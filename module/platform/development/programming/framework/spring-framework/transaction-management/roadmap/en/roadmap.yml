@@ -1,0 +1,166 @@
+# <roadmap-schema>
+# Module Roadmap Structure
+# schema-version: 1
+#
+# YAML CONTRACT
+# roadmap: High-level learning milestones for the current language roadmap.
+#
+# - id [string, required]: Stable and unique milestone identity within the current language roadmap.
+# - title [string, required]: Milestone title displayed to the learner.
+# - purpose [string, required]: What the learner should understand or achieve from this milestone.
+# - dependsOn [list, optional]: Prerequisite milestone ids when item order alone is not enough to express the dependency.
+# - objectives [list, optional]: Milestone-level learning objectives; do not use this to list every small fact/API/syntax item.
+# - relatedKnowledge [list, optional]: Knowledge category ids in the current module that support this milestone. Portal displays this list on the side opposite the milestone and clicking an item navigates to the matching Knowledge category.
+# - relatedModules [list, optional]: Related modules displayed as Portal Level 2 cards. Each item requires routeId and may provide localized label/note; this relation is navigation only and does not create child milestones or change learning order.
+#
+# ROADMAP THINKING FRAMEWORK
+# PURPOSE
+#   - What is this topic/module?
+#   - Why does it exist?
+#   - What problem exists without it?
+# FOUNDATION
+#   - What prerequisite or mental model must the learner have first?
+# CORE MODEL
+#   - What major abstractions or building blocks make up this topic?
+# MECHANICS
+#   - How does it work at the language/runtime/API level appropriate for this module?
+# USAGE
+#   - How is it used in real code?
+# DECISION / TRADE-OFF
+#   - When should this mechanism be chosen over another?
+#   - When should it not be used?
+# FAILURE / PITFALL
+#   - What mistakes, compile-time failures, or runtime failures matter?
+# INTEGRATION
+#   - How does this topic connect to neighboring concepts/modules?
+# SYNTHESIS
+#   - What end-to-end mental model should the learner retain?
+#
+# Each language owns its own roadmap. Do not infer or synchronize its structure from another language roadmap.
+# Item order in roadmap is the default learning order. Use dependsOn only when a dependency needs to be expressed beyond the linear order.
+# The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
+# </roadmap-schema>
+
+roadmap:
+  - id: transaction-purpose-and-boundaries
+    title: "Why Transaction Management Exists"
+    purpose: "Build the mental model of a transaction as an application-level unit of work and understand why Spring provides a consistent transaction abstraction across different resource technologies."
+    objectives:
+      - "Explain what problem transaction demarcation solves at service boundaries without reducing the topic to database-specific APIs."
+      - "Distinguish business transaction boundaries from individual repository calls and from remote/distributed workflow boundaries."
+      - "Understand what Spring adds beyond native JDBC, JPA, Hibernate, R2DBC, or JTA transaction APIs."
+
+  - id: transaction-abstraction-and-strategies
+    title: "Spring Transaction Abstraction and Manager Strategies"
+    purpose: "Understand the core transaction model that separates transaction policy from the underlying resource technology."
+    dependsOn:
+      - transaction-purpose-and-boundaries
+    objectives:
+      - "Understand TransactionManager as the common strategy and the roles of imperative PlatformTransactionManager and reactive ReactiveTransactionManager."
+      - "Relate transaction definition, execution status, commit, rollback, and manager selection without coupling the learning model to one database technology."
+      - "Reason about local resource transactions, JTA/global coordination, and multiple transaction-manager selection as deployment and resource-strategy choices."
+
+  - id: resource-synchronization-and-participation
+    title: "Resource Synchronization and Data-Access Participation"
+    purpose: "Understand how Spring associates resources with a transaction so multiple data-access operations can participate in the same unit of work."
+    dependsOn:
+      - transaction-abstraction-and-strategies
+    objectives:
+      - "Understand transaction-bound resource reuse, synchronization, cleanup, and the role of transaction-aware data-access infrastructure."
+      - "Distinguish high-level Spring data-access participation from low-level resource synchronization helpers."
+      - "Understand the boundary between generic transaction coordination and concrete JDBC, JPA, Hibernate, or R2DBC access mechanics."
+
+  - id: declarative-transaction-demarcation
+    title: "Declarative Transaction Demarcation"
+    purpose: "Understand how transactional metadata becomes runtime behavior through Spring's interception infrastructure rather than treating @Transactional as magic."
+    dependsOn:
+      - transaction-abstraction-and-strategies
+    objectives:
+      - "Trace the path from @Transactional metadata and transaction enablement to TransactionInterceptor and the selected transaction manager."
+      - "Understand proxy-mode interception boundaries, including external calls, self-invocation, method visibility, and the AspectJ alternative."
+      - "Understand transaction-manager qualification and metadata precedence at class and method boundaries."
+    relatedModules:
+      - routeId: ASPECT
+        label: "Spring AOP"
+        note: "Proxy, advice, interception, and self-invocation mechanics are owned by the AOP module."
+
+  - id: transaction-attributes-and-boundary-design
+    title: "Transaction Attributes and Boundary Design"
+    purpose: "Learn how transaction policy describes the intended unit of work and how each attribute should be chosen from business and resource requirements."
+    dependsOn:
+      - declarative-transaction-demarcation
+    objectives:
+      - "Reason about isolation, timeout, read-only mode, labels, and transaction-manager selection as transaction policy rather than annotation decoration."
+      - "Understand Spring's default @Transactional policy and which semantics are delegated to the underlying transaction system."
+      - "Design transaction boundaries that are neither excessively broad nor fragmented across low-level data-access calls."
+
+  - id: rollback-and-failure-semantics
+    title: "Rollback and Failure Semantics"
+    purpose: "Understand how application failures become commit or rollback decisions and why exception handling can change transaction outcomes."
+    dependsOn:
+      - transaction-attributes-and-boundary-design
+    objectives:
+      - "Understand Spring 6.1 default rollback behavior for unchecked exceptions and Error, plus explicit rollback and no-rollback rules."
+      - "Reason about rollback-only state, swallowed exceptions, catch-and-rethrow behavior, and UnexpectedRollbackException."
+      - "Recognize return-value-based rollback integrations such as Vavr Try failures and Spring 6.1 exceptional Future/CompletableFuture completion without confusing them with transaction-context propagation across new threads."
+
+  - id: propagation-and-participation
+    title: "Propagation and Transaction Participation"
+    purpose: "Understand how nested service calls participate in, suspend, reject, or create transaction scopes and what those choices mean for resources and failures."
+    dependsOn:
+      - rollback-and-failure-semantics
+    objectives:
+      - "Build a mental model for REQUIRED, REQUIRES_NEW, NESTED, SUPPORTS, MANDATORY, NOT_SUPPORTED, and NEVER based on existing transaction context."
+      - "Distinguish independent physical transactions from savepoint-based nested scopes and understand capability/resource constraints."
+      - "Apply rollback-only semantics to explain practical hazards such as connection-pool pressure with REQUIRES_NEW and UnexpectedRollbackException when an outer logical scope attempts to commit."
+
+  - id: programmatic-transaction-management
+    title: "Programmatic Transaction Management"
+    purpose: "Learn when explicit transaction control is preferable to declarative interception and how Spring supports imperative and reactive programmatic styles."
+    dependsOn:
+      - propagation-and-participation
+      - resource-synchronization-and-participation
+    objectives:
+      - "Use the mental models behind TransactionTemplate and direct manager APIs without turning business code into transaction boilerplate."
+      - "Understand TransactionalOperator as the programmatic composition model for reactive transactions."
+      - "Choose declarative or programmatic demarcation based on boundary shape, dynamic control needs, and coupling trade-offs."
+
+  - id: reactive-transaction-model
+    title: "Reactive Transaction Model"
+    purpose: "Understand why reactive transactions cannot reuse the imperative thread-bound mental model and how transaction context follows a reactive pipeline."
+    dependsOn:
+      - transaction-abstraction-and-strategies
+      - programmatic-transaction-management
+    objectives:
+      - "Contrast ThreadLocal-style imperative transaction context with Reactor Context used by ReactiveTransactionManager."
+      - "Understand why transaction-demarcated reactive methods must return a reactive pipeline and why participating work must stay in the same reactive context."
+      - "Reason about operator-style scoping, cancellation/error paths, and the handoff to reactive data-access technologies without re-teaching Reactor fundamentals."
+    relatedModules:
+      - routeId: SPRING_REACTIVE
+        label: "Spring Reactive"
+        note: "Reactive programming and WebFlux provide the execution model in which reactive transaction context participates."
+
+  - id: transaction-events-and-lifecycle-hooks
+    title: "Transaction-Bound Events and Lifecycle Hooks"
+    purpose: "Understand how application side effects and transaction-observation hooks attach to transaction phases without confusing event callbacks, execution listeners, and resource synchronization."
+    dependsOn:
+      - reactive-transaction-model
+    objectives:
+      - "Understand BEFORE_COMMIT, AFTER_COMMIT, AFTER_ROLLBACK, and AFTER_COMPLETION transaction-bound event phases and fallback behavior."
+      - "Account for Spring Framework 6.1 reactive transactional-event support, where the reactive transaction context must be published with the event source, typically through TransactionalEventPublisher."
+      - "Recognize that after-commit, after-rollback, and after-completion callbacks may still see active transactional resources even though the transaction has already completed, so additional data-access changes will not be committed to that transaction."
+      - "Distinguish TransactionExecutionListener, introduced in Spring Framework 6.1 for stateless lifecycle observation and statistics, from transaction synchronization used for resource participation."
+
+  - id: transaction-boundary-synthesis
+    title: "Transaction Boundary Synthesis for Production Systems"
+    purpose: "Synthesize the module by deciding where Spring transaction boundaries belong, which manager capabilities are required, and where local transaction guarantees stop in real systems."
+    dependsOn:
+      - transaction-events-and-lifecycle-hooks
+    objectives:
+      - "Recognize boundaries involving new threads, asynchronous work, remote calls, messaging, multiple resources, and long-running work; choose explicit coordination patterns instead of assuming one local transaction spans them."
+      - "Synthesize transaction-manager selection and qualification with the capability boundary between local resource transactions and coordinated multi-resource transactions."
+      - "Connect transaction design to testing and operational diagnosis without moving TestContext mechanics or datastore internals into this module."
+    relatedModules:
+      - routeId: SPRING_TESTING
+        label: "Spring Testing"
+        note: "Test-managed transactions and TransactionalTestExecutionListener belong to the testing module."

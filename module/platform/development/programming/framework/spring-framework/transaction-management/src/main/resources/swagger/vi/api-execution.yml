@@ -1,0 +1,58 @@
+TransactionExperimentController:
+  proxyBoundary():
+    execution: |-
+      <p><b>Khái niệm:</b> Trong proxy mode, transaction advice chỉ chạy khi lời gọi đi qua Spring proxy.</p>
+      <ol>
+        <li>Controller gọi <code>invokeAnnotatedMethodOnThis()</code>; method này gọi <code>transactionalWriteThenFail()</code> qua <code>this</code>, nên inner call không đi qua proxy.</li>
+        <li>Method bên trong ghi trạng thái transaction, insert một row vào H2 rồi cố ý ném exception.</li>
+        <li>Controller sau đó gọi chính annotated method đó qua Spring bean được inject, nên invocation đi qua proxy.</li>
+        <li>Response so sánh trace và row đã commit: self-invocation không có active Spring transaction. Với connection H2/Hikari mặc định auto-commit của chính demo này, row đó còn lại; proxy invocation có active transaction nên row bị rollback.</li>
+      </ol>
+      <p><b>Kết luận:</b> <code>@Transactional</code> là metadata; khả năng đi qua proxy mới quyết định interceptor có thực sự bao lời gọi hay không. Row của self-invocation còn lại là evidence riêng của cấu hình demo đang chạy ngoài Spring transaction boundary, không phải khẳng định mọi DataSource ngoài transaction đều bắt buộc auto-commit.</p>
+    usage: true
+  rollbackDefaults():
+    execution: |-
+      <p><b>Khái niệm:</b> Rollback rule mặc định của Spring phân biệt unchecked failure với checked exception thông thường.</p>
+      <ol>
+        <li><code>failWithRuntimeException()</code> mở transaction, insert <code>runtime-write</code> rồi ném <code>IllegalStateException</code>.</li>
+        <li>Transaction interceptor chọn rollback nên committed-row list của scenario này rỗng.</li>
+        <li><code>failWithCheckedException()</code> thực hiện cùng kiểu write nhưng ném checked exception.</li>
+        <li>Không có rollback rule bổ sung, Spring commit transaction trước khi truyền checked exception ra ngoài; <code>checked-write</code> vẫn tồn tại.</li>
+      </ol>
+      <p><b>Quan sát:</b> Cả hai method đều ghi nhận active transaction, nên khác biệt database outcome đến từ rollback policy chứ không phải một method bị bỏ qua transaction interception.</p>
+      <p><b>Kết luận:</b> Exception handling và rollback rule là một phần của transaction policy.</p>
+    usage: true
+  requiredRollbackOnly():
+    execution: |-
+      <p><b>Khái niệm:</b> Các <code>REQUIRED</code> scope lồng nhau là logical scope cùng chia sẻ một physical transaction.</p>
+      <ol>
+        <li>Outer method mở transaction và insert <code>outer-before-inner</code>.</li>
+        <li>Một proxied bean khác đi vào inner <code>REQUIRED</code>, insert <code>inner-required-write</code> rồi ném exception.</li>
+        <li>Inner interceptor đánh dấu shared transaction rollback-only. Outer method bắt exception, insert <code>outer-after-catch</code> rồi return bình thường.</li>
+        <li>Khi outer hoàn tất, Spring rollback physical transaction và ném <code>UnexpectedRollbackException</code> thay vì giả vờ commit thành công.</li>
+      </ol>
+      <p><b>Quan sát:</b> Trace cho thấy outer đã bắt lỗi và return bình thường, nhưng committed-row list rỗng và <code>unexpectedRollbackObserved</code> bằng true.</p>
+      <p><b>Kết luận:</b> Bắt inner exception không xóa rollback-only state của transaction dùng chung.</p>
+    usage: true
+  requiresNew():
+    execution: |-
+      <p><b>Khái niệm:</b> <code>REQUIRES_NEW</code> tạm ngưng outer transaction và tạo physical transaction độc lập.</p>
+      <ol>
+        <li>Outer transaction insert <code>outer-write-that-will-roll-back</code>.</li>
+        <li>Một bean khác đi vào <code>REQUIRES_NEW</code>, dùng transaction/connection riêng, insert <code>inner-requires-new-committed</code> và commit.</li>
+        <li>Sau khi quay lại outer transaction, code cố ý ném exception để outer rollback.</li>
+      </ol>
+      <p><b>Quan sát:</b> Sau outer rollback, marker duy nhất còn commit là <code>inner-requires-new-committed</code>.</p>
+      <p><b>Kết luận:</b> REQUIRES_NEW là commit boundary độc lập, không phải savepoint trong outer physical transaction.</p>
+    usage: true
+  eventPhases():
+    execution: |-
+      <p><b>Khái niệm:</b> <code>@TransactionalEventListener</code> gắn listener vào các phase của transaction lifecycle.</p>
+      <ol>
+        <li>Commit scenario ghi một row, publish <code>TransactionExperimentEvent</code> rồi return bình thường.</li>
+        <li>Phase probe ghi <code>BEFORE_COMMIT</code>, sau commit ghi <code>AFTER_COMMIT</code> và <code>AFTER_COMPLETION</code>.</li>
+        <li>Rollback scenario cũng ghi và publish event nhưng sau đó ném exception.</li>
+        <li>Scenario này ghi <code>AFTER_ROLLBACK</code> và <code>AFTER_COMPLETION</code>; row database không còn.</li>
+      </ol>
+      <p><b>Kết luận:</b> Transaction-bound event điều phối thời điểm callback với transaction outcome; phase trace và committed row là evidence trực tiếp.</p>
+    usage: true

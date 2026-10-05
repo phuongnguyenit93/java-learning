@@ -1,0 +1,138 @@
+TransactionExperimentController:
+  proxyBoundary():
+    summary: So sánh self-invocation với lời gọi transactional đi qua proxy
+    description: Chạy cùng một method transactional ghi dữ liệu rồi thất bại theo
+      hai đường. Self-invocation cùng bean bỏ qua proxy, còn lời gọi từ controller
+      đi qua Spring proxy. Response cho thấy transaction-active state và row thực
+      sự đã commit.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 4.Declarative/Declarative.md
+      anchor: transaction-proxy-boundary
+    methodName: proxyBoundary
+    params: [
+      ]
+    path: com/example/learning/transaction/controller/TransactionExperimentController.java
+    mapping: '@GetMapping("/proxy-boundary")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /spring-transactions/proxy-boundary
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  rollbackDefaults():
+    summary: Quan sát rollback mặc định cho checked và unchecked exception
+    description: Chạy hai JDBC write transactional giống nhau. Một nhánh ném RuntimeException
+      nên rollback; nhánh còn lại ném checked exception nên mặc định vẫn commit. Row
+      cuối cùng trong H2 là bằng chứng trực tiếp cho rollback rule.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: transaction-rollback-defaults
+    methodName: rollbackDefaults
+    params: [
+      ]
+    path: com/example/learning/transaction/controller/TransactionExperimentController.java
+    mapping: '@GetMapping("/rollback-defaults")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /spring-transactions/rollback-defaults
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  requiredRollbackOnly():
+    summary: Quan sát rollback-only và UnexpectedRollbackException với REQUIRED
+    description: Outer REQUIRED transaction bắt lỗi từ inner REQUIRED rồi return bình
+      thường. Physical transaction dùng chung đã bị đánh dấu rollback-only, nên khi
+      outer hoàn tất, Spring ném UnexpectedRollbackException và toàn bộ JDBC write
+      đều bị rollback.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 7.Propagation/Propagation.md
+      anchor: transaction-propagation-rollback-only
+    methodName: requiredRollbackOnly
+    params: [
+      ]
+    path: com/example/learning/transaction/controller/TransactionExperimentController.java
+    mapping: '@GetMapping("/required-rollback-only")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /spring-transactions/required-rollback-only
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  requiresNew():
+    summary: Quan sát commit độc lập của REQUIRES_NEW
+    description: Outer transaction ghi dữ liệu, gọi inner REQUIRES_NEW đã commit,
+      rồi outer thất bại. Table cuối cùng chỉ còn marker của inner transaction, chứng
+      minh physical transaction mới hoàn tất độc lập với rollback của outer transaction.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 7.Propagation/Propagation.md
+      anchor: transaction-propagation-requires-new
+    methodName: requiresNew
+    params: [
+      ]
+    path: com/example/learning/transaction/controller/TransactionExperimentController.java
+    mapping: '@GetMapping("/requires-new")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /spring-transactions/requires-new
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  eventPhases():
+    summary: So sánh transaction-bound event phase khi commit và rollback
+    description: Publish cùng loại application event từ một transaction commit và
+      một transaction rollback. Response ghi lại TransactionalEventListener phase
+      đã chạy và JDBC write có tồn tại sau completion hay không.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 10.EventsLifecycle/EventsLifecycle.md
+      anchor: transaction-event-listener
+    methodName: eventPhases
+    params: [
+      ]
+    path: com/example/learning/transaction/controller/TransactionExperimentController.java
+    mapping: '@GetMapping("/event-phases")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /spring-transactions/event-phases
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true

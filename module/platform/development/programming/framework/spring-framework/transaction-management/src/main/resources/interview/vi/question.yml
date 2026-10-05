@@ -1,0 +1,146 @@
+# <interview-schema>
+# Cấu trúc câu hỏi Interview
+# schema-version: 2
+#
+# questions [kiểu: list; bắt buộc; mặc định: []]
+#   Danh sách câu hỏi Interview của module trong language hiện tại.
+#   mỗi phần tử:
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi phỏng vấn hiển thị cho người học.
+#     answer [kiểu: string; bắt buộc; mặc định: ""]
+#       Câu trả lời tham khảo, chỉ hiển thị khi người học chủ động mở.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu nội dung được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu nội dung đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+# </interview-schema>
+
+questions:
+  - question: >-
+      Hãy giải thích cách business invariant quyết định ranh giới transaction trong Spring. Điều gì xảy ra khi ranh giới quá nhỏ hoặc quá lớn?
+    answer: >-
+      Hãy bắt đầu từ unit of work nhỏ nhất mà các thay đổi trạng thái bắt buộc phải cùng thành công hoặc cùng thất bại. Tầng application/service thường sở hữu invariant này vì nó điều phối nhiều thao tác data-access. Ranh giới quá nhỏ có thể commit trạng thái dở dang trước khi bước sau thất bại. Ranh giới quá lớn có thể giữ connection, lock, snapshot và trạng thái transaction manager trong lúc chạy công việc chậm hoặc không liên quan. Spring điều phối khả năng của các resource thực sự tham gia; nó không làm mọi công việc trong cùng Java method trở thành nguyên tử nếu resource đó nằm ngoài transaction.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Purpose/Purpose.md"
+      anchor: "transaction-unit-of-work"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Một ứng dụng có nhiều transaction manager. Nên chọn manager sở hữu một boundary như thế nào, và điều gì có thể sai nếu chọn nhầm?
+    answer: >-
+      Hãy chọn manager dựa trên resource ownership thực tế, execution model imperative hay reactive và các capability mà backend phải cung cấp. Khi mặc định bị mơ hồ, hãy qualify boundary tường minh, ví dụ qua @Transactional(transactionManager = "..."). Một transaction đang active ở manager sai không tự động enlist DataSource, reactive resource hay remote system không thuộc manager đó. Abstraction TransactionManager cho Spring một vocabulary policy thống nhất, nhưng không tự tạo capability mà manager và resource đã chọn không hỗ trợ.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.Abstraction/Abstraction.md"
+      anchor: "transaction-manager-selection"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Vì sao một @Transactional method có thể hành xử như không có transaction khi được gọi từ method khác trong cùng bean ở proxy mode, và bạn sẽ thiết kế lại hoặc chẩn đoán thế nào?
+    answer: >-
+      @Transactional là metadata; trong proxy mode mặc định, transaction advice chạy khi lời gọi đi qua Spring proxy. Lời gọi qua this vẫn ở trên target object và có thể bỏ qua TransactionInterceptor, nên inner method không nhận một transactional boundary độc lập. Cách thiết kế thường rõ ràng hơn là chuyển boundary sang Spring bean khác hoặc tổ chức lời gọi sao cho thực sự đi qua proxy. AspectJ là một interception mode khác, không phải fallback tự động. Khi chẩn đoán, hãy kiểm tra transaction có active tại invocation hay không và quan sát resource outcome thật, ví dụ một database write thất bại cuối cùng commit hay rollback.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.Declarative/Declarative.md"
+      anchor: "transaction-proxy-boundary"
+    apiRelated:
+      controller: "TransactionExperimentController"
+      methodSignature: "proxyBoundary()"
+
+  - question: >-
+      Outer REQUIRED method bắt exception từ inner REQUIRED method, return bình thường rồi lại nhận UnexpectedRollbackException. Hãy giải thích toàn bộ state transition.
+    answer: >-
+      Outer và inner là hai logical scope cùng tham gia một physical transaction. Khi RuntimeException thoát khỏi inner transactional boundary, inner interceptor có thể đánh dấu shared transaction là rollback-only. Việc outer bắt application exception không xóa marker này, nên Java code vẫn có thể chạy tiếp trong khi transaction đã không còn khả năng commit. Đến outer completion, caller có vẻ đang yêu cầu commit nhưng Spring rollback physical transaction và ném UnexpectedRollbackException để không báo thành công sai lệch. Nếu inner failure phải được phép không làm outer thất bại, cần xem lại unit-of-work boundary hoặc chủ động dùng separate transaction hay savepoint-based model khi phù hợp.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.Propagation/Propagation.md"
+      anchor: "transaction-propagation-rollback-only"
+    apiRelated:
+      controller: "TransactionExperimentController"
+      methodSignature: "requiredRollbackOnly()"
+
+  - question: >-
+      Khi nào REQUIRES_NEW là lựa chọn đúng về semantics, và vì sao nó có thể nguy hiểm khi concurrency cao dù hành vi transaction vẫn đúng?
+    answer: >-
+      REQUIRES_NEW phù hợp khi inner work thực sự cần quyết định commit hoặc rollback độc lập. Khi có outer transaction và transaction manager được chọn hỗ trợ suspension cần thiết, Spring tạm ngưng outer context/resource, mở physical transaction mới, hoàn tất nó rồi khôi phục outer context. Với local JDBC transaction, outer scope có thể vẫn giữ một connection trong khi inner transaction cần thêm connection khác. Khi concurrency cao, nhu cầu resource bổ sung này có thể làm cạn connection pool hoặc khiến nhiều thread chờ resource. Chỉ dùng REQUIRES_NEW cho công việc thật sự độc lập, chuẩn bị pool cho pattern này và không dùng nó như cách chung chung để né rollback semantics.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.Propagation/Propagation.md"
+      anchor: "transaction-propagation-requires-new"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Khi nào nên chọn TransactionTemplate hoặc TransactionalOperator thay cho @Transactional, và vì sao điều khiển trực tiếp PlatformTransactionManager thường là lựa chọn ở mức thấp hơn?
+    answer: >-
+      Nên ưu tiên @Transactional khi transaction boundary là một hợp đồng ổn định ở tầng service vì policy được tách khỏi business code. Programmatic control hữu ích khi scope phụ thuộc runtime branch, chỉ một phần nhỏ của method lớn cần transaction, hoặc code phải phản ứng trực tiếp với transaction status. TransactionTemplate đóng gói workflow begin/commit/rollback imperative quanh callback, còn TransactionalOperator cung cấp mô hình composition tương ứng cho reactive publisher. Điều khiển trực tiếp PlatformTransactionManager cho quyền kiểm soát lifecycle tường minh nhất nhưng cũng buộc code ứng dụng tự chịu trách nhiệm về completion, exception handling, rollback decision và nested participation, nên thường chỉ dùng khi template/operator không đủ. Không API nào trong số này tự tạo transaction capability mà manager và resource đã chọn vốn không hỗ trợ.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.Programmatic/Programmatic.md"
+      anchor: "transaction-declarative-vs-programmatic"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Vì sao transaction reactive của Spring dùng Reactor Context thay cho ThreadLocal, và vì sao việc đổi thread tự nó không làm mất transaction participation?
+    answer: >-
+      Reactive pipeline có thể chuyển qua nhiều thread nhưng vẫn biểu diễn một subscriber flow logic, nên thread identity không phải nơi đáng tin cậy để mang transaction state. Reactive transaction management gắn transaction state và resource với Reactor subscriber context. Các operator tiếp tục tham gia khi execution vẫn nằm trong publisher chain đã compose và mang context đó. Thoát khỏi chain, tạo manual subscription không liên quan hoặc ghép reactive manager với non-reactive method contract sẽ phá mô hình này. Câu hỏi quan trọng là pipeline/context membership, không phải mọi signal có chạy trên cùng thread hay không.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "9.Reactive/Reactive.md"
+      anchor: "transaction-reactive-context-model"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Một @TransactionalEventListener ở AFTER_COMMIT đảm bảo điều gì, và không đảm bảo điều gì đối với external side effect?
+    answer: >-
+      AFTER_COMMIT điều phối thời điểm listener với một commit thành công của publishing transaction, nên listener này không phải đường chạy bình thường khi transaction rollback. Bảo đảm về timing đó không làm HTTP call, message publication, email hay external side effect khác trở thành phần nguyên tử của database transaction. Process vẫn có thể crash sau database commit nhưng trước external action, làm side effect bị mất nếu chưa có cơ chế durable riêng. Hãy dùng transaction-bound event cho lifecycle timing, và thêm retry, durable messaging, outbox-style persistence hoặc reliability mechanism khác khi external effect phải sống sót qua failure.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "10.EventsLifecycle/EventsLifecycle.md"
+      anchor: "transaction-event-listener"
+    apiRelated:
+      controller: "TransactionExperimentController"
+      methodSignature: "eventPhases()"
+
+  - question: >-
+      Một use case cập nhật local database, gọi remote service và publish message. Hãy giải thích local Spring transaction dừng bảo đảm ở đâu và cách bạn suy luận thiết kế production.
+    answer: >-
+      Local Spring transaction chỉ điều phối resource mà transaction manager đã chọn thực sự sở hữu hoặc enlist được. HTTP/RPC call không kế thừa local database transaction của caller, và database update cùng message publication là hai side effect riêng nếu không có coordinator thật cùng các resource hỗ trợ shared transaction. Hãy chọn reliability pattern từ failure model: idempotency và retry, compensation hoặc saga, outbox hay durable messaging handoff, hoặc XA/JTA chỉ khi các resource cần thiết thực sự hỗ trợ và chi phí coordination là hợp lý. Giữ local transaction càng ngắn càng tốt và tránh giữ database resource xuyên qua remote work chậm trừ khi invariant thật sự đòi hỏi.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""

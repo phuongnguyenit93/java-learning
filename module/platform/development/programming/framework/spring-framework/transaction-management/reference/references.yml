@@ -1,0 +1,69 @@
+# ============================================================
+# MODULE REFERENCE STRUCTURE
+# ============================================================
+#
+# This is the shared module-level reference catalog.
+# It is intentionally not split by MODULE_LANGUAGE.
+#
+# Example structure:
+#
+# references:
+#   - title: "Java Language Specification"
+#     url: "https://docs.oracle.com/javase/specs/"
+#     description: "Official Java language specification."
+#
+# Add only curated references that are useful for the module.
+# The build system must not overwrite this file after authored content exists.
+
+references:
+  - title: "Transaction Management :: Spring Framework"
+    url: "https://docs.spring.io/spring-framework/reference/data-access/transaction.html"
+    description: "Official conceptual overview of Spring transaction management. Use the repository-baseline 6.1.14 API and 6.1 release-note entries below for version-sensitive semantics."
+
+  - title: "Understanding the Spring Framework Transaction Abstraction"
+    url: "https://docs.spring.io/spring-framework/reference/data-access/transaction/strategies.html"
+    description: "Official explanation of TransactionManager strategies, transaction definitions and status, and imperative versus reactive transaction managers."
+
+  - title: "Declarative Transaction Management :: Spring Framework"
+    url: "https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative.html"
+    description: "Official guide to AOP-driven declarative transactions, @Transactional metadata, rollback behavior, propagation, and proxy-based transaction boundaries."
+
+  - title: "Transaction Propagation :: Spring Framework"
+    url: "https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/tx-propagation.html"
+    description: "Official semantics and operational considerations for REQUIRED, REQUIRES_NEW, and NESTED transaction propagation."
+
+  - title: "Synchronizing Resources with Transactions :: Spring Framework"
+    url: "https://docs.spring.io/spring-framework/reference/data-access/transaction/tx-resource-synchronization.html"
+    description: "Official explanation of transaction-bound resource reuse, synchronization, cleanup, and participation by data-access infrastructure."
+
+  - title: "Programmatic Transaction Management :: Spring Framework"
+    url: "https://docs.spring.io/spring-framework/reference/data-access/transaction/programmatic.html"
+    description: "Official guidance for TransactionTemplate, TransactionalOperator, and direct imperative or reactive transaction-manager usage."
+
+  - title: "Transaction-bound Events :: Spring Framework"
+    url: "https://docs.spring.io/spring-framework/reference/data-access/transaction/event.html"
+    description: "Official lifecycle semantics for transaction-bound application events, including reactive transaction support introduced in Spring Framework 6.1."
+
+  - title: "@Transactional — Spring Framework 6.1.14 API"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/transaction/annotation/Transactional.html"
+    description: "Repository-baseline API contract for @Transactional attributes, thread-bound versus reactive transactions, rollback rules, and manager selection."
+
+  - title: "TransactionExecutionListener — Spring Framework 6.1.14 API"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/transaction/TransactionExecutionListener.html"
+    description: "Spring Framework 6.1 lifecycle-listener contract for stateless transaction execution observation and statistics across imperative and reactive managers."
+
+  - title: "TransactionalEventListener — Spring Framework 6.1.14 API"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/transaction/event/TransactionalEventListener.html"
+    description: "Repository-baseline contract for transaction phases, fallback execution, and reactive transaction support added in Spring Framework 6.1."
+
+  - title: "TransactionalEventPublisher — Spring Framework 6.1.14 API"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/transaction/reactive/TransactionalEventPublisher.html"
+    description: "Spring Framework 6.1 helper for publishing reactive transactional events with the current Reactor-managed TransactionContext as the event source."
+
+  - title: "org.springframework.transaction — Spring Framework 6.1.14 API"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/transaction/package-summary.html"
+    description: "Repository-baseline API inventory for Spring's core transaction abstractions, manager contracts, status/execution types, exceptions, and lifecycle listeners."
+
+  - title: "Spring Framework 6.1 Release Notes"
+    url: "https://github.com/spring-projects/spring-framework/wiki/Spring-Framework-6.1-Release-Notes"
+    description: "Official Spring project release notes covering 6.1 transaction changes such as TransactionExecutionListener, reactive transactional events, and failed CompletableFuture rollback."

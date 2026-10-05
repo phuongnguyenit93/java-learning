@@ -1,0 +1,137 @@
+TransactionExperimentController:
+  proxyBoundary():
+    summary: Compare self-invocation with a proxied transactional call
+    description: Execute the same transactional write-and-fail method once through
+      same-bean self-invocation and once through the Spring proxy. The response exposes
+      transaction-active state and committed rows, making the proxy boundary observable.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 4.Declarative/Declarative.md
+      anchor: transaction-proxy-boundary
+    methodName: proxyBoundary
+    params: [
+      ]
+    path: com/example/learning/transaction/controller/TransactionExperimentController.java
+    mapping: '@GetMapping("/proxy-boundary")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /spring-transactions/proxy-boundary
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  rollbackDefaults():
+    summary: Observe default rollback for checked and unchecked exceptions
+    description: Run two otherwise identical transactional JDBC writes. One throws
+      RuntimeException and rolls back; the other throws a checked exception and commits
+      under Spring's default rollback rules. Final rows are the observable evidence.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: transaction-rollback-defaults
+    methodName: rollbackDefaults
+    params: [
+      ]
+    path: com/example/learning/transaction/controller/TransactionExperimentController.java
+    mapping: '@GetMapping("/rollback-defaults")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /spring-transactions/rollback-defaults
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  requiredRollbackOnly():
+    summary: Observe rollback-only participation and UnexpectedRollbackException
+    description: An outer REQUIRED transaction catches an inner REQUIRED failure and
+      returns normally. The shared physical transaction is already rollback-only,
+      so the outer completion throws UnexpectedRollbackException and none of the writes
+      commit.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 7.Propagation/Propagation.md
+      anchor: transaction-propagation-rollback-only
+    methodName: requiredRollbackOnly
+    params: [
+      ]
+    path: com/example/learning/transaction/controller/TransactionExperimentController.java
+    mapping: '@GetMapping("/required-rollback-only")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /spring-transactions/required-rollback-only
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  requiresNew():
+    summary: Observe an independent REQUIRES_NEW commit
+    description: The outer transaction writes, invokes an inner REQUIRES_NEW method
+      that commits, then fails. The final table contains only the inner marker, proving
+      the inner physical transaction completed independently of the outer rollback.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 7.Propagation/Propagation.md
+      anchor: transaction-propagation-requires-new
+    methodName: requiresNew
+    params: [
+      ]
+    path: com/example/learning/transaction/controller/TransactionExperimentController.java
+    mapping: '@GetMapping("/requires-new")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /spring-transactions/requires-new
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  eventPhases():
+    summary: Compare transaction-bound event phases for commit and rollback
+    description: Publish the same application event from one committing and one rolling-back
+      transaction. The response records which TransactionalEventListener phases ran
+      and whether the JDBC write survived each outcome.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 10.EventsLifecycle/EventsLifecycle.md
+      anchor: transaction-event-listener
+    methodName: eventPhases
+    params: [
+      ]
+    path: com/example/learning/transaction/controller/TransactionExperimentController.java
+    mapping: '@GetMapping("/event-phases")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /spring-transactions/event-phases
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true

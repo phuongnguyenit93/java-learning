@@ -1,0 +1,166 @@
+# <roadmap-schema>
+# Cấu trúc Roadmap Module
+# schema-version: 1
+#
+# YAML CONTRACT
+# roadmap: Danh sách milestone cấp cao của roadmap cho language hiện tại.
+#
+# - id [string, required]: ID ổn định và duy nhất của milestone trong roadmap language hiện tại.
+# - title [string, required]: Tên milestone hiển thị cho learner.
+# - purpose [string, required]: Milestone này tồn tại để learner hiểu hoặc đạt được điều gì.
+# - dependsOn [list, optional]: Danh sách id milestone prerequisite khi dependency không thể hiện đủ chỉ bằng thứ tự item.
+# - objectives [list, optional]: Các learning objective cấp milestone; không dùng để liệt kê mọi fact/API/syntax nhỏ.
+# - relatedKnowledge [list, optional]: Danh sách Knowledge category id trong chính module hiện tại hỗ trợ milestone. Portal hiển thị danh sách này ở phía đối diện milestone và click item sẽ điều hướng sang Knowledge category tương ứng.
+# - relatedModules [list, optional]: Các module liên quan hiển thị ở Level 2 của Portal. Mỗi item dùng routeId bắt buộc và có thể có label/note localized; relation này chỉ để điều hướng, không tạo child milestone hoặc thay đổi learning order.
+#
+# ROADMAP THINKING FRAMEWORK
+# PURPOSE
+#   - Topic/module này là gì?
+#   - Vì sao nó tồn tại?
+#   - Không có nó thì learner gặp vấn đề gì?
+# FOUNDATION
+#   - Learner cần prerequisite hoặc mental model nào trước?
+# CORE MODEL
+#   - Những abstraction hoặc building block lớn nào tạo nên chủ đề này?
+# MECHANICS
+#   - Nó hoạt động như thế nào ở mức language/runtime/API phù hợp với module?
+# USAGE
+#   - Nó được dùng như thế nào trong code thực tế?
+# DECISION / TRADE-OFF
+#   - Khi nào nên chọn cơ chế này thay vì cơ chế khác?
+#   - Khi nào không nên dùng?
+# FAILURE / PITFALL
+#   - Những sai lầm, compile-time failure hoặc runtime failure nào đáng biết?
+# INTEGRATION
+#   - Chủ đề này kết nối với những concept/module lân cận nào?
+# SYNTHESIS
+#   - Sau cùng learner phải giữ mental model end-to-end nào?
+#
+# Mỗi language tự chịu trách nhiệm cho roadmap của chính nó. Không suy luận hoặc đồng bộ cấu trúc từ roadmap của language khác.
+# Thứ tự item trong roadmap chính là thứ tự học mặc định. Chỉ dùng dependsOn khi cần biểu diễn dependency rõ hơn thứ tự tuyến tính.
+# Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
+# </roadmap-schema>
+
+roadmap:
+  - id: transaction-purpose-and-boundaries
+    title: "Vì sao cần quản lý giao dịch"
+    purpose: "Xây dựng mô hình tư duy về transaction như một đơn vị công việc ở cấp ứng dụng và hiểu vì sao Spring cung cấp một lớp trừu tượng thống nhất trên nhiều công nghệ tài nguyên."
+    objectives:
+      - "Giải thích bài toán phân định phạm vi transaction tại tầng dịch vụ mà không thu hẹp chủ đề thành API riêng của cơ sở dữ liệu."
+      - "Phân biệt ranh giới transaction nghiệp vụ với từng lời gọi repository riêng lẻ và với ranh giới của quy trình phân tán hoặc lời gọi từ xa."
+      - "Hiểu giá trị Spring bổ sung phía trên transaction API gốc của JDBC, JPA, Hibernate, R2DBC hoặc JTA."
+
+  - id: transaction-abstraction-and-strategies
+    title: "Lớp trừu tượng transaction và chiến lược TransactionManager"
+    purpose: "Hiểu mô hình transaction cốt lõi tách chính sách transaction khỏi công nghệ tài nguyên nằm bên dưới."
+    dependsOn:
+      - transaction-purpose-and-boundaries
+    objectives:
+      - "Hiểu TransactionManager là chiến lược chung, cùng vai trò của PlatformTransactionManager cho luồng imperative và ReactiveTransactionManager cho luồng reactive."
+      - "Liên hệ transaction definition, trạng thái thực thi, commit, rollback và việc chọn manager mà không gắn mô hình tư duy vào một cơ sở dữ liệu cụ thể."
+      - "Nhận diện local resource transaction, JTA/global coordination và việc chọn giữa nhiều transaction manager như các quyết định về tài nguyên và môi trường triển khai."
+
+  - id: resource-synchronization-and-participation
+    title: "Đồng bộ tài nguyên và tham gia transaction"
+    purpose: "Hiểu cách Spring gắn tài nguyên với transaction để nhiều thao tác truy cập dữ liệu có thể cùng tham gia một đơn vị công việc."
+    dependsOn:
+      - transaction-abstraction-and-strategies
+    objectives:
+      - "Hiểu việc tái sử dụng tài nguyên trong transaction, synchronization, cleanup và vai trò của hạ tầng data-access có nhận biết transaction."
+      - "Phân biệt cơ chế tham gia transaction ở tầng Spring data-access với các helper đồng bộ tài nguyên cấp thấp."
+      - "Giữ ranh giới rõ giữa điều phối transaction tổng quát và mechanics cụ thể của JDBC, JPA, Hibernate hoặc R2DBC."
+
+  - id: declarative-transaction-demarcation
+    title: "Khai báo ranh giới transaction"
+    purpose: "Hiểu cách metadata transaction trở thành hành vi lúc chạy thông qua hạ tầng interception của Spring thay vì xem @Transactional như một cơ chế tự động bí ẩn."
+    dependsOn:
+      - transaction-abstraction-and-strategies
+    objectives:
+      - "Theo dõi luồng từ @Transactional và việc bật transaction management tới TransactionInterceptor và transaction manager được chọn."
+      - "Hiểu ranh giới của proxy mode, gồm lời gọi đi qua proxy, self-invocation, độ hiển thị method và lựa chọn AspectJ khi cần cơ chế interception khác proxy."
+      - "Hiểu cách chọn transaction manager và cách metadata ở class/method quyết định chính sách transaction cuối cùng."
+    relatedModules:
+      - routeId: ASPECT
+        label: "Spring AOP"
+        note: "Proxy, advice, interception và self-invocation là mechanics do module AOP sở hữu."
+
+  - id: transaction-attributes-and-boundary-design
+    title: "Thuộc tính transaction và thiết kế ranh giới"
+    purpose: "Học cách chính sách transaction mô tả đơn vị công việc mong muốn và cách chọn từng thuộc tính dựa trên yêu cầu nghiệp vụ cùng khả năng của tài nguyên."
+    dependsOn:
+      - declarative-transaction-demarcation
+    objectives:
+      - "Lý giải isolation, timeout, read-only, label và việc chọn transaction manager như chính sách transaction thay vì chỉ là tham số annotation."
+      - "Hiểu chính sách mặc định của @Transactional trong Spring 6.1 và phần semantics nào được giao cho transaction system bên dưới."
+      - "Thiết kế ranh giới transaction không quá rộng nhưng cũng không bị chia vụn theo từng lời gọi data-access cấp thấp."
+
+  - id: rollback-and-failure-semantics
+    title: "Rollback và ngữ nghĩa lỗi"
+    purpose: "Hiểu cách lỗi của ứng dụng được chuyển thành quyết định commit hoặc rollback và vì sao cách xử lý exception có thể thay đổi kết quả transaction."
+    dependsOn:
+      - transaction-attributes-and-boundary-design
+    objectives:
+      - "Hiểu quy tắc rollback mặc định của Spring 6.1 đối với unchecked exception và Error, cùng rollback/no-rollback rules khi cần ghi đè."
+      - "Lý giải trạng thái rollback-only, exception bị nuốt, catch-and-rethrow và UnexpectedRollbackException."
+      - "Nhận diện các tích hợp rollback dựa trên giá trị trả về như Vavr Try thất bại và Future/CompletableFuture hoàn tất exceptional trong Spring 6.1 mà không nhầm với việc transaction context tự truyền sang thread mới."
+
+  - id: propagation-and-participation
+    title: "Propagation và cách lời gọi tham gia transaction"
+    purpose: "Hiểu các lời gọi dịch vụ lồng nhau sẽ tham gia, tạm ngưng, từ chối hay tạo phạm vi transaction mới như thế nào và các lựa chọn đó ảnh hưởng tới tài nguyên cùng lỗi ra sao."
+    dependsOn:
+      - rollback-and-failure-semantics
+    objectives:
+      - "Xây dựng mô hình tư duy cho REQUIRED, REQUIRES_NEW, NESTED, SUPPORTS, MANDATORY, NOT_SUPPORTED và NEVER dựa trên việc đã có transaction context hay chưa."
+      - "Phân biệt physical transaction độc lập với nested scope dựa trên savepoint và hiểu giới hạn theo tài nguyên hoặc transaction manager."
+      - "Dùng semantics rollback-only để giải thích các rủi ro như áp lực lên connection pool với REQUIRES_NEW và UnexpectedRollbackException khi outer logical scope cố commit."
+
+  - id: programmatic-transaction-management
+    title: "Quản lý transaction bằng code"
+    purpose: "Học khi nào điều khiển transaction tường minh phù hợp hơn declarative interception và cách Spring hỗ trợ cả phong cách imperative lẫn reactive."
+    dependsOn:
+      - propagation-and-participation
+      - resource-synchronization-and-participation
+    objectives:
+      - "Nắm mô hình tư duy của TransactionTemplate và API transaction manager trực tiếp mà không biến business code thành transaction boilerplate."
+      - "Hiểu TransactionalOperator như mô hình composition cho reactive transaction."
+      - "Chọn declarative hay programmatic demarcation dựa trên hình dạng ranh giới, nhu cầu điều khiển động và mức coupling chấp nhận được."
+
+  - id: reactive-transaction-model
+    title: "Mô hình transaction reactive"
+    purpose: "Hiểu vì sao reactive transaction không thể dùng nguyên mô hình thread-bound của code imperative và transaction context đi theo reactive pipeline như thế nào."
+    dependsOn:
+      - transaction-abstraction-and-strategies
+      - programmatic-transaction-management
+    objectives:
+      - "So sánh transaction context kiểu ThreadLocal của imperative flow với Reactor Context được ReactiveTransactionManager sử dụng."
+      - "Hiểu vì sao method dùng reactive transaction phải trả về reactive pipeline và mọi thao tác data-access tham gia phải nằm trong cùng reactive context."
+      - "Lý giải phạm vi operator, đường đi của error/cancellation và phần chuyển tiếp sang reactive data-access mà không dạy lại Reactive Streams hoặc Reactor fundamentals."
+    relatedModules:
+      - routeId: SPRING_REACTIVE
+        label: "Spring Reactive"
+        note: "Reactive programming và WebFlux cung cấp execution model mà reactive transaction context tham gia."
+
+  - id: transaction-events-and-lifecycle-hooks
+    title: "Sự kiện theo transaction và lifecycle hook"
+    purpose: "Hiểu cách side effect của ứng dụng và hook quan sát transaction gắn với từng transaction phase mà không nhầm lẫn event callback, execution listener và resource synchronization."
+    dependsOn:
+      - reactive-transaction-model
+    objectives:
+      - "Hiểu các phase BEFORE_COMMIT, AFTER_COMMIT, AFTER_ROLLBACK, AFTER_COMPLETION của transaction-bound event và hành vi fallback."
+      - "Nắm hỗ trợ reactive transactional event từ Spring Framework 6.1, trong đó reactive transaction context phải được đưa vào event source, thường thông qua TransactionalEventPublisher."
+      - "Nhận diện rằng callback AFTER_COMMIT, AFTER_ROLLBACK và AFTER_COMPLETION vẫn có thể nhìn thấy transactional resource còn active dù transaction đã hoàn tất; thay đổi data-access phát sinh lúc này sẽ không được commit vào transaction đó."
+      - "Phân biệt TransactionExecutionListener, được bổ sung từ Spring Framework 6.1 cho quan sát vòng đời và thống kê không giữ state, với transaction synchronization dùng cho việc tham gia tài nguyên."
+
+  - id: transaction-boundary-synthesis
+    title: "Tổng hợp ranh giới transaction trong hệ thống thực tế"
+    purpose: "Tổng hợp toàn module bằng cách quyết định transaction boundary nên đặt ở đâu, cần năng lực transaction manager nào và local transaction guarantee dừng lại tại đâu trong hệ thống thực tế."
+    dependsOn:
+      - transaction-events-and-lifecycle-hooks
+    objectives:
+      - "Nhận diện ranh giới với thread mới, công việc bất đồng bộ, lời gọi từ xa, messaging, nhiều tài nguyên và tác vụ kéo dài; chọn cơ chế phối hợp rõ ràng thay vì giả định một local transaction bao trùm tất cả."
+      - "Tổng hợp cách chọn hoặc định danh transaction manager với giới hạn năng lực giữa local resource transaction và transaction phối hợp nhiều tài nguyên."
+      - "Kết nối thiết kế transaction với testing và chẩn đoán vận hành mà không kéo TestContext mechanics hoặc datastore internals vào module này."
+    relatedModules:
+      - routeId: SPRING_TESTING
+        label: "Spring Testing"
+        note: "Test-managed transaction và TransactionalTestExecutionListener thuộc module testing."

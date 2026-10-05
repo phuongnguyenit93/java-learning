@@ -1,0 +1,58 @@
+TransactionExperimentController:
+  proxyBoundary():
+    execution: |-
+      <p><b>Concept:</b> In proxy mode, transaction advice runs only when the invocation crosses the Spring proxy.</p>
+      <ol>
+        <li>The controller first calls <code>invokeAnnotatedMethodOnThis()</code>. That method calls <code>transactionalWriteThenFail()</code> on <code>this</code>, so no proxy intercepts the inner call.</li>
+        <li>The inner method records <code>TransactionSynchronizationManager.isActualTransactionActive()</code>, writes one H2 row, then throws.</li>
+        <li>The controller then invokes that same annotated method externally through the injected Spring bean, which does cross the proxy.</li>
+        <li>The response compares trace + committed rows: self-invocation reports no active Spring transaction. With this demo's default H2/Hikari auto-commit connection, that row survives; the proxied call reports an active transaction and its row disappears after rollback.</li>
+      </ol>
+      <p><b>Conclusion:</b> The annotation is metadata; proxy reachability determines whether the transaction interceptor actually wraps the call. The surviving self-invocation row is demo-specific evidence of running outside Spring's transaction boundary, not a claim that every non-transactional DataSource configuration must auto-commit.</p>
+    usage: true
+  rollbackDefaults():
+    execution: |-
+      <p><b>Concept:</b> Spring's default declarative rollback rule distinguishes unchecked failures from ordinary checked exceptions.</p>
+      <ol>
+        <li><code>failWithRuntimeException()</code> starts a transaction, inserts <code>runtime-write</code>, then throws <code>IllegalStateException</code>.</li>
+        <li>The transaction interceptor selects rollback; the response therefore shows an empty committed-row list for that scenario.</li>
+        <li><code>failWithCheckedException()</code> performs the same write but throws a checked exception.</li>
+        <li>Without an explicit rollback rule, Spring commits that transaction before rethrowing the checked exception; <code>checked-write</code> remains visible.</li>
+      </ol>
+      <p><b>Observation:</b> Both service methods ran with an active transaction, so the different database outcome comes from rollback policy rather than from one method missing transaction interception.</p>
+      <p><b>Conclusion:</b> Exception handling and rollback rules are part of transaction policy, not merely Java error handling.</p>
+    usage: true
+  requiredRollbackOnly():
+    execution: |-
+      <p><b>Concept:</b> Nested <code>REQUIRED</code> scopes are logical scopes sharing one physical transaction.</p>
+      <ol>
+        <li>The outer method starts the transaction and inserts <code>outer-before-inner</code>.</li>
+        <li>A separate proxied bean enters an inner <code>REQUIRED</code> scope, inserts <code>inner-required-write</code>, then throws.</li>
+        <li>The inner interceptor marks the shared transaction rollback-only. The outer method catches the application exception, writes <code>outer-after-catch</code>, and returns normally.</li>
+        <li>At outer completion Spring refuses to report a successful commit, rolls the physical transaction back, and throws <code>UnexpectedRollbackException</code>.</li>
+      </ol>
+      <p><b>Observation:</b> The trace shows the inner failure was caught and the outer method returned normally, yet the final committed-row list is empty and <code>unexpectedRollbackObserved</code> is true.</p>
+      <p><b>Conclusion:</b> Catching the inner exception does not clear rollback-only state on the shared transaction.</p>
+    usage: true
+  requiresNew():
+    execution: |-
+      <p><b>Concept:</b> <code>REQUIRES_NEW</code> suspends the outer transaction and starts an independent physical transaction.</p>
+      <ol>
+        <li>The outer transaction inserts <code>outer-write-that-will-roll-back</code>.</li>
+        <li>A separate bean enters <code>REQUIRES_NEW</code>, uses another transaction/connection, inserts <code>inner-requires-new-committed</code>, and commits.</li>
+        <li>Control resumes in the outer transaction, which then intentionally throws and rolls back.</li>
+      </ol>
+      <p><b>Observation:</b> After outer rollback, the only committed marker is <code>inner-requires-new-committed</code>.</p>
+      <p><b>Conclusion:</b> REQUIRES_NEW is an independent commit boundary, not a savepoint inside the outer physical transaction.</p>
+    usage: true
+  eventPhases():
+    execution: |-
+      <p><b>Concept:</b> <code>@TransactionalEventListener</code> binds listener execution to transaction completion phases.</p>
+      <ol>
+        <li>The commit scenario writes a row, publishes <code>TransactionExperimentEvent</code>, and returns normally.</li>
+        <li>The phase probe records <code>BEFORE_COMMIT</code>, then after successful commit records <code>AFTER_COMMIT</code> and <code>AFTER_COMPLETION</code>.</li>
+        <li>The rollback scenario writes and publishes the same event but then throws.</li>
+        <li>That scenario records <code>AFTER_ROLLBACK</code> and <code>AFTER_COMPLETION</code>; its database row is absent.</li>
+      </ol>
+      <p><b>Conclusion:</b> Transaction-bound events coordinate callback timing with the transaction outcome; the phase trace and committed rows make that timing observable.</p>
+    usage: true
