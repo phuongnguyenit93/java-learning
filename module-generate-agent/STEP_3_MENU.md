@@ -38,7 +38,9 @@ Existing Menu khi có
 → historical structure / reusable content identity / migration evidence
 ```
 
-Nếu Curriculum Map thiếu hoặc ambiguous, report **CURRICULUM CONTEXT GAP**. Nếu ROADMAP chưa approved hoặc Menu cần milestone mà ROADMAP không có, report **ROADMAP GAP**. Không tự bù upstream gap bằng Menu structure.
+Nếu Curriculum Map thiếu hoặc ambiguous, report **CURRICULUM CONTEXT GAP**. Nếu ROADMAP chưa approved hoặc Menu thực sự cần một **learning milestone mới** mà ROADMAP không có, report **ROADMAP GAP**. Không tự bù upstream gap bằng Menu structure.
+
+Không được nhầm `ROADMAP milestone` với `Knowledge H2`. Một approved ROADMAP milestone có thể cần được Step 3 phân rã thành nhiều anchored H2 để learner có đủ vocabulary, mental model và learning sequence trước khi Step 4 viết body. Việc phân rã một milestone đã tồn tại thành các learner-facing Knowledge identities **không phải ROADMAP GAP** nếu không làm thay đổi learning goal, order, ownership hoặc boundary đã được ROADMAP approve.
 
 Không suy đoán các orchestration, preservation, gap-routing hoặc cross-step rules từ trí nhớ khi context không còn chắc chắn.
 
@@ -208,6 +210,118 @@ roadmap → Knowledge structure
 ```
 
 This is the lowest-cost point to correct chapter numbering, file placement and title structure before downstream metadata and relations depend on them.
+
+---
+
+## Pedagogical decomposition từ ROADMAP sang Knowledge H2
+
+Step 3 không chỉ kiểm tra structural correctness của Menu. Step 3 phải bảo đảm **pedagogical structural correctness** trước khi Step 4 bắt đầu viết Knowledge body.
+
+Không áp dụng máy móc:
+
+```text
+1 roadmap milestone
+→ 1 chapter
+→ 1 H2
+```
+
+ROADMAP milestone là learning goal cấp cao. Step 3 chịu trách nhiệm phân rã learning goal đó thành số lượng Knowledge section vừa đủ để learner có thể học theo một chuỗi rõ ràng.
+
+Ví dụ:
+
+```text
+ROADMAP milestone
+→ "Understand why the Spring IoC Container exists"
+
+Step 3 có thể materialize thành:
+→ What Is the Spring IoC Container?
+→ Why Is a Container Needed?
+→ What Is a Spring Bean?
+→ Managed Bean vs Plain Object
+→ What Is IoC?
+→ How Dependency Injection Implements IoC
+```
+
+Các H2 trên vẫn cùng phục vụ một milestone nếu chúng không tạo learning goal mới ngoài ROADMAP.
+
+### Entry-chapter foundation gate
+
+Trước khi finalize chapter đầu tiên hoặc entry chapter tương đương, Step 3 phải kiểm tra learner có stable H2 identities để trả lời những câu hỏi nền tảng sau hay chưa:
+
+```text
+What is this module/core concept?
+        ↓
+Why does it exist?
+        ↓
+What concrete problem exists without it?
+        ↓
+What foundational terms will later sections assume?
+        ↓
+Have those terms been introduced before they are used?
+        ↓
+How do the foundational concepts relate to each other?
+        ↓
+What should the learner study next?
+```
+
+Không bắt buộc mỗi câu hỏi phải là một H2 riêng. Có thể gộp khi một section vẫn có một learning focus rõ ràng, ví dụ `What Is Generics and Why Is It Needed?` hoặc `What Is the Spring IoC Container and Why Is It Needed?`.
+
+Nhưng không được chỉ nhét định nghĩa quan trọng vào một đoạn prose không có stable identity nếu term đó là foundation mà nhiều chapter sau sẽ giả định learner đã hiểu.
+
+### Foundational terminology rule
+
+Step 3 phải lấy terminology ownership từ Curriculum + ROADMAP và hỏi:
+
+```text
+term này có phải learner sẽ gặp lại nhiều lần trong module không?
+term này có phải prerequisite để hiểu chapter sau không?
+module hiện tại có phải primary owner chịu trách nhiệm giới thiệu term này không?
+```
+
+Nếu câu trả lời là có, term đó phải được giới thiệu ở một vị trí learner-facing rõ ràng trước khi downstream section sử dụng nó như vocabulary đã biết.
+
+Ví dụ với `core-container`, nếu Curriculum xác định module này own IoC Container / Bean / Dependency Injection / ApplicationContext thì Step 3 phải bảo đảm các foundation đó được materialize đủ rõ trong Menu/H2 flow; không được để Step 4 lần đầu tiên "cứu" chúng bằng body prose.
+
+### Khi nào là ROADMAP GAP thật sự?
+
+Step 3 chỉ report **ROADMAP GAP** khi việc tạo Menu hợp lý đòi hỏi thay đổi learning journey ở cấp milestone, ví dụ:
+
+```text
+cần thêm một learning goal lớn chưa tồn tại
+milestone order hiện tại làm learner phải dùng prerequisite chưa được học
+approved milestone bỏ sót một domain/concept lớn
+Menu cần một branch/handoff làm thay đổi scope hoặc module boundary
+```
+
+Không report ROADMAP GAP chỉ vì một milestone cần nhiều H2 để dạy đầy đủ:
+
+```text
+milestone đã có đúng learning goal
+        +
+H2 mới chỉ định nghĩa vocabulary / prerequisite / relation
+        +
+không thay đổi ownership / boundary / milestone order
+        ↓
+đây là trách nhiệm bình thường của Step 3
+```
+
+### Step 4 compatibility gate
+
+Trước khi chốt Menu, Step 3 phải tự hỏi:
+
+```text
+Nếu Step 4 chỉ được phép viết/refactor body
+mà không redesign Menu,
+structure hiện tại có đủ để Step 4 thỏa:
+
+WHAT
+→ WHY
+→ RELATION
+→ HOW
+→ EVIDENCE
+```
+
+Nếu câu trả lời là không, phải sửa Menu/H2 ngay trong Step 3 hoặc report upstream gap phù hợp. Không được chuyển một structural pedagogy gap xuống Step 4 rồi kỳ vọng Step 4 tự thêm section ngoài approved skeleton.
 
 ---
 
@@ -525,11 +639,16 @@ Step 3 hoàn thành khi, cho cả new và existing module:
 ```text
 Menu structure tương thích với Step 1 Curriculum
 ROADMAP milestone/order được phản ánh hợp lý
+ROADMAP milestone đã được phân rã thành đủ learner-facing Knowledge identities; không áp dụng máy móc 1 milestone = 1 H2
 chapter order ổn định
 paths ổn định
 localized H1 titles ổn định
 toàn bộ planned anchored H2 identities đã được materialize vào Markdown file
 anchored H2 order/title/id ổn định
+entry chapter có stable H2 foundation đủ để learner hiểu module/core concept trước khi gặp vocabulary nâng cao
+không có foundational term quan trọng bị downstream section sử dụng trước khi được giới thiệu hợp lý
+Curriculum terminology ownership đã được phản ánh trong Menu/H2 flow khi module là primary owner
+Step 4 có thể thỏa WHAT → WHY → RELATION → HOW → EVIDENCE mà không cần redesign Menu
 generateInternalReadmeMenuForModule đã xử lý toàn bộ chapter files của MODULE_LANGUAGE
 internal Menu/details/back-to-top scaffold hợp lệ
 BASE.md đã được author/review cho mọi MODULE_LANGUAGE

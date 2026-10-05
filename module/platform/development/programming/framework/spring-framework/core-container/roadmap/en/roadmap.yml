@@ -43,10 +43,12 @@
 
 roadmap:
   - id: container-purpose
-    title: "Why the Spring IoC Container Exists"
+    title: "What the Spring IoC Container Is and Why It Exists"
     purpose: "Build the initial mental model for IoC, Dependency Injection, and why Spring manages an object graph instead of letting application code construct and locate every dependency itself."
+    relatedKnowledge:
+      - CoreContainer
     objectives:
-      - "Distinguish an ordinary Java object from a bean managed by the Spring container."
+      - "Define the Spring IoC Container as the runtime that creates, configures, assembles, and manages beans, and distinguish a managed bean from an ordinary Java object."
       - "Explain the coupling problems of direct construction and Service Locator that Dependency Injection is intended to reduce."
       - "Understand IoC as the broader principle and Dependency Injection as Spring's primary mechanism for assembling collaborating objects."
       - "Keep the boundary clear: this module teaches the Spring Framework container, not Spring Boot auto-configuration."
@@ -54,6 +56,8 @@ roadmap:
   - id: container-model
     title: "The Container Mental Model"
     purpose: "Understand the path from configuration metadata and BeanDefinition to BeanFactory, ApplicationContext, and bean instances so the rest of the module has one coherent model."
+    relatedKnowledge:
+      - ContainerModel
     dependsOn:
       - container-purpose
     objectives:
@@ -65,6 +69,8 @@ roadmap:
   - id: bean-registration
     title: "Bean Registration and Configuration"
     purpose: "Learn how application components enter the container and how different configuration styles converge on bean definitions before objects are created."
+    relatedKnowledge:
+      - BeanRegistration
     dependsOn:
       - container-model
     objectives:
@@ -74,10 +80,16 @@ roadmap:
       - "Understand configuration composition with @Import and framework-level conditional registration with @Conditional."
       - "Recognize XML and programmatic registration as alternative metadata sources feeding the same container model."
       - "Do not confuse Spring Framework @Conditional with Spring Boot @ConditionalOn... annotations."
+    relatedModules:
+      - routeId: SPRING_BOOT_AUTO_CONFIGURATION
+        label: "Spring Boot Auto-Configuration"
+        note: "Builds on Spring Framework bean registration and conditional infrastructure, while owning Boot-specific @ConditionalOn... rules and automatic configuration."
 
   - id: dependency-resolution
     title: "Dependency Injection and Bean Resolution"
     purpose: "Understand how the container selects dependency candidates, injects collaborators, and reports ambiguity instead of treating @Autowired as magic."
+    relatedKnowledge:
+      - DependencyInjection
     dependsOn:
       - bean-registration
     objectives:
@@ -90,6 +102,8 @@ roadmap:
   - id: scope-and-creation
     title: "Bean Scope and Creation Policy"
     purpose: "Understand how one bean definition can produce objects with different lifetimes and how eager, lazy, or scoped creation changes the object graph."
+    relatedKnowledge:
+      - BeanScope
     dependsOn:
       - dependency-resolution
     objectives:
@@ -99,10 +113,16 @@ roadmap:
       - "Understand how eager singleton creation, @Lazy, and on-demand lookup change when configuration failures become visible."
       - "Understand ObjectProvider/ObjectFactory and scoped proxies as ways to defer dependency resolution; understand @Lookup as runtime-subclass-based method injection with an important limitation: it does not work for bean instances created by @Bean factory methods."
       - "Recognize custom scopes and scoped proxies as container mechanisms rather than business abstractions."
+    relatedModules:
+      - routeId: SPRING_WEB
+        label: "Spring Web"
+        note: "Owns the request/session web lifecycle in which Spring's web-aware scopes are actually used."
 
   - id: bean-lifecycle
     title: "Bean Lifecycle and Startup Ordering"
     purpose: "Follow a bean through creation, dependency population, initialization, post-processing, and destruction so lifecycle callbacks and startup failures are understandable."
+    relatedKnowledge:
+      - BeanLifecycle
     dependsOn:
       - scope-and-creation
     objectives:
@@ -118,6 +138,8 @@ roadmap:
   - id: environment-and-expressions
     title: "Environment, Property Sources, Profiles, and SpEL"
     purpose: "Understand environment-dependent container metadata and value/expression resolution without mixing Spring Framework concepts with Spring Boot Config Data."
+    relatedKnowledge:
+      - EnvironmentAndSpEL
     dependsOn:
       - bean-registration
     objectives:
@@ -127,10 +149,16 @@ roadmap:
       - "Distinguish property placeholders ${...} from Spring Expression Language #{...} and understand how SpEL participates in bean metadata."
       - "Understand SpEL as expression evaluation over an object graph, providing the foundation for later Knowledge on property/method access, bean references, and the evaluation context."
       - "Keep Spring Boot externalized configuration, Config Data, and @ConfigurationProperties outside this module."
+    relatedModules:
+      - routeId: SPRING_BOOT_EXTERNALIZED_CONFIGURATION
+        label: "Spring Boot Externalized Configuration"
+        note: "Owns Config Data, Boot property precedence, @ConfigurationProperties, and Boot-specific binding built on top of Framework Environment/PropertySource concepts."
 
   - id: application-context-services
     title: "ApplicationContext Platform Services"
     purpose: "Extend the mental model from bean factory to application framework context through resource loading, events, internationalization, and context hierarchy."
+    relatedKnowledge:
+      - ApplicationContextServices
     dependsOn:
       - container-model
     objectives:
@@ -139,10 +167,16 @@ roadmap:
       - "Understand MessageSource as Spring Framework's message-resolution and internationalization facility."
       - "Understand parent-child ApplicationContext hierarchy and lookup boundaries conceptually."
       - "Keep MVC/WebFlux request processing and Spring Messaging/STOMP outside this module."
+    relatedModules:
+      - routeId: SPRING_MESSAGING
+        label: "Spring Messaging"
+        note: "Owns Spring's messaging abstractions and WebSocket/STOMP messaging; ApplicationContext events remain local in-process container events."
 
   - id: container-extension-points
     title: "Container Extension Points"
     purpose: "Understand the major hooks infrastructure code uses to change configuration metadata or bean instances without subclassing ApplicationContext."
+    relatedKnowledge:
+      - ExtensionPoints
     dependsOn:
       - bean-lifecycle
       - container-model
@@ -152,10 +186,16 @@ roadmap:
       - "Understand FactoryBean as a container-integrated object factory and distinguish the factory bean from its product."
       - "Recognize ordering, early instantiation, and per-container behavior as practical extension-point pitfalls."
       - "Know when an extension point is appropriate and when application code should remain container-agnostic."
+    relatedModules:
+      - routeId: ASPECT
+        label: "Spring AOP"
+        note: "Uses container-managed beans and post-processing/proxy infrastructure; advice, pointcuts, interception, and self-invocation semantics belong to the AOP module."
 
   - id: container-synthesis
     title: "End-to-End Container Design and Diagnosis"
     purpose: "Connect the full module into a practical mental model for designing object graphs, reading startup failures, and handing concerns to neighboring Spring modules."
+    relatedKnowledge:
+      - ContainerDesignAndDiagnostics
     dependsOn:
       - dependency-resolution
       - bean-lifecycle
@@ -168,3 +208,7 @@ roadmap:
       - "Diagnose common failure classes: missing or ambiguous dependencies, scope mismatch, circular dependencies, lifecycle or initialization failure, and environment misconfiguration."
       - "Keep application code less container-coupled through constructor injection and by avoiding global or static container lookup."
       - "Know when to hand off to validation-data-binding, aspect, transaction-management, web/reactive, and testing rather than expanding this module's scope."
+    relatedModules:
+      - routeId: SPRING_VALIDATION_DATA_BINDING
+        label: "Spring Validation and Data Binding"
+        note: "Is the next Framework learning layer in the curriculum and builds on the container's type, bean, and ApplicationContext foundations."

@@ -43,10 +43,12 @@
 
 roadmap:
   - id: container-purpose
-    title: "Vì sao cần Spring IoC Container"
+    title: "Spring IoC Container là gì và vì sao cần nó"
     purpose: "Xây mô hình tư duy đầu tiên về IoC, Dependency Injection và lý do Spring quản lý đồ thị đối tượng thay vì để ứng dụng tự tạo và tự tìm dependency."
+    relatedKnowledge:
+      - CoreContainer
     objectives:
-      - "Phân biệt đối tượng Java thông thường với bean do Spring container quản lý."
+      - "Định nghĩa Spring IoC Container là runtime tạo, cấu hình, lắp ráp và quản lý bean; đồng thời phân biệt managed bean với object Java thông thường."
       - "Giải thích mức độ phụ thuộc chặt do tự khởi tạo trực tiếp và Service Locator gây ra, và cách Dependency Injection giảm vấn đề đó."
       - "Hiểu IoC là nguyên lý rộng hơn, còn Dependency Injection là cơ chế chính Spring dùng để hiện thực IoC cho đồ thị đối tượng."
       - "Xác định ranh giới: module này dạy Spring Framework container, không dạy Spring Boot auto-configuration."
@@ -54,6 +56,8 @@ roadmap:
   - id: container-model
     title: "Mô hình hoạt động của container"
     purpose: "Hiểu chuỗi từ configuration metadata và BeanDefinition đến BeanFactory, ApplicationContext và bean instance để có mô hình nhất quán cho toàn module."
+    relatedKnowledge:
+      - ContainerModel
     dependsOn:
       - container-purpose
     objectives:
@@ -65,6 +69,8 @@ roadmap:
   - id: bean-registration
     title: "Đăng ký và cấu hình bean"
     purpose: "Học các cách đưa thành phần ứng dụng vào container và cách Spring hợp nhất chúng thành BeanDefinition trước khi tạo đối tượng."
+    relatedKnowledge:
+      - BeanRegistration
     dependsOn:
       - container-model
     objectives:
@@ -74,10 +80,16 @@ roadmap:
       - "Hiểu configuration composition bằng @Import và conditional registration bằng @Conditional ở mức Spring Framework."
       - "Nhận biết XML và programmatic registration là các nguồn metadata khác nhau nhưng cùng đi vào container model."
       - "Không nhầm @Conditional của Spring Framework với các @ConditionalOn... thuộc Spring Boot."
+    relatedModules:
+      - routeId: SPRING_BOOT_AUTO_CONFIGURATION
+        label: "Spring Boot Auto-Configuration"
+        note: "Xây trên bean registration và conditional infrastructure của Spring Framework, còn các @ConditionalOn... và cơ chế tự động cấu hình thuộc Spring Boot."
 
   - id: dependency-resolution
     title: "Dependency Injection và bean resolution"
     purpose: "Hiểu cách container xác định dependency candidate, inject dependency và xử lý trường hợp không có hoặc có nhiều candidate thay vì chỉ ghi nhớ @Autowired."
+    relatedKnowledge:
+      - DependencyInjection
     dependsOn:
       - bean-registration
     objectives:
@@ -90,6 +102,8 @@ roadmap:
   - id: scope-and-creation
     title: "Scope và chính sách tạo bean"
     purpose: "Hiểu BeanDefinition có thể tạo đối tượng với vòng đời khác nhau và việc eager, lazy hay scoped creation ảnh hưởng đồ thị đối tượng thế nào."
+    relatedKnowledge:
+      - BeanScope
     dependsOn:
       - dependency-resolution
     objectives:
@@ -99,10 +113,16 @@ roadmap:
       - "Hiểu eager singleton creation, @Lazy và lookup-on-demand thay đổi thời điểm phát hiện lỗi cấu hình như thế nào."
       - "Hiểu ObjectProvider/ObjectFactory và scoped proxy là các cách trì hoãn dependency resolution; @Lookup cung cấp method injection bằng runtime subclassing nhưng có giới hạn, đặc biệt không hoạt động cho bean instance được tạo bởi @Bean factory method."
       - "Biết khi nào custom scope hoặc scoped proxy là container concern thay vì business abstraction."
+    relatedModules:
+      - routeId: SPRING_WEB
+        label: "Spring Web"
+        note: "Sở hữu request/session web lifecycle, nơi các web-aware scope của Spring thực sự được sử dụng."
 
   - id: bean-lifecycle
     title: "Bean lifecycle và thứ tự khởi tạo"
     purpose: "Theo dõi một bean qua creation, dependency population, initialization, post-processing và destruction để hiểu callback, thứ tự khởi tạo và shutdown."
+    relatedKnowledge:
+      - BeanLifecycle
     dependsOn:
       - scope-and-creation
     objectives:
@@ -118,6 +138,8 @@ roadmap:
   - id: environment-and-expressions
     title: "Environment, PropertySource, Profile và SpEL"
     purpose: "Hiểu cách container đọc environment-dependent metadata và expression/value resolution mà không trộn với Spring Boot Config Data."
+    relatedKnowledge:
+      - EnvironmentAndSpEL
     dependsOn:
       - bean-registration
     objectives:
@@ -127,10 +149,16 @@ roadmap:
       - "Phân biệt property placeholder ${...} với Spring Expression Language #{...} và hiểu SpEL được dùng trong bean metadata như thế nào."
       - "Hiểu SpEL như cơ chế expression evaluation trên đồ thị đối tượng, đủ nền để sau này học property/method access, bean references và evaluation context ở Knowledge."
       - "Giữ ranh giới với Spring Boot externalized configuration, Config Data và @ConfigurationProperties."
+    relatedModules:
+      - routeId: SPRING_BOOT_EXTERNALIZED_CONFIGURATION
+        label: "Spring Boot Externalized Configuration"
+        note: "Sở hữu Config Data, thứ tự ưu tiên property của Boot, @ConfigurationProperties và binding phía Boot xây trên Environment/PropertySource của Framework."
 
   - id: application-context-services
     title: "Các dịch vụ nền của ApplicationContext"
     purpose: "Mở rộng mô hình từ bean factory sang ApplicationContext như một framework context cung cấp resource loading, events, i18n và context hierarchy."
+    relatedKnowledge:
+      - ApplicationContextServices
     dependsOn:
       - container-model
     objectives:
@@ -139,10 +167,16 @@ roadmap:
       - "Hiểu MessageSource cung cấp message resolution/i18n ở mức Spring Framework."
       - "Hiểu parent-child ApplicationContext hierarchy và lookup boundary ở mức khái niệm."
       - "Không kéo MVC/WebFlux request lifecycle hay Spring Messaging/STOMP vào module này."
+    relatedModules:
+      - routeId: SPRING_MESSAGING
+        label: "Spring Messaging"
+        note: "Sở hữu messaging abstractions cùng WebSocket/STOMP messaging; ApplicationContext event vẫn là event nội bộ trong cùng process/container."
 
   - id: container-extension-points
     title: "Extension points của container"
     purpose: "Hiểu những hook chính cho phép framework và infrastructure code thay đổi metadata hoặc bean instances mà không subclass ApplicationContext."
+    relatedKnowledge:
+      - ExtensionPoints
     dependsOn:
       - bean-lifecycle
       - container-model
@@ -152,10 +186,16 @@ roadmap:
       - "Hiểu FactoryBean là abstraction tạo đối tượng thông qua container và phân biệt factory bean với product bean."
       - "Nhận diện ordering, early instantiation và per-container scope của extension points như các bẫy thực tế."
       - "Biết khi nào cần extension point và khi nào mã ứng dụng nên giữ container-agnostic."
+    relatedModules:
+      - routeId: ASPECT
+        label: "Spring AOP"
+        note: "Dùng managed bean cùng post-processing/proxy infrastructure của container; advice, pointcut, interception và self-invocation semantics thuộc module AOP."
 
   - id: container-synthesis
     title: "Thiết kế và chẩn đoán container end-to-end"
     purpose: "Kết nối toàn bộ module thành một mô hình tư duy có thể dùng để thiết kế đồ thị đối tượng, đọc lỗi startup và handoff đúng sang các Spring module lân cận."
+    relatedKnowledge:
+      - ContainerDesignAndDiagnostics
     dependsOn:
       - dependency-resolution
       - bean-lifecycle
@@ -168,3 +208,7 @@ roadmap:
       - "Chẩn đoán các nhóm lỗi phổ biến: missing/ambiguous dependency, scope mismatch, circular dependency, lifecycle/initialization failure và environment misconfiguration."
       - "Giữ mã ứng dụng ít phụ thuộc container bằng constructor injection và tránh global/static container lookup."
       - "Biết điểm handoff sang validation-data-binding, aspect, transaction-management, web/reactive và testing thay vì mở rộng scope module này."
+    relatedModules:
+      - routeId: SPRING_VALIDATION_DATA_BINDING
+        label: "Spring Validation và Data Binding"
+        note: "Là lớp học Framework kế tiếp trong curriculum và xây trên nền type, bean cùng ApplicationContext của Core Container."
