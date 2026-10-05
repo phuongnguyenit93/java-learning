@@ -1,0 +1,68 @@
+ChannelExperimentController:
+  deliverySemantics():
+    execution: |-
+      <p><b>Concept:</b> <code>ExecutorSubscribableChannel</code> delegates through its configured executor; whether that produces asynchronous execution or a thread handoff depends on the concrete executor.</p>
+      <ol>
+        <li><b>Synchronous setup:</b> The service creates <code>new ExecutorSubscribableChannel()</code> with no executor. A handler records its thread and sets a completion flag.</li>
+        <li><b>Synchronous evidence:</b> The REST request thread calls <code>send</code>. The response compares <code>senderThread</code> with <code>syncHandlerThread</code> and records whether the handler completed before <code>send</code> returned.</li>
+        <li><b>Asynchronous setup:</b> A second channel receives a dedicated single-thread <code>ExecutorService</code>. Its handler records the worker thread, signals that it started, and waits on a bounded release latch.
+          <div><i>Source: MessagingExperimentService.channelDeliverySemantics()</i></div>
+          <pre><code>ExecutorSubscribableChannel asynchronousChannel =
+          new ExecutorSubscribableChannel(executor);
+      asynchronousChannel.subscribe(message -&gt; {
+          asyncHandlerThread.set(Thread.currentThread().getName());
+          asyncStarted.countDown();
+          releaseAsyncHandler.await(2, TimeUnit.SECONDS);
+      });</code></pre>
+        </li>
+        <li><b>Timing evidence:</b> The sender calls <code>send</code> while the worker is deliberately unable to complete until released. The response therefore records whether <code>send</code> returned before handler completion for this specifically asynchronous executor.</li>
+        <li><b>Cleanup:</b> The handler is released in all paths; the executor is shut down and must terminate within two seconds.</li>
+        <li><b>Conclusion:</b> No-executor delivery is caller-thread in this channel, while the dedicated executor configuration introduces a real handoff. The experiment intentionally does not generalize that result to every possible <code>Executor</code>.</li>
+      </ol>
+    usage: true
+RSocketExperimentController:
+  interactionCardinality():
+    execution: |-
+      <p><b>Concept:</b> Spring selects the RSocket interaction model from the request payload cardinality and responder return cardinality.</p>
+      <ol>
+        <li><b>Setup:</b> The service builds reusable <code>RSocketStrategies</code>, creates a Spring <code>RSocketMessageHandler</code> responder around three annotated methods, and binds an RSocket TCP server to an ephemeral loopback port.</li>
+        <li><b>Requester:</b> <code>RSocketRequester</code> connects to that port with the same strategies. All three interactions have a three-second terminal timeout.</li>
+        <li><b>One → one:</b> One String request is sent to <code>cardinality.one-one</code>; the responder returns one String and the requester uses <code>retrieveMono</code>. The response labels the observed model <code>request-response</code>.</li>
+        <li><b>One → many:</b> One String is sent to <code>cardinality.one-many</code>; the responder returns a three-element <code>Flux</code> and the requester collects <code>retrieveFlux</code>. This is request-stream.</li>
+        <li><b>Many → many:</b> A three-element <code>Flux</code> is the request data for <code>cardinality.many-many</code>; the responder accepts <code>Flux&lt;String&gt;</code> and maps every value. This is request-channel.
+          <div><i>Source: MessagingExperimentService.rsocketInteractionCardinality()</i></div>
+          <pre><code>requester.route("cardinality.many-many")
+          .data(Flux.just("C1", "C2", "C3"), String.class)
+          .retrieveFlux(String.class)
+          .collectList()
+          .block(RSOCKET_TIMEOUT);</code></pre>
+        </li>
+        <li><b>Observation:</b> Each result contains <code>interaction</code>, <code>inputCount</code>, <code>outputCount</code>, and returned values, making cardinality and interaction type inspectable together.</li>
+        <li><b>Cleanup:</b> The requester and ephemeral server are disposed in <code>finally</code>; server close is also bounded by the same timeout.</li>
+        <li><b>Conclusion:</b> The experiment demonstrates Spring's responder cardinality mapping with actual RSocket frames, not by labeling three ordinary HTTP responses.</li>
+      </ol>
+    usage: true
+StompExperimentController:
+  roundTrip():
+    execution: |-
+      <p><b>Concept:</b> A client message to an application destination travels through Spring's inbound messaging path to an annotated handler; the handler result can then pass through the broker and outbound path to a subscriber.</p>
+      <ol>
+        <li><b>Server setup:</b> <code>StompExperimentConfiguration</code> exposes <code>/messaging-stomp</code>, uses <code>/app</code> for application destinations, and enables the built-in simple broker for <code>/topic</code>. Receive order is preserved for deterministic processing of this single-session experiment.</li>
+        <li><b>Client setup:</b> The REST-triggered service creates a fresh <code>StandardWebSocketClient</code> backed by an experiment-owned daemon executor, wraps it with <code>WebSocketStompClient</code>, and connects to the actual embedded-server port with a three-second bound.</li>
+        <li><b>Subscription and send:</b> The STOMP session subscribes to <code>/topic/experiment.echo</code>, then sends a UUID-correlated String to <code>/app/experiment.echo</code>. Because Spring 6.1 STOMP session operations are synchronous, each subscribe/send action is executed in its own daemon task and bounded to three seconds by the experiment.</li>
+        <li><b>Application handling:</b> <code>StompEchoHandler.echo</code> is mapped to <code>/experiment.echo</code>, records the payload/thread in a probe, and returns <code>echo:&lt;payload&gt;</code> to <code>/topic/experiment.echo</code>.
+          <div><i>Source: StompEchoHandler.echo()</i></div>
+          <pre><code>@MessageMapping("/experiment.echo")
+      @SendTo("/topic/experiment.echo")
+      public String echo(String payload) {
+          stompExperimentProbe.record(payload);
+          return "echo:" + payload;
+      }</code></pre>
+        </li>
+        <li><b>Observation:</b> The response includes the WebSocket endpoint, STOMP session id, send/subscription destinations, correlated sent/received payloads, the actual handler thread, and <code>roundTripMatched</code>.</li>
+        <li><b>Cleanup:</b> Unsubscribe, disconnect, and shutdown of the owned WebSocket-connect executor run independently with bounds so one cleanup failure cannot skip the later steps. The experiment tracks the handshake future and captures the underlying <code>WebSocketSession</code> directly from <code>afterConnectionEstablished</code>, so session ownership does not depend on whether the handshake future can still complete normally. If STOMP connection establishment times out before <code>CONNECTED</code>, or otherwise fails before a <code>StompSession</code> is assigned, the attempt is marked abandoned, pending handshake work is cancelled when possible, and any WebSocket that establishes in the race is closed immediately. A failed abandoned-WebSocket close is retained and reported through the same cleanup-failure path rather than silently ignored. If the experiment already failed, cleanup failures are attached as suppressed failures instead of replacing the primary cause. No receipt is used because Spring's built-in simple broker does not implement STOMP receipts.</li>
+        <li><b>Conclusion:</b> A successful result is evidence of a real WebSocket/STOMP → <code>clientInboundChannel</code> → annotated handler → broker → <code>clientOutboundChannel</code> round trip inside the running application.</li>
+      </ol>
+    usage: true
+StompEchoHandler: {
+  }

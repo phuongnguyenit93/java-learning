@@ -1,0 +1,185 @@
+# <interview-schema>
+# Cấu trúc câu hỏi Interview
+# schema-version: 2
+#
+# questions [kiểu: list; bắt buộc; mặc định: []]
+#   Danh sách câu hỏi Interview của module trong language hiện tại.
+#   mỗi phần tử:
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi phỏng vấn hiển thị cho người học.
+#     answer [kiểu: string; bắt buộc; mặc định: ""]
+#       Câu trả lời tham khảo, chỉ hiển thị khi người học chủ động mở.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu nội dung được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu nội dung đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+# </interview-schema>
+
+questions:
+  - question: >-
+      Khi thiết kế một tính năng real-time, bạn sẽ giải thích ranh giới của Spring Messaging như thế nào và dựa vào đâu để biết khi nào bài toán đã thuộc về module Spring lân cận hoặc thuộc về chính broker?
+    answer: >-
+      Spring Messaging sở hữu mô hình trung lập với transport gồm Message, channel, handler, conversion, interception cùng các mô hình lập trình WebSocket/STOMP và RSocket của Spring Framework. Spring Integration sở hữu Enterprise Integration Patterns và các flow tích hợp, Spring Security sở hữu policy xác thực/phân quyền, Spring Session sở hữu vòng đời HTTP session, còn Spring Web MVC/WebFlux sở hữu web stack của chúng. Durability, acknowledgement, vòng đời queue, clustering và routing đặc thù nhà cung cấp vẫn là trách nhiệm của broker. Thiết kế sẽ dễ phân tích hơn khi mỗi yêu cầu được giao cho đúng tầng thực sự kiểm soát hành vi đó.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Vì sao cấu hình một Executor cho ExecutorSubscribableChannel chưa đủ để khẳng định việc chuyển giao là bất đồng bộ, và những hành vi nào có thể thay đổi khi thật sự chuyển sang luồng khác?
+    answer: >-
+      Khi không có Executor, ExecutorSubscribableChannel gọi handler trên chính luồng gửi. Khi có Executor, việc gọi handler được giao cho executor đó, nhưng một executor như SyncTaskExecutor vẫn có thể chạy đồng bộ trên luồng gọi. Việc chuyển thật sự sang luồng khác có thể làm send trả về trước khi handler hoàn tất, chuyển lỗi sang executor task, làm mất ThreadLocal thông thường và thay đổi ordering theo semantics của executor. Vì vậy cần nhìn vào hành vi của executor cụ thể thay vì chỉ nhìn thấy một đối tượng Executor.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.MessageModel/MessageModel.md"
+      anchor: "channel-delivery-semantics"
+    apiRelated:
+      controller: "ChannelExperimentController"
+      methodSignature: "deliverySemantics()"
+
+  - question: >-
+      Hãy lần theo một STOMP SEND từ WebSocket client tới destination /app, đi qua handler dùng annotation của Spring rồi quay lại subscriber. Thành phần nào sở hữu từng chặng trong luồng này?
+    answer: >-
+      Spring giải mã dữ liệu WebSocket thành STOMP frame, biểu diễn frame đó thành Spring Message rồi đưa qua clientInboundChannel. Destination ứng dụng như /app được route tới handler dùng annotation, chẳng hạn @MessageMapping; kết quả từ handler hoặc message do application gửi sau đó được chuyển về phía broker qua brokerChannel. Simple broker hoặc broker relay thực hiện định tuyến subscription, rồi message phù hợp đi qua clientOutboundChannel tới WebSocket session. Lần theo các channel này đáng tin cậy hơn việc chỉ suy luận từ endpoint URL hoặc annotation.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.StompMessageFlow/StompMessageFlow.md"
+      anchor: "application-message-flow"
+    apiRelated:
+      controller: "StompExperimentController"
+      methodSignature: "roundTrip()"
+
+  - question: >-
+      @MessageMapping, return-value routing, @SendTo hoặc @SendToUser và SimpMessagingTemplate liên hệ với nhau thế nào, và khi nào nên chọn từng cách?
+    answer: >-
+      @MessageMapping xử lý inbound application destination và cho Spring thực hiện argument resolution cùng payload conversion trước khi gọi application code. Return value được convert rồi gửi qua messaging infrastructure; @SendTo tùy biến broker destination, còn @SendToUser nhắm tới user gắn với input message. SimpMessagingTemplate phù hợp khi việc gửi xảy ra ngoài luồng trả về của handler hoặc khi destination cần được chọn bằng code. Đây là các cách đi vào cùng một messaging flow, nên conversion error, handler failure và routing mistake cần được chẩn đoán đúng tại giai đoạn phát sinh.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Bạn sẽ chọn built-in simple broker hay external STOMP broker relay như thế nào, và STOMP acknowledgement hoặc receipt cho thấy điều gì về ranh giới trách nhiệm giữa Spring và broker?
+    answer: >-
+      Simple broker là subscription router chạy trong process, phù hợp cho broadcast cơ bản và không cần cluster, nhưng không cung cấp đầy đủ broker feature như STOMP acknowledgement hoặc receipt và cũng không chia sẻ subscription state giữa nhiều application instance. Broker relay thường phù hợp khi cần scale ngang hoặc cần broker feature đầy đủ hơn, nhưng external broker vẫn quyết định durability, vòng đời queue, acknowledgement semantics và hành vi đặc thù nhà cung cấp. Vì vậy bật relay không tự biến receipt hay acknowledgement thành bảo đảm reliability end-to-end; application, client và cấu hình broker vẫn phải thống nhất hợp đồng delivery mong muốn.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "13.OperationsTestingDecisions/OperationsTestingDecisions.md"
+      anchor: "choose-stomp-broker"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Khi broker bị outage, vì sao Spring STOMP broker relay có thể tự phục hồi system connection nhưng các client session hiện hữu vẫn phải reconnect, và application nên phản ứng vận hành như thế nào?
+    answer: >-
+      Relay duy trì một system connection dùng chung cho traffic xuất phát từ server và các broker connection riêng gắn với từng STOMP client session. Spring tự retry system connection dùng chung, nhưng không tái tạo các broker connection theo từng client, nên client bị ảnh hưởng phải reconnect và tạo session mới. BrokerAvailabilityEvent hữu ích để tạm dừng hoặc từ chối các lần gửi từ server khi system connection chưa sẵn sàng, nhưng việc reconnect tự nó không làm các message sinh ra trong thời gian outage trở nên durable. Application vẫn phải có policy fail, buffer, retry hoặc drop rõ ràng theo business semantics.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "13.OperationsTestingDecisions/OperationsTestingDecisions.md"
+      anchor: "broker-availability-recovery"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Nên phân tích /user destination như thế nào khi một user có nhiều WebSocket session và application chạy trên nhiều node?
+    answer: >-
+      /user destination là địa chỉ logic mà Spring resolve thành các destination gắn với session cụ thể. Mặc định, một message gửi tới authenticated user có thể tới tất cả session đang hoạt động của user đó, còn @SendToUser(broadcast = false) giới hạn handler response về đúng session khởi tạo request. Trong deployment nhiều node, node đang gửi có thể không giữ session đích, nên unresolved user-destination broadcast và user-registry broadcast cho phép các node khác thử resolve thông qua shared broker infrastructure. Cơ chế đó giải quyết việc tìm nơi định tuyến chứ không biến Spring Messaging thành distributed identity hoặc session store.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Interception, executor thread boundary, ordering control, security và HTTP-session integration gặp nhau ở đâu trong một STOMP connection sống lâu, và trách nhiệm nào cần được giữ tách biệt?
+    answer: >-
+      ChannelInterceptor chạy quanh thao tác send của channel, còn ExecutorChannelInterceptor bao quanh handler execution trên executor worker nên phù hợp với execution context gắn theo thread. Inbound và outbound executor chạy song song có thể làm thay đổi thứ tự xử lý, vì vậy các tùy chọn preserve receive/publish order chỉ nên bật khi semantics theo từng session thực sự yêu cầu. Identity thường đi vào từ WebSocket handshake đã xác thực; Spring Security sở hữu authorization policy, còn Spring Session sở hữu phần tích hợp giữa vòng đời HTTP session và WebSocket activity. Dồn các trách nhiệm này vào một interceptor sẽ làm ordering, context propagation và policy khó chẩn đoán hơn.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Trong Spring RSocket, vì sao thay đổi handler signature từ một value sang stream có thể làm thay đổi interaction ở mức protocol, và tại sao cardinality của requester với responder phải tương thích?
+    answer: >-
+      Spring suy ra RSocket interaction từ input/output cardinality thay vì từ tên method. Một input và một output tương ứng request-response; một input và nhiều output tương ứng request-stream; input nhiều value chọn request-channel; trường hợp output bằng zero có thể là fire-and-forget hoặc request-response không trả value tùy operation phía requester. Vì vậy đổi Mono thành Flux có thể thay đổi protocol contract thể hiện trên wire. Cách requester nhận dữ liệu và responder signature phải mô tả cardinality tương thích, nếu không hai peer đang hiểu khác nhau về interaction đang thực hiện.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "12.RSocketResponders/RSocketResponders.md"
+      anchor: "rsocket-interaction-cardinality"
+    apiRelated:
+      controller: "RSocketExperimentController"
+      methodSignature: "interactionCardinality()"
+
+  - question: >-
+      Requester/responder symmetry trong RSocket có nghĩa gì, và @ConnectMapping cùng metadata tham gia vào connection lifecycle như thế nào mà không trở thành handler cho request thông thường?
+    answer: >-
+      Sau setup, mỗi peer đều có thể khởi tạo RSocket interaction, vì vậy server có thể giữ RSocketRequester gắn với peer rồi gọi các route do client responder cung cấp. @ConnectMapping xử lý frame cấp connection như SETUP và METADATA_PUSH, phải hoàn tất setup trước khi các request thông thường tiếp tục và không được trả application response data. Routing, security material, tracing cùng các metadata khác được encode theo MIME-type contract và cần strategy tương thích để decode hoặc extract thành Spring header. Vì vậy setup và metadata thuộc connection contract, còn @MessageMapping tiếp tục xử lý request interaction thông thường.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Nếu messaging application chạy đúng ở môi trường development nhưng lỗi dưới tải lớn, bạn sẽ kiểm tra những vấn đề vận hành và testing nào trước khi thay đổi business logic?
+    answer: >-
+      Trước hết cần xem executor capacity, queue growth, blocking work, rejection behavior và chi phí fan-out trên clientInboundChannel/clientOutboundChannel. Với STOMP/WebSocket, cần kiểm tra slow client, send-time/send-buffer limit, message-size limit, broker availability, connection lifecycle và broker stats; với RSocket còn phải xem demand, cancellation, codec, metadata và requester lifecycle. Focused test nên kiểm tra routing, conversion, handler và infrastructure mà không bắt buộc mở network khi có thể, còn một tập end-to-end nhỏ nên chứng minh wiring WebSocket/STOMP hoặc RSocket thật. Load test cần dùng payload size, connection count và slow-consumer pattern gần production vì giới hạn tài nguyên thường hỏng trước business handler.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Với một hệ thống mới, bạn sẽ chọn raw WebSocket, STOMP over WebSocket, RSocket hay handoff sang Spring Integration như thế nào, và sau khi đã chọn STOMP vẫn còn quyết định kiến trúc nào phải đưa ra riêng?
+    answer: >-
+      Raw WebSocket phù hợp khi application muốn tự định nghĩa duplex text/binary protocol và chấp nhận tự sở hữu framing, routing, error cùng compatibility. STOMP phù hợp với destination/subscription và broker-oriented pub/sub; RSocket phù hợp với requester/responder multiplexed và reactive streaming có network-level demand. Khi bài toán chính trở thành ghép adapter, router, filter, transformation và nhiều external system thành flow, phạm vi Spring Integration sẽ phù hợp hơn. Nếu chọn STOMP, thiết kế vẫn phải quyết định riêng giữa simple broker chạy trong process và external broker relay dựa trên yêu cầu scale cùng delivery semantics.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""

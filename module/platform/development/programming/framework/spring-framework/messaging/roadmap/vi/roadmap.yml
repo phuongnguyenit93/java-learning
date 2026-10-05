@@ -1,0 +1,210 @@
+# <roadmap-schema>
+# Cấu trúc Roadmap Module
+# schema-version: 1
+#
+# YAML CONTRACT
+# roadmap: Danh sách milestone cấp cao của roadmap cho language hiện tại.
+#
+# - id [string, required]: ID ổn định và duy nhất của milestone trong roadmap language hiện tại.
+# - title [string, required]: Tên milestone hiển thị cho learner.
+# - purpose [string, required]: Milestone này tồn tại để learner hiểu hoặc đạt được điều gì.
+# - dependsOn [list, optional]: Danh sách id milestone prerequisite khi dependency không thể hiện đủ chỉ bằng thứ tự item.
+# - objectives [list, optional]: Các learning objective cấp milestone; không dùng để liệt kê mọi fact/API/syntax nhỏ.
+# - relatedKnowledge [list, optional]: Danh sách Knowledge category id trong chính module hiện tại hỗ trợ milestone. Portal hiển thị danh sách này ở phía đối diện milestone và click item sẽ điều hướng sang Knowledge category tương ứng.
+# - relatedModules [list, optional]: Các module liên quan hiển thị ở Level 2 của Portal. Mỗi item dùng routeId bắt buộc và có thể có label/note localized; relation này chỉ để điều hướng, không tạo child milestone hoặc thay đổi learning order.
+#
+# ROADMAP THINKING FRAMEWORK
+# PURPOSE
+#   - Topic/module này là gì?
+#   - Vì sao nó tồn tại?
+#   - Không có nó thì learner gặp vấn đề gì?
+# FOUNDATION
+#   - Learner cần prerequisite hoặc mental model nào trước?
+# CORE MODEL
+#   - Những abstraction hoặc building block lớn nào tạo nên chủ đề này?
+# MECHANICS
+#   - Nó hoạt động như thế nào ở mức language/runtime/API phù hợp với module?
+# USAGE
+#   - Nó được dùng như thế nào trong code thực tế?
+# DECISION / TRADE-OFF
+#   - Khi nào nên chọn cơ chế này thay vì cơ chế khác?
+#   - Khi nào không nên dùng?
+# FAILURE / PITFALL
+#   - Những sai lầm, compile-time failure hoặc runtime failure nào đáng biết?
+# INTEGRATION
+#   - Chủ đề này kết nối với những concept/module lân cận nào?
+# SYNTHESIS
+#   - Sau cùng learner phải giữ mental model end-to-end nào?
+#
+# Mỗi language tự chịu trách nhiệm cho roadmap của chính nó. Không suy luận hoặc đồng bộ cấu trúc từ roadmap của language khác.
+# Thứ tự item trong roadmap chính là thứ tự học mặc định. Chỉ dùng dependsOn khi cần biểu diễn dependency rõ hơn thứ tự tuyến tính.
+# Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
+# </roadmap-schema>
+
+roadmap:
+  - id: messaging-purpose-and-boundaries
+    title: Mục đích và ranh giới của Spring Messaging
+    purpose: Xây dựng mental model về lý do Spring Framework cần các abstraction nhắn tin trung lập với transport và xác định rõ ranh giới với web request-response, Spring Integration, các project theo broker, nền tảng reactive và protocol specification.
+    objectives:
+      - Giải thích vấn đề được giải quyết khi giao tiếp ứng dụng được biểu diễn bằng message thay vì coupling trực tiếp qua lời gọi method hoặc HTTP request-response.
+      - Phân biệt nền tảng Spring Messaging với Enterprise Integration Patterns của Spring Integration và các abstraction chuyên biệt cho Kafka, AMQP hoặc JMS.
+      - Nhận ra WebSocket/STOMP và RSocket là hai programming model nhắn tin khác nhau cùng tái sử dụng hạ tầng Spring Messaging.
+      - Xác định khi nào phải handoff sang module web, reactive, security, session, broker hoặc integration-pattern lân cận.
+    relatedKnowledge:
+      - SpringMessaging
+    relatedModules:
+      - routeId: SPRING_INTEGRATION
+        label: Spring Integration
+        note: Xây dựng Enterprise Integration Patterns trên các primitive của Spring Messaging thay vì sở hữu lại foundation này.
+
+  - id: message-model-and-channels
+    title: Mô hình Message, Channel và Handler
+    purpose: Hiểu các building block cốt lõi giúp Spring Messaging tách rời producer, hạ tầng định tuyến và consumer.
+    objectives:
+      - Mô hình hóa message thành payload và headers, đồng thời hiểu vì sao việc tạo và truy cập header là một concern rõ ràng.
+      - Giải thích vai trò của MessageChannel, SubscribableChannel, MessageHandler và cơ chế delivery qua channel.
+      - Phân biệt handoff đồng bộ với delivery bất đồng bộ dựa trên executor và hệ quả đối với thread cùng failure handling.
+      - Hiểu vị trí của message conversion và channel interception mà không biến roadmap thành danh sách API.
+    relatedKnowledge:
+      - MessageModel
+
+  - id: websocket-transport-foundation
+    title: Nền tảng Spring WebSocket Transport
+    purpose: Kết nối messaging model trừu tượng với WebSocket support trên Servlet stack của Spring nhưng vẫn giữ protocol theory tổng quát và reactive-stack detail ở đúng owner.
+    objectives:
+      - Giải thích lifecycle từ WebSocket handshake tới session cùng vai trò của WebSocketHandler và WebSocketSession trong Spring.
+      - Hiểu raw text/binary handling, session lifecycle, handshake customization, origin considerations và SockJS fallback ở mức conceptual.
+      - Giải thích vì sao raw WebSocket chỉ định nghĩa transport chứ không định nghĩa application message semantics, từ đó cần sub-protocol cấp cao như STOMP.
+      - Nhận biết ranh giới giữa Servlet-stack Spring WebSocket APIs trong module này và reactive WebSocket programming model thuộc Spring WebFlux.
+    relatedKnowledge:
+      - WebSocketFoundation
+    relatedModules:
+      - routeId: SPRING_WEB
+        label: Spring Web
+        note: Sở hữu Servlet request-response stack tham gia vào bước WebSocket upgrade ban đầu và web infrastructure xung quanh.
+      - routeId: SPRING_REACTIVE
+        label: Spring Reactive
+        note: Sở hữu reactive WebSocket programming model và các concern web dựa trên Reactor.
+
+  - id: stomp-and-simple-messaging-model
+    title: STOMP và Simple Messaging Model
+    purpose: Hiểu cách STOMP bổ sung application-level messaging semantics trên WebSocket và cách Spring biểu diễn các semantics đó bằng simple-messaging infrastructure.
+    objectives:
+      - Giải thích STOMP frame, destination, subscription, session, header, heartbeat và receipt ở mức đủ để suy luận Spring behavior.
+      - Phân biệt application destination với broker destination và hiểu destination prefix là routing rule chứ không tự mang semantics queue/topic.
+      - Hiểu các simple-messaging concept của Spring, gồm destination-aware headers và user/session-oriented messaging.
+      - Liên hệ STOMP transport frame với Spring Message mà không biến roadmap thành inventory của từng protocol command.
+    relatedKnowledge:
+      - StompModel
+
+  - id: spring-stomp-message-flow
+    title: Luồng STOMP Message End-to-End trong Spring
+    purpose: Hình thành mô hình server-side hoàn chỉnh về cách STOMP-over-WebSocket message đi từ client qua Spring tới application handler hoặc broker rồi quay lại client.
+    objectives:
+      - Theo dõi client message qua clientInboundChannel, annotation-based application handling hoặc broker routing, rồi qua clientOutboundChannel.
+      - Giải thích vai trò của brokerChannel đối với message được tạo từ server-side application component.
+      - Hiểu về mặt conceptual hạ tầng được EnableWebSocketMessageBroker và WebSocketMessageBrokerConfigurer lắp ráp.
+      - Dùng message-flow model để chẩn đoán routing mistake thay vì chỉ suy luận từ annotation hoặc endpoint URL.
+    relatedKnowledge:
+      - StompMessageFlow
+
+  - id: stomp-application-message-handling
+    title: Xử lý và gửi STOMP Application Message
+    purpose: Hiểu cách Spring ánh xạ messaging destination vào application code và cách application component gửi reply, broadcast, error cùng user-targeted message.
+    objectives:
+      - Giải thích annotated handling model xoay quanh MessageMapping, subscription handling, destination variable, payload conversion và message-level exception handling.
+      - Hiểu return-value routing qua SendTo và SendToUser mà không nhầm application handler với message broker.
+      - Giải thích khi nào application code gửi message chủ động qua SimpMessagingTemplate.
+      - Suy luận conversion failure, handler exception và destination mismatch như các phần của message-processing pipeline.
+    relatedKnowledge:
+      - StompApplicationHandling
+
+  - id: broker-routing-and-user-destinations
+    title: Broker Routing, Destination và User Messaging
+    purpose: Hiểu cách Spring tách application routing khỏi subscription broadcasting và cách broker choice thay đổi capability, topology cùng khả năng scale.
+    objectives:
+      - So sánh built-in simple broker với external STOMP broker relay và hiểu giới hạn chức năng cùng clustering của simple broker.
+      - Giải thích application prefix, broker prefix, subscription routing và hệ quả của destination convention.
+      - Hiểu user destination, per-session resolution, người dùng có nhiều session và unresolved-user routing trong multi-application deployment.
+      - Nhận biết lúc queue lifecycle, acknowledgement, durability và vendor-specific broker behavior rời khỏi ownership của Spring Framework.
+    relatedKnowledge:
+      - BrokerRouting
+
+  - id: lifecycle-interception-ordering-and-boundaries
+    title: STOMP Lifecycle, Interception, Ordering và ranh giới Security
+    purpose: Học runtime behavior của WebSocket/STOMP giúp long-lived messaging session hoạt động đúng và quan sát được mà không hấp thụ curriculum của Spring Security hoặc Spring Session.
+    objectives:
+      - Dùng messaging/WebSocket lifecycle events để suy luận connection, subscription, broker availability và disconnect behavior.
+      - Hiểu lifecycle của WebSocketStompClient và StompSession, gồm connection handling, heartbeat, receipt cùng client-side subscription/send flow ở mức abstraction của Spring.
+      - Hiểu ChannelInterceptor và ExecutorChannelInterceptor như các hook trong message pipeline cùng khác biệt về thread boundary.
+      - Giải thích vì sao channel execution đồng thời có thể làm thay đổi thứ tự receive/publish và khi nào preserve-order option của Spring cần thiết.
+      - Hiểu cách identity từ WebSocket handshake tham gia vào messaging và xác định authorization là ownership của Spring Security.
+      - Nhận ra Spring Session là neighboring concern khi WebSocket activity cần tham gia vào HTTP session lifecycle.
+    relatedKnowledge:
+      - StompClientLifecycle
+      - StompLifecycleInterception
+    relatedModules:
+      - routeId: SPRING_SECURITY_FUNDAMENTALS
+        label: Spring Security Fundamentals
+        note: Sở hữu message authorization và các security policy được áp qua Spring Security integration.
+      - routeId: SPRING_SESSION
+        label: Spring Session
+        note: Sở hữu distributed/session-lifecycle concern khi WebSocket activity cần tham gia quản lý HTTP session.
+
+  - id: rsocket-interaction-model
+    title: RSocket Interaction Model và ranh giới Reactive
+    purpose: Xây dựng mental model tối thiểu về RSocket protocol cần để hiểu requester/responder support của Spring Framework mà không biến module thành khóa học sâu về protocol.
+    objectives:
+      - Giải thích bốn interaction model request-response, fire-and-forget, request-stream và request-channel.
+      - Hiểu tính đối xứng requester/responder và việc cả hai peer có thể khởi tạo interaction sau connection setup.
+      - Liên hệ route và metadata với message routing và conversion trong Spring.
+      - Giải thích vì sao streaming interaction dựa trên Reactive Streams semantics nhưng để Reactor và backpressure fundamentals cho owner reactive.
+      - Phân biệt RSocket application semantics với transport TCP hoặc WebSocket bên dưới.
+    relatedKnowledge:
+      - RSocketInteraction
+    relatedModules:
+      - routeId: SPRING_REACTIVE
+        label: Spring Reactive
+        note: Cung cấp reactive-programming foundation cần để suy luận streaming RSocket interaction và backpressure.
+
+  - id: spring-rsocket-programming-model
+    title: Spring RSocket Requester và Responder Programming Model
+    purpose: Hiểu cách Spring biến RSocket interaction thành requester API mức object, annotated responder và declarative service contract.
+    objectives:
+      - Giải thích RSocketRequester connection setup, route selection, payload, metadata, retrieval và requester lifecycle.
+      - Hiểu cách RSocketStrategies tập trung codec, route matching, metadata extraction và reactive adaptation.
+      - Giải thích annotated responder với MessageMapping và ConnectMapping cùng cách Spring suy ra interaction behavior từ request/response cardinality.
+      - Hiểu RSocketExchange service interface và RSocketServiceProxyFactory như declarative requester model.
+      - Nhận biết Spring Boot auto-configuration, Spring Security RSocket policy và Spring Integration RSocket gateway thuộc owner khác.
+    relatedKnowledge:
+      - RSocketRequester
+      - RSocketResponders
+    relatedModules:
+      - routeId: SPRING_INTEGRATION
+        label: Spring Integration
+        note: Sở hữu RSocket gateway khi RSocket được dùng như endpoint trong enterprise integration flow.
+      - routeId: SPRING_SECURITY_FUNDAMENTALS
+        label: Spring Security Fundamentals
+        note: Sở hữu authentication/authorization policy cho RSocket thay vì core requester/responder programming model.
+
+  - id: operations-scaling-testing-and-synthesis
+    title: Vận hành, Scaling, Testing và tổng hợp quyết định
+    purpose: Chuyển các message-flow mental model thành quyết định thực tế về capacity, reliability, observability, testing và messaging topology phù hợp cho production.
+    objectives:
+      - Suy luận inbound/outbound channel executor, blocking work, send-time limit, send-buffer limit, message-size limit và connection lifecycle.
+      - Giải thích heartbeat, broker availability, connection loss, slow client và delivery failure từ góc nhìn vận hành.
+      - Hiểu vì sao external STOMP broker relay thường là hướng đi cho clustered STOMP broadcasting và điểm mà broker-specific scaling behavior tiếp quản.
+      - Phân biệt focused handler/infrastructure test với end-to-end WebSocket/STOMP hoặc RSocket test và liên hệ chúng với Spring TestContext.
+      - Chủ động chọn raw WebSocket, STOMP messaging, Spring RSocket hoặc handoff sang Spring Integration; nếu chọn STOMP thì tách riêng quyết định dùng built-in simple broker hay external broker relay cho deployment.
+    relatedKnowledge:
+      - OperationsTestingDecisions
+    relatedModules:
+      - routeId: SPRING_CONCURRENCY
+        label: Spring Concurrency
+        note: Cung cấp nền tảng sâu hơn về Spring-managed executor và scheduling được dùng bởi messaging channel cùng heartbeat.
+      - routeId: SPRING_TESTING
+        label: Spring Testing
+        note: Cung cấp TestContext foundation ở cấp framework cho focused test và integration-style messaging test.
+      - routeId: SPRING_INTEGRATION
+        label: Spring Integration
+        note: Trở thành owner tiếp theo khi bài toán là composition của enterprise integration flow thay vì bản thân Framework messaging programming model.

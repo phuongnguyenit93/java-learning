@@ -1,0 +1,287 @@
+# <quiz-schema>
+# Cấu trúc câu hỏi Quiz
+# schema-version: 3
+#
+# questions [kiểu: list; bắt buộc; mặc định: []; duy nhất theo: id]
+#   Danh sách câu hỏi Quiz của module trong language hiện tại.
+#   mỗi phần tử:
+#     id [kiểu: string; bắt buộc; mặc định: ""]
+#       ID ổn định và duy nhất của câu hỏi.
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi hiển thị cho người học.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu câu hỏi được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu câu hỏi đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+#     answers [kiểu: list; bắt buộc; số phần tử: 4; mặc định: []; duy nhất theo: id]
+#       Chính xác bốn đáp án. ID A/B/C/D là identity nội bộ ổn định, không phải vị trí hiển thị sau khi frontend shuffle.
+#       mỗi phần tử:
+#         id [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#           Identity ổn định của đáp án.
+#         answer [kiểu: string; bắt buộc; mặc định: ""]
+#           Nội dung đáp án hiển thị cho người học.
+#         explanation [kiểu: string; bắt buộc; mặc định: ""]
+#           Giải thích hiển thị khi người học chọn đáp án này, bất kể đúng hay sai.
+#     correctAnswerId [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#       ID nội bộ của đáp án đúng. Frontend kiểm tra bằng identity này sau khi shuffle.
+# </quiz-schema>
+
+questions:
+  - id: messaging-transport-neutral-foundation
+    question: "Phát biểu nào mô tả đúng nhất nền tảng mà Spring Messaging cung cấp?"
+    answers:
+      - {id: A, answer: "Nó đảm bảo mọi message đều được lưu bền vững trước khi consumer nhìn thấy.", explanation: "Sai. Persistence và durability phụ thuộc broker hoặc hạ tầng cụ thể, không phải contract cốt lõi của Message và channel."}
+      - {id: B, answer: "Nó cung cấp abstraction trung lập với transport cho message, channel, handler, conversion và interception.", explanation: "Đúng. Nền tảng tạo một vocabulary chung cho messaging mà không ép dùng một transport, broker hay threading model cụ thể."}
+      - {id: C, answer: "Nó định nghĩa STOMP command và RSocket frame làm wire format chung cho mọi ứng dụng Spring.", explanation: "Sai. STOMP và RSocket là các protocol layer riêng biệt, nằm phía trên hoặc bên cạnh transport-neutral Spring Messaging model."}
+      - {id: D, answer: "Nó biến mọi giao tiếp thành bất đồng bộ mỗi khi application code gửi qua MessageChannel.", explanation: "Sai. MessageChannel có thể delivery ngay trên caller thread; asynchronous execution phụ thuộc channel và executor cụ thể."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.Introduction/SpringMessaging.md", anchor: "spring-messaging-foundation"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: channel-executor-delivery-semantics
+    question: "Một ExecutorSubscribableChannel được tạo với một Executor. Cần kiểm tra điều gì trước khi kết luận handler chạy bất đồng bộ?"
+    answers:
+      - {id: A, answer: "Executor dùng một worker thread hay một pool gồm nhiều worker thread.", explanation: "Sai. Pool size ảnh hưởng concurrency, nhưng cả hai thiết kế vẫn có thể hand off công việc khỏi sender thread."}
+      - {id: B, answer: "Executor có preserve submission order khi nhiều task được queue hay không.", explanation: "Sai. Ordering policy không tự cho biết task chạy inline hay được hand off sang thread khác."}
+      - {id: C, answer: "Thread do Executor tạo là daemon thread hay non-daemon thread.", explanation: "Sai. Thread lifetime policy tách biệt với việc Executor có thực hiện thread handoff hay không."}
+      - {id: D, answer: "Concrete Executor có schedule công việc sang thread khác hay chạy task inline.", explanation: "Đúng. Một Executor như SyncTaskExecutor vẫn có thể chạy trên calling thread, vì vậy concrete executor semantics mới quyết định thread handoff."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.MessageModel/MessageModel.md", anchor: "channel-delivery-semantics"}
+    apiRelated: {controller: "ChannelExperimentController", methodSignature: "deliverySemantics()"}
+
+  - id: channel-async-failure-visibility
+    question: "Một channel dùng executor thực sự dispatch handler sang thread khác. Handler lỗi sau khi send đã trả về. Kết luận nào chính xác nhất?"
+    answers:
+      - {id: A, answer: "Sender có thể đã return thành công, nên handler failure xảy ra sau cần cơ chế lỗi dành cho asynchronous path.", explanation: "Đúng. Khi handler chạy bất đồng bộ, send có thể kết thúc trước lúc handler lỗi nên failure không nhất thiết quay về original call path."}
+      - {id: B, answer: "Failure bắt buộc phải được rethrow đồng bộ từ lời gọi send ban đầu vì MessageChannel đảm bảo điều đó.", explanation: "Sai. MessageChannel không đảm bảo synchronous error propagation khi handler work được dispatch bất đồng bộ."}
+      - {id: C, answer: "Chỉ cần có MessageHeaders.errorChannel thì handler lỗi sẽ tự retry cho tới khi thành công.", explanation: "Sai. Core messaging abstraction không cung cấp universal retry chỉ vì header đó tồn tại."}
+      - {id: D, answer: "Failure luôn được chuyển thành STOMP ERROR frame kể cả khi không có STOMP transport.", explanation: "Sai. STOMP ERROR là cơ chế protocol-specific, không phải generic MessageChannel failure contract."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.MessageModel/MessageModel.md", anchor: "messaging-errors"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: websocket-vs-stomp-layering
+    question: "Vì sao ứng dụng có thể thêm STOMP phía trên WebSocket thay vì chỉ dùng raw WebSocket frame?"
+    answers:
+      - {id: A, answer: "STOMP biến WebSocket thành durable broker để message sống qua application restart.", explanation: "Sai. STOMP thêm messaging semantics; durability phụ thuộc broker capability và application design."}
+      - {id: B, answer: "STOMP là bắt buộc để WebSocket có thể mang text và binary data theo hai chiều.", explanation: "Sai. Raw WebSocket đã hỗ trợ full-duplex text và binary message mà không cần STOMP."}
+      - {id: C, answer: "STOMP thêm destination, subscription, command, header, receipt và broker-oriented routing.", explanation: "Đúng. WebSocket cung cấp duplex transport, còn STOMP định nghĩa application messaging semantics ở mức cao hơn."}
+      - {id: D, answer: "STOMP loại bỏ nhu cầu application-level routing vì mọi frame đều được gửi tới tất cả client đang kết nối.", explanation: "Sai. STOMP đưa vào explicit routing và subscription semantics thay vì broadcast mọi frame một cách vô điều kiện."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.StompModel/StompModel.md", anchor: "stomp-purpose"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: stomp-routing-prefix-boundary
+    question: "Một ứng dụng Spring STOMP dùng `/app` làm application prefix và `/topic` làm broker prefix. Cấu hình đó chủ yếu quyết định điều gì?"
+    answers:
+      - {id: A, answer: "Nó làm mọi `/topic` destination trở nên durable và mọi `/app` destination trở nên transient.", explanation: "Sai. Durability là broker capability; prefix text không tự tạo persistence semantics."}
+      - {id: B, answer: "Nó tách message route tới application handler khỏi message route tới broker đã cấu hình.", explanation: "Đúng. Prefix là routing rule dùng để phân trách nhiệm cho application handling hoặc broker handling."}
+      - {id: C, answer: "Nó chọn WebSocket handshake sẽ dùng HTTP GET hay HTTP POST.", explanation: "Sai. Destination prefix chỉ có ý nghĩa sau khi connection đã được thiết lập và không chọn HTTP upgrade method."}
+      - {id: D, answer: "Nó buộc mọi reply của application handler quay lại đúng destination của SEND frame đầu vào.", explanation: "Sai. Reply destination có thể do annotation, header, template hoặc broker routing quyết định; application prefix không tự cố định điều đó."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.StompMessageFlow/StompMessageFlow.md", anchor: "destination-prefixes"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: stomp-application-round-trip-flow
+    question: "Client subscribe `/topic/experiment.echo` rồi gửi message tới `/app/experiment.echo`. Handler tương ứng trả kết quả về topic. Flow nào mô tả đúng nhất round trip này?"
+    answers:
+      - {id: A, answer: "SEND frame đi thẳng vào clientOutboundChannel và chờ ở đó; application handler chỉ chạy sau khi subscriber đã nhận message.", explanation: "Sai. Inbound application message trước tiên đi qua inbound path tới application handling, không đi thẳng ra outbound client channel."}
+      - {id: B, answer: "Simple broker gọi trực tiếp method `@MessageMapping` và bỏ qua clientInboundChannel.", explanation: "Sai. Message có application destination được dispatch qua Spring inbound messaging infrastructure trước khi annotated handler được gọi."}
+      - {id: C, answer: "WebSocket transport echo payload trước, rồi Spring mới chuyển echoed frame thành Message cho handler.", explanation: "Sai. WebSocket là transport; application flow được điều khiển bởi STOMP destination routing bên trong Spring."}
+      - {id: D, answer: "Message đi vào clientInboundChannel, tới handler, rồi result đi qua broker và clientOutboundChannel tới subscriber.", explanation: "Đúng. Đây là application-destination path end-to-end mà STOMP round-trip experiment của module quan sát."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.StompMessageFlow/StompMessageFlow.md", anchor: "application-message-flow"}
+    apiRelated: {controller: "StompExperimentController", methodSignature: "roundTrip()"}
+
+  - id: message-mapping-application-role
+    question: "Vai trò chính của một method `@MessageMapping` trong Spring STOMP programming model là gì?"
+    answers:
+      - {id: A, answer: "Nó xử lý application-destination message và cho phép application code tạo reply hoặc gửi message khác.", explanation: "Đúng. `@MessageMapping` là phía application-handler của destination routing, tương tự một message-oriented controller method."}
+      - {id: B, answer: "Nó tạo và quản lý durable broker queue cho mọi destination pattern khai báo trên method.", explanation: "Sai. Broker queue lifecycle và durability thuộc broker, không thuộc annotated application method."}
+      - {id: C, answer: "Nó đăng ký WebSocket HTTP upgrade endpoint được dùng trước STOMP CONNECT.", explanation: "Sai. STOMP endpoint được đăng ký qua StompEndpointRegistry, không phải qua `@MessageMapping`."}
+      - {id: D, answer: "Nó thay thế client subscription bằng cách push mọi handler result tới tất cả session đang kết nối.", explanation: "Sai. Handler result được route theo reply destination và broker subscription; `@MessageMapping` không loại bỏ subscription semantics."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.StompApplicationHandling/StompApplicationHandling.md", anchor: "message-mapping"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: simple-broker-feature-boundary
+    question: "Ứng dụng cần STOMP receipt, acknowledgement mode và broker routing giữa nhiều application instance. Từ giới hạn của Spring built-in simple broker, nên kết luận thế nào?"
+    answers:
+      - {id: A, answer: "Simple broker đã có đủ các capability đó ngay khi cấu hình TaskScheduler.", explanation: "Sai. TaskScheduler có thể hỗ trợ heartbeat nhưng không bổ sung full receipt, acknowledgement hay clustered broker semantics."}
+      - {id: B, answer: "Các capability đó nên được tự xây bằng cách thêm nhiều `@MessageMapping` method quanh simple broker.", explanation: "Sai. Application handler không biến in-process simple broker thành một full STOMP broker."}
+      - {id: C, answer: "Dùng external STOMP-capable broker qua Spring broker relay khi các broker feature đó là yêu cầu.", explanation: "Đúng. Broker relay giữ Spring application model nhưng giao full broker capability và shared routing cho external broker."}
+      - {id: D, answer: "Ứng dụng phải bỏ STOMP và chuyển sang raw WebSocket vì external broker không thể hỗ trợ receipt.", explanation: "Sai. Full STOMP broker có thể hỗ trợ receipt và acknowledgement thông qua relay."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.BrokerRouting/BrokerRouting.md", anchor: "simple-broker-limits"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: broker-relay-connection-recovery
+    question: "STOMP broker relay mất TCP connectivity tới external broker. Operator nên kỳ vọng recovery behavior nào từ Spring?"
+    answers:
+      - {id: A, answer: "Mọi client broker connection được khôi phục trong suốt với cùng STOMP session và subscription.", explanation: "Sai. Per-client broker connection không được tự động reconnect; client bị ảnh hưởng phải reconnect và tạo lại session state."}
+      - {id: B, answer: "Relay retry shared system connection; client-specific broker connection cần client tự reconnect.", explanation: "Đúng. Recovery bất đối xứng giữa shared system connection và independent per-client broker connection."}
+      - {id: C, answer: "Chỉ client-specific broker connection được retry; system connection sẽ down cho tới khi restart application.", explanation: "Sai. Spring relay tự động cố gắng thiết lập lại shared system connection."}
+      - {id: D, answer: "Spring tự chuyển relay thành built-in simple broker cho tới khi external broker healthy trở lại.", explanation: "Sai. Broker relay failure không tự động thay đổi broker topology đã cấu hình."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.BrokerRouting/BrokerRouting.md", anchor: "broker-relay-connections"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: broker-outage-send-policy
+    question: "Một service publish server-originated STOMP message qua broker relay và BrokerAvailabilityEvent báo broker unavailable. Design response nào phù hợp nhất?"
+    answers:
+      - {id: A, answer: "Dùng outage policy rõ ràng: fail fast, bounded durable buffering, idempotent retry hoặc intentional drop.", explanation: "Đúng. Relay reconnect không làm message phát sinh trong outage trở nên durable, nên application phải định nghĩa cách xử lý work được tạo lúc broker unavailable."}
+      - {id: B, answer: "Cứ tiếp tục send bình thường vì BrokerAvailabilityEvent chỉ mang tính thông tin và relay sẽ lưu mọi message tới khi recovery.", explanation: "Sai. Relay không cung cấp automatic durable store cho application message phát sinh trong outage."}
+      - {id: C, answer: "Đổi tất cả destination sang `/user` vì user destination bypass broker relay.", explanation: "Sai. User destination là routing feature và không cung cấp general broker-outage bypass."}
+      - {id: D, answer: "Chỉ dựa vào health check của WebSocket endpoint vì endpoint mở được chứng minh external broker đang routable.", explanation: "Sai. Application vẫn có thể accept WebSocket connection trong khi external broker hoặc relay path unavailable."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "13.OperationsTestingDecisions/OperationsTestingDecisions.md", anchor: "broker-availability-recovery"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: user-destination-multi-session
+    question: "Một authenticated user có ba WebSocket session đang active. Server gửi một user-targeted message bình thường tới user đó. Application code nên giả định gì theo mặc định?"
+    answers:
+      - {id: A, answer: "Chính xác một session ngẫu nhiên nhận message vì một user identity chỉ có thể map tới một WebSocket session.", explanation: "Sai. Một authenticated user có thể có nhiều session đồng thời từ tab, device hoặc reconnect khác nhau."}
+      - {id: B, answer: "Message bị reject cho tới khi application code chọn một WebSocket session id cụ thể.", explanation: "Sai. Spring user-destination mechanism resolve logical user destination thành các active session-specific destination."}
+      - {id: C, answer: "Message có thể fan out tới mọi active session trừ khi application giới hạn reply về session khởi phát.", explanation: "Đúng. User identity và session identity là hai khái niệm khác nhau; mặc định user-targeted delivery có thể tới mọi session, còn `broadcast=false` có thể thu hẹp handler reply."}
+      - {id: D, answer: "Broker tạo một durable queue chung cho mọi session bất kể broker implementation.", explanation: "Sai. User destination là Spring routing abstraction và không ngụ ý universal durable-queue policy."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.BrokerRouting/BrokerRouting.md", anchor: "multi-session-users"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: stomp-client-receipt-semantics
+    question: "Một Spring STOMP client nhận RECEIPT cho một SEND frame. Receipt đó xác nhận điều gì?"
+    answers:
+      - {id: A, answer: "Mọi subscribed consumer đã xử lý business payload thành công.", explanation: "Sai. Receipt xác nhận protocol-level processing bởi STOMP server, không xác nhận downstream consumer đã hoàn tất."}
+      - {id: B, answer: "Message đã được lưu durable kể cả khi server dùng Spring built-in simple broker.", explanation: "Sai. Receipt không phải durability guarantee, và built-in simple broker không cung cấp full receipt semantics."}
+      - {id: C, answer: "Mọi database transaction được kích hoạt bởi message đã commit thành công.", explanation: "Sai. Business transaction cần domain-level confirmation riêng và nằm ngoài STOMP receipt semantics."}
+      - {id: D, answer: "STOMP server đã xử lý frame và correlate nó với receipt id đã yêu cầu.", explanation: "Đúng. RECEIPT xác nhận protocol progress; business guarantee hoặc durability mạnh hơn cần cơ chế riêng."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.StompClientLifecycle/StompClientLifecycle.md", anchor: "stomp-client-receipts"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: stomp-reconnect-subscriptions
+    question: "WebSocketStompClient mất transport connection rồi kết nối lại. Ứng dụng nên làm gì với subscription thuộc StompSession cũ?"
+    answers:
+      - {id: A, answer: "Tái sử dụng subscription handle cũ vì Spring tự transfer chúng sang session mới.", explanation: "Sai. Transport loss kết thúc STOMP session cũ và các subscription của session đó không còn active."}
+      - {id: B, answer: "Thiết lập session mới rồi tạo lại các subscription mà ứng dụng vẫn cần.", explanation: "Đúng. Reconnection tạo session state mới, vì vậy các subscription cần thiết phải được restore một cách explicit."}
+      - {id: C, answer: "Gửi RECEIPT request trên session cũ để kích hoạt lại tất cả subscription trước đó.", explanation: "Sai. Receipt xác nhận frame processing; nó không phục hồi state từ failed session."}
+      - {id: D, answer: "Bật preservePublishOrder vì setting đó thực hiện client reconnection và subscription restoration.", explanation: "Sai. Publish-order preservation chỉ kiểm soát outbound ordering theo session và không implement reconnect orchestration."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.StompClientLifecycle/StompClientLifecycle.md", anchor: "stomp-connection-recovery"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: executor-channel-interceptor-boundary
+    question: "Khi nào ExecutorChannelInterceptor phù hợp hơn một ChannelInterceptor cơ bản?"
+    answers:
+      - {id: A, answer: "Khi logic cần chạy quanh từng MessageHandler invocation trên executor thread thực hiện handler work.", explanation: "Đúng. ExecutorChannelInterceptor cung cấp callback tại handler-execution boundary, hữu ích cho execution-thread context và timing."}
+      - {id: B, answer: "Khi preSend chỉ cần inspect, modify hoặc reject Message trên channel send path.", explanation: "Sai. Các concern trên send path phù hợp với ChannelInterceptor; chúng không cần callback bao quanh executor-driven handler invocation."}
+      - {id: C, answer: "Khi timing chỉ cần đo caller send operation thay vì handler work được worker thread thực thi.", explanation: "Sai. ChannelInterceptor cơ bản có thể quan sát send path; ExecutorChannelInterceptor cần thiết khi phải quan sát actual handler-execution boundary."}
+      - {id: D, answer: "Khi context có thể được mang explicit trong message header và không cần setup hoặc cleanup quanh handler invocation.", explanation: "Sai. Explicit header thường phù hợp hơn cho dữ liệu thuộc message contract, nhưng trường hợp này không cần executor-aware callback quanh MessageHandler execution."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.StompLifecycleInterception/StompLifecycleInterception.md", anchor: "executor-channel-interceptor"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: stomp-ordering-per-session
+    question: "Ứng dụng bật preserve receive order cho STOMP. Guarantee nào đang được yêu cầu?"
+    answers:
+      - {id: A, answer: "Mọi message từ tất cả client được xử lý theo một global sequence duy nhất.", explanation: "Sai. Receive-order preservation có scope theo từng client session, không phải global trên mọi session."}
+      - {id: B, answer: "External broker phải persist message đúng thứ tự chúng đi vào application.", explanation: "Sai. Setting này kiểm soát Spring inbound processing path và không định nghĩa broker persistence behavior."}
+      - {id: C, answer: "Message từ cùng client session được xử lý trên clientInboundChannel theo receive order.", explanation: "Đúng. Option này đổi một phần parallelism để lấy per-session ordering trên Spring inbound path."}
+      - {id: D, answer: "Reply gửi tới một client được publish theo thứ tự kể cả khi inbound processing vẫn concurrent.", explanation: "Sai. Đó là concern riêng của preserve publish order trên outbound path."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.StompLifecycleInterception/StompLifecycleInterception.md", anchor: "preserve-receive-order"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: messaging-security-boundary
+    question: "Spring Messaging expose destination, message type, header, user identity và interceptor. Layer nào nên sở hữu policy quyết định user có được send hoặc subscribe hay không?"
+    answers:
+      - {id: A, answer: "STOMP destination naming convention, vì prefix như `/app` và `/topic` tự mang authorization semantics.", explanation: "Sai. Destination prefix dùng để route message, không định nghĩa authorization policy."}
+      - {id: B, answer: "Built-in simple broker, vì broker routing tự authenticate và authorize mọi message.", explanation: "Sai. Broker routing và security policy là hai responsibility khác nhau."}
+      - {id: C, answer: "Chỉ WebSocket transport, vì HTTP upgrade thành công đồng nghĩa user được truy cập mọi STOMP destination.", explanation: "Sai. Kết nối thành công không ngụ ý permission cho mọi messaging operation về sau."}
+      - {id: D, answer: "Spring Security, sử dụng identity và message hook mà messaging infrastructure expose.", explanation: "Đúng. Spring Framework Messaging cung cấp route và interception plumbing, còn authentication và authorization policy thuộc Spring Security."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.StompLifecycleInterception/StompLifecycleInterception.md", anchor: "message-authorization-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: rsocket-interaction-cardinality
+    question: "Một Spring RSocket responder nhận multi-value Flux request payload và trả về một Flux kết quả. Handler signature đó ngụ ý interaction model nào?"
+    answers:
+      - {id: A, answer: "Request-stream, vì cứ return Flux thì interaction luôn là request-stream.", explanation: "Sai. Request-stream có zero/one input và many output; multi-value input làm interaction trở thành request-channel."}
+      - {id: B, answer: "Request-channel, vì multi-value request input chọn channel interaction bất kể output cardinality.", explanation: "Đúng. Spring xác định model từ input/output cardinality, và many-valued input chọn request-channel."}
+      - {id: C, answer: "Fire-and-forget, vì nhiều request value được gửi không chờ nhau nên không thể tạo response stream.", explanation: "Sai. Fire-and-forget là one-way interaction và không mô tả multi-value request stream có response value."}
+      - {id: D, answer: "Request-response, vì toàn bộ exchange chỉ chọn một route.", explanation: "Sai. Số route không quyết định interaction type; request và response cardinality mới quyết định."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "12.RSocketResponders/RSocketResponders.md", anchor: "rsocket-interaction-cardinality"}
+    apiRelated: {controller: "RSocketExperimentController", methodSignature: "interactionCardinality()"}
+
+  - id: rsocket-requester-responder-symmetry
+    question: "Sau khi RSocket connection được thiết lập, requester/responder symmetry có nghĩa là gì?"
+    answers:
+      - {id: A, answer: "Mỗi peer có thể khởi tạo interaction và làm requester trong khi peer còn lại responder trên stream đó.", explanation: "Đúng. Client và server mô tả cách connection được thiết lập, còn requester/responder là role theo từng interaction sau setup."}
+      - {id: B, answer: "Hai peer phải gửi cùng payload cùng thời điểm cho mọi request để giữ tính đối xứng.", explanation: "Sai. Symmetry nói về peer nào có thể khởi tạo interaction, không yêu cầu payload đối xứng cùng lúc."}
+      - {id: C, answer: "Connection chuyển vĩnh viễn qua lại giữa client mode và server mode sau mỗi frame.", explanation: "Sai. Một peer có thể đồng thời là requester trên stream này và responder trên stream khác mà không đổi một global connection mode."}
+      - {id: D, answer: "Chỉ phía accept TCP connection mới được tạo request mới, còn phía kết nối chỉ được trả lời.", explanation: "Sai. RSocket cho phép cả hai phía khởi tạo request sau setup."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.RSocketInteraction/RSocketInteraction.md", anchor: "rsocket-symmetry"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: messaging-topology-choice
+    question: "Hai backend peer cần nhiều interaction đồng thời trên một long-lived connection, gồm bidirectional stream nơi Reactive Streams demand cần propagate qua network. Không cần durable broker semantics. Model nào phù hợp nhất?"
+    answers:
+      - {id: A, answer: "Raw WebSocket với custom application protocol và flow-control rule do application tự xây.", explanation: "Sai. Raw WebSocket có thể hiện thực contract này, nhưng application phải tự thiết kế interaction protocol, multiplexing, routing và flow control."}
+      - {id: B, answer: "STOMP over WebSocket vì destination và subscription tự động cung cấp Reactive Streams demand.", explanation: "Sai. STOMP cung cấp messaging destination và subscription, không cung cấp kiểu propagate Reactive Streams demand qua network như RSocket."}
+      - {id: C, answer: "RSocket, dùng requester/responder interaction model như request-response và request-channel.", explanation: "Đúng. RSocket trực tiếp mô hình hóa multiplexed requester/responder interaction, bidirectional streaming và demand propagation qua network."}
+      - {id: D, answer: "STOMP với broker relay vì external broker tự biến mọi subscription thành bidirectional reactive stream.", explanation: "Sai. Broker relay tăng broker-oriented routing và broker feature; nó không biến STOMP subscription thành RSocket request-channel semantics."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "13.OperationsTestingDecisions/OperationsTestingDecisions.md", anchor: "choose-messaging-model"}
+    apiRelated: {controller: "", methodSignature: ""}

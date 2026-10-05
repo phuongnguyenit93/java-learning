@@ -1,0 +1,481 @@
+1.Introduction/SpringMessaging.md:
+  messaging-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  direct-coupling-limits:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  spring-messaging-foundation:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  messaging-programming-models:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  neighboring-module-boundaries:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  messaging-learning-path:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+2.MessageModel/MessageModel.md:
+  message-payload-headers:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  message-building-access:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  message-channel:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  subscribable-channel:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  message-handler:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  channel-delivery-semantics:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  message-conversion:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  messaging-errors:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+3.WebSocketFoundation/WebSocketFoundation.md:
+  websocket-use-cases:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  websocket-handshake:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  websocket-handler-session:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  websocket-client:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  websocket-message-types:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  websocket-handshake-customization:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  websocket-origin-policy:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  sockjs-fallback:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  servlet-reactive-websocket-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+4.StompModel/StompModel.md:
+  stomp-purpose:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  stomp-frames-commands:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  stomp-destinations-subscriptions:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  stomp-headers-content:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  stomp-heartbeats-receipts:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  stomp-ack-transactions:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  stomp-over-websocket:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  simp-message-model:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  stomp-spring-message:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+5.StompMessageFlow/StompMessageFlow.md:
+  enable-websocket-message-broker:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  websocket-message-broker-configurer:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  register-stomp-endpoints:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  destination-prefixes:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  client-inbound-channel:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  client-outbound-channel:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  broker-channel:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  application-message-flow:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  broker-message-flow:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+6.StompApplicationHandling/StompApplicationHandling.md:
+  message-mapping:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  destination-variable:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  payload-conversion:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  payload-validation:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  subscribe-mapping:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  send-to:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  send-to-user:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  simp-messaging-template:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  message-exception-handling:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+7.BrokerRouting/BrokerRouting.md:
+  simple-broker:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  simple-broker-limits:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  broker-relay:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  broker-relay-connections:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  destination-conventions:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  user-destinations:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  multi-session-users:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  unresolved-user-destinations:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  broker-native-boundary:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+8.StompClientLifecycle/StompClientLifecycle.md:
+  websocket-stomp-client:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  reactor-netty-tcp-stomp-client:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  stomp-session-lifecycle:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  stomp-client-subscriptions:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  stomp-client-heartbeats:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  stomp-client-receipts:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  stomp-connection-recovery:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+9.StompLifecycleInterception/StompLifecycleInterception.md:
+  stomp-application-events:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  channel-interceptor:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  executor-channel-interceptor:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  message-ordering:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  preserve-receive-order:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  preserve-publish-order:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  websocket-authentication-identity:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  message-authorization-boundary:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  spring-session-boundary:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  websocket-scope:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+10.RSocketInteraction/RSocketInteraction.md:
+  rsocket-purpose:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  rsocket-request-response:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  rsocket-fire-and-forget:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  rsocket-request-stream:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  rsocket-request-channel:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  rsocket-symmetry:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  rsocket-setup-connection:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  rsocket-routes-metadata:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  rsocket-reactive-streams-boundary:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  rsocket-transports-boundary:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+11.RSocketRequester/RSocketRequester.md:
+  rsocket-requester-role:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  rsocket-client-requester:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  rsocket-server-requester:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  rsocket-route-data-retrieve:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  rsocket-request-metadata:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  rsocket-requester-lifecycle:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  rsocket-strategies:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  rsocket-codecs-route-matching:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  rsocket-metadata-extraction:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+12.RSocketResponders/RSocketResponders.md:
+  rsocket-message-handler:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  rsocket-message-mapping:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  rsocket-connect-mapping:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  rsocket-interaction-cardinality:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  rsocket-service-interface:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  rsocket-exchange:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  rsocket-service-proxy:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  rsocket-service-method-contract:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  rsocket-responder-symmetry:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  rsocket-neighbor-boundaries:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+13.OperationsTestingDecisions/OperationsTestingDecisions.md:
+  messaging-executor-capacity:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  messaging-send-limits:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  messaging-message-size-limits:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  broker-availability-recovery:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  slow-client-boundary:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  websocket-broker-stats:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  stomp-testing:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  rsocket-testing:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  choose-messaging-model:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  choose-stomp-broker:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  spring-integration-handoff:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  messaging-production-checklist:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false

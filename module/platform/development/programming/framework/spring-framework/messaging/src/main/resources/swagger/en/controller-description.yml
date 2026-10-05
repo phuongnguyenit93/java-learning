@@ -1,0 +1,24 @@
+ChannelExperimentController:
+  description: |-
+    <h2>Message Channel Delivery Experiment</h2>
+    <p>Compares caller-thread delivery with a deliberately asynchronous ExecutorSubscribableChannel and exposes the observed thread and completion boundary.</p>
+  readmeRelated:
+    file: 2.MessageModel/MessageModel.md
+RSocketExperimentController:
+  description: |-
+    <h2>RSocket Interaction Cardinality Experiment</h2>
+    <p>Runs request-response, request-stream, and request-channel interactions against an ephemeral local Spring RSocket responder.</p>
+  readmeRelated:
+    file: 12.RSocketResponders/RSocketResponders.md
+StompExperimentController:
+  description: |-
+    <h2>STOMP Message Flow Experiment</h2>
+    <p>Performs a real local WebSocket/STOMP round trip through an application destination, annotated handler, simple broker, and subscribed client.</p>
+  readmeRelated:
+    file: 5.StompMessageFlow/StompMessageFlow.md
+StompEchoHandler:
+  description: |-
+    <h2>STOMP Experiment Message Handler</h2>
+    <p>Internal annotated STOMP handler used by the round-trip experiment to make application routing and broker publication observable.</p>
+  readmeRelated:
+    file: 5.StompMessageFlow/StompMessageFlow.md

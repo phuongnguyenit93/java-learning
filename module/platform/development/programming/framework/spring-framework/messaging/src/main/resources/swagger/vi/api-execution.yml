@@ -1,0 +1,68 @@
+ChannelExperimentController:
+  deliverySemantics():
+    execution: |-
+      <p><b>Khái niệm:</b> <code>ExecutorSubscribableChannel</code> delegate qua executor được cấu hình; asynchronous execution hay thread handoff có thật sự xảy ra hay không phụ thuộc concrete executor.</p>
+      <ol>
+        <li><b>Thiết lập đồng bộ:</b> Service tạo <code>new ExecutorSubscribableChannel()</code> không truyền executor. Handler ghi lại thread và đánh dấu completion.</li>
+        <li><b>Evidence đồng bộ:</b> REST request thread gọi <code>send</code>. Response so sánh <code>senderThread</code> với <code>syncHandlerThread</code> và ghi nhận handler có hoàn tất trước khi <code>send</code> return hay không.</li>
+        <li><b>Thiết lập bất đồng bộ:</b> Channel thứ hai nhận một dedicated single-thread <code>ExecutorService</code>. Handler ghi worker thread, báo đã bắt đầu rồi chờ bounded release latch.
+          <div><i>Source: MessagingExperimentService.channelDeliverySemantics()</i></div>
+          <pre><code>ExecutorSubscribableChannel asynchronousChannel =
+          new ExecutorSubscribableChannel(executor);
+      asynchronousChannel.subscribe(message -&gt; {
+          asyncHandlerThread.set(Thread.currentThread().getName());
+          asyncStarted.countDown();
+          releaseAsyncHandler.await(2, TimeUnit.SECONDS);
+      });</code></pre>
+        </li>
+        <li><b>Timing evidence:</b> Sender gọi <code>send</code> trong khi worker bị giữ chưa thể hoàn tất trước khi latch được release. Response vì vậy ghi được việc <code>send</code> return trước handler completion đối với executor cụ thể này.</li>
+        <li><b>Cleanup:</b> Handler luôn được release; executor được shutdown và phải terminate trong hai giây.</li>
+        <li><b>Kết luận:</b> Với channel này, không có executor thì delivery chạy trên caller thread; dedicated executor được chọn cho thí nghiệm tạo handoff thật. Kết quả không bị khái quát sai thành “mọi Executor đều đổi thread”.</li>
+      </ol>
+    usage: true
+RSocketExperimentController:
+  interactionCardinality():
+    execution: |-
+      <p><b>Khái niệm:</b> Spring xác định RSocket interaction model từ request payload cardinality và responder return cardinality.</p>
+      <ol>
+        <li><b>Setup:</b> Service tạo reusable <code>RSocketStrategies</code>, bọc ba annotated method trong Spring <code>RSocketMessageHandler</code> responder và bind RSocket TCP server vào ephemeral loopback port.</li>
+        <li><b>Requester:</b> <code>RSocketRequester</code> kết nối tới port đó với cùng strategies. Cả ba interaction đều có terminal timeout ba giây.</li>
+        <li><b>One → one:</b> Một String được gửi tới <code>cardinality.one-one</code>; responder trả một String và requester dùng <code>retrieveMono</code>. Response gắn interaction thực tế là <code>request-response</code>.</li>
+        <li><b>One → many:</b> Một String được gửi tới <code>cardinality.one-many</code>; responder trả <code>Flux</code> ba phần tử và requester collect <code>retrieveFlux</code>. Đây là request-stream.</li>
+        <li><b>Many → many:</b> <code>Flux</code> ba phần tử trở thành request data cho <code>cardinality.many-many</code>; responder nhận <code>Flux&lt;String&gt;</code> và map từng value. Đây là request-channel.
+          <div><i>Source: MessagingExperimentService.rsocketInteractionCardinality()</i></div>
+          <pre><code>requester.route("cardinality.many-many")
+          .data(Flux.just("C1", "C2", "C3"), String.class)
+          .retrieveFlux(String.class)
+          .collectList()
+          .block(RSOCKET_TIMEOUT);</code></pre>
+        </li>
+        <li><b>Observation:</b> Mỗi result có <code>interaction</code>, <code>inputCount</code>, <code>outputCount</code> và values, giúp xem cardinality cùng interaction type trong một evidence object.</li>
+        <li><b>Cleanup:</b> Requester và ephemeral server đều được dispose trong <code>finally</code>; server close cũng bị bound bởi cùng timeout.</li>
+        <li><b>Kết luận:</b> Thí nghiệm chứng minh Spring responder cardinality mapping bằng RSocket frame thật, không phải ba HTTP response được gắn nhãn thủ công.</li>
+      </ol>
+    usage: true
+StompExperimentController:
+  roundTrip():
+    execution: |-
+      <p><b>Khái niệm:</b> Client message gửi tới application destination đi qua inbound messaging path của Spring tới annotated handler; kết quả handler sau đó có thể đi qua broker và outbound path tới subscriber.</p>
+      <ol>
+        <li><b>Server setup:</b> <code>StompExperimentConfiguration</code> expose <code>/messaging-stomp</code>, dùng <code>/app</code> cho application destination và bật built-in simple broker cho <code>/topic</code>. Receive order được preserve để single-session experiment có processing order xác định.</li>
+        <li><b>Client setup:</b> Service được REST trigger tạo mới <code>StandardWebSocketClient</code> dùng daemon executor do chính thí nghiệm sở hữu, bọc client đó bằng <code>WebSocketStompClient</code>, rồi connect tới actual embedded-server port với bound ba giây.</li>
+        <li><b>Subscription và send:</b> STOMP session subscribe <code>/topic/experiment.echo</code>, sau đó gửi UUID-correlated String tới <code>/app/experiment.echo</code>. Vì STOMP session operation của Spring 6.1 là synchronous, từng thao tác subscribe/send được chạy trong daemon task riêng và bị thí nghiệm giới hạn ba giây.</li>
+        <li><b>Application handling:</b> <code>StompEchoHandler.echo</code> map <code>/experiment.echo</code>, ghi payload/thread vào probe rồi trả <code>echo:&lt;payload&gt;</code> tới <code>/topic/experiment.echo</code>.
+          <div><i>Source: StompEchoHandler.echo()</i></div>
+          <pre><code>@MessageMapping("/experiment.echo")
+      @SendTo("/topic/experiment.echo")
+      public String echo(String payload) {
+          stompExperimentProbe.record(payload);
+          return "echo:" + payload;
+      }</code></pre>
+        </li>
+        <li><b>Observation:</b> Response có WebSocket endpoint, STOMP session id, send/subscription destination, correlated sent/received payload, actual handler thread và <code>roundTripMatched</code>.</li>
+        <li><b>Cleanup:</b> Unsubscribe, disconnect và shutdown WebSocket-connect executor thuộc sở hữu thí nghiệm đều chạy độc lập với bound để failure ở một bước không bỏ qua bước sau. Thí nghiệm track handshake future và capture trực tiếp <code>WebSocketSession</code> bên dưới từ <code>afterConnectionEstablished</code>, nên việc giữ transport handle không phụ thuộc handshake future còn có thể complete bình thường hay không. Nếu STOMP connection establishment timeout trước <code>CONNECTED</code>, hoặc fail theo cách khác trước khi có <code>StompSession</code>, attempt được đánh dấu abandoned, handshake còn pending sẽ được cancel khi có thể, và WebSocket establish trong race sẽ bị đóng ngay. Nếu việc đóng abandoned WebSocket thất bại, failure đó được giữ lại và báo qua cùng cleanup-failure path thay vì bị nuốt. Nếu thí nghiệm đã thất bại, cleanup failure được gắn dưới dạng suppressed failure thay vì thay thế nguyên nhân chính. Không dùng receipt vì built-in simple broker của Spring không implement STOMP receipt.</li>
+        <li><b>Kết luận:</b> Kết quả thành công là evidence của round trip WebSocket/STOMP → <code>clientInboundChannel</code> → annotated handler → broker → <code>clientOutboundChannel</code> thật trong running application.</li>
+      </ol>
+    usage: true
+StompEchoHandler: {
+  }
