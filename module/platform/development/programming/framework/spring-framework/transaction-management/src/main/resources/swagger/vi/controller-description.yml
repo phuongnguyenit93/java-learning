@@ -1,0 +1,6 @@
+TransactionExperimentController:
+  description: |-
+    <h2>Thí nghiệm runtime về Spring Transaction</h2>
+    <p>Chạy các thí nghiệm bounded gắn với Knowledge trên database H2 in-memory thật để ranh giới proxy, quyết định rollback, propagation và phase của transaction-bound event hiện ra qua row đã commit và runtime trace.</p>
+  readmeRelated:
+    file: 6.Rollback/Rollback.md

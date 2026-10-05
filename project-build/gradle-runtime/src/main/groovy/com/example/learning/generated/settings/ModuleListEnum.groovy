@@ -2190,6 +2190,15 @@ enum ModuleListEnum {
             []
     ),
 
+    SPRING_TRANSACTION_MANAGEMENT(
+            'module:platform:development:programming:framework:spring-framework:transaction-management',
+            'module/platform/development/programming/framework/spring-framework/transaction-management',
+            'SERVLET',
+            'Spring Framework transaction abstraction, declarative and programmatic transaction management, propagation, rollback and resource synchronization',
+            false,
+            []
+    ),
+
     SPRING_WEB(
             'module:platform:development:programming:framework:spring-framework:web',
             'module/platform/development/programming/framework/spring-framework/web',

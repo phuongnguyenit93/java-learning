@@ -1,0 +1,275 @@
+1.Purpose/Purpose.md:
+  transaction-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  transaction-unit-of-work:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  transaction-service-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  transaction-framework-value:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  transaction-local-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+2.Abstraction/Abstraction.md:
+  transaction-manager-strategy:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  transaction-platform-manager:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  transaction-reactive-manager:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  transaction-definition:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  transaction-status:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  transaction-lifecycle:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  transaction-manager-selection:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  transaction-local-vs-global:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+3.ResourceSynchronization/ResourceSynchronization.md:
+  transaction-bound-resources:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  transaction-synchronization:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  transaction-synchronization-manager:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  transaction-aware-infrastructure:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  transaction-resource-boundary:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+4.Declarative/Declarative.md:
+  transaction-declarative-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  transaction-enable-management:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  transactional-metadata:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  transaction-interceptor:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  transaction-proxy-boundary:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  transaction-aspectj-mode:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  transaction-metadata-precedence:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+5.TransactionPolicy/TransactionPolicy.md:
+  transaction-policy-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  transaction-defaults:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  transaction-isolation:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  transaction-policy-hints:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  transaction-boundary-placement:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+6.Rollback/Rollback.md:
+  transaction-rollback-defaults:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  transaction-rollback-rules:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  transaction-rollback-only:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  transaction-exception-handling:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  transaction-return-value-rollback:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+7.Propagation/Propagation.md:
+  transaction-physical-logical:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  transaction-propagation-required:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  transaction-propagation-requires-new:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  transaction-propagation-nested:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  transaction-propagation-supports:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  transaction-propagation-suspension:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  transaction-propagation-rollback-only:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+8.Programmatic/Programmatic.md:
+  transaction-declarative-vs-programmatic:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  transaction-template:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  transaction-direct-manager:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  transaction-transactional-operator:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  transaction-programmatic-tradeoffs:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+9.Reactive/Reactive.md:
+  transaction-reactive-context-model:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  transaction-reactive-manager-contract:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  transaction-reactive-method-contract:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  transaction-reactive-participation:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  transaction-reactive-error-cancel:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  transaction-reactive-resource-boundary:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+10.EventsLifecycle/EventsLifecycle.md:
+  transaction-event-listener:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  transaction-event-fallback:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  transaction-reactive-events:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  transaction-post-completion-resources:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  transaction-execution-listener:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+11.BoundarySynthesis/BoundarySynthesis.md:
+  transaction-service-layer-boundary:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  transaction-manager-capabilities:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  transaction-thread-boundary:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  transaction-remote-boundary:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  transaction-messaging-boundary:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  transaction-long-running-boundary:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  transaction-testing-handoff:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  transaction-design-checklist:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false

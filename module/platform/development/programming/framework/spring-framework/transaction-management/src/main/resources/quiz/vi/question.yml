@@ -1,0 +1,183 @@
+# <quiz-schema>
+# Cấu trúc câu hỏi Quiz
+# schema-version: 3
+#
+# questions [kiểu: list; bắt buộc; mặc định: []; duy nhất theo: id]
+#   Danh sách câu hỏi Quiz của module trong language hiện tại.
+#   mỗi phần tử:
+#     id [kiểu: string; bắt buộc; mặc định: ""]
+#       ID ổn định và duy nhất của câu hỏi.
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi hiển thị cho người học.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu câu hỏi được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu câu hỏi đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+#     answers [kiểu: list; bắt buộc; số phần tử: 4; mặc định: []; duy nhất theo: id]
+#       Chính xác bốn đáp án. ID A/B/C/D là identity nội bộ ổn định, không phải vị trí hiển thị sau khi frontend shuffle.
+#       mỗi phần tử:
+#         id [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#           Identity ổn định của đáp án.
+#         answer [kiểu: string; bắt buộc; mặc định: ""]
+#           Nội dung đáp án hiển thị cho người học.
+#         explanation [kiểu: string; bắt buộc; mặc định: ""]
+#           Giải thích hiển thị khi người học chọn đáp án này, bất kể đúng hay sai.
+#     correctAnswerId [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#       ID nội bộ của đáp án đúng. Frontend kiểm tra bằng identity này sau khi shuffle.
+# </quiz-schema>
+
+questions:
+  - id: transaction-service-boundary
+    question: "Một use case đặt hàng phải cập nhật order và giữ chỗ inventory theo một kết quả nguyên tử. Ranh giới transaction mặc định rõ ràng nhất nên đặt ở đâu?"
+    answers:
+      - {id: A, answer: "Bao quanh từng repository method riêng lẻ để mỗi database call commit càng sớm càng tốt.", explanation: "Sai. Các repository transaction tách rời có thể làm lộ trạng thái nghiệp vụ dở dang khi bước sau thất bại."}
+      - {id: B, answer: "Bao quanh thao tác service/application sở hữu business invariant và điều phối cả hai repository call.", explanation: "Đúng. Transaction thường nên đi theo business unit of work phải cùng thành công hoặc cùng thất bại."}
+      - {id: C, answer: "Bao quanh controller method vì HTTP request scope và transaction scope là cùng một khái niệm.", explanation: "Sai. Web request và business unit of work là hai ranh giới khác nhau; transaction nên xuất phát từ invariant chứ không từ vòng đời transport."}
+      - {id: D, answer: "Bao quanh toàn bộ process của ứng dụng để mọi thao tác sau có thể dùng lại cùng transaction.", explanation: "Sai. Transaction quá rộng giữ resource và lock quá lâu và không còn khớp với một unit of work hữu hạn."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.Purpose/Purpose.md", anchor: "transaction-service-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: transaction-manager-selection
+    question: "Một ứng dụng có cả JDBC transaction manager imperative và reactive transaction manager. Điều gì nên quyết định transactional method dùng manager nào?"
+    answers:
+      - {id: A, answer: "Dùng default manager cho mọi method; một khi có Spring transaction active thì mọi transactional resource sẽ tự tham gia.", explanation: "Sai. Transaction active của một manager không tự enlist resource thuộc manager hoặc execution model khác."}
+      - {id: B, answer: "Chỉ cần nhìn Java return type; resource ownership không quan trọng miễn method trả về Mono, Flux hoặc giá trị thông thường.", explanation: "Sai. Method contract có ý nghĩa, nhưng manager được chọn vẫn phải sở hữu resource và hỗ trợ transaction model cần thiết."}
+      - {id: C, answer: "Manager có resource ownership và execution model khớp với method, được chọn bằng cấu hình mặc định hoặc qualifier tường minh khi cần.", explanation: "Đúng. Việc chọn manager mang ý nghĩa hành vi vì nó quyết định resource và mô hình transaction nào thực sự được điều phối."}
+      - {id: D, answer: "Ưu tiên imperative manager bất cứ khi nào có database, kể cả khi công việc là reactive pipeline trên reactive resource.", explanation: "Sai. Imperative hay reactive là một phần của contract giữa execution model, manager và resource, không thể bỏ qua chỉ vì cả hai đều truy cập database."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.Abstraction/Abstraction.md", anchor: "transaction-manager-selection"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: transaction-bound-resource-reuse
+    question: "Một service transaction thực hiện hai thao tác JDBC có nhận biết Spring trên cùng DataSource. Vì sao cả hai có thể tham gia cùng local transaction mà repository code không phải tự truyền Connection?"
+    answers:
+      - {id: A, answer: "Spring-aware data access có thể tìm resource đã bind cho DataSource đó trong transaction context hiện tại và tái sử dụng nó cho phần việc tham gia.", explanation: "Đúng. Resource binding cho phép các thao tác data-access tham gia dùng lại resource gắn với transaction thay vì tự tạo transaction state độc lập."}
+      - {id: B, answer: "Mỗi repository mở một connection độc lập, sau đó Spring hợp nhất các commit riêng đó khi cả hai repository method return thành công.", explanation: "Sai. Các connection đã commit độc lập không được ghép lại thành một local transaction sau khi sự việc đã xảy ra."}
+      - {id: C, answer: "HTTP request tự sở hữu một JDBC connection, và mọi repository chạy trong request đó mặc định thừa hưởng cùng connection.", explanation: "Sai. HTTP request scope không phải mô hình bind transaction resource; participation đến từ hạ tầng data-access nhận biết Spring transaction."}
+      - {id: D, answer: "`@Transactional` thay đổi JDBC driver để mọi connection mở độc lập trên cùng thread được xem như cùng một transaction.", explanation: "Sai. Spring điều phối việc lookup/bind resource có nhận biết transaction; nó không viết lại JDBC semantics cho connection độc lập tùy ý."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.ResourceSynchronization/ResourceSynchronization.md", anchor: "transaction-bound-resources"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: transaction-proxy-self-invocation
+    question: "Một public `@Transactional` method ghi database rồi ném `RuntimeException`. Method khác trong cùng bean gọi nó qua `this`. Trong proxy mode mặc định, rủi ro chính là gì?"
+    answers:
+      - {id: A, answer: "Inner call có thể bỏ qua transaction proxy, nên annotated method có thể chạy mà không có transaction advice vốn sẽ bao lời gọi từ bên ngoài.", explanation: "Đúng. Self-invocation ở lại trên target object và có thể bỏ qua proxy interception trong mô hình mặc định."}
+      - {id: B, answer: "Vì inner method là public và có annotation nên Spring vẫn intercept dù lời gọi không rời target object.", explanation: "Sai. Public visibility và metadata không làm same-object call tự đi qua proxy."}
+      - {id: C, answer: "Inner method tự động join transaction dù outer caller không transactional vì hai method thuộc cùng một Spring bean.", explanation: "Sai. Cùng bean không tự tạo transaction participation khi annotated inner call không được intercept."}
+      - {id: D, answer: "Spring thay `this` bằng proxy lúc tạo bean nên self-invocation có semantics giống external bean call.", explanation: "Sai. `this` bên trong target vẫn là target object; self-invocation thông thường bỏ qua proxy bao quanh nó."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.Declarative/Declarative.md", anchor: "transaction-proxy-boundary"}
+    apiRelated: {controller: "TransactionExperimentController", methodSignature: "proxyBoundary()"}
+
+  - id: transaction-default-rollback
+    question: "Hai `@Transactional` method giống nhau đều ghi một row. Một method ném `IllegalStateException`, method kia ném checked exception thông thường. Không có rollback rule tường minh. Kết quả mặc định của Spring Framework 6.1 là gì?"
+    answers:
+      - {id: A, answer: "Cả hai rollback vì mọi subclass của Exception đều yêu cầu rollback mặc định.", explanation: "Sai. Checked exception không yêu cầu rollback theo rule mặc định thông thường."}
+      - {id: B, answer: "Cả hai commit vì rollback luôn cần cấu hình `rollbackFor` tường minh.", explanation: "Sai. RuntimeException và Error yêu cầu rollback theo mặc định."}
+      - {id: C, answer: "Checked exception rollback còn RuntimeException commit vì unchecked failure được xem là có thể phục hồi.", explanation: "Sai. Phát biểu này đảo ngược rollback behavior mặc định của Spring."}
+      - {id: D, answer: "Transaction ném RuntimeException rollback, còn transaction ném checked exception commit nếu không có rollback rule khác khớp.", explanation: "Đúng. Đây là khác biệt mặc định giữa checked và unchecked failure."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.Rollback/Rollback.md", anchor: "transaction-rollback-defaults"}
+    apiRelated: {controller: "TransactionExperimentController", methodSignature: "rollbackDefaults()"}
+
+  - id: transaction-required-rollback-only
+    question: "Inner `REQUIRED` method ném RuntimeException sau khi join outer `REQUIRED` transaction. Outer method bắt exception rồi return bình thường. Điều gì có thể xảy ra khi outer hoàn tất?"
+    answers:
+      - {id: A, answer: "Catch block tự động xóa rollback-only state nên shared transaction commit bình thường.", explanation: "Sai. Bắt application exception không làm transaction có thể commit trở lại sau khi inner interceptor đã đánh dấu rollback-only."}
+      - {id: B, answer: "Spring có thể rollback shared physical transaction và ném `UnexpectedRollbackException` khi outer scope cố commit.", explanation: "Đúng. Điều này tránh báo sai cho caller rằng một transaction đã bị doom vẫn commit thành công."}
+      - {id: C, answer: "Chỉ JDBC statement của inner rollback còn outer luôn commit vì REQUIRED tự tạo savepoint.", explanation: "Sai. REQUIRED thường dùng chung physical transaction và không phải semantics savepoint của NESTED."}
+      - {id: D, answer: "Outer method lỗi ngay khi compile vì Java không cho bắt exception từ transactional method.", explanation: "Sai. Java catch hoàn toàn hợp lệ; vấn đề là rollback-only state tại thời điểm transaction completion."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.Propagation/Propagation.md", anchor: "transaction-propagation-rollback-only"}
+    apiRelated: {controller: "TransactionExperimentController", methodSignature: "requiredRollbackOnly()"}
+
+  - id: transaction-requires-new-vs-nested
+    question: "Phát biểu nào phân biệt đúng nhất `REQUIRES_NEW` với semantics `NESTED` cổ điển trên JDBC?"
+    answers:
+      - {id: A, answer: "Cả hai mode giữ một physical transaction; REQUIRES_NEW dùng savepoint còn NESTED tạm ngưng rồi khôi phục outer scope.", explanation: "Sai. Phát biểu này đảo mô hình cốt lõi: savepoint thuộc semantics NESTED cổ điển, còn REQUIRES_NEW tạo transaction độc lập."}
+      - {id: B, answer: "REQUIRES_NEW tạo physical transaction riêng; NESTED thường dùng savepoint trong một physical transaction khi được hỗ trợ.", explanation: "Đúng. Đây là khác biệt cốt lõi giữa independent transaction và partial rollback dựa trên savepoint."}
+      - {id: C, answer: "Cả hai mode đều tạo physical transaction thứ hai, nhưng NESTED sao chép isolation và timeout của outer transaction.", explanation: "Sai. NESTED cổ điển dùng savepoint trong physical transaction hiện có thay vì mở physical transaction thứ hai."}
+      - {id: D, answer: "Cả hai mode đều dùng savepoint, nhưng REQUIRES_NEW giải phóng savepoint khi commit còn NESTED giữ đến outer completion.", explanation: "Sai. REQUIRES_NEW không phải propagation mode dựa trên savepoint."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "", anchor: ""}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: transaction-policy-existing-scope
+    question: "Một inner `REQUIRED` method khai báo isolation level khác khi đang join outer transaction đã active. Mô hình tư duy nào an toàn nhất?"
+    answers:
+      - {id: A, answer: "Inner declaration thay isolation của existing physical transaction cho toàn bộ phần còn lại của outer scope.", explanation: "Sai. Participating logical scope không thể đơn giản định nghĩa lại physical transaction mà nó đã join."}
+      - {id: B, answer: "Existing physical transaction giữ nguyên đặc tính; manager hỗ trợ có thể dùng strict validation để từ chối khai báo không tương thích.", explanation: "Đúng. Join existing transaction không tạo bộ physical characteristic thứ hai."}
+      - {id: C, answer: "Spring tự chuyển inner propagation thành REQUIRES_NEW mỗi khi isolation được yêu cầu khác outer transaction.", explanation: "Sai. Spring không âm thầm đổi propagation để tạo physical transaction mới."}
+      - {id: D, answer: "Inner isolation chỉ có hiệu lực cho SQL statement của inner method rồi Spring khôi phục isolation của outer scope.", explanation: "Sai. Participating scope không tạm viết lại isolation chỉ quanh các statement của nó."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.TransactionPolicy/TransactionPolicy.md", anchor: "transaction-isolation"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: transaction-reactive-context-cancel
+    question: "Phát biểu nào mô tả đúng transaction participation và cancellation trong reactive Spring transaction?"
+    answers:
+      - {id: A, answer: "Participation chỉ được mang bằng ThreadLocal nên đổi thread luôn mất transaction và cancellation không có ý nghĩa transaction.", explanation: "Sai. Reactive transaction state gắn với Reactor/subscriber context thay vì mô hình ThreadLocal imperative."}
+      - {id: B, answer: "Reactive transaction tồn tại ngay khi object Mono hoặc Flux được tạo, kể cả chưa có subscription.", explanation: "Sai. Reactive transaction work diễn ra ở subscription-time execution, không phải chỉ lúc publisher object được dựng."}
+      - {id: C, answer: "Work tham gia khi thực thi trong transactional Reactor context, và cancellation của transactional publisher có thể dẫn tới rollback thay vì commit thành công.", explanation: "Đúng. Pipeline membership và terminal signal đều ảnh hưởng transaction outcome."}
+      - {id: D, answer: "Tự gọi `subscribe()` bên trong transactional method bảo đảm subscription mới thừa hưởng cùng transaction context với chain được return.", explanation: "Sai. Manual subscription tạo execution riêng và không nên được giả định dùng chung transaction của returned pipeline."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.Reactive/Reactive.md", anchor: "transaction-reactive-error-cancel"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: transaction-event-phases
+    question: "Một transaction publish event rồi rollback. Có listener cho `BEFORE_COMMIT`, `AFTER_COMMIT`, `AFTER_ROLLBACK` và `AFTER_COMPLETION`. Cặp phase nào biểu diễn đúng completed rollback outcome?"
+    answers:
+      - {id: A, answer: "AFTER_COMMIT và AFTER_COMPLETION vì event đã được publish trước khi lỗi xảy ra.", explanation: "Sai. AFTER_COMMIT gắn với commit thành công chứ không chỉ với việc event từng được publish."}
+      - {id: B, answer: "BEFORE_COMMIT và AFTER_COMMIT vì mọi published event đều chạy toàn bộ commit-related listener.", explanation: "Sai. Rollback không tạo AFTER_COMMIT, và BEFORE_COMMIT thuộc quá trình commit chứ không phải completed rollback outcome."}
+      - {id: C, answer: "AFTER_ROLLBACK và AFTER_COMPLETION vì transaction hoàn tất bằng rollback thay vì commit.", explanation: "Đúng. AFTER_COMPLETION quan sát cả hai kết quả cuối, còn AFTER_ROLLBACK chỉ dành cho rollback."}
+      - {id: D, answer: "Không listener nào chạy vì TransactionalEventListener bỏ qua mọi event được publish bên trong transaction.", explanation: "Sai. Mục đích của annotation này chính là gắn listener execution vào transaction phase."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.EventsLifecycle/EventsLifecycle.md", anchor: "transaction-event-listener"}
+    apiRelated: {controller: "TransactionExperimentController", methodSignature: "eventPhases()"}
+
+  - id: transaction-local-remote-boundary
+    question: "Một service method cập nhật local database, gọi remote HTTP service và publish message. Phát biểu nào mô tả đúng nhất bảo đảm của `@Transactional`?"
+    answers:
+      - {id: A, answer: "Interceptor truyền local database transaction qua HTTP và broker header nên cả ba effect dùng chung một commit decision.", explanation: "Sai. HTTP/RPC thông thường không kéo local resource transaction sang remote process hoặc broker không liên quan."}
+      - {id: B, answer: "Vì ba call nằm trong cùng một service method nên Spring xem chúng là một physical transaction dù dùng các resource manager khác nhau.", explanation: "Sai. Java call scope không đồng nghĩa với coordinated multi-resource transaction."}
+      - {id: C, answer: "Chỉ resource mà transaction manager đã chọn thực sự điều phối được mới tham gia; remote call và messaging effect không liên quan cần reliability hoặc coordination strategy riêng.", explanation: "Đúng. @Transactional định nghĩa Spring transaction boundary chứ không tự tạo distributed atomicity xuyên qua các hệ thống tùy ý."}
+      - {id: D, answer: "Nếu local database rollback thì Spring tự compensate remote call đã hoàn tất và thu hồi message đã được broker không liên quan nhận.", explanation: "Sai. Compensation hoặc durable messaging behavior phải được thiết kế tường minh, không được suy ra từ local transaction."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "", anchor: ""}
+    apiRelated: {controller: "", methodSignature: ""}
