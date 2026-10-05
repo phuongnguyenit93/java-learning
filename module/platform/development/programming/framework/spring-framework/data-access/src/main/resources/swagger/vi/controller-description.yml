@@ -1,0 +1,24 @@
+DaoExceptionExperimentController:
+  description: |-
+    <h2>Thí nghiệm chuyển đổi exception của DAO</h2>
+    <p>Kích hoạt cùng một lỗi toàn vẹn dữ liệu qua Spring JDBC và Spring R2DBC để so sánh phân loại chung bằng <code>DataAccessException</code> và nguyên nhân native vẫn được giữ lại từ evidence runtime thật.</p>
+  readmeRelated:
+    file: 2.DaoExceptionModel/DaoExceptionModel.md
+JdbcCoreExperimentController:
+  description: |-
+    <h2>Thí nghiệm cardinality của Spring JDBC</h2>
+    <p>Chạy các truy vấn <code>JdbcClient</code> có phạm vi giới hạn trên H2 cô lập để quan sát trực tiếp contract khác nhau của <code>list()</code>, <code>optional()</code> và <code>single()</code>.</p>
+  readmeRelated:
+    file: 3.SpringJdbcCore/SpringJdbcCore.md
+R2dbcExperimentController:
+  description: |-
+    <h2>Thí nghiệm deferred execution của Spring R2DBC</h2>
+    <p>Đếm số lần lấy R2DBC connection trước và sau khi subscribe vào publisher của <code>DatabaseClient</code>, qua đó làm rõ ranh giới subscription của quá trình thực thi SQL reactive.</p>
+  readmeRelated:
+    file: 5.SpringR2dbcCore/SpringR2dbcCore.md
+ResourceParticipationExperimentController:
+  description: |-
+    <h2>Thí nghiệm resource gắn với transaction</h2>
+    <p>So sánh cách Spring tái sử dụng JDBC connection thông qua trạng thái transaction gắn với thread và R2DBC connection thông qua reactive subscriber context, kể cả khi có một scheduler hop được giới hạn.</p>
+  readmeRelated:
+    file: 6.ResourceTransactionParticipation/ResourceTransactionParticipation.md

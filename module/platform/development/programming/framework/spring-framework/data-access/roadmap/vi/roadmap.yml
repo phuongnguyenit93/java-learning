@@ -1,0 +1,156 @@
+# <roadmap-schema>
+# Cấu trúc Roadmap Module
+# schema-version: 1
+#
+# YAML CONTRACT
+# roadmap: Danh sách milestone cấp cao của roadmap cho language hiện tại.
+#
+# - id [string, required]: ID ổn định và duy nhất của milestone trong roadmap language hiện tại.
+# - title [string, required]: Tên milestone hiển thị cho learner.
+# - purpose [string, required]: Milestone này tồn tại để learner hiểu hoặc đạt được điều gì.
+# - dependsOn [list, optional]: Danh sách id milestone prerequisite khi dependency không thể hiện đủ chỉ bằng thứ tự item.
+# - objectives [list, optional]: Các learning objective cấp milestone; không dùng để liệt kê mọi fact/API/syntax nhỏ.
+# - relatedKnowledge [list, optional]: Danh sách Knowledge category id trong chính module hiện tại hỗ trợ milestone. Portal hiển thị danh sách này ở phía đối diện milestone và click item sẽ điều hướng sang Knowledge category tương ứng.
+# - relatedModules [list, optional]: Các module liên quan hiển thị ở Level 2 của Portal. Mỗi item dùng routeId bắt buộc và có thể có label/note localized; relation này chỉ để điều hướng, không tạo child milestone hoặc thay đổi learning order.
+#
+# ROADMAP THINKING FRAMEWORK
+# PURPOSE
+#   - Topic/module này là gì?
+#   - Vì sao nó tồn tại?
+#   - Không có nó thì learner gặp vấn đề gì?
+# FOUNDATION
+#   - Learner cần prerequisite hoặc mental model nào trước?
+# CORE MODEL
+#   - Những abstraction hoặc building block lớn nào tạo nên chủ đề này?
+# MECHANICS
+#   - Nó hoạt động như thế nào ở mức language/runtime/API phù hợp với module?
+# USAGE
+#   - Nó được dùng như thế nào trong code thực tế?
+# DECISION / TRADE-OFF
+#   - Khi nào nên chọn cơ chế này thay vì cơ chế khác?
+#   - Khi nào không nên dùng?
+# FAILURE / PITFALL
+#   - Những sai lầm, compile-time failure hoặc runtime failure nào đáng biết?
+# INTEGRATION
+#   - Chủ đề này kết nối với những concept/module lân cận nào?
+# SYNTHESIS
+#   - Sau cùng learner phải giữ mental model end-to-end nào?
+#
+# Mỗi language tự chịu trách nhiệm cho roadmap của chính nó. Không suy luận hoặc đồng bộ cấu trúc từ roadmap của language khác.
+# Thứ tự item trong roadmap chính là thứ tự học mặc định. Chỉ dùng dependsOn khi cần biểu diễn dependency rõ hơn thứ tự tuyến tính.
+# Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
+# </roadmap-schema>
+
+roadmap:
+  - id: spring-data-access-mental-model
+    title: "Mô hình tư duy Spring Data Access"
+    purpose: "Hiểu vì sao Spring Framework bổ sung một lớp truy cập dữ liệu trên JDBC, R2DBC và các công nghệ persistence, những trách nhiệm nào framework lấy khỏi mã ứng dụng, và ranh giới của module trước khi chuyển sang chính sách transaction, ORM mapping hoặc Spring Data repository."
+    relatedKnowledge:
+      - DataAccess
+    relatedModules:
+      - routeId: SPRING_CORE_CONTAINER
+        label: "Spring Core Container"
+        note: "DataSource, ConnectionFactory, client và DAO thường được cấu hình và inject dưới dạng component do Spring quản lý."
+      - routeId: JDBC
+        label: "JDBC"
+        note: "JDBC thuần sở hữu Java database API cùng nền tảng connection, statement và result set mà Spring JDBC xây dựng phía trên."
+    objectives:
+      - "Giải thích các vấn đề lặp lại mà Spring Data Access giải quyết: quản lý tài nguyên thủ công, exception phụ thuộc công nghệ, đưa tài nguyên tham gia transaction và mã lặp quanh việc thực thi SQL/trích xuất kết quả."
+      - "Phân biệt Spring Framework Data Access với Spring Data: module này sở hữu hạ tầng lõi DAO/JDBC/R2DBC, còn Spring Data sở hữu repository, aggregate mapping và derived-query abstraction."
+      - "Phân biệt đường đi blocking của JDBC với đường đi non-blocking của R2DBC trước khi chọn client API, không coi hai mô hình là phiên bản thay thế trực tiếp cho nhau."
+      - "Giữ ORM entity mapping, ngữ nghĩa gốc của JDBC/R2DBC, chính sách transaction propagation/isolation và repository abstraction ở đúng module sở hữu."
+
+  - id: consistent-dao-error-model
+    title: "Mô hình DAO và lỗi nhất quán"
+    purpose: "Xây dựng mô hình lỗi trung lập công nghệ dùng chung cho các cơ chế truy cập dữ liệu của Spring để code gọi có thể xử lý lỗi mà không phụ thuộc trực tiếp vào SQLException, JPA, Hibernate hoặc R2DBC exception."
+    relatedKnowledge:
+      - DaoExceptionModel
+    objectives:
+      - "Hiểu DataAccessException là gốc của hệ phân cấp exception unchecked cho data access và phân biệt về mặt khái niệm các nhóm transient, non-transient, recoverable, integrity, locking, timeout và sai số lượng kết quả kỳ vọng."
+      - "Hiểu Spring JDBC và Spring R2DBC chuyển exception gốc từ driver sang hệ phân cấp chung nhưng vẫn giữ nguyên nhân gốc để chẩn đoán."
+      - "Hiểu ranh giới DAO/repository stereotype: @Repository đánh dấu bean đủ điều kiện, còn PersistenceExceptionTranslationPostProcessor cùng các PersistenceExceptionTranslator được phát hiện mới áp dụng cơ chế chuyển exception ORM được hỗ trợ sang mô hình chung của Spring; phần ORM mapping vẫn nằm ngoài module này."
+      - "Biết khi nào ứng dụng nên xử lý một điều kiện lỗi data access cụ thể và khi nào nên để lỗi lan truyền thay vì thêm lớp catch-and-wrap dư thừa."
+
+  - id: spring-jdbc-core
+    title: "Spring JDBC Core"
+    purpose: "Sử dụng Spring JDBC với mô hình tư duy rõ về quyền sở hữu DataSource, tham số hóa SQL, thực thi query/update, row mapping, số lượng kết quả kỳ vọng và quan hệ giữa JdbcClient với các template API."
+    relatedKnowledge:
+      - SpringJdbcCore
+    relatedModules:
+      - routeId: JDBC
+        label: "JDBC"
+        note: "Spring JDBC tự động hóa nhiều bước lặp lại nhưng vẫn thực thi SQL thông qua JDBC driver và JDBC resource."
+      - routeId: SPRING_DATA_JDBC
+        label: "Spring Data JDBC"
+        note: "Spring Data JDBC bổ sung aggregate mapping và repository trên relational access; nó không thay thế Spring Framework JDBC foundation của module này."
+    objectives:
+      - "Hiểu ranh giới trách nhiệm giữa mã ứng dụng và Spring đối với việc lấy/trả connection, thực thi statement, duyệt kết quả và chuyển đổi exception."
+      - "Dùng JdbcClient như fluent facade từ Spring 6.1 cho query/update phổ biến, đồng thời hiểu nó ủy quyền xuống JdbcTemplate và NamedParameterJdbcTemplate."
+      - "Lập luận đúng về tham số theo vị trí/tham số có tên, binding an toàn, row/object mapping và số lượng kết quả kỳ vọng mà không biến roadmap thành danh sách method."
+      - "Biết khi nào cần dùng trực tiếp JdbcTemplate hoặc NamedParameterJdbcTemplate vì bài toán cần callback hoặc API/cơ chế ở mức thấp hơn mà JdbcClient không cung cấp."
+
+  - id: jdbc-advanced-workflows
+    title: "Quy trình JDBC vượt ngoài query/update cơ bản"
+    purpose: "Mở rộng mô hình Spring JDBC sang các thao tác mà fluent query/update đơn giản không đủ, nhưng vẫn giữ quyền sở hữu SQL rõ ràng và hiểu chính xác phần nào framework tự động hóa."
+    relatedKnowledge:
+      - AdvancedJdbc
+    objectives:
+      - "Hiểu batch execution là một workload riêng với ràng buộc từ driver/database, cách cấp nhiều bộ tham số và ngữ nghĩa update count, không chỉ là lặp nhiều lời gọi từng dòng."
+      - "Xử lý generated key, tùy biến cách trích xuất row/result và callback-based processing khi convenience client không đủ biểu đạt."
+      - "Nhận diện SimpleJdbcInsert và SimpleJdbcCall là tiện ích dựa trên metadata cho insert/stored procedure, đồng thời hiểu khi nào khai báo metadata/configuration tường minh an toàn hơn."
+      - "Đặt embedded database và SQL-script initialization helper vào đúng vai trò bootstrap/test, không nhầm chúng với chiến lược schema migration cho production."
+      - "Chọn giữa JdbcClient, template API và JDBC helper chuyên biệt dựa trên khả năng cần thiết và độ rõ ràng thay vì giả định facade mới nhất thay thế mọi API thấp hơn."
+
+  - id: spring-r2dbc-core
+    title: "Spring R2DBC Core và DatabaseClient"
+    purpose: "Hiểu mô hình truy cập dữ liệu quan hệ non-blocking của Spring Framework quanh ConnectionFactory và DatabaseClient, bao gồm thực thi reactive, binding tham số, ánh xạ kết quả, quản lý tài nguyên và cơ chế chuyển đổi exception chung."
+    relatedKnowledge:
+      - SpringR2dbcCore
+    relatedModules:
+      - routeId: REACTIVE_PROGRAMMING
+        label: "Reactive Programming"
+        note: "Reactive Streams, cách ghép publisher, backpressure và mô hình tư duy non-blocking là prerequisite, không phải nội dung Spring Data Access sở hữu."
+      - routeId: SPRING_DATA_R2DBC
+        label: "Spring Data R2DBC"
+        note: "Spring Data R2DBC sở hữu repository và entity-mapping abstraction; DatabaseClient thuộc Spring Framework R2DBC core."
+    objectives:
+      - "Hiểu DatabaseClient là client trung tâm của Spring Framework R2DBC và giữ quyền sở hữu của nó tách biệt khỏi repository/mapping layer của Spring Data R2DBC."
+      - "Theo dõi một thao tác SQL reactive từ ConnectionFactory qua thực thi statement tới ánh xạ kết quả mà không áp các giả định blocking connection/thread của JDBC."
+      - "Lập luận đúng về cách mở rộng named parameter và chuyển sang bind marker phù hợp với database/dialect, số lượng kết quả kỳ vọng, row mapping, generated value và quy tắc Reactive Streams không cho phép phát ra null."
+      - "Nhận ra truy cập non-blocking thay đổi ngữ nghĩa thực thi và vòng đời tài nguyên nhưng không tự động làm SQL hay database chạy nhanh hơn."
+
+  - id: resource-lifecycle-transaction-participation
+    title: "Vòng đời tài nguyên và tham gia transaction"
+    purpose: "Hiểu cách component data access của Spring lấy và giải phóng tài nguyên JDBC/R2DBC theo cách transaction-aware, đồng thời chuyển chính sách transaction và ngữ nghĩa propagation sang module Transaction Management chuyên trách."
+    relatedKnowledge:
+      - ResourceTransactionParticipation
+    relatedModules:
+      - routeId: SPRING_TRANSACTION_MANAGEMENT
+        label: "Spring Transaction Management"
+        note: "Transaction propagation, isolation, rollback rule, declarative interception và chính sách transaction manager thuộc module Transaction Management."
+    objectives:
+      - "Hiểu vì sao DataSourceUtils và ConnectionFactoryUtils tồn tại, cũng như cách Spring JDBC/R2DBC client dùng cơ chế lấy tài nguyên và cleanup có nhận biết transaction."
+      - "Phân biệt truy cập tài nguyên đã tích hợp trực tiếp với framework và transaction-aware proxy adapter dùng để giúp client chưa tích hợp vẫn tham gia Spring-managed transaction."
+      - "Nhận diện blocking JDBC thường gắn tài nguyên với thread còn reactive R2DBC gắn tài nguyên với subscriber context tại ranh giới tích hợp."
+      - "Không kéo chính sách transaction vào module này: chỉ học cách tài nguyên data access tham gia, còn propagation, isolation, rollback và transaction demarcation chuyển sang Spring Transaction Management."
+
+  - id: abstraction-choice-synthesis
+    title: "Chọn abstraction truy cập dữ liệu và tổng hợp"
+    purpose: "Tổng hợp module thành mô hình ra quyết định thực tế để chọn JDBC thuần, Spring JDBC, Spring R2DBC hoặc abstraction cao hơn của Spring Data/ORM nhưng vẫn giữ ranh giới tài nguyên, lỗi, transaction và mapping rõ ràng."
+    relatedKnowledge:
+      - AbstractionChoice
+    relatedModules:
+      - routeId: SPRING_DATA_JDBC
+        label: "Spring Data JDBC"
+        note: "Chọn Spring Data JDBC khi cần aggregate mapping và repository abstraction trên relational stack blocking."
+      - routeId: SPRING_DATA_R2DBC
+        label: "Spring Data R2DBC"
+        note: "Chọn Spring Data R2DBC khi cần repository/mapping abstraction trên relational stack dựa trên R2DBC."
+      - routeId: SPRING_TRANSACTION_MANAGEMENT
+        label: "Spring Transaction Management"
+        note: "Sau khi chọn công nghệ data access, ngữ nghĩa và chính sách transaction được ghép vào qua transaction abstraction chuyên trách."
+    objectives:
+      - "Chọn JdbcClient cho query/update Spring JDBC phổ biến, template/helper API ở mức thấp hơn cho khả năng JDBC nâng cao và DatabaseClient cho Spring Framework R2DBC core access."
+      - "Chỉ chọn Spring Data hoặc ORM khi thực sự cần repository, aggregate/entity mapping hoặc persistence behavior cấp cao thay vì thêm chúng theo mặc định."
+      - "Tránh đưa lời gọi JDBC blocking vào reactive execution path chỉ vì phần còn lại của ứng dụng dùng Reactor hoặc WebFlux."
+      - "Giữ mô hình end-to-end: persistence resource → Spring data-access client/helper → thao tác có binding tham số → ánh xạ kết quả → common exception model → tham gia transaction → service-layer caller."

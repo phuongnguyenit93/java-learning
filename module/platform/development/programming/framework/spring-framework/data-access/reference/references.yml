@@ -1,0 +1,49 @@
+# ============================================================
+# MODULE REFERENCE STRUCTURE
+# ============================================================
+#
+# This is the shared module-level reference catalog.
+# It is intentionally not split by MODULE_LANGUAGE.
+#
+# Example structure:
+#
+# references:
+#   - title: "Java Language Specification"
+#     url: "https://docs.oracle.com/javase/specs/"
+#     description: "Official Java language specification."
+#
+# Add only curated references that are useful for the module.
+# The build system must not overwrite this file after authored content exists.
+
+references:
+  - title: "Spring Framework 6.1 Release Notes"
+    url: "https://github.com/spring-projects/spring-framework/wiki/Spring-Framework-6.1-Release-Notes"
+    description: "Official 6.1 release-line notes, including JdbcClient and R2DBC data-access changes relevant to this repository baseline."
+
+  - title: "JdbcClient (Spring Framework 6.1.14 API)"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/jdbc/core/simple/JdbcClient.html"
+    description: "Repository-baseline API reference for the Spring 6.1 fluent JDBC facade."
+
+  - title: "JdbcTemplate (Spring Framework 6.1.14 API)"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/jdbc/core/JdbcTemplate.html"
+    description: "Repository-baseline API reference for the central Spring JDBC template and callback/resource-management model."
+
+  - title: "DataSourceUtils (Spring Framework 6.1.14 API)"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/jdbc/datasource/DataSourceUtils.html"
+    description: "Repository-baseline API reference for transaction-aware JDBC Connection acquisition and release."
+
+  - title: "DatabaseClient (Spring Framework 6.1.14 API)"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/r2dbc/core/DatabaseClient.html"
+    description: "Repository-baseline API reference confirming DatabaseClient as Spring Framework R2DBC core infrastructure."
+
+  - title: "ConnectionFactoryUtils (Spring Framework 6.1.14 API)"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/r2dbc/connection/ConnectionFactoryUtils.html"
+    description: "Repository-baseline API reference for transaction-aware R2DBC Connection acquisition and release."
+
+  - title: "org.springframework.dao (Spring Framework 6.1.14 API)"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/dao/package-summary.html"
+    description: "Repository-baseline package reference for Spring's technology-independent data-access exception model."
+
+  - title: "PersistenceExceptionTranslationPostProcessor (Spring Framework 6.1.14 API)"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/dao/annotation/PersistenceExceptionTranslationPostProcessor.html"
+    description: "Repository-baseline API reference for transparent persistence exception translation on eligible @Repository beans."

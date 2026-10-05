@@ -1,0 +1,156 @@
+# <roadmap-schema>
+# Module Roadmap Structure
+# schema-version: 1
+#
+# YAML CONTRACT
+# roadmap: High-level learning milestones for the current language roadmap.
+#
+# - id [string, required]: Stable and unique milestone identity within the current language roadmap.
+# - title [string, required]: Milestone title displayed to the learner.
+# - purpose [string, required]: What the learner should understand or achieve from this milestone.
+# - dependsOn [list, optional]: Prerequisite milestone ids when item order alone is not enough to express the dependency.
+# - objectives [list, optional]: Milestone-level learning objectives; do not use this to list every small fact/API/syntax item.
+# - relatedKnowledge [list, optional]: Knowledge category ids in the current module that support this milestone. Portal displays this list on the side opposite the milestone and clicking an item navigates to the matching Knowledge category.
+# - relatedModules [list, optional]: Related modules displayed as Portal Level 2 cards. Each item requires routeId and may provide localized label/note; this relation is navigation only and does not create child milestones or change learning order.
+#
+# ROADMAP THINKING FRAMEWORK
+# PURPOSE
+#   - What is this topic/module?
+#   - Why does it exist?
+#   - What problem exists without it?
+# FOUNDATION
+#   - What prerequisite or mental model must the learner have first?
+# CORE MODEL
+#   - What major abstractions or building blocks make up this topic?
+# MECHANICS
+#   - How does it work at the language/runtime/API level appropriate for this module?
+# USAGE
+#   - How is it used in real code?
+# DECISION / TRADE-OFF
+#   - When should this mechanism be chosen over another?
+#   - When should it not be used?
+# FAILURE / PITFALL
+#   - What mistakes, compile-time failures, or runtime failures matter?
+# INTEGRATION
+#   - How does this topic connect to neighboring concepts/modules?
+# SYNTHESIS
+#   - What end-to-end mental model should the learner retain?
+#
+# Each language owns its own roadmap. Do not infer or synchronize its structure from another language roadmap.
+# Item order in roadmap is the default learning order. Use dependsOn only when a dependency needs to be expressed beyond the linear order.
+# The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
+# </roadmap-schema>
+
+roadmap:
+  - id: spring-data-access-mental-model
+    title: "Spring Data Access Mental Model"
+    purpose: "Understand why Spring Framework adds a data-access layer on top of JDBC, R2DBC, and persistence technologies, which responsibilities it removes from application code, and where this module stops before transaction policy, ORM mapping, or Spring Data repositories begin."
+    relatedKnowledge:
+      - DataAccess
+    relatedModules:
+      - routeId: SPRING_CORE_CONTAINER
+        label: "Spring Core Container"
+        note: "DataSource, ConnectionFactory, clients, and DAOs are commonly configured and injected as Spring-managed components."
+      - routeId: JDBC
+        label: "JDBC"
+        note: "Plain JDBC owns the Java database API and connection/statement/result-set fundamentals that Spring JDBC builds on."
+    objectives:
+      - "Explain the recurring problems Spring Data Access solves: repetitive resource handling, technology-specific exception handling, transaction-aware resource participation, and boilerplate around SQL execution and result extraction."
+      - "Separate Spring Framework Data Access from Spring Data: this module owns DAO/JDBC/R2DBC core infrastructure, while Spring Data owns repository, aggregate mapping, and derived-query abstractions."
+      - "Distinguish the blocking JDBC path from the non-blocking R2DBC path before choosing a client API, without treating one as a drop-in replacement for the other."
+      - "Keep ORM entity mapping, database-native JDBC/R2DBC semantics, transaction propagation/isolation policy, and repository abstractions with their owning modules."
+
+  - id: consistent-dao-error-model
+    title: "Consistent DAO and Error Model"
+    purpose: "Build the technology-neutral failure model shared across Spring data-access technologies so callers can reason about data-access failures without depending on SQLException, JPA, Hibernate, or R2DBC exception types."
+    relatedKnowledge:
+      - DaoExceptionModel
+    objectives:
+      - "Understand DataAccessException as the root of Spring's unchecked data-access exception hierarchy and distinguish transient, non-transient, recoverable, integrity, locking, timeout, and result-cardinality failures conceptually."
+      - "Understand that Spring JDBC and Spring R2DBC translate native driver exceptions into the common hierarchy while preserving the underlying cause."
+      - "Understand the repository/DAO stereotype boundary and how @Repository marks eligible beans while PersistenceExceptionTranslationPostProcessor and discovered PersistenceExceptionTranslator implementations apply supported ORM exception translation into Spring's common model, without making ORM mapping part of this module."
+      - "Decide when application code should handle a specific data-access condition and when failures should propagate instead of adding broad catch-and-wrap boilerplate."
+
+  - id: spring-jdbc-core
+    title: "Spring JDBC Core"
+    purpose: "Use Spring's JDBC abstraction with a clear model of DataSource ownership, SQL parameterization, query/update execution, row mapping, result cardinality, and the relationship between JdbcClient and the template APIs."
+    relatedKnowledge:
+      - SpringJdbcCore
+    relatedModules:
+      - routeId: JDBC
+        label: "JDBC"
+        note: "Spring JDBC automates common JDBC workflow but still executes SQL through JDBC drivers and JDBC resources."
+      - routeId: SPRING_DATA_JDBC
+        label: "Spring Data JDBC"
+        note: "Spring Data JDBC adds aggregate mapping and repositories on top of relational access; it does not replace the Spring Framework JDBC foundation taught here."
+    objectives:
+      - "Understand the division of responsibility between application code and Spring around connection acquisition/release, statement execution, result iteration, and exception translation."
+      - "Use JdbcClient as the Spring 6.1 fluent facade for common query/update work while understanding that it delegates to JdbcTemplate and NamedParameterJdbcTemplate."
+      - "Reason about positional versus named parameters, safe parameter binding, row/object mapping, and expected result cardinality without turning the roadmap into a method inventory."
+      - "Know when direct JdbcTemplate or NamedParameterJdbcTemplate access is more appropriate than JdbcClient because lower-level callbacks or capabilities are required."
+
+  - id: jdbc-advanced-workflows
+    title: "JDBC Workflows Beyond Simple Query and Update"
+    purpose: "Extend the Spring JDBC mental model to operations where a simple fluent query/update is insufficient, while retaining explicit ownership of SQL and understanding what the framework automates."
+    relatedKnowledge:
+      - AdvancedJdbc
+    objectives:
+      - "Understand batch execution as a distinct workload with driver/database constraints, parameter-set handling, and update-count semantics rather than as repeated single-row calls hidden in a loop."
+      - "Handle generated keys, custom row/result extraction, and callback-based processing when the convenience client is not expressive enough."
+      - "Recognize SimpleJdbcInsert and SimpleJdbcCall as metadata-assisted conveniences for inserts and stored procedures, including the boundary where explicit metadata/configuration is safer."
+      - "Place embedded-database and SQL-script initialization helpers in their proper bootstrap/test role instead of confusing them with a production schema-migration strategy."
+      - "Choose among JdbcClient, template APIs, and specialized JDBC helpers by required capability and clarity instead of assuming the newest facade replaces every lower-level option."
+
+  - id: spring-r2dbc-core
+    title: "Spring R2DBC Core and DatabaseClient"
+    purpose: "Understand Spring Framework's non-blocking relational access model around ConnectionFactory and DatabaseClient, including reactive execution, parameter binding, result mapping, resource handling, and common error translation."
+    relatedKnowledge:
+      - SpringR2dbcCore
+    relatedModules:
+      - routeId: REACTIVE_PROGRAMMING
+        label: "Reactive Programming"
+        note: "Reactive Streams, publisher composition, backpressure, and non-blocking mental models are prerequisites rather than content owned by Spring Data Access."
+      - routeId: SPRING_DATA_R2DBC
+        label: "Spring Data R2DBC"
+        note: "Spring Data R2DBC owns repository and entity-mapping abstractions; DatabaseClient itself belongs to Spring Framework R2DBC core."
+    objectives:
+      - "Understand DatabaseClient as the central Spring Framework R2DBC client and keep its ownership distinct from Spring Data R2DBC's repositories and mapping layer."
+      - "Trace a reactive SQL operation from ConnectionFactory through statement execution and result mapping without importing JDBC's blocking connection/thread assumptions."
+      - "Reason about named-parameter expansion and translation to database-specific bind markers, result cardinality, row mapping, generated values, and the Reactive Streams rule that prevents emitting null values."
+      - "Recognize that non-blocking access changes resource and execution semantics but does not automatically make SQL or the database itself faster."
+
+  - id: resource-lifecycle-transaction-participation
+    title: "Resource Lifecycle and Transaction Participation"
+    purpose: "Understand how Spring data-access components obtain and release JDBC/R2DBC resources in a transaction-aware way, while handing transaction policy and propagation semantics to the dedicated Transaction Management module."
+    relatedKnowledge:
+      - ResourceTransactionParticipation
+    relatedModules:
+      - routeId: SPRING_TRANSACTION_MANAGEMENT
+        label: "Spring Transaction Management"
+        note: "Transaction propagation, isolation, rollback rules, declarative interception, and transaction-manager policy are owned by the Transaction Management module."
+    objectives:
+      - "Understand why DataSourceUtils and ConnectionFactoryUtils exist and how Spring's own JDBC/R2DBC clients use transaction-aware resource lookup and cleanup strategies."
+      - "Distinguish normal framework-integrated resource access from transaction-aware proxy adapters intended to let otherwise unaware clients participate in Spring-managed transactions."
+      - "Recognize the blocking JDBC model of thread-bound resources and the reactive R2DBC model of subscriber-context-bound resources at the integration boundary."
+      - "Keep transaction policy out of this module: learn how data-access resources participate, then hand propagation, isolation, rollback, and transaction demarcation to Spring Transaction Management."
+
+  - id: abstraction-choice-synthesis
+    title: "Choosing the Data-Access Abstraction"
+    purpose: "Synthesize the module into a practical decision model for choosing raw JDBC, Spring JDBC, Spring R2DBC, or a higher-level Spring Data/ORM abstraction while preserving clear resource, error, transaction, and mapping boundaries."
+    relatedKnowledge:
+      - AbstractionChoice
+    relatedModules:
+      - routeId: SPRING_DATA_JDBC
+        label: "Spring Data JDBC"
+        note: "Choose Spring Data JDBC when aggregate mapping and repository abstractions are desired on a blocking relational stack."
+      - routeId: SPRING_DATA_R2DBC
+        label: "Spring Data R2DBC"
+        note: "Choose Spring Data R2DBC when repository/mapping abstractions are desired on an R2DBC-based reactive relational stack."
+      - routeId: SPRING_TRANSACTION_MANAGEMENT
+        label: "Spring Transaction Management"
+        note: "Once data-access technology is chosen, transaction semantics and policy are composed through the dedicated transaction abstraction."
+    objectives:
+      - "Choose JdbcClient for common Spring JDBC query/update work, lower-level template/helper APIs for advanced JDBC capabilities, and DatabaseClient for Spring Framework R2DBC core access."
+      - "Choose Spring Data or ORM abstractions only when repository, aggregate/entity mapping, or higher-level persistence behavior is actually needed instead of adding them by default."
+      - "Avoid mixing blocking JDBC calls into a reactive execution path merely because the surrounding application uses Reactor or WebFlux."
+      - "Retain the end-to-end model: persistence resource → Spring data-access client/helper → parameterized operation → result mapping → common exception model → transaction participation → service-layer caller."

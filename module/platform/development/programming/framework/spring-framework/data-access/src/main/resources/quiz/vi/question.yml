@@ -1,0 +1,290 @@
+# <quiz-schema>
+# Cấu trúc câu hỏi Quiz
+# schema-version: 3
+#
+# questions [kiểu: list; bắt buộc; mặc định: []; duy nhất theo: id]
+#   Danh sách câu hỏi Quiz của module trong language hiện tại.
+#   mỗi phần tử:
+#     id [kiểu: string; bắt buộc; mặc định: ""]
+#       ID ổn định và duy nhất của câu hỏi.
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi hiển thị cho người học.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu câu hỏi được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu câu hỏi đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+#     answers [kiểu: list; bắt buộc; số phần tử: 4; mặc định: []; duy nhất theo: id]
+#       Chính xác bốn đáp án. ID A/B/C/D là identity nội bộ ổn định, không phải vị trí hiển thị sau khi frontend shuffle.
+#       mỗi phần tử:
+#         id [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#           Identity ổn định của đáp án.
+#         answer [kiểu: string; bắt buộc; mặc định: ""]
+#           Nội dung đáp án hiển thị cho người học.
+#         explanation [kiểu: string; bắt buộc; mặc định: ""]
+#           Giải thích hiển thị khi người học chọn đáp án này, bất kể đúng hay sai.
+#     correctAnswerId [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#       ID nội bộ của đáp án đúng. Frontend kiểm tra bằng identity này sau khi shuffle.
+# </quiz-schema>
+
+questions:
+  - id: data-access-q01-purpose
+    question: "Giá trị chính mà Spring Framework Data Access mang lại khi ứng dụng vẫn muốn viết SQL tường minh là gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Introduction/DataAccess.md"
+      anchor: "data-access-purpose"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Nó thay SQL tường minh bằng query derivation của repository và aggregate mapping."
+        explanation: "Sai. Query derivation và aggregate mapping thuộc các abstraction Spring Data ở tầng cao hơn."
+      - id: B
+        answer: "Nó chuẩn hóa resource workflow và failure translation nhưng vẫn giữ SQL cùng mapping tường minh."
+        explanation: "Đúng. Spring loại bỏ plumbing lặp lại quanh relational operation có chủ đích mà không che mất SQL contract."
+      - id: C
+        answer: "Nó biến JDBC driver blocking thành non-blocking mà không cần thay đổi database client."
+        explanation: "Sai. Spring JDBC vẫn blocking vì được xây trên JDBC specification blocking."
+      - id: D
+        answer: "Nó sở hữu lịch sử schema evolution và rollout ordering của production bên cạnh các data-access operation thông thường."
+        explanation: "Sai. Lịch sử migration và kỷ luật rollout thuộc các công cụ migration như Flyway hoặc Liquibase."
+    correctAnswerId: B
+
+  - id: data-access-q02-exception-translation
+    question: "Cùng một lỗi vi phạm unique constraint được kích hoạt qua JdbcClient và DatabaseClient. Quan sát chung nào ở tầng Spring có ý nghĩa nhất?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.DaoExceptionModel/DaoExceptionModel.md"
+      anchor: "jdbc-r2dbc-exception-translation"
+    apiRelated:
+      controller: "DaoExceptionExperimentController"
+      methodSignature: "observeCrossStackExceptionTranslation()"
+    answers:
+      - id: A
+        answer: "Cả hai phải lộ ra đúng cùng một vendor exception class vì Spring chuẩn hóa driver implementation."
+        explanation: "Sai. Translation chuẩn hóa ý nghĩa data-access chứ không chuẩn hóa concrete vendor exception class."
+      - id: B
+        answer: "Cả hai chỉ nên lộ ra RuntimeException chung để tầng trên không phụ thuộc persistence technology."
+        explanation: "Sai. Spring giữ phân loại hữu ích qua hierarchy DataAccessException thay vì xóa mất ý nghĩa lỗi."
+      - id: C
+        answer: "Cả hai có thể surface DataAccessException subtype có ý nghĩa và vẫn giữ native cause để chẩn đoán."
+        explanation: "Đúng. Spring bổ sung phân loại portable và vẫn giữ thông tin cause cấp thấp."
+      - id: D
+        answer: "Cả hai trở thành retry-safe vì exception translation đánh dấu operation thất bại là transient."
+        explanation: "Sai. Translation không biến integrity violation thành transient và cũng không làm retry tự động an toàn."
+    correctAnswerId: C
+
+  - id: data-access-q03-repository-translation
+    question: "@Repository đóng vai trò gì trong persistence-exception translation của Spring?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.DaoExceptionModel/DaoExceptionModel.md"
+      anchor: "repository-exception-translation"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Bản thân annotation cài translation quanh bean và chuyển các persistence failure được hỗ trợ thành DataAccessException."
+        explanation: "Sai. @Repository là stereotype và eligibility marker; tự nó không thực hiện translation."
+      - id: B
+        answer: "Nó đánh dấu persistence bean đủ điều kiện; translation infrastructure đã đăng ký áp translator-backed advisor."
+        explanation: "Đúng. PersistenceExceptionTranslationPostProcessor cung cấp cơ chế proxy/advisor khi infrastructure này được đăng ký."
+      - id: C
+        answer: "Nó là điều kiện bắt buộc để JdbcTemplate translate SQLException trong query/update workflow thông thường."
+        explanation: "Sai. JdbcTemplate đã thực hiện JDBC exception translation trong workflow của chính nó."
+      - id: D
+        answer: "Nó cấu hình persistence provider phát ra DataAccessException trực tiếp thay vì native exception type của provider."
+        explanation: "Sai. Native exception vẫn xảy ra; Spring translate các failure được hỗ trợ sau khi chúng được phát sinh."
+    correctAnswerId: B
+
+  - id: data-access-q04-parameter-binding
+    question: "Request chọn sort column động. Vì sao ứng dụng không nên coi tên column là một bind value thông thường của JdbcClient?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.SpringJdbcCore/SpringJdbcCore.md"
+      anchor: "jdbc-parameter-binding"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Bind parameter đại diện cho runtime value; identifier và SQL fragment nên được chọn từ các giá trị ứng dụng đã kiểm soát."
+        explanation: "Đúng. Parameter binding tách cấu trúc SQL khỏi value nhưng không parameterize identifier tùy ý."
+      - id: B
+        answer: "Named parameter bind được identifier còn positional placeholder thì không, nên chỉ cần đổi placeholder style."
+        explanation: "Sai. Spring named parameter được expand thành bind position cho value; nó không biến identifier thành bindable value."
+      - id: C
+        answer: "Identifier chỉ bind được khi dùng JdbcTemplate trực tiếp vì JdbcClient loại bỏ statement metadata."
+        explanation: "Sai. Đây là khác biệt ở SQL/driver contract, không phải hạn chế riêng của JdbcClient."
+      - id: D
+        answer: "Có thể concat column name từ request vì SQL injection chỉ áp dụng cho literal value."
+        explanation: "Sai. Identifier hoặc SQL fragment không tin cậy vẫn có thể thay đổi cấu trúc SQL và phải được kiểm soát."
+    correctAnswerId: A
+
+  - id: data-access-q05-cardinality
+    question: "Một query hiện trả về một row trong test data nhưng predicate và database constraint đều chưa bảo đảm uniqueness. Vì sao chưa nên dùng JdbcClient single()?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.SpringJdbcCore/SpringJdbcCore.md"
+      anchor: "jdbc-row-mapping-cardinality"
+    apiRelated:
+      controller: "JdbcCoreExperimentController"
+      methodSignature: "observeJdbcCardinality()"
+    answers:
+      - id: A
+        answer: "single() tắt row mapping nên chỉ nên dùng cho scalar database function."
+        explanation: "Sai. single() có thể trả object đã map; vấn đề ở đây là số lượng row kỳ vọng."
+      - id: B
+        answer: "single() âm thầm giữ row đầu tiên nên có thể che duplicate nếu thiếu ORDER BY."
+        explanation: "Sai. Cardinality sai của single-result được báo lỗi thay vì âm thầm chọn một row."
+      - id: C
+        answer: "single() thêm một count query nội bộ để xác nhận uniqueness nên contract phụ thuộc vào validation query đó."
+        explanation: "Sai. Cardinality contract không đòi connection thứ hai hay một uniqueness query riêng."
+      - id: D
+        answer: "single() nghĩa là exactly-one; predicate và constraint phải bảo đảm contract, không phải sample data."
+        explanation: "Đúng. Nếu xuất hiện nhiều row, Spring có thể báo IncorrectResultSizeDataAccessException."
+    correctAnswerId: D
+
+  - id: data-access-q06-batch-vs-transaction
+    question: "DAO gửi 500 insert tương tự bằng JdbcTemplate batchUpdate(). Bản thân batching bảo đảm điều gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.AdvancedJdbc/AdvancedJdbc.md"
+      anchor: "jdbc-batch-operations"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Nó bảo đảm cả 500 write commit hoặc rollback cùng nhau dù chưa cấu hình transaction boundary."
+        explanation: "Sai. Atomic commit/rollback là concern của transaction, không tự động có chỉ vì batching."
+      - id: B
+        answer: "Nó nhóm parameter set qua JDBC batching; transaction boundary và application chunking vẫn là quyết định riêng."
+        explanation: "Đúng. Batch, transaction và application chunking giải quyết các concern khác nhau."
+      - id: C
+        answer: "Nó bảo đảm database thực thi cả 500 row thành một physical statement với một generated-key shape."
+        explanation: "Sai. Driver và database quyết định execution detail cũng như generated-key support."
+      - id: D
+        answer: "Nó chuẩn hóa partial-failure recovery giữa các driver để caller xử lý mọi parameter set thất bại theo cùng một cách."
+        explanation: "Sai. Batching không định nghĩa automatic retry hay recovery policy."
+    correctAnswerId: B
+
+  - id: data-access-q07-r2dbc-deferred
+    question: "Một Mono của DatabaseClient đã được dựng nhưng CountingConnectionFactory vẫn báo 0 lần acquisition. Điều gì giải thích quan sát này tốt nhất?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.SpringR2dbcCore/SpringR2dbcCore.md"
+      anchor: "r2dbc-reactive-sql-execution"
+    apiRelated:
+      controller: "R2dbcExperimentController"
+      methodSignature: "observeR2dbcDeferredExecution()"
+    answers:
+      - id: A
+        answer: "DatabaseClient đã chạy SQL và cache rows mà không tạo driver connection."
+        explanation: "Sai. Database I/O không thể xảy ra mà không có connection; pipeline mới chỉ được dựng."
+      - id: B
+        answer: "DatabaseClient chỉ trì hoãn row mapping, còn connection acquisition và statement execution xảy ra ngay trong sql(...)."
+        explanation: "Sai. Core execution lifecycle, gồm acquisition, được defer tới lúc subscription."
+      - id: C
+        answer: "Reactive pipeline là lazy; subscription mới bắt đầu connection acquisition và SQL execution."
+        explanation: "Đúng. Dựng fluent specification chưa thực hiện database operation."
+      - id: D
+        answer: "DatabaseClient giữ một eager connection khi client được tạo nên wrapped ConnectionFactory bị bypass cho từng operation."
+        explanation: "Sai. R2DBC dùng ConnectionFactory và Connection; experiment đang đếm chính factory acquisition."
+    correctAnswerId: C
+
+  - id: data-access-q08-r2dbc-null
+    question: "DatabaseClient row mapper gặp SQL NULL ở một column. Cách mapping nào tuân thủ Reactive Streams semantics?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.SpringR2dbcCore/SpringR2dbcCore.md"
+      anchor: "r2dbc-result-mapping-cardinality-null"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Return null từ mapper để Publisher emit một null element cho row đó."
+        explanation: "Sai. Reactive Streams không cho phép emit null element."
+      - id: B
+        answer: "Bỏ toàn bộ row khi bất kỳ SQL column nào NULL vì reactive mapping không thể biểu diễn partial nullability."
+        explanation: "Sai. SQL NULL có thể được biểu diễn bên trong một mapped object không null hoặc một application model tường minh khác."
+      - id: C
+        answer: "Chuyển sang JDBC cho mọi nullable column vì chỉ blocking API mới biểu diễn SQL NULL an toàn."
+        explanation: "Sai. R2DBC biểu diễn được nullable column value; chỉ Publisher element phải không null."
+      - id: D
+        answer: "Return một mapped value không null, trong đó field hoặc domain representation tường minh biểu diễn SQL NULL."
+        explanation: "Đúng. Nullability nằm bên trong mapped value chứ không phải dưới dạng null Publisher element."
+    correctAnswerId: D
+
+  - id: data-access-q09-reactive-resource-context
+    question: "Trong một Spring-managed reactive transaction, hai DatabaseClient operation chạy trên hai thread khác nhau sau scheduler hop nhưng chỉ quan sát một lần driver connection acquisition. Điều gì giải thích reuse này?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.ResourceTransactionParticipation/ResourceTransactionParticipation.md"
+      anchor: "thread-vs-subscriber-context-resources"
+    apiRelated:
+      controller: "ResourceParticipationExperimentController"
+      methodSignature: "observeResourceBinding()"
+    answers:
+      - id: A
+        answer: "Spring copy một ThreadLocal Connection từ thread đầu sang mọi scheduler worker trước query thứ hai."
+        explanation: "Sai. Reactive transaction state không được mô hình hóa như ordinary ThreadLocal state copy giữa các worker."
+      - id: B
+        answer: "R2dbcTransactionManager dùng một process-wide Connection cho mọi request tới khi application shutdown."
+        explanation: "Sai. Reuse được scope theo reactive transaction, không phải toàn process."
+      - id: C
+        answer: "Reactor Context mang transaction state nên DatabaseClient có thể reuse transaction-associated resource sau thread switch."
+        explanation: "Đúng. Thread identity không định nghĩa reactive transaction participation."
+      - id: D
+        answer: "boundedElastic worker kế thừa transaction ThreadLocal của request thread nên ordinary thread-local propagation giải thích việc reuse."
+        explanation: "Sai. Experiment quan sát scheduler hop thật trong khi transaction-associated resource vẫn được tái sử dụng."
+    correctAnswerId: C
+
+  - id: data-access-q10-blocking-jdbc-reactive
+    question: "Một WebFlux path bọc JdbcClient call trong Mono nhưng thực thi call đó trên event-loop thread. Đánh giá nào đúng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.AbstractionChoice/AbstractionChoice.md"
+      anchor: "blocking-jdbc-in-reactive-paths"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "JDBC call trở thành non-blocking vì return Mono thay đổi cách underlying driver thực hiện I/O."
+        explanation: "Sai. Reactive wrapper không thay đổi blocking driver model của JDBC."
+      - id: B
+        answer: "Event loop vẫn có thể block; cô lập JDBC trên bounded scheduler hoặc dùng R2DBC khi cần end-to-end reactive I/O."
+        explanation: "Đúng. Scheduler isolation có thể bảo vệ event loop nhưng JDBC work vẫn là blocking work."
+      - id: C
+        answer: "Tăng JDBC connection pool là đủ vì pool size quyết định event-loop thread có block hay không."
+        explanation: "Sai. Pool sizing ảnh hưởng resource availability nhưng không làm JDBC I/O thành non-blocking."
+      - id: D
+        answer: "Gọi publishOn sau khi JdbcClient call đã hoàn tất sẽ chuyển ngược blocking database work ra khỏi event loop."
+        explanation: "Sai. Scheduling phải bao quanh nơi blocking work thực sự chạy; nó không thể di chuyển phần việc đã thực thi."
+    correctAnswerId: B

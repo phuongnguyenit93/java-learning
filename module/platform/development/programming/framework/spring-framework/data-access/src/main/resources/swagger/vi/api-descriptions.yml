@@ -1,0 +1,112 @@
+DaoExceptionExperimentController:
+  observeCrossStackExceptionTranslation():
+    summary: So sánh exception translation giữa JDBC và R2DBC
+    description: Kích hoạt cùng một lỗi vi phạm unique constraint qua JdbcClient và
+      DatabaseClient, sau đó trả về phân loại exception của Spring cùng native root
+      cause được giữ lại ở cả hai stack.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: jdbc-r2dbc-exception-translation
+    methodName: observeCrossStackExceptionTranslation
+    params: [
+      ]
+    path: com/example/learning/dataaccess/experiment/controller/DaoExceptionExperimentController.java
+    mapping: '@GetMapping("/cross-stack-translation")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /data-access/dao-exception/cross-stack-translation
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+JdbcCoreExperimentController:
+  observeJdbcCardinality():
+    summary: Quan sát contract cardinality của JdbcClient
+    description: Chạy các truy vấn list, optional và single trên dữ liệu cô lập, rồi
+      cố ý vi phạm contract single-result để quan sát IncorrectResultSizeDataAccessException
+      thực tế.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: jdbc-row-mapping-cardinality
+    methodName: observeJdbcCardinality
+    params: [
+      ]
+    path: com/example/learning/dataaccess/experiment/controller/JdbcCoreExperimentController.java
+    mapping: '@GetMapping("/cardinality")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /data-access/jdbc/cardinality
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+R2dbcExperimentController:
+  observeR2dbcDeferredExecution():
+    summary: Quan sát ranh giới subscription của R2DBC
+    description: Tạo publisher DatabaseClient quanh một ConnectionFactory có bộ đếm,
+      chứng minh rằng lúc chỉ dựng publisher chưa lấy connection, rồi quan sát việc
+      lấy connection và kết quả SQL sau khi subscribe.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: r2dbc-reactive-sql-execution
+    methodName: observeR2dbcDeferredExecution
+    params: [
+      ]
+    path: com/example/learning/dataaccess/experiment/controller/R2dbcExperimentController.java
+    mapping: '@GetMapping("/deferred-execution")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /data-access/r2dbc/deferred-execution
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+ResourceParticipationExperimentController:
+  observeResourceBinding():
+    summary: So sánh resource gắn với transaction của JDBC và R2DBC
+    description: Dùng transaction harness có phạm vi giới hạn để chứng minh JDBC tái
+      sử dụng cùng reference qua trạng thái gắn với thread, còn hai operation DatabaseClient
+      của R2DBC vẫn dùng một lần driver connection acquisition khi execution đổi scheduler.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: thread-vs-subscriber-context-resources
+    methodName: observeResourceBinding
+    params: [
+      ]
+    path: com/example/learning/dataaccess/experiment/controller/ResourceParticipationExperimentController.java
+    mapping: '@GetMapping("/binding-context")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /data-access/resource/binding-context
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true

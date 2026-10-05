@@ -1,0 +1,133 @@
+# <interview-schema>
+# Cấu trúc câu hỏi Interview
+# schema-version: 2
+#
+# questions [kiểu: list; bắt buộc; mặc định: []]
+#   Danh sách câu hỏi Interview của module trong language hiện tại.
+#   mỗi phần tử:
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi phỏng vấn hiển thị cho người học.
+#     answer [kiểu: string; bắt buộc; mặc định: ""]
+#       Câu trả lời tham khảo, chỉ hiển thị khi người học chủ động mở.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu nội dung được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu nội dung đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+# </interview-schema>
+
+questions:
+  - question: >-
+      Spring Framework Data Access giải quyết vấn đề gì mà không cố trở thành repository hoặc ORM layer, và bạn sẽ đặt boundary đó ở đâu trong ứng dụng thực tế?
+    answer: >-
+      Spring Framework Data Access loại bỏ phần lặp lại của resource acquisition/release, statement execution plumbing và technology-specific failure handling nhưng vẫn để SQL tường minh, parameter binding, mapping và result expectation hiển thị rõ. JdbcClient/JdbcTemplate nằm trực tiếp trên JDBC, còn DatabaseClient nằm trực tiếp trên R2DBC. Tôi giữ tầng này khi direct relational control có giá trị. Tôi chuyển lên Spring Data khi repository và aggregate mapping là bài toán chính, và dùng JPA/Hibernate khi cần persistence-context cùng ORM lifecycle semantics. Transaction propagation, isolation và rollback policy thuộc Spring Transaction Management chứ không được định nghĩa lại bởi data-access client.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Introduction/DataAccess.md"
+      anchor: "data-access-responsibility-boundary"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Hãy giải thích Spring exception translation bổ sung điều gì trên native exception của JDBC và R2DBC. Application code nên dùng translated hierarchy thế nào mà không làm mất giá trị chẩn đoán?
+    answer: >-
+      JDBC và R2DBC lộ ra các native exception family khác nhau, còn Spring translate các failure được hỗ trợ thành hierarchy DataAccessException dạng unchecked để tầng trên reasoning theo ý nghĩa data-access như duplicate key, integrity violation, lock failure hoặc result-cardinality error. Native cause ban đầu vẫn được giữ để chẩn đoán theo vendor. Tôi chỉ catch Spring subtype hẹp nhất khi ứng dụng thực sự có policy tương ứng, ví dụ map duplicate business key thành domain conflict. Tôi không catch rồi wrap mọi DataAccessException thành lỗi chung, và cũng không giả định mọi transient category tự động retry-safe; retry vẫn cần idempotency, backoff và policy có giới hạn.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.DaoExceptionModel/DaoExceptionModel.md"
+      anchor: "jdbc-r2dbc-exception-translation"
+    apiRelated:
+      controller: "DaoExceptionExperimentController"
+      methodSignature: "observeCrossStackExceptionTranslation()"
+
+  - question: >-
+      Bạn sẽ chọn JdbcClient hay template API như thế nào, và vì sao result cardinality phải được xem là một phần của query contract thay vì chỉ là lựa chọn tiện lợi?
+    answer: >-
+      Tôi bắt đầu với JdbcClient cho query/update có parameter thông thường vì nó đặt SQL, binding, mapping và result resolution trong một fluent surface nhưng vẫn delegate xuống template infrastructure đã ổn định. Tôi dùng JdbcTemplate hoặc NamedParameterJdbcTemplate khi cần batch API, execute-style operation, statement-creation callback, template-specific configuration hoặc tích hợp code hiện có dựa trên template. Mapping và cardinality là hai quyết định riêng: list() nghĩa là zero-or-more, optional() là zero-or-one, còn single() là exactly one. SQL predicate và database constraint phải biện minh expectation đó; sample data hiện tại không phải contract. Vì vậy single-result method có thể phát sinh IncorrectResultSizeDataAccessException khi dữ liệu trái với expectation của caller.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.SpringJdbcCore/SpringJdbcCore.md"
+      anchor: "jdbc-row-mapping-cardinality"
+    apiRelated:
+      controller: "JdbcCoreExperimentController"
+      methodSignature: "observeJdbcCardinality()"
+
+  - question: >-
+      Team muốn tăng tốc nhiều JDBC insert, lấy generated identifier và đôi lúc dựng result có state xuyên nhiều row. Bạn sẽ cân nhắc cơ chế Spring JDBC nào, và sẽ từ chối những giả định nào?
+    answer: >-
+      Với nhiều write tương tự tôi sẽ cân nhắc JdbcTemplate batchUpdate cùng batch size đã đo và có giới hạn, nhưng tách batch submission khỏi transaction atomicity và application chunking. Với generated value tôi dùng JDBC generated-key support qua Spring helper như KeyHolder hoặc JdbcClient result API phù hợp, nhưng xem returned column và numeric type là contract của driver/database thay vì giả định mọi key là Long. Với mapping cần state của toàn ResultSet tôi dùng ResultSetExtractor; RowCallbackHandler phù hợp cho per-row side effect. Các callback này là escape hatch bên trong Spring-managed JDBC workflow, không phải lý do để tự đóng resource mà Spring cung cấp trừ khi callback contract giao ownership đó cho application.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Hãy đi qua DatabaseClient execution lifecycle từ lúc dựng SQL đến khi release connection. Vì sao subscription quan trọng, và lỗi tư duy nào xuất hiện khi coi DatabaseClient như eager imperative client?
+    answer: >-
+      Dựng fluent specification của DatabaseClient tạo execution plan theo Publisher; nó chưa thực hiện database I/O. Subscription mới bắt đầu connection acquisition, statement creation và binding, execution, result consumption rồi release resource. Error và transaction context vì vậy đi cùng reactive chain. Gọi block() chỉ để bắt chước JdbcTemplate bên trong reactive request path sẽ phá non-blocking model và có thể làm nghẽn event-loop thread. SQL NULL cũng không thể trở thành null Publisher element; nó phải được biểu diễn bên trong mapped value không null. Step 5 experiment làm subscription boundary quan sát được vì CountingConnectionFactory vẫn bằng 0 trước subscription và chỉ tăng khi query được subscribe.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.SpringR2dbcCore/SpringR2dbcCore.md"
+      anchor: "r2dbc-reactive-sql-execution"
+    apiRelated:
+      controller: "R2dbcExperimentController"
+      methodSignature: "observeR2dbcDeferredExecution()"
+
+  - question: >-
+      Hãy so sánh transaction-associated resource lookup của JDBC với R2DBC. Vì sao reactive transaction có thể sống qua thread switch trong khi ordinary ThreadLocal reasoning là không đủ?
+    answer: >-
+      Imperative Spring transaction synchronization thường gắn JDBC ConnectionHolder với thread hiện tại, và DataSourceUtils cho phép lower-level JDBC code lấy hoặc release transaction-aware connection đúng cách. Reactive execution có thể chuyển thread nhưng vẫn là một logical subscription, nên reactive transaction infrastructure của Spring mang transaction state trong Reactor subscriber Context thay vì dựa vào ordinary ThreadLocal affinity. DatabaseClient và ConnectionFactoryUtils tham gia lifecycle nhận biết context đó. Trong Step 5 experiment, hai DatabaseClient operation chạy trên hai thread khác nhau sau scheduler hop trong khi CountingConnectionFactory chỉ ghi nhận một physical acquisition, chứng minh transaction-associated resource được reuse chứ không phải process-wide connection hay ThreadLocal bị copy.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.ResourceTransactionParticipation/ResourceTransactionParticipation.md"
+      anchor: "thread-vs-subscriber-context-resources"
+    apiRelated:
+      controller: "ResourceParticipationExperimentController"
+      methodSignature: "observeResourceBinding()"
+
+  - question: >-
+      Một reactive HTTP application bắt buộc phải gọi library chỉ hỗ trợ JDBC. Bạn sẽ làm gì, và điều gì bạn sẽ không tuyên bố về kết quả?
+    answer: >-
+      JDBC vẫn blocking dù được bọc trong Mono. Nếu dependency JDBC-only phải được giữ lại, tôi cô lập blocking call trên bounded scheduler phù hợp, cân đối JDBC connection pool với thread capacity, đồng thời làm boundary này rõ trong observability và load test. Cách đó bảo vệ event-loop thread nhưng không biến driver thành non-blocking I/O. Nếu ứng dụng thực sự cần end-to-end reactive data path và database có production-quality R2DBC driver, chuyển path đó sang R2DBC có thể sạch hơn. Tôi cũng không ép R2DBC vào một ứng dụng vốn chủ yếu imperative chỉ vì framework có hỗ trợ.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.AbstractionChoice/AbstractionChoice.md"
+      anchor: "blocking-jdbc-in-reactive-paths"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Hãy mô tả một quy trình quyết định end-to-end để chọn Spring JDBC, Spring R2DBC, Spring Data hoặc JPA/Hibernate cho một persistence use case mới.
+    answer: >-
+      Trước hết tôi chọn execution model của ứng dụng: imperative hay thực sự reactive. Sau đó tôi hỏi explicit SQL và thin framework workflow có phải điều mong muốn không. Với imperative explicit SQL, Spring JDBC bằng JdbcClient hoặc template API là lựa chọn tự nhiên; với reactive explicit SQL, DatabaseClient trên R2DBC phù hợp khi driver đủ trưởng thành cho production. Nếu aggregate mapping, repository convention và query abstraction là nhu cầu chính, Spring Data JDBC hoặc Spring Data R2DBC nâng abstraction lên. Nếu entity identity, persistence context, relationship, lazy loading và dirty checking là requirement cốt lõi, JPA/Hibernate giải một bài toán ORM khác. Quyết định còn phụ thuộc driver maturity, operational tooling, kinh nghiệm team, transaction model, database-specific feature và chi phí che SQL sau abstraction cao hơn. Tầng cao hơn không tự động tốt hơn; tầng đúng là tầng làm ownership, SQL intent, lifecycle và failure behavior dễ reasoning nhất.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""
