@@ -27,4 +27,91 @@
 #         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
 # </interview-schema>
 
-questions: []
+questions:
+  - question: "Giải thích sự khác nhau giữa full và lite @Configuration. Vì sao cùng một direct inter-@Bean call có thể cho object identity khác nhau, và kiểu cấu hình nào giúp không phụ thuộc vào interception đó?"
+    answer: "Với full @Configuration, Spring enhance configuration class và có thể intercept lời gọi giữa các instance @Bean method có thể override. Vì vậy khi service() gọi trực tiếp repository(), lời gọi có thể đi qua container và singleton repository được resolve về managed instance. Với proxyBeanMethods=false, class được xử lý theo lite mode và cùng lời gọi trong source trở thành Java method call thông thường, nên nó có thể tạo object khác ngoài managed singleton lookup path. Experiment của module chứng minh đúng khác biệt identity này. Parameter injection làm dependency edge hiện rõ và không phụ thuộc vào cross-method interception, nên thường là cách rõ ràng hơn khi các bean method được thiết kế như những factory độc lập."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.BeanRegistration/BeanRegistration.md"
+      anchor: "full-vs-lite-configuration"
+    apiRelated:
+      controller: "ConfigurationExperimentController"
+      methodSignature: "observeConfigurationIdentity()"
+
+  - question: "Một Spring context fail trong lúc refresh. Bạn phân biệt missing dependency, ambiguous dependency và constructor cycle như thế nào, và cách sửa của ba trường hợp khác nhau ra sao?"
+    answer: "Tôi tìm nguyên nhân sâu nhất liên quan trực tiếp đến failure thay vì thêm annotation một cách ngẫu nhiên. Missing dependency nghĩa là không có bean hợp lệ nào thỏa injection point bắt buộc; cần kiểm tra registration, scan boundary, condition, type và qualifier metadata. Ambiguous dependency nghĩa là còn nhiều bean cùng hợp lệ cho một single-valued injection point; nên chọn một mặc định có chủ đích bằng @Primary hoặc thu hẹp candidate theo vai trò bằng @Qualifier thay vì xóa một bean hợp lệ. Constructor cycle nghĩa là A không thể tạo nếu thiếu B trong khi B cũng không thể tạo nếu thiếu A; cách sửa thường là thiết kế lại dependency graph chứ không phải chọn candidate khác. Experiment của module làm ba dạng này quan sát được qua NoSuchBeanDefinitionException, NoUniqueBeanDefinitionException và BeanCurrentlyInCreationException trong exception chain tương ứng."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.DependencyInjection/DependencyInjection.md"
+      anchor: "dependency-resolution-failures"
+    apiRelated:
+      controller: "DependencyFailureExperimentController"
+      methodSignature: "observeDependencyFailure(DependencyFailureScenario)"
+
+  - question: "Vì sao inject prototype trực tiếp vào singleton không làm singleton nhận prototype mới ở mỗi lần dùng? Hãy so sánh cách đó với ObjectProvider và scoped proxy."
+    answer: "Prototype scope quyết định điều gì xảy ra khi container resolve bean definition đó. Direct constructor injection vào singleton thực hiện resolution khi singleton được tạo, rồi singleton giữ một Java reference thông thường; không có cơ chế tự re-inject field sau mỗi method call. ObjectProvider giữ deferred resolution một cách tường minh và cho consumer yêu cầu target về sau, nên nhiều lần getObject() có thể nhận các prototype instance mới. Scoped proxy dùng cách khác: consumer nhận một proxy ổn định, còn mỗi invocation được delegate tới target gắn với scope hiện tại. ObjectProvider làm lookup hiện rõ trong API của consumer, còn scoped proxy che phần lớn lookup phía sau proxy semantics. Chọn cơ chế dựa trên việc explicit deferred resolution hay transparent scope indirection làm thiết kế dễ hiểu hơn."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.BeanScope/BeanScope.md"
+      anchor: "scoped-dependency-mismatch"
+    apiRelated:
+      controller: "ScopeExperimentController"
+      methodSignature: "observeScopeIdentity()"
+
+  - question: "Hãy mô tả thứ tự initialization và destruction khi bean dùng @PostConstruct, InitializingBean, custom init, @PreDestroy, DisposableBean và custom destroy callback. Vì sao thứ tự đó quan trọng khi reasoning về lifecycle?"
+    answer: "Trong tổ hợp cơ chế được minh họa ở đây, initialization đi qua @PostConstruct, InitializingBean.afterPropertiesSet(), rồi custom init method sau khi bean đã được instantiate, populate dependency và nhận Aware callback. Khi context sở hữu bean đóng, destruction đi qua @PreDestroy, DisposableBean.destroy(), rồi custom destroy method. Thứ tự quan trọng vì các callback không phải những hook có thể hoán đổi tùy ý: bước initialization sau có thể dựa trên invariant do bước trước thiết lập, còn destruction cần giải phóng resource ở shutdown phase có thể dự đoán. Experiment ghi lại cả hai trace và kiểm tra đúng thứ tự thay vì xem lifecycle chỉ là danh sách annotation/interface rời rạc."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: "LifecycleExperimentController"
+      methodSignature: "observeLifecycleCallbacks()"
+
+  - question: "Bạn sẽ giải thích ranh giới giữa Environment, PropertySource, profile, property placeholder và SpEL như thế nào? Những vấn đề nào nên nằm ngoài module Core Container này?"
+    answer: "Environment là abstraction của container cho profile và property resolution, còn PropertySource biểu diễn một nguồn key-value riêng được tìm kiếm qua Environment. Profile là registration condition: nó quyết định definition nào tham gia trong một environment và không nên thay thế runtime business branching. Property placeholder thực hiện key lookup, có thể có default; SpEL đánh giá expression trên object/evaluation context và chỉ nên dùng khi thật sự cần expression semantics. Module này sở hữu các cơ chế Spring Framework đó. Spring Boot Config Data, @ConfigurationProperties và Boot-specific externalized-configuration precedence thuộc curriculum Spring Boot configuration, không nên bị trộn vào Core Container."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Vì sao ApplicationContext event của Spring không thay thế durable message broker? Hãy giải thích behavior đồng bộ mặc định và hệ quả thiết kế đối với publisher."
+    answer: "ApplicationContext event là cơ chế observer trong cùng process. Với SimpleApplicationEventMulticaster mặc định, matching listener được gọi đồng bộ trên publishing thread, nên publishEvent không return cho đến khi các listener đó hoàn tất. Vì vậy latency và failure của listener mặc định là một phần của publisher call, và listener có thể thấy execution context của publisher thread. Cơ chế này không cam kết persistence, acknowledgement, cross-process delivery hay retry sau process failure. Nó phù hợp cho local reaction cần decouple; durable integration messaging thuộc ranh giới messaging/broker."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.ApplicationContextServices/ApplicationContextServices.md"
+      anchor: "application-events"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "So sánh BeanFactoryPostProcessor, BeanPostProcessor và FactoryBean. Mỗi cơ chế mở rộng phần nào của container, và vì sao premature bean creation nguy hiểm khi processor chain còn đang được dựng?"
+    answer: "BeanFactoryPostProcessor làm việc với configuration metadata sau khi definition được load nhưng trước ordinary bean creation; đây là tầng phù hợp để thay đổi container model. BeanPostProcessor tham gia lifecycle của bean instance trước và sau initialization, có thể inspect, wrap hoặc thay exposed instance. FactoryBean lại khác: nó là factory object do Spring quản lý, trong đó bean name thông thường resolve tới product từ getObject(), còn prefix & dùng để lấy chính factory. Nếu factory post-processor hoặc infrastructure đang bootstrap kéo ordinary application bean vào quá sớm, bean đó có thể được tạo trước khi mọi BeanPostProcessor được đăng ký, nên có thể bỏ lỡ annotation processing, proxying hoặc infrastructure khác. Các hook này mạnh vì chúng can thiệp container mechanics; đó cũng là lý do business service thông thường không nên dùng chúng như workflow callback."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Hãy đưa ra mental model end-to-end để chẩn đoán một Spring Core Container startup failure trước khi đổi configuration. Mental model đó giúp giữ application code ít phụ thuộc container như thế nào?"
+    answer: "Tôi lần theo luồng từ configuration source tới BeanDefinition metadata, factory post-processing, dependency resolution, bean instantiation và population, initialization/post-processing, exposed ApplicationContext graph, rồi shutdown/destruction. Trước hết xác định phase lỗi: thiếu definition thường là registration; nhiều bean cùng hợp lệ là candidate selection; constructor cycle hoặc scope mismatch là dependency-graph design; exception từ init callback là lifecycle; premature creation là bootstrap/extension infrastructure; profile/property sai là Environment configuration. Mô hình theo phase giúp tránh sửa annotation ngẫu nhiên. Ở application layer, tôi vẫn ưu tiên constructor injection và dependency Java hẹp để service có thể được tạo/test mà không gọi ApplicationContext hay BeanFactory trực tiếp; container lookup và Aware contract chỉ nên là lựa chọn infrastructure có chủ đích."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "10.ContainerDesignAndDiagnostics/ContainerDesignAndDiagnostics.md"
+      anchor: "end-to-end-container-flow"
+    apiRelated:
+      controller: ""
+      methodSignature: ""

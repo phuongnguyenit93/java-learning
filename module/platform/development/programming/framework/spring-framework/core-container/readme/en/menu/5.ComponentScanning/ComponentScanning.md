@@ -1,1 +1,0 @@
-# Component Scanning and Stereotypes

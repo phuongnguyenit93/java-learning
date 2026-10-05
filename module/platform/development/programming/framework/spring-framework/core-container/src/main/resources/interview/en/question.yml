@@ -27,4 +27,91 @@
 #         Exact method signature in api-descriptions.yml, for example startVsRun().
 # </interview-schema>
 
-questions: []
+questions:
+  - question: "Explain the difference between full and lite @Configuration semantics. Why can the same direct inter-@Bean call produce different object identity, and what configuration style avoids depending on that interception?"
+    answer: "With full @Configuration semantics, Spring enhances the configuration class and can intercept calls between overridable instance @Bean methods. A direct call such as service() calling repository() is therefore routed through the container, so a singleton repository can resolve to the managed instance. With proxyBeanMethods=false, the configuration class is processed in lite mode and that same source-level call is an ordinary Java method call, so it can construct another object outside the managed singleton lookup path. The experiment demonstrates exactly that identity difference. Parameter injection makes the dependency edge explicit and does not rely on cross-method interception, so it is usually the clearer style when bean methods are intended to behave as independent factories."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.BeanRegistration/BeanRegistration.md"
+      anchor: "full-vs-lite-configuration"
+    apiRelated:
+      controller: "ConfigurationExperimentController"
+      methodSignature: "observeConfigurationIdentity()"
+
+  - question: "A Spring context fails during refresh. How would you distinguish a missing dependency, an ambiguous dependency, and a constructor cycle, and how should the fix differ for each?"
+    answer: "I would classify the deepest relevant cause instead of adding annotations blindly. A missing dependency means no eligible bean satisfies the required injection point; I would check registration, scan boundaries, conditions, type, and qualifier metadata. An ambiguous dependency means several beans remain eligible for one single-valued injection point; I would introduce a deliberate default with @Primary or a semantic constraint with @Qualifier rather than deleting a valid bean. A constructor cycle means A cannot be created without B while B cannot be created without A; the fix is usually to redesign the dependency graph, not to select another candidate. The module experiment makes these three shapes observable as NoSuchBeanDefinitionException, NoUniqueBeanDefinitionException, and BeanCurrentlyInCreationException inside their respective exception chains."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.DependencyInjection/DependencyInjection.md"
+      anchor: "dependency-resolution-failures"
+    apiRelated:
+      controller: "DependencyFailureExperimentController"
+      methodSignature: "observeDependencyFailure(DependencyFailureScenario)"
+
+  - question: "Why does injecting a prototype directly into a singleton not give the singleton a fresh prototype on every use? Compare that with ObjectProvider and a scoped proxy."
+    answer: "A prototype scope controls what happens when the container resolves that bean definition. Direct constructor injection into a singleton performs that resolution while the singleton is being created, and the singleton then stores one ordinary Java reference; nothing re-injects that field on each method call. ObjectProvider keeps resolution explicit and lets the consumer ask the container for a target later, so repeated getObject() calls can obtain fresh prototype instances. A scoped proxy instead injects one stable proxy and delegates each invocation to the target associated with the current scope. ObjectProvider exposes the lookup in the consumer API, while a scoped proxy hides most of the lookup behind proxy semantics. The right choice depends on whether explicit deferred resolution or transparent scope indirection is clearer for the design."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.BeanScope/BeanScope.md"
+      anchor: "scoped-dependency-mismatch"
+    apiRelated:
+      controller: "ScopeExperimentController"
+      methodSignature: "observeScopeIdentity()"
+
+  - question: "Walk through the initialization and destruction order when a bean uses @PostConstruct, InitializingBean, custom init, @PreDestroy, DisposableBean, and custom destroy callbacks. Why is that ordering useful to reason about?"
+    answer: "For the combined mechanisms demonstrated here, initialization proceeds through @PostConstruct, InitializingBean.afterPropertiesSet(), and then the custom init method after the bean has been instantiated, populated, and received its Aware callbacks. Destruction proceeds through @PreDestroy, DisposableBean.destroy(), and then the custom destroy method when the owning context closes. The order matters because the callbacks are not interchangeable: later initialization callbacks may rely on invariants established earlier, and destruction should release resources in a predictable shutdown phase. The experiment records both traces and verifies the expected ordering instead of treating lifecycle as a list of unrelated annotations and interfaces."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: "LifecycleExperimentController"
+      methodSignature: "observeLifecycleCallbacks()"
+
+  - question: "How would you explain the boundary among Environment, PropertySource, profiles, property placeholders, and SpEL? Which problems should remain outside this Core Container module?"
+    answer: "Environment is the container abstraction that exposes profiles and property resolution, while PropertySource represents an individual source of key-value data searched through that environment. Profiles are registration conditions: they decide whether definitions participate in a particular environment and should not replace runtime business branching. Property placeholders perform key lookup, optionally with defaults, whereas SpEL evaluates expressions over an object/evaluation context and should be reserved for cases that genuinely need expression semantics. This module owns those Spring Framework mechanisms. Spring Boot Config Data, @ConfigurationProperties, and Boot-specific externalized-configuration precedence belong to the Spring Boot configuration curriculum rather than being folded into the Core Container model."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Why are Spring ApplicationContext events not a substitute for a durable message broker? Explain the default synchronous behavior and the design consequences for a publisher."
+    answer: "ApplicationContext events are an in-process observer mechanism. With the default SimpleApplicationEventMulticaster, matching listeners are invoked synchronously in the publishing thread, so publishEvent does not return until those listeners finish. That means listener latency and failures are part of the publisher call unless the multicaster or error strategy is deliberately changed, and publisher-thread context can be visible to the listener. The mechanism does not promise persistence, acknowledgements, cross-process delivery, or retry after process failure. It is a good fit for decoupled local reactions; durable integration messaging belongs to the messaging/broker boundary."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.ApplicationContextServices/ApplicationContextServices.md"
+      anchor: "application-events"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Compare BeanFactoryPostProcessor, BeanPostProcessor, and FactoryBean. What does each extend, and why is premature bean creation dangerous while the processor chain is still being assembled?"
+    answer: "BeanFactoryPostProcessor operates on configuration metadata after definitions are loaded but before ordinary bean creation; it is the right level for changing the container model. BeanPostProcessor participates in the lifecycle of bean instances before and after initialization and can inspect, wrap, or replace the exposed instance. FactoryBean is different again: it is a Spring-managed factory object whose bean name normally resolves to the product returned by getObject(), while the & prefix addresses the factory itself. Pulling ordinary application beans too early from a factory post-processor or from infrastructure being created during bootstrap can instantiate them before all BeanPostProcessors are registered, so they may miss annotation processing, proxying, or other infrastructure. These hooks are powerful because they operate on container mechanics, which is also why ordinary business services should not use them as workflow callbacks."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Give an end-to-end mental model for diagnosing a Spring Core Container startup failure before changing configuration. How does that model help keep application code container-agnostic?"
+    answer: "I trace the flow from configuration sources to BeanDefinition metadata, factory post-processing, dependency resolution, bean instantiation and population, initialization/post-processing, the exposed ApplicationContext graph, and finally shutdown/destruction. I first locate the failing phase: missing definitions point to registration, several eligible beans point to candidate selection, constructor cycles or scope mismatches point to graph design, exceptions from init callbacks point to lifecycle, premature creation points to bootstrap/extension infrastructure, and wrong profiles or properties point to Environment configuration. This phase-oriented model avoids random annotation changes. At the application layer I still prefer constructor injection and narrow Java-facing dependencies so services can be instantiated and tested without calling ApplicationContext or BeanFactory directly; container lookup and Aware contracts should remain deliberate infrastructure choices."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "10.ContainerDesignAndDiagnostics/ContainerDesignAndDiagnostics.md"
+      anchor: "end-to-end-container-flow"
+    apiRelated:
+      controller: ""
+      methodSignature: ""

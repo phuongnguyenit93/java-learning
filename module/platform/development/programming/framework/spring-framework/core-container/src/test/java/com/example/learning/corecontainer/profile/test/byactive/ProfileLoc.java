@@ -6,7 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(classes = com.example.learning.SpringCoreContainerApplication.class)
-@ActiveProfiles("prd")
+@ActiveProfiles("loc")
 public class ProfileLoc {
     @Value("${school.name}")
     String school;

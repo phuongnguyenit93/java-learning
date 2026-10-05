@@ -1,0 +1,24 @@
+ConfigurationExperimentController:
+  description: |-
+    <h2>Configuration Experiment Controller</h2>
+    <p>So sánh ngữ nghĩa full <code>@Configuration</code> với <code>proxyBeanMethods=false</code> bằng cách quan sát identity runtime của bean được lấy qua lời gọi giữa các <code>@Bean</code> method.</p>
+  readmeRelated:
+    file: 3.BeanRegistration/BeanRegistration.md
+DependencyFailureExperimentController:
+  description: |-
+    <h2>Dependency Failure Experiment Controller</h2>
+    <p>Tạo các application context cô lập và có giới hạn để cố ý làm dependency resolution thất bại, từ đó so sánh evidence thật của missing, ambiguous và constructor-cycle failures.</p>
+  readmeRelated:
+    file: 4.DependencyInjection/DependencyInjection.md
+LifecycleExperimentController:
+  description: |-
+    <h2>Lifecycle Experiment Controller</h2>
+    <p>Ghi lại thứ tự initialization và destruction callback thực tế của một bean do Spring quản lý trong application context cô lập.</p>
+  readmeRelated:
+    file: 6.BeanLifecycle/BeanLifecycle.md
+ScopeExperimentController:
+  description: |-
+    <h2>Scope Experiment Controller</h2>
+    <p>Quan sát identity của singleton và prototype, sau đó so sánh prototype được inject một lần vào singleton với prototype mới được lấy qua <code>ObjectProvider</code>.</p>
+  readmeRelated:
+    file: 5.BeanScope/BeanScope.md

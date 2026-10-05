@@ -1,0 +1,115 @@
+ConfigurationExperimentController:
+  observeConfigurationIdentity():
+    summary: So sánh identity của bean giữa full và lite configuration
+    description: Tạo hai context cô lập với cùng một lời gọi giữa các @Bean method.
+      Full configuration đưa lời gọi qua container, còn lite configuration thực thi
+      nó như lời gọi Java thông thường. Các boolean so sánh reference là evidence
+      chính; identity hash code chỉ dùng để hỗ trợ quan sát.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: full-vs-lite-configuration
+    methodName: observeConfigurationIdentity
+    params: [
+      ]
+    path: com/example/learning/corecontainer/experiment/controller/ConfigurationExperimentController.java
+    mapping: '@GetMapping("/full-vs-lite")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /core-container/configuration/full-vs-lite
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+DependencyFailureExperimentController:
+  observeDependencyFailure(DependencyFailureScenario):
+    summary: Quan sát lỗi dependency resolution khi context refresh
+    description: Khởi động một context cô lập có giới hạn cho từng failure scenario
+      và trả về exception chain đã chuẩn hóa của missing dependency, ambiguous candidates
+      hoặc constructor cycle thay vì làm lộ toàn bộ stack trace.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: dependency-resolution-failures
+    methodName: observeDependencyFailure
+    params:
+    - scenario
+    path: com/example/learning/corecontainer/experiment/controller/DependencyFailureExperimentController.java
+    mapping: '@GetMapping("/failure")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /core-container/dependency/failure
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+LifecycleExperimentController:
+  observeLifecycleCallbacks():
+    summary: Quan sát thứ tự initialization và destruction callback của bean
+    description: Tạo rồi đóng một context cô lập quanh bean dùng BeanNameAware, @PostConstruct,
+      InitializingBean, custom init, @PreDestroy, DisposableBean và custom destroy
+      callbacks. Response phơi bày trace callback thực tế và kiểm tra thứ tự mong
+      đợi.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: bean-lifecycle-overview
+    methodName: observeLifecycleCallbacks
+    params: [
+      ]
+    path: com/example/learning/corecontainer/experiment/controller/LifecycleExperimentController.java
+    mapping: '@GetMapping("/callbacks")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /core-container/lifecycle/callbacks
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+ScopeExperimentController:
+  observeScopeIdentity():
+    summary: So sánh singleton, prototype và deferred prototype lookup
+    description: Resolve lặp lại singleton/prototype rồi so sánh prototype được inject
+      một lần vào singleton với các prototype được lấy sau đó qua ObjectProvider.
+      Các boolean so sánh reference chứng minh reuse/freshness; identity hash code
+      chỉ dùng để hỗ trợ quan sát.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: scoped-dependency-mismatch
+    methodName: observeScopeIdentity
+    params: [
+      ]
+    path: com/example/learning/corecontainer/experiment/controller/ScopeExperimentController.java
+    mapping: '@GetMapping("/identity")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /core-container/scope/identity
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
