@@ -1,0 +1,210 @@
+# <roadmap-schema>
+# Module Roadmap Structure
+# schema-version: 1
+#
+# YAML CONTRACT
+# roadmap: High-level learning milestones for the current language roadmap.
+#
+# - id [string, required]: Stable and unique milestone identity within the current language roadmap.
+# - title [string, required]: Milestone title displayed to the learner.
+# - purpose [string, required]: What the learner should understand or achieve from this milestone.
+# - dependsOn [list, optional]: Prerequisite milestone ids when item order alone is not enough to express the dependency.
+# - objectives [list, optional]: Milestone-level learning objectives; do not use this to list every small fact/API/syntax item.
+# - relatedKnowledge [list, optional]: Knowledge category ids in the current module that support this milestone. Portal displays this list on the side opposite the milestone and clicking an item navigates to the matching Knowledge category.
+# - relatedModules [list, optional]: Related modules displayed as Portal Level 2 cards. Each item requires routeId and may provide localized label/note; this relation is navigation only and does not create child milestones or change learning order.
+#
+# ROADMAP THINKING FRAMEWORK
+# PURPOSE
+#   - What is this topic/module?
+#   - Why does it exist?
+#   - What problem exists without it?
+# FOUNDATION
+#   - What prerequisite or mental model must the learner have first?
+# CORE MODEL
+#   - What major abstractions or building blocks make up this topic?
+# MECHANICS
+#   - How does it work at the language/runtime/API level appropriate for this module?
+# USAGE
+#   - How is it used in real code?
+# DECISION / TRADE-OFF
+#   - When should this mechanism be chosen over another?
+#   - When should it not be used?
+# FAILURE / PITFALL
+#   - What mistakes, compile-time failures, or runtime failures matter?
+# INTEGRATION
+#   - How does this topic connect to neighboring concepts/modules?
+# SYNTHESIS
+#   - What end-to-end mental model should the learner retain?
+#
+# Each language owns its own roadmap. Do not infer or synchronize its structure from another language roadmap.
+# Item order in roadmap is the default learning order. Use dependsOn only when a dependency needs to be expressed beyond the linear order.
+# The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
+# </roadmap-schema>
+
+roadmap:
+  - id: messaging-purpose-and-boundaries
+    title: Spring Messaging Purpose and Boundaries
+    purpose: Build the mental model for why Spring Framework has transport-neutral messaging abstractions and where this module stops relative to request-response web, Spring Integration, broker-specific projects, reactive fundamentals, and protocol specifications.
+    objectives:
+      - Explain the problem solved by representing application communication as messages instead of direct method or HTTP request-response coupling.
+      - Distinguish Spring Messaging foundation from Spring Integration enterprise integration patterns and from Kafka, AMQP, or JMS-specific abstractions.
+      - Recognize WebSocket/STOMP and RSocket as distinct messaging-oriented programming models that reuse Spring messaging infrastructure.
+      - Identify when neighboring modules own deeper HTTP, reactive, security, session, broker, or integration-pattern concerns.
+    relatedKnowledge:
+      - SpringMessaging
+    relatedModules:
+      - routeId: SPRING_INTEGRATION
+        label: Spring Integration
+        note: Builds enterprise integration patterns on top of Spring messaging primitives rather than redefining their foundation.
+
+  - id: message-model-and-channels
+    title: Message Model, Channels, and Handlers
+    purpose: Understand the core Spring Messaging building blocks that decouple message producers, routing infrastructure, and consumers.
+    objectives:
+      - Model a message as payload plus headers and understand why header access and message construction are explicit concerns.
+      - Explain the roles of MessageChannel, SubscribableChannel, MessageHandler, and channel-backed delivery.
+      - Distinguish synchronous handoff from executor-backed asynchronous delivery and the consequences for threading and failure handling.
+      - Understand where message conversion and channel interception fit without turning the roadmap into an API inventory.
+    relatedKnowledge:
+      - MessageModel
+
+  - id: websocket-transport-foundation
+    title: Spring WebSocket Transport Foundation
+    purpose: Connect the abstract messaging model to Spring's Servlet-stack WebSocket transport support while keeping generic protocol theory and reactive-stack details in their proper owners.
+    objectives:
+      - Explain the WebSocket handshake-to-session lifecycle and the role of Spring WebSocketHandler and WebSocketSession abstractions.
+      - Understand raw text/binary handling, session lifecycle, handshake customization, origin considerations, and SockJS fallback at a conceptual level.
+      - Explain why raw WebSocket defines transport but not application message semantics, motivating a higher-level sub-protocol such as STOMP.
+      - Recognize the boundary between the Servlet-stack Spring WebSocket APIs covered here and the reactive WebSocket programming model owned by Spring WebFlux.
+    relatedKnowledge:
+      - WebSocketFoundation
+    relatedModules:
+      - routeId: SPRING_WEB
+        label: Spring Web
+        note: Owns the Servlet request-response stack that participates in the initial WebSocket upgrade and surrounding web infrastructure.
+      - routeId: SPRING_REACTIVE
+        label: Spring Reactive
+        note: Owns the reactive WebSocket programming model and Reactor-based web concerns.
+
+  - id: stomp-and-simple-messaging-model
+    title: STOMP and the Simple Messaging Model
+    purpose: Learn how STOMP supplies application-level messaging semantics on top of a WebSocket connection and how Spring represents those semantics through its simple-messaging infrastructure.
+    objectives:
+      - Explain STOMP frames, destinations, subscriptions, sessions, headers, heartbeats, and receipts at the level needed to reason about Spring behavior.
+      - Distinguish application destinations from broker destinations and understand why destination prefixes are routing rules rather than queue/topic semantics by themselves.
+      - Understand Spring's simple-messaging concepts, including destination-aware headers and user/session-oriented messaging.
+      - Relate STOMP transport frames to Spring Message instances without turning the roadmap into a protocol command inventory.
+    relatedKnowledge:
+      - StompModel
+
+  - id: spring-stomp-message-flow
+    title: End-to-End Spring STOMP Message Flow
+    purpose: Form an end-to-end server-side model of how a STOMP-over-WebSocket message travels through Spring from the client to application handlers or a broker and back to clients.
+    objectives:
+      - Trace client messages through clientInboundChannel, annotation-based application handling or broker routing, and clientOutboundChannel.
+      - Explain the purpose of brokerChannel for messages produced by server-side application components.
+      - Understand what EnableWebSocketMessageBroker and WebSocketMessageBrokerConfigurer assemble conceptually.
+      - Use the message-flow model to diagnose routing mistakes instead of reasoning only from annotations or endpoint URLs.
+    relatedKnowledge:
+      - StompMessageFlow
+
+  - id: stomp-application-message-handling
+    title: STOMP Application Message Handling and Sending
+    purpose: Understand how Spring maps messaging destinations to application code and how application components publish replies, broadcasts, errors, and user-targeted messages.
+    objectives:
+      - Explain the annotated handling model around MessageMapping, subscription handling, destination variables, payload conversion, and message-level exception handling.
+      - Understand return-value routing through SendTo and SendToUser without confusing application handlers with the message broker.
+      - Explain when application code sends messages programmatically through SimpMessagingTemplate.
+      - Reason about conversion failures, handler exceptions, and destination mismatches as parts of the message-processing pipeline.
+    relatedKnowledge:
+      - StompApplicationHandling
+
+  - id: broker-routing-and-user-destinations
+    title: Broker Routing, Destinations, and User Messaging
+    purpose: Understand how Spring separates application routing from subscription broadcasting and how broker choice changes capability, topology, and scale.
+    objectives:
+      - Compare the built-in simple broker with an external STOMP broker relay and understand the simple broker's functional and clustering limits.
+      - Explain application prefixes, broker prefixes, subscription routing, and the consequences of choosing destination conventions.
+      - Understand user destinations, per-session resolution, multi-session users, and unresolved-user routing in multi-application deployments.
+      - Recognize where broker-native queue lifecycle, acknowledgement, durability, and vendor behavior leave Spring Framework ownership.
+    relatedKnowledge:
+      - BrokerRouting
+
+  - id: lifecycle-interception-ordering-and-boundaries
+    title: STOMP Lifecycle, Interception, Ordering, and Security Boundaries
+    purpose: Learn the WebSocket/STOMP runtime behavior that makes long-lived messaging sessions correct and observable without absorbing Spring Security or Spring Session curricula.
+    objectives:
+      - Use messaging and WebSocket lifecycle events to reason about connection, subscription, broker availability, and disconnect behavior.
+      - Understand WebSocketStompClient and StompSession lifecycle, including connection handling, heartbeats, receipts, and client-side subscription/send flow at Spring's abstraction level.
+      - Understand ChannelInterceptor and ExecutorChannelInterceptor as message-pipeline hooks and the thread-boundary difference between them.
+      - Explain why concurrent channel execution can change receive/publish ordering and when Spring's preserve-order options matter.
+      - Understand how identity from the WebSocket handshake participates in messaging and where authorization belongs to Spring Security.
+      - Recognize Spring Session integration as a neighboring concern for HTTP-session longevity across active WebSocket sessions.
+    relatedKnowledge:
+      - StompClientLifecycle
+      - StompLifecycleInterception
+    relatedModules:
+      - routeId: SPRING_SECURITY_FUNDAMENTALS
+        label: Spring Security Fundamentals
+        note: Owns message authorization and the security policies applied through Spring Security integration.
+      - routeId: SPRING_SESSION
+        label: Spring Session
+        note: Owns distributed/session-lifecycle concerns when WebSocket activity must participate in HTTP session management.
+
+  - id: rsocket-interaction-model
+    title: RSocket Interaction Model and Reactive Boundary
+    purpose: Build the minimum RSocket protocol mental model required to understand Spring Framework's requester/responder support without turning the module into a deep protocol course.
+    objectives:
+      - Explain request-response, fire-and-forget, request-stream, and request-channel interaction models.
+      - Understand requester/responder symmetry and how either peer can initiate interactions after connection setup.
+      - Relate route and metadata concepts to Spring message routing and conversion.
+      - Explain why streaming interactions depend on Reactive Streams semantics while leaving Reactor and backpressure fundamentals to the reactive learning owner.
+      - Distinguish RSocket application semantics from the underlying TCP or WebSocket transport.
+    relatedKnowledge:
+      - RSocketInteraction
+    relatedModules:
+      - routeId: SPRING_REACTIVE
+        label: Spring Reactive
+        note: Provides the reactive-programming foundation needed to reason about streaming RSocket interactions and backpressure.
+
+  - id: spring-rsocket-programming-model
+    title: Spring RSocket Requester and Responder Programming Model
+    purpose: Understand how Spring turns RSocket interactions into object-oriented requester APIs, annotated responders, and declarative service contracts.
+    objectives:
+      - Explain RSocketRequester connection setup, route selection, payloads, metadata, retrieval, and requester lifecycle.
+      - Understand how RSocketStrategies centralizes codecs, route matching, metadata extraction, and reactive adaptation.
+      - Explain annotated responders using MessageMapping and ConnectMapping and how Spring determines interaction behavior from request and response cardinality.
+      - Understand RSocketExchange service interfaces and RSocketServiceProxyFactory as a declarative requester model.
+      - Recognize where Spring Boot auto-configuration, Spring Security RSocket policy, and Spring Integration RSocket gateways take ownership.
+    relatedKnowledge:
+      - RSocketRequester
+      - RSocketResponders
+    relatedModules:
+      - routeId: SPRING_INTEGRATION
+        label: Spring Integration
+        note: Owns RSocket gateways when RSocket is used as an endpoint inside an enterprise integration flow.
+      - routeId: SPRING_SECURITY_FUNDAMENTALS
+        label: Spring Security Fundamentals
+        note: Owns RSocket authentication and authorization policy rather than the core requester/responder programming model.
+
+  - id: operations-scaling-testing-and-synthesis
+    title: Operations, Scaling, Testing, and Design Synthesis
+    purpose: Turn the message-flow models into practical decisions about capacity, reliability, observability, testing, and the right messaging topology for a production system.
+    objectives:
+      - Reason about inbound and outbound channel executors, blocking work, send-time limits, send-buffer limits, message-size limits, and connection lifecycle.
+      - Explain heartbeat, broker availability, connection loss, slow-client, and delivery-failure concerns from an operational perspective.
+      - Understand why an external STOMP broker relay is the usual path for clustered STOMP broadcasting and where broker-specific scaling behavior takes over.
+      - Distinguish focused handler/infrastructure tests from end-to-end WebSocket/STOMP or RSocket tests and connect them to Spring TestContext support.
+      - Choose deliberately among raw WebSocket, STOMP messaging, Spring RSocket, or handoff to Spring Integration; when STOMP is chosen, separately decide whether the built-in simple broker or an external broker relay fits the deployment.
+    relatedKnowledge:
+      - OperationsTestingDecisions
+    relatedModules:
+      - routeId: SPRING_CONCURRENCY
+        label: Spring Concurrency
+        note: Provides deeper understanding of Spring-managed executors and scheduling used by messaging channels and heartbeats.
+      - routeId: SPRING_TESTING
+        label: Spring Testing
+        note: Provides the framework-level TestContext foundation used by focused and integration-style messaging tests.
+      - routeId: SPRING_INTEGRATION
+        label: Spring Integration
+        note: Becomes the next owner when the problem is enterprise integration flow composition rather than the Framework messaging programming model itself.

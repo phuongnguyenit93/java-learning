@@ -1,0 +1,61 @@
+# ============================================================
+# MODULE REFERENCE STRUCTURE
+# ============================================================
+#
+# This is the shared module-level reference catalog.
+# It is intentionally not split by MODULE_LANGUAGE.
+#
+# Example structure:
+#
+# references:
+#   - title: "Java Language Specification"
+#     url: "https://docs.oracle.com/javase/specs/"
+#     description: "Official Java language specification."
+#
+# Add only curated references that are useful for the module.
+# The build system must not overwrite this file after authored content exists.
+
+references:
+  - title: "Spring Framework 6.1 Reference Documentation — WebSockets"
+    url: "https://docs.spring.io/spring-framework/reference/6.1/web/websocket.html"
+    description: "Official Spring Framework reference for the Servlet-stack WebSocket API, handshake/session model, SockJS fallback, and the transition from raw WebSocket to higher-level messaging."
+
+  - title: "Spring Framework 6.1 Reference Documentation — STOMP"
+    url: "https://docs.spring.io/spring-framework/reference/6.1/web/websocket/stomp.html"
+    description: "Official Spring Framework reference for STOMP over WebSocket, server-side message flow, annotated handling, brokers, user destinations, interception, ordering, performance, monitoring, and testing."
+
+  - title: "Spring Framework Reference Documentation — RSocket"
+    url: "https://docs.spring.io/spring-framework/reference/rsocket.html"
+    description: "Official Spring Framework reference for RSocket interaction models, RSocketRequester, annotated responders, routing/metadata, and Spring's RSocket programming model; version-sensitive details are checked against the 6.1 API."
+
+  - title: "Spring Framework 6.1 API — org.springframework.messaging"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.x/javadoc-api/org/springframework/messaging/package-summary.html"
+    description: "Official API documentation for the core Message, MessageChannel, MessageHandler, and related messaging contracts."
+
+  - title: "Spring Framework 6.1 API — org.springframework.messaging.simp"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.x/javadoc-api/org/springframework/messaging/simp/package-summary.html"
+    description: "Official API documentation for Spring's simple-messaging abstractions, including destination-aware messaging and user/session-oriented support."
+
+  - title: "Spring Framework 6.1 API — org.springframework.web.socket.messaging"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.x/javadoc-api/org/springframework/web/socket/messaging/package-summary.html"
+    description: "Official API documentation for integrating Spring Messaging with WebSocket and STOMP sub-protocol handling."
+
+  - title: "Spring Framework 6.1 API — org.springframework.messaging.rsocket"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.x/javadoc-api/org/springframework/messaging/rsocket/package-summary.html"
+    description: "Official 6.1 API documentation for Spring's RSocket requester, strategies, metadata extraction, and protocol support."
+
+  - title: "Spring Framework 6.1 API — RSocket Service Interfaces"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.x/javadoc-api/org/springframework/messaging/rsocket/service/package-summary.html"
+    description: "Official 6.1 API documentation for RSocketExchange service contracts and RSocketServiceProxyFactory."
+
+  - title: "RFC 6455 — The WebSocket Protocol"
+    url: "https://www.rfc-editor.org/rfc/rfc6455"
+    description: "IETF WebSocket protocol specification used as the transport-level authority while deep protocol theory stays outside the Spring-specific learning scope."
+
+  - title: "STOMP Protocol Specification, Version 1.2"
+    url: "https://stomp.github.io/stomp-specification-1.2.html"
+    description: "Official STOMP 1.2 specification for frame, command, acknowledgement, receipt, transaction, and heartbeat semantics referenced by Spring's STOMP support."
+
+  - title: "RSocket Protocol"
+    url: "https://rsocket.io/about/protocol/"
+    description: "Official RSocket protocol documentation used to verify interaction-model, requester/responder, metadata, transport, and Reactive Streams semantics without turning the Spring module into a deep protocol course."

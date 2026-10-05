@@ -1,0 +1,91 @@
+ChannelExperimentController:
+  deliverySemantics():
+    summary: Observe caller-thread and executor-backed channel delivery
+    description: A synchronous ExecutorSubscribableChannel and a second channel backed
+      by a dedicated single-thread executor process separate messages. The response
+      records sender and handler thread names plus completion timing so the experiment
+      demonstrates the chosen executor configuration rather than assuming every Executor
+      implies a thread handoff.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: channel-delivery-semantics
+    methodName: deliverySemantics
+    params: [
+      ]
+    path: com/example/learning/module/messaging/controller/ChannelExperimentController.java
+    mapping: '@GetMapping("/delivery-semantics")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /messaging/channel/delivery-semantics
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+RSocketExperimentController:
+  interactionCardinality():
+    summary: Observe RSocket interaction types from input and output cardinality
+    description: Starts an ephemeral loopback RSocket server with Spring annotated
+      responders, connects through RSocketRequester, and performs one-to-one, one-to-many,
+      and many-to-many exchanges. The returned counts and values make request-response,
+      request-stream, and request-channel behavior directly observable.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: rsocket-interaction-cardinality
+    methodName: interactionCardinality
+    params: [
+      ]
+    path: com/example/learning/module/messaging/controller/RSocketExperimentController.java
+    mapping: '@GetMapping("/interaction-cardinality")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /messaging/rsocket/interaction-cardinality
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+StompExperimentController:
+  roundTrip():
+    summary: Trace a real STOMP application-message round trip
+    description: Creates a local WebSocketStompClient, connects to the running module,
+      subscribes to the experiment topic, sends to an /app destination, and waits
+      for the annotated handler result to return through Spring's simple broker. Correlated
+      payload and handler evidence distinguish an actual messaging round trip from
+      a simulated REST response.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: application-message-flow
+    methodName: roundTrip
+    params: [
+      ]
+    path: com/example/learning/module/messaging/controller/StompExperimentController.java
+    mapping: '@GetMapping("/round-trip")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /messaging/stomp/round-trip
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+StompEchoHandler: {
+  }
