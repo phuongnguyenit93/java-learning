@@ -55,14 +55,14 @@ public class PointcutMatchingAspect {
 
     @Before("this(com.example.learning.module.pointcut.service.PointcutService) && " +
             "execution(* com.example.learning.module.pointcut.service.PointcutService.byThisAndTarget(..))")
-    public void matchThis() {
-        traceLog.add("pointcut:this-proxy-type");
+    public void matchThis(JoinPoint joinPoint) {
+        traceLog.add("pointcut:this-proxy-type=" + joinPoint.getThis().getClass().getName());
     }
 
     @Before("target(com.example.learning.module.pointcut.service.PointcutService) && " +
             "execution(* com.example.learning.module.pointcut.service.PointcutService.byThisAndTarget(..))")
-    public void matchTarget() {
-        traceLog.add("pointcut:target-type");
+    public void matchTarget(JoinPoint joinPoint) {
+        traceLog.add("pointcut:target-type=" + joinPoint.getTarget().getClass().getName());
     }
 
     @Before("bean(pointcutService) && execution(* com.example.learning.module.pointcut.service.PointcutService.byBean(..))")

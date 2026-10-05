@@ -5,7 +5,7 @@
 ## Menu
 - [1. The caller does not necessarily invoke the target directly](#proxy-mental-model)
 - [2. Demo in this module](#proxy-demo)
-- [3. Spring-managed bean vs object created with new](#managed-vs-new-demo)
+- [3. Container auto-proxying vs direct object creation](#managed-vs-new-demo)
 - [4. JDK Dynamic Proxy and CGLIB](#proxy-strategies)
 - [5. Conclusion](#proxy-conclusion)
 
@@ -16,27 +16,44 @@ The proxy boundary is the foundation for understanding most Spring AOP behavior.
 <details>
 <summary>Click for details</summary>
 
-Mental model:
+When Spring applies AOP to an object, callers commonly receive a proxy reference:
 
 ```text
 Caller
   ↓
 Spring AOP Proxy
   ↓
-Advice chain
+Advisor / interceptor chain
   ↓
 Target Object
 ```
 
-When a bean needs AOP, Spring usually gives consumers a proxy instead of a direct reference to the target object.
-
-The proxy can be created using different strategies such as JDK dynamic proxy or class-based proxy. Do not hard-code the assumption that every bean always uses the same proxy type.
-
-More important than the proxy type is this question:
+The proxy is the interception boundary. It can inspect the current method invocation, run matching advice, and continue toward the target. This leads to the most useful runtime question in Spring AOP:
 
 ```text
-does the invocation pass through the proxy?
+Did this invocation cross the expected proxy?
 ```
+
+That question comes before pointcut debugging. If code already holds a direct target reference, no pointcut can retroactively intercept that direct call.
+
+Container auto-proxying is the common application path: Spring's infrastructure examines Spring-managed beans and, when advisors apply, exposes a proxy in place of the plain bean reference. This is a container lifecycle feature, not a rule that every Java object in the JVM is automatically proxied.
+
+There is also a low-level boundary. `ProxyFactory` can explicitly wrap an object and create an AOP proxy programmatically. That matters when reasoning about examples created with `new`:
+
+```text
+new SomeService()
+→ ordinary object, no AOP by itself
+
+ProxyFactory(new SomeService()).getProxy()
+→ explicitly created Spring AOP proxy
+```
+
+So the correct distinction is between **calls through an AOP proxy** and **direct calls to an unproxied target**, rather than between "Spring bean" and "object created with new" as an absolute rule.
+
+### References
+
+- Spring Framework Reference — Proxying Mechanisms
+- Spring Framework Reference — Creating AOP Proxies Programmatically with the ProxyFactory
 
 </details>
 
@@ -83,7 +100,7 @@ isCglibProxy
 isJdkDynamicProxy
 ```
 
-The response `events` shows the call chain:
+The response `events` shows the invocation crossing advice before reaching the target:
 
 ```text
 proxy-boundary:before-target
@@ -91,7 +108,7 @@ target:invokeTarget
 proxy-boundary:after-target
 ```
 
-Do not try to guess the generated proxy class name. Use `AopUtils` to inspect semantics instead of depending on runtime class naming.
+Generated proxy class names are not a stable contract. Use Spring utilities such as `AopUtils.isAopProxy(...)`, `isJdkDynamicProxy(...)`, `isCglibProxy(...)`, and target-class inspection when the experiment needs semantic evidence.
 
 </details>
 
@@ -99,7 +116,7 @@ Do not try to guess the generated proxy class name. Use `AopUtils` to inspect se
 
 ---
 
-## <a id="managed-vs-new-demo">3. Spring-managed bean vs object created with new</a>
+## <a id="managed-vs-new-demo">3. Container auto-proxying vs direct object creation</a>
 
 <details>
 <summary>Click for details</summary>
@@ -116,20 +133,20 @@ Endpoint:
 GET /aop/proxy/managed-vs-new
 ```
 
-The experiment calls the same method through two different paths:
+The experiment deliberately compares the container-managed path with a plain direct object:
 
 ```text
-Spring-managed bean
+Spring-managed reference
 → AOP proxy
 → advice
 → target
 
 new ProxyMentalModelService(...)
-→ plain Java object
+→ plain object
 → target directly
 ```
 
-The managed branch has these events:
+The managed branch records:
 
 ```text
 proxy-boundary:before-target
@@ -137,22 +154,20 @@ target:invokeTarget
 proxy-boundary:after-target
 ```
 
-The `new` branch only has:
+The plain branch records only:
 
 ```text
 target:invokeTarget
 ```
 
-`facts` also shows:
+and `facts` confirms the difference:
 
 ```text
 managedIsAopProxy = true
 plainIsAopProxy   = false
 ```
 
-**Conclusion:** a correct pointcut expression is still not enough. The object must be inside the Spring AOP proxy boundary before advice has a chance to participate in the invocation.
-
----
+The lesson is precise: container auto-proxying does not automatically advise an arbitrary object merely because its class would match the same pointcut. The plain object could still be wrapped explicitly with `ProxyFactory`, but this experiment intentionally does not do that.
 
 </details>
 
@@ -165,26 +180,39 @@ plainIsAopProxy   = false
 <details>
 <summary>Click for details</summary>
 
-Two proxy strategies must be distinguished:
+Spring AOP has two main proxy strategies.
 
 ```text
-JDK Dynamic Proxy
+JDK dynamic proxy
 → interface-based proxy
+→ proxy type exposes the proxied interfaces
 
-Class-based / CGLIB Proxy
-→ proxy is a subclass of the target class
+CGLIB proxy
+→ generated subclass of the target class
+→ proxy type is assignable to the target class
 ```
 
-At the fundamentals level, it is enough to know that the strategy affects the proxy's type surface and interception limitations.
+In core Spring Framework defaults, if the target implements at least one interface, Spring can use a JDK dynamic proxy; if no interface is available, Spring uses a CGLIB class proxy. Configuration such as `proxyTargetClass = true` can force class-based proxying. Spring Boot can choose different application defaults, so do not treat a Boot default as the Spring Framework AOP contract.
 
-The experiment that creates **both strategies programmatically** is located at:
+The strategy affects which calls can be represented through the proxy. JDK proxies intercept calls exposed through the proxy interfaces. CGLIB relies on subclassing/overriding, so Java rules create limits:
+
+- a `final` class cannot be subclass-proxied;
+- a `final` method cannot be overridden and therefore cannot be advised through CGLIB;
+- a `private` method cannot be overridden and therefore cannot be advised;
+- methods that are effectively invisible to the subclass cannot be advised through that subclass proxy.
+
+Common application interactions should use clear public service boundaries. A requirement to intercept arbitrary internal calls, constructors, or field access is usually evidence that proxy-based Spring AOP is no longer the right runtime boundary.
+
+The module's programmatic comparison of both strategies is in:
 
 ```text
-readme/en/menu/11.ProxyFactory/ProxyFactory.md
+readme/en/menu/10.ProxyFactory/ProxyFactory.md
 ProgrammaticProxyController#compareProxyFactoryStrategies()
 ```
 
----
+### References
+
+- Spring Framework Reference — Proxying Mechanisms
 
 </details>
 
@@ -197,18 +225,16 @@ ProgrammaticProxyController#compareProxyFactoryStrategies()
 <details>
 <summary>Click for details</summary>
 
-An annotation or pointcut alone is not enough for advice to run.
-
-The correct mental model is:
+For any "why did advice run or not run?" question, keep this order:
 
 ```text
-method call
-→ passes through Spring proxy
-→ pointcut matches
-→ advice has a chance to run
+1. Is there an AOP proxy?
+2. Does the invocation cross that proxy?
+3. Does an advisor / pointcut match the invocation?
+4. What advice runs in the resulting chain?
 ```
 
-The self-invocation chapter later demonstrates a case where a method has an annotation but the call does not go back through the proxy.
+Proxy strategy changes the type surface and some interception limits, but the boundary principle stays the same. The later self-invocation chapter shows the classic case where a proxied object exists while one internal call still bypasses the proxy.
 
 </details>
 

@@ -1,7 +1,7 @@
 AdvisorController:
   observeAdvisor():
     execution: |-
-      <p>Experiment này chứng minh <code>Advisor = Pointcut + Advice</code>: Pointcut quyết định lời gọi nào được chọn, còn Advice quyết định logic nào được chèn vào khi lời gọi đó match. API cố ý đặt một matcher chỉ dựa trên tên method cạnh một matcher cần cả argument runtime để người học thấy hai tầng quyết định khác nhau.</p>
+      <p>Experiment này dùng <code>DefaultPointcutAdvisor</code>, một <b>PointcutAdvisor</b>, để minh họa đúng composition Pointcut + Advice: Pointcut quyết định lời gọi nào được chọn, còn Advice quyết định logic nào được chèn vào khi lời gọi đó match. Generic <code>Advisor</code> là contract rộng hơn. API cố ý đặt một matcher chỉ dựa trên tên method cạnh một matcher cần cả argument runtime để người học thấy hai tầng quyết định khác nhau.</p>
       <ol>
         <li>Nhánh static tạo <code>NameMatchMethodPointcut</code> với mapped name <code>write</code>, ghép với một <code>MethodInterceptor</code> trong <code>DefaultPointcutAdvisor</code>, rồi gắn Advisor vào CGLIB proxy bằng <code>ProxyFactory</code>. Vì matcher chỉ chọn <code>write()</code>, <code>read()</code> chỉ tạo <code>target:read</code>, còn <code>write()</code> tạo chuỗi <code>advisor-before:write → target:write → advisor-after:write</code>.
           <div><i>Nguồn: AdvisorExperimentService.observeStaticNameMatchPointcut()</i></div>
@@ -23,12 +23,12 @@ AdvisorController:
         </li>
         <li>Quan sát <code>staticMethodMatch=true</code>, <code>runtimeMatchAudit=true</code>, <code>runtimeMatchPlain=false</code> cùng trace của hai lời gọi. Đây là bằng chứng rằng một method có thể vượt qua bước lọc tĩnh nhưng vẫn bị loại ở bước runtime vì dữ liệu đầu vào.</li>
       </ol>
-      <p><b>Kết luận:</b> Advisor không đồng nghĩa với “mọi lời gọi đều chạy Advice”. Pointcut có thể lọc ở mức class/method và cả argument runtime; Advice chỉ được đưa vào chain khi toàn bộ điều kiện match.</p>
+      <p><b>Kết luận:</b> trong một <code>PointcutAdvisor</code>, Pointcut quyết định Advice/interceptor tham gia ở đâu và khi nào. Pointcut có thể lọc ở mức class/method và cả argument runtime; không nên tổng quát hóa hình dạng Pointcut + Advice này cho mọi subtype của generic <code>Advisor</code>.</p>
     usage: true
 RuntimeBoundaryController:
   inspectRuntimeBoundary():
     execution: |-
-      <p>Experiment này phân biệt hai ý thường bị trộn lẫn: dùng annotation <code>@Aspect</code> là cách khai báo AspectJ style, nhưng runtime của module vẫn là Spring AOP dựa trên proxy. Mục tiêu là nhận ra “cú pháp AspectJ” không đồng nghĩa với compile-time/load-time weaving.</p>
+      <p>Experiment này đưa ra <b>bằng chứng dương tính về Spring AOP proxy execution</b> trong khi source dùng các annotation AspectJ-style như <code>@Aspect</code> và <code>@Around</code>. Response tự nó không chứng minh AspectJ weaving vắng mặt; boundary đó được xác định từ build/runtime configuration của module.</p>
       <ol>
         <li>Controller gọi <code>RuntimeBoundaryService.execute()</code> trên bean được Spring inject. Pointcut <code>execution(...RuntimeBoundaryService.execute(..))</code> làm lời gọi đi qua <code>RuntimeBoundaryAspect.around()</code>, nơi ghi <code>runtime-aspect:join-point-kind=method-execution</code>, <code>runtime-aspect:before</code>, gọi <code>proceed()</code>, rồi ghi <code>runtime-aspect:after</code>.
           <div><i>Nguồn: RuntimeBoundaryAspect.around()</i></div>
@@ -45,12 +45,12 @@ RuntimeBoundaryController:
       facts.put("targetClass", AopUtils.getTargetClass(runtimeBoundaryService).getName());</code></pre>
         </li>
       </ol>
-      <p><b>Kết luận:</b> Trong module này, <code>@Aspect</code> mô tả advice/pointcut, còn Spring tạo proxy để intercept lời gọi runtime. Không có bằng chứng nào ở experiment này cho compile-time weaving hay load-time weaving.</p>
+      <p><b>Kết luận:</b> proxy facts cùng trace before/target/after chứng minh lời gọi này đi qua Spring AOP proxy quanh method execution của bean. Việc module không cấu hình AspectJ weaving phải được xác nhận từ build/runtime configuration, không suy ra chỉ từ response của endpoint.</p>
     usage: true
 InfrastructureController:
   inspectInfrastructure():
     execution: |-
-      <p>Experiment này đi xuống dưới mức “Aspect chạy trước/sau” để nhìn hạ tầng Spring AOP thật sự: auto-proxy creator tạo proxy cho bean, proxy giữ một Advisor chain, và các cấu hình <code>spring.aop.*</code> quyết định chiến lược proxy.</p>
+      <p>Experiment này đi xuống dưới mức “Aspect chạy trước/sau” để nhìn hạ tầng Spring AOP thật sự: auto-proxy creator tạo proxy cho bean, proxy giữ một Advisor chain; riêng các property <code>spring.aop.*</code> được quan sát ở đây là lớp auto-configuration của Spring Boot, không phải contract mặc định của Spring Framework AOP.</p>
       <ol>
         <li>Lời gọi <code>InfrastructureTargetService.execute()</code> đi qua Spring proxy vì <code>InfrastructureAspect</code> có pointcut match đúng method. Trace phải có <code>infrastructure-aspect:before → target:infrastructure → infrastructure-aspect:after</code>; đây là bằng chứng hành vi ở tầng execution.
           <div><i>Nguồn: InfrastructureAspect.observe()</i></div>
@@ -86,13 +86,18 @@ IntroductionController:
       )
       public static UsageTracked usageTracked;</code></pre>
         </li>
-        <li>Controller kiểm tra <code>introductionTargetService instanceof UsageTracked</code>. Nếu Introduction đã được áp dụng, cast này thành công; sau đó reset counter, gọi <code>incrementUseCount()</code> hai lần và đọc lại count. <code>DefaultUsageTracked</code> dùng <code>AtomicInteger</code>, nên behavior bổ sung có implementation thật chứ không chỉ là type marker.
+        <li>Controller kiểm tra <code>introductionTargetService instanceof UsageTracked</code>. Khi Introduction đã được áp dụng, controller vào một private experiment lock trước chuỗi reset → đọc → increment → increment → đọc. Lock này làm experiment hữu hạn giữ kết quả xác định ngay cả khi nhiều HTTP request chạy đồng thời; <code>AtomicInteger</code> vẫn cung cấp counter implementation thread-safe cho behavior được introduce.
           <div><i>Nguồn: IntroductionController.observeIntroduction()</i></div>
           <pre><code>boolean introduced = introductionTargetService instanceof UsageTracked;
-      UsageTracked usageTracked = (UsageTracked) introductionTargetService;
-      usageTracked.resetUseCount();
-      usageTracked.incrementUseCount();
-      usageTracked.incrementUseCount();</code></pre>
+      synchronized (experimentLock) {
+          UsageTracked usageTracked = (UsageTracked) introductionTargetService;
+          usageTracked.resetUseCount();
+          int before = usageTracked.getUseCount();
+          usageTracked.incrementUseCount();
+          usageTracked.incrementUseCount();
+          int after = usageTracked.getUseCount();
+          ...
+      }</code></pre>
         </li>
         <li>Controller vẫn gọi <code>businessOperation()</code> trên target để chứng minh business capability cũ không mất đi. Trace có <code>target:introduction-business-operation</code>, còn <code>facts.useCountBefore=0</code> và <code>useCountAfter=2</code> chứng minh capability mới hoạt động độc lập.</li>
         <li>Đối chiếu <code>targetClassImplementsUsageTracked=false</code>, <code>proxyImplementsUsageTracked=true</code> và <code>isAopProxy=true</code>. Ba fact này là bằng chứng trực tiếp rằng interface được expose bởi proxy, không phải do target class vốn implement nó.</li>
@@ -106,17 +111,19 @@ ProgrammaticProxyController:
       <ol>
         <li>Nhánh JDK gọi <code>setInterfaces(GreetingOperations.class)</code> và <code>setProxyTargetClass(false)</code>. Proxy chỉ expose interface contract, nên gọi <code>greet("jdk")</code> hợp lệ và trace phải có <code>interceptor-before:greet → target:greet:jdk → interceptor-after:greet</code>.
           <div><i>Nguồn: ProgrammaticProxyService.compareProxyStrategies()</i></div>
-          <pre><code>jdkFactory.setTarget(jdkTarget);
+          <pre><code>GreetingTarget target = new GreetingTarget(traceLog);
+      TracingMethodInterceptor interceptor = new TracingMethodInterceptor(traceLog);
+      jdkFactory.setTarget(target);
       jdkFactory.setInterfaces(GreetingOperations.class);
       jdkFactory.setProxyTargetClass(false);
-      jdkFactory.addAdvice(new TracingMethodInterceptor(traceLog));</code></pre>
+      jdkFactory.addAdvice(interceptor);</code></pre>
         </li>
         <li>Hãy nhìn <code>jdkProxy.proxyIsGreetingOperations=true</code>, <code>proxyIsGreetingTarget=false</code> và <code>targetOnlyCapabilityVisibleThroughProxyType=false</code>. Điều này quan trọng vì target thật có method <code>targetOnlyCapability()</code>, nhưng JDK proxy không đưa method ngoài interface vào public contract của proxy.</li>
         <li>Nhánh CGLIB dùng <code>setProxyTargetClass(true)</code>. Proxy là subclass của <code>GreetingTarget</code>, nên vừa gọi được <code>greet("cglib")</code> vừa gọi được <code>targetOnlyCapability()</code>; cả hai đều đi qua cùng <code>TracingMethodInterceptor</code>.
           <div><i>Nguồn: ProgrammaticProxyService.compareProxyStrategies()</i></div>
-          <pre><code>cglibFactory.setTarget(cglibTarget);
+          <pre><code>cglibFactory.setTarget(target);
       cglibFactory.setProxyTargetClass(true);
-      cglibFactory.addAdvice(new TracingMethodInterceptor(traceLog));
+      cglibFactory.addAdvice(interceptor);
       GreetingTarget cglibProxy = (GreetingTarget) cglibFactory.getProxy();</code></pre>
         </li>
         <li>Đối chiếu <code>cglibProxy.isCglibProxy=true</code>, <code>proxyIsGreetingTarget=true</code>, <code>targetOnlyCapabilityVisibleThroughProxyType=true</code> và trace có before/target/after cho cả hai method. Runtime class của hai nhánh cũng khác loại rõ rệt.</li>
@@ -178,11 +185,20 @@ AnnotationDrivenController:
         <li><code>TrackingAspect</code> dùng pointcut <code>@annotation(trackExecution)</code>, vì vậy Spring vừa match method vừa bind instance annotation vào advice. Advice đọc <code>trackExecution.value()</code> và ghi <code>track-before:label=annotation-demo</code> trước <code>proceed()</code>.
           <div><i>Nguồn: TrackingAspect.track()</i></div>
           <pre><code>@Around("@annotation(trackExecution)")
-      public Object track(ProceedingJoinPoint joinPoint, TrackExecution trackExecution) throws Throwable {
+      public Object track(
+              ProceedingJoinPoint joinPoint,
+              TrackExecution trackExecution
+      ) throws Throwable {
+          long startedAt = System.nanoTime();
           traceLog.add("track-before:label=" + trackExecution.value());
-          Object result = joinPoint.proceed();
-          traceLog.add("track-success:method=" + joinPoint.getSignature().getName());
-          return result;
+          try {
+              Object result = joinPoint.proceed();
+              traceLog.add("track-success:method=" + joinPoint.getSignature().getName());
+              return result;
+          } finally {
+              long elapsedNanos = System.nanoTime() - startedAt;
+              traceLog.add("track-finished:elapsed-nanos=" + elapsedNanos);
+          }
       }</code></pre>
         </li>
         <li>Target ghi <code>target:executeTrackedOperation</code> và trả <code>tracked-operation-result</code>. Sau đó advice ghi <code>track-success:method=executeTrackedOperation</code>; trong <code>finally</code> luôn ghi <code>track-finished:elapsed-nanos=...</code>.</li>
@@ -199,15 +215,13 @@ AroundAdviceController:
           <div><i>Nguồn: AroundAdviceAspect.measureExecution()</i></div>
           <pre><code>long startedAt = System.nanoTime();
       traceLog.add("around:before-proceed");
-      try {
-          return joinPoint.proceed();
-      } finally {
-          long elapsedNanos = System.nanoTime() - startedAt;
-          traceLog.add("around:after-proceed:elapsed-nanos=" + elapsedNanos);
-      }</code></pre>
+      Object result = joinPoint.proceed();
+      long elapsedNanos = System.nanoTime() - startedAt;
+      traceLog.add("around:after-proceed:elapsed-nanos=" + elapsedNanos);
+      return result;</code></pre>
         </li>
         <li><code>joinPoint.proceed()</code> mới chuyển quyền điều khiển vào <code>timedOperation()</code>; target ghi <code>target:timedOperation</code> và trả <code>timed-target-result</code>.</li>
-        <li>Trong <code>finally</code>, Aspect tính chênh lệch nanoseconds và ghi <code>around:after-proceed:elapsed-nanos=...</code>. Dùng <code>finally</code> quan trọng vì mốc kết thúc vẫn được ghi kể cả nếu target sau này ném exception.</li>
+        <li>Sau khi target return bình thường, Aspect tính chênh lệch nanoseconds và ghi <code>around:after-proceed:elapsed-nanos=...</code>. Experiment exception riêng phía sau minh họa exceptional path và semantics của cleanup.</li>
         <li>Response phải giữ <code>result=timed-target-result</code> và event theo thứ tự before → target → after. Con số elapsed nằm trong event là bằng chứng Advice thực sự bao quanh target thay vì chỉ chạy trước hoặc sau độc lập.</li>
       </ol>
       <p><b>Kết luận:</b> <code>@Around</code> phù hợp cho timing vì nó sở hữu cả hai phía của <code>proceed()</code>; target chỉ chạy khi Advice chủ động chuyển quyền điều khiển vào nó.</p>
@@ -386,7 +400,12 @@ PointcutController:
           traceLog.add("pointcut:args-runtime-type=" + value.getClass().getSimpleName());
       }</code></pre>
         </li>
-        <li><code>byWithin()</code> dùng hai named pointcut—<code>within(PointcutService)</code> và method execution—rồi compose bằng <code>&amp;&amp;</code>. <code>byThisAndTarget()</code> tạo hai marker riêng: <code>this</code> nhìn proxy object, <code>target</code> nhìn target object. <code>byBean()</code> lọc theo Spring bean name <code>pointcutService</code>.</li>
+        <li><code>byWithin()</code> dùng hai named pointcut—<code>within(PointcutService)</code> và method execution—rồi compose bằng <code>&amp;&amp;</code>. <code>byBean()</code> lọc theo Spring bean name <code>pointcutService</code>.</li>
+        <li><code>byThisAndTarget()</code> được match đồng thời bởi <code>this(PointcutService)</code> và <code>target(PointcutService)</code>. Hai Advice ghi class runtime thật từ <code>joinPoint.getThis()</code> và <code>joinPoint.getTarget()</code>; response còn trả <code>facts.proxyRuntimeClass</code>, <code>facts.targetClass</code> và <code>facts.isAopProxy</code>. Vì vậy learner có bằng chứng trực tiếp rằng <code>this</code> nhìn proxy object còn <code>target</code> nhìn target object, thay vì chỉ dựa vào marker viết sẵn.
+          <div><i>Nguồn: PointcutMatchingAspect.matchThis()/matchTarget()</i></div>
+          <pre><code>traceLog.add("pointcut:this-proxy-type=" + joinPoint.getThis().getClass().getName());
+      traceLog.add("pointcut:target-type=" + joinPoint.getTarget().getClass().getName());</code></pre>
+        </li>
         <li><code>unmatched()</code> cố ý không match Advice nào. Vì target method luôn tự ghi <code>target:unmatched</code>, việc response chỉ có target event cho method này là negative evidence rất rõ rằng pointcut không chọn nó.</li>
         <li>Đối chiếu danh sách <code>result</code> với <code>events</code>: mỗi method vẫn trả business result, còn marker pointcut chỉ xuất hiện ở những lời gọi thỏa điều kiện tương ứng.</li>
       </ol>

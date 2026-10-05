@@ -21,12 +21,10 @@ public class AroundAdviceAspect {
         long startedAt = System.nanoTime();
         traceLog.add("around:before-proceed");
 
-        try {
-            return joinPoint.proceed();
-        } finally {
-            long elapsedNanos = System.nanoTime() - startedAt;
-            traceLog.add("around:after-proceed:elapsed-nanos=" + elapsedNanos);
-        }
+        Object result = joinPoint.proceed();
+        long elapsedNanos = System.nanoTime() - startedAt;
+        traceLog.add("around:after-proceed:elapsed-nanos=" + elapsedNanos);
+        return result;
     }
 
     @Around("execution(* com.example.learning.module.around.service.AroundAdviceService.transformResult(..))")

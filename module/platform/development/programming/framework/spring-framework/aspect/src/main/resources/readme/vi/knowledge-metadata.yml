@@ -50,7 +50,19 @@
     aiGenerated: true
     reviewed: false
 4.Pointcut/Pointcut.md:
+  aop-declaration-styles:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  spring-aop-enablement:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
   pointcut-mental-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  pointcut-designators-and-composition:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
@@ -66,7 +78,24 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-5.Advice/Advice.md:
+5.Annotation/Annotation.md:
+  annotation-contract:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  annotation-demo:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  annotation-vs-expression:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  annotation-conclusion:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+6.Advice/Advice.md:
   advice-semantics:
     difficulty: BASIC
     aiGenerated: true
@@ -87,7 +116,7 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-6.Around/Around.md:
+7.Around/Around.md:
   around-mental-model:
     difficulty: BASIC
     aiGenerated: true
@@ -116,25 +145,12 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-7.Annotation/Annotation.md:
-  annotation-contract:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
-  annotation-demo:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
-  annotation-vs-expression:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
-  annotation-conclusion:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
 8.Ordering/Ordering.md:
   ordering-mental-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  aspect-instantiation-models:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
@@ -150,45 +166,24 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-9.SelfInvocation/SelfInvocation.md:
-  self-invocation-mental-model:
+9.Introduction/Introduction.md:
+  introduction-mental-model:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  self-invocation-demo:
+  declare-parents:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  proxy-limitations:
+  introduction-demo:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  final-method-demo:
+  introduction-conclusion:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  self-invocation-conclusion:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
-10.Patterns/Patterns.md:
-  practical-patterns:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
-  practical-demo:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
-  aop-pitfalls:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
-  practical-conclusion:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
-11.ProxyFactory/ProxyFactory.md:
+10.ProxyFactory/ProxyFactory.md:
   proxy-factory-mental-model:
     difficulty: BASIC
     aiGenerated: true
@@ -205,7 +200,7 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-12.Advisor/Advisor.md:
+11.Advisor/Advisor.md:
   advisor-mental-model:
     difficulty: BASIC
     aiGenerated: true
@@ -226,16 +221,20 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-13.Infrastructure/Infrastructure.md:
+12.Infrastructure/Infrastructure.md:
   auto-proxy-mental-model:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  spring-boot-aop-auto-config:
+  framework-boot-aop-enablement-boundary:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
   advised-interface:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  target-source-strategy:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
@@ -247,20 +246,53 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-14.Introduction/Introduction.md:
-  introduction-mental-model:
+13.SelfInvocation/SelfInvocation.md:
+  self-invocation-mental-model:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  declare-parents:
+  self-invocation-demo:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  introduction-demo:
+  proxy-limitations:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  introduction-conclusion:
+  self-invocation-remediation:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  final-method-demo:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  aop-debugging-checklist:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  self-invocation-conclusion:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+14.Patterns/Patterns.md:
+  practical-patterns:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  aop-design-tradeoffs:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  practical-demo:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  aop-pitfalls:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  practical-conclusion:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
@@ -278,6 +310,10 @@
     aiGenerated: true
     reviewed: false
   framework-connections:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  aop-end-to-end-synthesis:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false

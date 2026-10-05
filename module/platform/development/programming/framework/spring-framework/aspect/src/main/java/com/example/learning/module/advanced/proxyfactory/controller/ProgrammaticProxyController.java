@@ -19,7 +19,7 @@ public class ProgrammaticProxyController {
     }
 
     /**
-     * README: readme/vi/menu/11.ProxyFactory/ProxyFactory.md#proxy-factory-demo
+     * README: readme/vi/menu/10.ProxyFactory/ProxyFactory.md#proxy-factory-demo
      * Purpose: Tự tạo JDK proxy và CGLIB proxy bằng ProxyFactory với cùng một MethodInterceptor.
      */
     @GetMapping("/compare")

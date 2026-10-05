@@ -19,6 +19,7 @@ public class IntroductionController {
 
     private final IntroductionTargetService introductionTargetService;
     private final AopTraceLog traceLog;
+    private final Object experimentLock = new Object();
 
     public IntroductionController(
             IntroductionTargetService introductionTargetService,
@@ -29,7 +30,7 @@ public class IntroductionController {
     }
 
     /**
-     * README: readme/vi/menu/14.Introduction/Introduction.md#introduction-demo
+     * README: readme/vi/menu/9.Introduction/Introduction.md#introduction-demo
      * Purpose: Chứng minh AOP proxy có thể expose thêm interface mà target class ban đầu không implement.
      */
     @GetMapping("/observe")
@@ -45,24 +46,26 @@ public class IntroductionController {
             );
         }
 
-        UsageTracked usageTracked = (UsageTracked) introductionTargetService;
-        usageTracked.resetUseCount();
-        int before = usageTracked.getUseCount();
-        usageTracked.incrementUseCount();
-        usageTracked.incrementUseCount();
-        int after = usageTracked.getUseCount();
+        synchronized (experimentLock) {
+            UsageTracked usageTracked = (UsageTracked) introductionTargetService;
+            usageTracked.resetUseCount();
+            int before = usageTracked.getUseCount();
+            usageTracked.incrementUseCount();
+            usageTracked.incrementUseCount();
+            int after = usageTracked.getUseCount();
 
-        String result = introductionTargetService.businessOperation();
-        List<String> events = traceLog.snapshotAndClear();
+            String result = introductionTargetService.businessOperation();
+            List<String> events = traceLog.snapshotAndClear();
 
-        Map<String, Object> facts = new LinkedHashMap<>();
-        facts.put("introducedInterface", true);
-        facts.put("targetClassImplementsUsageTracked", UsageTracked.class.isAssignableFrom(IntroductionTargetService.class));
-        facts.put("proxyImplementsUsageTracked", UsageTracked.class.isAssignableFrom(introductionTargetService.getClass()));
-        facts.put("isAopProxy", AopUtils.isAopProxy(introductionTargetService));
-        facts.put("useCountBefore", before);
-        facts.put("useCountAfter", after);
+            Map<String, Object> facts = new LinkedHashMap<>();
+            facts.put("introducedInterface", true);
+            facts.put("targetClassImplementsUsageTracked", UsageTracked.class.isAssignableFrom(IntroductionTargetService.class));
+            facts.put("proxyImplementsUsageTracked", UsageTracked.class.isAssignableFrom(introductionTargetService.getClass()));
+            facts.put("isAopProxy", AopUtils.isAopProxy(introductionTargetService));
+            facts.put("useCountBefore", before);
+            facts.put("useCountAfter", after);
 
-        return new AopExperimentResponse(result, events, facts);
+            return new AopExperimentResponse(result, events, facts);
+        }
     }
 }

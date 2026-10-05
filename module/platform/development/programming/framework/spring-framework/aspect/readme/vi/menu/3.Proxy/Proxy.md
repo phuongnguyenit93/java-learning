@@ -1,42 +1,59 @@
 <a id="back-to-top"></a>
 
-# Spring AOP Proxy Mental Model
+# Mô hình Proxy trong Spring AOP
 
 ## Menu
-- [1. Caller không nhất thiết gọi target trực tiếp](#proxy-mental-model)
+- [1. Bên gọi không nhất thiết gọi trực tiếp target](#proxy-mental-model)
 - [2. Demo trong module](#proxy-demo)
-- [3. Spring-managed bean và object tạo bằng new](#managed-vs-new-demo)
+- [3. Container auto-proxying và object tạo trực tiếp](#managed-vs-new-demo)
 - [4. JDK Dynamic Proxy và CGLIB](#proxy-strategies)
 - [5. Kết luận](#proxy-conclusion)
 
-Proxy boundary là nền tảng để hiểu hầu hết behavior của Spring AOP.
+Proxy boundary là nền tảng để hiểu hầu hết hành vi của Spring AOP.
 
-## <a id="proxy-mental-model">1. Caller không nhất thiết gọi target trực tiếp</a>
+## <a id="proxy-mental-model">1. Bên gọi không nhất thiết gọi trực tiếp target</a>
 
 <details>
-<summary>Click for details</summary>
+<summary>Xem chi tiết</summary>
 
-Mental model:
+Khi Spring áp dụng AOP cho một object, bên gọi thường nhận một proxy reference:
 
 ```text
-Caller
+Bên gọi
   ↓
 Spring AOP Proxy
   ↓
-Advice chain
+Advisor / interceptor chain
   ↓
 Target Object
 ```
 
-Khi một bean cần AOP, Spring thường đưa cho consumer một proxy thay vì reference trực tiếp tới target object.
-
-Proxy có thể được tạo theo các chiến lược khác nhau như JDK dynamic proxy hoặc class-based proxy. Không nên hardcode assumption rằng mọi bean luôn dùng cùng một loại proxy.
-
-Điều quan trọng hơn loại proxy là:
+Proxy chính là interception boundary. Nó có thể xem invocation hiện tại, chạy advice phù hợp rồi tiếp tục về target. Vì vậy câu hỏi runtime hữu ích nhất trong Spring AOP là:
 
 ```text
-invocation có đi qua proxy hay không?
+Invocation này có đi qua đúng proxy không?
 ```
+
+Nên trả lời câu hỏi đó trước khi debug pointcut. Nếu code đang giữ reference trực tiếp tới target thì không có pointcut nào có thể tự chen vào lời gọi trực tiếp ấy.
+
+Container auto-proxying là đường đi phổ biến trong ứng dụng: infrastructure của Spring xem xét Spring-managed bean và khi có advisor phù hợp, Spring expose một proxy thay cho plain bean reference. Đây là hành vi trong lifecycle của container, không phải quy tắc rằng mọi Java object trong JVM tự động được proxy.
+
+Ngoài ra còn có boundary cấp thấp. `ProxyFactory` có thể explicit wrap một object và tạo AOP proxy bằng code. Vì vậy khi nói về object được tạo bằng `new` cần diễn đạt chính xác:
+
+```text
+new SomeService()
+→ object thường, tự nó không có AOP
+
+ProxyFactory(new SomeService()).getProxy()
+→ Spring AOP proxy được tạo explicit
+```
+
+Do đó điểm phân biệt quan trọng là **call đi qua AOP proxy** hay **call trực tiếp tới unproxied target**, thay vì coi "Spring bean" và "object tạo bằng new" là hai nhóm tuyệt đối.
+
+### Tài liệu tham khảo
+
+- Spring Framework Reference — Proxying Mechanisms
+- Spring Framework Reference — Creating AOP Proxies Programmatically with the ProxyFactory
 
 </details>
 
@@ -47,7 +64,7 @@ invocation có đi qua proxy hay không?
 ## <a id="proxy-demo">2. Demo trong module</a>
 
 <details>
-<summary>Click for details</summary>
+<summary>Xem chi tiết</summary>
 
 Controller:
 
@@ -73,7 +90,7 @@ Aspect:
 ProxyMentalModelAspect#observeProxyBoundary(...)
 ```
 
-Response `facts` cho biết:
+Response `facts` gồm:
 
 ```text
 runtimeClass
@@ -83,7 +100,7 @@ isCglibProxy
 isJdkDynamicProxy
 ```
 
-Response `events` cho thấy call chain:
+Response `events` cho thấy invocation đi qua advice trước khi tới target:
 
 ```text
 proxy-boundary:before-target
@@ -91,7 +108,7 @@ target:invokeTarget
 proxy-boundary:after-target
 ```
 
-Không cần cố đoán tên generated proxy class. Hãy dùng `AopUtils` để kiểm tra semantics thay vì phụ thuộc tên class runtime.
+Tên generated proxy class không phải contract ổn định. Khi experiment cần bằng chứng về semantics, dùng các utility của Spring như `AopUtils.isAopProxy(...)`, `isJdkDynamicProxy(...)`, `isCglibProxy(...)` và target-class inspection.
 
 </details>
 
@@ -99,10 +116,10 @@ Không cần cố đoán tên generated proxy class. Hãy dùng `AopUtils` để
 
 ---
 
-## <a id="managed-vs-new-demo">3. Spring-managed bean và object tạo bằng new</a>
+## <a id="managed-vs-new-demo">3. Container auto-proxying và object tạo trực tiếp</a>
 
 <details>
-<summary>Click for details</summary>
+<summary>Xem chi tiết</summary>
 
 Controller:
 
@@ -116,20 +133,20 @@ Endpoint:
 GET /aop/proxy/managed-vs-new
 ```
 
-Experiment gọi cùng một method theo hai đường:
+Experiment cố ý so sánh đường đi qua container với một object thông thường được gọi trực tiếp:
 
 ```text
-Spring-managed bean
+Spring-managed reference
 → AOP proxy
 → advice
 → target
 
 new ProxyMentalModelService(...)
-→ plain Java object
+→ object thông thường
 → target trực tiếp
 ```
 
-Nhánh managed có event:
+Nhánh managed ghi:
 
 ```text
 proxy-boundary:before-target
@@ -137,22 +154,20 @@ target:invokeTarget
 proxy-boundary:after-target
 ```
 
-Nhánh `new` chỉ có:
+Nhánh plain chỉ ghi:
 
 ```text
 target:invokeTarget
 ```
 
-`facts` còn cho thấy:
+và `facts` xác nhận:
 
 ```text
 managedIsAopProxy = true
 plainIsAopProxy   = false
 ```
 
-**Kết luận:** pointcut expression đúng vẫn chưa đủ. Object phải nằm trong Spring AOP proxy boundary thì advice mới có cơ hội tham gia invocation.
-
----
+Bài học ở đây rất cụ thể: container auto-proxying không tự advise một object bất kỳ chỉ vì class của nó sẽ match cùng pointcut. Object thông thường vẫn có thể được wrap explicit bằng `ProxyFactory`, nhưng experiment này cố ý không làm bước đó.
 
 </details>
 
@@ -163,28 +178,41 @@ plainIsAopProxy   = false
 ## <a id="proxy-strategies">4. JDK Dynamic Proxy và CGLIB</a>
 
 <details>
-<summary>Click for details</summary>
+<summary>Xem chi tiết</summary>
 
-Hai chiến lược proxy cần phân biệt:
+Spring AOP có hai chiến lược proxy chính.
 
 ```text
-JDK Dynamic Proxy
+JDK dynamic proxy
 → proxy dựa trên interface
+→ type surface của proxy là các interface được proxy
 
-Class-based / CGLIB Proxy
-→ proxy là subclass của target class
+CGLIB proxy
+→ generated subclass của target class
+→ proxy assignable tới target class
 ```
 
-Ở fundamentals chỉ cần biết strategy ảnh hưởng type surface và limitation của proxy.
+Với mặc định của Spring Framework core, khi target implements ít nhất một interface, Spring có thể dùng JDK dynamic proxy; nếu không có interface phù hợp, Spring dùng CGLIB class proxy. Cấu hình như `proxyTargetClass = true` có thể ép class-based proxying. Spring Boot có thể chọn mặc định ứng dụng khác, vì vậy không nên lấy default của Boot làm contract của Spring Framework AOP.
 
-Experiment tạo **cả hai strategy bằng code** nằm ở:
+Strategy ảnh hưởng những call nào có thể đi qua proxy. JDK proxy intercept lời gọi được expose qua proxy interfaces. CGLIB dựa vào subclassing/overriding nên chịu giới hạn từ Java:
+
+- class `final` không thể được subclass-proxy;
+- method `final` không thể override nên không thể được advise qua CGLIB;
+- method `private` không thể override nên không thể được advise;
+- method không visible với subclass cũng không thể được advise qua subclass proxy đó.
+
+Ứng dụng thông thường nên đặt AOP ở public service boundary rõ ràng. Nếu yêu cầu cần intercept internal call bất kỳ, constructor hoặc field access, đó thường là tín hiệu proxy-based Spring AOP không còn là runtime boundary phù hợp.
+
+Experiment so sánh cả hai strategy bằng code nằm ở:
 
 ```text
-readme/vi/menu/11.ProxyFactory/ProxyFactory.md
+readme/vi/menu/10.ProxyFactory/ProxyFactory.md
 ProgrammaticProxyController#compareProxyFactoryStrategies()
 ```
 
----
+### Tài liệu tham khảo
+
+- Spring Framework Reference — Proxying Mechanisms
 
 </details>
 
@@ -195,20 +223,18 @@ ProgrammaticProxyController#compareProxyFactoryStrategies()
 ## <a id="proxy-conclusion">5. Kết luận</a>
 
 <details>
-<summary>Click for details</summary>
+<summary>Xem chi tiết</summary>
 
-Annotation hoặc pointcut tự nó chưa đủ để advice chạy.
-
-Mental model đúng là:
+Với mọi câu hỏi kiểu "vì sao advice chạy hoặc không chạy?", nên kiểm tra theo thứ tự:
 
 ```text
-method call
-→ đi qua Spring proxy
-→ pointcut match
-→ advice có cơ hội chạy
+1. Có AOP proxy không?
+2. Invocation có đi qua proxy đó không?
+3. Advisor / pointcut có match invocation không?
+4. Advice nào nằm trong chain kết quả?
 ```
 
-Chapter self-invocation sau này sẽ chứng minh trường hợp method có annotation nhưng call không quay lại qua proxy.
+Proxy strategy làm thay đổi type surface và một số giới hạn interception, nhưng nguyên tắc về boundary không đổi. Chapter self-invocation phía sau sẽ cho thấy trường hợp điển hình: object đã có proxy nhưng một lời gọi nội bộ vẫn bypass proxy.
 
 </details>
 

@@ -1,16 +1,24 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "Aspect Oriented Programming with Spring"
+    url: "https://docs.spring.io/spring-framework/reference/core/aop.html"
+    description: "Official Spring Reference chapter for Spring AOP concepts, @AspectJ-style support, proxy semantics, introductions, ordering, and the boundary with AspectJ weaving. The repository targets Spring Framework 6.1.x, so version-specific API details are cross-checked against the 6.1.14 Javadoc entries below."
+
+  - title: "Spring AOP APIs"
+    url: "https://docs.spring.io/spring-framework/reference/core/aop-api.html"
+    description: "Official Spring Reference for the lower-level Pointcut, Advice, Advisor, ProxyFactory, auto-proxy, Advised, and TargetSource infrastructure beneath annotation-style AOP."
+
+  - title: "org.springframework.aop — Spring Framework 6.1.14 API"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/aop/package-summary.html"
+    description: "Version-aligned Javadoc for Spring Framework 6.1.14 core AOP interfaces, pointcuts, advice types, advisors, and introductions."
+
+  - title: "org.springframework.aop.framework — Spring Framework 6.1.14 API"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/aop/framework/package-summary.html"
+    description: "Version-aligned Javadoc for proxy creation and runtime infrastructure including ProxyFactory, Advised, proxy factories, and advisor-chain support."
+
+  - title: "org.springframework.aop.aspectj — Spring Framework 6.1.14 API"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/aop/aspectj/package-summary.html"
+    description: "Version-aligned Javadoc for Spring's AspectJ-expression integration and @AspectJ advice adapters while still using the proxy-based Spring AOP runtime."
+
+  - title: "org.springframework.aop.aspectj.annotation — Spring Framework 6.1.14 API"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/aop/aspectj/annotation/package-summary.html"
+    description: "Version-aligned Javadoc for @AspectJ metadata processing and aspect instantiation support, useful for checking perthis, pertarget, and pertypewithin behavior against the repository baseline."

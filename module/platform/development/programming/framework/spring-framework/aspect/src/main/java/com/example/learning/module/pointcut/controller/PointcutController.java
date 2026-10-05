@@ -3,11 +3,14 @@ package com.example.learning.module.pointcut.controller;
 import com.example.learning.module.common.AopExperimentResponse;
 import com.example.learning.module.common.AopTraceLog;
 import com.example.learning.module.pointcut.service.PointcutService;
+import org.springframework.aop.support.AopUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/aop/pointcut")
@@ -43,9 +46,13 @@ public class PointcutController {
                 pointcutService.unmatched()
         );
 
-        return AopExperimentResponse.of(
-                result,
-                traceLog.snapshotAndClear()
-        );
+        List<String> events = traceLog.snapshotAndClear();
+
+        Map<String, Object> facts = new LinkedHashMap<>();
+        facts.put("proxyRuntimeClass", pointcutService.getClass().getName());
+        facts.put("targetClass", AopUtils.getTargetClass(pointcutService).getName());
+        facts.put("isAopProxy", AopUtils.isAopProxy(pointcutService));
+
+        return new AopExperimentResponse(result, events, facts);
     }
 }

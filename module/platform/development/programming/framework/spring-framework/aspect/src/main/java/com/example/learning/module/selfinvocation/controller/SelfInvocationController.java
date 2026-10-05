@@ -30,7 +30,7 @@ public class SelfInvocationController {
     }
 
     /**
-     * README: readme/vi/menu/9.SelfInvocation/SelfInvocation.md#self-invocation-demo
+     * README: readme/vi/menu/13.SelfInvocation/SelfInvocation.md#self-invocation-demo
      * Purpose: So sánh this.inner() bên trong target với lời gọi inner() từ bên ngoài qua Spring proxy.
      */
     @GetMapping("/compare")
@@ -56,7 +56,7 @@ public class SelfInvocationController {
     }
 
     /**
-     * README: readme/vi/menu/9.SelfInvocation/SelfInvocation.md#final-method-demo
+     * README: readme/vi/menu/13.SelfInvocation/SelfInvocation.md#final-method-demo
      * Purpose: Chứng minh final method trên class-based proxy không thể bị override để advice intercept.
      */
     @GetMapping("/final-method")

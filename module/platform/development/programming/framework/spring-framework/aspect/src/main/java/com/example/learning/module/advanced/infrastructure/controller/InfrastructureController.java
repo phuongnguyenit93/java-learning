@@ -39,7 +39,7 @@ public class InfrastructureController {
     }
 
     /**
-     * README: readme/vi/menu/13.Infrastructure/Infrastructure.md#infrastructure-demo
+     * README: readme/vi/menu/12.Infrastructure/Infrastructure.md#infrastructure-demo
      * Purpose: Quan sát auto-proxy creator và Advisor chain nằm bên trong một Spring-managed AOP proxy.
      */
     @GetMapping("/inspect")

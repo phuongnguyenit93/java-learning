@@ -41,4 +41,131 @@
 # The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: aop-purpose-and-boundary
+    title: Why Spring AOP Exists and Where It Stops
+    purpose: "Understand the cross-cutting problem Spring AOP solves, why proxy-based interception complements object-oriented design, and where Spring AOP deliberately stops compared with full AspectJ weaving."
+    objectives:
+      - "Distinguish business concerns from concerns that cut across many types or operations, and explain why scattering those concerns through business code creates duplication and coupling."
+      - "Explain Spring AOP as a runtime, proxy-based method-interception mechanism: container auto-proxying normally wraps Spring-managed beans, while low-level APIs such as ProxyFactory can create AOP proxies programmatically without turning Spring AOP into a general bytecode-weaving system."
+      - "Recognize that @AspectJ is a declaration style interpreted by Spring AOP and does not by itself imply use of the AspectJ compiler or load-time weaver."
+      - "Identify common uses such as auditing, timing, tracing, policy checks, and declarative infrastructure without moving transaction, cache, async, or security semantics into this module."
+    relatedKnowledge:
+      - CrossCutting
+      - Terminology
+      - RuntimeBoundary
+    relatedModules:
+      - routeId: SPRING_CORE_CONTAINER
+        label: Spring Core Container
+        note: "Provides the Spring bean lifecycle and ApplicationContext foundation on which auto-proxying operates."
+
+  - id: spring-aop-core-model
+    title: Spring AOP Core Model
+    purpose: "Build a precise vocabulary and execution model for aspect, advice, pointcut, join point, target, proxy, advisor, and weaving before learning declaration syntax."
+    objectives:
+      - "Explain how a pointcut selects method-execution join points and how advice contributes behavior around those selected invocations."
+      - "Differentiate the proxy object seen by callers from the target object that ultimately executes application logic."
+      - "Understand how an aspect groups cross-cutting behavior while an advisor represents lower-level advice plus applicability metadata."
+      - "Use the model caller -> proxy -> interceptor/advice chain -> target as the baseline for reasoning about every later Spring AOP behavior."
+    relatedKnowledge:
+      - Terminology
+      - Advisor
+
+  - id: proxy-runtime-and-boundaries
+    title: Proxy Runtime and Invocation Boundaries
+    purpose: "Understand how Spring creates and uses AOP proxies, why proxy type and invocation path affect observable behavior, and which Java-level constraints limit interception."
+    objectives:
+      - "Distinguish JDK interface-based proxies from class-based CGLIB proxies and understand what each proxy exposes to callers."
+      - "Understand that advice can participate only when a call crosses the relevant proxy boundary, including the consequences of self-invocation."
+      - "Recognize limitations around final classes or methods, private methods, visibility, and concrete-type assumptions; understand that container auto-proxying does not advise arbitrary objects created outside the container unless they are explicitly wrapped in an AOP proxy."
+      - "Separate Spring Framework proxy semantics from Spring Boot defaults so infrastructure configuration is not mistaken for the core AOP contract."
+    relatedKnowledge:
+      - Proxy
+      - SelfInvocation
+      - ProxyFactory
+      - Infrastructure
+
+  - id: aspect-declaration-and-pointcut-design
+    title: Aspect Declaration and Pointcut Design
+    purpose: "Learn to declare Spring-managed aspects and design pointcuts that express stable architectural boundaries instead of brittle implementation accidents."
+    objectives:
+      - "Understand @AspectJ-style declaration, enabling auto-proxy support, named pointcuts, and the relationship between aspect metadata and Spring-created advisors; recognize schema-based AOP as an alternate declaration style that uses the same underlying proxy infrastructure rather than a separate runtime model."
+      - "Use the Spring-supported AspectJ pointcut designators such as execution, within, this, target, args, annotation-based forms, and Spring's bean designator with correct proxy-based semantics."
+      - "Differentiate signature-based matching from runtime-context matching and bind method arguments, annotations, proxy, or target context only when the concern needs them."
+      - "Compose narrow, reusable pointcuts and recognize pointcut designators that belong to the broader AspectJ join-point model but are unsupported by Spring AOP."
+    relatedKnowledge:
+      - Pointcut
+      - Annotation
+      - Terminology
+
+  - id: advice-semantics-and-control-flow
+    title: Advice Semantics and Invocation Control
+    purpose: "Understand when each advice kind runs, what context it can observe or bind, and how around advice changes control flow through the interceptor chain."
+    objectives:
+      - "Differentiate before, after-returning, after-throwing, after-finally, and around advice by lifecycle and control-flow semantics rather than annotation names alone."
+      - "Understand binding of arguments, return values, thrown exceptions, annotations, and join-point context into advice methods."
+      - "Use ProceedingJoinPoint and proceed() correctly, including the consequences of skipping, repeating, or changing arguments to the invocation."
+      - "Prefer the least-powerful advice type that satisfies the concern and preserve exception/return semantics unless deliberate transformation is part of the design."
+    relatedKnowledge:
+      - Advice
+      - Around
+
+  - id: aspect-composition-lifecycle-and-introductions
+    title: Aspect Composition, Lifecycle, and Introductions
+    purpose: "Understand how multiple pieces of AOP behavior compose, how precedence and aspect instance lifecycle affect execution, and how introductions can enrich advised object types."
+    objectives:
+      - "Reason about multiple matching advisors as a nested interceptor chain and apply ordering deliberately without turning ordering into a hidden business protocol."
+      - "Understand the default singleton aspect model and the supported perthis, pertarget, and pertypewithin models, including why stateful aspects require lifecycle awareness."
+      - "Understand introductions as adding an interface and implementation to advised objects, including the role of @DeclareParents."
+      - "Recognize that percflow, percflowbelow, and other weaving-only capabilities remain outside proxy-based Spring AOP."
+    relatedKnowledge:
+      - Ordering
+      - Introduction
+
+  - id: low-level-aop-api-and-auto-proxying
+    title: Low-Level AOP API and Auto-Proxy Infrastructure
+    purpose: "Connect annotation-style AOP to the lower-level Spring AOP abstractions that create proxies, match methods, build advisor chains, and integrate interception into the IoC container."
+    objectives:
+      - "Understand Pointcut as class filtering plus method matching, Advice/MethodInterceptor as behavior, and Advisor as the unit that combines behavior with applicability."
+      - "Use ProxyFactory as the conceptual bridge for constructing and inspecting proxies programmatically without making programmatic configuration the default application style."
+      - "Understand how auto-proxy creators and BeanPostProcessor infrastructure discover eligible beans and apply advisors inside the ApplicationContext lifecycle."
+      - "Understand TargetSource as the strategy that supplies the target for an invocation, including the ordinary singleton target and the existence of advanced dynamic, pooled, or hot-swappable target strategies without making them the default application model."
+      - "Recognize Advised and related infrastructure as diagnostic/extension surfaces while keeping ordinary application code decoupled from low-level AOP internals."
+    relatedKnowledge:
+      - ProxyFactory
+      - Advisor
+      - Infrastructure
+    relatedModules:
+      - routeId: SPRING_CORE_CONTAINER
+        label: Spring Core Container
+        note: "Owns BeanPostProcessor and container lifecycle concepts that Spring AOP auto-proxy infrastructure consumes."
+
+  - id: failure-model-and-debugging
+    title: Failure Model and Debugging
+    purpose: "Develop a repeatable way to diagnose advice that does not run, runs unexpectedly, or produces behavior that differs from the intended cross-cutting contract."
+    objectives:
+      - "Debug in order: confirm the expected proxy-creation path (container auto-proxying or an explicitly created proxy) and verify proxy creation, verify the invocation crosses that proxy, verify pointcut/advisor matching, then inspect chain ordering and advice behavior."
+      - "Recognize self-invocation, direct target references, direct use of objects created with new without explicit proxying, final/private method constraints, proxy type assumptions, and overly broad pointcuts as distinct failure classes."
+      - "Use proxy/introspection evidence carefully without coupling production business logic to AopContext or other infrastructure purely to work around design problems."
+      - "Distinguish proxy-related failures from concerns owned by downstream declarative features such as transactions, caching, async execution, or method security."
+    relatedKnowledge:
+      - SelfInvocation
+      - Patterns
+      - Infrastructure
+      - RuntimeBoundary
+
+  - id: design-tradeoffs-integration-and-synthesis
+    title: Design Trade-offs, Integration, and Synthesis
+    purpose: "Decide when Spring AOP is an appropriate design tool, understand how other Spring features consume the same interception model, and retain an end-to-end mental model without leaking their domain semantics into AOP."
+    objectives:
+      - "Choose AOP for stable cross-cutting policies with clear interception boundaries and avoid it for ordinary business workflow, hidden control flow, or behavior better expressed by explicit composition."
+      - "Understand how transaction management, caching, async execution, and method-security infrastructure can reuse proxy/advisor concepts while their domain rules remain owned by their dedicated modules."
+      - "Recognize when requirements exceed method-execution proxy interception and full AspectJ weaving or another mechanism is the more appropriate boundary."
+      - "Synthesize the complete path from concern and pointcut declaration through auto-proxy creation, advisor/interceptor chain execution, target invocation, and observable result."
+    relatedKnowledge:
+      - Patterns
+      - RuntimeBoundary
+    relatedModules:
+      - routeId: SPRING_CONCURRENCY
+        label: Spring Concurrency
+        note: "Consumes proxy/interception concepts for annotation-driven async execution while owning its own task-execution semantics."

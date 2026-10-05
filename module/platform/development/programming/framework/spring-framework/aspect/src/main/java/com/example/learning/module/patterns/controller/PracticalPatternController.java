@@ -24,7 +24,7 @@ public class PracticalPatternController {
     }
 
     /**
-     * README: readme/vi/menu/10.Patterns/Patterns.md#practical-demo
+     * README: readme/vi/menu/14.Patterns/Patterns.md#practical-demo
      * Purpose: Ghép auditing và timing thành cross-cutting behavior mà business method không phải tự triển khai hai concern đó.
      */
     @GetMapping("/checkout")
