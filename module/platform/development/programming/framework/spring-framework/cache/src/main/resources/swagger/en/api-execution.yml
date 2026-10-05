@@ -1,0 +1,70 @@
+CacheConcurrencyController:
+  synchronizedLoading():
+    execution: |-
+      <p><b>Concept:</b> <code>@Cacheable(sync=true)</code> asks the cache provider to coordinate loading for the same key.</p>
+      <ol>
+        <li>The experiment creates four bounded worker tasks and holds them behind one start gate so they contend for the same missing key.</li>
+        <li>Every worker calls the same proxied cacheable method.
+          <div><i>Source: CacheProbeService.loadSynchronized(...)</i></div>
+          <pre><code>@Cacheable(cacheNames = "cache-sync-demo",
+              key = "#p0 + ':' + #p1",
+              sync = true)
+      public CacheValue loadSynchronized(String experimentId, String businessKey) {
+          sleepBriefly();
+          return newValue(experimentId, businessKey, false);
+      }</code></pre>
+        </li>
+        <li>The loader increments an experiment-local counter. The response reports both that counter and the number of distinct load-sequence values returned to all callers.</li>
+        <li>The executor is shut down and the experiment key/counter are removed in <code>finally</code>, so repeated executions do not rely on stale state.</li>
+      </ol>
+      <p><b>Observation:</b> Four callers should produce <code>loaderInvocations = 1</code> and one distinct load sequence. The response also exposes the concrete cache implementation so the observation is tied to the provider actually used by this experiment.</p>
+      <p><b>Conclusion:</b> The runtime evidence demonstrates synchronized loading for one cache/key operation with this provider; <code>sync=true</code> remains provider-dependent and is not evidence of a general distributed lock.</p>
+    usage: true
+CacheInterceptionController:
+  selfInvocation():
+    execution: |-
+      <p><b>Concept:</b> In proxy mode, cache advice runs only when the invocation enters through the Spring proxy.</p>
+      <ol>
+        <li>The first phase calls <code>loadForSelfInvocation(...)</code> twice from a separate Spring bean. Both calls enter the cache proxy, so the underlying loader should run once.</li>
+        <li>The second phase calls a wrapper on the target bean; that wrapper invokes the annotated method through <code>this</code>.
+          <div><i>Source: CacheProbeService.invokeCachedMethodTwiceInternally(...)</i></div>
+          <pre><code>CacheValue first = this.loadForSelfInvocation(experimentId, businessKey);
+      CacheValue second = this.loadForSelfInvocation(experimentId, businessKey);</code></pre>
+        </li>
+        <li>The response exposes separate loader counts for the proxied path and the self-invocation path.</li>
+        <li>Both experiment namespaces are cleaned after the observation.</li>
+      </ol>
+      <p><b>Observation:</b> The proxied path reports one loader invocation while self-invocation reports two.</p>
+      <p><b>Conclusion:</b> Correct cache metadata on a method is not sufficient if the runtime call bypasses the proxy.</p>
+    usage: true
+CacheKeyController:
+  keyAndHitMiss():
+    execution: |-
+      <p><b>Concept:</b> A cache key that omits an input which changes the result can turn a cache hit into a correctness bug.</p>
+      <ol>
+        <li>The experiment creates separate unique namespaces for the incomplete-key and complete-key phases, so neither phase depends on entries from an earlier request.</li>
+        <li>The first cacheable method deliberately omits <code>includeReviews</code> from the key.
+          <div><i>Source: CacheProbeService.loadWithIncompleteKey(...)</i></div>
+          <pre><code>@Cacheable(cacheNames = "cache-key-incomplete-demo",
+              key = "#p0 + ':' + #p1")
+      public CacheValue loadWithIncompleteKey(
+              String experimentId,
+              String businessKey,
+              boolean includeReviews) { ... }</code></pre>
+        </li>
+        <li>That method is called first with <code>includeReviews=false</code> and then with <code>true</code>. Because both requests resolve to the same key, the second call reuses the first cached value: the response shows the request asked for reviews but the returned cached value still carries <code>includeReviews=false</code>.</li>
+        <li>The second cacheable method includes the result-shaping input in its key.
+          <div><i>Source: CacheProbeService.loadWithCompleteKey(...)</i></div>
+          <pre><code>@Cacheable(cacheNames = "cache-key-complete-demo",
+              key = "#p0 + ':' + #p1 + ':' + #p2")
+      public CacheValue loadWithCompleteKey(
+              String experimentId,
+              String businessKey,
+              boolean includeReviews) { ... }</code></pre>
+        </li>
+        <li>Repeating the same false→true request sequence now causes two loader invocations and returns the correct variant for each request.</li>
+        <li>All generated cache keys and experiment counters are removed in <code>finally</code>.</li>
+      </ol>
+      <p><b>Observation:</b> The incomplete key reports one loader invocation plus <code>wrongVariantWasReused=true</code>; the complete key reports two loader invocations plus <code>resultShapingInputCreatedDistinctEntry=true</code>.</p>
+      <p><b>Conclusion:</b> A cache hit is only correct when the key identity contains every dimension that defines the cached value.</p>
+    usage: true

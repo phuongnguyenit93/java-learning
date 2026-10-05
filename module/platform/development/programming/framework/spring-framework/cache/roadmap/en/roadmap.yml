@@ -1,0 +1,140 @@
+# <roadmap-schema>
+# Module Roadmap Structure
+# schema-version: 1
+#
+# YAML CONTRACT
+# roadmap: High-level learning milestones for the current language roadmap.
+#
+# - id [string, required]: Stable and unique milestone identity within the current language roadmap.
+# - title [string, required]: Milestone title displayed to the learner.
+# - purpose [string, required]: What the learner should understand or achieve from this milestone.
+# - dependsOn [list, optional]: Prerequisite milestone ids when item order alone is not enough to express the dependency.
+# - objectives [list, optional]: Milestone-level learning objectives; do not use this to list every small fact/API/syntax item.
+# - relatedKnowledge [list, optional]: Knowledge category ids in the current module that support this milestone. Portal displays this list on the side opposite the milestone and clicking an item navigates to the matching Knowledge category.
+# - relatedModules [list, optional]: Related modules displayed as Portal Level 2 cards. Each item requires routeId and may provide localized label/note; this relation is navigation only and does not create child milestones or change learning order.
+#
+# ROADMAP THINKING FRAMEWORK
+# PURPOSE
+#   - What is this topic/module?
+#   - Why does it exist?
+#   - What problem exists without it?
+# FOUNDATION
+#   - What prerequisite or mental model must the learner have first?
+# CORE MODEL
+#   - What major abstractions or building blocks make up this topic?
+# MECHANICS
+#   - How does it work at the language/runtime/API level appropriate for this module?
+# USAGE
+#   - How is it used in real code?
+# DECISION / TRADE-OFF
+#   - When should this mechanism be chosen over another?
+#   - When should it not be used?
+# FAILURE / PITFALL
+#   - What mistakes, compile-time failures, or runtime failures matter?
+# INTEGRATION
+#   - How does this topic connect to neighboring concepts/modules?
+# SYNTHESIS
+#   - What end-to-end mental model should the learner retain?
+#
+# Each language owns its own roadmap. Do not infer or synchronize its structure from another language roadmap.
+# Item order in roadmap is the default learning order. Use dependsOn only when a dependency needs to be expressed beyond the linear order.
+# The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
+# </roadmap-schema>
+
+roadmap:
+  - id: cache-purpose-and-boundary
+    title: Cache Purpose and the Spring Cache Boundary
+    purpose: Build the right mental model of caching as result reuse that reduces computation or I/O cost, while understanding that Spring Cache abstracts caching behavior rather than providing the cache store itself.
+    objectives:
+      - Distinguish a cache from a source of truth, a buffer, and persistent storage.
+      - Understand when results are suitable for caching, especially the relationship between inputs, outputs, staleness, and invalidation.
+      - Recognize concerns Spring Cache intentionally leaves to providers, including TTL, eviction policy, topology, and consistency.
+
+  - id: spring-cache-abstraction-model
+    title: Cache, CacheManager, and Cache Regions
+    purpose: Understand the central abstractions Spring uses to separate application caching policy from the backing cache provider.
+    objectives:
+      - Understand Cache as the abstraction for a named cache region and CacheManager as the SPI for resolving cache regions.
+      - Distinguish direct Cache API usage from declarative method caching.
+      - Understand hits, misses, cached null values, native caches, and provider adaptation at a conceptual level.
+
+  - id: declarative-cache-operations
+    title: Declarative Method Caching
+    purpose: Learn how to express cache intent at method and class boundaries without coupling application code to one provider.
+    objectives:
+      - Distinguish cache lookup and population with @Cacheable from updates with @CachePut and invalidation with @CacheEvict.
+      - Understand how @Caching and @CacheConfig compose and share caching policy.
+      - Understand that annotation metadata becomes behavior only when cache infrastructure is enabled and an appropriate CacheManager or CacheResolver is available.
+
+  - id: cache-key-policy-and-resolution
+    title: Cache Keys, Conditions, and Cache Resolution
+    purpose: Develop the model that cache correctness depends on how a method invocation maps to a key and a cache region.
+    objectives:
+      - Understand default key generation and when a custom KeyGenerator or SpEL key is needed.
+      - Distinguish condition from unless and when each participates in the caching decision.
+      - Understand CacheManager, CacheResolver, and multi-cache selection as policy resolution mechanisms.
+      - Understand that multiple cache names are consulted in declaration order and participating caches receive the newly cached value; this is not a provider-independent abstraction for tiered caching.
+      - Recognize key-design failures such as unstable keys, missing data dimensions, or unsuitable object equality.
+
+  - id: consistency-update-and-invalidation
+    title: Updates, Invalidation, and Consistency
+    purpose: Understand that cache correctness does not end at a cache hit and depends on how data changes are reflected in cached state.
+    objectives:
+      - Analyze population, put, single-entry eviction, and whole-cache eviction as different operations.
+      - Understand before-invocation versus after-success invalidation and the effect of exceptions.
+      - Recognize stale data and cache-aside consistency gaps, and why invalidation is often harder than population.
+      - Know why @Cacheable and @CachePut should not normally be combined for the same invocation path.
+
+  - id: cache-interception-boundary
+    title: Proxy Interception and Execution Boundaries
+    purpose: Understand why declarative caching runs through Spring interception infrastructure and which calls actually pass through cache advice.
+    objectives:
+      - Understand that @EnableCaching registers cache interception infrastructure rather than making annotations executable by themselves.
+      - Recognize that proxy mode intercepts only calls that pass through the proxy: self-invocation and calls made before the proxy is fully initialized do not apply cache advice as expected, and cache annotations in proxy mode should be placed on public methods.
+      - Understand advice ordering and AspectJ mode at the boundary, then hand deep proxy mechanics to the Spring AOP module.
+    relatedModules:
+      - routeId: ASPECT
+        label: Spring AOP
+        note: Deepen proxy, advice-ordering, self-invocation, and interception mechanics used by Spring Cache.
+
+  - id: concurrency-and-async-caching
+    title: Concurrency, Cache Stampede, and Async Return Types
+    purpose: Understand how caching behavior changes when callers compete for the same key or when a method returns a future or reactive type.
+    objectives:
+      - Understand duplicate computation on concurrent misses and @Cacheable(sync=true) as a provider-supported synchronization hint.
+      - Remember the Spring Cache restrictions of sync=true: no unless expression, exactly one cache, and no other cache operation on the same method.
+      - Understand Spring Framework 6.1 adaptation for CompletableFuture, Mono, and Flux at the cache-abstraction level.
+      - Recognize the need for suitable provider-side async retrieval and the coarse-grained nature of Spring Cache reactive adaptation.
+      - Recognize that with multiple caches in async or reactive mode, a late-determined miss can prevent later caches from being consulted, so the cache list is not a provider-independent fallback chain.
+      - Distinguish caching a method result from a reactive caching strategy that understands composition and back pressure.
+
+  - id: provider-and-interoperability-boundary
+    title: Cache Providers and the Interoperability Boundary
+    purpose: Learn how Spring Cache keeps application policy stable while the backing store, provider capabilities, and native configuration vary.
+    objectives:
+      - Compare the learning roles of ConcurrentMap, Caffeine, JCache, and custom Cache or CacheManager adapters without turning the module into a provider tutorial.
+      - Understand that TTL, TTI, eviction policy, maximum size, and distributed topology belong to provider configuration.
+      - Recognize that Spring Cache does not promise identical concurrency, serialization, or consistency semantics across providers.
+      - Understand JCache integration as an interoperability option rather than a perfectly identical annotation model.
+    relatedModules:
+      - routeId: SPRING_DATA_REDIS
+        label: Spring Data Redis
+        note: Redis-specific serialization, TTL, data structures, topology, and provider integration belong to Spring Data Redis.
+
+  - id: failure-and-transaction-boundary
+    title: Failure Policy and Transaction-aware Cache Updates
+    purpose: Understand that a cache is a dependency that can fail and that cache mutations may need coordination with transaction commit without making the cache the source of truth.
+    objectives:
+      - Understand how CacheErrorHandler defines whether cache infrastructure failures propagate or follow another policy.
+      - Distinguish cache read or write failures from failures of the business method.
+      - Understand that transaction-aware cache decorators can defer put, evict, and clear operations until after commit, while immediate operations such as putIfAbsent, evictIfPresent, and invalidate cannot use the same deferred semantics.
+      - Keep transaction propagation, rollback, and resource-synchronization mechanics in the Transaction Management module.
+
+  - id: cache-strategy-synthesis
+    title: End-to-end Cache Strategy Design
+    purpose: Synthesize abstraction, policy, interception, consistency, and provider boundaries into a production-oriented decision process.
+    objectives:
+      - Select caching candidates based on cost, reuse, mutability, freshness requirements, and failure tolerance.
+      - Design cache names, keys, population, invalidation, and provider configuration as one coherent policy.
+      - Evaluate local versus distributed caching, stampede, stale data, transaction interaction, and provider limitations before choosing an approach.
+      - Clearly explain which responsibilities belong to Spring Cache and which must be handed off to AOP, transactions, or the cache provider.

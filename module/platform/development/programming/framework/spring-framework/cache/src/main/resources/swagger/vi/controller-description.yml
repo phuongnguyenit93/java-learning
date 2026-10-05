@@ -1,0 +1,18 @@
+CacheConcurrencyController:
+  description: |-
+    <h2>Nạp cache có đồng bộ</h2>
+    <p>Kích hoạt nhiều bên gọi cho cùng một key đang cache miss và quan sát liệu <code>@Cacheable(sync=true)</code> có gom chúng về một lần thực thi loader hay không.</p>
+  readmeRelated:
+    file: 7.ConcurrencyAndAsync/ConcurrencyAndAsync.md
+CacheInterceptionController:
+  description: |-
+    <h2>Ranh giới interception của cache</h2>
+    <p>So sánh lời gọi đi qua proxy cache do Spring quản lý với self-invocation bên trong bean đích.</p>
+  readmeRelated:
+    file: 6.InterceptionBoundary/InterceptionBoundary.md
+CacheKeyController:
+  description: |-
+    <h2>Lỗi thiếu chiều cache key và cách sửa</h2>
+    <p>Đối chiếu key thiếu một đầu vào làm thay đổi kết quả — dẫn tới tái sử dụng sai cached variant — với key đầy đủ chứa đầu vào đó.</p>
+  readmeRelated:
+    file: 4.KeyAndResolution/KeyAndResolution.md

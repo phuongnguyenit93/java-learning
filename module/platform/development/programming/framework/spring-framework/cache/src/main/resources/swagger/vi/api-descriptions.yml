@@ -1,0 +1,84 @@
+CacheConcurrencyController:
+  synchronizedLoading():
+    summary: Quan sát nạp đồng bộ khi nhiều bên gọi cùng cache miss
+    description: Khởi chạy bốn bên gọi có giới hạn cho cùng một key chưa có trong
+      cache. Response cho biết loader thực sự chạy bao nhiêu lần và mọi bên gọi có
+      cùng quan sát một kết quả đã cache hay không.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: cacheable-sync
+    methodName: synchronizedLoading
+    params: [
+      ]
+    path: com/example/learning/cache/controller/CacheConcurrencyController.java
+    mapping: '@GetMapping("/sync-loading")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /spring-cache/concurrency/sync-loading
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+CacheInterceptionController:
+  selfInvocation():
+    summary: So sánh lời gọi qua proxy với self-invocation
+    description: Chạy cùng một phương thức có cache hai lần qua Spring proxy và hai
+      lần từ bên trong chính bean đích. Số lần loader thực thi làm ranh giới proxy
+      quan sát được trực tiếp.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: self-invocation
+    methodName: selfInvocation
+    params: [
+      ]
+    path: com/example/learning/cache/controller/CacheInterceptionController.java
+    mapping: '@GetMapping("/self-invocation")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /spring-cache/interception/self-invocation
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+CacheKeyController:
+  keyAndHitMiss():
+    summary: Quan sát key thiếu chiều gây lỗi rồi sửa bằng key đầy đủ
+    description: Đầu tiên loại một đầu vào làm thay đổi kết quả khỏi key và quan sát
+      cached variant sai bị tái sử dụng. Sau đó đưa đầu vào đó vào key và quan sát
+      hai lần load riêng biệt trả đúng từng variant.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: cache-key-design-pitfalls
+    methodName: keyAndHitMiss
+    params: [
+      ]
+    path: com/example/learning/cache/controller/CacheKeyController.java
+    mapping: '@GetMapping("/hit-miss")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /spring-cache/key/hit-miss
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true

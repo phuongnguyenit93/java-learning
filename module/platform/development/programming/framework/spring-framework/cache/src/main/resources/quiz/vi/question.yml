@@ -1,0 +1,291 @@
+# <quiz-schema>
+# Cấu trúc câu hỏi Quiz
+# schema-version: 3
+#
+# questions [kiểu: list; bắt buộc; mặc định: []; duy nhất theo: id]
+#   Danh sách câu hỏi Quiz của module trong language hiện tại.
+#   mỗi phần tử:
+#     id [kiểu: string; bắt buộc; mặc định: ""]
+#       ID ổn định và duy nhất của câu hỏi.
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi hiển thị cho người học.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu câu hỏi được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu câu hỏi đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+#     answers [kiểu: list; bắt buộc; số phần tử: 4; mặc định: []; duy nhất theo: id]
+#       Chính xác bốn đáp án. ID A/B/C/D là identity nội bộ ổn định, không phải vị trí hiển thị sau khi frontend shuffle.
+#       mỗi phần tử:
+#         id [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#           Identity ổn định của đáp án.
+#         answer [kiểu: string; bắt buộc; mặc định: ""]
+#           Nội dung đáp án hiển thị cho người học.
+#         explanation [kiểu: string; bắt buộc; mặc định: ""]
+#           Giải thích hiển thị khi người học chọn đáp án này, bất kể đúng hay sai.
+#     correctAnswerId [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#       ID nội bộ của đáp án đúng. Frontend kiểm tra bằng identity này sau khi shuffle.
+# </quiz-schema>
+
+
+questions:
+  - id: cache-source-of-truth
+    question: "Một service giữ một bản ghi trong database và một bản sao trong cache. Phát biểu nào mô tả đúng nhất vai trò của cache?"
+    answers:
+      - id: A
+        answer: "Bản cache trở thành dữ liệu có thẩm quyền khi nó được đọc thường xuyên hơn bản ghi trong database."
+        explanation: "Sai. Tần suất đọc không chuyển quyền sở hữu source of truth sang cache."
+      - id: B
+        answer: "Bản cache là trạng thái dẫn xuất có độ mới và vòng đời có thể khác với dữ liệu có thẩm quyền."
+        explanation: "Đúng. Cache là trạng thái dẫn xuất có thể tái sử dụng và có thể stale nếu consistency policy không giữ nó đồng bộ."
+      - id: C
+        answer: "Bản cache và bản ghi database cùng có thẩm quyền miễn là chúng dùng cùng một key."
+        explanation: "Sai. Cùng identity không tạo ra đồng quyền sở hữu dữ liệu có thẩm quyền."
+      - id: D
+        answer: "Bản cache có thẩm quyền cho thao tác đọc, còn database chỉ có thẩm quyền cho thao tác ghi."
+        explanation: "Sai. Read cache không tự động trở thành mô hình dữ liệu có thẩm quyền thứ hai."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.CachePurpose/CachePurpose.md"
+      anchor: "cache-vs-source-of-truth"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - id: cacheable-vs-cacheput
+    question: "Một phương thức phải luôn thực thi business logic rồi ghi giá trị trả về vào cache. Thao tác nào phù hợp nhất?"
+    answers:
+      - id: A
+        answer: "Dùng `@Cacheable`, vì nó lookup trước rồi ghi kết quả sau mọi lời gọi."
+        explanation: "Sai. Cache hit có thể bỏ qua việc thực thi phương thức, nên @Cacheable không bảo đảm phương thức luôn chạy."
+      - id: B
+        answer: "Dùng `@CachePut`, vì phương thức vẫn thực thi và giá trị trả về được dùng để cập nhật cache."
+        explanation: "Đúng. @CachePut mô hình hóa semantics execute-then-update."
+      - id: C
+        answer: "Dùng `@CacheEvict`, vì eviction thay thế giá trị hiện tại bằng kết quả phương thức."
+        explanation: "Sai. @CacheEvict loại bỏ trạng thái cache chứ không lưu giá trị trả về."
+      - id: D
+        answer: "Dùng `@CacheConfig`, vì nó biến cache hit thành trường hợp bắt buộc phải thực thi phương thức."
+        explanation: "Sai. @CacheConfig chia sẻ cấu hình; nó không định nghĩa lại hành vi khi cache hit."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.DeclarativeCaching/DeclarativeCaching.md"
+      anchor: "cache-put"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - id: cache-condition-unless
+    question: "Phát biểu nào phân biệt đúng `condition` và `unless` đối với một thao tác cacheable?"
+    answers:
+      - id: A
+        answer: "`condition` quyết định thao tác có tham gia trước lời gọi; `unless` có thể từ chối lưu cache sau khi đã có kết quả."
+        explanation: "Đúng. Hai expression hoạt động ở các giai đoạn khác nhau và phục vụ các quyết định khác nhau."
+      - id: B
+        answer: "`condition` và `unless` đều là post-invocation veto, nhưng `unless` còn evict entry hiện tại."
+        explanation: "Sai. condition không phải post-invocation veto và unless không đồng nghĩa eviction."
+      - id: C
+        answer: "`condition` chọn cache manager trước invocation; `unless` chọn cache manager sau invocation."
+        explanation: "Sai. Việc chọn CacheManager/CacheResolver là một mối quan tâm khác."
+      - id: D
+        answer: "`condition` quyết định kết quả có được lưu; `unless` quyết định business method có được gọi hay không."
+        explanation: "Sai. Phát biểu này đảo ngược trách nhiệm liên quan."
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.KeyAndResolution/KeyAndResolution.md"
+      anchor: "condition-vs-unless"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - id: cache-key-result-dimension
+    question: "Một phương thức có cache nhận `isbn` và `includeReviews`, trong đó `includeReviews` làm thay đổi dạng biểu diễn trả về. Rủi ro chính khi chỉ key theo `isbn` là gì?"
+    answers:
+      - id: A
+        answer: "Hai biến thể kết quả có thể bị gom vào cùng định danh cache, khiến một yêu cầu tái sử dụng giá trị của biến thể còn lại."
+        explanation: "Đúng. Bỏ một result-shaping input khỏi key có thể tạo cache hit sai về mặt ngữ nghĩa."
+      - id: B
+        answer: "Spring tự động nối `includeReviews` vào explicit key, nên rủi ro chỉ là serialized key lớn hơn."
+        explanation: "Sai. Key expression tường minh quyết định định danh; tham số bị bỏ không được tự động thêm vào."
+      - id: C
+        answer: "Biến thể đầu tiên được cache bình thường, nhưng Spring buộc mọi biến thể sau bỏ qua caching hoàn toàn."
+        explanation: "Sai. Spring không suy luận rằng tham số bị bỏ khỏi key phải làm tắt caching."
+      - id: D
+        answer: "Provider tạo entry riêng theo dạng kết quả ngay cả khi cả hai lời gọi resolve thành cùng explicit key."
+        explanation: "Sai. Provider nhìn thấy key đã resolve, không biết khái niệm biến thể kết quả ẩn của ứng dụng."
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.KeyAndResolution/KeyAndResolution.md"
+      anchor: "cache-key-design-pitfalls"
+    apiRelated:
+      controller: "CacheKeyController"
+      methodSignature: "keyAndHitMiss()"
+
+  - id: cache-evict-before-invocation
+    question: "Một cache entry phải bị xóa ngay cả khi business method sau đó throw exception. Timing nào phù hợp với yêu cầu này?"
+    answers:
+      - id: A
+        answer: "Dùng default after-success eviction để entry chỉ bị xóa khi phương thức trả về bình thường."
+        explanation: "Sai. Post-invocation eviction mặc định có thể không xảy ra nếu phương thức thất bại."
+      - id: B
+        answer: "Dùng `beforeInvocation=true` để eviction xảy ra trước khi business method chạy."
+        explanation: "Đúng. Pre-invocation eviction không phụ thuộc lời gọi sau đó thành công hay thất bại."
+      - id: C
+        answer: "Dùng `unless` để entry bị xóa khi phương thức throw exception."
+        explanation: "Sai. unless là result-based caching veto, không phải exception-triggered eviction mode."
+      - id: D
+        answer: "Dùng `sync=true` để cache evict entry trước khi vào synchronized loader."
+        explanation: "Sai. sync điều khiển việc phối hợp loading, không điều khiển thời điểm eviction."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.ConsistencyAndInvalidation/ConsistencyAndInvalidation.md"
+      anchor: "evict-before-invocation"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - id: cache-self-invocation
+    question: "Trong proxy mode mặc định, vì sao `this.load()` có thể bypass caching khi `load()` được gắn `@Cacheable`?"
+    answers:
+      - id: A
+        answer: "Lời gọi nội bộ ở lại trên target object và không đi lại qua Spring proxy đang mang cache interceptor."
+        explanation: "Đúng. Proxy-based advice được áp dụng khi invocation đi qua proxy boundary."
+      - id: B
+        answer: "Lời gọi nội bộ đi qua proxy hai lần nên Spring bỏ lần interception thứ hai để tránh recursion."
+        explanation: "Sai. Lời gọi này không đi lại qua proxy ngay từ đầu."
+      - id: C
+        answer: "Spring intercept lời gọi rồi chuyển nó thành programmatic `Cache.get`, làm annotation metadata bị tắt."
+        explanation: "Sai. Vấn đề là bypass interception chứ không phải bị đổi sang API khác."
+      - id: D
+        answer: "Annotation chỉ hoạt động cho controller-to-service call, nên service-to-service call không bao giờ cache được."
+        explanation: "Sai. Mọi external call đủ điều kiện đi qua proxy đều có thể được intercept; controller không đặc biệt."
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.InterceptionBoundary/InterceptionBoundary.md"
+      anchor: "self-invocation"
+    apiRelated:
+      controller: "CacheInterceptionController"
+      methodSignature: "selfInvocation()"
+
+  - id: cache-sync-scope
+    question: "Bốn thread yêu cầu cùng một key đang miss qua `@Cacheable(sync=true)`, và cache đã cấu hình chỉ chạy loader một lần. Kết luận nào hợp lý?"
+    answers:
+      - id: A
+        answer: "Với cache implementation và key đó, synchronized loading đã phối hợp concurrent miss thành một lần load."
+        explanation: "Đúng. Đây là kết luận có giới hạn được hành vi runtime của provider hỗ trợ."
+      - id: B
+        answer: "Spring đã thiết lập distributed lock để phối hợp cùng key trên mọi application instance."
+        explanation: "Sai. sync=true không phải distributed-lock guarantee tổng quát."
+      - id: C
+        answer: "Mọi provider bắt buộc triển khai feature này bằng cùng JVM locking primitive như thí nghiệm."
+        explanation: "Sai. Cơ chế synchronization và khả năng hỗ trợ là đặc thù của provider."
+      - id: D
+        answer: "Cùng cấu hình có thể tùy ý kết hợp `sync=true`, nhiều cache name, `unless` và put/evict operation."
+        explanation: "Sai. Synchronized caching có các ràng buộc rõ ràng và không nên bị suy rộng."
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.ConcurrencyAndAsync/ConcurrencyAndAsync.md"
+      anchor: "cacheable-sync"
+    apiRelated:
+      controller: "CacheConcurrencyController"
+      methodSignature: "synchronizedLoading()"
+
+  - id: cache-async-provider-capability
+    question: "Một cacheable method trong Spring Framework 6.1 trả `CompletableFuture<Book>`. Cần kiểm tra gì trước khi kết luận cache path là non-blocking?"
+    answers:
+      - id: A
+        answer: "Đường truy xuất/lưu trữ của provider có thực sự asynchronous hay chỉ bọc công việc blocking phía sau API có hình dạng future."
+        explanation: "Đúng. Cơ chế thích nghi kiểu trả về không xóa mô hình I/O và xử lý đồng thời thực tế của provider."
+      - id: B
+        answer: "Future có được tạo trên controller thread hay không, vì riêng điều đó đã bảo đảm non-blocking cache I/O."
+        explanation: "Sai. Nơi tạo wrapper không quyết định backing cache có block hay không."
+      - id: C
+        answer: "Provider có lưu object `CompletableFuture` hay không, vì lưu completed value sẽ làm lookup trở thành blocking."
+        explanation: "Sai. Việc lưu wrapper không phải tiêu chí quyết định hành vi non-blocking."
+      - id: D
+        answer: "Cache name có hậu tố `async` hay không, vì Spring chọn asynchronous SPI theo naming convention."
+        explanation: "Sai. Khả năng async không được suy ra từ cache name."
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.ConcurrencyAndAsync/ConcurrencyAndAsync.md"
+      anchor: "async-provider-capability"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - id: cache-transaction-aware-mutation
+    question: "Một database transaction lên lịch cache put thông thường qua `TransactionAwareCacheDecorator` rồi rollback. Hành vi nào được mong đợi?"
+    answers:
+      - id: A
+        answer: "Put được trì hoãn và không công bố khi transaction bao quanh không commit thành công."
+        explanation: "Đúng. Trì hoãn mutation giúp tránh công bố trạng thái cache cho dữ liệu chưa từng commit."
+      - id: B
+        answer: "Put xảy ra ngay, rồi rollback tự động chuyển put đó thành eviction riêng của provider."
+        explanation: "Sai. Decorator không mô hình hóa rollback thành một thao tác cache ngược."
+      - id: C
+        answer: "Cache trở thành transaction manager và rollback database resource cùng với entry."
+        explanation: "Sai. Cache synchronization không thay thế transaction manager thực sự."
+      - id: D
+        answer: "Put tham gia portable two-phase commit với mọi cache provider được Spring Cache chọn."
+        explanation: "Sai. Transaction-aware decoration không phải universal XA guarantee."
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "9.FailureAndTransaction/FailureAndTransaction.md"
+      anchor: "after-commit-cache-mutation"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - id: cache-strategy-provider-selection
+    question: "Một ứng dụng nhiều node cần trạng thái cache dùng chung và expiration do provider hỗ trợ. Lựa chọn nào phù hợp nhất với chiến lược của module?"
+    answers:
+      - id: A
+        answer: "Chọn provider có topology và khả năng expiration đáp ứng yêu cầu, đồng thời giữ các thao tác cache có tính khả chuyển phía sau Spring Cache."
+        explanation: "Đúng. Việc chọn provider nên xuất phát từ khả năng cần thiết thay vì giả định lớp trừu tượng sẽ cung cấp chúng."
+      - id: B
+        answer: "Giữ in-process provider và giả định Spring Cache sẽ replicate entry rồi áp dụng một expiration policy chung trên mọi node."
+        explanation: "Sai. Lớp trừu tượng không thêm ngữ nghĩa phân tán cho local provider."
+      - id: C
+        answer: "Dùng `@CacheConfig` để chuyển local provider thành distributed cache và định nghĩa expiration độc lập với provider."
+        explanation: "Sai. @CacheConfig chia sẻ annotation configuration; nó không cung cấp topology hay portable TTL."
+      - id: D
+        answer: "Tạo unique key cho mỗi request để từng node giữ entry riêng rồi để Spring hợp nhất chúng thành shared cache state."
+        explanation: "Sai. Per-request uniqueness phá reuse và không tạo shared topology hay consistency."
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "10.CacheStrategy/CacheStrategy.md"
+      anchor: "provider-selection"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
