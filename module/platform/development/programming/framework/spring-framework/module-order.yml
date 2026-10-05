@@ -1,0 +1,28 @@
+version: 1
+children:
+  core-container:
+    order: 10
+  validation-data-binding:
+    order: 20
+  aspect:
+    order: 30
+  concurrency:
+    order: 40
+  transaction-management:
+    order: 50
+  data-access:
+    order: 60
+  cache:
+    order: 70
+  web:
+    order: 80
+  reactive:
+    order: 90
+  messaging:
+    order: 100
+  jms:
+    order: 110
+  testing:
+    order: 120
+  global-exception-handler:
+    order: 130
