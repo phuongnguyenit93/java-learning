@@ -1,0 +1,39 @@
+JmsObservabilityExperimentController:
+  observePublishProcessBoundary():
+    execution: |-
+      <p><b>Khái niệm:</b> Spring Framework 6.1 có thể instrument việc publish JMS message và xử lý listener khi đã cấu hình <code>ObservationRegistry</code>, còn thời gian chờ của blocking <code>MessageConsumer.receive</code> nằm ngoài mô hình receive observation của JMS.</p>
+      <ol>
+        <li>Thí nghiệm dọn các queue riêng của nó trước, rồi mỗi lần gọi tạo một <code>ObservationRegistry</code> và recording handler mới, vì vậy bằng chứng không bị lẫn với request trước.</li>
+        <li><code>JmsTemplate</code> dùng registry đó publish một message tới destination riêng của thí nghiệm. Một <code>DefaultMessageListenerContainer</code> chỉ có một consumer và dùng cùng registry sẽ xử lý message rồi mở một latch có giới hạn.</li>
+        <li>Thí nghiệm chờ process observation đóng lại, sau đó chạy receive 200 ms bằng một <code>JmsTemplate</code> có observation trên destination rỗng khác.</li>
+        <li>Response trả về tên các observation đã stop cùng cờ cho <code>jms.message.publish</code>, <code>jms.message.process</code> và <code>jms.message.receive</code>.</li>
+      </ol>
+      <p><b>Quan sát:</b> publish và process observation phải xuất hiện, empty receive trả về <code>null</code>, còn <code>jms.message.receive</code> không xuất hiện.</p>
+      <p><b>Kết luận:</b> observability JMS của Spring 6.1 tách việc publish/xử lý message khỏi thời gian blocking chỉ để chờ message.</p>
+    usage: true
+JmsTemplateExperimentController:
+  observeRequestReplyRoundTrip():
+    execution: |-
+      <p><b>Khái niệm:</b> <code>JmsTemplate.sendAndReceive</code> là một request/reply đồng bộ đi qua broker và chờ trên temporary reply destination.</p>
+      <ol>
+        <li>Thí nghiệm dọn request queue riêng rồi khởi động một Spring listener container có giới hạn cho destination đó.</li>
+        <li>HTTP thread gọi <code>sendAndReceive</code> với receive timeout ba giây. Spring gửi request kèm temporary <code>JMSReplyTo</code> rồi block chờ response.</li>
+        <li>Listener ghi nhận reply destination là temporary, lấy message id của request, rồi gửi <code>reply:ping</code> về destination đó với request id làm correlation id.</li>
+        <li>Response hiển thị payload request/reply, số lần listener được gọi, cờ temporary destination, kết quả correlation và thời gian đã trôi qua.</li>
+      </ol>
+      <p><b>Quan sát:</b> <code>requestReplyObserved</code> chỉ true khi đúng một listener invocation trả về payload mong đợi qua temporary reply destination và correlation id của reply khớp request message id trong thời gian giới hạn.</p>
+      <p><b>Kết luận:</b> request/reply bổ sung dependency đồng bộ về latency và availability lên JMS dù transport bên dưới là message based.</p>
+    usage: true
+JmsTransactionExperimentController:
+  observeRollbackRedelivery():
+    execution: |-
+      <p><b>Khái niệm:</b> với Spring JMS listener dùng local transaction, exception sẽ rollback JMS session đang hoạt động và làm consumed message đủ điều kiện được provider giao lại.</p>
+      <ol>
+        <li>Thí nghiệm dọn queue riêng, khởi động một <code>DefaultMessageListenerContainer</code> chỉ có một consumer với <code>sessionTransacted=true</code>, rồi gửi đúng một message.</li>
+        <li>Listener cố ý ném exception ở delivery đầu tiên. Container rollback local JMS transaction và error hook ghi nhận lỗi.</li>
+        <li>Khi provider giao lại message, attempt thứ hai ghi nhận <code>JMSRedelivered=true</code>, áp dụng tác động nghiệp vụ mô phỏng đúng một lần rồi hoàn tất thành công.</li>
+        <li>Response trả về số attempt, các cờ redelivery, bằng chứng lỗi listener, business-effect count và cờ hoàn tất trong thời gian giới hạn.</li>
+      </ol>
+      <p><b>Quan sát:</b> bằng chứng portable mong đợi là hai attempt, delivery đầu chưa mang cờ redelivered, delivery thứ hai có cờ redelivered và business effect chỉ bằng một.</p>
+      <p><b>Kết luận:</b> rollback/redelivery giúp phục hồi sau lỗi nhưng không tạo exactly-once business semantics; tác động ứng dụng vẫn cần thiết kế an toàn khi bị lặp.</p>
+    usage: true

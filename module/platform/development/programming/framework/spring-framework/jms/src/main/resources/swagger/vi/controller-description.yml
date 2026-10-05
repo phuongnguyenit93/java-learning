@@ -1,0 +1,18 @@
+JmsObservabilityExperimentController:
+  description: |-
+    <h2>Thí nghiệm Observability của Spring JMS</h2>
+    <p>Chạy thí nghiệm có giới hạn cho observability của Spring Framework 6.1 JMS: ghi nhận observation khi publish và xử lý listener, sau đó thực hiện một blocking receive trên destination rỗng để làm rõ ranh giới cố ý không có receive observation.</p>
+  readmeRelated:
+    file: 8.ProductionReadiness/ProductionReadiness.md
+JmsTemplateExperimentController:
+  description: |-
+    <h2>Thí nghiệm Request-Reply với JmsTemplate</h2>
+    <p>Kích hoạt một vòng request/reply thực sự qua broker và trả về bằng chứng về temporary reply destination, số lần listener được gọi, correlation, payload phản hồi và thời gian hoàn tất có giới hạn.</p>
+  readmeRelated:
+    file: 2.TemplateAccess/JmsTemplateAccess.md
+JmsTransactionExperimentController:
+  description: |-
+    <h2>Thí nghiệm Rollback và Redelivery của Listener có Transaction</h2>
+    <p>Cố ý làm delivery đầu tiên thất bại trong listener dùng local transaction, thành công khi message được giao lại, và trả về bằng chứng portable rằng rollback khiến message đủ điều kiện redelivery trong khi tác động nghiệp vụ chỉ được áp dụng một lần.</p>
+  readmeRelated:
+    file: 6.TransactionsDelivery/TransactionsDelivery.md

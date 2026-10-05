@@ -1,0 +1,39 @@
+JmsObservabilityExperimentController:
+  observePublishProcessBoundary():
+    execution: |-
+      <p><b>Concept:</b> Spring Framework 6.1 can instrument JMS publication and listener processing when an <code>ObservationRegistry</code> is configured, while blocking <code>MessageConsumer.receive</code> wait time is intentionally outside the JMS receive-observation model.</p>
+      <ol>
+        <li>The experiment drains its dedicated queues, then creates a fresh <code>ObservationRegistry</code> and a recording handler for this invocation only, preventing previous requests from contaminating the evidence.</li>
+        <li>A <code>JmsTemplate</code> configured with that registry publishes one message to a dedicated experiment destination. A one-consumer <code>DefaultMessageListenerContainer</code> using the same registry processes it and releases a bounded latch.</li>
+        <li>The experiment waits for the listener-processing observation to close, then performs a 200 ms receive on a separate empty destination with an observed <code>JmsTemplate</code>.</li>
+        <li>The response reports the stopped observation names plus booleans for <code>jms.message.publish</code>, <code>jms.message.process</code>, and <code>jms.message.receive</code>.</li>
+      </ol>
+      <p><b>Observation:</b> publish and process observations should be present, the bounded empty receive should return <code>null</code>, and no <code>jms.message.receive</code> observation should appear.</p>
+      <p><b>Conclusion:</b> the Spring 6.1 JMS observation surface distinguishes message publication and application processing from time spent blocking while waiting for a message.</p>
+    usage: true
+JmsTemplateExperimentController:
+  observeRequestReplyRoundTrip():
+    execution: |-
+      <p><b>Concept:</b> <code>JmsTemplate.sendAndReceive</code> is a synchronous broker-mediated request/reply exchange that waits on a temporary reply destination.</p>
+      <ol>
+        <li>The experiment drains its dedicated request queue and starts one bounded Spring listener container for it.</li>
+        <li>The HTTP thread calls <code>sendAndReceive</code> with a three-second receive timeout. Spring sends the request with a temporary <code>JMSReplyTo</code> destination and blocks for the response.</li>
+        <li>The listener records that the incoming reply destination is temporary, captures the request message id, and sends <code>reply:ping</code> back to that destination with the request id as its correlation id.</li>
+        <li>The response exposes the request/reply payloads, listener invocation count, temporary-destination flag, correlation result, and elapsed time.</li>
+      </ol>
+      <p><b>Observation:</b> <code>requestReplyObserved</code> is true only when exactly one listener invocation produces the expected reply through a temporary reply destination, and the reply correlation id matches the request message id within the bounded call.</p>
+      <p><b>Conclusion:</b> request/reply adds a synchronous latency and availability dependency to JMS even though the transport itself is message based.</p>
+    usage: true
+JmsTransactionExperimentController:
+  observeRollbackRedelivery():
+    execution: |-
+      <p><b>Concept:</b> with a locally transacted Spring JMS listener, an exception rolls back the active JMS session and makes the consumed message eligible for provider redelivery.</p>
+      <ol>
+        <li>The experiment drains its dedicated queue, starts a one-consumer <code>DefaultMessageListenerContainer</code> with <code>sessionTransacted=true</code>, and sends exactly one message.</li>
+        <li>The listener deliberately throws on the first delivery. The container rolls back the local JMS transaction; the error hook records the failure.</li>
+        <li>When the provider redelivers the message, the second attempt records <code>JMSRedelivered=true</code>, applies the simulated business effect once, and completes successfully.</li>
+        <li>The response returns attempt count, redelivery flags, listener error evidence, one business-effect count, and a bounded-completion flag.</li>
+      </ol>
+      <p><b>Observation:</b> the expected portable evidence is two attempts, first delivery not marked redelivered, second delivery marked redelivered, and one successful business effect.</p>
+      <p><b>Conclusion:</b> rollback/redelivery provides failure recovery, not exactly-once business semantics; application effects still need duplicate-safe design.</p>
+    usage: true

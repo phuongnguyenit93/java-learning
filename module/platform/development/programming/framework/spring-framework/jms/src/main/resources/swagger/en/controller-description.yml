@@ -1,0 +1,18 @@
+JmsObservabilityExperimentController:
+  description: |-
+    <h2>Spring JMS Observability Experiment</h2>
+    <p>Runs a bounded Spring Framework 6.1 JMS observation experiment that records publish and listener-processing observations, then performs an empty blocking receive to make the intentional receive-observation boundary visible.</p>
+  readmeRelated:
+    file: 8.ProductionReadiness/ProductionReadiness.md
+JmsTemplateExperimentController:
+  description: |-
+    <h2>JmsTemplate Request-Reply Experiment</h2>
+    <p>Triggers a real broker-mediated request/reply round trip and exposes the temporary reply destination, listener invocation, correlation, response payload, and bounded elapsed time.</p>
+  readmeRelated:
+    file: 2.TemplateAccess/JmsTemplateAccess.md
+JmsTransactionExperimentController:
+  description: |-
+    <h2>Transacted Listener Rollback and Redelivery Experiment</h2>
+    <p>Fails the first delivery in a locally transacted listener, succeeds on redelivery, and exposes portable evidence that rollback makes the message eligible for provider redelivery while the business effect is applied once.</p>
+  readmeRelated:
+    file: 6.TransactionsDelivery/TransactionsDelivery.md

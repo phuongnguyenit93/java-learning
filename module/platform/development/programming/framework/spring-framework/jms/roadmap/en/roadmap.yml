@@ -1,0 +1,129 @@
+# <roadmap-schema>
+# Module Roadmap Structure
+# schema-version: 1
+#
+# YAML CONTRACT
+# roadmap: High-level learning milestones for the current language roadmap.
+#
+# - id [string, required]: Stable and unique milestone identity within the current language roadmap.
+# - title [string, required]: Milestone title displayed to the learner.
+# - purpose [string, required]: What the learner should understand or achieve from this milestone.
+# - dependsOn [list, optional]: Prerequisite milestone ids when item order alone is not enough to express the dependency.
+# - objectives [list, optional]: Milestone-level learning objectives; do not use this to list every small fact/API/syntax item.
+# - relatedKnowledge [list, optional]: Knowledge category ids in the current module that support this milestone. Portal displays this list on the side opposite the milestone and clicking an item navigates to the matching Knowledge category.
+# - relatedModules [list, optional]: Related modules displayed as Portal Level 2 cards. Each item requires routeId and may provide localized label/note; this relation is navigation only and does not create child milestones or change learning order.
+#
+# ROADMAP THINKING FRAMEWORK
+# PURPOSE
+#   - What is this topic/module?
+#   - Why does it exist?
+#   - What problem exists without it?
+# FOUNDATION
+#   - What prerequisite or mental model must the learner have first?
+# CORE MODEL
+#   - What major abstractions or building blocks make up this topic?
+# MECHANICS
+#   - How does it work at the language/runtime/API level appropriate for this module?
+# USAGE
+#   - How is it used in real code?
+# DECISION / TRADE-OFF
+#   - When should this mechanism be chosen over another?
+#   - When should it not be used?
+# FAILURE / PITFALL
+#   - What mistakes, compile-time failures, or runtime failures matter?
+# INTEGRATION
+#   - How does this topic connect to neighboring concepts/modules?
+# SYNTHESIS
+#   - What end-to-end mental model should the learner retain?
+#
+# Each language owns its own roadmap. Do not infer or synchronize its structure from another language roadmap.
+# Item order in roadmap is the default learning order. Use dependsOn only when a dependency needs to be expressed beyond the linear order.
+# The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
+# </roadmap-schema>
+
+roadmap:
+  - id: spring-jms-foundations
+    title: "Spring JMS Foundations"
+    purpose: "Build the mental model for what Spring JMS adds on top of Jakarta Messaging and a JMS provider, so the learner can separate framework responsibilities from broker and specification responsibilities before using higher-level APIs."
+    objectives:
+      - "Explain the producer/consumer split in Spring JMS and the difference between synchronous access and message-driven asynchronous consumption."
+      - "Distinguish Spring JMS infrastructure from Jakarta Messaging semantics and provider-specific broker behavior."
+      - "Recognize the Spring Framework 6.1 baseline: JmsTemplate is the primary synchronous JMS access template, JmsMessagingTemplate bridges Spring Messaging operations onto it, and JmsClient belongs to Spring Framework 7.0 and later."
+
+  - id: template-access-model
+    title: "Template-based JMS Access"
+    purpose: "Understand how Spring's template model removes repetitive JMS resource handling while still exposing controlled access to the underlying Session and producer/consumer model when necessary."
+    dependsOn:
+      - spring-jms-foundations
+    objectives:
+      - "Understand the roles of ConnectionFactory, JmsOperations and JmsTemplate in Spring-managed synchronous JMS access."
+      - "Use the send, synchronous receive, request-reply and callback models conceptually without treating JmsTemplate as a replacement for the underlying messaging semantics."
+      - "Reason about blocking synchronous receives, receive timeouts, quality-of-service settings and Spring's unchecked JMS exception translation."
+
+  - id: destinations-conversion-and-message-metadata
+    title: "Destinations, Conversion, and Message Metadata"
+    purpose: "Learn how application objects, destination names and messaging metadata cross the boundary between Spring application code and Jakarta Messaging messages."
+    dependsOn:
+      - template-access-model
+    objectives:
+      - "Understand queue/topic selection at the Spring integration boundary and how DestinationResolver strategies turn logical names into JMS Destination instances."
+      - "Understand the MessageConverter strategy, including simple payload conversion and JSON-oriented conversion, without coupling the learning path to one broker."
+      - "Reason about JMS headers, properties, correlation/reply metadata and the bridge between Spring Messaging headers and JMS-specific metadata."
+
+  - id: listener-container-model
+    title: "Message Listener Container Model"
+    purpose: "Move from blocking synchronous consumption to Spring's message-driven model and understand the container as the runtime boundary that owns consumer lifecycle, threads, JMS resources, dispatch and recovery."
+    dependsOn:
+      - destinations-conversion-and-message-metadata
+    objectives:
+      - "Explain the Message-Driven POJO model and why listener containers exist instead of application code managing MessageConsumer loops directly."
+      - "Understand the lifecycle and responsibilities shared by Spring MessageListenerContainer implementations."
+      - "Compare the conceptual roles of DefaultMessageListenerContainer and simpler listener-container choices without turning the roadmap into a class inventory."
+      - "Recognize JCA message endpoints as an alternative integration model for resource-adapter/application-server environments rather than the default standalone Spring JMS path."
+
+  - id: annotation-driven-listener-endpoints
+    title: "Annotation-driven Listener Endpoints"
+    purpose: "Understand how @EnableJms and @JmsListener build declarative listener endpoints on top of listener-container infrastructure while keeping the container model visible rather than hiding it behind annotations."
+    dependsOn:
+      - listener-container-model
+    objectives:
+      - "Trace an annotated listener from @JmsListener metadata through JmsListenerContainerFactory to the underlying MessageListenerContainer."
+      - "Understand payload/header argument resolution, conversion, reply handling and endpoint registration at a conceptual level."
+      - "Know when custom container factories or programmatic endpoint registration are needed instead of relying on default annotation configuration."
+
+  - id: transactions-and-delivery-semantics
+    title: "Transactions and Delivery Semantics"
+    purpose: "Connect JMS acknowledgement and redelivery behavior with Spring-managed local JMS transactions and external transaction coordination, without confusing Spring transaction policy with broker guarantees."
+    dependsOn:
+      - annotation-driven-listener-endpoints
+    objectives:
+      - "Understand sessionTransacted, listener rollback and redelivery behavior at the Spring container boundary."
+      - "Understand JmsTransactionManager as a local transaction manager for one JMS ConnectionFactory and how JmsTemplate participates in thread-bound JMS resources."
+      - "Distinguish local JMS transactions from externally coordinated JTA/XA transactions and reason about the cost and failure modes of coordinating JMS with database work."
+      - "Recognize redelivery and duplicate-processing risks and the need for idempotent handling, especially when JMS and external side effects cannot share one atomic transaction boundary."
+
+  - id: concurrency-recovery-and-resource-lifecycle
+    title: "Concurrency, Recovery, and Resource Lifecycle"
+    purpose: "Learn the operational behavior that determines whether a Spring JMS consumer is stable under load and failure: consumer concurrency, acknowledgement configuration, resource caching, startup/shutdown and provider recovery."
+    dependsOn:
+      - transactions-and-delivery-semantics
+    objectives:
+      - "Reason about listener concurrency ranges and the trade-off between parallelism, ordering and provider capacity."
+      - "Understand how acknowledgement modes, selectors, subscriptions and durable/shared subscription options interact with listener configuration while leaving their protocol semantics to Jakarta Messaging."
+      - "Understand recovery intervals/backoff and exception handling well enough to diagnose common listener lifecycle failures."
+      - "Distinguish provider pooling and Spring ConnectionFactory wrappers such as SingleConnectionFactory/CachingConnectionFactory from DefaultMessageListenerContainer's own caching, including how an external transaction manager changes the container's default cache level."
+
+  - id: production-readiness-and-integration-boundaries
+    title: "Production Readiness and Integration Boundaries"
+    purpose: "Synthesize Spring JMS into an end-to-end production mental model, including observability, testing strategy and the handoff to neighboring Spring messaging technologies without duplicating their curriculum."
+    dependsOn:
+      - concurrency-recovery-and-resource-lifecycle
+    objectives:
+      - "Understand Spring Framework's integration with Micrometer Jakarta JMS instrumentation: ObservationRegistry enables publish/process observations for template and listener paths, while blocking receive timing is not recorded as a receive observation."
+      - "Choose meaningful tests for conversion, listener endpoints, transaction/redelivery behavior and real provider integration rather than relying only on mocked JMS APIs."
+      - "Explain when direct Spring JMS is sufficient and when Enterprise Integration Patterns belong to Spring Integration instead."
+      - "Keep AMQP/Kafka broker-specific abstractions and generic Spring Messaging primitives in their neighboring module owners."
+    relatedModules:
+      - routeId: SPRING_INTEGRATION
+        label: "Spring Integration"
+        note: "Owns Enterprise Integration Patterns and JMS channel adapters/gateways built on top of Spring JMS infrastructure."

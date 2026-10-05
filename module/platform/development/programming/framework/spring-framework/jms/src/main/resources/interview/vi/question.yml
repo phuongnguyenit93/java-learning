@@ -1,0 +1,133 @@
+# <interview-schema>
+# Cấu trúc câu hỏi Interview
+# schema-version: 2
+#
+# questions [kiểu: list; bắt buộc; mặc định: []]
+#   Danh sách câu hỏi Interview của module trong language hiện tại.
+#   mỗi phần tử:
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi phỏng vấn hiển thị cho người học.
+#     answer [kiểu: string; bắt buộc; mặc định: ""]
+#       Câu trả lời tham khảo, chỉ hiển thị khi người học chủ động mở.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu nội dung được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu nội dung đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+# </interview-schema>
+
+questions:
+  - question: >-
+      Hãy giải thích ranh giới trách nhiệm giữa Spring JMS, Jakarta Messaging và JMS provider. Ranh giới đó giúp chẩn đoán lỗi production như thế nào?
+    answer: >-
+      Spring JMS sở hữu phần tích hợp framework như thực thi JmsTemplate, vòng đời listener container, destination resolution, conversion hook, annotation endpoint, transaction integration và cấu hình observability. Jakarta Messaging định nghĩa các contract như ConnectionFactory, Session, Destination, Message, producer, consumer, acknowledgement mode và selector. Provider hiện thực các contract đó và sở hữu hành vi broker/runtime như connectivity, storage, clustering, administration và tuning đặc thù. Khi chẩn đoán, hãy tìm đúng layer sở hữu hành vi: kiểm tra resolver/container configuration nếu lỗi nằm ở Spring integration, kiểm tra Jakarta contract nếu hiểu sai delivery/acknowledgement semantics, và kiểm tra provider connectivity/runtime nếu broker có vấn đề. Spring giảm ceremony lặp lại nhưng không xóa semantics của provider.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Foundations/SpringJmsFoundations.md"
+      anchor: "jms-framework-spec-provider-boundary"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Khi nào JmsTemplate.sendAndReceive là lựa chọn thiết kế phù hợp, và cần giải thích trade-off nào về latency, correlation và transaction trước khi dùng?
+    answer: >-
+      Chỉ nên dùng request-reply khi caller thực sự cần câu trả lời trước khi tiếp tục và có failure policy hữu hạn. Trong Spring Framework 6.1, JmsTemplate.sendAndReceive gửi request rồi chờ đồng bộ trên temporary reply destination, vì vậy latency và availability của responder trở thành latency và availability của caller. Reply phải correlate đúng request, nhưng correlation metadata không làm repeated request trở nên idempotent. Một ranh giới transaction dễ bỏ sót là đường request-reply này dùng local non-transacted execution path của template thay vì đơn giản tái sử dụng transactional JMS Session đang gắn với thread của caller. Khi không cần câu trả lời ngay, one-way command/event thường cách ly lỗi tốt hơn và ít kéo failure của downstream vào caller hơn.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.TemplateAccess/JmsTemplateAccess.md"
+      anchor: "jms-template-request-reply"
+    apiRelated:
+      controller: "JmsTemplateExperimentController"
+      methodSignature: "observeRequestReplyRoundTrip()"
+
+  - question: >-
+      Bạn sẽ thiết kế payload conversion và type metadata cho JMS thế nào để hai service deploy độc lập có thể tiến hóa mà không buộc wire contract phụ thuộc vào chi tiết Java implementation?
+    answer: >-
+      Hãy xem conversion là integration contract chứ không phải serialization helper cục bộ. Với các service tiến hóa độc lập, nên ưu tiên representation ổn định như JSON cùng logical type id tường minh thay vì đưa trực tiếp package/class name Java lên wire. MappingJackson2MessageConverter cần type-id property đã cấu hình trên default inbound path trừ khi type resolution được tùy biến, nên producer và consumer phải thống nhất property và mapping. Destination resolution, payload type resolution và business identity là ba concern khác nhau. Contract cần được quản lý phiên bản một cách có chủ đích và conversion nên được test hai chiều; target type ở higher-level API về sau không tự xóa yêu cầu inbound type resolution của JMS converter.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.DestinationsConversionMetadata/DestinationsConversionMetadata.md"
+      anchor: "jms-payload-conversion"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      So sánh DefaultMessageListenerContainer và SimpleMessageListenerContainer. Runtime requirement nào nên quyết định lựa chọn thay vì xem chúng chỉ là hai kiểu configuration tương đương?
+    answer: >-
+      Cả hai đều chuyển JMS delivery thành application listener invocation nhưng sở hữu runtime behavior khác nhau. SimpleMessageListenerContainer là mô hình đơn giản với số consumer cố định và dùng callback MessageConsumer.setMessageListener của provider. DefaultMessageListenerContainer sở hữu receive loop và task-based invoker, hỗ trợ dynamic concurrency, recovery mạnh hơn, local/external transaction participation và resource caching có thể cấu hình. Hãy chọn dựa trên nhu cầu thực như recovery sau broker failure, transactional consumption, dynamic scaling, shutdown behavior và provider/container integration. Container sở hữu consumer resource và lifecycle nên application listener không nên giữ hoặc đóng chúng. Tăng concurrency là công cụ throughput, không phải bảo đảm ordering tốt hơn hay latency thấp hơn.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.ListenerContainer/ListenerContainer.md"
+      anchor: "jms-listener-container-choices"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Một @JmsListener nhận domain object đã được convert, validate payload và đôi khi trả reply. Hãy giải thích các lớp xử lý và precedence của reply destination.
+    answer: >-
+      Trước hết JMS MessageConverter chuyển jakarta.jms.Message từ provider thành object của ứng dụng. Sau đó handler-method infrastructure của Spring resolve object và header đã convert thành method argument. Chỉ có @Valid chưa làm validation hoạt động trong Spring Framework thuần; handler-method factory cần một Validator thực sự. Với reply trả về, lựa chọn runtime tường minh nhất được ưu tiên: destination trong JmsResponse đứng trước, sau đó là JMSReplyTo của incoming message, cuối cùng mới là configured/default destination như @SendTo. Conversion failure và validation failure là hai failure mode khác nhau và nên được tách biệt trong log cũng như test.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Một transacted JMS listener thất bại sau khi đã chạm business state, broker giao lại message và attempt kế tiếp thành công. JMS transaction bảo đảm gì, không bảo đảm gì, và idempotency nằm ở đâu?
+    answer: >-
+      Với locally transacted listener Session, exception có thể khiến Spring rollback JMS transaction để consumed message đủ điều kiện provider redelivery. Delivery sau có thể mang JMSRedelivered=true, nhưng flag đó chỉ mô tả trạng thái giao message. Nó không chứng minh database, HTTP hay external side effect không liên quan ở attempt đầu được rollback atomically. Vì vậy rollback/redelivery là cơ chế phục hồi, không phải exactly-once business semantics. Business effect có thể bị retry cần thiết kế duplicate-safe, ví dụ dùng stable business/idempotency key và durable record cho work đã áp dụng. Nếu thật sự cần atomicity giữa nhiều transactional resource, phải đánh giá mô hình JTA/XA có coordinator và resource hỗ trợ thật thay vì giả định local JMS transaction tự mở rộng.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.TransactionsDelivery/TransactionsDelivery.md"
+      anchor: "jms-redelivery-idempotency"
+    apiRelated:
+      controller: "JmsTransactionExperimentController"
+      methodSignature: "observeRollbackRedelivery()"
+
+  - question: >-
+      Listener concurrency, ordering requirement, recovery policy và DMLC resource caching tác động với nhau thế nào trong một JMS consumer ở môi trường production?
+    answer: >-
+      Tăng concurrency làm nhiều message có thể in-flight cùng lúc và có thể tăng throughput, nhưng thứ tự hoàn tất có thể khác thứ tự delivery nên phải xác định business ordering requirement trước khi scale consumer. Recovery policy là concern riêng: BackOff và container recovery xử lý lỗi infrastructure/setup, còn rollback/redelivery xử lý một delivery bị lỗi. Resource caching phải khớp transaction model. Không có external transaction manager, DMLC thường cache tới consumer level; khi có external transaction manager, default chuyển về CACHE_NONE để môi trường có cơ hội enlist resource mới đúng transaction. Tăng cache level dưới JTA/XA là optimization đặc thù integration và phải được kiểm chứng với provider/server thực tế, không nên sao chép máy móc.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Bạn sẽ kiểm chứng Spring JMS integration bằng test và observability kiểu production như thế nào, và khi nào Spring Integration trở thành abstraction phù hợp hơn Spring JMS trực tiếp?
+    answer: >-
+      Dùng layer test nhỏ nhất có thể chứng minh từng hành vi: unit-test business/idempotency logic, test converter riêng, dùng Spring configuration test cho @JmsListener binding và validation, và dùng provider integration test thật cho destination resolution, transaction, redelivery, selector, subscription và connection recovery. Mọi asynchronous wait phải có giới hạn thay vì dựa vào sleep tùy ý. Với observability Spring Framework 6.1, Micrometer Jakarta JMS instrumentation phải có mặt và ObservationRegistry phải được cấu hình trên component sở hữu operation; khi đó có thể mong đợi jms.message.publish cùng jms.message.process, còn thời gian blocking receive chờ message cố ý không được biểu diễn thành jms.message.receive observation. Spring JMS trực tiếp phù hợp khi bài toán cơ bản là JMS-shaped. Nếu topology integration tự nó cần routing, filtering, transformation, aggregation, gateway hoặc nhiều transport thì Spring Integration là EIP abstraction ở tầng cao hơn và có thể dùng Spring JMS bên dưới.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""

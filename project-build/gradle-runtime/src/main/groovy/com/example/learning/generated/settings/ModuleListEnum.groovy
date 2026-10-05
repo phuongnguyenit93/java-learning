@@ -2127,6 +2127,15 @@ enum ModuleListEnum {
             []
     ),
 
+    SPRING_JMS(
+            'module:platform:development:programming:framework:spring-framework:jms',
+            'module/platform/development/programming/framework/spring-framework/jms',
+            'SERVLET',
+            'Spring Framework JMS access, JmsTemplate, listener containers, annotation-driven listeners and transaction integration',
+            false,
+            []
+    ),
+
     SPRING_JPA(
             'module:platform:development:programming:framework:spring-data:jpa',
             'module/platform/development/programming/framework/spring-data/jpa',

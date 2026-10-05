@@ -1,0 +1,170 @@
+# <quiz-schema>
+# Cấu trúc câu hỏi Quiz
+# schema-version: 3
+#
+# questions [kiểu: list; bắt buộc; mặc định: []; duy nhất theo: id]
+#   Danh sách câu hỏi Quiz của module trong language hiện tại.
+#   mỗi phần tử:
+#     id [kiểu: string; bắt buộc; mặc định: ""]
+#       ID ổn định và duy nhất của câu hỏi.
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi hiển thị cho người học.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu câu hỏi được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu câu hỏi đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+#     answers [kiểu: list; bắt buộc; số phần tử: 4; mặc định: []; duy nhất theo: id]
+#       Chính xác bốn đáp án. ID A/B/C/D là identity nội bộ ổn định, không phải vị trí hiển thị sau khi frontend shuffle.
+#       mỗi phần tử:
+#         id [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#           Identity ổn định của đáp án.
+#         answer [kiểu: string; bắt buộc; mặc định: ""]
+#           Nội dung đáp án hiển thị cho người học.
+#         explanation [kiểu: string; bắt buộc; mặc định: ""]
+#           Giải thích hiển thị khi người học chọn đáp án này, bất kể đúng hay sai.
+#     correctAnswerId [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#       ID nội bộ của đáp án đúng. Frontend kiểm tra bằng identity này sau khi shuffle.
+# </quiz-schema>
+
+questions:
+  - id: jms-layer-responsibility
+    question: "Một listener ngừng nhận message sau khi kết nối broker bị lỗi. Mô hình ownership nào cho hướng chẩn đoán đầu tiên tốt nhất?"
+    answers:
+      - {id: A, answer: "Trước tiên xem đây là lỗi domain của ứng dụng vì business handler sở hữu cơ chế recovery của listener.", explanation: "Sai. Business handler không nên sở hữu việc reconnect broker hay chính sách recovery của listener container."}
+      - {id: B, answer: "Kiểm tra recovery của Spring listener container và provider connectivity; Spring sở hữu vòng đời container còn provider sở hữu broker runtime/kết nối.", explanation: "Đúng. Lỗi đi qua ranh giới giữa Spring container và provider nên cả recovery configuration lẫn provider connectivity đều liên quan."}
+      - {id: C, answer: "Đổi acknowledgement mode của Jakarta Messaging trước vì acknowledgement mode quyết định việc thiết lập lại network connection.", explanation: "Sai. Acknowledgement ảnh hưởng semantics hoàn tất delivery, không phải cơ chế chính để khôi phục connection."}
+      - {id: D, answer: "Thay JmsTemplate vì toàn bộ recovery của Spring JMS consumer được triển khai bởi synchronous template.", explanation: "Sai. Asynchronous consumption dài hạn và recovery thuộc listener-container infrastructure, không thuộc JmsTemplate."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.Foundations/SpringJmsFoundations.md", anchor: "jms-framework-spec-provider-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: jms-sync-receive-timeout
+    question: "Một request-handling thread gọi JmsTemplate.receive trên queue mà message có thể không đến. Cấu hình nào phù hợp nhất để thread không chờ vô hạn?"
+    answers:
+      - {id: A, answer: "Dùng receive timeout mặc định vì JmsTemplate mặc định có thời gian chờ hữu hạn do provider quyết định.", explanation: "Sai. Mặc định JmsTemplate chờ receive vô hạn."}
+      - {id: B, answer: "Dùng RECEIVE_TIMEOUT_NO_WAIT vì mọi synchronous workflow luôn nên poll mà không chờ.", explanation: "Sai. No-wait có giới hạn nhưng có thể biến latency bình thường thành nhiều lần poll rỗng; nó không tự động đúng cho mọi workflow."}
+      - {id: C, answer: "Đặt receiveTimeout dương theo latency budget của request và xử lý null khi hết khoảng chờ.", explanation: "Đúng. Timeout dương giới hạn blocking call, và receive-style method trả null khi hết khoảng chờ mà không có message."}
+      - {id: D, answer: "Bật explicit QoS trên JmsTemplate vì time-to-live cũng giới hạn thời gian receive bị block.", explanation: "Sai. Producer QoS như TTL điều khiển metadata của message, không giới hạn thời gian synchronous receive của caller."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.TemplateAccess/JmsTemplateAccess.md", anchor: "jms-template-sync-receive"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: jms-request-reply-runtime
+    question: "Một vòng JmsTemplate.sendAndReceive đi qua broker chứng minh điều gì trong Spring Framework 6.1?"
+    answers:
+      - {id: A, answer: "Caller gửi request, chờ trên temporary reply destination và có thể kiểm tra correlation của reply với message id của request.", explanation: "Đúng. Thí nghiệm quan sát temporary JMSReplyTo, synchronous wait có giới hạn và reply correlation tường minh."}
+      - {id: B, answer: "Caller trả về ngay sau send, còn Spring sẽ gọi callback sau khi response bất kỳ xuất hiện trên request queue ban đầu.", explanation: "Sai. sendAndReceive là synchronous và chờ response thay vì trả về ngay."}
+      - {id: C, answer: "Exchange tự động tái sử dụng local JMS transaction đang gắn với thread của caller nên request và reply luôn thuộc transaction đó.", explanation: "Sai. Spring 6.1 dùng đường thực thi request-reply riêng của template và không đơn giản tái sử dụng transactional session đang gắn với thread của caller."}
+      - {id: D, answer: "Responder bắt buộc publish vào static reply queue vì sendAndReceive không thiết lập JMSReplyTo.", explanation: "Sai. Operation này dùng temporary reply destination cho exchange."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.TemplateAccess/JmsTemplateAccess.md", anchor: "jms-template-request-reply"}
+    apiRelated: {controller: "JmsTemplateExperimentController", methodSignature: "observeRequestReplyRoundTrip()"}
+
+  - id: jms-json-type-id
+    question: "MappingJackson2MessageConverter nhận JSON từ JMS nhưng không có type-id property và cũng không có custom type-resolution strategy. Hệ quả quan trọng trong Spring 6.1 là gì?"
+    answers:
+      - {id: A, answer: "Converter luôn suy ra Java type từ tên field trong JSON nên type metadata là tùy chọn cho inbound JMS conversion.", explanation: "Sai. Default converter không thể suy ra đáng tin cậy application type mong muốn chỉ từ cấu trúc JSON."}
+      - {id: B, answer: "Destination name tự động trở thành Java class name nên converter deserialize được mà không cần type-id configuration.", explanation: "Sai. Destination resolution và payload type resolution là hai trách nhiệm khác nhau."}
+      - {id: C, answer: "Target class của higher-level receive method ở bước sau tự động cung cấp type còn thiếu cho JMS converter trước khi conversion xảy ra.", explanation: "Sai. Target type ở tầng sau không tự loại bỏ yêu cầu type-id của converter ở inbound path."}
+      - {id: D, answer: "Default inbound path cần type-id property đã cấu hình, hoặc ứng dụng phải cung cấp chiến lược xác định type khác.", explanation: "Đúng. MappingJackson2MessageConverter mặc định dựa vào type-id metadata cho inbound conversion trừ khi type resolution được tùy biến."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.DestinationsConversionMetadata/DestinationsConversionMetadata.md", anchor: "jms-payload-conversion"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: jms-listener-container-ownership
+    question: "Vì sao Spring MessageListenerContainer thường phù hợp hơn một receive loop tự viết cho consumer chạy liên tục?"
+    answers:
+      - {id: A, answer: "Nó biến mọi JMS provider thành cùng một broker implementation nên provider-specific runtime behavior biến mất.", explanation: "Sai. Spring chuẩn hóa framework integration nhưng không thay thế provider behavior hay Jakarta Messaging contract."}
+      - {id: B, answer: "Nó gom lifecycle dài hạn của consumer, concurrency, recovery, resource reuse và transaction/acknowledgement configuration.", explanation: "Đúng. Đây chính là các runtime responsibility mà listener container được thiết kế để sở hữu."}
+      - {id: C, answer: "Nó đảm bảo exactly-once processing cho mọi listener bằng cách ngăn toàn bộ redelivery sau exception.", explanation: "Sai. Redelivery và duplicate vẫn có thể xảy ra; transaction, acknowledgement, provider policy và idempotency vẫn quan trọng."}
+      - {id: D, answer: "Nó làm listener execution đồng bộ với producer nên sender chờ tới khi business listener hoàn tất.", explanation: "Sai. Message-driven consumption đổi chiều điều khiển nhưng không biến sender thành synchronous caller."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.ListenerContainer/ListenerContainer.md", anchor: "jms-listener-container-responsibilities"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: jms-listener-validation
+    question: "Một @JmsListener method có @Valid trên payload nhưng object không hợp lệ vẫn được chấp nhận trong Spring Framework thuần. Cấu hình nào có khả năng đang thiếu nhất?"
+    answers:
+      - {id: A, answer: "DestinationResolver vì validation chỉ chạy sau khi destination name được custom resolver xử lý.", explanation: "Sai. Destination lookup không kích hoạt handler-method validation."}
+      - {id: B, answer: "Transacted listener Session vì Bean Validation chỉ được bật khi sessionTransacted=true.", explanation: "Sai. Transaction configuration và payload validation là hai concern độc lập."}
+      - {id: C, answer: "Một Validator trên DefaultMessageHandlerMethodFactory được đăng ký cho việc gọi JMS listener method.", explanation: "Đúng. @Valid đánh dấu payload, nhưng handler-method validation cần Validator thực sự được cấu hình trong message-handler method factory."}
+      - {id: D, answer: "JmsTransactionManager vì nó cung cấp Jakarta Validation provider cho listener container.", explanation: "Sai. JmsTransactionManager phối hợp JMS transaction chứ không cung cấp payload validation."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.AnnotationEndpoints/AnnotationEndpoints.md", anchor: "jms-listener-conversion-validation"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: jms-listener-reply-precedence
+    question: "Một annotated JMS listener trả về JmsResponse với destination X. Incoming message cũng có JMSReplyTo=Y và method có @SendTo(\"Z\"). Destination nào được ưu tiên cho reply?"
+    answers:
+      - {id: A, answer: "Z được chọn; precedence là @SendTo/default, rồi JMSReplyTo, rồi destination trong JmsResponse.", explanation: "Sai. @SendTo/default là fallback cuối cùng, không phải lựa chọn đầu khi có runtime reply destination."}
+      - {id: B, answer: "Y được chọn; precedence là JMSReplyTo, rồi destination trong JmsResponse, rồi @SendTo/default.", explanation: "Sai. Destination tường minh trong JmsResponse được ưu tiên hơn JMSReplyTo."}
+      - {id: C, answer: "X được chọn; precedence là destination trong JmsResponse, rồi @SendTo/default, rồi JMSReplyTo.", explanation: "Sai. JmsResponse đứng đầu, nhưng JMSReplyTo được xét trước configured/default destination."}
+      - {id: D, answer: "X được chọn; precedence là destination trong JmsResponse, rồi JMSReplyTo, rồi @SendTo/default.", explanation: "Đúng. Runtime destination tường minh nhất được ưu tiên, sau đó là reply destination của request và cuối cùng là configured/default fallback."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.AnnotationEndpoints/AnnotationEndpoints.md", anchor: "jms-listener-replies"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: jms-rollback-redelivery-idempotency
+    question: "Một locally transacted listener ném lỗi ở delivery đầu rồi thành công khi provider giao lại cùng message. Ứng dụng nên kết luận gì từ hành vi đó?"
+    answers:
+      - {id: A, answer: "Dùng stable business/idempotency key và làm business effect duplicate-safe; local JMS rollback chỉ bao phủ message delivery chứ không bao phủ arbitrary external effect.", explanation: "Đúng. Redelivery là cơ chế phục hồi, còn duplicate-safe business handling bảo vệ các effect nằm ngoài local JMS transaction."}
+      - {id: B, answer: "Dùng JMSRedelivered làm deduplication key; khi flag là true thì bỏ qua business effect vì flag này định danh duy nhất attempt trước.", explanation: "Sai. JMSRedelivered là delivery metadata, không phải stable business identity hay bằng chứng về những gì attempt trước đã thay đổi."}
+      - {id: C, answer: "Dựa vào local JMS transaction để rollback cả message lẫn database work chạy cùng thread, nên không cần cơ chế idempotency riêng.", explanation: "Sai. Local JMS transaction không tự động phối hợp unrelated database transaction hay external side effect khác."}
+      - {id: D, answer: "Dùng delivery-attempt count của provider làm business identity và áp dụng effect khi counter bắt đầu lại sau reconnect hoặc restart.", explanation: "Sai. Provider attempt counter không phải portable stable business identity và không nên thay thế application-level idempotency."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.TransactionsDelivery/TransactionsDelivery.md", anchor: "jms-redelivery-idempotency"}
+    apiRelated: {controller: "JmsTransactionExperimentController", methodSignature: "observeRollbackRedelivery()"}
+
+  - id: jms-concurrency-ordering
+    question: "Một queue listener tăng concurrent consumers từ một lên nhiều consumer để tăng throughput. Trade-off nào cần được xem xét đầu tiên?"
+    answers:
+      - {id: A, answer: "Giả định provider dispatch theo thứ tự cũng bảo đảm business completion order, nên có thể tăng concurrency mà không cần xem lại ordering requirement.", explanation: "Sai. Nhiều delivery có thể cùng in-flight và hoàn tất khác thứ tự ngay cả khi dispatch-order constraint vẫn được giữ."}
+      - {id: B, answer: "Bật sessionTransacted để commit được serialize toàn cục theo thứ tự queue ban đầu trên mọi concurrent consumer.", explanation: "Sai. Transacted session điều khiển transaction của từng consumer chứ không tạo global commit-order barrier giữa nhiều consumer."}
+      - {id: C, answer: "Dự kiến nhiều message in-flight có thể hoàn tất khác thứ tự, rồi xác định ordering phải global, theo key hay không quan trọng trước khi scale concurrency.", explanation: "Đúng. Throughput và ordering là hai requirement khác nhau; work nhạy với thứ tự có thể cần keyed hoặc serialized processing."}
+      - {id: D, answer: "Giả định per-aggregate ordering vẫn tự động được giữ khi mọi consumer đọc cùng queue, nên không cần routing hay serialization strategy riêng.", explanation: "Sai. Nhiều consumer có thể xử lý message của cùng aggregate song song nếu topology không chủ đích bảo toàn ordering."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.ConcurrencyRecoveryLifecycle/ConcurrencyRecoveryLifecycle.md", anchor: "jms-ordering-tradeoffs"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: jms-observability-boundary
+    question: "Một thí nghiệm Spring Framework 6.1 JMS ghi nhận jms.message.publish và jms.message.process rồi chạy blocking receive có giới hạn trên destination rỗng. Kết quả nào đúng với observation model mong đợi?"
+    answers:
+      - {id: A, answer: "Phải có jms.message.receive đo toàn bộ thời gian chờ rỗng; nếu không có nghĩa là ObservationRegistry bị lỗi.", explanation: "Sai. Spring 6.1 cố ý không mô hình hóa blocking receive wait time thành jms.message.receive observation."}
+      - {id: B, answer: "Publish và process observation có thể xuất hiện trong khi empty receive trả null mà không có jms.message.receive observation.", explanation: "Đúng. Đây là ranh giới chủ đích của Spring 6.1 giữa publish/process message và thời gian chỉ chờ work."}
+      - {id: C, answer: "Chỉ jms.message.receive xuất hiện vì publish/process observation chỉ thuộc Spring Integration chứ không thuộc Spring JMS.", explanation: "Sai. Spring JMS 6.1 hỗ trợ publish/process observation khi component liên quan có ObservationRegistry."}
+      - {id: D, answer: "Không observation nào xuất hiện nếu mọi JMS call không dùng external transaction manager vì observability gắn với transaction scope.", explanation: "Sai. Observation configuration độc lập với việc có external transaction manager hay không."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.ProductionReadiness/ProductionReadiness.md", anchor: "jms-observability-61"}
+    apiRelated: {controller: "JmsObservabilityExperimentController", methodSignature: "observePublishProcessBoundary()"}
