@@ -38,4 +38,253 @@
 #       Internal id of the correct answer. The frontend checks this identity after shuffling.
 # </quiz-schema>
 
-questions: []
+questions:
+  - id: testing-scope-selection
+    question: "A service can be constructed directly with fake collaborators, and the behavior under test does not depend on Spring configuration. Which test scope gives the most appropriate evidence?"
+    answers:
+      - id: A
+        answer: "Load a full ApplicationContext so the test resembles production as closely as possible."
+        explanation: "Incorrect. Loading Spring adds configuration cost without proving anything the behavior requires."
+      - id: B
+        answer: "Use a plain object test and construct the service with the required fakes or stubs."
+        explanation: "Correct. The smallest scope that can falsify the behavior is the better fit when Spring-managed infrastructure is not part of the claim."
+      - id: C
+        answer: "Use MockMvc because every Spring application should verify the DispatcherServlet path."
+        explanation: "Incorrect. MockMvc is appropriate when MVC request processing is part of the behavior being verified."
+      - id: D
+        answer: "Use WebTestClient against a live server so the test also covers networking."
+        explanation: "Incorrect. A live HTTP boundary would add unrelated infrastructure and make the test broader than necessary."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Introduction/SpringTesting.md"
+      anchor: "test-scope-ladder"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - id: testcontext-manager-role
+    question: "What best describes the relationship between a test engine such as JUnit Jupiter and Spring's TestContext Framework?"
+    answers:
+      - id: A
+        answer: "The test engine runs the tests; TestContextManager receives lifecycle callbacks and invokes Spring-specific TestExecutionListeners."
+        explanation: "Correct. Spring adapts to the test engine and adds context loading, dependency injection, transactions, and related lifecycle services."
+      - id: B
+        answer: "TestContextManager replaces the test engine and directly discovers every test method in the suite."
+        explanation: "Incorrect. Test discovery and the core test lifecycle remain responsibilities of the external test engine."
+      - id: C
+        answer: "The test engine loads the Spring ApplicationContext, while TestContextManager only formats assertion failures."
+        explanation: "Incorrect. Spring's TestContext infrastructure owns Spring-specific context management; assertion reporting is not its defining role."
+      - id: D
+        answer: "TestExecutionListeners run only after all test methods finish and therefore cannot prepare fixtures or transactions."
+        explanation: "Incorrect. Listeners participate at multiple well-defined phases before and after class, instance, method, and execution boundaries."
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.TestContextFramework/TestContextFramework.md"
+      anchor: "testcontext-core-abstractions"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - id: merged-context-configuration
+    question: "Why can two tests that look similar still receive different cached ApplicationContexts?"
+    answers:
+      - id: A
+        answer: "Because Spring creates a new context for every test method regardless of configuration."
+        explanation: "Incorrect. TestContext intentionally caches and reuses contexts when their merged configuration keys match."
+      - id: B
+        answer: "Because only the Java package name determines context identity, so tests in different packages never share a context."
+        explanation: "Incorrect. Package location by itself is not the TestContext cache identity rule."
+      - id: C
+        answer: "Because differences in merged test configuration can produce different cache keys even when the test classes look similar."
+        explanation: "Correct. Context reuse follows the effective merged configuration rather than visual similarity between test classes."
+      - id: D
+        answer: "Because the cache key is based only on the test method name and therefore changes for every method."
+        explanation: "Incorrect. Method names are not the normal basis for identifying cached ApplicationContexts."
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.ContextConfiguration/ContextConfiguration.md"
+      anchor: "context-configuration-model"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - id: per-class-constructor-dirties-context
+    question: "A JUnit Jupiter test uses `@TestInstance(PER_CLASS)`, constructor injection, and `@DirtiesContext` that closes the context between test methods. What is the main risk?"
+    answers:
+      - id: A
+        answer: "Spring will create a new test instance automatically after each context close, so constructor injection remains fresh."
+        explanation: "Incorrect. PER_CLASS keeps the same test instance, so its constructor is not rerun for each replacement context."
+      - id: B
+        answer: "The reused test instance can keep constructor-injected references to beans from the closed context."
+        explanation: "Correct. Field or setter injection is safer when the same test instance must be reinjected after context replacement."
+      - id: C
+        answer: "The test becomes a plain unit test because constructor injection disables the TestContext Framework."
+        explanation: "Incorrect. Constructor injection does not disable TestContext; the problem is stale references on a reused test instance."
+      - id: D
+        answer: "`@DirtiesContext` affects only the context cache statistics and never closes an ApplicationContext."
+        explanation: "Incorrect. Dirtied contexts can be removed and closed, which is exactly why retained bean references become risky."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.TestFixtures/TestFixtures.md"
+      anchor: "test-instance-and-constructor-injection"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - id: dynamic-property-cache-identity
+    question: "Two subclasses inherit the same `@DynamicPropertySource` registration method, but its supplier returns a different external endpoint for each subclass. What is the important cache concern?"
+    answers:
+      - id: A
+        answer: "The runtime value itself always creates a new cache key, so context reuse can never occur."
+        explanation: "Incorrect. The dynamic-property registration participates through a context customizer; the later supplier value is not automatically a distinct cache identity."
+      - id: B
+        answer: "The subclasses must share one context because inherited dynamic properties are ignored by TestContext."
+        explanation: "Incorrect. Dynamic property registration is part of the effective test configuration; the issue is that changing supplied values may not change identity."
+      - id: C
+        answer: "If the new value needs a different context, invalidate or distinguish the context; the supplier value alone may not change cache identity."
+        explanation: "Correct. An inherited registration can reuse a context even when a supplier later produces a different value, so the test must make the required context boundary explicit."
+      - id: D
+        answer: "Replace `@DynamicPropertySource` with `@ActiveProfiles`, because profiles are the only supported source of test properties."
+        explanation: "Incorrect. DynamicPropertySource is supported; the question is how its registration interacts with context identity."
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.TestEnvironment/TestEnvironment.md"
+      anchor: "environment-inheritance-and-cache-identity"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - id: context-failure-threshold
+    question: "In Spring Framework 6.1, a context fails to load once for a particular cache key and the default context failure threshold is unchanged. What should a later attempt for that same key normally do?"
+    answers:
+      - id: A
+        answer: "Retry the expensive context load indefinitely until one attempt succeeds."
+        explanation: "Incorrect. The failure-threshold feature exists to avoid repeatedly paying for the same failing context load."
+      - id: B
+        answer: "Block every other Spring test context in the JVM, even when those tests use different cache keys."
+        explanation: "Incorrect. Failure tracking is associated with the affected context key, not with every context in the suite."
+      - id: C
+        answer: "Silently return the partially constructed failed ApplicationContext from the cache."
+        explanation: "Incorrect. A failed context is not treated as a usable cached ApplicationContext."
+      - id: D
+        answer: "Fail preemptively for that key instead of attempting the same context load again."
+        explanation: "Correct. With the default threshold of 1, subsequent attempts for the same failing key are rejected early."
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.ContextCaching/ContextCaching.md"
+      anchor: "context-failure-threshold"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - id: preemptive-timeout-test-transaction
+    question: "A Spring test is running in a test-managed transaction with default rollback, but a preemptive timeout executes the test body on another thread. Why can database changes escape the expected rollback?"
+    answers:
+      - id: A
+        answer: "The test-managed transaction is bound to the original test thread, so work on the timeout thread may run outside it."
+        explanation: "Correct. The rollback only controls work that actually participates in the test-managed transaction."
+      - id: B
+        answer: "Preemptive timeouts automatically change every Spring transaction to `REQUIRES_NEW` and commit it."
+        explanation: "Incorrect. The issue is the thread boundary, not an automatic propagation rewrite."
+      - id: C
+        answer: "Default rollback applies only to read-only tests and is disabled whenever a timeout is configured."
+        explanation: "Incorrect. Default rollback is not conditioned on the test being read-only or on timeout configuration."
+      - id: D
+        answer: "Spring closes the DataSource before the timeout thread starts, so the second thread always opens an independent database."
+        explanation: "Incorrect. The key problem is transaction context binding, not automatic DataSource replacement."
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.TransactionalDatabaseTesting/TransactionalDatabaseTesting.md"
+      anchor: "transaction-testing-pitfalls"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - id: mockmvc-setup-choice
+    question: "A test must verify that component scanning, custom MVC configuration, controller advice, and configured converters work together. Which MockMvc setup is the stronger fit?"
+    answers:
+      - id: A
+        answer: "Use `standaloneSetup` because it automatically discovers the complete application MVC configuration."
+        explanation: "Incorrect. Standalone setup is focused and requires relevant MVC collaborators to be registered explicitly."
+      - id: B
+        answer: "Use `webAppContextSetup` with the TestContext-loaded WebApplicationContext to exercise the application's configured MVC infrastructure."
+        explanation: "Correct. This setup provides stronger evidence when real context wiring and MVC configuration are part of the claim."
+      - id: C
+        answer: "Call the controller method directly because direct invocation verifies DispatcherServlet configuration more precisely."
+        explanation: "Incorrect. Direct invocation bypasses the MVC dispatch infrastructure the scenario needs to verify."
+      - id: D
+        answer: "Use a live server because MockMvc cannot exercise controller advice, converters, or request mapping."
+        explanation: "Incorrect. MockMvc can exercise those MVC behaviors; a live server is needed only for evidence that depends on the real server/network boundary."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.MockMvcTesting/MockMvcTesting.md"
+      anchor: "mockmvc-setup-strategies"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - id: webtestclient-binding-evidence
+    question: "What changes when a WebTestClient test moves from a MockMvc-backed binding to `bindToServer()` against a running application?"
+    answers:
+      - id: A
+        answer: "The MockMvc-backed test already uses real TCP, so only the assertion syntax changes."
+        explanation: "Incorrect. MockMvc-backed WebTestClient remains in-process and does not cross a real network boundary."
+      - id: B
+        answer: "`bindToServer()` converts the server implementation to WebFlux even when the running application uses Spring MVC."
+        explanation: "Incorrect. The client binding does not change the server application's programming model."
+      - id: C
+        answer: "`bindToServer()` crosses the real HTTP boundary, while MockMvc-backed WebTestClient remains in-process over Servlet MVC."
+        explanation: "Correct. The same client-facing style can provide different evidence depending on what it is bound to."
+      - id: D
+        answer: "The live binding can make server-side model and handler assertions that are unavailable to MockMvc-backed tests."
+        explanation: "Incorrect. Server-side MockMvc assertions are available because the backing server is in-process; a remote HTTP client cannot inspect those internals."
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "9.WebTestClientAndClientTesting/WebTestClientAndClientTesting.md"
+      anchor: "mockmvc-webtestclient-binding"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - id: testexecutionlistener-merge-mode
+    question: "A test registers a custom `TestExecutionListener` and still needs Spring's normal dependency-injection and transactional listeners. Which configuration intent is safest?"
+    answers:
+      - id: A
+        answer: "Merge the custom listener with the default listeners and let the framework re-sort the combined set."
+        explanation: "Correct. `MERGE_WITH_DEFAULTS` preserves the default infrastructure while adding the custom listener and respecting ordering."
+      - id: B
+        answer: "Replace the defaults, because Spring always re-adds dependency injection and transaction listeners afterward."
+        explanation: "Incorrect. Replacing defaults can remove those listeners and silently change test behavior."
+      - id: C
+        answer: "Register the listener only through Java declaration order, because listener ordering does not affect lifecycle behavior."
+        explanation: "Incorrect. Listener ordering is part of the lifecycle contract and should be expressed with ordering semantics."
+      - id: D
+        answer: "Disable the TestContext Framework and invoke the custom listener manually from each test method."
+        explanation: "Incorrect. That would bypass the infrastructure the listener is intended to extend."
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "10.TestLifecycle/TestLifecycle.md"
+      anchor: "testexecutionlistener-ordering"
+    apiRelated:
+      controller: ""
+      methodSignature: ""

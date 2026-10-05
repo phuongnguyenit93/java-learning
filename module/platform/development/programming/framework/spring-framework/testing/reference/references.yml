@@ -14,3 +14,28 @@
 #
 # Add only curated references that are useful for the module.
 # The build system must not overwrite this file after authored content exists.
+
+references:
+  - title: "Spring Framework 6.1.14 API - org.springframework.test.context"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/test/context/package-summary.html"
+    description: "Official Spring Framework 6.1.14 API overview for the TestContext Framework, including context management, dependency injection, transactional testing, events, and AOT-related support."
+
+  - title: "Spring Framework 6.1.14 API - MockMvc"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/test/web/servlet/MockMvc.html"
+    description: "Official Spring Framework 6.1.14 API reference for the main server-side Spring MVC testing entry point."
+
+  - title: "Spring Framework 6.1.14 API - TransactionalTestExecutionListener"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/test/context/transaction/TransactionalTestExecutionListener.html"
+    description: "Official Spring Framework 6.1.14 contract for test-managed transactions, rollback behavior, supported @Transactional test semantics, and TestTransaction integration."
+
+  - title: "Spring Framework 6.1 API - ContextCache"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/test/context/cache/ContextCache.html"
+    description: "Official Spring Framework 6.1.14 API contract for TestContext ApplicationContext caching, cache sizing, eviction, statistics, and failure-count support introduced in the 6.1 line."
+
+  - title: "Spring Framework 6.1.14 API - WebTestClient"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/test/web/reactive/server/WebTestClient.html"
+    description: "Official Spring Framework 6.1.14 API reference for WebTestClient mock-server and live-server bindings and response assertions."
+
+  - title: "Spring Framework 6.1.14 API - MockRestServiceServer"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/test/web/client/MockRestServiceServer.html"
+    description: "Official Spring Framework 6.1.14 API reference for client-side REST testing with MockRestServiceServer and Spring Framework HTTP clients."

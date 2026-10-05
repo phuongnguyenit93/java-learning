@@ -27,4 +27,94 @@
 #         Exact method signature in api-descriptions.yml, for example startVsRun().
 # </interview-schema>
 
-questions: []
+questions:
+  - question: >-
+      How would you choose between a plain object test, a TestContext-based integration test, MockMvc or mock-bound WebTestClient, and a live-server test?
+    answer: >-
+      Start from the behavior that must be falsifiable. Use a plain object test when Spring infrastructure is irrelevant. Escalate to TestContext when the claim depends on bean wiring, profiles, lifecycle or other ApplicationContext behavior. Use MockMvc or a mock-bound WebTestClient when request mapping, binding, validation, exception handling or framework web dispatch is the behavior at risk. Use a live server only when evidence must include the real HTTP transport or deployed server boundary. The useful rule is not “bigger tests are better”; it is “use the smallest scope that still observes the failure mode you care about.”
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Introduction/SpringTesting.md"
+      anchor: "test-scope-ladder"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Explain the TestContext runtime model from the test engine down to ApplicationContext loading. Where do TestContextManager, TestExecutionListener, SmartContextLoader, and the context cache fit?
+    answer: >-
+      The external test engine still owns discovery and the basic test lifecycle. Its Spring integration delegates lifecycle callbacks into TestContextManager, which maintains the current TestContext and invokes ordered TestExecutionListeners at defined phases. Those listeners add Spring-specific behavior such as dependency injection, transactions, SQL scripts, event support, or context invalidation. When an ApplicationContext is needed, merged test configuration is used for a cache lookup; on a miss, a SmartContextLoader creates the context. This separation explains why Spring can add integration-test behavior without replacing JUnit or TestNG.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.TestContextFramework/TestContextFramework.md"
+      anchor: "testcontext-framework-role"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      A large Spring test suite has poor context reuse and becomes slower after subclasses start using dynamic properties. How would you reason about the cache before simply increasing its maximum size?
+    answer: >-
+      First inspect context identity, not cache capacity. The TestContext cache key is derived from merged configuration such as configuration classes or locations, loaders, parents, active profiles, test property sources, customizers and the web resource base path. DynamicPropertySource contributes through its registration/customizer identity; a changed supplier value is not automatically a new key. Subclasses can therefore accidentally reuse a context whose dynamic value should have changed, in which case DirtiesContext or an explicit configuration distinction may be required. Conversely, inconsistent annotations or customizers can fragment the cache into many keys. Only after separating legitimate unique contexts from accidental fragmentation should cache-size tuning be considered.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.ContextCaching/ContextCaching.md"
+      anchor: "context-cache-key"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Why can a transactional Spring test still produce committed database state even though test-managed transactions roll back by default? Give several concrete failure modes.
+    answer: >-
+      Default rollback only controls work that actually participates in the test-managed transaction. A preemptive timeout can run the test body on another thread, outside the transaction bound to the original test thread. A live-server request is also handled on a server thread and is not automatically enclosed by the caller's test transaction. SQL fixtures using an isolated transaction can commit independently, TestTransaction can explicitly end and commit a transaction when flagged, and application code can deliberately open an independent transaction. ORM tests can also create false confidence if they never flush buffered changes before asserting. The debugging question is therefore: which thread and resource manager owns each write, and which transaction will actually end it?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.TransactionalDatabaseTesting/TransactionalDatabaseTesting.md"
+      anchor: "transaction-testing-pitfalls"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Compare MockMvc standalone setup with WebApplicationContext setup. When would you choose each, and what does neither one prove compared with a live server?
+    answer: >-
+      Standalone setup is useful for a focused controller test where the controller and the relevant MVC collaborators can be configured explicitly. WebApplicationContext setup is stronger when the claim includes real Spring MVC wiring such as component scanning, configured advice, converters, interceptors, or other context-level MVC infrastructure. Both still execute with mock Servlet infrastructure and no real network connection. They can prove DispatcherServlet-level request processing but not connector behavior, TLS, real sockets, deployment-container defaults, or other transport concerns. Those require a live-server boundary when they are part of the behavior at risk.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.MockMvcTesting/MockMvcTesting.md"
+      anchor: "mockmvc-limitations-and-live-server"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      WebTestClient can be bound to WebFlux targets, MockMvc, or a live server, while MockRestServiceServer tests an outbound HTTP client collaborator. How do these choices change the evidence produced by a test?
+    answer: >-
+      A mock-bound WebTestClient stays in-process and proves framework request handling without a TCP connection. When backed by MockMvc it still exercises Servlet MVC, not WebFlux, although the assertion API is WebTestClient. bindToServer crosses the real HTTP transport boundary and can prove transport-visible behavior, but it loses access to server internals available only to in-process test infrastructure. MockRestServiceServer addresses the opposite direction: it intercepts requests made by a Spring HTTP client and verifies client-side request construction and response handling without real network I/O. A real mock web server or live environment is stronger when DNS, sockets, TLS, proxy configuration, timeouts, or the actual remote service are part of the claim.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "9.WebTestClientAndClientTesting/WebTestClientAndClientTesting.md"
+      anchor: "mock-server-vs-live-integration"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      What lifecycle and concurrency risks should you review before adding custom TestExecutionListeners, application-event assertions, or parallel execution to a Spring integration-test suite?
+    answer: >-
+      Listener ordering is part of the contract because later listeners may depend on state prepared earlier; replacing the default listener set can accidentally remove dependency injection, transactions, SQL support, or event support. Test execution events depend on an active ApplicationContext, so very early or very late events can be absent when the context has not yet loaded or has already been dirtied. Recorded application events have thread-related limits and should not be treated as proof that arbitrary asynchronous work completed successfully. Parallel execution also requires more than a thread-safe TestContext cache: mutable beans, databases, files, DirtiesContext usage, method ordering, thread-bound transactions, and custom TestContext copy semantics must all be safe. The framework can support concurrency without making the surrounding fixture automatically concurrent-safe.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""

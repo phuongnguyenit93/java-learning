@@ -41,4 +41,108 @@
 # The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: spring-testing-purpose-and-scope
+    title: Spring Testing Purpose and Scope
+    purpose: Build the mental model for what Spring Framework testing support adds on top of a general test framework, and when a test should stay context-free versus use Spring-managed integration or web infrastructure.
+    relatedKnowledge:
+      - SpringTesting
+    objectives:
+      - Explain how dependency injection and ordinary object construction make many Spring components testable without loading an ApplicationContext.
+      - Distinguish plain unit tests, TestContext-based integration tests, mock web tests, and live-server tests by what behavior they actually verify.
+      - Keep JUnit or TestNG fundamentals outside this module and keep Spring Boot test slices and @SpringBootTest in the Spring Boot testing owner.
+
+  - id: testcontext-runtime-model
+    title: TestContext Runtime Model
+    purpose: Understand the framework that connects an external test engine to Spring-managed context loading, fixture preparation, transactions, and lifecycle callbacks.
+    relatedKnowledge:
+      - TestContextFramework
+    objectives:
+      - Explain the roles of TestContext, TestContextManager, TestExecutionListener, and SmartContextLoader.
+      - Understand how SpringExtension and other framework integrations delegate into the TestContext lifecycle instead of replacing the underlying test engine.
+      - Recognize bootstrapping and listener configuration as extension points rather than application-test business logic.
+
+  - id: application-context-fixtures
+    title: ApplicationContext and Test Fixtures
+    purpose: Learn how integration tests declare, load, and consume Spring application contexts while keeping test fixtures predictable and reusable.
+    relatedKnowledge:
+      - ContextConfiguration
+      - TestFixtures
+    objectives:
+      - Configure ApplicationContext or WebApplicationContext loading with @ContextConfiguration and the TestContext loading model.
+      - Use dependency injection in test fixtures and understand where the test framework versus Spring participates in test-instance creation.
+      - Reason about configuration inheritance, context hierarchies, web test contexts, and request or session scoped test fixtures without turning them into Spring Boot-specific patterns.
+
+  - id: test-environment-and-dynamic-inputs
+    title: Test Environment and Dynamic Inputs
+    purpose: Control profiles and test-specific configuration inputs without confusing Spring Framework test configuration with Spring Boot externalized-configuration facilities.
+    relatedKnowledge:
+      - TestEnvironment
+    objectives:
+      - Use @ActiveProfiles to select bean-definition profiles for a test scenario.
+      - Use @TestPropertySource and @DynamicPropertySource with correct precedence and inheritance expectations.
+      - Understand which profile and property-source declarations, including @DynamicPropertySource registrations, participate in context identity, and why inherited dynamic values that change between subclasses can require @DirtiesContext.
+
+  - id: context-caching-isolation-and-parallelism
+    title: Context Caching, Isolation, and Parallelism
+    purpose: Balance test isolation with suite performance by understanding how the TestContext framework identifies, reuses, invalidates, and concurrently accesses loaded contexts.
+    dependsOn:
+      - application-context-fixtures
+      - test-environment-and-dynamic-inputs
+    relatedKnowledge:
+      - ContextCaching
+    objectives:
+      - Explain which configuration dimensions contribute to the context cache key and why inconsistent declarations create extra contexts.
+      - Use @DirtiesContext deliberately when shared context state is no longer safe to reuse.
+      - Understand the Spring Framework 6.1 context failure threshold, JVM-process boundary of the static cache, and constraints that matter for parallel test execution.
+
+  - id: transactional-and-database-test-support
+    title: Transactional and Database Test Support
+    purpose: Use Spring's test-managed transaction and SQL-fixture support correctly while keeping transaction semantics owned by the transaction-management module.
+    dependsOn:
+      - application-context-fixtures
+    relatedKnowledge:
+      - TransactionalDatabaseTesting
+    objectives:
+      - Distinguish test-managed transactions from Spring-managed and application-managed transactions invoked by the test.
+      - Understand default rollback behavior, supported @Transactional test semantics, TestTransaction, @BeforeTransaction, and @AfterTransaction.
+      - Prepare and verify database state with @Sql and JDBC testing utilities while recognizing pitfalls such as false positives from unflushed ORM state and preemptive timeouts that execute test code on another thread.
+
+  - id: mockmvc-servlet-web-testing
+    title: MockMvc and Servlet Web Testing
+    purpose: Test the Spring MVC request-processing stack without starting a real server, while understanding exactly which production behaviors MockMvc does and does not reproduce.
+    dependsOn:
+      - application-context-fixtures
+    relatedKnowledge:
+      - MockMvcTesting
+    objectives:
+      - Explain how MockMvc drives DispatcherServlet processing through Servlet API mock objects.
+      - Choose between standalone controller setup and WebApplicationContext setup based on the amount of real MVC configuration that must be verified.
+      - Verify request mapping, binding, conversion, validation, filters, asynchronous processing, exception handling, and response contracts while preserving the boundary with the spring-framework/web module.
+      - Recognize where an end-to-end server test is still required because mock servlet infrastructure cannot reproduce the full container and network environment.
+
+  - id: webtestclient-and-http-client-tests
+    title: WebTestClient and Client-side HTTP Testing
+    purpose: Learn the Spring testing clients that cover WebFlux, MVC-through-MockMvc, live servers, and client-side HTTP collaborators without conflating those tools with Spring Boot test automation.
+    relatedKnowledge:
+      - WebTestClientAndClientTesting
+    objectives:
+      - Use WebTestClient against controller, router-function, ApplicationContext, MockMvc-backed, or live-server targets and understand what each binding mode verifies.
+      - Distinguish response-level assertions available to any HTTP client test from server-side assertions available when MockMvc is the backing server.
+      - Understand the role of MockRestServiceServer for code using Spring Framework HTTP clients and when a real mock web server or live integration environment provides stronger evidence.
+
+  - id: lifecycle-extension-and-testing-synthesis
+    title: Lifecycle, Extension Points, and Testing Synthesis
+    purpose: Connect lifecycle callbacks, events, extensibility, execution constraints, and test-scope choices into an end-to-end strategy for Spring Framework integration testing.
+    dependsOn:
+      - testcontext-runtime-model
+      - context-caching-isolation-and-parallelism
+      - transactional-and-database-test-support
+      - webtestclient-and-http-client-tests
+    relatedKnowledge:
+      - TestLifecycle
+    objectives:
+      - Understand TestExecutionListener ordering, test execution events, application-event recording, and composed testing annotations as framework-level extension mechanisms.
+      - Recognize parallel-execution and AOT-test support as execution concerns that must preserve TestContext lifecycle assumptions.
+      - Choose the smallest test scope that proves the required behavior, escalating from ordinary unit tests to context integration, mock web, and live-server testing only when the missing infrastructure is part of the behavior under test.
+      - Explain the complete Spring testing journey without shifting JUnit fundamentals, Spring Boot test slices, transaction internals, MVC internals, or WebFlux internals into this module.

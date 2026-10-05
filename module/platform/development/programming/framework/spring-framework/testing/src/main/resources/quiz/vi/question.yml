@@ -38,4 +38,253 @@
 #       ID nội bộ của đáp án đúng. Frontend kiểm tra bằng identity này sau khi shuffle.
 # </quiz-schema>
 
-questions: []
+questions:
+  - id: testing-scope-selection
+    question: "Một service có thể được khởi tạo trực tiếp với các fake collaborator và hành vi cần kiểm thử không phụ thuộc cấu hình Spring. Phạm vi test nào cho bằng chứng phù hợp nhất?"
+    answers:
+      - id: A
+        answer: "Load toàn bộ ApplicationContext để test giống production nhất có thể."
+        explanation: "Sai. Việc load Spring làm tăng chi phí cấu hình nhưng không chứng minh thêm điều gì mà hành vi này cần."
+      - id: B
+        answer: "Dùng plain object test và tự khởi tạo service với các fake hoặc stub cần thiết."
+        explanation: "Đúng. Khi Spring-managed infrastructure không thuộc điều cần chứng minh, phạm vi nhỏ nhất có thể làm sai giả thuyết là lựa chọn phù hợp hơn."
+      - id: C
+        answer: "Dùng MockMvc vì mọi ứng dụng Spring đều phải kiểm chứng đường đi qua DispatcherServlet."
+        explanation: "Sai. MockMvc phù hợp khi MVC request processing thực sự là một phần của hành vi cần kiểm chứng."
+      - id: D
+        answer: "Dùng WebTestClient với live server để test đồng thời cả network."
+        explanation: "Sai. Live HTTP boundary sẽ thêm hạ tầng không liên quan và làm test rộng hơn mức cần thiết."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Introduction/SpringTesting.md"
+      anchor: "test-scope-ladder"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - id: testcontext-manager-role
+    question: "Mô tả nào đúng nhất về mối quan hệ giữa test engine như JUnit Jupiter và Spring TestContext Framework?"
+    answers:
+      - id: A
+        answer: "Test engine chạy test; TestContextManager nhận lifecycle callback và gọi các TestExecutionListener riêng của Spring."
+        explanation: "Đúng. Spring tích hợp với test engine và bổ sung context loading, dependency injection, transaction cùng các lifecycle service liên quan."
+      - id: B
+        answer: "TestContextManager thay thế test engine và tự discovery mọi test method trong suite."
+        explanation: "Sai. Test discovery và lifecycle cốt lõi vẫn thuộc trách nhiệm của test engine bên ngoài."
+      - id: C
+        answer: "Test engine load Spring ApplicationContext, còn TestContextManager chỉ định dạng assertion failure."
+        explanation: "Sai. Spring TestContext quản lý context riêng của Spring; định dạng assertion failure không phải vai trò cốt lõi của nó."
+      - id: D
+        answer: "TestExecutionListener chỉ chạy sau khi mọi test method kết thúc nên không thể chuẩn bị fixture hoặc transaction."
+        explanation: "Sai. Listener tham gia nhiều phase xác định rõ trước và sau class, instance, method và actual execution."
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.TestContextFramework/TestContextFramework.md"
+      anchor: "testcontext-core-abstractions"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - id: merged-context-configuration
+    question: "Vì sao hai test trông khá giống nhau vẫn có thể nhận các ApplicationContext cache khác nhau?"
+    answers:
+      - id: A
+        answer: "Vì Spring luôn tạo context mới cho từng test method bất kể cấu hình."
+        explanation: "Sai. TestContext chủ động cache và tái sử dụng context khi merged configuration tạo cùng cache key."
+      - id: B
+        answer: "Vì chỉ tên Java package quyết định context identity nên test ở package khác nhau không bao giờ dùng chung context."
+        explanation: "Sai. Vị trí package tự nó không phải quy tắc identity của TestContext cache."
+      - id: C
+        answer: "Vì khác biệt trong merged test configuration có thể tạo cache key khác nhau dù các test class nhìn khá giống nhau."
+        explanation: "Đúng. Context reuse dựa trên effective merged configuration chứ không dựa vào việc hai test class nhìn có vẻ giống nhau."
+      - id: D
+        answer: "Vì cache key chỉ dựa trên tên test method nên luôn thay đổi ở từng method."
+        explanation: "Sai. Tên method không phải cơ sở thông thường để nhận diện cached ApplicationContext."
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.ContextConfiguration/ContextConfiguration.md"
+      anchor: "context-configuration-model"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - id: per-class-constructor-dirties-context
+    question: "Một test JUnit Jupiter dùng `@TestInstance(PER_CLASS)`, constructor injection và `@DirtiesContext` làm đóng context giữa các test method. Rủi ro chính là gì?"
+    answers:
+      - id: A
+        answer: "Spring tự tạo test instance mới sau mỗi lần đóng context nên constructor injection luôn được làm mới."
+        explanation: "Sai. PER_CLASS giữ nguyên test instance nên constructor không được gọi lại mỗi khi context bị thay thế."
+      - id: B
+        answer: "Test instance được tái sử dụng có thể giữ reference constructor-injected tới bean thuộc context đã đóng."
+        explanation: "Đúng. Field hoặc setter injection an toàn hơn khi cùng test instance cần được reinject sau khi context được thay thế."
+      - id: C
+        answer: "Test trở thành plain unit test vì constructor injection vô hiệu hóa TestContext Framework."
+        explanation: "Sai. Constructor injection không vô hiệu hóa TestContext; vấn đề là reference cũ trên test instance được tái sử dụng."
+      - id: D
+        answer: "`@DirtiesContext` chỉ ảnh hưởng thống kê cache và không bao giờ đóng ApplicationContext."
+        explanation: "Sai. Context bị đánh dấu dirty có thể bị loại khỏi cache và đóng, nên reference tới bean cũ mới trở thành rủi ro."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.TestFixtures/TestFixtures.md"
+      anchor: "test-instance-and-constructor-injection"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - id: dynamic-property-cache-identity
+    question: "Hai subclass kế thừa cùng một method đăng ký `@DynamicPropertySource`, nhưng supplier trả về endpoint bên ngoài khác nhau cho từng subclass. Điểm cần lưu ý về cache là gì?"
+    answers:
+      - id: A
+        answer: "Runtime value luôn tự tạo cache key mới nên context reuse không thể xảy ra."
+        explanation: "Sai. Dynamic-property registration tham gia thông qua context customizer; giá trị supplier trả về sau đó không tự động trở thành cache identity khác."
+      - id: B
+        answer: "Các subclass bắt buộc dùng chung một context vì TestContext bỏ qua dynamic property được kế thừa."
+        explanation: "Sai. Dynamic property registration là một phần của effective test configuration; vấn đề là giá trị thay đổi có thể không làm identity thay đổi."
+      - id: C
+        answer: "Nếu giá trị mới cần context khác, hãy invalidate hoặc làm context identity khác đi; supplier value tự nó có thể không đổi cache identity."
+        explanation: "Đúng. Registration được kế thừa có thể tái sử dụng context dù supplier về sau trả giá trị khác, nên boundary cần thiết phải được biểu diễn rõ."
+      - id: D
+        answer: "Thay `@DynamicPropertySource` bằng `@ActiveProfiles` vì profile là nguồn duy nhất Spring hỗ trợ cho test property."
+        explanation: "Sai. DynamicPropertySource được hỗ trợ; câu hỏi nằm ở cách registration của nó tương tác với context identity."
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.TestEnvironment/TestEnvironment.md"
+      anchor: "environment-inheritance-and-cache-identity"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - id: context-failure-threshold
+    question: "Trong Spring Framework 6.1, một context đã load thất bại một lần cho một cache key cụ thể và context failure threshold vẫn giữ mặc định. Lần thử sau cho cùng key thường sẽ thế nào?"
+    answers:
+      - id: A
+        answer: "Tiếp tục retry việc load context tốn kém vô hạn cho tới khi thành công."
+        explanation: "Sai. Failure threshold tồn tại để tránh lặp lại chi phí của cùng một context load đã biết là thất bại."
+      - id: B
+        answer: "Chặn mọi Spring test context khác trong JVM, kể cả khi chúng dùng cache key khác."
+        explanation: "Sai. Failure tracking gắn với context key bị ảnh hưởng, không phải toàn bộ context trong suite."
+      - id: C
+        answer: "Âm thầm trả về ApplicationContext bị dựng dở từ cache."
+        explanation: "Sai. Context load thất bại không được xem là một cached ApplicationContext hợp lệ."
+      - id: D
+        answer: "Fail sớm cho key đó thay vì thử load lại cùng context."
+        explanation: "Đúng. Với threshold mặc định bằng 1, lần thử sau cho cùng key thất bại sẽ bị từ chối sớm."
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.ContextCaching/ContextCaching.md"
+      anchor: "context-failure-threshold"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - id: preemptive-timeout-test-transaction
+    question: "Một Spring test đang chạy trong test-managed transaction với default rollback, nhưng preemptive timeout chạy test body trên thread khác. Vì sao thay đổi database có thể thoát khỏi rollback mong đợi?"
+    answers:
+      - id: A
+        answer: "Test-managed transaction gắn với test thread ban đầu, nên công việc trên timeout thread có thể chạy ngoài transaction đó."
+        explanation: "Đúng. Rollback chỉ kiểm soát công việc thực sự tham gia test-managed transaction."
+      - id: B
+        answer: "Preemptive timeout tự động đổi mọi Spring transaction thành `REQUIRES_NEW` rồi commit."
+        explanation: "Sai. Vấn đề là thread boundary, không phải tự động thay đổi propagation."
+      - id: C
+        answer: "Default rollback chỉ áp dụng cho read-only test và bị tắt mỗi khi cấu hình timeout."
+        explanation: "Sai. Default rollback không phụ thuộc test có read-only hay có timeout."
+      - id: D
+        answer: "Spring đóng DataSource trước khi timeout thread chạy nên thread thứ hai luôn mở database độc lập."
+        explanation: "Sai. Điểm cốt lõi là transaction context binding chứ không phải DataSource tự bị thay thế."
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.TransactionalDatabaseTesting/TransactionalDatabaseTesting.md"
+      anchor: "transaction-testing-pitfalls"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - id: mockmvc-setup-choice
+    question: "Một test cần kiểm chứng component scanning, custom MVC configuration, controller advice và các converter đã cấu hình hoạt động cùng nhau. MockMvc setup nào cho bằng chứng mạnh hơn?"
+    answers:
+      - id: A
+        answer: "Dùng `standaloneSetup` vì nó tự discovery toàn bộ MVC configuration của ứng dụng."
+        explanation: "Sai. Standalone setup có phạm vi tập trung và các MVC collaborator cần thiết phải được đăng ký rõ khi scenario cần."
+      - id: B
+        answer: "Dùng `webAppContextSetup` với WebApplicationContext do TestContext load để đi qua MVC infrastructure thực đã cấu hình."
+        explanation: "Đúng. Setup này cho bằng chứng mạnh hơn khi real context wiring và MVC configuration là một phần của điều cần kiểm chứng."
+      - id: C
+        answer: "Gọi trực tiếp controller method vì direct invocation kiểm chứng DispatcherServlet configuration chính xác hơn."
+        explanation: "Sai. Direct invocation bỏ qua MVC dispatch infrastructure mà scenario này cần kiểm chứng."
+      - id: D
+        answer: "Dùng live server vì MockMvc không thể kiểm thử controller advice, converter hoặc request mapping."
+        explanation: "Sai. MockMvc có thể kiểm thử các MVC behavior đó; live server chỉ cần khi evidence phụ thuộc real server/network boundary."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.MockMvcTesting/MockMvcTesting.md"
+      anchor: "mockmvc-setup-strategies"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - id: webtestclient-binding-evidence
+    question: "Điều gì thay đổi khi một WebTestClient test chuyển từ binding dựa trên MockMvc sang `bindToServer()` với ứng dụng đang chạy?"
+    answers:
+      - id: A
+        answer: "MockMvc-backed test vốn đã dùng TCP thật nên chỉ assertion syntax thay đổi."
+        explanation: "Sai. WebTestClient dựa trên MockMvc vẫn chạy in-process và không đi qua network boundary thật."
+      - id: B
+        answer: "`bindToServer()` chuyển server implementation thành WebFlux kể cả khi ứng dụng đang chạy Spring MVC."
+        explanation: "Sai. Client binding không thay đổi programming model của server application."
+      - id: C
+        answer: "`bindToServer()` đi qua HTTP boundary thật, còn MockMvc-backed WebTestClient vẫn chạy in-process trên Servlet MVC."
+        explanation: "Đúng. Cùng một client-facing style có thể tạo bằng chứng khác nhau tùy target mà nó bind tới."
+      - id: D
+        answer: "Live binding cho phép assertion server-side về model và handler mà MockMvc-backed test không thể làm."
+        explanation: "Sai. Server-side MockMvc assertion khả dụng vì backing server chạy in-process; remote HTTP client không thể nhìn các internal này."
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "9.WebTestClientAndClientTesting/WebTestClientAndClientTesting.md"
+      anchor: "mockmvc-webtestclient-binding"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - id: testexecutionlistener-merge-mode
+    question: "Một test đăng ký custom `TestExecutionListener` nhưng vẫn cần các listener mặc định của Spring cho dependency injection và transaction. Ý định cấu hình nào an toàn hơn?"
+    answers:
+      - id: A
+        answer: "Merge custom listener với default listeners và để framework sắp xếp lại tập kết hợp."
+        explanation: "Đúng. `MERGE_WITH_DEFAULTS` giữ hạ tầng mặc định, thêm custom listener và vẫn tôn trọng ordering."
+      - id: B
+        answer: "Thay thế defaults vì Spring luôn tự thêm lại dependency-injection và transactional listener sau đó."
+        explanation: "Sai. Replace defaults có thể loại các listener đó và âm thầm thay đổi test behavior."
+      - id: C
+        answer: "Chỉ dựa vào thứ tự khai báo trong Java vì listener ordering không ảnh hưởng lifecycle behavior."
+        explanation: "Sai. Listener ordering là một phần của lifecycle contract và nên được biểu diễn bằng ordering semantics."
+      - id: D
+        answer: "Tắt TestContext Framework rồi gọi custom listener thủ công từ từng test method."
+        explanation: "Sai. Cách đó bỏ qua chính infrastructure mà listener được dùng để mở rộng."
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "10.TestLifecycle/TestLifecycle.md"
+      anchor: "testexecutionlistener-ordering"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
