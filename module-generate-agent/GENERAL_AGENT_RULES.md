@@ -568,6 +568,8 @@ Step 10 output
 → task-scoped commit on the current module branch
 → module branch pushed to remote
 → Merge Request created from the module branch into `main`
+→ entire Step 10 workflow is CLI-only; browser UI / desktop GUI automation is forbidden
+→ if any required Step 10 operation cannot be completed by CLI, stop at the safe current state and report the exact completed state + blocker instead of falling back to browser
 → no automatic merge unless the user explicitly requests/authorizes it
 → after the Merge Request is actually merged, return the session to the original main worktree
 ```

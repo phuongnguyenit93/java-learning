@@ -115,6 +115,8 @@ Step 10
 
 đều phải được thực hiện **trong cùng module worktree đó**.
 
+Step 10 trong lifecycle này tuân theo **CLI-only execution contract** của [`STEP_10_COMMIT.md`](./STEP_10_COMMIT.md): commit, push, Pull Request / Merge Request creation, merge/accept khi được authorize, verification và cleanup đều phải thực hiện bằng terminal/CLI. Không được fallback sang browser UI hoặc desktop GUI automation. Nếu một bước bắt buộc không thể hoàn thành bằng CLI, dừng workflow tại trạng thái an toàn hiện tại và report chính xác blocker; không cleanup module worktree/branch nếu merge chưa được verify.
+
 Sau khi Step 10 đã:
 
 ```text
