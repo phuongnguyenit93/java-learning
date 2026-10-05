@@ -1,0 +1,24 @@
+DaoExceptionExperimentController:
+  description: |-
+    <h2>DAO Exception Translation Experiment</h2>
+    <p>Triggers the same integrity failure through Spring JDBC and Spring R2DBC so the common <code>DataAccessException</code> classification and preserved native cause can be compared from real runtime evidence.</p>
+  readmeRelated:
+    file: 2.DaoExceptionModel/DaoExceptionModel.md
+JdbcCoreExperimentController:
+  description: |-
+    <h2>Spring JDBC Cardinality Experiment</h2>
+    <p>Runs bounded <code>JdbcClient</code> queries against an isolated H2 database and makes the different contracts of <code>list()</code>, <code>optional()</code>, and <code>single()</code> observable.</p>
+  readmeRelated:
+    file: 3.SpringJdbcCore/SpringJdbcCore.md
+R2dbcExperimentController:
+  description: |-
+    <h2>Spring R2DBC Deferred Execution Experiment</h2>
+    <p>Counts R2DBC connection acquisition before and after subscribing to a <code>DatabaseClient</code> publisher, exposing the subscription boundary of reactive SQL execution.</p>
+  readmeRelated:
+    file: 5.SpringR2dbcCore/SpringR2dbcCore.md
+ResourceParticipationExperimentController:
+  description: |-
+    <h2>Transaction-Aware Resource Binding Experiment</h2>
+    <p>Compares how Spring reuses a JDBC connection through thread-associated transaction state and an R2DBC connection through reactive subscriber context, including a bounded scheduler hop.</p>
+  readmeRelated:
+    file: 6.ResourceTransactionParticipation/ResourceTransactionParticipation.md

@@ -1,0 +1,151 @@
+1.Introduction/DataAccess.md:
+  data-access-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  data-access-problem-without-spring:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  data-access-responsibility-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  jdbc-vs-r2dbc-paths:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+2.DaoExceptionModel/DaoExceptionModel.md:
+  data-access-exception-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  data-access-exception-categories:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  jdbc-r2dbc-exception-translation:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  repository-exception-translation:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  data-access-failure-handling:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+3.SpringJdbcCore/SpringJdbcCore.md:
+  jdbc-datasource-workflow:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  jdbc-client-template-stack:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jdbc-parameter-binding:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jdbc-query-update-execution:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jdbc-row-mapping-cardinality:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jdbc-client-vs-template:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+4.AdvancedJdbc/AdvancedJdbc.md:
+  jdbc-batch-operations:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jdbc-generated-keys:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jdbc-custom-extraction-callbacks:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  simple-jdbc-insert-call:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  embedded-database-sql-initialization:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+5.SpringR2dbcCore/SpringR2dbcCore.md:
+  r2dbc-connection-factory-database-client:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  r2dbc-reactive-sql-execution:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  r2dbc-parameter-binding-bind-markers:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  r2dbc-result-mapping-cardinality-null:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  r2dbc-generated-values-statement-filters:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+6.ResourceTransactionParticipation/ResourceTransactionParticipation.md:
+  resource-acquisition-release:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  datasource-utils-transaction-participation:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  connection-factory-utils-transaction-participation:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  transaction-aware-resource-proxies:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  thread-vs-subscriber-context-resources:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  transaction-management-boundary:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+7.AbstractionChoice/AbstractionChoice.md:
+  choose-jdbc-client-layer:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  choose-jdbc-or-r2dbc:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  choose-persistence-abstraction-level:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  blocking-jdbc-in-reactive-paths:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  data-access-end-to-end-model:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false

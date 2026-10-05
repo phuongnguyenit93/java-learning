@@ -1,0 +1,52 @@
+DaoExceptionExperimentController:
+  observeCrossStackExceptionTranslation():
+    execution: |-
+      <p><b>Concept:</b> Spring JDBC and Spring R2DBC translate native database failures into the common <code>DataAccessException</code> hierarchy while retaining the original cause for diagnostics.</p>
+      <ol>
+        <li>The experiment creates isolated in-memory H2 stores for the JDBC and R2DBC paths. Each store defines a unique constraint and inserts one baseline row.</li>
+        <li>It then attempts to insert the same logical duplicate through <code>JdbcClient</code> and <code>DatabaseClient</code>. The database rejects both operations at the driver level.</li>
+        <li>Spring translates each native failure before it reaches the experiment boundary. The response records <code>springExceptionType</code>, whether it is a <code>DataIntegrityViolationException</code>, the deepest <code>rootCauseType</code>, and <code>nativeDatabaseCausePreserved</code>, which is true when the retained cause chain still contains a JDBC <code>SQLException</code> or an R2DBC <code>R2dbcException</code>.</li>
+        <li>Compare <code>jdbc</code> and <code>r2dbc</code>. <code>bothUseSpringDataAccessHierarchy</code> and <code>bothClassifyIntegrityFailure</code> should both be <code>true</code>.</li>
+      </ol>
+      <p><b>Observation:</b> two different driver APIs surface one portable Spring failure meaning while still preserving low-level evidence.</p>
+      <p><b>Conclusion:</b> exception translation is classification, not information loss; upper layers can reason about Spring data-access meaning without discarding vendor diagnostics.</p>
+    usage: true
+JdbcCoreExperimentController:
+  observeJdbcCardinality():
+    execution: |-
+      <p><b>Concept:</b> row mapping and expected result cardinality are separate parts of a Spring JDBC query contract.</p>
+      <ol>
+        <li>The experiment creates an isolated H2 table with two <code>ACTIVE</code> rows and one <code>INACTIVE</code> row.</li>
+        <li>A named-parameter <code>JdbcClient</code> query calls <code>list()</code> for <code>ACTIVE</code> rows. The response exposes both names and the resulting size of two.</li>
+        <li>A lookup for a missing id calls <code>optional()</code> and reports an empty result, while a lookup for id <code>1</code> calls <code>single()</code> and returns exactly one name.</li>
+        <li>The experiment deliberately calls <code>single()</code> for the two-row <code>ACTIVE</code> query. Spring reports <code>IncorrectResultSizeDataAccessException</code> instead of silently selecting one row.</li>
+      </ol>
+      <p><b>Observation:</b> <code>list()</code>, <code>optional()</code>, and <code>single()</code> express different cardinality expectations even when row mapping itself is straightforward.</p>
+      <p><b>Conclusion:</b> choose a result method whose cardinality is justified by the SQL predicate and data constraints, not merely by the current test data.</p>
+    usage: true
+R2dbcExperimentController:
+  observeR2dbcDeferredExecution():
+    execution: |-
+      <p><b>Concept:</b> building a <code>DatabaseClient</code> reactive pipeline does not execute SQL immediately; resource acquisition and execution begin when the publisher is subscribed.</p>
+      <ol>
+        <li>A counting <code>ConnectionFactory</code> wraps an H2 R2DBC driver. Its counter increments only when <code>create()</code> is actually subscribed.</li>
+        <li>The experiment builds <code>client.sql(&quot;select 1&quot;).map(...).one()</code> but does not subscribe yet. <code>acquisitionsBeforeSubscription</code> should remain <code>0</code>.</li>
+        <li>The bounded Servlet learning endpoint subscribes with a five-second timeout only to turn the reactive behavior into finite HTTP evidence. This is an experiment boundary, not a pattern for blocking inside a reactive request path. The driver connection is then acquired and the query emits <code>1</code>.</li>
+        <li>The response compares the acquisition count before and after subscription and returns <code>deferredExecutionObserved=true</code> when the boundary is visible.</li>
+      </ol>
+      <p><b>Observation:</b> assembling the fluent specification is separate from the subscription that causes resource acquisition and SQL execution.</p>
+      <p><b>Conclusion:</b> reactive data-access lifecycle belongs to the publisher chain; code must compose and subscribe to that chain rather than treating <code>DatabaseClient</code> like an eager imperative call.</p>
+    usage: true
+ResourceParticipationExperimentController:
+  observeResourceBinding():
+    execution: |-
+      <p><b>Concept:</b> Spring can associate a data-access resource with the current transaction, but the context carrying that association differs between imperative JDBC and reactive R2DBC.</p>
+      <ol>
+        <li>The JDBC half uses a local <code>DataSourceTransactionManager</code> only as a bounded experiment harness. Inside that transaction, two calls to <code>DataSourceUtils.getConnection()</code> record the same connection identity.</li>
+        <li>The R2DBC half uses a local <code>R2dbcTransactionManager</code> and <code>TransactionalOperator</code> as the equivalent harness. A counting <code>ConnectionFactory</code> sits under <code>DatabaseClient</code>. The first query runs, the chain crosses to <code>boundedElastic</code>, and a second query runs inside the same reactive transaction.</li>
+        <li>The response records the driver-level connection acquisition count after each query. The transaction manager acquires one connection; both <code>DatabaseClient</code> operations reuse that transaction-associated resource, so the count remains <code>1</code> across the scheduler hop while the query results remain <code>1</code> then <code>2</code>.</li>
+        <li>The local transaction managers own final resource cleanup when each bounded harness completes. The experiment does not teach propagation, isolation, rollback policy, or transaction demarcation choices; those remain in Spring Transaction Management.</li>
+      </ol>
+      <p><b>Observation:</b> JDBC transaction association is naturally thread-oriented, whereas reactive transaction association survives through Reactor context rather than depending on one processing thread. The aggregate <code>bothReuseTransactionAssociatedResource</code> is true only when JDBC reference equality proves reuse, R2DBC performs both operations with one driver connection acquisition, and the scheduler hop was actually observed.</p>
+      <p><b>Conclusion:</b> lower-level integration code should use Spring's transaction-aware resource helpers instead of manually caching connections in thread-local or shared state.</p>
+    usage: true

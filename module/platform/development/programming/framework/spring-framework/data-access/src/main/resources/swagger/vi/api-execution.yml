@@ -1,0 +1,52 @@
+DaoExceptionExperimentController:
+  observeCrossStackExceptionTranslation():
+    execution: |-
+      <p><b>Khái niệm:</b> Spring JDBC và Spring R2DBC chuyển lỗi native của database sang hierarchy <code>DataAccessException</code> chung, đồng thời vẫn giữ nguyên nhân gốc để chẩn đoán.</p>
+      <ol>
+        <li>Thí nghiệm tạo hai H2 in-memory cô lập cho hướng JDBC và R2DBC. Mỗi database có một unique constraint và một dòng dữ liệu ban đầu.</li>
+        <li>Sau đó nó thử insert cùng một giá trị trùng lặp qua <code>JdbcClient</code> và <code>DatabaseClient</code>. Database từ chối cả hai thao tác ở tầng driver.</li>
+        <li>Spring chuyển đổi từng lỗi native trước khi lỗi tới ranh giới thí nghiệm. Response ghi lại <code>springExceptionType</code>, việc exception có phải <code>DataIntegrityViolationException</code> hay không, <code>rootCauseType</code> sâu nhất và <code>nativeDatabaseCausePreserved</code>; field này là <code>true</code> khi cause chain được giữ lại vẫn chứa JDBC <code>SQLException</code> hoặc R2DBC <code>R2dbcException</code>.</li>
+        <li>So sánh phần <code>jdbc</code> và <code>r2dbc</code>. <code>bothUseSpringDataAccessHierarchy</code> và <code>bothClassifyIntegrityFailure</code> đều phải là <code>true</code>.</li>
+      </ol>
+      <p><b>Quan sát:</b> hai API driver khác nhau cùng được biểu diễn bằng một ý nghĩa lỗi portable của Spring nhưng evidence native vẫn còn nguyên.</p>
+      <p><b>Kết luận:</b> exception translation là phân loại lỗi chứ không phải làm mất thông tin; tầng phía trên có thể xử lý theo ý nghĩa data access mà vẫn giữ dữ liệu vendor để debug.</p>
+    usage: true
+JdbcCoreExperimentController:
+  observeJdbcCardinality():
+    execution: |-
+      <p><b>Khái niệm:</b> row mapping và số lượng kết quả kỳ vọng là hai phần độc lập trong contract của một truy vấn Spring JDBC.</p>
+      <ol>
+        <li>Thí nghiệm tạo một bảng H2 cô lập với hai dòng <code>ACTIVE</code> và một dòng <code>INACTIVE</code>.</li>
+        <li>Một truy vấn <code>JdbcClient</code> dùng named parameter gọi <code>list()</code> cho các dòng <code>ACTIVE</code>. Response cho thấy hai tên và kích thước kết quả bằng hai.</li>
+        <li>Lookup một id không tồn tại dùng <code>optional()</code> và cho kết quả rỗng; lookup id <code>1</code> dùng <code>single()</code> và trả về đúng một tên.</li>
+        <li>Thí nghiệm cố ý gọi <code>single()</code> trên truy vấn <code>ACTIVE</code> trả hai dòng. Spring phát sinh <code>IncorrectResultSizeDataAccessException</code> thay vì âm thầm chọn một dòng.</li>
+      </ol>
+      <p><b>Quan sát:</b> <code>list()</code>, <code>optional()</code> và <code>single()</code> biểu đạt các kỳ vọng cardinality khác nhau ngay cả khi row mapping rất đơn giản.</p>
+      <p><b>Kết luận:</b> hãy chọn result method dựa trên contract được bảo đảm bởi predicate và constraint của dữ liệu, không chỉ dựa trên test data hiện tại.</p>
+    usage: true
+R2dbcExperimentController:
+  observeR2dbcDeferredExecution():
+    execution: |-
+      <p><b>Khái niệm:</b> dựng pipeline reactive bằng <code>DatabaseClient</code> chưa làm SQL chạy ngay; quá trình lấy resource và thực thi bắt đầu khi publisher được subscribe.</p>
+      <ol>
+        <li>Một <code>ConnectionFactory</code> có bộ đếm bọc quanh H2 R2DBC driver. Bộ đếm chỉ tăng khi <code>create()</code> thực sự được subscribe.</li>
+        <li>Thí nghiệm dựng <code>client.sql(&quot;select 1&quot;).map(...).one()</code> nhưng chưa subscribe. <code>acquisitionsBeforeSubscription</code> phải vẫn bằng <code>0</code>.</li>
+        <li>Sau đó Servlet learning endpoint có phạm vi giới hạn thực hiện subscription với timeout năm giây chỉ để biến behavior reactive thành HTTP evidence hữu hạn. Đây là ranh giới của thí nghiệm, không phải pattern để block bên trong reactive request path. Driver connection được lấy và query phát ra giá trị <code>1</code>.</li>
+        <li>Response so sánh số lần lấy connection trước/sau subscription và trả <code>deferredExecutionObserved=true</code> khi ranh giới này được quan sát đúng.</li>
+      </ol>
+      <p><b>Quan sát:</b> việc dựng fluent specification tách biệt với subscription gây ra resource acquisition và SQL execution.</p>
+      <p><b>Kết luận:</b> vòng đời reactive data access thuộc publisher chain; code cần compose/subscribe chain đó thay vì xem <code>DatabaseClient</code> như một lời gọi imperative chạy ngay.</p>
+    usage: true
+ResourceParticipationExperimentController:
+  observeResourceBinding():
+    execution: |-
+      <p><b>Khái niệm:</b> Spring có thể gắn data-access resource với transaction hiện tại, nhưng context mang sự liên kết đó khác nhau giữa JDBC imperative và R2DBC reactive.</p>
+      <ol>
+        <li>Phần JDBC dùng <code>DataSourceTransactionManager</code> cục bộ chỉ như harness giới hạn cho thí nghiệm. Bên trong transaction, hai lần gọi <code>DataSourceUtils.getConnection()</code> ghi nhận cùng một connection identity.</li>
+        <li>Phần R2DBC dùng <code>R2dbcTransactionManager</code> cục bộ và <code>TransactionalOperator</code> làm harness tương đương. Một <code>ConnectionFactory</code> có bộ đếm nằm dưới <code>DatabaseClient</code>. Query đầu tiên chạy, chain chuyển sang <code>boundedElastic</code>, rồi query thứ hai chạy trong cùng reactive transaction.</li>
+        <li>Response ghi số lần driver-level connection được lấy sau từng query. Transaction manager lấy một connection; cả hai thao tác <code>DatabaseClient</code> cùng tái sử dụng resource gắn với transaction nên count vẫn bằng <code>1</code> qua scheduler hop, trong khi kết quả query lần lượt là <code>1</code> và <code>2</code>.</li>
+        <li>Các transaction manager cục bộ chịu trách nhiệm cleanup resource cuối cùng khi từng harness giới hạn hoàn tất. Thí nghiệm không dạy propagation, isolation, rollback policy hay lựa chọn transaction demarcation; các chủ đề đó vẫn thuộc Spring Transaction Management.</li>
+      </ol>
+      <p><b>Quan sát:</b> việc gắn transaction của JDBC phù hợp với mô hình thread-bound, còn transaction reactive tồn tại qua Reactor context thay vì phụ thuộc vào một thread xử lý cố định. Aggregate <code>bothReuseTransactionAssociatedResource</code> chỉ là <code>true</code> khi JDBC chứng minh reuse bằng reference equality, R2DBC thực hiện hai operation chỉ với một lần driver connection acquisition và scheduler hop thực sự đã xảy ra.</p>
+      <p><b>Kết luận:</b> code tích hợp cấp thấp nên dùng resource helper có transaction awareness của Spring thay vì tự cache connection trong ThreadLocal hoặc shared state.</p>
+    usage: true

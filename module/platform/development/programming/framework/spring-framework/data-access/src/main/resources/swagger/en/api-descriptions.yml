@@ -1,0 +1,112 @@
+DaoExceptionExperimentController:
+  observeCrossStackExceptionTranslation():
+    summary: Compare JDBC and R2DBC exception translation
+    description: Triggers the same duplicate-value constraint failure through JdbcClient
+      and DatabaseClient, then returns the Spring exception classification and the
+      preserved native root cause for both stacks.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: jdbc-r2dbc-exception-translation
+    methodName: observeCrossStackExceptionTranslation
+    params: [
+      ]
+    path: com/example/learning/dataaccess/experiment/controller/DaoExceptionExperimentController.java
+    mapping: '@GetMapping("/cross-stack-translation")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /data-access/dao-exception/cross-stack-translation
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+JdbcCoreExperimentController:
+  observeJdbcCardinality():
+    summary: Observe JdbcClient result-cardinality contracts
+    description: Executes list, optional, and single-result queries against isolated
+      data and intentionally violates the single-result contract so the resulting
+      IncorrectResultSizeDataAccessException is observable.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: jdbc-row-mapping-cardinality
+    methodName: observeJdbcCardinality
+    params: [
+      ]
+    path: com/example/learning/dataaccess/experiment/controller/JdbcCoreExperimentController.java
+    mapping: '@GetMapping("/cardinality")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /data-access/jdbc/cardinality
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+R2dbcExperimentController:
+  observeR2dbcDeferredExecution():
+    summary: Observe the R2DBC subscription boundary
+    description: Builds a DatabaseClient publisher around a counting ConnectionFactory,
+      proves that assembling the publisher acquires no connection, and then observes
+      acquisition and SQL result after subscription.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: r2dbc-reactive-sql-execution
+    methodName: observeR2dbcDeferredExecution
+    params: [
+      ]
+    path: com/example/learning/dataaccess/experiment/controller/R2dbcExperimentController.java
+    mapping: '@GetMapping("/deferred-execution")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /data-access/r2dbc/deferred-execution
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+ResourceParticipationExperimentController:
+  observeResourceBinding():
+    summary: Compare JDBC and R2DBC transaction-associated resources
+    description: Uses bounded transaction harnesses to show JDBC reference reuse through
+      thread-associated state and R2DBC reuse through two DatabaseClient operations
+      that keep one driver connection acquisition across a scheduler boundary.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: thread-vs-subscriber-context-resources
+    methodName: observeResourceBinding
+    params: [
+      ]
+    path: com/example/learning/dataaccess/experiment/controller/ResourceParticipationExperimentController.java
+    mapping: '@GetMapping("/binding-context")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /data-access/resource/binding-context
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
