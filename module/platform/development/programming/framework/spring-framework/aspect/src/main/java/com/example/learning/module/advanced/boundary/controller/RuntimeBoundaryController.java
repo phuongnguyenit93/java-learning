@@ -34,7 +34,7 @@ public class RuntimeBoundaryController {
 
     /**
      * README: readme/vi/menu/15.RuntimeBoundary/RuntimeBoundary.md#runtime-boundary-demo
-     * Purpose: Phân biệt @AspectJ declaration style với runtime proxy-based Spring AOP đang dùng trong module.
+     * Purpose: Quan sát bằng chứng dương tính rằng lời gọi hiện tại đi qua runtime proxy-based Spring AOP; việc có hay không AspectJ weaving được xác định từ build/runtime configuration.
      */
     @GetMapping("/inspect")
     public AopExperimentResponse inspectRuntimeBoundary() {

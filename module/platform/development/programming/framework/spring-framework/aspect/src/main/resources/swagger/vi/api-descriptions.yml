@@ -1,8 +1,9 @@
 AdvisorController:
   observeAdvisor():
-    summary: Quan sát cách Advisor kết hợp Pointcut và Advice
-    description: Minh họa cách Advisor ghép Pointcut với Advice, đồng thời so sánh
-      việc match method tĩnh với việc match theo argument ở runtime.
+    summary: Quan sát cách PointcutAdvisor kết hợp Pointcut và Advice
+    description: Minh họa cách DefaultPointcutAdvisor, một PointcutAdvisor, ghép Pointcut
+      với Advice, đồng thời so sánh việc match method tĩnh với việc match theo argument
+      ở runtime.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -28,8 +29,9 @@ AdvisorController:
 RuntimeBoundaryController:
   inspectRuntimeBoundary():
     summary: Quan sát ranh giới runtime của Spring AOP
-    description: Minh họa sự khác nhau giữa cú pháp khai báo AspectJ và cơ chế Spring
-      AOP dựa trên proxy đang được sử dụng trong module.
+    description: Đưa ra bằng chứng runtime dương tính rằng lời gọi hiện tại đi qua
+      Spring AOP proxy; việc có cấu hình AspectJ weaving hay không được xác định riêng
+      từ build/runtime configuration của module.
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video

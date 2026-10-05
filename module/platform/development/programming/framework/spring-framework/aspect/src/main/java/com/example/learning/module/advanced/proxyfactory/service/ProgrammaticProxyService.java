@@ -24,12 +24,13 @@ public class ProgrammaticProxyService {
         Map<String, Object> result = new LinkedHashMap<>();
 
         traceLog.reset();
-        GreetingTarget jdkTarget = new GreetingTarget(traceLog);
+        GreetingTarget target = new GreetingTarget(traceLog);
+        TracingMethodInterceptor interceptor = new TracingMethodInterceptor(traceLog);
         ProxyFactory jdkFactory = new ProxyFactory();
-        jdkFactory.setTarget(jdkTarget);
+        jdkFactory.setTarget(target);
         jdkFactory.setInterfaces(GreetingOperations.class);
         jdkFactory.setProxyTargetClass(false);
-        jdkFactory.addAdvice(new TracingMethodInterceptor(traceLog));
+        jdkFactory.addAdvice(interceptor);
 
         GreetingOperations jdkProxy =
                 (GreetingOperations) jdkFactory.getProxy();
@@ -52,11 +53,10 @@ public class ProgrammaticProxyService {
         result.put("jdkProxy", jdk);
 
         traceLog.reset();
-        GreetingTarget cglibTarget = new GreetingTarget(traceLog);
         ProxyFactory cglibFactory = new ProxyFactory();
-        cglibFactory.setTarget(cglibTarget);
+        cglibFactory.setTarget(target);
         cglibFactory.setProxyTargetClass(true);
-        cglibFactory.addAdvice(new TracingMethodInterceptor(traceLog));
+        cglibFactory.addAdvice(interceptor);
 
         GreetingTarget cglibProxy =
                 (GreetingTarget) cglibFactory.getProxy();

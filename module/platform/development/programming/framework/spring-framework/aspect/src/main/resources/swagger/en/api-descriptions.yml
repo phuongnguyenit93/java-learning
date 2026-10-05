@@ -1,8 +1,9 @@
 AdvisorController:
   observeAdvisor():
-    summary: Observe Advisor composition and runtime matching
-    description: Demonstrates how an Advisor combines a Pointcut with Advice and compares
-      static method matching with runtime argument matching.
+    summary: Observe PointcutAdvisor composition and runtime matching
+    description: Demonstrates how DefaultPointcutAdvisor, a PointcutAdvisor, combines
+      a Pointcut with Advice and compares static method matching with runtime argument
+      matching.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -28,8 +29,9 @@ AdvisorController:
 RuntimeBoundaryController:
   inspectRuntimeBoundary():
     summary: Inspect the runtime boundary of Spring AOP
-    description: Shows the difference between AspectJ-style aspect declarations and
-      the proxy-based Spring AOP runtime used by this module.
+    description: Exposes positive runtime evidence that the current invocation crosses
+      a Spring AOP proxy; whether AspectJ weaving is configured is established separately
+      from the module build/runtime configuration.
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video

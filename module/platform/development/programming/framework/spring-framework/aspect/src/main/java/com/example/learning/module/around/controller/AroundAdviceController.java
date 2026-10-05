@@ -23,7 +23,7 @@ public class AroundAdviceController {
     }
 
     /**
-     * README: readme/vi/menu/6.Around/Around.md#around-timing-demo
+     * README: readme/vi/menu/7.Around/Around.md#around-timing-demo
      * Purpose: Quan sát code trước/sau proceed() và đo thời gian target execution.
      */
     @GetMapping("/timing")
@@ -34,7 +34,7 @@ public class AroundAdviceController {
     }
 
     /**
-     * README: readme/vi/menu/6.Around/Around.md#around-transform-demo
+     * README: readme/vi/menu/7.Around/Around.md#around-transform-demo
      * Purpose: Chứng minh @Around có thể thay đổi return value sau khi target đã chạy.
      */
     @GetMapping("/transform")
@@ -45,7 +45,7 @@ public class AroundAdviceController {
     }
 
     /**
-     * README: readme/vi/menu/6.Around/Around.md#around-skip-demo
+     * README: readme/vi/menu/7.Around/Around.md#around-skip-demo
      * Purpose: Chứng minh không gọi proceed() thì target method không được thực thi.
      */
     @GetMapping("/skip")
@@ -56,7 +56,7 @@ public class AroundAdviceController {
     }
 
     /**
-     * README: readme/vi/menu/6.Around/Around.md#around-arguments-demo
+     * README: readme/vi/menu/7.Around/Around.md#around-arguments-demo
      * Purpose: Chứng minh @Around có thể đọc và thay đổi arguments trước khi proceed(Object[]).
      */
     @GetMapping("/arguments")
@@ -67,7 +67,7 @@ public class AroundAdviceController {
     }
 
     /**
-     * README: readme/vi/menu/6.Around/Around.md#around-exception-demo
+     * README: readme/vi/menu/7.Around/Around.md#around-exception-demo
      * Purpose: Quan sát @Around bắt được exception nhưng rethrow để giữ nguyên target contract.
      */
     @GetMapping("/exception")

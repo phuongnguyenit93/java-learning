@@ -15,7 +15,39 @@ This section maps AOP terminology to a real method call instead of treating each
 <details>
 <summary>Click for details</summary>
 
-In this module's experiment:
+Use one invocation as the map:
+
+```text
+caller
+  ↓
+AOP proxy
+  ↓
+advisor / interceptor chain
+  ↓
+target object
+  ↓
+method execution
+```
+
+The main terms describe different parts of that path.
+
+**Aspect** groups a cross-cutting concern. An aspect can contain pointcuts, advice, and state.
+
+**Advice** is the behavior that runs at a selected join point. Spring AOP supports before, after-returning, after-throwing, after-finally, and around advice.
+
+**Join point** means a point in program execution. Spring AOP deliberately narrows that concept: a join point is always a **method execution** that can be reached through its proxy-based interception model.
+
+**Pointcut** is the predicate that selects join points. It answers where advice should apply; it does not itself perform the behavior.
+
+**Target object** is the application object whose method eventually executes.
+
+**AOP proxy** is the object the caller usually sees when Spring applies AOP. It receives the call, runs the applicable interceptor/advice chain, and then delegates toward the target.
+
+**Advisor** is a lower-level Spring AOP concept that combines advice with the rule describing where it applies. Annotation-style aspects are translated into advisor/interceptor infrastructure behind the scenes; the dedicated Advisor chapter goes deeper later.
+
+**Weaving** is the general AOP term for linking aspects with application types or objects to produce advised behavior. Spring AOP performs that link at runtime through proxies. Full AspectJ can weave at compile time or load time and supports a broader join-point model.
+
+Mapped to this module:
 
 ```text
 TerminologyAspect
@@ -28,7 +60,7 @@ execution(...TerminologyService.execute(..))
 → Pointcut expression
 
 TerminologyService.execute()
-→ selected Join Point (method execution)
+→ selected method-execution Join Point
 
 TerminologyService instance
 → Target Object
@@ -37,9 +69,20 @@ object injected into the Controller
 → AOP Proxy
 ```
 
-In **Spring AOP**, the join point model is **method execution**. A pointcut selects a subset of those method executions, while the proxy boundary determines whether the invocation actually enters the AOP chain.
+The key relationship is:
 
-`weaving` is the general AOP term for linking an Aspect to a target/advised object. Spring AOP does this at runtime with proxies; full AspectJ also supports compile-time or load-time weaving and a broader join point model.
+```text
+proxy boundary
++ pointcut match
+→ advice can participate
+```
+
+A pointcut match without a call crossing the proxy is not enough.
+
+### References
+
+- Spring Framework Reference — AOP Concepts
+- Spring Framework Reference — Spring AOP Capabilities and Goals
 
 </details>
 
@@ -76,13 +119,7 @@ Advice:
 TerminologyAspect#explainTerms(...)
 ```
 
-The response `facts` shows:
-
-- whether the injected object is an AOP proxy;
-- the runtime class of the injected object;
-- the real target class.
-
-The response `events` also records:
+The response `facts` shows whether the injected object is an AOP proxy, its runtime class, and the actual target class. The `events` sequence records the same model from the running application:
 
 ```text
 aspect=TerminologyAspect
@@ -92,6 +129,8 @@ proxy-class=...
 target-class=TerminologyService
 target:TerminologyService.execute
 ```
+
+Read the output as evidence of roles, not as a promise about a generated proxy class name. Runtime class names are implementation details; the conceptual identities are proxy, target, pointcut, join point, and advice.
 
 </details>
 
@@ -104,58 +143,52 @@ target:TerminologyService.execute
 <details>
 <summary>Click for details</summary>
 
-The module uses annotations such as:
+Spring can interpret AspectJ annotations such as:
 
 ```text
 @Aspect
 @Before
 @Around
+@Pointcut
 ```
 
-These annotations belong to the **@AspectJ declaration style**, but the runtime used by this module is still **proxy-based Spring AOP**.
+This is the **@AspectJ declaration style**. The annotation vocabulary comes from AspectJ, but Spring can use it while the runtime remains pure proxy-based Spring AOP.
 
 Mental model:
 
 ```text
-AspectJ annotation syntax
+@AspectJ metadata
         ↓
-Spring reads metadata + pointcut expression
+Spring parses the aspect + pointcut declarations
         ↓
-Spring creates an AOP proxy
+Spring AOP builds advisors/interceptors
         ↓
-method invocation passes through the proxy
+Spring creates an AOP proxy for eligible objects
+        ↓
+method invocation crosses the proxy
 ```
 
-The module does not configure the AspectJ compiler or a load-time weaving agent.
+No AspectJ compiler or load-time weaver is implied by `@Aspect`.
 
-So keep these three concepts separate:
-
-```text
-weaving
-→ general AOP concept
-
-Spring AOP runtime weaving
-→ proxy-based
-
-AspectJ compile-time / load-time weaving
-→ bytecode weaving + broader join point model
-```
-
-Another important distinction:
+Also separate declaration from bean registration:
 
 ```text
 @Aspect
-→ declares that a class has Aspect semantics
+→ marks the class as an aspect
 
-@Component or @Bean
-→ puts the Aspect instance into the Spring ApplicationContext
+@Component / @Bean / XML bean definition
+→ makes an aspect instance available in the ApplicationContext
 ```
 
-`@Aspect` itself is not a component-scanning annotation. The Aspects in this module use both `@Aspect` and `@Component` because Spring needs the Aspect to exist as a bean before the auto-proxy infrastructure can use it.
+`@Aspect` is not itself a component-scanning stereotype. With @AspectJ auto-proxying enabled, Spring detects aspect **beans** and uses them to configure AOP proxies.
 
-Section `15.RuntimeBoundary` revisits this distinction at the infrastructure level.
+If the requirement needs constructor calls, field access, or other join points beyond proxy method execution, that is where full AspectJ weaving becomes a different runtime choice rather than a different spelling of the same Spring AOP mechanism.
 
----
+### References
+
+- Spring Framework Reference — @AspectJ support
+- Spring Framework Reference — Declaring an Aspect
+- Spring Framework Reference — Using AspectJ with Spring Applications
 
 </details>
 
@@ -168,17 +201,17 @@ Section `15.RuntimeBoundary` revisits this distinction at the infrastructure lev
 <details>
 <summary>Click for details</summary>
 
-One way to read the call chain is:
+Read a Spring AOP call from the outside inward:
 
 ```text
-Controller
-→ AOP Proxy
-→ Pointcut selects a Join Point
-→ Advice executes
-→ Target Object
+caller
+→ proxy
+→ applicable advisor/interceptor chain
+→ advice around a selected method-execution join point
+→ target object
 ```
 
-An Aspect groups cross-cutting behavior; Advice is the concrete behavior that runs at a join point selected by a pointcut.
+These terms are related but not interchangeable. Keeping their roles separate prevents later confusion about pointcut matching, proxy limitations, and the difference between Spring AOP and AspectJ weaving.
 
 </details>
 

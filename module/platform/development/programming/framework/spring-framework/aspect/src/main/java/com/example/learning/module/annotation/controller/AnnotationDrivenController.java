@@ -23,7 +23,7 @@ public class AnnotationDrivenController {
     }
 
     /**
-     * README: readme/vi/menu/7.Annotation/Annotation.md#annotation-demo
+     * README: readme/vi/menu/5.Annotation/Annotation.md#annotation-demo
      * Purpose: Dùng custom annotation như declarative contract và đọc metadata của annotation trong Aspect.
      */
     @GetMapping("/track")

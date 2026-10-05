@@ -41,4 +41,131 @@
 # Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: aop-purpose-and-boundary
+    title: Vì sao Spring AOP tồn tại và ranh giới của nó
+    purpose: "Hiểu vấn đề cross-cutting mà Spring AOP giải quyết, vì sao interception qua proxy bổ sung cho thiết kế hướng đối tượng và Spring AOP chủ động dừng ở đâu so với AspectJ weaving đầy đủ."
+    objectives:
+      - "Phân biệt business concern với concern cắt ngang nhiều type hoặc operation, đồng thời giải thích vì sao rải các concern này vào business code gây lặp và tăng coupling."
+      - "Giải thích Spring AOP là cơ chế method interception ở runtime dựa trên proxy: auto-proxy trong container thường bọc Spring-managed bean, còn low-level API như ProxyFactory có thể tạo AOP proxy bằng code mà không biến Spring AOP thành hệ thống weaving bytecode tổng quát."
+      - "Nhận biết @AspectJ là phong cách khai báo được Spring AOP diễn giải và bản thân việc dùng annotation này không có nghĩa ứng dụng đang chạy AspectJ compiler hoặc load-time weaver."
+      - "Nhận diện các use case như auditing, đo thời gian, tracing, policy check và declarative infrastructure mà không kéo semantics của transaction, cache, async hay security vào module này."
+    relatedKnowledge:
+      - CrossCutting
+      - Terminology
+      - RuntimeBoundary
+    relatedModules:
+      - routeId: SPRING_CORE_CONTAINER
+        label: Spring Core Container
+        note: "Cung cấp vòng đời Spring bean và ApplicationContext mà cơ chế auto-proxy dựa vào."
+
+  - id: spring-aop-core-model
+    title: Mô hình cốt lõi của Spring AOP
+    purpose: "Xây vocabulary và execution model chính xác cho aspect, advice, pointcut, join point, target, proxy, advisor và weaving trước khi đi vào cú pháp khai báo."
+    objectives:
+      - "Giải thích pointcut chọn các join point dạng method execution và advice bổ sung hành vi quanh những invocation được chọn như thế nào."
+      - "Phân biệt proxy object mà caller nhìn thấy với target object cuối cùng thực thi application logic."
+      - "Hiểu aspect gom nhóm cross-cutting behavior, còn advisor biểu diễn ở mức thấp hơn mối liên hệ giữa advice và điều kiện áp dụng."
+      - "Dùng mô hình caller -> proxy -> interceptor/advice chain -> target làm nền để suy luận mọi hành vi Spring AOP về sau."
+    relatedKnowledge:
+      - Terminology
+      - Advisor
+
+  - id: proxy-runtime-and-boundaries
+    title: Proxy runtime và ranh giới invocation
+    purpose: "Hiểu Spring tạo và sử dụng AOP proxy như thế nào, vì sao loại proxy và đường đi của lời gọi làm thay đổi hành vi quan sát được, cùng các giới hạn interception từ Java."
+    objectives:
+      - "Phân biệt JDK proxy dựa trên interface với CGLIB proxy dựa trên subclass và hiểu mỗi loại proxy phơi bày type nào cho caller."
+      - "Hiểu advice chỉ có thể tham gia khi lời gọi đi qua proxy phù hợp, bao gồm hệ quả của self-invocation."
+      - "Nhận diện giới hạn liên quan final class/method, private method, visibility và giả định concrete type; hiểu rằng container auto-proxying không tự advise object tùy ý được tạo ngoài container trừ khi object đó được explicit wrap bằng AOP proxy."
+      - "Tách semantics proxy của Spring Framework khỏi default/configuration của Spring Boot để không nhầm infrastructure config với contract cốt lõi của AOP."
+    relatedKnowledge:
+      - Proxy
+      - SelfInvocation
+      - ProxyFactory
+      - Infrastructure
+
+  - id: aspect-declaration-and-pointcut-design
+    title: Khai báo Aspect và thiết kế Pointcut
+    purpose: "Biết khai báo aspect do Spring quản lý và thiết kế pointcut biểu diễn boundary kiến trúc ổn định thay vì bám vào chi tiết implementation dễ vỡ."
+    objectives:
+      - "Hiểu phong cách @AspectJ, cách bật auto-proxy support, named pointcut và mối liên hệ giữa metadata của aspect với advisor do Spring tạo; nhận biết schema-based AOP là một phong cách khai báo khác dùng cùng proxy infrastructure chứ không phải runtime model riêng."
+      - "Dùng đúng semantics proxy của các AspectJ pointcut designator mà Spring hỗ trợ như execution, within, this, target, args, các dạng annotation và designator bean riêng của Spring."
+      - "Phân biệt matching theo signature với matching theo runtime context và chỉ bind argument, annotation, proxy hoặc target khi concern thực sự cần."
+      - "Ghép các pointcut hẹp, tái sử dụng được và nhận biết những designator thuộc join-point model rộng hơn của AspectJ nhưng Spring AOP không hỗ trợ."
+    relatedKnowledge:
+      - Pointcut
+      - Annotation
+      - Terminology
+
+  - id: advice-semantics-and-control-flow
+    title: Ngữ nghĩa Advice và điều khiển invocation
+    purpose: "Hiểu thời điểm từng loại advice chạy, context nào có thể quan sát hoặc bind và cách around advice điều khiển luồng qua interceptor chain."
+    objectives:
+      - "Phân biệt before, after-returning, after-throwing, after-finally và around theo lifecycle/control-flow semantics thay vì chỉ nhớ tên annotation."
+      - "Hiểu cách bind argument, return value, exception, annotation và join-point context vào advice method."
+      - "Dùng ProceedingJoinPoint và proceed() đúng cách, bao gồm hệ quả khi bỏ qua, gọi lặp hoặc thay đổi argument của invocation."
+      - "Ưu tiên loại advice ít quyền lực nhất nhưng vẫn đủ yêu cầu và bảo toàn semantics của exception/return value trừ khi việc biến đổi là chủ đích của thiết kế."
+    relatedKnowledge:
+      - Advice
+      - Around
+
+  - id: aspect-composition-lifecycle-and-introductions
+    title: Composition, lifecycle và Introduction của Aspect
+    purpose: "Hiểu nhiều AOP behavior kết hợp ra sao, precedence và vòng đời instance của aspect ảnh hưởng execution thế nào, và Introduction có thể mở rộng type của advised object như thế nào."
+    objectives:
+      - "Suy luận nhiều advisor cùng match như một interceptor chain lồng nhau và thiết lập ordering có chủ đích mà không biến thứ tự advice thành business protocol ẩn."
+      - "Hiểu mặc định mỗi aspect là singleton và các model perthis, pertarget, pertypewithin mà baseline của repository hỗ trợ, đặc biệt khi aspect có state."
+      - "Hiểu Introduction là cách thêm interface cùng implementation cho advised object, bao gồm vai trò của @DeclareParents."
+      - "Nhận biết percflow, percflowbelow và các capability chỉ có trong weaving vẫn nằm ngoài proxy-based Spring AOP."
+    relatedKnowledge:
+      - Ordering
+      - Introduction
+
+  - id: low-level-aop-api-and-auto-proxying
+    title: Low-level AOP API và hạ tầng Auto-Proxy
+    purpose: "Nối annotation-style AOP với các abstraction cấp thấp của Spring AOP dùng để tạo proxy, match method, xây advisor chain và tích hợp interception vào IoC container."
+    objectives:
+      - "Hiểu Pointcut gồm class filtering và method matching, Advice/MethodInterceptor biểu diễn behavior, còn Advisor kết hợp behavior với điều kiện áp dụng."
+      - "Dùng ProxyFactory như cầu nối tư duy để tạo/quan sát proxy bằng code mà không biến programmatic configuration thành cách mặc định cho application code."
+      - "Hiểu auto-proxy creator và BeanPostProcessor infrastructure phát hiện bean phù hợp rồi áp advisor trong vòng đời ApplicationContext như thế nào."
+      - "Hiểu TargetSource là strategy cung cấp target cho mỗi invocation, từ singleton target thông thường tới các strategy nâng cao như dynamic, pooled hoặc hot-swappable, nhưng không coi các strategy đó là model mặc định của application."
+      - "Nhận diện Advised và các infrastructure surface liên quan cho mục đích extension/debugging nhưng giữ business code độc lập với low-level AOP internals."
+    relatedKnowledge:
+      - ProxyFactory
+      - Advisor
+      - Infrastructure
+    relatedModules:
+      - routeId: SPRING_CORE_CONTAINER
+        label: Spring Core Container
+        note: "Sở hữu BeanPostProcessor và vòng đời container mà Spring AOP auto-proxy infrastructure sử dụng."
+
+  - id: failure-model-and-debugging
+    title: Failure model và cách debug Spring AOP
+    purpose: "Xây quy trình chẩn đoán lặp lại được khi advice không chạy, chạy ngoài dự kiến hoặc tạo hành vi khác với cross-cutting contract mong muốn."
+    objectives:
+      - "Debug theo thứ tự: xác nhận đúng proxy-creation path mong đợi (container auto-proxying hoặc proxy được tạo explicit) và proxy đã tồn tại, kiểm tra lời gọi có đi qua proxy đó, kiểm tra pointcut/advisor có match rồi mới xét chain ordering và behavior của advice."
+      - "Phân biệt self-invocation, reference trực tiếp tới target, việc dùng trực tiếp object tạo bằng new mà không explicit proxy, giới hạn final/private method, giả định sai về proxy type và pointcut quá rộng thành các nhóm lỗi riêng."
+      - "Dùng bằng chứng introspection về proxy cẩn thận, không coupling production business logic với AopContext hoặc infrastructure chỉ để né vấn đề thiết kế."
+      - "Phân biệt lỗi ở proxy/AOP với semantics thuộc các feature dùng interception như transaction, cache, async hay method security."
+    relatedKnowledge:
+      - SelfInvocation
+      - Patterns
+      - Infrastructure
+      - RuntimeBoundary
+
+  - id: design-tradeoffs-integration-and-synthesis
+    title: Đánh đổi thiết kế, tích hợp và tổng hợp
+    purpose: "Biết khi nào Spring AOP là công cụ thiết kế phù hợp, hiểu các Spring feature khác tiêu thụ cùng interception model ra sao và giữ mental model xuyên suốt mà không kéo domain semantics của chúng vào AOP."
+    objectives:
+      - "Chọn AOP cho policy cắt ngang ổn định với interception boundary rõ; tránh dùng AOP cho business workflow thông thường, hidden control flow hoặc behavior diễn đạt rõ hơn bằng explicit composition."
+      - "Hiểu transaction management, caching, async execution và method-security infrastructure có thể tái sử dụng proxy/advisor concepts trong khi domain rule vẫn thuộc module chuyên trách."
+      - "Nhận biết khi yêu cầu vượt khỏi method-execution proxy interception và full AspectJ weaving hoặc cơ chế khác mới là boundary phù hợp."
+      - "Tổng hợp toàn bộ đường đi từ concern và pointcut declaration qua auto-proxy creation, advisor/interceptor chain, target invocation đến kết quả quan sát được."
+    relatedKnowledge:
+      - Patterns
+      - RuntimeBoundary
+    relatedModules:
+      - routeId: SPRING_CONCURRENCY
+        label: Spring Concurrency
+        note: "Sử dụng proxy/interception concepts cho annotation-driven async execution nhưng tự sở hữu semantics của task execution."

@@ -1,6 +1,6 @@
 <a id="back-to-top"></a>
 
-# AOP và Cross-Cutting Concern
+# AOP và các mối quan tâm cắt ngang (Cross-Cutting Concern)
 
 ## Menu
 - [1. Business concern và cross-cutting concern](#cross-cutting-concern)
@@ -12,42 +12,63 @@ Phần này trả lời câu hỏi cơ bản nhất: **vì sao AOP tồn tại?*
 ## <a id="cross-cutting-concern">1. Business concern và cross-cutting concern</a>
 
 <details>
-<summary>Click for details</summary>
+<summary>Xem chi tiết</summary>
 
-Business concern là logic cốt lõi của use case, ví dụ tạo đơn hàng hoặc hủy đơn hàng.
+Business concern là hành vi tạo ra giá trị chính của use case, ví dụ tạo đơn hàng, giữ tồn kho hoặc tính giá. Cross-cutting concern có vai trò khác: đó là một chính sách hoặc hành vi kỹ thuật cần áp dụng cho nhiều thao tác vốn không cùng trách nhiệm nghiệp vụ.
 
-Cross-cutting concern là behavior xuất hiện ở nhiều nơi nhưng không phải business logic chính, ví dụ:
+Các ví dụ quen thuộc:
 
-- logging;
-- đo thời gian;
+- logging và tracing;
+- đo thời gian thực thi, metrics;
 - auditing;
-- tracing;
-- authorization check.
+- kiểm tra authorization hoặc chính sách.
 
-Nếu mỗi business method tự viết logging, code dễ lặp:
+Nếu không có một cơ chế AOP, từng phương thức nghiệp vụ vẫn có thể tự thực hiện các việc đó:
 
 ```text
 createOrder()
-→ log before
+→ log trước
 → business logic
-→ log after
+→ log sau
 
 cancelOrder()
-→ log before
+→ log trước
 → business logic
-→ log after
+→ log sau
 ```
 
-AOP cho phép tách phần lặp đó thành một Aspect:
+Cách này có thể chạy đúng, nhưng cùng một chính sách bị rải qua nhiều class. Khi chính sách thay đổi, ta phải sửa đồng thời ở những nơi mà trách nhiệm chính vốn là nghiệp vụ khác.
+
+AOP bổ sung một trục modularization khác:
 
 ```text
-LoggingAspect
-        ↓
-createOrder()
-cancelOrder()
+business classes
+→ giữ hành vi của use case
+
+aspect
+→ sở hữu một chính sách cắt ngang
+
+pointcut
+→ mô tả chính sách áp dụng ở đâu
 ```
 
-Điểm quan trọng: AOP không làm business logic biến mất. Nó chỉ đặt một cross-cutting behavior ở boundary phù hợp.
+AOP bổ sung cho thiết kế hướng đối tượng chứ không thay thế class, service hay quan hệ cộng tác tường minh giữa các object. Target method vẫn sở hữu hành vi nghiệp vụ; aspect sở hữu hành vi có thể mô tả độc lập tại một interception boundary ổn định.
+
+Một câu hỏi thiết kế hữu ích là:
+
+```text
+Concern này có thể diễn đạt thành một chính sách tái sử dụng,
+áp dụng cho một tập method execution có boundary rõ ràng không?
+```
+
+Nếu có, AOP có thể phù hợp. Nếu hành vi thực chất là một quy trình nghiệp vụ nhiều bước và thứ tự các bước là một phần của miền nghiệp vụ, biểu diễn bằng service/composition tường minh thường dễ hiểu hơn việc giấu quy trình trong advice.
+
+Spring AOP hiện thực ý tưởng này bằng runtime proxy và method interception. Boundary runtime đó sẽ rất quan trọng ở các chapter sau: pointcut match đúng vẫn chưa đồng nghĩa mọi Java call đều có thể bị intercept.
+
+### Tài liệu tham khảo
+
+- Spring Framework Reference — Aspect Oriented Programming with Spring
+- Spring Framework Reference — AOP Concepts
 
 </details>
 
@@ -58,7 +79,9 @@ cancelOrder()
 ## <a id="cross-cutting-demo">2. Demo trong module</a>
 
 <details>
-<summary>Click for details</summary>
+<summary>Xem chi tiết</summary>
+
+Experiment của module cố ý tách rõ hành vi nghiệp vụ và hành vi cắt ngang.
 
 Controller:
 
@@ -79,13 +102,13 @@ CrossCuttingService#createOrder()
 CrossCuttingService#cancelOrder()
 ```
 
-Cross-cutting behavior:
+Hành vi cắt ngang:
 
 ```text
 CrossCuttingLoggingAspect#logAround(...)
 ```
 
-Response `events` sẽ có dạng:
+Response `events` dự kiến cho thấy chính sách bao quanh từng target invocation:
 
 ```text
 logging-before:createOrder
@@ -96,7 +119,18 @@ target:cancel-order
 logging-after:cancelOrder
 ```
 
-Hãy mở `CrossCuttingService` và kiểm tra: hai business method không tự viết `logging-before` hay `logging-after`.
+Mở `CrossCuttingService` và kiểm tra hai phương thức nghiệp vụ không tự phát ra `logging-before` hay `logging-after`. Sau đó xem aspect: chính nó sở hữu hành vi dùng chung và áp dụng hành vi đó tại các method-execution boundary được chọn.
+
+Điều cần rút ra không nằm ở ví dụ logging cụ thể, mà ở đường đi:
+
+```text
+bên gọi
+→ AOP boundary
+→ chính sách dùng chung
+→ phương thức nghiệp vụ
+```
+
+Các chapter sau sẽ làm rõ từng phần: proxy tạo boundary, pointcut chọn method execution, còn advice hiện thực chính sách.
 
 </details>
 
@@ -107,19 +141,25 @@ Hãy mở `CrossCuttingService` và kiểm tra: hai business method không tự 
 ## <a id="cross-cutting-conclusion">3. Kết luận</a>
 
 <details>
-<summary>Click for details</summary>
+<summary>Xem chi tiết</summary>
 
-Mental model:
+Giữ mental model đầu tiên này:
 
 ```text
-Business method
-→ chỉ tập trung vào behavior chính
+Phương thức nghiệp vụ
+→ sở hữu hành vi chính của use case
 
 Aspect
-→ chứa behavior dùng chung đi ngang qua nhiều method
+→ gom một cross-cutting concern
+
+Pointcut
+→ chỉ ra concern áp dụng ở đâu
+
+Advice
+→ thực hiện concern tại các invocation đã chọn
 ```
 
-AOP phù hợp khi concern thật sự cross-cutting và boundary có thể mô tả rõ bằng pointcut hoặc annotation.
+Spring AOP phù hợp nhất khi chính sách cắt ngang ổn định, có thể tái sử dụng và vẫn hiểu được mà không phải đọc từng target method. Phần còn lại của module giải thích cách Spring biến thiết kế đó thành một runtime chain dựa trên proxy.
 
 </details>
 

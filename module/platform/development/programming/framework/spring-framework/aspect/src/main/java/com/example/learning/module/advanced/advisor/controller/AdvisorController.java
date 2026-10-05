@@ -19,8 +19,8 @@ public class AdvisorController {
     }
 
     /**
-     * README: readme/vi/menu/12.Advisor/Advisor.md#advisor-demo
-     * Purpose: Chứng minh Advisor ghép Pointcut + Advice, đồng thời so sánh static và runtime MethodMatcher.
+     * README: readme/vi/menu/11.Advisor/Advisor.md#advisor-demo
+     * Purpose: Chứng minh DefaultPointcutAdvisor (một PointcutAdvisor) ghép Pointcut + Advice, đồng thời so sánh static và runtime MethodMatcher.
      */
     @GetMapping("/observe")
     public AopExperimentResponse observeAdvisor() {

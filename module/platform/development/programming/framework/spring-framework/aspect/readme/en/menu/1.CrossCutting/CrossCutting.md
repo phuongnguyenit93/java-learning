@@ -14,17 +14,16 @@ This section answers the most basic question: **why does AOP exist?**
 <details>
 <summary>Click for details</summary>
 
-A business concern is the core logic of a use case, for example creating an order or canceling an order.
+A business concern is the behavior that makes a use case valuable: creating an order, reserving inventory, or calculating a price. A cross-cutting concern serves a different role. It is a policy or technical behavior that must be applied across many otherwise unrelated operations.
 
-A cross-cutting concern is behavior that appears in many places but is not the main business logic, for example:
+Typical examples include:
 
-- logging;
-- timing;
+- logging and tracing;
+- execution timing and metrics;
 - auditing;
-- tracing;
-- authorization checks.
+- authorization or policy checks.
 
-If every business method writes its own logging, the code is easily duplicated:
+Without an AOP mechanism, each business method can perform those tasks explicitly:
 
 ```text
 createOrder()
@@ -38,16 +37,38 @@ cancelOrder()
 → log after
 ```
 
-AOP lets us extract that repeated behavior into an Aspect:
+That code can work, but it spreads one policy through many classes. Changes to the policy then require coordinated edits in places whose main responsibility is something else.
+
+AOP adds another modularization axis:
 
 ```text
-LoggingAspect
-        ↓
-createOrder()
-cancelOrder()
+business classes
+→ keep the use-case behavior
+
+aspect
+→ owns one cross-cutting policy
+
+pointcut
+→ describes where that policy applies
 ```
 
-The important point is that AOP does not make business logic disappear. It only places cross-cutting behavior at an appropriate boundary.
+This complements object-oriented design. It does not replace classes, services, or explicit collaboration between objects. The target method still owns the business behavior; the aspect owns behavior that can be described independently at a stable interception boundary.
+
+A useful design test is:
+
+```text
+Can the concern be described as a reusable policy
+that applies to a predictable set of method executions?
+```
+
+If yes, AOP may be a good fit. If the behavior is really a multi-step business workflow whose order is part of the domain, explicit service composition is usually easier to understand than hiding the workflow in advice.
+
+Spring AOP implements this idea with runtime proxies and method interception. That runtime boundary becomes important in the next chapters: a matching pointcut alone does not make every Java call interceptable.
+
+### References
+
+- Spring Framework Reference — Aspect Oriented Programming with Spring
+- Spring Framework Reference — AOP Concepts
 
 </details>
 
@@ -59,6 +80,8 @@ The important point is that AOP does not make business logic disappear. It only 
 
 <details>
 <summary>Click for details</summary>
+
+The module keeps the business behavior and the cross-cutting behavior visibly separate.
 
 Controller:
 
@@ -85,7 +108,7 @@ Cross-cutting behavior:
 CrossCuttingLoggingAspect#logAround(...)
 ```
 
-The response `events` will look like:
+The response `events` is expected to show the policy surrounding each target invocation:
 
 ```text
 logging-before:createOrder
@@ -96,7 +119,18 @@ target:cancel-order
 logging-after:cancelOrder
 ```
 
-Open `CrossCuttingService` and verify that the two business methods do not write `logging-before` or `logging-after` themselves.
+Open `CrossCuttingService` and verify that the two business methods do not emit `logging-before` or `logging-after` themselves. Then inspect the aspect: it owns that repeated behavior and applies it at selected method-execution boundaries.
+
+The observation matters more than the logging example itself:
+
+```text
+caller
+→ AOP boundary
+→ shared policy
+→ business method
+```
+
+Later chapters refine every part of this path: the proxy creates the boundary, the pointcut selects method executions, and advice implements the policy.
 
 </details>
 
@@ -109,17 +143,23 @@ Open `CrossCuttingService` and verify that the two business methods do not write
 <details>
 <summary>Click for details</summary>
 
-Mental model:
+Keep this first mental model:
 
 ```text
 Business method
-→ focuses only on the main behavior
+→ owns the main use-case behavior
 
 Aspect
-→ contains shared behavior that cuts across multiple methods
+→ groups a cross-cutting concern
+
+Pointcut
+→ states where the concern applies
+
+Advice
+→ performs the concern at those selected invocations
 ```
 
-AOP is a good fit when the concern is genuinely cross-cutting and the boundary can be described clearly with a pointcut or annotation.
+Spring AOP is most useful when the cross-cutting policy is stable, reusable, and understandable without reading every target method. The rest of the module explains how Spring turns that design into a runtime chain built around proxies.
 
 </details>
 

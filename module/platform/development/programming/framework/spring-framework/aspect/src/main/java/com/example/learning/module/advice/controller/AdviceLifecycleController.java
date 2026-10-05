@@ -23,7 +23,7 @@ public class AdviceLifecycleController {
     }
 
     /**
-     * README: readme/vi/menu/5.Advice/Advice.md#advice-success-demo
+     * README: readme/vi/menu/6.Advice/Advice.md#advice-success-demo
      * Purpose: Quan sát @Before, target, @AfterReturning và @After khi target return bình thường.
      */
     @GetMapping("/success")
@@ -39,7 +39,7 @@ public class AdviceLifecycleController {
     }
 
     /**
-     * README: readme/vi/menu/5.Advice/Advice.md#advice-failure-demo
+     * README: readme/vi/menu/6.Advice/Advice.md#advice-failure-demo
      * Purpose: Quan sát @AfterThrowing và @After khi target thoát ra bằng exception.
      */
     @GetMapping("/failure")
