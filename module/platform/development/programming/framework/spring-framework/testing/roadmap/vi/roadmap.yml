@@ -41,4 +41,108 @@
 # Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: spring-testing-purpose-and-scope
+    title: Mục đích và phạm vi của Spring Testing
+    purpose: Xây dựng mental model về phần mà Spring Framework bổ sung cho một test framework thông thường, đồng thời biết khi nào test nên giữ nguyên dạng không load context và khi nào cần hạ tầng integration hoặc web do Spring quản lý.
+    relatedKnowledge:
+      - SpringTesting
+    objectives:
+      - Giải thích vì sao dependency injection và việc khởi tạo object trực tiếp giúp nhiều Spring component có thể unit test mà không cần load ApplicationContext.
+      - Phân biệt unit test thuần, integration test dựa trên TestContext, web test dùng mock infrastructure và live-server test theo đúng hành vi mà từng loại thực sự kiểm chứng.
+      - Giữ kiến thức nền JUnit hoặc TestNG ngoài module này, đồng thời giữ Spring Boot test slice và @SpringBootTest ở owner Spring Boot Testing.
+
+  - id: testcontext-runtime-model
+    title: Mô hình runtime của TestContext
+    purpose: Hiểu framework kết nối test engine bên ngoài với việc load Spring context, chuẩn bị fixture, quản lý transaction và gọi các lifecycle callback.
+    relatedKnowledge:
+      - TestContextFramework
+    objectives:
+      - Giải thích vai trò của TestContext, TestContextManager, TestExecutionListener và SmartContextLoader.
+      - Hiểu cách SpringExtension và các integration khác ủy quyền vào lifecycle của TestContext thay vì thay thế test engine bên dưới.
+      - Nhận diện bootstrapping và listener configuration là extension point của testing infrastructure, không phải business logic của test.
+
+  - id: application-context-fixtures
+    title: ApplicationContext và test fixture
+    purpose: Học cách integration test khai báo, load và sử dụng Spring application context sao cho fixture vẫn dễ hiểu, ổn định và tái sử dụng được.
+    relatedKnowledge:
+      - ContextConfiguration
+      - TestFixtures
+    objectives:
+      - Cấu hình việc load ApplicationContext hoặc WebApplicationContext bằng @ContextConfiguration và mô hình context loading của TestContext.
+      - Sử dụng dependency injection trong test fixture và hiểu phần nào do test framework đảm nhiệm, phần nào do Spring tham gia khi tạo test instance.
+      - Lý giải configuration inheritance, context hierarchy, web test context và request hoặc session scoped fixture mà không biến chúng thành Spring Boot-specific pattern.
+
+  - id: test-environment-and-dynamic-inputs
+    title: Môi trường test và cấu hình động
+    purpose: Điều khiển profile cùng các giá trị cấu hình dành riêng cho test mà không nhầm Spring Framework test configuration với cơ chế externalized configuration của Spring Boot.
+    relatedKnowledge:
+      - TestEnvironment
+    objectives:
+      - Dùng @ActiveProfiles để chọn bean-definition profile cho từng test scenario.
+      - Dùng @TestPropertySource và @DynamicPropertySource với đúng thứ tự ưu tiên và semantics kế thừa.
+      - Hiểu những khai báo profile và property source nào, bao gồm registration từ @DynamicPropertySource, tham gia vào identity của context; đồng thời hiểu vì sao dynamic value kế thừa nhưng thay đổi giữa các subclass có thể cần @DirtiesContext.
+
+  - id: context-caching-isolation-and-parallelism
+    title: Context caching, isolation và chạy song song
+    purpose: Cân bằng isolation với hiệu năng của test suite bằng cách hiểu TestContext nhận diện, tái sử dụng, loại bỏ và truy cập context khi có concurrent test như thế nào.
+    dependsOn:
+      - application-context-fixtures
+      - test-environment-and-dynamic-inputs
+    relatedKnowledge:
+      - ContextCaching
+    objectives:
+      - Giải thích những thành phần cấu hình tham gia vào context cache key và vì sao khai báo thiếu nhất quán làm phát sinh thêm context.
+      - Dùng @DirtiesContext có chủ đích khi state dùng chung của context không còn an toàn để tái sử dụng.
+      - Hiểu context failure threshold của Spring Framework 6.1, giới hạn static cache trong phạm vi JVM process và các ràng buộc quan trọng khi chạy test song song.
+
+  - id: transactional-and-database-test-support
+    title: Hỗ trợ test transaction và database
+    purpose: Sử dụng đúng test-managed transaction và SQL fixture support của Spring, đồng thời giữ transaction semantics tổng quát ở module transaction-management.
+    dependsOn:
+      - application-context-fixtures
+    relatedKnowledge:
+      - TransactionalDatabaseTesting
+    objectives:
+      - Phân biệt test-managed transaction với Spring-managed transaction và application-managed transaction được code dưới test tạo ra.
+      - Hiểu default rollback, phần @Transactional semantics được hỗ trợ trong test, TestTransaction, @BeforeTransaction và @AfterTransaction.
+      - Chuẩn bị và kiểm tra database state bằng @Sql cùng JDBC testing utility, đồng thời nhận diện các pitfall như false positive do ORM state chưa flush và preemptive timeout làm test code chạy trên thread khác.
+
+  - id: mockmvc-servlet-web-testing
+    title: MockMvc và kiểm thử Servlet web
+    purpose: Kiểm thử Spring MVC request-processing stack mà không cần chạy server thật, đồng thời hiểu chính xác hành vi production nào MockMvc mô phỏng được và hành vi nào không.
+    dependsOn:
+      - application-context-fixtures
+    relatedKnowledge:
+      - MockMvcTesting
+    objectives:
+      - Giải thích cách MockMvc đưa request qua DispatcherServlet bằng các Servlet API mock object.
+      - Chọn giữa standalone controller setup và WebApplicationContext setup dựa trên lượng cấu hình MVC thực tế cần được kiểm chứng.
+      - Kiểm tra request mapping, binding, conversion, validation, filter, async processing, exception handling và response contract nhưng vẫn giữ implementation semantics của MVC ở module spring-framework/web.
+      - Nhận diện trường hợp vẫn cần end-to-end server test vì mock servlet infrastructure không tái hiện đầy đủ container và network environment.
+
+  - id: webtestclient-and-http-client-tests
+    title: WebTestClient và kiểm thử HTTP phía client
+    purpose: Học các Spring testing client dùng cho WebFlux, MVC thông qua MockMvc, live server và HTTP collaborator phía client mà không lẫn chúng với test automation của Spring Boot.
+    relatedKnowledge:
+      - WebTestClientAndClientTesting
+    objectives:
+      - Dùng WebTestClient với controller, router function, ApplicationContext, MockMvc-backed target hoặc live server và hiểu từng binding mode thực sự kiểm chứng điều gì.
+      - Phân biệt assertion ở mức HTTP response với server-side assertion chỉ có khi MockMvc là server phía sau.
+      - Hiểu vai trò của MockRestServiceServer đối với code dùng Spring Framework HTTP client, đồng thời biết khi nào mock web server thật hoặc live integration environment cho bằng chứng mạnh hơn.
+
+  - id: lifecycle-extension-and-testing-synthesis
+    title: Lifecycle, extension point và tổng hợp chiến lược test
+    purpose: Kết nối lifecycle callback, event, khả năng mở rộng, ràng buộc thực thi và lựa chọn test scope thành một chiến lược integration testing end-to-end cho Spring Framework.
+    dependsOn:
+      - testcontext-runtime-model
+      - context-caching-isolation-and-parallelism
+      - transactional-and-database-test-support
+      - webtestclient-and-http-client-tests
+    relatedKnowledge:
+      - TestLifecycle
+    objectives:
+      - Hiểu thứ tự TestExecutionListener, test execution event, application-event recording và composed testing annotation như các extension mechanism ở cấp framework.
+      - Nhận diện parallel execution và AOT test support là execution concern phải giữ đúng các giả định lifecycle của TestContext.
+      - Chọn test scope nhỏ nhất đủ chứng minh hành vi cần kiểm tra, chỉ nâng từ unit test lên context integration, mock web hoặc live-server test khi infrastructure đó thực sự là một phần của hành vi cần chứng minh.
+      - Giải thích được toàn bộ Spring testing journey mà không kéo JUnit fundamentals, Spring Boot test slice, transaction internals, MVC internals hoặc WebFlux internals vào ownership của module này.

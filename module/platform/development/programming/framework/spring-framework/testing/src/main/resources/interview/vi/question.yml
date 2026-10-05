@@ -27,4 +27,94 @@
 #         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
 # </interview-schema>
 
-questions: []
+questions:
+  - question: >-
+      Bạn sẽ chọn giữa plain object test, integration test dựa trên TestContext, MockMvc hoặc WebTestClient mock-bound, và live-server test như thế nào?
+    answer: >-
+      Hãy bắt đầu từ hành vi cần có khả năng bị chứng minh là sai. Dùng plain object test khi Spring infrastructure không liên quan. Chuyển sang TestContext khi điều cần chứng minh phụ thuộc bean wiring, profile, lifecycle hoặc hành vi khác của ApplicationContext. Dùng MockMvc hoặc WebTestClient mock-bound khi request mapping, binding, validation, exception handling hay framework web dispatch là phần đang có rủi ro. Chỉ dùng live server khi evidence phải bao gồm real HTTP transport hoặc deployed server boundary. Quy tắc hữu ích không phải “test càng lớn càng tốt”, mà là “dùng phạm vi nhỏ nhất vẫn quan sát được failure mode mình quan tâm”.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Introduction/SpringTesting.md"
+      anchor: "test-scope-ladder"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Hãy giải thích TestContext runtime model từ test engine xuống bước load ApplicationContext. TestContextManager, TestExecutionListener, SmartContextLoader và context cache nằm ở đâu trong flow này?
+    answer: >-
+      Test engine bên ngoài vẫn sở hữu discovery và test lifecycle cơ bản. Phần tích hợp Spring chuyển các lifecycle callback vào TestContextManager, nơi giữ TestContext hiện tại và gọi các TestExecutionListener đã được sắp thứ tự ở những phase xác định. Các listener bổ sung hành vi riêng của Spring như dependency injection, transaction, SQL script, event support hoặc context invalidation. Khi cần ApplicationContext, merged test configuration được dùng để lookup cache; nếu miss thì SmartContextLoader tạo context. Sự phân tách này giải thích vì sao Spring có thể thêm integration-test behavior mà không thay thế JUnit hoặc TestNG.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.TestContextFramework/TestContextFramework.md"
+      anchor: "testcontext-framework-role"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Một Spring test suite lớn reuse context kém và chậm hơn sau khi các subclass bắt đầu dùng dynamic property. Bạn sẽ phân tích cache như thế nào trước khi chỉ tăng maximum size?
+    answer: >-
+      Trước hết hãy kiểm tra context identity chứ không phải dung lượng cache. TestContext cache key được tạo từ merged configuration như configuration class hoặc location, loader, parent, active profile, test property source, customizer và web resource base path. DynamicPropertySource tham gia thông qua registration/customizer identity; supplier trả một giá trị khác không tự động tạo key mới. Vì vậy subclass có thể vô tình reuse context dù dynamic value lẽ ra cần đổi, khi đó có thể cần DirtiesContext hoặc một khác biệt cấu hình rõ ràng. Ngược lại, annotation hay customizer không nhất quán có thể làm cache bị phân mảnh thành nhiều key. Chỉ sau khi phân biệt context thực sự cần khác với fragmentation vô tình thì mới nên cân nhắc tăng cache size.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.ContextCaching/ContextCaching.md"
+      anchor: "context-cache-key"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Vì sao một transactional Spring test vẫn có thể tạo database state đã commit dù test-managed transaction mặc định rollback? Hãy nêu vài failure mode cụ thể.
+    answer: >-
+      Default rollback chỉ kiểm soát công việc thực sự tham gia test-managed transaction. Preemptive timeout có thể chạy test body trên thread khác, ngoài transaction đang bound vào test thread ban đầu. Request gửi tới live server cũng được xử lý trên server thread và không tự động nằm trong transaction của caller. SQL fixture dùng isolated transaction có thể commit độc lập, TestTransaction có thể kết thúc và commit transaction khi được flag, và application code có thể chủ động mở transaction độc lập. ORM test cũng có thể tạo cảm giác an toàn giả nếu không flush các thay đổi đang buffer trước assertion quyết định. Câu hỏi debug vì vậy là: thread và resource manager nào sở hữu từng write, và transaction nào thực sự kết thúc write đó?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.TransactionalDatabaseTesting/TransactionalDatabaseTesting.md"
+      anchor: "transaction-testing-pitfalls"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      So sánh MockMvc standalone setup với WebApplicationContext setup. Khi nào chọn mỗi loại, và điều gì cả hai vẫn không chứng minh được so với live server?
+    answer: >-
+      Standalone setup phù hợp cho controller test có phạm vi tập trung, nơi controller và các MVC collaborator cần thiết được cấu hình rõ ràng. WebApplicationContext setup mạnh hơn khi điều cần chứng minh bao gồm real Spring MVC wiring như component scanning, configured advice, converter, interceptor hoặc MVC infrastructure ở mức context. Cả hai vẫn chạy bằng mock Servlet infrastructure và không có network connection thật. Chúng có thể chứng minh request processing ở mức DispatcherServlet nhưng không chứng minh connector behavior, TLS, socket thật, deployment-container default hay các transport concern khác. Những điều đó cần live-server boundary khi thực sự thuộc behavior đang có rủi ro.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.MockMvcTesting/MockMvcTesting.md"
+      anchor: "mockmvc-limitations-and-live-server"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      WebTestClient có thể bind vào WebFlux target, MockMvc hoặc live server, còn MockRestServiceServer dùng để test outbound HTTP client collaborator. Các lựa chọn này làm thay đổi evidence của test ra sao?
+    answer: >-
+      WebTestClient mock-bound chạy in-process và chứng minh framework request handling mà không cần TCP connection. Khi backing bằng MockMvc, server side vẫn là Servlet MVC chứ không trở thành WebFlux dù assertion API là WebTestClient. bindToServer đi qua real HTTP transport boundary và có thể chứng minh transport-visible behavior, nhưng không còn nhìn được server internals vốn chỉ có ở in-process test infrastructure. MockRestServiceServer giải quyết chiều ngược lại: nó intercept request do Spring HTTP client tạo ra và kiểm chứng client-side request construction cùng response handling mà không dùng network I/O thật. Real mock web server hoặc live environment mạnh hơn khi DNS, socket, TLS, proxy, timeout hay remote service thực sự thuộc điều cần chứng minh.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "9.WebTestClientAndClientTesting/WebTestClientAndClientTesting.md"
+      anchor: "mock-server-vs-live-integration"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Những rủi ro lifecycle và concurrency nào cần review trước khi thêm custom TestExecutionListener, assertion trên application event hoặc parallel execution vào Spring integration-test suite?
+    answer: >-
+      Listener ordering là một phần của contract vì listener chạy sau có thể phụ thuộc state do listener trước chuẩn bị; thay toàn bộ default listener set có thể vô tình loại dependency injection, transaction, SQL support hoặc event support. Test execution event phụ thuộc ApplicationContext đang hoạt động nên một số event quá sớm hoặc quá muộn có thể không xuất hiện nếu context chưa load hoặc đã bị dirtied. Recorded application event có giới hạn liên quan thread và không nên được coi là bằng chứng rằng arbitrary asynchronous work đã hoàn tất thành công. Parallel execution cũng cần nhiều hơn một TestContext cache thread-safe: mutable bean, database, file, DirtiesContext, method ordering, thread-bound transaction và copy semantics của custom TestContext đều phải an toàn. Framework có thể hỗ trợ concurrency nhưng không tự biến toàn bộ fixture xung quanh thành concurrent-safe.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""
