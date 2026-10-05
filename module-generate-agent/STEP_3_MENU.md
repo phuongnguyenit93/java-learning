@@ -15,13 +15,13 @@ hoặc agent không chắc mình còn nhớ đầy đủ các global rules
 → đọc lại ./GENERAL_AGENT_RULES.md trước khi tiếp tục
 ```
 
-Ngoài General Agent Rules, Step 3 **bắt buộc** phải đọc và nắm context của Curriculum Map liên quan trong:
+Ngoài General Agent Rules, Step 3 phải đọc và nắm context của Curriculum Map liên quan trong đường dẫn sau **khi file đó tồn tại**:
 
 ```text
 ./temp/*_CURRICULUM_MAP.md
 ```
 
-và ROADMAP Step 2 đã được review/approve của target module.
+và ROADMAP Step 2 đã được review/approve của target module khi artifact đó tồn tại/đã được thực hiện cho workflow hiện tại.
 
 Resolve Curriculum Map theo module path/area thực tế. Không chọn file chỉ theo tên gần giống.
 
@@ -38,7 +38,9 @@ Existing Menu khi có
 → historical structure / reusable content identity / migration evidence
 ```
 
-Nếu Curriculum Map thiếu hoặc ambiguous, report **CURRICULUM CONTEXT GAP**. Nếu ROADMAP chưa approved hoặc Menu thực sự cần một **learning milestone mới** mà ROADMAP không có, report **ROADMAP GAP**. Không tự bù upstream gap bằng Menu structure.
+Nếu Curriculum Map không tồn tại và Step 3 được gọi như một **isolated Menu review/refactor**, không block chỉ vì thiếu file. Dùng current Roadmap/Menu/Knowledge/source/reference/metadata, neighboring-module ownership evidence và authoritative external documentation/real-world behavior để re-evaluate Menu từ first principles. Current content là migration evidence, không phải curriculum authority tuyệt đối.
+
+Nếu đang chạy canonical full flow bắt đầu từ Step 1 thì không dùng fallback này để skip Step 1/Curriculum. Nếu isolated fallback vẫn để lại ownership/boundary conflict thật sự không thể resolve, report **CURRICULUM CONTEXT GAP**. Nếu ROADMAP đã tồn tại nhưng Menu thực sự cần một **learning milestone mới** mà ROADMAP không có, report **ROADMAP GAP** thay vì silently redefining the Roadmap.
 
 Không được nhầm `ROADMAP milestone` với `Knowledge H2`. Một approved ROADMAP milestone có thể cần được Step 3 phân rã thành nhiều anchored H2 để learner có đủ vocabulary, mental model và learning sequence trước khi Step 4 viết body. Việc phân rã một milestone đã tồn tại thành các learner-facing Knowledge identities **không phải ROADMAP GAP** nếu không làm thay đổi learning goal, order, ownership hoặc boundary đã được ROADMAP approve.
 
@@ -51,9 +53,54 @@ NEW MODULE
 REFACTOR MODULE
 → execute Step 3 exactly like a new module
 → additionally inspect the existing Menu/Knowledge structure
-→ preserve/reuse compatible structure where appropriate
+→ preserve/reuse compatible structure only when real body content or downstream semantic dependencies justify it
 → restructure incompatible Menu before Step 4
 ```
+
+### Existing Menu content-presence rule
+
+For Step 3, distinguish **real lesson body content** from mere structural scaffold.
+
+Counts as real body content:
+
+```text
+explanatory prose inside a lesson/section
+code/example blocks
+tables/lists that teach substantive behavior
+failure/trade-off/evidence discussion
+other learner-facing explanation below the section identity
+```
+
+Does **not** count as body content:
+
+```text
+H1 chapter title
+H2/H3 section title
+anchor id
+folder/file name
+generated internal Menu links
+<details> / back-to-top / navigation boilerplate
+empty section scaffold
+TODO/placeholder text
+section title alone, even when it sounds descriptive
+```
+
+If an existing Menu file/tree contains only titles/anchors/scaffold and **no real body content inside its sections**, treat that existing Menu as **reference only**. Its current chapter count, paths, titles, anchors and ordering are **not fixed constraints**.
+
+In that case Step 3 must re-evaluate the Menu from first principles against the Step 3 pedagogical criteria and may freely:
+
+```text
+REMOVE unnecessary chapter/section identities
+ADD missing chapter/section identities
+REORDER learning progression
+RENAME titles/anchors/paths
+SPLIT or MERGE chapters/sections
+REPLACE a weak historical decomposition with a better one
+```
+
+Do **not** keep a title-only Menu rigid merely to preserve historical shape. Existing empty scaffold is cheaper to replace now than to force Step 4 Knowledge into a bad structure later.
+
+If real body content **does exist**, its valid semantic content creates a migration/no-loss obligation, but it still does not make the old Menu structure immutable. Step 3 may still move/rename/split/merge/reorder structure when needed; it must simply map and preserve valid body meaning so Step 4 can migrate it safely.
 
 Canonical source chủ yếu: `module/.../readme/{lang}/menu/**/*.md`.
 
@@ -150,7 +197,9 @@ full lesson body
 → thuộc Step 4
 ```
 
-Mỗi anchored H2 là một stable Knowledge identity chuẩn bị cho Step 4 và downstream relations.
+Mỗi anchored H2 **sau khi đã được Step 3 hiện tại review/approve** mới trở thành stable Knowledge identity chuẩn bị cho Step 4 và downstream relations.
+
+Một anchored H2 cũ chỉ tồn tại dưới dạng title/anchor/scaffold, chưa có real body content và chưa được current Step 3 re-approve **không tự động là stable identity**. Step 3 được phép remove/rename/reorder/split/merge identity đó khi pedagogical review cho thấy structure khác tốt hơn.
 
 Không tạo placeholder body kiểu:
 
@@ -183,12 +232,14 @@ Không chạy `syncMetadataReadme` chỉ để tạo metadata rỗng trước kh
 
 This step applies to **both new and existing/refactor modules**.
 
-Derive the detailed Knowledge skeleton from the approved Curriculum + ROADMAP:
+Derive the detailed Knowledge skeleton from the approved Curriculum + ROADMAP when those artifacts exist. In isolated fallback mode without a Curriculum Map, use the reconstructed scope/boundary obtained from current repository evidence + authoritative real-world knowledge:
 
 ```text
-approved Curriculum boundary
+approved Curriculum boundary when present
+or isolated-fallback reconstructed boundary
         ↓
-approved roadmap milestone
+approved roadmap milestone when present
+or current Roadmap evidence reviewed in this isolated step
         ↓
 Knowledge category / chapter
         ↓
@@ -558,9 +609,11 @@ unexpected diff
 Existing modules follow the same target-design process as new modules. The old Menu is additional evidence, not the source-of-truth:
 
 ```text
-Step 1 Curriculum
+Step 1 Curriculum khi tồn tại
+hoặc isolated-fallback reconstructed scope/boundary
         +
-Step 2 approved ROADMAP
+Step 2 approved ROADMAP khi tồn tại
+hoặc reviewed current Roadmap evidence trong isolated fallback
         +
 authoritative technical sources
         ↓
@@ -569,6 +622,8 @@ target Menu skeleton
 existing Menu / existing Knowledge
 → inspect for reusable structure and migration impact
 ```
+
+Before classifying any existing chapter/section as reusable, first apply the **Existing Menu content-presence rule** above. Title-only/anchor-only/generated-scaffold structure has no preservation privilege and must not be treated as a stable identity merely because it already exists on disk.
 
 For an existing module, audit current chapter/files/section identities as:
 
@@ -595,7 +650,8 @@ missing
 → add planned chapter/section identity
 
 out of scope / stale / incorrect
-→ surface as an explicit finding; do not silently delete
+→ nếu có real body content: surface as an explicit finding and preserve/migrate valid meaning before removal
+→ nếu chỉ là title/anchor/generated scaffold không có real body content: có thể remove trong Step 3 sau review; không giữ cứng chỉ vì identity đã tồn tại
 ```
 
 Step 3 may inspect old Knowledge bodies to understand what existing structural identities contain, but **must not perform full Knowledge rewriting**. Full explanation/body refactor belongs to Step 4 after the Menu structure is approved.
@@ -637,7 +693,7 @@ Repository content remains important migration evidence, but it is not the only 
 Step 3 hoàn thành khi, cho cả new và existing module:
 
 ```text
-Menu structure tương thích với Step 1 Curriculum
+Menu structure tương thích với Step 1 Curriculum khi Curriculum Map tồn tại; nếu isolated fallback thì tương thích với reconstructed scope/boundary đã được kiểm chứng từ current content + authoritative real-world knowledge
 ROADMAP milestone/order được phản ánh hợp lý
 ROADMAP milestone đã được phân rã thành đủ learner-facing Knowledge identities; không áp dụng máy móc 1 milestone = 1 H2
 chapter order ổn định
@@ -647,12 +703,12 @@ toàn bộ planned anchored H2 identities đã được materialize vào Markdow
 anchored H2 order/title/id ổn định
 entry chapter có stable H2 foundation đủ để learner hiểu module/core concept trước khi gặp vocabulary nâng cao
 không có foundational term quan trọng bị downstream section sử dụng trước khi được giới thiệu hợp lý
-Curriculum terminology ownership đã được phản ánh trong Menu/H2 flow khi module là primary owner
+Curriculum terminology ownership đã được phản ánh trong Menu/H2 flow khi module là primary owner; nếu không có Curriculum Map thì ownership không được invent và phải dựa trên repository boundary + authoritative evidence đã review
 Step 4 có thể thỏa WHAT → WHY → RELATION → HOW → EVIDENCE mà không cần redesign Menu
 generateInternalReadmeMenuForModule đã xử lý toàn bộ chapter files của MODULE_LANGUAGE
 internal Menu/details/back-to-top scaffold hợp lệ
 BASE.md đã được author/review cho mọi MODULE_LANGUAGE
-BASE.md phản ánh đúng Curriculum + ROADMAP + Menu structure
+BASE.md phản ánh đúng Curriculum + ROADMAP + Menu structure khi các artifact đó tồn tại; isolated fallback phải phản ánh reconstructed scope + reviewed Roadmap/Menu hiện hành
 generateFinalReadme đã chạy thành công
 LIST.md và final README phản ánh đúng Menu/BASE source
 existing structural content đã được audit/migrated khi có

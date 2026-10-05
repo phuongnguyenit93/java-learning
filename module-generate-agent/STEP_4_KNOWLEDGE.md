@@ -15,7 +15,7 @@ hoặc agent không chắc mình còn nhớ đầy đủ các global rules
 → đọc lại ./GENERAL_AGENT_RULES.md trước khi tiếp tục
 ```
 
-Ngoài General Agent Rules, Step 4 **bắt buộc** phải đọc và nắm context của:
+Ngoài General Agent Rules, Step 4 phải đọc và nắm context của các artifact sau **khi chúng tồn tại trong workflow hiện tại**:
 
 ```text
 ./temp/*_CURRICULUM_MAP.md tương ứng với target module
@@ -25,7 +25,9 @@ Ngoài General Agent Rules, Step 4 **bắt buộc** phải đọc và nắm cont
 
 Curriculum Map cung cấp area/module ownership và boundary; ROADMAP cung cấp module learning journey; Step 3 Menu cung cấp chapter/path/title/section structure mà Knowledge phải triển khai.
 
-Nếu Curriculum Map thiếu/ambiguous, report **CURRICULUM CONTEXT GAP**. Nếu Knowledge cần một milestone chưa có, report **ROADMAP GAP**. Nếu Knowledge chỉ có thể đúng bằng cách redesign chapter/path/title structure đáng kể, report **MENU GAP** và quay lại Step 3 thay vì tự tái cấu trúc Menu trong Step 4.
+Nếu Curriculum Map không tồn tại và Step 4 được gọi như một **isolated Knowledge review/refactor**, không block chỉ vì thiếu file. Dùng current Roadmap/Menu/Knowledge/source/reference/metadata, neighboring ownership evidence và authoritative external documentation/real-world behavior để validate/refactor Knowledge theo scope thực tế. Existing Knowledge phải được preserve khi valid nhưng không được giữ technical claim sai chỉ vì historical content đã tồn tại.
+
+Nếu đang chạy canonical full flow bắt đầu từ Step 1 thì không dùng fallback này để skip Step 1. Nếu isolated fallback không resolve được ownership/boundary, report **CURRICULUM CONTEXT GAP**. Nếu Knowledge cần một milestone chưa có trong Roadmap hiện hữu, report **ROADMAP GAP**. Nếu Knowledge chỉ có thể đúng bằng cách redesign chapter/path/title structure đáng kể, report **MENU GAP** và quay lại Step 3 thay vì tự tái cấu trúc Menu trong Step 4.
 
 Không suy đoán các orchestration, preservation, gap-routing hoặc cross-step rules từ trí nhớ khi context không còn chắc chắn.
 
@@ -52,9 +54,9 @@ module/.../src/main/resources/readme/{lang}/knowledge-metadata.yml
 
 ### Existing / refactor module — Refactor Knowledge against approved Menu
 
-For an existing/refactor module, Step 3 has already reconciled the structural Menu with Curriculum + ROADMAP. Step 4 therefore focuses on the learner-facing Knowledge body and metadata.
+For an existing/refactor module, Step 3 has already reconciled the structural Menu with Curriculum + ROADMAP, or with the isolated-step fallback evidence when the Curriculum Map was absent. Step 4 therefore focuses on the learner-facing Knowledge body and metadata.
 
-Audit the old Knowledge against the approved Curriculum, ROADMAP and Step 3 structure. Existing knowledge must be preserved while being migrated, rewritten, regrouped, split, merged or expanded as needed.
+Audit the old Knowledge against the approved Curriculum when present, the reviewed Roadmap/current scope evidence, and the Step 3 structure. Existing valid knowledge must be preserved while being migrated, rewritten, regrouped, split, merged or expanded as needed.
 
 Allowed operations include:
 

@@ -15,7 +15,7 @@ hoặc agent không chắc mình còn nhớ đầy đủ các global rules
 → đọc lại ./GENERAL_AGENT_RULES.md trước khi tiếp tục
 ```
 
-Step 5 **bắt buộc** phải nắm context của:
+Step 5 phải nắm context của các upstream artifact sau **khi chúng tồn tại trong workflow hiện tại**:
 
 ```text
 relevant ./temp/*_CURRICULUM_MAP.md
@@ -26,7 +26,9 @@ relevant ./temp/*_CURRICULUM_MAP.md
 
 Step 5 applicability phải được quyết định từ các upstream learning artifacts này trước khi nhìn config/runtime implementation hiện tại.
 
-Nếu Curriculum Map thiếu/ambiguous, report **CURRICULUM CONTEXT GAP**. Nếu API experiment cần concept/milestone chưa tồn tại, route về đúng upstream gap thay vì tự mở rộng curriculum trong Step 5.
+Nếu Curriculum Map không tồn tại và Step 5 được gọi như một **isolated API applicability/review/refactor step**, không block chỉ vì thiếu file. Quyết định applicability từ current Roadmap/Menu/Knowledge/source/runtime evidence cộng authoritative external documentation và real-world behavior. Current config (`MODULE_TYPE`, `BUILD_SWAGGER`, controller hiện có) vẫn chỉ là implementation evidence, không được biến thành curriculum authority.
+
+Nếu đang chạy canonical full flow bắt đầu từ Step 1 thì không dùng fallback này để skip Step 1. Nếu isolated fallback không resolve được ownership/boundary, report **CURRICULUM CONTEXT GAP**. Nếu API experiment cần concept/milestone chưa tồn tại, route về đúng upstream gap thay vì tự mở rộng curriculum trong Step 5.
 
 Không suy đoán các orchestration, preservation, gap-routing hoặc cross-step rules từ trí nhớ khi context không còn chắc chắn.
 
@@ -46,6 +48,8 @@ module/.../src/main/resources/swagger/{lang}/api-params.yml
 Step 5 là conditional learning surface, nhưng quyết định **có cần API hay không phải đến từ learning value**, không phải trạng thái repository hiện tại.
 
 ### Applicability source of truth
+
+`Curriculum` below means the real Step 1 Curriculum artifact when present. In isolated fallback mode without that file, use the reconstructed scope/boundary established from current repository evidence + authoritative real-world knowledge; do not invent a fake Curriculum artifact.
 
 ```text
 Curriculum
@@ -556,7 +560,7 @@ At the end of the API step, API Docs should read as the **practical experiment l
 Step 5 hoàn thành khi:
 
 ```text
-[ ] Applicability được quyết định từ Curriculum/Roadmap/Menu/Knowledge, không từ config hiện tại
+[ ] Applicability được quyết định từ Curriculum/Roadmap/Menu/Knowledge; khi Curriculum Map không tồn tại trong isolated fallback thì dùng reconstructed scope + Roadmap/Menu/Knowledge/current evidence, không từ config hiện tại
 [ ] Có rationale rõ vì sao Step 5 REQUIRED hoặc NOT REQUIRED
 [ ] MODULE_TYPE / BUILD_SWAGGER / source hiện tại chỉ được dùng như implementation evidence
 [ ] Nếu Step 5 REQUIRED, canonical module config đã được sửa để support runtime/API capability cần thiết

@@ -15,7 +15,7 @@ hoặc agent không chắc mình còn nhớ đầy đủ các global rules
 → đọc lại ./GENERAL_AGENT_RULES.md trước khi tiếp tục
 ```
 
-Ngoài General Agent Rules, Step 2 **bắt buộc** phải đọc và nắm context của Step 1 Curriculum Map liên quan trong:
+Ngoài General Agent Rules, Step 2 phải đọc và nắm context của Step 1 Curriculum Map liên quan trong đường dẫn sau **khi file đó tồn tại**:
 
 ```text
 ./temp/*_CURRICULUM_MAP.md
@@ -33,9 +33,13 @@ recommended area learning order
 duplication / curriculum-gap risks
 ```
 
-Không coi Curriculum Map là optional chỉ vì module đã tồn tại hoặc đã có ROADMAP cũ.
+Nếu Curriculum Map tồn tại, không được bỏ qua nó chỉ vì module đã tồn tại hoặc đã có ROADMAP cũ.
 
-Nếu không xác định được Curriculum Map tương ứng, file bị thiếu, hoặc có nhiều candidate mâu thuẫn, phải report **CURRICULUM CONTEXT GAP** thay vì tự suy ownership/boundary.
+Nếu Curriculum Map **không tồn tại** và Step 2 được yêu cầu như một **isolated review/refactor step**, không block chỉ vì thiếu file. Thay vào đó phải đọc current module/repository content, Roadmap cũ khi có, neighboring ownership evidence và authoritative external documentation/real-world behavior để thiết kế/refactor Roadmap từ first principles theo scope thực tế.
+
+Fallback này không biến current Roadmap/Menu/Knowledge cũ thành authority tuyệt đối. Chúng là evidence để preserve valid learning intent và phát hiện migration impact; technical/scope correctness vẫn phải được kiểm chứng độc lập.
+
+Nếu đang chạy canonical full flow bắt đầu từ Step 1 thì không dùng fallback này để skip Step 1. Nếu không có Curriculum Map trong full flow, quay lại Step 1 để materialize/review nó. Nếu isolated fallback vẫn không thể resolve ownership/boundary một cách đáng tin cậy, report **CURRICULUM CONTEXT GAP**.
 
 Không suy đoán các orchestration, preservation, gap-routing, Curriculum hoặc cross-step rules từ trí nhớ khi context không còn chắc chắn.
 

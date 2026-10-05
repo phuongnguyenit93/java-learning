@@ -256,20 +256,22 @@ The difference is only the evidence being inspected:
 
 ```text
 NEW MODULE
-→ derive Menu/chapter/title skeleton from approved Curriculum + ROADMAP
+→ derive Menu/chapter/title skeleton from approved Curriculum + ROADMAP when those artifacts exist
+→ for an isolated-step fallback with no Curriculum Map, derive from current repository evidence + authoritative real-world knowledge
 
 EXISTING / REFACTOR MODULE
-→ derive the same target Menu/chapter/title skeleton from approved Curriculum + ROADMAP
+→ derive the same target Menu/chapter/title skeleton from approved Curriculum + ROADMAP when available
+→ if the Curriculum Map is absent in an isolated-step refactor, reconstruct the target from current valid content + authoritative real-world knowledge instead of freezing historical structure
 → additionally inspect the old Menu/content structure as migration evidence
 → preserve/reuse compatible structure where appropriate
 → move/reorder/rename/split/merge structural items when needed
 ```
 
-Existing Menu structure is never a reason to skip Step 3 and is never the curriculum authority. Step 3 must explicitly reconcile it with Step 1 and Step 2 before Step 4 authors/refactors full Knowledge.
+Existing Menu structure is never a reason to skip Step 3 and is never the curriculum authority. In canonical flow, Step 3 reconciles it with Step 1 + Step 2. In isolated fallback mode, Step 3 reconciles it with whatever approved upstream artifacts exist plus current repository evidence and authoritative real-world knowledge before Step 4 authors/refactors full Knowledge.
 
-### Mandatory Curriculum Map context for Steps 2, 3, 4 and 5
+### Curriculum Map context for Steps 2, 3, 4 and 5
 
-Steps 2, 3, 4 and 5 must load and understand the relevant Step 1 Curriculum Map from:
+Steps 2, 3, 4 and 5 must **use the relevant Step 1 Curriculum Map when that artifact exists** at:
 
 ```text
 module-generate-agent/temp/*_CURRICULUM_MAP.md
@@ -284,14 +286,14 @@ GENERAL_AGENT_RULES.md
         +
 target module/repository context
         +
-relevant *_CURRICULUM_MAP.md from module-generate-agent/temp
+relevant *_CURRICULUM_MAP.md from module-generate-agent/temp when present
         +
 the requested STEP_X rule file
         +
 required upstream output from earlier steps
 ```
 
-must be present in working context before editing.
+must be present in working context before editing **when the Curriculum Map exists**.
 
 The Curriculum Map supplies:
 
@@ -306,7 +308,41 @@ cross-module terminology ownership
 known duplication/gap risks
 ```
 
-If the required Curriculum Map is missing, stale relative to an explicitly updated Step 1, or ambiguous for the target module, do not silently infer the missing Step 1 decisions. Report the prerequisite as a **CURRICULUM CONTEXT GAP** and resolve Step 1 context first.
+#### Missing Curriculum Map fallback for isolated-step refactor
+
+The absence of `module-generate-agent/temp/*_CURRICULUM_MAP.md` is **not by itself a blocker** when the user explicitly asks for an isolated Step 2, 3, 4 or 5 review/refactor rather than the canonical Step 1 → Step 9/10 flow.
+
+In that isolated-step case, reconstruct only the context needed for the requested step from:
+
+```text
+current module/repository content
+        +
+current Roadmap/Menu/Knowledge/API/source/reference/metadata as applicable
+        +
+neighboring-module content needed to detect ownership overlap
+        +
+authoritative external documentation
+        +
+established real-world behavior/practice for the technology and repository baseline
+```
+
+Then refactor the requested step from first principles. Do **not** fabricate a missing Curriculum Map, do not claim locally inferred scope is an approved Step 1 artifact, and do not silently execute Step 1 just to satisfy the old prerequisite.
+
+Evidence priority for this fallback is:
+
+```text
+authoritative technology behavior/documentation
+        ↓
+explicit repository architecture/governance and current approved upstream artifacts that do exist
+        ↓
+valid current learning content and source/runtime evidence
+        ↓
+historical structure/naming
+```
+
+If current repository evidence and authoritative behavior are sufficient to resolve scope/boundary, proceed with the isolated refactor. If a real cross-module ownership/boundary conflict remains ambiguous after that review, report a **CURRICULUM CONTEXT GAP** instead of inventing a global ownership decision.
+
+For a canonical full-chain run that starts from Step 1 (for example Step 1 → Step 9/10), do **not** use this fallback to skip Step 1. The canonical flow should materialize/review the Curriculum Map first, then downstream Steps 2–5 consume it normally.
 
 ### Execute only the requested step
 
