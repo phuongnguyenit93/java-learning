@@ -1,0 +1,170 @@
+# <quiz-schema>
+# Cấu trúc câu hỏi Quiz
+# schema-version: 3
+#
+# questions [kiểu: list; bắt buộc; mặc định: []; duy nhất theo: id]
+#   Danh sách câu hỏi Quiz của module trong language hiện tại.
+#   mỗi phần tử:
+#     id [kiểu: string; bắt buộc; mặc định: ""]
+#       ID ổn định và duy nhất của câu hỏi.
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi hiển thị cho người học.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu câu hỏi được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu câu hỏi đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+#     answers [kiểu: list; bắt buộc; số phần tử: 4; mặc định: []; duy nhất theo: id]
+#       Chính xác bốn đáp án. ID A/B/C/D là identity nội bộ ổn định, không phải vị trí hiển thị sau khi frontend shuffle.
+#       mỗi phần tử:
+#         id [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#           Identity ổn định của đáp án.
+#         answer [kiểu: string; bắt buộc; mặc định: ""]
+#           Nội dung đáp án hiển thị cho người học.
+#         explanation [kiểu: string; bắt buộc; mặc định: ""]
+#           Giải thích hiển thị khi người học chọn đáp án này, bất kể đúng hay sai.
+#     correctAnswerId [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#       ID nội bộ của đáp án đúng. Frontend kiểm tra bằng identity này sau khi shuffle.
+# </quiz-schema>
+
+questions:
+  - id: validation-binding-phase-boundary
+    question: 'Input có age="not-a-number" cho property int, còn age="15" convert thành công nhưng vi phạm quy tắc tuổi trưởng thành. Cách phân loại nào chính xác nhất?'
+    answers:
+      - {id: A, answer: "Cả hai đều là lỗi validation vì cả hai input đều không được ứng dụng chấp nhận.", explanation: "Sai. Trường hợp đầu thất bại khi conversion/binding dữ liệu gốc; trường hợp sau chỉ thất bại sau khi đã tạo được trạng thái có kiểu."}
+      - {id: B, answer: "Cả hai đều là lỗi binding vì DataBinder có thể thu thập cả hai loại lỗi.", explanation: "Sai. Cùng một BindingResult có thể chứa hai loại lỗi nhưng không làm cho giai đoạn phát sinh của chúng trở thành một."}
+      - {id: C, answer: "Giá trị không phải số là lỗi binding/conversion; age 15 có thể bind thành công rồi mới thất bại ở validation.", explanation: "Đúng. Binding trả lời input có trở thành trạng thái object có kiểu được không; validation trả lời trạng thái đó có được chấp nhận không."}
+      - {id: D, answer: "Giá trị không phải số nên bị bỏ qua, còn age 15 nên bị từ chối ngay trong conversion.", explanation: "Sai. Bỏ qua input sai định dạng làm mất bằng chứng lỗi, còn giá trị đúng kiểu như 15 thuộc validation nếu quy tắc là ngữ nghĩa nghiệp vụ."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.Foundation/Foundation.md", anchor: "validation-vs-binding"}
+    apiRelated: {controller: "ValidationExperimentController", methodSignature: "bindingVsValidation()"}
+
+  - id: conversion-formatting-selection
+    question: "Yêu cầu nào là dấu hiệu mạnh nhất để chọn Formatter thay vì Converter đơn giản?"
+    answers:
+      - {id: A, answer: "Dạng text phải được parse và print theo Locale hiện tại.", explanation: "Đúng. Formatter hướng tới trình bày và các hợp đồng Parser/Printer nhận Locale."}
+      - {id: B, answer: "Kiểu nguồn và kiểu đích có một phép biến đổi ổn định, không phụ thuộc ngữ cảnh.", explanation: "Sai. Đây là trường hợp phù hợp với Converter đơn giản."}
+      - {id: C, answer: "Conversion chỉ được phép chạy bên trong Spring MVC controller.", explanation: "Sai. Formatter là hạ tầng định dạng có thể tái sử dụng và không thuộc riêng MVC."}
+      - {id: D, answer: "Giá trị đích còn phải thỏa một bất biến nghiệp vụ sau conversion.", explanation: "Sai. Tính hợp lệ nghiệp vụ thuộc validation, không phải lý do chọn Formatter thay cho Converter."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.Foundation/Foundation.md", anchor: "conversion-vs-formatting"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: binding-result-error-evidence
+    question: "Vì sao BindingResult hữu ích hơn việc chỉ nhìn object đích đã được điền một phần sau binding?"
+    answers:
+      - {id: A, answer: "BindingResult bảo đảm mọi writable property đều đã được gán thành công.", explanation: "Sai. Nó ghi lại lỗi và bằng chứng binding chính vì việc gán có thể không hoàn tất."}
+      - {id: B, answer: "BindingResult tự động biến mọi lỗi validation thành exception.", explanation: "Sai. Lỗi vẫn là kết quả có cấu trúc trừ khi bên gọi chủ động chọn đường đi tạo exception."}
+      - {id: C, answer: "BindingResult thay thế object đích nên trạng thái target không còn quan trọng.", explanation: "Sai. BindingResult mô tả kết quả binding quanh target thực tế chứ không thay thế target."}
+      - {id: D, answer: "BindingResult giữ FieldError, rejected value, trạng thái binding failure và suppressed fields.", explanation: "Đúng. Các dữ kiện này cho biết input thất bại hoặc bị giới hạn vì sao thay vì buộc người đọc suy đoán từ target."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.PropertyAccess/PropertyAccess.md", anchor: "binding-result-model"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: type-descriptor-context
+    question: "Khi nào TypeDescriptor đặc biệt quan trọng trong hệ thống conversion của Spring?"
+    answers:
+      - {id: A, answer: "Khi chỉ cần raw Class nguồn và Class đích, không có metadata nào liên quan.", explanation: "Sai. Trường hợp đó thường đã đủ với API conversion dựa trên Class đơn giản."}
+      - {id: B, answer: "Khi conversion phụ thuộc ngữ cảnh kiểu phong phú hơn như generic element type hoặc annotation trên field.", explanation: "Đúng. TypeDescriptor mang thông tin kiểu và annotation mà một cặp Class thô không biểu diễn được."}
+      - {id: C, answer: "Khi Validator cần quyết định domain object có được chấp nhận hay không.", explanation: "Sai. TypeDescriptor thuộc ngữ cảnh conversion, không phải domain validation."}
+      - {id: D, answer: "Khi DataBinder cần quyết định field bên ngoài nào được phép ghi.", explanation: "Sai. Allowed-field policy là vấn đề bề mặt binding, không phải vai trò chính của TypeDescriptor."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.TypeConversion/TypeConversion.md", anchor: "type-descriptor-context"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: formatter-locale-boundary
+    question: "Một field tiền tệ dạng text phải tôn trọng locale của bên gọi. Thiết kế nào giữ trách nhiệm trình bày này rõ ràng?"
+    answers:
+      - {id: A, answer: "Dùng Converter<String, BigDecimal> toàn cục và đọc locale mặc định của JVM bên trong.", explanation: "Sai. Converter không nhận Locale và việc phụ thuộc ngầm vào mặc định JVM làm chính sách khó suy luận."}
+      - {id: B, answer: "Parse text bên trong Validator để conversion và validation xảy ra cùng lúc.", explanation: "Sai. Validator nên đánh giá trạng thái đã có kiểu thay vì sở hữu parsing phụ thuộc locale."}
+      - {id: C, answer: "Dùng Formatter hoặc Parser mà thao tác parse nhận Locale một cách tường minh.", explanation: "Đúng. Formatting được thiết kế cho việc parse/print text phụ thuộc ngữ cảnh trình bày và Locale."}
+      - {id: D, answer: "Giữ nguyên text đã localize trong domain object và trì hoãn conversion vô thời hạn.", explanation: "Sai. Cách này né tránh trạng thái có kiểu thay vì mô hình hóa ranh giới conversion/formatting rõ ràng."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.Formatting/Formatting.md", anchor: "formatting-locale-boundary"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: validator-validate-object-boundary
+    question: "Giới hạn quan trọng nào cần nhớ khi dùng Spring 6.1 Validator.validateObject(Object)?"
+    answers:
+      - {id: A, answer: "Errors đơn giản không hỗ trợ nested path; validation cần nested-path state phải dùng Errors implementation giàu hơn.", explanation: "Đúng. validateObject thuận tiện cho validation trực tiếp nhưng SimpleErrors cố ý có mô hình nhỏ hơn."}
+      - {id: B, answer: "Method chỉ validate được object đã được DataBinder điền trước đó.", explanation: "Sai. Điểm tiện lợi của method là có thể validation trực tiếp mà không cần một binding process."}
+      - {id: C, answer: "Method thực hiện constructor binding trước khi gọi validate(Object, Errors).", explanation: "Sai. Đây là API validation tiện lợi, không phải API binding."}
+      - {id: D, answer: "Method luôn ném exception ngay khi có bất kỳ validation error nào.", explanation: "Sai. Bên gọi có thể kiểm tra Errors trả về và chỉ chủ động chuyển thành exception, ví dụ qua failOnError."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.Validation/Validation.md", anchor: "validator-contract"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: declarative-binding-default-posture
+    question: "Với Spring 6.1 DataBinder, điều gì xảy ra khi bật declarative binding nhưng không cấu hình allowedFields cho property binding?"
+    answers:
+      - {id: A, answer: "Mọi writable property vẫn được bind nhưng validation bị tắt.", explanation: "Sai. Declarative mode thay đổi việc property binding có được phép hay không; nó không tắt validation."}
+      - {id: B, answer: "Chỉ property có giá trị hiện tại khác null được bind.", explanation: "Sai. Nullability của giá trị hiện tại không phải quy tắc declarative binding."}
+      - {id: C, answer: "Mọi submitted property đều được ghi vào suppressedFields rồi vẫn được gán.", explanation: "Sai. Khi không có allowed-field surface, property binding bị bỏ qua thay vì gán các property gửi vào."}
+      - {id: D, answer: "Property binding bị bỏ qua; cấu hình allowedFields sau đó chỉ mở đúng bề mặt property được chỉ định.", explanation: "Đúng. Experiment runtime của module so sánh ordinary binding, declarative binding không có allow-list và declarative binding có allow-list."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.SafeBinding/SafeBinding.md", anchor: "safe-binding-controls"}
+    apiRelated: {controller: "SafeBindingExperimentController", methodSignature: "declarativeBinding()"}
+
+  - id: required-fields-vs-validation
+    question: "Một field của DataBinder được cấu hình qua setRequiredFields(...). Lỗi required sinh ra có ý nghĩa gì?"
+    answers:
+      - {id: A, answer: "Domain object cuối cùng vi phạm mọi bất biến nghiệp vụ liên quan tới field đó.", explanation: "Sai. Required-field check thuộc thao tác binding, không phải toàn bộ tập quy tắc domain."}
+      - {id: B, answer: "Submitted value vắng mặt hoặc bị phép kiểm tra required-field của DataBinder xem là rỗng.", explanation: "Đúng. Value vắng mặt, null hoặc một số dạng rỗng có thể tạo lỗi binding required."}
+      - {id: C, answer: "Java property là non-nullable theo type system của JVM.", explanation: "Sai. Java nullability tự nó không cấu hình required fields cho DataBinder."}
+      - {id: D, answer: "Formatter không thể print giá trị property hiện tại.", explanation: "Sai. Required-field policy tách biệt với output formatting."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.DataBinder/DataBinder.md", anchor: "binding-field-policies"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: bean-validation-spring-adapter
+    question: "LocalValidatorFactoryBean cung cấp vai trò gì trong tích hợp Bean Validation của Spring?"
+    answers:
+      - {id: A, answer: "Thay thế mọi Spring Validator và ngăn ứng dụng dùng validation viết bằng code.", explanation: "Sai. Spring có thể kết hợp Bean Validation với Validator lập trình khi phù hợp."}
+      - {id: B, answer: "Một binder chỉ dành cho Web MVC để convert request parameter trước validation.", explanation: "Sai. LocalValidatorFactoryBean là hạ tầng validation và không thuộc riêng request binding của MVC."}
+      - {id: C, answer: "Adapter đưa Bean Validation ValidatorFactory/Validator vào hạ tầng validation của Spring.", explanation: "Đúng. Nó thích nghi Jakarta Bean Validation vào hạ tầng Spring và hỗ trợ cấu hình do Spring quản lý."}
+      - {id: D, answer: "Formatter registry dành riêng cho constraint message.", explanation: "Sai. Formatting và Bean Validation integration là hai trách nhiệm khác nhau."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.BeanValidation/BeanValidation.md", anchor: "local-validator-factory-bean"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: method-validation-activation-vs-groups
+    question: "Với method validation dựa trên proxy qua MethodValidationPostProcessor, phát biểu nào tách đúng việc kích hoạt khỏi việc chọn group?"
+    answers:
+      - {id: A, answer: "@Validated mức type kích hoạt proxy validation; mức method có thể tinh chỉnh group nhưng tự nó không kích hoạt bean.", explanation: "Đúng. Kích hoạt và chọn validation group có liên quan nhưng là hai trách nhiệm khác nhau."}
+      - {id: B, answer: "Chỉ cần có constraint trên method là Spring tự tạo proxy nên @Validated không bao giờ liên quan.", explanation: "Sai. Có constraint và kích hoạt proxy của Spring không phải cùng một cơ chế."}
+      - {id: C, answer: "Chỉ @Validated ở mức method mới kích hoạt bean, còn @Validated mức type chỉ dùng cho field binding.", explanation: "Sai. Phát biểu này đảo ngược vai trò kích hoạt của hạ tầng method validation dựa trên proxy."}
+      - {id: D, answer: "Validation group được chọn bởi DataBinder allowedFields nên @Validated chỉ ảnh hưởng component scanning.", explanation: "Sai. Binding field policy và Bean Validation group là hai cơ chế riêng."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.BeanValidation/BeanValidation.md", anchor: "validation-groups-hints"}
+    apiRelated: {controller: "", methodSignature: ""}

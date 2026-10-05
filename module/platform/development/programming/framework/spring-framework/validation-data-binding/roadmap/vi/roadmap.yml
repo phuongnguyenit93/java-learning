@@ -1,0 +1,139 @@
+# <roadmap-schema>
+# Cấu trúc Roadmap Module
+# schema-version: 1
+#
+# YAML CONTRACT
+# roadmap: Danh sách milestone cấp cao của roadmap cho language hiện tại.
+#
+# - id [string, required]: ID ổn định và duy nhất của milestone trong roadmap language hiện tại.
+# - title [string, required]: Tên milestone hiển thị cho learner.
+# - purpose [string, required]: Milestone này tồn tại để learner hiểu hoặc đạt được điều gì.
+# - dependsOn [list, optional]: Danh sách id milestone prerequisite khi dependency không thể hiện đủ chỉ bằng thứ tự item.
+# - objectives [list, optional]: Các learning objective cấp milestone; không dùng để liệt kê mọi fact/API/syntax nhỏ.
+# - relatedKnowledge [list, optional]: Danh sách Knowledge category id trong chính module hiện tại hỗ trợ milestone. Portal hiển thị danh sách này ở phía đối diện milestone và click item sẽ điều hướng sang Knowledge category tương ứng.
+# - relatedModules [list, optional]: Các module liên quan hiển thị ở Level 2 của Portal. Mỗi item dùng routeId bắt buộc và có thể có label/note localized; relation này chỉ để điều hướng, không tạo child milestone hoặc thay đổi learning order.
+#
+# ROADMAP THINKING FRAMEWORK
+# PURPOSE
+#   - Topic/module này là gì?
+#   - Vì sao nó tồn tại?
+#   - Không có nó thì learner gặp vấn đề gì?
+# FOUNDATION
+#   - Learner cần prerequisite hoặc mental model nào trước?
+# CORE MODEL
+#   - Những abstraction hoặc building block lớn nào tạo nên chủ đề này?
+# MECHANICS
+#   - Nó hoạt động như thế nào ở mức language/runtime/API phù hợp với module?
+# USAGE
+#   - Nó được dùng như thế nào trong code thực tế?
+# DECISION / TRADE-OFF
+#   - Khi nào nên chọn cơ chế này thay vì cơ chế khác?
+#   - Khi nào không nên dùng?
+# FAILURE / PITFALL
+#   - Những sai lầm, compile-time failure hoặc runtime failure nào đáng biết?
+# INTEGRATION
+#   - Chủ đề này kết nối với những concept/module lân cận nào?
+# SYNTHESIS
+#   - Sau cùng learner phải giữ mental model end-to-end nào?
+#
+# Mỗi language tự chịu trách nhiệm cho roadmap của chính nó. Không suy luận hoặc đồng bộ cấu trúc từ roadmap của language khác.
+# Thứ tự item trong roadmap chính là thứ tự học mặc định. Chỉ dùng dependsOn khi cần biểu diễn dependency rõ hơn thứ tự tuyến tính.
+# Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
+# </roadmap-schema>
+
+roadmap:
+  - id: validation-binding-purpose
+    title: Vì sao cần validation, binding và conversion?
+    purpose: Xây mô hình tư duy về lý do Spring tách kiểm tra hợp lệ, ràng buộc dữ liệu, chuyển đổi kiểu và định dạng trường thay vì coi mọi dữ liệu đầu vào chỉ là thao tác gán String vào thuộc tính.
+    objectives:
+      - Giải thích được bốn bài toán khác nhau mà validation, data binding, type conversion và formatting giải quyết.
+      - Hiểu vì sao hợp đồng validation của Spring không bị gắn cứng với tầng web và có thể tái sử dụng ở tầng nghiệp vụ, giao diện hoặc hạ tầng.
+      - Xác định ranh giới giữa các hợp đồng dùng chung của module này với vòng đời binding theo HTTP/controller thuộc Spring MVC và WebFlux.
+    relatedModules:
+      - routeId: SPRING_CORE_CONTAINER
+        label: Spring Core Container
+        note: Container cung cấp hạ tầng dùng chung như đăng ký ConversionService và tích hợp vòng đời bean mà các hợp đồng trong module này có thể sử dụng.
+      - routeId: SPRING_WEB
+        label: Spring Web
+        note: Spring MVC sử dụng các cơ chế nền tảng này cho controller binding/validation nhưng sở hữu vòng đời HTTP và controller.
+      - routeId: SPRING_REACTIVE
+        label: Spring Reactive
+        note: WebFlux sử dụng cùng nền tảng validation/conversion trong reactive web stack.
+
+  - id: property-access-model
+    title: Mô hình truy cập thuộc tính và trạng thái binding
+    purpose: Hiểu mô hình object/property mà data binding thao tác lên, gồm property path lồng nhau, vai trò của BeanWrapper và cách Spring biểu diễn kết quả binding độc lập với HTTP hay một request cụ thể.
+    objectives:
+      - Hiểu property path, truy cập object lồng nhau và vai trò của BeanWrapper như abstraction mức thấp cho property access.
+      - Phân biệt lỗi binding trực tiếp như sai kiểu với các trường hợp phụ thuộc policy: thiếu giá trị chỉ thành lỗi khi field được đánh dấu required, field lạ có thể được bỏ qua và nested path không truy cập được còn phụ thuộc chính sách invalid-field.
+      - Hiểu BindingResult và Errors là cấu trúc biểu diễn kết quả binding/validation chứ không chỉ là thông báo ngoại lệ.
+
+  - id: type-conversion-system
+    title: Hệ thống chuyển đổi kiểu dùng chung
+    purpose: Học hệ thống chuyển đổi kiểu tổng quát của Spring trước khi đưa nó vào binding, để thấy conversion là phép biến đổi có thể tái sử dụng chứ không phải logic parse riêng của controller.
+    objectives:
+      - Hiểu ConversionService là điểm vào khi thực thi chuyển đổi và ConverterRegistry là phía đăng ký converter.
+      - Biết khi nào dùng Converter, ConverterFactory, GenericConverter hoặc conditional conversion dựa trên hình dạng và ngữ cảnh của phép chuyển đổi.
+      - Hiểu vai trò của TypeDescriptor khi generic type, collection, annotation hoặc vị trí property ảnh hưởng tới conversion.
+      - Phân biệt mô hình ConversionService/Formatter hiện đại với cơ chế JavaBeans PropertyEditor cũ mà Spring vẫn hỗ trợ để tương thích.
+      - Nhận diện ranh giới lỗi khi chuyển đổi thất bại hoặc không tìm thấy converter phù hợp mà không biến roadmap thành danh sách API.
+
+  - id: field-formatting-model
+    title: Định dạng trường và bản địa hóa
+    purpose: Bổ sung lớp parse/print hướng tới client trên nền conversion tổng quát, từ đó hiểu khi nào formatting phù hợp hơn một converter thông thường.
+    objectives:
+      - Phân biệt conversion dùng chung với formatting phụ thuộc locale và ngữ cảnh hiển thị.
+      - Hiểu Printer, Parser, Formatter, FormatterRegistry và annotation-driven formatting như một mô hình thống nhất.
+      - Biết cách suy luận về chính sách formatting tập trung và annotation formatting tái sử dụng mà không đi sang cấu hình MVC cụ thể.
+
+  - id: spring-validation-model
+    title: Mô hình validation và báo lỗi của Spring
+    purpose: Hiểu cách Spring kiểm tra object và biểu diễn lỗi thành object error/field error có cấu trúc để nhiều layer có thể xử lý hoặc bản địa hóa về sau.
+    objectives:
+      - Hiểu vai trò khái niệm của Validator, SmartValidator, Errors, BindingResult, ObjectError và FieldError.
+      - Biết cách ghép validation cho object lồng nhau mà không buộc validator phụ thuộc một giao diện hay tầng vận chuyển cụ thể.
+      - Hiểu validation hint/group ở ranh giới Spring contract và vai trò hỗ trợ của ValidationUtils.
+      - Hiểu message-code resolution là cầu nối từ mã lỗi ổn định sang bước bản địa hóa bằng MessageSource ở downstream, nhưng không biến module này thành owner của i18n.
+
+  - id: data-binder-orchestration
+    title: DataBinder điều phối binding như thế nào?
+    purpose: Kết nối property access, conversion, formatting, binding result và validation thông qua DataBinder như bộ điều phối binding dùng chung của Spring.
+    objectives:
+      - Lần theo luồng từ giá trị đầu vào qua conversion, áp giá trị lên object, tạo BindingResult và thực hiện validation khi được cấu hình.
+      - Phân biệt constructor binding với property/setter binding và hiểu vì sao hai cách này mở ra bề mặt input khác nhau.
+      - Hiểu required, unknown, invalid, allowed và disallowed fields là chính sách của property binding chứ không phải validation rule, đồng thời nhận ra constructor binding chỉ resolve những giá trị constructor thực sự cần.
+      - Hiểu declarative binding được Spring Framework 6.1 bổ sung như chế độ opt-in luôn cho phép constructor binding nhưng chỉ cho property binding khi field đã được khai báo trong allowed fields.
+      - Nhận diện các extension point chính như conversion, custom editor, validator và binding-error processing mà không học thuộc từng method.
+
+  - id: bean-validation-integration
+    title: Tích hợp Jakarta Bean Validation
+    purpose: Hiểu cách Spring đưa Jakarta Bean Validation provider vào hệ sinh thái Validator của Spring mà vẫn giữ ranh giới giữa đặc tả Bean Validation và hạ tầng Spring.
+    objectives:
+      - Hiểu LocalValidatorFactoryBean và SpringValidatorAdapter là hạ tầng tích hợp, không phải một đặc tả validation thay thế.
+      - Kết nối constraint annotation, validation group/hint với Errors và BindingResult của Spring.
+      - Phân biệt object validation với executable method validation trên tham số/giá trị trả về, gồm mô hình MethodValidator/MethodValidationAdapter và kết quả method validation được Spring 6.1 bổ sung cùng cách chọn validation group.
+      - Hiểu MethodValidationPostProcessor là lựa chọn wiring dựa trên proxy của Spring cho method validation, còn cơ chế AOP proxy/interceptor bên dưới thuộc module Aspect.
+      - Giữ ngữ nghĩa của constraint/provider ở đúng ranh giới Bean Validation thay vì biến chúng thành khái niệm riêng của Spring.
+    relatedModules:
+      - routeId: ASPECT
+        label: Spring AOP
+        note: Cơ chế proxy/interceptor được method-validation infrastructure sử dụng thuộc owner Spring AOP.
+
+  - id: safe-binding-synthesis
+    title: Binding an toàn và mô hình end-to-end
+    purpose: Tổng hợp module thành mô hình ra quyết định an toàn để biến dữ liệu ngoài hệ thống thành object có kiểu, kiểm tra hợp lệ, biểu diễn lỗi và chuyển các mối quan tâm phụ thuộc tầng vận chuyển sang đúng module lân cận.
+    objectives:
+      - Ưu tiên input model có tập field rõ ràng, constructor/declarative binding và chính sách allowed fields tường minh khi binding dữ liệu không đáng tin cậy.
+      - Giải thích được binding security kiểm soát phần nào của object được phép ghi, còn validation kiểm tra giá trị đã bind có thỏa rule hay không.
+      - Chọn đúng giữa conversion, formatting, Spring Validator, Bean Validation và DataBinder theo bài toán thực tế.
+      - Lần theo pipeline end-to-end từ raw values qua conversion/formatting, binding, validation và error/message-code resolution, sau đó handoff bước MessageSource localization và presentation phụ thuộc transport sang đúng module sở hữu.
+    relatedModules:
+      - routeId: SPRING_CORE_CONTAINER
+        label: Spring Core Container
+        note: MessageSource và i18n sở hữu bước bản địa hóa sau khi module này đã tạo structured errors cùng message codes có thể resolve.
+      - routeId: SPRING_WEB
+        label: Spring Web
+        note: MVC sở hữu WebDataBinder, controller argument binding, @InitBinder và cách validation vận hành trong vòng đời HTTP.
+      - routeId: SPRING_REACTIVE
+        label: Spring Reactive
+        note: WebFlux sở hữu vòng đời controller binding/validation reactive nhưng tái sử dụng các contract cốt lõi của module này.

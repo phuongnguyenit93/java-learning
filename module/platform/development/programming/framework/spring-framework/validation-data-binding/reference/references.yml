@@ -1,0 +1,48 @@
+# ============================================================
+# MODULE REFERENCE STRUCTURE
+# ============================================================
+#
+# This is the shared module-level reference catalog.
+# It is intentionally not split by MODULE_LANGUAGE.
+#
+# Example structure:
+#
+# references:
+#   - title: "Java Language Specification"
+#     url: "https://docs.oracle.com/javase/specs/"
+#     description: "Official Java language specification."
+#
+# Add only curated references that are useful for the module.
+# The build system must not overwrite this file after authored content exists.
+
+references:
+  - title: "Validation, Data Binding, and Type Conversion - Spring Framework Reference"
+    url: "https://docs.spring.io/spring-framework/reference/core/validation.html"
+    description: "Official Spring Framework reference chapter that explains the module-wide relationship among validation, data binding, JavaBeans property access, type conversion, formatting, and Bean Validation integration."
+  - title: "Spring Framework 6.1.14 API"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/index.html"
+    description: "Version-pinned Spring Framework 6.1.14 API index used to verify module-level contracts without drifting to a newer Framework generation."
+  - title: "Validator API - Spring Framework 6.1"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/validation/Validator.html"
+    description: "Version-pinned Spring Framework 6.1.14 contract for the UI-agnostic Validator abstraction and Errors-based validation model."
+  - title: "Spring Type Conversion"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/core/convert/ConversionService.html"
+    description: "Version-pinned Spring Framework 6.1.14 API contract for ConversionService and TypeDescriptor-aware conversion."
+  - title: "Spring Field Formatting"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/format/support/DefaultFormattingConversionService.html"
+    description: "Version-pinned Spring Framework 6.1.14 API for the formatting-aware ConversionService that combines converters with FormatterRegistry-based formatting."
+  - title: "BeanWrapper API - Spring Framework 6.1"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/beans/BeanWrapper.html"
+    description: "Version-pinned Spring Framework 6.1.14 contract for bean property access, nested property paths, conversion support, and PropertyEditor integration."
+  - title: "MessageCodesResolver API - Spring Framework 6.1"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/validation/MessageCodesResolver.html"
+    description: "Version-pinned Spring Framework 6.1.14 contract for expanding binding and validation error codes before MessageSource localization."
+  - title: "Java Bean Validation"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/validation/beanvalidation/LocalValidatorFactoryBean.html"
+    description: "Version-pinned Spring Framework 6.1.14 integration contract for bootstrapping Jakarta Bean Validation and exposing it through Spring's Validator infrastructure."
+  - title: "MethodValidationPostProcessor API - Spring Framework 6.1"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/validation/beanvalidation/MethodValidationPostProcessor.html"
+    description: "Version-pinned Spring Framework 6.1.14 API for Spring-driven executable method validation, including parameter and return-value constraints and validation groups."
+  - title: "DataBinder API - Spring Framework 6.1"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/validation/DataBinder.html"
+    description: "Version-pinned Spring Framework 6.1.14 API contract for constructor/property binding, declarative binding, validation integration, and safe field exposure."

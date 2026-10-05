@@ -1,0 +1,51 @@
+DataBinderExperimentController:
+  typeMismatch():
+    execution: |-
+      <p><b>Khái niệm:</b> Binding và conversion có thể thất bại trước khi domain validation chạy.</p>
+      <ol>
+        <li>Tạo target mới có property <code>age</code> kiểu <code>int</code>, khởi tạo bằng <code>41</code>, rồi bind giá trị text bên ngoài <code>not-a-number</code>.</li>
+        <li><code>DataBinder</code> không thể chuyển text đó sang kiểu đích nên <code>BindingResult</code> ghi một <code>FieldError</code> thay vì gán giá trị thành công.</li>
+        <li>Response trả về rejected value, error code, cờ <code>bindingFailure</code> và giá trị target cả trước lẫn sau lần bind.</li>
+      </ol>
+      <p><b>Bằng chứng trong code:</b> thí nghiệm lưu <code>ageBeforeBinding</code> trước khi gọi <code>binder.bind(values)</code> rồi so sánh với giá trị target cuối cùng.</p>
+      <p><b>Quan sát:</b> <code>hasErrors=true</code>, error code là type-mismatch code, <code>bindingFailure=true</code>, age trước/sau đều bằng <code>41</code> và <code>targetAgeUnchanged=true</code>.</p>
+      <p><b>Kết luận:</b> Lỗi conversion/binding là bằng chứng binding có cấu trúc; nó không phải domain validation failure.</p>
+    usage: false
+SafeBindingExperimentController:
+  declarativeBinding():
+    execution: |-
+      <p><b>Khái niệm:</b> Declarative binding thay đổi trạng thái mặc định của property binding; allow-list tường minh sau đó chỉ mở đúng các property được phép ghi.</p>
+      <ol>
+        <li>Dùng cùng input <code>displayName=Ada</code> và <code>role=ADMIN</code> cho ba target mới, đều bắt đầu với <code>displayName=Before</code> và <code>role=USER</code>.</li>
+        <li>Property binding thông thường không có giới hạn declarative và không cấu hình allow-list, nên bề mặt property binding mặc định chấp nhận cả hai property.</li>
+        <li>Declarative binding không cấu hình <code>allowedFields</code> sẽ bỏ qua toàn bộ property binding, vì vậy cả hai property đều không đổi.</li>
+        <li>Declarative binding chỉ cho phép <code>displayName</code> sẽ ghi property đó và ghi nhận <code>role</code> là suppressed field.</li>
+      </ol>
+      <p><b>Bằng chứng trong code:</b> ba scenario chỉ khác ở <code>setDeclarativeBinding(true)</code> và việc có hay không gọi <code>setAllowedFields("displayName")</code>.</p>
+      <p><b>Quan sát:</b> Hai scenario đầu trả về <code>allowedFieldsConfigured=false</code> và <code>allowedFields=null</code>, cho thấy rõ allow-list chưa được cấu hình. Binding thông thường vẫn kết thúc ở <code>Ada/ADMIN</code>, còn declarative binding giữ <code>Before/USER</code>. <code>suppressedFields</code> của scenario declarative-closed vẫn rỗng vì property binding bị bỏ qua trước khi bước lọc allowed field chạy. Scenario thứ ba trả về <code>allowedFieldsConfigured=true</code>, kết thúc ở <code>Ada/USER</code> và <code>suppressedFields</code> chứa <code>role</code>.</p>
+      <p><b>Kết luận:</b> Declarative binding có thể đóng property binding theo mặc định, còn allow-list làm bề mặt ghi được chấp nhận trở nên tường minh.</p>
+    usage: true
+ValidationExperimentController:
+  validationFailure():
+    execution: |-
+      <p><b>Khái niệm:</b> Binding thành công không đồng nghĩa trạng thái domain đã hợp lệ.</p>
+      <ol>
+        <li>Bind giá trị text <code>15</code> vào property <code>age</code> kiểu integer.</li>
+        <li>Conversion và assignment thành công nên giai đoạn binding chưa có lỗi.</li>
+        <li>Chạy Spring <code>Validator</code> từ chối tuổi nhỏ hơn 18 với code <code>age.tooYoung</code>.</li>
+      </ol>
+      <p><b>Quan sát:</b> Target age bằng <code>15</code>, số lỗi sau binding bằng 0 và lỗi chỉ xuất hiện sau validation với <code>bindingFailure=false</code>.</p>
+      <p><b>Kết luận:</b> Binding trả lời input có thể tạo trạng thái có kiểu hay không; validation trả lời trạng thái đó có chấp nhận được hay không.</p>
+    usage: false
+  bindingVsValidation():
+    execution: |-
+      <p><b>Khái niệm:</b> Lỗi binding/conversion và lỗi validation nghiệp vụ xảy ra ở hai giai đoạn khác nhau và để lại bằng chứng có cấu trúc khác nhau.</p>
+      <ol>
+        <li><b>Scenario lỗi binding:</b> khởi tạo <code>age</code> kiểu integer bằng <code>41</code>, rồi bind <code>not-a-number</code>. Conversion thất bại nên target vẫn bằng <code>41</code> và <code>FieldError</code> cho thấy <code>bindingFailure=true</code>.</li>
+        <li><b>Scenario lỗi validation:</b> bind <code>15</code>. Conversion và assignment thành công, chưa có binding error; sau đó chạy Spring <code>Validator</code> từ chối tuổi dưới 18 bằng code <code>age.tooYoung</code>.</li>
+        <li>Response đặt hai scenario mới cạnh nhau để learner quan sát trực tiếp ranh giới giữa hai giai đoạn.</li>
+      </ol>
+      <p><b>Bằng chứng trong code:</b> scenario đầu ghi lại target trước và sau <code>binder.bind(...)</code>; scenario sau ghi số lỗi trước và sau <code>binder.validate()</code>.</p>
+      <p><b>Quan sát:</b> scenario đầu có lỗi type mismatch, rejected raw value, <code>bindingFailure=true</code> và target không đổi. Scenario sau có <code>errorsAfterBinding=0</code>, target age bằng <code>15</code>, rồi xuất hiện <code>age.tooYoung</code> với <code>bindingFailure=false</code>.</p>
+      <p><b>Kết luận:</b> Binding trả lời dữ liệu bên ngoài có thể trở thành trạng thái object có kiểu hay không; validation trả lời trạng thái đã tạo thành công có được chấp nhận hay không.</p>
+    usage: true

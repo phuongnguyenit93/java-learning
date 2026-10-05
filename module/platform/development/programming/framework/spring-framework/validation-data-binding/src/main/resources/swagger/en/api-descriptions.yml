@@ -1,0 +1,113 @@
+DataBinderExperimentController:
+  typeMismatch():
+    summary: Observe a type-mismatch binding failure
+    description: Start from age 41, bind the text value "not-a-number" to the integer
+      property, and inspect the resulting FieldError together with before/after target
+      state that proves the failed conversion did not assign a new value.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: data-binding-flow
+    methodName: typeMismatch
+    params: [
+      ]
+    path: com/example/learning/module/validationbinding/controller/DataBinderExperimentController.java
+    mapping: '@GetMapping("/type-mismatch")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /validation-binding/data-binder/type-mismatch
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: false
+SafeBindingExperimentController:
+  declarativeBinding():
+    summary: Compare ordinary and declarative property binding
+    description: Submit displayName and role through three fresh binders. Ordinary
+      property binding writes both fields, declarative binding with no allowed fields
+      writes neither, and declarative binding with only displayName allowed writes
+      displayName while suppressing role.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: safe-binding-controls
+    methodName: declarativeBinding
+    params: [
+      ]
+    path: com/example/learning/module/validationbinding/controller/SafeBindingExperimentController.java
+    mapping: '@GetMapping("/declarative")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /validation-binding/safe-binding/declarative
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+ValidationExperimentController:
+  validationFailure():
+    summary: Separate binding success from validation failure
+    description: Bind age "15" successfully to an integer target, then run a Spring
+      Validator that rejects ages below 18. The evidence distinguishes binding errors
+      from domain validation errors.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: validation-vs-binding
+    methodName: validationFailure
+    params: [
+      ]
+    path: com/example/learning/module/validationbinding/controller/ValidationExperimentController.java
+    mapping: '@GetMapping("/rule-failure")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /validation-binding/validation/rule-failure
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: false
+  bindingVsValidation():
+    summary: Compare binding failure with validation failure
+    description: Run two fresh age scenarios side by side. Invalid text fails during
+      conversion and records a binding FieldError while preserving the prior target
+      value; valid text binds successfully first and is rejected only when the Spring
+      Validator runs.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: validation-vs-binding
+    methodName: bindingVsValidation
+    params: [
+      ]
+    path: com/example/learning/module/validationbinding/controller/ValidationExperimentController.java
+    mapping: '@GetMapping("/binding-vs-validation")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /validation-binding/validation/binding-vs-validation
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
