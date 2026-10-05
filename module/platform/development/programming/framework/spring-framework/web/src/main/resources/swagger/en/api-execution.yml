@@ -1,0 +1,69 @@
+AsyncMvcExperimentController:
+  callable():
+    execution: |-
+      <p><b>Concept:</b> A Servlet async request can release the original request thread, run deferred work on an MVC executor, and later continue through an <code>ASYNC</code> redispatch.</p>
+      <ol>
+        <li><code>AsyncDispatchTraceFilter</code> records the initial <code>REQUEST</code> dispatch and its container thread in a request attribute.</li>
+        <li>The controller captures that request thread and returns a <code>Callable</code> instead of computing the response immediately.</li>
+        <li>Spring MVC submits the callable to the bounded executor configured by <code>AsyncSupportConfigurer</code>; the worker records its <code>spring-web-mvc-</code> thread name.</li>
+        <li>When the callable completes, the Servlet container performs an <code>ASYNC</code> redispatch. The filter runs again and appends that dispatch to the same request-scoped trace before the response is written.</li>
+      </ol>
+      <p><b>Evidence:</b> <code>differentThread=true</code>, <code>configuredExecutorThread=true</code>, and the trace contains both REQUEST and ASYNC dispatch entries. This is Servlet async processing, not an end-to-end WebFlux pipeline.</p>
+    usage: true
+ConditionalCacheExperimentController:
+  conditional():
+    execution: |-
+      <p><b>Concept:</b> Conditional GET lets a client cheaply revalidate a representation instead of downloading the same body again.</p>
+      <ol>
+        <li>The first GET returns a deterministic representation with <code>ETag</code>, <code>Last-Modified</code>, and <code>Cache-Control</code>.</li>
+        <li>Send another GET with <code>If-None-Match</code> equal to the returned ETag.</li>
+        <li><code>ServletWebRequest.checkNotModified</code> compares the validator and, when it still matches, prepares HTTP <code>304 Not Modified</code> so normal response-body rendering is skipped.</li>
+      </ol>
+      <p><b>Evidence:</b> Compare the first 200 response and body with the second 304 response and empty body. This demonstrates HTTP representation caching, not the Spring Cache abstraction.</p>
+    usage: true
+HttpClientExperimentController:
+  restClientStatus():
+    execution: |-
+      <p><b>Concept:</b> <code>RestClient.retrieve()</code> and <code>exchange()</code> have different status-handling ownership.</p>
+      <ol>
+        <li>The experiment's loopback clients use finite 2-second connect and read timeouts so a stalled embedded server cannot block the learning endpoint indefinitely.</li>
+        <li>A bounded functional localhost route returns a normal 200 response so <code>retrieve()</code> can decode its JSON body.</li>
+        <li>A second local route returns 404. Through <code>retrieve()</code>, the builder-level default status handler runs and records <code>configured-handler:404</code>.</li>
+        <li>The same 404 is requested with <code>exchange()</code>. The exchange callback reads the raw status directly; retrieve/default status handlers are not applied.</li>
+      </ol>
+      <p><b>Evidence:</b> The response contains the decoded success body, the configured retrieve failure, raw <code>exchangeStatus=404</code>, and <code>exchangeBypassedConfiguredStatusHandler=true</code>.</p>
+    usage: true
+  httpServiceAdapters(String):
+    execution: |-
+      <p><b>Concept:</b> An HTTP Service Interface describes the HTTP contract independently from the synchronous client adapter that executes it.</p>
+      <ol>
+        <li><code>EchoHttpService</code> declares path, query, and header inputs with <code>@HttpExchange</code>/<code>@GetExchange</code>.</li>
+        <li>At application readiness, the experiment service pins its target to the embedded server's loopback address, actual port, and context path, configures finite 2-second connect/read timeouts, then creates one reusable proxy with <code>RestClientAdapter</code> and another with <code>RestTemplateAdapter</code>.</li>
+        <li>Each endpoint invocation reuses those stable proxies to call the same bounded local echo route with the same interface method but different marker headers.</li>
+        <li>The returned maps prove that method arguments became real path/query/header values and that both adapters decoded the response through the same interface contract.</li>
+      </ol>
+      <p><b>Evidence:</b> Compare the <code>restClientAdapter</code> and <code>restTemplateAdapter</code> entries. The experiment demonstrates adapter independence, not performance or client-selection policy.</p>
+    usage: true
+MvcInputExperimentController:
+  validatedBody(CreateOrderRequest):
+    execution: |-
+      <p><b>Concept:</b> Request-body conversion and object validation are separate MVC stages.</p>
+      <ol>
+        <li>With <code>Content-Type: application/json</code>, an <code>HttpMessageConverter</code> decodes the body into <code>CreateOrderRequest</code>.</li>
+        <li><code>@Valid</code> then evaluates <code>@NotBlank</code> and <code>@Min</code>. Valid input reaches the handler and returns typed field evidence.</li>
+        <li>Invalid object constraints raise <code>MethodArgumentNotValidException</code>; <code>MvcValidationExceptionAdvice</code> turns that Framework exception into a deterministic 400 <code>ProblemDetail</code>.</li>
+        <li>The same mapping also exposes representation failures: an unsupported request media type can produce 415, and an unacceptable <code>Accept</code> header can produce 406 before a normal success response is selected.</li>
+      </ol>
+      <p><b>Evidence:</b> Compare a valid 200 JSON response with validation 400, unsupported-media-type 415, and not-acceptable 406 behavior.</p>
+    usage: true
+  methodValidation(int):
+    execution: |-
+      <p><b>Concept:</b> Spring MVC 6.1 can perform controller method validation without class-level <code>@Validated</code>.</p>
+      <ol>
+        <li>The request parameter is converted to <code>int</code> and carries a direct <code>@Min(1)</code> constraint.</li>
+        <li>A positive value passes MVC method validation and the controller returns <code>methodInvoked=true</code>.</li>
+        <li>Zero or a negative value fails before normal handler completion and raises <code>HandlerMethodValidationException</code>.</li>
+        <li>The MVC advice translates that exception into a stable 400 <code>ProblemDetail</code> whose <code>errorType</code> exposes the runtime path.</li>
+      </ol>
+      <p><b>Evidence:</b> Compare the successful handler response with the validation ProblemDetail and its <code>HandlerMethodValidationException</code> marker.</p>
+    usage: true

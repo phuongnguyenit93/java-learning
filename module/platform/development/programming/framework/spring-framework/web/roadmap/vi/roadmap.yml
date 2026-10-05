@@ -41,4 +41,163 @@
 # Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: servlet-web-foundation
+    title: Mục đích của Spring MVC và mô hình Servlet
+    purpose: Hiểu vì sao Spring MVC tồn tại trên nền Servlet API, kiến trúc front controller giải quyết vấn đề gì, và module này chịu trách nhiệm đến đâu trước khi học các annotation của controller.
+    relatedKnowledge:
+      - SpringMvcFoundation
+    relatedModules:
+      - routeId: SPRING_CORE_CONTAINER
+        label: Spring Core Container
+        note: Hạ tầng Spring MVC và controller đều được quản lý qua ApplicationContext cùng mô hình bean thuộc Core Container.
+    objectives:
+      - Giải thích Spring MVC là web framework theo Servlet stack của Spring Framework và phân biệt nó với auto-configuration web của Spring Boot.
+      - Hình thành mental model về request, response, Servlet container, thread xử lý, handler và hạ tầng framework trước khi tập trung vào annotation.
+      - Giữ ranh giới rõ ràng; nền tảng validation/conversion dùng chung, WebFlux, WebSocket/STOMP messaging, chính sách Spring Security và kiến trúc HTTP integration có owner riêng.
+
+  - id: dispatcher-servlet-request-lifecycle
+    title: DispatcherServlet và vòng đời xử lý request
+    purpose: Theo dõi một HTTP request xuyên qua front-controller pipeline của Spring MVC để hiểu routing, invocation, rendering, interception và exception handling là các strategy phối hợp với nhau chứ không phải những annotation rời rạc.
+    relatedKnowledge:
+      - DispatcherServletLifecycle
+    dependsOn:
+      - servlet-web-foundation
+    objectives:
+      - Hiểu DispatcherServlet là bộ điều phối trung tâm và mối quan hệ của nó với WebApplicationContext.
+      - Theo dõi HandlerMapping, HandlerExecutionChain, HandlerAdapter, handler invocation, xử lý return value, render view hoặc body và HandlerExceptionResolver ở đúng mức kiến trúc.
+      - Hiểu cách bootstrap trong Servlet container và, khi có root WebApplicationContext, quan hệ parent-child của nó với WebApplicationContext của DispatcherServlet để ownership hạ tầng và phạm vi nhìn thấy bean được hiểu rõ.
+      - Nhận biết multipart, locale, view resolution và các strategy khác của DispatcherServlet mà không biến roadmap thành danh sách SPI.
+
+  - id: mvc-endpoint-programming-models
+    title: Các mô hình xây endpoint trong Spring MVC
+    purpose: Hiểu hai programming model chính của Spring MVC trên Servlet stack là annotated controller và functional endpoint, cùng cách chúng đưa request vào application handler.
+    relatedKnowledge:
+      - AnnotatedControllers
+      - WebMvcFunctionalEndpoints
+    dependsOn:
+      - dispatcher-servlet-request-lifecycle
+    objectives:
+      - Hiểu @Controller, @RestController, @RequestMapping và các composed mapping annotation như programming model annotation chính của Spring MVC.
+      - Hiểu request mapping condition, URI variable, request parameter, header, cookie, request body, model attribute, session state và cách handler method nhận dữ liệu.
+      - Phân biệt response theo model-view, response body, ResponseEntity, redirect và trường hợp controller trực tiếp xử lý response mà không học thuộc toàn bộ danh sách argument/return type.
+      - Hiểu RouterFunction, HandlerFunction, ServerRequest và ServerResponse như functional model trên Servlet stack, rồi so sánh với annotated controller theo khả năng composition, mức độ explicit, filtering và nhu cầu ứng dụng.
+
+  - id: mvc-binding-validation-integration
+    title: Tích hợp binding và validation trong MVC
+    purpose: Hiểu Spring MVC gọi data binding, type conversion, formatting và validation ở đâu trong controller pipeline, đồng thời giữ nền tảng validation/data-binding dùng chung ở module chuyên trách.
+    relatedKnowledge:
+      - MvcBindingValidation
+    dependsOn:
+      - mvc-endpoint-programming-models
+    objectives:
+      - Theo dõi cách request data trở thành command object thông qua WebDataBinder và hạ tầng conversion/formatting đã cấu hình.
+      - Hiểu @InitBinder, @Valid hoặc @Validated, Errors hoặc BindingResult và phân biệt object validation với method validation của Spring MVC.
+      - Nhận biết mô hình built-in controller method validation được bổ sung trong Spring Framework 6.1, đường đi của validation error và ranh giới với method validation qua class-level @Validated/AOP mà không lặp lại toàn bộ Validator, DataBinder, ConversionService hay Bean Validation.
+      - Xem safe binding và allowed fields là quyết định có ảnh hưởng bảo mật, không giả định automatic binding luôn an toàn.
+
+  - id: response-representation-rendering
+    title: Biểu diễn response, message conversion và view rendering
+    purpose: Hiểu cách kết quả từ handler trở thành HTTP representation hoặc server-rendered view và cách content negotiation chọn representation phù hợp.
+    relatedKnowledge:
+      - MessageConversionRepresentation
+      - ViewRenderingNavigation
+    dependsOn:
+      - mvc-endpoint-programming-models
+    objectives:
+      - Hiểu HttpMessageConverter là cơ chế chuyển đổi representation trên Servlet stack được Spring MVC sử dụng, bao gồm cả annotated controller và functional endpoint.
+      - Hiểu content negotiation, media type, ResponseEntity và response header mà không đồng nhất REST handling với việc serialize JSON.
+      - Hiểu Model, View, ViewResolver, logical view name, redirect, flash attribute và ranh giới giữa REST-style response với server-side view rendering.
+      - Giữ cơ chế representation của HTTP trong Spring Framework, còn lý thuyết protocol và kiến trúc HTTP ở cấp ứng dụng thuộc Integration HTTP.
+
+  - id: mvc-exception-error-contract
+    title: Exception resolution và HTTP error response
+    purpose: Hiểu cách failure đi qua exception-resolution chain của Spring MVC và cách ứng dụng tạo HTTP error response nhất quán mà không biến utility global handler riêng của repository thành curriculum owner.
+    relatedKnowledge:
+      - MvcErrorHandling
+    dependsOn:
+      - mvc-endpoint-programming-models
+    objectives:
+      - Hiểu chuỗi có thứ tự các HandlerExceptionResolver mà DispatcherServlet sử dụng và đặt ExceptionHandlerExceptionResolver, ResponseStatusExceptionResolver, DefaultHandlerExceptionResolver đúng vị trí.
+      - Dùng @ExceptionHandler và @ControllerAdvice cho xử lý lỗi trong controller hoặc xuyên nhiều controller, đồng thời giữ đúng exception specificity và response semantics.
+      - Hiểu ResponseStatusException, ErrorResponse, ProblemDetail, ResponseEntityExceptionHandler và cách Spring MVC render problem-detail response.
+      - Giữ Spring Boot error page/error endpoint và module support global-exception-handler của repository ngoài ownership của learning journey này.
+
+  - id: async-servlet-request-processing
+    title: Xử lý request bất đồng bộ và streaming trên Servlet
+    purpose: Hiểu Spring MVC xây trên Servlet asynchronous processing cho cả xử lý một kết quả được hoàn tất về sau qua async dispatch lẫn response streaming được giữ mở trong lúc dữ liệu được ghi, đồng thời vẫn khác căn bản với WebFlux.
+    relatedKnowledge:
+      - AsyncMvcStreaming
+    dependsOn:
+      - dispatcher-servlet-request-lifecycle
+      - mvc-endpoint-programming-models
+    objectives:
+      - Theo dõi Servlet async dispatch lifecycle dùng bởi Callable, DeferredResult và WebAsyncTask.
+      - Hiểu ResponseBodyEmitter, SseEmitter và StreamingResponseBody như cơ chế streaming của Servlet stack, bao gồm timeout, completion, disconnect và exception dispatch.
+      - Tính đến việc bật Servlet async, cấu hình AsyncTaskExecutor và timeout, cùng ASYNC filter dispatch khi dùng xử lý bất đồng bộ trong production.
+      - Nhận biết Spring MVC có thể adapt reactive return value nhưng việc ghi response vẫn dựa trên mô hình Servlet/blocking.
+      - Phân biệt async Spring MVC với WebFlux để không đồng nhất API controller bất đồng bộ với một web stack reactive, non-blocking hoàn toàn.
+
+  - id: cross-cutting-web-infrastructure
+    title: Hạ tầng request xuyên suốt
+    purpose: Đặt filter, MVC interceptor, CORS, multipart handling, locale resolution, static resource và HTTP caching vào đúng tầng của Servlet request pipeline.
+    relatedKnowledge:
+      - CrossCuttingRequestInfrastructure
+      - WebSupportResourceDelivery
+    dependsOn:
+      - dispatcher-servlet-request-lifecycle
+    objectives:
+      - Phân biệt Servlet Filter với HandlerInterceptor theo vị trí lifecycle, khả năng can thiệp và use case phù hợp.
+      - Hiểu CORS processing trong Spring MVC và mối quan hệ với HandlerMapping, đồng thời để authentication, authorization, CSRF và security policy cho Spring Security.
+      - Nhận biết multipart resolution, locale resolution, forwarded-header handling, URI building, static-resource handling và conditional caching là web infrastructure chứ không phải business logic của controller.
+      - Tính đến async dispatch khi filter hoặc interceptor tham gia request rời khỏi rồi quay lại Servlet pipeline.
+
+  - id: mvc-configuration-extension
+    title: Cấu hình và mở rộng Spring MVC
+    purpose: Hiểu cách bật, tùy biến và mở rộng Spring MVC mà không vô tình thay thế framework default hoặc nhầm Spring Framework configuration với Spring Boot auto-configuration.
+    relatedKnowledge:
+      - MvcConfigurationExtension
+    dependsOn:
+      - dispatcher-servlet-request-lifecycle
+    objectives:
+      - Hiểu vai trò của @EnableWebMvc và WebMvcConfigurer trong việc đăng ký và tùy biến hạ tầng MVC.
+      - Cấu hình path matching, content negotiation, message converter, formatter, validator, interceptor, resource handler, view resolver và async support ở đúng extension boundary.
+      - Nhận biết khi nào ứng dụng nâng cao cần custom HandlerMapping, HandlerAdapter, argument resolver, return-value handler hoặc exception resolver.
+      - Giữ opinionated MVC auto-configuration và property-driven default của Spring Boot ngoài ownership của module này.
+
+  - id: synchronous-http-clients
+    title: HTTP client đồng bộ và HTTP Interface của Spring
+    purpose: Hiểu các abstraction HTTP client đồng bộ của Spring Framework cùng mô hình HTTP service interface dùng chung, đồng thời chuyển deep reactive client mechanics và chính sách chọn client cho module sở hữu chúng.
+    relatedKnowledge:
+      - SynchronousHttpClients
+      - HttpServiceInterfaces
+    objectives:
+      - Hiểu RestClient là fluent synchronous HTTP client được giới thiệu từ Spring Framework 6.1 và RestTemplate là synchronous client theo template style đã tồn tại lâu hơn.
+      - Hiểu request factory, message converter, interceptor, initializer, URI building, status handling và body conversion như hạ tầng client tái sử dụng.
+      - Hiểu HTTP Interface và HttpServiceProxyFactory như mô hình declarative client có thể chạy trên các client adapter được hỗ trợ.
+      - Giữ deep mechanics của WebClient trong module reactive và để kiến trúc chọn client, resilience, service-to-service policy cho curriculum Integration HTTP.
+
+  - id: spring-web-synthesis-boundaries
+    title: Tổng hợp Spring Web trên Servlet stack và các ranh giới
+    purpose: Kết nối Spring MVC phía server với hạ tầng HTTP client đồng bộ thành một mental model end-to-end, đồng thời giữ đúng ranh giới với các Spring module lân cận.
+    relatedKnowledge:
+      - SpringWebSynthesis
+    dependsOn:
+      - mvc-configuration-extension
+      - async-servlet-request-processing
+      - synchronous-http-clients
+    relatedModules:
+      - routeId: SPRING_REACTIVE
+        label: Spring Reactive
+        note: WebFlux sở hữu Spring web stack reactive, non-blocking hoàn chỉnh và deep model của WebClient.
+      - routeId: SPRING_TESTING
+        label: Spring Testing
+        note: Spring TestContext, MockMvc và hạ tầng framework-level web testing được mở rộng trong testing module.
+      - routeId: SPRING_SECURITY_FUNDAMENTALS
+        label: Spring Security Fundamentals
+        note: Authentication, authorization, SecurityFilterChain, CSRF và security policy thuộc Spring Security.
+    objectives:
+      - Theo dõi một request end-to-end từ lúc vào Servlet container qua mapping, handler invocation, binding, render representation hoặc resolve exception đến khi hoàn tất response.
+      - Chọn annotated hay functional endpoint và synchronous hay asynchronous Servlet processing dựa trên nhu cầu ứng dụng thay vì sở thích annotation.
+      - Giải thích vai trò của RestClient, RestTemplate và HTTP Interface mà không biến Framework mechanics thành chính sách chọn client hay resilience ở cấp ứng dụng.
+      - Giải thích khi nào Spring MVC là stack phù hợp và khi nào yêu cầu nên được chuyển sang WebFlux, messaging, validation/data-binding, testing, security hoặc integration module chuyên trách.

@@ -1,0 +1,24 @@
+AsyncMvcExperimentController:
+  description: |-
+    <h2>Async MVC Lifecycle Experiments</h2>
+    <p>Runs bounded Servlet-stack async experiments that expose request-thread handoff, the configured MVC executor, and the later ASYNC redispatch.</p>
+  readmeRelated:
+    file: 9.AsyncMvcStreaming/AsyncMvcStreaming.md
+ConditionalCacheExperimentController:
+  description: |-
+    <h2>Conditional Request Experiments</h2>
+    <p>Demonstrates HTTP validators and Spring MVC conditional-request handling with deterministic ETag and Last-Modified values.</p>
+  readmeRelated:
+    file: 11.WebSupportResourceDelivery/WebSupportResourceDelivery.md
+HttpClientExperimentController:
+  description: |-
+    <h2>Synchronous HTTP Client Experiments</h2>
+    <p>Uses bounded localhost targets to make RestClient status handling and Spring HTTP Service proxy adapters observable without external network dependencies.</p>
+  readmeRelated:
+    file: 13.SynchronousHttpClients/SynchronousHttpClients.md
+MvcInputExperimentController:
+  description: |-
+    <h2>MVC Input and Validation Experiments</h2>
+    <p>Shows the real Spring MVC request-body, Bean Validation, and built-in handler-method validation paths, including their different exception outcomes.</p>
+  readmeRelated:
+    file: 5.MvcBindingValidation/MvcBindingValidation.md

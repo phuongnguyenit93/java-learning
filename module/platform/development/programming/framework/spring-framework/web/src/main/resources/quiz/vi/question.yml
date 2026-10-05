@@ -1,0 +1,170 @@
+# <quiz-schema>
+# Cấu trúc câu hỏi Quiz
+# schema-version: 3
+#
+# questions [kiểu: list; bắt buộc; mặc định: []; duy nhất theo: id]
+#   Danh sách câu hỏi Quiz của module trong language hiện tại.
+#   mỗi phần tử:
+#     id [kiểu: string; bắt buộc; mặc định: ""]
+#       ID ổn định và duy nhất của câu hỏi.
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi hiển thị cho người học.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu câu hỏi được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu câu hỏi đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+#     answers [kiểu: list; bắt buộc; số phần tử: 4; mặc định: []; duy nhất theo: id]
+#       Chính xác bốn đáp án. ID A/B/C/D là identity nội bộ ổn định, không phải vị trí hiển thị sau khi frontend shuffle.
+#       mỗi phần tử:
+#         id [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#           Identity ổn định của đáp án.
+#         answer [kiểu: string; bắt buộc; mặc định: ""]
+#           Nội dung đáp án hiển thị cho người học.
+#         explanation [kiểu: string; bắt buộc; mặc định: ""]
+#           Giải thích hiển thị khi người học chọn đáp án này, bất kể đúng hay sai.
+#     correctAnswerId [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#       ID nội bộ của đáp án đúng. Frontend kiểm tra bằng identity này sau khi shuffle.
+# </quiz-schema>
+
+questions:
+  - id: dispatcher-mapping-adapter-roles
+    question: "Trong một request Spring MVC, mô tả nào phân biệt đúng vai trò của HandlerMapping và HandlerAdapter?"
+    answers:
+      - {id: A, answer: "HandlerMapping vừa chọn vừa gọi handler; HandlerAdapter chủ yếu convert return value sau khi handler chạy.", explanation: "Sai. HandlerMapping xác định handler và execution chain; HandlerAdapter chịu trách nhiệm gọi handler đã chọn theo programming model phù hợp."}
+      - {id: B, answer: "HandlerMapping chọn handler và chain; HandlerAdapter sau đó gọi handler đã chọn qua handler model phù hợp.", explanation: "Đúng. Sự tách biệt này cho phép DispatcherServlet route trước rồi invoke nhiều kiểu handler qua adapter phù hợp."}
+      - {id: C, answer: "HandlerAdapter thu hẹp URL candidate trước, rồi HandlerMapping gọi handler mà adapter đó hỗ trợ.", explanation: "Sai. Chọn URL-to-handler thuộc HandlerMapping; HandlerAdapter được chọn sau khi đã có handler."}
+      - {id: D, answer: "HandlerMapping chọn cả handler lẫn adapter; HandlerAdapter chỉ đánh dấu những handler type mà MVC hỗ trợ.", explanation: "Sai. DispatcherServlet chọn adapter sau mapping và adapter thực sự gọi handler."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.DispatcherServletLifecycle/DispatcherServletLifecycle.md", anchor: "handler-mapping-and-execution-chain"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: annotated-functional-coexistence
+    question: "Nên hiểu annotated controller và WebMvc.fn functional endpoint như thế nào khi cùng tồn tại trong một ứng dụng Spring MVC?"
+    answers:
+      - {id: A, answer: "Cả hai dùng DispatcherServlet, nhưng đăng ký RouterFunction sẽ vô hiệu hóa các @RequestMapping handler trong cùng context.", explanation: "Sai. Annotated và functional endpoint mapping có thể cùng tồn tại trong một MVC application context."}
+      - {id: B, answer: "Functional route dùng chung MVC nhưng được đổi thành HandlerMethod trước khi gọi, nên hai model dùng cùng handler adapter.", explanation: "Sai. WebMvc.fn có router/handler abstraction và adapter riêng thay vì biến thành annotated HandlerMethod."}
+      - {id: C, answer: "Hai model chỉ có thể cùng tồn tại trong các DispatcherServlet context khác nhau để handler mapping không cùng tham gia một dispatch pipeline.", explanation: "Sai. Chúng có thể cùng tồn tại trong cùng DispatcherServlet context nếu route không xung đột."}
+      - {id: D, answer: "Cả hai là Servlet-stack MVC model có thể cùng tồn tại trong DispatcherServlet; khác nhau chủ yếu ở cách khai báo route và handler.", explanation: "Đúng. Khác biệt chính là style và composition, không phải Servlet MVC đối lập với WebFlux."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.WebMvcFunctionalEndpoints/WebMvcFunctionalEndpoints.md", anchor: "annotated-and-functional-coexistence"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: mvc-validation-exception-paths
+    question: "Cặp exception nào khớp với hai validation path được module Web minh họa?"
+    answers:
+      - {id: A, answer: "@RequestBody sai object constraint tạo HandlerMethodValidationException, còn direct @Min parameter tạo MethodArgumentNotValidException.", explanation: "Sai. Câu này đảo ngược hai MVC validation path được các experiment sử dụng."}
+      - {id: B, answer: "Cả hai trường hợp tạo MethodArgumentNotValidException vì đều phát hiện lỗi trước khi controller hoàn tất bình thường.", explanation: "Sai. Spring MVC 6.1 có method-validation path riêng với HandlerMethodValidationException."}
+      - {id: C, answer: "@RequestBody validation có thể tạo MethodArgumentNotValidException; direct constraint có thể tạo HandlerMethodValidationException.", explanation: "Đúng. Hai exception phản ánh individual argument object validation và MVC method validation."}
+      - {id: D, answer: "Direct parameter constraint chỉ được kiểm tra khi class-level @Validated tạo AOP proxy, nên thiếu @Validated thì @Min vẫn tới handler.", explanation: "Sai. Module minh họa built-in MVC method validation của Spring 6.1 mà không cần class-level @Validated."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.MvcBindingValidation/MvcBindingValidation.md", anchor: "validation-exception-paths"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: mvc-406-vs-415
+    question: "Với endpoint validated-body, phân biệt nào giữa HTTP 406 và 415 là đúng?"
+    answers:
+      - {id: A, answer: "406 nghĩa là MVC không tạo được response phù hợp Accept; 415 nghĩa là request Content-Type không được hỗ trợ.", explanation: "Đúng. Hai status tương ứng với response representation selection và request-body media type."}
+      - {id: B, answer: "406 nghĩa là request Content-Type không được hỗ trợ; 415 nghĩa là MVC không tạo được response phù hợp Accept.", explanation: "Sai. Câu này đảo hướng media type của request và response."}
+      - {id: C, answer: "406 nghĩa là body decode được nhưng validation thất bại; 415 nghĩa là validation pass nhưng response serialization thất bại.", explanation: "Sai. Validation error khác với hai media-type negotiation status này."}
+      - {id: D, answer: "406 nghĩa là JSON body malformed; 415 nghĩa là JSON hợp lệ nhưng không Bean Validation provider nào chấp nhận.", explanation: "Sai. Malformed content và Bean Validation failure đi theo các MVC error path khác."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.MessageConversionRepresentation/MessageConversionRepresentation.md", anchor: "content-negotiation-and-media-types"}
+    apiRelated: {controller: "MvcInputExperimentController", methodSignature: "validatedBody(CreateOrderRequest)"}
+
+  - id: mvc-exception-advice-resolution
+    question: "Một controller exception khớp với @ExceptionHandler trong @ControllerAdvice đang áp dụng. Cách hiểu MVC nào chính xác nhất?"
+    answers:
+      - {id: A, answer: "@ControllerAdvice chỉ xử lý exception sau khi HandlerExceptionResolver chain của DispatcherServlet đã từ chối nó.", explanation: "Sai. @ExceptionHandler trong advice được tiếp cận ngay trong MVC exception-resolution process."}
+      - {id: B, answer: "ResponseStatusExceptionResolver sở hữu @ControllerAdvice và gọi advice sau khi map exception thành status.", explanation: "Sai. @ExceptionHandler được xử lý bởi ExceptionHandlerExceptionResolver, không phải ResponseStatusExceptionResolver."}
+      - {id: C, answer: "DispatcherServlet gọi thẳng @ExceptionHandler phù hợp trước khi hỏi bất kỳ HandlerExceptionResolver nào.", explanation: "Sai. @ExceptionHandler support tham gia qua resolver chain chứ không bypass chain."}
+      - {id: D, answer: "ExceptionHandlerExceptionResolver có thể gọi @ExceptionHandler phù hợp trong resolver chain để tạo MVC response.", explanation: "Đúng. Nếu không resolver nào xử lý, exception có thể tiếp tục quay ra Servlet container."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.MvcErrorHandling/MvcErrorHandling.md", anchor: "exception-handler-and-controller-advice"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: async-callable-runtime-evidence
+    question: "Async experiment ghi REQUEST trên một container thread, Callable trên spring-web-mvc-1 rồi có ASYNC dispatch sau đó. Evidence này chứng minh điều gì?"
+    answers:
+      - {id: A, answer: "Request đã trở thành WebFlux pipeline vì Servlet thread ban đầu được giải phóng.", explanation: "Sai. Servlet async có thể nhả thread ban đầu mà không biến ứng dụng thành WebFlux."}
+      - {id: B, answer: "MVC chạy Callable trên AsyncTaskExecutor đã cấu hình rồi tiếp tục cùng request qua Servlet ASYNC redispatch.", explanation: "Đúng. Trace thể hiện Servlet async lifecycle và executor handoff của Callable result."}
+      - {id: C, answer: "DispatcherServlet rời request vĩnh viễn sau khi Callable bắt đầu nên không còn MVC processing sau khi worker hoàn tất.", explanation: "Sai. MVC tiếp tục xử lý khi async result được dispatch trở lại Servlet pipeline."}
+      - {id: D, answer: "Worker thread chứng minh response write tự động non-blocking và có reactive backpressure.", explanation: "Sai. Servlet async execution tự nó không cung cấp non-blocking I/O hay backpressure kiểu WebFlux."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.AsyncMvcStreaming/AsyncMvcStreaming.md", anchor: "servlet-async-lifecycle"}
+    apiRelated: {controller: "AsyncMvcExperimentController", methodSignature: "callable()"}
+
+  - id: filter-interceptor-placement
+    question: "Placement nào phù hợp khi một concern cần wrap raw Servlet request trước MVC handler selection, còn concern khác cần metadata của handler đã được chọn?"
+    answers:
+      - {id: A, answer: "Dùng HandlerInterceptor ở raw pre-MVC boundary và Servlet Filter sau mapping khi đã có handler metadata.", explanation: "Sai. Câu này đảo ngược vị trí thông thường của hai cơ chế."}
+      - {id: B, answer: "Dùng HandlerInterceptor cho cả hai vì preHandle chạy trước controller nên cũng chạy trước Servlet filter chain.", explanation: "Sai. Interceptor chạy bên trong MVC dispatch, sau khi request đã đi vào enclosing Servlet filter chain."}
+      - {id: C, answer: "Dùng Servlet Filter ở container boundary; dùng HandlerInterceptor khi cần metadata của selected MVC handler.", explanation: "Đúng. Filter nằm ngoài MVC dispatch, còn interceptor chạy quanh mapped MVC handler execution."}
+      - {id: D, answer: "Dùng HandlerFilterFunction cho cả hai vì nó có thể wrap cả annotated handler lẫn functional handler ở Servlet boundary.", explanation: "Sai. HandlerFilterFunction thuộc functional routing và không phải Servlet-wide wrapper cho annotated controller."}
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "10.CrossCuttingRequestInfrastructure/CrossCuttingRequestInfrastructure.md", anchor: "filters-interceptors-and-placement"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: conditional-get-revalidation
+    question: "GET đầu tiên trả 200 với ETag spring-web-cache-v1. GET thứ hai gửi cùng validator trong If-None-Match và nhận 304 không có body. Kết luận nào phù hợp nhất?"
+    answers:
+      - {id: A, answer: "Client revalidate cùng representation nên server có thể không gửi lại representation body.", explanation: "Đúng. Đây là conditional GET behavior mong đợi khi validator vẫn khớp."}
+      - {id: B, answer: "Spring Cache trả controller result từ application-level method cache thay vì chạy HTTP validation.", explanation: "Sai. HTTP conditional request là representation caching, khác với Spring Cache abstraction."}
+      - {id: C, answer: "304 nghĩa là Cache-Control freshness đã đủ nên server bỏ qua If-None-Match và không so sánh ETag.", explanation: "Sai. Experiment này trực tiếp dùng validator-based conditional request handling."}
+      - {id: D, answer: "If-None-Match khớp vẫn phải trả 200 cùng body; chỉ If-Modified-Since mới có thể tạo 304.", explanation: "Sai. If-None-Match là validator chuẩn của conditional GET và có thể dẫn tới 304 khi khớp."}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "11.WebSupportResourceDelivery/WebSupportResourceDelivery.md", anchor: "conditional-requests-and-http-caching"}
+    apiRelated: {controller: "ConditionalCacheExperimentController", methodSignature: "conditional()"}
+
+  - id: rest-client-retrieve-vs-exchange
+    question: "Một RestClient có default status handler cho error response. Trong experiment 404 của module, retrieve() và exchange() khác nhau thế nào?"
+    answers:
+      - {id: A, answer: "Cả hai API đều bắt buộc chạy configured retrieve status handler trước khi application code đọc response.", explanation: "Sai. exchange() trao quyền xử lý response trực tiếp cho callback và không áp dụng retrieve status handler."}
+      - {id: B, answer: "exchange() chạy configured status handler trước callback, còn retrieve() để body extraction quyết định 404 có phải error hay không.", explanation: "Sai. exchange() bỏ qua retrieve/default status handler và trao raw response cho callback."}
+      - {id: C, answer: "retrieve() bỏ qua default status handler, còn exchange() luôn chạy handler sau khi callback kết thúc.", explanation: "Sai. Câu này đảo ngược behavior mà experiment chứng minh."}
+      - {id: D, answer: "retrieve() chạy configured status handler; exchange() trao raw 404 cho callback để callback tự quyết định status handling.", explanation: "Đúng. Experiment ghi configured-handler:404 cho retrieve() và exchangeStatus=404 cho exchange()."}
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "13.SynchronousHttpClients/SynchronousHttpClients.md", anchor: "status-and-error-handling"}
+    apiRelated: {controller: "HttpClientExperimentController", methodSignature: "restClientStatus()"}
+
+  - id: http-service-adapter-independence
+    question: "Cùng EchoHttpService interface chạy thành công qua RestClientAdapter và RestTemplateAdapter. Điều này chủ yếu chứng minh gì?"
+    answers:
+      - {id: A, answer: "Interface tự cung cấp service discovery, retry và circuit breaking bất kể client bên dưới.", explanation: "Sai. Các policy đó không tự xuất hiện chỉ vì khai báo HTTP Service Interface."}
+      - {id: B, answer: "Cùng một @HttpExchange interface contract có thể được HttpServiceProxyFactory thực thi qua các HttpExchangeAdapter khác nhau.", explanation: "Đúng. Experiment thay synchronous adapter nhưng giữ cùng một interface contract."}
+      - {id: C, answer: "RestTemplateAdapter tự nâng cấp call sang RestClient nên cả hai proxy cuối cùng dùng cùng RestClient và status policy.", explanation: "Sai. Mỗi adapter delegate tới underlying client đã cấu hình riêng, không đổi RestTemplate thành RestClient."}
+      - {id: D, answer: "RestTemplateAdapter chỉ hỗ trợ reactive return type, còn RestClientAdapter mới là adapter synchronous cho return type thông thường.", explanation: "Sai. Cả hai adapter trong experiment đều là synchronous HttpExchangeAdapter."}
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "14.HttpServiceInterfaces/HttpServiceInterfaces.md", anchor: "synchronous-http-client-adapters"}
+    apiRelated: {controller: "HttpClientExperimentController", methodSignature: "httpServiceAdapters(String)"}

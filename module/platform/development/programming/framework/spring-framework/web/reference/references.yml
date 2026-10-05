@@ -14,3 +14,36 @@
 #
 # Add only curated references that are useful for the module.
 # The build system must not overwrite this file after authored content exists.
+
+references:
+  - title: "Jakarta Servlet 6.0 Specification"
+    url: "https://jakarta.ee/specifications/servlet/6.0/"
+    description: "Official Servlet specification for the server-side request, response, container, dispatch, filter, and asynchronous-processing model that underpins the repository's Servlet-stack Spring MVC baseline."
+
+  - title: "Spring Framework 6.1.14 - org.springframework.web.servlet API"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/web/servlet/package-summary.html"
+    description: "Version-aligned API reference for the central Spring MVC contracts and infrastructure used by the repository baseline."
+
+  - title: "Spring Framework 6.1.14 - DispatcherServlet API"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/web/servlet/DispatcherServlet.html"
+    description: "Authoritative reference for the front-controller responsibilities, default strategies, handler mapping, adapter, exception resolution, view resolution, multipart, and locale integration."
+
+  - title: "Spring Framework 6.1.14 - Web Binding Annotations API"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/web/bind/annotation/package-summary.html"
+    description: "Version-aligned reference for request mapping, controller advice, binding, request-body, response-body, CORS, and related web annotations."
+
+  - title: "Spring Framework 6.1.14 - HTTP Message Conversion API"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/http/converter/package-summary.html"
+    description: "Version-aligned reference for HttpMessageConverter and the object-to-HTTP representation conversion layer shared by Spring MVC and synchronous clients."
+
+  - title: "Spring Framework 6.1.14 - Synchronous Web Client API"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/web/client/package-summary.html"
+    description: "Version-aligned reference for RestClient, RestTemplate, synchronous client errors, and shared client-side web support."
+
+  - title: "Spring Framework 6.1.14 - RestClient API"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/web/client/RestClient.html"
+    description: "Version-aligned API reference for RestClient, the fluent synchronous HTTP client introduced in Spring Framework 6.1."
+
+  - title: "Spring Framework 6.1.14 - HTTP Service Proxy API"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/web/service/invoker/package-summary.html"
+    description: "Version-aligned reference for HttpServiceProxyFactory and the common HTTP service proxy infrastructure used by declarative HTTP interfaces."

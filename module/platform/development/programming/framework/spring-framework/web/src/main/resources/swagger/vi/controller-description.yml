@@ -1,0 +1,24 @@
+AsyncMvcExperimentController:
+  description: |-
+    <h2>Thí nghiệm vòng đời Async MVC</h2>
+    <p>Chạy thí nghiệm bất đồng bộ có giới hạn trên Servlet stack để quan sát việc chuyển thread, executor MVC đã cấu hình và ASYNC redispatch xảy ra sau đó.</p>
+  readmeRelated:
+    file: 9.AsyncMvcStreaming/AsyncMvcStreaming.md
+ConditionalCacheExperimentController:
+  description: |-
+    <h2>Thí nghiệm Conditional Request</h2>
+    <p>Minh họa HTTP validator và conditional-request handling của Spring MVC bằng ETag và Last-Modified xác định trước.</p>
+  readmeRelated:
+    file: 11.WebSupportResourceDelivery/WebSupportResourceDelivery.md
+HttpClientExperimentController:
+  description: |-
+    <h2>Thí nghiệm HTTP Client đồng bộ</h2>
+    <p>Dùng target localhost có giới hạn để quan sát RestClient status handling và Spring HTTP Service proxy adapter mà không phụ thuộc mạng bên ngoài.</p>
+  readmeRelated:
+    file: 13.SynchronousHttpClients/SynchronousHttpClients.md
+MvcInputExperimentController:
+  description: |-
+    <h2>Thí nghiệm Input và Validation trong MVC</h2>
+    <p>Quan sát request-body binding, Bean Validation và built-in handler-method validation của Spring MVC, bao gồm các exception path khác nhau.</p>
+  readmeRelated:
+    file: 5.MvcBindingValidation/MvcBindingValidation.md

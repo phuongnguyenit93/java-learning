@@ -1,0 +1,133 @@
+# <interview-schema>
+# Cấu trúc câu hỏi Interview
+# schema-version: 2
+#
+# questions [kiểu: list; bắt buộc; mặc định: []]
+#   Danh sách câu hỏi Interview của module trong language hiện tại.
+#   mỗi phần tử:
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi phỏng vấn hiển thị cho người học.
+#     answer [kiểu: string; bắt buộc; mặc định: ""]
+#       Câu trả lời tham khảo, chỉ hiển thị khi người học chủ động mở.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu nội dung được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu nội dung đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+# </interview-schema>
+
+questions:
+  - question: >-
+      Hãy giải thích DispatcherServlet phối hợp HandlerMapping và HandlerAdapter như thế nào, và vì sao Spring MVC tách hai trách nhiệm này.
+    answer: >-
+      DispatcherServlet là front controller. Trước hết nó hỏi các HandlerMapping để xác định handler và tạo execution chain cho request hiện tại. Sau đó nó chọn HandlerAdapter biết cách gọi đúng handler model, chẳng hạn annotated HandlerMethod, rồi tiếp tục argument resolution và return-value processing. Việc tách selection khỏi invocation giúp MVC hỗ trợ nhiều kiểu handler mà DispatcherServlet không phải biết calling convention của từng kiểu. Mental model ngắn gọn là route trước, invoke sau.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.DispatcherServletLifecycle/DispatcherServletLifecycle.md"
+      anchor: "handler-mapping-and-execution-chain"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Object validation, built-in method validation của Spring MVC 6.1 và class-level @Validated khác nhau như thế nào trong controller?
+    answer: >-
+      Object validation thường bắt đầu tại argument resolver, ví dụ @Valid trên @RequestBody hoặc @ModelAttribute, và lỗi của object riêng lẻ có thể xuất hiện dưới dạng MethodArgumentNotValidException. Direct constraint trên controller method parameter hoặc return value có thể kích hoạt built-in MVC method validation của Spring 6.1 và tạo HandlerMethodValidationException khi lỗi không được xử lý cục bộ. Class-level @Validated là đường khác: nó dùng generic AOP method validation qua proxy. Nếu muốn dùng built-in MVC 6.1 method-validation model thì không nên xem class-level @Validated như cùng một cơ chế. Errors hoặc BindingResult cũng có thể giữ một số validation failure ở local handler khi được đặt ngay sau parameter phù hợp và mọi lỗi liên quan đều được xử lý ở đó.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Một JSON endpoint đôi khi trả 415 và đôi khi trả 406. Bạn sẽ chẩn đoán hai failure này trong Spring MVC như thế nào?
+    answer: >-
+      Trước hết hãy xác định hướng representation processing nào thất bại. 415 Unsupported Media Type chỉ về phía request: Content-Type không mô tả body format mà MVC có thể đọc thành Java type đích bằng các HttpMessageConverter hiện có. 406 Not Acceptable chỉ về phía response: request đã được xử lý nhưng MVC không tạo được representation tương thích với Accept header và các converter hoặc handler khả dụng. Phân biệt này giúp tránh debug validation hoặc controller logic khi request chưa tới stage đó, hoặc debug request decoding khi lỗi thực ra nằm ở response negotiation.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.MessageConversionRepresentation/MessageConversionRepresentation.md"
+      anchor: "content-negotiation-and-media-types"
+    apiRelated:
+      controller: "MvcInputExperimentController"
+      methodSignature: "validatedBody(CreateOrderRequest)"
+
+  - question: >-
+      Vì sao controller trả Callable trong Spring MVC không làm ứng dụng trở thành WebFlux, và bạn mong đợi runtime evidence nào?
+    answer: >-
+      Callable dùng Servlet asynchronous request processing. MVC có thể bắt đầu async processing, giải phóng request thread ban đầu, chạy Callable trên AsyncTaskExecutor rồi tiếp tục bằng ASYNC redispatch trước khi hoàn thành normal MVC response processing. Cách này có thể cải thiện thread usage cho deferred work, nhưng ứng dụng vẫn dùng Servlet programming và I/O model; nó không tự có reactive execution model hoặc backpressure semantics của WebFlux. Evidence hữu ích là Callable chạy trên executor thread khác cùng với REQUEST và ASYNC dispatch của cùng request. Production configuration cũng cần bounded executor và timeout policy có chủ đích.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "9.AsyncMvcStreaming/AsyncMvcStreaming.md"
+      anchor: "async-mvc-vs-webflux"
+    apiRelated:
+      controller: "AsyncMvcExperimentController"
+      methodSignature: "callable()"
+
+  - question: >-
+      Bạn quyết định một cross-cutting web concern nên nằm ở Servlet Filter, HandlerInterceptor, controller advice hay MVC extension point khác bằng cách nào?
+    answer: >-
+      Hãy đặt concern ở lifecycle layer hẹp nhất sở hữu thông tin mà nó cần. Servlet Filter phù hợp với container-level request/response wrapping trước hoặc bên ngoài MVC handler selection. HandlerInterceptor phù hợp khi cần selected MVC handler và lifecycle preHandle/postHandle/afterCompletion. RequestBodyAdvice hoặc ResponseBodyAdvice nằm quanh body conversion, còn @ControllerAdvice phù hợp cho binding hoặc exception concern trên nhiều controller chứ không phải universal request wrapper. Async dispatch cũng quan trọng vì filter có thể chạy ở nhiều dispatcher type, và security policy thuộc Spring Security thay vì tự dựng lại bằng MVC interceptor. Quyết định nên theo lifecycle ownership, không theo sự tiện tay.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "15.SpringWebSynthesis/SpringWebSynthesis.md"
+      anchor: "filter-interceptor-and-advice-placement"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Hãy giải thích ETag hoặc Last-Modified validator tương tác với Cache-Control ra sao và vì sao conditional request có thể trả 304 hoặc 412.
+    answer: >-
+      Cache-Control mô tả chính sách cache. ETag và Last-Modified là các validator dùng để revalidate representation đang lưu; các conditional header có thể dùng những validator đó để biểu diễn precondition. Với conditional GET hoặc HEAD, validator khớp có thể cho phép server trả 304 Not Modified mà không gửi representation body. Với request thay đổi trạng thái, conditional header hoạt động như precondition; khi điều kiện bắt buộc không còn đúng, 412 Precondition Failed có thể là kết quả phù hợp thay vì 304. Các semantics HTTP này khác Spring Cache abstraction, vốn cache application-level method result hoặc value chứ không phải HTTP representation.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "11.WebSupportResourceDelivery/WebSupportResourceDelivery.md"
+      anchor: "conditional-requests-and-http-caching"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Bạn so sánh việc dùng RestClient trực tiếp với @HttpExchange HTTP Service Interface như thế nào, và không nên kỳ vọng hai abstraction này tự cung cấp điều gì?
+    answer: >-
+      RestClient là synchronous fluent client, nơi caller trực tiếp xây request và chọn response handling như retrieve() hoặc exchange() ở mức thấp hơn. HTTP Service Interface đưa HTTP contract vào các Java method có annotation và để HttpServiceProxyFactory thực thi contract đó qua HttpExchangeAdapter như RestClientAdapter hoặc RestTemplateAdapter. Interface có thể giảm code lặp ở call site và giữ một contract khi thay supported adapter bên dưới, nhưng nó không biến remote call thành local call và không tự cung cấp service discovery, retry, circuit breaking, latency control hay business-level resilience policy. Những concern đó vẫn cần ownership rõ ràng ở lớp kiến trúc phù hợp.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Một form POST render phía server cần tránh submit lặp, hiển thị success message đúng một lần ở GET kế tiếp và render logical view như orders/detail. Hãy giải thích flow Spring MVC và điểm khác với việc trả response body.
+    answer: >-
+      Hãy dùng Post/Redirect/Get: sau khi POST thành công, thêm success message dạng flash attribute qua RedirectAttributes rồi trả redirect outcome như redirect:/orders/{id}. Redirect khiến client tạo một GET mới. Spring mang output FlashMap qua bước chuyển này để GET phù hợp nhận flash attribute mà không encode nó vào redirect URL; ordinary model state không tự động trở thành cùng request state ở request kế tiếp, còn redirect attribute dành cho URL là cơ chế khác. GET có thể populate Model và trả logical view name như orders/detail. ViewResolver sẽ resolve tên đó thành View rồi View render model vào response. Ngược lại, @ResponseBody bỏ qua normal view resolution và ghi representation qua message-conversion infrastructure. Flash data chỉ là transition state ngắn hạn, không phải durable business state hay general session cache.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.ViewRenderingNavigation/ViewRenderingNavigation.md"
+      anchor: "redirects-and-flash-attributes"
+    apiRelated:
+      controller: ""
+      methodSignature: ""

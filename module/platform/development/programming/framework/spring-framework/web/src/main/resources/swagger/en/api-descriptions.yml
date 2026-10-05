@@ -1,0 +1,170 @@
+AsyncMvcExperimentController:
+  callable():
+    summary: Observe Callable thread handoff and ASYNC redispatch
+    description: Return a Callable so Spring MVC releases the initial Servlet request
+      thread, executes the result on the configured bounded AsyncTaskExecutor, and
+      later performs an ASYNC redispatch. The response reports thread identities and
+      the request-scoped dispatch trace.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: servlet-async-lifecycle
+    methodName: callable
+    params: [
+      ]
+    path: com/example/learning/module/web/async/controller/AsyncMvcExperimentController.java
+    mapping: '@GetMapping("/callable")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /spring-web/async/callable
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+ConditionalCacheExperimentController:
+  conditional():
+    summary: Revalidate a response with ETag and Last-Modified
+    description: Return a deterministic cacheable representation with ETag and Last-Modified
+      validators. Repeating the request with the current If-None-Match value lets
+      Spring MVC short-circuit normal body rendering with HTTP 304.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: conditional-requests-and-http-caching
+    methodName: conditional
+    params: [
+      ]
+    path: com/example/learning/module/web/cache/controller/ConditionalCacheExperimentController.java
+    mapping: '@GetMapping("/conditional")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /spring-web/cache/conditional
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+HttpClientExperimentController:
+  restClientStatus():
+    summary: Compare RestClient retrieve status handling with exchange
+    description: Call bounded localhost fixtures through one RestClient. retrieve()
+      applies the configured default status handler to a 404 response, while exchange()
+      receives the raw 404 and owns the status decision itself.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: status-and-error-handling
+    methodName: restClientStatus
+    params: [
+      ]
+    path: com/example/learning/module/web/client/controller/HttpClientExperimentController.java
+    mapping: '@GetMapping("/rest-client-status")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /spring-web/client/rest-client-status
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  httpServiceAdapters(String):
+    summary: Run one HTTP Service interface through two synchronous adapters
+    description: Reuse two application-initialized proxies for the same @HttpExchange
+      interface, one backed by RestClientAdapter and one by RestTemplateAdapter. Both
+      call the same bounded loopback echo route so path, query, header, and decoded
+      response evidence can be compared directly.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 14.HttpServiceInterfaces/HttpServiceInterfaces.md
+      anchor: synchronous-http-client-adapters
+    methodName: httpServiceAdapters
+    params:
+    - id
+    path: com/example/learning/module/web/client/controller/HttpClientExperimentController.java
+    mapping: '@GetMapping("/http-service-adapters")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /spring-web/client/http-service-adapters
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+MvcInputExperimentController:
+  validatedBody(CreateOrderRequest):
+    summary: Decode and validate a JSON request body
+    description: Let Spring MVC select an HttpMessageConverter, decode JSON into CreateOrderRequest,
+      and run Bean Validation. Valid input reaches the controller; invalid object
+      constraints are translated by the learning advice from MethodArgumentNotValidException
+      into ProblemDetail.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: validation-exception-paths
+    methodName: validatedBody
+    params:
+    - request
+    path: com/example/learning/module/web/input/controller/MvcInputExperimentController.java
+    mapping: '@PostMapping("/validated-body")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /spring-web/input/validated-body
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  methodValidation(int):
+    summary: Trigger Spring MVC 6.1 built-in method validation
+    description: Apply a direct @Min constraint to a controller request parameter
+      without class-level @Validated. A valid value reaches the handler; an invalid
+      value follows the MVC HandlerMethodValidationException path and is rendered
+      as ProblemDetail.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: mvc-method-validation-6-1
+    methodName: methodValidation
+    params:
+    - quantity
+    path: com/example/learning/module/web/input/controller/MvcInputExperimentController.java
+    mapping: '@GetMapping("/method-validation")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /spring-web/input/method-validation
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true

@@ -1,0 +1,69 @@
+AsyncMvcExperimentController:
+  callable():
+    execution: |-
+      <p><b>Khái niệm:</b> Servlet async request có thể nhả request thread ban đầu, chạy deferred work trên MVC executor rồi tiếp tục bằng một <code>ASYNC</code> redispatch.</p>
+      <ol>
+        <li><code>AsyncDispatchTraceFilter</code> ghi lại <code>REQUEST</code> dispatch đầu tiên và container thread vào request attribute.</li>
+        <li>Controller lưu request thread rồi trả về <code>Callable</code> thay vì tính response ngay.</li>
+        <li>Spring MVC submit callable vào bounded executor được cấu hình qua <code>AsyncSupportConfigurer</code>; worker ghi lại thread có prefix <code>spring-web-mvc-</code>.</li>
+        <li>Khi callable hoàn tất, Servlet container thực hiện <code>ASYNC</code> redispatch. Filter chạy lại và append dispatch này vào cùng request-scoped trace trước khi response được ghi.</li>
+      </ol>
+      <p><b>Minh chứng:</b> <code>differentThread=true</code>, <code>configuredExecutorThread=true</code> và trace có cả REQUEST lẫn ASYNC. Đây là Servlet async processing, không phải pipeline WebFlux non-blocking end-to-end.</p>
+    usage: true
+ConditionalCacheExperimentController:
+  conditional():
+    execution: |-
+      <p><b>Khái niệm:</b> Conditional GET cho phép client revalidate representation với chi phí thấp thay vì tải lại cùng một body.</p>
+      <ol>
+        <li>GET đầu tiên trả representation xác định trước cùng <code>ETag</code>, <code>Last-Modified</code> và <code>Cache-Control</code>.</li>
+        <li>Gửi GET thứ hai với <code>If-None-Match</code> bằng ETag vừa nhận.</li>
+        <li><code>ServletWebRequest.checkNotModified</code> so sánh validator; khi vẫn khớp, nó chuẩn bị HTTP <code>304 Not Modified</code> và normal response-body rendering được bỏ qua.</li>
+      </ol>
+      <p><b>Minh chứng:</b> So sánh response 200 có body với response 304 không có body. Đây là HTTP representation caching, không phải Spring Cache abstraction.</p>
+    usage: true
+HttpClientExperimentController:
+  restClientStatus():
+    execution: |-
+      <p><b>Khái niệm:</b> <code>RestClient.retrieve()</code> và <code>exchange()</code> có ownership khác nhau đối với status handling.</p>
+      <ol>
+        <li>Các loopback client của experiment dùng connect/read timeout hữu hạn 2 giây để embedded server bị stall không thể block learning endpoint vô thời hạn.</li>
+        <li>Một functional route localhost có giới hạn trả 200 để <code>retrieve()</code> decode JSON body.</li>
+        <li>Route thứ hai trả 404. Khi đi qua <code>retrieve()</code>, builder-level default status handler chạy và ghi nhận <code>configured-handler:404</code>.</li>
+        <li>Cùng response 404 được gọi bằng <code>exchange()</code>. Exchange callback đọc raw status trực tiếp; retrieve/default status handler không được áp dụng.</li>
+      </ol>
+      <p><b>Minh chứng:</b> Response chứa success body đã decode, retrieve failure, raw <code>exchangeStatus=404</code> và <code>exchangeBypassedConfiguredStatusHandler=true</code>.</p>
+    usage: true
+  httpServiceAdapters(String):
+    execution: |-
+      <p><b>Khái niệm:</b> HTTP Service Interface mô tả HTTP contract độc lập với synchronous client adapter thực thi nó.</p>
+      <ol>
+        <li><code>EchoHttpService</code> khai báo path, query và header input bằng <code>@HttpExchange</code>/<code>@GetExchange</code>.</li>
+        <li>Khi application ready, experiment service pin target vào loopback address, actual port và context path của embedded server, cấu hình connect/read timeout hữu hạn 2 giây, rồi tạo một reusable proxy qua <code>RestClientAdapter</code> và một reusable proxy qua <code>RestTemplateAdapter</code>.</li>
+        <li>Mỗi lần gọi endpoint đều dùng lại hai stable proxy này để gọi cùng bounded local echo route bằng cùng interface method nhưng gửi marker header khác nhau.</li>
+        <li>Map trả về chứng minh method argument đã trở thành path/query/header thật và cả hai adapter đều decode response qua cùng interface contract.</li>
+      </ol>
+      <p><b>Minh chứng:</b> So sánh <code>restClientAdapter</code> và <code>restTemplateAdapter</code>. Experiment chứng minh adapter independence, không đưa ra kết luận performance hay client-selection policy.</p>
+    usage: true
+MvcInputExperimentController:
+  validatedBody(CreateOrderRequest):
+    execution: |-
+      <p><b>Khái niệm:</b> Request-body conversion và object validation là hai stage khác nhau trong MVC.</p>
+      <ol>
+        <li>Với <code>Content-Type: application/json</code>, <code>HttpMessageConverter</code> decode body thành <code>CreateOrderRequest</code>.</li>
+        <li><code>@Valid</code> sau đó đánh giá <code>@NotBlank</code> và <code>@Min</code>. Input hợp lệ tới handler và trả evidence từ typed field.</li>
+        <li>Object constraint không hợp lệ tạo <code>MethodArgumentNotValidException</code>; <code>MvcValidationExceptionAdvice</code> chuyển Framework exception này thành <code>ProblemDetail</code> 400 xác định trước.</li>
+        <li>Cùng mapping còn cho thấy representation failure: request media type không hỗ trợ có thể trả 415, còn <code>Accept</code> không thể đáp ứng có thể trả 406 trước normal success response.</li>
+      </ol>
+      <p><b>Minh chứng:</b> So sánh JSON response 200 hợp lệ với validation 400, unsupported-media-type 415 và not-acceptable 406.</p>
+    usage: true
+  methodValidation(int):
+    execution: |-
+      <p><b>Khái niệm:</b> Spring MVC 6.1 có thể validate controller method mà không cần class-level <code>@Validated</code>.</p>
+      <ol>
+        <li>Request parameter được convert thành <code>int</code> và có direct constraint <code>@Min(1)</code>.</li>
+        <li>Giá trị dương vượt qua MVC method validation và controller trả <code>methodInvoked=true</code>.</li>
+        <li>Giá trị 0 hoặc âm thất bại trước normal handler completion và tạo <code>HandlerMethodValidationException</code>.</li>
+        <li>MVC advice chuyển exception thành <code>ProblemDetail</code> 400 ổn định; property <code>errorType</code> cho thấy runtime path thực tế.</li>
+      </ol>
+      <p><b>Minh chứng:</b> So sánh success response với validation ProblemDetail và marker <code>HandlerMethodValidationException</code>.</p>
+    usage: true

@@ -1,0 +1,15 @@
+id:
+  summary: Identifier dùng cho echo
+  description: Identifier được đưa vào path của HTTP Service interface để cả hai synchronous
+    adapter chứng minh path-variable argument resolution.
+  usage: true
+request:
+  summary: Order request body
+  description: JSON object được decode thành CreateOrderRequest. item không được blank
+    và quantity phải ít nhất là 1.
+  usage: true
+quantity:
+  summary: Quantity được MVC method validation kiểm tra
+  description: Integer request parameter có direct constraint @Min(1). Giá trị nhỏ
+    hơn 1 đi vào HandlerMethodValidationException path.
+  usage: true

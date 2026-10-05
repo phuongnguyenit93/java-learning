@@ -1,0 +1,169 @@
+AsyncMvcExperimentController:
+  callable():
+    summary: Quan sát Callable chuyển thread và ASYNC redispatch
+    description: Trả về Callable để Spring MVC giải phóng Servlet request thread ban
+      đầu, thực thi kết quả trên AsyncTaskExecutor có giới hạn đã cấu hình rồi thực
+      hiện ASYNC redispatch. Response cho thấy thread identity và dispatch trace gắn
+      với chính request đó.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: servlet-async-lifecycle
+    methodName: callable
+    params: [
+      ]
+    path: com/example/learning/module/web/async/controller/AsyncMvcExperimentController.java
+    mapping: '@GetMapping("/callable")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /spring-web/async/callable
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+ConditionalCacheExperimentController:
+  conditional():
+    summary: Revalidate response bằng ETag và Last-Modified
+    description: Trả representation cacheable xác định trước với ETag và Last-Modified.
+      Khi lặp request cùng If-None-Match hiện tại, Spring MVC có thể dừng normal body
+      rendering và trả HTTP 304.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: conditional-requests-and-http-caching
+    methodName: conditional
+    params: [
+      ]
+    path: com/example/learning/module/web/cache/controller/ConditionalCacheExperimentController.java
+    mapping: '@GetMapping("/conditional")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /spring-web/cache/conditional
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+HttpClientExperimentController:
+  restClientStatus():
+    summary: So sánh RestClient retrieve status handling với exchange
+    description: Gọi các fixture localhost có giới hạn bằng cùng một RestClient. retrieve()
+      áp dụng default status handler đã cấu hình cho response 404, còn exchange()
+      nhận raw 404 và tự sở hữu quyết định xử lý status.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: status-and-error-handling
+    methodName: restClientStatus
+    params: [
+      ]
+    path: com/example/learning/module/web/client/controller/HttpClientExperimentController.java
+    mapping: '@GetMapping("/rest-client-status")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /spring-web/client/rest-client-status
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  httpServiceAdapters(String):
+    summary: Chạy một HTTP Service interface qua hai synchronous adapter
+    description: Dùng lại hai proxy được application khởi tạo một lần cho cùng một
+      @HttpExchange interface, một dùng RestClientAdapter và một dùng RestTemplateAdapter.
+      Cả hai gọi cùng bounded loopback echo route để đối chiếu path, query, header
+      và decoded response thực tế.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 14.HttpServiceInterfaces/HttpServiceInterfaces.md
+      anchor: synchronous-http-client-adapters
+    methodName: httpServiceAdapters
+    params:
+    - id
+    path: com/example/learning/module/web/client/controller/HttpClientExperimentController.java
+    mapping: '@GetMapping("/http-service-adapters")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /spring-web/client/http-service-adapters
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+MvcInputExperimentController:
+  validatedBody(CreateOrderRequest):
+    summary: Decode và validate JSON request body
+    description: Để Spring MVC chọn HttpMessageConverter, decode JSON thành CreateOrderRequest
+      rồi chạy Bean Validation. Input hợp lệ tới controller; object constraint không
+      hợp lệ được learning advice chuyển từ MethodArgumentNotValidException thành
+      ProblemDetail.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: validation-exception-paths
+    methodName: validatedBody
+    params:
+    - request
+    path: com/example/learning/module/web/input/controller/MvcInputExperimentController.java
+    mapping: '@PostMapping("/validated-body")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /spring-web/input/validated-body
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  methodValidation(int):
+    summary: Kích hoạt built-in MVC method validation của Spring 6.1
+    description: Đặt direct @Min constraint trên controller request parameter mà không
+      dùng class-level @Validated. Giá trị hợp lệ tới handler; giá trị không hợp lệ
+      đi theo MVC HandlerMethodValidationException path và được render thành ProblemDetail.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: mvc-method-validation-6-1
+    methodName: methodValidation
+    params:
+    - quantity
+    path: com/example/learning/module/web/input/controller/MvcInputExperimentController.java
+    mapping: '@GetMapping("/method-validation")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /spring-web/input/method-validation
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
