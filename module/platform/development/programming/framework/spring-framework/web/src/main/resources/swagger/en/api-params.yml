@@ -1,0 +1,15 @@
+id:
+  summary: Echo identifier
+  description: Identifier inserted into the HTTP Service interface path so both synchronous
+    adapters can prove path-variable argument resolution.
+  usage: true
+request:
+  summary: Order request body
+  description: JSON object decoded into CreateOrderRequest. item must be non-blank
+    and quantity must be at least 1.
+  usage: true
+quantity:
+  summary: Quantity constrained by MVC method validation
+  description: Integer request parameter with a direct @Min(1) constraint. Values
+    below 1 exercise HandlerMethodValidationException.
+  usage: true

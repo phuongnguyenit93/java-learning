@@ -41,4 +41,163 @@
 # The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: servlet-web-foundation
+    title: Spring MVC Purpose and Servlet-Stack Mental Model
+    purpose: Understand why Spring MVC exists on top of the Servlet API, what problems its front-controller architecture solves, and which responsibilities belong to this module before learning controller APIs.
+    relatedKnowledge:
+      - SpringMvcFoundation
+    relatedModules:
+      - routeId: SPRING_CORE_CONTAINER
+        label: Spring Core Container
+        note: Spring MVC infrastructure and controllers are managed through the ApplicationContext and bean model owned by the core container.
+    objectives:
+      - Explain Spring MVC as the Servlet-stack web framework in Spring Framework and distinguish it from Spring Boot web auto-configuration.
+      - Build a mental model of request, response, Servlet container, application thread, handler, and framework infrastructure before focusing on annotations.
+      - Keep module boundaries explicit; generic validation/conversion primitives, WebFlux, WebSocket/STOMP messaging, Spring Security policy, and HTTP integration architecture have separate owners.
+
+  - id: dispatcher-servlet-request-lifecycle
+    title: DispatcherServlet and the Request Processing Lifecycle
+    purpose: Trace an HTTP request through Spring MVC's front-controller pipeline so routing, invocation, rendering, interception, and exception handling are understood as cooperating strategies instead of unrelated annotations.
+    relatedKnowledge:
+      - DispatcherServletLifecycle
+    dependsOn:
+      - servlet-web-foundation
+    objectives:
+      - Understand DispatcherServlet as the central dispatcher and its relationship with the WebApplicationContext.
+      - Trace HandlerMapping, HandlerExecutionChain, HandlerAdapter, handler invocation, return-value processing, view or body rendering, and HandlerExceptionResolver at the correct conceptual level.
+      - Understand Servlet-container bootstrap and, when a root WebApplicationContext is present, its parent-child relationship with the DispatcherServlet WebApplicationContext so infrastructure ownership and bean visibility are explicit.
+      - Recognize multipart, locale, view resolution, and other DispatcherServlet strategies without turning the roadmap into an SPI inventory.
+
+  - id: mvc-endpoint-programming-models
+    title: Spring MVC Endpoint Programming Models
+    purpose: Learn the annotated-controller and functional-endpoint models that Spring MVC uses to route Servlet-stack requests into application handlers.
+    relatedKnowledge:
+      - AnnotatedControllers
+      - WebMvcFunctionalEndpoints
+    dependsOn:
+      - dispatcher-servlet-request-lifecycle
+    objectives:
+      - Understand @Controller, @RestController, @RequestMapping and composed mapping annotations as the dominant annotated programming model.
+      - Reason about request mapping conditions, URI variables, request parameters, headers, cookies, request bodies, model attributes, session state, and supported handler-method signatures.
+      - Distinguish model-and-view responses, response-body responses, ResponseEntity, redirects, and direct response handling without memorizing every supported argument or return type.
+      - Understand RouterFunction, HandlerFunction, ServerRequest and ServerResponse as the Servlet functional model and compare it with annotated controllers by composition, explicitness, filtering, and application needs.
+
+  - id: mvc-binding-validation-integration
+    title: MVC Binding and Validation Integration
+    purpose: Understand where Spring MVC invokes binding, type conversion, formatting, and validation while keeping the reusable validation/data-binding foundation owned by its dedicated module.
+    relatedKnowledge:
+      - MvcBindingValidation
+    dependsOn:
+      - mvc-endpoint-programming-models
+    objectives:
+      - Trace how request data becomes command objects through WebDataBinder and the configured conversion/formatting infrastructure.
+      - Understand @InitBinder, @Valid or @Validated, Errors or BindingResult, and the difference between object validation and Spring MVC method validation.
+      - Recognize the Spring Framework 6.1 built-in controller method-validation model, its error path, and its boundary with class-level @Validated/AOP method validation without duplicating the generic Validator, DataBinder, ConversionService, or Bean Validation curriculum.
+      - Treat safe binding and allowed-field decisions as security-sensitive application design rather than assuming automatic binding is harmless.
+
+  - id: response-representation-rendering
+    title: Response Representation, Message Conversion, and View Rendering
+    purpose: Understand how handler results become HTTP representations or server-rendered views and how content negotiation selects an appropriate representation.
+    relatedKnowledge:
+      - MessageConversionRepresentation
+      - ViewRenderingNavigation
+    dependsOn:
+      - mvc-endpoint-programming-models
+    objectives:
+      - Understand HttpMessageConverter as the Servlet-stack representation-conversion mechanism used by Spring MVC, including annotated controllers and functional endpoints.
+      - Reason about content negotiation, media types, ResponseEntity and response headers without reducing REST handling to JSON serialization alone.
+      - Understand Model, View, ViewResolver, logical view names, redirects, flash attributes, and the boundary between REST-style responses and server-side view rendering.
+      - Keep HTTP representation mechanics in Spring Framework while leaving protocol theory and application-level HTTP architecture to the Integration HTTP owner.
+
+  - id: mvc-exception-error-contract
+    title: Exception Resolution and HTTP Error Responses
+    purpose: Understand how failures move through Spring MVC's exception-resolution chain and how applications expose consistent HTTP error responses without relying on repository-specific global-handler utilities as the curriculum owner.
+    relatedKnowledge:
+      - MvcErrorHandling
+    dependsOn:
+      - mvc-endpoint-programming-models
+    objectives:
+      - Understand DispatcherServlet's ordered chain of HandlerExceptionResolver implementations and place ExceptionHandlerExceptionResolver, ResponseStatusExceptionResolver, and DefaultHandlerExceptionResolver in that model.
+      - Use @ExceptionHandler and @ControllerAdvice as controller-level and cross-controller exception mechanisms while preserving exception specificity and response semantics.
+      - Understand ResponseStatusException, ErrorResponse, ProblemDetail, ResponseEntityExceptionHandler, and RFC problem-detail rendering at the Spring MVC boundary.
+      - Keep Spring Boot error-page/error-endpoint behavior and the repository global-exception-handler support module outside the ownership of this learning journey.
+
+  - id: async-servlet-request-processing
+    title: Asynchronous Servlet Requests and Streaming
+    purpose: Understand how Spring MVC builds on Servlet asynchronous processing for deferred single-result handling that later resumes through async dispatch and for streaming responses that remain open while data is written, while staying fundamentally different from WebFlux.
+    relatedKnowledge:
+      - AsyncMvcStreaming
+    dependsOn:
+      - dispatcher-servlet-request-lifecycle
+      - mvc-endpoint-programming-models
+    objectives:
+      - Trace the Servlet async dispatch lifecycle used by Callable, DeferredResult and WebAsyncTask.
+      - Understand ResponseBodyEmitter, SseEmitter and StreamingResponseBody as Servlet-stack streaming mechanisms and how timeouts, completion, disconnects and exception dispatch affect lifecycle.
+      - Account for Servlet async enablement, AsyncTaskExecutor and timeout configuration, and ASYNC filter dispatch when asynchronous processing is used in production.
+      - Recognize how reactive return values can be adapted in Spring MVC while response writes remain Servlet/blocking oriented.
+      - Distinguish async Spring MVC from WebFlux so asynchronous controller APIs are not mistaken for a fully non-blocking reactive web stack.
+
+  - id: cross-cutting-web-infrastructure
+    title: Cross-Cutting Request Infrastructure
+    purpose: Place filters, MVC interceptors, CORS, multipart handling, locale resolution, static resources, and HTTP caching at the correct layer of the Servlet request pipeline.
+    relatedKnowledge:
+      - CrossCuttingRequestInfrastructure
+      - WebSupportResourceDelivery
+    dependsOn:
+      - dispatcher-servlet-request-lifecycle
+    objectives:
+      - Distinguish Servlet Filter from HandlerInterceptor by lifecycle position, capabilities, and typical use cases.
+      - Understand Spring MVC CORS processing and its relationship with handler mappings while keeping authentication, authorization, CSRF and security-policy ownership in Spring Security.
+      - Recognize multipart resolution, locale resolution, forwarded-header handling, URI building, static-resource handling and conditional caching as web infrastructure rather than controller business logic.
+      - Account for asynchronous dispatch when filters or interceptors participate in requests that leave and later re-enter the Servlet pipeline.
+
+  - id: mvc-configuration-extension
+    title: MVC Configuration and Extension Points
+    purpose: Learn how Spring MVC is enabled, customized, and extended without replacing framework defaults accidentally or confusing Framework configuration with Spring Boot auto-configuration.
+    relatedKnowledge:
+      - MvcConfigurationExtension
+    dependsOn:
+      - dispatcher-servlet-request-lifecycle
+    objectives:
+      - Understand the role of @EnableWebMvc and WebMvcConfigurer in registering and customizing MVC infrastructure.
+      - Configure path matching, content negotiation, message converters, formatters, validators, interceptors, resource handlers, view resolvers and async support at the appropriate extension boundary.
+      - Recognize when advanced applications need custom HandlerMapping, HandlerAdapter, argument resolver, return-value handler or exception resolver implementations.
+      - Keep Spring Boot's opinionated MVC auto-configuration and property-driven defaults outside this module's ownership.
+
+  - id: synchronous-http-clients
+    title: Synchronous Spring HTTP Clients and HTTP Interfaces
+    purpose: Understand Spring Framework's synchronous client-side HTTP abstractions and shared HTTP-service interface model while handing reactive client mechanics and application-level client-selection policy to their owning modules.
+    relatedKnowledge:
+      - SynchronousHttpClients
+      - HttpServiceInterfaces
+    objectives:
+      - Understand RestClient as the fluent synchronous HTTP client introduced in Spring Framework 6.1 and RestTemplate as the established template-style synchronous client.
+      - Reason about request factories, message converters, interceptors, initializers, URI building, status handling and body conversion as reusable client infrastructure.
+      - Understand HTTP Interface and HttpServiceProxyFactory as a declarative client model that can be backed by supported client adapters.
+      - Keep WebClient deep mechanics in the reactive module and cross-client architecture, resilience and service-to-service policy in the Integration HTTP curriculum.
+
+  - id: spring-web-synthesis-boundaries
+    title: Spring Web Servlet-Stack Synthesis and Boundaries
+    purpose: Connect server-side Spring MVC and synchronous client-side HTTP infrastructure into one end-to-end mental model while preserving the boundaries of neighboring Spring modules.
+    relatedKnowledge:
+      - SpringWebSynthesis
+    dependsOn:
+      - mvc-configuration-extension
+      - async-servlet-request-processing
+      - synchronous-http-clients
+    relatedModules:
+      - routeId: SPRING_REACTIVE
+        label: Spring Reactive
+        note: WebFlux owns the fully reactive and non-blocking Spring web stack and the deep WebClient model.
+      - routeId: SPRING_TESTING
+        label: Spring Testing
+        note: Spring TestContext, MockMvc and framework-level web test infrastructure are expanded in the testing module.
+      - routeId: SPRING_SECURITY_FUNDAMENTALS
+        label: Spring Security Fundamentals
+        note: Authentication, authorization, SecurityFilterChain, CSRF and security policy belong to Spring Security.
+    objectives:
+      - Trace a request end to end from Servlet container entry through mapping, handler invocation, binding, representation rendering or error resolution and response completion.
+      - Choose annotated versus functional endpoints and synchronous versus asynchronous Servlet processing based on application needs rather than annotation preference.
+      - Explain the roles of RestClient, RestTemplate, and HTTP Interfaces without turning Framework mechanics into application-level client-selection or resilience policy.
+      - Explain when Spring MVC remains the appropriate stack and when a requirement points toward WebFlux, messaging, dedicated validation/data-binding, testing, security, or integration modules.

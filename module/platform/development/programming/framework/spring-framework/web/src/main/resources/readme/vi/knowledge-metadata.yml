@@ -1,0 +1,383 @@
+1.SpringMvcFoundation/SpringMvcFoundation.md:
+  spring-mvc-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  servlet-request-response-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  spring-web-and-spring-webmvc:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  framework-vs-boot-web:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  spring-web-module-boundaries:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+2.DispatcherServletLifecycle/DispatcherServletLifecycle.md:
+  dispatcher-servlet-front-controller:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  dispatcher-bootstrap-and-context-hierarchy:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  handler-mapping-and-execution-chain:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  handler-invocation-and-return-value-processing:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  exception-resolution-position:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  dispatcher-strategies-overview:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+3.AnnotatedControllers/AnnotatedControllers.md:
+  annotated-controller-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  request-mapping-and-conditions:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  handler-method-inputs:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  model-and-session-state:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  handler-return-values-and-response-handling:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+4.WebMvcFunctionalEndpoints/WebMvcFunctionalEndpoints.md:
+  webmvc-fn-mental-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  router-functions-and-request-predicates:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  handler-functions-request-response:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  handler-filter-functions:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  annotated-and-functional-coexistence:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+5.MvcBindingValidation/MvcBindingValidation.md:
+  mvc-binding-lifecycle:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  web-data-binder-and-init-binder:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  validation-and-binding-result:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  mvc-method-validation-6-1:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  validation-exception-paths:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  validated-aop-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  safe-binding:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+6.MessageConversionRepresentation/MessageConversionRepresentation.md:
+  http-message-converters:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  request-response-body-conversion:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  content-negotiation-and-media-types:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  response-entity-status-and-headers:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  request-response-body-advice:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+7.ViewRenderingNavigation/ViewRenderingNavigation.md:
+  model-and-view:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  view-resolution-and-logical-names:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  redirects-and-flash-attributes:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  uri-building:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  view-technology-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+8.MvcErrorHandling/MvcErrorHandling.md:
+  handler-exception-resolver-chain:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  exception-handler-and-controller-advice:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  response-status-errors:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  error-response-and-problem-detail:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  response-entity-exception-handler:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  validation-error-responses:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  mvc-error-boundaries:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+9.AsyncMvcStreaming/AsyncMvcStreaming.md:
+  servlet-async-lifecycle:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  deferred-single-result:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  servlet-streaming:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  reactive-return-values-in-mvc:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  async-timeouts-executor-and-dispatch:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  async-mvc-vs-webflux:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+10.CrossCuttingRequestInfrastructure/CrossCuttingRequestInfrastructure.md:
+  filters-interceptors-and-placement:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  cors-processing:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  forwarded-headers:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  async-dispatch-cross-cutting:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  security-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+11.WebSupportResourceDelivery/WebSupportResourceDelivery.md:
+  multipart-request-resolution:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  locale-resolution:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  static-resources-and-resource-chain:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  conditional-requests-and-http-caching:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  default-servlet-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+12.MvcConfigurationExtension/MvcConfigurationExtension.md:
+  enable-web-mvc:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  web-mvc-configurer:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  path-matching-configuration:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  conversion-validation-configuration:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  message-converter-content-negotiation-configuration:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  interceptor-cors-resource-view-configuration:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  async-support-configuration:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  custom-mvc-spis:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  framework-defaults-vs-customization:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+13.SynchronousHttpClients/SynchronousHttpClients.md:
+  synchronous-client-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  rest-client-6-1:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  rest-template:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  client-http-request-factory:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  client-request-customization:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  client-message-conversion-and-bodies:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  status-and-error-handling:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  integration-http-selection-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+14.HttpServiceInterfaces/HttpServiceInterfaces.md:
+  http-exchange-contract:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  http-service-proxy-factory:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  http-exchange-adapter-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  synchronous-http-client-adapters:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  service-method-arguments-and-return-values:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  reactive-adapter-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+15.SpringWebSynthesis/SpringWebSynthesis.md:
+  mvc-request-end-to-end:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  annotated-vs-functional-endpoints:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  synchronous-vs-async-servlet-processing:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  filter-interceptor-and-advice-placement:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  mvc-vs-webflux-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  inbound-vs-outbound-http-mechanics:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  neighboring-module-handoffs:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  spring-web-final-mental-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
