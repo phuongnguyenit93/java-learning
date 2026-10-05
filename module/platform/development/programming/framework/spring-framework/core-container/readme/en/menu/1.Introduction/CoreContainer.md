@@ -3,16 +3,18 @@
 # Spring IoC Container
 
 ## Menu
-- [Why Does the Spring IoC Container Exist?](#container-purpose)
-- [Managed Beans vs Plain Java Objects](#managed-beans-vs-plain-objects)
+- [What Is the Spring IoC Container and Why Is It Needed?](#container-purpose)
+- [What Is a Spring Bean and Why Does It Matter?](#managed-beans-vs-plain-objects)
 - [What Is Inversion of Control?](#inversion-of-control)
 - [How Dependency Injection Implements IoC](#dependency-injection-role)
 - [Core Container Boundaries in the Spring Ecosystem](#container-module-boundary)
 
-## <a id="container-purpose">Why Does the Spring IoC Container Exist?</a>
+## <a id="container-purpose">What Is the Spring IoC Container and Why Is It Needed?</a>
 
 <details>
 <summary>Click for details</summary>
+
+The Spring IoC Container is the runtime part of Spring Framework that creates, configures, assembles, and manages application objects from configuration metadata. Those container-managed objects are called **Spring beans**. `BeanFactory` defines the foundational container contract, while `ApplicationContext` is the richer container abstraction applications normally use.
 
 When an application is small, creating collaborators directly with `new` feels simple. The problem appears as the object graph grows: a service must know which concrete repository to create, the repository may need a data source, another component may need the same service, and construction policy becomes scattered through business code. Changes to wiring then spread across many classes even when the business behavior itself has not changed.
 
@@ -42,12 +44,14 @@ The container does not remove object construction. It moves construction and com
 
 ---
 
-## <a id="managed-beans-vs-plain-objects">Managed Beans vs Plain Java Objects</a>
+## <a id="managed-beans-vs-plain-objects">What Is a Spring Bean and Why Does It Matter?</a>
 
 <details>
 <summary>Click for details</summary>
 
-A plain Java object and a Spring bean can be instances of exactly the same class. The important difference is not the class declaration; it is who owns the instance and its lifecycle.
+A **Spring bean** is an object that participates in the IoC Container's managed object graph: Spring knows about the object, can resolve its dependencies, apply scope and lifecycle rules, and run container infrastructure around it. A bean is not a special Java type. A plain Java object and a Spring bean can be instances of exactly the same class; the important difference is whether the instance is managed by the container.
+
+Beans matter because the container needs a managed unit on which to apply Dependency Injection, scopes, lifecycle callbacks, post-processing, proxies, and other infrastructure consistently. An object that never enters the container can still be perfectly valid Java, but it does not automatically participate in those Spring-managed behaviors.
 
 If application code creates an object directly, Spring does not automatically know about that instance:
 

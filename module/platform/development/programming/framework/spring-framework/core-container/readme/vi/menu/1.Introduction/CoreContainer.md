@@ -3,16 +3,18 @@
 # Spring IoC Container
 
 ## Menu
-- [Spring IoC Container tồn tại để giải quyết vấn đề gì?](#container-purpose)
-- [Bean do Spring quản lý khác đối tượng Java thông thường như thế nào?](#managed-beans-vs-plain-objects)
+- [Spring IoC Container là gì và vì sao cần nó?](#container-purpose)
+- [Spring Bean là gì và vì sao cần nó?](#managed-beans-vs-plain-objects)
 - [Inversion of Control là gì?](#inversion-of-control)
 - [Dependency Injection hiện thực IoC như thế nào?](#dependency-injection-role)
 - [Ranh giới của Core Container trong hệ sinh thái Spring](#container-module-boundary)
 
-## <a id="container-purpose">Spring IoC Container tồn tại để giải quyết vấn đề gì?</a>
+## <a id="container-purpose">Spring IoC Container là gì và vì sao cần nó?</a>
 
 <details>
 <summary>Xem chi tiết</summary>
+
+**Spring IoC Container** là thành phần runtime của Spring Framework chịu trách nhiệm tạo, cấu hình, lắp ráp và quản lý các object của ứng dụng dựa trên configuration metadata. Những object được container quản lý đó được gọi là **Spring bean**. `BeanFactory` định nghĩa contract nền tảng của container, còn `ApplicationContext` là abstraction giàu tính năng hơn mà ứng dụng Spring thường sử dụng.
 
 Với một ứng dụng nhỏ, tự tạo dependency bằng `new` thường rất tự nhiên. Vấn đề xuất hiện khi đồ thị đối tượng lớn dần: service phải biết repository cụ thể nào cần được tạo, repository lại cần data source, nhiều component cùng dùng một dependency, và logic khởi tạo bị rải khắp mã nghiệp vụ. Khi cách wiring thay đổi, nhiều lớp phải sửa dù nghiệp vụ không đổi.
 
@@ -42,12 +44,14 @@ Container không làm biến mất việc khởi tạo object. Nó chuyển vi�
 
 ---
 
-## <a id="managed-beans-vs-plain-objects">Bean do Spring quản lý khác đối tượng Java thông thường như thế nào?</a>
+## <a id="managed-beans-vs-plain-objects">Spring Bean là gì và vì sao cần nó?</a>
 
 <details>
 <summary>Xem chi tiết</summary>
 
-Một object Java thông thường và một Spring bean có thể là instance của chính cùng một class. Điểm khác biệt nằm ở việc ai sở hữu instance đó và ai quản lý vòng đời của nó.
+**Spring bean** là một object tham gia vào đồ thị đối tượng do IoC Container quản lý: Spring biết object đó tồn tại, có thể phân giải dependency cho nó, áp dụng scope/lifecycle và chạy các cơ chế hạ tầng của container quanh nó. Bean không phải là một kiểu Java đặc biệt. Một object Java thông thường và một Spring bean có thể là instance của chính cùng một class; điểm khác biệt là instance đó có được container quản lý hay không.
+
+Bean cần thiết vì container phải có một đơn vị được quản lý để áp dụng nhất quán Dependency Injection, scope, lifecycle callback, post-processing, proxy và các cơ chế hạ tầng khác. Object không đi vào container vẫn là Java object hoàn toàn hợp lệ, nhưng nó không tự động tham gia các behavior do Spring quản lý.
 
 Nếu ứng dụng tự tạo object:
 
