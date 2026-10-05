@@ -2157,8 +2157,8 @@ enum ModuleListEnum {
     SPRING_REACTIVE(
             'module:platform:development:programming:framework:spring-framework:reactive',
             'module/platform/development/programming/framework/spring-framework/reactive',
-            'PLATFORM',
-            'Shared YAML composition module for Spring WebFlux applications',
+            'REACTIVE',
+            'Spring WebFlux streaming, context propagation and blocking-boundary learning experiments',
             false,
             []
     ),

@@ -14,3 +14,44 @@
 #
 # Add only curated references that are useful for the module.
 # The build system must not overwrite this file after authored content exists.
+
+references:
+  - title: "Spring Framework 6.1.14 API — org.springframework.web.reactive"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/web/reactive/package-summary.html"
+    description: "Version-pinned overview of the spring-webflux module, its central DispatcherHandler entry point, server programming models, and reactive WebClient support."
+
+  - title: "Spring Framework 6.1.14 API — DispatcherHandler"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/web/reactive/DispatcherHandler.html"
+    description: "Version-pinned contract for the central WebFlux dispatcher and its HandlerMapping, HandlerAdapter, and HandlerResultHandler collaboration model."
+
+  - title: "Spring Framework 6.1.14 API — Annotated Controller Infrastructure"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/web/reactive/result/method/annotation/package-summary.html"
+    description: "Version-pinned API overview for annotation-based WebFlux handler method processing, argument resolution, return values, and exception infrastructure."
+
+  - title: "Spring Framework 6.1.14 API — Functional Server"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/web/reactive/function/server/package-summary.html"
+    description: "Version-pinned API overview for RouterFunction, HandlerFunction, ServerRequest, ServerResponse, routing, and functional endpoint adaptation."
+
+  - title: "Spring Framework 6.1.14 API — WebClient"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/web/reactive/function/client/WebClient.html"
+    description: "Version-pinned contract for the non-blocking WebClient, request and response composition, exchange control, and reactive body handling."
+
+  - title: "Spring Framework 6.1.14 API — org.springframework.web.server"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/web/server/package-summary.html"
+    description: "Version-pinned API overview for ServerWebExchange, WebHandler, WebFilter, WebExceptionHandler, WebSession, and generic reactive server-web contracts."
+
+  - title: "Spring Framework 6.1.14 API — ReactiveAdapterRegistry"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/core/ReactiveAdapterRegistry.html"
+    description: "Version-pinned contract for adapting supported reactive and asynchronous types at Spring Framework boundaries."
+
+  - title: "Spring Framework 6.1.14 API — WebFluxConfigurer"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/web/reactive/config/WebFluxConfigurer.html"
+    description: "Version-pinned framework extension contract for customizing WebFlux configuration such as codecs, CORS, path matching, view resolution, and blocking-controller execution."
+
+  - title: "Spring Framework 6.1.14 API — WebFlux View Resolution"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/web/reactive/result/view/package-summary.html"
+    description: "Version-pinned API overview for WebFlux view resolution, rendering contracts, and ViewResolutionResultHandler so the module covers server-rendered responses as well as response bodies."
+
+  - title: "Spring Framework 6.1.14 API — ServerRequest"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/web/reactive/function/server/ServerRequest.html"
+    description: "Version-pinned functional request contract covering reactive body extraction, form and multipart access, sessions, and ETag/Last-Modified conditional-request checks."

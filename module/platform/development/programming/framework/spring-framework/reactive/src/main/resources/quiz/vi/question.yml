@@ -1,0 +1,290 @@
+# <quiz-schema>
+# Cấu trúc câu hỏi Quiz
+# schema-version: 3
+#
+# questions [kiểu: list; bắt buộc; mặc định: []; duy nhất theo: id]
+#   Danh sách câu hỏi Quiz của module trong language hiện tại.
+#   mỗi phần tử:
+#     id [kiểu: string; bắt buộc; mặc định: ""]
+#       ID ổn định và duy nhất của câu hỏi.
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi hiển thị cho người học.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu câu hỏi được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu câu hỏi đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+#     answers [kiểu: list; bắt buộc; số phần tử: 4; mặc định: []; duy nhất theo: id]
+#       Chính xác bốn đáp án. ID A/B/C/D là identity nội bộ ổn định, không phải vị trí hiển thị sau khi frontend shuffle.
+#       mỗi phần tử:
+#         id [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#           Identity ổn định của đáp án.
+#         answer [kiểu: string; bắt buộc; mặc định: ""]
+#           Nội dung đáp án hiển thị cho người học.
+#         explanation [kiểu: string; bắt buộc; mặc định: ""]
+#           Giải thích hiển thị khi người học chọn đáp án này, bất kể đúng hay sai.
+#     correctAnswerId [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#       ID nội bộ của đáp án đúng. Frontend kiểm tra bằng identity này sau khi shuffle.
+# </quiz-schema>
+
+questions:
+  - id: webflux-nonblocking-benefit
+    question: "Lợi ích chính mà Spring WebFlux hướng tới cho service có nhiều I/O chờ là gì?"
+    answers:
+      - id: A
+        answer: "Chủ yếu giảm CPU cost của từng request bằng cách thay serialization và business logic bằng event-loop callback."
+        explanation: "Sai. WebFlux thay đổi concurrency và I/O model; nó không loại bỏ serialization hay application work và reactive orchestration vẫn có overhead."
+      - id: B
+        answer: "Chủ yếu hấp thụ dependency blocking bằng cách tăng một request-worker pool lớn khi nhiều lời gọi phải chờ I/O."
+        explanation: "Sai. Đây gần với blocking thread-pool strategy mà WebFlux muốn tránh; dependency blocking cần boundary tường minh."
+      - id: C
+        answer: "Duy trì nhiều I/O đang chờ đồng thời với số processing thread tương đối nhỏ khi request path vẫn non-blocking."
+        explanation: "Đúng. Lợi ích chính là hiệu quả concurrency và tài nguyên khi có I/O latency, không phải tự động giảm latency."
+      - id: D
+        answer: "Phù hợp nhất với CPU-bound request path vì event-loop pool nhỏ tự động parallelize computation nặng."
+        explanation: "Sai. Event-loop pool nhỏ không phù hợp cho CPU work kéo dài; WebFlux mạnh nhất khi concurrency chủ yếu là non-blocking I/O wait."
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Purpose/WebFluxPurpose.md"
+      anchor: "webflux-throughput-vs-latency"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - id: webflux-dispatch-strategy-chain
+    question: "Sau khi DispatcherHandler nhận request trong flow annotated controller chuẩn, chuỗi trách nhiệm nào chính xác nhất?"
+    answers:
+      - id: A
+        answer: "HandlerAdapter chọn route, HandlerMapping gọi controller và WebFilter serialize return value."
+        explanation: "Sai. Các trách nhiệm này thuộc những strategy layer khác nhau."
+      - id: B
+        answer: "HandlerMapping tìm handler, HandlerAdapter gọi handler và HandlerResultHandler xử lý giá trị kết quả."
+        explanation: "Đúng. DispatcherHandler điều phối các strategy contract này thay vì tự làm toàn bộ dispatch."
+      - id: C
+        answer: "HttpMessageWriter tìm controller, ReactiveAdapterRegistry gọi controller và HandlerMapping commit response."
+        explanation: "Sai. Codec và reactive adapter tham gia ở các bước khác, không thay thế dispatch strategy chain."
+      - id: D
+        answer: "WebHandler chọn HandlerResultHandler trước, sau đó HandlerMapping mới quyết định response đã ghi có cần route hay không."
+        explanation: "Sai. Routing phải xác định handler trước invocation và result handling."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.RuntimeArchitecture/WebFluxRuntime.md"
+      anchor: "webflux-dispatch-strategies"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - id: webflux-event-loop-blocking
+    question: "Một Reactor Netty WebFlux handler gọi JDBC blocking lâu trực tiếp trên request-processing thread. Rủi ro quan trọng nhất là gì?"
+    answers:
+      - id: A
+        answer: "Chỉ request đó chậm hơn; các connection khác trên cùng event-loop worker không bị ảnh hưởng."
+        explanation: "Sai. Event-loop worker bị block có thể làm chậm công việc khác được giao cho worker đó."
+      - id: B
+        answer: "Spring tự tạo một thread riêng cho mỗi request bị block, nên tác động chính chỉ là tốn thêm memory."
+        explanation: "Sai. Đây không phải execution model mặc định của WebFlux event loop."
+      - id: C
+        answer: "JDBC driver trở thành non-blocking vì controller đang chạy bên trong reactive pipeline."
+        explanation: "Sai. Reactive composition không thay đổi I/O model của dependency blocking."
+      - id: D
+        answer: "Event-loop worker bị giữ không thể xử lý công việc sẵn sàng khác, nên latency có thể tăng trên nhiều exchange đồng thời."
+        explanation: "Đúng. Event-loop starvation có thể khuếch đại một dependency blocking thành vấn đề concurrency rộng hơn."
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.RuntimeArchitecture/WebFluxRuntime.md"
+      anchor: "webflux-runtime-threading"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - id: webflux-sse-streaming
+    question: "Thí nghiệm SSE ở Step 5 chứng minh trực tiếp điều gì?"
+    answers:
+      - id: A
+        answer: "Một Flux hữu hạn với streaming media type có thể đưa phần tử ra tăng dần theo thời gian thay vì gom toàn bộ kết quả trước."
+        explanation: "Đúng. Thí nghiệm phát các SSE frame hữu hạn với elapsed-time evidence tăng dần."
+      - id: B
+        answer: "Chỉ cần trả Flux là đủ; cùng incremental behavior sẽ luôn được bảo đảm ngay cả với response JSON có tính aggregation."
+        explanation: "Sai. Publisher shape không tự bảo đảm HTTP flush tăng dần; media type, writer, buffering và transport đều có vai trò."
+      - id: C
+        answer: "delayElements chỉ làm chậm source creation; server vẫn đợi Flux complete rồi mới ghi toàn bộ SSE frame."
+        explanation: "Sai. Các frame được quan sát trước khi publisher complete, chính là evidence runtime của incremental delivery."
+      - id: D
+        answer: "Thí nghiệm chứng minh mỗi reactive element tương ứng một network write nên transport buffering không còn ảnh hưởng SSE."
+        explanation: "Sai. Nó chứng minh delivery tăng dần có thể quan sát được, không chứng minh contract một element bằng một network write."
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.HttpDataFlow/ReactiveHttpDataFlow.md"
+      anchor: "webflux-streaming-vs-aggregation"
+    apiRelated:
+      controller: "ReactiveHttpDataController"
+      methodSignature: "stream(int,long)"
+
+  - id: webflux-data-buffer-ownership
+    question: "Khi application code nhận pooled DataBuffer nhưng không consume hoặc forward toàn bộ, mental model an toàn nhất là gì?"
+    answers:
+      - id: A
+        answer: "Nếu DataBuffer đến từ WebFlux decoder thì framework luôn giữ ownership kể cả khi user code intercept raw buffer."
+        explanation: "Sai. Khi application code tham gia raw pooled-buffer handling, ownership phải theo đúng contract consume, relay, retain hoặc release."
+      - id: B
+        answer: "Sau khi pooled DataBuffer được emit downstream, lifetime của nó có thể kéo dài đến lúc garbage collection mà không cần quyết định retain/release."
+        explanation: "Sai. Pooled-buffer lifetime không chỉ do Java GC quyết định; reference-counted ownership có thể cần xử lý tường minh."
+      - id: C
+        answer: "Code nhận ownership phải consume, relay hoặc release buffer theo contract WebFlux tương ứng."
+        explanation: "Đúng. Ownership phải rõ ràng, đặc biệt với pooled buffer hoặc multipart streaming."
+      - id: D
+        answer: "Copy byte sang array riêng khiến original pooled DataBuffer có thể được giữ vô hạn mà không cần release ownership."
+        explanation: "Sai. Copy dữ liệu không tự xóa lifecycle obligation của pooled buffer ban đầu."
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.HttpDataFlow/ReactiveHttpDataFlow.md"
+      anchor: "webflux-data-buffer-lifecycle"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - id: webflux-controller-method-validation
+    question: "Trong Spring Framework 6.1 WebFlux controller, tình huống nào trực tiếp làm built-in method validation được áp dụng?"
+    answers:
+      - id: A
+        answer: "Parameter chỉ có @Valid và không có constraint annotation nào trên method signature."
+        explanation: "Sai. @Valid hỗ trợ nested validation nhưng bản thân nó không phải constraint kích hoạt method validation."
+      - id: B
+        answer: "Constraint được đặt trực tiếp trên method parameter hoặc return value nên invocation được đánh giá qua method validation."
+        explanation: "Đúng. Direct constraint trên parameter hoặc return value là trigger chính của built-in controller method validation trong 6.1."
+      - id: C
+        answer: "Controller trả Mono vì mọi reactive return type tự động bật Bean Validation cho toàn bộ method argument."
+        explanation: "Sai. Reactive return type và applicability của Bean Validation là hai vấn đề khác nhau."
+      - id: D
+        answer: "Controller dùng @RestController vì annotation này chạy method validation trước request mapping."
+        explanation: "Sai. @RestController không tự cung cấp method-validation semantics."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.AnnotatedControllers/AnnotatedControllers.md"
+      anchor: "webflux-controller-binding-validation"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - id: webflux-functional-direct-adaptation
+    question: "Điều gì thay đổi khi RouterFunction được adapt trực tiếp thành HttpHandler với HandlerStrategies thay vì được discover qua WebFlux ApplicationContext thông thường?"
+    answers:
+      - id: A
+        answer: "Route trước tiên được chuyển thành annotated controller rồi dispatch qua controller-method infrastructure."
+        explanation: "Sai. Direct functional adaptation không biến route thành annotated controller."
+      - id: B
+        answer: "Route vẫn cần RouterFunctionMapping và DispatcherHandler để discover từ ApplicationContext."
+        explanation: "Sai. Direct adaptation là lower-level path có thể bỏ qua discovery chain đó."
+      - id: C
+        answer: "HandlerStrategies bị bỏ qua vì codec và exception handling chỉ tồn tại trong annotated model."
+        explanation: "Sai. HandlerStrategies cung cấp functional request/response infrastructure như codec và các strategy liên quan."
+      - id: D
+        answer: "RouterFunction có thể thành HttpHandler với HandlerStrategies được cung cấp và bỏ qua DispatcherHandler route discovery."
+        explanation: "Đúng. Đây là lower-level functional deployment path của WebFlux.fn."
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.FunctionalEndpoints/FunctionalEndpoints.md"
+      anchor: "webflux-direct-http-handler-adaptation"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - id: webflux-reactor-context-propagation
+    question: "Vì sao Reactor Context phù hợp hơn ThreadLocal không có bridge cho correlation data theo request khi đi qua async boundary trong cùng composed Reactor subscription?"
+    answers:
+      - id: A
+        answer: "Reactor Context đi theo subscriber chain; execution có thể resume trên thread nơi ThreadLocal không có bridge sẽ không tự xuất hiện."
+        explanation: "Đúng. Step 5 experiment cho thấy contextual data vẫn giữ nguyên dù resumed thread thay đổi."
+      - id: B
+        answer: "ThreadLocal thông thường vẫn đủ vì Reactor giữ một request trên cùng worker trừ khi application gọi publishOn."
+        explanation: "Sai. Reactive execution có thể đi qua scheduler hoặc async boundary mà không giữ ordinary ThreadLocal state nếu không có bridge."
+      - id: C
+        answer: "ServerWebExchange attribute và Reactor Context tương đương vì mọi downstream operator đều đọc được exchange attribute mà không cần exchange reference."
+        explanation: "Sai. Exchange attribute nằm trên ServerWebExchange; Reactor Context có thể được truy cập qua subscriber context mà không cần truyền exchange reference."
+      - id: D
+        answer: "Value được ghi vào Reactor Context bên trong controller tự động hiện với filter đã chạy trước đó trong chain."
+        explanation: "Sai. Context visibility phụ thuộc composition và subscription direction; contextWrite không phải global retroactive mutation."
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.CrossCuttingProcessing/CrossCuttingProcessing.md"
+      anchor: "webflux-reactor-context"
+    apiRelated:
+      controller: "ReactiveContextController"
+      methodSignature: "reactorContext(String)"
+
+  - id: webflux-blocking-execution-boundary
+    question: "BlockingExecutionConfigurer chứng minh điều gì khi một annotated controller method đã chọn chạy trên executor cấu hình?"
+    answers:
+      - id: A
+        answer: "Controller method đã chọn và mọi operator trong Publisher nó trả về đều bị pin vào executor này cho đến khi response complete."
+        explanation: "Sai. Cấu hình kiểm soát invocation của controller method; reactive execution phía sau theo scheduling semantics của publisher."
+      - id: B
+        answer: "Nó thay thế Reactor scheduler choice cho service-layer blocking call nên controller đã chọn không cần boundary riêng quanh dependency đó."
+        explanation: "Sai. Đây là controller-invocation facility, không phải scheduler policy chung cho arbitrary downstream blocking work."
+      - id: C
+        answer: "Spring có thể gọi annotated controller method đã chọn trên executor cấu hình, tạo một bounded interoperability boundary rõ ràng."
+        explanation: "Đúng. Experiment chứng minh invocation boundary, không phải biến mọi blocking work thành non-blocking."
+      - id: D
+        answer: "Controller-method predicate cũng được đánh giá cho functional HandlerFunction vì hai model dùng chung WebFlux runtime."
+        explanation: "Sai. Dùng chung runtime không biến HandlerFunction thành controller HandlerMethod thuộc predicate này."
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.CrossCuttingProcessing/CrossCuttingProcessing.md"
+      anchor: "webflux-blocking-execution"
+    apiRelated:
+      controller: "ReactiveContextController"
+      methodSignature: "blockingExecution()"
+
+  - id: webclient-retrieve-vs-exchange
+    question: "Khi nào exchangeToMono hoặc exchangeToFlux phù hợp hơn retrieve()?"
+    answers:
+      - id: A
+        answer: "Khi mọi status dùng cùng body decoding và custom error mapping có thể thực hiện sau khi retrieve() đã decode kết quả."
+        explanation: "Sai. Trường hợp này thường phù hợp với retrieve(); exchangeTo* có giá trị khi status/header phải quyết định chính cách decode."
+      - id: B
+        answer: "Khi response handling cần branch tường minh theo status trước khi quyết định decode body như thế nào hoặc có decode hay không."
+        explanation: "Đúng. exchangeToMono/exchangeToFlux expose ClientResponse để xử lý status-aware một cách chủ động."
+      - id: C
+        answer: "Khi caller chỉ cần status và header sau normal decoding nhưng vẫn muốn giữ default 4xx/5xx handling của retrieve()."
+        explanation: "Sai. retrieve() có các entity-oriented variant cho nhiều trường hợp thông thường; riêng nhu cầu này chưa bắt buộc exchangeTo*."
+      - id: D
+        answer: "Khi ClientResponse body cần được decode ở downstream bên ngoài exchange handler vì exchangeTo* giữ unconsumed response content mở để dùng sau."
+        explanation: "Sai. Sau khi publisher của exchange handler complete, unconsumed response content được release; body cần dùng phải được decode trong handler."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.WebClient/WebClient.md"
+      anchor: "webclient-exchange-control"
+    apiRelated:
+      controller: ""
+      methodSignature: ""

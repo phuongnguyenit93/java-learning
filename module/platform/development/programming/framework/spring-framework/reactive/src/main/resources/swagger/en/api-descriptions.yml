@@ -1,0 +1,113 @@
+ReactiveContextController:
+  reactorContext(ServerWebExchange):
+    summary: Inactive historical Reactor Context signature
+    description: Generated metadata history from the earlier in-step ServerWebExchange
+      signature. It is retained with usage=false and is excluded from the active API
+      learning surface.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: reactorContext
+    params:
+    - exchange
+    path: com/example/learning/module/context/controller/ReactiveContextController.java
+    mapping: '@GetMapping("/reactor")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /api/reactive/context/reactor
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: false
+  blockingExecution():
+    summary: Observe Spring 6.1 blocking-controller offload
+    description: Invoke a synchronous controller method selected by BlockingExecutionConfigurer
+      and return its actual thread name plus bounded timing evidence. The result proves
+      that Spring can invoke this selected annotated method on the configured executor
+      without implying that arbitrary downstream reactive work is also offloaded.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: webflux-blocking-execution
+    methodName: blockingExecution
+    params: [
+      ]
+    path: com/example/learning/module/context/controller/ReactiveContextController.java
+    mapping: '@GetMapping("/blocking-execution")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /api/reactive/context/blocking-execution
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  reactorContext(String):
+    summary: Follow Reactor Context across an asynchronous boundary
+    description: Seed a correlation id in a WebFilter, cross a Mono.delay asynchronous
+      boundary, then read the value with deferContextual. The response compares the
+      normalized request correlation id with the Reactor Context value and records
+      the entry and resumed thread names.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: webflux-reactor-context
+    methodName: reactorContext
+    params:
+    - correlationId
+    path: com/example/learning/module/context/controller/ReactiveContextController.java
+    mapping: '@GetMapping("/reactor")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /api/reactive/context/reactor
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+ReactiveHttpDataController:
+  stream(int,long):
+    summary: Stream finite SSE elements over time
+    description: Emit a bounded sequence of server-sent events with sequence numbers
+      and per-subscription elapsed-time evidence. The experiment makes incremental
+      response delivery visible without creating an unbounded stream or a load benchmark.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: webflux-streaming-vs-aggregation
+    methodName: stream
+    params:
+    - count
+    - delayMillis
+    path: com/example/learning/module/http/controller/ReactiveHttpDataController.java
+    mapping: '@GetMapping(path = "/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /api/reactive/http/stream
+    produces:
+    - MediaType.TEXT_EVENT_STREAM_VALUE
+    consumes: [
+      ]
+    usage: true

@@ -1,0 +1,56 @@
+ReactiveContextController:
+  reactorContext(ServerWebExchange):
+    execution: <p>Signature lịch sử không còn active và được Swagger metadata synchronization
+      giữ lại. Thí nghiệm hiện tại là <code>reactorContext(String)</code>.</p>
+    usage: false
+  blockingExecution():
+    execution: |-
+      <p><b>Khái niệm:</b> Spring Framework 6.1 có thể gọi một số annotated WebFlux controller method đã chọn trên <code>AsyncTaskExecutor</code> được cấu hình.</p>
+      <ol>
+        <li><code>ReactiveExperimentConfig</code> tạo một <code>ThreadPoolTaskExecutor</code> có giới hạn, với prefix thread <code>webflux-blocking-</code>.</li>
+        <li><code>configureBlockingExecution</code> chỉ chọn method có <code>@BlockingExperiment</code>.
+          <pre><code>configurer.setExecutor(blockingExecutor);
+      configurer.setControllerMethodPredicate(handlerMethod -&gt;
+              handlerMethod.hasMethodAnnotation(BlockingExperiment.class));</code></pre>
+        </li>
+        <li>Controller method được chọn thực hiện một lần sleep blocking nhỏ 40 ms rồi trả về tên thread thực tế và thời gian đã chạy.</li>
+      </ol>
+      <p><b>Quan sát:</b> <code>offloadedToConfiguredExecutor</code> phải là <code>true</code> và tên thread trả về bắt đầu bằng <code>webflux-blocking-</code>.</p>
+      <p><b>Kết luận:</b> Evidence chỉ chứng minh vị trí gọi controller method. Nó không có nghĩa các reactive operator phía sau hoặc dependency blocking ẩn cũng tự động được chuyển sang executor này.</p>
+    usage: true
+  reactorContext(String):
+    execution: |-
+      <p><b>Khái niệm:</b> Context của WebFlux request có thể đi theo reactive subscription thay vì dựa vào giả định một request luôn sở hữu một Java thread.</p>
+      <ol>
+        <li><code>CorrelationContextFilter</code> đọc <code>X-Correlation-Id</code>, chuẩn hóa giá trị thiếu hoặc rỗng thành <code>demo-context</code>, rồi gắn giá trị hiệu lực bằng <code>contextWrite</code>.
+          <pre><code>return chain.filter(exchange)
+              .contextWrite(context -&gt;
+                      context.put(REACTOR_CONTEXT_KEY, correlationId));</code></pre>
+        </li>
+        <li>Controller ghi lại thread lúc vào, đi qua ranh giới bất đồng bộ ngắn bằng <code>Mono.delay</code>, sau đó đọc correlation id bằng <code>Mono.deferContextual</code>.</li>
+        <li>Controller áp dụng cùng quy tắc chuẩn hóa trước khi so sánh. Response trả về giá trị request hiệu lực, giá trị Reactor Context, thread trước/sau ranh giới và evidence so sánh.</li>
+      </ol>
+      <p><b>Quan sát:</b> <code>sameValue</code> phải giữ <code>true</code>. Tên thread là evidence runtime và có thể thay đổi sau ranh giới bất đồng bộ; tính đúng đắn không phụ thuộc thread affinity.</p>
+      <p><b>Kết luận:</b> Reactor Context là contextual state theo subscription. Thí nghiệm không khẳng định mọi thư viện dựa trên ThreadLocal đều không dùng được; framework có thể có bridge tường minh.</p>
+    usage: true
+ReactiveHttpDataController:
+  stream(int,long):
+    execution: |-
+      <p><b>Khái niệm:</b> Response nhiều giá trị của WebFlux có thể giữ tính streaming thay vì gom toàn bộ dữ liệu trước khi ghi HTTP response.</p>
+      <ol>
+        <li>Endpoint kiểm tra <code>count</code> và <code>delayMillis</code> để thí nghiệm luôn hữu hạn và có giới hạn.</li>
+        <li><code>Flux.defer</code> bắt đầu timer riêng cho từng subscription; bên trong, <code>Flux.range</code> tạo chuỗi và <code>delayElements</code> tạo khoảng cách giữa các lần phát.
+          <pre><code>return Flux.defer(() -&gt; {
+          long startedAt = System.nanoTime();
+          return Flux.range(1, count)
+                  .delayElements(Duration.ofMillis(delayMillis))
+                  .map(sequence -&gt; ServerSentEvent.builder(...)
+                          .data(evidence)
+                          .build());
+      });</code></pre>
+        </li>
+        <li>Mỗi SSE chứa số thứ tự, số mili-giây đã trôi qua từ lúc subscription bắt đầu và cờ phần tử cuối.</li>
+      </ol>
+      <p><b>Quan sát:</b> Client nhận các SSE frame riêng biệt với elapsed time tăng dần trước khi finite stream hoàn tất.</p>
+      <p><b>Kết luận:</b> Streaming media kết hợp multi-value publisher có thể đưa phần tử ra từng bước. Thí nghiệm không khẳng định mọi <code>Flux</code> hoặc mọi media type đều flush đúng một network message cho mỗi phần tử.</p>
+    usage: true

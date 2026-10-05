@@ -1,0 +1,12 @@
+ReactiveContextController:
+  description: |-
+    <h2>Reactive Context Controller</h2>
+    <p>Chạy các thí nghiệm WebFlux có giới hạn để quan sát Reactor Context propagation và cơ chế chạy controller blocking của Spring Framework 6.1.</p>
+  readmeRelated:
+    file: 6.CrossCuttingProcessing/CrossCuttingProcessing.md
+ReactiveHttpDataController:
+  description: |-
+    <h2>Reactive HTTP Data Controller</h2>
+    <p>Minh họa server-sent-event hữu hạn để người học quan sát trực tiếp dữ liệu response được gửi tăng dần theo thời gian.</p>
+  readmeRelated:
+    file: 3.HttpDataFlow/ReactiveHttpDataFlow.md
