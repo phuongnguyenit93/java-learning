@@ -41,4 +41,140 @@
 # The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: webflux-purpose-and-applicability
+    title: "Why Spring WebFlux Exists"
+    purpose: "Build the mental model for Spring WebFlux as Spring Framework's non-blocking reactive web stack, including the problems it is designed to solve and the situations where it is not the right choice."
+    objectives:
+      - "Explain why non-blocking I/O and Reactive Streams-style backpressure matter at a web-system boundary without relearning the entire reactive programming paradigm here."
+      - "Distinguish throughput and concurrency benefits from raw request latency; reactive code is not automatically faster."
+      - "Compare the default blocking assumptions of Spring MVC with WebFlux's non-blocking execution model."
+      - "Recognize when blocking persistence or networking dependencies undermine the main benefits of a non-blocking web stack."
+      - "Describe the two WebFlux server programming models: annotated controllers and functional endpoints."
+    relatedKnowledge:
+      - WebFluxPurpose
+    relatedModules:
+      - routeId: REACTIVE_PROGRAMMING
+        label: "Reactive Programming"
+        note: "Owns the general Reactive Streams, publisher/subscriber, operator, and backpressure foundations that WebFlux applies."
+      - routeId: SPRING_WEB
+        label: "Spring Web"
+        note: "Owns the Servlet-stack Spring MVC model used as the primary comparison point when deciding whether WebFlux is appropriate."
+
+  - id: webflux-runtime-and-dispatch-model
+    title: "Reactive HTTP Runtime and Dispatch Model"
+    purpose: "Understand how an incoming HTTP exchange moves through WebFlux from the server adapter to the central dispatch infrastructure before learning endpoint syntax."
+    dependsOn:
+      - webflux-purpose-and-applicability
+    objectives:
+      - "Explain the roles of the reactive HTTP adapter layer, HttpHandler/WebHandler contracts, ServerWebExchange, and the WebHandler processing chain."
+      - "Trace how DispatcherHandler coordinates HandlerMapping, HandlerAdapter, and HandlerResultHandler strategies."
+      - "Distinguish the major result-handling paths for response entities/bodies, functional ServerResponse values, and view resolution/rendering rather than treating WebFlux as REST-only."
+      - "Understand Reactor's internal role and ReactiveAdapterRegistry-style adaptation of supported reactive/asynchronous types without turning this module into a general Reactor course."
+      - "Understand how WebFlux can run on non-Servlet runtimes such as Reactor Netty and on Servlet containers through non-blocking adapters without exposing the Servlet programming model directly."
+      - "Relate WebFlux's no-blocking assumption to the threading model of the chosen runtime: for example Reactor Netty uses event-loop resources, while Servlet-container adapters have a different server thread profile."
+      - "Identify where framework configuration extends the runtime without confusing Spring Boot auto-configuration with Spring Framework mechanics."
+    relatedKnowledge:
+      - WebFluxRuntime
+
+  - id: reactive-http-data-flow
+    title: "Reactive Request, Response, and Codec Flow"
+    purpose: "Learn how WebFlux represents, decodes, validates, streams, and writes HTTP data while preserving reactive and non-blocking contracts."
+    dependsOn:
+      - webflux-runtime-and-dispatch-model
+    objectives:
+      - "Model request and response data as asynchronous values or streams instead of assuming eagerly available bodies."
+      - "Understand HttpMessageReader/HttpMessageWriter-style codec responsibilities, content negotiation, and streaming media behavior at a conceptual level."
+      - "Explain when a body can be streamed and when aggregation or buffering changes memory and backpressure characteristics."
+      - "Handle form and multipart data with the correct mental model, including the difference between aggregated multipart access and sequential/streaming part processing for large payloads."
+      - "Understand how WebFlux integrates with Spring binding and validation while leaving reusable Validator, DataBinder, ConversionService, and formatting semantics to the validation-data-binding module."
+      - "Understand Cache-Control plus conditional requests with ETag/Last-Modified, including not-modified and precondition short-circuit behavior, as HTTP caching concerns distinct from Spring's application-level Cache abstraction."
+      - "Recognize malformed input, decoding, validation, and response-writing failures as distinct parts of the HTTP data flow."
+    relatedKnowledge:
+      - ReactiveHttpDataFlow
+
+  - id: annotated-controller-model
+    title: "Annotated Reactive Controllers"
+    purpose: "Apply the familiar Spring annotation model with WebFlux-specific reactive request and response semantics."
+    dependsOn:
+      - reactive-http-data-flow
+    objectives:
+      - "Use request mappings and supported controller method contracts without treating annotations themselves as the WebFlux architecture."
+      - "Reason about reactive request bodies, reactive return values, response entities, streaming responses, and completion semantics."
+      - "Understand binding and validation integration at the controller boundary while preserving ownership of generic validation infrastructure."
+      - "Understand model-and-view return styles and how ViewResolver/ViewResolutionResultHandler participate when annotated controllers render views instead of writing response bodies."
+      - "Handle controller-scoped errors and HTTP status mapping without bypassing the wider WebFlux exception-processing chain."
+      - "Identify where MVC and WebFlux annotations look similar but execute under different runtime assumptions."
+    relatedKnowledge:
+      - AnnotatedControllers
+
+  - id: functional-endpoint-model
+    title: "Functional Endpoints with WebFlux.fn"
+    purpose: "Learn the alternative functional programming model and understand when its explicit routing and immutable request/response contracts are preferable to annotated controllers."
+    dependsOn:
+      - reactive-http-data-flow
+    objectives:
+      - "Explain RouterFunction, HandlerFunction, ServerRequest, and ServerResponse as the core functional endpoint contracts."
+      - "Trace how functional endpoints integrate with DispatcherHandler in standard WebFlux configuration, while recognizing that RouterFunctions can also be adapted directly to an HttpHandler in lower-level setups."
+      - "Compose routes, nested routes, predicates, handlers, and route filters without turning the roadmap into an API inventory."
+      - "Understand functional rendering responses and how configured view resolvers can render a model as an alternative to body-oriented ServerResponse values."
+      - "Compare explicit functional routing with annotation-driven controllers in terms of control, discoverability, composition, and team conventions."
+      - "Recognize that both programming models share the same reactive HTTP foundation rather than forming separate web stacks."
+    relatedKnowledge:
+      - FunctionalEndpoints
+
+  - id: cross-cutting-web-processing
+    title: "Cross-Cutting Processing, Context, and Errors"
+    purpose: "Understand the infrastructure that surrounds endpoint invocation so cross-cutting behavior, context propagation, sessions, and failures remain compatible with a reactive execution model."
+    dependsOn:
+      - reactive-http-data-flow
+    objectives:
+      - "Explain WebFilter/WebFilterChain ordering and distinguish reactive web filters from Servlet filters and MVC interceptors."
+      - "Use Reactor Context for request-related contextual data instead of assuming ThreadLocal affinity across a reactive pipeline."
+      - "Understand WebSession and other exchange-scoped state without introducing blocking assumptions."
+      - "Trace the distinction between controller/handler error handling and WebExceptionHandler-level processing."
+      - "Use WebFluxConfigurer and related framework extension points for codecs, CORS, path matching, view resolution, and other web configuration without confusing them with Spring Boot auto-configuration."
+      - "Understand Spring Framework 6.1 blocking-execution configuration as an explicit mechanism to offload identified blocking controller methods to a configured executor, not as permission to mix blocking work freely into reactive pipelines."
+      - "Treat CORS, security integration, and similar cross-cutting concerns as extensions around the WebFlux pipeline while leaving authentication/authorization policy to Spring Security."
+    relatedKnowledge:
+      - CrossCuttingProcessing
+
+  - id: webclient-reactive-http-client
+    title: "WebClient and Outbound Reactive HTTP"
+    purpose: "Build a correct mental model for Spring WebClient as a non-blocking, streaming HTTP client that composes with reactive application flows."
+    dependsOn:
+      - reactive-http-data-flow
+    objectives:
+      - "Understand WebClient's role above pluggable HTTP client connectors and its reuse of WebFlux codec infrastructure."
+      - "Differentiate convenient response retrieval from lower-level exchange control and understand their error-handling implications."
+      - "Compose request bodies, streaming responses, filters, attributes, and Reactor Context without introducing hidden blocking."
+      - "Reuse immutable WebClient instances appropriately while reasoning separately about connector-owned connection pools and event-loop resources; when Reactor Netty backs both client and server, understand its default shared-resource model and lifecycle implications."
+      - "Recognize that WebClient can be useful from MVC applications too, while its deep reactive mechanics remain owned by this module."
+    relatedKnowledge:
+      - WebClient
+
+  - id: webflux-production-boundaries-and-synthesis
+    title: "Production Boundaries, Trade-offs, and End-to-End Design"
+    purpose: "Synthesize WebFlux into a production-ready decision model: preserve non-blocking boundaries, diagnose common failure modes, and know when to hand work to neighboring Spring modules."
+    dependsOn:
+      - cross-cutting-web-processing
+      - webclient-reactive-http-client
+    objectives:
+      - "Identify blocking calls, accidental thread starvation, unbounded buffering, and inappropriate scheduler switching as common ways to defeat the WebFlux model."
+      - "Relate backpressure, cancellation, connection lifetime, streaming, and resource limits to observable runtime behavior without duplicating generic Reactor theory."
+      - "Choose Spring MVC or WebFlux based on workload, dependency stack, team complexity, and measurable concurrency needs rather than fashion."
+      - "Hand reactive persistence and transaction concerns to their Spring data-access and transaction-management owners instead of teaching them as WebFlux internals."
+      - "Hand WebFlux testing strategy to the Spring testing module, and hand low-level reactive WebSocket client/server APIs plus higher-level WebSocket/STOMP application messaging to the Spring messaging module according to the area Curriculum."
+      - "Trace an end-to-end request from server adapter through dispatch, endpoint logic, cross-cutting processing, outbound I/O, and response completion."
+    relatedKnowledge:
+      - ProductionBoundaries
+    relatedModules:
+      - routeId: SPRING_WEB
+        label: "Spring Web"
+        note: "Provides the Servlet-stack MVC alternative and comparison baseline for architecture decisions."
+      - routeId: SPRING_TESTING
+        label: "Spring Testing"
+        note: "Owns framework-level testing infrastructure such as WebTestClient usage and test-context concerns."
+      - routeId: REACTIVE_PROGRAMMING
+        label: "Reactive Programming"
+        note: "Owns the generic reactive composition, operator, scheduler, and backpressure theory required to reason about WebFlux pipelines."

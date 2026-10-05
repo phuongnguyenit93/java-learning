@@ -7,7 +7,19 @@
 ---
 # Common runtime configuration
 # Add common runtime configuration below this line.
-
+spring:
+  application:
+    name: spring-reactive-learning
+swagger:
+  enabled: true
+  languages: vi,en
+springdoc:
+  swagger-ui:
+    enabled: ${swagger.enabled}
+    docExpansion:
+      - none
+  api-docs:
+    enabled: ${swagger.enabled}
 
 ---
 # Runtime configuration for profile DEV

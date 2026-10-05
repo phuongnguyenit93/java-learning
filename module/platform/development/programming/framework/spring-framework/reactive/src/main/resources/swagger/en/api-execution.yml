@@ -1,0 +1,56 @@
+ReactiveContextController:
+  reactorContext(ServerWebExchange):
+    execution: <p>Inactive historical signature retained by Swagger metadata synchronization.
+      The current experiment is <code>reactorContext(String)</code>.</p>
+    usage: false
+  blockingExecution():
+    execution: |-
+      <p><b>Concept:</b> Spring Framework 6.1 can invoke selected annotated WebFlux controller methods on a configured <code>AsyncTaskExecutor</code>.</p>
+      <ol>
+        <li><code>ReactiveExperimentConfig</code> installs one bounded <code>ThreadPoolTaskExecutor</code> whose threads use the <code>webflux-blocking-</code> prefix.</li>
+        <li><code>configureBlockingExecution</code> selects only methods marked with <code>@BlockingExperiment</code>.
+          <pre><code>configurer.setExecutor(blockingExecutor);
+      configurer.setControllerMethodPredicate(handlerMethod -&gt;
+              handlerMethod.hasMethodAnnotation(BlockingExperiment.class));</code></pre>
+        </li>
+        <li>The selected controller method performs a deliberately small 40 ms blocking sleep and returns the actual thread name and elapsed time.</li>
+      </ol>
+      <p><b>Observation:</b> <code>offloadedToConfiguredExecutor</code> should be <code>true</code> and the returned thread should start with <code>webflux-blocking-</code>.</p>
+      <p><b>Conclusion:</b> The evidence concerns controller-method invocation only. It does not claim that later reactive operators or hidden blocking dependencies are automatically moved to this executor.</p>
+    usage: true
+  reactorContext(String):
+    execution: |-
+      <p><b>Concept:</b> WebFlux request context can follow the reactive subscription instead of relying on one request owning one Java thread.</p>
+      <ol>
+        <li><code>CorrelationContextFilter</code> reads <code>X-Correlation-Id</code>, normalizes an absent or blank value to <code>demo-context</code>, and attaches the effective value with <code>contextWrite</code>.
+          <pre><code>return chain.filter(exchange)
+              .contextWrite(context -&gt;
+                      context.put(REACTOR_CONTEXT_KEY, correlationId));</code></pre>
+        </li>
+        <li>The controller records its entry thread, crosses a short <code>Mono.delay</code> asynchronous boundary, then reads the correlation id with <code>Mono.deferContextual</code>.</li>
+        <li>The controller applies the same normalization before comparing values. The response returns the effective request value, Reactor Context value, entry/resumed thread names, and equality evidence.</li>
+      </ol>
+      <p><b>Observation:</b> <code>sameValue</code> should remain <code>true</code>. The thread names are runtime evidence and may differ across the asynchronous boundary; correctness does not depend on thread affinity.</p>
+      <p><b>Conclusion:</b> Reactor Context is subscription-scoped contextual state. This experiment does not imply that every ThreadLocal-based library is unsupported; explicit framework bridges can exist.</p>
+    usage: true
+ReactiveHttpDataController:
+  stream(int,long):
+    execution: |-
+      <p><b>Concept:</b> A multi-value WebFlux response can preserve streaming instead of aggregating all values before the HTTP response is written.</p>
+      <ol>
+        <li>The endpoint validates <code>count</code> and <code>delayMillis</code> so the experiment is finite and bounded.</li>
+        <li><code>Flux.defer</code> starts the timer separately for each subscription; inside it, <code>Flux.range</code> creates the sequence and <code>delayElements</code> spaces emissions over time.
+          <pre><code>return Flux.defer(() -&gt; {
+          long startedAt = System.nanoTime();
+          return Flux.range(1, count)
+                  .delayElements(Duration.ofMillis(delayMillis))
+                  .map(sequence -&gt; ServerSentEvent.builder(...)
+                          .data(evidence)
+                          .build());
+      });</code></pre>
+        </li>
+        <li>Each SSE carries its sequence number, elapsed milliseconds since subscription, and whether it is the last element.</li>
+      </ol>
+      <p><b>Observation:</b> The client receives separate SSE frames with increasing elapsed times before the finite stream completes.</p>
+      <p><b>Conclusion:</b> Streaming media plus a multi-value publisher can expose elements incrementally. This experiment does not claim that every <code>Flux</code> or every media type flushes one network message per element.</p>
+    usage: true

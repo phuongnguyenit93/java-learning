@@ -1,0 +1,113 @@
+ReactiveContextController:
+  reactorContext(ServerWebExchange):
+    summary: Signature Reactor Context lịch sử không còn active
+    description: Metadata lịch sử được generator giữ lại từ signature ServerWebExchange
+      ở giai đoạn triển khai trước. Entry này có usage=false và không thuộc API learning
+      surface hiện tại.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: reactorContext
+    params:
+    - exchange
+    path: com/example/learning/module/context/controller/ReactiveContextController.java
+    mapping: '@GetMapping("/reactor")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /api/reactive/context/reactor
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: false
+  blockingExecution():
+    summary: Quan sát Spring 6.1 offload controller blocking
+    description: Gọi một controller method đồng bộ được BlockingExecutionConfigurer
+      chọn và trả về tên thread thực tế cùng timing có giới hạn. Kết quả chứng minh
+      Spring có thể gọi annotated method này trên executor đã cấu hình nhưng không
+      ngụ ý mọi reactive work phía sau cũng được offload.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: webflux-blocking-execution
+    methodName: blockingExecution
+    params: [
+      ]
+    path: com/example/learning/module/context/controller/ReactiveContextController.java
+    mapping: '@GetMapping("/blocking-execution")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /api/reactive/context/blocking-execution
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  reactorContext(String):
+    summary: Theo dõi Reactor Context qua ranh giới bất đồng bộ
+    description: Gắn correlation id trong WebFilter, đi qua ranh giới bất đồng bộ
+      Mono.delay rồi đọc lại bằng deferContextual. Response so sánh correlation id
+      đã được chuẩn hóa từ request với Reactor Context và ghi lại thread trước/sau
+      ranh giới đó.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: webflux-reactor-context
+    methodName: reactorContext
+    params:
+    - correlationId
+    path: com/example/learning/module/context/controller/ReactiveContextController.java
+    mapping: '@GetMapping("/reactor")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /api/reactive/context/reactor
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+ReactiveHttpDataController:
+  stream(int,long):
+    summary: Stream chuỗi SSE hữu hạn theo thời gian
+    description: Phát một chuỗi server-sent event có giới hạn với số thứ tự và elapsed-time
+      evidence riêng cho mỗi subscription. Thí nghiệm làm rõ response được gửi tăng
+      dần mà không tạo stream vô hạn hay benchmark tải.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: webflux-streaming-vs-aggregation
+    methodName: stream
+    params:
+    - count
+    - delayMillis
+    path: com/example/learning/module/http/controller/ReactiveHttpDataController.java
+    mapping: '@GetMapping(path = "/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /api/reactive/http/stream
+    produces:
+    - MediaType.TEXT_EVENT_STREAM_VALUE
+    consumes: [
+      ]
+    usage: true

@@ -1,0 +1,20 @@
+exchange:
+  summary: Framework parameter lịch sử không còn active
+  description: ServerWebExchange parameter từ signature ở giai đoạn triển khai trước.
+    Entry chỉ được giữ vì stale generated metadata dùng usage=false.
+  usage: false
+count:
+  summary: Số phần tử SSE
+  description: Số event hữu hạn của thí nghiệm streaming. Giá trị hợp lệ từ 1 đến
+    5; mặc định là 3.
+  usage: true
+delayMillis:
+  summary: Khoảng trễ giữa các phần tử SSE
+  description: Khoảng trễ tính bằng mili-giây giữa hai event. Giá trị hợp lệ từ 50
+    đến 500; mặc định là 120.
+  usage: true
+correlationId:
+  summary: Correlation id được mang theo Reactor Context
+  description: Giá trị từ request header X-Correlation-Id. Nếu header bị thiếu hoặc
+    rỗng, thí nghiệm dùng demo-context để kết quả luôn xác định.
+  usage: true

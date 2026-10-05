@@ -1,1 +1,352 @@
-{}
+1.Purpose/WebFluxPurpose.md:
+  webflux-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  webflux-problem-with-blocking:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  webflux-nonblocking-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  webflux-throughput-vs-latency:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  webflux-mvc-runtime-contrast:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  webflux-blocking-dependency-impact:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  webflux-good-fit:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  webflux-poor-fit:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  webflux-programming-models:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+2.RuntimeArchitecture/WebFluxRuntime.md:
+  webflux-reactive-http-adapter:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  webflux-http-handler-web-handler:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  webflux-server-web-exchange:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  webflux-web-handler-chain:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  webflux-dispatcher-handler:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  webflux-dispatch-strategies:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  webflux-result-handling-paths:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  webflux-reactive-adapter-registry:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  webflux-server-runtime-options:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  webflux-runtime-threading:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  webflux-config-foundation:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+3.HttpDataFlow/ReactiveHttpDataFlow.md:
+  webflux-reactive-body-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  webflux-message-readers-writers:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  webflux-content-negotiation:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  webflux-streaming-vs-aggregation:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  webflux-data-buffer-lifecycle:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  webflux-form-data:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  webflux-multipart-data:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  webflux-multipart-streaming:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  webflux-binding-validation-integration:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  webflux-http-cache-conditional:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  webflux-http-data-failures:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+4.AnnotatedControllers/AnnotatedControllers.md:
+  webflux-annotated-controller-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  webflux-request-mapping:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  webflux-controller-arguments:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  webflux-reactive-request-body:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  webflux-controller-binding-validation:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  webflux-reactive-return-values:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  webflux-response-entity-streaming:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  webflux-controller-view-rendering:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  webflux-controller-error-handling:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  webflux-annotation-mvc-contrast:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+5.FunctionalEndpoints/FunctionalEndpoints.md:
+  webflux-functional-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  webflux-router-function:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  webflux-handler-function:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  webflux-server-request-response:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  webflux-route-predicates:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  webflux-route-composition:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  webflux-route-filters:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  webflux-functional-dispatcher-integration:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  webflux-direct-http-handler-adaptation:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  webflux-functional-view-rendering:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  webflux-annotated-vs-functional:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+6.CrossCuttingProcessing/CrossCuttingProcessing.md:
+  webflux-webfilter-chain:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  webflux-webfilter-ordering:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  webflux-reactor-context:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  webflux-context-vs-threadlocal:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  webflux-web-session:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  webflux-webexceptionhandler:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  webflux-error-handling-layers:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  webflux-configurer:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  webflux-cors-path-config:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  webflux-blocking-execution:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  webflux-security-boundary:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+7.WebClient/WebClient.md:
+  webclient-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  webclient-builder-immutability:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  webclient-client-connectors:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  webclient-request-and-body:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  webclient-response-retrieval:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  webclient-exchange-control:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  webclient-error-handling:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  webclient-streaming-responses:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  webclient-filters-attributes-context:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  webclient-codec-infrastructure:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  webclient-connector-resources:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  webclient-reactor-netty-shared-resources:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  webclient-in-mvc:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+8.ProductionBoundaries/ProductionBoundaries.md:
+  webflux-blocking-thread-starvation:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  webflux-buffering-scheduler-pitfalls:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  webflux-backpressure-cancellation:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  webflux-connection-lifetime:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  webflux-resource-limits:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  webflux-mvc-decision:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  webflux-dependency-stack-fit:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  webflux-team-complexity:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  webflux-neighboring-module-handoffs:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  webflux-end-to-end-flow:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false

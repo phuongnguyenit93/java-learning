@@ -41,4 +41,140 @@
 # Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: webflux-purpose-and-applicability
+    title: "Mục đích và phạm vi áp dụng của Spring WebFlux"
+    purpose: "Xây dựng mental model về Spring WebFlux như web stack reactive, non-blocking của Spring Framework; hiểu vấn đề nó giải quyết và những trường hợp không nên chọn WebFlux."
+    objectives:
+      - "Giải thích vì sao non-blocking I/O và backpressure theo Reactive Streams quan trọng tại biên hệ thống web mà không học lại toàn bộ reactive programming trong module này."
+      - "Phân biệt lợi ích về concurrency/khả năng chịu tải với độ trễ của từng request; reactive không mặc định làm request chạy nhanh hơn."
+      - "So sánh giả định blocking của Spring MVC với execution model non-blocking của WebFlux."
+      - "Nhận ra khi dependency blocking như persistence hoặc network client làm mất phần lớn lợi ích của non-blocking web stack."
+      - "Mô tả hai programming model phía server của WebFlux: annotated controller và functional endpoint."
+    relatedKnowledge:
+      - WebFluxPurpose
+    relatedModules:
+      - routeId: REACTIVE_PROGRAMMING
+        label: "Reactive Programming"
+        note: "Sở hữu nền tảng chung về Reactive Streams, publisher/subscriber, operator và backpressure mà WebFlux áp dụng."
+      - routeId: SPRING_WEB
+        label: "Spring Web"
+        note: "Sở hữu Spring MVC trên Servlet stack, là mốc so sánh chính khi quyết định có nên dùng WebFlux hay không."
+
+  - id: webflux-runtime-and-dispatch-model
+    title: "Runtime reactive HTTP và mô hình dispatch"
+    purpose: "Hiểu một HTTP exchange đi qua WebFlux từ server adapter tới hạ tầng dispatch trung tâm như thế nào trước khi học cú pháp endpoint."
+    dependsOn:
+      - webflux-purpose-and-applicability
+    objectives:
+      - "Giải thích vai trò của reactive HTTP adapter, các contract HttpHandler/WebHandler, ServerWebExchange và WebHandler processing chain."
+      - "Theo dõi cách DispatcherHandler phối hợp HandlerMapping, HandlerAdapter và HandlerResultHandler."
+      - "Phân biệt các nhánh result handling chính cho response entity/body, functional ServerResponse và view resolution/rendering thay vì coi WebFlux chỉ dành cho REST."
+      - "Hiểu vai trò nội bộ của Reactor và cơ chế kiểu ReactiveAdapterRegistry để thích nghi các reactive/asynchronous type được hỗ trợ mà không biến module này thành khóa học Reactor tổng quát."
+      - "Hiểu WebFlux có thể chạy trên runtime non-Servlet như Reactor Netty hoặc trên Servlet container thông qua non-blocking adapter nhưng không dùng trực tiếp Servlet programming model."
+      - "Liên hệ giả định không block của WebFlux với threading model của runtime được chọn: ví dụ Reactor Netty dùng event-loop resources, còn adapter trên Servlet container có server thread profile khác."
+      - "Nhận biết đâu là cấu hình mở rộng của Spring Framework và không nhầm nó với Spring Boot auto-configuration."
+    relatedKnowledge:
+      - WebFluxRuntime
+
+  - id: reactive-http-data-flow
+    title: "Luồng request, response và codec reactive"
+    purpose: "Hiểu WebFlux biểu diễn, decode, validate, stream và ghi HTTP data như thế nào trong khi vẫn giữ contract reactive và non-blocking."
+    dependsOn:
+      - webflux-runtime-and-dispatch-model
+    objectives:
+      - "Mô hình hóa request/response data dưới dạng giá trị hoặc stream bất đồng bộ thay vì giả định body luôn có sẵn ngay lập tức."
+      - "Hiểu trách nhiệm của codec kiểu HttpMessageReader/HttpMessageWriter, content negotiation và streaming media ở mức conceptual."
+      - "Phân biệt trường hợp có thể stream body với trường hợp phải aggregate/buffer và hệ quả lên memory/backpressure."
+      - "Xử lý form và multipart data với mental model đúng, bao gồm khác biệt giữa việc đọc multipart đã aggregate và xử lý part tuần tự/streaming cho payload lớn."
+      - "Hiểu cách WebFlux tích hợp Spring binding/validation nhưng để Validator, DataBinder, ConversionService và formatting dùng chung cho module validation-data-binding sở hữu."
+      - "Hiểu Cache-Control cùng conditional request với ETag/Last-Modified, bao gồm việc short-circuit khi resource chưa đổi hoặc precondition quyết định không tiếp tục xử lý, như HTTP caching concern riêng và không nhầm với Spring Cache abstraction ở application level."
+      - "Phân biệt lỗi input malformed, decoding, validation và ghi response như các failure point khác nhau trong HTTP data flow."
+    relatedKnowledge:
+      - ReactiveHttpDataFlow
+
+  - id: annotated-controller-model
+    title: "Annotated Controller trong WebFlux"
+    purpose: "Áp dụng programming model annotation quen thuộc của Spring nhưng với semantics request/response reactive đặc thù của WebFlux."
+    dependsOn:
+      - reactive-http-data-flow
+    objectives:
+      - "Dùng request mapping và controller method contract được hỗ trợ mà không nhầm annotation với kiến trúc WebFlux."
+      - "Lý giải reactive request body, reactive return value, response entity, streaming response và completion semantics."
+      - "Hiểu binding/validation tại controller boundary nhưng vẫn giữ generic validation infrastructure ở đúng owner."
+      - "Hiểu các kiểu trả về model-and-view và cách ViewResolver/ViewResolutionResultHandler tham gia khi annotated controller render view thay vì ghi response body."
+      - "Xử lý lỗi trong phạm vi controller/handler và HTTP status mapping mà không bỏ qua WebFlux exception-processing chain rộng hơn."
+      - "Nhận biết nơi Spring MVC và WebFlux dùng annotation giống nhau nhưng chạy dưới các runtime assumption khác nhau."
+    relatedKnowledge:
+      - AnnotatedControllers
+
+  - id: functional-endpoint-model
+    title: "Functional Endpoint với WebFlux.fn"
+    purpose: "Học programming model functional thay thế và hiểu khi nào routing tường minh cùng immutable request/response contract phù hợp hơn annotated controller."
+    dependsOn:
+      - reactive-http-data-flow
+    objectives:
+      - "Giải thích RouterFunction, HandlerFunction, ServerRequest và ServerResponse như các contract cốt lõi của functional endpoint."
+      - "Theo dõi cách functional endpoint tích hợp với DispatcherHandler trong WebFlux configuration thông thường, đồng thời hiểu RouterFunction cũng có thể được adapt trực tiếp thành HttpHandler ở setup mức thấp hơn."
+      - "Kết hợp route, nested route, predicate, handler và route filter mà không biến roadmap thành API inventory."
+      - "Hiểu functional rendering response và cách view resolver đã cấu hình có thể render model như một lựa chọn thay cho ServerResponse hướng body."
+      - "So sánh explicit functional routing với annotation-driven controller về control, discoverability, composition và team convention."
+      - "Hiểu hai programming model dùng chung reactive HTTP foundation thay vì là hai web stack riêng."
+    relatedKnowledge:
+      - FunctionalEndpoints
+
+  - id: cross-cutting-web-processing
+    title: "Cross-cutting processing, context và error flow"
+    purpose: "Hiểu hạ tầng bao quanh endpoint invocation để cross-cutting behavior, context propagation, session và failure vẫn tương thích với reactive execution model."
+    dependsOn:
+      - reactive-http-data-flow
+    objectives:
+      - "Giải thích thứ tự WebFilter/WebFilterChain và phân biệt reactive web filter với Servlet filter hay MVC interceptor."
+      - "Dùng Reactor Context cho contextual data thay vì giả định ThreadLocal luôn bám theo một reactive pipeline."
+      - "Hiểu WebSession và exchange-scoped state mà không đưa blocking assumption vào flow."
+      - "Phân biệt error handling tại controller/handler với WebExceptionHandler-level processing."
+      - "Dùng WebFluxConfigurer và các extension point liên quan để cấu hình codec, CORS, path matching, view resolution và web concern khác mà không nhầm với Spring Boot auto-configuration."
+      - "Hiểu blocking-execution configuration của Spring Framework 6.1 như cơ chế tường minh để offload controller method đã xác định là blocking sang executor được cấu hình, không phải giấy phép đưa blocking work tùy ý vào reactive pipeline."
+      - "Xem CORS, security integration và concern tương tự như extension quanh WebFlux pipeline, trong khi authentication/authorization policy thuộc Spring Security."
+    relatedKnowledge:
+      - CrossCuttingProcessing
+
+  - id: webclient-reactive-http-client
+    title: "WebClient và outbound reactive HTTP"
+    purpose: "Xây dựng mental model đúng về WebClient như HTTP client non-blocking, hỗ trợ streaming và có thể compose trực tiếp với reactive application flow."
+    dependsOn:
+      - reactive-http-data-flow
+    objectives:
+      - "Hiểu vai trò của WebClient phía trên các HTTP client connector có thể thay thế và việc tái sử dụng codec infrastructure của WebFlux."
+      - "Phân biệt cách lấy response thuận tiện với exchange control mức thấp hơn và hệ quả lên error handling."
+      - "Compose request body, streaming response, filter, attribute và Reactor Context mà không tạo hidden blocking."
+      - "Tái sử dụng WebClient immutable hợp lý, đồng thời tách riêng connection pool và event-loop resource do connector sở hữu; khi Reactor Netty đứng sau cả client và server, hiểu default shared-resource model cùng hệ quả lifecycle."
+      - "Nhận biết WebClient cũng có thể hữu ích trong ứng dụng Spring MVC, nhưng deep reactive mechanics của nó vẫn thuộc module này."
+    relatedKnowledge:
+      - WebClient
+
+  - id: webflux-production-boundaries-and-synthesis
+    title: "Production boundary, trade-off và thiết kế end-to-end"
+    purpose: "Tổng hợp WebFlux thành một decision model dùng được trong production: giữ đúng non-blocking boundary, nhận diện failure mode thường gặp và biết khi nào phải handoff sang module Spring lân cận."
+    dependsOn:
+      - cross-cutting-web-processing
+      - webclient-reactive-http-client
+    objectives:
+      - "Nhận diện blocking call, thread starvation, unbounded buffering và scheduler switching không phù hợp là các cách phổ biến làm hỏng WebFlux execution model."
+      - "Liên hệ backpressure, cancellation, connection lifetime, streaming và resource limit với runtime behavior quan sát được mà không duplicate Reactor theory."
+      - "Chọn Spring MVC hoặc WebFlux dựa trên workload, dependency stack, độ phức tạp của team và concurrency need có thể đo lường, không chạy theo xu hướng."
+      - "Handoff reactive persistence và transaction concern cho owner data-access và transaction-management thay vì dạy chúng như WebFlux internals."
+      - "Handoff chiến lược kiểm thử WebFlux cho Spring testing; handoff cả low-level reactive WebSocket client/server API lẫn WebSocket/STOMP application messaging cho Spring messaging theo area Curriculum."
+      - "Theo dõi end-to-end một request từ server adapter qua dispatch, endpoint logic, cross-cutting processing, outbound I/O tới response completion."
+    relatedKnowledge:
+      - ProductionBoundaries
+    relatedModules:
+      - routeId: SPRING_WEB
+        label: "Spring Web"
+        note: "Cung cấp Spring MVC trên Servlet stack để so sánh và ra quyết định kiến trúc."
+      - routeId: SPRING_TESTING
+        label: "Spring Testing"
+        note: "Sở hữu hạ tầng kiểm thử cấp framework như WebTestClient và các concern của test context."
+      - routeId: REACTIVE_PROGRAMMING
+        label: "Reactive Programming"
+        note: "Sở hữu lý thuyết reactive composition, operator, scheduler và backpressure dùng để lý giải WebFlux pipeline."
