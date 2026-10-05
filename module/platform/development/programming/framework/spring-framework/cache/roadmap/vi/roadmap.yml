@@ -1,0 +1,140 @@
+# <roadmap-schema>
+# Cấu trúc Roadmap Module
+# schema-version: 1
+#
+# YAML CONTRACT
+# roadmap: Danh sách milestone cấp cao của roadmap cho language hiện tại.
+#
+# - id [string, required]: ID ổn định và duy nhất của milestone trong roadmap language hiện tại.
+# - title [string, required]: Tên milestone hiển thị cho learner.
+# - purpose [string, required]: Milestone này tồn tại để learner hiểu hoặc đạt được điều gì.
+# - dependsOn [list, optional]: Danh sách id milestone prerequisite khi dependency không thể hiện đủ chỉ bằng thứ tự item.
+# - objectives [list, optional]: Các learning objective cấp milestone; không dùng để liệt kê mọi fact/API/syntax nhỏ.
+# - relatedKnowledge [list, optional]: Danh sách Knowledge category id trong chính module hiện tại hỗ trợ milestone. Portal hiển thị danh sách này ở phía đối diện milestone và click item sẽ điều hướng sang Knowledge category tương ứng.
+# - relatedModules [list, optional]: Các module liên quan hiển thị ở Level 2 của Portal. Mỗi item dùng routeId bắt buộc và có thể có label/note localized; relation này chỉ để điều hướng, không tạo child milestone hoặc thay đổi learning order.
+#
+# ROADMAP THINKING FRAMEWORK
+# PURPOSE
+#   - Topic/module này là gì?
+#   - Vì sao nó tồn tại?
+#   - Không có nó thì learner gặp vấn đề gì?
+# FOUNDATION
+#   - Learner cần prerequisite hoặc mental model nào trước?
+# CORE MODEL
+#   - Những abstraction hoặc building block lớn nào tạo nên chủ đề này?
+# MECHANICS
+#   - Nó hoạt động như thế nào ở mức language/runtime/API phù hợp với module?
+# USAGE
+#   - Nó được dùng như thế nào trong code thực tế?
+# DECISION / TRADE-OFF
+#   - Khi nào nên chọn cơ chế này thay vì cơ chế khác?
+#   - Khi nào không nên dùng?
+# FAILURE / PITFALL
+#   - Những sai lầm, compile-time failure hoặc runtime failure nào đáng biết?
+# INTEGRATION
+#   - Chủ đề này kết nối với những concept/module lân cận nào?
+# SYNTHESIS
+#   - Sau cùng learner phải giữ mental model end-to-end nào?
+#
+# Mỗi language tự chịu trách nhiệm cho roadmap của chính nó. Không suy luận hoặc đồng bộ cấu trúc từ roadmap của language khác.
+# Thứ tự item trong roadmap chính là thứ tự học mặc định. Chỉ dùng dependsOn khi cần biểu diễn dependency rõ hơn thứ tự tuyến tính.
+# Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
+# </roadmap-schema>
+
+roadmap:
+  - id: cache-purpose-and-boundary
+    title: Tư duy về cache và ranh giới của Spring Cache
+    purpose: Xây dựng mô hình tư duy đúng về cache như một cơ chế tái sử dụng kết quả để giảm chi phí tính toán hoặc I/O, đồng thời hiểu Spring Cache là lớp trừu tượng cho hành vi cache chứ không phải nơi lưu dữ liệu cache.
+    objectives:
+      - Phân biệt cache với nguồn dữ liệu chuẩn, buffer và lưu trữ bền vững.
+      - Hiểu điều kiện để một kết quả phù hợp với việc đưa vào cache, đặc biệt là quan hệ giữa đầu vào, đầu ra, dữ liệu cũ và invalidation.
+      - Nhận biết những vấn đề Spring Cache cố ý không chuẩn hóa như TTL, eviction policy, topology và consistency của provider.
+
+  - id: spring-cache-abstraction-model
+    title: Mô hình Cache, CacheManager và vùng cache
+    purpose: Hiểu các abstraction trung tâm mà Spring dùng để tách chính sách cache của ứng dụng khỏi cache provider phía sau.
+    objectives:
+      - Hiểu vai trò của Cache như abstraction cho một vùng cache có tên và CacheManager như SPI để tìm vùng cache cần dùng.
+      - Phân biệt sử dụng Cache API trực tiếp với cache khai báo trên method.
+      - Hiểu cache hit, cache miss, giá trị null đã được cache, native cache và việc Spring thích nghi với provider ở mức khái niệm.
+
+  - id: declarative-cache-operations
+    title: Khai báo hành vi cache trên method
+    purpose: Học cách mô tả chính sách cache ở cấp method hoặc class mà chưa phụ thuộc vào một provider cụ thể.
+    objectives:
+      - Phân biệt việc @Cacheable kiểm tra cache trước khi gọi method với cập nhật bằng @CachePut và invalidation bằng @CacheEvict.
+      - Hiểu vai trò của @Caching và @CacheConfig trong việc kết hợp và chia sẻ chính sách cache.
+      - Hiểu rằng metadata từ annotation chỉ tạo ra hành vi khi cache infrastructure đã được bật và có CacheManager hoặc CacheResolver phù hợp.
+
+  - id: cache-key-policy-and-resolution
+    title: Cache key, điều kiện và lựa chọn vùng cache
+    purpose: Hình thành tư duy rằng tính đúng đắn của cache phụ thuộc trực tiếp vào cách một lần gọi method được ánh xạ thành key và vùng cache.
+    objectives:
+      - Hiểu cơ chế tạo key mặc định và khi nào cần custom KeyGenerator hoặc SpEL key.
+      - Phân biệt condition với unless và thời điểm chúng tham gia quyết định caching.
+      - Hiểu CacheManager, CacheResolver và lựa chọn nhiều cache như các cơ chế quyết định vùng cache sẽ được dùng.
+      - Hiểu khi khai báo nhiều cache name, Spring kiểm tra chúng theo thứ tự và cập nhật các cache tham gia bằng cùng giá trị mới; đây không phải một abstraction chung cho mô hình cache nhiều tầng.
+      - Nhận diện lỗi thiết kế key như key không ổn định, thiếu chiều dữ liệu hoặc equality của object không phù hợp.
+
+  - id: consistency-update-and-invalidation
+    title: Cập nhật, invalidation và tính nhất quán
+    purpose: Hiểu tính đúng đắn của cache không kết thúc ở cache hit mà phụ thuộc vào cách thay đổi của dữ liệu được phản ánh vào cache.
+    objectives:
+      - Phân tích khác biệt giữa populate, put, single-entry eviction và whole-cache eviction.
+      - Hiểu invalidation trước khi gọi method so với sau khi method thành công và ảnh hưởng của exception.
+      - Nhận biết dữ liệu cũ, khoảng trống nhất quán giữa nguồn dữ liệu và cache, cũng như lý do invalidation thường khó hơn việc đưa dữ liệu vào cache.
+      - Biết khi nào không nên phối hợp @Cacheable và @CachePut cho cùng một invocation path.
+
+  - id: cache-interception-boundary
+    title: Proxy interception và ranh giới thực thi
+    purpose: Hiểu tại sao cache khai báo hoạt động qua Spring interception infrastructure và những lời gọi nào thực sự đi qua cache advice.
+    objectives:
+      - Hiểu @EnableCaching đăng ký cache interception infrastructure thay vì tự biến annotation thành hành vi runtime.
+      - Nhận biết proxy mode chỉ intercept lời gọi đi qua proxy: self-invocation và code chạy khi bean chưa khởi tạo proxy hoàn chỉnh không kích hoạt cache advice như mong đợi; cache annotations trong proxy mode nên đặt trên public methods.
+      - Hiểu advice ordering và AspectJ mode ở mức ranh giới, rồi chuyển phần proxy mechanics chuyên sâu sang module Spring AOP.
+    relatedModules:
+      - routeId: ASPECT
+        label: Spring AOP
+        note: Học sâu proxy, advice ordering, self-invocation và interception mechanics được Spring Cache sử dụng.
+
+  - id: concurrency-and-async-caching
+    title: Concurrency, cache stampede và kiểu trả về bất đồng bộ
+    purpose: Hiểu cách hành vi cache thay đổi khi nhiều caller cạnh tranh cùng một key hoặc khi method trả về future hay reactive type.
+    objectives:
+      - Hiểu việc một giá trị có thể bị tính lặp lại khi nhiều caller cùng cache miss và ý nghĩa của @Cacheable(sync=true) như một synchronization hint cần provider hỗ trợ.
+      - Ghi nhớ các ràng buộc của sync=true trong Spring Cache: không dùng unless, chỉ được chỉ định một cache và không kết hợp cache operation khác trên cùng method.
+      - Hiểu cách Spring Framework 6.1 thích nghi với CompletableFuture, Mono và Flux ở mức cache abstraction.
+      - Nhận biết provider phải hỗ trợ async retrieval phù hợp và reactive caching của Spring Cache chỉ hoạt động ở mức khá thô.
+      - Nhận biết với nhiều cache trong async/reactive mode, cache miss được xác định muộn có thể khiến các cache phía sau không còn được kiểm tra, nên không được coi danh sách cache là một fallback chain độc lập với provider.
+      - Phân biệt cache kết quả của method với một chiến lược reactive cache hiểu sâu về composition và backpressure.
+
+  - id: provider-and-interoperability-boundary
+    title: Cache provider và ranh giới interoperability
+    purpose: Biết cách Spring Cache giữ chính sách của ứng dụng ổn định trong khi backing store, khả năng của provider và native configuration có thể thay đổi.
+    objectives:
+      - So sánh vai trò của ConcurrentMap, Caffeine, JCache và custom Cache/CacheManager adapter mà không biến module thành tutorial cho từng provider.
+      - Hiểu TTL, TTI, eviction policy, maximum size và distributed topology phải được cấu hình qua provider.
+      - Nhận biết Spring Cache abstraction không đảm bảo concurrency, serialization hay consistency semantics giống nhau giữa các provider.
+      - Hiểu JCache integration như một lựa chọn interoperability thay vì một mô hình annotation hoàn toàn đồng nhất với Spring Cache.
+    relatedModules:
+      - routeId: SPRING_DATA_REDIS
+        label: Spring Data Redis
+        note: Redis-specific serialization, TTL, data structures, topology và provider integration thuộc module Spring Data Redis.
+
+  - id: failure-and-transaction-boundary
+    title: Chính sách lỗi và cập nhật cache theo transaction
+    purpose: Hiểu cache là một dependency có thể lỗi và thay đổi cache có thể cần phối hợp với transaction commit mà không biến cache thành nguồn dữ liệu chuẩn.
+    objectives:
+      - Hiểu CacheErrorHandler quyết định lỗi của cache infrastructure được propagate hay xử lý theo chính sách khác.
+      - Phân biệt lỗi đọc/ghi cache với lỗi của business method.
+      - Hiểu transaction-aware cache decorator có thể hoãn put, evict và clear tới after-commit, nhưng các operation cần hiệu lực ngay như putIfAbsent, evictIfPresent và invalidate không thể dùng cùng cơ chế defer đó.
+      - Giữ propagation, rollback và resource synchronization mechanics của transaction ở module Transaction Management.
+
+  - id: cache-strategy-synthesis
+    title: Thiết kế chiến lược cache toàn diện
+    purpose: Tổng hợp abstraction, policy, interception, consistency và ranh giới provider thành một quy trình ra quyết định có thể áp dụng cho production.
+    objectives:
+      - Chọn dữ liệu hoặc phép tính nên cache dựa trên chi phí, mức độ tái sử dụng, khả năng thay đổi, yêu cầu độ mới và khả năng chấp nhận lỗi.
+      - Thiết kế cache name, key, population, invalidation và cấu hình provider như một chính sách thống nhất.
+      - Đánh giá local cache so với distributed cache, stampede, dữ liệu cũ, tương tác với transaction và giới hạn của provider trước khi chọn giải pháp.
+      - Có thể giải thích rõ phần nào Spring Cache chịu trách nhiệm và phần nào phải chuyển sang AOP, transaction hoặc cache provider.

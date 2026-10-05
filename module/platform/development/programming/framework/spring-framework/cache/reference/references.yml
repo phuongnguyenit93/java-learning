@@ -1,0 +1,49 @@
+# ============================================================
+# MODULE REFERENCE STRUCTURE
+# ============================================================
+#
+# This is the shared module-level reference catalog.
+# It is intentionally not split by MODULE_LANGUAGE.
+#
+# Example structure:
+#
+# references:
+#   - title: "Java Language Specification"
+#     url: "https://docs.oracle.com/javase/specs/"
+#     description: "Official Java language specification."
+#
+# Add only curated references that are useful for the module.
+# The build system must not overwrite this file after authored content exists.
+
+references:
+  - title: "Spring Framework Reference — Cache Abstraction"
+    url: "https://docs.spring.io/spring-framework/reference/integration/cache.html"
+    description: "Current official conceptual overview for Spring caching. Use the Spring Framework 6.1.x Javadocs below as the version-aligned authority for API details in this repository."
+
+  - title: "Spring Framework Reference — Understanding the Cache Abstraction"
+    url: "https://docs.spring.io/spring-framework/reference/integration/cache/strategies.html"
+    description: "Current official conceptual explanation of method-result caching, Cache and CacheManager responsibilities, and the boundary between Spring's abstraction and a backing implementation; version-sensitive API details are checked against 6.1.x Javadocs."
+
+  - title: "Spring Framework Reference — Declarative Annotation-based Caching"
+    url: "https://docs.spring.io/spring-framework/reference/integration/cache/annotations.html"
+    description: "Current official conceptual reference for declarative caching. The roadmap only adopts behavior verified against the repository's Spring Framework 6.1.x baseline, especially for asynchronous and reactive return types."
+
+  - title: "Spring Framework Reference — Configuring the Cache Storage"
+    url: "https://docs.spring.io/spring-framework/reference/integration/cache/store-configuration.html"
+    description: "Current official guidance on storage integrations and CacheManager responsibilities; provider availability may vary by Spring version, so 6.1.x API references remain authoritative for the repository baseline."
+
+  - title: "Spring Framework Reference — JCache (JSR-107) Annotations"
+    url: "https://docs.spring.io/spring-framework/reference/integration/cache/jsr-107.html"
+    description: "Current official conceptual interoperability guidance for JCache annotations; the 6.1.x JCache packages and APIs are the version-aligned authority for this module."
+
+  - title: "Spring Framework 6.1 Javadoc — Cache"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.x/javadoc-api/org/springframework/cache/Cache.html"
+    description: "Version-aligned API reference for Spring's Cache SPI, including synchronous loading, immediate operations, and the asynchronous retrieve methods introduced in Spring Framework 6.1."
+
+  - title: "Spring Framework 6.1 Javadoc — Cacheable"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.x/javadoc-api/org/springframework/cache/annotation/Cacheable.html"
+    description: "Version-aligned annotation contract for cache lookup and population, conditions, key selection, and the exact limitations of sync=true."
+
+  - title: "Spring Framework 6.1 Javadoc — TransactionAwareCacheDecorator"
+    url: "https://docs.spring.io/spring-framework/docs/6.1.x/javadoc-api/org/springframework/cache/transaction/TransactionAwareCacheDecorator.html"
+    description: "Version-aligned contract for after-commit put/evict/clear behavior and the immediate operations that cannot be deferred transactionally."

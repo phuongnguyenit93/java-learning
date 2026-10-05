@@ -1,0 +1,314 @@
+1.CachePurpose/CachePurpose.md:
+  cache-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  cache-vs-source-of-truth:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  cache-vs-buffer-and-storage:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  cache-candidate-criteria:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  spring-cache-abstraction-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  provider-owned-concerns:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+2.CacheAbstraction/CacheAbstraction.md:
+  cache-interface:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  cache-manager:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  named-cache-region:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  cache-hit-miss:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  cached-null-value:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  native-cache-access:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  programmatic-vs-declarative:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+3.DeclarativeCaching/DeclarativeCaching.md:
+  enable-caching:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  cacheable:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  cache-put:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  cache-evict:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  caching-composition:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  cache-config:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  caching-configurer:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  cache-operation-configuration-precedence:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+4.KeyAndResolution/KeyAndResolution.md:
+  default-key-generation:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  custom-key-generator:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  spel-key-context:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  condition-vs-unless:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  cache-manager-resolution:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  cache-resolver:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  multiple-cache-names:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  cache-key-design-pitfalls:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+5.ConsistencyAndInvalidation/ConsistencyAndInvalidation.md:
+  population-put-eviction:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  evict-before-invocation:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  whole-cache-eviction:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  exception-and-cache-mutation:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  stale-data:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  cache-aside-consistency:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  cacheable-cacheput-conflict:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+6.InterceptionBoundary/InterceptionBoundary.md:
+  cache-interceptor-infrastructure:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  proxy-mode:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  self-invocation:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  public-method-boundary:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  initialization-boundary:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  cache-advice-ordering:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  aspectj-mode:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+7.ConcurrencyAndAsync/ConcurrencyAndAsync.md:
+  concurrent-cache-miss:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  cacheable-sync:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  cacheable-sync-restrictions:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  cache-async-retrieve:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  completable-future-caching:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  reactive-return-types:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  async-provider-capability:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  multi-cache-late-miss:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  reactive-cache-boundary:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+8.ProviderInteroperability/ProviderInteroperability.md:
+  concurrent-map-provider:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  caffeine-provider:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  jcache-integration:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  spring-vs-jcache-annotations:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  custom-cache-adapter:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  provider-policy-boundary:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  serialization-and-consistency:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  local-vs-distributed-cache:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+9.FailureAndTransaction/FailureAndTransaction.md:
+  cache-error-handler:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  cache-vs-business-failure:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  transaction-aware-cache:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  after-commit-cache-mutation:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  immediate-cache-operations:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  no-active-transaction:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  transaction-module-boundary:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+10.CacheStrategy/CacheStrategy.md:
+  select-cache-candidate:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  cache-naming-strategy:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  key-strategy:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  population-invalidation-strategy:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  freshness-consistency-tradeoff:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  stampede-strategy:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  transaction-interaction:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  provider-selection:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  cache-strategy-checklist:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false

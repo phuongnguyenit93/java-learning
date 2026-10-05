@@ -1,0 +1,134 @@
+# <interview-schema>
+# Cấu trúc câu hỏi Interview
+# schema-version: 2
+#
+# questions [kiểu: list; bắt buộc; mặc định: []]
+#   Danh sách câu hỏi Interview của module trong language hiện tại.
+#   mỗi phần tử:
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi phỏng vấn hiển thị cho người học.
+#     answer [kiểu: string; bắt buộc; mặc định: ""]
+#       Câu trả lời tham khảo, chỉ hiển thị khi người học chủ động mở.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu nội dung được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu nội dung đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+# </interview-schema>
+
+
+questions:
+  - question: >-
+      Spring Cache trừu tượng hóa những gì, và những quyết định quan trọng nào vẫn thuộc về cache provider?
+    answer: >-
+      Spring Cache cung cấp cho mã ứng dụng một hợp đồng chung quanh named cache, lookup, population, eviction và các declarative annotation như @Cacheable. Nó không chuẩn hóa mọi đặc tính lưu trữ. TTL/TTI, maximum size, chính sách eviction riêng, serialization, topology phân tán và nhiều bảo đảm về xử lý đồng thời vẫn là trách nhiệm của provider. Thiết kế tốt giữ các thao tác cache ở tầng ứng dụng phía sau Spring abstraction ở nơi phù hợp, đồng thời chọn và cấu hình provider có khả năng gốc đáp ứng yêu cầu vận hành.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.CachePurpose/CachePurpose.md"
+      anchor: "spring-cache-abstraction-boundary"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      `Cache` và `CacheManager` phân chia trách nhiệm như thế nào, và vì sao tên cache nên là khái niệm của ứng dụng thay vì tên gắn với một provider cụ thể?
+    answer: >-
+      `Cache` biểu diễn các thao tác trên một vùng cache logic: lookup, put, eviction, clear cùng các hợp đồng loading/retrieval liên quan. `CacheManager` resolve các vùng đó theo tên và đóng vai trò registry/factory ở ranh giới ứng dụng. Một tên ổn định như `productsById` nên mô tả dữ liệu ứng dụng đang lưu, không nên phụ thuộc provider hiện tại là Redis, Caffeine hay concurrent map. Sự tách biệt này giúp chính sách cache của ứng dụng giữ ổn định khi cấu hình provider thay đổi. Vẫn có thể truy cập native cache khi thực sự cần tính năng riêng của provider, nhưng bước qua ranh giới đó là quyết định có chủ đích vì nó làm giảm tính khả chuyển và không nên định nghĩa lại mô hình cache logic của ứng dụng.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.CacheAbstraction/CacheAbstraction.md"
+      anchor: "cache-manager"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Hãy giải thích cách một cache key không đầy đủ có thể tạo lỗi về tính đúng đắn, và bạn sẽ chứng minh vấn đề đó thế nào thay vì chỉ nhìn key expression?
+    answer: >-
+      Định danh cache phải chứa mọi đầu vào định nghĩa giá trị có thể tái sử dụng. Nếu includeReviews làm thay đổi dạng biểu diễn nhưng key chỉ chứa ISBN, yêu cầu cho biến thể có reviews có thể hit entry được tạo cho biến thể không có reviews. Một thí nghiệm thuyết phục sẽ chạy hai yêu cầu với key thiếu chiều và cho thấy yêu cầu thứ hai tái sử dụng sai giá trị chỉ với một lần loader chạy, rồi lặp lại khi includeReviews có trong key và cho thấy hai lần load riêng trả đúng hai biến thể. Minh chứng cần cho thấy hành vi đã chuyển từ tái sử dụng sai sang định danh cache đúng, chứ không chỉ cho thấy chuỗi key thay đổi.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.KeyAndResolution/KeyAndResolution.md"
+      anchor: "cache-key-design-pitfalls"
+    apiRelated:
+      controller: "CacheKeyController"
+      methodSignature: "keyAndHitMiss()"
+
+  - question: >-
+      Vì sao self-invocation bỏ qua @Cacheable trong proxy mode mặc định, và có thể thiết kế thế nào để không phụ thuộc vào hành vi đó?
+    answer: >-
+      Trong proxy mode, cache interceptor nằm trên Spring proxy. Một lời gọi đi vào qua tham chiếu của bean khác có thể đi qua proxy, nhưng this.load() bên trong target object vẫn ở trên target và không đi lại qua interceptor. Thiết kế phổ biến là đưa thao tác được cache sang Spring bean khác hoặc tái cấu trúc lời gọi để proxy boundary rõ ràng. AspectJ mode có thể intercept self-invocation nhờ weaving thay vì proxy entry, nhưng nó thay đổi mô hình vận hành và nên là lựa chọn có chủ đích chứ không phải giải pháp vá tùy tiện.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.InterceptionBoundary/InterceptionBoundary.md"
+      anchor: "self-invocation"
+    apiRelated:
+      controller: "CacheInterceptionController"
+      methodSignature: "selfInvocation()"
+
+  - question: >-
+      @Cacheable(sync=true) giải quyết vấn đề gì, thí nghiệm runtime thực sự chứng minh điều gì, và không nên suy diễn điều gì từ kết quả đó?
+    answer: >-
+      Concurrent miss cho cùng key có thể kích hoạt nhiều lần tính toán đắt đỏ. sync=true yêu cầu cách triển khai cache phối hợp việc load cho thao tác cache/key đó. Trong thí nghiệm của module, bốn bên gọi dùng ConcurrentMapCache chỉ tạo một lần loader chạy và một load sequence trả về, nên synchronized loading quan sát được trực tiếp với provider này. Kết quả không chứng minh distributed lock, phối hợp xuyên node hay một cơ chế khóa duy nhất cho mọi provider. Khả năng của provider và các ràng buộc chính xác của annotation vẫn rất quan trọng.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.ConcurrencyAndAsync/ConcurrencyAndAsync.md"
+      anchor: "cacheable-sync"
+    apiRelated:
+      controller: "CacheConcurrencyController"
+      methodSignature: "synchronizedLoading()"
+
+  - question: >-
+      Nên suy luận thế nào về CompletableFuture hoặc reactive return type trong Spring caching mà không mặc định toàn bộ đường cache là non-blocking?
+    answer: >-
+      Spring Framework 6.1 có thể thích nghi các asynchronous và reactive return type được hỗ trợ để giá trị được tạo ra tham gia caching, nhưng cache provider vẫn quyết định việc truy xuất và lưu trữ được triển khai thế nào. API có hình dạng future không biến backend chặn luồng thành non-blocking. Cần kiểm tra khả năng async retrieval của provider, thời điểm xác định miss, null semantics, error propagation, cancellation và hành vi của multiple caches. Hãy tách cơ chế thích nghi kiểu trả về của Spring khỏi mô hình I/O và xử lý đồng thời thực tế của provider.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.ConcurrencyAndAsync/ConcurrencyAndAsync.md"
+      anchor: "async-provider-capability"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Transaction-aware cache mutation giải quyết vấn đề gì, và vì sao các thao tác cache cần hiệu lực tức thời phải được chú ý riêng?
+    answer: >-
+      Nếu database transaction về sau rollback, công bố cache put hoặc eviction thông thường quá sớm có thể làm trạng thái cache không khớp dữ liệu đã commit. TransactionAwareCacheDecorator hoặc TransactionAwareCacheManagerProxy có thể trì hoãn các put, evict và clear được hỗ trợ tới sau commit thành công. Những thao tác mà hợp đồng yêu cầu hiệu lực tức thời như putIfAbsent, evictIfPresent và invalidate không thể đơn giản bị coi như mutation trì hoãn thông thường. Module cache sở hữu ranh giới tương tác này; propagation, isolation, rollback rule và transaction-manager policy thuộc Spring Transaction Management.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "9.FailureAndTransaction/FailureAndTransaction.md"
+      anchor: "immediate-cache-operations"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Bạn sẽ chọn giữa local cache đơn giản và distributed provider cho hệ thống production như thế nào?
+    answer: >-
+      Hãy bắt đầu từ hành vi cần thiết thay vì tên provider: quyền sở hữu dữ liệu, mức stale chấp nhận được, invalidation strategy, node topology, nhu cầu đồng thời, expiration/size policy, serialization, failure handling và observability. Local in-process cache rất phù hợp khi trạng thái theo từng node là chấp nhận được và ưu tiên sự đơn giản, nhưng nó không tự trở thành shared cache chỉ vì ứng dụng dùng Spring Cache. Nếu nhiều node cần trạng thái dùng chung hoặc expiry/coordination riêng của provider, hãy chọn provider có các khả năng đó và kiểm chứng ngữ nghĩa riêng của nó. Giữ Spring abstraction cho các thao tác ứng dụng có tính khả chuyển ở nơi phù hợp.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "10.CacheStrategy/CacheStrategy.md"
+      anchor: "provider-selection"
+    apiRelated:
+      controller: ""
+      methodSignature: ""

@@ -1,0 +1,84 @@
+CacheConcurrencyController:
+  synchronizedLoading():
+    summary: Observe synchronized loading for concurrent cache misses
+    description: Launch four bounded callers for one uncached key. The response reports
+      how many times the underlying loader actually executed and whether every caller
+      observed the one cached result.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: cacheable-sync
+    methodName: synchronizedLoading
+    params: [
+      ]
+    path: com/example/learning/cache/controller/CacheConcurrencyController.java
+    mapping: '@GetMapping("/sync-loading")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /spring-cache/concurrency/sync-loading
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+CacheInterceptionController:
+  selfInvocation():
+    summary: Compare proxy calls with self-invocation
+    description: Run the same cacheable method twice through the Spring proxy and
+      twice from inside its own target bean. Invocation counts make the proxy boundary
+      directly observable.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: self-invocation
+    methodName: selfInvocation
+    params: [
+      ]
+    path: com/example/learning/cache/controller/CacheInterceptionController.java
+    mapping: '@GetMapping("/self-invocation")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /spring-cache/interception/self-invocation
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+CacheKeyController:
+  keyAndHitMiss():
+    summary: Observe a missing key dimension fail, then fix it
+    description: First omit a result-shaping input from the key and observe the wrong
+      cached variant being reused. Then include that input and observe two distinct
+      loads with the correct returned variants.
+    enableVideoYoutube: false
+    videoYoutubeId: ID of youtube video add to API description
+    videoYoutubeTitle: Title of video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: cache-key-design-pitfalls
+    methodName: keyAndHitMiss
+    params: [
+      ]
+    path: com/example/learning/cache/controller/CacheKeyController.java
+    mapping: '@GetMapping("/hit-miss")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /spring-cache/key/hit-miss
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true

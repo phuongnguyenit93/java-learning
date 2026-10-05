@@ -1,0 +1,70 @@
+CacheConcurrencyController:
+  synchronizedLoading():
+    execution: |-
+      <p><b>Khái niệm:</b> <code>@Cacheable(sync=true)</code> yêu cầu cache provider phối hợp việc nạp dữ liệu cho cùng một key.</p>
+      <ol>
+        <li>Thí nghiệm tạo bốn worker task có giới hạn và giữ chúng sau cùng một cổng bắt đầu để chúng đồng thời cạnh tranh một key đang thiếu.</li>
+        <li>Mỗi worker gọi cùng một phương thức cacheable qua proxy.
+          <div><i>Source: CacheProbeService.loadSynchronized(...)</i></div>
+          <pre><code>@Cacheable(cacheNames = "cache-sync-demo",
+              key = "#p0 + ':' + #p1",
+              sync = true)
+      public CacheValue loadSynchronized(String experimentId, String businessKey) {
+          sleepBriefly();
+          return newValue(experimentId, businessKey, false);
+      }</code></pre>
+        </li>
+        <li>Loader tăng bộ đếm riêng của lần chạy. Response trả cả bộ đếm này và số lượng <code>loadSequence</code> khác nhau mà các bên gọi nhận được.</li>
+        <li>Executor được dừng, cache key và bộ đếm được dọn trong <code>finally</code>, nên chạy lại không phụ thuộc state cũ.</li>
+      </ol>
+      <p><b>Quan sát:</b> Bốn bên gọi phải cho <code>loaderInvocations = 1</code> và một load sequence duy nhất. Response cũng trả lớp triển khai cache cụ thể để gắn quan sát với đúng provider mà thí nghiệm thực sự dùng.</p>
+      <p><b>Kết luận:</b> Minh chứng runtime cho thấy synchronized loading của một thao tác cache/key với provider này; <code>sync=true</code> vẫn phụ thuộc provider và không chứng minh một distributed lock tổng quát.</p>
+    usage: true
+CacheInterceptionController:
+  selfInvocation():
+    execution: |-
+      <p><b>Khái niệm:</b> Trong proxy mode, cache advice chỉ chạy khi lời gọi đi vào qua Spring proxy.</p>
+      <ol>
+        <li>Pha đầu gọi <code>loadForSelfInvocation(...)</code> hai lần từ một Spring bean khác. Cả hai lời gọi đi qua cache proxy nên loader bên dưới chỉ nên chạy một lần.</li>
+        <li>Pha sau gọi một wrapper trên bean đích; wrapper này gọi phương thức có annotation thông qua <code>this</code>.
+          <div><i>Source: CacheProbeService.invokeCachedMethodTwiceInternally(...)</i></div>
+          <pre><code>CacheValue first = this.loadForSelfInvocation(experimentId, businessKey);
+      CacheValue second = this.loadForSelfInvocation(experimentId, businessKey);</code></pre>
+        </li>
+        <li>Response trả loader count riêng cho đường qua proxy và đường self-invocation.</li>
+        <li>Hai namespace của thí nghiệm đều được dọn sau khi quan sát.</li>
+      </ol>
+      <p><b>Quan sát:</b> Đường qua proxy báo một lần loader chạy, còn self-invocation báo hai lần.</p>
+      <p><b>Kết luận:</b> Cache metadata đúng trên phương thức vẫn chưa đủ nếu lời gọi runtime bỏ qua proxy.</p>
+    usage: true
+CacheKeyController:
+  keyAndHitMiss():
+    execution: |-
+      <p><b>Khái niệm:</b> Cache key bỏ sót một đầu vào làm thay đổi kết quả có thể biến cache hit thành lỗi về tính đúng đắn.</p>
+      <ol>
+        <li>Thí nghiệm tạo namespace riêng cho pha key thiếu chiều và pha key đầy đủ, nên hai pha không phụ thuộc entry từ request trước.</li>
+        <li>Phương thức cacheable đầu tiên cố ý bỏ <code>includeReviews</code> khỏi key.
+          <div><i>Source: CacheProbeService.loadWithIncompleteKey(...)</i></div>
+          <pre><code>@Cacheable(cacheNames = "cache-key-incomplete-demo",
+              key = "#p0 + ':' + #p1")
+      public CacheValue loadWithIncompleteKey(
+              String experimentId,
+              String businessKey,
+              boolean includeReviews) { ... }</code></pre>
+        </li>
+        <li>Phương thức này được gọi trước với <code>includeReviews=false</code>, sau đó với <code>true</code>. Vì cả hai request resolve thành cùng key, lời gọi thứ hai tái sử dụng giá trị cache của lần đầu: response cho thấy request yêu cầu reviews nhưng cached value trả về vẫn có <code>includeReviews=false</code>.</li>
+        <li>Phương thức cacheable thứ hai đưa đầu vào làm thay đổi kết quả vào key.
+          <div><i>Source: CacheProbeService.loadWithCompleteKey(...)</i></div>
+          <pre><code>@Cacheable(cacheNames = "cache-key-complete-demo",
+              key = "#p0 + ':' + #p1 + ':' + #p2")
+      public CacheValue loadWithCompleteKey(
+              String experimentId,
+              String businessKey,
+              boolean includeReviews) { ... }</code></pre>
+        </li>
+        <li>Lặp lại chuỗi request false→true lúc này tạo hai lần loader thực thi và trả đúng variant cho từng request.</li>
+        <li>Mọi cache key và bộ đếm do thí nghiệm sinh ra đều được dọn trong <code>finally</code>.</li>
+      </ol>
+      <p><b>Quan sát:</b> Key thiếu chiều báo một lần loader thực thi cùng <code>wrongVariantWasReused=true</code>; key đầy đủ báo hai lần loader thực thi cùng <code>resultShapingInputCreatedDistinctEntry=true</code>.</p>
+      <p><b>Kết luận:</b> Cache hit chỉ đúng khi định danh key chứa mọi chiều dữ liệu định nghĩa giá trị được cache.</p>
+    usage: true
