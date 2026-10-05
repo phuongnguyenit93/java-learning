@@ -66,11 +66,13 @@ Workflow bắt buộc:
 ```text
 1. Kiểm tra current branch và git status.
 2. Không mang unrelated working-tree changes vào task module mới.
-3. Từ baseline `main` phù hợp, create branch `module/<module-name>`.
-4. Tạo worktree riêng cho branch đó.
-5. Session hiện tại chuyển toàn bộ thao tác sang worktree vừa tạo.
-6. Step 2 và mọi Step tiếp theo của module tiếp tục làm trong worktree riêng này cho tới hết Step 10.
-7. Không quay lại sửa module từ main worktree trong lúc module worktree còn là workspace active của task.
+3. Fetch `origin/main` và xác định latest remote-main baseline.
+4. Nếu local `main` clean và có thể fast-forward an toàn, sync local `main` với `origin/main`; nếu local `main` đang có unrelated changes thì không overwrite/stash/reset chúng chỉ để bắt đầu module.
+5. Create `module/<module-name>` từ latest verified `origin/main` baseline; không branch từ một local `main` stale.
+6. Tạo worktree riêng cho branch đó.
+7. Session hiện tại chuyển toàn bộ thao tác module sang worktree vừa tạo.
+8. Step 2 và mọi Step tiếp theo của module tiếp tục làm trong worktree riêng này cho tới khi Step 10 đã merge + verify remote result.
+9. Không quay lại sửa module từ main worktree trong lúc module worktree còn là workspace active của task.
 ```
 
 Ví dụ logical layout:
@@ -110,24 +112,31 @@ Step 3
 ↓
 ...
 ↓
-Step 10
+Step 10 — through merge + remote verification
 ```
 
-đều phải được thực hiện **trong cùng module worktree đó**.
+đều phải được thực hiện **trong cùng module worktree đó** cho tới khi Step 10 đã xác nhận Pull Request / Merge Request merged thành công và remote `main` đã chứa final module change.
 
-Step 10 trong lifecycle này tuân theo **CLI-only execution contract** của [`STEP_10_COMMIT.md`](./STEP_10_COMMIT.md): commit, push, Pull Request / Merge Request creation, merge/accept khi được authorize, verification và cleanup đều phải thực hiện bằng terminal/CLI. Không được fallback sang browser UI hoặc desktop GUI automation. Nếu một bước bắt buộc không thể hoàn thành bằng CLI, dừng workflow tại trạng thái an toàn hiện tại và report chính xác blocker; không cleanup module worktree/branch nếu merge chưa được verify.
+Step 10 trong lifecycle này tuân theo toàn bộ contract của [`STEP_10_COMMIT.md`](./STEP_10_COMMIT.md), bao gồm CLI-only execution, explicit Step 10 authorization, merge verification, safe branch/worktree cleanup và final local-`main` synchronization. Không duplicate chi tiết Step 10 tại đây để tránh hai source-of-truth drift nhau.
 
-Sau khi Step 10 đã:
+Sau khi Step 10 đã verify:
 
 ```text
-commit
-→ push module branch
-→ create Merge Request vào main
+Pull Request / Merge Request
+→ merged successfully
+→ remote main contains final module change
 ```
 
-thì session quay lại **main worktree ban đầu** để kết thúc lifecycle của task hoặc chuẩn bị cho module/task tiếp theo.
+thì session phải **switch ra khỏi module worktree** sang original main worktree hoặc một working directory an toàn khác để Step 10 thực hiện cleanup. Không chạy `git worktree remove` từ chính worktree đang bị remove.
 
-Việc quay lại main worktree sau khi tạo Merge Request **không có nghĩa auto-merge MR** và cũng không xóa module worktree/branch. Cleanup worktree/branch là thao tác riêng, chỉ thực hiện khi phù hợp với trạng thái MR và user workflow.
+```text
+module worktree
+→ merge + remote verification complete
+→ switch to main worktree / safe cwd
+→ STEP_10_COMMIT.md owns cleanup + local-main sync
+```
+
+Nếu Step 10 bị block trước merge/remote verification, giữ nguyên module worktree/branch và report blocker theo `STEP_10_COMMIT.md`; không chuyển sang cleanup sớm.
 
 File này sở hữu đồng thời:
 

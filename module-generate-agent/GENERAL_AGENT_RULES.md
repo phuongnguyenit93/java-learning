@@ -565,13 +565,8 @@ Step 9 output
 → prioritized gaps/fixes, not a competing curriculum
 
 Step 10 output
-→ task-scoped commit on the current module branch
-→ module branch pushed to remote
-→ Merge Request created from the module branch into `main`
-→ entire Step 10 workflow is CLI-only; browser UI / desktop GUI automation is forbidden
-→ if any required Step 10 operation cannot be completed by CLI, stop at the safe current state and report the exact completed state + blocker instead of falling back to browser
-→ no automatic merge unless the user explicitly requests/authorizes it
-→ after the Merge Request is actually merged, return the session to the original main worktree
+→ final delivery is governed by `STEP_10_COMMIT.md` as the canonical source-of-truth
+→ do not duplicate, reinterpret or infer commit / push / PR-MR / merge / verification / cleanup semantics here
 ```
 
 Workers must inspect the latest upstream files before editing. Do not rely only on a stale task description if an upstream worker has changed the canonical Knowledge/API/Video structure.
