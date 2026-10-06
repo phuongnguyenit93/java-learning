@@ -3,14 +3,14 @@
 # Introduction và mở rộng Interface
 
 ## Menu
-- [1. Introduction là gì?](#introduction-mental-model)
-- [2. @DeclareParents](#declare-parents)
-- [3. Demo trong module](#introduction-demo)
-- [4. Kết luận](#introduction-conclusion)
+- [Introduction là gì?](#introduction-mental-model)
+- [@DeclareParents](#declare-parents)
+- [Minh chứng thực thi cho Introduction và mở rộng Interface](#introduction-demo)
+- [Tổng hợp Introduction và mở rộng Interface](#introduction-conclusion)
 
 Phần lớn nội dung AOP trước đó thay đổi hành vi **xung quanh phương thức hiện có**. Introduction cho thấy proxy còn có thể phơi bày **interface mới** mà lớp đích ban đầu không triển khai.
 
-## <a id="introduction-mental-model">1. Introduction là gì?</a>
+## <a id="introduction-mental-model">Introduction là gì?</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -33,13 +33,14 @@ Lớp đích và bytecode của nó không thay đổi. Contract mới chỉ t�
 Sự khác biệt này ảnh hưởng trực tiếp đến ép kiểu. Một instance thô của `IntroductionTargetService` không thể trở thành `UsageTracked` chỉ vì một Aspect khai báo introduction. Mã cần contract mới phải giữ tham chiếu proxy đã được advice.
 
 Vì vậy, introduction cho phép bổ sung một khả năng công khai ở lớp proxy mà không bắt lớp đích phải biết về interface đó.
+
 </details>
 
 - [Quay lại đầu trang](#back-to-top)
 
 ---
 
-## <a id="declare-parents">2. @DeclareParents</a>
+## <a id="declare-parents">@DeclareParents</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -74,13 +75,14 @@ Introduction phù hợp khi proxy thực sự cần một contract phụ ổn đ
 ### Tài liệu tham khảo
 
 - Spring Framework Reference — [Introductions](https://docs.spring.io/spring-framework/reference/core/aop/ataspectj/introductions.html)
+
 </details>
 
 - [Quay lại đầu trang](#back-to-top)
 
 ---
 
-## <a id="introduction-demo">3. Demo trong module</a>
+## <a id="introduction-demo">Minh chứng thực thi cho Introduction và mở rộng Interface</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -125,7 +127,7 @@ rồi tăng counter từ `0` lên `2` trước khi gọi phương thức nghiệ
 
 ---
 
-## <a id="introduction-conclusion">4. Kết luận</a>
+## <a id="introduction-conclusion">Tổng hợp Introduction và mở rộng Interface</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -133,6 +135,7 @@ rồi tăng counter từ `0` lên `2` trước khi gọi phương thức nghiệ
 Introduction cho thấy Spring AOP không chỉ bao quanh việc thực thi phương thức. Proxy còn có thể phơi bày một interface mới trong khi lớp đích vẫn giữ nguyên.
 
 Lợi ích là tách contract phụ khỏi lớp đích. Đánh đổi là khả năng đó chỉ tồn tại trên tham chiếu proxy, nên mã bỏ qua proxy hoặc chỉ nhìn vào concrete target type có thể hiểu sai đối tượng đang cung cấp những contract nào.
+
 </details>
 
 - [Quay lại đầu trang](#back-to-top)

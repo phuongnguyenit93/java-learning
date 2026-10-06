@@ -15,7 +15,6 @@
 <details>
 <summary>Click for details</summary>
 
-
 A DataSource is the standard JDBC entry point that supplies Connections. Spring JDBC deliberately builds on that contract instead of inventing a separate connection API. In production, the DataSource is commonly backed by a pool; Spring JDBC does not own pool sizing, validation, or vendor-driver tuning.
 
 JdbcTemplate organizes the repetitive JDBC workflow around the DataSource:
@@ -37,6 +36,7 @@ release Connection appropriately
 The word "appropriately" matters. When Spring transaction synchronization is active, the Connection can be associated with the current transaction rather than physically closed after each template call. JdbcTemplate uses Spring's resource utilities internally so callers do not need custom transaction-aware connection code.
 
 The application still owns the SQL and the mapping decision. Spring owns the workflow that makes those decisions safe and repeatable.
+
 </details>
 
 - [Back to top](#back-to-top)
@@ -47,7 +47,6 @@ The application still owns the SQL and the mapping decision. Spring owns the wor
 
 <details>
 <summary>Click for details</summary>
-
 
 Spring JDBC has several layers because common operations and low-level extension points need different APIs.
 
@@ -68,6 +67,7 @@ Customer customer = client.sql(
 ~~~
 
 Use the fluent facade when it expresses the operation clearly. Reach for template callbacks or specialized helpers when the operation needs capabilities outside JdbcClient's common query/update scope.
+
 </details>
 
 - [Back to top](#back-to-top)
@@ -78,7 +78,6 @@ Use the fluent facade when it expresses the operation clearly. Reach for templat
 
 <details>
 <summary>Click for details</summary>
-
 
 Parameter binding separates SQL structure from runtime values. This is both safer and clearer than assembling value text into SQL strings.
 
@@ -107,6 +106,7 @@ jdbcClient.sql("""
 NamedParameterJdbcTemplate and JdbcClient expand named parameters before the JDBC statement executes. Named parameters are not a new database protocol; the eventual JDBC driver still receives JDBC-compatible bind positions.
 
 Binding values is not a substitute for validating dynamic SQL identifiers. Table names, column names, sort directions, and SQL fragments generally cannot be treated as ordinary bind values. If those elements are dynamic, choose them from controlled application values rather than concatenating untrusted input.
+
 </details>
 
 - [Back to top](#back-to-top)
@@ -117,7 +117,6 @@ Binding values is not a substitute for validating dynamic SQL identifiers. Table
 
 <details>
 <summary>Click for details</summary>
-
 
 Spring JDBC distinguishes the shape of the operation rather than hiding all database work behind one method.
 
@@ -143,6 +142,7 @@ List<Customer> customers = jdbcTemplate.query(
 ~~~
 
 Choose the smallest abstraction that expresses the operation. Dropping to callbacks is useful for uncommon JDBC behavior, not a default style for simple reads and writes.
+
 </details>
 
 - [Back to top](#back-to-top)
@@ -153,7 +153,6 @@ Choose the smallest abstraction that expresses the operation. Dropping to callba
 
 <details>
 <summary>Click for details</summary>
-
 
 A query has two independent decisions: **how each row becomes a value** and **how many values the caller expects**.
 
@@ -170,6 +169,7 @@ Cardinality should be part of the contract:
 If a single-result API sees the wrong number of rows, Spring reports a DataAccessException subtype such as IncorrectResultSizeDataAccessException instead of silently picking one row.
 
 Do not use "single row" methods simply because test data currently contains one row. The SQL predicate and database constraints should justify the cardinality expectation.
+
 </details>
 
 - [Back to top](#back-to-top)
@@ -180,7 +180,6 @@ Do not use "single row" methods simply because test data currently contains one 
 
 <details>
 <summary>Click for details</summary>
-
 
 Prefer JdbcClient for ordinary parameterized queries and updates when its fluent API keeps SQL, bindings, mapping, and result cardinality together. It is especially convenient in Spring Framework 6.1 code that would otherwise switch between JdbcTemplate and NamedParameterJdbcTemplate for common operations.
 
@@ -200,6 +199,7 @@ metadata-assisted insert/procedure
 ~~~
 
 A team can use these APIs together. Consistency matters, but forcing every operation through one facade is less valuable than choosing the clearest Spring abstraction for the required JDBC capability.
+
 </details>
 
 - [Back to top](#back-to-top)

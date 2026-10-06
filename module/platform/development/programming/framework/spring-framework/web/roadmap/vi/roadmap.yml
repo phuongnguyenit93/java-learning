@@ -121,7 +121,7 @@ roadmap:
       - Hiểu chuỗi có thứ tự các HandlerExceptionResolver mà DispatcherServlet sử dụng và đặt ExceptionHandlerExceptionResolver, ResponseStatusExceptionResolver, DefaultHandlerExceptionResolver đúng vị trí.
       - Dùng @ExceptionHandler và @ControllerAdvice cho xử lý lỗi trong controller hoặc xuyên nhiều controller, đồng thời giữ đúng exception specificity và response semantics.
       - Hiểu ResponseStatusException, ErrorResponse, ProblemDetail, ResponseEntityExceptionHandler và cách Spring MVC render problem-detail response.
-      - Giữ Spring Boot error page/error endpoint và module support global-exception-handler của repository ngoài ownership của learning journey này.
+      - Giữ Spring Boot error page/error endpoint và module support `project-build/springboot-runtime/exception-handler-servlet` của repository ngoài ownership của learning journey này.
 
   - id: async-servlet-request-processing
     title: Xử lý request bất đồng bộ và streaming trên Servlet

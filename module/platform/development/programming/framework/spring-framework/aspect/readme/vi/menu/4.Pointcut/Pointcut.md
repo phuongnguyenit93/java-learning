@@ -3,17 +3,17 @@
 # Khai báo Aspect và thiết kế Pointcut
 
 ## Menu
-- [1. Chọn phong cách khai báo: @AspectJ và AOP dựa trên schema](#aop-declaration-styles)
-- [2. Bật @AspectJ auto-proxy support trong Spring Framework](#spring-aop-enablement)
-- [3. Pointcut đang khớp với yếu tố nào?](#pointcut-mental-model)
-- [4. Các designator được hỗ trợ, cách kết hợp và runtime context](#pointcut-designators-and-composition)
-- [5. Demo trong module](#pointcut-demo)
-- [6. Spring AOP không hỗ trợ toàn bộ AspectJ join point model](#spring-aop-pointcut-boundary)
-- [7. Kết luận](#pointcut-conclusion)
+- [Chọn phong cách khai báo: @AspectJ và AOP dựa trên schema](#aop-declaration-styles)
+- [Bật @AspectJ auto-proxy support trong Spring Framework](#spring-aop-enablement)
+- [Pointcut đang khớp với yếu tố nào?](#pointcut-mental-model)
+- [Các designator được hỗ trợ, cách kết hợp và runtime context](#pointcut-designators-and-composition)
+- [Minh chứng thực thi cho Khai báo Aspect và thiết kế Pointcut](#pointcut-demo)
+- [Spring AOP không hỗ trợ toàn bộ AspectJ join point model](#spring-aop-pointcut-boundary)
+- [Tổng hợp Khai báo Aspect và thiết kế Pointcut](#pointcut-conclusion)
 
 Pointcut quyết định **join point nào được chọn**.
 
-## <a id="aop-declaration-styles">1. Chọn phong cách khai báo: @AspectJ và AOP dựa trên schema</a>
+## <a id="aop-declaration-styles">Chọn phong cách khai báo: @AspectJ và AOP dựa trên schema</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -60,7 +60,7 @@ Với Java configuration thông thường, @AspectJ style thường dễ đặt 
 
 ---
 
-## <a id="spring-aop-enablement">2. Bật @AspectJ auto-proxy support trong Spring Framework</a>
+## <a id="spring-aop-enablement">Bật @AspectJ auto-proxy support trong Spring Framework</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -110,7 +110,7 @@ Cũng cần tách framework contract khỏi mặc định ứng dụng. Spring B
 
 ---
 
-## <a id="pointcut-mental-model">3. Pointcut đang khớp với yếu tố nào?</a>
+## <a id="pointcut-mental-model">Pointcut đang khớp với yếu tố nào?</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -181,7 +181,7 @@ Vì vậy pointcut không chỉ là text pattern trên tên method. Nó có th�
 
 ---
 
-## <a id="pointcut-designators-and-composition">4. Các designator được hỗ trợ, cách kết hợp và runtime context</a>
+## <a id="pointcut-designators-and-composition">Các designator được hỗ trợ, cách kết hợp và runtime context</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -263,7 +263,7 @@ Nên ưu tiên pointcut hẹp mô tả boundary ổn định như service layer 
 
 ---
 
-## <a id="pointcut-demo">5. Demo trong module</a>
+## <a id="pointcut-demo">Minh chứng thực thi cho Khai báo Aspect và thiết kế Pointcut</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -338,7 +338,7 @@ target:unmatched
 
 ---
 
-## <a id="spring-aop-pointcut-boundary">6. Spring AOP không hỗ trợ toàn bộ AspectJ join point model</a>
+## <a id="spring-aop-pointcut-boundary">Spring AOP không hỗ trợ toàn bộ AspectJ join point model</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -386,7 +386,7 @@ Boundary này giải thích lúc nào full AspectJ weaving mới trở nên phù
 
 ---
 
-## <a id="pointcut-conclusion">7. Kết luận</a>
+## <a id="pointcut-conclusion">Tổng hợp Khai báo Aspect và thiết kế Pointcut</a>
 
 <details>
 <summary>Xem chi tiết</summary>

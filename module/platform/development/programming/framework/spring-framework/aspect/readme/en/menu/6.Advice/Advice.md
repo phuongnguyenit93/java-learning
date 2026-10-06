@@ -3,15 +3,15 @@
 # Advice Semantics and Lifecycle
 
 ## Menu
-- [1. Semantics of each advice type](#advice-semantics)
-- [2. Success path](#advice-success-demo)
-- [3. Exception path](#advice-failure-demo)
-- [4. Advice parameter binding](#advice-parameter-binding)
-- [5. Conclusion](#advice-conclusion)
+- [Semantics of each advice type](#advice-semantics)
+- [Success path](#advice-success-demo)
+- [Exception path](#advice-failure-demo)
+- [Advice parameter binding](#advice-parameter-binding)
+- [Advice Semantics and Lifecycle Synthesis](#advice-conclusion)
 
 This section observes when `@Before`, `@After`, `@AfterReturning`, and `@AfterThrowing` execute.
 
-## <a id="advice-semantics">1. Semantics of each advice type</a>
+## <a id="advice-semantics">Semantics of each advice type</a>
 
 <details>
 <summary>Click for details</summary>
@@ -72,7 +72,7 @@ If two advice methods of the **same type** in the same aspect match the same joi
 
 ---
 
-## <a id="advice-success-demo">2. Success path</a>
+## <a id="advice-success-demo">Success path</a>
 
 <details>
 <summary>Click for details</summary>
@@ -98,10 +98,10 @@ AdviceLifecycleService#success()
 When the target returns normally, the experiment records:
 
 ```text
-@Before
+@Before:success
 target:success
-@AfterReturning
-@After
+@AfterReturning:success:success-result
+@After:success
 ```
 
 The sequence shows two separate facts. `@AfterReturning` participates because the join point completed normally, and `@After` participates because after-finally advice runs regardless of outcome.
@@ -114,7 +114,7 @@ The `@AfterReturning` method also binds the return value. Binding is useful when
 
 ---
 
-## <a id="advice-failure-demo">3. Exception path</a>
+## <a id="advice-failure-demo">Exception path</a>
 
 <details>
 <summary>Click for details</summary>
@@ -142,10 +142,10 @@ The controller catches that exception outside the advised service call so the ex
 Important events:
 
 ```text
-@Before
+@Before:failure
 target:failure
-@AfterThrowing
-@After
+@AfterThrowing:failure:IllegalStateException
+@After:failure
 ```
 
 `@AfterReturning` does not run because the target did not return normally. `@AfterThrowing` receives the exception leaving the selected method execution, and `@After` still runs with finally-like semantics.
@@ -160,7 +160,7 @@ This is observation, not automatic recovery. `@AfterThrowing` does not turn the 
 
 ---
 
-## <a id="advice-parameter-binding">4. Advice parameter binding</a>
+## <a id="advice-parameter-binding">Advice parameter binding</a>
 
 <details>
 <summary>Click for details</summary>
@@ -205,7 +205,7 @@ Use `JoinPoint` when the concern needs general invocation metadata; use typed bi
 
 ---
 
-## <a id="advice-conclusion">5. Conclusion</a>
+## <a id="advice-conclusion">Advice Semantics and Lifecycle Synthesis</a>
 
 <details>
 <summary>Click for details</summary>

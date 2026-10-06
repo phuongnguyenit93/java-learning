@@ -3,17 +3,17 @@
 # RSocketRequester và RSocketStrategies
 
 ## Menu
-- [1. Vai trò của RSocketRequester](#rsocket-requester-role)
-- [2. Client requester connection setup](#rsocket-client-requester)
-- [3. Server-side requester](#rsocket-server-requester)
-- [4. Route, data và response retrieval](#rsocket-route-data-retrieve)
-- [5. Request metadata](#rsocket-request-metadata)
-- [6. Requester lifecycle và disposal](#rsocket-requester-lifecycle)
-- [7. RSocketStrategies](#rsocket-strategies)
-- [8. Codec và route matching](#rsocket-codecs-route-matching)
-- [9. Metadata extraction](#rsocket-metadata-extraction)
+- [Vai trò của RSocketRequester](#rsocket-requester-role)
+- [Client requester connection setup](#rsocket-client-requester)
+- [Server-side requester](#rsocket-server-requester)
+- [Route, data và response retrieval](#rsocket-route-data-retrieve)
+- [Request metadata](#rsocket-request-metadata)
+- [Requester lifecycle và disposal](#rsocket-requester-lifecycle)
+- [RSocketStrategies](#rsocket-strategies)
+- [Codec và route matching](#rsocket-codecs-route-matching)
+- [Metadata extraction](#rsocket-metadata-extraction)
 
-## <a id="rsocket-requester-role">1. Vai trò của RSocketRequester</a>
+## <a id="rsocket-requester-role">Vai trò của RSocketRequester</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -41,7 +41,7 @@ Interaction type phần lớn được suy ra từ cardinality của input và o
 
 ---
 
-## <a id="rsocket-client-requester">2. Client requester connection setup</a>
+## <a id="rsocket-client-requester">Client requester connection setup</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -77,7 +77,7 @@ RSocketRequester requester = RSocketRequester.builder()
 
 ---
 
-## <a id="rsocket-server-requester">3. Server-side requester</a>
+## <a id="rsocket-server-requester">Server-side requester</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -104,7 +104,7 @@ Mô hình này hữu ích cho server-to-client query/command, nhưng client cũn
 
 ---
 
-## <a id="rsocket-route-data-retrieve">4. Route, data và response retrieval</a>
+## <a id="rsocket-route-data-retrieve">Route, data và response retrieval</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -135,7 +135,7 @@ Cần khớp những lựa chọn này với responder contract. Trong fluent AP
 
 ---
 
-## <a id="rsocket-request-metadata">5. Request metadata</a>
+## <a id="rsocket-request-metadata">Request metadata</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -160,7 +160,7 @@ Không nên xem metadata như một `Map` không kiểu mà hai phía tự nhiê
 
 ---
 
-## <a id="rsocket-requester-lifecycle">6. Requester lifecycle và disposal</a>
+## <a id="rsocket-requester-lifecycle">Requester lifecycle và disposal</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -184,7 +184,7 @@ Reconnect và resumption là policy riêng. Dispose là hành động đóng ch�
 
 ---
 
-## <a id="rsocket-strategies">7. RSocketStrategies</a>
+## <a id="rsocket-strategies">RSocketStrategies</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -216,7 +216,7 @@ RSocketStrategies strategies = RSocketStrategies.builder()
 
 ---
 
-## <a id="rsocket-codecs-route-matching">8. Codec và route matching</a>
+## <a id="rsocket-codecs-route-matching">Codec và route matching</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -241,7 +241,7 @@ RSocket route là logical destination, không phải URL. Không có HTTP URL de
 
 ---
 
-## <a id="rsocket-metadata-extraction">9. Metadata extraction</a>
+## <a id="rsocket-metadata-extraction">Metadata extraction</a>
 
 <details>
 <summary>Xem chi tiết</summary>

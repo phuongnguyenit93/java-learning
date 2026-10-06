@@ -14,7 +14,6 @@
 <details>
 <summary>Click for details</summary>
 
-
 Within the blocking Spring JDBC stack, choose the narrowest API that makes the intent obvious.
 
 Use JdbcClient for common parameterized queries and updates. It gives a concise fluent surface and unifies positional and named-parameter use.
@@ -30,6 +29,7 @@ metadata-assisted insert/call  → SimpleJdbcInsert / SimpleJdbcCall
 ~~~
 
 The APIs are layers in one Spring JDBC ecosystem, not mutually exclusive generations. A codebase can choose a preferred default while still using lower-level infrastructure where it makes the operation clearer.
+
 </details>
 
 - [Back to top](#back-to-top)
@@ -41,7 +41,6 @@ The APIs are layers in one Spring JDBC ecosystem, not mutually exclusive generat
 <details>
 <summary>Click for details</summary>
 
-
 Choose JDBC or R2DBC from the application's **end-to-end execution model**, driver support, and operational needs.
 
 JDBC is appropriate when the application is imperative/blocking, the ecosystem relies on JDBC-only libraries, or database drivers/tooling are strongest there. Mature connection pools and broad vendor support make it the default for many applications.
@@ -51,6 +50,7 @@ R2DBC is appropriate when a genuinely reactive stack needs non-blocking database
 R2DBC is not "faster JDBC". Non-blocking I/O can improve resource utilization under concurrency, but database capacity, SQL quality, locks, network latency, and pool configuration still dominate many workloads.
 
 Do not choose a model only because the surrounding framework supports it. Choose one that is coherent from request handling through transaction/data access to the driver.
+
 </details>
 
 - [Back to top](#back-to-top)
@@ -61,7 +61,6 @@ Do not choose a model only because the surrounding framework supports it. Choose
 
 <details>
 <summary>Click for details</summary>
-
 
 Spring Framework data access is the right level when explicit SQL and direct relational control are important. Higher abstractions solve different problems.
 
@@ -83,6 +82,7 @@ need ORM entity lifecycle and relationship model
 ~~~
 
 Choose based on the dominant problem. Avoid introducing a repository or ORM layer merely to hide a small amount of already-clear SQL.
+
 </details>
 
 - [Back to top](#back-to-top)
@@ -93,7 +93,6 @@ Choose based on the dominant problem. Avoid introducing a repository or ORM laye
 
 <details>
 <summary>Click for details</summary>
-
 
 A reactive method signature does not make blocking JDBC non-blocking. If a WebFlux/Reactor path calls JdbcClient or JdbcTemplate on an event-loop thread, the thread can remain blocked for the duration of database I/O.
 
@@ -111,6 +110,7 @@ Mono<Customer> customer = Mono.fromCallable(
 This pattern is a boundary adapter, not a substitute for R2DBC. It can protect event-loop threads but does not create non-blocking database I/O.
 
 If the application needs a fully reactive data path and the database has a suitable driver, use R2DBC. If the application is mostly imperative, forcing R2DBC may add complexity without a corresponding benefit.
+
 </details>
 
 - [Back to top](#back-to-top)
@@ -121,7 +121,6 @@ If the application needs a fully reactive data path and the database has a suita
 
 <details>
 <summary>Click for details</summary>
-
 
 The module can be summarized as a sequence of explicit decisions rather than a list of classes.
 
@@ -152,6 +151,7 @@ The module can be summarized as a sequence of explicit decisions rather than a l
 The central trade-off is control versus abstraction. Spring Framework Data Access removes accidental plumbing while leaving the relational operation visible.
 
 A mature DAO should make resource ownership, SQL intent, result expectations, and failure meaning easier to reason about—not hide them behind unnecessary layers.
+
 </details>
 
 - [Back to top](#back-to-top)

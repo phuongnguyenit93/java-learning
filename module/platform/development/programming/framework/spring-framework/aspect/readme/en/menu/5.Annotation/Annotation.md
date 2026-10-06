@@ -3,14 +3,14 @@
 # Annotation-Driven Pointcuts and Declarative Contracts
 
 ## Menu
-- [1. The annotation as a contract](#annotation-contract)
-- [2. Demo in this module](#annotation-demo)
-- [3. When is an annotation-based pointcut appropriate?](#annotation-vs-expression)
-- [4. Conclusion](#annotation-conclusion)
+- [The annotation as a contract](#annotation-contract)
+- [Executable Evidence for Annotation-Driven Pointcuts and Declarative Contracts](#annotation-demo)
+- [When is an annotation-based pointcut appropriate?](#annotation-vs-expression)
+- [Annotation-Driven Pointcuts and Declarative Contracts Synthesis](#annotation-conclusion)
 
 A custom annotation lets us describe cross-cutting behavior declaratively.
 
-## <a id="annotation-contract">1. The annotation as a contract</a>
+## <a id="annotation-contract">The annotation as a contract</a>
 
 <details>
 <summary>Click for details</summary>
@@ -86,7 +86,7 @@ The proxy requirement still applies. Metadata on a method does not make a direct
 
 ---
 
-## <a id="annotation-demo">2. Demo in this module</a>
+## <a id="annotation-demo">Executable Evidence for Annotation-Driven Pointcuts and Declarative Contracts</a>
 
 <details>
 <summary>Click for details</summary>
@@ -140,7 +140,7 @@ The label proves metadata binding; the target event proves that the advice conti
 
 ---
 
-## <a id="annotation-vs-expression">3. When is an annotation-based pointcut appropriate?</a>
+## <a id="annotation-vs-expression">When is an annotation-based pointcut appropriate?</a>
 
 <details>
 <summary>Click for details</summary>
@@ -182,7 +182,7 @@ Finally, annotation presence does not override proxy semantics. Self-invocation 
 
 ---
 
-## <a id="annotation-conclusion">4. Conclusion</a>
+## <a id="annotation-conclusion">Annotation-Driven Pointcuts and Declarative Contracts Synthesis</a>
 
 <details>
 <summary>Click for details</summary>

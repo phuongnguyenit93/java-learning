@@ -294,13 +294,18 @@ module
     │   │   │   │   ├── r2dbc [SPRING_DATA_R2DBC] : Spring Data R2DBC reactive relational access, repositories, mapping, transactions and backpressure-aware database workflows
     │   │   │   │   └── redis [SPRING_DATA_REDIS] : Spring Data Redis templates, repositories, serialization, caching, pub-sub and reactive access
     │   │   │   ├── spring-framework
+    │   │   │   │   ├── core-container [SPRING_CORE_CONTAINER] : Spring Core Container, bean management, dependency injection, scopes, environment, profiles, conditional registration and configuration composition
+    │   │   │   │   ├── validation-data-binding [SPRING_VALIDATION_DATA_BINDING] : Spring Framework validation, data binding, type conversion, formatting and Bean Validation integration
     │   │   │   │   ├── aspect [ASPECT] : Spring Aspect-Oriented Programming with proxy-based interception, advice, pointcuts and AOP infrastructure
     │   │   │   │   ├── concurrency [SPRING_CONCURRENCY] : Spring task execution, async methods, scheduling, context propagation and virtual-thread integration
-    │   │   │   │   ├── core-container [SPRING_CORE_CONTAINER] : Spring Core Container, bean management, dependency injection, scopes, environment, profiles, conditional registration and configuration composition
-    │   │   │   │   ├── global-exception-handler [GLOBAL_EXCEPTION_HANDLER] - [DEPEND] : Module stored custom exception handler case. Use by @EnableCustomExceptionHandler
-    │   │   │   │   ├── reactive [SPRING_REACTIVE] : Shared YAML composition module for Spring WebFlux applications
-    │   │   │   │   ├── testing [SPRING_TESTING] : Spring TestContext Framework including context configuration, profiles, test properties, context caching, transactions and integration testing
-    │   │   │   │   └── web [SPRING_WEB]
+    │   │   │   │   ├── transaction-management [SPRING_TRANSACTION_MANAGEMENT] : Spring Framework transaction abstraction, declarative and programmatic transaction management, propagation, rollback and resource synchronization
+    │   │   │   │   ├── data-access [SPRING_DATA_ACCESS] : Spring Framework DAO support, JDBC and R2DBC core data-access infrastructure including JdbcClient, JdbcTemplate and DatabaseClient
+    │   │   │   │   ├── cache [SPRING_CACHE] : Spring Framework cache abstraction, declarative caching, key resolution and cache-provider integration boundary
+    │   │   │   │   ├── web [SPRING_WEB] : Spring MVC Servlet-stack request processing, binding, validation, error handling, async execution, synchronous HTTP clients and declarative HTTP service interfaces
+    │   │   │   │   ├── reactive [SPRING_REACTIVE] : Spring WebFlux streaming, context propagation and blocking-boundary learning experiments
+    │   │   │   │   ├── messaging [SPRING_MESSAGING] : Spring Framework messaging foundation plus WebSocket/STOMP and RSocket application messaging infrastructure
+    │   │   │   │   ├── jms [SPRING_JMS] : Spring Framework JMS access, JmsTemplate, listener containers, annotation-driven listeners and transaction integration
+    │   │   │   │   └── testing [SPRING_TESTING] : Spring TestContext Framework including context configuration, profiles, test properties, context caching, transactions and integration testing
     │   │   │   ├── spring-graphql
     │   │   │   ├── spring-grpc
     │   │   │   ├── spring-hateoas

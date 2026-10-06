@@ -3,17 +3,17 @@
 # Spring WebSocket Transport Foundation
 
 ## Menu
-- [1. When WebSocket is a fit](#websocket-use-cases)
-- [2. HTTP Upgrade handshake](#websocket-handshake)
-- [3. WebSocketHandler and WebSocketSession](#websocket-handler-session)
-- [4. WebSocketClient and WebSocketConnectionManager](#websocket-client)
-- [5. Text, binary, ping, and pong messages](#websocket-message-types)
-- [6. Handshake customization and interceptors](#websocket-handshake-customization)
-- [7. Origin policy](#websocket-origin-policy)
-- [8. SockJS fallback](#sockjs-fallback)
-- [9. Servlet WebSocket and reactive WebSocket boundary](#servlet-reactive-websocket-boundary)
+- [When WebSocket is a fit](#websocket-use-cases)
+- [HTTP Upgrade handshake](#websocket-handshake)
+- [WebSocketHandler and WebSocketSession](#websocket-handler-session)
+- [WebSocketClient and WebSocketConnectionManager](#websocket-client)
+- [Text, binary, ping, and pong messages](#websocket-message-types)
+- [Handshake customization and interceptors](#websocket-handshake-customization)
+- [Origin policy](#websocket-origin-policy)
+- [SockJS fallback](#sockjs-fallback)
+- [Servlet WebSocket and reactive WebSocket boundary](#servlet-reactive-websocket-boundary)
 
-## <a id="websocket-use-cases">1. When WebSocket is a fit</a>
+## <a id="websocket-use-cases">When WebSocket is a fit</a>
 
 <details>
 <summary>Click for details</summary>
@@ -30,7 +30,7 @@ Spring's WebSocket API gives applications a framework-level handler/session abst
 
 ---
 
-## <a id="websocket-handshake">2. HTTP Upgrade handshake</a>
+## <a id="websocket-handshake">HTTP Upgrade handshake</a>
 
 <details>
 <summary>Click for details</summary>
@@ -47,7 +47,7 @@ The handshake is still part of the web boundary, so cookies, HTTP headers, origi
 
 ---
 
-## <a id="websocket-handler-session">3. WebSocketHandler and WebSocketSession</a>
+## <a id="websocket-handler-session">WebSocketHandler and WebSocketSession</a>
 
 <details>
 <summary>Click for details</summary>
@@ -72,7 +72,7 @@ If a WebSocketHandler lets an exception escape, Spring's default decorator strat
 
 ---
 
-## <a id="websocket-client">4. WebSocketClient and WebSocketConnectionManager</a>
+## <a id="websocket-client">WebSocketClient and WebSocketConnectionManager</a>
 
 <details>
 <summary>Click for details</summary>
@@ -93,7 +93,7 @@ Choose the direct client API when connection ownership belongs to explicit appli
 
 ---
 
-## <a id="websocket-message-types">5. Text, binary, ping, and pong messages</a>
+## <a id="websocket-message-types">Text, binary, ping, and pong messages</a>
 
 <details>
 <summary>Click for details</summary>
@@ -110,7 +110,7 @@ Do not confuse WebSocket message types with Spring Messaging Message<?> or STOMP
 
 ---
 
-## <a id="websocket-handshake-customization">6. Handshake customization and interceptors</a>
+## <a id="websocket-handshake-customization">Handshake customization and interceptors</a>
 
 <details>
 <summary>Click for details</summary>
@@ -131,7 +131,7 @@ Keep application message routing out of handshake code. The handshake runs once 
 
 ---
 
-## <a id="websocket-origin-policy">7. Origin policy</a>
+## <a id="websocket-origin-policy">Origin policy</a>
 
 <details>
 <summary>Click for details</summary>
@@ -148,7 +148,7 @@ When SockJS is enabled, origin restrictions can also disable fallback transports
 
 ---
 
-## <a id="sockjs-fallback">8. SockJS fallback</a>
+## <a id="sockjs-fallback">SockJS fallback</a>
 
 <details>
 <summary>Click for details</summary>
@@ -165,7 +165,7 @@ Use SockJS for a concrete compatibility requirement. Modern deployments that can
 
 ---
 
-## <a id="servlet-reactive-websocket-boundary">9. Servlet WebSocket and reactive WebSocket boundary</a>
+## <a id="servlet-reactive-websocket-boundary">Servlet WebSocket and reactive WebSocket boundary</a>
 
 <details>
 <summary>Click for details</summary>

@@ -3,20 +3,20 @@
 # Operations, Testing, and Design Decisions
 
 ## Menu
-- [1. Channel executor capacity](#messaging-executor-capacity)
-- [2. Send-time and buffer limits](#messaging-send-limits)
-- [3. Message-size limits](#messaging-message-size-limits)
-- [4. Broker availability and recovery](#broker-availability-recovery)
-- [5. Slow clients and backpressure boundary](#slow-client-boundary)
-- [6. WebSocketMessageBrokerStats and monitoring](#websocket-broker-stats)
-- [7. Testing WebSocket and STOMP messaging](#stomp-testing)
-- [8. Testing RSocket messaging](#rsocket-testing)
-- [9. Choosing raw WebSocket, STOMP, or RSocket](#choose-messaging-model)
-- [10. Choosing the simple broker or broker relay](#choose-stomp-broker)
-- [11. Handoff to Spring Integration](#spring-integration-handoff)
-- [12. Production readiness checklist](#messaging-production-checklist)
+- [Channel executor capacity](#messaging-executor-capacity)
+- [Send-time and buffer limits](#messaging-send-limits)
+- [Message-size limits](#messaging-message-size-limits)
+- [Broker availability and recovery](#broker-availability-recovery)
+- [Slow clients and backpressure boundary](#slow-client-boundary)
+- [WebSocketMessageBrokerStats and monitoring](#websocket-broker-stats)
+- [Testing WebSocket and STOMP messaging](#stomp-testing)
+- [Testing RSocket messaging](#rsocket-testing)
+- [Choosing raw WebSocket, STOMP, or RSocket](#choose-messaging-model)
+- [Choosing the simple broker or broker relay](#choose-stomp-broker)
+- [Handoff to Spring Integration](#spring-integration-handoff)
+- [Production readiness checklist](#messaging-production-checklist)
 
-## <a id="messaging-executor-capacity">1. Channel executor capacity</a>
+## <a id="messaging-executor-capacity">Channel executor capacity</a>
 
 <details>
 <summary>Click for details</summary>
@@ -45,7 +45,7 @@ Measure queue growth, active threads, task latency, and rejection behavior under
 
 ---
 
-## <a id="messaging-send-limits">2. Send-time and buffer limits</a>
+## <a id="messaging-send-limits">Send-time and buffer limits</a>
 
 <details>
 <summary>Click for details</summary>
@@ -75,7 +75,7 @@ These are safety controls, not throughput targets. Set them from observed messag
 
 ---
 
-## <a id="messaging-message-size-limits">3. Message-size limits</a>
+## <a id="messaging-message-size-limits">Message-size limits</a>
 
 <details>
 <summary>Click for details</summary>
@@ -101,7 +101,7 @@ Keep three limits conceptually separate: WebSocket container frame/message limit
 
 ---
 
-## <a id="broker-availability-recovery">4. Broker availability and recovery</a>
+## <a id="broker-availability-recovery">Broker availability and recovery</a>
 
 <details>
 <summary>Click for details</summary>
@@ -127,7 +127,7 @@ Also monitor the external broker independently. A healthy WebSocket endpoint onl
 
 ---
 
-## <a id="slow-client-boundary">5. Slow clients and backpressure boundary</a>
+## <a id="slow-client-boundary">Slow clients and backpressure boundary</a>
 
 <details>
 <summary>Click for details</summary>
@@ -146,7 +146,7 @@ For either protocol, watch for fan-out multiplication. One application event sen
 
 ---
 
-## <a id="websocket-broker-stats">6. WebSocketMessageBrokerStats and monitoring</a>
+## <a id="websocket-broker-stats">WebSocketMessageBrokerStats and monitoring</a>
 
 <details>
 <summary>Click for details</summary>
@@ -172,7 +172,7 @@ Correlate infrastructure metrics with application symptoms. A high outbound queu
 
 ---
 
-## <a id="stomp-testing">7. Testing WebSocket and STOMP messaging</a>
+## <a id="stomp-testing">Testing WebSocket and STOMP messaging</a>
 
 <details>
 <summary>Click for details</summary>
@@ -193,7 +193,7 @@ Keep a small number of end-to-end tests for wiring and protocol behavior, then t
 
 ---
 
-## <a id="rsocket-testing">8. Testing RSocket messaging</a>
+## <a id="rsocket-testing">Testing RSocket messaging</a>
 
 <details>
 <summary>Click for details</summary>
@@ -222,7 +222,7 @@ Connection failures should be deterministic in tests: dispose requesters/servers
 
 ---
 
-## <a id="choose-messaging-model">9. Choosing raw WebSocket, STOMP, or RSocket</a>
+## <a id="choose-messaging-model">Choosing raw WebSocket, STOMP, or RSocket</a>
 
 <details>
 <summary>Click for details</summary>
@@ -248,7 +248,7 @@ Do not choose solely from latency benchmarks. Team familiarity, browser/client l
 
 ---
 
-## <a id="choose-stomp-broker">10. Choosing the simple broker or broker relay</a>
+## <a id="choose-stomp-broker">Choosing the simple broker or broker relay</a>
 
 <details>
 <summary>Click for details</summary>
@@ -279,7 +279,7 @@ The relay is a bridge, not a magic reliability switch. End-to-end delivery guara
 
 ---
 
-## <a id="spring-integration-handoff">11. Handoff to Spring Integration</a>
+## <a id="spring-integration-handoff">Handoff to Spring Integration</a>
 
 <details>
 <summary>Click for details</summary>
@@ -306,7 +306,7 @@ Do not reproduce a large integration flow manually inside WebSocket or RSocket h
 
 ---
 
-## <a id="messaging-production-checklist">12. Production readiness checklist</a>
+## <a id="messaging-production-checklist">Production readiness checklist</a>
 
 <details>
 <summary>Click for details</summary>

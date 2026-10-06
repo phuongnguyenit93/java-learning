@@ -3,14 +3,14 @@
 # Spring Messaging: Mục đích và ranh giới
 
 ## Menu
-- [1. Vì sao messaging tồn tại](#messaging-purpose)
-- [2. Giới hạn của direct coupling và request-response](#direct-coupling-limits)
-- [3. Spring Messaging như một transport-neutral foundation](#spring-messaging-foundation)
-- [4. Các messaging programming model trong module](#messaging-programming-models)
-- [5. Ranh giới với các Spring module lân cận](#neighboring-module-boundaries)
-- [6. Learning path khuyến nghị](#messaging-learning-path)
+- [Messaging là gì và vì sao tồn tại?](#messaging-purpose)
+- [Giới hạn của direct coupling và request-response](#direct-coupling-limits)
+- [Spring Messaging như một transport-neutral foundation](#spring-messaging-foundation)
+- [Các messaging programming model trong module](#messaging-programming-models)
+- [Ranh giới với các Spring module lân cận](#neighboring-module-boundaries)
+- [Learning path khuyến nghị](#messaging-learning-path)
 
-## <a id="messaging-purpose">1. Vì sao messaging tồn tại</a>
+## <a id="messaging-purpose">Messaging là gì và vì sao tồn tại?</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -27,7 +27,7 @@ Trong module này, messaging là nền chung cho programming model WebSocket/STO
 
 ---
 
-## <a id="direct-coupling-limits">2. Giới hạn của direct coupling và request-response</a>
+## <a id="direct-coupling-limits">Giới hạn của direct coupling và request-response</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -44,7 +44,7 @@ Quy tắc thực tế là chọn messaging vì **communication model** phù hợ
 
 ---
 
-## <a id="spring-messaging-foundation">3. Spring Messaging như một transport-neutral foundation</a>
+## <a id="spring-messaging-foundation">Spring Messaging như một transport-neutral foundation</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -61,7 +61,7 @@ Ranh giới này cũng giữ scope của module rõ ràng. Spring Integration s�
 
 ---
 
-## <a id="messaging-programming-models">4. Các messaging programming model trong module</a>
+## <a id="messaging-programming-models">Các messaging programming model trong module</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -82,7 +82,7 @@ Các Spring messaging abstraction dùng chung giúp ba phần này liên hệ đ
 
 ---
 
-## <a id="neighboring-module-boundaries">5. Ranh giới với các Spring module lân cận</a>
+## <a id="neighboring-module-boundaries">Ranh giới với các Spring module lân cận</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -103,7 +103,7 @@ Các handoff này giữ mental model ổn định: hiểu cơ chế Spring Frame
 
 ---
 
-## <a id="messaging-learning-path">6. Learning path khuyến nghị</a>
+## <a id="messaging-learning-path">Learning path khuyến nghị</a>
 
 <details>
 <summary>Xem chi tiết</summary>

@@ -24,5 +24,3 @@ children:
     order: 110
   testing:
     order: 120
-  global-exception-handler:
-    order: 130

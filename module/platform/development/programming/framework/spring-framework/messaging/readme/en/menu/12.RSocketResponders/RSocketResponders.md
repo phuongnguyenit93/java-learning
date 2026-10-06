@@ -3,18 +3,18 @@
 # RSocket Responders and Service Interfaces
 
 ## Menu
-- [1. RSocketMessageHandler](#rsocket-message-handler)
-- [2. @MessageMapping responders](#rsocket-message-mapping)
-- [3. @ConnectMapping for SETUP and metadata push](#rsocket-connect-mapping)
-- [4. Interaction model from input and output cardinality](#rsocket-interaction-cardinality)
-- [5. RSocket service interfaces](#rsocket-service-interface)
-- [6. @RSocketExchange](#rsocket-exchange)
-- [7. RSocketServiceProxyFactory](#rsocket-service-proxy)
-- [8. Service method parameters and return values](#rsocket-service-method-contract)
-- [9. Client and server annotated responders](#rsocket-responder-symmetry)
-- [10. Boot, Security, and Spring Integration boundaries](#rsocket-neighbor-boundaries)
+- [RSocketMessageHandler](#rsocket-message-handler)
+- [@MessageMapping responders](#rsocket-message-mapping)
+- [@ConnectMapping for SETUP and metadata push](#rsocket-connect-mapping)
+- [Interaction model from input and output cardinality](#rsocket-interaction-cardinality)
+- [RSocket service interfaces](#rsocket-service-interface)
+- [@RSocketExchange](#rsocket-exchange)
+- [RSocketServiceProxyFactory](#rsocket-service-proxy)
+- [Service method parameters and return values](#rsocket-service-method-contract)
+- [Client and server annotated responders](#rsocket-responder-symmetry)
+- [Boot, Security, and Spring Integration boundaries](#rsocket-neighbor-boundaries)
 
-## <a id="rsocket-message-handler">1. RSocketMessageHandler</a>
+## <a id="rsocket-message-handler">RSocketMessageHandler</a>
 
 <details>
 <summary>Click for details</summary>
@@ -42,7 +42,7 @@ The handler is framework infrastructure, not business logic. Keep codecs, route 
 
 ---
 
-## <a id="rsocket-message-mapping">2. @MessageMapping responders</a>
+## <a id="rsocket-message-mapping">@MessageMapping responders</a>
 
 <details>
 <summary>Click for details</summary>
@@ -72,7 +72,7 @@ The method's input and output cardinality determine the RSocket interaction. Tha
 
 ---
 
-## <a id="rsocket-connect-mapping">3. @ConnectMapping for SETUP and metadata push</a>
+## <a id="rsocket-connect-mapping">@ConnectMapping for SETUP and metadata push</a>
 
 <details>
 <summary>Click for details</summary>
@@ -100,7 +100,7 @@ On a client responder, `@ConnectMapping` is a callback and does not control whet
 
 ---
 
-## <a id="rsocket-interaction-cardinality">4. Interaction model from input and output cardinality</a>
+## <a id="rsocket-interaction-cardinality">Interaction model from input and output cardinality</a>
 
 <details>
 <summary>Click for details</summary>
@@ -126,7 +126,7 @@ This cardinality model prevents method names from lying about protocol behavior.
 
 ---
 
-## <a id="rsocket-service-interface">5. RSocket service interfaces</a>
+## <a id="rsocket-service-interface">RSocket service interfaces</a>
 
 <details>
 <summary>Click for details</summary>
@@ -155,7 +155,7 @@ Use the interface for a stable RSocket contract that both sides intentionally sh
 
 ---
 
-## <a id="rsocket-exchange">6. @RSocketExchange</a>
+## <a id="rsocket-exchange">@RSocketExchange</a>
 
 <details>
 <summary>Click for details</summary>
@@ -191,7 +191,7 @@ Because metadata arguments are positional value/MIME-type pairs, keep interface 
 
 ---
 
-## <a id="rsocket-service-proxy">7. RSocketServiceProxyFactory</a>
+## <a id="rsocket-service-proxy">RSocketServiceProxyFactory</a>
 
 <details>
 <summary>Click for details</summary>
@@ -220,7 +220,7 @@ Treat the factory as an adapter from a Java contract to an existing requester. C
 
 ---
 
-## <a id="rsocket-service-method-contract">8. Service method parameters and return values</a>
+## <a id="rsocket-service-method-contract">Service method parameters and return values</a>
 
 <details>
 <summary>Click for details</summary>
@@ -246,7 +246,7 @@ Changing a parameter from one value to a multi-value publisher or changing a ret
 
 ---
 
-## <a id="rsocket-responder-symmetry">9. Client and server annotated responders</a>
+## <a id="rsocket-responder-symmetry">Client and server annotated responders</a>
 
 <details>
 <summary>Click for details</summary>
@@ -274,7 +274,7 @@ Symmetry is powerful but should be intentional. A server-initiated route is part
 
 ---
 
-## <a id="rsocket-neighbor-boundaries">10. Boot, Security, and Spring Integration boundaries</a>
+## <a id="rsocket-neighbor-boundaries">Boot, Security, and Spring Integration boundaries</a>
 
 <details>
 <summary>Click for details</summary>

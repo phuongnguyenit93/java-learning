@@ -67,6 +67,10 @@ Static resources such as JavaScript, CSS, images, and fonts do not need controll
 
 `WebMvcConfigurer.addResourceHandlers` registers URL patterns and one or more resource locations. Requests are handled by `ResourceHttpRequestHandler`, which resolves a Spring `Resource`, checks request conditions, determines media type, and writes the resource response.
 
+Resource delivery also participates in HTTP **byte-range** semantics. For a valid `Range` request against a resource whose length can be determined, Spring MVC can serve only the requested region and produce a partial-content response instead of forcing application code to slice the file manually. The same model is available when application handlers return `Resource` or `ResponseEntity<Resource>`; Spring uses `HttpRange`/`ResourceRegion` support and the corresponding message-conversion path where applicable. Multiple ranges and provider/resource capabilities affect the exact response, so range behavior should be tested with the resource type used in production.
+
+Range requests are a transport concern, not an application pagination mechanism. They are useful for resumable or seekable delivery of large representations such as media or files, while authorization, ownership, and resource lookup still need to be decided before bytes are exposed.
+
 The optional resource chain adds ordered `ResourceResolver` and `ResourceTransformer` components. This is useful when delivery requires behaviors such as content-versioned filenames, encoded variants, WebJar resolution, or transformed references. A `VersionResourceResolver`, for example, can make cache-friendly versioned URLs part of the delivery contract instead of forcing application controllers to compute hashes.
 
 The design rule is to keep **resource delivery** separate from application request handling:

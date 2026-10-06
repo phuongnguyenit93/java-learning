@@ -3,14 +3,14 @@
 # Introductions and Interface Enrichment
 
 ## Menu
-- [1. What is Introduction?](#introduction-mental-model)
-- [2. @DeclareParents](#declare-parents)
-- [3. Demo in this module](#introduction-demo)
-- [4. Conclusion](#introduction-conclusion)
+- [What is Introduction?](#introduction-mental-model)
+- [@DeclareParents](#declare-parents)
+- [Executable Evidence for Introductions and Interface Enrichment](#introduction-demo)
+- [Introductions and Interface Enrichment Synthesis](#introduction-conclusion)
 
 Most AOP in the module so far changes behavior **around existing methods**. Introduction shows that a proxy can also expose a **new interface** that the original target class does not implement.
 
-## <a id="introduction-mental-model">1. What is Introduction?</a>
+## <a id="introduction-mental-model">What is Introduction?</a>
 
 <details>
 <summary>Click for details</summary>
@@ -33,13 +33,14 @@ The target class and its bytecode stay unchanged. The additional contract exists
 That distinction affects object identity and casting. A raw `IntroductionTargetService` instance cannot be treated as `UsageTracked` merely because an Aspect declares an introduction. Code that needs the introduced contract must hold the advised proxy reference.
 
 Introduction therefore enriches a proxied object's public capability without requiring the original class to know that interface.
+
 </details>
 
 - [Back to top](#back-to-top)
 
 ---
 
-## <a id="declare-parents">2. @DeclareParents</a>
+## <a id="declare-parents">@DeclareParents</a>
 
 <details>
 <summary>Click for details</summary>
@@ -74,13 +75,14 @@ Introduction is useful when a proxy deliberately needs a stable secondary contra
 ### References
 
 - Spring Framework Reference — [Introductions](https://docs.spring.io/spring-framework/reference/core/aop/ataspectj/introductions.html)
+
 </details>
 
 - [Back to top](#back-to-top)
 
 ---
 
-## <a id="introduction-demo">3. Demo in this module</a>
+## <a id="introduction-demo">Executable Evidence for Introductions and Interface Enrichment</a>
 
 <details>
 <summary>Click for details</summary>
@@ -125,7 +127,7 @@ and increments the counter from `0` to `2` before invoking the business method.
 
 ---
 
-## <a id="introduction-conclusion">4. Conclusion</a>
+## <a id="introduction-conclusion">Introductions and Interface Enrichment Synthesis</a>
 
 <details>
 <summary>Click for details</summary>
@@ -133,6 +135,7 @@ and increments the counter from `0` to `2` before invoking the business method.
 Introduction shows that Spring AOP can change more than execution around an existing method: a proxy can also expose a new interface while the target class remains unchanged.
 
 The benefit is separation from the target class. The trade-off is that the capability exists only on the advised reference, so callers can be surprised if they bypass the proxy or assume the concrete target type tells the whole story.
+
 </details>
 
 - [Back to top](#back-to-top)

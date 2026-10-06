@@ -3,20 +3,20 @@
 # Vận hành, Testing và quyết định thiết kế
 
 ## Menu
-- [1. Capacity của channel executor](#messaging-executor-capacity)
-- [2. Send-time và buffer limit](#messaging-send-limits)
-- [3. Message-size limit](#messaging-message-size-limits)
-- [4. Broker availability và recovery](#broker-availability-recovery)
-- [5. Slow client và ranh giới backpressure](#slow-client-boundary)
-- [6. WebSocketMessageBrokerStats và monitoring](#websocket-broker-stats)
-- [7. Testing WebSocket và STOMP messaging](#stomp-testing)
-- [8. Testing RSocket messaging](#rsocket-testing)
-- [9. Chọn raw WebSocket, STOMP hay RSocket](#choose-messaging-model)
-- [10. Chọn simple broker hay broker relay](#choose-stomp-broker)
-- [11. Handoff sang Spring Integration](#spring-integration-handoff)
-- [12. Production readiness checklist](#messaging-production-checklist)
+- [Capacity của channel executor](#messaging-executor-capacity)
+- [Send-time và buffer limit](#messaging-send-limits)
+- [Message-size limit](#messaging-message-size-limits)
+- [Broker availability và recovery](#broker-availability-recovery)
+- [Slow client và ranh giới backpressure](#slow-client-boundary)
+- [WebSocketMessageBrokerStats và monitoring](#websocket-broker-stats)
+- [Testing WebSocket và STOMP messaging](#stomp-testing)
+- [Testing RSocket messaging](#rsocket-testing)
+- [Chọn raw WebSocket, STOMP hay RSocket](#choose-messaging-model)
+- [Chọn simple broker hay broker relay](#choose-stomp-broker)
+- [Handoff sang Spring Integration](#spring-integration-handoff)
+- [Production readiness checklist](#messaging-production-checklist)
 
-## <a id="messaging-executor-capacity">1. Capacity của channel executor</a>
+## <a id="messaging-executor-capacity">Capacity của channel executor</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -45,7 +45,7 @@ Cần đo queue growth, active thread, task latency và rejection dưới traffi
 
 ---
 
-## <a id="messaging-send-limits">2. Send-time và buffer limit</a>
+## <a id="messaging-send-limits">Send-time và buffer limit</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -75,7 +75,7 @@ Một chi tiết quan trọng của 6.1 là send-time limit được kiểm tra 
 
 ---
 
-## <a id="messaging-message-size-limits">3. Message-size limit</a>
+## <a id="messaging-message-size-limits">Message-size limit</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -101,7 +101,7 @@ Cần tách ba loại limit: limit của WebSocket container, Spring STOMP messa
 
 ---
 
-## <a id="broker-availability-recovery">4. Broker availability và recovery</a>
+## <a id="broker-availability-recovery">Broker availability và recovery</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -127,7 +127,7 @@ External broker cũng cần được monitor độc lập. WebSocket endpoint v�
 
 ---
 
-## <a id="slow-client-boundary">5. Slow client và ranh giới backpressure</a>
+## <a id="slow-client-boundary">Slow client và ranh giới backpressure</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -146,7 +146,7 @@ Với cả hai protocol, phải chú ý fan-out multiplication. Một applicatio
 
 ---
 
-## <a id="websocket-broker-stats">6. WebSocketMessageBrokerStats và monitoring</a>
+## <a id="websocket-broker-stats">WebSocketMessageBrokerStats và monitoring</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -172,7 +172,7 @@ Cần đọc metric theo mối quan hệ nguyên nhân. Outbound queue cao có t
 
 ---
 
-## <a id="stomp-testing">7. Testing WebSocket và STOMP messaging</a>
+## <a id="stomp-testing">Testing WebSocket và STOMP messaging</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -193,7 +193,7 @@ Chỉ cần một số ít end-to-end test để bảo vệ wiring/protocol beha
 
 ---
 
-## <a id="rsocket-testing">8. Testing RSocket messaging</a>
+## <a id="rsocket-testing">Testing RSocket messaging</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -222,7 +222,7 @@ Connection failure trong test nên deterministic: dispose requester/server rõ r
 
 ---
 
-## <a id="choose-messaging-model">9. Chọn raw WebSocket, STOMP hay RSocket</a>
+## <a id="choose-messaging-model">Chọn raw WebSocket, STOMP hay RSocket</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -248,7 +248,7 @@ Không nên chọn chỉ từ latency benchmark. Team familiarity, browser/clien
 
 ---
 
-## <a id="choose-stomp-broker">10. Chọn simple broker hay broker relay</a>
+## <a id="choose-stomp-broker">Chọn simple broker hay broker relay</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -279,7 +279,7 @@ Broker relay chỉ là bridge, không phải công tắc “bật reliability”
 
 ---
 
-## <a id="spring-integration-handoff">11. Handoff sang Spring Integration</a>
+## <a id="spring-integration-handoff">Handoff sang Spring Integration</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -306,7 +306,7 @@ Không nên nhét một integration flow lớn thủ công vào WebSocket/RSocke
 
 ---
 
-## <a id="messaging-production-checklist">12. Production readiness checklist</a>
+## <a id="messaging-production-checklist">Production readiness checklist</a>
 
 <details>
 <summary>Xem chi tiết</summary>

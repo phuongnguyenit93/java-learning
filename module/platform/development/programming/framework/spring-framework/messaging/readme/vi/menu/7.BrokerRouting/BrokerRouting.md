@@ -3,17 +3,17 @@
 # Broker Routing và User Destination
 
 ## Menu
-- [1. Built-in simple broker](#simple-broker)
-- [2. Capability và giới hạn của simple broker](#simple-broker-limits)
-- [3. External STOMP broker relay](#broker-relay)
-- [4. System và client broker connection](#broker-relay-connections)
-- [5. Quy ước đặt tên destination](#destination-conventions)
-- [6. User destination](#user-destinations)
-- [7. Nhiều session cho một user](#multi-session-users)
-- [8. Unresolved user destination trong clustered application](#unresolved-user-destinations)
-- [9. Ranh giới với broker-native behavior](#broker-native-boundary)
+- [Built-in simple broker](#simple-broker)
+- [Capability và giới hạn của simple broker](#simple-broker-limits)
+- [External STOMP broker relay](#broker-relay)
+- [System và client broker connection](#broker-relay-connections)
+- [Quy ước đặt tên destination](#destination-conventions)
+- [User destination](#user-destinations)
+- [Nhiều session cho một user](#multi-session-users)
+- [Unresolved user destination trong clustered application](#unresolved-user-destinations)
+- [Ranh giới với broker-native behavior](#broker-native-boundary)
 
-## <a id="simple-broker">1. Built-in simple broker</a>
+## <a id="simple-broker">Built-in simple broker</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -38,7 +38,7 @@ Mental model quan trọng là **subscription routing trong cùng process**, khô
 
 ---
 
-## <a id="simple-broker-limits">2. Capability và giới hạn của simple broker</a>
+## <a id="simple-broker-limits">Capability và giới hạn của simple broker</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -55,7 +55,7 @@ Hãy dùng simple broker khi yêu cầu thực tế là "ghi nhớ active subscr
 
 ---
 
-## <a id="broker-relay">3. External STOMP broker relay</a>
+## <a id="broker-relay">External STOMP broker relay</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -82,7 +82,7 @@ Destination durability, permission, queue lifecycle và vendor-specific routing 
 
 ---
 
-## <a id="broker-relay-connections">4. System và client broker connection</a>
+## <a id="broker-relay-connections">System và client broker connection</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -101,7 +101,7 @@ Recovery của hai loại connection không đối xứng. Khi mất kết nối
 
 ---
 
-## <a id="destination-conventions">5. Quy ước đặt tên destination</a>
+## <a id="destination-conventions">Quy ước đặt tên destination</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -125,7 +125,7 @@ Nên chọn prefix làm rõ routing intent và tách application destination kh�
 
 ---
 
-## <a id="user-destinations">6. User destination</a>
+## <a id="user-destinations">User destination</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -144,7 +144,7 @@ Cơ chế user destination không bắt buộc phải có authenticated user. M�
 
 ---
 
-## <a id="multi-session-users">7. Nhiều session cho một user</a>
+## <a id="multi-session-users">Nhiều session cho một user</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -161,7 +161,7 @@ Mặc định, message gửi tới một user có thể được phân phối t�
 
 ---
 
-## <a id="unresolved-user-destinations">8. Unresolved user destination trong clustered application</a>
+## <a id="unresolved-user-destinations">Unresolved user destination trong clustered application</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -178,7 +178,7 @@ Cơ chế này giải quyết bài toán khám phá routing, không thay thế d
 
 ---
 
-## <a id="broker-native-boundary">9. Ranh giới với broker-native behavior</a>
+## <a id="broker-native-boundary">Ranh giới với broker-native behavior</a>
 
 <details>
 <summary>Xem chi tiết</summary>

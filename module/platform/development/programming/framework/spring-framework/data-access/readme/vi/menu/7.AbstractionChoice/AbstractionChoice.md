@@ -14,7 +14,6 @@
 <details>
 <summary>Xem chi tiết</summary>
 
-
 Trong hệ Spring JDBC blocking, hãy chọn API nhỏ nhất nhưng diễn đạt ý định rõ nhất.
 
 Dùng JdbcClient cho query/update có tham số thông thường. Nó có giao diện fluent gọn và thống nhất positional/named parameter.
@@ -30,6 +29,7 @@ insert/procedure theo metadata  → SimpleJdbcInsert / SimpleJdbcCall
 ~~~
 
 Các API này là nhiều tầng trong cùng Spring JDBC hệ sinh thái, không phải các thế hệ loại trừ nhau. Codebase có thể có quy ước mặc định nhưng vẫn dùng tầng thấp hơn khi thao tác cần.
+
 </details>
 
 - [Quay lại đầu trang](#back-to-top)
@@ -41,7 +41,6 @@ Các API này là nhiều tầng trong cùng Spring JDBC hệ sinh thái, không
 <details>
 <summary>Xem chi tiết</summary>
 
-
 Chọn JDBC hay R2DBC dựa trên **mô hình thực thi xuyên suốt (end-to-end)**, mức hỗ trợ của driver và nhu cầu vận hành.
 
 JDBC phù hợp khi ứng dụng chạy theo mô hình imperative/blocking, hệ sinh thái phụ thuộc thư viện chỉ hỗ trợ JDBC hoặc driver và công cụ của database trưởng thành nhất ở JDBC. Các connection pool trưởng thành cùng mức hỗ trợ rộng từ nhiều nhà cung cấp khiến JDBC vẫn là lựa chọn mặc định của nhiều ứng dụng.
@@ -51,6 +50,7 @@ R2DBC phù hợp khi hệ thống thật sự reactive cần truy cập database
 R2DBC không phải "JDBC nhanh hơn". Non-blocking I/O có thể cải thiện mức sử dụng tài nguyên khi có nhiều tác vụ đồng thời, nhưng chất lượng SQL, cơ chế lock, năng lực database, độ trễ mạng và cấu hình pool vẫn chi phối nhiều loại tải.
 
 Đừng chọn chỉ vì framework có hỗ trợ. Mô hình nên nhất quán từ xử lý request, transaction và data access cho tới driver.
+
 </details>
 
 - [Quay lại đầu trang](#back-to-top)
@@ -61,7 +61,6 @@ R2DBC không phải "JDBC nhanh hơn". Non-blocking I/O có thể cải thiện 
 
 <details>
 <summary>Xem chi tiết</summary>
-
 
 Spring Framework Data Access phù hợp khi SQL tường minh và khả năng kiểm soát relational trực tiếp là điều quan trọng. Abstraction cao hơn giải quyết bài toán khác.
 
@@ -83,6 +82,7 @@ cần ORM entity lifecycle/relationship model
 ~~~
 
 Hãy chọn theo vấn đề chi phối. Không cần thêm repository hoặc ORM layer chỉ để che một lượng SQL vốn đã rõ ràng.
+
 </details>
 
 - [Quay lại đầu trang](#back-to-top)
@@ -93,7 +93,6 @@ Hãy chọn theo vấn đề chi phối. Không cần thêm repository hoặc OR
 
 <details>
 <summary>Xem chi tiết</summary>
-
 
 Reactive method signature không biến JDBC blocking thành non-blocking. Nếu WebFlux/Reactor path gọi JdbcClient hoặc JdbcTemplate trên event-loop thread, thread đó vẫn có thể bị giữ trong toàn bộ thời gian database I/O.
 
@@ -111,6 +110,7 @@ Mono<Customer> customer = Mono.fromCallable(
 Mẫu này bảo vệ event-loop thread, nhưng **không tạo non-blocking database I/O**.
 
 Nếu ứng dụng cần luồng dữ liệu reactive end-to-end và database có driver phù hợp, dùng R2DBC. Nếu phần lớn ứng dụng imperative, ép R2DBC vào có thể tăng độ phức tạp mà không có lợi ích tương xứng.
+
 </details>
 
 - [Quay lại đầu trang](#back-to-top)
@@ -121,7 +121,6 @@ Nếu ứng dụng cần luồng dữ liệu reactive end-to-end và database c�
 
 <details>
 <summary>Xem chi tiết</summary>
-
 
 Có thể tóm tắt toàn module như một chuỗi quyết định thay vì danh sách class.
 
@@ -152,6 +151,7 @@ Có thể tóm tắt toàn module như một chuỗi quyết định thay vì da
 Đánh đổi cốt lõi nằm giữa mức độ kiểm soát và mức độ trừu tượng hóa. Spring Framework Data Access loại bỏ phần mã hạ tầng lặp lại nhưng vẫn giữ các thao tác quan hệ đủ rõ để người đọc suy luận.
 
 Một DAO trưởng thành phải giúp quyền sở hữu tài nguyên, ý định SQL, kỳ vọng kết quả và ý nghĩa lỗi dễ suy luận hơn, không phải che chúng dưới thêm nhiều tầng không cần thiết.
+
 </details>
 
 - [Quay lại đầu trang](#back-to-top)

@@ -121,7 +121,7 @@ roadmap:
       - Understand DispatcherServlet's ordered chain of HandlerExceptionResolver implementations and place ExceptionHandlerExceptionResolver, ResponseStatusExceptionResolver, and DefaultHandlerExceptionResolver in that model.
       - Use @ExceptionHandler and @ControllerAdvice as controller-level and cross-controller exception mechanisms while preserving exception specificity and response semantics.
       - Understand ResponseStatusException, ErrorResponse, ProblemDetail, ResponseEntityExceptionHandler, and RFC problem-detail rendering at the Spring MVC boundary.
-      - Keep Spring Boot error-page/error-endpoint behavior and the repository global-exception-handler support module outside the ownership of this learning journey.
+      - Keep Spring Boot error-page/error-endpoint behavior and the repository `project-build/springboot-runtime/exception-handler-servlet` support module outside the ownership of this learning journey.
 
   - id: async-servlet-request-processing
     title: Asynchronous Servlet Requests and Streaming

@@ -3,18 +3,18 @@
 # RSocket Interaction Model and Reactive Boundary
 
 ## Menu
-- [1. Why RSocket exists](#rsocket-purpose)
-- [2. Request-response](#rsocket-request-response)
-- [3. Fire-and-forget](#rsocket-fire-and-forget)
-- [4. Request-stream](#rsocket-request-stream)
-- [5. Request-channel](#rsocket-request-channel)
-- [6. Requester and responder symmetry](#rsocket-symmetry)
-- [7. Setup and connection model](#rsocket-setup-connection)
-- [8. Routes and metadata](#rsocket-routes-metadata)
-- [9. Reactive Streams and backpressure boundary](#rsocket-reactive-streams-boundary)
-- [10. TCP, WebSocket, and protocol-feature boundary](#rsocket-transports-boundary)
+- [Why RSocket exists](#rsocket-purpose)
+- [Request-response](#rsocket-request-response)
+- [Fire-and-forget](#rsocket-fire-and-forget)
+- [Request-stream](#rsocket-request-stream)
+- [Request-channel](#rsocket-request-channel)
+- [Requester and responder symmetry](#rsocket-symmetry)
+- [Setup and connection model](#rsocket-setup-connection)
+- [Routes and metadata](#rsocket-routes-metadata)
+- [Reactive Streams and backpressure boundary](#rsocket-reactive-streams-boundary)
+- [TCP, WebSocket, and protocol-feature boundary](#rsocket-transports-boundary)
 
-## <a id="rsocket-purpose">1. Why RSocket exists</a>
+## <a id="rsocket-purpose">Why RSocket exists</a>
 
 <details>
 <summary>Click for details</summary>
@@ -38,7 +38,7 @@ The key design question is therefore not “Should every WebSocket become RSocke
 
 ---
 
-## <a id="rsocket-request-response">2. Request-response</a>
+## <a id="rsocket-request-response">Request-response</a>
 
 <details>
 <summary>Click for details</summary>
@@ -64,7 +64,7 @@ Choose request-response when the semantic contract is genuinely one result: look
 
 ---
 
-## <a id="rsocket-fire-and-forget">3. Fire-and-forget</a>
+## <a id="rsocket-fire-and-forget">Fire-and-forget</a>
 
 <details>
 <summary>Click for details</summary>
@@ -88,7 +88,7 @@ That distinction matters operationally. The RSocket protocol describes fire-and-
 
 ---
 
-## <a id="rsocket-request-stream">4. Request-stream</a>
+## <a id="rsocket-request-stream">Request-stream</a>
 
 <details>
 <summary>Click for details</summary>
@@ -112,7 +112,7 @@ This model can represent both finite and long-lived streams. The application sti
 
 ---
 
-## <a id="rsocket-request-channel">5. Request-channel</a>
+## <a id="rsocket-request-channel">Request-channel</a>
 
 <details>
 <summary>Click for details</summary>
@@ -138,7 +138,7 @@ Avoid using a channel merely because the transport is duplex. If one request pro
 
 ---
 
-## <a id="rsocket-symmetry">6. Requester and responder symmetry</a>
+## <a id="rsocket-symmetry">Requester and responder symmetry</a>
 
 <details>
 <summary>Click for details</summary>
@@ -157,7 +157,7 @@ The practical consequence is that connection ownership and request ownership are
 
 ---
 
-## <a id="rsocket-setup-connection">7. Setup and connection model</a>
+## <a id="rsocket-setup-connection">Setup and connection model</a>
 
 <details>
 <summary>Click for details</summary>
@@ -183,7 +183,7 @@ Connection settings such as keepalive, resumption, interceptors, and other proto
 
 ---
 
-## <a id="rsocket-routes-metadata">8. Routes and metadata</a>
+## <a id="rsocket-routes-metadata">Routes and metadata</a>
 
 <details>
 <summary>Click for details</summary>
@@ -208,7 +208,7 @@ On the responder, routing metadata becomes the destination used for `@MessageMap
 
 ---
 
-## <a id="rsocket-reactive-streams-boundary">9. Reactive Streams and backpressure boundary</a>
+## <a id="rsocket-reactive-streams-boundary">Reactive Streams and backpressure boundary</a>
 
 <details>
 <summary>Click for details</summary>
@@ -234,7 +234,7 @@ Flow control protects a live stream from uncontrolled production. It is not a su
 
 ---
 
-## <a id="rsocket-transports-boundary">10. TCP, WebSocket, and protocol-feature boundary</a>
+## <a id="rsocket-transports-boundary">TCP, WebSocket, and protocol-feature boundary</a>
 
 <details>
 <summary>Click for details</summary>

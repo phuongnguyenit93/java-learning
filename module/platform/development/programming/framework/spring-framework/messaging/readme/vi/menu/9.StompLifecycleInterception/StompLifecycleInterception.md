@@ -3,18 +3,18 @@
 # STOMP Lifecycle, Interception, Ordering và các ranh giới
 
 ## Menu
-- [1. STOMP và WebSocket application event](#stomp-application-events)
-- [2. ChannelInterceptor](#channel-interceptor)
-- [3. ExecutorChannelInterceptor](#executor-channel-interceptor)
-- [4. Message ordering khi thực thi đồng thời](#message-ordering)
-- [5. Giữ receive order](#preserve-receive-order)
-- [6. Giữ publish order](#preserve-publish-order)
-- [7. Authentication identity từ WebSocket handshake](#websocket-authentication-identity)
-- [8. Ranh giới message authorization](#message-authorization-boundary)
-- [9. Ranh giới Spring Session](#spring-session-boundary)
-- [10. WebSocket scope](#websocket-scope)
+- [STOMP và WebSocket application event](#stomp-application-events)
+- [ChannelInterceptor](#channel-interceptor)
+- [ExecutorChannelInterceptor](#executor-channel-interceptor)
+- [Message ordering khi thực thi đồng thời](#message-ordering)
+- [Giữ receive order](#preserve-receive-order)
+- [Giữ publish order](#preserve-publish-order)
+- [Authentication identity từ WebSocket handshake](#websocket-authentication-identity)
+- [Ranh giới message authorization](#message-authorization-boundary)
+- [Ranh giới Spring Session](#spring-session-boundary)
+- [WebSocket scope](#websocket-scope)
 
-## <a id="stomp-application-events">1. STOMP và WebSocket application event</a>
+## <a id="stomp-application-events">STOMP và WebSocket application event</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -31,7 +31,7 @@ Hãy dùng event cho telemetry, session bookkeeping và operational reaction. Kh
 
 ---
 
-## <a id="channel-interceptor">2. ChannelInterceptor</a>
+## <a id="channel-interceptor">ChannelInterceptor</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -48,7 +48,7 @@ Boundary cần rõ: Framework cung cấp interception hook; authentication, auth
 
 ---
 
-## <a id="executor-channel-interceptor">3. ExecutorChannelInterceptor</a>
+## <a id="executor-channel-interceptor">ExecutorChannelInterceptor</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -65,7 +65,7 @@ Không nên dùng nó để sao chép tùy tiện mọi `ThreadLocal`. Khi dữ 
 
 ---
 
-## <a id="message-ordering">4. Message ordering khi thực thi đồng thời</a>
+## <a id="message-ordering">Message ordering khi thực thi đồng thời</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -87,7 +87,7 @@ Trước khi yêu cầu strict order, cần hỏi domain có thực sự phụ t
 
 ---
 
-## <a id="preserve-receive-order">5. Giữ receive order</a>
+## <a id="preserve-receive-order">Giữ receive order</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -112,7 +112,7 @@ Ordering làm giảm parallelism khả dụng, nên chỉ bật khi application 
 
 ---
 
-## <a id="preserve-publish-order">6. Giữ publish order</a>
+## <a id="preserve-publish-order">Giữ publish order</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -136,7 +136,7 @@ Cơ chế không tạo transactional ordering xuyên external broker hoặc gi�
 
 ---
 
-## <a id="websocket-authentication-identity">7. Authentication identity từ WebSocket handshake</a>
+## <a id="websocket-authentication-identity">Authentication identity từ WebSocket handshake</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -153,7 +153,7 @@ Thiết kế token trong STOMP header vẫn có thể dùng inbound `ChannelInte
 
 ---
 
-## <a id="message-authorization-boundary">8. Ranh giới message authorization</a>
+## <a id="message-authorization-boundary">Ranh giới message authorization</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -177,7 +177,7 @@ Module này chỉ cần giải thích identity đi vào flow ở đâu và secur
 
 ---
 
-## <a id="spring-session-boundary">9. Ranh giới Spring Session</a>
+## <a id="spring-session-boundary">Ranh giới Spring Session</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -194,7 +194,7 @@ Mental model cần nhớ: WebSocket message là long-lived activity gắn với 
 
 ---
 
-## <a id="websocket-scope">10. WebSocket scope</a>
+## <a id="websocket-scope">WebSocket scope</a>
 
 <details>
 <summary>Xem chi tiết</summary>

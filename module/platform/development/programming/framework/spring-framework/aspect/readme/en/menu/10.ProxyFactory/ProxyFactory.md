@@ -3,14 +3,14 @@
 # ProxyFactory and MethodInterceptor
 
 ## Menu
-- [1. From annotations down to proxy infrastructure](#proxy-factory-mental-model)
-- [2. JDK Dynamic Proxy and CGLIB with the same target](#jdk-vs-cglib)
-- [3. Demo in this module](#proxy-factory-demo)
-- [4. Conclusion](#proxy-factory-conclusion)
+- [From annotations down to proxy infrastructure](#proxy-factory-mental-model)
+- [JDK Dynamic Proxy and CGLIB with the same target](#jdk-vs-cglib)
+- [Executable Evidence for ProxyFactory and MethodInterceptor](#proxy-factory-demo)
+- [ProxyFactory and MethodInterceptor Synthesis](#proxy-factory-conclusion)
 
 This chapter opens the proxy layer instead of continuing to view Spring AOP only through `@Aspect`.
 
-## <a id="proxy-factory-mental-model">1. From annotations down to proxy infrastructure</a>
+## <a id="proxy-factory-mental-model">From annotations down to proxy infrastructure</a>
 
 <details>
 <summary>Click for details</summary>
@@ -51,13 +51,14 @@ Programmatic proxy construction is useful for infrastructure code and experiment
 ### References
 
 - Spring Framework 6.1.14 API — [`ProxyFactory`](https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/aop/framework/ProxyFactory.html)
+
 </details>
 
 - [Back to top](#back-to-top)
 
 ---
 
-## <a id="jdk-vs-cglib">2. JDK Dynamic Proxy and CGLIB with the same target</a>
+## <a id="jdk-vs-cglib">JDK Dynamic Proxy and CGLIB with the same target</a>
 
 <details>
 <summary>Click for details</summary>
@@ -91,13 +92,14 @@ Spring creates a runtime subclass of `GreetingTarget`. The concrete type surface
 This does not make class-based proxies universally better. Subclassing brings its own limits: a final class cannot be subclassed; final and private methods cannot be overridden; and methods not visible to the generated subclass cannot be intercepted.
 
 The distinction also explains `this(...)` versus `target(...)` pointcuts. `this(...)` observes the proxy object, while `target(...)` refers to the target object behind it. With a JDK proxy those types can differ significantly.
+
 </details>
 
 - [Back to top](#back-to-top)
 
 ---
 
-## <a id="proxy-factory-demo">3. Demo in this module</a>
+## <a id="proxy-factory-demo">Executable Evidence for ProxyFactory and MethodInterceptor</a>
 
 <details>
 <summary>Click for details</summary>
@@ -152,7 +154,7 @@ while the JDK proxy does not expose that method through `GreetingOperations`.
 
 ---
 
-## <a id="proxy-factory-conclusion">4. Conclusion</a>
+## <a id="proxy-factory-conclusion">ProxyFactory and MethodInterceptor Synthesis</a>
 
 <details>
 <summary>Click for details</summary>
@@ -160,6 +162,7 @@ while the JDK proxy does not expose that method through `GreetingOperations`.
 `ProxyFactory` makes the Spring AOP runtime visible: proxy strategy, target, advice, and Advisors are explicit objects rather than annotations hidden behind container setup.
 
 The next chapter adds the missing selection abstraction. `Advice` describes behavior; a pointcut-based Advisor pairs that behavior with the classes and methods where it applies.
+
 </details>
 
 - [Back to top](#back-to-top)

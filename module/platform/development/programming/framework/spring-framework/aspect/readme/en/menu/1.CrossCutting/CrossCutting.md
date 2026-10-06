@@ -3,13 +3,13 @@
 # AOP and Cross-Cutting Concerns
 
 ## Menu
-- [1. Business concerns and cross-cutting concerns](#cross-cutting-concern)
-- [2. Demo in this module](#cross-cutting-demo)
-- [3. Conclusion](#cross-cutting-conclusion)
+- [What Is a Cross-Cutting Concern and Why Does AOP Exist?](#cross-cutting-concern)
+- [Executable Evidence for AOP and Cross-Cutting Concerns](#cross-cutting-demo)
+- [AOP and Cross-Cutting Concerns Synthesis](#cross-cutting-conclusion)
 
 This section answers the most basic question: **why does AOP exist?**
 
-## <a id="cross-cutting-concern">1. Business concerns and cross-cutting concerns</a>
+## <a id="cross-cutting-concern">What Is a Cross-Cutting Concern and Why Does AOP Exist?</a>
 
 <details>
 <summary>Click for details</summary>
@@ -76,7 +76,7 @@ Spring AOP implements this idea with runtime proxies and method interception. Th
 
 ---
 
-## <a id="cross-cutting-demo">2. Demo in this module</a>
+## <a id="cross-cutting-demo">Executable Evidence for AOP and Cross-Cutting Concerns</a>
 
 <details>
 <summary>Click for details</summary>
@@ -138,7 +138,7 @@ Later chapters refine every part of this path: the proxy creates the boundary, t
 
 ---
 
-## <a id="cross-cutting-conclusion">3. Conclusion</a>
+## <a id="cross-cutting-conclusion">AOP and Cross-Cutting Concerns Synthesis</a>
 
 <details>
 <summary>Click for details</summary>

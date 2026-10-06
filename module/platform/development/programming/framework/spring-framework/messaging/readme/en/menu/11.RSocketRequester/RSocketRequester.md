@@ -3,17 +3,17 @@
 # RSocketRequester and RSocketStrategies
 
 ## Menu
-- [1. RSocketRequester role](#rsocket-requester-role)
-- [2. Client requester connection setup](#rsocket-client-requester)
-- [3. Server-side requester](#rsocket-server-requester)
-- [4. Route, data, and response retrieval](#rsocket-route-data-retrieve)
-- [5. Request metadata](#rsocket-request-metadata)
-- [6. Requester lifecycle and disposal](#rsocket-requester-lifecycle)
-- [7. RSocketStrategies](#rsocket-strategies)
-- [8. Codecs and route matching](#rsocket-codecs-route-matching)
-- [9. Metadata extraction](#rsocket-metadata-extraction)
+- [RSocketRequester role](#rsocket-requester-role)
+- [Client requester connection setup](#rsocket-client-requester)
+- [Server-side requester](#rsocket-server-requester)
+- [Route, data, and response retrieval](#rsocket-route-data-retrieve)
+- [Request metadata](#rsocket-request-metadata)
+- [Requester lifecycle and disposal](#rsocket-requester-lifecycle)
+- [RSocketStrategies](#rsocket-strategies)
+- [Codecs and route matching](#rsocket-codecs-route-matching)
+- [Metadata extraction](#rsocket-metadata-extraction)
 
-## <a id="rsocket-requester-role">1. RSocketRequester role</a>
+## <a id="rsocket-requester-role">RSocketRequester role</a>
 
 <details>
 <summary>Click for details</summary>
@@ -41,7 +41,7 @@ Interaction type is largely inferred from input and output cardinality. For exam
 
 ---
 
-## <a id="rsocket-client-requester">2. Client requester connection setup</a>
+## <a id="rsocket-client-requester">Client requester connection setup</a>
 
 <details>
 <summary>Click for details</summary>
@@ -77,7 +77,7 @@ RSocketRequester requester = RSocketRequester.builder()
 
 ---
 
-## <a id="rsocket-server-requester">3. Server-side requester</a>
+## <a id="rsocket-server-requester">Server-side requester</a>
 
 <details>
 <summary>Click for details</summary>
@@ -104,7 +104,7 @@ This model is useful for server-to-client queries or commands, but it also means
 
 ---
 
-## <a id="rsocket-route-data-retrieve">4. Route, data, and response retrieval</a>
+## <a id="rsocket-route-data-retrieve">Route, data, and response retrieval</a>
 
 <details>
 <summary>Click for details</summary>
@@ -135,7 +135,7 @@ Match those choices to the responder contract. In the fluent `RSocketRequester` 
 
 ---
 
-## <a id="rsocket-request-metadata">5. Request metadata</a>
+## <a id="rsocket-request-metadata">Request metadata</a>
 
 <details>
 <summary>Click for details</summary>
@@ -160,7 +160,7 @@ Do not treat metadata as an untyped map shared magically by both sides. The conn
 
 ---
 
-## <a id="rsocket-requester-lifecycle">6. Requester lifecycle and disposal</a>
+## <a id="rsocket-requester-lifecycle">Requester lifecycle and disposal</a>
 
 <details>
 <summary>Click for details</summary>
@@ -184,7 +184,7 @@ Reconnect and resumption are separate policies. Disposing a requester is an inte
 
 ---
 
-## <a id="rsocket-strategies">7. RSocketStrategies</a>
+## <a id="rsocket-strategies">RSocketStrategies</a>
 
 <details>
 <summary>Click for details</summary>
@@ -216,7 +216,7 @@ Do not confuse `RSocketStrategies` with protocol-level connector configuration. 
 
 ---
 
-## <a id="rsocket-codecs-route-matching">8. Codecs and route matching</a>
+## <a id="rsocket-codecs-route-matching">Codecs and route matching</a>
 
 <details>
 <summary>Click for details</summary>
@@ -241,7 +241,7 @@ RSocket routes are logical destinations, not URLs. There is no HTTP URL decoding
 
 ---
 
-## <a id="rsocket-metadata-extraction">9. Metadata extraction</a>
+## <a id="rsocket-metadata-extraction">Metadata extraction</a>
 
 <details>
 <summary>Click for details</summary>

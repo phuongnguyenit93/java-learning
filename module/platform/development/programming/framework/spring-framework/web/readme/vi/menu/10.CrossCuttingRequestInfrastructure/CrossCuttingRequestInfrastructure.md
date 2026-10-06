@@ -91,6 +91,10 @@ Filter có thể được map cho `REQUEST`, `ASYNC`, `ERROR` và dispatcher typ
 
 MVC interceptor có thể tham gia lại khi async request redispatch. `AsyncHandlerInterceptor` có callback lúc concurrent handling bắt đầu, trước khi original request thread rời đi.
 
+Hạ tầng request-context của Spring là cơ chế thread-bound nằm trên lifecycle này. `RequestContextHolder` expose `RequestAttributes` hiện tại; với Servlet request đó thường là `ServletRequestAttributes`. `DispatcherServlet` expose context này cho các request mà nó xử lý. `RequestContextFilter` hoặc `RequestContextListener` có thể cung cấp binding tương tự cho code cần Spring request context ngoài đường đi của `DispatcherServlet`, nhưng không nên đăng ký dư thừa khi servlet đã sở hữu việc expose context cần thiết.
+
+Binding thuộc về thread đang xử lý dispatch hiện tại, không gắn vĩnh viễn với một asynchronous task bất kỳ. Vì vậy async/error redispatch có thể cần infrastructure bind context lại trên thread tham gia. Không capture state từ `RequestContextHolder` rồi giả định application-created executor task tự động dùng an toàn; chỉ truyền dữ liệu cụ thể mà task sau thực sự cần, hoặc dùng một cơ chế context propagation có chủ đích.
+
 Code đo timing, mở resource hoặc giữ thread-local state phải tính tới lifecycle bị chia. "Original handler thread đã return" chưa chắc nghĩa HTTP request đã hoàn tất.
 
 Với correlation/logging context, chỉ propagate dữ liệu thread sau thật sự cần và cleanup trên mọi completion/error path.

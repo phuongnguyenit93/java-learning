@@ -3,15 +3,15 @@
 # Kết hợp Aspect, thứ tự và vòng đời
 
 ## Menu
-- [1. Advice chain là một call stack lồng nhau](#ordering-mental-model)
-- [2. Vòng đời Aspect instance: singleton, perthis, pertarget, pertypewithin](#aspect-instantiation-models)
-- [3. Demo trong module](#ordering-demo)
-- [4. Thứ tự Aspect không nên trở thành business protocol](#ordering-pitfall)
-- [5. Kết luận](#ordering-conclusion)
+- [Advice chain là một call stack lồng nhau](#ordering-mental-model)
+- [Vòng đời Aspect instance: singleton, perthis, pertarget, pertypewithin](#aspect-instantiation-models)
+- [Minh chứng thực thi cho Kết hợp Aspect, thứ tự và vòng đời](#ordering-demo)
+- [Thứ tự Aspect không nên trở thành business protocol](#ordering-pitfall)
+- [Tổng hợp Kết hợp Aspect, thứ tự và vòng đời](#ordering-conclusion)
 
 Một join point có thể match nhiều Aspect cùng lúc.
 
-## <a id="ordering-mental-model">1. Advice chain là một call stack lồng nhau</a>
+## <a id="ordering-mental-model">Advice chain là một call stack lồng nhau</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -59,7 +59,7 @@ Còn một vấn đề ordering bên trong cùng aspect. Nếu nhiều advice **
 
 ---
 
-## <a id="aspect-instantiation-models">2. Vòng đời Aspect instance: singleton, perthis, pertarget, pertypewithin</a>
+## <a id="aspect-instantiation-models">Vòng đời Aspect instance: singleton, perthis, pertarget, pertypewithin</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -109,7 +109,7 @@ Aspect có trạng thái cần được thiết kế cẩn thận: lifecycle tha
 
 ---
 
-## <a id="ordering-demo">3. Demo trong module</a>
+## <a id="ordering-demo">Minh chứng thực thi cho Kết hợp Aspect, thứ tự và vòng đời</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -159,7 +159,7 @@ Demo chỉ thiết lập ordering cho hai aspect có order explicit này. Không
 
 ---
 
-## <a id="ordering-pitfall">4. Thứ tự Aspect không nên trở thành business protocol</a>
+## <a id="ordering-pitfall">Thứ tự Aspect không nên trở thành business protocol</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -187,7 +187,7 @@ Cũng cần phân biệt **thứ tự bắt buộc** và **thứ tự tình cờ
 
 ---
 
-## <a id="ordering-conclusion">5. Kết luận</a>
+## <a id="ordering-conclusion">Tổng hợp Kết hợp Aspect, thứ tự và vòng đời</a>
 
 <details>
 <summary>Xem chi tiết</summary>

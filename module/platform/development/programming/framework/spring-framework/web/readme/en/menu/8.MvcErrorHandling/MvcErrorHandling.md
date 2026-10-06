@@ -152,7 +152,7 @@ Do not return an opaque "validation failed" string for every case. Preserve enou
 <details>
 <summary>Click for details</summary>
 
-Spring MVC owns the Framework exception-resolution mechanics. Spring Boot adds application-level defaults around error dispatch and error endpoints, while this repository's `global-exception-handler` module is a support/runtime artifact rather than the curriculum owner.
+Spring MVC owns the Framework exception-resolution mechanics. Spring Boot adds application-level defaults around error dispatch and error endpoints, while this repository's `project-build/springboot-runtime/exception-handler-servlet` module is a support/runtime artifact rather than the curriculum owner.
 
 That means this module teaches:
 

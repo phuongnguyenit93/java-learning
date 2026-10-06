@@ -3,15 +3,15 @@
 # Spring AOP Proxy Mental Model
 
 ## Menu
-- [1. The caller does not necessarily invoke the target directly](#proxy-mental-model)
-- [2. Demo in this module](#proxy-demo)
-- [3. Container auto-proxying vs direct object creation](#managed-vs-new-demo)
-- [4. JDK Dynamic Proxy and CGLIB](#proxy-strategies)
-- [5. Conclusion](#proxy-conclusion)
+- [The caller does not necessarily invoke the target directly](#proxy-mental-model)
+- [Executable Evidence for Spring AOP Proxy Mental Model](#proxy-demo)
+- [Container auto-proxying vs direct object creation](#managed-vs-new-demo)
+- [JDK Dynamic Proxy and CGLIB](#proxy-strategies)
+- [Spring AOP Proxy Mental Model Synthesis](#proxy-conclusion)
 
 The proxy boundary is the foundation for understanding most Spring AOP behavior.
 
-## <a id="proxy-mental-model">1. The caller does not necessarily invoke the target directly</a>
+## <a id="proxy-mental-model">The caller does not necessarily invoke the target directly</a>
 
 <details>
 <summary>Click for details</summary>
@@ -61,7 +61,7 @@ So the correct distinction is between **calls through an AOP proxy** and **direc
 
 ---
 
-## <a id="proxy-demo">2. Demo in this module</a>
+## <a id="proxy-demo">Executable Evidence for Spring AOP Proxy Mental Model</a>
 
 <details>
 <summary>Click for details</summary>
@@ -116,7 +116,7 @@ Generated proxy class names are not a stable contract. Use Spring utilities such
 
 ---
 
-## <a id="managed-vs-new-demo">3. Container auto-proxying vs direct object creation</a>
+## <a id="managed-vs-new-demo">Container auto-proxying vs direct object creation</a>
 
 <details>
 <summary>Click for details</summary>
@@ -175,7 +175,7 @@ The lesson is precise: container auto-proxying does not automatically advise an 
 
 ---
 
-## <a id="proxy-strategies">4. JDK Dynamic Proxy and CGLIB</a>
+## <a id="proxy-strategies">JDK Dynamic Proxy and CGLIB</a>
 
 <details>
 <summary>Click for details</summary>
@@ -220,7 +220,7 @@ ProgrammaticProxyController#compareProxyFactoryStrategies()
 
 ---
 
-## <a id="proxy-conclusion">5. Conclusion</a>
+## <a id="proxy-conclusion">Spring AOP Proxy Mental Model Synthesis</a>
 
 <details>
 <summary>Click for details</summary>

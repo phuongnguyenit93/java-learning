@@ -3,14 +3,14 @@
 # ProxyFactory và MethodInterceptor
 
 ## Menu
-- [1. Từ annotation đến hạ tầng proxy](#proxy-factory-mental-model)
-- [2. JDK Dynamic Proxy và CGLIB trên cùng một target](#jdk-vs-cglib)
-- [3. Demo trong module](#proxy-factory-demo)
-- [4. Kết luận](#proxy-factory-conclusion)
+- [Từ annotation đến hạ tầng proxy](#proxy-factory-mental-model)
+- [JDK Dynamic Proxy và CGLIB trên cùng một target](#jdk-vs-cglib)
+- [Minh chứng thực thi cho ProxyFactory và MethodInterceptor](#proxy-factory-demo)
+- [Tổng hợp ProxyFactory và MethodInterceptor](#proxy-factory-conclusion)
 
 Chương này mở trực tiếp tầng proxy thay vì chỉ nhìn Spring AOP qua `@Aspect`.
 
-## <a id="proxy-factory-mental-model">1. Từ annotation đến hạ tầng proxy</a>
+## <a id="proxy-factory-mental-model">Từ annotation đến hạ tầng proxy</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -51,13 +51,14 @@ Tạo proxy bằng mã hữu ích cho hạ tầng và thử nghiệm. Với bean
 ### Tài liệu tham khảo
 
 - Spring Framework 6.1.14 API — [`ProxyFactory`](https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/aop/framework/ProxyFactory.html)
+
 </details>
 
 - [Quay lại đầu trang](#back-to-top)
 
 ---
 
-## <a id="jdk-vs-cglib">2. JDK Dynamic Proxy và CGLIB trên cùng một target</a>
+## <a id="jdk-vs-cglib">JDK Dynamic Proxy và CGLIB trên cùng một target</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -91,13 +92,14 @@ Spring tạo một subclass runtime của `GreetingTarget`. Bề mặt concrete 
 Điều đó không làm class-based proxy tốt hơn trong mọi trường hợp. Subclassing có giới hạn riêng: lớp `final` không thể được subclass; phương thức `final` hoặc `private` không thể được override; phương thức không nhìn thấy từ subclass sinh ra cũng không thể được intercept.
 
 Khác biệt này cũng giải thích `this(...)` và `target(...)` trong pointcut. `this(...)` quan sát đối tượng proxy, còn `target(...)` quan sát đối tượng đích phía sau proxy. Với JDK proxy, hai kiểu này có thể khác nhau rõ rệt.
+
 </details>
 
 - [Quay lại đầu trang](#back-to-top)
 
 ---
 
-## <a id="proxy-factory-demo">3. Demo trong module</a>
+## <a id="proxy-factory-demo">Minh chứng thực thi cho ProxyFactory và MethodInterceptor</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -152,7 +154,7 @@ Trong khi JDK proxy không expose method đó qua `GreetingOperations`.
 
 ---
 
-## <a id="proxy-factory-conclusion">4. Kết luận</a>
+## <a id="proxy-factory-conclusion">Tổng hợp ProxyFactory và MethodInterceptor</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -160,6 +162,7 @@ Trong khi JDK proxy không expose method đó qua `GreetingOperations`.
 `ProxyFactory` làm rõ runtime của Spring AOP: chiến lược proxy, target, advice và Advisor đều là các đối tượng cấu hình tường minh thay vì chỉ nhìn thấy annotation và để container che phần còn lại.
 
 Chương tiếp theo bổ sung thành phần mô tả phạm vi áp dụng. `Advice` mô tả hành vi; một Advisor dựa trên pointcut ghép hành vi đó với các lớp và phương thức nơi nó cần chạy.
+
 </details>
 
 - [Quay lại đầu trang](#back-to-top)

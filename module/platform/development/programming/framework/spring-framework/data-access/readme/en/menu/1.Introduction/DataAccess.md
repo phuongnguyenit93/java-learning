@@ -13,7 +13,6 @@
 <details>
 <summary>Click for details</summary>
 
-
 Spring Data Access is Spring Framework's infrastructure layer for working with persistence technologies without forcing application code to repeat low-level resource management and technology-specific error handling. In this module, the two main concrete paths are Spring JDBC and Spring R2DBC.
 
 The key mental model is **application intent above, resource workflow below**. Application code should express SQL, parameters, and how rows become useful values. Spring takes responsibility for the repetitive workflow around obtaining resources, invoking driver APIs, translating failures, and releasing resources correctly.
@@ -33,6 +32,7 @@ database driver and database
 ~~~
 
 The abstraction is valuable because the repetitive mechanics become consistent while SQL and database behavior remain visible.
+
 </details>
 
 - [Back to top](#back-to-top)
@@ -43,7 +43,6 @@ The abstraction is valuable because the repetitive mechanics become consistent w
 
 <details>
 <summary>Click for details</summary>
-
 
 Raw database APIs are usable, but every call carries operational ceremony. With JDBC, code must obtain a Connection, create and parameterize a statement, execute it, traverse results, translate failures, and close resources in the correct order. R2DBC removes blocking I/O from the API model but still requires careful connection, statement, result, and error handling.
 
@@ -58,6 +57,7 @@ Without a framework-level workflow, this ceremony tends to spread across DAOs. T
 Spring does **not** eliminate the database's own constraints. SQL can still be slow, a unique key can still be violated, a lock can still time out, and network failures can still happen. Spring changes the consistency of the Java-side contract around those events.
 
 The goal is therefore not "less SQL". It is **less accidental resource and exception plumbing around intentional SQL**.
+
 </details>
 
 - [Back to top](#back-to-top)
@@ -68,7 +68,6 @@ The goal is therefore not "less SQL". It is **less accidental resource and excep
 
 <details>
 <summary>Click for details</summary>
-
 
 This module owns the Spring Framework mechanisms that sit directly on JDBC and R2DBC: the org.springframework.dao exception model, Spring JDBC templates and JdbcClient, Spring R2DBC DatabaseClient, connection/resource helpers, and the boundary where those resources participate in Spring-managed transactions.
 
@@ -83,6 +82,7 @@ Several adjacent concerns have different owners:
 Those boundaries matter because a data-access API should not be mistaken for a complete persistence architecture. JdbcClient can map rows to objects, but that is not the same responsibility as aggregate mapping. DatabaseClient returns reactive publishers, but that does not make this module the owner of Reactor semantics.
 
 When a concept appears only for comparison or handoff, this module explains just enough to make the boundary clear and sends the deeper learning journey to its owner.
+
 </details>
 
 - [Back to top](#back-to-top)
@@ -93,7 +93,6 @@ When a concept appears only for comparison or handoff, this module explains just
 
 <details>
 <summary>Click for details</summary>
-
 
 Spring exposes two relational paths with different execution models.
 
@@ -113,6 +112,7 @@ thread-oriented context         subscriber/Reactor context
 ~~~
 
 Choose from the application's end-to-end execution model. Wrapping a blocking JDBC call in a reactive type does not turn the driver into non-blocking I/O.
+
 </details>
 
 - [Back to top](#back-to-top)

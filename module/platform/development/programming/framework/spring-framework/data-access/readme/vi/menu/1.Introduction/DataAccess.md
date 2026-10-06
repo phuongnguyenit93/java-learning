@@ -13,7 +13,6 @@
 <details>
 <summary>Xem chi tiết</summary>
 
-
 Spring Data Access là lớp hạ tầng của Spring Framework giúp ứng dụng làm việc với công nghệ lưu trữ dữ liệu mà không phải lặp lại toàn bộ việc quản lý tài nguyên và xử lý lỗi đặc thù của từng driver. Trong module này, hai hướng chính là Spring JDBC và Spring R2DBC.
 
 Mô hình tư duy quan trọng là **ý định của ứng dụng ở phía trên, quy trình tài nguyên ở phía dưới**. Mã ứng dụng nên tập trung vào SQL, giá trị tham số và cách biến dữ liệu trả về thành giá trị hữu ích. Spring chịu trách nhiệm cho phần lặp lại như lấy connection, gọi API của driver, chuyển đổi lỗi và giải phóng tài nguyên đúng cách.
@@ -33,6 +32,7 @@ driver và database
 ~~~
 
 Giá trị chính của Spring Data Access là giảm phần mã hạ tầng lặp lại ngoài ý muốn mà không che mất hành vi thật của database.
+
 </details>
 
 - [Quay lại đầu trang](#back-to-top)
@@ -43,7 +43,6 @@ Giá trị chính của Spring Data Access là giảm phần mã hạ tầng l�
 
 <details>
 <summary>Xem chi tiết</summary>
-
 
 API database thuần hoàn toàn dùng được, nhưng mỗi thao tác đều kéo theo nhiều bước cơ học. Với JDBC, mã phải lấy Connection, tạo và bind statement, thực thi, đọc ResultSet, xử lý SQLException và đóng tài nguyên đúng thứ tự. R2DBC bỏ mô hình I/O blocking khỏi API, nhưng vẫn cần quản lý connection, statement, result và lỗi cẩn thận.
 
@@ -58,6 +57,7 @@ Nếu mỗi DAO tự làm toàn bộ quy trình này, một số vấn đề th�
 Spring không làm mất các giới hạn của database. SQL vẫn có thể chậm, unique constraint vẫn có thể vi phạm, lock vẫn có thể timeout và network vẫn có thể lỗi. Spring chỉ làm cho **hợp đồng phía Java quanh các tình huống đó nhất quán hơn**.
 
 Mục tiêu không phải là "ít SQL hơn", mà là ít mã quản lý tài nguyên và exception không cần thiết quanh SQL có chủ đích.
+
 </details>
 
 - [Quay lại đầu trang](#back-to-top)
@@ -68,7 +68,6 @@ Mục tiêu không phải là "ít SQL hơn", mà là ít mã quản lý tài ng
 
 <details>
 <summary>Xem chi tiết</summary>
-
 
 Module này sở hữu các cơ chế Spring Framework nằm trực tiếp trên JDBC và R2DBC: hệ exception org.springframework.dao, Spring JDBC template và JdbcClient, Spring R2DBC DatabaseClient, các utility quản lý connection/tài nguyên và ranh giới để tài nguyên đó tham gia Spring-managed transaction.
 
@@ -83,6 +82,7 @@ Các phạm vi lân cận có module sở hữu khác:
 Ranh giới này giúp tránh nhầm một client API với cả kiến trúc persistence. JdbcClient có thể map row sang object nhưng không vì thế mà trở thành aggregate mapper. DatabaseClient trả Publisher nhưng module này không sở hữu toàn bộ ngữ nghĩa Reactor.
 
 Khi một khái niệm chỉ dùng để so sánh hoặc chuyển tiếp, Knowledge chỉ giải thích đủ để người học hiểu ranh giới rồi chuyển phần sâu hơn sang module sở hữu.
+
 </details>
 
 - [Quay lại đầu trang](#back-to-top)
@@ -93,7 +93,6 @@ Khi một khái niệm chỉ dùng để so sánh hoặc chuyển tiếp, Knowle
 
 <details>
 <summary>Xem chi tiết</summary>
-
 
 Spring có hai hướng relational access với mô hình thực thi khác nhau.
 
@@ -113,6 +112,7 @@ context theo thread             context theo subscriber/Reactor
 ~~~
 
 Hãy chọn theo mô hình thực thi end-to-end. Bọc một lời gọi JDBC blocking trong Mono không biến driver thành non-blocking I/O.
+
 </details>
 
 - [Quay lại đầu trang](#back-to-top)

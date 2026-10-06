@@ -3,15 +3,15 @@
 # Ngữ nghĩa và vòng đời của Advice
 
 ## Menu
-- [1. Ngữ nghĩa của từng loại Advice](#advice-semantics)
-- [2. Luồng thành công](#advice-success-demo)
-- [3. Luồng exception](#advice-failure-demo)
-- [4. Binding tham số cho Advice](#advice-parameter-binding)
-- [5. Kết luận](#advice-conclusion)
+- [Ngữ nghĩa của từng loại Advice](#advice-semantics)
+- [Luồng thành công](#advice-success-demo)
+- [Luồng exception](#advice-failure-demo)
+- [Binding tham số cho Advice](#advice-parameter-binding)
+- [Tổng hợp Ngữ nghĩa và vòng đời của Advice](#advice-conclusion)
 
 Phần này quan sát điều kiện chạy của `@Before`, `@After`, `@AfterReturning` và `@AfterThrowing`.
 
-## <a id="advice-semantics">1. Ngữ nghĩa của từng loại Advice</a>
+## <a id="advice-semantics">Ngữ nghĩa của từng loại Advice</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -72,7 +72,7 @@ Nếu hai advice **cùng loại** trong cùng aspect đều match một join poi
 
 ---
 
-## <a id="advice-success-demo">2. Luồng thành công</a>
+## <a id="advice-success-demo">Luồng thành công</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -98,10 +98,10 @@ AdviceLifecycleService#success()
 Khi target return bình thường, experiment ghi:
 
 ```text
-@Before
+@Before:success
 target:success
-@AfterReturning
-@After
+@AfterReturning:success:success-result
+@After:success
 ```
 
 Sequence này cho thấy hai sự kiện khác nhau. `@AfterReturning` tham gia vì join point hoàn thành bình thường, còn `@After` tham gia vì after-finally advice chạy bất kể kết quả.
@@ -114,7 +114,7 @@ Method `@AfterReturning` còn bind return value. Binding hữu ích khi chính s
 
 ---
 
-## <a id="advice-failure-demo">3. Luồng exception</a>
+## <a id="advice-failure-demo">Luồng exception</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -142,10 +142,10 @@ Controller bắt exception ở bên ngoài advised service call để experiment
 Các event quan trọng:
 
 ```text
-@Before
+@Before:failure
 target:failure
-@AfterThrowing
-@After
+@AfterThrowing:failure:IllegalStateException
+@After:failure
 ```
 
 `@AfterReturning` không chạy vì target không return bình thường. `@AfterThrowing` nhận exception thoát ra khỏi method execution được chọn, còn `@After` vẫn chạy theo semantics kiểu finally.
@@ -160,7 +160,7 @@ Kiểu exception của parameter được bind bằng `throwing` còn giới h�
 
 ---
 
-## <a id="advice-parameter-binding">4. Binding tham số cho Advice</a>
+## <a id="advice-parameter-binding">Binding tham số cho Advice</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -205,7 +205,7 @@ Dùng `JoinPoint` khi concern cần metadata invocation tổng quát; dùng type
 
 ---
 
-## <a id="advice-conclusion">5. Kết luận</a>
+## <a id="advice-conclusion">Tổng hợp Ngữ nghĩa và vòng đời của Advice</a>
 
 <details>
 <summary>Xem chi tiết</summary>

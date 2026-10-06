@@ -1733,6 +1733,15 @@ springboot-runtime/execution-context-servlet
 
 Trong đó core là stack-neutral và Servlet adapter sở hữu Spring MVC/Servlet integration. Reactive adapter là target tương lai, chưa phải implementation hiện tại.
 
+Shared exception handling cho Servlet application nằm ở runtime boundary riêng:
+
+```text
+springboot-runtime/exception-handler-servlet
+SERVICE_NAME=GLOBAL_EXCEPTION_HANDLER
+```
+
+Module này dùng Spring Boot auto-configuration để đăng ký common MVC exception handling và chỉ bật các adapter Feign/Mongo khi classpath tương ứng tồn tại. Nó không dùng package `com.example.learning.*`, không component-scan learning modules, và không phải curriculum owner cho Spring MVC exception mechanics.
+
 Các Spring Boot dependency capability dùng chung cũng thuộc runtime boundary này:
 
 \`\`\`text

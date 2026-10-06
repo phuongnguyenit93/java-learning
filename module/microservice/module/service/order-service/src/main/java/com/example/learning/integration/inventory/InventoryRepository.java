@@ -1,6 +1,6 @@
 package com.example.learning.integration.inventory;
 
-import com.example.learning.module.feign.exception.FeignClientException;
+import com.example.projectbuild.exceptionhandler.servlet.feign.FeignClientException;
 import com.example.learning.module.order.dto.OrderRequest;
 import feign.FeignException;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;

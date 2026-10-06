@@ -15,7 +15,6 @@
 <details>
 <summary>Xem chi tiết</summary>
 
-
 Connection là tài nguyên có giới hạn. Data access đúng phải luôn ghép việc lấy tài nguyên với việc release, đồng thời vẫn cho phép một transaction tái sử dụng cùng một tài nguyên logic qua nhiều thao tác.
 
 Spring client/template che phần thao tác cơ học này, nhưng mô hình tư duy vẫn quan trọng:
@@ -27,6 +26,7 @@ Spring client/template che phần thao tác cơ học này, nhưng mô hình tư
 Các utility tồn tại cho code ở mức thấp cần tham gia cùng lifecycle. DataSourceUtils dành cho JDBC; ConnectionFactoryUtils dành cho R2DBC.
 
 Quy tắc thực tế: **ưu tiên abstraction Spring cao nhất phù hợp**. Chỉ dùng tiện ích quản lý tài nguyên trực tiếp khi tích hợp mã ở tầng thấp; với JdbcTemplate/JdbcClient/DatabaseClient, hãy để framework quản lý việc lấy/giải phóng tài nguyên.
+
 </details>
 
 - [Quay lại đầu trang](#back-to-top)
@@ -37,7 +37,6 @@ Quy tắc thực tế: **ưu tiên abstraction Spring cao nhất phù hợp**. C
 
 <details>
 <summary>Xem chi tiết</summary>
-
 
 DataSourceUtils cung cấp các phương thức static để lấy JDBC Connection có nhận biết cơ chế synchronization của Spring transaction. getConnection(dataSource) trả Connection gắn với transaction hiện tại nếu có; nếu không, nó lấy Connection mới và có thể gắn Connection đó với thread khi transaction synchronization đang hoạt động.
 
@@ -56,6 +55,7 @@ finally {
 Hãy dùng releaseConnection thay vì close() vô điều kiện. Tiện ích này biết Connection có đang gắn với transaction hay không và quyết định khi nào nên đóng kết nối vật lý.
 
 Phần lớn mã ứng dụng không cần gọi trực tiếp vì JdbcTemplate và các đối tượng thao tác của Spring JDBC đã dùng DataSourceUtils bên dưới. Việc dùng trực tiếp thuộc ranh giới tích hợp ở tầng thấp.
+
 </details>
 
 - [Quay lại đầu trang](#back-to-top)
@@ -66,7 +66,6 @@ Phần lớn mã ứng dụng không cần gọi trực tiếp vì JdbcTemplate 
 
 <details>
 <summary>Xem chi tiết</summary>
-
 
 ConnectionFactoryUtils giữ vai trò tương ứng cho R2DBC. Nó lấy Connection từ ConnectionFactory, chuyển lỗi khi lấy kết nối thành DataAccessException và nhận biết Connection được gắn với cơ chế synchronization của transaction reactive.
 
@@ -80,6 +79,7 @@ Mono<Connection> connection =
 DatabaseClient đã dùng tiện ích này bên dưới, nên việc gọi trực tiếp thường chỉ cần khi mã R2DBC tùy biến cần Connection trực tiếp nhưng vẫn phải tham gia vòng đời reactive do Spring quản lý.
 
 Không lấy Connection ra khỏi Publisher rồi cất vào trạng thái dùng chung theo kiểu imperative. Cách đó phá vòng đời tài nguyên và transaction context mà Spring đang quản lý.
+
 </details>
 
 - [Quay lại đầu trang](#back-to-top)
@@ -90,7 +90,6 @@ Không lấy Connection ra khỏi Publisher rồi cất vào trạng thái dùng
 
 <details>
 <summary>Xem chi tiết</summary>
-
 
 TransactionAwareDataSourceProxy và TransactionAwareConnectionFactoryProxy là adapter dành cho **mã không biết về Spring transaction**.
 
@@ -109,6 +108,7 @@ mã cũ bắt buộc dùng DataSource/ConnectionFactory chuẩn
 ~~~
 
 Hãy xem proxy như adapter tại ranh giới tích hợp. Thêm proxy khắp nơi chỉ làm quyền sở hữu của tài nguyên khó suy luận hơn.
+
 </details>
 
 - [Quay lại đầu trang](#back-to-top)
@@ -119,7 +119,6 @@ Hãy xem proxy như adapter tại ranh giới tích hợp. Thêm proxy khắp n�
 
 <details>
 <summary>Xem chi tiết</summary>
-
 
 Với JDBC imperative, việc tham gia transaction thường gắn với thread: cơ chế transaction synchronization theo kiểu imperative của Spring liên kết ConnectionHolder với thread hiện tại trong phạm vi transaction.
 
@@ -140,6 +139,7 @@ subscriber chain
 Điểm khác biệt này giải thích vì sao giả định dựa trên ThreadLocal không phù hợp với trạng thái của transaction reactive. Việc chuyển thread không quyết định một thao tác có tham gia transaction hay không: Spring gắn trạng thái transaction reactive với Reactor Context đi cùng subscription, không phải với thread tình cờ xử lý tín hiệu. Vì vậy, tự cất R2DBC Connection vào ThreadLocal sẽ đi ngược mô hình đó.
 
 Chi tiết ngữ nghĩa transaction sâu hơn thuộc Transaction Management; phần này chỉ giải thích vì sao cơ chế tra cứu tài nguyên của JDBC và R2DBC khác nhau.
+
 </details>
 
 - [Quay lại đầu trang](#back-to-top)
@@ -150,7 +150,6 @@ Chi tiết ngữ nghĩa transaction sâu hơn thuộc Transaction Management; ph
 
 <details>
 <summary>Xem chi tiết</summary>
-
 
 Data Access sở hữu câu hỏi **tài nguyên JDBC/R2DBC tham gia lifecycle của Spring như thế nào**. Transaction Management sở hữu câu hỏi **transaction bắt đầu/kết thúc khi nào và dùng chính sách nào**.
 
@@ -174,6 +173,7 @@ Transaction Management
 ~~~
 
 Tách rõ hai quyền sở hữu giúp người học không nhầm tiện ích quản lý tài nguyên với transaction manager.
+
 </details>
 
 - [Quay lại đầu trang](#back-to-top)

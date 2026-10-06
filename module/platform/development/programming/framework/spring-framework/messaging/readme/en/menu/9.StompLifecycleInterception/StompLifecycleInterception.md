@@ -3,18 +3,18 @@
 # STOMP Lifecycle, Interception, Ordering, and Boundaries
 
 ## Menu
-- [1. STOMP and WebSocket application events](#stomp-application-events)
-- [2. ChannelInterceptor](#channel-interceptor)
-- [3. ExecutorChannelInterceptor](#executor-channel-interceptor)
-- [4. Message ordering under concurrent execution](#message-ordering)
-- [5. Preserving receive order](#preserve-receive-order)
-- [6. Preserving publish order](#preserve-publish-order)
-- [7. Authentication identity from the WebSocket handshake](#websocket-authentication-identity)
-- [8. Message authorization boundary](#message-authorization-boundary)
-- [9. Spring Session boundary](#spring-session-boundary)
-- [10. WebSocket scope](#websocket-scope)
+- [STOMP and WebSocket application events](#stomp-application-events)
+- [ChannelInterceptor](#channel-interceptor)
+- [ExecutorChannelInterceptor](#executor-channel-interceptor)
+- [Message ordering under concurrent execution](#message-ordering)
+- [Preserving receive order](#preserve-receive-order)
+- [Preserving publish order](#preserve-publish-order)
+- [Authentication identity from the WebSocket handshake](#websocket-authentication-identity)
+- [Message authorization boundary](#message-authorization-boundary)
+- [Spring Session boundary](#spring-session-boundary)
+- [WebSocket scope](#websocket-scope)
 
-## <a id="stomp-application-events">1. STOMP and WebSocket application events</a>
+## <a id="stomp-application-events">STOMP and WebSocket application events</a>
 
 <details>
 <summary>Click for details</summary>
@@ -31,7 +31,7 @@ Use events for telemetry, session bookkeeping, and operational reactions. Avoid 
 
 ---
 
-## <a id="channel-interceptor">2. ChannelInterceptor</a>
+## <a id="channel-interceptor">ChannelInterceptor</a>
 
 <details>
 <summary>Click for details</summary>
@@ -48,7 +48,7 @@ Keep the boundary clear: the Framework supplies the interception hook. Authoriza
 
 ---
 
-## <a id="executor-channel-interceptor">3. ExecutorChannelInterceptor</a>
+## <a id="executor-channel-interceptor">ExecutorChannelInterceptor</a>
 
 <details>
 <summary>Click for details</summary>
@@ -65,7 +65,7 @@ Do not use it as an excuse to copy arbitrary `ThreadLocal` state. Prefer explici
 
 ---
 
-## <a id="message-ordering">4. Message ordering under concurrent execution</a>
+## <a id="message-ordering">Message ordering under concurrent execution</a>
 
 <details>
 <summary>Click for details</summary>
@@ -87,7 +87,7 @@ Before requiring strict order, ask whether the domain truly depends on it. Seque
 
 ---
 
-## <a id="preserve-receive-order">5. Preserving receive order</a>
+## <a id="preserve-receive-order">Preserving receive order</a>
 
 <details>
 <summary>Click for details</summary>
@@ -112,7 +112,7 @@ Ordering reduces available parallelism, so enable it because the application sem
 
 ---
 
-## <a id="preserve-publish-order">6. Preserving publish order</a>
+## <a id="preserve-publish-order">Preserving publish order</a>
 
 <details>
 <summary>Click for details</summary>
@@ -136,7 +136,7 @@ This does not create transactional ordering across an external broker or across 
 
 ---
 
-## <a id="websocket-authentication-identity">7. Authentication identity from the WebSocket handshake</a>
+## <a id="websocket-authentication-identity">Authentication identity from the WebSocket handshake</a>
 
 <details>
 <summary>Click for details</summary>
@@ -153,7 +153,7 @@ Token-in-STOMP-header designs are possible with an inbound `ChannelInterceptor`,
 
 ---
 
-## <a id="message-authorization-boundary">8. Message authorization boundary</a>
+## <a id="message-authorization-boundary">Message authorization boundary</a>
 
 <details>
 <summary>Click for details</summary>
@@ -177,7 +177,7 @@ Knowledge in this module should therefore explain where identity enters the flow
 
 ---
 
-## <a id="spring-session-boundary">9. Spring Session boundary</a>
+## <a id="spring-session-boundary">Spring Session boundary</a>
 
 <details>
 <summary>Click for details</summary>
@@ -194,7 +194,7 @@ This module needs only the handoff mental model: WebSocket messages are long-liv
 
 ---
 
-## <a id="websocket-scope">10. WebSocket scope</a>
+## <a id="websocket-scope">WebSocket scope</a>
 
 <details>
 <summary>Click for details</summary>

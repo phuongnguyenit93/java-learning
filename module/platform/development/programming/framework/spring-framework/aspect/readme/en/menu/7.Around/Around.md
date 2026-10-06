@@ -3,17 +3,17 @@
 # Around Advice and ProceedingJoinPoint
 
 ## Menu
-- [1. Mental model of @Around](#around-mental-model)
-- [2. Timing demo](#around-timing-demo)
-- [3. Return-value transformation demo](#around-transform-demo)
-- [4. Demo without calling proceed()](#around-skip-demo)
-- [5. proceed(Object[]) and argument replacement](#around-arguments-demo)
-- [6. Exception propagation demo](#around-exception-demo)
-- [7. Conclusion](#around-conclusion)
+- [Mental model of @Around](#around-mental-model)
+- [Timing demo](#around-timing-demo)
+- [Return-value transformation demo](#around-transform-demo)
+- [Demo without calling proceed()](#around-skip-demo)
+- [proceed(Object[]) and argument replacement](#around-arguments-demo)
+- [Exception propagation demo](#around-exception-demo)
+- [Around Advice and ProceedingJoinPoint Synthesis](#around-conclusion)
 
 `@Around` is the Spring AOP advice type with the greatest control over an invocation.
 
-## <a id="around-mental-model">1. Mental model of @Around</a>
+## <a id="around-mental-model">Mental model of @Around</a>
 
 <details>
 <summary>Click for details</summary>
@@ -58,7 +58,7 @@ This power is useful for policies such as timing that need state before and afte
 
 ---
 
-## <a id="around-timing-demo">2. Timing demo</a>
+## <a id="around-timing-demo">Timing demo</a>
 
 <details>
 <summary>Click for details</summary>
@@ -111,7 +111,7 @@ The experiment keeps the success path simple so the nested control flow is easy 
 
 ---
 
-## <a id="around-transform-demo">3. Return-value transformation demo</a>
+## <a id="around-transform-demo">Return-value transformation demo</a>
 
 <details>
 <summary>Click for details</summary>
@@ -157,7 +157,7 @@ When the policy only needs to **observe** a successful result, `@AfterReturning`
 
 ---
 
-## <a id="around-skip-demo">4. Demo without calling proceed()</a>
+## <a id="around-skip-demo">Demo without calling proceed()</a>
 
 <details>
 <summary>Click for details</summary>
@@ -199,7 +199,7 @@ This is why `@Around` is more than "before plus after in one method". It can sho
 
 ---
 
-## <a id="around-arguments-demo">5. proceed(Object[]) and argument replacement</a>
+## <a id="around-arguments-demo">proceed(Object[]) and argument replacement</a>
 
 <details>
 <summary>Click for details</summary>
@@ -262,7 +262,7 @@ Argument rewriting changes what the target sees. Use it only when normalization 
 
 ---
 
-## <a id="around-exception-demo">6. Exception propagation demo</a>
+## <a id="around-exception-demo">Exception propagation demo</a>
 
 <details>
 <summary>Click for details</summary>
@@ -310,7 +310,7 @@ Treat `proceed()` as control over the invocation chain, not as a harmless callba
 
 ---
 
-## <a id="around-conclusion">7. Conclusion</a>
+## <a id="around-conclusion">Around Advice and ProceedingJoinPoint Synthesis</a>
 
 <details>
 <summary>Click for details</summary>

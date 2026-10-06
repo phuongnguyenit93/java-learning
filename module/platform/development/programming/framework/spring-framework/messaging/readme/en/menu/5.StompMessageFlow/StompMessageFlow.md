@@ -3,17 +3,17 @@
 # Spring STOMP Message Flow
 
 ## Menu
-- [1. Enabling the WebSocket message broker with @EnableWebSocketMessageBroker](#enable-websocket-message-broker)
-- [2. WebSocketMessageBrokerConfigurer as the configuration extension point](#websocket-message-broker-configurer)
-- [3. Registering STOMP endpoints](#register-stomp-endpoints)
-- [4. Application and broker destination prefixes](#destination-prefixes)
-- [5. clientInboundChannel](#client-inbound-channel)
-- [6. clientOutboundChannel](#client-outbound-channel)
-- [7. brokerChannel](#broker-channel)
-- [8. Application-handler message flow](#application-message-flow)
-- [9. Broker-directed message flow](#broker-message-flow)
+- [Enabling the WebSocket message broker with @EnableWebSocketMessageBroker](#enable-websocket-message-broker)
+- [WebSocketMessageBrokerConfigurer as the configuration extension point](#websocket-message-broker-configurer)
+- [Registering STOMP endpoints](#register-stomp-endpoints)
+- [Application and broker destination prefixes](#destination-prefixes)
+- [clientInboundChannel](#client-inbound-channel)
+- [clientOutboundChannel](#client-outbound-channel)
+- [brokerChannel](#broker-channel)
+- [Application-handler message flow](#application-message-flow)
+- [Broker-directed message flow](#broker-message-flow)
 
-## <a id="enable-websocket-message-broker">1. Enabling the WebSocket message broker with @EnableWebSocketMessageBroker</a>
+## <a id="enable-websocket-message-broker">Enabling the WebSocket message broker with @EnableWebSocketMessageBroker</a>
 
 <details>
 <summary>Click for details</summary>
@@ -30,7 +30,7 @@ Use it on a @Configuration class and implement WebSocketMessageBrokerConfigurer 
 
 ---
 
-## <a id="websocket-message-broker-configurer">2. WebSocketMessageBrokerConfigurer as the configuration extension point</a>
+## <a id="websocket-message-broker-configurer">WebSocketMessageBrokerConfigurer as the configuration extension point</a>
 
 <details>
 <summary>Click for details</summary>
@@ -60,7 +60,7 @@ Keep configuration at the layer it controls. Endpoint registration configures th
 
 ---
 
-## <a id="register-stomp-endpoints">3. Registering STOMP endpoints</a>
+## <a id="register-stomp-endpoints">Registering STOMP endpoints</a>
 
 <details>
 <summary>Click for details</summary>
@@ -81,7 +81,7 @@ Once the WebSocket connection is established, STOMP frames carry their own desti
 
 ---
 
-## <a id="destination-prefixes">4. Application and broker destination prefixes</a>
+## <a id="destination-prefixes">Application and broker destination prefixes</a>
 
 <details>
 <summary>Click for details</summary>
@@ -101,7 +101,7 @@ Choose disjoint, readable prefixes. Overlapping or ambiguous conventions make it
 
 ---
 
-## <a id="client-inbound-channel">5. clientInboundChannel</a>
+## <a id="client-inbound-channel">clientInboundChannel</a>
 
 <details>
 <summary>Click for details</summary>
@@ -118,7 +118,7 @@ The channel is executor-backed in the broker configuration, so inbound handling 
 
 ---
 
-## <a id="client-outbound-channel">6. clientOutboundChannel</a>
+## <a id="client-outbound-channel">clientOutboundChannel</a>
 
 <details>
 <summary>Click for details</summary>
@@ -135,7 +135,7 @@ Like the inbound channel, clientOutboundChannel is executor-backed by default in
 
 ---
 
-## <a id="broker-channel">7. brokerChannel</a>
+## <a id="broker-channel">brokerChannel</a>
 
 <details>
 <summary>Click for details</summary>
@@ -152,7 +152,7 @@ That distinction is useful when tracing a failure: if a controller ran and produ
 
 ---
 
-## <a id="application-message-flow">8. Application-handler message flow</a>
+## <a id="application-message-flow">Application-handler message flow</a>
 
 <details>
 <summary>Click for details</summary>
@@ -169,7 +169,7 @@ If the method returns a value, Spring converts that value to an outbound Message
 
 ---
 
-## <a id="broker-message-flow">9. Broker-directed message flow</a>
+## <a id="broker-message-flow">Broker-directed message flow</a>
 
 <details>
 <summary>Click for details</summary>

@@ -3,16 +3,16 @@
 # Ranh giới Runtime của Spring AOP và AspectJ
 
 ## Menu
-- [1. @AspectJ syntax và Spring AOP runtime](#spring-aop-runtime)
-- [2. Ranh giới với full AspectJ](#spring-aop-vs-aspectj)
-- [3. Demo trong module](#runtime-boundary-demo)
-- [4. Liên hệ với các Spring feature khác](#framework-connections)
-- [5. Tổng hợp end-to-end: concern → proxy creation → advisor chain → target](#aop-end-to-end-synthesis)
-- [6. Kết luận](#runtime-boundary-conclusion)
+- [@AspectJ syntax và Spring AOP runtime](#spring-aop-runtime)
+- [Ranh giới với full AspectJ](#spring-aop-vs-aspectj)
+- [Minh chứng thực thi cho Ranh giới Runtime của Spring AOP và AspectJ](#runtime-boundary-demo)
+- [Liên hệ với các Spring feature khác](#framework-connections)
+- [Tổng hợp end-to-end: concern → proxy creation → advisor chain → target](#aop-end-to-end-synthesis)
+- [Tổng hợp Ranh giới Runtime của Spring AOP và AspectJ](#runtime-boundary-conclusion)
 
 Chương cuối xác lập ranh giới giữa **phong cách khai báo @AspectJ**, **Spring AOP runtime** và **full AspectJ weaving**.
 
-## <a id="spring-aop-runtime">1. @AspectJ syntax và Spring AOP runtime</a>
+## <a id="spring-aop-runtime">@AspectJ syntax và Spring AOP runtime</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -45,13 +45,14 @@ intercept method execution
 Các type annotation/runtime của AspectJ xuất hiện trên classpath vì hỗ trợ `@AspectJ` của Spring cần chúng. Chỉ có các type đó không chứng minh application class đang được weave.
 
 Một proxy tạo trực tiếp bằng `ProxyFactory` vẫn thuộc cùng mô hình runtime Spring AOP; nó chỉ bỏ qua bước container tự phát hiện và auto-proxy.
+
 </details>
 
 - [Quay lại đầu trang](#back-to-top)
 
 ---
 
-## <a id="spring-aop-vs-aspectj">2. Ranh giới với full AspectJ</a>
+## <a id="spring-aop-vs-aspectj">Ranh giới với full AspectJ</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -88,13 +89,14 @@ Module giữ Spring AOP vì đây là mục tiêu học. Nếu yêu cầu cần 
 
 - Spring Framework Reference — [Proxying Mechanisms](https://docs.spring.io/spring-framework/reference/core/aop/proxying.html)
 - Spring Framework Reference — [Using AspectJ with Spring Applications](https://docs.spring.io/spring-framework/reference/core/aop/using-aspectj.html)
+
 </details>
 
 - [Quay lại đầu trang](#back-to-top)
 
 ---
 
-## <a id="runtime-boundary-demo">3. Demo trong module</a>
+## <a id="runtime-boundary-demo">Minh chứng thực thi cho Ranh giới Runtime của Spring AOP và AspectJ</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -150,7 +152,7 @@ Endpoint không cố "chứng minh bằng reflection" rằng mọi loại Aspect
 
 ---
 
-## <a id="framework-connections">4. Liên hệ với các Spring feature khác</a>
+## <a id="framework-connections">Liên hệ với các Spring feature khác</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -175,13 +177,14 @@ thời điểm CompletableFuture / Mono / Flux hoàn tất công việc bất đ
 ```
 
 Nếu phương thức trả về một container async/reactive rất nhanh, advice có thể kết thúc trước khi công việc thật sự hoàn thành. Muốn đo thời gian end-to-end cần cơ chế đo phù hợp với mô hình bất đồng bộ/reactive đó, không chỉ đo quanh `proceed()`.
+
 </details>
 
 - [Quay lại đầu trang](#back-to-top)
 
 ---
 
-## <a id="aop-end-to-end-synthesis">5. Tổng hợp end-to-end: concern → proxy creation → advisor chain → target</a>
+## <a id="aop-end-to-end-synthesis">Tổng hợp end-to-end: concern → proxy creation → advisor chain → target</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -235,13 +238,14 @@ around advice không gọi proceed
 Mô hình này cũng giải thích vì sao transaction management, caching, async execution và method security có thể dùng hạ tầng AOP mà không sở hữu ngữ nghĩa của AOP. Quy tắc domain của chúng khác nhau; phần dùng chung là cơ chế proxy/advisor/interceptor.
 
 Khi yêu cầu vượt khỏi pipeline này, đặc biệt ra ngoài ranh giới proxy của method execution, thiết kế đã chuyển sang một cơ chế khác như AspectJ weaving.
+
 </details>
 
 - [Quay lại đầu trang](#back-to-top)
 
 ---
 
-## <a id="runtime-boundary-conclusion">6. Kết luận</a>
+## <a id="runtime-boundary-conclusion">Tổng hợp Ranh giới Runtime của Spring AOP và AspectJ</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -269,6 +273,7 @@ Target
 `Advisor` vẫn là contract rộng hơn phía trên các subtype như `PointcutAdvisor` và `IntroductionAdvisor`.
 
 `@Aspect`, `@Around`, ordering, self-invocation, kiểu proxy và cách debug đều là hệ quả của kiến trúc này. AspectJ weaving dùng chung một phần cú pháp khai báo nhưng thay đổi runtime boundary, nên chỉ chọn khi join point cần thiết vượt khỏi mô hình method-execution dựa trên proxy của Spring AOP.
+
 </details>
 
 - [Quay lại đầu trang](#back-to-top)

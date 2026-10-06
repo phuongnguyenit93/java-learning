@@ -62,6 +62,8 @@ Controller thường nên trả semantic/logical name thay vì filesystem path t
 
 Redirect yêu cầu client gửi request mới tới URI khác. Trong MVC có thể dùng prefix `redirect:` hoặc `RedirectView`.
 
+MVC còn hiểu prefix view-name đặc biệt `forward:`. Khác redirect, forward là **Servlet dispatch phía server** tới resource khác trong cùng ứng dụng: browser không nhận response 3xx và không khởi tạo request mới. `UrlBasedViewResolver` hiểu prefix này như chỉ thị tạo internal forward thay vì resolve template view thông thường. Chỉ dùng khi thực sự muốn tiếp tục trong cùng request; không nhầm nó với Post/Redirect/Get, nơi việc tạo request mới từ client chính là mục tiêu.
+
 Vì request tiếp theo là HTTP request mới, model attribute thông thường không tự trở thành state của request mới. `RedirectAttributes` cho phép controller chọn các redirect-model value để `RedirectView` dùng cho URI-template expansion; những simple value phù hợp còn lại có thể được append thành query parameter. Nó đồng thời hỗ trợ **flash attribute** riêng, không cần encode vào redirect URL.
 
 Flash attribute là short-lived server-side value được quản lý qua `FlashMap`/`FlashMapManager` và thường được giữ tạm trong HTTP session. Với redirect, Spring stamp output `FlashMap` bằng target path và query parameter để default manager match incoming request chính xác hơn. Cơ chế này giảm mạnh khả năng request khác lấy nhầm flash state nhưng không tạo bảo đảm tuyệt đối khi có concurrent request.

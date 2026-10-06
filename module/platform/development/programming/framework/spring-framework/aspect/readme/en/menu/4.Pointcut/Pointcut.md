@@ -3,17 +3,17 @@
 # Aspect Declaration and Pointcut Design
 
 ## Menu
-- [1. Choosing a declaration style: @AspectJ and schema-based AOP](#aop-declaration-styles)
-- [2. Enabling @AspectJ auto-proxy support in Spring Framework](#spring-aop-enablement)
-- [3. What is the pointcut matching against?](#pointcut-mental-model)
-- [4. Supported designators, composition, and runtime context](#pointcut-designators-and-composition)
-- [5. Demo in this module](#pointcut-demo)
-- [6. Spring AOP does not support the full AspectJ join point model](#spring-aop-pointcut-boundary)
-- [7. Conclusion](#pointcut-conclusion)
+- [Choosing a declaration style: @AspectJ and schema-based AOP](#aop-declaration-styles)
+- [Enabling @AspectJ auto-proxy support in Spring Framework](#spring-aop-enablement)
+- [What is the pointcut matching against?](#pointcut-mental-model)
+- [Supported designators, composition, and runtime context](#pointcut-designators-and-composition)
+- [Executable Evidence for Aspect Declaration and Pointcut Design](#pointcut-demo)
+- [Spring AOP does not support the full AspectJ join point model](#spring-aop-pointcut-boundary)
+- [Aspect Declaration and Pointcut Design Synthesis](#pointcut-conclusion)
 
 A pointcut decides **which join points are selected**.
 
-## <a id="aop-declaration-styles">1. Choosing a declaration style: @AspectJ and schema-based AOP</a>
+## <a id="aop-declaration-styles">Choosing a declaration style: @AspectJ and schema-based AOP</a>
 
 <details>
 <summary>Click for details</summary>
@@ -60,7 +60,7 @@ For ordinary Java configuration, @AspectJ style is usually easier to keep near t
 
 ---
 
-## <a id="spring-aop-enablement">2. Enabling @AspectJ auto-proxy support in Spring Framework</a>
+## <a id="spring-aop-enablement">Enabling @AspectJ auto-proxy support in Spring Framework</a>
 
 <details>
 <summary>Click for details</summary>
@@ -110,7 +110,7 @@ Keep framework and application defaults separate. Spring Boot may auto-configure
 
 ---
 
-## <a id="pointcut-mental-model">3. What is the pointcut matching against?</a>
+## <a id="pointcut-mental-model">What is the pointcut matching against?</a>
 
 <details>
 <summary>Click for details</summary>
@@ -181,7 +181,7 @@ A pointcut is therefore more than a text pattern over method names. It can combi
 
 ---
 
-## <a id="pointcut-designators-and-composition">4. Supported designators, composition, and runtime context</a>
+## <a id="pointcut-designators-and-composition">Supported designators, composition, and runtime context</a>
 
 <details>
 <summary>Click for details</summary>
@@ -263,7 +263,7 @@ Prefer narrow pointcuts that describe a stable boundary such as a service layer 
 
 ---
 
-## <a id="pointcut-demo">5. Demo in this module</a>
+## <a id="pointcut-demo">Executable Evidence for Aspect Declaration and Pointcut Design</a>
 
 <details>
 <summary>Click for details</summary>
@@ -338,7 +338,7 @@ target:unmatched
 
 ---
 
-## <a id="spring-aop-pointcut-boundary">6. Spring AOP does not support the full AspectJ join point model</a>
+## <a id="spring-aop-pointcut-boundary">Spring AOP does not support the full AspectJ join point model</a>
 
 <details>
 <summary>Click for details</summary>
@@ -386,7 +386,7 @@ This boundary explains when full AspectJ weaving becomes relevant. If a requirem
 
 ---
 
-## <a id="pointcut-conclusion">7. Conclusion</a>
+## <a id="pointcut-conclusion">Aspect Declaration and Pointcut Design Synthesis</a>
 
 <details>
 <summary>Click for details</summary>

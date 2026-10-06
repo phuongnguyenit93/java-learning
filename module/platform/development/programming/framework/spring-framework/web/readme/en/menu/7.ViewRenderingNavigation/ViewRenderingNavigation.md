@@ -62,6 +62,8 @@ Controllers should normally return semantic/logical names, not filesystem paths 
 
 A redirect tells the client to issue a new request to another URI. In MVC, a `redirect:` view-name prefix or a `RedirectView` can express this flow.
 
+MVC also recognizes the special `forward:` view-name prefix. Unlike a redirect, a forward is a **server-side Servlet dispatch** to another resource in the same application: the browser does not receive a 3xx response and does not start a new request. `UrlBasedViewResolver` treats the prefix as an instruction to create an internal forward rather than resolving a normal template view. Use it only when that same-request dispatch is intentional; it should not be confused with Post/Redirect/Get, where a new client request is the point of the pattern.
+
 Because the next request is a new HTTP request, ordinary model attributes are not automatically the same request state. `RedirectAttributes` lets a controller choose redirect-model values that `RedirectView` can use for URI-template expansion; eligible remaining simple values can be appended as query parameters. It separately supports **flash attributes** that are not encoded into the redirect URL.
 
 Flash attributes are short-lived server-side values managed through `FlashMap`/`FlashMapManager` and are typically stored temporarily in the HTTP session. For redirects, Spring stamps the output `FlashMap` with the target path and query parameters so the default manager can match incoming requests more precisely. This greatly reduces accidental consumption by another request, but it is not an absolute delivery guarantee under concurrent requests.

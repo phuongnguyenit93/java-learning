@@ -14,7 +14,6 @@
 <details>
 <summary>Xem chi tiết</summary>
 
-
 R2DBC định nghĩa SPI non-blocking cho truy cập relational database. Entry point tài nguyên là ConnectionFactory; vai trò gần giống DataSource của JDBC nhưng mô hình thực thi hoàn toàn khác.
 
 Trong Spring Framework, org.springframework.r2dbc.core.DatabaseClient là client trung tâm của R2DBC core. Nó quản lý việc lấy/trả tài nguyên, thực thi statement, mapping result và chuyển lỗi R2DBC thành DataAccessException. Quyền sở hữu này thuộc **Spring Framework**, không thuộc Spring Data R2DBC.
@@ -32,6 +31,7 @@ Mono<Customer> customer = client.sql(
 ~~~
 
 Spring Data R2DBC xây mapping/repository abstraction ở tầng cao hơn. Dùng DatabaseClient khi explicit SQL và framework-level reactive access là mục tiêu; chỉ chuyển lên repository/entity mapping khi bài toán thật sự cần.
+
 </details>
 
 - [Quay lại đầu trang](#back-to-top)
@@ -42,7 +42,6 @@ Spring Data R2DBC xây mapping/repository abstraction ở tầng cao hơn. Dùng
 
 <details>
 <summary>Xem chi tiết</summary>
-
 
 Một lời gọi DatabaseClient xây dựng pipeline reactive; database I/O không diễn ra ngay lúc chuỗi fluent được tạo. Việc thực thi bắt đầu khi có subscription vào Publisher.
 
@@ -67,6 +66,7 @@ giải phóng tài nguyên
 Xử lý lỗi, hủy luồng và transaction context đều phải nằm trong cùng chuỗi reactive. DatabaseClient an toàn khi dùng đồng thời sau khi cấu hình và có thể được dùng chung; trạng thái riêng của từng thao tác nằm trong đặc tả thực thi chứ không nằm trong client dùng chung.
 
 Không gọi block() chỉ để dùng DatabaseClient theo kiểu imperative. Việc blocking ở một ranh giới có chủ đích có thể chấp nhận được trong ứng dụng không reactive, nhưng block() bên trong luồng xử lý request reactive sẽ phá mô hình non-blocking và có thể làm cạn thread xử lý.
+
 </details>
 
 - [Quay lại đầu trang](#back-to-top)
@@ -77,7 +77,6 @@ Không gọi block() chỉ để dùng DatabaseClient theo kiểu imperative. Vi
 
 <details>
 <summary>Xem chi tiết</summary>
-
 
 R2DBC driver dùng cú pháp bind marker phụ thuộc database. PostgreSQL có thể dùng marker đánh số như $1, còn driver khác có thể dùng ? hoặc dạng native khác. DatabaseClient cho phép SQL phía ứng dụng dùng named parameter theo kiểu Spring rồi chuyển chúng thành bind marker phù hợp với ConnectionFactory.
 
@@ -104,6 +103,7 @@ driver nhận native bind marker
 Điểm cần nhớ: đây là **quá trình chuyển đổi marker của tham số**, không phải database tự hiểu :name.
 
 Binding bảo vệ value, không bảo vệ SQL identifier. Table name, column name hoặc SQL fragment động phải được chọn từ tập giá trị do ứng dụng kiểm soát; không nối trực tiếp input không tin cậy.
+
 </details>
 
 - [Quay lại đầu trang](#back-to-top)
@@ -114,7 +114,6 @@ Binding bảo vệ value, không bảo vệ SQL identifier. Table name, column n
 
 <details>
 <summary>Xem chi tiết</summary>
-
 
 R2DBC map row theo reactive flow, nhưng bên gọi vẫn phải xác định rõ cardinality contract. RowsFetchSpec của DatabaseClient có các cách resolve như one(), first() và all().
 
@@ -131,6 +130,7 @@ Flux<Customer> customers = client.sql(sql)
 ~~~
 
 Khi hành vi chuyển kiểu của driver không rõ ràng, hãy giữ việc chuyển kiểu SQL ở dạng tường minh. Row mapper là ranh giới giữa giá trị của driver và ứng dụng; không nên tự gán thêm ngữ nghĩa persistence cấp cao nếu trách nhiệm đó thuộc tầng mapping khác.
+
 </details>
 
 - [Quay lại đầu trang](#back-to-top)
@@ -141,7 +141,6 @@ Khi hành vi chuyển kiểu của driver không rõ ràng, hãy giữ việc ch
 
 <details>
 <summary>Xem chi tiết</summary>
-
 
 Một số thao tác cần tùy chọn ở tầng Statement mà fluent API cơ bản không biểu diễn. DatabaseClient cung cấp StatementFilterFunction để tùy biến R2DBC Statement hoặc bao quanh bước thực thi mà vẫn giữ quy trình quản lý tài nguyên và lỗi của client.
 
@@ -159,6 +158,7 @@ Mono<Long> id = client.sql(
 Statement filter cũng có thể cấu hình tùy chọn như fetch size nếu driver hỗ trợ. Đây là điểm mở rộng ở mức thấp; chỉ dùng khi DatabaseClient API thông thường không diễn đạt đủ nhu cầu.
 
 Hành vi trả giá trị sinh tự động vẫn phụ thuộc database và driver. Tên cột, dạng SQL được hỗ trợ và kiểu dữ liệu trả về có thể khác. Cần kiểm thử với R2DBC driver thật thay vì giả định hành vi giống generated key của JDBC.
+
 </details>
 
 - [Quay lại đầu trang](#back-to-top)

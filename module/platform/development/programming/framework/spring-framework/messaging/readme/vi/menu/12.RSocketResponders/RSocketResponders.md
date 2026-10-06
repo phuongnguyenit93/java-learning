@@ -3,18 +3,18 @@
 # RSocket Responder và Service Interface
 
 ## Menu
-- [1. RSocketMessageHandler](#rsocket-message-handler)
-- [2. @MessageMapping responder](#rsocket-message-mapping)
-- [3. @ConnectMapping cho SETUP và metadata push](#rsocket-connect-mapping)
-- [4. Interaction model từ input và output cardinality](#rsocket-interaction-cardinality)
-- [5. RSocket service interface](#rsocket-service-interface)
-- [6. @RSocketExchange](#rsocket-exchange)
-- [7. RSocketServiceProxyFactory](#rsocket-service-proxy)
-- [8. Service method parameter và return value](#rsocket-service-method-contract)
-- [9. Annotated responder ở cả client và server](#rsocket-responder-symmetry)
-- [10. Ranh giới Boot, Security và Spring Integration](#rsocket-neighbor-boundaries)
+- [RSocketMessageHandler](#rsocket-message-handler)
+- [@MessageMapping responder](#rsocket-message-mapping)
+- [@ConnectMapping cho SETUP và metadata push](#rsocket-connect-mapping)
+- [Interaction model từ input và output cardinality](#rsocket-interaction-cardinality)
+- [RSocket service interface](#rsocket-service-interface)
+- [@RSocketExchange](#rsocket-exchange)
+- [RSocketServiceProxyFactory](#rsocket-service-proxy)
+- [Service method parameter và return value](#rsocket-service-method-contract)
+- [Annotated responder ở cả client và server](#rsocket-responder-symmetry)
+- [Ranh giới Boot, Security và Spring Integration](#rsocket-neighbor-boundaries)
 
-## <a id="rsocket-message-handler">1. RSocketMessageHandler</a>
+## <a id="rsocket-message-handler">RSocketMessageHandler</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -42,7 +42,7 @@ Class này cũng hỗ trợ responder phía client. Static factory `RSocketMessa
 
 ---
 
-## <a id="rsocket-message-mapping">2. @MessageMapping responder</a>
+## <a id="rsocket-message-mapping">@MessageMapping responder</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -72,7 +72,7 @@ Interaction type được quyết định từ cardinality của input và outpu
 
 ---
 
-## <a id="rsocket-connect-mapping">3. @ConnectMapping cho SETUP và metadata push</a>
+## <a id="rsocket-connect-mapping">@ConnectMapping cho SETUP và metadata push</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -100,7 +100,7 @@ Mono<Void> connect(
 
 ---
 
-## <a id="rsocket-interaction-cardinality">4. Interaction model từ input và output cardinality</a>
+## <a id="rsocket-interaction-cardinality">Interaction model từ input và output cardinality</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -126,7 +126,7 @@ Mô hình cardinality giúp tránh việc method name che giấu protocol behavi
 
 ---
 
-## <a id="rsocket-service-interface">5. RSocket service interface</a>
+## <a id="rsocket-service-interface">RSocket service interface</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -155,7 +155,7 @@ Nên dùng service interface khi hai phía chủ động chia sẻ một RSocket
 
 ---
 
-## <a id="rsocket-exchange">6. @RSocketExchange</a>
+## <a id="rsocket-exchange">@RSocketExchange</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -191,7 +191,7 @@ Vì metadata argument dùng cặp value/MIME type theo vị trí, interface nên
 
 ---
 
-## <a id="rsocket-service-proxy">7. RSocketServiceProxyFactory</a>
+## <a id="rsocket-service-proxy">RSocketServiceProxyFactory</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -220,7 +220,7 @@ Factory chỉ là adapter từ Java contract sang requester đã tồn tại. Co
 
 ---
 
-## <a id="rsocket-service-method-contract">8. Service method parameter và return value</a>
+## <a id="rsocket-service-method-contract">Service method parameter và return value</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -246,7 +246,7 @@ Nên ưu tiên reactive signature cho streaming và code cần giữ non-blockin
 
 ---
 
-## <a id="rsocket-responder-symmetry">9. Annotated responder ở cả client và server</a>
+## <a id="rsocket-responder-symmetry">Annotated responder ở cả client và server</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -274,7 +274,7 @@ Tính đối xứng rất mạnh nhưng phải được thiết kế chủ độ
 
 ---
 
-## <a id="rsocket-neighbor-boundaries">10. Ranh giới Boot, Security và Spring Integration</a>
+## <a id="rsocket-neighbor-boundaries">Ranh giới Boot, Security và Spring Integration</a>
 
 <details>
 <summary>Xem chi tiết</summary>

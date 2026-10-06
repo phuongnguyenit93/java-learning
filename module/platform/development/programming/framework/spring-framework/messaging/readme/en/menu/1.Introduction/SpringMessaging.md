@@ -3,14 +3,14 @@
 # Spring Messaging: Purpose and Boundaries
 
 ## Menu
-- [1. Why messaging exists](#messaging-purpose)
-- [2. Direct coupling and request-response limits](#direct-coupling-limits)
-- [3. Spring Messaging as a transport-neutral foundation](#spring-messaging-foundation)
-- [4. Messaging programming models in this module](#messaging-programming-models)
-- [5. Boundaries with neighboring Spring modules](#neighboring-module-boundaries)
-- [6. Recommended learning path](#messaging-learning-path)
+- [What Is Messaging and Why Does It Exist?](#messaging-purpose)
+- [Direct coupling and request-response limits](#direct-coupling-limits)
+- [Spring Messaging as a transport-neutral foundation](#spring-messaging-foundation)
+- [Messaging programming models in this module](#messaging-programming-models)
+- [Boundaries with neighboring Spring modules](#neighboring-module-boundaries)
+- [Recommended learning path](#messaging-learning-path)
 
-## <a id="messaging-purpose">1. Why messaging exists</a>
+## <a id="messaging-purpose">What Is Messaging and Why Does It Exist?</a>
 
 <details>
 <summary>Click for details</summary>
@@ -27,7 +27,7 @@ In this module, messaging is the common foundation underneath Spring's WebSocket
 
 ---
 
-## <a id="direct-coupling-limits">2. Direct coupling and request-response limits</a>
+## <a id="direct-coupling-limits">Direct coupling and request-response limits</a>
 
 <details>
 <summary>Click for details</summary>
@@ -44,7 +44,7 @@ A useful rule is to choose messaging because the communication model fits, not b
 
 ---
 
-## <a id="spring-messaging-foundation">3. Spring Messaging as a transport-neutral foundation</a>
+## <a id="spring-messaging-foundation">Spring Messaging as a transport-neutral foundation</a>
 
 <details>
 <summary>Click for details</summary>
@@ -61,7 +61,7 @@ That distinction is important for scope. Spring Integration also uses Spring Mes
 
 ---
 
-## <a id="messaging-programming-models">4. Messaging programming models in this module</a>
+## <a id="messaging-programming-models">Messaging programming models in this module</a>
 
 <details>
 <summary>Click for details</summary>
@@ -82,7 +82,7 @@ The shared Spring messaging abstractions make these models easier to relate, but
 
 ---
 
-## <a id="neighboring-module-boundaries">5. Boundaries with neighboring Spring modules</a>
+## <a id="neighboring-module-boundaries">Boundaries with neighboring Spring modules</a>
 
 <details>
 <summary>Click for details</summary>
@@ -103,7 +103,7 @@ These handoffs are intentional. They keep the learner's mental model stable: und
 
 ---
 
-## <a id="messaging-learning-path">6. Recommended learning path</a>
+## <a id="messaging-learning-path">Recommended learning path</a>
 
 <details>
 <summary>Click for details</summary>

@@ -3,15 +3,15 @@
 # AOP Design Trade-offs, Patterns, and Pitfalls
 
 ## Menu
-- [1. Patterns that fit AOP](#practical-patterns)
-- [2. When AOP is the wrong abstraction: prefer explicit composition and visible workflow](#aop-design-tradeoffs)
-- [3. Auditing + timing demo](#practical-demo)
-- [4. Pitfalls to avoid](#aop-pitfalls)
-- [5. Conclusion](#practical-conclusion)
+- [Patterns that fit AOP](#practical-patterns)
+- [When AOP is the wrong abstraction: prefer explicit composition and visible workflow](#aop-design-tradeoffs)
+- [Auditing + timing demo](#practical-demo)
+- [Pitfalls to avoid](#aop-pitfalls)
+- [AOP Design Trade-offs, Patterns, and Pitfalls Synthesis](#practical-conclusion)
 
 This chapter applies the AOP mental model to design choices and patterns that are closer to real application code.
 
-## <a id="practical-patterns">1. Patterns that fit AOP</a>
+## <a id="practical-patterns">Patterns that fit AOP</a>
 
 <details>
 <summary>Click for details</summary>
@@ -38,13 +38,14 @@ the policy is orthogonal to the business workflow
 A good AOP concern can usually be stated as a policy over method boundaries: "record every audited operation", "time calls in this service layer", or "attach tracing context around these entry points".
 
 The target's business operation should still be understandable when read without the Aspect source. If the Aspect contains a required step of the domain workflow, the abstraction is starting to hide too much.
+
 </details>
 
 - [Back to top](#back-to-top)
 
 ---
 
-## <a id="aop-design-tradeoffs">2. When AOP is the wrong abstraction: prefer explicit composition and visible workflow</a>
+## <a id="aop-design-tradeoffs">When AOP is the wrong abstraction: prefer explicit composition and visible workflow</a>
 
 <details>
 <summary>Click for details</summary>
@@ -76,13 +77,14 @@ AOP may fit
 Choose explicit collaborators, decorators, protocol-level filters/interceptors, or ordinary method calls when the behavior needs visible data flow, explicit business ordering, or domain-specific branching.
 
 AOP also adds operational costs: proxy type matters, self invocation can bypass advice, pointcuts can drift as packages and annotations change, and multiple Advisors can create hidden ordering dependencies. Those costs are worthwhile only when centralizing the cross-cutting policy makes the overall design easier to understand.
+
 </details>
 
 - [Back to top](#back-to-top)
 
 ---
 
-## <a id="practical-demo">3. Auditing + timing demo</a>
+## <a id="practical-demo">Auditing + timing demo</a>
 
 <details>
 <summary>Click for details</summary>
@@ -134,7 +136,7 @@ The business service does not have to implement audit start/success or timing it
 
 ---
 
-## <a id="aop-pitfalls">4. Pitfalls to avoid</a>
+## <a id="aop-pitfalls">Pitfalls to avoid</a>
 
 <details>
 <summary>Click for details</summary>
@@ -183,7 +185,7 @@ Prefer stateless Aspects. If state is truly required, design the scope and concu
 
 ---
 
-## <a id="practical-conclusion">5. Conclusion</a>
+## <a id="practical-conclusion">AOP Design Trade-offs, Patterns, and Pitfalls Synthesis</a>
 
 <details>
 <summary>Click for details</summary>
@@ -191,6 +193,7 @@ Prefer stateless Aspects. If state is truly required, design the scope and concu
 The design goal is not merely to remove repeated lines of code. AOP should centralize a stable cross-cutting policy while keeping the main workflow readable and the interception boundary predictable.
 
 If understanding a use case requires reconstructing several hidden pointcuts and ordering rules, explicit composition is usually the clearer design.
+
 </details>
 
 - [Back to top](#back-to-top)

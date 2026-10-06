@@ -3,16 +3,16 @@
 # Message Model, Channels, and Handlers
 
 ## Menu
-- [1. Message as payload and headers](#message-payload-headers)
-- [2. Building messages and accessing headers](#message-building-access)
-- [3. MessageChannel](#message-channel)
-- [4. SubscribableChannel and subscribers](#subscribable-channel)
-- [5. MessageHandler](#message-handler)
-- [6. Synchronous and executor-backed delivery](#channel-delivery-semantics)
-- [7. Message conversion](#message-conversion)
-- [8. Messaging errors and delivery failures](#messaging-errors)
+- [Message as payload and headers](#message-payload-headers)
+- [Building messages and accessing headers](#message-building-access)
+- [MessageChannel](#message-channel)
+- [SubscribableChannel and subscribers](#subscribable-channel)
+- [MessageHandler](#message-handler)
+- [Synchronous and executor-backed delivery](#channel-delivery-semantics)
+- [Message conversion](#message-conversion)
+- [Messaging errors and delivery failures](#messaging-errors)
 
-## <a id="message-payload-headers">1. Message as payload and headers</a>
+## <a id="message-payload-headers">Message as payload and headers</a>
 
 <details>
 <summary>Click for details</summary>
@@ -29,7 +29,7 @@ MessageHeaders can contain framework keys such as id, timestamp, contentType, re
 
 ---
 
-## <a id="message-building-access">2. Building messages and accessing headers</a>
+## <a id="message-building-access">Building messages and accessing headers</a>
 
 <details>
 <summary>Click for details</summary>
@@ -51,7 +51,7 @@ Prefer semantic header names and avoid putting mutable application state into he
 
 ---
 
-## <a id="message-channel">3. MessageChannel</a>
+## <a id="message-channel">MessageChannel</a>
 
 <details>
 <summary>Click for details</summary>
@@ -68,7 +68,7 @@ This separation is useful in application design: a sender can focus on building 
 
 ---
 
-## <a id="subscribable-channel">4. SubscribableChannel and subscribers</a>
+## <a id="subscribable-channel">SubscribableChannel and subscribers</a>
 
 <details>
 <summary>Click for details</summary>
@@ -85,7 +85,7 @@ Subscription is an infrastructure relationship, not a broker subscription such a
 
 ---
 
-## <a id="message-handler">5. MessageHandler</a>
+## <a id="message-handler">MessageHandler</a>
 
 <details>
 <summary>Click for details</summary>
@@ -102,7 +102,7 @@ Keep handlers focused on one processing responsibility. Once the design grows in
 
 ---
 
-## <a id="channel-delivery-semantics">6. Synchronous and executor-backed delivery</a>
+## <a id="channel-delivery-semantics">Synchronous and executor-backed delivery</a>
 
 <details>
 <summary>Click for details</summary>
@@ -123,7 +123,7 @@ Do not use a channel type name, or merely the presence of an Executor, as proof 
 
 ---
 
-## <a id="message-conversion">7. Message conversion</a>
+## <a id="message-conversion">Message conversion</a>
 
 <details>
 <summary>Click for details</summary>
@@ -142,7 +142,7 @@ Prefer explicit, predictable converter configuration. A very broad custom conver
 
 ---
 
-## <a id="messaging-errors">8. Messaging errors and delivery failures</a>
+## <a id="messaging-errors">Messaging errors and delivery failures</a>
 
 <details>
 <summary>Click for details</summary>

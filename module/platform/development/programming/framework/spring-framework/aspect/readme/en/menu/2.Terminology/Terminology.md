@@ -3,14 +3,14 @@
 # AOP Terminology
 
 ## Menu
-- [1. Core terminology](#terminology-map)
-- [2. Demo in this module](#terminology-demo)
-- [3. @AspectJ style does not mean AspectJ weaving](#spring-aop-vs-aspectj-style)
-- [4. Conclusion](#terminology-conclusion)
+- [Core terminology](#terminology-map)
+- [Executable Evidence for AOP Terminology](#terminology-demo)
+- [@AspectJ style does not mean AspectJ weaving](#spring-aop-vs-aspectj-style)
+- [AOP Terminology Synthesis](#terminology-conclusion)
 
 This section maps AOP terminology to a real method call instead of treating each definition as an isolated term to memorize.
 
-## <a id="terminology-map">1. Core terminology</a>
+## <a id="terminology-map">Core terminology</a>
 
 <details>
 <summary>Click for details</summary>
@@ -90,7 +90,7 @@ A pointcut match without a call crossing the proxy is not enough.
 
 ---
 
-## <a id="terminology-demo">2. Demo in this module</a>
+## <a id="terminology-demo">Executable Evidence for AOP Terminology</a>
 
 <details>
 <summary>Click for details</summary>
@@ -138,7 +138,7 @@ Read the output as evidence of roles, not as a promise about a generated proxy c
 
 ---
 
-## <a id="spring-aop-vs-aspectj-style">3. @AspectJ style does not mean AspectJ weaving</a>
+## <a id="spring-aop-vs-aspectj-style">@AspectJ style does not mean AspectJ weaving</a>
 
 <details>
 <summary>Click for details</summary>
@@ -196,7 +196,7 @@ If the requirement needs constructor calls, field access, or other join points b
 
 ---
 
-## <a id="terminology-conclusion">4. Conclusion</a>
+## <a id="terminology-conclusion">AOP Terminology Synthesis</a>
 
 <details>
 <summary>Click for details</summary>

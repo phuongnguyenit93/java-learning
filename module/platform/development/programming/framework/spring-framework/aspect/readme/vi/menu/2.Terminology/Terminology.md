@@ -3,14 +3,14 @@
 # Thuật ngữ AOP
 
 ## Menu
-- [1. Thuật ngữ cốt lõi](#terminology-map)
-- [2. Demo trong module](#terminology-demo)
-- [3. @AspectJ style không đồng nghĩa với AspectJ weaving](#spring-aop-vs-aspectj-style)
-- [4. Kết luận](#terminology-conclusion)
+- [Thuật ngữ cốt lõi](#terminology-map)
+- [Minh chứng thực thi cho Thuật ngữ AOP](#terminology-demo)
+- [@AspectJ style không đồng nghĩa với AspectJ weaving](#spring-aop-vs-aspectj-style)
+- [Tổng hợp Thuật ngữ AOP](#terminology-conclusion)
 
 Phần này gắn các thuật ngữ AOP vào một method call thật thay vì học thuộc định nghĩa rời rạc.
 
-## <a id="terminology-map">1. Thuật ngữ cốt lõi</a>
+## <a id="terminology-map">Thuật ngữ cốt lõi</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -90,7 +90,7 @@ Pointcut match nhưng call không đi qua proxy vẫn chưa đủ.
 
 ---
 
-## <a id="terminology-demo">2. Demo trong module</a>
+## <a id="terminology-demo">Minh chứng thực thi cho Thuật ngữ AOP</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -138,7 +138,7 @@ Hãy đọc output như bằng chứng về vai trò của từng thành phần,
 
 ---
 
-## <a id="spring-aop-vs-aspectj-style">3. @AspectJ style không đồng nghĩa với AspectJ weaving</a>
+## <a id="spring-aop-vs-aspectj-style">@AspectJ style không đồng nghĩa với AspectJ weaving</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -196,7 +196,7 @@ Nếu yêu cầu cần intercept constructor, field access hoặc join point kh�
 
 ---
 
-## <a id="terminology-conclusion">4. Kết luận</a>
+## <a id="terminology-conclusion">Tổng hợp Thuật ngữ AOP</a>
 
 <details>
 <summary>Xem chi tiết</summary>

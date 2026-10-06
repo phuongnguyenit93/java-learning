@@ -3,16 +3,16 @@
 # Spring AOP Runtime Boundary and AspectJ
 
 ## Menu
-- [1. @AspectJ syntax, Spring AOP runtime](#spring-aop-runtime)
-- [2. Boundary with full AspectJ](#spring-aop-vs-aspectj)
-- [3. Demo in this module](#runtime-boundary-demo)
-- [4. Connections to other Spring features](#framework-connections)
-- [5. End-to-end synthesis: concern → proxy creation → advisor chain → target](#aop-end-to-end-synthesis)
-- [6. Conclusion](#runtime-boundary-conclusion)
+- [@AspectJ syntax, Spring AOP runtime](#spring-aop-runtime)
+- [Boundary with full AspectJ](#spring-aop-vs-aspectj)
+- [Executable Evidence for Spring AOP Runtime Boundary and AspectJ](#runtime-boundary-demo)
+- [Connections to other Spring features](#framework-connections)
+- [End-to-end synthesis: concern → proxy creation → advisor chain → target](#aop-end-to-end-synthesis)
+- [Spring AOP Runtime Boundary and AspectJ Synthesis](#runtime-boundary-conclusion)
 
 The final chapter establishes the correct boundary between **@AspectJ declaration style**, the **Spring AOP runtime**, and **full AspectJ weaving**.
 
-## <a id="spring-aop-runtime">1. @AspectJ syntax, Spring AOP runtime</a>
+## <a id="spring-aop-runtime">@AspectJ syntax, Spring AOP runtime</a>
 
 <details>
 <summary>Click for details</summary>
@@ -45,13 +45,14 @@ method-execution interception
 AspectJ annotation/runtime types appear on the classpath because Spring's `@AspectJ` support needs them. Their presence alone does not mean application classes are being woven.
 
 A `ProxyFactory` proxy created directly in code is still the same Spring AOP runtime model; it simply skips container auto-proxy discovery.
+
 </details>
 
 - [Back to top](#back-to-top)
 
 ---
 
-## <a id="spring-aop-vs-aspectj">2. Boundary with full AspectJ</a>
+## <a id="spring-aop-vs-aspectj">Boundary with full AspectJ</a>
 
 <details>
 <summary>Click for details</summary>
@@ -88,13 +89,14 @@ This module stays with Spring AOP because that is its learning target. Requireme
 
 - Spring Framework Reference — [Proxying Mechanisms](https://docs.spring.io/spring-framework/reference/core/aop/proxying.html)
 - Spring Framework Reference — [Using AspectJ with Spring Applications](https://docs.spring.io/spring-framework/reference/core/aop/using-aspectj.html)
+
 </details>
 
 - [Back to top](#back-to-top)
 
 ---
 
-## <a id="runtime-boundary-demo">3. Demo in this module</a>
+## <a id="runtime-boundary-demo">Executable Evidence for Spring AOP Runtime Boundary and AspectJ</a>
 
 <details>
 <summary>Click for details</summary>
@@ -150,7 +152,7 @@ The endpoint does not try to "prove with reflection" that every possible AspectJ
 
 ---
 
-## <a id="framework-connections">4. Connections to other Spring features</a>
+## <a id="framework-connections">Connections to other Spring features</a>
 
 <details>
 <summary>Click for details</summary>
@@ -182,7 +184,7 @@ If a method returns an async/reactive container very quickly, the advice can com
 
 ---
 
-## <a id="aop-end-to-end-synthesis">5. End-to-end synthesis: concern → proxy creation → advisor chain → target</a>
+## <a id="aop-end-to-end-synthesis">End-to-end synthesis: concern → proxy creation → advisor chain → target</a>
 
 <details>
 <summary>Click for details</summary>
@@ -236,13 +238,14 @@ around advice does not proceed
 This also explains why transaction management, caching, async execution, and method security can consume AOP infrastructure without owning AOP semantics. Their domain rules differ; the shared part is the proxy/advisor/interceptor delivery mechanism.
 
 When requirements move outside this pipeline, especially beyond method-execution proxy boundaries, the design has crossed into a different mechanism such as AspectJ weaving.
+
 </details>
 
 - [Back to top](#back-to-top)
 
 ---
 
-## <a id="runtime-boundary-conclusion">6. Conclusion</a>
+## <a id="runtime-boundary-conclusion">Spring AOP Runtime Boundary and AspectJ Synthesis</a>
 
 <details>
 <summary>Click for details</summary>
@@ -270,6 +273,7 @@ Target
 `Advisor` remains the broader contract above specialized forms such as `PointcutAdvisor` and `IntroductionAdvisor`.
 
 `@Aspect`, `@Around`, ordering, self invocation, proxy type, and debugging behavior are consequences of this architecture. AspectJ weaving shares some declaration syntax but changes the runtime boundary, so choose it only when the required join points exceed Spring AOP's proxy-based method-execution model.
+
 </details>
 
 - [Back to top](#back-to-top)

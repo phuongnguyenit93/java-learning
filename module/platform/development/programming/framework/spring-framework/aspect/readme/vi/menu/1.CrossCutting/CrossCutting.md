@@ -3,13 +3,13 @@
 # AOP và các mối quan tâm cắt ngang (Cross-Cutting Concern)
 
 ## Menu
-- [1. Business concern và cross-cutting concern](#cross-cutting-concern)
-- [2. Demo trong module](#cross-cutting-demo)
-- [3. Kết luận](#cross-cutting-conclusion)
+- [Cross-cutting concern là gì và vì sao AOP tồn tại?](#cross-cutting-concern)
+- [Minh chứng thực thi cho AOP và các mối quan tâm cắt ngang (Cross-Cutting Concern)](#cross-cutting-demo)
+- [Tổng hợp AOP và các mối quan tâm cắt ngang (Cross-Cutting Concern)](#cross-cutting-conclusion)
 
 Phần này trả lời câu hỏi cơ bản nhất: **vì sao AOP tồn tại?**
 
-## <a id="cross-cutting-concern">1. Business concern và cross-cutting concern</a>
+## <a id="cross-cutting-concern">Cross-cutting concern là gì và vì sao AOP tồn tại?</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -76,7 +76,7 @@ Spring AOP hiện thực ý tưởng này bằng runtime proxy và method interc
 
 ---
 
-## <a id="cross-cutting-demo">2. Demo trong module</a>
+## <a id="cross-cutting-demo">Minh chứng thực thi cho AOP và các mối quan tâm cắt ngang (Cross-Cutting Concern)</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -138,7 +138,7 @@ Các chapter sau sẽ làm rõ từng phần: proxy tạo boundary, pointcut ch�
 
 ---
 
-## <a id="cross-cutting-conclusion">3. Kết luận</a>
+## <a id="cross-cutting-conclusion">Tổng hợp AOP và các mối quan tâm cắt ngang (Cross-Cutting Concern)</a>
 
 <details>
 <summary>Xem chi tiết</summary>

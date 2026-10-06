@@ -2,7 +2,7 @@ package com.example.learning.module.order.service;
 
 import com.example.learning.integration.inventory.InventoryClient;
 import com.example.learning.integration.inventory.InventoryRepository;
-import com.example.learning.module.feign.exception.FeignClientException;
+import com.example.projectbuild.exceptionhandler.servlet.feign.FeignClientException;
 import com.example.learning.module.order.dto.OrderRequest;
 import com.example.learning.module.order.mapper.OrderMapper;
 import com.example.learning.module.order.model.Order;

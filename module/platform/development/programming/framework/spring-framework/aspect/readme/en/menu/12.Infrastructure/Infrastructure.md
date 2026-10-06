@@ -3,16 +3,16 @@
 # Auto-Proxy Infrastructure, Advised, and TargetSource
 
 ## Menu
-- [1. Where does auto-proxy creation happen?](#auto-proxy-mental-model)
-- [2. Spring Framework enablement vs Spring Boot auto-configuration](#framework-boot-aop-enablement-boundary)
-- [3. Advised reveals what a proxy contains](#advised-interface)
-- [4. TargetSource and target lifecycle strategies](#target-source-strategy)
-- [5. Demo in this module](#infrastructure-demo)
-- [6. Conclusion](#infrastructure-conclusion)
+- [Where does auto-proxy creation happen?](#auto-proxy-mental-model)
+- [Spring Framework enablement vs Spring Boot auto-configuration](#framework-boot-aop-enablement-boundary)
+- [Advised reveals what a proxy contains](#advised-interface)
+- [TargetSource and target lifecycle strategies](#target-source-strategy)
+- [Executable Evidence for Auto-Proxy Infrastructure, Advised, and TargetSource](#infrastructure-demo)
+- [Auto-Proxy Infrastructure, Advised, and TargetSource Synthesis](#infrastructure-conclusion)
 
 In normal application code, we do not call `new ProxyFactory(...)` for every bean. Spring automatically discovers candidates and wraps beans in proxies.
 
-## <a id="auto-proxy-mental-model">1. Where does auto-proxy creation happen?</a>
+## <a id="auto-proxy-mental-model">Where does auto-proxy creation happen?</a>
 
 <details>
 <summary>Click for details</summary>
@@ -39,13 +39,14 @@ The diagram is deliberately simplified. The container also has lifecycle paths f
 Auto-proxying applies to Spring-managed bean lifecycle processing. An arbitrary object created directly with `new` is not automatically wrapped just because a matching Aspect exists. It must enter suitable Spring infrastructure or be explicitly proxied.
 
 Do not hard-code a concrete auto-proxy creator class name into business code. It is framework infrastructure, not an application contract.
+
 </details>
 
 - [Back to top](#back-to-top)
 
 ---
 
-## <a id="framework-boot-aop-enablement-boundary">2. Spring Framework enablement vs Spring Boot auto-configuration</a>
+## <a id="framework-boot-aop-enablement-boundary">Spring Framework enablement vs Spring Boot auto-configuration</a>
 
 <details>
 <summary>Click for details</summary>
@@ -92,13 +93,14 @@ The distinction matters: a Boot property default is not a Spring Framework AOP r
 
 - Spring Framework 6.1.x API — [`@EnableAspectJAutoProxy`](https://docs.spring.io/spring-framework/docs/6.1.x/javadoc-api/org/springframework/context/annotation/EnableAspectJAutoProxy.html)
 - Spring Boot 3.3 API — [`AopAutoConfiguration`](https://docs.spring.io/spring-boot/3.3/api/java/org/springframework/boot/autoconfigure/aop/AopAutoConfiguration.html)
+
 </details>
 
 - [Back to top](#back-to-top)
 
 ---
 
-## <a id="advised-interface">3. Advised reveals what a proxy contains</a>
+## <a id="advised-interface">Advised reveals what a proxy contains</a>
 
 <details>
 <summary>Click for details</summary>
@@ -126,13 +128,14 @@ This is conditional. `ProxyConfig#setOpaque(true)` prevents callers from casting
 
 - Spring Framework 6.1.x API — [`Advised`](https://docs.spring.io/spring-framework/docs/6.1.x/javadoc-api/org/springframework/aop/framework/Advised.html)
 - Spring Framework 6.1.x API — [`ProxyConfig`](https://docs.spring.io/spring-framework/docs/6.1.x/javadoc-api/org/springframework/aop/framework/ProxyConfig.html)
+
 </details>
 
 - [Back to top](#back-to-top)
 
 ---
 
-## <a id="target-source-strategy">4. TargetSource and target lifecycle strategies</a>
+## <a id="target-source-strategy">TargetSource and target lifecycle strategies</a>
 
 <details>
 <summary>Click for details</summary>
@@ -180,13 +183,14 @@ Most application code should never implement a custom `TargetSource`. It is an i
 
 - Spring Framework 6.1.14 API — [`TargetSource`](https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/aop/TargetSource.html)
 - Spring Framework Reference — [Using `TargetSource` Implementations](https://docs.spring.io/spring-framework/reference/core/aop-api/targetsource.html)
+
 </details>
 
 - [Back to top](#back-to-top)
 
 ---
 
-## <a id="infrastructure-demo">5. Demo in this module</a>
+## <a id="infrastructure-demo">Executable Evidence for Auto-Proxy Infrastructure, Advised, and TargetSource</a>
 
 <details>
 <summary>Click for details</summary>
@@ -263,7 +267,7 @@ This keeps the response from pretending that a Boot default is a property value 
 
 ---
 
-## <a id="infrastructure-conclusion">6. Conclusion</a>
+## <a id="infrastructure-conclusion">Auto-Proxy Infrastructure, Advised, and TargetSource Synthesis</a>
 
 <details>
 <summary>Click for details</summary>
@@ -271,6 +275,7 @@ This keeps the response from pretending that a Boot default is a property value 
 Annotation-style Spring AOP looks declarative at the application layer because proxy creation, Advisor discovery, target selection, and interceptor-chain construction are infrastructure responsibilities.
 
 In Spring Framework, `@EnableAspectJAutoProxy` is one explicit way to register this support. In this Boot-based module, the starter and Boot AOP auto-configuration install equivalent infrastructure with Boot-specific defaults. Keeping those layers distinct prevents application auto-configuration choices from being mistaken for Spring AOP semantics.
+
 </details>
 
 - [Back to top](#back-to-top)

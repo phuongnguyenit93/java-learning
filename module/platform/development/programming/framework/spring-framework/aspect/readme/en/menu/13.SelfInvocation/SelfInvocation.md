@@ -3,17 +3,17 @@
 # Proxy Failure Model and Self-Invocation
 
 ## Menu
-- [1. Why is this.inner() different from an external call?](#self-invocation-mental-model)
-- [2. Demo in this module](#self-invocation-demo)
-- [3. Related limitations](#proxy-limitations)
-- [4. Responding to self-invocation: refactor, self injection, and AopContext](#self-invocation-remediation)
-- [5. Final methods on class-based proxies](#final-method-demo)
-- [6. Debugging checklist: proxy creation → proxy boundary → pointcut → advisor chain](#aop-debugging-checklist)
-- [7. Conclusion](#self-invocation-conclusion)
+- [Why is this.inner() different from an external call?](#self-invocation-mental-model)
+- [Executable Evidence for Proxy Failure Model and Self-Invocation](#self-invocation-demo)
+- [Related limitations](#proxy-limitations)
+- [Responding to self-invocation: refactor, self injection, and AopContext](#self-invocation-remediation)
+- [Final methods on class-based proxies](#final-method-demo)
+- [Debugging checklist: proxy creation → proxy boundary → pointcut → advisor chain](#aop-debugging-checklist)
+- [Proxy Failure Model and Self-Invocation Synthesis](#self-invocation-conclusion)
 
 This is one of the most important limitations of proxy-based Spring AOP.
 
-## <a id="self-invocation-mental-model">1. Why is this.inner() different from an external call?</a>
+## <a id="self-invocation-mental-model">Why is this.inner() different from an external call?</a>
 
 <details>
 <summary>Click for details</summary>
@@ -60,7 +60,7 @@ Therefore **having an annotation does not guarantee that advice will run**.
 
 ---
 
-## <a id="self-invocation-demo">2. Demo in this module</a>
+## <a id="self-invocation-demo">Executable Evidence for Proxy Failure Model and Self-Invocation</a>
 
 <details>
 <summary>Click for details</summary>
@@ -121,7 +121,7 @@ This time the invocation begins outside the target and passes through the proxy.
 
 ---
 
-## <a id="proxy-limitations">3. Related limitations</a>
+## <a id="proxy-limitations">Related limitations</a>
 
 <details>
 <summary>Click for details</summary>
@@ -145,13 +145,14 @@ Spring features such as `@Transactional`, `@Async`, and `@Cacheable` may use the
 ### References
 
 - Spring Framework Reference — [Proxying Mechanisms](https://docs.spring.io/spring-framework/reference/core/aop/proxying.html)
+
 </details>
 
 - [Back to top](#back-to-top)
 
 ---
 
-## <a id="self-invocation-remediation">4. Responding to self-invocation: refactor, self injection, and AopContext</a>
+## <a id="self-invocation-remediation">Responding to self-invocation: refactor, self injection, and AopContext</a>
 
 <details>
 <summary>Click for details</summary>
@@ -179,13 +180,14 @@ The Spring reference documentation recommends avoiding self invocation when prac
 
 - Spring Framework Reference — [Understanding AOP Proxies](https://docs.spring.io/spring-framework/reference/core/aop/proxying.html)
 - Spring Framework 6.1.x API — [`AopContext`](https://docs.spring.io/spring-framework/docs/6.1.x/javadoc-api/org/springframework/aop/framework/AopContext.html)
+
 </details>
 
 - [Back to top](#back-to-top)
 
 ---
 
-## <a id="final-method-demo">5. Final methods on class-based proxies</a>
+## <a id="final-method-demo">Final methods on class-based proxies</a>
 
 <details>
 <summary>Click for details</summary>
@@ -274,7 +276,7 @@ The `finalTrackedMethod()` demo returns a constant so the experiment stays focus
 
 ---
 
-## <a id="aop-debugging-checklist">6. Debugging checklist: proxy creation → proxy boundary → pointcut → advisor chain</a>
+## <a id="aop-debugging-checklist">Debugging checklist: proxy creation → proxy boundary → pointcut → advisor chain</a>
 
 <details>
 <summary>Click for details</summary>
@@ -300,13 +302,14 @@ When advice does not run, debug in the same order as the runtime architecture:
 **Ordering and advice behavior:** if several Advisors match, inspect their order and whether an around interceptor calls `proceed()`, calls it more than once, transforms the result, or changes exception behavior.
 
 This sequence prevents a common debugging mistake: changing the selection rule when the invocation never reached the expected proxy in the first place.
+
 </details>
 
 - [Back to top](#back-to-top)
 
 ---
 
-## <a id="self-invocation-conclusion">7. Conclusion</a>
+## <a id="self-invocation-conclusion">Proxy Failure Model and Self-Invocation Synthesis</a>
 
 <details>
 <summary>Click for details</summary>
@@ -314,6 +317,7 @@ This sequence prevents a common debugging mistake: changing the selection rule w
 When AOP does not run, first establish whether a proxy exists and whether the invocation crossed it. Then check method interceptability, pointcut matching, and the Advisor chain.
 
 For self invocation specifically, refactoring the collaboration boundary is usually clearer than adding hidden proxy lookups. The proxy model becomes predictable once call routing is treated as part of the design rather than as an annotation side effect.
+
 </details>
 
 - [Back to top](#back-to-top)

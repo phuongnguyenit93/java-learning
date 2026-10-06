@@ -1,0 +1,3 @@
+com.example.projectbuild.exceptionhandler.servlet.autoconfigure.ServletExceptionHandlerAutoConfiguration
+com.example.projectbuild.exceptionhandler.servlet.autoconfigure.FeignExceptionHandlerAutoConfiguration
+com.example.projectbuild.exceptionhandler.servlet.autoconfigure.MongoExceptionHandlerAutoConfiguration

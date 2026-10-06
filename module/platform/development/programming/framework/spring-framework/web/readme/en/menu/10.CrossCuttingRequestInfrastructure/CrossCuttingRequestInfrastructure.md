@@ -91,6 +91,10 @@ A filter can be mapped for `REQUEST`, `ASYNC`, `ERROR`, and other dispatcher typ
 
 MVC interceptors can participate again when an async request is redispatched. `AsyncHandlerInterceptor` adds a callback for the moment concurrent handling starts, before the original request thread exits.
 
+Spring's request-context facilities are thread-bound infrastructure layered on top of this lifecycle. `RequestContextHolder` exposes the current `RequestAttributes`; in a Servlet request that is commonly a `ServletRequestAttributes` instance. `DispatcherServlet` exposes this context for requests it processes. `RequestContextFilter` or `RequestContextListener` can provide the same binding for code that needs Spring request context outside the `DispatcherServlet` path, but they should not be added redundantly when the servlet already owns the required exposure.
+
+The binding is associated with the thread that is currently processing the dispatch, not with an arbitrary asynchronous task forever. Async/error redispatch may therefore require infrastructure to bind context again on the participating thread. Do not capture `RequestContextHolder` state and assume it is automatically safe to use from application-created executor tasks; copy only the specific data a later task really needs, or use a deliberate context-propagation mechanism.
+
 Code that records timing, opens resources, or stores thread-local state must account for this split lifecycle. "after the original handler thread returns" is not necessarily "the HTTP request is complete".
 
 For correlation/logging context, propagate only what later threads need and ensure cleanup happens for every completion/error path.

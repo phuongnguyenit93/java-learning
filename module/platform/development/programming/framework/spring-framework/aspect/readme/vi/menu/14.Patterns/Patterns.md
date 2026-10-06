@@ -3,15 +3,15 @@
 # Đánh đổi thiết kế, Pattern và Pitfall trong AOP
 
 ## Menu
-- [1. Các pattern phù hợp với AOP](#practical-patterns)
-- [2. Khi AOP là abstraction không phù hợp: ưu tiên composition tường minh và workflow dễ thấy](#aop-design-tradeoffs)
-- [3. Demo auditing và timing](#practical-demo)
-- [4. Các pitfall cần tránh](#aop-pitfalls)
-- [5. Kết luận](#practical-conclusion)
+- [Các pattern phù hợp với AOP](#practical-patterns)
+- [Khi AOP là abstraction không phù hợp: ưu tiên composition tường minh và workflow dễ thấy](#aop-design-tradeoffs)
+- [Demo auditing và timing](#practical-demo)
+- [Các pitfall cần tránh](#aop-pitfalls)
+- [Tổng hợp Đánh đổi thiết kế, Pattern và Pitfall trong AOP](#practical-conclusion)
 
 Chương này ghép mô hình tư duy AOP vào một pattern gần với mã ứng dụng thực tế.
 
-## <a id="practical-patterns">1. Các pattern phù hợp với AOP</a>
+## <a id="practical-patterns">Các pattern phù hợp với AOP</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -38,13 +38,14 @@ policy tách khỏi luồng nghiệp vụ chính
 Một concern AOP tốt thường có thể mô tả như policy trên ranh giới phương thức: "ghi lại mọi operation cần audit", "đo thời gian các lời gọi ở service layer", hoặc "gắn tracing context quanh các entry point này".
 
 Khi đọc riêng service nghiệp vụ, người học vẫn phải hiểu được operation chính mà không cần mở Aspect. Nếu một bước bắt buộc của luồng nghiệp vụ nằm trong Aspect thì AOP đang che quá nhiều logic.
+
 </details>
 
 - [Quay lại đầu trang](#back-to-top)
 
 ---
 
-## <a id="aop-design-tradeoffs">2. Khi AOP là abstraction không phù hợp: ưu tiên composition tường minh và workflow dễ thấy</a>
+## <a id="aop-design-tradeoffs">Khi AOP là abstraction không phù hợp: ưu tiên composition tường minh và workflow dễ thấy</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -76,13 +77,14 @@ AOP có thể phù hợp
 Ưu tiên đối tượng cộng tác tường minh, decorator, filter/interceptor ở đúng tầng giao thức hoặc lời gọi phương thức thông thường khi hành vi cần luồng dữ liệu dễ thấy, thứ tự nghiệp vụ rõ ràng hoặc nhánh xử lý theo domain.
 
 AOP cũng có chi phí vận hành: kiểu proxy ảnh hưởng hành vi, self-invocation có thể bypass advice, pointcut có thể lệch khi package hoặc annotation thay đổi, và nhiều Advisor có thể tạo phụ thuộc ẩn về ordering. Chỉ đáng trả các chi phí đó khi việc tập trung hóa chính sách cross-cutting làm thiết kế tổng thể dễ hiểu hơn.
+
 </details>
 
 - [Quay lại đầu trang](#back-to-top)
 
 ---
 
-## <a id="practical-demo">3. Demo auditing và timing</a>
+## <a id="practical-demo">Demo auditing và timing</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -134,7 +136,7 @@ Service nghiệp vụ không phải tự viết audit start/success hoặc timin
 
 ---
 
-## <a id="aop-pitfalls">4. Các pitfall cần tránh</a>
+## <a id="aop-pitfalls">Các pitfall cần tránh</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -183,7 +185,7 @@ có thể bị nhiều request/thread cùng truy cập và tạo race condition 
 
 ---
 
-## <a id="practical-conclusion">5. Kết luận</a>
+## <a id="practical-conclusion">Tổng hợp Đánh đổi thiết kế, Pattern và Pitfall trong AOP</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -191,6 +193,7 @@ có thể bị nhiều request/thread cùng truy cập và tạo race condition 
 Mục tiêu không chỉ là xóa mã lặp. AOP nên tập trung hóa một cross-cutting policy ổn định trong khi vẫn giữ luồng nghiệp vụ dễ đọc và ranh giới interception dễ dự đoán.
 
 Nếu muốn hiểu một use case mà phải dựng lại nhiều pointcut ẩn cùng các luật ordering, composition tường minh thường là thiết kế rõ hơn.
+
 </details>
 
 - [Quay lại đầu trang](#back-to-top)

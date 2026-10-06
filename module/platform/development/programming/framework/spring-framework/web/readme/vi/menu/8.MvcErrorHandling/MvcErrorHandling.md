@@ -150,7 +150,7 @@ Không chỉ trả chuỗi "validation failed" cho mọi trường hợp. Nên g
 <details>
 <summary>Xem chi tiết</summary>
 
-Spring MVC sở hữu Framework exception-resolution mechanics. Spring Boot thêm default ở application level quanh error dispatch/error endpoint; còn module `global-exception-handler` của repository là support/runtime artifact, không phải curriculum owner.
+Spring MVC sở hữu Framework exception-resolution mechanics. Spring Boot thêm default ở application level quanh error dispatch/error endpoint; còn module `project-build/springboot-runtime/exception-handler-servlet` của repository là support/runtime artifact, không phải curriculum owner.
 
 Module này dạy:
 

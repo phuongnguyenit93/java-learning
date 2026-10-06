@@ -3,15 +3,15 @@
 # Advisor API và Programmatic Pointcut
 
 ## Menu
-- [1. PointcutAdvisor = Pointcut + Advice; Advisor là contract rộng hơn](#advisor-mental-model)
-- [2. Pointcut = ClassFilter + MethodMatcher](#pointcut-internals)
-- [3. MethodMatcher tĩnh và động](#static-dynamic-pointcut)
-- [4. Demo trong module](#advisor-demo)
-- [5. Kết luận](#advisor-conclusion)
+- [PointcutAdvisor = Pointcut + Advice; Advisor là contract rộng hơn](#advisor-mental-model)
+- [Pointcut = ClassFilter + MethodMatcher](#pointcut-internals)
+- [MethodMatcher tĩnh và động](#static-dynamic-pointcut)
+- [Minh chứng thực thi cho Advisor API và Programmatic Pointcut](#advisor-demo)
+- [Tổng hợp Advisor API và Programmatic Pointcut](#advisor-conclusion)
 
 Chương này trả lời câu hỏi: nếu `MethodInterceptor` mô tả **làm gì**, thì thành phần nào mô tả **lớp/phương thức/invocation nào cần áp dụng hành vi đó**?
 
-## <a id="advisor-mental-model">1. PointcutAdvisor = Pointcut + Advice; Advisor là contract rộng hơn</a>
+## <a id="advisor-mental-model">PointcutAdvisor = Pointcut + Advice; Advisor là contract rộng hơn</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -44,13 +44,14 @@ Advisor         = contract rộng hơn mang Advice/cấu hình AOP
 ### Tài liệu tham khảo
 
 - Spring Framework Reference — [The Advisor API in Spring](https://docs.spring.io/spring-framework/reference/core/aop-api/advisor.html)
+
 </details>
 
 - [Quay lại đầu trang](#back-to-top)
 
 ---
 
-## <a id="pointcut-internals">2. Pointcut = ClassFilter + MethodMatcher</a>
+## <a id="pointcut-internals">Pointcut = ClassFilter + MethodMatcher</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -81,13 +82,14 @@ write()
 ```
 
 `MethodMatcher#isRuntime()` trả `false`, nên việc khớp không cần nhìn argument của từng lời gọi.
+
 </details>
 
 - [Quay lại đầu trang](#back-to-top)
 
 ---
 
-## <a id="static-dynamic-pointcut">3. MethodMatcher tĩnh và động</a>
+## <a id="static-dynamic-pointcut">MethodMatcher tĩnh và động</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -131,13 +133,14 @@ Pointcut động chỉ nên dùng khi phạm vi áp dụng thực sự phụ thu
 ### Tài liệu tham khảo
 
 - Spring Framework Reference — [Pointcut API in Spring](https://docs.spring.io/spring-framework/reference/core/aop-api/pointcuts.html)
+
 </details>
 
 - [Quay lại đầu trang](#back-to-top)
 
 ---
 
-## <a id="advisor-demo">4. Demo trong module</a>
+## <a id="advisor-demo">Minh chứng thực thi cho Advisor API và Programmatic Pointcut</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -204,7 +207,7 @@ Invocation `plain` vẫn tới target nhưng không có `dynamic-advisor-*`, ch�
 
 ---
 
-## <a id="advisor-conclusion">5. Kết luận</a>
+## <a id="advisor-conclusion">Tổng hợp Advisor API và Programmatic Pointcut</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -227,6 +230,7 @@ Advisor
 ```
 
 Phong cách `@AspectJ` giúp khai báo thuận tiện hơn, nhưng Spring vẫn xây các Advisor/interceptor thấp hơn để proxy biết hành vi nào phải có trong chuỗi của mỗi invocation.
+
 </details>
 
 - [Quay lại đầu trang](#back-to-top)

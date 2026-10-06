@@ -3,17 +3,17 @@
 # Nền tảng Spring WebSocket Transport
 
 ## Menu
-- [1. Khi nào WebSocket phù hợp](#websocket-use-cases)
-- [2. HTTP Upgrade handshake](#websocket-handshake)
-- [3. WebSocketHandler và WebSocketSession](#websocket-handler-session)
-- [4. WebSocketClient và WebSocketConnectionManager](#websocket-client)
-- [5. Text, binary, ping và pong message](#websocket-message-types)
-- [6. Tùy biến handshake và interceptor](#websocket-handshake-customization)
-- [7. Origin policy](#websocket-origin-policy)
-- [8. SockJS fallback](#sockjs-fallback)
-- [9. Ranh giới Servlet WebSocket và reactive WebSocket](#servlet-reactive-websocket-boundary)
+- [Khi nào WebSocket phù hợp](#websocket-use-cases)
+- [HTTP Upgrade handshake](#websocket-handshake)
+- [WebSocketHandler và WebSocketSession](#websocket-handler-session)
+- [WebSocketClient và WebSocketConnectionManager](#websocket-client)
+- [Text, binary, ping và pong message](#websocket-message-types)
+- [Tùy biến handshake và interceptor](#websocket-handshake-customization)
+- [Origin policy](#websocket-origin-policy)
+- [SockJS fallback](#sockjs-fallback)
+- [Ranh giới Servlet WebSocket và reactive WebSocket](#servlet-reactive-websocket-boundary)
 
-## <a id="websocket-use-cases">1. Khi nào WebSocket phù hợp</a>
+## <a id="websocket-use-cases">Khi nào WebSocket phù hợp</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -30,7 +30,7 @@ Spring WebSocket API cung cấp abstraction ở mức framework cho handler/sess
 
 ---
 
-## <a id="websocket-handshake">2. HTTP Upgrade handshake</a>
+## <a id="websocket-handshake">HTTP Upgrade handshake</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -47,7 +47,7 @@ Handshake vẫn nằm ở ranh giới web nên cookie, HTTP header, origin infor
 
 ---
 
-## <a id="websocket-handler-session">3. WebSocketHandler và WebSocketSession</a>
+## <a id="websocket-handler-session">WebSocketHandler và WebSocketSession</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -72,7 +72,7 @@ Nếu WebSocketHandler để exception thoát ra ngoài, default decorator strat
 
 ---
 
-## <a id="websocket-client">4. WebSocketClient và WebSocketConnectionManager</a>
+## <a id="websocket-client">WebSocketClient và WebSocketConnectionManager</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -93,7 +93,7 @@ Dùng direct client API khi application logic chủ động sở hữu connectio
 
 ---
 
-## <a id="websocket-message-types">5. Text, binary, ping và pong message</a>
+## <a id="websocket-message-types">Text, binary, ping và pong message</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -110,7 +110,7 @@ Không nên nhầm WebSocket message type với Spring Messaging Message<?> ho�
 
 ---
 
-## <a id="websocket-handshake-customization">6. Tùy biến handshake và interceptor</a>
+## <a id="websocket-handshake-customization">Tùy biến handshake và interceptor</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -131,7 +131,7 @@ Không đặt application message routing vào handshake code. Handshake chỉ c
 
 ---
 
-## <a id="websocket-origin-policy">7. Origin policy</a>
+## <a id="websocket-origin-policy">Origin policy</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -148,7 +148,7 @@ Khi SockJS được bật, origin restriction còn có thể disable các fallba
 
 ---
 
-## <a id="sockjs-fallback">8. SockJS fallback</a>
+## <a id="sockjs-fallback">SockJS fallback</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -165,7 +165,7 @@ Chỉ nên dùng SockJS khi có compatibility requirement cụ thể. Deployment
 
 ---
 
-## <a id="servlet-reactive-websocket-boundary">9. Ranh giới Servlet WebSocket và reactive WebSocket</a>
+## <a id="servlet-reactive-websocket-boundary">Ranh giới Servlet WebSocket và reactive WebSocket</a>
 
 <details>
 <summary>Xem chi tiết</summary>

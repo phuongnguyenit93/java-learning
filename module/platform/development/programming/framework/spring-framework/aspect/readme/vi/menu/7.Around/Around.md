@@ -3,17 +3,17 @@
 # Around Advice và ProceedingJoinPoint
 
 ## Menu
-- [1. Mental model cho @Around](#around-mental-model)
-- [2. Demo đo thời gian](#around-timing-demo)
-- [3. Demo biến đổi giá trị trả về](#around-transform-demo)
-- [4. Demo không gọi proceed()](#around-skip-demo)
-- [5. proceed(Object[]) và thay đổi argument](#around-arguments-demo)
-- [6. Demo lan truyền exception](#around-exception-demo)
-- [7. Kết luận](#around-conclusion)
+- [Mental model cho @Around](#around-mental-model)
+- [Demo đo thời gian](#around-timing-demo)
+- [Demo biến đổi giá trị trả về](#around-transform-demo)
+- [Demo không gọi proceed()](#around-skip-demo)
+- [proceed(Object[]) và thay đổi argument](#around-arguments-demo)
+- [Demo lan truyền exception](#around-exception-demo)
+- [Tổng hợp Around Advice và ProceedingJoinPoint](#around-conclusion)
 
 `@Around` là advice có quyền kiểm soát invocation mạnh nhất trong Spring AOP.
 
-## <a id="around-mental-model">1. Mental model cho @Around</a>
+## <a id="around-mental-model">Mental model cho @Around</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -58,7 +58,7 @@ Quyền này hữu ích cho chính sách như đo thời gian vì cần trạng 
 
 ---
 
-## <a id="around-timing-demo">2. Demo đo thời gian</a>
+## <a id="around-timing-demo">Demo đo thời gian</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -111,7 +111,7 @@ Experiment giữ luồng thành công đơn giản để nested control flow d�
 
 ---
 
-## <a id="around-transform-demo">3. Demo biến đổi giá trị trả về</a>
+## <a id="around-transform-demo">Demo biến đổi giá trị trả về</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -157,7 +157,7 @@ Nếu chính sách chỉ cần **quan sát** result thành công, `@AfterReturni
 
 ---
 
-## <a id="around-skip-demo">4. Demo không gọi proceed()</a>
+## <a id="around-skip-demo">Demo không gọi proceed()</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -199,7 +199,7 @@ vì phần invocation chain còn lại chưa từng chạy.
 
 ---
 
-## <a id="around-arguments-demo">5. proceed(Object[]) và thay đổi argument</a>
+## <a id="around-arguments-demo">proceed(Object[]) và thay đổi argument</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -262,7 +262,7 @@ Việc đổi argument làm thay đổi dữ liệu target nhận. Chỉ nên d�
 
 ---
 
-## <a id="around-exception-demo">6. Demo lan truyền exception</a>
+## <a id="around-exception-demo">Demo lan truyền exception</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -310,7 +310,7 @@ Hãy xem `proceed()` là quyền điều khiển invocation chain, không phải
 
 ---
 
-## <a id="around-conclusion">7. Kết luận</a>
+## <a id="around-conclusion">Tổng hợp Around Advice và ProceedingJoinPoint</a>
 
 <details>
 <summary>Xem chi tiết</summary>

@@ -229,10 +229,10 @@ enum ModuleListEnum {
     ),
 
     GLOBAL_EXCEPTION_HANDLER(
-            'module:platform:development:programming:framework:spring-framework:global-exception-handler',
-            'module/platform/development/programming/framework/spring-framework/global-exception-handler',
+            'project-build:springboot-runtime:exception-handler-servlet',
+            'project-build/springboot-runtime/exception-handler-servlet',
             'LIBRARY',
-            'Module stored custom exception handler case. Use by @EnableCustomExceptionHandler',
+            'Servlet runtime auto-configuration for shared MVC, Feign, and Mongo exception handling',
             true,
             []
     ),
@@ -2055,6 +2055,15 @@ enum ModuleListEnum {
             []
     ),
 
+    SPRING_CACHE(
+            'module:platform:development:programming:framework:spring-framework:cache',
+            'module/platform/development/programming/framework/spring-framework/cache',
+            'SERVLET',
+            'Spring Framework cache abstraction, declarative caching, key resolution and cache-provider integration boundary',
+            false,
+            []
+    ),
+
     SPRING_CONCURRENCY(
             'module:platform:development:programming:framework:spring-framework:concurrency',
             'module/platform/development/programming/framework/spring-framework/concurrency',
@@ -2069,6 +2078,15 @@ enum ModuleListEnum {
             'module/platform/development/programming/framework/spring-framework/core-container',
             'SERVLET',
             'Spring Core Container, bean management, dependency injection, scopes, environment, profiles, conditional registration and configuration composition',
+            false,
+            []
+    ),
+
+    SPRING_DATA_ACCESS(
+            'module:platform:development:programming:framework:spring-framework:data-access',
+            'module/platform/development/programming/framework/spring-framework/data-access',
+            'SERVLET',
+            'Spring Framework DAO support, JDBC and R2DBC core data-access infrastructure including JdbcClient, JdbcTemplate and DatabaseClient',
             false,
             []
     ),
@@ -2145,6 +2163,15 @@ enum ModuleListEnum {
             []
     ),
 
+    SPRING_MESSAGING(
+            'module:platform:development:programming:framework:spring-framework:messaging',
+            'module/platform/development/programming/framework/spring-framework/messaging',
+            'SERVLET',
+            'Spring Framework messaging foundation plus WebSocket/STOMP and RSocket application messaging infrastructure',
+            false,
+            []
+    ),
+
     SPRING_MODULITH(
             'module:platform:development:programming:framework:spring-modulith',
             'module/platform/development/programming/framework/spring-modulith',
@@ -2208,11 +2235,20 @@ enum ModuleListEnum {
             []
     ),
 
+    SPRING_VALIDATION_DATA_BINDING(
+            'module:platform:development:programming:framework:spring-framework:validation-data-binding',
+            'module/platform/development/programming/framework/spring-framework/validation-data-binding',
+            'SERVLET',
+            'Spring Framework validation, data binding, type conversion, formatting and Bean Validation integration',
+            false,
+            []
+    ),
+
     SPRING_WEB(
             'module:platform:development:programming:framework:spring-framework:web',
             'module/platform/development/programming/framework/spring-framework/web',
-            'PLATFORM',
-            '',
+            'SERVLET',
+            'Spring MVC Servlet-stack request processing, binding, validation, error handling, async execution, synchronous HTTP clients and declarative HTTP service interfaces',
             false,
             []
     );

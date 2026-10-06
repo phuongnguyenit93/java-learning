@@ -3,15 +3,15 @@
 # Advisor API and Programmatic Pointcuts
 
 ## Menu
-- [1. PointcutAdvisor = Pointcut + Advice; Advisor is the broader contract](#advisor-mental-model)
-- [2. Pointcut = ClassFilter + MethodMatcher](#pointcut-internals)
-- [3. Static and dynamic MethodMatcher](#static-dynamic-pointcut)
-- [4. Demo in this module](#advisor-demo)
-- [5. Conclusion](#advisor-conclusion)
+- [PointcutAdvisor = Pointcut + Advice; Advisor is the broader contract](#advisor-mental-model)
+- [Pointcut = ClassFilter + MethodMatcher](#pointcut-internals)
+- [Static and dynamic MethodMatcher](#static-dynamic-pointcut)
+- [Executable Evidence for Advisor API and Programmatic Pointcuts](#advisor-demo)
+- [Advisor API and Programmatic Pointcuts Synthesis](#advisor-conclusion)
 
 This chapter answers the question: if `MethodInterceptor` describes **what to do**, which object describes **which class/method/invocation should receive that behavior**?
 
-## <a id="advisor-mental-model">1. PointcutAdvisor = Pointcut + Advice; Advisor is the broader contract</a>
+## <a id="advisor-mental-model">PointcutAdvisor = Pointcut + Advice; Advisor is the broader contract</a>
 
 <details>
 <summary>Click for details</summary>
@@ -44,13 +44,14 @@ Advisor         = broader advice/configuration contract
 ### References
 
 - Spring Framework Reference — [The Advisor API in Spring](https://docs.spring.io/spring-framework/reference/core/aop-api/advisor.html)
+
 </details>
 
 - [Back to top](#back-to-top)
 
 ---
 
-## <a id="pointcut-internals">2. Pointcut = ClassFilter + MethodMatcher</a>
+## <a id="pointcut-internals">Pointcut = ClassFilter + MethodMatcher</a>
 
 <details>
 <summary>Click for details</summary>
@@ -81,13 +82,14 @@ write()
 ```
 
 Its `MethodMatcher#isRuntime()` returns `false`, so the match does not require invocation arguments.
+
 </details>
 
 - [Back to top](#back-to-top)
 
 ---
 
-## <a id="static-dynamic-pointcut">3. Static and dynamic MethodMatcher</a>
+## <a id="static-dynamic-pointcut">Static and dynamic MethodMatcher</a>
 
 <details>
 <summary>Click for details</summary>
@@ -131,13 +133,14 @@ Dynamic matching is appropriate only when selection genuinely depends on runtime
 ### References
 
 - Spring Framework Reference — [Pointcut API in Spring](https://docs.spring.io/spring-framework/reference/core/aop-api/pointcuts.html)
+
 </details>
 
 - [Back to top](#back-to-top)
 
 ---
 
-## <a id="advisor-demo">4. Demo in this module</a>
+## <a id="advisor-demo">Executable Evidence for Advisor API and Programmatic Pointcuts</a>
 
 <details>
 <summary>Click for details</summary>
@@ -204,7 +207,7 @@ The `plain` invocation still reaches the target but has no `dynamic-advisor-*` e
 
 ---
 
-## <a id="advisor-conclusion">5. Conclusion</a>
+## <a id="advisor-conclusion">Advisor API and Programmatic Pointcuts Synthesis</a>
 
 <details>
 <summary>Click for details</summary>
@@ -227,6 +230,7 @@ Advisor
 ```
 
 `@AspectJ` style is a convenient authoring layer, but Spring ultimately builds lower-level Advisor/interceptor structures so the proxy can determine which behavior belongs in each invocation chain.
+
 </details>
 
 - [Back to top](#back-to-top)

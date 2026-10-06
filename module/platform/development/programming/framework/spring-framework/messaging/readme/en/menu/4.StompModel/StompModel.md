@@ -3,17 +3,17 @@
 # STOMP and the Simple Messaging Model
 
 ## Menu
-- [1. Why STOMP over WebSocket](#stomp-purpose)
-- [2. STOMP frames and commands](#stomp-frames-commands)
-- [3. Destinations and subscriptions](#stomp-destinations-subscriptions)
-- [4. Headers and message content](#stomp-headers-content)
-- [5. Heartbeats and receipts](#stomp-heartbeats-receipts)
-- [6. Acknowledgements, transactions, and broker-support boundary](#stomp-ack-transactions)
-- [7. STOMP over the WebSocket transport](#stomp-over-websocket)
-- [8. SIMP message types and destination, session, and user headers](#simp-message-model)
-- [9. Mapping STOMP frames to Spring Message](#stomp-spring-message)
+- [Why STOMP over WebSocket](#stomp-purpose)
+- [STOMP frames and commands](#stomp-frames-commands)
+- [Destinations and subscriptions](#stomp-destinations-subscriptions)
+- [Headers and message content](#stomp-headers-content)
+- [Heartbeats and receipts](#stomp-heartbeats-receipts)
+- [Acknowledgements, transactions, and broker-support boundary](#stomp-ack-transactions)
+- [STOMP over the WebSocket transport](#stomp-over-websocket)
+- [SIMP message types and destination, session, and user headers](#simp-message-model)
+- [Mapping STOMP frames to Spring Message](#stomp-spring-message)
 
-## <a id="stomp-purpose">1. Why STOMP over WebSocket</a>
+## <a id="stomp-purpose">Why STOMP over WebSocket</a>
 
 <details>
 <summary>Click for details</summary>
@@ -30,7 +30,7 @@ The reason to choose STOMP over raw WebSocket is therefore not that WebSocket is
 
 ---
 
-## <a id="stomp-frames-commands">2. STOMP frames and commands</a>
+## <a id="stomp-frames-commands">STOMP frames and commands</a>
 
 <details>
 <summary>Click for details</summary>
@@ -47,7 +47,7 @@ Commands belong to the STOMP protocol layer, not directly to Java controller met
 
 ---
 
-## <a id="stomp-destinations-subscriptions">3. Destinations and subscriptions</a>
+## <a id="stomp-destinations-subscriptions">Destinations and subscriptions</a>
 
 <details>
 <summary>Click for details</summary>
@@ -64,7 +64,7 @@ In Spring's WebSocket/STOMP stack, destination prefixes split responsibility. An
 
 ---
 
-## <a id="stomp-headers-content">4. Headers and message content</a>
+## <a id="stomp-headers-content">Headers and message content</a>
 
 <details>
 <summary>Click for details</summary>
@@ -81,7 +81,7 @@ This distinction matters when constructing messages programmatically. A Spring h
 
 ---
 
-## <a id="stomp-heartbeats-receipts">5. Heartbeats and receipts</a>
+## <a id="stomp-heartbeats-receipts">Heartbeats and receipts</a>
 
 <details>
 <summary>Click for details</summary>
@@ -98,7 +98,7 @@ Broker capability matters. Spring's built-in simple broker supports heartbeats w
 
 ---
 
-## <a id="stomp-ack-transactions">6. Acknowledgements, transactions, and broker-support boundary</a>
+## <a id="stomp-ack-transactions">Acknowledgements, transactions, and broker-support boundary</a>
 
 <details>
 <summary>Click for details</summary>
@@ -115,7 +115,7 @@ When an application requires broker-native acknowledgement modes, durable queues
 
 ---
 
-## <a id="stomp-over-websocket">7. STOMP over the WebSocket transport</a>
+## <a id="stomp-over-websocket">STOMP over the WebSocket transport</a>
 
 <details>
 <summary>Click for details</summary>
@@ -132,7 +132,7 @@ This layered model helps diagnose failures. An HTTP upgrade failure occurs befor
 
 ---
 
-## <a id="simp-message-model">8. SIMP message types and destination, session, and user headers</a>
+## <a id="simp-message-model">SIMP message types and destination, session, and user headers</a>
 
 <details>
 <summary>Click for details</summary>
@@ -149,7 +149,7 @@ SIMP is an internal/common Spring messaging model, not a wire protocol that clie
 
 ---
 
-## <a id="stomp-spring-message">9. Mapping STOMP frames to Spring Message</a>
+## <a id="stomp-spring-message">Mapping STOMP frames to Spring Message</a>
 
 <details>
 <summary>Click for details</summary>

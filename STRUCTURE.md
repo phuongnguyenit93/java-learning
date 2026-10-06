@@ -1352,25 +1352,40 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <summary><b><a href='./module/platform/development/programming/framework/spring-framework'>📁 spring-framework</a></b></summary>
 <ul>
 <li>
+  <a href='./module/platform/development/programming/framework/spring-framework/core-container'>🪄 core-container</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-framework/validation-data-binding'>🪄 validation-data-binding</a>
+</li>
+<li>
   <a href='./module/platform/development/programming/framework/spring-framework/aspect'>🪄 aspect</a>
 </li>
 <li>
   <a href='./module/platform/development/programming/framework/spring-framework/concurrency'>🪄 concurrency</a>
 </li>
 <li>
-  <a href='./module/platform/development/programming/framework/spring-framework/core-container'>🪄 core-container</a>
+  <a href='./module/platform/development/programming/framework/spring-framework/transaction-management'>🪄 transaction-management</a>
 </li>
 <li>
-  <a href='./module/platform/development/programming/framework/spring-framework/global-exception-handler'>🪄 global-exception-handler</a>
+  <a href='./module/platform/development/programming/framework/spring-framework/data-access'>🪄 data-access</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-framework/cache'>🪄 cache</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-framework/web'>🪄 web</a>
 </li>
 <li>
   <a href='./module/platform/development/programming/framework/spring-framework/reactive'>🪄 reactive</a>
 </li>
 <li>
-  <a href='./module/platform/development/programming/framework/spring-framework/testing'>🪄 testing</a>
+  <a href='./module/platform/development/programming/framework/spring-framework/messaging'>🪄 messaging</a>
 </li>
 <li>
-  <a href='./module/platform/development/programming/framework/spring-framework/web'>🪄 web</a>
+  <a href='./module/platform/development/programming/framework/spring-framework/jms'>🪄 jms</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-framework/testing'>🪄 testing</a>
 </li>
 </ul>
 </details>

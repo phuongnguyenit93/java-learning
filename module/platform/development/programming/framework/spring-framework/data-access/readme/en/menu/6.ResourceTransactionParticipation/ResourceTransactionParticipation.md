@@ -15,7 +15,6 @@
 <details>
 <summary>Click for details</summary>
 
-
 Connections are scarce resources. Correct data access must pair acquisition with release while still allowing a transaction to reuse one logical resource across multiple operations.
 
 Spring's templates/clients hide this ceremony, but the underlying model is important:
@@ -27,6 +26,7 @@ Spring's templates/clients hide this ceremony, but the underlying model is impor
 The resource helper classes exist for lower-level code that must participate in the same lifecycle. DataSourceUtils covers JDBC; ConnectionFactoryUtils covers R2DBC.
 
 The rule is simple: **use the highest Spring abstraction available**. Reach for resource utilities only when integrating lower-level code. Otherwise let JdbcTemplate/JdbcClient/DatabaseClient perform the correct acquisition and release behavior behind the scenes.
+
 </details>
 
 - [Back to top](#back-to-top)
@@ -37,7 +37,6 @@ The rule is simple: **use the highest Spring abstraction available**. Reach for 
 
 <details>
 <summary>Click for details</summary>
-
 
 DataSourceUtils provides static JDBC Connection access that is aware of Spring transaction synchronization. getConnection(dataSource) returns a Connection associated with the current transaction when one exists; otherwise it obtains a new Connection and can bind it when synchronization is active.
 
@@ -56,6 +55,7 @@ finally {
 Use releaseConnection rather than calling close() unconditionally. The utility knows whether the Connection is transaction-bound and therefore whether physical close is appropriate.
 
 Most application code should not need this pattern because JdbcTemplate and Spring JDBC operation objects use DataSourceUtils internally. Direct use belongs at an integration/lower-level boundary, not in every DAO.
+
 </details>
 
 - [Back to top](#back-to-top)
@@ -66,7 +66,6 @@ Most application code should not need this pattern because JdbcTemplate and Spri
 
 <details>
 <summary>Click for details</summary>
-
 
 ConnectionFactoryUtils plays the corresponding role for R2DBC. It obtains Connections from a ConnectionFactory, translates acquisition failures into DataAccessException, and understands connections associated with reactive transaction synchronization.
 
@@ -80,6 +79,7 @@ Mono<Connection> connection =
 DatabaseClient uses the helper internally, so direct calls are usually unnecessary. They are appropriate when custom R2DBC code needs a raw Connection but must still participate in the Spring-managed reactive resource lifecycle.
 
 Always compose the resulting Publisher. Acquiring a connection reactively and then escaping it into imperative shared state breaks the lifecycle assumptions that make cleanup and transaction participation reliable.
+
 </details>
 
 - [Back to top](#back-to-top)
@@ -90,7 +90,6 @@ Always compose the resulting Publisher. Acquiring a connection reactively and th
 
 <details>
 <summary>Click for details</summary>
-
 
 TransactionAwareDataSourceProxy and TransactionAwareConnectionFactoryProxy adapt **unaware client code** to Spring-managed transaction resources.
 
@@ -109,6 +108,7 @@ existing code requiring standard DataSource/ConnectionFactory
 ~~~
 
 Treat proxies as integration adapters. Adding one everywhere can obscure resource ownership and make configuration harder to reason about.
+
 </details>
 
 - [Back to top](#back-to-top)
@@ -119,7 +119,6 @@ Treat proxies as integration adapters. Adding one everywhere can obscure resourc
 
 <details>
 <summary>Click for details</summary>
-
 
 Imperative JDBC transaction participation is commonly thread-bound: Spring's imperative transaction synchronization associates a ConnectionHolder with the current thread for the duration of the transaction.
 
@@ -140,6 +139,7 @@ subscriber chain
 This distinction explains why ThreadLocal-based assumptions fail for reactive transaction state. A thread switch does not define transaction participation: Spring associates reactive transaction state with the Reactor Context carried by the subscription, not with whichever thread happens to process a signal. Manually storing an R2DBC Connection in a ThreadLocal therefore bypasses that model.
 
 The transaction module owns the full semantics. Here the learner only needs enough context to understand why resource lookup differs between JDBC and R2DBC.
+
 </details>
 
 - [Back to top](#back-to-top)
@@ -150,7 +150,6 @@ The transaction module owns the full semantics. Here the learner only needs enou
 
 <details>
 <summary>Click for details</summary>
-
 
 Data Access owns **how a JDBC or R2DBC resource joins Spring's resource lifecycle**. Transaction Management owns **when transactions begin/end and what policy they use**.
 
@@ -176,6 +175,7 @@ Transaction Management
 ~~~
 
 Keeping the boundary explicit prevents learners from confusing a connection helper with a transaction manager.
+
 </details>
 
 - [Back to top](#back-to-top)

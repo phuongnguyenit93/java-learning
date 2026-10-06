@@ -3,15 +3,15 @@
 # Aspect Composition, Ordering, and Lifecycle
 
 ## Menu
-- [1. The advice chain is a nested call stack](#ordering-mental-model)
-- [2. Aspect instance lifecycle: singleton, perthis, pertarget, pertypewithin](#aspect-instantiation-models)
-- [3. Demo in this module](#ordering-demo)
-- [4. Ordering should not become a business protocol](#ordering-pitfall)
-- [5. Conclusion](#ordering-conclusion)
+- [The advice chain is a nested call stack](#ordering-mental-model)
+- [Aspect instance lifecycle: singleton, perthis, pertarget, pertypewithin](#aspect-instantiation-models)
+- [Executable Evidence for Aspect Composition, Ordering, and Lifecycle](#ordering-demo)
+- [Ordering should not become a business protocol](#ordering-pitfall)
+- [Aspect Composition, Ordering, and Lifecycle Synthesis](#ordering-conclusion)
 
 One join point can match multiple Aspects at the same time.
 
-## <a id="ordering-mental-model">1. The advice chain is a nested call stack</a>
+## <a id="ordering-mental-model">The advice chain is a nested call stack</a>
 
 <details>
 <summary>Click for details</summary>
@@ -59,7 +59,7 @@ There is a second ordering issue inside one aspect. If multiple advice methods o
 
 ---
 
-## <a id="aspect-instantiation-models">2. Aspect instance lifecycle: singleton, perthis, pertarget, pertypewithin</a>
+## <a id="aspect-instantiation-models">Aspect instance lifecycle: singleton, perthis, pertarget, pertypewithin</a>
 
 <details>
 <summary>Click for details</summary>
@@ -109,7 +109,7 @@ Stateful aspects require particular care: lifecycle changes where state is share
 
 ---
 
-## <a id="ordering-demo">3. Demo in this module</a>
+## <a id="ordering-demo">Executable Evidence for Aspect Composition, Ordering, and Lifecycle</a>
 
 <details>
 <summary>Click for details</summary>
@@ -159,7 +159,7 @@ The demo establishes ordering only for the two explicitly ordered aspects. It sh
 
 ---
 
-## <a id="ordering-pitfall">4. Ordering should not become a business protocol</a>
+## <a id="ordering-pitfall">Ordering should not become a business protocol</a>
 
 <details>
 <summary>Click for details</summary>
@@ -187,7 +187,7 @@ Also distinguish **required order** from **observed order**. The Pointcut chapte
 
 ---
 
-## <a id="ordering-conclusion">5. Conclusion</a>
+## <a id="ordering-conclusion">Aspect Composition, Ordering, and Lifecycle Synthesis</a>
 
 <details>
 <summary>Click for details</summary>

@@ -3,15 +3,15 @@
 # Mô hình Proxy trong Spring AOP
 
 ## Menu
-- [1. Bên gọi không nhất thiết gọi trực tiếp target](#proxy-mental-model)
-- [2. Demo trong module](#proxy-demo)
-- [3. Container auto-proxying và object tạo trực tiếp](#managed-vs-new-demo)
-- [4. JDK Dynamic Proxy và CGLIB](#proxy-strategies)
-- [5. Kết luận](#proxy-conclusion)
+- [Bên gọi không nhất thiết gọi trực tiếp target](#proxy-mental-model)
+- [Minh chứng thực thi cho Mô hình Proxy trong Spring AOP](#proxy-demo)
+- [Container auto-proxying và object tạo trực tiếp](#managed-vs-new-demo)
+- [JDK Dynamic Proxy và CGLIB](#proxy-strategies)
+- [Tổng hợp Mô hình Proxy trong Spring AOP](#proxy-conclusion)
 
 Proxy boundary là nền tảng để hiểu hầu hết hành vi của Spring AOP.
 
-## <a id="proxy-mental-model">1. Bên gọi không nhất thiết gọi trực tiếp target</a>
+## <a id="proxy-mental-model">Bên gọi không nhất thiết gọi trực tiếp target</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -61,7 +61,7 @@ Do đó điểm phân biệt quan trọng là **call đi qua AOP proxy** hay **c
 
 ---
 
-## <a id="proxy-demo">2. Demo trong module</a>
+## <a id="proxy-demo">Minh chứng thực thi cho Mô hình Proxy trong Spring AOP</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -116,7 +116,7 @@ Tên generated proxy class không phải contract ổn định. Khi experiment c
 
 ---
 
-## <a id="managed-vs-new-demo">3. Container auto-proxying và object tạo trực tiếp</a>
+## <a id="managed-vs-new-demo">Container auto-proxying và object tạo trực tiếp</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -175,7 +175,7 @@ Bài học ở đây rất cụ thể: container auto-proxying không tự advis
 
 ---
 
-## <a id="proxy-strategies">4. JDK Dynamic Proxy và CGLIB</a>
+## <a id="proxy-strategies">JDK Dynamic Proxy và CGLIB</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -220,7 +220,7 @@ ProgrammaticProxyController#compareProxyFactoryStrategies()
 
 ---
 
-## <a id="proxy-conclusion">5. Kết luận</a>
+## <a id="proxy-conclusion">Tổng hợp Mô hình Proxy trong Spring AOP</a>
 
 <details>
 <summary>Xem chi tiết</summary>

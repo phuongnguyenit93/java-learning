@@ -14,7 +14,6 @@
 <details>
 <summary>Click for details</summary>
 
-
 Batching reduces repeated client/driver round trips by submitting multiple parameter sets through JDBC's batch facilities. It is useful when many similar writes must be executed, but it is not the same thing as one atomic transaction and it does not guarantee that the database executes every row as one physical operation.
 
 JdbcTemplate exposes batchUpdate variants for fixed or varying parameter sets. The driver and database determine details such as batch-size limits, generated-key behavior, and update counts.
@@ -37,6 +36,7 @@ Important distinctions:
 - **chunking** controls how much work the application groups at once.
 
 A huge batch can increase memory pressure or lock duration. Measure with the actual driver/database, use bounded batch sizes, and do not assume batching alone provides transaction semantics or error recovery.
+
 </details>
 
 - [Back to top](#back-to-top)
@@ -47,7 +47,6 @@ A huge batch can increase memory pressure or lock duration. Measure with the act
 
 <details>
 <summary>Click for details</summary>
-
 
 Databases often generate identifiers or other values during INSERT. Spring JDBC can request those values through JDBC generated-key support, commonly using KeyHolder/GeneratedKeyHolder or JdbcClient result APIs where appropriate.
 
@@ -68,6 +67,7 @@ jdbcTemplate.update(connection -> {
 Generated-key support depends on the JDBC driver and database. Some databases require naming the generated columns; some drivers return multiple columns or vendor-specific numeric types. Treat the returned key shape as a database/driver contract rather than assuming every generated key is a Long.
 
 If key retrieval becomes complicated, make the required columns explicit and keep the database-specific assumption close to the DAO. The purpose of Spring's helper types is to reduce plumbing, not to erase database differences.
+
 </details>
 
 - [Back to top](#back-to-top)
@@ -78,7 +78,6 @@ If key retrieval becomes complicated, make the required columns explicit and kee
 
 <details>
 <summary>Click for details</summary>
-
 
 Convenience row mapping is ideal when one row maps independently to one object. Some queries do not have that shape: they may build a graph from repeated parent rows, aggregate across rows, stream values into another sink, or need custom statement configuration.
 
@@ -102,6 +101,7 @@ Map<Long, OrderView> orders = jdbcTemplate.query(sql, rs -> {
 ~~~
 
 Callbacks are an escape hatch with a defined contract, not an invitation to manually reopen resource management. Do not close the Connection or ResultSet that Spring supplied to a callback unless that callback contract explicitly assigns such ownership.
+
 </details>
 
 - [Back to top](#back-to-top)
@@ -112,7 +112,6 @@ Callbacks are an escape hatch with a defined contract, not an invitation to manu
 
 <details>
 <summary>Click for details</summary>
-
 
 SimpleJdbcInsert and SimpleJdbcCall are reusable Spring JDBC helpers for operations where database metadata can remove repetitive configuration.
 
@@ -130,6 +129,7 @@ Number id = insert.executeAndReturnKey(
 ~~~
 
 These helpers are not ORM. They still operate against relational tables/procedures and use JdbcTemplate underneath. Metadata is a convenience, not a source of application truth: explicit configuration is preferable when portability, unusual schemas, or stored-procedure signatures make auto-detection ambiguous.
+
 </details>
 
 - [Back to top](#back-to-top)
@@ -140,7 +140,6 @@ These helpers are not ORM. They still operate against relational tables/procedur
 
 <details>
 <summary>Click for details</summary>
-
 
 Spring JDBC includes support for creating embedded databases and initializing a database from SQL scripts. These facilities are valuable for tests, samples, local bootstrap, and controlled application initialization.
 
@@ -157,6 +156,7 @@ DataSource dataSource = new EmbeddedDatabaseBuilder()
 Keep the boundary clear: script initialization is not automatically a production schema-migration strategy. Production evolution usually needs ordered migrations, history, repeatability, rollout discipline, and compatibility management—concerns owned by tools such as Flyway/Liquibase rather than by a basic Spring JDBC bootstrap helper.
 
 Also avoid assuming an embedded engine behaves exactly like the production database. SQL dialects, locking, types, and optimizer behavior can differ.
+
 </details>
 
 - [Back to top](#back-to-top)

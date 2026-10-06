@@ -3,17 +3,17 @@
 # Xử lý STOMP Application Message
 
 ## Menu
-- [1. @MessageMapping handler method](#message-mapping)
-- [2. Destination variable](#destination-variable)
-- [3. Payload conversion](#payload-conversion)
-- [4. Payload validation](#payload-validation)
-- [5. @SubscribeMapping](#subscribe-mapping)
-- [6. @SendTo và reply destination](#send-to)
-- [7. @SendToUser và user reply](#send-to-user)
-- [8. SimpMessagingTemplate](#simp-messaging-template)
-- [9. Xử lý message exception](#message-exception-handling)
+- [@MessageMapping handler method](#message-mapping)
+- [Destination variable](#destination-variable)
+- [Payload conversion](#payload-conversion)
+- [Payload validation](#payload-validation)
+- [@SubscribeMapping](#subscribe-mapping)
+- [@SendTo và reply destination](#send-to)
+- [@SendToUser và user reply](#send-to-user)
+- [SimpMessagingTemplate](#simp-messaging-template)
+- [Xử lý message exception](#message-exception-handling)
 
-## <a id="message-mapping">1. @MessageMapping handler method</a>
+## <a id="message-mapping">@MessageMapping handler method</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -39,7 +39,7 @@ Nên giữ destination handler tập trung vào application work. Broker subscri
 
 ---
 
-## <a id="destination-variable">2. Destination variable</a>
+## <a id="destination-variable">Destination variable</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -61,7 +61,7 @@ Destination pattern là routing syntax, không phải authorization rule. Việc
 
 ---
 
-## <a id="payload-conversion">3. Payload conversion</a>
+## <a id="payload-conversion">Payload conversion</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -80,7 +80,7 @@ WebSocketMessageBrokerConfigurer.configureMessageConverters(...) là extension p
 
 ---
 
-## <a id="payload-validation">4. Payload validation</a>
+## <a id="payload-validation">Payload validation</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -102,7 +102,7 @@ Nên giữ ownership của validation rõ ràng. Chapter này giải thích các
 
 ---
 
-## <a id="subscribe-mapping">5. @SubscribeMapping</a>
+## <a id="subscribe-mapping">@SubscribeMapping</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -124,7 +124,7 @@ Dùng @SubscribeMapping cho hành vi ứng dụng tại thời điểm subscribe
 
 ---
 
-## <a id="send-to">6. @SendTo và reply destination</a>
+## <a id="send-to">@SendTo và reply destination</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -147,7 +147,7 @@ Nếu @MessageMapping thông thường không có explicit @SendTo, Spring có t
 
 ---
 
-## <a id="send-to-user">7. @SendToUser và user reply</a>
+## <a id="send-to-user">@SendToUser và user reply</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -170,7 +170,7 @@ Dùng @SendToUser cho user-targeted reply, không dùng nó làm authorization m
 
 ---
 
-## <a id="simp-messaging-template">8. SimpMessagingTemplate</a>
+## <a id="simp-messaging-template">SimpMessagingTemplate</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -200,7 +200,7 @@ Nên dùng template khi publication bắt nguồn từ timer, HTTP handler, doma
 
 ---
 
-## <a id="message-exception-handling">9. Xử lý message exception</a>
+## <a id="message-exception-handling">Xử lý message exception</a>
 
 <details>
 <summary>Xem chi tiết</summary>

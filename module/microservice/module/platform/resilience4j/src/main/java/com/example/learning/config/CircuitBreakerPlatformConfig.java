@@ -1,7 +1,7 @@
 package com.example.learning.config;
 
 
-import com.example.learning.module.feign.exception.FeignClientException;
+import com.example.projectbuild.exceptionhandler.servlet.feign.FeignClientException;
 import feign.FeignException;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;

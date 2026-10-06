@@ -3,15 +3,15 @@
 # STOMP Client và Connection Lifecycle
 
 ## Menu
-- [1. WebSocketStompClient](#websocket-stomp-client)
-- [2. ReactorNettyTcpStompClient và STOMP trên TCP](#reactor-netty-tcp-stomp-client)
-- [3. STOMP session lifecycle](#stomp-session-lifecycle)
-- [4. Client subscription và send](#stomp-client-subscriptions)
-- [5. Client heartbeat](#stomp-client-heartbeats)
-- [6. Receipt và xác nhận server đã xử lý frame](#stomp-client-receipts)
-- [7. Ranh giới failure và recovery của Spring STOMP client](#stomp-connection-recovery)
+- [WebSocketStompClient](#websocket-stomp-client)
+- [ReactorNettyTcpStompClient và STOMP trên TCP](#reactor-netty-tcp-stomp-client)
+- [STOMP session lifecycle](#stomp-session-lifecycle)
+- [Client subscription và send](#stomp-client-subscriptions)
+- [Client heartbeat](#stomp-client-heartbeats)
+- [Receipt và xác nhận server đã xử lý frame](#stomp-client-receipts)
+- [Ranh giới failure và recovery của Spring STOMP client](#stomp-connection-recovery)
 
-## <a id="websocket-stomp-client">1. WebSocketStompClient</a>
+## <a id="websocket-stomp-client">WebSocketStompClient</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -37,7 +37,7 @@ CompletableFuture<StompSession> future =
 
 ---
 
-## <a id="reactor-netty-tcp-stomp-client">2. ReactorNettyTcpStompClient và STOMP trên TCP</a>
+## <a id="reactor-netty-tcp-stomp-client">ReactorNettyTcpStompClient và STOMP trên TCP</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -54,7 +54,7 @@ Việc Reactor Netty xuất hiện ở đây không biến chapter thành Reacto
 
 ---
 
-## <a id="stomp-session-lifecycle">3. STOMP session lifecycle</a>
+## <a id="stomp-session-lifecycle">STOMP session lifecycle</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -80,7 +80,7 @@ Không nên coi việc có client object là session đã connected; connection 
 
 ---
 
-## <a id="stomp-client-subscriptions">4. Client subscription và send</a>
+## <a id="stomp-client-subscriptions">Client subscription và send</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -109,7 +109,7 @@ Subscription id và broker acknowledgement mode là STOMP concepts. Hành vi th�
 
 ---
 
-## <a id="stomp-client-heartbeats">5. Client heartbeat</a>
+## <a id="stomp-client-heartbeats">Client heartbeat</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -126,7 +126,7 @@ Cấu hình interval cần cân bằng network và operational requirement. Inte
 
 ---
 
-## <a id="stomp-client-receipts">6. Receipt và xác nhận server đã xử lý frame</a>
+## <a id="stomp-client-receipts">Receipt và xác nhận server đã xử lý frame</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -143,7 +143,7 @@ Sự phân biệt này rất quan trọng khi thiết kế reliability. Receipt 
 
 ---
 
-## <a id="stomp-connection-recovery">7. Ranh giới failure và recovery của Spring STOMP client</a>
+## <a id="stomp-connection-recovery">Ranh giới failure và recovery của Spring STOMP client</a>
 
 <details>
 <summary>Xem chi tiết</summary>

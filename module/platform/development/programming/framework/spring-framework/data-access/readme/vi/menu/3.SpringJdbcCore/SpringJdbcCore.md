@@ -15,7 +15,6 @@
 <details>
 <summary>Xem chi tiết</summary>
 
-
 DataSource là điểm vào chuẩn của JDBC để cung cấp Connection. Spring JDBC chủ động xây trên contract đó thay vì tạo một connection API riêng. Trong production, DataSource thường được cung cấp bởi một connection pool; việc sizing, validation và tuning pool/driver không thuộc phạm vi trách nhiệm của Spring JDBC.
 
 JdbcTemplate tổ chức JDBC quy trình lặp lại quanh DataSource:
@@ -37,6 +36,7 @@ giải phóng Connection đúng cách
 "Đúng cách" là điểm quan trọng. Khi transaction synchronization đang hoạt động, Connection có thể thuộc transaction hiện tại thay vì bị đóng vật lý sau từng lời gọi template. JdbcTemplate dùng tiện ích quản lý tài nguyên của Spring bên dưới để bên gọi không phải tự viết logic transaction-aware.
 
 Ứng dụng vẫn sở hữu SQL và quyết định mapping. Spring sở hữu quy trình giúp các quyết định đó an toàn và lặp lại được.
+
 </details>
 
 - [Quay lại đầu trang](#back-to-top)
@@ -47,7 +47,6 @@ giải phóng Connection đúng cách
 
 <details>
 <summary>Xem chi tiết</summary>
-
 
 Spring JDBC có nhiều tầng API vì thao tác phổ biến và extension point ở mức thấp cần độ chi tiết khác nhau.
 
@@ -68,6 +67,7 @@ Customer customer = client.sql(
 ~~~
 
 Dùng facade khi nó diễn đạt thao tác rõ ràng. Chuyển xuống template callback hoặc tiện ích chuyên biệt khi thao tác cần capability nằm ngoài phạm vi query/update phổ biến của JdbcClient.
+
 </details>
 
 - [Quay lại đầu trang](#back-to-top)
@@ -78,7 +78,6 @@ Dùng facade khi nó diễn đạt thao tác rõ ràng. Chuyển xuống templat
 
 <details>
 <summary>Xem chi tiết</summary>
-
 
 Parameter binding tách cấu trúc SQL khỏi giá trị runtime. Cách này an toàn và dễ đọc hơn việc nối trực tiếp giá trị vào SQL string.
 
@@ -107,6 +106,7 @@ jdbcClient.sql("""
 NamedParameterJdbcTemplate và JdbcClient expand named parameter trước khi JDBC statement chạy. Đây không phải database protocol mới; driver cuối cùng vẫn nhận bind position tương thích JDBC.
 
 Binding chỉ bảo vệ **giá trị**. Table name, column name, sort direction và SQL fragment thường không thể truyền như bind value; nếu cần dynamic identifier, hãy chọn từ tập giá trị ứng dụng kiểm soát thay vì nối input không tin cậy.
+
 </details>
 
 - [Quay lại đầu trang](#back-to-top)
@@ -117,7 +117,6 @@ Binding chỉ bảo vệ **giá trị**. Table name, column name, sort direction
 
 <details>
 <summary>Xem chi tiết</summary>
-
 
 Spring JDBC phân biệt thao tác theo hình dạng kết quả thay vì nhét mọi thứ vào một API chung.
 
@@ -143,6 +142,7 @@ List<Customer> customers = jdbcTemplate.query(
 ~~~
 
 Hãy chọn abstraction nhỏ nhất diễn đạt đúng thao tác. Callback là extension point cho hành vi JDBC ít phổ biến, không phải style mặc định cho đọc/ghi đơn giản.
+
 </details>
 
 - [Quay lại đầu trang](#back-to-top)
@@ -153,7 +153,6 @@ Hãy chọn abstraction nhỏ nhất diễn đạt đúng thao tác. Callback l�
 
 <details>
 <summary>Xem chi tiết</summary>
-
 
 Query có hai quyết định độc lập: **mỗi row được chuyển thành giá trị nào** và **bên gọi kỳ vọng bao nhiêu giá trị**.
 
@@ -170,6 +169,7 @@ Cardinality phải là một phần của contract:
 Nếu single-result API nhận số row không đúng, Spring ném DataAccessException subtype như IncorrectResultSizeDataAccessException thay vì âm thầm lấy một row.
 
 Không chọn single() chỉ vì test data hiện có một record. SQL predicate và constraint của database phải thực sự bảo đảm expectation đó.
+
 </details>
 
 - [Quay lại đầu trang](#back-to-top)
@@ -180,7 +180,6 @@ Không chọn single() chỉ vì test data hiện có một record. SQL predicat
 
 <details>
 <summary>Xem chi tiết</summary>
-
 
 Ưu tiên JdbcClient cho query/update có bind parameter thông thường khi fluent API giúp SQL, binding, mapping và cardinality nằm gần nhau. Trong Spring 6.1, đây là facade thuận tiện cho những thao tác trước đây thường phải chuyển qua lại giữa JdbcTemplate và NamedParameterJdbcTemplate.
 
@@ -198,6 +197,7 @@ insert/procedure dựa trên metadata
 ~~~
 
 Đây không phải lựa chọn "API mới thay API cũ". JdbcClient cố ý là facade trên hạ tầng template, nên cùng một codebase có thể dùng nhiều tầng nếu mỗi thao tác trở nên rõ ràng hơn.
+
 </details>
 
 - [Quay lại đầu trang](#back-to-top)

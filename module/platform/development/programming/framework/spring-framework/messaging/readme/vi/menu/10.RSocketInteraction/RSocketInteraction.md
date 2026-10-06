@@ -3,18 +3,18 @@
 # RSocket Interaction Model và ranh giới Reactive
 
 ## Menu
-- [1. Vì sao RSocket tồn tại](#rsocket-purpose)
-- [2. Request-response](#rsocket-request-response)
-- [3. Fire-and-forget](#rsocket-fire-and-forget)
-- [4. Request-stream](#rsocket-request-stream)
-- [5. Request-channel](#rsocket-request-channel)
-- [6. Tính đối xứng requester và responder](#rsocket-symmetry)
-- [7. Setup và connection model](#rsocket-setup-connection)
-- [8. Route và metadata](#rsocket-routes-metadata)
-- [9. Ranh giới Reactive Streams và backpressure](#rsocket-reactive-streams-boundary)
-- [10. Ranh giới TCP, WebSocket và protocol feature](#rsocket-transports-boundary)
+- [Vì sao RSocket tồn tại](#rsocket-purpose)
+- [Request-response](#rsocket-request-response)
+- [Fire-and-forget](#rsocket-fire-and-forget)
+- [Request-stream](#rsocket-request-stream)
+- [Request-channel](#rsocket-request-channel)
+- [Tính đối xứng requester và responder](#rsocket-symmetry)
+- [Setup và connection model](#rsocket-setup-connection)
+- [Route và metadata](#rsocket-routes-metadata)
+- [Ranh giới Reactive Streams và backpressure](#rsocket-reactive-streams-boundary)
+- [Ranh giới TCP, WebSocket và protocol feature](#rsocket-transports-boundary)
 
-## <a id="rsocket-purpose">1. Vì sao RSocket tồn tại</a>
+## <a id="rsocket-purpose">Vì sao RSocket tồn tại</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -38,7 +38,7 @@ Vì vậy câu hỏi thiết kế nên là “Ứng dụng có cần interaction
 
 ---
 
-## <a id="rsocket-request-response">2. Request-response</a>
+## <a id="rsocket-request-response">Request-response</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -64,7 +64,7 @@ Chọn request-response khi contract thật sự chỉ có một kết quả: lo
 
 ---
 
-## <a id="rsocket-fire-and-forget">3. Fire-and-forget</a>
+## <a id="rsocket-fire-and-forget">Fire-and-forget</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -88,7 +88,7 @@ Khác biệt này rất quan trọng khi thiết kế reliability. RSocket xem f
 
 ---
 
-## <a id="rsocket-request-stream">4. Request-stream</a>
+## <a id="rsocket-request-stream">Request-stream</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -112,7 +112,7 @@ Request-stream có thể biểu diễn stream hữu hạn hoặc kéo dài lâu.
 
 ---
 
-## <a id="rsocket-request-channel">5. Request-channel</a>
+## <a id="rsocket-request-channel">Request-channel</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -138,7 +138,7 @@ Không nên dùng channel chỉ vì transport có thể giao tiếp hai chiều.
 
 ---
 
-## <a id="rsocket-symmetry">6. Tính đối xứng requester và responder</a>
+## <a id="rsocket-symmetry">Tính đối xứng requester và responder</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -157,7 +157,7 @@ Hệ quả thực tế là connection ownership và request ownership là hai v�
 
 ---
 
-## <a id="rsocket-setup-connection">7. Setup và connection model</a>
+## <a id="rsocket-setup-connection">Setup và connection model</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -183,7 +183,7 @@ Keepalive, resumption, interceptor và các protocol option khác là connection
 
 ---
 
-## <a id="rsocket-routes-metadata">8. Route và metadata</a>
+## <a id="rsocket-routes-metadata">Route và metadata</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -210,7 +210,7 @@ Nên giữ route ổn định, mang ý nghĩa nghiệp vụ. Không nên nhét p
 
 ---
 
-## <a id="rsocket-reactive-streams-boundary">9. Ranh giới Reactive Streams và backpressure</a>
+## <a id="rsocket-reactive-streams-boundary">Ranh giới Reactive Streams và backpressure</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -236,7 +236,7 @@ Flow control kiểm soát producer của một stream đang sống. Nó không t
 
 ---
 
-## <a id="rsocket-transports-boundary">10. Ranh giới TCP, WebSocket và protocol feature</a>
+## <a id="rsocket-transports-boundary">Ranh giới TCP, WebSocket và protocol feature</a>
 
 <details>
 <summary>Xem chi tiết</summary>

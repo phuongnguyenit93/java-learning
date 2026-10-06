@@ -3,14 +3,14 @@
 # Pointcut dựa trên Annotation và Declarative Contract
 
 ## Menu
-- [1. Annotation như một declarative contract](#annotation-contract)
-- [2. Demo trong module](#annotation-demo)
-- [3. Khi nào nên dùng pointcut dựa trên annotation?](#annotation-vs-expression)
-- [4. Kết luận](#annotation-conclusion)
+- [Annotation như một declarative contract](#annotation-contract)
+- [Minh chứng thực thi cho Pointcut dựa trên Annotation và Declarative Contract](#annotation-demo)
+- [Khi nào nên dùng pointcut dựa trên annotation?](#annotation-vs-expression)
+- [Tổng hợp Pointcut dựa trên Annotation và Declarative Contract](#annotation-conclusion)
 
 Custom annotation cho phép mô tả hành vi cắt ngang theo kiểu declarative.
 
-## <a id="annotation-contract">1. Annotation như một declarative contract</a>
+## <a id="annotation-contract">Annotation như một declarative contract</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -86,7 +86,7 @@ Yêu cầu về proxy vẫn giữ nguyên. Metadata trên method không làm m�
 
 ---
 
-## <a id="annotation-demo">2. Demo trong module</a>
+## <a id="annotation-demo">Minh chứng thực thi cho Pointcut dựa trên Annotation và Declarative Contract</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -140,7 +140,7 @@ Label chứng minh metadata đã được bind; target event chứng minh advice
 
 ---
 
-## <a id="annotation-vs-expression">3. Khi nào nên dùng pointcut dựa trên annotation?</a>
+## <a id="annotation-vs-expression">Khi nào nên dùng pointcut dựa trên annotation?</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -182,7 +182,7 @@ Cuối cùng, annotation có mặt không làm mất proxy semantics. Self-invoc
 
 ---
 
-## <a id="annotation-conclusion">4. Kết luận</a>
+## <a id="annotation-conclusion">Tổng hợp Pointcut dựa trên Annotation và Declarative Contract</a>
 
 <details>
 <summary>Xem chi tiết</summary>

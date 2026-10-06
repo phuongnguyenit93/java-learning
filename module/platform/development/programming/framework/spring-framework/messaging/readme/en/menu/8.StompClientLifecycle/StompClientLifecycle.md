@@ -3,15 +3,15 @@
 # STOMP Client and Connection Lifecycle
 
 ## Menu
-- [1. WebSocketStompClient](#websocket-stomp-client)
-- [2. ReactorNettyTcpStompClient and STOMP over TCP](#reactor-netty-tcp-stomp-client)
-- [3. STOMP session lifecycle](#stomp-session-lifecycle)
-- [4. Client subscriptions and sends](#stomp-client-subscriptions)
-- [5. Client heartbeats](#stomp-client-heartbeats)
-- [6. Receipts and server processing confirmation](#stomp-client-receipts)
-- [7. Spring STOMP client failure and recovery boundary](#stomp-connection-recovery)
+- [WebSocketStompClient](#websocket-stomp-client)
+- [ReactorNettyTcpStompClient and STOMP over TCP](#reactor-netty-tcp-stomp-client)
+- [STOMP session lifecycle](#stomp-session-lifecycle)
+- [Client subscriptions and sends](#stomp-client-subscriptions)
+- [Client heartbeats](#stomp-client-heartbeats)
+- [Receipts and server processing confirmation](#stomp-client-receipts)
+- [Spring STOMP client failure and recovery boundary](#stomp-connection-recovery)
 
-## <a id="websocket-stomp-client">1. WebSocketStompClient</a>
+## <a id="websocket-stomp-client">WebSocketStompClient</a>
 
 <details>
 <summary>Click for details</summary>
@@ -37,7 +37,7 @@ Treat this class as protocol infrastructure, not a resilience framework. It hand
 
 ---
 
-## <a id="reactor-netty-tcp-stomp-client">2. ReactorNettyTcpStompClient and STOMP over TCP</a>
+## <a id="reactor-netty-tcp-stomp-client">ReactorNettyTcpStompClient and STOMP over TCP</a>
 
 <details>
 <summary>Click for details</summary>
@@ -54,7 +54,7 @@ The presence of Reactor Netty here does **not** make this chapter a Reactor curr
 
 ---
 
-## <a id="stomp-session-lifecycle">3. STOMP session lifecycle</a>
+## <a id="stomp-session-lifecycle">STOMP session lifecycle</a>
 
 <details>
 <summary>Click for details</summary>
@@ -80,7 +80,7 @@ Do not assume that obtaining a client object means the session is already connec
 
 ---
 
-## <a id="stomp-client-subscriptions">4. Client subscriptions and sends</a>
+## <a id="stomp-client-subscriptions">Client subscriptions and sends</a>
 
 <details>
 <summary>Click for details</summary>
@@ -109,7 +109,7 @@ Subscription identifiers and broker acknowledgement modes are STOMP concepts. Th
 
 ---
 
-## <a id="stomp-client-heartbeats">5. Client heartbeats</a>
+## <a id="stomp-client-heartbeats">Client heartbeats</a>
 
 <details>
 <summary>Click for details</summary>
@@ -126,7 +126,7 @@ Configure heartbeat intervals according to network characteristics and operation
 
 ---
 
-## <a id="stomp-client-receipts">6. Receipts and server processing confirmation</a>
+## <a id="stomp-client-receipts">Receipts and server processing confirmation</a>
 
 <details>
 <summary>Click for details</summary>
@@ -143,7 +143,7 @@ This distinction matters when building reliability logic. A receipt can prove pr
 
 ---
 
-## <a id="stomp-connection-recovery">7. Spring STOMP client failure and recovery boundary</a>
+## <a id="stomp-connection-recovery">Spring STOMP client failure and recovery boundary</a>
 
 <details>
 <summary>Click for details</summary>

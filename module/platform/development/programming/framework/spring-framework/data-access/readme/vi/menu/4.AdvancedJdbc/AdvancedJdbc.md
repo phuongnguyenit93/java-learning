@@ -14,7 +14,6 @@
 <details>
 <summary>Xem chi tiết</summary>
 
-
 Batch giúp giảm số lần round trip lặp lại bằng cách gửi nhiều bộ tham số qua JDBC batch facility. Nó hữu ích khi ghi nhiều row cùng kiểu, nhưng **batch không đồng nghĩa transaction** và cũng không bảo đảm database thực thi mọi row thành một thao tác vật lý duy nhất.
 
 JdbcTemplate có các batchUpdate variant cho parameter set cố định hoặc thay đổi. Driver và database quyết định giới hạn batch, hành vi update count và nhiều chi tiết generated-key.
@@ -37,6 +36,7 @@ Cần tách ba khái niệm:
 - **chunking**: lượng công việc ứng dụng gom mỗi lần.
 
 Batch quá lớn có thể tăng memory pressure hoặc thời gian giữ lock. Hãy đo với driver/database thật, dùng kích thước có giới hạn và không coi batching là cơ chế transaction hay khôi phục sau lỗi.
+
 </details>
 
 - [Quay lại đầu trang](#back-to-top)
@@ -47,7 +47,6 @@ Batch quá lớn có thể tăng memory pressure hoặc thời gian giữ lock. 
 
 <details>
 <summary>Xem chi tiết</summary>
-
 
 Database thường sinh id hoặc giá trị khác trong lúc INSERT. Spring JDBC có thể yêu cầu các generated value đó qua JDBC generated-key support, thường với KeyHolder/GeneratedKeyHolder hoặc API phù hợp ở tầng client.
 
@@ -68,6 +67,7 @@ jdbcTemplate.update(connection -> {
 Khả năng trả key phụ thuộc driver và database. Có hệ cần chỉ rõ tên column sinh tự động; có driver trả nhiều column hoặc numeric type đặc thù. Đừng mặc định mọi generated key đều là Long.
 
 Nếu việc lấy generated key phức tạp, hãy khai báo rõ các cột bắt buộc và giữ giả định đặc thù database gần DAO. Tiện ích của Spring giảm mã hạ tầng lặp lại chứ không xóa khác biệt giữa các database.
+
 </details>
 
 - [Quay lại đầu trang](#back-to-top)
@@ -78,7 +78,6 @@ Nếu việc lấy generated key phức tạp, hãy khai báo rõ các cột b�
 
 <details>
 <summary>Xem chi tiết</summary>
-
 
 Row mapping tiện lợi phù hợp khi mỗi row độc lập tạo một object. Một số query không có hình dạng đó: cần gom nhiều row chung parent, aggregate qua nhiều row, đẩy dữ liệu sang sink khác hoặc tùy biến statement sâu hơn.
 
@@ -102,6 +101,7 @@ Map<Long, OrderView> orders = jdbcTemplate.query(sql, rs -> {
 ~~~
 
 Callback là extension point có contract, không phải lý do để tự quản lý lại toàn bộ tài nguyên. Không tự đóng Connection/ResultSet do Spring cấp nếu callback contract không giao quyền sở hữu đó cho bạn.
+
 </details>
 
 - [Quay lại đầu trang](#back-to-top)
@@ -112,7 +112,6 @@ Callback là extension point có contract, không phải lý do để tự quả
 
 <details>
 <summary>Xem chi tiết</summary>
-
 
 SimpleJdbcInsert và SimpleJdbcCall là các tiện ích tái sử dụng cho những thao tác mà database metadata có thể giảm cấu hình lặp lại.
 
@@ -130,6 +129,7 @@ Number id = insert.executeAndReturnKey(
 ~~~
 
 Các tiện ích này không phải ORM. Chúng vẫn làm việc trực tiếp với table/procedure và dùng JdbcTemplate bên dưới. Metadata chỉ là tiện ích; cấu hình tường minh thường tốt hơn khi cần khả năng chuyển đổi giữa database, schema lạ hoặc stored-procedure signature khiến việc tự phát hiện trở nên mơ hồ.
+
 </details>
 
 - [Quay lại đầu trang](#back-to-top)
@@ -140,7 +140,6 @@ Các tiện ích này không phải ORM. Chúng vẫn làm việc trực tiếp 
 
 <details>
 <summary>Xem chi tiết</summary>
-
 
 Spring JDBC hỗ trợ tạo embedded database và khởi tạo database từ SQL script. Các tiện ích này hữu ích cho kiểm thử, ví dụ minh họa, khởi động môi trường cục bộ và những luồng khởi tạo ứng dụng có kiểm soát.
 
@@ -157,6 +156,7 @@ DataSource dataSource = new EmbeddedDatabaseBuilder()
 Ranh giới quan trọng: khởi tạo bằng SQL script **không tự trở thành chiến lược migration schema cho production**. Việc phát triển schema trong production thường cần thứ tự phiên bản, lịch sử migration, khả năng chạy lặp có kiểm soát, kỷ luật rollout và quản lý tương thích; đó là bài toán phù hợp hơn với các công cụ như Flyway hoặc Liquibase.
 
 Cũng không nên giả định database nhúng mô phỏng hoàn toàn database production. SQL dialect, kiểu dữ liệu, cơ chế lock và hành vi của optimizer có thể khác đáng kể.
+
 </details>
 
 - [Quay lại đầu trang](#back-to-top)

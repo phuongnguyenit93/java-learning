@@ -2361,6 +2361,13 @@ Swagger runtime
 → YML still composes GLOBAL_SWAGGER_CONFIG
 → Spring Boot AutoConfiguration.imports under META-INF/spring
 
+Shared Servlet exception handling
+→ springboot-runtime/exception-handler-servlet
+→ SERVICE_NAME = GLOBAL_EXCEPTION_HANDLER
+→ auto-configured by default for Servlet applications that consume the module
+→ Feign/Mongo handlers are classpath-conditional
+→ runtime packages stay under com.example.projectbuild.* and must not scan com.example.learning.*
+
 Execution Context
 → BUILD_EXECUTION_CONTEXT is an independent capability flag
 → springboot-runtime/execution-context = neutral core

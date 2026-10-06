@@ -3,16 +3,16 @@
 # Mô hình Message, Channel và Handler
 
 ## Menu
-- [1. Message gồm payload và headers](#message-payload-headers)
-- [2. Tạo message và truy cập headers](#message-building-access)
-- [3. MessageChannel](#message-channel)
-- [4. SubscribableChannel và subscriber](#subscribable-channel)
-- [5. MessageHandler](#message-handler)
-- [6. Delivery đồng bộ và delivery qua executor](#channel-delivery-semantics)
-- [7. Message conversion](#message-conversion)
-- [8. Messaging error và delivery failure](#messaging-errors)
+- [Message gồm payload và headers](#message-payload-headers)
+- [Tạo message và truy cập headers](#message-building-access)
+- [MessageChannel](#message-channel)
+- [SubscribableChannel và subscriber](#subscribable-channel)
+- [MessageHandler](#message-handler)
+- [Delivery đồng bộ và delivery qua executor](#channel-delivery-semantics)
+- [Message conversion](#message-conversion)
+- [Messaging error và delivery failure](#messaging-errors)
 
-## <a id="message-payload-headers">1. Message gồm payload và headers</a>
+## <a id="message-payload-headers">Message gồm payload và headers</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -29,7 +29,7 @@ MessageHeaders có thể chứa các framework key như id, timestamp, contentTy
 
 ---
 
-## <a id="message-building-access">2. Tạo message và truy cập headers</a>
+## <a id="message-building-access">Tạo message và truy cập headers</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -51,7 +51,7 @@ Nên dùng tên header có ý nghĩa rõ và tránh nhét trạng thái ứng d�
 
 ---
 
-## <a id="message-channel">3. MessageChannel</a>
+## <a id="message-channel">MessageChannel</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -68,7 +68,7 @@ Sự tách biệt này giúp thiết kế ứng dụng rõ hơn: sender tập tr
 
 ---
 
-## <a id="subscribable-channel">4. SubscribableChannel và subscriber</a>
+## <a id="subscribable-channel">SubscribableChannel và subscriber</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -85,7 +85,7 @@ Subscription ở đây là quan hệ hạ tầng trong JVM, không phải broker
 
 ---
 
-## <a id="message-handler">5. MessageHandler</a>
+## <a id="message-handler">MessageHandler</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -102,7 +102,7 @@ Nên giữ handler tập trung vào một trách nhiệm xử lý. Khi thiết k
 
 ---
 
-## <a id="channel-delivery-semantics">6. Delivery đồng bộ và delivery qua executor</a>
+## <a id="channel-delivery-semantics">Delivery đồng bộ và delivery qua executor</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -123,7 +123,7 @@ Không nên nhìn tên channel, hoặc chỉ thấy có Executor, rồi mặc đ
 
 ---
 
-## <a id="message-conversion">7. Message conversion</a>
+## <a id="message-conversion">Message conversion</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -142,7 +142,7 @@ Nên cấu hình converter rõ ràng và dễ dự đoán. Một custom converte
 
 ---
 
-## <a id="messaging-errors">8. Messaging error và delivery failure</a>
+## <a id="messaging-errors">Messaging error và delivery failure</a>
 
 <details>
 <summary>Xem chi tiết</summary>

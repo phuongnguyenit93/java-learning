@@ -3,17 +3,17 @@
 # STOMP và Simple Messaging Model
 
 ## Menu
-- [1. Vì sao dùng STOMP trên WebSocket](#stomp-purpose)
-- [2. STOMP frame và command](#stomp-frames-commands)
-- [3. Destination và subscription](#stomp-destinations-subscriptions)
-- [4. Header và message content](#stomp-headers-content)
-- [5. Heartbeat và receipt](#stomp-heartbeats-receipts)
-- [6. Acknowledgement, transaction và ranh giới broker support](#stomp-ack-transactions)
-- [7. STOMP trên WebSocket transport](#stomp-over-websocket)
-- [8. SIMP message type cùng destination, session và user headers](#simp-message-model)
-- [9. Ánh xạ STOMP frame thành Spring Message](#stomp-spring-message)
+- [Vì sao dùng STOMP trên WebSocket](#stomp-purpose)
+- [STOMP frame và command](#stomp-frames-commands)
+- [Destination và subscription](#stomp-destinations-subscriptions)
+- [Header và message content](#stomp-headers-content)
+- [Heartbeat và receipt](#stomp-heartbeats-receipts)
+- [Acknowledgement, transaction và ranh giới broker support](#stomp-ack-transactions)
+- [STOMP trên WebSocket transport](#stomp-over-websocket)
+- [SIMP message type cùng destination, session và user headers](#simp-message-model)
+- [Ánh xạ STOMP frame thành Spring Message](#stomp-spring-message)
 
-## <a id="stomp-purpose">1. Vì sao dùng STOMP trên WebSocket</a>
+## <a id="stomp-purpose">Vì sao dùng STOMP trên WebSocket</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -30,7 +30,7 @@ Vì vậy lý do chọn STOMP trên raw WebSocket không phải vì WebSocket kh
 
 ---
 
-## <a id="stomp-frames-commands">2. STOMP frame và command</a>
+## <a id="stomp-frames-commands">STOMP frame và command</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -47,7 +47,7 @@ Command nằm ở STOMP protocol layer, không map trực tiếp 1:1 thành Java
 
 ---
 
-## <a id="stomp-destinations-subscriptions">3. Destination và subscription</a>
+## <a id="stomp-destinations-subscriptions">Destination và subscription</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -64,7 +64,7 @@ Trong Spring WebSocket/STOMP stack, destination prefix chia ownership. Applicati
 
 ---
 
-## <a id="stomp-headers-content">4. Header và message content</a>
+## <a id="stomp-headers-content">Header và message content</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -81,7 +81,7 @@ Ranh giới này quan trọng khi tạo message bằng code. Một Spring header
 
 ---
 
-## <a id="stomp-heartbeats-receipts">5. Heartbeat và receipt</a>
+## <a id="stomp-heartbeats-receipts">Heartbeat và receipt</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -98,7 +98,7 @@ Broker capability quyết định phần còn lại. Built-in simple broker củ
 
 ---
 
-## <a id="stomp-ack-transactions">6. Acknowledgement, transaction và ranh giới broker support</a>
+## <a id="stomp-ack-transactions">Acknowledgement, transaction và ranh giới broker support</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -115,7 +115,7 @@ Khi ứng dụng cần broker-native acknowledgement mode, durable queue, transa
 
 ---
 
-## <a id="stomp-over-websocket">7. STOMP trên WebSocket transport</a>
+## <a id="stomp-over-websocket">STOMP trên WebSocket transport</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -132,7 +132,7 @@ Mô hình nhiều tầng này rất hữu ích khi debug. Lỗi HTTP upgrade x�
 
 ---
 
-## <a id="simp-message-model">8. SIMP message type cùng destination, session và user headers</a>
+## <a id="simp-message-model">SIMP message type cùng destination, session và user headers</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -149,7 +149,7 @@ SIMP là common/internal messaging model của Spring, không phải wire protoc
 
 ---
 
-## <a id="stomp-spring-message">9. Ánh xạ STOMP frame thành Spring Message</a>
+## <a id="stomp-spring-message">Ánh xạ STOMP frame thành Spring Message</a>
 
 <details>
 <summary>Xem chi tiết</summary>

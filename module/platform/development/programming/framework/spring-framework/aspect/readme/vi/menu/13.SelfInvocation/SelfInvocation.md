@@ -3,17 +3,17 @@
 # Mô hình lỗi của Proxy và Self-Invocation
 
 ## Menu
-- [1. Vì sao this.inner() khác lời gọi từ bên ngoài?](#self-invocation-mental-model)
-- [2. Demo trong module](#self-invocation-demo)
-- [3. Các giới hạn proxy liên quan](#proxy-limitations)
-- [4. Xử lý self-invocation: refactor, self injection và AopContext](#self-invocation-remediation)
-- [5. Final method trên class-based proxy](#final-method-demo)
-- [6. Checklist debug: tạo proxy → proxy boundary → pointcut → advisor chain](#aop-debugging-checklist)
-- [7. Kết luận](#self-invocation-conclusion)
+- [Vì sao this.inner() khác lời gọi từ bên ngoài?](#self-invocation-mental-model)
+- [Minh chứng thực thi cho Mô hình lỗi của Proxy và Self-Invocation](#self-invocation-demo)
+- [Các giới hạn proxy liên quan](#proxy-limitations)
+- [Xử lý self-invocation: refactor, self injection và AopContext](#self-invocation-remediation)
+- [Final method trên class-based proxy](#final-method-demo)
+- [Checklist debug: tạo proxy → proxy boundary → pointcut → advisor chain](#aop-debugging-checklist)
+- [Tổng hợp Mô hình lỗi của Proxy và Self-Invocation](#self-invocation-conclusion)
 
 Đây là một trong những giới hạn quan trọng nhất của Spring AOP dựa trên proxy.
 
-## <a id="self-invocation-mental-model">1. Vì sao this.inner() khác lời gọi từ bên ngoài?</a>
+## <a id="self-invocation-mental-model">Vì sao this.inner() khác lời gọi từ bên ngoài?</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -60,7 +60,7 @@ Vì vậy **có annotation không đồng nghĩa advice chắc chắn chạy**.
 
 ---
 
-## <a id="self-invocation-demo">2. Demo trong module</a>
+## <a id="self-invocation-demo">Minh chứng thực thi cho Mô hình lỗi của Proxy và Self-Invocation</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -121,7 +121,7 @@ Lần này invocation bắt đầu từ bên ngoài target và đi qua proxy.
 
 ---
 
-## <a id="proxy-limitations">3. Các giới hạn proxy liên quan</a>
+## <a id="proxy-limitations">Các giới hạn proxy liên quan</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -145,13 +145,14 @@ Các tính năng như `@Transactional`, `@Async` và `@Cacheable` có thể dùn
 ### Tài liệu tham khảo
 
 - Spring Framework Reference — [Proxying Mechanisms](https://docs.spring.io/spring-framework/reference/core/aop/proxying.html)
+
 </details>
 
 - [Quay lại đầu trang](#back-to-top)
 
 ---
 
-## <a id="self-invocation-remediation">4. Xử lý self-invocation: refactor, self injection và AopContext</a>
+## <a id="self-invocation-remediation">Xử lý self-invocation: refactor, self injection và AopContext</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -179,13 +180,14 @@ Spring Reference khuyến nghị tránh self-invocation khi có thể và xem `A
 
 - Spring Framework Reference — [Understanding AOP Proxies](https://docs.spring.io/spring-framework/reference/core/aop/proxying.html)
 - Spring Framework 6.1.x API — [`AopContext`](https://docs.spring.io/spring-framework/docs/6.1.x/javadoc-api/org/springframework/aop/framework/AopContext.html)
+
 </details>
 
 - [Quay lại đầu trang](#back-to-top)
 
 ---
 
-## <a id="final-method-demo">5. Final method trên class-based proxy</a>
+## <a id="final-method-demo">Final method trên class-based proxy</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -274,7 +276,7 @@ Demo `finalTrackedMethod()` chỉ trả về một hằng để tập trung vào
 
 ---
 
-## <a id="aop-debugging-checklist">6. Checklist debug: tạo proxy → proxy boundary → pointcut → advisor chain</a>
+## <a id="aop-debugging-checklist">Checklist debug: tạo proxy → proxy boundary → pointcut → advisor chain</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -300,13 +302,14 @@ Khi advice không chạy, hãy debug theo đúng thứ tự của kiến trúc r
 **Ordering và advice:** nếu nhiều Advisor cùng khớp, kiểm tra thứ tự của chúng và xem around interceptor có gọi `proceed()`, gọi nhiều lần, biến đổi kết quả hoặc thay đổi exception contract hay không.
 
 Trình tự này tránh lỗi debug phổ biến: sửa quy tắc chọn trong khi invocation thực tế chưa bao giờ đi qua proxy cần thiết.
+
 </details>
 
 - [Quay lại đầu trang](#back-to-top)
 
 ---
 
-## <a id="self-invocation-conclusion">7. Kết luận</a>
+## <a id="self-invocation-conclusion">Tổng hợp Mô hình lỗi của Proxy và Self-Invocation</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -314,6 +317,7 @@ Trình tự này tránh lỗi debug phổ biến: sửa quy tắc chọn trong k
 Khi AOP không chạy, trước hết hãy xác nhận proxy có tồn tại và invocation có đi qua nó hay không. Sau đó mới kiểm tra khả năng intercept của phương thức, pointcut và Advisor chain.
 
 Riêng với self-invocation, refactor ranh giới cộng tác thường rõ ràng hơn việc thêm proxy lookup ẩn. Proxy model trở nên dễ dự đoán khi đường đi của lời gọi được xem là một phần thiết kế, thay vì coi annotation như cơ chế tự động bất kể invocation đi bằng đường nào.
+
 </details>
 
 - [Quay lại đầu trang](#back-to-top)

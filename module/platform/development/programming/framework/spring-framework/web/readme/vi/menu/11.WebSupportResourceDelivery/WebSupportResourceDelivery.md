@@ -67,6 +67,10 @@ Các static resource như JavaScript, CSS, ảnh hay font không cần semantics
 
 `WebMvcConfigurer.addResourceHandlers` đăng ký URL pattern cùng một hay nhiều resource location. Request được xử lý bởi `ResourceHttpRequestHandler`: component này resolve Spring `Resource`, kiểm tra điều kiện request, xác định media type và ghi resource vào response.
 
+Resource delivery cũng tham gia semantics **byte-range** của HTTP. Với `Range` request hợp lệ tới resource mà length có thể xác định, Spring MVC có thể chỉ gửi region được yêu cầu và tạo partial-content response thay vì bắt application code tự cắt file. Cùng mental model này áp dụng khi application handler trả `Resource` hoặc `ResponseEntity<Resource>`; Spring dùng hỗ trợ `HttpRange`/`ResourceRegion` và message-conversion path tương ứng khi phù hợp. Multiple range và capability của provider/resource ảnh hưởng response cụ thể, vì vậy cần test range behavior với đúng resource type dùng trong production.
+
+Range request là transport concern, không phải pagination mechanism của ứng dụng. Nó phù hợp cho việc resume/seek khi phân phối representation lớn như media hoặc file; authorization, ownership và resource lookup vẫn phải được quyết định trước khi byte được expose.
+
 Resource chain tùy chọn cho phép ghép các `ResourceResolver` và `ResourceTransformer` theo thứ tự. Nó hữu ích khi cần content-versioned filename, biến thể đã encode, WebJar resolution hoặc transform reference. Ví dụ, `VersionResourceResolver` giúp đưa URL có version vào contract phân phối resource thay vì bắt application controller tự tính hash.
 
 Nên tách rõ **resource delivery** khỏi application request handling:

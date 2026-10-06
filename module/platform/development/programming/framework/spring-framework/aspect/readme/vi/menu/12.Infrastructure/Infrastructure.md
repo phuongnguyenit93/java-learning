@@ -3,16 +3,16 @@
 # Hạ tầng Auto-Proxy, Advised và TargetSource
 
 ## Menu
-- [1. Auto-proxy được tạo ở đâu?](#auto-proxy-mental-model)
-- [2. Bật AOP trong Spring Framework và ranh giới auto-configuration của Spring Boot](#framework-boot-aop-enablement-boundary)
-- [3. Advised cho biết proxy chứa gì](#advised-interface)
-- [4. TargetSource và chiến lược vòng đời của target](#target-source-strategy)
-- [5. Demo trong module](#infrastructure-demo)
-- [6. Kết luận](#infrastructure-conclusion)
+- [Auto-proxy được tạo ở đâu?](#auto-proxy-mental-model)
+- [Bật AOP trong Spring Framework và ranh giới auto-configuration của Spring Boot](#framework-boot-aop-enablement-boundary)
+- [Advised cho biết proxy chứa gì](#advised-interface)
+- [TargetSource và chiến lược vòng đời của target](#target-source-strategy)
+- [Minh chứng thực thi cho Hạ tầng Auto-Proxy, Advised và TargetSource](#infrastructure-demo)
+- [Tổng hợp Hạ tầng Auto-Proxy, Advised và TargetSource](#infrastructure-conclusion)
 
 Trong mã ứng dụng thông thường, ta không tự gọi `new ProxyFactory(...)` cho từng bean. Spring tự động phát hiện bean ứng viên và bọc bean bằng proxy.
 
-## <a id="auto-proxy-mental-model">1. Auto-proxy được tạo ở đâu?</a>
+## <a id="auto-proxy-mental-model">Auto-proxy được tạo ở đâu?</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -39,13 +39,14 @@ Sơ đồ trên cố ý đơn giản hóa. Container còn có các đường lif
 Auto-proxying thuộc vòng đời Spring-managed bean. Một object được tạo trực tiếp bằng `new` không tự được bọc chỉ vì có Aspect khớp; object đó phải đi qua hạ tầng Spring phù hợp hoặc được tạo proxy tường minh.
 
 Không gắn cứng tên một lớp auto-proxy creator cụ thể vào mã nghiệp vụ. Đây là chi tiết hạ tầng của framework, không phải điểm tích hợp ổn định dành cho ứng dụng.
+
 </details>
 
 - [Quay lại đầu trang](#back-to-top)
 
 ---
 
-## <a id="framework-boot-aop-enablement-boundary">2. Bật AOP trong Spring Framework và ranh giới auto-configuration của Spring Boot</a>
+## <a id="framework-boot-aop-enablement-boundary">Bật AOP trong Spring Framework và ranh giới auto-configuration của Spring Boot</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -92,13 +93,14 @@ Khi đặt `spring.aop.proxy-target-class=false`, Boot có thể dùng JDK dynam
 
 - Spring Framework 6.1.x API — [`@EnableAspectJAutoProxy`](https://docs.spring.io/spring-framework/docs/6.1.x/javadoc-api/org/springframework/context/annotation/EnableAspectJAutoProxy.html)
 - Spring Boot 3.3 API — [`AopAutoConfiguration`](https://docs.spring.io/spring-boot/3.3/api/java/org/springframework/boot/autoconfigure/aop/AopAutoConfiguration.html)
+
 </details>
 
 - [Quay lại đầu trang](#back-to-top)
 
 ---
 
-## <a id="advised-interface">3. Advised cho biết proxy chứa gì</a>
+## <a id="advised-interface">Advised cho biết proxy chứa gì</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -126,13 +128,14 @@ cấu hình proxy
 
 - Spring Framework 6.1.x API — [`Advised`](https://docs.spring.io/spring-framework/docs/6.1.x/javadoc-api/org/springframework/aop/framework/Advised.html)
 - Spring Framework 6.1.x API — [`ProxyConfig`](https://docs.spring.io/spring-framework/docs/6.1.x/javadoc-api/org/springframework/aop/framework/ProxyConfig.html)
+
 </details>
 
 - [Quay lại đầu trang](#back-to-top)
 
 ---
 
-## <a id="target-source-strategy">4. TargetSource và chiến lược vòng đời của target</a>
+## <a id="target-source-strategy">TargetSource và chiến lược vòng đời của target</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -180,13 +183,14 @@ Phần lớn mã ứng dụng không cần tự triển khai `TargetSource`. Đ�
 
 - Spring Framework 6.1.14 API — [`TargetSource`](https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/aop/TargetSource.html)
 - Spring Framework Reference — [Using `TargetSource` Implementations](https://docs.spring.io/spring-framework/reference/core/aop-api/targetsource.html)
+
 </details>
 
 - [Quay lại đầu trang](#back-to-top)
 
 ---
 
-## <a id="infrastructure-demo">5. Demo trong module</a>
+## <a id="infrastructure-demo">Minh chứng thực thi cho Hạ tầng Auto-Proxy, Advised và TargetSource</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -263,7 +267,7 @@ Nhờ vậy phản hồi không đánh đồng mặc định của Boot với pr
 
 ---
 
-## <a id="infrastructure-conclusion">6. Kết luận</a>
+## <a id="infrastructure-conclusion">Tổng hợp Hạ tầng Auto-Proxy, Advised và TargetSource</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -271,6 +275,7 @@ Nhờ vậy phản hồi không đánh đồng mặc định của Boot với pr
 Spring AOP theo phong cách annotation trông rất khai báo ở tầng ứng dụng vì việc tạo proxy, tìm Advisor, chọn target và xây interceptor chain đều do hạ tầng đảm nhiệm.
 
 Trong Spring Framework, `@EnableAspectJAutoProxy` là một cách tường minh để đăng ký hỗ trợ này. Trong module dùng Boot, starter và Boot AOP auto-configuration cài hạ tầng tương đương với các mặc định riêng của Boot. Phân biệt hai lớp này giúp tránh nhầm lựa chọn auto-configuration của Boot với ngữ nghĩa cốt lõi của Spring AOP.
+
 </details>
 
 - [Quay lại đầu trang](#back-to-top)

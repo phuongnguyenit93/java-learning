@@ -14,7 +14,6 @@
 <details>
 <summary>Click for details</summary>
 
-
 R2DBC defines a non-blocking SPI for relational database access. Its resource entry point is ConnectionFactory, analogous in responsibility—but not in execution model—to JDBC DataSource.
 
 Spring Framework's org.springframework.r2dbc.core.DatabaseClient is the central client in the framework's R2DBC core package. It creates/releases resources, executes statements, maps results, and translates R2DBC failures into DataAccessException. This ownership belongs to Spring Framework, not Spring Data R2DBC.
@@ -32,6 +31,7 @@ Mono<Customer> customer = client.sql(
 ~~~
 
 Spring Data R2DBC builds higher-level mapping/repository abstractions above this foundation. Use DatabaseClient when explicit SQL and framework-level reactive access are the goal; move upward only when repository/entity mapping is actually useful.
+
 </details>
 
 - [Back to top](#back-to-top)
@@ -42,7 +42,6 @@ Spring Data R2DBC builds higher-level mapping/repository abstractions above this
 
 <details>
 <summary>Click for details</summary>
-
 
 A DatabaseClient call builds a reactive pipeline; it does not imply that database I/O happens at the point where the fluent chain is assembled. Execution occurs when the returned Publisher is subscribed.
 
@@ -69,6 +68,7 @@ Reactive composition therefore belongs in the same lifecycle as the database wor
 DatabaseClient is thread-safe once configured and can be shared. The client retains configuration such as the ConnectionFactory; per-operation state belongs to the fluent execution specification.
 
 Do not call block() merely to make DatabaseClient look imperative. Blocking at the edge may be deliberate in a non-reactive application, but doing so inside a reactive request path defeats the non-blocking model and can cause thread starvation.
+
 </details>
 
 - [Back to top](#back-to-top)
@@ -79,7 +79,6 @@ Do not call block() merely to make DatabaseClient look imperative. Blocking at t
 
 <details>
 <summary>Click for details</summary>
-
 
 R2DBC drivers use database-specific bind-marker syntax. PostgreSQL may use numbered markers such as $1, while other drivers may expose ? or another native form. DatabaseClient lets application SQL use Spring-style named parameters and translates them into bind markers appropriate for the ConnectionFactory.
 
@@ -106,6 +105,7 @@ driver receives native bind markers
 ~~~
 
 Binding protects values; it does not make dynamic SQL identifiers safe. Table/column names and arbitrary SQL fragments must still be chosen from trusted application-controlled values.
+
 </details>
 
 - [Back to top](#back-to-top)
@@ -116,7 +116,6 @@ Binding protects values; it does not make dynamic SQL identifiers safe. Table/co
 
 <details>
 <summary>Click for details</summary>
-
 
 R2DBC rows are mapped reactively, but result cardinality still needs an explicit contract. DatabaseClient's RowsFetchSpec supports one(), first(), and all() style result resolution.
 
@@ -133,6 +132,7 @@ Flux<Customer> customers = client.sql(sql)
 ~~~
 
 Keep SQL type conversion explicit when driver behavior is ambiguous. A row mapper is a boundary between driver-level values and application-level values; it should not silently invent persistence semantics that belong to a higher mapping layer.
+
 </details>
 
 - [Back to top](#back-to-top)
@@ -143,7 +143,6 @@ Keep SQL type conversion explicit when driver behavior is ambiguous. A row mappe
 
 <details>
 <summary>Click for details</summary>
-
 
 Some database operations need statement options beyond simple SQL and bindings. DatabaseClient exposes StatementFilterFunction so application code can customize the R2DBC Statement or wrap execution without abandoning the client's resource/error workflow.
 
@@ -161,6 +160,7 @@ Mono<Long> id = client.sql(
 Statement filters can also configure options such as fetch size when the driver supports them. They are deliberately lower-level than ordinary fluent operations; use them only for behavior the normal DatabaseClient API does not express.
 
 Generated-value behavior remains database/driver specific. Column names, supported SQL forms, and returned types can differ. Keep that assumption local to the DAO and test it against the actual R2DBC driver rather than assuming JDBC-generated-key behavior transfers unchanged.
+
 </details>
 
 - [Back to top](#back-to-top)

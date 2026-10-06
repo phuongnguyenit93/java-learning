@@ -3,17 +3,17 @@
 # Luồng STOMP Message trong Spring
 
 ## Menu
-- [1. Bật WebSocket message broker với @EnableWebSocketMessageBroker](#enable-websocket-message-broker)
-- [2. WebSocketMessageBrokerConfigurer như configuration extension point](#websocket-message-broker-configurer)
-- [3. Đăng ký STOMP endpoint](#register-stomp-endpoints)
-- [4. Application và broker destination prefix](#destination-prefixes)
-- [5. clientInboundChannel](#client-inbound-channel)
-- [6. clientOutboundChannel](#client-outbound-channel)
-- [7. brokerChannel](#broker-channel)
-- [8. Luồng message qua application handler](#application-message-flow)
-- [9. Luồng message hướng tới broker](#broker-message-flow)
+- [Bật WebSocket message broker với @EnableWebSocketMessageBroker](#enable-websocket-message-broker)
+- [WebSocketMessageBrokerConfigurer như configuration extension point](#websocket-message-broker-configurer)
+- [Đăng ký STOMP endpoint](#register-stomp-endpoints)
+- [Application và broker destination prefix](#destination-prefixes)
+- [clientInboundChannel](#client-inbound-channel)
+- [clientOutboundChannel](#client-outbound-channel)
+- [brokerChannel](#broker-channel)
+- [Luồng message qua application handler](#application-message-flow)
+- [Luồng message hướng tới broker](#broker-message-flow)
 
-## <a id="enable-websocket-message-broker">1. Bật WebSocket message broker với @EnableWebSocketMessageBroker</a>
+## <a id="enable-websocket-message-broker">Bật WebSocket message broker với @EnableWebSocketMessageBroker</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -30,7 +30,7 @@ Vì vậy annotation này nhiều hơn một endpoint switch. Nó thiết lập 
 
 ---
 
-## <a id="websocket-message-broker-configurer">2. WebSocketMessageBrokerConfigurer như configuration extension point</a>
+## <a id="websocket-message-broker-configurer">WebSocketMessageBrokerConfigurer như configuration extension point</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -60,7 +60,7 @@ Nên giữ configuration đúng tầng mà nó điều khiển. Endpoint registr
 
 ---
 
-## <a id="register-stomp-endpoints">3. Đăng ký STOMP endpoint</a>
+## <a id="register-stomp-endpoints">Đăng ký STOMP endpoint</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -81,7 +81,7 @@ Sau khi WebSocket connection được thiết lập, STOMP frame mang destinatio
 
 ---
 
-## <a id="destination-prefixes">4. Application và broker destination prefix</a>
+## <a id="destination-prefixes">Application và broker destination prefix</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -101,7 +101,7 @@ Nên chọn prefix tách biệt và dễ đọc. Convention overlap hoặc mơ h
 
 ---
 
-## <a id="client-inbound-channel">5. clientInboundChannel</a>
+## <a id="client-inbound-channel">clientInboundChannel</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -118,7 +118,7 @@ Trong broker configuration, channel này được executor-back nên inbound han
 
 ---
 
-## <a id="client-outbound-channel">6. clientOutboundChannel</a>
+## <a id="client-outbound-channel">clientOutboundChannel</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -135,7 +135,7 @@ Giống inbound channel, clientOutboundChannel mặc định cũng executor-back
 
 ---
 
-## <a id="broker-channel">7. brokerChannel</a>
+## <a id="broker-channel">brokerChannel</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -152,7 +152,7 @@ Ranh giới này hữu ích khi trace lỗi: nếu controller đã chạy và t�
 
 ---
 
-## <a id="application-message-flow">8. Luồng message qua application handler</a>
+## <a id="application-message-flow">Luồng message qua application handler</a>
 
 <details>
 <summary>Xem chi tiết</summary>
@@ -169,7 +169,7 @@ Nếu method return value, Spring convert giá trị đó thành outbound Messag
 
 ---
 
-## <a id="broker-message-flow">9. Luồng message hướng tới broker</a>
+## <a id="broker-message-flow">Luồng message hướng tới broker</a>
 
 <details>
 <summary>Xem chi tiết</summary>

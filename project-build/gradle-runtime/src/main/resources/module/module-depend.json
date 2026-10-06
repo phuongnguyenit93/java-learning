@@ -11,9 +11,6 @@
             "org.springframework.boot:spring-boot-starter-data-jpa"
         ]
     },
-    "GLOBAL_EXCEPTION_HANDLER": {
-        "DESCRIBE": "Module stored custom exception handler case. Use by @EnableCustomExceptionHandler"
-    },
     "FLEXMARK_MARKDOWN": {
         "DESCRIBE": ""
     },
@@ -30,6 +27,13 @@
         "DESCRIBE": "Runtime development-only dependency wrapper for Spring Boot DevTools",
         "developmentOnly": [
             "org.springframework.boot:spring-boot-devtools"
+        ]
+    },
+    "GLOBAL_EXCEPTION_HANDLER": {
+        "DESCRIBE": "Servlet runtime auto-configuration for shared MVC, Feign, and Mongo exception handling",
+        "api": [
+            "org.springframework.boot:spring-boot-autoconfigure",
+            "org.springframework:spring-webmvc"
         ]
     },
     "GLOBAL_EXECUTION_CONTEXT": {

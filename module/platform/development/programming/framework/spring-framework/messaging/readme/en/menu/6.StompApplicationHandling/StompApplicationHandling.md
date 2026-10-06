@@ -3,17 +3,17 @@
 # STOMP Application Message Handling
 
 ## Menu
-- [1. @MessageMapping handler methods](#message-mapping)
-- [2. Destination variables](#destination-variable)
-- [3. Payload conversion](#payload-conversion)
-- [4. Payload validation](#payload-validation)
-- [5. @SubscribeMapping](#subscribe-mapping)
-- [6. @SendTo and reply destinations](#send-to)
-- [7. @SendToUser and user replies](#send-to-user)
-- [8. SimpMessagingTemplate](#simp-messaging-template)
-- [9. Message exception handling](#message-exception-handling)
+- [@MessageMapping handler methods](#message-mapping)
+- [Destination variables](#destination-variable)
+- [Payload conversion](#payload-conversion)
+- [Payload validation](#payload-validation)
+- [@SubscribeMapping](#subscribe-mapping)
+- [@SendTo and reply destinations](#send-to)
+- [@SendToUser and user replies](#send-to-user)
+- [SimpMessagingTemplate](#simp-messaging-template)
+- [Message exception handling](#message-exception-handling)
 
-## <a id="message-mapping">1. @MessageMapping handler methods</a>
+## <a id="message-mapping">@MessageMapping handler methods</a>
 
 <details>
 <summary>Click for details</summary>
@@ -39,7 +39,7 @@ Keep destination handlers focused on application work. Broker subscription match
 
 ---
 
-## <a id="destination-variable">2. Destination variables</a>
+## <a id="destination-variable">Destination variables</a>
 
 <details>
 <summary>Click for details</summary>
@@ -61,7 +61,7 @@ Destination patterns are routing syntax, not authorization rules. A caller being
 
 ---
 
-## <a id="payload-conversion">3. Payload conversion</a>
+## <a id="payload-conversion">Payload conversion</a>
 
 <details>
 <summary>Click for details</summary>
@@ -80,7 +80,7 @@ WebSocketMessageBrokerConfigurer.configureMessageConverters(...) is the extensio
 
 ---
 
-## <a id="payload-validation">4. Payload validation</a>
+## <a id="payload-validation">Payload validation</a>
 
 <details>
 <summary>Click for details</summary>
@@ -102,7 +102,7 @@ Keep validation responsibilities separated. This chapter explains how messaging 
 
 ---
 
-## <a id="subscribe-mapping">5. @SubscribeMapping</a>
+## <a id="subscribe-mapping">@SubscribeMapping</a>
 
 <details>
 <summary>Click for details</summary>
@@ -124,7 +124,7 @@ Use @SubscribeMapping for subscription-time application behavior, not as a repla
 
 ---
 
-## <a id="send-to">6. @SendTo and reply destinations</a>
+## <a id="send-to">@SendTo and reply destinations</a>
 
 <details>
 <summary>Click for details</summary>
@@ -147,7 +147,7 @@ Without an explicit @SendTo on a normal @MessageMapping method, Spring can deriv
 
 ---
 
-## <a id="send-to-user">7. @SendToUser and user replies</a>
+## <a id="send-to-user">@SendToUser and user replies</a>
 
 <details>
 <summary>Click for details</summary>
@@ -170,7 +170,7 @@ Use @SendToUser for user-targeted replies, not for authorization. The Principal 
 
 ---
 
-## <a id="simp-messaging-template">8. SimpMessagingTemplate</a>
+## <a id="simp-messaging-template">SimpMessagingTemplate</a>
 
 <details>
 <summary>Click for details</summary>
@@ -200,7 +200,7 @@ Prefer the template when publication originates from timers, HTTP handlers, doma
 
 ---
 
-## <a id="message-exception-handling">9. Message exception handling</a>
+## <a id="message-exception-handling">Message exception handling</a>
 
 <details>
 <summary>Click for details</summary>
