@@ -38,4 +38,297 @@
 #       Internal id of the correct answer. The frontend checks this identity after shuffling.
 # </quiz-schema>
 
-questions: []
+questions:
+  - id: auto-configuration-defaults-control
+    question: "Which statement best describes the design goal of Spring Boot auto-configuration?"
+    answers:
+      - id: A
+        answer: "It establishes a conventional baseline that applications are expected to customize mainly through external properties."
+        explanation: "Incorrect. External properties are one control surface, but auto-configuration also backs off from defaults when application beans or other conditions take ownership."
+      - id: B
+        answer: "It contributes infrastructure defaults discovered from dependencies and keeps them unless a user bean is marked @Primary."
+        explanation: "Incorrect. @Primary affects injection choice; it is not the general signal that makes auto-configuration back off."
+      - id: C
+        answer: "It contributes conventional defaults when conditions fit, while backing off when application configuration should own the choice."
+        explanation: "Correct. Boot uses conditions to offer useful defaults without taking ownership away from explicit application configuration."
+      - id: D
+        answer: "It centralizes common infrastructure setup so applications normally replace defaults by excluding the whole auto-configuration."
+        explanation: "Incorrect. Exclusion is available, but normal customization is often more granular through conditions and back-off rather than disabling the entire candidate."
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.AutoConfigurationFoundation/AutoConfigurationFoundation.md", anchor: "defaults-and-back-off-contract"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: imports-vs-component-scanning
+    question: "A library publishes AcmeClientAutoConfiguration. How should Spring Boot 3.3 normally discover it as an auto-configuration candidate?"
+    answers:
+      - id: A
+        answer: "Place it under the consuming application's base package so @SpringBootApplication component scanning finds it."
+        explanation: "Incorrect. Auto-configuration discovery should not depend on the consumer's component-scan boundary."
+      - id: B
+        answer: "List the fully qualified class name in META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports."
+        explanation: "Correct. Boot 3.3 discovers published auto-configuration candidates from AutoConfiguration.imports."
+      - id: C
+        answer: "Add @Component to the class and let Spring scan dependency JARs globally."
+        explanation: "Incorrect. Broad component scanning is not the publication mechanism for Boot auto-configuration."
+      - id: D
+        answer: "Register the class only in application.properties because configuration files own all candidate discovery."
+        explanation: "Incorrect. Properties may influence conditions or exclusions, but they are not the normal candidate-registration mechanism."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.ActivationDiscovery/ActivationDiscovery.md", anchor: "auto-configuration-imports"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: candidate-discovery-not-bean-creation
+    question: "Boot has discovered an auto-configuration class from AutoConfiguration.imports. What can you conclude at that point?"
+    answers:
+      - id: A
+        answer: "Boot has accepted the class for configuration processing, so its class-level conditions have already matched even though method conditions may still fail."
+        explanation: "Incorrect. Discovery identifies a candidate before the full condition evaluation that determines whether the configuration matches."
+      - id: B
+        answer: "Boot will register the class's bean definitions unless an explicit exclusion removes the candidate during a later phase."
+        explanation: "Incorrect. A discovered candidate can still be rejected by its own class- or method-level conditions without any explicit exclusion."
+      - id: C
+        answer: "Boot has validated the imports entry and will instantiate the configuration class before evaluating conditions on its @Bean methods."
+        explanation: "Incorrect. Discovery does not imply eager configuration instantiation; condition processing still governs whether definitions are contributed."
+      - id: D
+        answer: "Only that the class is eligible for further auto-configuration processing; condition matching and bean contribution are still separate decisions."
+        explanation: "Correct. AutoConfiguration.imports supplies candidates, while later condition evaluation decides what configuration and bean definitions actually apply."
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.ActivationDiscovery/ActivationDiscovery.md", anchor: "candidate-discovery-vs-bean-creation"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: optional-class-linkage-boundary
+    question: "An optional library may be absent. Why can putting @ConditionalOnClass only on a @Bean method that directly returns an optional-library type still be risky?"
+    answers:
+      - id: A
+        answer: "The JVM may resolve the method signature before the method-level condition can safely protect the optional type."
+        explanation: "Correct. Optional types in signatures can create linkage risk before a method-level condition is useful; isolating them behind a class-level guarded configuration is safer."
+      - id: B
+        answer: "Because Boot can inspect annotation metadata without loading the optional class, the method signature is safe as long as the condition names that class through metadata."
+        explanation: "Incorrect. Annotation metadata can often be inspected safely, but the JVM may still resolve an optional type that appears directly in the method signature."
+      - id: C
+        answer: "Method-level conditions are evaluated before Spring needs the @Bean method signature, so the guard is sufficient when the optional type appears only as the return type."
+        explanation: "Incorrect. The signature itself can become a linkage boundary before the method-level condition is able to protect the optional type."
+      - id: D
+        answer: "Optional-type linkage is mainly a risk for annotation attributes; a return type is resolved only when the @Bean method runs, so it normally needs no extra isolation."
+        explanation: "Incorrect. Optional types in configuration signatures can be resolved earlier than bean-method invocation, which is why a class-level guarded configuration boundary is safer."
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.ConditionModel/ConditionModel.md", anchor: "optional-class-linkage"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: missing-bean-target-vs-return-type
+    question: "An auto-configuration should back off whenever the user supplies any AcmeClient, but its default implementation method returns DefaultAcmeClient. Which declaration best preserves both intentions?"
+    answers:
+      - id: A
+        answer: "Use bare @ConditionalOnMissingBean on a method returning DefaultAcmeClient, because Boot automatically checks all interfaces of that type."
+        explanation: "Incorrect. With no explicit target, the @Bean method return type becomes the condition target, so an alternative AcmeClient implementation may not make it back off."
+      - id: B
+        answer: "Return AcmeClient and omit the condition so the container can choose whichever implementation is primary."
+        explanation: "Incorrect. That removes the back-off contract and also hides more specific implementation type information from bean-definition reasoning."
+      - id: C
+        answer: "Use @ConditionalOnMissingBean(AcmeClient.class) on a method returning DefaultAcmeClient."
+        explanation: "Correct. The explicit condition target protects the AcmeClient role, while the concrete return type preserves DefaultAcmeClient visibility."
+      - id: D
+        answer: "Use @ConditionalOnClass(AcmeClient.class) because classpath presence is equivalent to a user-defined bean."
+        explanation: "Incorrect. Classpath presence and bean presence answer different questions."
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.BackOffUserControl/BackOffUserControl.md", anchor: "bean-type-specificity"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: conditional-expression-early-bean
+    question: "Why is directly referencing a bean from @ConditionalOnExpression SpEL a potential auto-configuration pitfall?"
+    answers:
+      - id: A
+        answer: "The expression is resolved from Environment state before bean post-processors run, so bean references are deferred until normal binding has completed."
+        explanation: "Incorrect. A bean reference can trigger bean access during condition evaluation rather than being deferred until normal post-processing finishes."
+      - id: B
+        answer: "The referenced bean can be initialized during condition evaluation and may miss normal post-processing such as @ConfigurationProperties binding."
+        explanation: "Correct. Referencing the bean from the expression can cause premature initialization before the usual post-processing lifecycle has completed."
+      - id: C
+        answer: "The expression uses the normal bean resolver after definitions are registered, so resolving a bean has the same lifecycle timing as ordinary dependency injection."
+        explanation: "Incorrect. Condition evaluation occurs at a sensitive phase where resolving the referenced bean can initialize it earlier than ordinary injection would."
+      - id: D
+        answer: "The expression result is cached before profile and property processing completes, so later configuration changes cannot affect the condition outcome."
+        explanation: "Incorrect. The documented risk is premature bean initialization, not a separate rule that freezes the expression before configuration sources are available."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.ConditionModel/ConditionModel.md", anchor: "bean-conditions-and-timing"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: property-condition-input-model
+    question: "What is the most accurate relationship between externalized configuration and @ConditionalOnProperty in this module?"
+    answers:
+      - id: A
+        answer: "Externalized configuration determines the effective property state; @ConditionalOnProperty reads that Environment state as an input to an auto-configuration decision."
+        explanation: "Correct. Property-source loading and precedence determine the effective value, while the condition uses that value to decide whether configuration matches."
+      - id: B
+        answer: "@ConditionalOnProperty reads the first matching property source directly, so its own lookup order can differ from the Environment's effective-value precedence."
+        explanation: "Incorrect. The condition relies on Environment property resolution rather than defining an independent precedence model over property sources."
+      - id: C
+        answer: "@ConditionalOnProperty evaluates the value after @ConfigurationProperties binding, so the bound object's converted field value is the condition input."
+        explanation: "Incorrect. The condition can read property state without requiring a @ConfigurationProperties bean to be created and bound first."
+      - id: D
+        answer: "@ConditionalOnProperty participates in Config Data loading by selecting which property sources should be added before the auto-configuration is evaluated."
+        explanation: "Incorrect. Config Data determines available property sources; the condition consumes the resulting Environment rather than selecting sources to load."
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.ConditionModel/ConditionModel.md", anchor: "property-conditions"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: auto-configuration-order-vs-bean-order
+    question: "AcmeMetricsAutoConfiguration is ordered after AcmeCoreAutoConfiguration. What does that ordering primarily guarantee?"
+    answers:
+      - id: A
+        answer: "Core bean definitions are processed first, which also guarantees that every core bean instance is created before any metrics bean instance."
+        explanation: "Incorrect. Ordering can affect definition processing, but it does not establish a universal runtime bean-instantiation sequence."
+      - id: B
+        answer: "Metrics conditions are evaluated only after the core ApplicationContext lifecycle has completed, so they can inspect fully initialized core beans."
+        explanation: "Incorrect. The ordering applies during configuration processing; it does not wait for a separate fully initialized context lifecycle."
+      - id: C
+        answer: "Spring adds an implicit dependency from each metrics bean definition to the core definitions so destruction and initialization order follow the configuration order."
+        explanation: "Incorrect. Auto-configuration order does not create bean dependency edges; bean lifecycle dependencies must come from the bean relationships themselves."
+      - id: D
+        answer: "The core configuration gets an earlier opportunity to contribute definitions before conditions in the later auto-configuration are evaluated."
+        explanation: "Correct. Auto-configuration ordering coordinates definition processing, which matters when later conditions inspect definitions contributed so far."
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.OrderingComposition/OrderingComposition.md", anchor: "configuration-order-vs-bean-order"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: exclusion-vs-indirect-fighting
+    question: "An application deliberately does not want one otherwise matching auto-configuration, but the dependency that publishes it must remain. Which approach most clearly expresses that application-level decision?"
+    answers:
+      - id: A
+        answer: "Set a nearby feature property so one of the candidate's current property conditions fails, and rely on that condition path to keep the candidate inactive."
+        explanation: "Incorrect. That couples the application-level opt-out to an internal condition path instead of directly expressing that the whole candidate is unwanted."
+      - id: B
+        answer: "Provide an application bean that satisfies the candidate's missing-bean guard and let ordinary back-off suppress the candidate's default infrastructure."
+        explanation: "Incorrect. Back-off is appropriate when the application genuinely owns that bean role; it is an indirect substitute for disabling the candidate when no replacement is wanted."
+      - id: C
+        answer: "Use an explicit supported exclusion mechanism when the application wants that auto-configuration candidate disabled as a whole."
+        explanation: "Correct. Exclusion directly represents the application-level decision and remains clear even if the candidate's internal conditions change later."
+      - id: D
+        answer: "Order the application's own configuration before the unwanted auto-configuration so later condition evaluation sees the application's definitions first."
+        explanation: "Incorrect. Ordering can influence some definition-sensitive conditions, but it does not state that the candidate is disabled and may not stop unrelated branches from matching."
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.ExclusionsDiagnostics/ExclusionsDiagnostics.md", anchor: "when-to-exclude-auto-configuration"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: condition-report-diagnosis
+    question: "An auto-configuration candidate is already confirmed as discovered, but one of its expected beans is missing. Which evidence best explains whether its conditions matched or failed?"
+    answers:
+      - id: A
+        answer: "Re-read AutoConfiguration.imports to confirm the candidate name, then infer which condition probably failed from the configuration class annotations."
+        explanation: "Incorrect. Discovery is already established here; the condition report provides runtime evidence instead of requiring inference from source annotations."
+      - id: B
+        answer: "Inspect the Condition Evaluation Report or debug diagnostics to see which candidate and condition matched or failed."
+        explanation: "Correct. It exposes the actual decision path, letting diagnosis start from observed condition evidence before changing configuration."
+      - id: C
+        answer: "Inspect user bean definitions first for a possible back-off trigger, then change bean qualifiers until the expected auto-configured bean appears."
+        explanation: "Incorrect. A user bean may explain one back-off case, but qualifiers are not a general condition fix and this skips evidence from classpath, property, exclusion, and other conditions."
+      - id: D
+        answer: "Inspect auto-configuration ordering metadata first to determine whether another configuration was processed early enough to suppress the expected bean."
+        explanation: "Incorrect. Ordering can matter for some bean conditions, but it is only one possible cause and is narrower than reading the condition evidence first."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.ExclusionsDiagnostics/ExclusionsDiagnostics.md", anchor: "condition-evaluation-report"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: auto-configuration-authoring-boundary
+    question: "Which authoring choice best matches a well-bounded Spring Boot 3.3 auto-configuration?"
+    answers:
+      - id: A
+        answer: "Use @AutoConfiguration, register it through AutoConfiguration.imports, keep its package independent of the consumer, and explicitly import focused support configuration."
+        explanation: "Correct. Boot owns candidate discovery, while explicit imports keep the library's support graph bounded and independent of the consumer's package layout."
+      - id: B
+        answer: "Use a regular @Configuration entry point discovered by the consumer's component scan, then scan the library's internal package for supporting components."
+        explanation: "Incorrect. This makes auto-configuration activation depend on the consumer's scan layout instead of Boot's publication mechanism."
+      - id: C
+        answer: "Use @AutoConfiguration and AutoConfiguration.imports, but add @ComponentScan for the library package so support types can be discovered without explicit imports."
+        explanation: "Incorrect. The entry point is published correctly, but broad component scanning weakens the intended package/configuration boundary compared with focused imports."
+      - id: D
+        answer: "Use @AutoConfiguration and AutoConfiguration.imports, and place the class below the consumer's base package so component scanning and auto-configuration discovery share one boundary."
+        explanation: "Incorrect. Published auto-configuration should remain independent of the consuming application's package structure even when Boot discovery is configured correctly."
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.CustomAuthoring/CustomAuthoring.md", anchor: "registration-and-package-boundaries"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: auto-configure-metadata-role
+    question: "What is the role of condition metadata produced by the auto-configuration annotation processor?"
+    answers:
+      - id: A
+        answer: "It precomputes final outcomes for supported conditions at library compile time so Boot can reuse those outcomes without evaluating them at runtime."
+        explanation: "Incorrect. Compile-time metadata cannot know the consuming application's final runtime environment; condition evaluation remains authoritative."
+      - id: B
+        answer: "It records candidate registration and ordering information so Boot can reconstruct AutoConfiguration.imports without reading that imports resource."
+        explanation: "Incorrect. Candidate publication and ordering have their own mechanisms; condition metadata is an optimization aid for condition filtering."
+      - id: C
+        answer: "It stores default configuration-property values discovered by the processor so property conditions can compare against them before Environment lookup."
+        explanation: "Incorrect. The metadata does not replace Environment property resolution or act as a store for application configuration values."
+      - id: D
+        answer: "It can help Boot filter clearly nonmatching auto-configuration candidates earlier without changing the runtime meaning of the conditions themselves."
+        explanation: "Correct. The metadata provides optimization hints; the actual condition semantics still determine whether configuration applies."
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.CustomAuthoring/CustomAuthoring.md", anchor: "auto-configure-metadata"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: focused-context-test-choice
+    question: "Why is ApplicationContextRunner especially useful for testing a custom auto-configuration?"
+    answers:
+      - id: A
+        answer: "It loads the complete application configuration for each case, which is useful when auto-configuration behavior must be tested with production-equivalent startup ordering."
+        explanation: "Incorrect. Its strength is a deliberately small, controlled context rather than requiring the application's full configuration graph."
+      - id: B
+        answer: "It lets each test build a small context with controlled properties, user configuration, and classpath variations, then assert the resulting beans."
+        explanation: "Correct. That makes the condition input matrix explicit and keeps each auto-configuration scenario isolated and easy to inspect."
+      - id: C
+        answer: "It evaluates selected auto-configuration conditions without refreshing the context, which is useful for checking match outcomes without creating beans."
+        explanation: "Incorrect. ApplicationContextRunner normally refreshes a context and supports assertions against the beans and condition outcomes produced by that context."
+      - id: D
+        answer: "It reuses one prepared ApplicationContext across property and classpath permutations, which reduces startup cost while preserving condition isolation between assertions."
+        explanation: "Incorrect. Each run creates its own controlled context; reusing mutable context state across permutations would undermine the isolation the runner provides."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.AutoConfigurationTesting/AutoConfigurationTesting.md", anchor: "application-context-runner"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: starter-split-combine-role
+    question: "Which statement best captures the relationship between a starter and auto-configuration?"
+    answers:
+      - id: A
+        answer: "The starter is the artifact that publishes auto-configuration candidates, while a separate autoconfigure artifact mainly carries the runtime libraries those candidates use."
+        explanation: "Incorrect. Candidate publication belongs to the auto-configuration side; a starter primarily provides a convenient dependency opinion around that integration."
+      - id: B
+        answer: "When starter dependencies and auto-configuration classes live in one artifact, Boot can infer the candidates from the starter dependency, so AutoConfiguration.imports is unnecessary."
+        explanation: "Incorrect. Combining the roles in one artifact does not change candidate discovery; the auto-configuration classes still need Boot's publication mechanism."
+      - id: C
+        answer: "A starter usually packages a convenient dependency choice around auto-configuration; the integration may split or combine artifacts depending on complexity and reuse needs."
+        explanation: "Correct. Dependency convenience and conditional configuration are separate design roles even when one artifact happens to carry both."
+      - id: D
+        answer: "Separating starter and autoconfigure artifacts mainly changes when conditions run: the starter adds dependencies first, then the autoconfigure artifact activates in a later startup phase."
+        explanation: "Incorrect. Artifact separation is a packaging and reuse boundary; it does not create a second startup phase for auto-configuration condition evaluation."
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.StarterSynthesis/StarterSynthesis.md", anchor: "starter-split-or-combine"}
+    apiRelated: {controller: "", methodSignature: ""}

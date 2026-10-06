@@ -1,1 +1,205 @@
-{}
+1.AutoConfigurationFoundation/AutoConfigurationFoundation.md:
+  auto-configuration-what-why:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  boot-vs-framework-configuration:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  defaults-and-back-off-contract:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  auto-configuration-end-to-end-flow:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+2.ActivationDiscovery/ActivationDiscovery.md:
+  spring-boot-application-and-enable-auto-configuration:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  candidate-discovery-vs-bean-creation:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  auto-configuration-imports:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  auto-configuration-package-isolation:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  application-base-package-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+3.ConditionModel/ConditionModel.md:
+  condition-model-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  class-conditions:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  bean-conditions-and-timing:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  property-conditions:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  resource-and-web-conditions:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  optional-class-linkage:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+4.BackOffUserControl/BackOffUserControl.md:
+  back-off-as-design-contract:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  user-defined-beans-win:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  bean-type-specificity:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  defaults-vs-forced-policy:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  back-off-failure-patterns:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+5.OrderingComposition/OrderingComposition.md:
+  configuration-order-vs-bean-order:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  before-after-ordering:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  auto-configure-order:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  conditional-composition:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  optional-technology-isolation:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+6.ExclusionsDiagnostics/ExclusionsDiagnostics.md:
+  when-to-exclude-auto-configuration:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  exclusion-mechanisms:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  condition-evaluation-report:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  debug-diagnostics:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  condition-diagnosis-playbook:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+7.CustomAuthoring/CustomAuthoring.md:
+  auto-configuration-class-contract:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  registration-and-package-boundaries:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  configuration-properties-integration:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  optional-dependency-design:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  auto-configure-metadata:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  stable-auto-configuration-identities:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+8.AutoConfigurationTesting/AutoConfigurationTesting.md:
+  why-focused-context-tests:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  application-context-runner:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  back-off-and-property-tests:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  filtered-class-loader:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  web-context-runners:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  condition-report-in-tests:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+9.StarterSynthesis/StarterSynthesis.md:
+  starter-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  starter-split-or-combine:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  starter-naming:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  configuration-key-namespace:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  starter-dependency-opinion:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  starter-end-to-end-flow:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  auto-configuration-boundaries-next:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false

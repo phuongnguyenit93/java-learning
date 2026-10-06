@@ -41,4 +41,112 @@
 # Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: auto-configuration-purpose
+    title: Vì sao Spring Boot Auto-configuration tồn tại
+    purpose: Xây dựng mô hình tư duy rằng auto-configuration là lớp quy ước của Boot, chỉ đóng góp hạ tầng mặc định khi điều kiện ứng dụng phù hợp và vẫn giữ quyền kiểm soát cho ứng dụng.
+    relatedKnowledge: [AutoConfigurationFoundation]
+    relatedModules:
+      - routeId: SPRING_BOOT_FUNDAMENTALS
+        label: Spring Boot Fundamentals
+        note: Fundamentals giới thiệu @SpringBootApplication, starter và mô hình quy ước của Boot; module này đào sâu cơ chế auto-configuration phía sau.
+      - routeId: SPRING_BOOT_EXTERNALIZED_CONFIGURATION
+        label: Spring Boot Externalized Configuration
+        note: Externalized configuration sở hữu property sources và binding; auto-configuration dùng các giá trị cấu hình làm đầu vào cho quyết định.
+    objectives:
+      - Giải thích vấn đề auto-configuration giải quyết so với việc tự khai báo toàn bộ bean hạ tầng cho các kiểu ứng dụng phổ biến.
+      - Phân biệt cơ chế cấu hình của Spring Framework với lớp cấu hình có quy ước và điều kiện của Spring Boot.
+      - Hiểu nguyên tắc cốt lõi rằng Boot có thể cung cấp giá trị mặc định nhưng cấu hình do ứng dụng định nghĩa vẫn phải được ưu tiên khi auto-configuration được thiết kế để back off.
+
+  - id: candidate-discovery-activation
+    title: Kích hoạt và khám phá auto-configuration candidate
+    purpose: Hiểu cách Boot bật auto-configuration và khám phá các candidate trước khi quá trình đánh giá condition quyết định candidate nào thực sự đóng góp cấu hình.
+    relatedKnowledge: [ActivationDiscovery]
+    dependsOn: [auto-configuration-purpose]
+    objectives:
+      - Liên hệ @SpringBootApplication với @EnableAutoConfiguration nhưng không nhầm component scanning của ứng dụng với cơ chế khám phá auto-configuration.
+      - Hiểu auto-configuration được publish sẽ được khám phá qua META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports và không nên dựa vào component scanning.
+      - Tách bước khám phá candidate khỏi bước condition matching để không nhầm việc một class được phát hiện với việc bean chắc chắn được tạo.
+
+  - id: condition-driven-selection
+    title: Chọn cấu hình bằng condition
+    purpose: Học cách Boot đánh giá Environment, classpath, bean, resource, loại ứng dụng và các condition liên quan để quyết định auto-configuration hoặc bean definition có phù hợp với ứng dụng hiện tại hay không.
+    relatedKnowledge: [ConditionModel]
+    dependsOn: [candidate-discovery-activation]
+    objectives:
+      - Xây dựng mô hình tư duy theo nhóm cho class, bean, property, resource, web application và các họ condition của Boot mà không biến Roadmap thành danh sách annotation.
+      - Hiểu vì sao classpath và trạng thái property là các đầu vào quyết định phổ biến, đồng thời liên hệ chúng với starter và externalized configuration.
+      - Nhận biết giới hạn về thời điểm đánh giá condition, đặc biệt khi bean condition phụ thuộc các definition đã được xử lý và class tùy chọn cần được cô lập để tránh JVM liên kết quá sớm.
+
+  - id: back-off-user-control
+    title: Back-off, giá trị mặc định và quyền ghi đè của ứng dụng
+    purpose: Hiểu nguyên tắc thiết kế rằng auto-configuration nên cung cấp mặc định nhưng không khóa ứng dụng, cùng cách bean condition và cấu hình tường minh của người dùng bảo toàn quyền kiểm soát đó.
+    relatedKnowledge: [BackOffUserControl]
+    dependsOn: [condition-driven-selection]
+    objectives:
+      - Giải thích back-off như một contract có chủ đích thay vì chỉ là hệ quả tình cờ của @ConditionalOnMissingBean.
+      - Lý giải cách bean do người dùng định nghĩa, phạm vi nhìn thấy của candidate, độ cụ thể của return type và thứ tự xử lý có thể ảnh hưởng kết quả bean condition.
+      - Phân biệt mặc định có thể tùy biến với chính sách framework bị áp đặt và nhận diện khi thiết kế auto-configuration can thiệp quá mức.
+
+  - id: ordering-composition
+    title: Thứ tự và cách phối hợp các auto-configuration
+    purpose: Hiểu cách nhiều auto-configuration phối hợp thứ tự khai báo và dependency mà không giả định thứ tự configuration sẽ điều khiển thứ tự khởi tạo bean.
+    relatedKnowledge: [OrderingComposition]
+    dependsOn: [back-off-user-control]
+    objectives:
+      - Dùng quan hệ before/after và auto-configuration ordering như cơ chế phối hợp thứ tự khai báo configuration.
+      - Phân biệt auto-configuration ordering với @Order trên runtime component không liên quan và với thứ tự do dependency giữa các bean quyết định.
+      - Nhận biết khi nào nên tách configuration thành cấu hình lồng nhau hoặc cấu hình điều kiện riêng để công nghệ tùy chọn được cô lập và dễ phối hợp.
+
+  - id: exclusions-diagnostics
+    title: Loại trừ và chẩn đoán condition
+    purpose: Học cách ứng dụng chủ động loại bỏ auto-configuration không mong muốn và cách condition report giải thích vì sao candidate khớp, không khớp hoặc bị loại trừ.
+    relatedKnowledge: [ExclusionsDiagnostics]
+    dependsOn: [condition-driven-selection]
+    objectives:
+      - Hiểu cơ chế loại trừ theo class, theo name và qua property, cùng lúc nào loại trừ tường minh tốt hơn việc cố vô hiệu hóa auto-configuration một cách gián tiếp.
+      - Dùng Condition Evaluation Report và thông tin debug của Boot để lần theo các condition khớp hoặc không khớp thay vì đoán từ việc thiếu bean.
+      - Chẩn đoán các kiểu lỗi phổ biến như thiếu class, property ngoài dự kiến, bean cạnh tranh, thứ tự sai và condition quá rộng.
+
+  - id: custom-auto-configuration-authoring
+    title: Tự xây dựng custom auto-configuration
+    purpose: Chuyển mô hình tư duy từ phía ứng dụng sử dụng thư viện sang phía tác giả thư viện bằng cách thiết kế auto-configuration tập trung, có thể được khám phá, áp điều kiện, cấu hình, mở rộng và ghi đè an toàn.
+    relatedKnowledge: [CustomAuthoring]
+    dependsOn: [ordering-composition, exclusions-diagnostics]
+    objectives:
+      - Dùng @AutoConfiguration, package boundary riêng, AutoConfiguration.imports, condition hẹp và @Import tường minh cho supporting component thay vì bật component scanning từ chính auto-configuration.
+      - Tích hợp configuration properties và dependency tùy chọn trong khi vẫn giữ phạm vi trách nhiệm rõ ràng và hành vi back-off đúng.
+      - Hiểu rằng auto-configuration annotation processor tạo condition metadata để lọc sớm các cấu hình không khớp nhằm tối ưu quá trình khởi động; metadata này không thay thế semantics thực tế khi condition được đánh giá lúc chạy.
+      - Giữ định danh auto-configuration và contract package đủ ổn định để ứng dụng sử dụng thư viện có thể tham chiếu an toàn các class dùng cho ordering và exclusion trong mô hình Spring Boot 3.3.
+
+  - id: auto-configuration-testing
+    title: Kiểm thử quyết định auto-configuration
+    purpose: Kiểm chứng auto-configuration bằng một ma trận ApplicationContext để các trường hợp condition khớp, back-off, property, thiếu class tùy chọn và hành vi riêng của web context được chứng minh thay vì giả định.
+    relatedKnowledge: [AutoConfigurationTesting]
+    dependsOn: [custom-auto-configuration-authoring]
+    relatedModules:
+      - routeId: SPRING_BOOT_TESTING
+        label: Spring Boot Testing
+        note: Milestone này sở hữu việc kiểm chứng đặc thù cho auto-configuration; module testing chuyên biệt sở hữu chiến lược kiểm thử Boot và test-slice curriculum rộng hơn.
+    objectives:
+      - Dùng test dựa trên ApplicationContextRunner để tạo context tập trung và assert bean được đóng góp hoặc không tồn tại.
+      - Kiểm thử back-off trước cấu hình người dùng, các biến thể property, trường hợp thiếu class trên classpath và web/reactive context chuyên biệt khi phù hợp.
+      - Hiểu vì sao test condition có đầu vào xác định rõ tốt hơn việc chỉ dựa vào một ứng dụng @SpringBootTest đầy đủ để kiểm chứng custom auto-configuration.
+
+  - id: starter-design-synthesis
+    title: Thiết kế starter và tổng hợp auto-configuration end-to-end
+    purpose: Kết nối cơ chế khám phá, condition, back-off, ordering, chẩn đoán, cách xây dựng và kiểm thử thành mô hình starter dùng được trong thực tế, đồng thời giữ ranh giới với Boot build tooling và các module lân cận.
+    relatedKnowledge: [StarterSynthesis]
+    dependsOn: [auto-configuration-testing]
+    relatedModules:
+      - routeId: SPRING_BOOT_BUILD_TOOLING_PACKAGING
+        label: Spring Boot Build Tooling and Packaging
+        note: Build tooling sở hữu cơ chế BOM, plugin và dependency management; module này sở hữu cách starter dependency tạo nên trải nghiệm auto-configuration.
+      - routeId: SPRING_BOOT_NATIVE_IMAGE
+        label: Spring Boot Native Image
+        note: Các ràng buộc native image tiêu thụ kết quả auto-configuration và AOT nhưng thuộc module native-image chuyên biệt.
+    objectives:
+      - Hiểu mô hình phổ biến tách artifact autoconfigure và starter, trường hợp tích hợp đơn giản có thể gộp hai vai trò, cùng vai trò khái niệm của starter là gói dependency thuận tiện mang một tập lựa chọn mặc định quanh auto-configuration.
+      - Giữ namespace của configuration key, dependency tùy chọn, metadata và điểm mở rộng phù hợp cho ứng dụng sử dụng thư viện.
+      - Lần theo toàn bộ luồng từ lúc thêm starter qua khám phá candidate, đánh giá condition, đóng góp bean mặc định, người dùng ghi đè, chẩn đoán và kiểm chứng.
+      - Giữ ranh giới trách nhiệm: cơ chế Spring container thuộc Spring Framework, semantics của property source/binding thuộc externalized configuration và cơ chế dependency management thuộc build tooling.
