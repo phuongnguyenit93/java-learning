@@ -1,1 +1,197 @@
-{}
+1.SpringBootPurpose/SpringBootPurpose.md:
+  spring-boot-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  boot-vs-framework:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  convention-over-configuration:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  externalized-configuration-orientation:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  boot-capability-map:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  fundamentals-learning-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+2.ApplicationBootstrap/ApplicationBootstrap.md:
+  springapplication-role:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  main-to-context:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  bootstrap-flow:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  high-level-lifecycle:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  runtime-handoff:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+3.PrimaryConfiguration/PrimaryConfiguration.md:
+  primary-configuration-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  springbootapplication-composition:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  root-package-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  customizing-composition:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  auto-configuration-handoff:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+4.StartersAndClasspath/StartersAndClasspath.md:
+  starter-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  managed-dependencies:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  classpath-driven-behavior:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  starter-vs-auto-configuration:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  dependency-choice-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+5.StartupObservation/StartupObservation.md:
+  startup-as-evidence:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  reading-startup-output:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  defaults-observable-overridable:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  startup-failure-classes:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  diagnostics-handoff:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+6.ApplicationShapes/ApplicationShapes.md:
+  application-shapes:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  non-web-servlet-reactive:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  embedded-server-mental-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  classpath-changes-runtime-shape:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  web-runtime-handoff:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+7.DevTools/DevTools.md:
+  devtools-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  restart-classloader-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  livereload-property-defaults:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  devtools-setup-restart-scope:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  remote-devtools-security:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  devtools-production-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+8.PackagingMentalModel/PackagingMentalModel.md:
+  packaging-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  executable-artifact:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  boot-loader-layout-mental-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  run-packaged-application:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  packaging-tooling-handoff:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+9.FundamentalsSynthesis/FundamentalsSynthesis.md:
+  end-to-end-boot-flow:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  classpath-configuration-conventions:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  common-misconceptions:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  ownership-handoff-map:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  next-learning-path:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false

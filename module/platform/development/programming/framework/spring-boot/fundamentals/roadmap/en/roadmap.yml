@@ -41,4 +41,136 @@
 # The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: boot-purpose
+    title: "What Spring Boot Is and Why It Exists"
+    purpose: "Build the first mental model for Spring Boot as an opinionated application bootstrap and integration layer on top of Spring Framework, and understand which recurring setup problems it is designed to reduce."
+    objectives:
+      - "Explain the difference between Spring Framework capabilities and Spring Boot conventions without treating Boot as a replacement framework."
+      - "Understand convention over configuration as sensible defaults that remain overridable rather than hidden mandatory behavior."
+      - "Recognize externalized configuration as a major input that lets the same Boot application vary behavior without changing application code, while leaving Config Data, precedence, profiles, binding, and @ConfigurationProperties to the externalized-configuration module."
+      - "Recognize dependency management, starters, auto-configuration, runtime bootstrap, production tooling, and packaging as cooperating Boot capabilities whose details are owned by later modules."
+      - "Know the scope boundary of Fundamentals: establish the Boot mental model and hand deeper mechanisms to their dedicated modules."
+
+  - id: application-entry-point
+    title: "From a Java main Method to a Boot Application"
+    purpose: "Understand the minimum application shape and how SpringApplication turns a primary source plus command-line arguments into a running Spring ApplicationContext, then places that context inside a managed application start/run/stop lifecycle."
+    dependsOn:
+      - boot-purpose
+    objectives:
+      - "Read the canonical SpringApplication.run(primarySource, args) entry point as an application bootstrap operation rather than application business logic."
+      - "Understand at a high level that SpringApplication chooses an appropriate ApplicationContext, prepares the environment, refreshes the context, and starts the application."
+      - "Distinguish a normal Java main method from the Boot-specific bootstrap responsibilities delegated to SpringApplication."
+      - "Keep a high-level lifecycle model: Boot prepares and starts the context, the application remains running according to its application type and non-daemon work, and orderly shutdown closes the application context; leave detailed events, runners, availability, exit handling, and shutdown integrations to later owners."
+      - "Keep detailed lifecycle events, runners, availability states, and runtime customization in the application-runtime module."
+    relatedModules:
+      - routeId: SPRING_BOOT_APPLICATION_RUNTIME
+        label: "Spring Boot Application Runtime"
+        note: "Owns the detailed lifecycle, runtime events, runners, availability states, task execution, logging, and runtime customization built on this bootstrap model."
+
+  - id: primary-configuration
+    title: "The Primary Configuration and @SpringBootApplication"
+    purpose: "Understand why a Boot application normally has one primary configuration class and what @SpringBootApplication contributes to configuration discovery, component scanning, and auto-configuration enablement."
+    dependsOn:
+      - application-entry-point
+    objectives:
+      - "Understand @SpringBootApplication as the composition of @SpringBootConfiguration, @EnableAutoConfiguration, and @ComponentScan."
+      - "Place the primary application class in a sensible root package and explain why package location affects component scanning and related search boundaries."
+      - "Recognize that the composed features can be replaced or customized independently when application structure requires it."
+      - "Keep condition evaluation and custom auto-configuration mechanics in the auto-configuration module."
+    relatedModules:
+      - routeId: SPRING_BOOT_AUTO_CONFIGURATION
+        label: "Spring Boot Auto-Configuration"
+        note: "Owns how Boot selects, orders, backs off, excludes, diagnoses, and authors auto-configuration beyond the introductory @EnableAutoConfiguration role taught here."
+
+  - id: dependencies-and-starters
+    title: "Starters, Managed Dependencies, and Classpath-Driven Behavior"
+    purpose: "Understand how Boot assembles a useful application classpath through starters and managed dependency versions, and why changing the classpath can change Boot behavior."
+    dependsOn:
+      - primary-configuration
+    objectives:
+      - "Treat a starter as a curated dependency descriptor rather than executable framework magic."
+      - "Understand at a high level that Boot publishes a curated dependency set so common dependency versions can move together."
+      - "Connect starter-selected libraries on the classpath with auto-configuration without incorrectly assuming starters and auto-configuration are the same mechanism."
+      - "Recognize when to use starters, individual dependencies, or explicit version overrides while leaving build-plugin and BOM mechanics to build-tooling-packaging."
+    relatedModules:
+      - routeId: SPRING_BOOT_BUILD_TOOLING_PACKAGING
+        label: "Spring Boot Build Tooling and Packaging"
+        note: "Owns the Gradle/Maven plugin model, BOM/dependency-management mechanics, executable packaging, layered archives, and image production."
+      - routeId: SPRING_BOOT_AUTO_CONFIGURATION
+        label: "Spring Boot Auto-Configuration"
+        note: "Explains how classpath and configuration inputs drive conditional automatic configuration after the classpath has been assembled."
+
+  - id: startup-observation
+    title: "Reading Boot Startup as Evidence"
+    purpose: "Learn to interpret startup output and application structure as observable evidence of Boot's bootstrap decisions instead of treating a successful run as unexplained magic."
+    dependsOn:
+      - dependencies-and-starters
+    objectives:
+      - "Read the startup banner, application identity, active-profile summary, context startup timing, and selected runtime components as clues about the application that Boot created."
+      - "Recognize the difference between a startup failure caused by the Java process, the Spring container, or Boot configuration/integration decisions at a beginner diagnostic level."
+      - "Understand that Boot defaults can be inspected and overridden; automatic does not mean unobservable or uncontrollable."
+      - "Know that detailed condition diagnostics, runtime logging behavior, and production diagnostics belong to later modules."
+    relatedModules:
+      - routeId: SPRING_BOOT_AUTO_CONFIGURATION
+        label: "Spring Boot Auto-Configuration"
+        note: "Owns the Condition Evaluation Report and deeper diagnosis of why auto-configurations matched or backed off."
+      - routeId: SPRING_BOOT_ACTUATOR
+        label: "Spring Boot Actuator"
+        note: "Owns production-ready runtime endpoints and operational diagnostics beyond basic startup observation."
+
+  - id: application-shapes
+    title: "Application Shapes: Non-Web and Embedded Web"
+    purpose: "Understand that Spring Boot can bootstrap different application shapes and that an embedded web server is a consequence of the application type and classpath, not the definition of Spring Boot itself."
+    dependsOn:
+      - startup-observation
+    objectives:
+      - "Distinguish a non-web Boot application from Servlet and reactive web application shapes at a high level."
+      - "Understand the embedded-server mental model: the server is started and managed as part of the application process when the web runtime is present."
+      - "Recognize that adding a web starter can change the runtime shape because the classpath changes the capabilities Boot can auto-configure."
+      - "Hand server selection, server properties, TLS, proxy handling, and graceful shutdown to the web-runtime module."
+    relatedModules:
+      - routeId: SPRING_BOOT_WEB_RUNTIME
+        label: "Spring Boot Web Runtime"
+        note: "Owns web-application type detection, embedded server auto-configuration, server customization, TLS, proxy deployment, and graceful shutdown."
+
+  - id: development-and-delivery-mental-model
+    title: "Development Convenience and Delivery Mental Models"
+    purpose: "Understand the beginner-facing roles of DevTools, executable application packaging, and Boot's development-to-delivery workflow without pulling advanced runtime or build mechanics into Fundamentals."
+    dependsOn:
+      - application-shapes
+    objectives:
+      - "Understand DevTools as an optional development-time convenience layer and distinguish restart/live-reload behavior from production runtime behavior."
+      - "Understand that a Boot application can be packaged as an executable artifact with its application classes and dependencies arranged for Boot's launcher."
+      - "Separate the mental model of producing/running an application artifact from the detailed Gradle/Maven, layered-archive, OCI-image, and Buildpack mechanics."
+      - "Know that DevTools should not be treated as a production dependency or production lifecycle mechanism."
+    relatedModules:
+      - routeId: SPRING_BOOT_BUILD_TOOLING_PACKAGING
+        label: "Spring Boot Build Tooling and Packaging"
+        note: "Owns bootRun, bootJar/bootWar, Boot Loader, layers, reproducible packaging, OCI images, and Buildpacks."
+
+  - id: fundamentals-synthesis
+    title: "The End-to-End Spring Boot Mental Model and Handoffs"
+    purpose: "Connect the module into one explainable model: application code and dependencies provide intent, SpringApplication bootstraps the context, @SpringBootApplication establishes common conventions, and specialized Boot modules own configuration, automatic decisions, runtime behavior, web servers, operations, testing, packaging, and native execution."
+    dependsOn:
+      - application-entry-point
+      - primary-configuration
+      - dependencies-and-starters
+      - startup-observation
+      - application-shapes
+      - development-and-delivery-mental-model
+    objectives:
+      - "Trace a simple Boot application from the Java main method and primary configuration through context bootstrap to a running application."
+      - "Explain how classpath, configuration inputs, and Boot conventions cooperate while remaining separately owned mechanisms."
+      - "Choose the correct next module when a question becomes about external configuration, auto-configuration, runtime lifecycle, web runtime, packaging, Actuator, testing, or native image."
+      - "Avoid beginner misconceptions such as 'Spring Boot replaces Spring Framework', 'a starter is auto-configuration', or 'every Boot application is a web application'."
+    relatedModules:
+      - routeId: SPRING_BOOT_EXTERNALIZED_CONFIGURATION
+        label: "Spring Boot Externalized Configuration"
+        note: "Owns Config Data, property precedence, profiles, @ConfigurationProperties, binding, validation, and configuration metadata."
+      - routeId: SPRING_BOOT_AUTO_CONFIGURATION
+        label: "Spring Boot Auto-Configuration"
+        note: "Owns Boot's conditional configuration decisions, back-off rules, exclusions, diagnostics, and custom auto-configuration."
+      - routeId: SPRING_BOOT_APPLICATION_RUNTIME
+        label: "Spring Boot Application Runtime"
+        note: "Owns the detailed application lifecycle and runtime integration model."

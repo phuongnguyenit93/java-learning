@@ -14,3 +14,28 @@
 #
 # Add only curated references that are useful for the module.
 # The build system must not overwrite this file after authored content exists.
+
+references:
+  - title: "Spring Boot 3.3 Reference — Developing with Spring Boot"
+    url: "https://docs.spring.io/spring-boot/3.3/reference/using/index.html"
+    description: "Official Spring Boot 3.3 guide to application structure, build systems, auto-configuration, Spring beans and common development conventions."
+
+  - title: "Spring Boot 3.3 Reference — Developing Your First Spring Boot Application"
+    url: "https://docs.spring.io/spring-boot/3.3/tutorial/first-application/"
+    description: "Official beginner-facing application walkthrough connecting starters, @SpringBootApplication, SpringApplication and the embedded runtime model."
+
+  - title: "Spring Boot 3.3 Reference — SpringApplication"
+    url: "https://docs.spring.io/spring-boot/3.3/reference/features/spring-application.html"
+    description: "Official reference for the SpringApplication bootstrap abstraction and its application-startup responsibilities."
+
+  - title: "Spring Boot 3.3 Reference — Structuring Your Code"
+    url: "https://docs.spring.io/spring-boot/3.3/reference/using/structuring-your-code.html"
+    description: "Official guidance on packages, the primary application class, component scanning boundaries and recommended application structure."
+
+  - title: "Spring Boot 3.3 Reference — Build Systems and Starters"
+    url: "https://docs.spring.io/spring-boot/3.3/reference/using/build-systems.html"
+    description: "Official introduction to Boot dependency management, Maven/Gradle usage and starter dependencies."
+
+  - title: "Spring Boot 3.3 Reference — Developer Tools"
+    url: "https://docs.spring.io/spring-boot/3.3/reference/using/devtools.html"
+    description: "Official reference for the optional spring-boot-devtools development-time behavior and its production boundary."
