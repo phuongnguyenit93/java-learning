@@ -70,7 +70,7 @@ export function KnowledgeVideoPanel({ item, compact = false }: KnowledgeVideoPan
   useEffect(() => {
     let active = true;
 
-    if (!scriptExpanded || script || scriptLoading) {
+    if (!scriptExpanded || script) {
       return () => {
         active = false;
       };
@@ -100,7 +100,7 @@ export function KnowledgeVideoPanel({ item, compact = false }: KnowledgeVideoPan
     return () => {
       active = false;
     };
-  }, [item.content, script, scriptExpanded, scriptLoading]);
+  }, [item.content, script, scriptExpanded]);
 
   return (
     <section className={`knowledge-video${compact ? ' knowledge-video--compact' : ''}`}>

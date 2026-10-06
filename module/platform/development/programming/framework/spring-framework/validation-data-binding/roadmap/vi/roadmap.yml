@@ -65,7 +65,7 @@ roadmap:
     purpose: Hiểu mô hình object/property mà data binding thao tác lên, gồm property path lồng nhau, vai trò của BeanWrapper và cách Spring biểu diễn kết quả binding độc lập với HTTP hay một request cụ thể.
     objectives:
       - Hiểu property path, truy cập object lồng nhau và vai trò của BeanWrapper như abstraction mức thấp cho property access.
-      - Phân biệt lỗi binding trực tiếp như sai kiểu với các trường hợp phụ thuộc policy: thiếu giá trị chỉ thành lỗi khi field được đánh dấu required, field lạ có thể được bỏ qua và nested path không truy cập được còn phụ thuộc chính sách invalid-field.
+      - "Phân biệt lỗi binding trực tiếp như sai kiểu với các trường hợp phụ thuộc policy: thiếu giá trị chỉ thành lỗi khi field được đánh dấu required, field lạ có thể được bỏ qua và nested path không truy cập được còn phụ thuộc chính sách invalid-field."
       - Hiểu BindingResult và Errors là cấu trúc biểu diễn kết quả binding/validation chứ không chỉ là thông báo ngoại lệ.
 
   - id: type-conversion-system

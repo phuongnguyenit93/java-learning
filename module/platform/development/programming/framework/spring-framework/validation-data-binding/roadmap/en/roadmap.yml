@@ -65,7 +65,7 @@ roadmap:
     purpose: Understand the object-property model that data binding operates on, including nested property paths, BeanWrapper-style access, and how binding outcomes are represented independently from transport-specific request handling.
     objectives:
       - Understand property paths, nested object access, and the role of BeanWrapper as a lower-level Spring property-access abstraction.
-      - Distinguish direct binding errors such as type mismatch from policy-dependent cases: missing values become errors only for required fields, unknown fields can be ignored, and inaccessible nested paths depend on invalid-field policy.
+      - "Distinguish direct binding errors such as type mismatch from policy-dependent cases: missing values become errors only for required fields, unknown fields can be ignored, and inaccessible nested paths depend on invalid-field policy."
       - Understand BindingResult and Errors as structured representations of binding and validation outcomes rather than mere exception messages.
 
   - id: type-conversion-system
