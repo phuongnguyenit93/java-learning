@@ -424,9 +424,9 @@ Prefer clear ownership and correct review sequencing over keeping all three lane
 
 ---
 
-## 7A. FRESH SUB-WORKER SESSION TITLE CONTRACT
+## 7A. FRESH SUB-WORKER EXACT CHATGPT TITLE CONTRACT
 
-Whenever Prime opens/spawns a **new sub-worker session**, the task instruction must explicitly tell that worker that the session title should begin with the CURRENT canonical STEP prefix.
+Whenever Prime opens/spawns a **new sub-worker session**, Prime must construct one **exact intended ChatGPT conversation title** before sending the first task.
 
 Required title pattern:
 
@@ -445,13 +445,34 @@ STEP 7 - Fix Quiz Testing
 
 The STEP prefix must reflect the actual CURRENT canonical STEP being executed, not a historical hard-coded number.
 
-When sending the initial task to a fresh sub-worker session, include an explicit instruction such as:
+The first worker task should begin with the exact title requirement, before the normal task body. Preferred structure:
 
 ```text
-Session title requirement: prefix this new session title with `STEP <N> - `.
+CHATGPT CONVERSATION TITLE:
+STEP <N> - <short task description>
+
+Use exactly the title above for this ChatGPT conversation if conversation-title control is available.
+Do not translate, shorten, paraphrase, or replace it.
+
+TASK:
+<normal worker task starts here>
 ```
 
-If the product/session runtime auto-generates titles and does not expose direct title control, still include this instruction in the first worker task so the intended title convention is unambiguous. Also use the same STEP-prefixed wording in the worker label/task headline when practical.
+Prime should also use the same exact `STEP <N> - ...` text as the Chat On Steroids worker label/title or task headline when that field is available.
+
+The intended result is therefore:
+
+```text
+Chat On Steroids worker title
+→ STEP <N> - <short task description>
+
+Underlying ChatGPT conversation title
+→ STEP <N> - <short task description>
+```
+
+If the product/session runtime auto-generates the ChatGPT sidebar title and does not expose direct title control, the prompt cannot guarantee the UI title. Still include the exact-title block above in the first worker task so the intended title is explicit and the title generator has the strongest possible signal.
+
+Do not claim that task text alone guarantees a ChatGPT sidebar rename when the runtime exposes no rename action.
 
 This title rule applies to newly created sub-worker sessions. Reusing/reviving an existing worker session does not require creating a new title merely because the worker receives another message.
 
@@ -797,7 +818,7 @@ FOR EACH CURRENT STEP:
 → ORIGINAL AUTHORS FIX + REVALIDATE
 → ROTATE REVIEW #2 ON CURRENT POST-FIX SOURCE, PREFERABLY WITH THE THIRD LANE
 → ORIGINAL AUTHORS REMAIN WRITE OWNERS UNTIL CLEAN
-→ EVERY FRESH SUB-WORKER SESSION MUST BE INSTRUCTED TO USE TITLE PREFIX `STEP <N> - `
+→ EVERY FRESH SUB-WORKER SESSION GETS AN EXACT `CHATGPT CONVERSATION TITLE` BLOCK USING `STEP <N> - ...`
 → REVIEW #1 → FIX → REVALIDATE → REVIEW #2 OF CURRENT SOURCE
 → DO NOT ADVANCE ANY CHILD ALONE TO NEXT STEP
 → ADVANCE ONLY WHEN ALL TARGET CHILDREN ARE CLEAN
