@@ -27,4 +27,157 @@
 #         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
 # </interview-schema>
 
-questions: []
+questions:
+  - question: 'Vì sao Externalized Configuration của Spring Boot nhấn mạnh việc chạy cùng một gói ứng dụng với các giá trị khác nhau theo môi trường, và ranh giới thiết kế nào vẫn phải nằm trong mã ứng dụng?'
+    answer: 'Externalized Configuration tách các giá trị phụ thuộc lúc triển khai khỏi hành vi của chương trình để cùng một gói đã biên dịch có thể đi qua development, staging và production mà không phải build lại chỉ vì endpoint, port, timeout, ngưỡng hoặc tham chiếu thông tin xác thực thay đổi. Lợi ích là khả năng tái sử dụng và vận hành linh hoạt, nhưng điều đó không có nghĩa mọi quyết định đều nên đưa vào property. Mã ứng dụng vẫn phải sở hữu quy tắc nghiệp vụ và logic diễn giải cấu hình. Một ranh giới hữu ích là hỏi đội vận hành có thể đổi giá trị này mà năng lực của ứng dụng vẫn giữ nguyên hay không. Nếu thay đổi đó làm đổi quy tắc cốt lõi hoặc cấu trúc chương trình, nó nên nằm trong code. Tách hai phần như vậy cũng giúp giải thích rõ gói ứng dụng nào đang chạy và đầu vào môi trường nào đang làm hành vi thay đổi.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '1.ConfigurationMentalModel/ConfigurationMentalModel.md'
+      anchor: 'externalized-configuration-purpose'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: 'Khi ứng dụng quan sát một giá trị property có hiệu lực không như mong đợi, bạn sẽ suy luận precedence thế nào mà không dựa vào các mẹo kiểu tệp bên ngoài luôn thắng?'
+    answer: 'Hãy bắt đầu từ key chuẩn rồi liệt kê mọi nguồn có thể định nghĩa key đó. Tiếp theo xác nhận từng nguồn dự kiến thật sự đã được nạp và tài liệu theo profile liên quan có đang hoạt động hay không. Chỉ những ứng viên thực sự tham gia mới được đem so theo precedence của PropertySource và thứ tự Config Data. Chẳng hạn Config Data đóng gói có thể bị Config Data bên ngoài ghi đè, rồi các nguồn lúc chạy có precedence cao hơn như biến môi trường, JVM system property, JSON nội tuyến hoặc tham số dòng lệnh có thể tiếp tục thắng theo thứ tự Boot quy định. Thói quen quan trọng là xác định nguồn thắng bằng bằng chứng thay vì suy từ vị trí vật lý của tệp. Chỉ sau khi đã biết nguồn thắng mới kiểm tra placeholder, relaxed name hoặc binding nếu ứng dụng vẫn nhận giá trị bất ngờ.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '2.PropertySourcesAndPrecedence/PropertySourcesAndPrecedence.md'
+      anchor: 'precedence-reasoning'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: 'So sánh spring.config.location, spring.config.additional-location và spring.config.import. Khi nào nên dùng từng cơ chế, và chuyện gì dễ xảy ra nếu coi chúng là tương đương?'
+    answer: 'spring.config.location thay tập vị trí tìm Config Data mặc định bằng danh sách được cung cấp, vì vậy phù hợp khi môi trường triển khai muốn một hợp đồng tìm kiếm thay thế có chủ đích. spring.config.additional-location giữ các vị trí mặc định rồi bổ sung vị trí mới, nên thường hợp với mô hình cấu hình đóng gói làm nền và một thư mục vận hành dùng để ghi đè. spring.config.import giải quyết bài toán khác: một tài liệu Config Data kéo thêm tài nguyên vào thành phần cấu hình của chính nó, và dữ liệu được import tham gia thứ tự tương đối với tài liệu khai báo. Nếu coi ba cơ chế là một, đội ngũ có thể vô tình làm mất vị trí mặc định, tạo chuỗi import khó lần theo hoặc hiểu sai thứ tự giá trị. Câu hỏi thiết kế đúng là đang thay cách tìm, mở rộng cách tìm hay ghép thêm tài liệu vào một tài liệu hiện có.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: 'Bạn sẽ quyết định thế nào giữa import bắt buộc, import optional và configtree cho cấu hình được mount, và cần giải thích những đánh đổi vận hành nào với đội production?'
+    answer: 'Import bắt buộc nên làm startup thất bại khi tài nguyên đó là một phần của hợp đồng cấu hình, vì tiếp tục chạy khi thiếu dữ liệu bắt buộc chỉ đẩy lỗi sang giai đoạn sau và làm nguyên nhân khó thấy hơn. optional: chỉ phù hợp khi việc tài nguyên không tồn tại thật sự là trạng thái được thiết kế chấp nhận, ví dụ lớp ghi đè cục bộ cho lập trình viên hoặc tài nguyên nền tảng có thể vắng hợp lệ. configtree: phù hợp khi nền tảng mount mỗi giá trị thành một tệp và Boot cần đưa cây tệp đó vào Environment. Đánh đổi là tính tiện dụng có thể làm giảm khả năng quan sát nếu mọi thứ đều bị đánh dấu optional hoặc bị chia nhỏ quá mức. Đội vận hành nên giữ fail-fast cho đầu vào bắt buộc, tài liệu hóa đường dẫn mount và để vòng đời, lưu trữ, rotation cùng quyền truy cập secret cho hệ thống hạ tầng hoặc security chịu trách nhiệm.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: 'Khi nào nên dùng Spring profile thay cho cách ghi đè property thông thường, và việc tạo profile cho mọi giá trị phụ thuộc môi trường sẽ gây vấn đề gì?'
+    answer: 'Profile phù hợp khi một chế độ có tên kích hoạt một biến thể cấu hình gồm nhiều khác biệt có liên hệ, chẳng hạn bộ thiết lập production cho database, messaging và feature. Nếu chỉ một timeout, port, hostname hoặc endpoint cần đổi, ghi đè property trực tiếp thường rõ hơn. Khi mỗi cluster, region, customer hay secret lại có profile riêng, profile trở thành một hệ cấu hình thứ hai nằm chồng lên precedence thông thường. Hệ quả là số tổ hợp tăng, quan hệ kích hoạt khó nhìn và việc chẩn đoán phải suy luận đồng thời cả tập profile lẫn thứ tự nguồn. Nên chọn cơ chế nhỏ nhất diễn đạt đúng yêu cầu: override trực tiếp cho giá trị đơn lẻ và profile cho một biến thể có tên thật sự gồm nhiều thay đổi liên quan.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '5.ProfilesAndActivation/ProfilesAndActivation.md'
+      anchor: 'profile-boundary'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: 'Vì sao @PropertySource có thể quá muộn với các thiết lập như logging.* hoặc spring.main.*, dù sau đó property vẫn xuất hiện trong Environment?'
+    answer: '@PropertySource được thêm khi ApplicationContext đang refresh, trong khi một số quyết định của Boot phải được thực hiện trước giai đoạn đó. Các thiết lập được đọc sớm như logging.* hoặc spring.main.* có thể đã được Boot tiêu thụ trước khi @PropertySource được đăng ký. Vì vậy có một failure mode dễ gây nhầm: key xuất hiện hợp lệ trong Environment về sau nhưng không còn khả năng thay đổi quyết định bootstrap đã xảy ra. Với thiết lập cần tác động sớm, nên dùng nguồn có mặt trước thời điểm quyết định, chẳng hạn Config Data phù hợp, biến môi trường, JVM system property hoặc tham số dòng lệnh. Điểm cần nhớ là không chỉ precedence quyết định kết quả; thời điểm một PropertySource tham gia vòng đời khởi động cũng quan trọng.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '2.PropertySourcesAndPrecedence/PropertySourcesAndPrecedence.md'
+      anchor: 'propertysource-timing'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: 'Bạn chọn @Value hay @ConfigurationProperties cho cấu hình ứng dụng theo tiêu chí nào, và vì sao đây là quyết định thiết kế chứ không phải quyết định về precedence?'
+    answer: '@Value tiện cho một số ít giá trị đơn lẻ, cục bộ và còn hỗ trợ SpEL, nên phù hợp khi cấu hình chỉ phục vụ một điểm tiêu thụ nhỏ. @ConfigurationProperties phù hợp hơn khi nhiều giá trị cùng tạo thành một không gian tên có thể tái sử dụng, đặc biệt khi cần đối tượng lồng nhau, List, Map, validation, chuyển đổi kiểu, metadata và khả năng refactor an toàn. Cả hai đều nhận dữ liệu sau khi Environment đã phân giải nguồn thắng, vì vậy không annotation nào có precedence cao hơn annotation kia. Quyết định nằm ở hình dạng và quyền sở hữu của hợp đồng cấu hình phía ứng dụng. Một dấu hiệu nên chuyển sang @ConfigurationProperties là có nhiều @Value cùng lặp tiền tố, quy tắc kiểm tra và logic chuyển đổi ở nhiều nơi, khiến hợp đồng cấu hình bị phân tán.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '6.EnvironmentValueAndPlaceholders/EnvironmentValueAndPlaceholders.md'
+      anchor: 'value-vs-configuration-properties'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: 'Hãy giải thích constructor binding của @ConfigurationProperties trong Spring Boot 3.x, gồm cách chọn constructor và hệ quả ở bước build liên quan đến tên tham số Java.'
+    answer: 'Constructor binding cho phép Boot tạo trực tiếp một đối tượng cấu hình bất biến từ tham số constructor thay vì tạo bean khả biến rồi gọi setter. Trong Boot 3.x, nếu kiểu @ConfigurationProperties chỉ có một constructor có tham số thì Boot thường dùng constructor đó mà không cần @ConstructorBinding. Nếu có nhiều constructor, @ConstructorBinding có thể chỉ rõ constructor cần dùng; constructor đánh dấu @Autowired sẽ đi theo cơ chế tạo bean khác. Kiểu dùng constructor binding vẫn phải được đăng ký qua @ConfigurationPropertiesScan hoặc @EnableConfigurationProperties thay vì coi là @Component thông thường. Binder còn cần tên tham số constructor khả dụng lúc chạy, nên mã thường phải biên dịch với -parameters. Boot Gradle plugin tự cấu hình tùy chọn này, Maven dùng spring-boot-starter-parent kế thừa thiết lập phù hợp, còn cấu hình build tùy chỉnh phải tự bảo đảm. Vì vậy lỗi binding có thể bắt nguồn từ thông tin tên tham số do trình biên dịch giữ lại, dù mã Java nhìn hoàn toàn đúng.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '7.ConfigurationProperties/ConfigurationProperties.md'
+      anchor: 'constructor-binding'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: 'Relaxed binding có ý nghĩa gì đối với cách đặt tên biến môi trường, và kỷ luật đặt tên nào giúp tránh bất ngờ khi triển khai?'
+    answer: 'Relaxed binding cho phép một property chuẩn được biểu diễn bằng dạng vật lý phù hợp với từng nguồn. Với khóa cấu hình công khai của ứng dụng, nên dùng dạng kebab-case chữ thường làm hợp đồng chuẩn. Khi chuyển sang biến môi trường, Boot áp dụng quy tắc xác định: dấu chấm thành gạch dưới, dấu gạch ngang bị bỏ, chữ chuyển thành chữ hoa và chỉ số List được đặt giữa hai dấu gạch dưới. Ví dụ my.service[0].other trở thành MY_SERVICE_0_OTHER. Điều này quan trọng vì nền tảng triển khai thường chỉ cung cấp biến môi trường trong khi mã nguồn và tài liệu dùng tên property chuẩn. Đội ngũ nên tài liệu hóa key chuẩn rồi suy ra tên theo quy tắc của từng nguồn, thay vì tự tạo nhiều cách viết riêng. Cách làm đó giúp cấu hình dễ di chuyển và giúp chẩn đoán nhanh khi một biến không bind vì tên vật lý được chuyển đổi sai.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '8.RelaxedAndComplexBinding/RelaxedAndComplexBinding.md'
+      anchor: 'environment-variable-mapping'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: 'Vì sao List phức hợp ở nguồn precedence cao thay toàn bộ List ở nguồn thấp thay vì vá từng phần tử, và vì sao không được khái quát quy tắc đó sang Map hoặc property đặc biệt của Boot?'
+    answer: 'Với binding List phức hợp thông thường qua @ConfigurationProperties, List từ nguồn tham gia có precedence cao hơn thay toàn bộ List ở nguồn thấp; nó không vá từng index trên danh sách đã bind trước đó. Vì vậy một ghi đè tưởng như chỉ đổi một phần tử có thể làm các phần tử khác biến mất khỏi List có hiệu lực. Map có hành vi khác: các key có thể được kết hợp qua nhiều nguồn, còn khi trùng key thì giá trị từ nguồn precedence cao hơn thắng. Một số property đặc biệt của Boot như spring.profiles.include lại có quy tắc xử lý riêng và không nên suy luận như List binder thông thường. Ý nghĩa thực tế là phải xác định cơ chế đang xử lý cấu hình trước khi giả định merge hay replace. Nếu một List thường xuyên cần vá một phần theo môi trường, nên xem lại hình dạng cấu hình hoặc cân nhắc Map hay cấu trúc tường minh khác phù hợp hơn với ý nghĩa ghi đè mong muốn.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '8.RelaxedAndComplexBinding/RelaxedAndComplexBinding.md'
+      anchor: 'list-replacement'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: 'Bạn phân biệt thế nào giữa lỗi nạp Config Data, lỗi binding hoặc chuyển đổi kiểu và lỗi validation, và vì sao xác định đúng giai đoạn lại quan trọng?'
+    answer: 'Lỗi nạp nghĩa là Boot chưa lấy được hoặc chưa phân tích được đầu vào cấu hình, ví dụ import bắt buộc bị thiếu. Lỗi binding hoặc chuyển đổi kiểu xảy ra sau khi key đã có thể tham gia: tên hay cấu trúc không khớp mô hình Java, hoặc một giá trị đã phân giải như timeout=banana không thể chuyển thành Duration. Lỗi validation xảy ra muộn hơn, khi binding đã tạo được giá trị có kiểu nhưng giá trị đó vi phạm ràng buộc miền, ví dụ -1 bị @Positive từ chối. Phân biệt giai đoạn quan trọng vì mỗi lỗi cần bằng chứng và cách sửa khác nhau. Đánh dấu import thành optional không sửa được lỗi chuyển đổi kiểu, nới validation không sửa dữ liệu sai định dạng, và điều tra precedence không giúp ích nếu tài nguyên chưa từng được nạp. Chẩn đoán theo luồng giúp tránh thay đổi cấu hình ngẫu nhiên chỉ để làm quá trình khởi động đi qua.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '9.ValidationAndMetadata/ValidationAndMetadata.md'
+      anchor: 'binding-vs-validation-failure'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: 'Metadata cấu hình của Spring Boot dùng để làm gì, và kỹ sư cần tránh suy luận sai điều gì về runtime chỉ từ gợi ý IDE hoặc tệp metadata?'
+    answer: 'Metadata cấu hình mô tả các key được hỗ trợ, kiểu, giá trị mặc định, mô tả, deprecation và gợi ý để IDE hay công cụ khác có thể hỗ trợ completion và tài liệu. Configuration processor có thể sinh metadata lúc biên dịch từ các kiểu @ConfigurationProperties. Metadata không phải PropertySource lúc chạy, không tạo giá trị, không đổi precedence và cũng không cấp quyền hay thực hiện binding. Một key vẫn có thể bind dù metadata tùy chỉnh bị thiếu; ngược lại có entry metadata không chứng minh rằng runtime thật sự nhận key đó từ một nguồn nào hoặc validation đã thành công. Nếu IDE gợi ý sai, hãy điều tra việc sinh metadata. Nếu ứng dụng nhận sai giá trị, hãy quay về Environment, PropertySource, precedence và binding. Tách tooling compile-time khỏi hành vi runtime giúp tránh sửa nhầm lớp vấn đề.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '9.ValidationAndMetadata/ValidationAndMetadata.md'
+      anchor: 'metadata-tooling-boundary'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: 'Hãy mô tả một quy trình có hệ thống và an toàn trong môi trường sản xuất để chẩn đoán giá trị cấu hình có hiệu lực không như mong đợi mà không thay đổi thiết lập một cách ngẫu nhiên.'
+    answer: 'Bắt đầu bằng key chuẩn và ghi lại giá trị ứng dụng thực sự quan sát. Liệt kê mọi nguồn có thể định nghĩa key đó, xác nhận tệp hoặc import nào đã được nạp và tài liệu theo profile nào thật sự đang hoạt động. Chỉ trên tập ứng viên đang tham gia mới áp dụng thứ tự Config Data cùng precedence tổng thể của PropertySource để xác định nguồn thắng. Sau khi biết nguồn thắng, mới điều tra placeholder, relaxed name, binding hoặc chuyển đổi kiểu nếu phía tiêu thụ vẫn cho kết quả bất ngờ. Các endpoint env hay configprops của Actuator có thể cung cấp bằng chứng vận hành khi được bật có chủ ý, nhưng vẫn phải tuân thủ kiểm soát truy cập và che dữ liệu nhạy cảm. Mục tiêu là giải thích giá trị từ bằng chứng, không phải liên tục thêm ghi đè có precedence cao hơn cho đến khi triệu chứng biến mất.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '10.DiagnosticsAndSynthesis/DiagnosticsAndSynthesis.md'
+      anchor: 'effective-value-debugging'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: 'Externalized Configuration của Spring Boot dừng ở đâu trong môi trường production, và khi nào một cuộc điều tra nên bàn giao sang Actuator, Testing, Spring Cloud Config hoặc quản lý secret?'
+    answer: 'Module này sở hữu cách Boot nhận đầu vào cấu hình, xử lý Config Data, áp dụng precedence và profile, cung cấp giá trị đã phân giải, bind cấu hình có kiểu, tích hợp validation và xuất metadata cấu hình. Cơ chế ghi đè chỉ dành cho test thuộc Spring Boot Testing vì nó hoạt động trong test context chứ không phải quá trình khởi động production thông thường. Actuator có thể cung cấp bằng chứng vận hành qua env hoặc configprops, nhưng hành vi endpoint, quyền truy cập và khả năng quan sát ở production thuộc phạm vi Actuator hoặc Application Runtime. Yêu cầu cấu hình tập trung từ xa nên bàn giao sang Spring Cloud Config thay vì ép vào Config Data cục bộ. Việc lưu trữ, rotation, phân phối và chính sách truy cập secret thuộc security hoặc infrastructure; Boot chỉ tiêu thụ giá trị đã được cung cấp. Ranh giới rõ ràng giúp cuộc điều tra chuyển đúng nơi thay vì biến Externalized Configuration thành module chịu trách nhiệm cho mọi vấn đề vận hành lân cận.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '10.DiagnosticsAndSynthesis/DiagnosticsAndSynthesis.md'
+      anchor: 'externalized-configuration-handoffs'
+    apiRelated:
+      controller: ''
+      methodSignature: ''

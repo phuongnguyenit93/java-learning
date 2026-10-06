@@ -38,4 +38,503 @@
 #       Internal id of the correct answer. The frontend checks this identity after shuffling.
 # </quiz-schema>
 
-questions: []
+questions:
+  - id: 'q01-externalized-purpose'
+    question: 'What is the main reason to externalize configuration in a Spring Boot application?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '1.ConfigurationMentalModel/ConfigurationMentalModel.md'
+      anchor: 'externalized-configuration-purpose'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Run the same application artifact in different environments by supplying different values.'
+        explanation: 'Correct. Environment-specific values can change while the compiled application artifact remains the same.'
+      - id: B
+        answer: 'Move business decisions into property files so application code no longer owns behavior.'
+        explanation: 'Business rules still belong in application code; external configuration is for values that may vary without redefining behavior.'
+      - id: C
+        answer: 'Guarantee that external files override every other property source used by the application.'
+        explanation: 'External files participate in precedence, but later property sources such as command-line arguments can still override them.'
+      - id: D
+        answer: 'Make application code read each physical configuration source directly instead of using Environment.'
+        explanation: 'Spring normally exposes the resolved result through Environment or binding rather than requiring direct reads from every source.'
+    correctAnswerId: A
+
+  - id: 'q02-precedence-command-line'
+    question: 'The same key is defined in an external Config Data file, an OS environment variable, a JVM system property, and a command-line argument. Which candidate wins under normal Spring Boot precedence?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '2.PropertySourcesAndPrecedence/PropertySourcesAndPrecedence.md'
+      anchor: 'environment-system-json-cli'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'The value from the external Config Data file.'
+        explanation: 'External Config Data can override packaged defaults, but the listed runtime sources can still come later.'
+      - id: B
+        answer: 'The value from the command-line argument.'
+        explanation: 'Correct. Command-line arguments are later than the other listed sources and therefore override their competing values.'
+      - id: C
+        answer: 'The value from the OS environment variable.'
+        explanation: 'Environment variables can override Config Data, but the listed JVM system property and command-line source come later.'
+      - id: D
+        answer: 'The value from the JVM system property.'
+        explanation: 'A JVM system property can override an OS environment variable, but the command-line argument still comes later.'
+    correctAnswerId: B
+
+  - id: 'q03-propertysource-timing'
+    question: 'Why can @PropertySource be ineffective for an early Boot setting such as logging configuration?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '2.PropertySourcesAndPrecedence/PropertySourcesAndPrecedence.md'
+      anchor: 'propertysource-timing'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: '@PropertySource can load only custom application keys, not framework configuration keys.'
+        explanation: 'The limitation is not a namespace restriction; timing is the important issue for early Boot decisions.'
+      - id: B
+        answer: '@PropertySource is read before default properties, so it can provide only fallback values.'
+        explanation: 'The problem is not that it is too early or limited to fallback values.'
+      - id: C
+        answer: '@PropertySource is added during context refresh, after some early Boot settings may already be read.'
+        explanation: 'Correct. A property may eventually appear in Environment yet arrive too late to affect an earlier startup decision.'
+      - id: D
+        answer: '@PropertySource participates only when Config Data processing has been disabled for the application.'
+        explanation: '@PropertySource can coexist with Config Data and does not require Config Data to be disabled.'
+    correctAnswerId: C
+
+  - id: 'q04-config-location-vs-additional'
+    question: 'A deployment must keep Boot default Config Data locations and add file:./ops/ as an extra override location. Which setting best matches that requirement?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '3.ConfigDataFilesAndLocations/ConfigDataFilesAndLocations.md'
+      anchor: 'spring-config-additional-location'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Use spring.config.location=file:./ops/ and expect Boot to append all default locations automatically.'
+        explanation: 'spring.config.location replaces the default search set unless the desired locations are included explicitly.'
+      - id: B
+        answer: 'Use spring.config.name=ops so Boot searches both application and ops basenames in every default location.'
+        explanation: 'spring.config.name changes the basename being searched; it does not append an independent directory.'
+      - id: C
+        answer: 'Use spring.config.import=file:./ops/ because imports extend the global default search set for all documents.'
+        explanation: 'Imports compose Config Data from a declaring document and are not the same as extending the global search locations.'
+      - id: D
+        answer: 'Use spring.config.additional-location=file:./ops/ so the default search locations remain in place.'
+        explanation: 'Correct. additional-location extends the normal search set instead of replacing it.'
+    correctAnswerId: D
+
+  - id: 'q05-location-groups'
+    question: 'Why would a Spring Boot configuration use location groups instead of treating every Config Data location as a separate precedence level?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '3.ConfigDataFilesAndLocations/ConfigDataFilesAndLocations.md'
+      anchor: 'location-files-directories-groups'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'To make several locations share the same precedence level when Config Data is processed.'
+        explanation: 'Correct. A location group defines locations that should be considered at the same precedence level.'
+      - id: B
+        answer: 'To make Boot recursively scan every child directory below each configured location.'
+        explanation: 'Location grouping controls precedence relationships; it does not turn directory discovery into unrestricted recursion.'
+      - id: C
+        answer: 'To force all files in the group to use the same file extension and basename.'
+        explanation: 'Grouping does not require one shared extension or basename across all locations.'
+      - id: D
+        answer: 'To disable profile-specific Config Data for the grouped locations.'
+        explanation: 'Profile-specific processing still applies; grouping changes how locations relate in precedence.'
+    correctAnswerId: A
+
+  - id: 'q06-import-precedence'
+    question: 'application.properties defines app.name=base and imports extra.properties, which defines app.name=imported. With no higher-precedence source, what is the effective value?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '4.ConfigDataImportsAndTrees/ConfigDataImportsAndTrees.md'
+      anchor: 'import-precedence'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'base, because the document declaring the import always has priority over imported values.'
+        explanation: 'Imported values can override values from the document that declared the import.'
+      - id: B
+        answer: 'imported, because the imported document takes precedence over the importing document for that key.'
+        explanation: 'Correct. Imported Config Data has local precedence over the document that triggered the import.'
+      - id: C
+        answer: 'base, unless the spring.config.import line appears before app.name inside the importing file.'
+        explanation: 'The physical position of the import line within one document does not change this relationship.'
+      - id: D
+        answer: 'Neither value, because duplicate keys across an import boundary make the Config Data invalid.'
+        explanation: 'Duplicate keys are resolved by ordering; they do not make the import invalid by themselves.'
+    correctAnswerId: B
+
+  - id: 'q07-optional-import'
+    question: 'When is optional: appropriate on a Config Data import?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '4.ConfigDataImportsAndTrees/ConfigDataImportsAndTrees.md'
+      anchor: 'optional-imports'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'When a required production file is missing and startup must continue regardless.'
+        explanation: 'Required configuration should normally fail fast rather than be marked optional merely to hide the error.'
+      - id: B
+        answer: 'When the imported document should have lower precedence than the document that imports it.'
+        explanation: 'optional: changes missing-resource behavior, not the precedence of a successfully loaded import.'
+      - id: C
+        answer: 'When absence of the imported resource is an accepted state by design.'
+        explanation: 'Correct. A developer-local overlay or intentionally absent platform resource is a valid optional import use case.'
+      - id: D
+        answer: 'When Boot must infer whether an extensionless import contains properties or YAML.'
+        explanation: 'Extension hints solve parser selection for extensionless resources; optional: does not.'
+    correctAnswerId: C
+
+  - id: 'q08-configtree'
+    question: 'A platform mounts /etc/config/myapp/username and /etc/config/myapp/password as separate files. Which Boot mechanism is designed to expose them as configuration properties?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '4.ConfigDataImportsAndTrees/ConfigDataImportsAndTrees.md'
+      anchor: 'configtree-imports'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Point @PropertySource at /etc/config/ so each child file becomes a property automatically.'
+        explanation: '@PropertySource is not the file-per-property directory adapter provided by Config Data.'
+      - id: B
+        answer: 'Set spring.config.name=username,password so each mounted file becomes an application basename.'
+        explanation: 'spring.config.name changes application Config Data basenames and does not map this directory structure into properties.'
+      - id: C
+        answer: 'Inject each filesystem path with @Value so the files are registered as PropertySource instances.'
+        explanation: '@Value consumes resolved values; it does not automatically register each mounted file as a PropertySource.'
+      - id: D
+        answer: 'Import the mounted directory as Config Data using the configtree: location prefix.'
+        explanation: 'Correct. configtree: maps file-per-property directory structures into Environment keys such as myapp.username.'
+    correctAnswerId: D
+
+  - id: 'q09-profile-declaration-restriction'
+    question: 'Which profile-selection declaration is invalid under the Boot 3.3 rules taught in this module?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '5.ProfilesAndActivation/ProfilesAndActivation.md'
+      anchor: 'profile-declaration-restrictions'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'spring.profiles.active=metrics inside a document activated only when prod is already active.'
+        explanation: 'Correct. Profile-selection properties must not be declared inside profile-specific or profile-activated documents.'
+      - id: B
+        answer: 'spring.profiles.active=prod supplied directly as a command-line argument at application launch.'
+        explanation: 'The command line is an unconditional Environment source and is a valid place to select active profiles.'
+      - id: C
+        answer: 'spring.profiles.group.production[0]=proddb declared in an unconditional application configuration document.'
+        explanation: 'Profile groups can be declared in unconditional configuration where profile selection is allowed.'
+      - id: D
+        answer: 'spring.profiles.include[0]=observability declared in a non-profile-specific application configuration document.'
+        explanation: 'Profile includes are allowed in non-profile-specific, unconditional configuration.'
+    correctAnswerId: A
+
+  - id: 'q10-multiple-profile-precedence'
+    question: 'Profiles prod and live are active in that order, and their profile-specific Config Data defines the same key at the same relevant location group. Which value can win?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '5.ProfilesAndActivation/ProfilesAndActivation.md'
+      anchor: 'multiple-profile-precedence'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'The prod value, because the first active profile always has stronger precedence.'
+        explanation: 'The documented behavior is last-wins for competing profile-specific Config Data, not first-wins.'
+      - id: B
+        answer: 'The live value, because the later active profile can override the earlier one.'
+        explanation: 'Correct. Profile-specific Config Data uses last-wins behavior at the relevant location-group level.'
+      - id: C
+        answer: 'Neither value, because two active profiles are not allowed to define the same key.'
+        explanation: 'Multiple active profiles may define the same key; ordering determines the effective candidate.'
+      - id: D
+        answer: 'The alphabetically earlier profile wins after Boot sorts all active profile names.'
+        explanation: 'Boot does not alphabetically sort active profile names to determine this precedence.'
+    correctAnswerId: B
+
+  - id: 'q11-value-vs-configuration-properties'
+    question: 'A component needs six related client settings, including nested values, validation, and IDE metadata. Which consumption model is the better fit?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '6.EnvironmentValueAndPlaceholders/EnvironmentValueAndPlaceholders.md'
+      anchor: 'value-vs-configuration-properties'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Use direct Environment lookups for every setting so each value stays independent.'
+        explanation: 'Direct lookups can read values, but repeated related lookups lose the structured contract, validation, and metadata advantages.'
+      - id: B
+        answer: 'Use one @Value expression that concatenates all settings into a single injected string.'
+        explanation: '@Value is useful for focused scalar or expression-based injection, not for replacing a structured configuration model.'
+      - id: C
+        answer: 'Use a @ConfigurationProperties type that owns and binds the complete client namespace.'
+        explanation: 'Correct. Structured related settings are the intended use case for typed binding, validation integration, and metadata.'
+      - id: D
+        answer: 'Use @PropertySource on the component so the values bypass normal configuration binding.'
+        explanation: '@PropertySource adds a source; it does not provide the structured consumption model described here.'
+    correctAnswerId: C
+
+  - id: 'q12-canonical-placeholder-name'
+    question: 'Which placeholder form best follows Spring Boot guidance for broad relaxed-name lookup?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '6.EnvironmentValueAndPlaceholders/EnvironmentValueAndPlaceholders.md'
+      anchor: 'canonical-property-names'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: '${DEMO_ITEM_PRICE}, because placeholders should use the environment-variable spelling.'
+        explanation: 'Environment variables may use that physical form, but placeholder references should use the canonical property name.'
+      - id: B
+        answer: '${demo.itemPrice}, because camelCase enables the widest relaxed lookup across sources.'
+        explanation: 'Camel-case placeholder names are more restrictive than the recommended canonical kebab-case form.'
+      - id: C
+        answer: '${demo_item_price}, because underscore notation is the canonical form for all property sources.'
+        explanation: 'Underscore notation is not the canonical form Spring Boot recommends for application property names.'
+      - id: D
+        answer: '${demo.item-price}, because lower-case kebab case is the canonical placeholder form.'
+        explanation: 'Correct. Canonical lower-case kebab case enables the broadest compatible lookup behavior described by Boot.'
+    correctAnswerId: D
+
+  - id: 'q13-constructor-binding'
+    question: 'A @ConfigurationProperties class in Boot 3.x has exactly one constructor, and that constructor is parameterized. Which statement correctly describes constructor selection and the parameter-name requirement?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '7.ConfigurationProperties/ConfigurationProperties.md'
+      anchor: 'constructor-binding'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Boot normally selects that constructor without @ConstructorBinding, but binding still needs discoverable parameter names at runtime.'
+        explanation: 'Correct. In Boot 3.x, a single parameterized constructor is normally selected without @ConstructorBinding, while successful binding still requires parameter names at runtime, typically via -parameters. The Boot Gradle plugin configures it, Maven projects using spring-boot-starter-parent inherit it, and custom builds must ensure it explicitly.'
+      - id: B
+        answer: 'Boot normally selects that constructor only when @ConstructorBinding is present, while runtime parameter names are optional.'
+        explanation: 'For a single parameterized constructor, Boot 3.x does not normally require @ConstructorBinding, and parameter names are not optional for constructor binding.'
+      - id: C
+        answer: 'Boot normally selects that constructor automatically and can bind it even when compiled parameter names are unavailable.'
+        explanation: 'Automatic constructor selection does not remove the parameter-name requirement; the binder needs discoverable constructor parameter names at runtime.'
+      - id: D
+        answer: 'Boot normally selects that constructor through regular @Component creation, so compiler parameter metadata is unnecessary.'
+        explanation: 'Constructor-bound property types use configuration-properties registration rather than ordinary @Component creation, and their parameter names still need to be discoverable.'
+    correctAnswerId: A
+
+  - id: 'q14-environment-variable-mapping'
+    question: 'Using Spring Boot environment-variable mapping rules, which name corresponds to my.service[0].other?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '8.RelaxedAndComplexBinding/RelaxedAndComplexBinding.md'
+      anchor: 'environment-variable-mapping'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'MY_SERVICE[0]_OTHER'
+        explanation: 'Environment-variable list indices use numeric values surrounded by underscores rather than square brackets.'
+      - id: B
+        answer: 'MY_SERVICE_0_OTHER'
+        explanation: 'Correct. Dots become underscores, letters are uppercased, and the list index is surrounded by underscores.'
+      - id: C
+        answer: 'MY-SERVICE-0-OTHER'
+        explanation: 'Dashes are not used as the delimiter in the environment-variable representation.'
+      - id: D
+        answer: 'MY_SERVICE__0__OTHER'
+        explanation: 'The documented indexed form uses single underscores around the numeric index.'
+    correctAnswerId: B
+
+  - id: 'q15-list-replacement'
+    question: 'A lower-precedence source defines users=[alice,bob] and a higher-precedence source defines users=[carol]. What is the normal effective list for complex List binding?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '8.RelaxedAndComplexBinding/RelaxedAndComplexBinding.md'
+      anchor: 'list-replacement'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: '[alice,bob,carol], because list values are appended across property sources.'
+        explanation: 'Ordinary complex List binding does not append elements from lower- and higher-precedence sources.'
+      - id: B
+        answer: '[carol,bob], because only the overridden list index is replaced.'
+        explanation: 'The higher-precedence list replaces the lower list as a whole rather than patching individual indices.'
+      - id: C
+        answer: '[carol], because the higher-precedence list replaces the lower list as a whole.'
+        explanation: 'Correct. Whole-list replacement is the normal rule for complex List binding across property sources.'
+      - id: D
+        answer: '[alice,bob], because an existing lower-precedence list cannot be replaced.'
+        explanation: 'Higher-precedence configuration can replace the lower-precedence list.'
+    correctAnswerId: C
+
+  - id: 'q16-map-special-keys'
+    question: 'A Map<String,Object> must preserve a literal key named a.b instead of treating the dot as nested structure. Which property-key form should be used?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '8.RelaxedAndComplexBinding/RelaxedAndComplexBinding.md'
+      anchor: 'map-binding'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Use a.b without special syntax so the binder preserves the dot literally.'
+        explanation: 'Without bracket notation, the dot is naturally interpreted as part of the property path structure.'
+      - id: B
+        answer: 'Use a_b because relaxed binding always converts underscores back into literal dots for Map keys.'
+        explanation: 'Relaxed naming does not provide that guarantee for preserving a literal dotted Map key.'
+      - id: C
+        answer: 'Use "a.b" because quoting the text disables nested-path parsing for Map binding.'
+        explanation: 'Quoting is not the documented mechanism for preserving the dot as one Map key.'
+      - id: D
+        answer: 'Use [a.b] so bracket notation preserves the dotted text as one Map key.'
+        explanation: 'Correct. Bracket notation protects characters that would otherwise be interpreted as path separators.'
+    correctAnswerId: D
+
+  - id: 'q17-duration-conversion'
+    question: 'client.timeout exists in Environment with the text value fast, while the target @ConfigurationProperties member is Duration. What kind of failure is this most directly?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '8.RelaxedAndComplexBinding/RelaxedAndComplexBinding.md'
+      anchor: 'type-conversion'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'A conversion failure because the resolved text cannot become the target Duration.'
+        explanation: 'Correct. The key is present, but the binder cannot convert its value into the requested target type.'
+      - id: B
+        answer: 'A binding-shape failure because the resolved client.timeout key does not match the target object structure.'
+        explanation: 'The key is already present and is reaching the intended Duration member; the failure is converting its text value, not locating the member.'
+      - id: C
+        answer: 'A validation failure because fast is a domain-invalid timeout value that should be rejected after binding.'
+        explanation: 'Validation can reject a successfully converted Duration, but fast never reaches that stage because it cannot first become a Duration.'
+      - id: D
+        answer: 'A precedence failure because the wrong source supplied fast instead of a lower-precedence duration value.'
+        explanation: 'A surprising winning source can be a precedence problem, but once fast is the resolved value, this specific failure occurs during conversion.'
+    correctAnswerId: A
+
+  - id: 'q18-failure-stage-classification'
+    question: 'Which diagnosis correctly matches the failure to the stage where it occurs?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '9.ValidationAndMetadata/ValidationAndMetadata.md'
+      anchor: 'binding-vs-validation-failure'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'A missing required import is a binding failure because the target object cannot receive the expected property.'
+        explanation: 'The failure occurs earlier: Boot cannot load the required Config Data resource, so binding has not started yet.'
+      - id: B
+        answer: 'timeout=banana for Duration is a binding/conversion failure because the text cannot become the target type.'
+        explanation: 'Correct. The source can load and the key can resolve, yet conversion into Duration still fails.'
+      - id: C
+        answer: 'max-connections=-1 with @Positive is a conversion failure because a negative value cannot become the target int.'
+        explanation: 'The value can load and convert to int successfully; @Positive rejects the resulting typed value during validation.'
+      - id: D
+        answer: 'A key that resolves from an unexpected PropertySource is a binding failure because the target receives the wrong value.'
+        explanation: 'If the key is present but the winning source is unexpected, the problem belongs to precedence and ordering rather than object binding.'
+    correctAnswerId: B
+
+  - id: 'q19-metadata-runtime-boundary'
+    question: 'Which statement correctly describes the boundary between configuration metadata and runtime configuration behavior?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '9.ValidationAndMetadata/ValidationAndMetadata.md'
+      anchor: 'metadata-tooling-boundary'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Generated metadata is consulted by the binder at runtime to decide which custom keys are allowed to bind.'
+        explanation: 'Metadata describes the configuration contract for tooling, but runtime binding does not require a metadata entry to authorize a key.'
+      - id: B
+        answer: 'Missing metadata disables IDE completion and also prevents @ConfigurationProperties from binding that key at runtime.'
+        explanation: 'IDE assistance may be reduced when metadata is missing, but runtime binding can still work because the two concerns are separate.'
+      - id: C
+        answer: 'Metadata can drive IDE assistance, while Environment and binding still determine runtime values and objects.'
+        explanation: 'Correct. Metadata is descriptive tooling data, whereas runtime resolution and binding follow their own pipeline.'
+      - id: D
+        answer: 'A default recorded in metadata becomes a low-precedence runtime fallback when no PropertySource supplies the key.'
+        explanation: 'Metadata can document a default for tooling, but it is not a PropertySource and does not inject a runtime fallback value.'
+    correctAnswerId: C
+
+  - id: 'q20-effective-value-diagnostics'
+    question: 'The application starts successfully, but app.region has an unexpected value. Which diagnostic sequence best follows the module mental model?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '10.DiagnosticsAndSynthesis/DiagnosticsAndSynthesis.md'
+      anchor: 'effective-value-debugging'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Start from the observed value, inspect the target binding type, then compare PropertySources only if conversion looks correct.'
+        explanation: 'For an unexpected effective value, source participation and precedence should be established before investigating how the consumer binds that value.'
+      - id: B
+        answer: 'List candidate configuration files first, compare their physical order, then check profiles only if two files define the key.'
+        explanation: 'File order alone is insufficient because active documents, imports, and PropertySource precedence determine which candidates actually participate and win.'
+      - id: C
+        answer: 'Check active profiles first, then change the highest-precedence source that mentions the key and observe whether the value changes.'
+        explanation: 'Changing configuration before identifying all participating candidates can hide the cause; first trace the observed value back through sources and ordering.'
+      - id: D
+        answer: 'Write down the canonical key and observed value, list participating sources, check active documents, then apply precedence.'
+        explanation: 'Correct. Trace the effective key backward through source participation and ordering before investigating placeholder or binding details.'
+    correctAnswerId: D

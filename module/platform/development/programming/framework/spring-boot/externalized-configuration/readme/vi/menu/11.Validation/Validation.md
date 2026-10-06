@@ -1,1 +1,0 @@
-﻿# Validation cho Configuration Properties

@@ -27,4 +27,157 @@
 #         Exact method signature in api-descriptions.yml, for example startVsRun().
 # </interview-schema>
 
-questions: []
+questions:
+  - question: 'Why does Spring Boot externalized configuration emphasize running the same application artifact with different environment-specific values, and what design boundary should remain in application code?'
+    answer: 'Externalized configuration separates deploy-time values from program behavior so the same compiled artifact can move across development, staging, and production without being rebuilt just to change endpoints, ports, timeouts, thresholds, or credential references. The benefit is portability and operational flexibility, but it does not mean every decision belongs in properties. Application code should still own domain rules and the logic that interprets configuration. A useful boundary is whether operations can change a value while preserving the same application capability; if changing it redefines core behavior, it is probably code rather than configuration. This distinction also improves reproducibility because teams can reason separately about artifact identity and environment-specific inputs.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '1.ConfigurationMentalModel/ConfigurationMentalModel.md'
+      anchor: 'externalized-configuration-purpose'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: 'An application observes an unexpected effective property value. Explain how you would reason about precedence without relying on shortcuts such as external always wins.'
+    answer: 'Start from the canonical key and enumerate every source that can define it. Then prove that each expected source was actually loaded and that any profile-specific document is active. Only the participating candidates should be compared using Boot property-source precedence plus Config Data ordering. For example, packaged Config Data can be overridden by external Config Data, which can then be overridden by later runtime sources such as environment variables, JVM system properties, inline JSON, or command-line arguments according to the documented order. The important habit is to identify the winning candidate rather than infer precedence from where a file happens to live. Once the winner is known, investigate placeholder resolution or binding only if the application still observes something unexpected.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '2.PropertySourcesAndPrecedence/PropertySourcesAndPrecedence.md'
+      anchor: 'precedence-reasoning'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: 'Compare spring.config.location, spring.config.additional-location, and spring.config.import. When would you choose each, and what mistake happens if their roles are treated as interchangeable?'
+    answer: 'spring.config.location changes the search locations and replaces the normal defaults unless those defaults are explicitly included, so it is appropriate when a deployment wants a deliberate replacement search contract. spring.config.additional-location keeps the normal defaults and adds extra locations, which fits the common pattern of packaged defaults plus an operational override directory. spring.config.import is different: a Config Data document composes in another resource and the imported data participates relative to that declaring document. Treating them as interchangeable can silently remove expected default locations, create hidden import chains, or produce surprising ordering. The design question is whether you are replacing discovery, extending discovery, or composing one document with another.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: 'How would you decide between a required import, an optional import, and a configtree import for mounted configuration, and what operational trade-offs should you explain to a production team?'
+    answer: 'A required import should fail startup when the resource is part of the application contract, because continuing without it would hide a configuration defect and often move the failure to a less obvious stage. optional: is appropriate only when absence is intentionally acceptable, such as a developer-local overlay or a platform resource that is genuinely optional by design. configtree: is useful when a platform mounts one file per property, allowing Boot to expose that directory through the normal Environment model. The trade-off is that convenience can reduce visibility if everything is marked optional or split into too many files. Teams should preserve fail-fast behavior for required inputs, document which mounted paths are expected, and keep secret lifecycle and provisioning concerns with the infrastructure or security system that creates those files.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: 'When should a team use Spring profiles instead of ordinary property overrides, and what problems appear when profiles are used for every environment-specific value?'
+    answer: 'Profiles are a good fit when a named mode activates a coherent configuration variant, such as a production set of related database, messaging, and feature settings. An ordinary override is clearer when only one value such as a timeout, port, hostname, or endpoint needs to change. If every cluster, region, customer, or secret receives its own profile, profiles become a second configuration system layered over normal precedence. That creates more combinations, hidden activation dependencies, and harder debugging because developers must reason about both profile selection and property ordering. Prefer the smallest mechanism that expresses the requirement: direct overrides for individual values and profiles for meaningful groups of related differences.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '5.ProfilesAndActivation/ProfilesAndActivation.md'
+      anchor: 'profile-boundary'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: 'Why can @PropertySource be too late for settings such as logging.* or spring.main.*, even if the property later appears in Environment?'
+    answer: '@PropertySource is added while the application context is being refreshed, but some Boot decisions are made before that refresh stage. Early settings such as logging configuration or spring.main.* may already have been consumed by the time the @PropertySource is registered. That creates an important failure mode: the key can be visible later in Environment and still have had no effect on the earlier decision. For early Boot controls, use a source that participates before the decision is made, such as supported Config Data, an environment variable, JVM system property, or command-line argument. The lesson is that source timing matters in addition to source precedence.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '2.PropertySourcesAndPrecedence/PropertySourcesAndPrecedence.md'
+      anchor: 'propertysource-timing'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: 'How do you choose between @Value and @ConfigurationProperties for application configuration, and why is this a design decision rather than a precedence decision?'
+    answer: '@Value is convenient for a small number of local scalar values and can also evaluate SpEL, so it works well when configuration is isolated to one consuming component. @ConfigurationProperties is the better fit when several values form one reusable namespace, especially when nested objects, lists, maps, validation, type-safe conversion, metadata, and refactoring support matter. Both consume values that have already been resolved through Environment, so neither annotation has a special precedence advantage. The choice is about the shape and ownership of the application-facing configuration contract. A warning sign is many related @Value injections that duplicate prefixes and validation logic; that usually indicates a typed configuration object would communicate intent more clearly.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '6.EnvironmentValueAndPlaceholders/EnvironmentValueAndPlaceholders.md'
+      anchor: 'value-vs-configuration-properties'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: 'Explain Spring Boot 3.x constructor binding for @ConfigurationProperties, including constructor selection and the build-time implication of Java parameter names.'
+    answer: 'Constructor binding lets Boot create an immutable configuration object directly from constructor parameters instead of constructing a mutable bean and calling setters. In Boot 3.x, a @ConfigurationProperties type with one parameterized constructor normally uses that constructor without requiring @ConstructorBinding; if several constructors exist, @ConstructorBinding can identify the intended one, while an @Autowired constructor opts out of this binding path. The type must still be registered through @ConfigurationPropertiesScan or @EnableConfigurationProperties rather than treated as an ordinary component. The binder also needs constructor parameter names to be discoverable at runtime, so compilation normally requires -parameters. The Boot Gradle plugin configures that option, Maven builds using spring-boot-starter-parent inherit the relevant compiler setup, and custom build configurations must ensure it explicitly. A deployment failure here can therefore come from build metadata even when the Java constructor itself looks correct.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '7.ConfigurationProperties/ConfigurationProperties.md'
+      anchor: 'constructor-binding'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: 'What does relaxed binding mean for environment-variable naming, and what naming discipline helps avoid deployment surprises?'
+    answer: 'Relaxed binding lets one canonical configuration property map to source-specific physical names. Application keys should be designed in lower-case kebab form, while environment variables typically uppercase the name, replace dots with underscores, remove dashes, and represent list indices with numbers surrounded by underscores. For example, my.service[0].other maps to MY_SERVICE_0_OTHER. This matters because deployment systems often expose environment variables even though Java code and documentation use canonical names. Teams should document the canonical key as the contract and derive platform-specific forms from it rather than inventing several competing spellings. That keeps configuration portable and makes debugging easier when a value fails to bind because the physical name was transformed incorrectly.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '8.RelaxedAndComplexBinding/RelaxedAndComplexBinding.md'
+      anchor: 'environment-variable-mapping'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: 'Why do higher-precedence sources replace an ordinary complex List instead of patching individual elements, and why should that rule not be generalized to maps or special Boot properties?'
+    answer: 'For ordinary complex List binding, the higher-precedence participating source replaces the lower-precedence list as a whole. The consequence is that precedence applies to the effective list as a unit rather than as an element-by-element patch, so an override intended to change one element can unexpectedly remove the others. Maps can behave differently because keys may be combined or overridden independently, and special Boot properties such as spring.profiles.include have their own processing semantics rather than being ordinary binder-managed lists. The operational implication is to diagnose the actual mechanism before assuming merge behavior. When list configuration is frequently patched per environment, reconsider whether the configuration shape is appropriate or whether a map or another explicit structure would express the desired override semantics more safely.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '8.RelaxedAndComplexBinding/RelaxedAndComplexBinding.md'
+      anchor: 'list-replacement'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: 'How do you distinguish a Config Data loading failure from a binding or conversion failure and from a validation failure, and why does the stage distinction matter?'
+    answer: 'A loading failure means Boot could not obtain or parse the configuration input, for example because a required import is missing. A binding or conversion failure happens later after a key is available, when the property name or object shape does not match the Java model or when a resolved value such as timeout=banana cannot become the target Duration. A validation failure occurs after binding has produced a typed value but the value violates a domain constraint, such as -1 failing @Positive. The stage distinction matters because each failure needs different evidence and a different fix. Making a required import optional does not solve a conversion error, weakening validation does not solve malformed data, and debugging precedence does not help if the resource was never loaded.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '9.ValidationAndMetadata/ValidationAndMetadata.md'
+      anchor: 'binding-vs-validation-failure'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: 'What is Spring Boot configuration metadata for, and what incorrect runtime assumptions should an engineer avoid making from IDE completion or metadata files?'
+    answer: 'Configuration metadata describes supported keys, types, defaults, descriptions, deprecations, and hints so IDEs and other tools can provide completion and documentation. The configuration processor can generate this metadata at compile time from @ConfigurationProperties types. It is not a runtime PropertySource, does not create values, does not change precedence, and does not authorize or perform binding. A key may still bind at runtime even when custom metadata is absent, and a metadata entry does not prove that a runtime source supplied the key or that validation succeeded. If completion is wrong, inspect metadata generation; if the application receives the wrong value, inspect Environment, precedence, and binding instead.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '9.ValidationAndMetadata/ValidationAndMetadata.md'
+      anchor: 'metadata-tooling-boundary'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: 'Describe a systematic production-safe process for diagnosing an unexpected effective configuration value without changing settings at random.'
+    answer: 'Begin with the canonical key and record the value the application actually observes. List every source that can define that key, verify which files or imports loaded, and check which profile-specific documents are active. Apply Config Data ordering and overall PropertySource precedence only across those participating candidates, then identify the winning source. After the winner is known, investigate placeholder composition, relaxed-name mapping, binding, or conversion if the consumer still sees something unexpected. Operational evidence such as Actuator env or configprops endpoints can help when intentionally enabled, but access controls and secret redaction still apply. The process should explain the value from evidence rather than modify higher-precedence sources until the symptom disappears.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '10.DiagnosticsAndSynthesis/DiagnosticsAndSynthesis.md'
+      anchor: 'effective-value-debugging'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: 'Where does Spring Boot externalized configuration stop in production, and when should an investigation hand off to Actuator, Testing, Spring Cloud Config, or secret-management concerns?'
+    answer: 'This module owns how Boot accepts configuration inputs, processes Config Data, applies precedence and profiles, exposes resolved values, binds typed configuration, integrates validation, and publishes configuration metadata. Test-only override mechanisms belong to Spring Boot Testing because they participate in the test context rather than normal production startup. Actuator can expose operational evidence such as env or configprops, but endpoint behavior, access control, and production observability belong to the Actuator and runtime areas. A requirement for centralized remote configuration belongs to Spring Cloud Config rather than being stretched into local Config Data. Secret storage, rotation, distribution, and access policy belong to security or infrastructure systems; Boot only consumes the resulting values. Clear ownership prevents one configuration module from becoming responsible for every neighboring operational concern.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '10.DiagnosticsAndSynthesis/DiagnosticsAndSynthesis.md'
+      anchor: 'externalized-configuration-handoffs'
+    apiRelated:
+      controller: ''
+      methodSignature: ''

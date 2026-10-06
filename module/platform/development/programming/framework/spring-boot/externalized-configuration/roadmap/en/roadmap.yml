@@ -41,4 +41,126 @@
 # The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: configuration-purpose-and-input-model
+    title: "Why Spring Boot Externalizes Configuration"
+    purpose: "Understand externalized configuration as a runtime input model that lets one application binary adapt across environments without hard-coding environment-specific values."
+    objectives:
+      - "Explain why environment-specific values should be separated from application code and what kinds of values belong in configuration."
+      - "Recognize that Spring Boot exposes configuration through an ordered Environment assembled from multiple property sources."
+      - "Distinguish configuration values from application behavior and from remote configuration products such as Spring Cloud Config."
+      - "Understand the module boundary: this module owns Boot configuration loading, precedence, binding, profiles, validation, and metadata rather than Spring Framework Environment internals."
+    relatedModules:
+      - routeId: SPRING_BOOT_FUNDAMENTALS
+        label: "Spring Boot Fundamentals"
+        note: "Provides the Boot bootstrap and convention mental model that this module specializes into configuration inputs."
+
+  - id: property-sources-and-precedence
+    title: "Configuration Sources and Override Precedence"
+    purpose: "Build a reliable mental model for how competing values from defaults, config data, environment variables, JVM system properties, inline JSON, command-line arguments, and other sources are ordered and resolved."
+    objectives:
+      - "Identify the major Boot property-source categories that commonly participate in runtime configuration."
+      - "Reason about later/higher-precedence sources overriding earlier/lower-precedence sources without reducing the whole system to a misleading one-line rule."
+      - "Recognize timing caveats such as @PropertySource becoming available only during context refresh and therefore being too late for certain early Boot properties."
+      - "Separate general application configuration precedence from test-only override sources, while recognizing that testing adds additional high-precedence sources."
+    relatedModules:
+      - routeId: SPRING_BOOT_TESTING
+        label: "Spring Boot Testing"
+        note: "Owns test-specific property overrides such as test annotations and DynamicPropertySource usage."
+
+  - id: config-data-files-and-locations
+    title: "Config Data Files, Search Locations, and Location Groups"
+    purpose: "Understand how Boot discovers application.properties/application.yaml inside and outside the packaged application, and how config names, replacement locations, additional locations, and location groups change that search."
+    objectives:
+      - "Understand the default packaged and external Config Data search locations and why external files can override packaged defaults."
+      - "Use spring.config.name to change the configuration basename."
+      - "Distinguish spring.config.location, which replaces default search locations, from spring.config.additional-location, which augments them."
+      - "Understand that spring.config.name, spring.config.location, and spring.config.additional-location are read early to determine which Config Data is loaded, so they must be supplied as Environment properties such as OS environment variables, JVM system properties, or command-line arguments rather than from the Config Data they control."
+      - "Understand directory versus file locations, optional locations, wildcard locations where supported, and location groups used to preserve intended precedence levels."
+      - "Recognize the properties-vs-YAML same-location precedence rule and prefer one format per application for predictability."
+
+  - id: config-data-imports-and-trees
+    title: "Config Data Imports, Optional Resources, and Configuration Trees"
+    purpose: "Understand how one Config Data document imports additional resources and how Boot exposes file- and mounted-tree-based configuration through the same Environment model."
+    objectives:
+      - "Use spring.config.import to load additional configuration and reason about imported values taking precedence over the document that declares the import."
+      - "Distinguish fixed and import-relative locations and understand how chained relative imports are resolved."
+      - "Use optional: intentionally and understand the failure model when a non-optional resource cannot be found."
+      - "Recognize extension hints as a Config Data loading feature when an imported file has no extension and its format cannot be inferred normally."
+      - "Understand configtree: as Boot's file-per-property bridge for mounted configuration, without turning the module into Kubernetes or secrets-management training."
+
+  - id: profiles-and-profile-specific-config
+    title: "Profiles, Activation, and Profile-Specific Configuration"
+    purpose: "Understand how profiles select configuration variants and how Boot combines active/default profiles, profile-specific files/documents, profile groups, and activation rules."
+    objectives:
+      - "Use spring.profiles.active and spring.profiles.default as configuration inputs and understand that normal property-source precedence still applies."
+      - "Understand application-{profile} Config Data and the last-wins behavior when multiple profiles contribute competing values."
+      - "Use spring.config.activate.on-profile for document activation without confusing it with spring.profiles.active."
+      - "Understand profile include/group behavior and the restriction that active/default/include/group declarations belong in non-profile-specific documents."
+      - "Avoid using profiles as a substitute for every deployment/configuration concern when ordinary property overrides are sufficient."
+
+  - id: consuming-individual-values
+    title: "Reading Configuration with Environment, Placeholders, and @Value"
+    purpose: "Understand the main ways application code consumes individual resolved values after Boot has assembled its Environment, while keeping Spring Framework implementation internals out of scope."
+    objectives:
+      - "Read resolved values through Environment when programmatic lookup is appropriate."
+      - "Use ${...} placeholders and @Value for focused scalar injection while understanding their readability and maintainability limits for structured configuration."
+      - "Understand placeholder defaults and why canonical kebab-case property names improve consistency across sources and tooling."
+      - "Recognize that @Value supports features such as SpEL that are intentionally different from type-safe @ConfigurationProperties binding."
+
+  - id: type-safe-configuration-properties
+    title: "Type-Safe Configuration with @ConfigurationProperties"
+    purpose: "Build the mental model for binding a coherent configuration namespace into a typed object and registering that object through scanning, explicit enablement, or @Bean binding."
+    objectives:
+      - "Choose @ConfigurationProperties for grouped, reusable, type-safe configuration rather than scattering many @Value expressions."
+      - "Understand prefix-based binding and the role of @ConfigurationPropertiesScan and @EnableConfigurationProperties."
+      - "Distinguish JavaBean/setter binding from constructor binding and understand the Boot 3.x constructor-binding conventions for a single parameterized constructor or record."
+      - "Recognize the lifecycle constraint that constructor-bound configuration properties are not ordinary component beans created by regular Spring mechanisms."
+
+  - id: relaxed-and-complex-binding
+    title: "Relaxed Binding, Complex Types, and Type Conversion"
+    purpose: "Understand how Boot normalizes configuration names across files, environment variables, and system properties, then binds nested objects, collections, maps, and converted value types."
+    objectives:
+      - "Understand relaxed binding and the recommended canonical kebab-case form for configuration property names."
+      - "Translate canonical property names to environment-variable form, including list-index conventions."
+      - "Bind nested objects, lists, sets, and maps, including bracket notation when map keys contain characters that must be preserved."
+      - "Reason about complex-type override/merge behavior, especially that list values from a higher-precedence source replace rather than element-wise merge lower-precedence lists."
+      - "Understand Boot's conversion of strings into common target types such as Duration, DataSize, enums, addresses, and other supported types at the binding boundary."
+
+  - id: validation-metadata-and-failures
+    title: "Validation, Configuration Metadata, and Failure Diagnosis"
+    purpose: "Turn configuration into an explicit contract by validating bound objects, generating IDE metadata, and diagnosing loading/binding failures with evidence from startup behavior."
+    objectives:
+      - "Validate @ConfigurationProperties using @Validated and Jakarta Validation constraints when a validation provider is present."
+      - "Understand nested validation and the role of @Valid when validation must cascade into nested configuration objects."
+      - "Use the Spring Boot configuration processor to generate metadata that improves IDE completion and documentation for custom configuration keys."
+      - "Differentiate missing Config Data resources, invalid profile/config declarations, binding/conversion failures, and validation failures rather than treating every startup problem as the same kind of configuration error."
+      - "Keep generic Bean Validation internals and production secret-management systems outside this module's ownership."
+
+  - id: configuration-synthesis-and-boundaries
+    title: "End-to-End Configuration Resolution and Ownership Boundaries"
+    purpose: "Synthesize the full model from incoming configuration sources through Config Data, precedence, profiles, consumption, binding, validation, and handoff to neighboring Spring Boot modules."
+    dependsOn:
+      - property-sources-and-precedence
+      - config-data-files-and-locations
+      - config-data-imports-and-trees
+      - profiles-and-profile-specific-config
+      - consuming-individual-values
+      - type-safe-configuration-properties
+      - relaxed-and-complex-binding
+      - validation-metadata-and-failures
+    objectives:
+      - "Trace a single configuration key from multiple candidate sources to the effective value observed by application code."
+      - "Explain when to use files, environment variables, command-line inputs, imports, profiles, @Value, or @ConfigurationProperties based on the configuration problem being solved."
+      - "Recognize which questions belong to testing, runtime/Actuator, Spring Cloud Config, generic secret management, or Spring Framework internals instead of expanding this module beyond its boundary."
+      - "Debug configuration problems by separating loading, precedence, activation, binding, conversion, and validation stages."
+    relatedModules:
+      - routeId: SPRING_BOOT_AUTO_CONFIGURATION
+        label: "Spring Boot Auto-Configuration"
+        note: "Consumes externalized configuration as one of the inputs that can drive conditional automatic configuration decisions."
+      - routeId: SPRING_BOOT_APPLICATION_RUNTIME
+        label: "Spring Boot Application Runtime"
+        note: "Consumes externalized configuration to shape runtime services and Boot behavior after configuration has been resolved."
+      - routeId: SPRING_BOOT_TESTING
+        label: "Spring Boot Testing"
+        note: "Owns test-specific configuration override mechanisms and test context behavior."
