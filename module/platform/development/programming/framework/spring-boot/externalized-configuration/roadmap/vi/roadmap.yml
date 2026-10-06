@@ -41,4 +41,126 @@
 # Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: configuration-purpose-and-input-model
+    title: "Vì sao Spring Boot tách cấu hình khỏi mã nguồn"
+    purpose: "Xây mô hình tư duy đầu tiên về externalized configuration như tập đầu vào lúc chạy, giúp cùng một bản ứng dụng thích nghi với nhiều môi trường mà không phải ghi cứng giá trị riêng cho từng môi trường."
+    objectives:
+      - "Giải thích vì sao giá trị phụ thuộc môi trường nên tách khỏi mã ứng dụng và loại giá trị nào phù hợp để trở thành cấu hình."
+      - "Nhận biết Spring Boot đưa cấu hình vào một Environment có thứ tự, được ghép từ nhiều property source."
+      - "Phân biệt giá trị cấu hình với hành vi ứng dụng và với các sản phẩm cấu hình từ xa như Spring Cloud Config."
+      - "Hiểu ranh giới của module: module này sở hữu cách Boot nạp cấu hình, precedence, binding, profiles, validation và metadata chứ không sở hữu phần triển khai nội bộ của Spring Framework Environment."
+    relatedModules:
+      - routeId: SPRING_BOOT_FUNDAMENTALS
+        label: "Spring Boot Fundamentals"
+        note: "Cung cấp mô hình tư duy về quá trình khởi động và các quy ước của Boot để module này đào sâu vào các đầu vào cấu hình."
+
+  - id: property-sources-and-precedence
+    title: "Nguồn cấu hình và thứ tự ghi đè"
+    purpose: "Xây mô hình tư duy đáng tin cậy về cách các giá trị cạnh tranh từ giá trị mặc định, Config Data, biến môi trường, JVM system properties, inline JSON, command-line arguments và các nguồn khác được sắp thứ tự rồi phân giải."
+    objectives:
+      - "Nhận diện các nhóm property source quan trọng thường tham gia vào cấu hình lúc chạy của Boot."
+      - "Suy luận nguồn có precedence cao hơn ghi đè nguồn có precedence thấp hơn mà không biến toàn bộ hệ thống thành một quy tắc đơn giản hóa sai lệch."
+      - "Nhận biết giới hạn về thời điểm như @PropertySource chỉ được thêm khi context refresh và vì vậy quá trễ đối với một số Boot property được đọc sớm."
+      - "Tách precedence của cấu hình ứng dụng thông thường khỏi các nguồn ghi đè chỉ dành cho test, đồng thời biết testing bổ sung các nguồn precedence cao riêng."
+    relatedModules:
+      - routeId: SPRING_BOOT_TESTING
+        label: "Spring Boot Testing"
+        note: "Sở hữu các cơ chế ghi đè property dành riêng cho test như test annotations và DynamicPropertySource."
+
+  - id: config-data-files-and-locations
+    title: "Config Data files, vị trí tìm kiếm và location groups"
+    purpose: "Hiểu cách Boot tìm application.properties/application.yaml bên trong và bên ngoài ứng dụng đã đóng gói, cùng cách tên cấu hình, vị trí thay thế, vị trí bổ sung và location group thay đổi quá trình tìm kiếm đó."
+    objectives:
+      - "Hiểu các vị trí tìm Config Data mặc định ở trong gói ứng dụng và bên ngoài, cùng lý do file bên ngoài có thể ghi đè giá trị mặc định đóng gói sẵn."
+      - "Dùng spring.config.name để đổi tên cơ sở của file cấu hình."
+      - "Phân biệt spring.config.location thay thế các vị trí tìm kiếm mặc định với spring.config.additional-location bổ sung thêm vị trí."
+      - "Hiểu spring.config.name, spring.config.location và spring.config.additional-location được đọc rất sớm để quyết định Config Data nào sẽ được nạp, vì vậy chúng phải được cung cấp dưới dạng Environment property như biến môi trường hệ điều hành, JVM system property hoặc command-line argument thay vì nằm trong chính Config Data mà chúng điều khiển."
+      - "Hiểu directory và file location, optional location, wildcard location khi được hỗ trợ, và location group để giữ đúng mức precedence mong muốn."
+      - "Nhận biết quy tắc precedence giữa properties và YAML trong cùng location, đồng thời ưu tiên dùng một định dạng để dễ dự đoán."
+
+  - id: config-data-imports-and-trees
+    title: "Config Data imports, tài nguyên tùy chọn và configuration trees"
+    purpose: "Hiểu cách một Config Data document import thêm tài nguyên và cách Boot đưa file cùng configuration tree được mount vào chung mô hình Environment."
+    objectives:
+      - "Dùng spring.config.import để nạp cấu hình bổ sung và hiểu giá trị từ tài nguyên được import có precedence trên document khai báo import."
+      - "Phân biệt fixed location với import-relative location và hiểu chuỗi relative import được phân giải như thế nào."
+      - "Dùng optional: có chủ đích và hiểu mô hình lỗi khi tài nguyên không optional nhưng không tồn tại."
+      - "Nhận biết extension hint là khả năng của Config Data khi file được import không có extension và định dạng không thể được suy ra theo cách thông thường."
+      - "Hiểu configtree: như cầu nối file-per-property của Boot cho cấu hình được mount mà không biến module thành khóa học Kubernetes hay secrets management."
+
+  - id: profiles-and-profile-specific-config
+    title: "Profiles, kích hoạt và cấu hình theo profile"
+    purpose: "Hiểu cách profile chọn các biến thể cấu hình và cách Boot kết hợp active/default profiles, file/document theo profile, profile groups và các quy tắc kích hoạt."
+    objectives:
+      - "Dùng spring.profiles.active và spring.profiles.default như đầu vào cấu hình và hiểu precedence thông thường của property source vẫn áp dụng."
+      - "Hiểu application-{profile} Config Data và quy tắc giá trị sau cùng thắng khi nhiều profile cùng cung cấp giá trị cạnh tranh."
+      - "Dùng spring.config.activate.on-profile để kích hoạt document mà không nhầm với spring.profiles.active."
+      - "Hiểu profile include/group và giới hạn rằng active/default/include/group phải được khai báo trong document không dành riêng cho profile."
+      - "Tránh dùng profile để thay thế mọi vấn đề triển khai/cấu hình khi ghi đè property thông thường đã đủ."
+
+  - id: consuming-individual-values
+    title: "Đọc cấu hình bằng Environment, placeholders và @Value"
+    purpose: "Hiểu các cách chính mà mã ứng dụng đọc từng giá trị đã được phân giải sau khi Boot xây Environment, nhưng không đi sâu vào phần triển khai nội bộ của Spring Framework."
+    objectives:
+      - "Đọc giá trị đã được phân giải qua Environment khi tra cứu bằng code là phù hợp."
+      - "Dùng ${...} placeholders và @Value để inject giá trị đơn lẻ có phạm vi nhỏ, đồng thời hiểu giới hạn về khả năng đọc và bảo trì khi cấu hình trở nên có cấu trúc."
+      - "Hiểu giá trị mặc định của placeholder và vì sao tên property kebab-case chuẩn giúp nhất quán giữa các nguồn và công cụ hỗ trợ."
+      - "Nhận biết @Value hỗ trợ khả năng như SpEL, khác có chủ đích với binding type-safe của @ConfigurationProperties."
+
+  - id: type-safe-configuration-properties
+    title: "Cấu hình type-safe với @ConfigurationProperties"
+    purpose: "Xây mô hình tư duy về việc bind một namespace cấu hình nhất quán vào object có kiểu và đăng ký object đó bằng scanning, enablement tường minh hoặc @Bean binding."
+    objectives:
+      - "Chọn @ConfigurationProperties cho cấu hình được nhóm, có thể tái sử dụng và type-safe thay vì rải nhiều biểu thức @Value."
+      - "Hiểu binding theo prefix và vai trò của @ConfigurationPropertiesScan cùng @EnableConfigurationProperties."
+      - "Phân biệt JavaBean/setter binding với constructor binding và hiểu quy ước constructor binding của Boot 3.x cho một parameterized constructor duy nhất hoặc record."
+      - "Nhận biết giới hạn vòng đời: configuration properties dùng constructor binding không phải component bean thông thường được tạo bởi cơ chế Spring thông thường."
+
+  - id: relaxed-and-complex-binding
+    title: "Relaxed binding, kiểu phức hợp và type conversion"
+    purpose: "Hiểu cách Boot chuẩn hóa tên cấu hình giữa file, biến môi trường và system properties rồi bind nested objects, collections, maps cùng các kiểu giá trị đã được chuyển đổi."
+    objectives:
+      - "Hiểu relaxed binding và dạng kebab-case chuẩn được khuyến nghị cho tên configuration property."
+      - "Chuyển tên property chuẩn sang dạng biến môi trường, bao gồm quy ước cho chỉ số list."
+      - "Bind nested objects, lists, sets và maps, kể cả bracket notation khi map key chứa ký tự cần được giữ nguyên."
+      - "Suy luận cách ghi đè/gộp của kiểu phức hợp, đặc biệt list từ nguồn có precedence cao hơn sẽ thay thế chứ không gộp từng phần tử với list ở nguồn thấp hơn."
+      - "Hiểu Boot chuyển string sang các kiểu đích phổ biến như Duration, DataSize, enum, address và các kiểu được hỗ trợ khác tại ranh giới binding."
+
+  - id: validation-metadata-and-failures
+    title: "Validation, configuration metadata và chẩn đoán lỗi"
+    purpose: "Biến cấu hình thành một hợp đồng rõ ràng bằng cách validate object đã bind, tạo metadata cho IDE và chẩn đoán lỗi nạp/binding qua bằng chứng lúc khởi động."
+    objectives:
+      - "Validate @ConfigurationProperties bằng @Validated và Jakarta Validation constraints khi validation provider có trên classpath."
+      - "Hiểu nested validation và vai trò của @Valid khi validation cần lan xuống object cấu hình lồng nhau."
+      - "Dùng Spring Boot configuration processor để tạo metadata giúp IDE completion và tài liệu hóa custom configuration keys."
+      - "Phân biệt Config Data resource bị thiếu, khai báo profile/config không hợp lệ, lỗi binding/conversion và lỗi validation thay vì xem mọi sự cố khởi động là cùng một loại lỗi cấu hình."
+      - "Giữ phần triển khai nội bộ tổng quát của Bean Validation và các hệ thống quản lý secret ở production ngoài phạm vi sở hữu của module này."
+
+  - id: configuration-synthesis-and-boundaries
+    title: "Tổng hợp luồng phân giải và ranh giới trách nhiệm"
+    purpose: "Kết nối toàn bộ mô hình từ các nguồn cấu hình đầu vào qua Config Data, precedence, profiles, cách tiêu thụ giá trị, binding, validation đến điểm bàn giao sang các Spring Boot module lân cận."
+    dependsOn:
+      - property-sources-and-precedence
+      - config-data-files-and-locations
+      - config-data-imports-and-trees
+      - profiles-and-profile-specific-config
+      - consuming-individual-values
+      - type-safe-configuration-properties
+      - relaxed-and-complex-binding
+      - validation-metadata-and-failures
+    objectives:
+      - "Theo dõi một configuration key từ nhiều nguồn ứng viên đến giá trị hiệu lực mà mã ứng dụng quan sát được."
+      - "Giải thích khi nào dùng file, biến môi trường, command-line input, import, profile, @Value hoặc @ConfigurationProperties dựa trên bài toán cấu hình cần giải quyết."
+      - "Nhận biết câu hỏi nào thuộc testing, runtime/Actuator, Spring Cloud Config, quản lý secret tổng quát hoặc phần triển khai nội bộ của Spring Framework thay vì mở rộng module quá ranh giới."
+      - "Chẩn đoán vấn đề cấu hình bằng cách tách các giai đoạn nạp, precedence, activation, binding, conversion và validation."
+    relatedModules:
+      - routeId: SPRING_BOOT_AUTO_CONFIGURATION
+        label: "Spring Boot Auto-Configuration"
+        note: "Tiêu thụ externalized configuration như một trong các đầu vào có thể điều khiển quyết định auto-configuration có điều kiện."
+      - routeId: SPRING_BOOT_APPLICATION_RUNTIME
+        label: "Spring Boot Application Runtime"
+        note: "Tiêu thụ externalized configuration để định hình các dịch vụ runtime và hành vi Boot sau khi cấu hình đã được phân giải."
+      - routeId: SPRING_BOOT_TESTING
+        label: "Spring Boot Testing"
+        note: "Sở hữu các cơ chế ghi đè cấu hình dành riêng cho test và hành vi của test context."

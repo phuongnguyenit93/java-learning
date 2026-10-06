@@ -1031,11 +1031,11 @@ ${message}
 
 
             boolean leftNumber =
-                    leftPart ==~ /\\d+/
+                    leftPart ==~ /\d+/
 
 
             boolean rightNumber =
-                    rightPart ==~ /\\d+/
+                    rightPart ==~ /\d+/
 
 
             int comparison

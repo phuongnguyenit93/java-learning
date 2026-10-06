@@ -14,3 +14,24 @@
 #
 # Add only curated references that are useful for the module.
 # The build system must not overwrite this file after authored content exists.
+
+references:
+  - title: "Spring Boot 3.3 — Externalized Configuration"
+    url: "https://docs.spring.io/spring-boot/3.3/reference/features/external-config.html"
+    description: "Canonical reference for property-source order, Config Data locations/imports, YAML, placeholders, @ConfigurationProperties, relaxed binding, conversion, and validation."
+
+  - title: "Spring Boot 3.3 — Profiles"
+    url: "https://docs.spring.io/spring-boot/3.3/reference/features/profiles.html"
+    description: "Canonical reference for active/default profiles, profile-specific configuration, profile includes/groups, and profile activation behavior."
+
+  - title: "Spring Boot 3.3 — Configuration Metadata"
+    url: "https://docs.spring.io/spring-boot/3.3/specification/configuration-metadata/index.html"
+    description: "Official specification for generated and manual configuration metadata used by IDE tooling and custom configuration properties."
+
+  - title: "Spring Boot 3.3 API — ConfigurationProperties"
+    url: "https://docs.spring.io/spring-boot/3.3/api/java/org/springframework/boot/context/properties/ConfigurationProperties.html"
+    description: "Official API contract for binding external properties to typed configuration objects and @Bean methods."
+
+  - title: "Spring Boot 3.3 API — Binder"
+    url: "https://docs.spring.io/spring-boot/3.3/api/java/org/springframework/boot/context/properties/bind/Binder.html"
+    description: "Official binding API reference for understanding the Boot binding boundary without turning the module into binder-internals training."

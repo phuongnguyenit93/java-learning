@@ -38,4 +38,503 @@
 #       ID nội bộ của đáp án đúng. Frontend kiểm tra bằng identity này sau khi shuffle.
 # </quiz-schema>
 
-questions: []
+questions:
+  - id: 'q01-externalized-purpose'
+    question: 'Lý do chính để đưa cấu hình ra bên ngoài mã ứng dụng Spring Boot là gì?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '1.ConfigurationMentalModel/ConfigurationMentalModel.md'
+      anchor: 'externalized-configuration-purpose'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Chạy cùng một gói ứng dụng ở nhiều môi trường bằng cách cung cấp các giá trị khác nhau.'
+        explanation: 'Đúng. Các giá trị phụ thuộc môi trường có thể thay đổi trong khi gói ứng dụng đã biên dịch vẫn giữ nguyên.'
+      - id: B
+        answer: 'Chuyển các quyết định nghiệp vụ sang tệp cấu hình để mã ứng dụng không còn sở hữu hành vi.'
+        explanation: 'Quy tắc nghiệp vụ vẫn thuộc mã ứng dụng; cấu hình bên ngoài dành cho các giá trị có thể thay đổi mà không định nghĩa lại hành vi.'
+      - id: C
+        answer: 'Bảo đảm tệp cấu hình bên ngoài ghi đè mọi nguồn thuộc tính khác mà ứng dụng sử dụng.'
+        explanation: 'Tệp bên ngoài tham gia thứ tự ưu tiên, nhưng nguồn đứng sau như tham số dòng lệnh vẫn có thể ghi đè chúng.'
+      - id: D
+        answer: 'Buộc mã ứng dụng đọc trực tiếp từng nguồn cấu hình vật lý thay vì dùng Environment.'
+        explanation: 'Spring thường cung cấp kết quả đã phân giải qua Environment hoặc binding thay vì yêu cầu đọc trực tiếp mọi nguồn.'
+    correctAnswerId: A
+
+  - id: 'q02-precedence-command-line'
+    question: 'Cùng một khóa được định nghĩa trong tệp Config Data bên ngoài, biến môi trường hệ điều hành, JVM system property và tham số dòng lệnh. Theo thứ tự ưu tiên thông thường của Spring Boot, giá trị nào thắng?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '2.PropertySourcesAndPrecedence/PropertySourcesAndPrecedence.md'
+      anchor: 'environment-system-json-cli'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Giá trị từ tệp Config Data bên ngoài.'
+        explanation: 'Config Data bên ngoài có thể ghi đè giá trị đóng gói, nhưng các nguồn lúc chạy được nêu vẫn có thể đứng sau nó.'
+      - id: B
+        answer: 'Giá trị từ tham số dòng lệnh.'
+        explanation: 'Đúng. Tham số dòng lệnh đứng sau các nguồn còn lại được nêu nên ghi đè các giá trị cạnh tranh của chúng.'
+      - id: C
+        answer: 'Giá trị từ biến môi trường hệ điều hành.'
+        explanation: 'Biến môi trường có thể ghi đè Config Data, nhưng JVM system property và tham số dòng lệnh được nêu có thứ tự ưu tiên cao hơn.'
+      - id: D
+        answer: 'Giá trị từ JVM system property.'
+        explanation: 'JVM system property có thể ghi đè biến môi trường hệ điều hành, nhưng tham số dòng lệnh vẫn có thứ tự ưu tiên cao hơn.'
+    correctAnswerId: B
+
+  - id: 'q03-propertysource-timing'
+    question: 'Vì sao @PropertySource có thể không tác động được tới một thiết lập Boot được đọc sớm như cấu hình logging?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '2.PropertySourcesAndPrecedence/PropertySourcesAndPrecedence.md'
+      anchor: 'propertysource-timing'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: '@PropertySource chỉ có thể nạp khóa tùy chỉnh của ứng dụng, không thể nạp khóa cấu hình framework.'
+        explanation: 'Giới hạn không nằm ở không gian tên của khóa; thời điểm mới là vấn đề quan trọng đối với các quyết định sớm của Boot.'
+      - id: B
+        answer: '@PropertySource được đọc trước các thuộc tính mặc định nên chỉ có thể cung cấp giá trị dự phòng.'
+        explanation: 'Vấn đề không phải @PropertySource xuất hiện quá sớm hay chỉ được dùng làm giá trị dự phòng.'
+      - id: C
+        answer: '@PropertySource được thêm trong lúc ApplicationContext được refresh, sau khi một số thiết lập Boot sớm có thể đã được đọc.'
+        explanation: 'Đúng. Thuộc tính có thể xuất hiện trong Environment về sau nhưng vẫn đến quá muộn để ảnh hưởng một quyết định khởi động trước đó.'
+      - id: D
+        answer: '@PropertySource chỉ tham gia khi cơ chế xử lý Config Data đã bị tắt cho ứng dụng.'
+        explanation: '@PropertySource có thể cùng tồn tại với Config Data và không yêu cầu phải tắt Config Data.'
+    correctAnswerId: C
+
+  - id: 'q04-config-location-vs-additional'
+    question: 'Một môi trường triển khai cần giữ các vị trí Config Data mặc định của Boot và thêm file:./ops/ làm vị trí ghi đè bổ sung. Thiết lập nào phù hợp nhất?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '3.ConfigDataFilesAndLocations/ConfigDataFilesAndLocations.md'
+      anchor: 'spring-config-additional-location'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Dùng spring.config.location=file:./ops/ và mong Boot tự nối thêm mọi vị trí mặc định.'
+        explanation: 'spring.config.location thay thế tập tìm kiếm mặc định trừ khi các vị trí mong muốn được đưa vào tường minh.'
+      - id: B
+        answer: 'Dùng spring.config.name=ops để Boot tìm cả basename application và ops trong mọi vị trí mặc định.'
+        explanation: 'spring.config.name thay đổi basename được tìm kiếm; nó không bổ sung một thư mục độc lập.'
+      - id: C
+        answer: 'Dùng spring.config.import=file:./ops/ vì import mở rộng tập tìm kiếm mặc định toàn cục cho mọi tài liệu.'
+        explanation: 'Import kết hợp Config Data từ tài liệu khai báo và không tương đương với việc mở rộng các vị trí tìm kiếm toàn cục.'
+      - id: D
+        answer: 'Dùng spring.config.additional-location=file:./ops/ để giữ nguyên các vị trí tìm kiếm mặc định.'
+        explanation: 'Đúng. additional-location mở rộng tập tìm kiếm thông thường thay vì thay thế nó.'
+    correctAnswerId: D
+
+  - id: 'q05-location-groups'
+    question: 'Vì sao cấu hình Spring Boot có thể dùng nhóm vị trí thay vì coi mỗi vị trí Config Data là một mức ưu tiên riêng?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '3.ConfigDataFilesAndLocations/ConfigDataFilesAndLocations.md'
+      anchor: 'location-files-directories-groups'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Để nhiều vị trí cùng chia sẻ một mức ưu tiên khi Config Data được xử lý.'
+        explanation: 'Đúng. Nhóm vị trí xác định các vị trí cần được xem xét ở cùng một mức ưu tiên.'
+      - id: B
+        answer: 'Để Boot quét đệ quy mọi thư mục con bên dưới từng vị trí đã cấu hình.'
+        explanation: 'Nhóm vị trí điều khiển quan hệ ưu tiên; nó không biến việc khám phá thư mục thành quét đệ quy không giới hạn.'
+      - id: C
+        answer: 'Để bắt buộc mọi tệp trong nhóm dùng cùng phần mở rộng và basename.'
+        explanation: 'Việc nhóm vị trí không yêu cầu mọi vị trí phải dùng chung phần mở rộng hoặc basename.'
+      - id: D
+        answer: 'Để tắt Config Data dành riêng cho profile ở các vị trí đã được nhóm.'
+        explanation: 'Xử lý theo profile vẫn áp dụng; việc nhóm chỉ thay đổi quan hệ ưu tiên giữa các vị trí.'
+    correctAnswerId: A
+
+  - id: 'q06-import-precedence'
+    question: 'application.properties định nghĩa app.name=base và import extra.properties, nơi app.name=imported. Khi không có nguồn ưu tiên cao hơn, giá trị có hiệu lực là gì?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '4.ConfigDataImportsAndTrees/ConfigDataImportsAndTrees.md'
+      anchor: 'import-precedence'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'base, vì tài liệu khai báo import luôn có ưu tiên cao hơn giá trị được nhập.'
+        explanation: 'Giá trị được nhập có thể ghi đè giá trị từ tài liệu đã khai báo import.'
+      - id: B
+        answer: 'imported, vì tài liệu được nhập có ưu tiên cao hơn tài liệu thực hiện import đối với khóa đó.'
+        explanation: 'Đúng. Config Data được nhập có ưu tiên cục bộ cao hơn tài liệu đã kích hoạt import.'
+      - id: C
+        answer: 'base, trừ khi dòng spring.config.import đứng trước app.name trong tệp thực hiện import.'
+        explanation: 'Vị trí vật lý của dòng import trong cùng một tài liệu không thay đổi quan hệ này.'
+      - id: D
+        answer: 'Không giá trị nào, vì khóa trùng qua ranh giới import làm Config Data không hợp lệ.'
+        explanation: 'Khóa trùng được giải quyết bằng thứ tự; bản thân việc trùng không làm import trở nên không hợp lệ.'
+    correctAnswerId: B
+
+  - id: 'q07-optional-import'
+    question: 'Khi nào nên dùng optional: cho một Config Data import?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '4.ConfigDataImportsAndTrees/ConfigDataImportsAndTrees.md'
+      anchor: 'optional-imports'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Khi một tệp production bắt buộc bị thiếu nhưng quá trình khởi động vẫn phải tiếp tục.'
+        explanation: 'Cấu hình bắt buộc thường nên làm ứng dụng dừng sớm thay vì bị đánh dấu optional chỉ để che lỗi.'
+      - id: B
+        answer: 'Khi tài liệu được import cần có ưu tiên thấp hơn tài liệu thực hiện import.'
+        explanation: 'optional: thay đổi hành vi khi tài nguyên vắng mặt, không thay đổi ưu tiên của một import được nạp thành công.'
+      - id: C
+        answer: 'Khi việc tài nguyên được import vắng mặt là trạng thái được chấp nhận theo thiết kế.'
+        explanation: 'Đúng. Lớp ghi đè cục bộ của lập trình viên hoặc tài nguyên nền tảng được phép vắng là trường hợp dùng import tùy chọn hợp lệ.'
+      - id: D
+        answer: 'Khi Boot phải suy ra import không có phần mở rộng chứa properties hay YAML.'
+        explanation: 'Gợi ý phần mở rộng giải quyết việc chọn bộ phân tích cho tài nguyên không có phần mở rộng; optional: không làm việc đó.'
+    correctAnswerId: C
+
+  - id: 'q08-configtree'
+    question: 'Một nền tảng gắn /etc/config/myapp/username và /etc/config/myapp/password thành các tệp riêng. Cơ chế Boot nào được thiết kế để đưa chúng thành các thuộc tính cấu hình?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '4.ConfigDataImportsAndTrees/ConfigDataImportsAndTrees.md'
+      anchor: 'configtree-imports'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Trỏ @PropertySource tới /etc/config/ để mỗi tệp con tự động trở thành một thuộc tính.'
+        explanation: '@PropertySource không phải cơ chế chuyển đổi thư mục một-tệp-mỗi-thuộc-tính mà Config Data cung cấp.'
+      - id: B
+        answer: 'Đặt spring.config.name=username,password để mỗi tệp được gắn trở thành một basename của Config Data.'
+        explanation: 'spring.config.name thay đổi basename của Config Data ứng dụng và không ánh xạ cấu trúc thư mục này thành thuộc tính.'
+      - id: C
+        answer: 'Tiêm từng đường dẫn hệ thống tệp bằng @Value để các tệp được đăng ký thành PropertySource.'
+        explanation: '@Value tiêu thụ giá trị đã phân giải; nó không tự đăng ký từng tệp được gắn thành PropertySource.'
+      - id: D
+        answer: 'Nhập trực tiếp thư mục /etc/config/ bằng tiền tố vị trí configtree: để Boot ánh xạ các tệp thành thuộc tính.'
+        explanation: 'Đúng. configtree: ánh xạ cấu trúc thư mục một-tệp-mỗi-thuộc-tính thành các khóa trong Environment như myapp.username.'
+    correctAnswerId: D
+
+  - id: 'q09-profile-declaration-restriction'
+    question: 'Khai báo chọn profile nào không hợp lệ theo các quy tắc Boot 3.3 được học trong module này?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '5.ProfilesAndActivation/ProfilesAndActivation.md'
+      anchor: 'profile-declaration-restrictions'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'spring.profiles.active=metrics nằm trong tài liệu chỉ được kích hoạt khi prod đã hoạt động.'
+        explanation: 'Đúng. Thuộc tính chọn profile không được khai báo trong tài liệu dành riêng cho profile hoặc tài liệu được kích hoạt theo profile.'
+      - id: B
+        answer: 'spring.profiles.active=prod được cung cấp bằng tham số dòng lệnh.'
+        explanation: 'Dòng lệnh là nguồn Environment vô điều kiện và là nơi hợp lệ để chọn profile đang hoạt động.'
+      - id: C
+        answer: 'spring.profiles.group.production[0]=proddb nằm trong cấu hình vô điều kiện.'
+        explanation: 'Nhóm profile có thể được khai báo trong cấu hình vô điều kiện, nơi việc chọn profile được phép.'
+      - id: D
+        answer: 'spring.profiles.include[0]=observability nằm trong tài liệu application không dành riêng cho profile.'
+        explanation: 'Profile được bổ sung bằng spring.profiles.include được phép nằm trong cấu hình vô điều kiện, không dành riêng cho profile.'
+    correctAnswerId: A
+
+  - id: 'q10-multiple-profile-precedence'
+    question: 'Các profile prod và live cùng hoạt động theo thứ tự đó, và Config Data theo profile của chúng định nghĩa cùng một khóa trong cùng nhóm vị trí liên quan. Giá trị nào có thể thắng?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '5.ProfilesAndActivation/ProfilesAndActivation.md'
+      anchor: 'multiple-profile-precedence'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Giá trị của prod, vì profile hoạt động đầu tiên luôn có ưu tiên mạnh hơn.'
+        explanation: 'Hành vi được tài liệu hóa là giá trị sau cùng thắng đối với Config Data theo profile cạnh tranh, không phải giá trị đầu tiên thắng.'
+      - id: B
+        answer: 'Giá trị của live, vì profile hoạt động sau có thể ghi đè profile đứng trước.'
+        explanation: 'Đúng. Config Data theo profile dùng quy tắc giá trị sau cùng thắng ở mức nhóm vị trí liên quan.'
+      - id: C
+        answer: 'Không giá trị nào, vì hai profile đang hoạt động không được phép định nghĩa cùng một khóa.'
+        explanation: 'Nhiều profile đang hoạt động có thể định nghĩa cùng một khóa; thứ tự quyết định ứng viên có hiệu lực.'
+      - id: D
+        answer: 'Profile đứng trước theo thứ tự chữ cái sẽ thắng sau khi Boot sắp xếp mọi tên profile đang hoạt động.'
+        explanation: 'Boot không sắp xếp tên profile đang hoạt động theo chữ cái để quyết định thứ tự ưu tiên này.'
+    correctAnswerId: B
+
+  - id: 'q11-value-vs-configuration-properties'
+    question: 'Một thành phần cần sáu thiết lập cho client có liên quan, gồm giá trị lồng nhau, xác thực và metadata cho IDE. Cách tiêu thụ cấu hình nào phù hợp hơn?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '6.EnvironmentValueAndPlaceholders/EnvironmentValueAndPlaceholders.md'
+      anchor: 'value-vs-configuration-properties'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Dùng Environment để tra cứu trực tiếp mọi thiết lập sao cho mỗi giá trị vẫn độc lập.'
+        explanation: 'Tra cứu trực tiếp có thể đọc giá trị, nhưng nhiều lần tra cứu liên quan làm mất hợp đồng có cấu trúc cùng lợi ích về xác thực và metadata.'
+      - id: B
+        answer: 'Dùng một biểu thức @Value để nối mọi thiết lập thành một chuỗi duy nhất được tiêm vào.'
+        explanation: '@Value phù hợp với giá trị đơn lẻ hoặc cách tiêm dựa trên biểu thức, không thay thế một mô hình cấu hình có cấu trúc.'
+      - id: C
+        answer: 'Dùng một kiểu @ConfigurationProperties cho không gian tên của client.'
+        explanation: 'Đúng. Nhóm thiết lập có cấu trúc là trường hợp phù hợp cho binding có kiểu, tích hợp xác thực và metadata.'
+      - id: D
+        answer: 'Dùng @PropertySource trên thành phần để các giá trị bỏ qua cơ chế binding cấu hình thông thường.'
+        explanation: '@PropertySource thêm một nguồn; nó không cung cấp mô hình tiêu thụ có cấu trúc được mô tả ở đây.'
+    correctAnswerId: C
+
+  - id: 'q12-canonical-placeholder-name'
+    question: 'Dạng placeholder nào tuân theo hướng dẫn Spring Boot tốt nhất để tận dụng khả năng tra cứu relaxed name rộng nhất?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '6.EnvironmentValueAndPlaceholders/EnvironmentValueAndPlaceholders.md'
+      anchor: 'canonical-property-names'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: '${DEMO_ITEM_PRICE}, vì placeholder nên dùng cách viết của biến môi trường.'
+        explanation: 'Biến môi trường có thể dùng dạng vật lý đó, nhưng tham chiếu placeholder nên dùng tên thuộc tính chuẩn.'
+      - id: B
+        answer: '${demo.itemPrice}, vì camelCase cho phép tra cứu relaxed name rộng nhất qua các nguồn.'
+        explanation: 'Tên placeholder camelCase hạn chế hơn dạng kebab-case chuẩn được khuyến nghị.'
+      - id: C
+        answer: '${demo_item_price}, vì underscore là dạng chuẩn cho mọi nguồn thuộc tính.'
+        explanation: 'Dấu gạch dưới không phải dạng chuẩn Spring Boot khuyến nghị cho tên thuộc tính ứng dụng.'
+      - id: D
+        answer: '${demo.item-price}, vì kebab-case chữ thường là dạng placeholder chuẩn.'
+        explanation: 'Đúng. Kebab-case chữ thường chuẩn cho phép hành vi tra cứu tương thích rộng nhất được Boot mô tả.'
+    correctAnswerId: D
+
+  - id: 'q13-constructor-binding'
+    question: 'Một lớp @ConfigurationProperties trong Boot 3.x chỉ có đúng một constructor và constructor đó có tham số. Hành vi constructor binding thông thường là gì?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '7.ConfigurationProperties/ConfigurationProperties.md'
+      anchor: 'constructor-binding'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Boot có thể chọn constructor đó để binding mà không cần @ConstructorBinding; để binding thành công, tên tham số vẫn phải được giữ để có thể phát hiện lúc chạy.'
+        explanation: 'Đúng. Boot 3.x có thể suy ra constructor binding khi kiểu chỉ có một constructor có tham số. Các tên tham số phải có ở runtime, thường nhờ biên dịch với -parameters.'
+      - id: B
+        answer: 'Boot luôn yêu cầu @ConstructorBinding trên kiểu khi constructor duy nhất có tham số.'
+        explanation: 'Đó không phải quy tắc của Boot 3.x đối với kiểu chỉ có một constructor có tham số.'
+      - id: C
+        answer: 'Boot tạo một constructor không tham số ngầm rồi sao chép giá trị vào các tham số constructor có sẵn.'
+        explanation: 'Constructor binding tạo đối tượng từ tham số constructor; Boot không tạo thêm constructor không tham số để thực hiện việc này.'
+      - id: D
+        answer: 'Boot chỉ dùng constructor binding khi kiểu cấu hình đồng thời là một @Component thông thường.'
+        explanation: 'Kiểu dùng constructor binding được đăng ký qua cơ chế configuration-properties, không phải bằng cách coi nó là component thông thường.'
+    correctAnswerId: A
+
+  - id: 'q14-environment-variable-mapping'
+    question: 'Theo quy tắc ánh xạ biến môi trường của Spring Boot, tên nào tương ứng với my.service[0].other?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '8.RelaxedAndComplexBinding/RelaxedAndComplexBinding.md'
+      anchor: 'environment-variable-mapping'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'MY_SERVICE[0]_OTHER'
+        explanation: 'Chỉ số List trong biến môi trường dùng số được bao quanh bằng dấu gạch dưới thay vì ngoặc vuông.'
+      - id: B
+        answer: 'MY_SERVICE_0_OTHER'
+        explanation: 'Đúng. Dấu chấm thành gạch dưới, chữ chuyển thành chữ hoa và chỉ số List được bao quanh bằng gạch dưới.'
+      - id: C
+        answer: 'MY-SERVICE-0-OTHER'
+        explanation: 'Dấu gạch ngang không được dùng làm dấu phân cách trong dạng biến môi trường.'
+      - id: D
+        answer: 'MY_SERVICE__0__OTHER'
+        explanation: 'Dạng có chỉ số được tài liệu hóa dùng một dấu gạch dưới ở mỗi phía của chỉ số số.'
+    correctAnswerId: B
+
+  - id: 'q15-list-replacement'
+    question: 'Nguồn ưu tiên thấp định nghĩa users=[alice,bob], còn nguồn ưu tiên cao định nghĩa users=[carol]. Khi bind một List phức hợp theo cách thông thường, List có hiệu lực là gì?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '8.RelaxedAndComplexBinding/RelaxedAndComplexBinding.md'
+      anchor: 'list-replacement'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: '[alice,bob,carol], vì các giá trị List được nối thêm qua các nguồn thuộc tính.'
+        explanation: 'Cách bind List phức hợp thông thường không nối phần tử từ nguồn ưu tiên thấp và cao lại với nhau.'
+      - id: B
+        answer: '[carol,bob], vì chỉ index List bị ghi đè mới được thay thế.'
+        explanation: 'List ở nguồn ưu tiên cao thay toàn bộ List thấp hơn thay vì vá từng chỉ số.'
+      - id: C
+        answer: '[carol], vì List ở nguồn ưu tiên cao thay thế toàn bộ List ở nguồn thấp.'
+        explanation: 'Đúng. Thay thế toàn bộ List là quy tắc thông thường khi bind List phức hợp qua các nguồn thuộc tính.'
+      - id: D
+        answer: '[alice,bob], vì List đã có ở nguồn ưu tiên thấp không thể bị thay thế.'
+        explanation: 'Cấu hình có thứ tự ưu tiên cao hơn có thể thay thế List ở nguồn ưu tiên thấp.'
+    correctAnswerId: C
+
+  - id: 'q16-map-special-keys'
+    question: 'Một Map<String,Object> phải giữ nguyên khóa a.b theo đúng chuỗi ký tự đó thay vì hiểu dấu chấm là cấu trúc lồng nhau. Nên dùng dạng khóa thuộc tính nào?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '8.RelaxedAndComplexBinding/RelaxedAndComplexBinding.md'
+      anchor: 'map-binding'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Dùng a.b không có cú pháp đặc biệt để binder giữ dấu chấm như một ký tự bình thường.'
+        explanation: 'Nếu không dùng cú pháp ngoặc vuông, dấu chấm được hiểu như một phần của cấu trúc đường dẫn thuộc tính.'
+      - id: B
+        answer: 'Dùng a_b vì relaxed binding luôn chuyển dấu gạch dưới ngược thành dấu chấm bình thường cho khóa Map.'
+        explanation: 'Relaxed naming không bảo đảm cách đó sẽ giữ nguyên một khóa Map có dấu chấm như một chuỗi duy nhất.'
+      - id: C
+        answer: 'Dùng "a.b" vì đặt chuỗi trong ngoặc kép sẽ tắt phân tích đường dẫn lồng nhau khi binding Map.'
+        explanation: 'Đặt chuỗi trong ngoặc kép không phải cơ chế được tài liệu hóa để giữ dấu chấm thành một khóa Map.'
+      - id: D
+        answer: 'Dùng [a.b] để cú pháp ngoặc vuông giữ chuỗi có dấu chấm thành một khóa Map.'
+        explanation: 'Đúng. Cú pháp ngoặc vuông bảo vệ các ký tự nếu không có thể bị hiểu như dấu phân cách đường dẫn.'
+    correctAnswerId: D
+
+  - id: 'q17-duration-conversion'
+    question: 'Ứng dụng đã chọn giá trị client.timeout=fast và đang binding nó vào trường Duration của @ConfigurationProperties. Startup thất bại ở giai đoạn binding. Chẩn đoán trực tiếp nào phù hợp nhất?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '8.RelaxedAndComplexBinding/RelaxedAndComplexBinding.md'
+      anchor: 'type-conversion'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Lỗi chuyển đổi kiểu vì chuỗi fast đã được chọn nhưng không thể chuyển thành Duration.'
+        explanation: 'Đúng. Giá trị đã được phân giải, nhưng binder không thể chuyển chuỗi đó sang kiểu Duration mà trường đích yêu cầu.'
+      - id: B
+        answer: 'Lỗi ánh xạ tên vì client.timeout có thể đã vào Environment nhưng không khớp trường timeout của đối tượng đích.'
+        explanation: 'Tên client.timeout khớp namespace và trường timeout trong ví dụ; lỗi được mô tả xảy ra khi chuyển chính giá trị fast sang Duration.'
+      - id: C
+        answer: 'Lỗi xác thực vì binder phải tạo Duration hợp lệ trước khi áp dụng các constraint của Jakarta Validation.'
+        explanation: 'Constraint miền chỉ được kiểm tra sau khi binding/chuyển đổi đã tạo được giá trị đích; ở đây việc chuyển đổi đã thất bại trước đó.'
+      - id: D
+        answer: 'Lỗi chọn nguồn vì một nguồn ưu tiên cao có thể đã đưa giá trị fast vào; do đó giai đoạn thất bại trực tiếp là thứ tự ưu tiên.'
+        explanation: 'Nguồn ưu tiên cao có thể là nguyên nhân gốc khiến fast được chọn, nhưng lỗi trực tiếp quan sát được khi startup là chuyển đổi giá trị đã chọn sang Duration.'
+    correctAnswerId: A
+
+  - id: 'q18-failure-stage-classification'
+    question: 'Chẩn đoán nào ghép đúng lỗi với giai đoạn mà nó xảy ra?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '9.ValidationAndMetadata/ValidationAndMetadata.md'
+      anchor: 'binding-vs-validation-failure'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Import bắt buộc bị thiếu là lỗi binding vì đối tượng đích cuối cùng sẽ thiếu một giá trị cần thiết.'
+        explanation: 'Import bắt buộc bị thiếu làm startup thất bại ngay khi nạp Config Data, trước khi binder có cơ hội tạo đối tượng đích.'
+      - id: B
+        answer: 'timeout=banana cho Duration là lỗi binding/chuyển đổi vì chuỗi không thể trở thành kiểu đích.'
+        explanation: 'Đúng. Nguồn có thể nạp và khóa có thể phân giải, nhưng việc chuyển thành Duration vẫn thất bại.'
+      - id: C
+        answer: 'max-connections=-1 với @Positive là lỗi chuyển đổi vì số âm không thể trở thành một int dương hợp lệ.'
+        explanation: 'Chuỗi -1 vẫn có thể chuyển thành int; @Positive từ chối giá trị sau đó ở giai đoạn xác thực.'
+      - id: D
+        answer: 'Một khóa được phân giải từ PropertySource không mong đợi là lỗi binding vì đối tượng đích nhận sai giá trị.'
+        explanation: 'Nếu khóa tồn tại nhưng nguồn thắng không như mong đợi, vấn đề thuộc thứ tự ưu tiên và sắp xếp nguồn chứ không phải binding đối tượng.'
+    correctAnswerId: B
+
+  - id: 'q19-metadata-runtime-boundary'
+    question: 'Phát biểu nào mô tả đúng ranh giới giữa metadata cấu hình và hành vi cấu hình lúc chạy?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '9.ValidationAndMetadata/ValidationAndMetadata.md'
+      anchor: 'metadata-tooling-boundary'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Binder dùng metadata được tạo ra để quyết định khóa tùy chỉnh nào được phép bind lúc chạy.'
+        explanation: 'Metadata mô tả hợp đồng cấu hình cho công cụ, nhưng runtime binding không cần một entry metadata để cho phép khóa đó.'
+      - id: B
+        answer: 'Thiếu metadata sẽ làm mất gợi ý của IDE và đồng thời ngăn @ConfigurationProperties bind khóa đó lúc chạy.'
+        explanation: 'Hỗ trợ của IDE có thể giảm khi metadata thiếu, nhưng runtime binding vẫn hoạt động vì hai mối quan tâm này tách biệt.'
+      - id: C
+        answer: 'Metadata có thể hỗ trợ IDE, còn Environment và binding vẫn quyết định giá trị và đối tượng lúc chạy.'
+        explanation: 'Đúng. Metadata là dữ liệu mô tả cho công cụ, trong khi phân giải và binding lúc chạy đi theo luồng riêng.'
+      - id: D
+        answer: 'Giá trị mặc định được ghi trong metadata trở thành giá trị dự phòng có ưu tiên thấp lúc chạy khi không PropertySource nào cung cấp khóa.'
+        explanation: 'Metadata có thể mô tả giá trị mặc định cho công cụ, nhưng nó không phải PropertySource và không tự đưa giá trị dự phòng vào runtime.'
+    correctAnswerId: C
+
+  - id: 'q20-effective-value-diagnostics'
+    question: 'Ứng dụng khởi động thành công nhưng app.region có giá trị không như mong đợi. Chuỗi chẩn đoán nào bám sát mô hình của module nhất?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '10.DiagnosticsAndSynthesis/DiagnosticsAndSynthesis.md'
+      anchor: 'effective-value-debugging'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Bắt đầu từ kiểu trường @ConfigurationProperties và các quy tắc conversion; chỉ lần ngược nguồn cấu hình nếu binding không giải thích được giá trị.'
+        explanation: 'Khi ứng dụng đã khởi động nhưng giá trị hiệu lực không mong đợi, nên xác định nguồn tham gia và thứ tự ưu tiên trước khi nghi ngờ kiểu phía tiêu thụ.'
+      - id: B
+        answer: 'Liệt kê mọi tệp Config Data có app.region, kiểm tra profile/import của các tệp đó rồi chọn giá trị từ tệp được nạp sau cùng.'
+        explanation: 'Cách này tốt hơn việc đoán theo tên tệp nhưng vẫn bỏ sót các nguồn ngoài Config Data như biến môi trường, system property hoặc tham số dòng lệnh.'
+      - id: C
+        answer: 'Kiểm tra profile đang hoạt động và thứ tự import trước, rồi coi giá trị ở tài liệu cuối cùng đang hoạt động là kết quả mà không đối chiếu PropertySource khác.'
+        explanation: 'Profile và import quyết định tài liệu tham gia, nhưng giá trị cuối cùng vẫn phải được so với toàn bộ nguồn đang tham gia theo thứ tự ưu tiên.'
+      - id: D
+        answer: 'Ghi lại khóa chuẩn và giá trị quan sát được, liệt kê mọi nguồn tham gia, kiểm tra tài liệu đang hoạt động rồi áp dụng thứ tự ưu tiên.'
+        explanation: 'Đúng. Hãy lần ngược khóa có hiệu lực qua nguồn tham gia và thứ tự ưu tiên trước khi điều tra placeholder hay chi tiết binding.'
+    correctAnswerId: D

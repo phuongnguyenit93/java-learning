@@ -1,1 +1,310 @@
-{}
+1.ConfigurationMentalModel/ConfigurationMentalModel.md:
+  externalized-configuration-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  configuration-vs-application-code:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  environment-resolved-view:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  configuration-source-categories:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  configuration-resolution-pipeline:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  module-ownership-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+2.PropertySourcesAndPrecedence/PropertySourcesAndPrecedence.md:
+  property-source-order:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  default-and-config-data-position:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  environment-system-json-cli:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  propertysource-timing:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  precedence-reasoning:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  test-precedence-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+3.ConfigDataFilesAndLocations/ConfigDataFilesAndLocations.md:
+  config-data-role:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  default-search-locations:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  packaged-vs-external-config:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  properties-vs-yaml:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  spring-config-name:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  spring-config-location:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  spring-config-additional-location:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  location-files-directories-groups:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  early-config-location-inputs:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+4.ConfigDataImportsAndTrees/ConfigDataImportsAndTrees.md:
+  spring-config-import:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  import-precedence:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  fixed-vs-relative-imports:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  optional-imports:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  extension-hints:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  configtree-imports:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  import-failure-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+5.ProfilesAndActivation/ProfilesAndActivation.md:
+  profile-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  active-default-profiles:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  profile-specific-files:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  profile-specific-documents:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  on-profile-activation:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  profile-includes-groups:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  profile-declaration-restrictions:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  multiple-profile-precedence:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  profile-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+6.EnvironmentValueAndPlaceholders/EnvironmentValueAndPlaceholders.md:
+  environment-access:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  placeholder-resolution:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  placeholder-defaults:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  value-injection:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  canonical-property-names:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  value-vs-configuration-properties:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  spel-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+7.ConfigurationProperties/ConfigurationProperties.md:
+  configuration-properties-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  prefix-namespace:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  properties-registration:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  javabean-binding:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  constructor-binding:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  record-binding:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  third-party-bean-binding:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  configuration-properties-lifecycle-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+8.RelaxedAndComplexBinding/RelaxedAndComplexBinding.md:
+  relaxed-binding:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  environment-variable-mapping:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  nested-object-binding:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  list-set-binding:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  map-binding:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  list-replacement:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  type-conversion:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  duration-datasize-types:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+9.ValidationAndMetadata/ValidationAndMetadata.md:
+  configuration-validation-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  validated-configuration-properties:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  nested-validation:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  binding-vs-validation-failure:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  configuration-metadata-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  configuration-processor:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  metadata-tooling-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+10.DiagnosticsAndSynthesis/DiagnosticsAndSynthesis.md:
+  resolution-pipeline-synthesis:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  loading-failures:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  activation-failures:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  binding-conversion-failures:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  validation-failures:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  effective-value-debugging:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  configuration-decision-guide:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  externalized-configuration-handoffs:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
