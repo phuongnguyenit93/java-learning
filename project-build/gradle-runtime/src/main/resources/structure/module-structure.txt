@@ -21,7 +21,7 @@ module
 │   │   ├── orchestration
 │   │   │   └── kubernetes
 │   │   └── source-control
-│   │       └── git
+│   │       └── git [SOURCE_CONTROL_GIT] : Git source control fundamentals: repository model, commits, branches, merges, rebases, tags, remotes and collaboration workflows
 │   └── system
 │       ├── database
 │       │   ├── connection-management

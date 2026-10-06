@@ -1974,6 +1974,15 @@ enum ModuleListEnum {
             []
     ),
 
+    SOURCE_CONTROL_GIT(
+            'module:infrastructure:devops:source-control:git',
+            'module/infrastructure/devops/source-control/git',
+            'LIBRARY',
+            'Git source control fundamentals: repository model, commits, branches, merges, rebases, tags, remotes and collaboration workflows',
+            false,
+            []
+    ),
+
     SPRINGDOC_OPENAPI(
             'module:platform:development:programming:framework:springdoc:openapi',
             'module/platform/development/programming/framework/springdoc/openapi',
@@ -2040,7 +2049,7 @@ enum ModuleListEnum {
     SPRING_BOOT_EXTERNALIZED_CONFIGURATION(
             'module:platform:development:programming:framework:spring-boot:externalized-configuration',
             'module/platform/development/programming/framework/spring-boot/externalized-configuration',
-            'SERVLET',
+            'LIBRARY',
             'Spring Boot externalized configuration including config data, property precedence, binding, profiles, validation and metadata',
             false,
             []
