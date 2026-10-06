@@ -1,1 +1,0 @@
-﻿# Excluding auto-configuration

@@ -14,3 +14,17 @@
 #
 # Add only curated references that are useful for the module.
 # The build system must not overwrite this file after authored content exists.
+
+references:
+  - title: "Spring Boot 3.3 Reference - Creating Your Own Auto-configuration"
+    url: "https://docs.spring.io/spring-boot/3.3/reference/features/developing-auto-configuration.html"
+    description: "Primary official guide for auto-configuration discovery, conditions, ordering, testing, custom auto-configuration, configuration metadata, and starter design in the Spring Boot 3.3 line."
+  - title: "Spring Boot 3.3 API - EnableAutoConfiguration"
+    url: "https://docs.spring.io/spring-boot/3.3/api/java/org/springframework/boot/autoconfigure/EnableAutoConfiguration.html"
+    description: "Version-aligned API contract for enabling auto-configuration, exclusions, user-defined-bean precedence, and candidate discovery."
+  - title: "Spring Boot 3.3 API - AutoConfiguration"
+    url: "https://docs.spring.io/spring-boot/3.3/api/java/org/springframework/boot/autoconfigure/AutoConfiguration.html"
+    description: "Version-aligned API contract for authoring auto-configuration classes and expressing before/after relationships."
+  - title: "Spring Boot 3.3 API - Auto-configuration Conditions"
+    url: "https://docs.spring.io/spring-boot/3.3/api/java/org/springframework/boot/autoconfigure/condition/package-summary.html"
+    description: "Official package reference for Boot condition annotations and ConditionEvaluationReport used to explain configuration decisions."

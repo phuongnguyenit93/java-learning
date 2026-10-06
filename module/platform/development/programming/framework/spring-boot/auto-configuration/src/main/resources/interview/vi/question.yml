@@ -27,4 +27,185 @@
 #         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
 # </interview-schema>
 
-questions: []
+questions:
+  - question: >-
+      Vì sao back-off là một quy ước thiết kế của Spring Boot auto-configuration chứ không chỉ là hệ quả của @ConditionalOnMissingBean? Dấu hiệu nào cho thấy một auto-configuration đang can thiệp quá mức vào ứng dụng?
+    answer: >-
+      Auto-configuration tồn tại để cung cấp một nền mặc định hữu ích mà không lấy mất quyền quyết định của ứng dụng. Vì vậy back-off là lời hứa thiết kế: giá trị mặc định chỉ nên xuất hiện khi ứng dụng chưa đưa ra lựa chọn tương ứng, còn cấu hình tường minh của ứng dụng phải thắng khi nó đã sở hữu quyết định đó. @ConditionalOnMissingBean là một cơ chế phổ biến nhưng quy ước rộng hơn annotation này, vì condition theo classpath, property, resource hoặc loại ứng dụng cũng có thể quyết định khi nào Boot nên đứng ngoài. Auto-configuration trở nên quá mạnh tay khi vẫn tạo hạ tầng dù ứng dụng đã cung cấp lựa chọn tương đương, buộc người dùng phải chống lại condition nội bộ, hoặc bắt họ loại trừ cả candidate chỉ để thực hiện một tùy biến thông thường lẽ ra phải có điểm ghi đè rõ ràng.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.AutoConfigurationFoundation/AutoConfigurationFoundation.md"
+      anchor: "defaults-and-back-off-contract"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Hãy lần theo đường đi từ @SpringBootApplication tới một auto-configuration candidate đã được công bố. Vì sao khi debug startup phải tách candidate discovery khỏi condition matching và bean creation?
+    answer: >-
+      @SpringBootApplication bao gồm @EnableAutoConfiguration, từ đó kích hoạt đường import auto-configuration của Boot. Thư viện công bố tên class candidate qua META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports. Việc tìm thấy class trong resource này chỉ làm nó đủ điều kiện tham gia quá trình auto-configuration; điều đó chưa chứng minh condition ở mức class khớp, condition trên @Bean khớp, hay bean instance cuối cùng sẽ tồn tại. Tách ba giai đoạn giúp tránh lỗi suy luận phổ biến: thấy imports entry hợp lệ rồi kết luận Boot bắt buộc phải tạo bean. Bằng chứng tiếp theo phải là kết quả đánh giá condition và các bean definition được đóng góp, không phải discovery đơn thuần.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.ActivationDiscovery/ActivationDiscovery.md"
+      anchor: "candidate-discovery-vs-bean-creation"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Một dependency của thư viện là tùy chọn và @Bean method trong auto-configuration nhắc trực tiếp tới type của thư viện đó. Vì sao chỉ đặt @ConditionalOnClass ở mức method vẫn có thể chưa an toàn, và bạn sẽ tổ chức configuration thế nào?
+    answer: >-
+      Metadata của condition thường có thể được đọc mà không cần load class tùy chọn, nhưng JVM vẫn có thể resolve type xuất hiện trong method signature trước khi condition ở mức method kịp bảo vệ method đó. Khi đó integration vốn tùy chọn lại trở thành lỗi linkage. Thiết kế an toàn hơn là cô lập các signature nhắc tới công nghệ tùy chọn trong một configuration riêng hoặc nested configuration được bảo vệ bởi @ConditionalOnClass ở mức class. Auto-configuration bên ngoài vẫn có thể load khi thư viện không tồn tại, còn nhánh tùy chọn chỉ được xem xét khi class cần thiết có mặt. Test bằng FilteredClassLoader là cách tốt để chứng minh trường hợp thiếu dependency thật sự an toàn thay vì chỉ nhìn annotation và giả định.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.ConditionModel/ConditionModel.md"
+      anchor: "optional-class-linkage"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Vì sao bean condition nhạy cảm với thời điểm đánh giá? Hãy giải thích thêm bẫy riêng của @ConditionalOnExpression khi SpEL tham chiếu trực tiếp tới một bean.
+    answer: >-
+      Bean condition suy luận từ các definition có thể nhìn thấy tại thời điểm configuration đang được xử lý, vì vậy thứ tự authoring và những definition đã được đóng góp có thể ảnh hưởng kết quả. Không nên xem nó như truy vấn trên một ApplicationContext cuối cùng đã khởi tạo đầy đủ. @ConditionalOnExpression còn có một rủi ro rõ hơn: nếu SpEL resolve trực tiếp một bean, bean đó có thể bị khởi tạo rất sớm trong quá trình refresh context. Bean được tạo sớm như vậy không còn đủ điều kiện nhận hậu xử lý thông thường, trong đó có binding @ConfigurationProperties, nên trạng thái mà expression quan sát có thể chưa hoàn chỉnh. Khi quyết định có thể mô hình hóa trực tiếp bằng classpath, property hoặc sự hiện diện của bean definition, nên ưu tiên các condition đó thay vì dùng bean reference trong SpEL như đường tắt.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.ConditionModel/ConditionModel.md"
+      anchor: "bean-conditions-and-timing"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Nên giải thích ranh giới giữa Externalized Configuration và @ConditionalOnProperty như thế nào? Vì sao câu "condition bind @ConfigurationProperties rồi mới kiểm tra object" là sai mental model?
+    answer: >-
+      Externalized Configuration sở hữu cách property source được nạp, sắp thứ tự, ghi đè và biểu diễn qua Environment. @ConditionalOnProperty dùng trạng thái property hiệu lực từ Environment làm đầu vào cho quyết định auto-configuration. Nó không sở hữu precedence của Config Data và cũng không cần một object @ConfigurationProperties được tạo rồi bind trước. Nói condition kiểm tra object đã bind sẽ đảo ngược quan hệ phụ thuộc: quá trình phân giải property tạo ra đầu vào hiệu lực, condition quyết định configuration có áp dụng hay không, và configuration-properties binding có thể diễn ra sau đó cho các bean thực sự được đăng ký. Ranh giới này giúp tách ngữ nghĩa của nguồn cấu hình khỏi ngữ nghĩa của conditional configuration.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.ConditionModel/ConditionModel.md"
+      anchor: "property-conditions"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Auto-configuration muốn cung cấp DefaultAcmeClient nhưng phải back off nếu người dùng có bất kỳ AcmeClient nào. Vì sao cần phân biệt type mà condition kiểm tra với return type của @Bean method?
+    answer: >-
+      @ConditionalOnMissingBean không có type kiểm tra tường minh trên @Bean method thường suy ra type cần tìm từ kiểu trả về của method. Nếu method trả về DefaultAcmeClient, một bean do người dùng cung cấp triển khai AcmeClient bằng concrete class khác có thể không thỏa type được suy ra và bean mặc định vẫn bị đóng góp. Tác giả nên biểu đạt vai trò sở hữu bằng @ConditionalOnMissingBean(AcmeClient.class), đồng thời vẫn có thể để method trả về DefaultAcmeClient khi thông tin concrete type hữu ích cho condition xử lý sau đó. Type mà condition kiểm tra nói lựa chọn nào của ứng dụng phải làm bean mặc định back off; kiểu trả về mô tả definition đang được đóng góp. Trộn hai ý nghĩa này dễ dẫn tới bean mặc định trùng lặp hoặc mất thông tin type cần thiết.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.BackOffUserControl/BackOffUserControl.md"
+      anchor: "bean-type-specificity"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Sắp một auto-configuration trước hoặc sau auto-configuration khác thực sự điều khiển điều gì, và không điều khiển điều gì? Khi nào quan hệ ordering là hợp lý?
+    answer: >-
+      Auto-configuration ordering điều phối thứ tự xử lý configuration definition. Nó có thể cho một configuration cơ hội đóng góp definition sớm hơn trước khi condition của configuration khác được đánh giá. Nó không bảo đảm mọi bean instance của configuration trước sẽ được tạo trước mọi bean instance của configuration sau, và cũng không tự tạo cạnh phụ thuộc ở runtime. Tôi chỉ thêm quan hệ before/after khi quyết định ở thời điểm xử lý definition của một auto-configuration thật sự phụ thuộc vào definition mà candidate khác có thể đóng góp. Thứ tự khởi tạo runtime nên đi theo dependency thật giữa bean hoặc quy ước lifecycle. Ordering toàn cục không cần thiết sẽ khiến các integration vốn độc lập khó phối hợp hơn.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.OrderingComposition/OrderingComposition.md"
+      anchor: "configuration-order-vs-bean-order"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Một bean được kỳ vọng từ auto-configuration lại mất trong môi trường production. Hãy mô tả một trình tự chẩn đoán có kỷ luật bằng exclusion và Condition Evaluation Report thay vì thử ngẫu nhiên property hoặc qualifier.
+    answer: >-
+      Bắt đầu từ bằng chứng. Trước tiên xác nhận candidate có tham gia hay không và đọc Condition Evaluation Report hoặc debug output của Boot để thấy condition nào khớp hoặc không khớp. Từ report, phân loại nguyên nhân: thiếu class, property không khớp, resource hoặc loại ứng dụng không phù hợp, bean do người dùng cung cấp làm back-off, exclusion tường minh, hoặc dependency về thứ tự definition. Sau đó mới kiểm tra đúng đầu vào liên quan. Nếu ứng dụng chủ động không muốn toàn bộ candidate, dùng cơ chế exclusion được hỗ trợ để ý định đó rõ ràng. Nếu candidate đáng lẽ phải match, sửa condition thật sự không khớp thay vì tạo bean giả, thay qualifier không liên quan hoặc lợi dụng một feature property chỉ để đánh trượt condition khác. Cách này giữ việc chẩn đoán dễ giải thích ngay cả khi condition nội bộ thay đổi.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.ExclusionsDiagnostics/ExclusionsDiagnostics.md"
+      anchor: "condition-diagnosis-playbook"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Khi viết một Spring Boot 3.3 auto-configuration có thể tái sử dụng, bạn sẽ giữ những ranh giới nào? Vì sao component scanning rộng trong ứng dụng sử dụng là cách công bố kém phù hợp?
+    answer: >-
+      Tôi sẽ dùng một @AutoConfiguration entry point tập trung, công bố nó qua AutoConfiguration.imports, giữ package độc lập với base package của ứng dụng sử dụng và import tường minh các configuration hỗ trợ. @AutoConfiguration dùng proxyBeanMethods=false, phù hợp với configuration không dựa vào proxy giữa các @Bean method. Component scanning rộng khiến integration phụ thuộc vào package layout của ứng dụng sử dụng và có thể kéo class thư viện không liên quan vào context, làm ranh giới sở hữu mờ đi. Công nghệ tùy chọn nên nằm sau class-level condition hẹp, configuration key cần namespace có chủ đích, còn điểm mở rộng/back-off phải rõ ràng. Discovery, phạm vi sở hữu của configuration và application component scanning nên là các trách nhiệm tách biệt.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.CustomAuthoring/CustomAuthoring.md"
+      anchor: "registration-and-package-boundaries"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Condition metadata do auto-configuration annotation processor tạo ra giải quyết vấn đề gì, và vì sao không được xem metadata đó là nguồn sự thật cuối cùng của condition?
+    answer: >-
+      Annotation processor có thể ghi metadata cho một số condition được hỗ trợ để Boot loại sớm các auto-configuration candidate rõ ràng không khớp, từ đó giảm việc load hoặc xử lý configuration class không cần thiết. Đây là tối ưu startup. Processor chạy lúc build thư viện nên không thể biết classpath cuối cùng, Environment, user bean, resource hay loại web application của ứng dụng sử dụng. Vì vậy semantics của condition khi runtime vẫn là nguồn quyết định. Mental model phù hợp là metadata giúp cùng một decision pipeline chạy rẻ hơn; nó không tạo ra một mô hình semantics thứ hai nơi kết quả compile-time ghi đè ý nghĩa của condition lúc runtime.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.CustomAuthoring/CustomAuthoring.md"
+      anchor: "auto-configure-metadata"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Vì sao danh tính công khai của class auto-configuration cần được xem là vấn đề tương thích trong Spring Boot 3.3 dù ứng dụng thường không tự khởi tạo class đó?
+    answer: >-
+      Auto-configuration khác và ứng dụng có thể tham chiếu class này trong quan hệ before/after, exclusion và cấu hình theo tên. Vì vậy package cùng tên class trở thành một phần có thể quan sát từ bên ngoài của integration. Ở baseline Spring Boot 3.3 chưa có cơ chế AutoConfiguration.replacements tổng quát tự ánh xạ mọi danh tính cũ sang class mới. Đổi tên hoặc di chuyển một auto-configuration đã công bố vì thế có thể làm hỏng ordering hoặc tham chiếu exclusion dù không có bên gọi nào gọi constructor. Nên xem refactor này như thay đổi integration công khai: tìm các tham chiếu phía sau, giữ tương thích khi cần và không giả định Boot sẽ tự sửa danh tính.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.CustomAuthoring/CustomAuthoring.md"
+      anchor: "stable-auto-configuration-identities"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Bạn sẽ thiết kế ma trận test tập trung cho custom auto-configuration bằng ApplicationContextRunner, FilteredClassLoader và các web context runner như thế nào? Vì sao một @SpringBootTest lớn thường cho bằng chứng yếu hơn cho các quyết định này?
+    answer: >-
+      Tôi sẽ coi mỗi đầu vào quan trọng của condition là một chiều có kiểm soát: dependency có hoặc không, các biến thể property, bean do người dùng cung cấp có hoặc không, Servlet so với Reactive context khi phù hợp, và nhánh ordering hoặc công nghệ tùy chọn cần chứng minh. ApplicationContextRunner tạo context mới nhỏ cho từng kịch bản và giúp kiểm tra kết quả bean rõ ràng. FilteredClassLoader chứng minh dependency tùy chọn thật sự có thể biến mất mà không gây linkage failure. WebApplicationContextRunner hoặc ReactiveWebApplicationContextRunner cung cấp đúng loại ứng dụng cho web-specific condition. Một full @SpringBootTest chứng minh được ứng dụng tích hợp có thể khởi động nhưng trộn nhiều đầu vào cùng lúc, nên thường khó cho biết condition nào tạo ra kết quả. Focused runner làm ma trận quyết định rõ ràng và dễ chẩn đoán hơn.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.AutoConfigurationTesting/AutoConfigurationTesting.md"
+      anchor: "application-context-runner"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Hãy giải thích vai trò của starter và autoconfigure artifact. Khi nào tách hai artifact hữu ích, khi nào gộp là hợp lý, và nhầm lẫn phổ biến nào về starter discovery cần tránh?
+    answer: >-
+      Hai vai trò khác nhau về mặt khái niệm. Auto-configuration chứa hành vi configuration có điều kiện; starter cung cấp một lựa chọn dependency thuận tiện để đưa các thành phần integration dự kiến lên classpath. Tách hai artifact hữu ích khi auto-configuration cần được tái sử dụng mà không kéo toàn bộ lựa chọn dependency của starter, hoặc khi ranh giới dependency quan trọng với ứng dụng sử dụng. Một integration nhỏ có thể gộp hai vai trò trong cùng artifact nếu việc tách ra không tạo thêm giá trị tái sử dụng. Nhầm lẫn quan trọng là nghĩ "starter" tự nó là cơ chế discovery. Ngay cả khi gộp artifact, auto-configuration class vẫn phải được công bố qua cơ chế của Boot; sự tiện lợi về dependency không tự biến configuration class bất kỳ thành candidate.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "9.StarterSynthesis/StarterSynthesis.md"
+      anchor: "starter-split-or-combine"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Một ứng dụng sử dụng thêm Acme starter nhưng không nhận được AcmeClient như kỳ vọng. Hãy trình bày đường suy luận end-to-end từ dependency tới ứng dụng đã cấu hình, đồng thời nêu những ranh giới curriculum không nên trộn lẫn khi debug.
+    answer: >-
+      Trước tiên tôi xác nhận starter đưa autoconfigure artifact và runtime dependency dự kiến lên classpath. Tiếp theo kiểm tra auto-configuration class đã được công bố trong AutoConfiguration.imports. Sau đó đọc Condition Evaluation Report: classpath cần thiết, property hiệu lực trong Environment, bean do người dùng cung cấp gây back-off, loại ứng dụng, exclusion và dependency về ordering. Nếu candidate match, mới kiểm tra bean definition nó đóng góp rồi mới tới hành vi của bean ở runtime. Tôi giữ ranh giới rõ ràng: Externalized Configuration sở hữu cách giá trị property hiệu lực được tạo ra; Spring Framework sở hữu container và bean mechanics; build tooling sở hữu cơ chế dependency management; module này sở hữu discovery candidate và conditional contribution của Boot. Trình tự đó tránh biến một missing bean thành chuỗi thay đổi ngẫu nhiên ở các layer không liên quan.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "9.StarterSynthesis/StarterSynthesis.md"
+      anchor: "starter-end-to-end-flow"
+    apiRelated:
+      controller: ""
+      methodSignature: ""

@@ -41,4 +41,112 @@
 # The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: auto-configuration-purpose
+    title: Why Spring Boot Auto-configuration Exists
+    purpose: Build the mental model that auto-configuration is Boot's convention layer for contributing sensible infrastructure only when application conditions justify it, while preserving user control.
+    relatedKnowledge: [AutoConfigurationFoundation]
+    relatedModules:
+      - routeId: SPRING_BOOT_FUNDAMENTALS
+        label: Spring Boot Fundamentals
+        note: Fundamentals introduces @SpringBootApplication, starters, and Boot's convention model that auto-configuration expands here.
+      - routeId: SPRING_BOOT_EXTERNALIZED_CONFIGURATION
+        label: Spring Boot Externalized Configuration
+        note: Externalized configuration owns property sources and binding; auto-configuration consumes configuration values as decision inputs.
+    objectives:
+      - Explain the problem auto-configuration solves compared with manually wiring every infrastructure bean for common application stacks.
+      - Distinguish Spring Framework configuration mechanics from Spring Boot's opinionated, conditional configuration layer.
+      - Understand the contract that Boot may provide defaults while application-defined configuration remains authoritative when the auto-configuration is designed to back off.
+
+  - id: candidate-discovery-activation
+    title: Auto-configuration Activation and Candidate Discovery
+    purpose: Understand how Boot enables auto-configuration and discovers candidate auto-configuration classes before condition evaluation decides which candidates actually contribute configuration.
+    relatedKnowledge: [ActivationDiscovery]
+    dependsOn: [auto-configuration-purpose]
+    objectives:
+      - Relate @SpringBootApplication to @EnableAutoConfiguration without confusing application component scanning with auto-configuration discovery.
+      - Understand that published auto-configurations are discovered through META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports and should not rely on component scanning.
+      - Separate candidate discovery from condition matching so class discovery is not mistaken for unconditional bean creation.
+
+  - id: condition-driven-selection
+    title: Condition-driven Configuration Selection
+    purpose: Learn how Boot evaluates environment, classpath, bean, resource, application-type, and related conditions to decide whether an auto-configuration or bean definition is appropriate for the current application.
+    relatedKnowledge: [ConditionModel]
+    dependsOn: [candidate-discovery-activation]
+    objectives:
+      - Build a category-level mental model for class, bean, property, resource, web-application, and other Boot condition families without turning the roadmap into an annotation inventory.
+      - Understand why classpath and property state are common decision inputs and how they connect to starters and externalized configuration.
+      - Recognize condition-evaluation timing constraints, especially where bean conditions depend on definitions processed so far and optional classes require isolation from eager JVM linkage.
+
+  - id: back-off-user-control
+    title: Back-off, Defaults, and User Override
+    purpose: Understand the design principle that auto-configuration should supply defaults without trapping the application, and how bean conditions and explicit user configuration preserve that control.
+    relatedKnowledge: [BackOffUserControl]
+    dependsOn: [condition-driven-selection]
+    objectives:
+      - Explain back-off as a deliberate contract rather than an accidental side effect of @ConditionalOnMissingBean.
+      - Reason about user-defined beans, candidate visibility, return-type specificity, and ordering concerns that affect bean-condition outcomes.
+      - Distinguish configurable defaults from forced framework policy and identify when an auto-configuration design is too aggressive.
+
+  - id: ordering-composition
+    title: Auto-configuration Ordering and Composition
+    purpose: Understand how multiple auto-configurations coordinate definition order and dependencies without assuming that configuration ordering controls bean-instantiation order.
+    relatedKnowledge: [OrderingComposition]
+    dependsOn: [back-off-user-control]
+    objectives:
+      - Use before/after relationships and auto-configuration ordering as configuration-definition coordination mechanisms.
+      - Distinguish auto-configuration ordering from ordinary @Order semantics on unrelated runtime components and from bean dependency ordering.
+      - Recognize when configuration should be decomposed into nested or separate conditional configuration so optional technology can remain isolated and composable.
+
+  - id: exclusions-diagnostics
+    title: Exclusions and Condition Diagnostics
+    purpose: Learn how applications opt out of unwanted auto-configuration and how condition reports explain why candidates matched, did not match, or were excluded.
+    relatedKnowledge: [ExclusionsDiagnostics]
+    dependsOn: [condition-driven-selection]
+    objectives:
+      - Understand class-based, name-based, and property-based exclusion mechanisms and when explicit exclusion is preferable to fighting an auto-configuration indirectly.
+      - Use the Condition Evaluation Report and Boot debug diagnostics to trace positive and negative matches rather than guessing from missing beans.
+      - Diagnose common failure modes such as absent classes, unexpected properties, competing beans, ordering mistakes, and overly broad conditions.
+
+  - id: custom-auto-configuration-authoring
+    title: Authoring a Custom Auto-configuration
+    purpose: Apply the model from the consumer side to library authoring by designing a focused auto-configuration that can be discovered, conditioned, configured, extended, and safely overridden.
+    relatedKnowledge: [CustomAuthoring]
+    dependsOn: [ordering-composition, exclusions-diagnostics]
+    objectives:
+      - Use @AutoConfiguration, dedicated package boundaries, AutoConfiguration.imports, narrow conditions, and explicit @Import for supporting components instead of enabling component scanning from the auto-configuration itself.
+      - Integrate configuration properties and optional dependencies while preserving clear ownership and back-off behavior.
+      - Understand that the auto-configuration annotation processor produces condition metadata that can eagerly filter nonmatching candidates as a startup optimization without replacing runtime condition semantics.
+      - Keep auto-configuration identities and package contracts stable enough that consumers can safely reference ordering and exclusion targets in the Spring Boot 3.3 model.
+
+  - id: auto-configuration-testing
+    title: Testing Auto-configuration Decisions
+    purpose: Verify an auto-configuration as a matrix of application contexts so positive matches, back-off, properties, optional classpaths, and web-specific behavior are proven instead of assumed.
+    relatedKnowledge: [AutoConfigurationTesting]
+    dependsOn: [custom-auto-configuration-authoring]
+    relatedModules:
+      - routeId: SPRING_BOOT_TESTING
+        label: Spring Boot Testing
+        note: This milestone owns auto-configuration-specific verification; the dedicated testing module owns the broader Boot test strategy and test-slice curriculum.
+    objectives:
+      - Use ApplicationContextRunner-style tests to construct focused contexts and assert contributed or absent beans.
+      - Test user-configuration back-off, property variants, classpath absence, and specialized web/reactive contexts where relevant.
+      - Understand why deterministic condition tests are preferable to relying only on a full @SpringBootTest application for custom auto-configuration behavior.
+
+  - id: starter-design-synthesis
+    title: Starter Design and End-to-end Auto-configuration Synthesis
+    purpose: Connect discovery, conditions, back-off, ordering, diagnostics, authoring, and testing into a production-ready starter mental model while preserving boundaries with Boot build tooling and neighboring modules.
+    relatedKnowledge: [StarterSynthesis]
+    dependsOn: [auto-configuration-testing]
+    relatedModules:
+      - routeId: SPRING_BOOT_BUILD_TOOLING_PACKAGING
+        label: Spring Boot Build Tooling and Packaging
+        note: Build tooling owns BOM/plugin/dependency-management mechanics; this module owns how starter dependencies compose an auto-configuration experience.
+      - routeId: SPRING_BOOT_NATIVE_IMAGE
+        label: Spring Boot Native Image
+        note: Native-image constraints consume auto-configuration and AOT outcomes but belong to the dedicated native-image module.
+    objectives:
+      - Understand the typical autoconfigure-artifact plus starter split, when a straightforward integration can combine them, and the starter's conceptual role as a convenient dependency opinion around the auto-configuration.
+      - Keep configuration-key namespaces, optional dependencies, metadata, and extension points suitable for external consumers.
+      - Trace the complete flow from adding a starter through candidate discovery, condition evaluation, default bean contribution, user override, diagnostics, and verification.
+      - Preserve ownership boundaries: Spring container mechanics remain Spring Framework, property-source/binding semantics remain externalized configuration, and dependency-management mechanics remain build tooling.

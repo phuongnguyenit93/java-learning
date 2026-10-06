@@ -1,1 +1,0 @@
-﻿# Loại trừ Auto Configuration

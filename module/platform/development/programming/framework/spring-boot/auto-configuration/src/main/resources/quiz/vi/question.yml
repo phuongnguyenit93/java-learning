@@ -38,4 +38,297 @@
 #       ID nội bộ của đáp án đúng. Frontend kiểm tra bằng identity này sau khi shuffle.
 # </quiz-schema>
 
-questions: []
+questions:
+  - id: auto-configuration-defaults-control
+    question: "Phát biểu nào mô tả đúng nhất mục tiêu thiết kế của Spring Boot auto-configuration?"
+    answers:
+      - id: A
+        answer: "Nó thiết lập một baseline theo quy ước và ứng dụng chủ yếu tùy biến baseline đó bằng các external property."
+        explanation: "Sai. External property chỉ là một cơ chế điều khiển; auto-configuration còn phải back off khi bean hoặc condition khác cho thấy ứng dụng đã tự sở hữu quyết định."
+      - id: B
+        answer: "Nó đóng góp các mặc định hạ tầng được suy ra từ dependency và giữ các mặc định đó trừ khi bean của người dùng được đánh dấu @Primary."
+        explanation: "Sai. @Primary ảnh hưởng cách chọn bean khi inject; nó không phải tín hiệu chung để auto-configuration back off."
+      - id: C
+        answer: "Nó đóng góp các mặc định theo quy ước khi condition phù hợp và back off khi cấu hình của ứng dụng nên sở hữu quyết định đó."
+        explanation: "Đúng. Boot dùng condition để cung cấp mặc định hữu ích mà vẫn nhường quyền kiểm soát cho cấu hình tường minh của ứng dụng."
+      - id: D
+        answer: "Nó tập trung hóa cấu hình hạ tầng phổ biến để ứng dụng thường thay thế mặc định bằng cách exclude toàn bộ auto-configuration tương ứng."
+        explanation: "Sai. Exclusion có tồn tại, nhưng cách tùy biến thông thường thường chi tiết hơn thông qua condition và back-off thay vì tắt toàn bộ candidate."
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "1.AutoConfigurationFoundation/AutoConfigurationFoundation.md", anchor: "defaults-and-back-off-contract"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: imports-vs-component-scanning
+    question: "Một thư viện công bố AcmeClientAutoConfiguration. Trong Spring Boot 3.3, cách thông thường để Boot khám phá class này như một auto-configuration candidate là gì?"
+    answers:
+      - id: A
+        answer: "Đặt class bên dưới base package của ứng dụng sử dụng thư viện để component scanning từ @SpringBootApplication tìm thấy nó."
+        explanation: "Sai. Cơ chế khám phá auto-configuration không nên phụ thuộc vào ranh giới component scan của ứng dụng sử dụng thư viện."
+      - id: B
+        answer: "Liệt kê tên class đầy đủ trong META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports."
+        explanation: "Đúng. Boot 3.3 khám phá các auto-configuration candidate được công bố từ AutoConfiguration.imports."
+      - id: C
+        answer: "Gắn @Component lên class và để Spring quét toàn bộ dependency JAR một cách tự động."
+        explanation: "Sai. Component scanning rộng không phải cơ chế công bố auto-configuration của Boot."
+      - id: D
+        answer: "Chỉ đăng ký class trong application.properties vì file cấu hình sở hữu toàn bộ quá trình khám phá candidate."
+        explanation: "Sai. Property có thể ảnh hưởng condition hoặc exclusion, nhưng không phải cơ chế đăng ký candidate thông thường."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.ActivationDiscovery/ActivationDiscovery.md", anchor: "auto-configuration-imports"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: candidate-discovery-not-bean-creation
+    question: "Boot đã khám phá một auto-configuration class từ AutoConfiguration.imports. Ở thời điểm này có thể kết luận điều gì?"
+    answers:
+      - id: A
+        answer: "Boot đã chấp nhận class để xử lý configuration, nên các class-level condition đã khớp dù method-level condition vẫn có thể thất bại."
+        explanation: "Sai. Discovery mới xác định candidate; việc các condition của configuration có khớp hay không vẫn thuộc giai đoạn xử lý tiếp theo."
+      - id: B
+        answer: "Boot sẽ đăng ký các bean definition của class trừ khi một exclusion tường minh loại candidate đó ở giai đoạn sau."
+        explanation: "Sai. Candidate đã được khám phá vẫn có thể bị loại bởi class-level hoặc method-level condition mà không cần exclusion tường minh."
+      - id: C
+        answer: "Boot đã xác nhận imports entry hợp lệ và sẽ tạo configuration instance trước khi đánh giá condition trên các phương thức @Bean."
+        explanation: "Sai. Discovery không kéo theo việc khởi tạo configuration sớm; condition vẫn chi phối definition nào thực sự được đóng góp."
+      - id: D
+        answer: "Chỉ có thể kết luận class đủ điều kiện đi tiếp vào quá trình xử lý auto-configuration; việc condition khớp và đóng góp bean vẫn là các quyết định riêng."
+        explanation: "Đúng. AutoConfiguration.imports cung cấp candidate, còn condition ở các bước sau mới quyết định configuration và bean definition nào thực sự được áp dụng."
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "2.ActivationDiscovery/ActivationDiscovery.md", anchor: "candidate-discovery-vs-bean-creation"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: optional-class-linkage-boundary
+    question: "Một thư viện tùy chọn có thể vắng mặt. Vì sao chỉ đặt @ConditionalOnClass trên một phương thức @Bean trả về trực tiếp type của thư viện tùy chọn vẫn có rủi ro?"
+    answers:
+      - id: A
+        answer: "JVM có thể phải phân giải chữ ký phương thức trước khi condition ở mức method kịp bảo vệ type tùy chọn đó."
+        explanation: "Đúng. Type tùy chọn trong chữ ký có thể gây lỗi liên kết trước khi method-level condition phát huy tác dụng; cô lập phía sau configuration có class-level guard an toàn hơn."
+      - id: B
+        answer: "Vì Boot có thể đọc annotation metadata mà không load class tùy chọn, chữ ký phương thức sẽ an toàn miễn là condition tham chiếu class đó qua metadata."
+        explanation: "Sai. Annotation metadata có thể được đọc an toàn trong nhiều trường hợp, nhưng JVM vẫn có thể resolve type tùy chọn xuất hiện trực tiếp trong chữ ký phương thức."
+      - id: C
+        answer: "Condition ở mức method được đánh giá trước khi Spring cần chữ ký @Bean method, nên guard tại method là đủ khi type tùy chọn chỉ xuất hiện ở return type."
+        explanation: "Sai. Chính chữ ký có thể trở thành ranh giới linkage trước khi condition ở mức method kịp bảo vệ type tùy chọn."
+      - id: D
+        answer: "Rủi ro linkage chủ yếu nằm ở class tùy chọn dùng trong annotation attribute; return type chỉ được resolve lúc @Bean method chạy nên thường không cần cô lập thêm."
+        explanation: "Sai. Type tùy chọn trong configuration signature có thể được resolve sớm hơn lúc gọi bean method, vì vậy ranh giới configuration có class-level guard an toàn hơn."
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.ConditionModel/ConditionModel.md", anchor: "optional-class-linkage"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: missing-bean-target-vs-return-type
+    question: "Auto-configuration cần back off khi người dùng cung cấp bất kỳ AcmeClient nào, nhưng phương thức tạo mặc định trả về DefaultAcmeClient. Khai báo nào giữ đúng cả hai ý định?"
+    answers:
+      - id: A
+        answer: "Dùng @ConditionalOnMissingBean không chỉ rõ target trên phương thức trả về DefaultAcmeClient vì Boot tự động kiểm tra mọi interface mà type đó triển khai."
+        explanation: "Sai. Khi không chỉ rõ target, return type của phương thức @Bean trở thành type condition kiểm tra, nên một cách triển khai AcmeClient khác có thể không làm mặc định back off."
+      - id: B
+        answer: "Đổi return type thành AcmeClient và bỏ condition để container tự chọn cách triển khai nào là primary."
+        explanation: "Sai. Cách này loại bỏ quy ước back-off và đồng thời làm bean definition mất bớt thông tin type cụ thể của implementation."
+      - id: C
+        answer: "Dùng @ConditionalOnMissingBean(AcmeClient.class) trên phương thức trả về DefaultAcmeClient."
+        explanation: "Đúng. Condition target tường minh bảo vệ vai trò AcmeClient, còn return type cụ thể vẫn giữ thông tin DefaultAcmeClient cho bean-definition reasoning."
+      - id: D
+        answer: "Dùng @ConditionalOnClass(AcmeClient.class) vì class có trên classpath tương đương với việc người dùng đã định nghĩa bean."
+        explanation: "Sai. Classpath presence và bean presence trả lời hai câu hỏi khác nhau."
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "4.BackOffUserControl/BackOffUserControl.md", anchor: "bean-type-specificity"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: conditional-expression-early-bean
+    question: "Vì sao tham chiếu trực tiếp tới bean trong SpEL của @ConditionalOnExpression có thể gây vấn đề cho auto-configuration?"
+    answers:
+      - id: A
+        answer: "Expression được phân giải từ Environment trước khi bean post-processor chạy, nên bean reference sẽ được hoãn cho tới khi quá trình binding thông thường hoàn tất."
+        explanation: "Sai. Bean reference có thể kích hoạt truy cập bean ngay trong lúc đánh giá condition thay vì được hoãn tới sau giai đoạn hậu xử lý thông thường."
+      - id: B
+        answer: "Bean được tham chiếu có thể bị khởi tạo ngay trong lúc đánh giá condition và bỏ lỡ hậu xử lý thông thường như binding @ConfigurationProperties."
+        explanation: "Đúng. Việc tham chiếu bean trong expression có thể kích hoạt khởi tạo quá sớm, trước khi vòng đời hậu xử lý thông thường hoàn tất."
+      - id: C
+        answer: "Expression dùng bean resolver thông thường sau khi definition đã được đăng ký, nên việc resolve bean có cùng thời điểm vòng đời như dependency injection bình thường."
+        explanation: "Sai. Condition được đánh giá ở một giai đoạn nhạy cảm, nơi resolve bean có thể khiến bean khởi tạo sớm hơn so với injection thông thường."
+      - id: D
+        answer: "Kết quả expression được cache trước khi profile và property processing hoàn tất, nên thay đổi cấu hình sau đó không thể ảnh hưởng kết quả condition."
+        explanation: "Sai. Rủi ro được cảnh báo là khởi tạo bean quá sớm, không phải một quy tắc riêng đóng băng expression trước khi các nguồn cấu hình sẵn sàng."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.ConditionModel/ConditionModel.md", anchor: "bean-conditions-and-timing"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: property-condition-input-model
+    question: "Trong module này, mối quan hệ nào giữa externalized configuration và @ConditionalOnProperty là chính xác nhất?"
+    answers:
+      - id: A
+        answer: "Externalized Configuration quyết định trạng thái property hiệu lực; @ConditionalOnProperty đọc trạng thái đó từ Environment làm đầu vào cho quyết định auto-configuration."
+        explanation: "Đúng. Việc nạp và ưu tiên property source quyết định giá trị hiệu lực, còn condition dùng giá trị đó để quyết định configuration có khớp hay không."
+      - id: B
+        answer: "@ConditionalOnProperty đọc trực tiếp property source khớp đầu tiên, nên thứ tự lookup của nó có thể khác precedence của giá trị hiệu lực trong Environment."
+        explanation: "Sai. Condition dựa trên cơ chế phân giải property của Environment thay vì định nghĩa một mô hình precedence riêng giữa các property source."
+      - id: C
+        answer: "@ConditionalOnProperty đánh giá sau khi @ConfigurationProperties binding hoàn tất, nên giá trị field đã convert trong object được dùng làm đầu vào condition."
+        explanation: "Sai. Condition có thể đọc trạng thái property mà không cần tạo và bind một @ConfigurationProperties bean trước đó."
+      - id: D
+        answer: "@ConditionalOnProperty tham gia vào Config Data loading bằng cách chọn property source nào cần được thêm trước khi auto-configuration được đánh giá."
+        explanation: "Sai. Config Data quyết định các property source sẵn có; condition tiêu thụ Environment kết quả chứ không chọn source để nạp."
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "3.ConditionModel/ConditionModel.md", anchor: "property-conditions"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: auto-configuration-order-vs-bean-order
+    question: "AcmeMetricsAutoConfiguration được sắp sau AcmeCoreAutoConfiguration. Thứ tự này chủ yếu bảo đảm điều gì?"
+    answers:
+      - id: A
+        answer: "Bean definition của core được xử lý trước, vì vậy mọi bean instance của core cũng chắc chắn được tạo trước mọi bean instance của metrics."
+        explanation: "Sai. Ordering có thể ảnh hưởng quá trình xử lý definition, nhưng không tạo ra một thứ tự khởi tạo bean toàn cục ở runtime."
+      - id: B
+        answer: "Condition của metrics chỉ được đánh giá sau khi vòng đời ApplicationContext của core hoàn tất, nên có thể quan sát các core bean đã khởi tạo đầy đủ."
+        explanation: "Sai. Ordering áp dụng trong quá trình xử lý configuration; nó không chờ một vòng đời context riêng của core hoàn tất trước."
+      - id: C
+        answer: "Spring tạo dependency ngầm từ từng bean definition của metrics tới các definition của core để thứ tự init và destroy đi theo thứ tự configuration."
+        explanation: "Sai. Auto-configuration order không tạo dependency edge giữa bean; quan hệ vòng đời vẫn phải xuất phát từ dependency thật của các bean."
+      - id: D
+        answer: "Core configuration có cơ hội đóng góp definition trước khi các condition trong auto-configuration phía sau được đánh giá."
+        explanation: "Đúng. Auto-configuration ordering điều phối quá trình xử lý definition, điều này quan trọng khi condition phía sau quan sát các definition đã được đóng góp."
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "5.OrderingComposition/OrderingComposition.md", anchor: "configuration-order-vs-bean-order"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: exclusion-vs-indirect-fighting
+    question: "Ứng dụng chủ động không muốn một auto-configuration dù các condition của nó có thể khớp, nhưng dependency công bố candidate vẫn phải được giữ lại. Cách nào biểu đạt quyết định cấp ứng dụng rõ nhất?"
+    answers:
+      - id: A
+        answer: "Đặt một feature property lân cận sao cho property condition hiện tại của candidate thất bại và dựa vào đường condition đó để giữ candidate không hoạt động."
+        explanation: "Sai. Cách này gắn quyết định opt-out cấp ứng dụng vào một đường condition nội bộ thay vì biểu đạt trực tiếp rằng toàn bộ candidate không được mong muốn."
+      - id: B
+        answer: "Cung cấp một application bean thỏa missing-bean guard của candidate và để cơ chế back-off thông thường ngăn hạ tầng mặc định của nó được đóng góp."
+        explanation: "Sai. Back-off phù hợp khi ứng dụng thật sự sở hữu vai trò bean đó; nó là cách gián tiếp để tắt candidate khi ứng dụng không muốn một implementation thay thế."
+      - id: C
+        answer: "Dùng cơ chế exclusion tường minh được hỗ trợ khi ứng dụng muốn tắt toàn bộ auto-configuration candidate đó."
+        explanation: "Đúng. Exclusion biểu đạt trực tiếp quyết định ở cấp ứng dụng và vẫn rõ ràng ngay cả khi các condition nội bộ của candidate thay đổi sau này."
+      - id: D
+        answer: "Sắp configuration của ứng dụng trước auto-configuration không mong muốn để condition phía sau nhìn thấy application definition trước khi được đánh giá."
+        explanation: "Sai. Ordering có thể ảnh hưởng một số condition phụ thuộc definition, nhưng không biểu đạt rằng candidate bị tắt và cũng không bảo đảm các nhánh khác không match."
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.ExclusionsDiagnostics/ExclusionsDiagnostics.md", anchor: "when-to-exclude-auto-configuration"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: condition-report-diagnosis
+    question: "Một auto-configuration candidate đã được xác nhận là Boot đã khám phá, nhưng một bean kỳ vọng từ nó lại không xuất hiện. Bằng chứng nào giải thích tốt nhất condition nào đã khớp hoặc không khớp?"
+    answers:
+      - id: A
+        answer: "Đọc lại AutoConfiguration.imports để xác nhận tên candidate rồi suy ra condition nào có lẽ đã fail từ các annotation trên configuration class."
+        explanation: "Sai. Discovery đã được xác nhận trong tình huống này; condition report cung cấp bằng chứng runtime thay vì buộc suy đoán từ annotation trong source."
+      - id: B
+        answer: "Kiểm tra Condition Evaluation Report hoặc debug diagnostics để xem candidate và condition nào khớp hoặc không khớp."
+        explanation: "Đúng. Report cho thấy đường ra quyết định thực tế, giúp bắt đầu chẩn đoán từ bằng chứng trước khi thay đổi cấu hình."
+      - id: C
+        answer: "Kiểm tra các user bean trước để tìm back-off trigger, rồi thay đổi qualifier cho tới khi bean từ auto-configuration xuất hiện."
+        explanation: "Sai. User bean có thể giải thích một trường hợp back-off, nhưng qualifier không phải cách sửa condition tổng quát và cách này bỏ qua classpath, property, exclusion cùng condition khác."
+      - id: D
+        answer: "Kiểm tra metadata về auto-configuration ordering trước để xem configuration khác có được xử lý sớm và làm bean mong đợi back off hay không."
+        explanation: "Sai. Ordering có thể liên quan trong một số bean condition, nhưng đó chỉ là một nguyên nhân hẹp hơn việc đọc condition evidence trước."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "6.ExclusionsDiagnostics/ExclusionsDiagnostics.md", anchor: "condition-evaluation-report"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: auto-configuration-authoring-boundary
+    question: "Lựa chọn nào phù hợp nhất với một Spring Boot 3.3 auto-configuration có ranh giới rõ ràng?"
+    answers:
+      - id: A
+        answer: "Dùng @AutoConfiguration, đăng ký qua AutoConfiguration.imports, giữ package độc lập với ứng dụng sử dụng và import tường minh các cấu hình hỗ trợ tập trung."
+        explanation: "Đúng. Boot sở hữu việc khám phá candidate, còn explicit import giữ đồ thị cấu hình hỗ trợ trong ranh giới rõ ràng và không phụ thuộc package của ứng dụng sử dụng."
+      - id: B
+        answer: "Dùng một @Configuration entry point thông thường được component scan của ứng dụng tìm thấy, rồi scan package nội bộ của thư viện để nạp các component hỗ trợ."
+        explanation: "Sai. Cách này làm việc kích hoạt auto-configuration phụ thuộc vào cách bố trí component scan của ứng dụng thay vì cơ chế publication của Boot."
+      - id: C
+        answer: "Dùng @AutoConfiguration và AutoConfiguration.imports, nhưng thêm @ComponentScan cho package thư viện để tự động tìm support type thay vì import tường minh."
+        explanation: "Sai. Entry point được công bố đúng, nhưng component scan rộng làm ranh giới cấu hình/package kém rõ hơn so với các import tập trung."
+      - id: D
+        answer: "Dùng @AutoConfiguration và AutoConfiguration.imports, đồng thời đặt class dưới base package của ứng dụng sử dụng để component scan và auto-configuration discovery dùng chung một ranh giới."
+        explanation: "Sai. Auto-configuration đã được công bố nên phải độc lập với package layout của ứng dụng sử dụng, kể cả khi cơ chế discovery của Boot đã cấu hình đúng."
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.CustomAuthoring/CustomAuthoring.md", anchor: "registration-and-package-boundaries"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: auto-configure-metadata-role
+    question: "Condition metadata do auto-configuration annotation processor tạo ra có vai trò gì?"
+    answers:
+      - id: A
+        answer: "Metadata tính trước kết quả cuối của các condition được hỗ trợ ngay lúc compile thư viện để Boot tái sử dụng kết quả mà không cần đánh giá lúc runtime."
+        explanation: "Sai. Compile-time metadata không thể biết Environment cuối cùng của ứng dụng sử dụng; việc đánh giá condition ở runtime vẫn là nguồn quyết định."
+      - id: B
+        answer: "Metadata lưu thông tin đăng ký candidate và ordering để Boot dựng lại AutoConfiguration.imports mà không cần đọc resource imports tương ứng."
+        explanation: "Sai. Candidate publication và ordering có cơ chế riêng; condition metadata chủ yếu hỗ trợ tối ưu việc lọc condition."
+      - id: C
+        answer: "Metadata lưu default value của configuration property do processor tìm thấy để property condition so sánh trước khi lookup Environment."
+        explanation: "Sai. Metadata không thay thế việc phân giải property từ Environment và cũng không phải kho chứa giá trị cấu hình của ứng dụng."
+      - id: D
+        answer: "Metadata có thể giúp Boot lọc sớm các auto-configuration candidate rõ ràng không khớp mà không thay đổi ý nghĩa runtime của các condition."
+        explanation: "Đúng. Metadata cung cấp optimization hint; ngữ nghĩa condition thực tế vẫn quyết định configuration có được áp dụng hay không."
+    correctAnswerId: D
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "7.CustomAuthoring/CustomAuthoring.md", anchor: "auto-configure-metadata"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: focused-context-test-choice
+    question: "Vì sao ApplicationContextRunner đặc biệt hữu ích khi kiểm thử một custom auto-configuration?"
+    answers:
+      - id: A
+        answer: "Nó nạp toàn bộ application configuration cho từng trường hợp, phù hợp khi cần kiểm thử auto-configuration với thứ tự startup tương đương production."
+        explanation: "Sai. Điểm mạnh của runner là context nhỏ và có kiểm soát, không phải bắt buộc kéo toàn bộ đồ thị cấu hình của ứng dụng vào mỗi test."
+      - id: B
+        answer: "Mỗi test có thể dựng một context nhỏ với property, cấu hình người dùng và biến thể classpath được kiểm soát, rồi kiểm tra bean kết quả."
+        explanation: "Đúng. Cách này làm rõ ma trận đầu vào của condition và giữ từng kịch bản auto-configuration độc lập, dễ quan sát."
+      - id: C
+        answer: "Nó đánh giá condition của các auto-configuration được chọn mà không refresh context, phù hợp để kiểm tra kết quả match mà không tạo bean."
+        explanation: "Sai. ApplicationContextRunner thường refresh một context thật và cho phép assert cả bean lẫn condition outcome sinh ra từ context đó."
+      - id: D
+        answer: "Nó tái sử dụng một ApplicationContext đã chuẩn bị qua nhiều biến thể property và classpath để giảm startup cost nhưng vẫn giữ condition isolation giữa các assertion."
+        explanation: "Sai. Mỗi lần run tạo context có kiểm soát riêng; tái sử dụng mutable context giữa các biến thể sẽ làm mất isolation mà runner cung cấp."
+    correctAnswerId: B
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "8.AutoConfigurationTesting/AutoConfigurationTesting.md", anchor: "application-context-runner"}
+    apiRelated: {controller: "", methodSignature: ""}
+
+  - id: starter-split-combine-role
+    question: "Phát biểu nào mô tả đúng nhất mối quan hệ giữa starter và auto-configuration?"
+    answers:
+      - id: A
+        answer: "Starter là artifact công bố auto-configuration candidate, còn autoconfigure artifact riêng chủ yếu mang các runtime library mà những candidate đó sử dụng."
+        explanation: "Sai. Candidate publication thuộc phía auto-configuration; starter chủ yếu cung cấp một lựa chọn dependency thuận tiện bao quanh integration đó."
+      - id: B
+        answer: "Khi starter dependency và auto-configuration class nằm chung một artifact, Boot có thể suy ra candidate từ starter dependency nên AutoConfiguration.imports không còn cần thiết."
+        explanation: "Sai. Gộp hai vai trò trong cùng artifact không thay đổi discovery; auto-configuration class vẫn phải được công bố qua cơ chế của Boot."
+      - id: C
+        answer: "Starter thường đóng gói một lựa chọn dependency thuận tiện quanh auto-configuration; phần tích hợp có thể tách hoặc gộp artifact tùy độ phức tạp và nhu cầu tái sử dụng."
+        explanation: "Đúng. Dependency convenience và conditional configuration là hai vai trò thiết kế khác nhau dù đôi khi cùng nằm trong một artifact."
+      - id: D
+        answer: "Tách starter và autoconfigure artifact chủ yếu làm đổi thời điểm condition chạy: starter thêm dependency trước, rồi autoconfigure artifact được kích hoạt ở một startup phase sau."
+        explanation: "Sai. Việc tách artifact là ranh giới packaging và reuse; nó không tạo một startup phase thứ hai cho việc đánh giá condition của auto-configuration."
+    correctAnswerId: C
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {file: "9.StarterSynthesis/StarterSynthesis.md", anchor: "starter-split-or-combine"}
+    apiRelated: {controller: "", methodSignature: ""}

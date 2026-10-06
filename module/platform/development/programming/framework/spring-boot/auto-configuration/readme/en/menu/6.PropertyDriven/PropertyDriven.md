@@ -1,1 +1,0 @@
-﻿# Property-driven configuration
