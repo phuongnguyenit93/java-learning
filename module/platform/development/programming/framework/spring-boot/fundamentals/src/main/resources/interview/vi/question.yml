@@ -27,4 +27,113 @@
 #         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
 # </interview-schema>
 
-questions: []
+questions:
+  - question: "Hãy giải thích Spring Boot xây trên Spring Framework như thế nào thay vì thay thế nó. Sau đó phân tích convention over configuration thay đổi các quyết định thiết lập của một nhóm ra sao, gồm khi nào nên dùng mặc định, ghi đè mặc định hoặc thay hẳn một quy ước."
+    answer: "Spring Framework vẫn sở hữu các cơ chế ứng dụng cốt lõi như ApplicationContext, đăng ký bean và dependency injection, transaction, Spring MVC/WebFlux cùng semantics của container. Spring Boot bổ sung bootstrap, quy ước, điều phối dependency, tích hợp auto-configuration, công cụ phục vụ phát triển và cách đóng gói thực thi quanh các cơ chế đó. Convention over configuration nghĩa là bắt đầu bằng mặc định đã được tài liệu hóa cho trường hợp phổ biến rồi chỉ ghi đè đúng quyết định khác với nhu cầu. Khi yêu cầu chỉ là một ngoại lệ hẹp, property hoặc hook được hỗ trợ thường là lựa chọn phù hợp; chỉ nên thay hẳn quy ước khi kiến trúc ứng dụng thực sự không khớp mặc định. Điểm cần giữ là Boot giảm các quyết định lặp lại nhưng vẫn để quyền kiểm soát tường minh và không tạo một container riêng thay Spring Framework."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Hãy mô tả một ứng dụng Boot đi từ JVM main(String[]) tới context đang chạy ở mức tổng quan. Phần giải thích nên dừng ở đâu trước khi trở thành nội dung lifecycle chi tiết của SpringApplication, và vì sao ranh giới đó hữu ích khi chẩn đoán lỗi?"
+    answer: "JVM đi vào main method bình thường của ứng dụng, rồi main giao việc bootstrap cho SpringApplication.run(primarySource, args). SpringApplication chuẩn bị environment và thiết lập ứng dụng, xác định dạng ứng dụng ở mức lớn, tạo ApplicationContext phù hợp, nạp các nguồn cấu hình, refresh context để thiết lập bean cùng các tích hợp được quản lý, rồi trả về context đang chạy. Sau đó ứng dụng tiếp tục sống tùy dạng runtime và các công việc non-daemon còn hoạt động; khi JVM shutdown có trật tự, context được đóng. Fundamentals nên dừng ở mô hình start/run/stop cấp cao này. Thứ tự event chính xác, thời điểm runner chạy, availability state, logging integration, task execution và các lifecycle hook khác thuộc application-runtime. Ranh giới này tránh việc dùng sơ đồ tổng quan như hợp đồng runtime chính xác và giúp phân loại lỗi thành trước Boot, trong bootstrap/refresh context hoặc sau khi ứng dụng đã chạy."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Một dịch vụ chuyển class @SpringBootApplication từ com.example.orders xuống com.example.orders.web, sau đó component trong com.example.orders.service không còn được phát hiện. Hãy chẩn đoán bằng cả composition của @SpringBootApplication và quy ước root package. Bạn sẽ cân nhắc cách sửa nào?"
+    answer: "@SpringBootApplication tổng hợp primary Boot configuration, việc bật auto-configuration và component scanning. Theo mặc định, component scanning bắt đầu từ package của primary configuration class và đi xuống các subpackage. Khi class bị chuyển xuống com.example.orders.web, ranh giới mặc định bị thu hẹp nên package ngang cấp com.example.orders.service nằm ngoài phạm vi scan. Cách sửa sạch nhất thường là đưa primary class trở lại root package hợp lý như com.example.orders. Nếu package layout đặc biệt là chủ ý, có thể khai báo scan base tường minh để diễn đạt cấu trúc đó, nhưng không nên dùng cấu hình scan chỉ để che một layout khó hiểu. Đây trước hết là vấn đề ranh giới component discovery; condition chi tiết của auto-configuration là một mảng khác."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Hãy so sánh Boot starter, các phiên bản dependency được quản lý, runtime classpath và auto-configuration. Nếu nhóm thêm web starter rồi sau đó ghi đè version của một dependency đang được Boot quản lý, trách nhiệm thay đổi ở từng bước thế nào và nhóm phải kiểm chứng điều gì?"
+    answer: "Starter là dependency metadata chọn một tập thư viện theo quy ước cho một khả năng; bản thân starter không đăng ký bean của ứng dụng. Tập managed dependency của Boot cung cấp baseline version đã được điều phối để các thư viện phổ biến có thể di chuyển cùng nhau. Các lựa chọn dependency này định hình runtime classpath, và classpath trở thành bằng chứng về công nghệ cùng dạng ứng dụng đang khả dụng. SpringApplication có thể dùng bằng chứng đó khi chọn application type và context ở mức lớn; auto-configuration đóng góp cấu hình phù hợp bên trong context khi các condition thỏa mãn. Vì vậy thêm web starter làm xuất hiện các class mới và có thể khiến web shape cùng server infrastructure trở nên khả dụng. Ghi đè managed version là quyết định khác: project chủ động rời version đã được Boot tuyển chọn cho dependency đó, nên một phần trách nhiệm tương thích quay lại nhóm. Nhóm cần kiểm tra dependency graph và khả năng tương thích khi chạy thay vì giả định baseline được quản lý vẫn bảo đảm tổ hợp mới."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Bạn sẽ giải thích các dạng non-web, Servlet và reactive thế nào cho một đồng đội đang nghĩ mọi ứng dụng Boot đều khởi động embedded server? Hãy nêu cả bằng chứng sẽ kiểm tra nếu một dịch vụ dự kiến non-web lại bất ngờ khởi động server."
+    answer: "Boot có thể tạo ApplicationContext non-web thông thường, Servlet web ApplicationContext hoặc reactive web ApplicationContext. Web server là hệ quả của web runtime shape cùng hạ tầng phù hợp, không phải định nghĩa của Spring Boot. Tiến trình non-web vẫn có Boot bootstrap, cấu hình, dependency injection và các tích hợp khác nhưng không cần lắng nghe HTTP. Servlet và reactive dùng các Spring web stack cùng context type khác nhau; khi cả MVC và WebFlux cùng có mặt, Boot thường ưu tiên Servlet/MVC application type trừ khi ứng dụng chủ động chọn khác. Nếu dịch vụ bất ngờ khởi động server, trước hết đọc startup output để tìm dấu hiệu về server và context, rồi kiểm tra dependency tree cùng runtime classpath xem web stack nào đã làm thay đổi dạng ứng dụng khả dụng. Sau bước đó, các quy tắc sâu về lựa chọn server và web runtime thuộc web-runtime."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Một tiến trình Boot đã tới main và bắt đầu SpringApplication bootstrap, nhưng context refresh thất bại vì không thỏa mãn một bean dependency bắt buộc. Bạn nên lập luận về lỗi này thế nào trước khi dùng các công cụ chẩn đoán chuyên sâu?"
+    answer: "Hãy xác định lớp lỗi trước thay vì bám vào stack frame có tên quen thuộc. JVM đã tới main nên đây không còn là lỗi khởi chạy Java/process ban đầu. Vì ApplicationContext không thể refresh do bean creation hoặc dependency injection, phân loại hữu ích đầu tiên là lỗi Spring container. Từ đó lần theo thông báo lỗi có ý nghĩa xuất hiện sớm nhất và root cause trong chuỗi tạo bean hoặc phân giải dependency. Nếu bằng chứng sau đó cho thấy bean thiếu vì một auto-configuration cụ thể không match hoặc đã back off, lúc đó mới chuyển sang diagnostics của auto-configuration và lập luận condition. Nếu startup đã thành công và câu hỏi trở thành trạng thái vận hành của dịch vụ đang chạy, đó là lúc dùng Actuator."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.StartupObservation/StartupObservation.md"
+      anchor: "startup-failure-classes"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Vì sao DevTools automatic restart có thể nhanh hơn cold JVM restart, và vì sao chỉ lưu source file đôi khi vẫn không gây restart? Hãy giải thích thêm cách mô hình hai ClassLoader tạo ra một giả thuyết chẩn đoán hữu ích."
+    answer: "DevTools tách các dependency JAR tương đối ổn định vào base ClassLoader và các application class đang được phát triển vào restart ClassLoader. Khi phát hiện cập nhật phù hợp trên runtime classpath, DevTools có thể bỏ restart ClassLoader cũ, tạo loader mới và restart ApplicationContext trong khi giữ base loader đã được nạp, nên thường rẻ hơn restart toàn bộ JVM process. Chỉ lưu source code chưa chắc làm runtime classpath thay đổi; source phải được compile hoặc copy để class/resource mới thực sự tới thư mục classpath đang được theo dõi. Mô hình hai loader cũng giải thích một nhóm lỗi về class identity hoặc hành vi thư viện. Nếu thư viện giả định quan hệ classloader cố định, hoặc một shared module bị nạp vào loader không mong muốn, hành vi có thể khác khi bật DevTools; nếu tắt restart làm triệu chứng biến mất thì vị trí classloader là hướng chẩn đoán mạnh tiếp theo."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Một nhóm muốn bật Remote DevTools trên bản triển khai vận hành thực tế để lập trình viên có thể làm mới và kiểm tra dịch vụ từ xa. Bạn sẽ đánh giá đề xuất đó thế nào và thiết lập ranh giới công cụ vận hành ra sao?"
+    answer: "Không nên dùng Remote DevTools như cơ chế vận hành trong môi trường thực tế. Đây là quy trình phát triển phải bật chủ động, yêu cầu phía ứng dụng từ xa có DevTools cùng remote secret; Boot coi tính năng này nhạy cảm về bảo mật, khuyến nghị mạng tin cậy hoặc SSL cho trường hợp phát triển và nêu rõ không bao giờ nên bật trên bản triển khai vận hành thực tế. Một secret mạnh hay việc chỉ bật trong lúc xử lý sự cố không làm mất ranh giới đó. Với môi trường vận hành, nên dùng công cụ được thiết kế cho dịch vụ đang chạy, chẳng hạn Actuator cho health, tích hợp metrics, loggers và các endpoint quản lý/chẩn đoán, đi kèm các quyết định phơi bày endpoint và bảo mật thông thường của ứng dụng. DevTools nên tiếp tục phục vụ mục tiêu rút ngắn vòng phản hồi khi phát triển."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Hãy giải thích luồng khởi chạy của một executable Spring Boot JAR điển hình từ java -jar tới SpringApplication.run. Manifest Main-Class, Start-Class và Boot launcher khác nhau ra sao, và Fundamentals nên bàn giao chi tiết đóng gói ở đâu?"
+    answer: "Trong executable Boot JAR điển hình, java -jar đi theo manifest Main-Class, và Main-Class trỏ tới Boot launcher chứ không trực tiếp tới class main logic của ứng dụng. Launcher hiểu layout của Boot archive, thiết lập truy cập tới các class ứng dụng cùng các dependency JAR lồng bên trong, đọc Start-Class đã cấu hình để xác định class điểm vào của ứng dụng rồi gọi main method của class đó. Từ đây ứng dụng quay về luồng bootstrap quen thuộc: main gọi SpringApplication.run. Vì vậy cơ chế đóng gói thay đổi cách JVM tìm tới ứng dụng cùng các dependency, nhưng không thay thế luồng bootstrap logic của ứng dụng. Fundamentals chỉ cần giữ mô hình này; chi tiết bootJar hoặc Maven repackage, nội bộ launcher, layout thay thế, layers, archive có khả năng tái lập, OCI image và Buildpacks thuộc build-tooling-packaging."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Trong một buổi rà soát thiết kế xuất hiện các câu hỏi về property precedence, lý do auto-configuration back off, thứ tự chính xác của runner/event, TLS và graceful shutdown, health/metrics trong môi trường vận hành, Boot test slice và cách đóng gói executable image. Hãy chỉ ra module chịu trách nhiệm cho từng nhóm và giải thích vì sao việc điều hướng trách nhiệm thuộc mô hình tư duy của Fundamentals."
+    answer: "Đưa property source, precedence, profile, binding và Config Data sang externalized-configuration. Đưa condition matching, back-off, exclusions và custom auto-configuration sang auto-configuration. Đưa vòng đời SpringApplication chi tiết, event, runner, availability, logging cùng tích hợp runtime sang application-runtime. Đưa chi tiết nhận diện web application, cấu hình embedded server, TLS, proxy và graceful shutdown sang web-runtime. Đưa các endpoint vận hành, health, tích hợp metrics và chẩn đoán vận hành sang actuator. Đưa Boot test bootstrap và slices sang testing. Đưa Boot build plugins, cơ chế executable archive, layers, OCI image và Buildpacks sang build-tooling-packaging. Fundamentals chịu trách nhiệm cho bản đồ này vì vai trò của nó là kết nối mô hình Boot từ đầu đến cuối, đồng thời giữ các cơ chế chuyên sâu ở đúng module ngang hàng để tránh lặp lại nội dung học."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "9.FundamentalsSynthesis/FundamentalsSynthesis.md"
+      anchor: "ownership-handoff-map"
+    apiRelated:
+      controller: ""
+      methodSignature: ""

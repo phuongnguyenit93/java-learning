@@ -27,4 +27,113 @@
 #         Exact method signature in api-descriptions.yml, for example startVsRun().
 # </interview-schema>
 
-questions: []
+questions:
+  - question: "Explain how Spring Boot builds on Spring Framework rather than replacing it. Then describe how convention over configuration changes a team's setup decisions, including when accepting a default, overriding it, or replacing a convention is the right trade-off."
+    answer: "Spring Framework still owns the core application mechanisms: ApplicationContext, bean registration and dependency injection, transactions, Spring MVC/WebFlux, and related container semantics. Spring Boot adds bootstrap support, conventions, dependency coordination, auto-configuration integration, development tooling, and executable packaging around those mechanisms. Convention over configuration means starting from a documented default that fits the common case, then overriding only the decision that differs. A supported property or hook is preferable when the requirement is a narrow exception; replacing a convention is justified when the application's architecture truly does not fit the default. The key reasoning is that Boot reduces repeated decisions without taking away explicit control or creating a separate container."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Walk through a typical Boot application from JVM main(String[]) to a running context at a coarse level. Where should your explanation stop before it becomes detailed SpringApplication lifecycle material, and why does that boundary matter during diagnosis?"
+    answer: "The JVM enters the application's ordinary main method, which delegates bootstrap to SpringApplication.run(primarySource, args). SpringApplication prepares the environment and application settings, determines the broad application shape, creates the appropriate ApplicationContext, loads configuration sources, refreshes the context so managed beans and integrations can be established, and returns a running context. From there the application stays alive according to its runtime shape and active non-daemon work, and an orderly JVM shutdown closes the context. Fundamentals should stop at this coarse start/run/stop model. Exact event ordering, runner timing, availability states, logging integration, task execution, and other lifecycle hooks belong to application-runtime. That boundary prevents a coarse diagram from being mistaken for the exact runtime contract and helps triage failures as before Boot, during context bootstrap/refresh, or after the application is already running."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "A service moved its @SpringBootApplication class from com.example.orders to com.example.orders.web, and components under com.example.orders.service stopped appearing. Explain the diagnosis using both the composition of @SpringBootApplication and the root-package convention. What fixes would you consider?"
+    answer: "@SpringBootApplication composes primary Boot configuration, auto-configuration enablement, and component scanning. By default, component scanning begins from the package of the primary configuration class and covers its subpackages. Moving the class down into com.example.orders.web narrows that natural boundary, so the sibling com.example.orders.service package is no longer inside the default scan path. The cleanest fix is usually to place the primary class back in a sensible application root such as com.example.orders. If the package structure is intentionally unusual, an explicit scan base can express that structure, but it should not be used merely to hide a confusing layout. The failure is primarily a component-discovery boundary issue; detailed auto-configuration condition reasoning is a separate concern."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Compare a Boot starter, managed dependency versions, the runtime classpath, and auto-configuration. If a team adds a web starter and later overrides one managed library version, what responsibilities changed at each step and what must the team verify?"
+    answer: "A starter is dependency metadata that selects a conventional set of libraries for a capability; it does not itself register application beans. Boot's managed dependency set provides a coordinated version baseline so common libraries can move together. Those dependency choices shape the runtime classpath, which becomes evidence about what technologies and application shapes are available. SpringApplication can use that evidence when choosing the broad application type and context, while auto-configuration contributes matching configuration inside the context when its conditions are satisfied. Adding a web starter therefore changes available classes and may make a web shape and server infrastructure possible. Overriding a managed library version is different: the project intentionally departs from Boot's curated version for that library, so some compatibility responsibility moves back to the team. They should verify the resulting dependency graph and runtime compatibility rather than assuming the managed baseline still guarantees the combination."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "How would you explain the non-web, Servlet, and reactive application shapes to a teammate who thinks every Boot application starts an embedded server? Include the evidence you would inspect if a supposedly non-web service unexpectedly starts one."
+    answer: "Boot can create a plain non-web ApplicationContext, a Servlet web ApplicationContext, or a reactive web ApplicationContext. A web server is a consequence of a web runtime shape and matching infrastructure, not the definition of Spring Boot. A non-web process can still use Boot bootstrap, configuration, dependency injection, and other integrations without listening for HTTP. Servlet and reactive shapes use different Spring web stacks and context types, and when both MVC and WebFlux are present Boot normally prefers the Servlet/MVC application type unless the application explicitly chooses otherwise. If a service unexpectedly starts a server, first read startup output for server and context evidence, then inspect the dependency tree and runtime classpath for a web stack that may have changed the available application shape. After that, deeper server-selection and web-runtime rules belong to web-runtime."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "A Boot process reaches main and begins SpringApplication bootstrap, but context refresh fails because a required bean dependency cannot be satisfied. How should you reason about the failure before reaching for specialized diagnostics?"
+    answer: "Start by locating the failing layer instead of reacting to whichever stack-frame name looks familiar. The JVM already reached main, so this is not an initial Java/process launch failure. Because the ApplicationContext cannot refresh due to bean creation or dependency injection, the first useful classification is a Spring container failure. Follow the earliest meaningful failure message and root cause through the bean-creation or dependency-resolution chain. If the evidence later shows that the bean is missing because a specific auto-configuration did not match or backed off, then hand the question to auto-configuration diagnostics such as condition reasoning. If startup succeeds and the question becomes the operational state of the running service, that is where Actuator becomes appropriate."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.StartupObservation/StartupObservation.md"
+      anchor: "startup-failure-classes"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Why can DevTools automatic restart be faster than a cold JVM restart, and why might saving a source file still produce no restart? Describe how the two-ClassLoader model also creates a useful failure hypothesis."
+    answer: "DevTools separates relatively stable dependency JARs into a base ClassLoader and application classes being actively developed into a restart ClassLoader. When it detects a relevant runtime-classpath update, it can discard and recreate the restart ClassLoader and restart the ApplicationContext while keeping the already populated base loader, which is usually cheaper than restarting the whole JVM process. Saving source code alone is not always a runtime-classpath change: the source must be compiled or copied so updated classes or resources reach a watched classpath directory. The two-loader model can also explain class identity or library-behavior problems. If a library assumes a particular classloader relationship, or a shared module lands in an unexpected loader, behavior can differ under DevTools; if disabling restart removes the symptom, classloader placement becomes a strong next diagnostic direction."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "A team wants Remote DevTools enabled on a production deployment so developers can refresh and inspect the service remotely. How would you assess that proposal, and what tooling boundary would you establish instead?"
+    answer: "Reject Remote DevTools as a production operating mechanism. It is an opt-in development workflow that requires DevTools on the remote side and a remote secret; Boot explicitly treats it as security-sensitive, recommends trusted networking or SSL for its development use, and says it should never be enabled on a production deployment. That warning is not removed by a strong secret or by enabling the feature only during an incident. The production boundary should use tooling designed for running services, such as Actuator for health, metrics integration, loggers, and management/diagnostic endpoints, with the application's normal security and exposure decisions. DevTools should remain focused on shortening the development feedback loop."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Explain the launch path of a typical executable Spring Boot JAR from java -jar to SpringApplication.run. How do manifest Main-Class, Start-Class, and the Boot launcher differ, and where should Fundamentals hand packaging details off?"
+    answer: "In a typical executable Boot JAR, java -jar follows the archive manifest Main-Class, which points to a Boot launcher rather than directly to the application's logical main class. The launcher understands the Boot archive layout, establishes access to application classes and nested dependency JARs, reads the configured Start-Class as the application entry class, and invokes that class's main method. The application then follows the same logical bootstrap as before: main calls SpringApplication.run. Packaging therefore changes how the JVM reaches the application and its dependencies; it does not replace the application's logical bootstrap. Fundamentals should keep that mental model and hand detailed bootJar or Maven repackage behavior, loader internals, alternative layouts, layers, reproducible archives, OCI images, and Buildpacks to build-tooling-packaging."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ""
+      anchor: ""
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Suppose a design review raises these questions: property precedence, why an auto-configuration backed off, exact runner/event timing, TLS and graceful shutdown, production health/metrics, Boot test slices, and executable-image packaging. Show how you would route each concern and explain why ownership routing is part of the Fundamentals mental model."
+    answer: "Route property sources, precedence, profiles, binding, and Config Data to externalized-configuration. Route condition matching, back-off, exclusions, and custom auto-configuration to auto-configuration. Route detailed SpringApplication lifecycle, events, runners, availability, logging, and related runtime integration to application-runtime. Route web application detection details, embedded-server configuration, TLS, proxy handling, and graceful shutdown to web-runtime. Route production endpoints, health, metrics integration, and operational diagnostics to actuator. Route Boot test bootstrap and slices to testing. Route Boot build plugins, executable archive mechanics, layers, OCI images, and Buildpacks to build-tooling-packaging. Fundamentals owns this map because its job is to connect the end-to-end Boot model while preventing one introductory module from duplicating the deeper mechanisms owned by its siblings."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "9.FundamentalsSynthesis/FundamentalsSynthesis.md"
+      anchor: "ownership-handoff-map"
+    apiRelated:
+      controller: ""
+      methodSignature: ""

@@ -38,4 +38,378 @@
 #       ID nội bộ của đáp án đúng. Frontend kiểm tra bằng identity này sau khi shuffle.
 # </quiz-schema>
 
-questions: []
+questions:
+  - id: "boot-vs-framework-boundary"
+    question: "Một thành viên trong nhóm nói rằng ứng dụng Spring Boot chạy trên một container riêng thay thế Spring Framework. Cách sửa nào phù hợp nhất với mô hình Fundamentals?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.SpringBootPurpose/SpringBootPurpose.md"
+      anchor: "boot-vs-framework"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Boot thay ApplicationContext bằng container riêng của Boot, còn Spring Framework chủ yếu cung cấp annotation và utility API."
+        explanation: "Boot không tạo một dependency-injection container thay thế. Ứng dụng Boot thông thường vẫn chạy trên Spring ApplicationContext."
+      - id: B
+        answer: "Boot thông thường chạy một Spring ApplicationContext và bổ sung quy ước, hỗ trợ bootstrap, điều phối dependency cùng các tích hợp quanh cơ chế của Spring."
+        explanation: "Cách hiểu này giữ đúng ranh giới: Spring Framework cung cấp cơ chế container/framework cốt lõi, còn Boot giúp ghép và khởi động các tổ hợp phổ biến dễ hơn."
+      - id: C
+        answer: "Spring Framework chỉ chịu trách nhiệm dependency injection, còn Boot sở hữu Spring MVC, transaction và application container khi Boot có trên classpath."
+        explanation: "Spring MVC, transaction và ApplicationContext vẫn là phần của Spring Framework; Boot tích hợp và cấu hình chúng chứ không chuyển quyền sở hữu các cơ chế đó."
+      - id: D
+        answer: "Boot chủ yếu là lớp đóng gói executable, còn runtime container của ứng dụng không liên quan tới Spring Framework."
+        explanation: "Executable packaging chỉ là một khả năng của Boot; Boot còn tham gia bootstrap và tích hợp một ứng dụng Spring thông thường."
+    correctAnswerId: B
+
+  - id: "convention-over-configuration-decision"
+    question: "Một nhóm dùng cùng mặc định của Boot ở mọi môi trường, nhưng giờ một môi trường cần hành vi khác. Thay đổi nào tuân theo convention over configuration tốt nhất mà vẫn giữ quyền kiểm soát?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.SpringBootPurpose/SpringBootPurpose.md"
+      anchor: "convention-over-configuration"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Giữ mặc định của Boot và đưa khác biệt vào logic ứng dụng để mọi môi trường tiếp tục dùng cùng một cấu hình Boot."
+        explanation: "Cách này giữ một cấu hình Boot thống nhất, nhưng lại đẩy khác biệt hạ tầng vốn có thể cấu hình vào code ứng dụng thay vì dùng đúng điểm điều khiển."
+      - id: B
+        answer: "Thay mặc định của Boot bằng một thành phần hạ tầng tùy chỉnh dùng ở mọi môi trường để tập trung toàn bộ khác biệt môi trường bên ngoài quy ước."
+        explanation: "Tập trung như vậy hữu ích khi quy ước không đủ, nhưng thay ở mọi nơi là không cần thiết nếu khác biệt đã có thể cấu hình trực tiếp."
+      - id: C
+        answer: "Giữ mặc định của Boot cho trường hợp chung, đổi môi trường khác biệt qua điểm cấu hình được hỗ trợ, và chỉ thay quy ước nếu điểm điều khiển đó không đủ."
+        explanation: "Cách này giữ mặc định hữu ích cho trường hợp chung đồng thời dùng đúng ranh giới ghi đè được hỗ trợ cho ngoại lệ thực sự."
+      - id: D
+        answer: "Giữ nguyên code ứng dụng và thay tập dependency theo môi trường để Boot suy ra hành vi khác từ classpath thay vì đổi cấu hình."
+        explanation: "Classpath là một đầu vào thực của Boot, nhưng đổi khả năng hoặc dạng được suy ra là sai đòn bẩy cho hành vi có thể cấu hình trực tiếp."
+    correctAnswerId: C
+
+  - id: "springapplication-main-to-context"
+    question: "Cách hiểu tổng quan nào đúng nhất về SpringApplication.run(MyApplication.class, args) trong main method của một ứng dụng Boot điển hình?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.ApplicationBootstrap/ApplicationBootstrap.md"
+      anchor: "main-to-context"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Nó dùng primary source và arguments để chuẩn bị Spring context phù hợp, nạp cấu hình, refresh context rồi trả về ApplicationContext đang chạy."
+        explanation: "Đây là mô hình bootstrap của Fundamentals: main bàn giao việc khởi động cho SpringApplication và kết quả là một Spring ApplicationContext thực sự."
+      - id: B
+        answer: "Nó chỉ tạo một đối tượng MyApplication và trả về đối tượng đó sau khi gán command-line arguments vào các trường."
+        explanation: "Primary source là đầu vào cấu hình/bootstrap; SpringApplication.run không chỉ là thao tác gọi constructor cho lớp ứng dụng."
+      - id: C
+        answer: "Nó đóng gói dependencies trước, sau đó khởi động embedded server rồi mới tạo Spring context nếu có hỗ trợ web."
+        explanation: "Đóng gói là mảng build và bàn giao, còn ứng dụng Boot có thể là non-web. Context bootstrap không phụ thuộc vào việc đóng gói embedded server."
+      - id: D
+        answer: "Nó thay JVM main method bằng một event loop ẩn của Boot, rồi Spring context mới được phát hiện sau khi loop đã chạy."
+        explanation: "Java main method thông thường vẫn là điểm vào; chính main gọi SpringApplication để tạo và khởi động context."
+    correctAnswerId: A
+
+  - id: "lifecycle-detail-handoff"
+    question: "Bạn cần biết chính xác thứ tự Boot event và thời điểm ApplicationRunner thực thi. Bước tiếp theo đúng là gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.ApplicationBootstrap/ApplicationBootstrap.md"
+      anchor: "runtime-handoff"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Ở lại Fundamentals và suy ra thứ tự event chính xác từ sơ đồ start/run/stop tổng quan."
+        explanation: "Vòng đời trong Fundamentals cố ý ở mức thô và không nên được xem như mô tả chính xác thứ tự các event runtime."
+      - id: B
+        answer: "Chuyển sang web-runtime vì thứ tự event khởi động chi tiết chủ yếu do vòng đời embedded server quyết định."
+        explanation: "Ứng dụng Boot có thể là non-web; các event vòng đời ứng dụng và runner không phải mảng chịu trách nhiệm chính của web server."
+      - id: C
+        answer: "Chuyển sang auto-configuration vì thời điểm ApplicationRunner chạy là một phần của condition matching và back-off."
+        explanation: "Việc đánh giá condition và back-off thuộc auto-configuration, nhưng thời điểm runner chạy thuộc vòng đời runtime của ứng dụng."
+      - id: D
+        answer: "Giữ mô hình thô trước/trong/sau context của Fundamentals và chuyển câu hỏi event, runner chính xác sang application-runtime."
+        explanation: "Cách này giữ đúng ranh giới Fundamentals đồng thời đưa thuật ngữ vòng đời chi tiết về đúng module chịu trách nhiệm."
+    correctAnswerId: D
+
+  - id: "springbootapplication-composition"
+    question: "Phân rã nào giải thích đúng @SpringBootApplication tổng hợp những gì ở mức Fundamentals?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.PrimaryConfiguration/PrimaryConfiguration.md"
+      anchor: "springbootapplication-composition"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "@Configuration, @Bean và @Import, kết hợp khai báo cấu hình, factory method và import configuration tường minh."
+        explanation: "Đây là các khái niệm cấu hình của Spring, nhưng không phải ba annotation được @SpringBootApplication tổng hợp."
+      - id: B
+        answer: "@SpringBootConfiguration, @EnableAutoConfiguration và @ComponentScan, kết hợp primary configuration, bật Boot auto-configuration và component discovery."
+        explanation: "Đây là ba trách nhiệm được tổng hợp và giải thích vì sao primary class nhỏ vẫn tạo được thiết lập mặc định hữu ích."
+      - id: C
+        answer: "@EnableScheduling, @ConfigurationPropertiesScan và @ComponentScan, kết hợp scheduling, discovery cho property binding và component discovery."
+        explanation: "Các tính năng này có thể xuất hiện trong ứng dụng Boot nhưng không phải composition của @SpringBootApplication."
+      - id: D
+        answer: "@SpringBootConfiguration, @RestController và @EnableAutoConfiguration, kết hợp primary configuration, HTTP request handling và automatic configuration."
+        explanation: "@RestController là annotation của Spring MVC và không nằm trong composition của @SpringBootApplication."
+    correctAnswerId: B
+
+  - id: "root-package-component-scan"
+    question: "OrdersApplication được chuyển từ com.example.orders xuống com.example.orders.web. Một component ở package cùng cấp com.example.orders.service không còn được phát hiện. Giải thích trực tiếp nhất ở mức Fundamentals là gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.PrimaryConfiguration/PrimaryConfiguration.md"
+      anchor: "root-package-boundary"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Việc di chuyển làm thay đổi managed dependency versions nên component metadata của service package không còn tương thích."
+        explanation: "Vị trí package không thay tập phiên bản dependency được quản lý; triệu chứng này liên quan phạm vi phát hiện component."
+      - id: B
+        answer: "Web package khiến auto-configuration tắt component scanning sau khi suy ra Servlet application type."
+        explanation: "Dạng ứng dụng web không mặc định tắt component scanning; vấn đề nằm ở ranh giới quét mặc định."
+      - id: C
+        answer: "Primary class giờ tạo ranh giới component scanning mặc định quá sâu, khiến service package cùng cấp nằm ngoài phạm vi tìm kiếm."
+        explanation: "Đặt primary class ở root package hợp lý giúp component scanning mặc định bao phủ các subpackage của ứng dụng."
+      - id: D
+        answer: "SpringApplication chuyển sang non-web context khi primary class nằm sâu dưới project root nên service component bị bỏ qua."
+        explanation: "Dạng ứng dụng phụ thuộc classpath và cấu hình, không phụ thuộc độ sâu package Java của primary class."
+    correctAnswerId: C
+
+  - id: "managed-dependency-version-override"
+    question: "Một project dùng dependency management được Boot hỗ trợ, sau đó ghi đè tường minh version của một managed library để lấy bản sửa cần thiết. Cách hiểu nào chính xác nhất?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.StartersAndClasspath/StartersAndClasspath.md"
+      anchor: "managed-dependencies"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Xem các managed version của Boot là tập phiên bản chuẩn đã được điều phối; ghi đè cho nhu cầu cụ thể rồi kiểm chứng tương thích vì thư viện đó đã khác tổ hợp được tuyển chọn."
+        explanation: "Dependency management cung cấp tập phiên bản chuẩn được hỗ trợ chứ không phải luật bất biến. Khi chủ động ghi đè, một phần trách nhiệm tương thích quay lại nhóm ứng dụng."
+      - id: B
+        answer: "Dựa vào dependency management để mọi transitive dependency tự hội tụ về tổ hợp tương thích, nên version đã ghi đè vẫn có cùng mức bảo đảm như tập phiên bản được quản lý."
+        explanation: "Cơ chế phân giải có thể hội tụ version, nhưng điều đó không khiến một lần ghi đè bất kỳ thừa hưởng bảo đảm tương thích của tập version Boot đã tuyển chọn."
+      - id: C
+        answer: "Xem version đã ghi đè vẫn nằm trong tập phiên bản chuẩn của Boot miễn là dự án còn dùng Boot BOM hoặc Boot build plugin."
+        explanation: "BOM hoặc plugin cung cấp cơ chế quản lý dependency, nhưng chọn một version khác vẫn đưa thư viện đó ra ngoài version mà Boot đã tuyển chọn."
+      - id: D
+        answer: "Xem việc ghi đè chỉ là chi tiết phân giải dependency khi build; nếu dependency được phân giải và code biên dịch thành công thì trách nhiệm tương thích vẫn hoàn toàn thuộc về Boot."
+        explanation: "Build thành công chỉ chứng minh dependency được phân giải và code biên dịch, không chứng minh khả năng tương thích khi chạy với phần còn lại của hệ sinh thái Boot."
+    correctAnswerId: A
+
+  - id: "classpath-web-type-vs-auto-configuration"
+    question: "Một ứng dụng trước đây là non-web thêm Servlet web stack thông thường. Chuỗi nào tách đúng trách nhiệm của SpringApplication và auto-configuration?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.StartersAndClasspath/StartersAndClasspath.md"
+      anchor: "classpath-driven-behavior"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Starter thêm các class web rồi tự chọn Servlet ApplicationContext; auto-configuration chủ yếu áp dụng cấu hình server bên trong context đã chọn."
+        explanation: "Starter định hình classpath nhưng không chọn context. SpringApplication mới chịu trách nhiệm chọn dạng ứng dụng lớn và context tương ứng."
+      - id: B
+        answer: "Auto-configuration đọc web classpath rồi chọn WebApplicationType trước; SpringApplication sau đó tạo context đó và refresh hạ tầng đã được chọn."
+        explanation: "Cách này đảo ngược trách nhiệm: SpringApplication xác định dạng ứng dụng lớn và tạo context tương ứng."
+      - id: C
+        answer: "SpringApplication tạo một context chung rồi refresh trước; sau đó auto-configuration phát hiện web stack, chuyển context sang Servlet và thêm server."
+        explanation: "Dạng ứng dụng và context phù hợp được chọn trước refresh; auto-configuration không chuyển đổi một context chung đã refresh xong."
+      - id: D
+        answer: "SpringApplication dùng classpath và cấu hình để xác định WebApplicationType rồi tạo context tương ứng; auto-configuration đóng góp hạ tầng server phù hợp trong lúc xây context."
+        explanation: "Cách này giữ việc chọn dạng ứng dụng/context ở SpringApplication và việc đóng góp hạ tầng có điều kiện ở auto-configuration trong quá trình xây context."
+    correctAnswerId: D
+
+  - id: "startup-evidence-unexpected-server"
+    question: "Một dịch vụ dự kiến non-web nhưng lại khởi động embedded server. Điều tra đầu tiên mạnh nhất ở mức Fundamentals là gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.ApplicationShapes/ApplicationShapes.md"
+      anchor: "classpath-changes-runtime-shape"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Xác nhận server trong đầu ra lúc khởi động rồi kiểm tra cấu hình đang có hiệu lực xem cấu hình server hoặc profile nào vừa thay đổi trước khi xem dependency tree."
+        explanation: "Cấu hình có thể thay đổi chi tiết của server, nhưng cấu hình server thông thường không tự giải thích vì sao runtime web trở nên khả dụng."
+      - id: B
+        answer: "Đọc đầu ra lúc khởi động để tìm dấu hiệu server/context rồi kiểm tra dependency tree hoặc classpath xem có web stack làm thay đổi dạng ứng dụng khả dụng hay không."
+        explanation: "Log lúc khởi động cung cấp bằng chứng về dạng runtime, còn classpath là tín hiệu trực tiếp có thể làm dạng ứng dụng web trở nên khả dụng."
+      - id: C
+        answer: "Xác nhận server trong đầu ra lúc khởi động rồi kiểm tra component scanning và các controller được phát hiện vì request handler mới có thể đã làm xuất hiện runtime web."
+        explanation: "Controller ảnh hưởng request handling, nhưng việc phát hiện controller không phải tín hiệu khiến SpringApplication suy ra dạng ứng dụng web hay bật hạ tầng server."
+      - id: D
+        answer: "Xác nhận server trong đầu ra lúc khởi động rồi so sánh launcher đã đóng gói và main class vì điểm vào khác có thể đã chọn một web context."
+        explanation: "Đóng gói quyết định JVM đi tới ứng dụng thế nào, nhưng SpringApplication vẫn xác định context ứng dụng từ các đầu vào bootstrap của nó."
+    correctAnswerId: B
+
+  - id: "startup-failure-layer"
+    question: "JVM đã tới main và SpringApplication bắt đầu startup, nhưng context refresh thất bại vì một bean dependency bắt buộc không được thỏa mãn. Nên điều tra nhóm lỗi nào trước?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.StartupObservation/StartupObservation.md"
+      anchor: "startup-failure-classes"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Java/process failure, vì mọi exception lúc startup đều có nghĩa JVM hỏng trước khi Boot thật sự bắt đầu."
+        explanation: "JVM đã tới main và Boot đã bắt đầu bootstrap, nên lỗi này nằm sau lớp Java/process ban đầu."
+      - id: B
+        answer: "Lỗi trạng thái vận hành, vì bean bị thiếu nên được chẩn đoán qua health và metrics sau khi ứng dụng đã khởi động."
+        explanation: "Context chưa refresh thành công, nên đây là vấn đề startup/container chứ chưa phải vấn đề trạng thái vận hành sau startup."
+      - id: C
+        answer: "Lỗi Spring container, lần theo nguyên nhân gốc và thông báo về tạo bean hoặc tiêm dependency có ý nghĩa sớm nhất."
+        explanation: "Bean dependency không được thỏa mãn trong context refresh là lỗi container cốt lõi; phân lớp này dùng để phân loại ban đầu trước khi đi sâu."
+      - id: D
+        answer: "Lỗi đóng gói, vì lỗi tiêm dependency thường có nghĩa executable JAR launcher chọn sai lớp ứng dụng."
+        explanation: "Ứng dụng đã đi tới SpringApplication và context refresh, nên việc launcher chọn điểm vào không phải lớp lỗi trực tiếp."
+    correctAnswerId: C
+
+  - id: "devtools-restart-classloader-model"
+    question: "Vì sao DevTools automatic restart thường nhanh hơn cold JVM restart, và điều gì thực sự phải xảy ra để restart được phát hiện?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.DevTools/DevTools.md"
+      anchor: "restart-classloader-model"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Dependency jar ổn định ở base ClassLoader, application class đang thay đổi ở restart ClassLoader được tạo lại; DevTools phải phát hiện cập nhật phù hợp trên runtime classpath."
+        explanation: "Giữ dependency ổn định đã nạp giúp giảm công việc restart, và việc kích hoạt dựa trên thay đổi nhìn thấy trên classpath chứ không chỉ một lần sửa tệp nguồn."
+      - id: B
+        answer: "Dependency jar ổn định ở base ClassLoader và application class ở restart ClassLoader, nhưng chỉ cần lưu tệp nguồn là đủ kích hoạt restart dù chưa có class đã biên dịch mới."
+        explanation: "Vị trí loader là đúng, nhưng thay đổi tệp nguồn phải được biên dịch hoặc sao chép để thay đổi phù hợp thực sự đi tới thư mục runtime classpath đang được theo dõi."
+      - id: C
+        answer: "Application class nằm ở base ClassLoader còn dependency jar thay đổi nằm ở restart ClassLoader; khi classpath cập nhật thì chỉ phía dependency được tạo lại."
+        explanation: "Vị trí này bị đảo ngược. Dependency ổn định thường ở base loader, còn application class đang phát triển dùng restart loader."
+      - id: D
+        answer: "Cách đặt hai loader giống mô hình chuẩn, nhưng quy tắc restart include/exclude khiến việc lưu tệp nguồn trở thành kích hoạt dù runtime classpath chưa thay đổi."
+        explanation: "Quy tắc include/exclude có thể tinh chỉnh phạm vi restart hoặc cách phân bổ classloader, nhưng không loại bỏ yêu cầu nội dung thay đổi phải đi tới classpath được theo dõi."
+    correctAnswerId: A
+
+  - id: "remote-devtools-production-boundary"
+    question: "Một nhóm đề xuất bật Remote DevTools trên bản triển khai vận hành thực tế để lập trình viên kiểm tra và làm mới dịch vụ đang chạy. Phản hồi nào đúng nhất?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.DevTools/DevTools.md"
+      anchor: "remote-devtools-security"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Cho phép Remote DevTools trong môi trường vận hành nếu dịch vụ chỉ truy cập được từ mạng riêng và kết nối được bảo vệ bằng remote secret mạnh."
+        explanation: "Giới hạn mạng và secret giảm mức phơi bày, nhưng không thay đổi ranh giới rõ ràng của Boot rằng Remote DevTools không được bật trên bản triển khai vận hành thực tế."
+      - id: B
+        answer: "Đưa DevTools vào artifact dùng cho vận hành nhưng tắt restart và LiveReload, chỉ giữ kênh từ xa cho việc chẩn đoán có kiểm soát chặt."
+        explanation: "Bản thân hỗ trợ từ xa là tính năng phát triển nhạy cảm về bảo mật; tắt các khả năng khác không biến kênh này thành công cụ dành cho môi trường vận hành."
+      - id: C
+        answer: "Chỉ bật Remote DevTools tạm thời khi xử lý sự cố vận hành, bảo vệ bằng SSL và secret, rồi gỡ bỏ ngay sau khi chẩn đoán xong."
+        explanation: "Dùng tạm thời và tăng bảo vệ đường truyền vẫn vi phạm ranh giới môi trường vận hành; chẩn đoán vận hành nên dùng công cụ được thiết kế cho mục đích đó."
+      - id: D
+        answer: "Giữ Remote DevTools cho quy trình phát triển, bảo vệ việc dùng từ xa bằng mạng tin cậy hoặc SSL, không bao giờ bật trong môi trường vận hành thực tế và dùng Actuator cho trạng thái vận hành."
+        explanation: "Cách này giữ cả hai ranh giới: bảo vệ quy trình phát triển từ xa ngoại lệ và dùng công cụ vận hành phù hợp cho dịch vụ đang chạy."
+    correctAnswerId: D
+
+  - id: "executable-jar-main-class-start-class"
+    question: "Với executable Spring Boot JAR điển hình, phát biểu nào phân biệt đúng điểm vào ở cấp archive của launcher với điểm vào logic của ứng dụng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "9.FundamentalsSynthesis/FundamentalsSynthesis.md"
+      anchor: "common-misconceptions"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Class ứng dụng là manifest Main-Class, còn Start-Class chỉ tên implementation của embedded server mà Boot cần khởi động."
+        explanation: "Trong layout thực thi chuẩn, Boot launcher là manifest Main-Class; Start-Class mới chỉ class main của ứng dụng."
+      - id: B
+        answer: "Manifest Main-Class trỏ tới Boot launcher, Start-Class xác định class ứng dụng, và launcher cuối cùng gọi main method của class ứng dụng đó."
+        explanation: "Cách này tách bootstrap ở cấp archive khỏi luồng bootstrap logic từ main của ứng dụng sang SpringApplication."
+      - id: C
+        answer: "Main-Class và Start-Class đều trỏ tới class ứng dụng, và Boot chỉ chọn một trong hai khi việc nạp dependency lồng thất bại."
+        explanation: "Hai thuộc tính có vai trò khác nhau: launcher và class điểm vào của ứng dụng, không phải hai điểm vào dự phòng giống nhau."
+      - id: D
+        answer: "Executable Boot JAR không cần class điểm vào của ứng dụng vì launcher tự scan BOOT-INF/classes để tìm một class có @SpringBootApplication."
+        explanation: "Launcher dùng start class đã cấu hình; nó không chọn class main của ứng dụng bằng cách scan annotation."
+    correctAnswerId: B
+
+  - id: "classpath-config-beans-vs-auto-configuration"
+    question: "Trong lúc Boot xây context, phát biểu nào tách đúng các đầu vào/tín hiệu khỏi cơ chế auto-configuration?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "9.FundamentalsSynthesis/FundamentalsSynthesis.md"
+      anchor: "classpath-configuration-conventions"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Classpath, đầu vào cấu hình và auto-configuration là ba đầu vào ngang hàng; bean ứng dụng chỉ được tạo sau khi mọi quyết định tự động đã kết thúc."
+        explanation: "Auto-configuration không phải một đầu vào ngang hàng, và bean hoặc bean definition hiện có có thể ảnh hưởng cấu hình trong lúc context đang được xây."
+      - id: B
+        answer: "Classpath và đầu vào cấu hình ảnh hưởng SpringApplication, còn bean ứng dụng chỉ liên quan sau refresh khi auto-configuration chạy như một giai đoạn tích hợp hậu khởi động."
+        explanation: "Auto-configuration được xử lý như cấu hình trong quá trình chuẩn bị và refresh context, không phải một giai đoạn riêng sau refresh."
+      - id: C
+        answer: "Classpath, đầu vào cấu hình và bean hoặc bean definition của ứng dụng là các tín hiệu; quy ước Boot và auto-configuration phản ứng với chúng trong lúc chuẩn bị và refresh context."
+        explanation: "Đây là mô hình tổng hợp: các đầu vào/tín hiệu tham gia quá trình xây context, còn auto-configuration là cơ chế cấu hình được áp dụng trong vòng đời đó."
+      - id: D
+        answer: "Starter chạy trước để biến đầu vào cấu hình thành bean; sau đó auto-configuration cung cấp classpath cho SpringApplication chọn context."
+        explanation: "Starter chủ yếu định hình dependency/classpath, còn auto-configuration không xây classpath cho SpringApplication."
+    correctAnswerId: C
+
+  - id: "fundamentals-ownership-routing"
+    question: "Sơ đồ điều hướng nào đưa các câu hỏi Spring Boot chuyên sâu về đúng module chịu trách nhiệm?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "9.FundamentalsSynthesis/FundamentalsSynthesis.md"
+      anchor: "ownership-handoff-map"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Property precedence -> externalized-configuration; lập luận condition/back-off -> auto-configuration; event/runner chi tiết -> application-runtime; TLS/proxy/graceful shutdown -> web-runtime."
+        explanation: "Các điểm bàn giao này khớp bản đồ trách nhiệm hiện tại và giữ Fundamentals tập trung vào mô hình tư duy chung thay vì lặp lại cơ chế chuyên sâu."
+      - id: B
+        answer: "Property precedence -> auto-configuration; lập luận condition/back-off -> Actuator; event/runner chi tiết -> web-runtime; TLS/proxy/graceful shutdown -> application-runtime."
+        explanation: "Cách này hoán đổi nhiều ranh giới trách nhiệm; từng vấn đề trong câu hỏi có module chuyên trách khác."
+      - id: C
+        answer: "Property precedence -> build-tooling-packaging; lập luận condition/back-off -> testing; event/runner chi tiết -> externalized-configuration; TLS/proxy/graceful shutdown -> Actuator."
+        explanation: "Các module này giải quyết những vấn đề lân cận nhưng không chịu trách nhiệm cho các cơ chế được nêu trong câu hỏi."
+      - id: D
+        answer: "Property precedence -> Fundamentals; lập luận condition/back-off -> Fundamentals; event/runner chi tiết -> Fundamentals; TLS/proxy/graceful shutdown -> Fundamentals."
+        explanation: "Fundamentals thiết lập định hướng và các điểm bàn giao; module này cố ý không hấp thụ toàn bộ các cơ chế chi tiết đó."
+    correctAnswerId: A

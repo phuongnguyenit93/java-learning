@@ -38,4 +38,378 @@
 #       Internal id of the correct answer. The frontend checks this identity after shuffling.
 # </quiz-schema>
 
-questions: []
+questions:
+  - id: "boot-vs-framework-boundary"
+    question: "A teammate says a Spring Boot application runs on a separate container that replaces Spring Framework. Which correction best matches the Fundamentals model?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.SpringBootPurpose/SpringBootPurpose.md"
+      anchor: "boot-vs-framework"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Boot replaces ApplicationContext with a Boot-specific container, while Spring Framework is used mainly for annotations and utility APIs."
+        explanation: "Boot does not introduce a replacement dependency-injection container. A Boot application normally runs a Spring ApplicationContext."
+      - id: B
+        answer: "Boot normally runs a Spring ApplicationContext and adds conventions, bootstrap support, dependency coordination, and integrations around Spring mechanisms."
+        explanation: "This preserves the ownership boundary: Spring Framework supplies core container/framework mechanisms, while Boot makes common combinations easier to assemble and run."
+      - id: C
+        answer: "Spring Framework owns only dependency injection, while Boot owns Spring MVC, transactions, and the application container once Boot is on the classpath."
+        explanation: "Spring MVC, transactions, and the ApplicationContext remain Spring Framework concerns; Boot integrates and configures them rather than taking ownership of those mechanisms."
+      - id: D
+        answer: "Boot is primarily an executable-packaging layer, and the runtime container used by the application is unrelated to Spring Framework."
+        explanation: "Executable packaging is one Boot capability, but Boot also participates in bootstrap and integration of a normal Spring application."
+    correctAnswerId: B
+
+  - id: "convention-over-configuration-decision"
+    question: "A team relies on the same Boot default in every environment, but one environment now needs different behavior. Which change best follows convention over configuration without giving up control?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.SpringBootPurpose/SpringBootPurpose.md"
+      anchor: "convention-over-configuration"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Keep the Boot default and encode the difference in application logic so every environment continues to share the same Boot configuration."
+        explanation: "This preserves one Boot configuration, but it moves a configurable infrastructure difference into application code instead of using the intended control point."
+      - id: B
+        answer: "Replace the Boot default with one custom infrastructure component used in every environment so all environment-specific behavior is centralized outside the convention."
+        explanation: "Centralization can be useful when the convention is inadequate, but replacing it everywhere is unnecessary when the difference is already configurable."
+      - id: C
+        answer: "Keep the Boot default for the common case, change the differing environment through the supported configuration point, and replace the convention only if that control is insufficient."
+        explanation: "This keeps the useful default for the common case while using the supported override boundary for the real exception."
+      - id: D
+        answer: "Keep application code unchanged and vary the environment's dependency set so Boot infers different behavior from the classpath instead of changing configuration."
+        explanation: "Classpath is a real Boot input, but changing capabilities or inferred shape is the wrong lever for behavior that is directly configurable."
+    correctAnswerId: C
+
+  - id: "springapplication-main-to-context"
+    question: "What is the best high-level interpretation of SpringApplication.run(MyApplication.class, args) in a typical Boot main method?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.ApplicationBootstrap/ApplicationBootstrap.md"
+      anchor: "main-to-context"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "It uses the primary source and arguments to prepare an appropriate Spring context, load configuration, refresh it, and return the running ApplicationContext."
+        explanation: "That is the Fundamentals bootstrap model: main delegates application startup to SpringApplication, whose result is a real Spring ApplicationContext."
+      - id: B
+        answer: "It constructs only an instance of MyApplication and returns that object after command-line arguments have been assigned to its fields."
+        explanation: "The primary source is configuration/bootstrap input; SpringApplication.run is not simply an object constructor for the application class."
+      - id: C
+        answer: "It first packages the application's dependencies, then launches an embedded server, and only afterward creates a Spring context if web support is present."
+        explanation: "Packaging is a build/delivery concern, and a Boot application can also be non-web. Context bootstrap is not conditional on packaging an embedded server."
+      - id: D
+        answer: "It replaces the JVM main method with a hidden Boot event loop, and the Spring context is discovered later after that loop is already running."
+        explanation: "The ordinary Java main method remains the entry point; it explicitly delegates to SpringApplication to create and start the context."
+    correctAnswerId: A
+
+  - id: "lifecycle-detail-handoff"
+    question: "You now need the exact Boot event ordering and the precise point at which ApplicationRunner executes. What is the correct next step?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.ApplicationBootstrap/ApplicationBootstrap.md"
+      anchor: "runtime-handoff"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Stay in Fundamentals and infer the exact event sequence from the generic start/run/stop diagram."
+        explanation: "The Fundamentals lifecycle is intentionally coarse and should not be treated as the exact runtime event contract."
+      - id: B
+        answer: "Move to web-runtime because detailed startup event ordering is primarily controlled by the embedded server lifecycle."
+        explanation: "A Boot application can be non-web; detailed application lifecycle events and runners are not fundamentally web-server concerns."
+      - id: C
+        answer: "Move to auto-configuration because ApplicationRunner execution is part of condition matching and back-off."
+        explanation: "Condition evaluation and back-off are auto-configuration concerns, but runner timing belongs to the application runtime lifecycle."
+      - id: D
+        answer: "Keep the coarse before/during/after-context model from Fundamentals and move the exact event and runner questions to application-runtime."
+        explanation: "This preserves the Fundamentals boundary while routing detailed lifecycle vocabulary to its owning module."
+    correctAnswerId: D
+
+  - id: "springbootapplication-composition"
+    question: "Which decomposition correctly explains what @SpringBootApplication composes at the Fundamentals level?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.PrimaryConfiguration/PrimaryConfiguration.md"
+      anchor: "springbootapplication-composition"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "@Configuration, @Bean, and @Import, combining bean declaration, factory methods, and explicit configuration imports."
+        explanation: "Those are Spring configuration concepts, but they are not the three annotations composed by @SpringBootApplication."
+      - id: B
+        answer: "@SpringBootConfiguration, @EnableAutoConfiguration, and @ComponentScan, combining primary configuration, Boot auto-configuration enablement, and component discovery."
+        explanation: "These are the three composed responsibilities that explain why a small Boot primary class can provide a useful default setup."
+      - id: C
+        answer: "@EnableScheduling, @ConfigurationPropertiesScan, and @ComponentScan, combining scheduling, property binding discovery, and component discovery."
+        explanation: "These features can be useful in Boot applications, but they are not the composition of @SpringBootApplication."
+      - id: D
+        answer: "@SpringBootConfiguration, @RestController, and @EnableAutoConfiguration, combining primary configuration, HTTP request handling, and automatic configuration."
+        explanation: "@RestController is a Spring MVC annotation and is not part of @SpringBootApplication's composition."
+    correctAnswerId: B
+
+  - id: "root-package-component-scan"
+    question: "OrdersApplication is moved from com.example.orders to com.example.orders.web. A sibling com.example.orders.service component is no longer discovered. What is the most direct Fundamentals explanation?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.PrimaryConfiguration/PrimaryConfiguration.md"
+      anchor: "root-package-boundary"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "The move changed Boot's managed dependency versions, so component metadata from the service package is no longer compatible."
+        explanation: "Package placement does not change the dependency-management baseline; this symptom is about discovery scope."
+      - id: B
+        answer: "The web package caused auto-configuration to disable component scanning once a Servlet application type was inferred."
+        explanation: "Web application type does not normally disable component scanning; the issue is the default scan boundary."
+      - id: C
+        answer: "The primary class now establishes a default component-scan boundary that is too deep, leaving the sibling service package outside that search path."
+        explanation: "Placing the primary class in a sensible root package lets default component scanning cover the application's subpackages."
+      - id: D
+        answer: "SpringApplication switches to a non-web context when the primary class is below the project root, so service components are skipped."
+        explanation: "Application type is determined by classpath and settings, not by how deep the Java package of the primary class is."
+    correctAnswerId: C
+
+  - id: "managed-dependency-version-override"
+    question: "A project uses Boot's supported dependency management, then explicitly overrides one managed library version for a required fix. Which interpretation is most accurate?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.StartersAndClasspath/StartersAndClasspath.md"
+      anchor: "managed-dependencies"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Treat Boot's managed versions as a coordinated baseline; override for the concrete need, then verify compatibility because that library now differs from the curated combination."
+        explanation: "Dependency management supplies a tested baseline rather than an immovable rule. An intentional override shifts some compatibility responsibility back to the application team."
+      - id: B
+        answer: "Rely on dependency management to converge all transitive libraries onto a compatible set automatically, so the override keeps the same compatibility assurance as the managed baseline."
+        explanation: "Version resolution can converge dependencies, but that does not mean an arbitrary override inherits Boot's compatibility guarantee for the curated version set."
+      - id: C
+        answer: "Assume the override remains inside Boot's curated baseline as long as the project still imports the Boot BOM or uses the Boot build plugin."
+        explanation: "The BOM or plugin can provide dependency-management mechanics, but explicitly choosing another version still departs from the curated version for that library."
+      - id: D
+        answer: "Treat the override as only a build-resolution detail; if dependency resolution and compilation succeed, compatibility responsibility still remains entirely with Boot."
+        explanation: "A successful build proves resolution and compilation, not runtime compatibility with the rest of Boot's managed ecosystem."
+    correctAnswerId: A
+
+  - id: "classpath-web-type-vs-auto-configuration"
+    question: "A previously non-web application adds the usual Servlet web stack. Which sequence most accurately separates SpringApplication from auto-configuration?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.StartersAndClasspath/StartersAndClasspath.md"
+      anchor: "classpath-driven-behavior"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "The starter adds the web classes and then selects the Servlet ApplicationContext; auto-configuration mainly applies server settings inside that selected context."
+        explanation: "The starter shapes the classpath but does not select the context. SpringApplication owns the broad application-type and context choice."
+      - id: B
+        answer: "Auto-configuration reads the web classpath and selects WebApplicationType first; SpringApplication then creates that context and refreshes the infrastructure it was given."
+        explanation: "This reverses the responsibility boundary: SpringApplication determines the broad application type and creates the corresponding context."
+      - id: C
+        answer: "SpringApplication first creates a generic context and refreshes it; afterward auto-configuration detects the web stack, converts the context to Servlet, and adds the server."
+        explanation: "The application type and matching context are chosen before refresh; auto-configuration does not convert a completed generic context after refresh."
+      - id: D
+        answer: "SpringApplication uses classpath and settings to determine WebApplicationType and create the matching context; auto-configuration contributes matching server infrastructure while that context is built."
+        explanation: "This keeps context selection with SpringApplication and conditional infrastructure contribution with auto-configuration during context construction."
+    correctAnswerId: D
+
+  - id: "startup-evidence-unexpected-server"
+    question: "A service expected to be non-web unexpectedly starts an embedded server. What is the strongest first Fundamentals-level investigation?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.ApplicationShapes/ApplicationShapes.md"
+      anchor: "classpath-changes-runtime-shape"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Confirm the server in startup output, then inspect active configuration for server settings or profile changes before looking at the dependency tree."
+        explanation: "Configuration may change server details, but ordinary server settings do not by themselves explain why a web runtime became available."
+      - id: B
+        answer: "Read startup output for server/context clues and inspect the dependency tree or classpath for a web stack that may have changed the available application shape."
+        explanation: "Startup logs provide runtime-shape evidence, and the classpath is a direct signal that can make a web application type available."
+      - id: C
+        answer: "Confirm the server in startup output, then inspect component scanning and discovered controllers because a newly found request handler may have caused the web runtime."
+        explanation: "Controllers affect request handling, but their discovery is not what makes SpringApplication infer a web application type or enables server infrastructure."
+      - id: D
+        answer: "Confirm the server in startup output, then compare the packaged launcher and main class because a different executable entry point may have selected a web context."
+        explanation: "Packaging determines how the JVM reaches the application, but the logical SpringApplication bootstrap still determines the application context from its inputs."
+    correctAnswerId: B
+
+  - id: "startup-failure-layer"
+    question: "The JVM reaches main and SpringApplication begins startup, but context refresh fails because a required bean dependency cannot be satisfied. Which failure class should you investigate first?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.StartupObservation/StartupObservation.md"
+      anchor: "startup-failure-classes"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Java/process failure, because any startup exception means the JVM failed before Boot could meaningfully begin."
+        explanation: "The JVM already reached main and Boot began bootstrap, so this is beyond the initial Java/process failure layer."
+      - id: B
+        answer: "Operational-state failure, because a missing bean should be diagnosed through production health and metrics after startup."
+        explanation: "The context has not successfully refreshed, so this is a startup/container problem rather than a post-start operational-state problem."
+      - id: C
+        answer: "Spring container failure, following the root cause and earliest meaningful bean-creation or dependency-injection message."
+        explanation: "An unsatisfied bean dependency during context refresh is a core container failure; the layer model is a triage aid before deeper diagnosis."
+      - id: D
+        answer: "Packaging failure, because a dependency-injection problem usually means the executable JAR launcher selected the wrong application class."
+        explanation: "The application already reached SpringApplication and context refresh, so launcher entry-point selection is not the direct failure layer."
+    correctAnswerId: C
+
+  - id: "devtools-restart-classloader-model"
+    question: "Why can DevTools automatic restart be faster than a cold JVM restart, and what event must actually occur for restart detection?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.DevTools/DevTools.md"
+      anchor: "restart-classloader-model"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Stable dependency jars stay in the base ClassLoader while changing application classes use the recreated restart ClassLoader; DevTools must detect a relevant runtime-classpath update."
+        explanation: "Keeping stable dependencies loaded reduces restart work, and the trigger is a classpath-visible change rather than merely editing a source file."
+      - id: B
+        answer: "Stable dependency jars stay in the base ClassLoader and application classes use the restart ClassLoader, but saving the source file itself is enough to trigger restart before new class output exists."
+        explanation: "The loader placement is right, but a source edit must be compiled or copied so the relevant change reaches a watched runtime classpath directory."
+      - id: C
+        answer: "Application classes stay in the base ClassLoader while changing dependency jars use the restart ClassLoader; a runtime-classpath update then recreates only the dependency side."
+        explanation: "The placement is reversed. Stable dependencies normally use the base loader, while actively developed application classes use the restart loader."
+      - id: D
+        answer: "The two-loader placement is the same as the normal model, but restart include/exclude rules make a saved source file a restart trigger even when the runtime classpath has not changed."
+        explanation: "Include/exclude rules can refine restart scope or classloader placement, but they do not remove the need for the changed content to reach the watched classpath."
+    correctAnswerId: A
+
+  - id: "remote-devtools-production-boundary"
+    question: "A team proposes enabling Remote DevTools on a production deployment so developers can inspect and refresh the running service. What is the best response?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.DevTools/DevTools.md"
+      anchor: "remote-devtools-security"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Allow Remote DevTools in production when the service is reachable only on a private network and a strong remote secret protects the connection."
+        explanation: "Network restriction and a secret reduce exposure, but they do not change Boot's explicit boundary that Remote DevTools must not be enabled on production deployments."
+      - id: B
+        answer: "Package DevTools in production but disable restart and LiveReload, leaving only the remote channel available for tightly controlled diagnostics."
+        explanation: "Remote support itself is the security-sensitive development feature; disabling other DevTools capabilities does not make that channel production tooling."
+      - id: C
+        answer: "Enable Remote DevTools only during a production incident, protect it with SSL and a secret, then remove it after diagnosis is complete."
+        explanation: "Temporary use and stronger transport controls still violate the production boundary; operational diagnosis should use production-ready tooling instead."
+      - id: D
+        answer: "Keep Remote DevTools as a development-only workflow, protect remote use with trusted-network or SSL controls, never enable it in production, and use Actuator for operational state."
+        explanation: "This preserves both parts of the boundary: secure the exceptional remote development workflow and use production-ready operations tooling for running services."
+    correctAnswerId: D
+
+  - id: "executable-jar-main-class-start-class"
+    question: "For a typical executable Spring Boot JAR, which statement correctly distinguishes the archive launcher entry point from the application's logical entry point?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "9.FundamentalsSynthesis/FundamentalsSynthesis.md"
+      anchor: "common-misconceptions"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "The application class is the manifest Main-Class, while Start-Class names the embedded server implementation that Boot should launch."
+        explanation: "In the standard executable layout, the Boot launcher is the manifest Main-Class; Start-Class identifies the application's main class."
+      - id: B
+        answer: "The manifest Main-Class points to a Boot launcher, Start-Class identifies the application class, and the launcher eventually invokes that application's main method."
+        explanation: "This separates the archive-level bootstrap from the application's logical main-to-SpringApplication bootstrap."
+      - id: C
+        answer: "Main-Class and Start-Class both point to the application class, and Boot chooses one only when nested dependency loading fails."
+        explanation: "The two attributes serve different roles: launcher versus application entry class, not redundant fallback entries."
+      - id: D
+        answer: "Executable Boot JARs omit an application entry class because the launcher discovers a @SpringBootApplication class by scanning BOOT-INF/classes."
+        explanation: "The launcher uses the configured start class; it does not choose the application's main class by scanning for the annotation."
+    correctAnswerId: B
+
+  - id: "classpath-config-beans-vs-auto-configuration"
+    question: "During Boot context construction, which statement correctly separates input signals from the auto-configuration mechanism?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "9.FundamentalsSynthesis/FundamentalsSynthesis.md"
+      anchor: "classpath-configuration-conventions"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Classpath, configuration inputs, and auto-configuration are the three peer inputs; existing application beans are produced only after all automatic decisions finish."
+        explanation: "Auto-configuration is not another peer input, and existing beans or bean definitions can influence configuration while the context is being built."
+      - id: B
+        answer: "Classpath and configuration inputs affect SpringApplication, but application beans become relevant only after refresh, when auto-configuration runs as a post-start integration phase."
+        explanation: "Auto-configuration is processed as configuration during context preparation and refresh, not as a separate post-refresh phase."
+      - id: C
+        answer: "Classpath, configuration inputs, and application beans or bean definitions are signals; Boot conventions and auto-configuration react to them during context preparation and refresh."
+        explanation: "This is the synthesis model: inputs/signals feed context construction, while auto-configuration is a configuration mechanism applied within that lifecycle."
+      - id: D
+        answer: "Starters execute first and convert configuration inputs into beans; auto-configuration then supplies the classpath that SpringApplication uses for context selection."
+        explanation: "Starters primarily shape dependencies/classpath, and auto-configuration does not construct the classpath for SpringApplication."
+    correctAnswerId: C
+
+  - id: "fundamentals-ownership-routing"
+    question: "Which routing map sends deeper Spring Boot questions to the correct owning modules?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "9.FundamentalsSynthesis/FundamentalsSynthesis.md"
+      anchor: "ownership-handoff-map"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Property precedence -> externalized-configuration; condition/back-off reasoning -> auto-configuration; detailed events/runners -> application-runtime; TLS/proxy/graceful shutdown -> web-runtime."
+        explanation: "These handoffs match the current ownership map and keep Fundamentals focused on the shared mental model rather than duplicating deeper mechanisms."
+      - id: B
+        answer: "Property precedence -> auto-configuration; condition/back-off reasoning -> Actuator; detailed events/runners -> web-runtime; TLS/proxy/graceful shutdown -> application-runtime."
+        explanation: "This swaps multiple ownership boundaries: each listed concern has a different dedicated module in the curriculum."
+      - id: C
+        answer: "Property precedence -> build-tooling-packaging; condition/back-off reasoning -> testing; detailed events/runners -> externalized-configuration; TLS/proxy/graceful shutdown -> Actuator."
+        explanation: "Those modules solve adjacent but different problems and do not own the mechanisms named in the question."
+      - id: D
+        answer: "Property precedence -> Fundamentals; condition/back-off reasoning -> Fundamentals; detailed events/runners -> Fundamentals; TLS/proxy/graceful shutdown -> Fundamentals."
+        explanation: "Fundamentals establishes orientation and handoffs; it intentionally does not absorb all of those detailed mechanisms."
+    correctAnswerId: A

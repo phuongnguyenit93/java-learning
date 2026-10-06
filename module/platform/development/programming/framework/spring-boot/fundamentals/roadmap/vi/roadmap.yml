@@ -41,4 +41,136 @@
 # Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: boot-purpose
+    title: "Spring Boot là gì và vì sao cần nó"
+    purpose: "Xây mô hình tư duy đầu tiên về Spring Boot như lớp khởi động và tích hợp theo quy ước trên Spring Framework, đồng thời hiểu các công việc thiết lập lặp lại mà Boot giúp giảm bớt."
+    objectives:
+      - "Phân biệt khả năng do Spring Framework cung cấp với các quy ước của Spring Boot mà không xem Boot là framework thay thế Spring Framework."
+      - "Hiểu convention over configuration là dùng các giá trị mặc định hợp lý nhưng vẫn có thể ghi đè, không phải hành vi bắt buộc bị che giấu."
+      - "Nhận biết externalized configuration là một đầu vào lớn giúp cùng một ứng dụng Boot thay đổi hành vi mà không phải sửa mã ứng dụng; còn Config Data, thứ tự ưu tiên, profiles, binding và @ConfigurationProperties thuộc module externalized-configuration."
+      - "Nhận biết quản lý dependency, starter, auto-configuration, khởi động runtime, công cụ phục vụ production và đóng gói là các khả năng Boot phối hợp với nhau; chi tiết thuộc các module sau."
+      - "Giữ đúng ranh giới của Fundamentals: xây mô hình tư duy về Boot và chuyển các cơ chế chuyên sâu sang module chịu trách nhiệm."
+
+  - id: application-entry-point
+    title: "Từ Java main method đến một ứng dụng Boot"
+    purpose: "Hiểu hình dạng tối thiểu của ứng dụng và cách SpringApplication biến nguồn cấu hình chính cùng tham số dòng lệnh thành Spring ApplicationContext đang chạy, rồi đặt context đó trong vòng đời khởi động/chạy/dừng do ứng dụng quản lý."
+    dependsOn:
+      - boot-purpose
+    objectives:
+      - "Đọc SpringApplication.run(primarySource, args) như thao tác khởi động ứng dụng chứ không phải business logic."
+      - "Hiểu ở mức tổng quan rằng SpringApplication chọn ApplicationContext phù hợp, chuẩn bị môi trường, refresh context và khởi động ứng dụng."
+      - "Phân biệt Java main method thông thường với các trách nhiệm khởi động đặc thù của Boot được giao cho SpringApplication."
+      - "Giữ mô hình vòng đời cấp cao: Boot chuẩn bị và khởi động context, ứng dụng tiếp tục chạy theo loại ứng dụng và công việc non-daemon, còn quá trình dừng có trật tự sẽ đóng application context; các event, runner, availability, exit handling và tích hợp shutdown chi tiết thuộc các owner sau."
+      - "Để lifecycle events, runners, availability states và tùy biến runtime chi tiết cho module application-runtime."
+    relatedModules:
+      - routeId: SPRING_BOOT_APPLICATION_RUNTIME
+        label: "Spring Boot Application Runtime"
+        note: "Sở hữu vòng đời chi tiết, runtime events, runners, availability states, task execution, logging và tùy biến runtime xây trên mô hình khởi động này."
+
+  - id: primary-configuration
+    title: "Cấu hình chính và @SpringBootApplication"
+    purpose: "Hiểu vì sao ứng dụng Boot thường có một lớp cấu hình chính và @SpringBootApplication đóng góp gì cho việc phát hiện cấu hình, component scanning và bật auto-configuration."
+    dependsOn:
+      - application-entry-point
+    objectives:
+      - "Hiểu @SpringBootApplication là composition của @SpringBootConfiguration, @EnableAutoConfiguration và @ComponentScan."
+      - "Đặt lớp ứng dụng chính trong root package hợp lý và giải thích vì sao vị trí package ảnh hưởng component scanning cùng phạm vi tìm kiếm liên quan."
+      - "Nhận biết từng khả năng trong annotation tổng hợp có thể được thay thế hoặc tùy biến độc lập khi cấu trúc ứng dụng yêu cầu."
+      - "Để việc đánh giá condition và cơ chế custom auto-configuration cho module auto-configuration."
+    relatedModules:
+      - routeId: SPRING_BOOT_AUTO_CONFIGURATION
+        label: "Spring Boot Auto-Configuration"
+        note: "Sở hữu cách Boot lựa chọn, sắp thứ tự, back off, loại trừ, chẩn đoán và xây dựng auto-configuration ngoài vai trò giới thiệu của @EnableAutoConfiguration ở đây."
+
+  - id: dependencies-and-starters
+    title: "Starter, dependency được quản lý và hành vi dựa trên classpath"
+    purpose: "Hiểu cách Boot tạo classpath hữu ích thông qua starter và các phiên bản dependency được quản lý, đồng thời hiểu vì sao thay đổi classpath có thể thay đổi hành vi của Boot."
+    dependsOn:
+      - primary-configuration
+    objectives:
+      - "Xem starter là tập dependency được tuyển chọn cho một nhu cầu phổ biến, không phải cơ chế framework tự thực thi."
+      - "Hiểu ở mức tổng quan rằng Boot phát hành một tập phiên bản dependency được tuyển chọn để các thư viện phổ biến có thể nâng cấp đồng bộ."
+      - "Liên hệ thư viện được starter đưa vào classpath với auto-configuration nhưng không đánh đồng starter và auto-configuration thành cùng một cơ chế."
+      - "Nhận biết khi nào dùng starter, dependency riêng lẻ hoặc ghi đè phiên bản tường minh; để cơ chế build plugin và BOM cho build-tooling-packaging."
+    relatedModules:
+      - routeId: SPRING_BOOT_BUILD_TOOLING_PACKAGING
+        label: "Spring Boot Build Tooling and Packaging"
+        note: "Sở hữu mô hình plugin Gradle/Maven, cơ chế BOM/quản lý dependency, executable packaging, layered archives và tạo image."
+      - routeId: SPRING_BOOT_AUTO_CONFIGURATION
+        label: "Spring Boot Auto-Configuration"
+        note: "Giải thích cách classpath và các đầu vào cấu hình điều khiển automatic configuration có điều kiện sau khi classpath đã được hình thành."
+
+  - id: startup-observation
+    title: "Đọc quá trình khởi động như bằng chứng về Boot"
+    purpose: "Học cách đọc đầu ra lúc khởi động và cấu trúc ứng dụng như bằng chứng cho các quyết định khởi động của Boot thay vì xem một lần chạy thành công là điều tự động không thể giải thích."
+    dependsOn:
+      - dependencies-and-starters
+    objectives:
+      - "Đọc banner, định danh ứng dụng, thông tin profile đang hoạt động, thời gian khởi động context và runtime component được chọn như các dấu hiệu về ứng dụng Boot đã tạo."
+      - "Ở mức nhập môn, phân biệt lỗi khởi động bắt nguồn từ Java process, Spring container hay quyết định cấu hình/tích hợp của Boot."
+      - "Hiểu các giá trị mặc định của Boot có thể được quan sát và ghi đè; tự động không có nghĩa là không thể kiểm soát."
+      - "Biết chẩn đoán condition, hành vi logging runtime và chẩn đoán production chi tiết thuộc các module sau."
+    relatedModules:
+      - routeId: SPRING_BOOT_AUTO_CONFIGURATION
+        label: "Spring Boot Auto-Configuration"
+        note: "Sở hữu Condition Evaluation Report và chẩn đoán sâu vì sao auto-configuration khớp điều kiện hoặc back off."
+      - routeId: SPRING_BOOT_ACTUATOR
+        label: "Spring Boot Actuator"
+        note: "Sở hữu các runtime endpoint sẵn sàng cho production và chẩn đoán vận hành ngoài quan sát khởi động cơ bản."
+
+  - id: application-shapes
+    title: "Các dạng ứng dụng: non-web và embedded web"
+    purpose: "Hiểu Spring Boot có thể khởi động nhiều dạng ứng dụng và embedded web server là hệ quả của loại ứng dụng cùng classpath chứ không phải định nghĩa của Spring Boot."
+    dependsOn:
+      - startup-observation
+    objectives:
+      - "Phân biệt ứng dụng Boot non-web với ứng dụng web Servlet và reactive ở mức tổng quan."
+      - "Hiểu mô hình embedded server: server được khởi động và quản lý như một phần của tiến trình ứng dụng khi web runtime hiện diện."
+      - "Nhận biết thêm web starter có thể thay đổi dạng runtime vì classpath thay đổi các khả năng Boot có thể auto-configure."
+      - "Chuyển server selection, server properties, TLS, xử lý proxy và graceful shutdown sang module web-runtime."
+    relatedModules:
+      - routeId: SPRING_BOOT_WEB_RUNTIME
+        label: "Spring Boot Web Runtime"
+        note: "Sở hữu việc nhận diện loại web application, auto-configuration cho embedded server, tùy biến server, TLS, triển khai sau proxy và graceful shutdown."
+
+  - id: development-and-delivery-mental-model
+    title: "Mô hình về tiện ích phát triển và bàn giao ứng dụng"
+    purpose: "Hiểu vai trò ở mức nhập môn của DevTools, việc đóng gói ứng dụng thực thi được và luồng từ phát triển đến bàn giao của Boot mà không kéo cơ chế runtime hoặc build nâng cao vào Fundamentals."
+    dependsOn:
+      - application-shapes
+    objectives:
+      - "Hiểu DevTools là lớp tiện ích tùy chọn cho thời gian phát triển và phân biệt hành vi restart/live reload với hành vi runtime ở production."
+      - "Hiểu ứng dụng Boot có thể được đóng gói thành artifact thực thi được, với application classes và dependencies được sắp xếp cho Boot launcher."
+      - "Tách mô hình tạo/chạy artifact ứng dụng khỏi cơ chế chi tiết của Gradle/Maven, layered archive, OCI image và Buildpack."
+      - "Biết DevTools không nên được xem là dependency production hay cơ chế vòng đời production."
+    relatedModules:
+      - routeId: SPRING_BOOT_BUILD_TOOLING_PACKAGING
+        label: "Spring Boot Build Tooling and Packaging"
+        note: "Sở hữu bootRun, bootJar/bootWar, Boot Loader, các layer, reproducible packaging, OCI image và Buildpacks."
+
+  - id: fundamentals-synthesis
+    title: "Mô hình Spring Boot end-to-end và các điểm chuyển tiếp"
+    purpose: "Kết nối module thành một mô hình có thể giải thích: mã ứng dụng và dependencies thể hiện ý định, SpringApplication khởi động context, @SpringBootApplication thiết lập các quy ước phổ biến, còn các module Boot chuyên biệt sở hữu cấu hình, quyết định tự động, hành vi runtime, web server, vận hành, kiểm thử, đóng gói và native execution."
+    dependsOn:
+      - application-entry-point
+      - primary-configuration
+      - dependencies-and-starters
+      - startup-observation
+      - application-shapes
+      - development-and-delivery-mental-model
+    objectives:
+      - "Theo dõi một ứng dụng Boot đơn giản từ Java main method và cấu hình chính qua quá trình khởi động context tới ứng dụng đang chạy."
+      - "Giải thích classpath, các đầu vào cấu hình và quy ước của Boot phối hợp với nhau nhưng vẫn là các cơ chế có phạm vi trách nhiệm riêng."
+      - "Chọn đúng module tiếp theo khi câu hỏi chuyển sang external configuration, auto-configuration, vòng đời runtime, web runtime, đóng gói, Actuator, kiểm thử hoặc native image."
+      - "Tránh các misconception cơ bản như 'Spring Boot thay thế Spring Framework', 'starter chính là auto-configuration' hoặc 'mọi Boot application đều là web application'."
+    relatedModules:
+      - routeId: SPRING_BOOT_EXTERNALIZED_CONFIGURATION
+        label: "Spring Boot Externalized Configuration"
+        note: "Sở hữu Config Data, thứ tự ưu tiên property, profiles, @ConfigurationProperties, binding, validation và configuration metadata."
+      - routeId: SPRING_BOOT_AUTO_CONFIGURATION
+        label: "Spring Boot Auto-Configuration"
+        note: "Sở hữu các quyết định cấu hình có điều kiện, quy tắc back-off, loại trừ, chẩn đoán và custom auto-configuration của Boot."
+      - routeId: SPRING_BOOT_APPLICATION_RUNTIME
+        label: "Spring Boot Application Runtime"
+        note: "Sở hữu vòng đời ứng dụng chi tiết và mô hình tích hợp runtime."
