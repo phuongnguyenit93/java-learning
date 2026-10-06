@@ -1,0 +1,10 @@
+﻿references:
+  - title: "Spring Boot 3.3 Reference - SpringApplication"
+    url: "https://docs.spring.io/spring-boot/docs/3.3.5/reference/html/features.html#features.spring-application"
+    description: "Official Spring Boot application runtime and lifecycle reference."
+  - title: "Spring Boot 3.3 Reference - Logging"
+    url: "https://docs.spring.io/spring-boot/docs/3.3.5/reference/html/features.html#features.logging"
+    description: "Official Spring Boot logging integration reference."
+  - title: "Spring Boot 3.3 Reference - Docker Compose"
+    url: "https://docs.spring.io/spring-boot/docs/3.3.5/reference/html/features.html#features.docker-compose"
+    description: "Official development-time Docker Compose integration reference."

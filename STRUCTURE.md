@@ -1295,22 +1295,31 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <summary><b><a href='./module/platform/development/programming/framework/spring-boot'>📁 spring-boot</a></b></summary>
 <ul>
 <li>
-  <a href='./module/platform/development/programming/framework/spring-boot/actuator'>🪄 actuator</a>
-</li>
-<li>
-  <a href='./module/platform/development/programming/framework/spring-boot/auto-configuration'>🪄 auto-configuration</a>
+  <a href='./module/platform/development/programming/framework/spring-boot/fundamentals'>🪄 fundamentals</a>
 </li>
 <li>
   <a href='./module/platform/development/programming/framework/spring-boot/externalized-configuration'>🪄 externalized-configuration</a>
 </li>
 <li>
-  <a href='./module/platform/development/programming/framework/spring-boot/fundamentals'>🪄 fundamentals</a>
+  <a href='./module/platform/development/programming/framework/spring-boot/auto-configuration'>🪄 auto-configuration</a>
 </li>
 <li>
-  <a href='./module/platform/development/programming/framework/spring-boot/native-image'>🪄 native-image</a>
+  <a href='./module/platform/development/programming/framework/spring-boot/application-runtime'>🪄 application-runtime</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-boot/web-runtime'>🪄 web-runtime</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-boot/build-tooling-packaging'>🪄 build-tooling-packaging</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-boot/actuator'>🪄 actuator</a>
 </li>
 <li>
   <a href='./module/platform/development/programming/framework/spring-boot/testing'>🪄 testing</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/framework/spring-boot/native-image'>🪄 native-image</a>
 </li>
 </ul>
 </details>

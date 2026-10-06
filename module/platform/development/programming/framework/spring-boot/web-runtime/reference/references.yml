@@ -1,0 +1,4 @@
+﻿references:
+  - title: "Spring Boot 3.3 Reference - Web"
+    url: "https://docs.spring.io/spring-boot/docs/3.3.5/reference/html/web.html"
+    description: "Official Spring Boot Servlet and Reactive web-runtime reference."

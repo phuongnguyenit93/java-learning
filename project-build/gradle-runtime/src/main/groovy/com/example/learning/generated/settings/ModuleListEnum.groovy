@@ -2010,11 +2010,29 @@ enum ModuleListEnum {
             []
     ),
 
+    SPRING_BOOT_APPLICATION_RUNTIME(
+            'module:platform:development:programming:framework:spring-boot:application-runtime',
+            'module/platform/development/programming/framework/spring-boot/application-runtime',
+            'LIBRARY',
+            'Spring Boot application runtime lifecycle, execution, logging, TLS, Docker Compose integration, and runtime customization',
+            false,
+            []
+    ),
+
     SPRING_BOOT_AUTO_CONFIGURATION(
             'module:platform:development:programming:framework:spring-boot:auto-configuration',
             'module/platform/development/programming/framework/spring-boot/auto-configuration',
             'LIBRARY',
             'Spring Boot auto-configuration model, conditional registration, ordering, diagnostics and custom auto-configuration',
+            false,
+            []
+    ),
+
+    SPRING_BOOT_BUILD_TOOLING_PACKAGING(
+            'module:platform:development:programming:framework:spring-boot:build-tooling-packaging',
+            'module/platform/development/programming/framework/spring-boot/build-tooling-packaging',
+            'LIBRARY',
+            'Spring Boot build plugins, executable packaging, layered archives, OCI images, Buildpacks, and deployment handoff',
             false,
             []
     ),
@@ -2051,6 +2069,15 @@ enum ModuleListEnum {
             'module/platform/development/programming/framework/spring-boot/testing',
             'LIBRARY',
             'Spring Boot testing support including application context tests, test slices, test auto-configuration and integration testing',
+            false,
+            []
+    ),
+
+    SPRING_BOOT_WEB_RUNTIME(
+            'module:platform:development:programming:framework:spring-boot:web-runtime',
+            'module/platform/development/programming/framework/spring-boot/web-runtime',
+            'LIBRARY',
+            'Spring Boot web runtime, embedded servers, server auto-configuration, TLS, proxy handling, and graceful shutdown',
             false,
             []
     ),

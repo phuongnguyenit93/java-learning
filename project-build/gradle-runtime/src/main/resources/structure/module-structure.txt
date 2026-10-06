@@ -279,12 +279,15 @@ module
     │   │   │   ├── spring-amqp
     │   │   │   ├── spring-batch [SPRING_BATCH] : Spring Batch job and step processing, chunk-oriented processing, restartability, fault tolerance and scaling
     │   │   │   ├── spring-boot
-    │   │   │   │   ├── actuator [SPRING_BOOT_ACTUATOR] : Spring Boot Actuator knowledge: production-ready endpoints, health, metrics, diagnostics, security and observability
-    │   │   │   │   ├── auto-configuration [SPRING_BOOT_AUTO_CONFIGURATION] : Spring Boot auto-configuration model, conditional registration, ordering, diagnostics and custom auto-configuration
-    │   │   │   │   ├── externalized-configuration [SPRING_BOOT_EXTERNALIZED_CONFIGURATION] : Spring Boot externalized configuration including config data, property precedence, binding, profiles, validation and metadata
     │   │   │   │   ├── fundamentals [SPRING_BOOT_FUNDAMENTALS] : Spring Boot fundamentals including application bootstrap, starters, embedded servers, lifecycle, packaging and development experience
-    │   │   │   │   ├── native-image [SPRING_BOOT_NATIVE_IMAGE] : Spring Boot AOT and native image support including GraalVM integration, runtime hints, testing and trade-offs
-    │   │   │   │   └── testing [SPRING_BOOT_TESTING] : Spring Boot testing support including application context tests, test slices, test auto-configuration and integration testing
+    │   │   │   │   ├── externalized-configuration [SPRING_BOOT_EXTERNALIZED_CONFIGURATION] : Spring Boot externalized configuration including config data, property precedence, binding, profiles, validation and metadata
+    │   │   │   │   ├── auto-configuration [SPRING_BOOT_AUTO_CONFIGURATION] : Spring Boot auto-configuration model, conditional registration, ordering, diagnostics and custom auto-configuration
+    │   │   │   │   ├── application-runtime [SPRING_BOOT_APPLICATION_RUNTIME] : Spring Boot application runtime lifecycle, execution, logging, TLS, Docker Compose integration, and runtime customization
+    │   │   │   │   ├── web-runtime [SPRING_BOOT_WEB_RUNTIME] : Spring Boot web runtime, embedded servers, server auto-configuration, TLS, proxy handling, and graceful shutdown
+    │   │   │   │   ├── build-tooling-packaging [SPRING_BOOT_BUILD_TOOLING_PACKAGING] : Spring Boot build plugins, executable packaging, layered archives, OCI images, Buildpacks, and deployment handoff
+    │   │   │   │   ├── actuator [SPRING_BOOT_ACTUATOR] : Spring Boot Actuator knowledge: production-ready endpoints, health, metrics, diagnostics, security and observability
+    │   │   │   │   ├── testing [SPRING_BOOT_TESTING] : Spring Boot testing support including application context tests, test slices, test auto-configuration and integration testing
+    │   │   │   │   └── native-image [SPRING_BOOT_NATIVE_IMAGE] : Spring Boot AOT and native image support including GraalVM integration, runtime hints, testing and trade-offs
     │   │   │   ├── spring-cloud
     │   │   │   │   └── gateway
     │   │   │   ├── spring-data

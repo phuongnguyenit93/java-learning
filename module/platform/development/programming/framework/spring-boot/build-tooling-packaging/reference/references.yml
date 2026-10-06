@@ -1,0 +1,7 @@
+﻿references:
+  - title: "Spring Boot 3.3 Gradle Plugin Reference"
+    url: "https://docs.spring.io/spring-boot/gradle-plugin/index.html"
+    description: "Official Gradle plugin, packaging, and OCI image reference."
+  - title: "Spring Boot 3.3 Maven Plugin Reference"
+    url: "https://docs.spring.io/spring-boot/maven-plugin/index.html"
+    description: "Official Maven plugin, packaging, and OCI image reference."

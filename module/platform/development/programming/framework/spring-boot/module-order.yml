@@ -1,0 +1,20 @@
+version: 1
+children:
+  fundamentals:
+    order: 10
+  externalized-configuration:
+    order: 20
+  auto-configuration:
+    order: 30
+  application-runtime:
+    order: 40
+  web-runtime:
+    order: 50
+  build-tooling-packaging:
+    order: 60
+  actuator:
+    order: 70
+  testing:
+    order: 80
+  native-image:
+    order: 90
