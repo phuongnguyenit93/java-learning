@@ -72,7 +72,7 @@ This horizontal rule exists to keep sibling modules aligned to the same current 
 
 ## 2. WORKFLOW AUTHORITY
 
-This Goal owns only **parent-level orchestration, worker scheduling, worktree ownership, review routing, STEP barriers, and compaction checkpoints**.
+This Goal owns only **parent-level orchestration, worker scheduling, worktree ownership, review routing, and STEP barriers**.
 
 Authority is split as follows:
 
@@ -85,7 +85,6 @@ PARENT_MODULE_STEP_WORKFLOW.md
 → cyclic independent-review routing
 → worktree isolation rules
 → STEP barrier across all children
-→ safe compaction checkpoints
 
 GENERAL_AGENT_RULES.md
 → CURRENT canonical workflow graph/order
@@ -149,7 +148,7 @@ The Prime must treat the mapping:
 child module ↔ branch ↔ worktree
 ```
 
-as durable orchestration state and preserve it across worker handoffs and compaction.
+as durable orchestration state and preserve it across worker handoffs.
 
 If the mapping is ambiguous, resolve it from CURRENT repository/worktree state before any edit.
 
@@ -311,7 +310,7 @@ Prime, when used as an execution lane
 → authors one child module in the current wave
 → writes only that authored child's worktree
 → later reviews another wave child READ-ONLY
-→ must still maintain parent-level scheduling/checkpoint state
+→ must still maintain parent-level scheduling state
 ```
 
 The **original author remains the write owner** of that child for the current STEP until CLEAN.
@@ -663,64 +662,7 @@ If a parent-level check exposes a real defect in one child, reopen that child's 
 
 ---
 
-## 13. COMPACTION CHECKPOINT AFTER EACH TWO CLEAN CHILDREN
-
-Use semantic checkpoints rather than relying only on automatic context-pressure compaction.
-
-After each additional **two child modules become CLEAN for the CURRENT STEP**, prepare a compaction checkpoint when it can be done safely.
-
-Safe checkpoint conditions:
-
-```text
-the two counted child modules are CLEAN
-no accepted fix for those children is pending
-no review of those children is still running/pending
-their current worktree state is on disk
-Prime has recorded current orchestration state
-```
-
-The checkpoint must record at least:
-
-```text
-CURRENT STEP
-parent module
-completed/CLEAN children for this STEP
-remaining children for this STEP
-child → branch → worktree mapping
-current worker ownership
-any review/fix still pending on other active children
-important cross-module decisions needed for continuation
-the rule that filesystem/CURRENT source is the source of truth
-```
-
-Then report clearly:
-
-```text
-COMPACTION CHECKPOINT READY
-```
-
-and wait for the user/app to perform `Compact & resume now` when manual compaction is required.
-
-Do not claim that typing the phrase itself programmatically compacts the session.
-
-If reaching exactly two CLEAN children occurs while another child in the same wave is still inside an unsafe author/review/fix transition, delay the checkpoint until the wave reaches a safe boundary. Wave integrity takes precedence over forcing compaction at the exact instant the counter reaches two.
-
-After resume:
-
-```text
-1. inspect CURRENT worktree/filesystem state;
-2. restore child/worktree ownership mapping from the checkpoint;
-3. re-read CURRENT GENERAL_AGENT_RULES.md;
-4. re-read the CURRENT STEP rule file;
-5. re-read CURRENT source needed for pending work;
-6. continue from actual filesystem state, not conversational memory.
-```
-
-Auto-compaction may still occur earlier as a safety mechanism. If it does, recover using the same source-of-truth procedure.
-
----
-
-## 14. WORKTREE SAFETY
+## 13. WORKTREE SAFETY
 
 Separate child worktrees are a feature of this workflow, not an exception.
 
@@ -750,7 +692,7 @@ Reviewers must know explicitly that their access to the other child's worktree i
 
 ---
 
-## 15. ROOT / SHARED SCANNER SIDE EFFECTS
+## 14. ROOT / SHARED SCANNER SIDE EFFECTS
 
 Repository-wide scanners/generators may see worktree-management directories such as `.worktrees` or `.wt`.
 
@@ -772,7 +714,7 @@ Do not modify a child module merely to satisfy an accidental scan of the worktre
 
 ---
 
-## 16. UPSTREAM DEFECT ROUTING
+## 15. UPSTREAM DEFECT ROUTING
 
 If a child STEP discovers a real defect owned by an earlier STEP, shared generator, parent curriculum, or repository infrastructure, route it according to CURRENT governance.
 
@@ -782,7 +724,7 @@ After an upstream correction, reopen and revalidate all materially affected chil
 
 ---
 
-## 17. COMMIT / FINAL-DELIVERY STEP
+## 16. COMMIT / FINAL-DELIVERY STEP
 
 The Commit/final-delivery STEP is discovered dynamically from CURRENT `GENERAL_AGENT_RULES.md`.
 
@@ -812,7 +754,7 @@ It completes only when every target child's required final-delivery lifecycle ha
 
 ---
 
-## 18. DEFINITION OF DONE
+## 17. DEFINITION OF DONE
 
 The parent-module Goal is complete only when:
 
@@ -857,7 +799,6 @@ FOR EACH CURRENT STEP:
 → ORIGINAL AUTHORS REMAIN WRITE OWNERS UNTIL CLEAN
 → EVERY FRESH SUB-WORKER SESSION MUST BE INSTRUCTED TO USE TITLE PREFIX `STEP <N> - `
 → REVIEW #1 → FIX → REVALIDATE → REVIEW #2 OF CURRENT SOURCE
-→ CHECKPOINT AFTER EACH TWO CLEAN CHILDREN WHEN SAFE
 → DO NOT ADVANCE ANY CHILD ALONE TO NEXT STEP
 → ADVANCE ONLY WHEN ALL TARGET CHILDREN ARE CLEAN
 
