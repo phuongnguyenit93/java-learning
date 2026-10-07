@@ -1,0 +1,10 @@
+version: 1
+children:
+  github:
+    order: 10
+  gitlab:
+    order: 20
+  bitbucket:
+    order: 30
+  azure-devops:
+    order: 40

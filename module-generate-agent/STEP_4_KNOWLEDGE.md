@@ -189,6 +189,79 @@ chỉ để chứa citation/reference, vì H2 là stable Knowledge section ident
 
 Section-level Reference không cần stable reference id, YAML riêng, relation metadata, generator riêng hoặc Portal projection riêng. Nó là một phần tự nhiên của learner-facing Knowledge Markdown.
 
+### Knowledge → Roadmap `relatedKnowledge` binding
+
+Sau khi Step 4 đã author/refactor đủ Knowledge để structure và stable Knowledge identities trở nên rõ ràng, Step 4 phải **audit và materialize/refine navigation binding ngược vào approved Roadmap** theo contract `relatedKnowledge` do Step 2 sở hữu.
+
+Lifecycle bắt buộc:
+
+```text
+approved Roadmap milestones
+        ↓
+approved Step 3 Menu structure
+        ↓
+finalized/current Step 4 Knowledge identities
+        ↓
+audit each Roadmap milestone
+        ↓
+add / refine / remove stale relatedKnowledge mappings
+        ↓
+validate every relatedKnowledge target against CURRENT Knowledge
+```
+
+Mục tiêu của binding này là navigation/traceability:
+
+```text
+Roadmap milestone
+→ learner đang học chặng nào?
+
+relatedKnowledge
+→ Knowledge nào trong cùng module giúp learner hoàn thành milestone đó?
+```
+
+Contract bắt buộc:
+
+```text
+relatedKnowledge
+→ chỉ map tới CURRENT Knowledge identity hợp lệ trong cùng module
+→ dùng identity/schema mà CURRENT Step 2 Roadmap contract yêu cầu
+→ phải phản ánh Knowledge structure thực tế sau Step 4
+→ remove/refine stale mappings khi Knowledge đã move/rename/merge/split
+→ một milestone có thể map tới nhiều Knowledge identities khi hợp lý
+→ một Knowledge identity có thể support nhiều milestones khi semantics thực sự overlap
+```
+
+Step 4 **không được** dùng `relatedKnowledge` để:
+
+```text
+đổi milestone order
+đổi milestone meaning/purpose
+reverse-engineer lại Roadmap từ Knowledge hiện tại
+biến Knowledge section/category thành child Roadmap node
+tạo milestone mới một cách silent
+```
+
+Nếu việc binding đúng đòi hỏi một milestone/prerequisite quan trọng mà approved Roadmap chưa có:
+
+```text
+ROADMAP GAP
+→ quay lại Step 2
+→ review/approve Roadmap change
+→ sau đó quay lại Step 4 để hoàn tất Knowledge + relatedKnowledge binding
+```
+
+Nếu Knowledge identity thay đổi chỉ do Step 4 refactor nhưng Roadmap semantics vẫn đúng, Step 4 được phép update `relatedKnowledge` trực tiếp như một downstream navigation-binding maintenance task; không cần coi đó là Roadmap redesign.
+
+Step 4 review phải kiểm tra ít nhất:
+
+```text
+[ ] every existing relatedKnowledge target still exists
+[ ] no stale Knowledge identity remains in Roadmap mapping
+[ ] important Roadmap milestones that should navigate to Knowledge are mapped when useful
+[ ] mapping reflects CURRENT Knowledge, not historical Menu/Knowledge layout
+[ ] relatedKnowledge remains supporting navigation metadata, not curriculum authority
+```
+
 However, a mature module must collectively satisfy the three-layer contract:
 
 ```text
@@ -219,7 +292,7 @@ Preserve existing human-owned values. Use the repository's explicit synchronizat
 
 Knowledge is allowed to contain concepts without an API. Pure conceptual material, constraints, comparisons and mental models may be valid Knowledge even when no useful executable endpoint exists.
 
-At the end of the Knowledge authoring/refactor step, the module should have a coherent Knowledge path before Video/Quiz/Interview are authored and before API relations are finalized. Video later mirrors one Knowledge Menu file into one Video source and treats the finalized H2 order as its section order.
+At the end of the Knowledge authoring/refactor step, the module should have a coherent Knowledge path **and its applicable Roadmap `relatedKnowledge` bindings must reflect the CURRENT finalized Knowledge structure** before Video/Quiz/Interview are authored and before API relations are finalized. Video later mirrors one Knowledge Menu file into one Video source and treats the finalized H2 order as its section order.
 
 "Coherent" here means more than all planned anchors existing. A learner entering at chapter 1 should be able to follow the motivation and chapter transitions without already knowing the module's vocabulary.
 

@@ -1,0 +1,12 @@
+version: 1
+children:
+  fundamentals:
+    order: 10
+  ci-cd:
+    order: 20
+  versioning:
+    order: 30
+  artifact-management:
+    order: 40
+  release-management:
+    order: 50

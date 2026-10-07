@@ -1,0 +1,10 @@
+version: 1
+children:
+  fundamentals:
+    order: 10
+  maven-central:
+    order: 20
+  nexus:
+    order: 30
+  container-registry:
+    order: 40

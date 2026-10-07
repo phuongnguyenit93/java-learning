@@ -1,0 +1,18 @@
+version: 1
+children:
+  fundamentals:
+    order: 10
+  source-management:
+    order: 20
+  delivery-automation:
+    order: 30
+  runtime-delivery:
+    order: 40
+  infrastructure-management:
+    order: 50
+  reliability-operations:
+    order: 60
+  devsecops:
+    order: 70
+  platform-engineering:
+    order: 80

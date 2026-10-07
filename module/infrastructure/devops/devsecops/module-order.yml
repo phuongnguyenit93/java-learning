@@ -1,0 +1,18 @@
+version: 1
+children:
+  fundamentals:
+    order: 10
+  secret-scanning:
+    order: 20
+  dependency-scanning:
+    order: 30
+  sast-dast:
+    order: 40
+  container-security:
+    order: 50
+  infrastructure-security:
+    order: 60
+  pipeline-security:
+    order: 70
+  software-supply-chain:
+    order: 80

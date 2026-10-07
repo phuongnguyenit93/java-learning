@@ -1,0 +1,6 @@
+version: 1
+children:
+  fundamentals:
+    order: 10
+  terraform:
+    order: 20

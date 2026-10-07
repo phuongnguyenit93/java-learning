@@ -1,27 +1,83 @@
 module
 ├── infrastructure
 │   ├── devops
-│   │   ├── artifact-management
-│   │   │   ├── maven-central
-│   │   │   └── nexus
-│   │   ├── ci-cd
-│   │   │   ├── fundamentals
-│   │   │   ├── github-actions
-│   │   │   ├── gitlab-ci
-│   │   │   └── jenkins
-│   │   ├── configuration-management
-│   │   │   └── ansible
-│   │   ├── containerization
-│   │   │   └── docker
-│   │   ├── deployment
-│   │   │   └── deployment-strategy
-│   │   ├── environment-management
-│   │   ├── infrastructure-as-code
-│   │   │   └── terraform
-│   │   ├── orchestration
-│   │   │   └── kubernetes
-│   │   └── source-control
-│   │       └── git [SOURCE_CONTROL_GIT] : Git source control fundamentals: repository model, commits, branches, merges, rebases, tags, remotes and collaboration workflows
+│   │   ├── fundamentals [DEVOPS_FUNDAMENTALS] : DevOps fundamentals: lifecycle, culture, feedback loops, source-to-production flow, automation, delivery, operations and cross-cutting practices
+│   │   ├── source-management
+│   │   │   ├── fundamentals [DEVOPS_SOURCE_MANAGEMENT_FUNDAMENTALS] : Source management fundamentals: version control, repository hosting, collaboration workflows and repository strategy boundaries
+│   │   │   ├── source-control
+│   │   │   │   └── git [SOURCE_CONTROL_GIT] : Git source control fundamentals: repository model, commits, branches, merges, rebases, tags, remotes and collaboration workflows
+│   │   │   ├── collaboration-platform
+│   │   │   │   ├── github [COLLABORATION_GITHUB] : GitHub repository hosting and collaboration: repositories, pull requests, code review, permissions, branch protection, issues, releases and organization workflows
+│   │   │   │   ├── gitlab [COLLABORATION_GITLAB] : GitLab repository hosting and collaboration: repositories, merge requests, code review, permissions, protected branches, issues, releases and group/project workflows
+│   │   │   │   ├── bitbucket [COLLABORATION_BITBUCKET] : Bitbucket repository hosting and collaboration: repositories, pull requests, code review, workspace/project permissions, branch restrictions and team workflows
+│   │   │   │   └── azure-devops [COLLABORATION_AZURE_DEVOPS] : Azure DevOps collaboration with emphasis on Azure Repos: repositories, pull requests, code review, branch policies, permissions and project workflows
+│   │   │   └── repository-strategy
+│   │   │       ├── branching-strategy [DEVOPS_BRANCHING_STRATEGY] : Branching strategy for team delivery: trunk-based development, GitHub Flow, Git Flow, branch lifetime, integration and protection tradeoffs
+│   │   │       └── monorepo-polyrepo [DEVOPS_MONOREPO_POLYREPO] : Repository topology strategy: monorepo versus polyrepo ownership, dependency boundaries, tooling, scaling and delivery tradeoffs
+│   │   ├── delivery-automation
+│   │   │   ├── fundamentals [DEVOPS_DELIVERY_AUTOMATION_FUNDAMENTALS] : Delivery automation fundamentals: continuous integration, delivery flow, automation boundaries, feedback and promotion through delivery stages
+│   │   │   ├── ci-cd
+│   │   │   │   ├── fundamentals [DEVOPS_CI_CD_FUNDAMENTALS] : CI/CD fundamentals: pipeline stages, triggers, jobs, quality gates, artifacts, environments, promotion and feedback loops
+│   │   │   │   ├── github-actions
+│   │   │   │   ├── gitlab-ci
+│   │   │   │   └── jenkins
+│   │   │   ├── versioning [DEVOPS_VERSIONING] : Software versioning for delivery: semantic versioning, snapshots, prereleases, build metadata, tags and version lifecycle
+│   │   │   ├── artifact-management
+│   │   │   │   ├── fundamentals [DEVOPS_ARTIFACT_MANAGEMENT_FUNDAMENTALS] : Artifact management fundamentals: immutable build outputs, repositories, coordinates, provenance, retention, promotion and consumption
+│   │   │   │   ├── maven-central
+│   │   │   │   ├── nexus
+│   │   │   │   └── container-registry [DEVOPS_CONTAINER_REGISTRY] : Container registry concepts: OCI images, repositories, tags versus digests, immutability, retention, authentication and promotion
+│   │   │   └── release-management [DEVOPS_RELEASE_MANAGEMENT] : Release management: release candidates, approvals, promotion, changelogs, immutability, rollback and release coordination
+│   │   ├── runtime-delivery
+│   │   │   ├── fundamentals [DEVOPS_RUNTIME_DELIVERY_FUNDAMENTALS] : Runtime delivery fundamentals: packaging, deployment targets, orchestration, rollout, runtime configuration and operational delivery flow
+│   │   │   ├── containerization
+│   │   │   │   ├── fundamentals [DEVOPS_CONTAINERIZATION_FUNDAMENTALS] : Containerization fundamentals: images, containers, isolation, layers, registries, runtime lifecycle and portability tradeoffs
+│   │   │   │   ├── docker
+│   │   │   │   └── docker-compose [DEVOPS_DOCKER_COMPOSE] : Docker Compose for multi-container environments: services, networks, volumes, configuration, dependencies and local integration workflows
+│   │   │   ├── orchestration
+│   │   │   │   ├── fundamentals [DEVOPS_ORCHESTRATION_FUNDAMENTALS] : Container orchestration fundamentals: scheduling, desired state, service discovery, scaling, rollout, recovery and control-plane concepts
+│   │   │   │   ├── kubernetes
+│   │   │   │   └── helm [DEVOPS_HELM] : Helm for Kubernetes packaging: charts, templates, values, releases, dependencies, upgrade and rollback workflows
+│   │   │   ├── deployment
+│   │   │   │   ├── fundamentals [DEVOPS_DEPLOYMENT_FUNDAMENTALS] : Deployment fundamentals: rollout lifecycle, deployment safety, environment promotion, rollback, verification and delivery risk
+│   │   │   │   └── deployment-strategy
+│   │   │   └── gitops
+│   │   │       ├── fundamentals [DEVOPS_GITOPS_FUNDAMENTALS] : GitOps fundamentals: declarative desired state, Git as change source, reconciliation, drift detection, pull-based delivery and auditability
+│   │   │       └── argo-cd [DEVOPS_ARGO_CD] : Argo CD for GitOps delivery: applications, sync, reconciliation, health, drift, promotion and rollback on Kubernetes
+│   │   ├── infrastructure-management
+│   │   │   ├── fundamentals [DEVOPS_INFRASTRUCTURE_MANAGEMENT_FUNDAMENTALS] : Infrastructure management fundamentals: provisioning, configuration, environments, desired state, drift and infrastructure lifecycle automation
+│   │   │   ├── infrastructure-as-code
+│   │   │   │   ├── fundamentals [DEVOPS_IAC_FUNDAMENTALS] : Infrastructure as Code fundamentals: declarative versus imperative models, desired state, idempotency, state, planning and drift
+│   │   │   │   └── terraform
+│   │   │   ├── configuration-management
+│   │   │   │   ├── fundamentals [DEVOPS_CONFIGURATION_MANAGEMENT_FUNDAMENTALS] : Configuration management fundamentals: desired configuration, idempotency, inventory, convergence, drift and host configuration automation
+│   │   │   │   └── ansible
+│   │   │   └── environment-management
+│   │   │       ├── fundamentals [DEVOPS_ENVIRONMENT_MANAGEMENT_FUNDAMENTALS] : Environment management fundamentals: local, development, staging and production boundaries, configuration ownership and promotion
+│   │   │       └── environment-strategy [DEVOPS_ENVIRONMENT_STRATEGY] : Environment strategy: environment topology, parity, promotion, ephemeral environments, configuration separation and lifecycle tradeoffs
+│   │   ├── reliability-operations
+│   │   │   ├── fundamentals [DEVOPS_RELIABILITY_OPERATIONS_FUNDAMENTALS] : Reliability and operations fundamentals: service health, operational readiness, feedback, failure handling, recovery and continuous improvement
+│   │   │   ├── sli-slo-sla [DEVOPS_SLI_SLO_SLA] : SLI, SLO and SLA fundamentals: service indicators, objectives, agreements, error budgets and reliability decision making
+│   │   │   ├── alerting-strategy [DEVOPS_ALERTING_STRATEGY] : Alerting strategy: actionable signals, symptom versus cause alerts, severity, routing, noise reduction and escalation design
+│   │   │   ├── incident-management [DEVOPS_INCIDENT_MANAGEMENT] : Incident management: detection, triage, command, communication, mitigation, recovery and operational coordination
+│   │   │   ├── postmortem [DEVOPS_POSTMORTEM] : Blameless postmortems: timeline, contributing factors, corrective actions, learning loops and follow-through after incidents
+│   │   │   ├── capacity-planning [DEVOPS_CAPACITY_PLANNING] : Capacity planning: demand, saturation, headroom, scaling thresholds, forecasting, bottlenecks and cost-performance tradeoffs
+│   │   │   └── disaster-recovery [DEVOPS_DISASTER_RECOVERY] : Disaster recovery: failure domains, backups, restore verification, RTO, RPO, failover and recovery planning
+│   │   ├── devsecops
+│   │   │   ├── fundamentals [DEVSECOPS_FUNDAMENTALS] : DevSecOps fundamentals: integrating security controls, feedback and ownership throughout the software delivery lifecycle
+│   │   │   ├── secret-scanning [DEVSECOPS_SECRET_SCANNING] : Secret scanning in source and delivery workflows: detection, prevention, remediation, rotation and false-positive handling
+│   │   │   ├── dependency-scanning [DEVSECOPS_DEPENDENCY_SCANNING] : Dependency scanning: software composition analysis, vulnerable dependencies, advisories, remediation and policy gates
+│   │   │   ├── sast-dast [DEVSECOPS_SAST_DAST] : SAST and DAST in delivery pipelines: static and dynamic analysis scope, placement, findings, gating and tradeoffs
+│   │   │   ├── container-security [DEVSECOPS_CONTAINER_SECURITY] : Container delivery security: image hardening, scanning, provenance, least privilege, runtime boundaries and policy enforcement
+│   │   │   ├── infrastructure-security [DEVSECOPS_INFRASTRUCTURE_SECURITY] : Infrastructure security in DevOps: IaC scanning, policy as code, misconfiguration detection, review and enforcement
+│   │   │   ├── pipeline-security [DEVSECOPS_PIPELINE_SECURITY] : Pipeline security: credentials, permissions, runner trust, untrusted input, artifact integrity and protected delivery workflows
+│   │   │   └── software-supply-chain [DEVSECOPS_SOFTWARE_SUPPLY_CHAIN] : Software supply-chain security: provenance, SBOM, signing, attestations, dependency trust, build integrity and release verification
+│   │   └── platform-engineering
+│   │       ├── fundamentals [DEVOPS_PLATFORM_ENGINEERING_FUNDAMENTALS] : Platform engineering fundamentals: internal platforms, product thinking, developer experience, self-service, golden paths and platform ownership
+│   │       ├── internal-developer-platform [DEVOPS_INTERNAL_DEVELOPER_PLATFORM] : Internal Developer Platform concepts: platform capabilities, interfaces, abstractions, paved roads, ownership, governance and developer experience
+│   │       ├── self-service [DEVOPS_PLATFORM_SELF_SERVICE] : Self-service platform workflows: catalog-driven provisioning, standardized actions, guardrails, automation, permissions and developer autonomy
+│   │       ├── golden-path [DEVOPS_GOLDEN_PATH] : Golden paths for software delivery: recommended workflows, templates, standards, guardrails, escape hatches and continuous improvement
+│   │       └── backstage [DEVOPS_BACKSTAGE] : Backstage developer portal: software catalog, templates, plugins, ownership metadata, developer workflows and platform integration
 │   └── system
 │       ├── database
 │       │   ├── connection-management
@@ -80,16 +136,9 @@ module
 │       │   └── traffic-management
 │       │       └── rate-limiting
 │       ├── observability
-│       │   ├── diagnostic
-│       │   │   ├── profiling
-│       │   │   │   ├── jprofiler
-│       │   │   │   └── visualvm
-│       │   │   ├── runtime-analysis
-│       │   │   │   └── arthas [ARTHAS]
-│       │   │   ├── runtime-monitoring
-│       │   │   │   └── jconsole
-│       │   │   └── thread-dump
-│       │   │       └── jstack
+│       │   ├── fundamentals [SYSTEM_OBSERVABILITY_FUNDAMENTALS] : Observability fundamentals: monitoring versus observability, telemetry signals, instrumentation, correlation, context propagation, cardinality and telemetry pipelines
+│       │   ├── instrumentation
+│       │   │   └── opentelemetry [SYSTEM_OBSERVABILITY_OPENTELEMETRY] : OpenTelemetry instrumentation and telemetry pipeline concepts: traces, metrics, logs, context propagation, OTLP, SDKs, auto-instrumentation and Collector
 │       │   ├── logging
 │       │   │   ├── event-log
 │       │   │   │   ├── audit-log
@@ -107,21 +156,34 @@ module
 │       │   │       ├── elk-stack
 │       │   │       │   └── kibana
 │       │   │       └── loki-stack
-│       │   ├── management-console
-│       │   │   └── hawtio [HAWTIO]
 │       │   ├── metrics
 │       │   │   ├── aggregation
 │       │   │   ├── time-series
 │       │   │   │   └── prometheus
 │       │   │   └── visualization
 │       │   │       └── grafana
-│       │   └── tracing
-│       │       ├── concept
-│       │       └── tooling
-│       │           ├── datadog
-│       │           ├── jaeger
-│       │           ├── tempo
-│       │           └── zipkin
+│       │   ├── tracing
+│       │   │   ├── concept
+│       │   │   └── tooling
+│       │   │       ├── datadog
+│       │   │       ├── jaeger
+│       │   │       ├── tempo
+│       │   │       └── zipkin
+│       │   ├── alerting
+│       │   │   ├── fundamentals [SYSTEM_OBSERVABILITY_ALERTING_FUNDAMENTALS] : Technical alerting fundamentals: rule evaluation, thresholds, grouping, routing, silencing, inhibition, notification delivery and alert lifecycle
+│       │   │   └── alertmanager [SYSTEM_OBSERVABILITY_ALERTMANAGER] : Prometheus Alertmanager: alert grouping, routing, receivers, inhibition, silences, deduplication and notification delivery
+│       │   ├── diagnostic
+│       │   │   ├── profiling
+│       │   │   │   ├── jprofiler
+│       │   │   │   └── visualvm
+│       │   │   ├── runtime-analysis
+│       │   │   │   └── arthas [ARTHAS]
+│       │   │   ├── runtime-monitoring
+│       │   │   │   └── jconsole
+│       │   │   └── thread-dump
+│       │   │       └── jstack
+│       │   └── management-console
+│       │       └── hawtio [HAWTIO]
 │       ├── runtime
 │       │   └── servlet-container
 │       │       ├── jetty

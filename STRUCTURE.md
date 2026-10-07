@@ -14,96 +14,308 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <summary><b><a href='./module/infrastructure/devops'>📁 devops</a></b></summary>
 <ul>
 <li>
-<details>
-  <summary><b><a href='./module/infrastructure/devops/artifact-management'>📁 artifact-management</a></b></summary>
-<ul>
-<li>
-  <a href='./module/infrastructure/devops/artifact-management/maven-central'>🪄 maven-central</a>
+  <a href='./module/infrastructure/devops/fundamentals'>🪄 fundamentals</a>
 </li>
 <li>
-  <a href='./module/infrastructure/devops/artifact-management/nexus'>🪄 nexus</a>
+<details>
+  <summary><b><a href='./module/infrastructure/devops/source-management'>📁 source-management</a></b></summary>
+<ul>
+<li>
+  <a href='./module/infrastructure/devops/source-management/fundamentals'>🪄 fundamentals</a>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/infrastructure/devops/source-management/source-control'>📁 source-control</a></b></summary>
+<ul>
+<li>
+  <a href='./module/infrastructure/devops/source-management/source-control/git'>🪄 git</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
 <details>
-  <summary><b><a href='./module/infrastructure/devops/ci-cd'>📁 ci-cd</a></b></summary>
+  <summary><b><a href='./module/infrastructure/devops/source-management/collaboration-platform'>📁 collaboration-platform</a></b></summary>
 <ul>
 <li>
-  <a href='./module/infrastructure/devops/ci-cd/fundamentals'>🪄 fundamentals</a>
+  <a href='./module/infrastructure/devops/source-management/collaboration-platform/github'>🪄 github</a>
 </li>
 <li>
-  <a href='./module/infrastructure/devops/ci-cd/github-actions'>🪄 github-actions</a>
+  <a href='./module/infrastructure/devops/source-management/collaboration-platform/gitlab'>🪄 gitlab</a>
 </li>
 <li>
-  <a href='./module/infrastructure/devops/ci-cd/gitlab-ci'>🪄 gitlab-ci</a>
+  <a href='./module/infrastructure/devops/source-management/collaboration-platform/bitbucket'>🪄 bitbucket</a>
 </li>
 <li>
-  <a href='./module/infrastructure/devops/ci-cd/jenkins'>🪄 jenkins</a>
+  <a href='./module/infrastructure/devops/source-management/collaboration-platform/azure-devops'>🪄 azure-devops</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
 <details>
-  <summary><b><a href='./module/infrastructure/devops/configuration-management'>📁 configuration-management</a></b></summary>
+  <summary><b><a href='./module/infrastructure/devops/source-management/repository-strategy'>📁 repository-strategy</a></b></summary>
 <ul>
 <li>
-  <a href='./module/infrastructure/devops/configuration-management/ansible'>🪄 ansible</a>
+  <a href='./module/infrastructure/devops/source-management/repository-strategy/branching-strategy'>🪄 branching-strategy</a>
+</li>
+<li>
+  <a href='./module/infrastructure/devops/source-management/repository-strategy/monorepo-polyrepo'>🪄 monorepo-polyrepo</a>
+</li>
+</ul>
+</details>
 </li>
 </ul>
 </details>
 </li>
 <li>
 <details>
-  <summary><b><a href='./module/infrastructure/devops/containerization'>📁 containerization</a></b></summary>
+  <summary><b><a href='./module/infrastructure/devops/delivery-automation'>📁 delivery-automation</a></b></summary>
 <ul>
 <li>
-  <a href='./module/infrastructure/devops/containerization/docker'>🪄 docker</a>
+  <a href='./module/infrastructure/devops/delivery-automation/fundamentals'>🪄 fundamentals</a>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/infrastructure/devops/delivery-automation/ci-cd'>📁 ci-cd</a></b></summary>
+<ul>
+<li>
+  <a href='./module/infrastructure/devops/delivery-automation/ci-cd/fundamentals'>🪄 fundamentals</a>
+</li>
+<li>
+  <a href='./module/infrastructure/devops/delivery-automation/ci-cd/github-actions'>🪄 github-actions</a>
+</li>
+<li>
+  <a href='./module/infrastructure/devops/delivery-automation/ci-cd/gitlab-ci'>🪄 gitlab-ci</a>
+</li>
+<li>
+  <a href='./module/infrastructure/devops/delivery-automation/ci-cd/jenkins'>🪄 jenkins</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+  <a href='./module/infrastructure/devops/delivery-automation/versioning'>🪄 versioning</a>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/infrastructure/devops/delivery-automation/artifact-management'>📁 artifact-management</a></b></summary>
+<ul>
+<li>
+  <a href='./module/infrastructure/devops/delivery-automation/artifact-management/fundamentals'>🪄 fundamentals</a>
+</li>
+<li>
+  <a href='./module/infrastructure/devops/delivery-automation/artifact-management/maven-central'>🪄 maven-central</a>
+</li>
+<li>
+  <a href='./module/infrastructure/devops/delivery-automation/artifact-management/nexus'>🪄 nexus</a>
+</li>
+<li>
+  <a href='./module/infrastructure/devops/delivery-automation/artifact-management/container-registry'>🪄 container-registry</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+  <a href='./module/infrastructure/devops/delivery-automation/release-management'>🪄 release-management</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
 <details>
-  <summary><b><a href='./module/infrastructure/devops/deployment'>📁 deployment</a></b></summary>
+  <summary><b><a href='./module/infrastructure/devops/runtime-delivery'>📁 runtime-delivery</a></b></summary>
 <ul>
 <li>
-  <a href='./module/infrastructure/devops/deployment/deployment-strategy'>🪄 deployment-strategy</a>
-</li>
-</ul>
-</details>
-</li>
-<li>
-  <a href='./module/infrastructure/devops/environment-management'>🪄 environment-management</a>
+  <a href='./module/infrastructure/devops/runtime-delivery/fundamentals'>🪄 fundamentals</a>
 </li>
 <li>
 <details>
-  <summary><b><a href='./module/infrastructure/devops/infrastructure-as-code'>📁 infrastructure-as-code</a></b></summary>
+  <summary><b><a href='./module/infrastructure/devops/runtime-delivery/containerization'>📁 containerization</a></b></summary>
 <ul>
 <li>
-  <a href='./module/infrastructure/devops/infrastructure-as-code/terraform'>🪄 terraform</a>
-</li>
-</ul>
-</details>
+  <a href='./module/infrastructure/devops/runtime-delivery/containerization/fundamentals'>🪄 fundamentals</a>
 </li>
 <li>
-<details>
-  <summary><b><a href='./module/infrastructure/devops/orchestration'>📁 orchestration</a></b></summary>
-<ul>
+  <a href='./module/infrastructure/devops/runtime-delivery/containerization/docker'>🪄 docker</a>
+</li>
 <li>
-  <a href='./module/infrastructure/devops/orchestration/kubernetes'>🪄 kubernetes</a>
+  <a href='./module/infrastructure/devops/runtime-delivery/containerization/docker-compose'>🪄 docker-compose</a>
 </li>
 </ul>
 </details>
 </li>
 <li>
 <details>
-  <summary><b><a href='./module/infrastructure/devops/source-control'>📁 source-control</a></b></summary>
+  <summary><b><a href='./module/infrastructure/devops/runtime-delivery/orchestration'>📁 orchestration</a></b></summary>
 <ul>
 <li>
-  <a href='./module/infrastructure/devops/source-control/git'>🪄 git</a>
+  <a href='./module/infrastructure/devops/runtime-delivery/orchestration/fundamentals'>🪄 fundamentals</a>
+</li>
+<li>
+  <a href='./module/infrastructure/devops/runtime-delivery/orchestration/kubernetes'>🪄 kubernetes</a>
+</li>
+<li>
+  <a href='./module/infrastructure/devops/runtime-delivery/orchestration/helm'>🪄 helm</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/infrastructure/devops/runtime-delivery/deployment'>📁 deployment</a></b></summary>
+<ul>
+<li>
+  <a href='./module/infrastructure/devops/runtime-delivery/deployment/fundamentals'>🪄 fundamentals</a>
+</li>
+<li>
+  <a href='./module/infrastructure/devops/runtime-delivery/deployment/deployment-strategy'>🪄 deployment-strategy</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/infrastructure/devops/runtime-delivery/gitops'>📁 gitops</a></b></summary>
+<ul>
+<li>
+  <a href='./module/infrastructure/devops/runtime-delivery/gitops/fundamentals'>🪄 fundamentals</a>
+</li>
+<li>
+  <a href='./module/infrastructure/devops/runtime-delivery/gitops/argo-cd'>🪄 argo-cd</a>
+</li>
+</ul>
+</details>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/infrastructure/devops/infrastructure-management'>📁 infrastructure-management</a></b></summary>
+<ul>
+<li>
+  <a href='./module/infrastructure/devops/infrastructure-management/fundamentals'>🪄 fundamentals</a>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/infrastructure/devops/infrastructure-management/infrastructure-as-code'>📁 infrastructure-as-code</a></b></summary>
+<ul>
+<li>
+  <a href='./module/infrastructure/devops/infrastructure-management/infrastructure-as-code/fundamentals'>🪄 fundamentals</a>
+</li>
+<li>
+  <a href='./module/infrastructure/devops/infrastructure-management/infrastructure-as-code/terraform'>🪄 terraform</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/infrastructure/devops/infrastructure-management/configuration-management'>📁 configuration-management</a></b></summary>
+<ul>
+<li>
+  <a href='./module/infrastructure/devops/infrastructure-management/configuration-management/fundamentals'>🪄 fundamentals</a>
+</li>
+<li>
+  <a href='./module/infrastructure/devops/infrastructure-management/configuration-management/ansible'>🪄 ansible</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/infrastructure/devops/infrastructure-management/environment-management'>📁 environment-management</a></b></summary>
+<ul>
+<li>
+  <a href='./module/infrastructure/devops/infrastructure-management/environment-management/fundamentals'>🪄 fundamentals</a>
+</li>
+<li>
+  <a href='./module/infrastructure/devops/infrastructure-management/environment-management/environment-strategy'>🪄 environment-strategy</a>
+</li>
+</ul>
+</details>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/infrastructure/devops/reliability-operations'>📁 reliability-operations</a></b></summary>
+<ul>
+<li>
+  <a href='./module/infrastructure/devops/reliability-operations/fundamentals'>🪄 fundamentals</a>
+</li>
+<li>
+  <a href='./module/infrastructure/devops/reliability-operations/sli-slo-sla'>🪄 sli-slo-sla</a>
+</li>
+<li>
+  <a href='./module/infrastructure/devops/reliability-operations/alerting-strategy'>🪄 alerting-strategy</a>
+</li>
+<li>
+  <a href='./module/infrastructure/devops/reliability-operations/incident-management'>🪄 incident-management</a>
+</li>
+<li>
+  <a href='./module/infrastructure/devops/reliability-operations/postmortem'>🪄 postmortem</a>
+</li>
+<li>
+  <a href='./module/infrastructure/devops/reliability-operations/capacity-planning'>🪄 capacity-planning</a>
+</li>
+<li>
+  <a href='./module/infrastructure/devops/reliability-operations/disaster-recovery'>🪄 disaster-recovery</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/infrastructure/devops/devsecops'>📁 devsecops</a></b></summary>
+<ul>
+<li>
+  <a href='./module/infrastructure/devops/devsecops/fundamentals'>🪄 fundamentals</a>
+</li>
+<li>
+  <a href='./module/infrastructure/devops/devsecops/secret-scanning'>🪄 secret-scanning</a>
+</li>
+<li>
+  <a href='./module/infrastructure/devops/devsecops/dependency-scanning'>🪄 dependency-scanning</a>
+</li>
+<li>
+  <a href='./module/infrastructure/devops/devsecops/sast-dast'>🪄 sast-dast</a>
+</li>
+<li>
+  <a href='./module/infrastructure/devops/devsecops/container-security'>🪄 container-security</a>
+</li>
+<li>
+  <a href='./module/infrastructure/devops/devsecops/infrastructure-security'>🪄 infrastructure-security</a>
+</li>
+<li>
+  <a href='./module/infrastructure/devops/devsecops/pipeline-security'>🪄 pipeline-security</a>
+</li>
+<li>
+  <a href='./module/infrastructure/devops/devsecops/software-supply-chain'>🪄 software-supply-chain</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/infrastructure/devops/platform-engineering'>📁 platform-engineering</a></b></summary>
+<ul>
+<li>
+  <a href='./module/infrastructure/devops/platform-engineering/fundamentals'>🪄 fundamentals</a>
+</li>
+<li>
+  <a href='./module/infrastructure/devops/platform-engineering/internal-developer-platform'>🪄 internal-developer-platform</a>
+</li>
+<li>
+  <a href='./module/infrastructure/devops/platform-engineering/self-service'>🪄 self-service</a>
+</li>
+<li>
+  <a href='./module/infrastructure/devops/platform-engineering/golden-path'>🪄 golden-path</a>
+</li>
+<li>
+  <a href='./module/infrastructure/devops/platform-engineering/backstage'>🪄 backstage</a>
 </li>
 </ul>
 </details>
@@ -384,51 +596,14 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <summary><b><a href='./module/infrastructure/system/observability'>📁 observability</a></b></summary>
 <ul>
 <li>
-<details>
-  <summary><b><a href='./module/infrastructure/system/observability/diagnostic'>📁 diagnostic</a></b></summary>
-<ul>
-<li>
-<details>
-  <summary><b><a href='./module/infrastructure/system/observability/diagnostic/profiling'>📁 profiling</a></b></summary>
-<ul>
-<li>
-  <a href='./module/infrastructure/system/observability/diagnostic/profiling/jprofiler'>🪄 jprofiler</a>
-</li>
-<li>
-  <a href='./module/infrastructure/system/observability/diagnostic/profiling/visualvm'>🪄 visualvm</a>
-</li>
-</ul>
-</details>
+  <a href='./module/infrastructure/system/observability/fundamentals'>🪄 fundamentals</a>
 </li>
 <li>
 <details>
-  <summary><b><a href='./module/infrastructure/system/observability/diagnostic/runtime-analysis'>📁 runtime-analysis</a></b></summary>
+  <summary><b><a href='./module/infrastructure/system/observability/instrumentation'>📁 instrumentation</a></b></summary>
 <ul>
 <li>
-  <a href='./module/infrastructure/system/observability/diagnostic/runtime-analysis/arthas'>🪄 arthas</a>
-</li>
-</ul>
-</details>
-</li>
-<li>
-<details>
-  <summary><b><a href='./module/infrastructure/system/observability/diagnostic/runtime-monitoring'>📁 runtime-monitoring</a></b></summary>
-<ul>
-<li>
-  <a href='./module/infrastructure/system/observability/diagnostic/runtime-monitoring/jconsole'>🪄 jconsole</a>
-</li>
-</ul>
-</details>
-</li>
-<li>
-<details>
-  <summary><b><a href='./module/infrastructure/system/observability/diagnostic/thread-dump'>📁 thread-dump</a></b></summary>
-<ul>
-<li>
-  <a href='./module/infrastructure/system/observability/diagnostic/thread-dump/jstack'>🪄 jstack</a>
-</li>
-</ul>
-</details>
+  <a href='./module/infrastructure/system/observability/instrumentation/opentelemetry'>🪄 opentelemetry</a>
 </li>
 </ul>
 </details>
@@ -510,16 +685,6 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </li>
 <li>
 <details>
-  <summary><b><a href='./module/infrastructure/system/observability/management-console'>📁 management-console</a></b></summary>
-<ul>
-<li>
-  <a href='./module/infrastructure/system/observability/management-console/hawtio'>🪄 hawtio</a>
-</li>
-</ul>
-</details>
-</li>
-<li>
-<details>
   <summary><b><a href='./module/infrastructure/system/observability/metrics'>📁 metrics</a></b></summary>
 <ul>
 <li>
@@ -573,6 +738,79 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </li>
 </ul>
 </details>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/infrastructure/system/observability/alerting'>📁 alerting</a></b></summary>
+<ul>
+<li>
+  <a href='./module/infrastructure/system/observability/alerting/fundamentals'>🪄 fundamentals</a>
+</li>
+<li>
+  <a href='./module/infrastructure/system/observability/alerting/alertmanager'>🪄 alertmanager</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/infrastructure/system/observability/diagnostic'>📁 diagnostic</a></b></summary>
+<ul>
+<li>
+<details>
+  <summary><b><a href='./module/infrastructure/system/observability/diagnostic/profiling'>📁 profiling</a></b></summary>
+<ul>
+<li>
+  <a href='./module/infrastructure/system/observability/diagnostic/profiling/jprofiler'>🪄 jprofiler</a>
+</li>
+<li>
+  <a href='./module/infrastructure/system/observability/diagnostic/profiling/visualvm'>🪄 visualvm</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/infrastructure/system/observability/diagnostic/runtime-analysis'>📁 runtime-analysis</a></b></summary>
+<ul>
+<li>
+  <a href='./module/infrastructure/system/observability/diagnostic/runtime-analysis/arthas'>🪄 arthas</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/infrastructure/system/observability/diagnostic/runtime-monitoring'>📁 runtime-monitoring</a></b></summary>
+<ul>
+<li>
+  <a href='./module/infrastructure/system/observability/diagnostic/runtime-monitoring/jconsole'>🪄 jconsole</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/infrastructure/system/observability/diagnostic/thread-dump'>📁 thread-dump</a></b></summary>
+<ul>
+<li>
+  <a href='./module/infrastructure/system/observability/diagnostic/thread-dump/jstack'>🪄 jstack</a>
+</li>
+</ul>
+</details>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
+  <summary><b><a href='./module/infrastructure/system/observability/management-console'>📁 management-console</a></b></summary>
+<ul>
+<li>
+  <a href='./module/infrastructure/system/observability/management-console/hawtio'>🪄 hawtio</a>
 </li>
 </ul>
 </details>

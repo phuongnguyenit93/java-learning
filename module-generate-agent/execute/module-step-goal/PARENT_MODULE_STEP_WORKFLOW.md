@@ -80,9 +80,9 @@ Authority is split as follows:
 PARENT_MODULE_STEP_WORKFLOW.md
 → process sibling child modules horizontally by STEP
 → max-two-sub-worker scheduling with Prime optionally acting as a third execution lane
-→ wave-oriented three-lane scheduling
-→ original-author write ownership for fixes
-→ cyclic independent-review routing
+→ parent-wide phase scheduling across the full target-child set
+→ explicit transferable write ownership with no concurrent writers
+→ independent-review routing that preserves reviewer-vs-initial-author separation
 → worktree isolation rules
 → STEP barrier across all children
 
@@ -187,8 +187,56 @@ At minimum, check the CURRENT versions of:
 ```text
 module-generate-agent/GENERAL_AGENT_RULES.md
 CURRENT canonical STEP rule file
-required Curriculum/governance inputs named by those rules
+STEP-range context inputs defined below
 ```
+
+### Mandatory context-loading contract by STEP range
+
+Before authoring **or reviewing** any child for the CURRENT STEP, Prime and the assigned execution lane must work from fresh CURRENT context, not remembered summaries.
+
+Always load:
+
+```text
+CURRENT module-generate-agent/GENERAL_AGENT_RULES.md
+        +
+CURRENT canonical STEP rule file resolved from that governance
+        +
+CURRENT target-child module state / required upstream artifacts
+```
+
+Then apply this explicit Curriculum boundary:
+
+```text
+STEP 2 / STEP 3 / STEP 4 / STEP 5
+→ resolve the relevant Curriculum Map for the actual parent/child scope
+→ when substantive Curriculum content exists, READ and USE it
+
+STEP 6 AND LATER
+→ Curriculum is NOT a required execution input
+→ do not reload/search Curriculum merely by habit
+→ derive the STEP from CURRENT module content + CURRENT approved/upstream artifacts
+  + source/runtime/repository evidence required by the CURRENT STEP rule
+```
+
+For STEP 2–5, a Curriculum filename existing is not enough. Treat a missing file, empty file, title-only scaffold, placeholder-only artifact, or a Curriculum that contains no substantive scope/ownership guidance for the target as **no usable Curriculum content**.
+
+When STEP 2–5 has no usable Curriculum content:
+
+```text
+inspect the CURRENT child/module content
+        +
+inspect CURRENT upstream artifacts/repository evidence that already exists
+        ↓
+substantive grounding exists?
+   ├─ YES → continue from that CURRENT content according to GENERAL + CURRENT STEP rules
+   └─ NO  → STOP the affected child instead of inventing scope/content
+```
+
+If an affected child stops for this reason, report the missing context clearly. Because the parent cannot advance to the next canonical STEP until every target child satisfies the current barrier, the parent workflow remains blocked until the missing context is supplied/resolved or CURRENT governance changes the target set.
+
+Do not use external knowledge alone to silently bootstrap a completely empty STEP 2–5 child when both usable Curriculum content and substantive CURRENT module/upstream content are absent in this parent workflow.
+
+For STEP 6+, the grounding source is the **CURRENT module**, not the Curriculum Map. If the CURRENT module/upstream artifacts required by that STEP are missing or insufficient, route/stop according to the CURRENT STEP and upstream-defect rules rather than falling back to Curriculum.
 
 Do not silently assume two worktrees contain equivalent rules because they came from the same repository historically.
 
@@ -222,8 +270,9 @@ For the normal full run:
 3. read CURRENT GENERAL_AGENT_RULES.md from disk;
 4. resolve what CURRENT canonical STEP 2 is and which rule file owns it;
 5. read that CURRENT STEP 2 rule file from disk;
-6. verify shared governance compatibility across participating worktrees;
-7. execute STEP 2 horizontally across every target child module.
+6. apply the STEP-range context-loading contract above, including relevant Curriculum handling for STEP 2;
+7. verify shared governance compatibility across participating worktrees;
+8. execute STEP 2 horizontally across every target child module.
 ```
 
 For an explicit STEP 3+ partial/resume run:
@@ -236,8 +285,9 @@ For an explicit STEP 3+ partial/resume run:
 5. read CURRENT GENERAL_AGENT_RULES.md from disk;
 6. resolve the requested canonical STEP and its CURRENT rule file;
 7. read that rule file from disk;
-8. verify shared governance compatibility across participating worktrees;
-9. execute the requested STEP horizontally across every target child module.
+8. apply the STEP-range context-loading contract above;
+9. verify shared governance compatibility across participating worktrees;
+10. execute the requested STEP horizontally across every target child module.
 ```
 
 Do not replay STEP 2 merely because this Goal's normal full-run entry is STEP 2 when the invoking request explicitly authorizes a later-step partial/resume run.
@@ -261,7 +311,9 @@ resolve the NEXT canonical STEP and its CURRENT delegated rule file
         ↓
 READ THAT STEP RULE FILE FROM DISK
         ↓
-refresh required context
+APPLY THE STEP-RANGE CONTEXT-LOADING CONTRACT
+→ STEP 2–5: Curriculum when substantive, otherwise CURRENT content fallback; stop if neither exists
+→ STEP 6+: CURRENT module/upstream content; Curriculum not required
         ↓
 verify governance compatibility across target worktrees
         ↓
@@ -291,136 +343,187 @@ Do not spawn additional sub-workers merely to increase throughput.
 
 The Prime remains the scheduler and source of orchestration truth even while it owns one child module directly.
 
-Prime is allowed to perform the same authoring/fix/validation role as a sub-worker for one child module. Therefore the scheduler may process up to three child modules concurrently when the worktrees are isolated and review sequencing remains safe.
+Prime is allowed to perform the same authoring/fix/validation/review role as a sub-worker when safe. Therefore the scheduler may process up to three child-module assignments concurrently when worktree isolation and source-state dependencies remain correct.
 
-Preferred execution-lane responsibilities:
-
-```text
-Worker 1
-→ authors one child module in the current wave
-→ writes only that authored child's worktree
-→ later reviews another wave child READ-ONLY
-
-Worker 2
-→ authors one child module in the current wave
-→ writes only that authored child's worktree
-→ later reviews another wave child READ-ONLY
-
-Prime, when used as an execution lane
-→ authors one child module in the current wave
-→ writes only that authored child's worktree
-→ later reviews another wave child READ-ONLY
-→ must still maintain parent-level scheduling state
-```
-
-The **original author remains the write owner** of that child for the current STEP until CLEAN.
-
-Write ownership means:
+Execution lanes are reusable across the entire target-child set within the CURRENT phase:
 
 ```text
-authoring
-validation
-receiving review findings
-applying valid fixes
-revalidation
-final CLEAN handoff
+Prime / Worker 1 / Worker 2
+→ take one eligible child assignment
+→ finish that assignment safely
+→ then take another eligible child assignment in the SAME CURRENT PHASE
 ```
 
-Review roles may rotate between lanes, but reviewers remain read-only on children they did not author.
+Do not reserve one lane permanently for one child unless that is operationally useful.
 
-Do not permanently assign an author to a later wave while its authored child still has unresolved valid findings or required revalidation unless Prime can preserve that author's fix ownership without unsafe context/worktree switching.
+### Write ownership is exclusive but transferable
+
+Every child branch/worktree has at most **one active writer at a time**.
+
+The initial author is the preferred fixer when convenient because that preserves context, but fix ownership may be transferred to Prime or another worker when that is simpler or more efficient.
+
+Transfer rules:
+
+```text
+before writing:
+→ identify the child module
+→ identify its exact branch
+→ identify its exact worktree
+→ identify the CURRENT write owner
+
+when ownership transfers:
+→ previous writer stops writing that child
+→ Prime records/knows the new write owner
+→ new writer uses the SAME child branch/worktree
+→ never allow concurrent writers
+```
+
+A reviewer may become the fixer after the review has finished. Review independence is preserved by requiring the reviewer to be different from the **initial author** of that child for the CURRENT STEP; the reviewer is not required to remain permanently read-only afterward.
+
+The initial author must still be tracked durably because reviewer eligibility depends on it even if later write ownership changes.
 
 ---
 
-## 7. WAVE-ORIENTED CHILD SCHEDULING
+## 7. PARENT-WIDE PHASE SCHEDULING ACROSS ALL TARGET CHILDREN
 
-At most three child modules are grouped into one active **wave**:
+Do not group children into lifecycle waves.
 
-```text
-Prime + Worker 1 + Worker 2
-```
+The CURRENT STEP is scheduled across the **entire target-child set** using parent-wide phases.
 
-Prime participation is optional, not mandatory. Use a two-child wave when Prime needs to concentrate on orchestration, integration, recovery, or review routing.
-
-Preferred three-child wave:
+The high-level model is:
 
 ```text
-AUTHOR PHASE
-Prime    → child 1
-Worker 1 → child 2
-Worker 2 → child 3
-
-REVIEW #1 PHASE
-rotate lanes across the three current children
-
-FIX / REVALIDATE PHASE
-original authors fix their own children
-
-REVIEW #2 PHASE
-rotate again, preferably to a reviewer different from Review #1
-
-FINAL FIX / REVALIDATE
-original authors fix their own children
-
-WAVE CLEAN
-→ only then schedule the next wave
+PHASE A — IMPLEMENT / AUTHOR ALL N CHILDREN
+        ↓
+ALL N IMPLEMENTED + REQUIRED PRE-REVIEW VALIDATION COMPLETE
+        ↓
+PHASE B — REVIEW #1 ACROSS ALL N CHILDREN
+        ↓
+ALL N HAVE COMPLETED REVIEW #1
+        ↓
+PHASE C — REVIEW #2 BECOMES GLOBALLY ELIGIBLE
+        ↓
+EVERY CHILD EVENTUALLY COMPLETES REVIEW #2
+        ↓
+REVIEW #3+ ONLY FOR AFFECTED CHILDREN WHEN NEEDED
+        ↓
+ALL N CLEAN
+        ↓
+PARENT-LEVEL CONSISTENCY CHECK
+        ↓
+NEXT CANONICAL STEP
 ```
 
-This is **phase-centric / wave-centric scheduling**, not worker-centric scheduling.
+The three available execution lanes are a **concurrency limit**, not a child grouping boundary.
 
-The scheduler does not require authoring completion times to be identical, but it should normally keep the current wave together through its review/fix lifecycle rather than immediately sending the first free lane into a later wave.
+Example with many children:
 
-### Pipeline the next phase as soon as it is eligible
+```text
+IMPLEMENT PHASE
+Prime    → child A → then child D → then child G ...
+Worker 1 → child B → then child E → then child H ...
+Worker 2 → child C → then child F → then child I ...
 
-Do not insert an artificial idle barrier between phases inside the same wave.
+When a lane becomes free:
+→ take the next eligible child assignment in the same CURRENT parent phase
+```
 
-When the prerequisites for the **next wave phase** are satisfied, any free execution lane should immediately take eligible work from that next phase.
+### Implement barrier before Review #1
+
+Review #1 does not open until **all target children** have completed CURRENT-STEP implementation plus whatever pre-review validation the CURRENT STEP rule requires.
+
+Therefore this is forbidden:
+
+```text
+child A implementation done
+→ start Review #1 A
+while child B/C/... have not yet finished implementation
+```
+
+Required:
+
+```text
+ALL N children implementation complete
+        ↓
+open Review #1 phase
+```
+
+### Review #1 fixes may happen immediately per child
+
+Once Review #1 is open, review assignments may be processed in any efficient order.
+
+When one child's Review #1 finishes:
+
+```text
+Review #1 child A complete
+→ adjudicate findings
+→ transfer/assign write ownership if needed
+→ fix accepted findings immediately
+→ revalidate child A immediately
+```
+
+Do **not** force child A to wait for Review #1 of every sibling before applying its own Review #1 fixes.
+
+The worker that becomes free after finishing/fixing one child should continue taking other eligible **Review #1 assignments** until Review #1 has covered the full target-child set.
+
+### Review #2 global eligibility barrier
+
+Review #2 for any child may begin only after:
+
+```text
+1. Review #1 has been completed for ALL target children; and
+2. that specific child's Review #1 findings have been adjudicated;
+3. all accepted fixes for that child have been applied; and
+4. that child has completed required revalidation.
+```
+
+Once condition (1) is true, Review #2 is globally open. It does **not** need to wait for every sibling to finish Review #1 fixes.
 
 Example:
 
 ```text
-AUTHOR PHASE
-Prime    → child 1 → done
-Worker 1 → child 2 → done
-Worker 2 → child 3 → done
+ALL children have Review #1 result
 
-All wave authoring is now complete.
-
-If Worker 1 becomes available first:
-→ Worker 1 immediately starts an eligible Review #1 assignment
-→ do NOT wait for Prime and Worker 2 to become idle merely to announce a formal phase switch
+child A → Review #1 fixed + revalidated → Review #2 eligible now
+child B → still applying Review #1 fixes → not yet Review #2 eligible
+child C → Review #1 fixed + revalidated → Review #2 eligible now
 ```
 
-The same pipeline rule applies later:
+Free lanes may immediately start Review #2 for A/C while B continues its Review #1 fix/revalidation work.
+
+Never start Review #2 from a pre-fix source state.
+
+### Severe governance blocker may interrupt the current review phase
+
+The normal expectation is to finish the parent-wide Review #1 coverage before opening Review #2. However, a **genuine severe governance / Curriculum / ownership / shared-infrastructure blocker** does not need to wait for the rest of Review #1 to finish.
+
+When such a blocker is discovered:
 
 ```text
-Review #1 prerequisites satisfied
-→ free original author may begin an accepted fix/revalidation assignment
-
-Review #1 fixes + required revalidation complete for a child
-→ a free independent lane may begin that child's Review #2
-
-Review #2 findings accepted
-→ the original author may fix/revalidate immediately
+STOP unsafe/affected review or authoring work
+        ↓
+route the blocker to its canonical owner immediately
+        ↓
+resolve/synchronize the governing state according to CURRENT rules
+        ↓
+determine which already-reviewed/implemented children are materially affected
+        ↓
+reopen/revalidate those affected child states as required
+        ↓
+resume the parent-wide phase only when it is safe
 ```
 
-This is a **work-conserving pipeline within the current wave**. It exists to minimize unnecessary idle time while preserving all source-state dependencies.
+Do not use this exception for ordinary child-local findings. It is for blockers whose unresolved state would make continued sibling review unreliable or invalid.
 
-Do not confuse this with advancing to the next canonical STEP or the next child wave. The current canonical STEP barrier and current-wave ownership still apply.
+### No next canonical STEP early
 
-Never pipeline work whose prerequisite source state is not ready. In particular:
+Regardless of intra-STEP scheduling flexibility:
 
 ```text
-NO Review #1 before the reviewed child's authoring/required pre-review validation is complete
-NO Review #2 before that child's Review #1 is adjudicated, accepted fixes are applied, and required revalidation completes
-NO next canonical STEP before ALL target children are CLEAN for the current STEP
+NO next canonical STEP
+until ALL target children are CLEAN for the CURRENT STEP
+and required parent-level checks pass.
 ```
-
-However, the Prime must not optimize utilization at the cost of review correctness.
-
-If one execution lane finishes authoring early, it may perform useful validation/orchestration/review work at a safe boundary, but Prime must not force context switching merely to avoid brief idle time.
-
-Prefer clear ownership and correct review sequencing over keeping all three lanes busy every moment, while using phase rotation to keep utilization high naturally.
 
 ---
 
@@ -478,52 +581,60 @@ This title rule applies to newly created sub-worker sessions. Reusing/reviving a
 
 ---
 
-## 8. WRITE ISOLATION AND CYCLIC CROSS-REVIEW
+## 8. REVIEWER ELIGIBILITY + WRITE ISOLATION
 
-For two-child waves, use the available third lane as an independent reviewer when possible; otherwise the two active lanes may cross-review while preserving write ownership.
-
-For three concurrently owned children, prefer a cyclic independent-review assignment so nobody reviews the child they authored:
+For each child and each mandatory review round:
 
 ```text
-AUTHORSHIP
-Prime    → child 1
-Worker 1 → child 2
-Worker 2 → child 3
-
-REVIEW #1 CYCLE
-Worker 2 → reviews child 1 READ-ONLY
-Prime    → reviews child 2 READ-ONLY
-Worker 1 → reviews child 3 READ-ONLY
-
-REVIEW #2 CYCLE — after Review #1 fixes/revalidation
-Worker 1 → reviews child 1 READ-ONLY
-Worker 2 → reviews child 2 READ-ONLY
-Prime    → reviews child 3 READ-ONLY
+reviewer
+≠ initial author of that child for the CURRENT STEP
 ```
 
-This preferred rotation gives each child:
+That is the required independence boundary for this parent workflow.
+
+Review #1 and Review #2:
+
+- may use the same reviewer;
+- do not need to rotate through different reviewers;
+- may be performed by Prime or either sub-worker as long as the reviewer is not the child's initial author;
+- must still satisfy source-state sequencing rules.
+
+A reviewer may write fixes **after its review has ended** if Prime explicitly establishes/transfers write ownership first.
+
+For example, all of these are valid:
 
 ```text
-1 original author
-+ Review #1 by a second lane
-+ Review #2 by the third lane
+initial author = Worker 1
+Review #1      = Worker 2
+Fix #1         = Worker 2
+Review #2      = Worker 2
 ```
 
-Another cyclic direction is acceptable when scheduling requires it, provided reviewer independence is preserved and Review #2 still audits the CURRENT post-fix source.
+or:
 
-An independent reviewer must not edit the reviewed child's worktree while acting in review role.
+```text
+initial author = Worker 1
+Review #1      = Worker 2
+Fix #1         = Prime
+Review #2      = Worker 2
+```
 
-Review findings are reported to Prime.
+provided Review #2 occurs only after Review #1 findings are fully adjudicated/applied as required and the current child source has been revalidated.
 
-Prime routes accepted findings back to the original author/write owner.
+Write isolation remains strict:
 
-The original author/write owner performs the fix in its own worktree.
+```text
+one child branch/worktree
+→ at most one active writer
+→ every writer uses that exact child branch/worktree
+→ ownership transfer must be clear before writing starts
+```
 
-This prevents two workers from concurrently writing the same child branch/worktree and preserves clear change ownership.
+Do not confuse reviewer eligibility with write ownership. Reviewer independence is measured against the **initial author**; write ownership may change later.
 
 ---
 
-## 9. MANDATORY SEQUENTIAL REVIEW LIFECYCLE PER CHILD AND WAVE
+## 9. MANDATORY SEQUENTIAL REVIEW LIFECYCLE PER CHILD
 
 For every non-Commit STEP that CURRENT governance requires to pass a learning/content review gate, each child module must satisfy the CURRENT review requirement independently.
 
@@ -532,28 +643,28 @@ Where the common two-review rule applies, use:
 ```text
 ORIGINAL AUTHOR IMPLEMENTS CURRENT STEP
         ↓
-owner runs required validation
+required validation
         ↓
 CHILD SOURCE STATE V1
         ↓
-ANOTHER INDEPENDENT LANE performs FRESH READ-ONLY REVIEW #1
+ELIGIBLE INDEPENDENT REVIEWER performs FRESH REVIEW #1
         ↓
 review findings → Prime
         ↓
 Prime adjudicates / routes findings
         ↓
-ORIGINAL AUTHOR fixes all valid MUST FIX
+CURRENT WRITE OWNER fixes all valid MUST FIX
 + fixes all valid SHOULD IMPROVE
         ↓
-ORIGINAL AUTHOR revalidates
+revalidate
         ↓
 CHILD SOURCE STATE V2
         ↓
-ANOTHER INDEPENDENT LANE performs FRESH FULL REVIEW #2 OF CURRENT V2
+ELIGIBLE INDEPENDENT REVIEWER performs FRESH FULL REVIEW #2 OF CURRENT V2
         ↓
-findings → Prime → original author
+findings → Prime → assigned/current write owner
         ↓
-ORIGINAL AUTHOR fixes valid findings
+CURRENT WRITE OWNER fixes valid findings
         ↓
 revalidate
         ↓
@@ -587,47 +698,30 @@ SOURCE V1
 
 The implementation owner's own self-check never substitutes for a mandatory independent review.
 
-At wave level, preserve the same **logical dependency order**. Physical execution may pipeline into the next eligible phase as soon as prerequisites are satisfied; it does not need a full-lane idle barrier between phases:
+Minimum review count is **two for every target child** even when Review #1 reports no findings.
 
-```text
-AUTHOR all children in the wave
-        ↓
-REVIEW #1 all children in the wave
-        ↓
-ORIGINAL AUTHORS apply accepted fixes
-        ↓
-REVALIDATE all materially changed children
-        ↓
-REVIEW #2 all children against CURRENT post-fix source
-        ↓
-ORIGINAL AUTHORS apply accepted fixes
-        ↓
-REVALIDATE
-        ↓
-WAVE CLEAN
-```
+Review #3 / #4 / later rounds are required only for affected children that still have unresolved findings, substantial post-review changes, or another reason under CURRENT rules to reopen review.
 
-For example, once all authoring in the wave is complete, the first free eligible lane should begin Review #1 immediately. Likewise, once one child's Review #1 fixes and revalidation are complete, an eligible independent lane may begin that child's Review #2 without waiting for unrelated children to finish their own fix work.
+Do not rerun Review #3 across unaffected siblings merely to preserve symmetric counts.
 
-Do not start Review #2 for one child from its old pre-fix snapshot while another process is still applying that child's Review #1 fixes.
+The parent-wide scheduling/barrier behavior around these per-child chains is defined in Section 7.
 
 ---
 
-## 10. WHEN ONLY ONE CHILD REMAINS
+## 10. WHEN ONLY ONE CHILD ASSIGNMENT REMAINS IN A PHASE
 
-If the CURRENT STEP ends with a partial wave, every remaining child still requires the same review standard.
+If only one child assignment remains in the CURRENT phase, that child still requires the same validation/review standard.
 
-Use the otherwise free lanes as read-only reviewers even if they are not authoring a child in that final wave.
-
-Example:
+Use any otherwise free eligible lane when helpful, while preserving:
 
 ```text
-Prime    → authors final child 7
-Worker 1 → Review #1 for child 7
-Worker 2 → Review #2 for child 7 after fixes/revalidation
+reviewer ≠ initial author
+correct child branch/worktree
+single active writer
+Review #1 → fix/revalidate → Review #2 source ordering
 ```
 
-Do not downgrade review independence merely because only one target child remains.
+Do not downgrade review independence merely because only one child assignment remains.
 
 ---
 
@@ -709,7 +803,7 @@ owned worktree root
 allowed edit scope
 ```
 
-Reviewers must know explicitly that their access to the other child's worktree is READ-ONLY.
+While actively performing a review, a reviewer must treat the reviewed child's worktree as **READ-ONLY** so the review result is produced before any fix mutation. After that review is complete, the same person may become the child's writer/fixer only after write ownership is explicitly transferred/established and no other writer is active.
 
 ---
 
@@ -762,12 +856,22 @@ read it from disk
         ↓
 apply it independently to each target child's branch/worktree as required
         ↓
-respect MAX 2 active sub-workers; Prime may also own one child when safe
+select one target child branch for final delivery
         ↓
-complete final delivery for ALL target children
+complete that child's branch-specific commit → push → PR/MR → merge → verify lifecycle
+        ↓
+cleanup that child's worktree/branch only after its merge + remote verification succeeds
+        ↓
+then select the next target child branch
+        ↓
+continue until ALL target children have completed final delivery
 ```
 
 Do not apply the generic two-learning-review requirement to the Commit STEP unless the CURRENT Commit rule explicitly requires it.
+
+Each child branch is delivered independently according to the CURRENT Commit rule. Do not combine sibling changes into one synthetic parent branch merely to simplify final delivery unless CURRENT governance explicitly changes that model.
+
+By default, final delivery is **serialized one child branch at a time**. Do not concurrently merge multiple child branches into `main`, because each child's CURRENT Commit lifecycle may verify/synchronize `main` and clean its own worktree/branch before the next branch is delivered. If a future CURRENT Commit rule explicitly defines a safe concurrent parent-delivery strategy, that newer canonical rule may override this serialization.
 
 The Goal is not complete because one child was committed/pushed/merged successfully.
 
@@ -811,13 +915,16 @@ FOR EACH CURRENT STEP:
 → RE-READ CURRENT GOVERNANCE
 → PROCESS CHILDREN WITH MAX 2 ACTIVE SUB-WORKERS
 → PRIME MAY ALSO OWN ONE CHILD, ALLOWING UP TO 3 CONCURRENT CHILD LANES
-→ GROUP UP TO 3 CHILDREN INTO A WAVE
-→ AUTHOR IN PARALLEL
-→ WHEN A NEXT WAVE PHASE BECOMES ELIGIBLE, ASSIGN FREE LANES IMMEDIATELY; DO NOT ADD ARTIFICIAL IDLE BARRIERS
-→ ROTATE REVIEW #1 READ-ONLY
-→ ORIGINAL AUTHORS FIX + REVALIDATE
-→ ROTATE REVIEW #2 ON CURRENT POST-FIX SOURCE, PREFERABLY WITH THE THIRD LANE
-→ ORIGINAL AUTHORS REMAIN WRITE OWNERS UNTIL CLEAN
+→ IMPLEMENT ALL TARGET CHILDREN BEFORE OPENING REVIEW #1
+→ REUSE FREE LANES ACROSS CHILDREN WITHIN THE CURRENT PHASE
+→ REVIEW #1 MUST COVER ALL TARGET CHILDREN
+→ EACH CHILD MAY APPLY REVIEW #1 FIXES + REVALIDATE IMMEDIATELY AFTER ITS REVIEW #1
+→ WRITE OWNERSHIP MAY TRANSFER, BUT NEVER ALLOW CONCURRENT WRITERS
+→ REVIEWER MUST DIFFER FROM THE CHILD'S INITIAL AUTHOR
+→ AFTER ALL CHILDREN HAVE COMPLETED REVIEW #1, OPEN REVIEW #2 GLOBALLY
+→ REVIEW #2 FOR A CHILD REQUIRES THAT CHILD'S REVIEW #1 FIXES + REVALIDATION TO BE COMPLETE
+→ REVIEW #1 AND REVIEW #2 MAY USE THE SAME ELIGIBLE REVIEWER
+→ REVIEW #3+ ONLY FOR AFFECTED CHILDREN WHEN REQUIRED
 → EVERY FRESH SUB-WORKER SESSION GETS AN EXACT `CHATGPT CONVERSATION TITLE` BLOCK USING `STEP <N> - ...`
 → REVIEW #1 → FIX → REVALIDATE → REVIEW #2 OF CURRENT SOURCE
 → DO NOT ADVANCE ANY CHILD ALONE TO NEXT STEP

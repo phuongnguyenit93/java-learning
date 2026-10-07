@@ -1,0 +1,16 @@
+version: 1
+children:
+  fundamentals:
+    order: 10
+  sli-slo-sla:
+    order: 20
+  alerting-strategy:
+    order: 30
+  incident-management:
+    order: 40
+  postmortem:
+    order: 50
+  capacity-planning:
+    order: 60
+  disaster-recovery:
+    order: 70

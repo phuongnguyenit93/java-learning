@@ -1,0 +1,10 @@
+version: 1
+children:
+  fundamentals:
+    order: 10
+  github-actions:
+    order: 20
+  gitlab-ci:
+    order: 30
+  jenkins:
+    order: 40

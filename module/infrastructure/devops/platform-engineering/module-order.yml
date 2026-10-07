@@ -1,0 +1,12 @@
+version: 1
+children:
+  fundamentals:
+    order: 10
+  internal-developer-platform:
+    order: 20
+  self-service:
+    order: 30
+  golden-path:
+    order: 40
+  backstage:
+    order: 50

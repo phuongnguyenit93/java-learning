@@ -1,0 +1,6 @@
+version: 1
+children:
+  branching-strategy:
+    order: 10
+  monorepo-polyrepo:
+    order: 20

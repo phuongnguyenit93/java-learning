@@ -75,6 +75,42 @@ enum ModuleListEnum {
             []
     ),
 
+    COLLABORATION_AZURE_DEVOPS(
+            'module:infrastructure:devops:source-management:collaboration-platform:azure-devops',
+            'module/infrastructure/devops/source-management/collaboration-platform/azure-devops',
+            'LIBRARY',
+            'Azure DevOps collaboration with emphasis on Azure Repos: repositories, pull requests, code review, branch policies, permissions and project workflows',
+            false,
+            []
+    ),
+
+    COLLABORATION_BITBUCKET(
+            'module:infrastructure:devops:source-management:collaboration-platform:bitbucket',
+            'module/infrastructure/devops/source-management/collaboration-platform/bitbucket',
+            'LIBRARY',
+            'Bitbucket repository hosting and collaboration: repositories, pull requests, code review, workspace/project permissions, branch restrictions and team workflows',
+            false,
+            []
+    ),
+
+    COLLABORATION_GITHUB(
+            'module:infrastructure:devops:source-management:collaboration-platform:github',
+            'module/infrastructure/devops/source-management/collaboration-platform/github',
+            'LIBRARY',
+            'GitHub repository hosting and collaboration: repositories, pull requests, code review, permissions, branch protection, issues, releases and organization workflows',
+            false,
+            []
+    ),
+
+    COLLABORATION_GITLAB(
+            'module:infrastructure:devops:source-management:collaboration-platform:gitlab',
+            'module/infrastructure/devops/source-management/collaboration-platform/gitlab',
+            'LIBRARY',
+            'GitLab repository hosting and collaboration: repositories, merge requests, code review, permissions, protected branches, issues, releases and group/project workflows',
+            false,
+            []
+    ),
+
     CONFIG_SERVER(
             'module:microservice:module:infrastructure:config-server',
             'module/microservice/module/infrastructure/config-server',
@@ -143,6 +179,393 @@ enum ModuleListEnum {
             'module/platform/development/software-design/design-technique/dependency-injection',
             'LIBRARY',
             'Dependency Injection and Inversion of Control design concepts',
+            false,
+            []
+    ),
+
+    DEVOPS_ALERTING_STRATEGY(
+            'module:infrastructure:devops:reliability-operations:alerting-strategy',
+            'module/infrastructure/devops/reliability-operations/alerting-strategy',
+            'LIBRARY',
+            'Alerting strategy: actionable signals, symptom versus cause alerts, severity, routing, noise reduction and escalation design',
+            false,
+            []
+    ),
+
+    DEVOPS_ARGO_CD(
+            'module:infrastructure:devops:runtime-delivery:gitops:argo-cd',
+            'module/infrastructure/devops/runtime-delivery/gitops/argo-cd',
+            'LIBRARY',
+            'Argo CD for GitOps delivery: applications, sync, reconciliation, health, drift, promotion and rollback on Kubernetes',
+            false,
+            []
+    ),
+
+    DEVOPS_ARTIFACT_MANAGEMENT_FUNDAMENTALS(
+            'module:infrastructure:devops:delivery-automation:artifact-management:fundamentals',
+            'module/infrastructure/devops/delivery-automation/artifact-management/fundamentals',
+            'LIBRARY',
+            'Artifact management fundamentals: immutable build outputs, repositories, coordinates, provenance, retention, promotion and consumption',
+            false,
+            []
+    ),
+
+    DEVOPS_BACKSTAGE(
+            'module:infrastructure:devops:platform-engineering:backstage',
+            'module/infrastructure/devops/platform-engineering/backstage',
+            'LIBRARY',
+            'Backstage developer portal: software catalog, templates, plugins, ownership metadata, developer workflows and platform integration',
+            false,
+            []
+    ),
+
+    DEVOPS_BRANCHING_STRATEGY(
+            'module:infrastructure:devops:source-management:repository-strategy:branching-strategy',
+            'module/infrastructure/devops/source-management/repository-strategy/branching-strategy',
+            'LIBRARY',
+            'Branching strategy for team delivery: trunk-based development, GitHub Flow, Git Flow, branch lifetime, integration and protection tradeoffs',
+            false,
+            []
+    ),
+
+    DEVOPS_CAPACITY_PLANNING(
+            'module:infrastructure:devops:reliability-operations:capacity-planning',
+            'module/infrastructure/devops/reliability-operations/capacity-planning',
+            'LIBRARY',
+            'Capacity planning: demand, saturation, headroom, scaling thresholds, forecasting, bottlenecks and cost-performance tradeoffs',
+            false,
+            []
+    ),
+
+    DEVOPS_CI_CD_FUNDAMENTALS(
+            'module:infrastructure:devops:delivery-automation:ci-cd:fundamentals',
+            'module/infrastructure/devops/delivery-automation/ci-cd/fundamentals',
+            'LIBRARY',
+            'CI/CD fundamentals: pipeline stages, triggers, jobs, quality gates, artifacts, environments, promotion and feedback loops',
+            false,
+            []
+    ),
+
+    DEVOPS_CONFIGURATION_MANAGEMENT_FUNDAMENTALS(
+            'module:infrastructure:devops:infrastructure-management:configuration-management:fundamentals',
+            'module/infrastructure/devops/infrastructure-management/configuration-management/fundamentals',
+            'LIBRARY',
+            'Configuration management fundamentals: desired configuration, idempotency, inventory, convergence, drift and host configuration automation',
+            false,
+            []
+    ),
+
+    DEVOPS_CONTAINERIZATION_FUNDAMENTALS(
+            'module:infrastructure:devops:runtime-delivery:containerization:fundamentals',
+            'module/infrastructure/devops/runtime-delivery/containerization/fundamentals',
+            'LIBRARY',
+            'Containerization fundamentals: images, containers, isolation, layers, registries, runtime lifecycle and portability tradeoffs',
+            false,
+            []
+    ),
+
+    DEVOPS_CONTAINER_REGISTRY(
+            'module:infrastructure:devops:delivery-automation:artifact-management:container-registry',
+            'module/infrastructure/devops/delivery-automation/artifact-management/container-registry',
+            'LIBRARY',
+            'Container registry concepts: OCI images, repositories, tags versus digests, immutability, retention, authentication and promotion',
+            false,
+            []
+    ),
+
+    DEVOPS_DELIVERY_AUTOMATION_FUNDAMENTALS(
+            'module:infrastructure:devops:delivery-automation:fundamentals',
+            'module/infrastructure/devops/delivery-automation/fundamentals',
+            'LIBRARY',
+            'Delivery automation fundamentals: continuous integration, delivery flow, automation boundaries, feedback and promotion through delivery stages',
+            false,
+            []
+    ),
+
+    DEVOPS_DEPLOYMENT_FUNDAMENTALS(
+            'module:infrastructure:devops:runtime-delivery:deployment:fundamentals',
+            'module/infrastructure/devops/runtime-delivery/deployment/fundamentals',
+            'LIBRARY',
+            'Deployment fundamentals: rollout lifecycle, deployment safety, environment promotion, rollback, verification and delivery risk',
+            false,
+            []
+    ),
+
+    DEVOPS_DISASTER_RECOVERY(
+            'module:infrastructure:devops:reliability-operations:disaster-recovery',
+            'module/infrastructure/devops/reliability-operations/disaster-recovery',
+            'LIBRARY',
+            'Disaster recovery: failure domains, backups, restore verification, RTO, RPO, failover and recovery planning',
+            false,
+            []
+    ),
+
+    DEVOPS_DOCKER_COMPOSE(
+            'module:infrastructure:devops:runtime-delivery:containerization:docker-compose',
+            'module/infrastructure/devops/runtime-delivery/containerization/docker-compose',
+            'LIBRARY',
+            'Docker Compose for multi-container environments: services, networks, volumes, configuration, dependencies and local integration workflows',
+            false,
+            []
+    ),
+
+    DEVOPS_ENVIRONMENT_MANAGEMENT_FUNDAMENTALS(
+            'module:infrastructure:devops:infrastructure-management:environment-management:fundamentals',
+            'module/infrastructure/devops/infrastructure-management/environment-management/fundamentals',
+            'LIBRARY',
+            'Environment management fundamentals: local, development, staging and production boundaries, configuration ownership and promotion',
+            false,
+            []
+    ),
+
+    DEVOPS_ENVIRONMENT_STRATEGY(
+            'module:infrastructure:devops:infrastructure-management:environment-management:environment-strategy',
+            'module/infrastructure/devops/infrastructure-management/environment-management/environment-strategy',
+            'LIBRARY',
+            'Environment strategy: environment topology, parity, promotion, ephemeral environments, configuration separation and lifecycle tradeoffs',
+            false,
+            []
+    ),
+
+    DEVOPS_FUNDAMENTALS(
+            'module:infrastructure:devops:fundamentals',
+            'module/infrastructure/devops/fundamentals',
+            'LIBRARY',
+            'DevOps fundamentals: lifecycle, culture, feedback loops, source-to-production flow, automation, delivery, operations and cross-cutting practices',
+            false,
+            []
+    ),
+
+    DEVOPS_GITOPS_FUNDAMENTALS(
+            'module:infrastructure:devops:runtime-delivery:gitops:fundamentals',
+            'module/infrastructure/devops/runtime-delivery/gitops/fundamentals',
+            'LIBRARY',
+            'GitOps fundamentals: declarative desired state, Git as change source, reconciliation, drift detection, pull-based delivery and auditability',
+            false,
+            []
+    ),
+
+    DEVOPS_GOLDEN_PATH(
+            'module:infrastructure:devops:platform-engineering:golden-path',
+            'module/infrastructure/devops/platform-engineering/golden-path',
+            'LIBRARY',
+            'Golden paths for software delivery: recommended workflows, templates, standards, guardrails, escape hatches and continuous improvement',
+            false,
+            []
+    ),
+
+    DEVOPS_HELM(
+            'module:infrastructure:devops:runtime-delivery:orchestration:helm',
+            'module/infrastructure/devops/runtime-delivery/orchestration/helm',
+            'LIBRARY',
+            'Helm for Kubernetes packaging: charts, templates, values, releases, dependencies, upgrade and rollback workflows',
+            false,
+            []
+    ),
+
+    DEVOPS_IAC_FUNDAMENTALS(
+            'module:infrastructure:devops:infrastructure-management:infrastructure-as-code:fundamentals',
+            'module/infrastructure/devops/infrastructure-management/infrastructure-as-code/fundamentals',
+            'LIBRARY',
+            'Infrastructure as Code fundamentals: declarative versus imperative models, desired state, idempotency, state, planning and drift',
+            false,
+            []
+    ),
+
+    DEVOPS_INCIDENT_MANAGEMENT(
+            'module:infrastructure:devops:reliability-operations:incident-management',
+            'module/infrastructure/devops/reliability-operations/incident-management',
+            'LIBRARY',
+            'Incident management: detection, triage, command, communication, mitigation, recovery and operational coordination',
+            false,
+            []
+    ),
+
+    DEVOPS_INFRASTRUCTURE_MANAGEMENT_FUNDAMENTALS(
+            'module:infrastructure:devops:infrastructure-management:fundamentals',
+            'module/infrastructure/devops/infrastructure-management/fundamentals',
+            'LIBRARY',
+            'Infrastructure management fundamentals: provisioning, configuration, environments, desired state, drift and infrastructure lifecycle automation',
+            false,
+            []
+    ),
+
+    DEVOPS_INTERNAL_DEVELOPER_PLATFORM(
+            'module:infrastructure:devops:platform-engineering:internal-developer-platform',
+            'module/infrastructure/devops/platform-engineering/internal-developer-platform',
+            'LIBRARY',
+            'Internal Developer Platform concepts: platform capabilities, interfaces, abstractions, paved roads, ownership, governance and developer experience',
+            false,
+            []
+    ),
+
+    DEVOPS_MONOREPO_POLYREPO(
+            'module:infrastructure:devops:source-management:repository-strategy:monorepo-polyrepo',
+            'module/infrastructure/devops/source-management/repository-strategy/monorepo-polyrepo',
+            'LIBRARY',
+            'Repository topology strategy: monorepo versus polyrepo ownership, dependency boundaries, tooling, scaling and delivery tradeoffs',
+            false,
+            []
+    ),
+
+    DEVOPS_ORCHESTRATION_FUNDAMENTALS(
+            'module:infrastructure:devops:runtime-delivery:orchestration:fundamentals',
+            'module/infrastructure/devops/runtime-delivery/orchestration/fundamentals',
+            'LIBRARY',
+            'Container orchestration fundamentals: scheduling, desired state, service discovery, scaling, rollout, recovery and control-plane concepts',
+            false,
+            []
+    ),
+
+    DEVOPS_PLATFORM_ENGINEERING_FUNDAMENTALS(
+            'module:infrastructure:devops:platform-engineering:fundamentals',
+            'module/infrastructure/devops/platform-engineering/fundamentals',
+            'LIBRARY',
+            'Platform engineering fundamentals: internal platforms, product thinking, developer experience, self-service, golden paths and platform ownership',
+            false,
+            []
+    ),
+
+    DEVOPS_PLATFORM_SELF_SERVICE(
+            'module:infrastructure:devops:platform-engineering:self-service',
+            'module/infrastructure/devops/platform-engineering/self-service',
+            'LIBRARY',
+            'Self-service platform workflows: catalog-driven provisioning, standardized actions, guardrails, automation, permissions and developer autonomy',
+            false,
+            []
+    ),
+
+    DEVOPS_POSTMORTEM(
+            'module:infrastructure:devops:reliability-operations:postmortem',
+            'module/infrastructure/devops/reliability-operations/postmortem',
+            'LIBRARY',
+            'Blameless postmortems: timeline, contributing factors, corrective actions, learning loops and follow-through after incidents',
+            false,
+            []
+    ),
+
+    DEVOPS_RELEASE_MANAGEMENT(
+            'module:infrastructure:devops:delivery-automation:release-management',
+            'module/infrastructure/devops/delivery-automation/release-management',
+            'LIBRARY',
+            'Release management: release candidates, approvals, promotion, changelogs, immutability, rollback and release coordination',
+            false,
+            []
+    ),
+
+    DEVOPS_RELIABILITY_OPERATIONS_FUNDAMENTALS(
+            'module:infrastructure:devops:reliability-operations:fundamentals',
+            'module/infrastructure/devops/reliability-operations/fundamentals',
+            'LIBRARY',
+            'Reliability and operations fundamentals: service health, operational readiness, feedback, failure handling, recovery and continuous improvement',
+            false,
+            []
+    ),
+
+    DEVOPS_RUNTIME_DELIVERY_FUNDAMENTALS(
+            'module:infrastructure:devops:runtime-delivery:fundamentals',
+            'module/infrastructure/devops/runtime-delivery/fundamentals',
+            'LIBRARY',
+            'Runtime delivery fundamentals: packaging, deployment targets, orchestration, rollout, runtime configuration and operational delivery flow',
+            false,
+            []
+    ),
+
+    DEVOPS_SLI_SLO_SLA(
+            'module:infrastructure:devops:reliability-operations:sli-slo-sla',
+            'module/infrastructure/devops/reliability-operations/sli-slo-sla',
+            'LIBRARY',
+            'SLI, SLO and SLA fundamentals: service indicators, objectives, agreements, error budgets and reliability decision making',
+            false,
+            []
+    ),
+
+    DEVOPS_SOURCE_MANAGEMENT_FUNDAMENTALS(
+            'module:infrastructure:devops:source-management:fundamentals',
+            'module/infrastructure/devops/source-management/fundamentals',
+            'LIBRARY',
+            'Source management fundamentals: version control, repository hosting, collaboration workflows and repository strategy boundaries',
+            false,
+            []
+    ),
+
+    DEVOPS_VERSIONING(
+            'module:infrastructure:devops:delivery-automation:versioning',
+            'module/infrastructure/devops/delivery-automation/versioning',
+            'LIBRARY',
+            'Software versioning for delivery: semantic versioning, snapshots, prereleases, build metadata, tags and version lifecycle',
+            false,
+            []
+    ),
+
+    DEVSECOPS_CONTAINER_SECURITY(
+            'module:infrastructure:devops:devsecops:container-security',
+            'module/infrastructure/devops/devsecops/container-security',
+            'LIBRARY',
+            'Container delivery security: image hardening, scanning, provenance, least privilege, runtime boundaries and policy enforcement',
+            false,
+            []
+    ),
+
+    DEVSECOPS_DEPENDENCY_SCANNING(
+            'module:infrastructure:devops:devsecops:dependency-scanning',
+            'module/infrastructure/devops/devsecops/dependency-scanning',
+            'LIBRARY',
+            'Dependency scanning: software composition analysis, vulnerable dependencies, advisories, remediation and policy gates',
+            false,
+            []
+    ),
+
+    DEVSECOPS_FUNDAMENTALS(
+            'module:infrastructure:devops:devsecops:fundamentals',
+            'module/infrastructure/devops/devsecops/fundamentals',
+            'LIBRARY',
+            'DevSecOps fundamentals: integrating security controls, feedback and ownership throughout the software delivery lifecycle',
+            false,
+            []
+    ),
+
+    DEVSECOPS_INFRASTRUCTURE_SECURITY(
+            'module:infrastructure:devops:devsecops:infrastructure-security',
+            'module/infrastructure/devops/devsecops/infrastructure-security',
+            'LIBRARY',
+            'Infrastructure security in DevOps: IaC scanning, policy as code, misconfiguration detection, review and enforcement',
+            false,
+            []
+    ),
+
+    DEVSECOPS_PIPELINE_SECURITY(
+            'module:infrastructure:devops:devsecops:pipeline-security',
+            'module/infrastructure/devops/devsecops/pipeline-security',
+            'LIBRARY',
+            'Pipeline security: credentials, permissions, runner trust, untrusted input, artifact integrity and protected delivery workflows',
+            false,
+            []
+    ),
+
+    DEVSECOPS_SAST_DAST(
+            'module:infrastructure:devops:devsecops:sast-dast',
+            'module/infrastructure/devops/devsecops/sast-dast',
+            'LIBRARY',
+            'SAST and DAST in delivery pipelines: static and dynamic analysis scope, placement, findings, gating and tradeoffs',
+            false,
+            []
+    ),
+
+    DEVSECOPS_SECRET_SCANNING(
+            'module:infrastructure:devops:devsecops:secret-scanning',
+            'module/infrastructure/devops/devsecops/secret-scanning',
+            'LIBRARY',
+            'Secret scanning in source and delivery workflows: detection, prevention, remediation, rotation and false-positive handling',
+            false,
+            []
+    ),
+
+    DEVSECOPS_SOFTWARE_SUPPLY_CHAIN(
+            'module:infrastructure:devops:devsecops:software-supply-chain',
+            'module/infrastructure/devops/devsecops/software-supply-chain',
+            'LIBRARY',
+            'Software supply-chain security: provenance, SBOM, signing, attestations, dependency trust, build integrity and release verification',
             false,
             []
     ),
@@ -1975,8 +2398,8 @@ enum ModuleListEnum {
     ),
 
     SOURCE_CONTROL_GIT(
-            'module:infrastructure:devops:source-control:git',
-            'module/infrastructure/devops/source-control/git',
+            'module:infrastructure:devops:source-management:source-control:git',
+            'module/infrastructure/devops/source-management/source-control/git',
             'LIBRARY',
             'Git source control fundamentals: repository model, commits, branches, merges, rebases, tags, remotes and collaboration workflows',
             false,
@@ -2285,6 +2708,42 @@ enum ModuleListEnum {
             'module/platform/development/programming/framework/spring-framework/web',
             'SERVLET',
             'Spring MVC Servlet-stack request processing, binding, validation, error handling, async execution, synchronous HTTP clients and declarative HTTP service interfaces',
+            false,
+            []
+    ),
+
+    SYSTEM_OBSERVABILITY_ALERTING_FUNDAMENTALS(
+            'module:infrastructure:system:observability:alerting:fundamentals',
+            'module/infrastructure/system/observability/alerting/fundamentals',
+            'LIBRARY',
+            'Technical alerting fundamentals: rule evaluation, thresholds, grouping, routing, silencing, inhibition, notification delivery and alert lifecycle',
+            false,
+            []
+    ),
+
+    SYSTEM_OBSERVABILITY_ALERTMANAGER(
+            'module:infrastructure:system:observability:alerting:alertmanager',
+            'module/infrastructure/system/observability/alerting/alertmanager',
+            'LIBRARY',
+            'Prometheus Alertmanager: alert grouping, routing, receivers, inhibition, silences, deduplication and notification delivery',
+            false,
+            []
+    ),
+
+    SYSTEM_OBSERVABILITY_FUNDAMENTALS(
+            'module:infrastructure:system:observability:fundamentals',
+            'module/infrastructure/system/observability/fundamentals',
+            'LIBRARY',
+            'Observability fundamentals: monitoring versus observability, telemetry signals, instrumentation, correlation, context propagation, cardinality and telemetry pipelines',
+            false,
+            []
+    ),
+
+    SYSTEM_OBSERVABILITY_OPENTELEMETRY(
+            'module:infrastructure:system:observability:instrumentation:opentelemetry',
+            'module/infrastructure/system/observability/instrumentation/opentelemetry',
+            'LIBRARY',
+            'OpenTelemetry instrumentation and telemetry pipeline concepts: traces, metrics, logs, context propagation, OTLP, SDKs, auto-instrumentation and Collector',
             false,
             []
     );

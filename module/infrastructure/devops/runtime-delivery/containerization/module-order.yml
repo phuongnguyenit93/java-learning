@@ -1,0 +1,8 @@
+version: 1
+children:
+  fundamentals:
+    order: 10
+  docker:
+    order: 20
+  docker-compose:
+    order: 30
