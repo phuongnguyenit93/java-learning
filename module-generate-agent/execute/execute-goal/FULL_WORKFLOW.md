@@ -21,6 +21,8 @@ The target module is supplied by the invoking request/session context.
 
 The CURRENT repository governance determines the workflow after STEP 2.
 
+Long-running execution must also apply [`../heartbeat/HEARTBEAT.md`](../heartbeat/HEARTBEAT.md). That file owns heartbeat cadence, liveness-safe waiting, non-overlapping heartbeat behavior, and interrupted-turn recovery. Read it at Goal start and keep it active for the lifetime of this Goal.
+
 ---
 
 ## 1. PRIMARY OBJECTIVE
@@ -59,6 +61,12 @@ FULL_WORKFLOW.md
 → fresh-context transition policy
 → sequential independent-review policy
 → cross-step routing policy
+
+HEARTBEAT.md
+→ long-wait heartbeat cadence
+→ liveness checks without creating overlapping model work
+→ safe scheduler/tool waiting
+→ interrupted-turn recovery behavior
 
 GENERAL_AGENT_RULES.md
 → CURRENT canonical workflow graph/order
@@ -99,10 +107,11 @@ At Goal start:
 ```text
 1. inspect current repository/worktree state;
 2. read CURRENT GENERAL_AGENT_RULES.md from disk;
-3. resolve what CURRENT canonical STEP 2 is and which rule file owns it;
-4. read that CURRENT STEP 2 rule file from disk;
-5. load the context required by those current rules;
-6. execute STEP 2.
+3. read CURRENT execute/heartbeat/HEARTBEAT.md from disk;
+4. resolve what CURRENT canonical STEP 2 is and which rule file owns it;
+5. read that CURRENT STEP 2 rule file from disk;
+6. load the context required by those current rules;
+7. execute STEP 2 while applying the heartbeat contract during quiet/long-running periods.
 ```
 
 Only `STEP 2` is fixed by this Goal.
@@ -215,6 +224,8 @@ actual build/runtime/source evidence
 Never use this Goal as a substitute for those sources.
 
 Never execute a STEP only from remembered context captured during an earlier STEP.
+
+`HEARTBEAT.md` remains active across STEP transitions. It does not need to be treated as a STEP artifact, but if that file changes materially during a long-running Goal, re-read it before the next orchestration-controlled wait period.
 
 ---
 

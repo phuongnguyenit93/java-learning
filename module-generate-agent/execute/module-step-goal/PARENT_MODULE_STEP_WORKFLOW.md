@@ -25,6 +25,8 @@ The parent module, target child modules, and their branch/worktree locations are
 
 The CURRENT repository governance determines the workflow after the actual requested start STEP.
 
+Long-running parent orchestration must also apply [`../heartbeat/HEARTBEAT.md`](../heartbeat/HEARTBEAT.md). That file owns Prime heartbeat cadence, liveness-safe worker/tool waiting, non-overlapping heartbeat behavior, and interrupted-turn recovery. Read it at Goal start and keep it active across all parent phases.
+
 ---
 
 ## 1. PRIMARY OBJECTIVE
@@ -85,6 +87,12 @@ PARENT_MODULE_STEP_WORKFLOW.md
 → independent-review routing that preserves reviewer-vs-initial-author separation
 → worktree isolation rules
 → STEP barrier across all children
+
+HEARTBEAT.md
+→ Prime liveness while waiting for dispatched workers/tools
+→ bounded heartbeat cadence during quiet orchestration periods
+→ no worker/model ping solely to manufacture activity
+→ interrupted-turn recovery from actual current state
 
 GENERAL_AGENT_RULES.md
 → CURRENT canonical workflow graph/order
@@ -268,11 +276,12 @@ For the normal full run:
 1. inspect current repository/worktree state;
 2. resolve the parent and target child-module inventory;
 3. read CURRENT GENERAL_AGENT_RULES.md from disk;
-4. resolve what CURRENT canonical STEP 2 is and which rule file owns it;
-5. read that CURRENT STEP 2 rule file from disk;
-6. apply the STEP-range context-loading contract above, including relevant Curriculum handling for STEP 2;
-7. verify shared governance compatibility across participating worktrees;
-8. execute STEP 2 horizontally across every target child module.
+4. read CURRENT execute/heartbeat/HEARTBEAT.md from disk;
+5. resolve what CURRENT canonical STEP 2 is and which rule file owns it;
+6. read that CURRENT STEP 2 rule file from disk;
+7. apply the STEP-range context-loading contract above, including relevant Curriculum handling for STEP 2;
+8. verify shared governance compatibility across participating worktrees;
+9. execute STEP 2 horizontally across every target child module while applying the heartbeat contract during quiet/long-running periods.
 ```
 
 For an explicit STEP 3+ partial/resume run:
@@ -283,11 +292,12 @@ For an explicit STEP 3+ partial/resume run:
 3. locate the EXISTING correct branch/worktree for every target child;
 4. verify prior STEP state is present there;
 5. read CURRENT GENERAL_AGENT_RULES.md from disk;
-6. resolve the requested canonical STEP and its CURRENT rule file;
-7. read that rule file from disk;
-8. apply the STEP-range context-loading contract above;
-9. verify shared governance compatibility across participating worktrees;
-10. execute the requested STEP horizontally across every target child module.
+6. read CURRENT execute/heartbeat/HEARTBEAT.md from disk;
+7. resolve the requested canonical STEP and its CURRENT rule file;
+8. read that rule file from disk;
+9. apply the STEP-range context-loading contract above;
+10. verify shared governance compatibility across participating worktrees;
+11. execute the requested STEP horizontally across every target child module while applying the heartbeat contract during quiet/long-running periods.
 ```
 
 Do not replay STEP 2 merely because this Goal's normal full-run entry is STEP 2 when the invoking request explicitly authorizes a later-step partial/resume run.
@@ -342,6 +352,8 @@ MAX CONCURRENT CHILD-MODULE OWNERS = 3
 Do not spawn additional sub-workers merely to increase throughput.
 
 The Prime remains the scheduler and source of orchestration truth even while it owns one child module directly.
+
+Whenever Prime has dispatched work but temporarily has no eligible immediate assignment, Prime must follow `../heartbeat/HEARTBEAT.md` instead of remaining intentionally silent beyond the heartbeat budget. Heartbeat/status checks must not message an already-running worker merely to manufacture activity and must not consume a new worker/model request solely for liveness.
 
 Prime is allowed to perform the same authoring/fix/validation/review role as a sub-worker when safe. Therefore the scheduler may process up to three child-module assignments concurrently when worktree isolation and source-state dependencies remain correct.
 

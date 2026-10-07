@@ -36,9 +36,14 @@ STEP_9_VALIDATION.md
 
 STEP_10_COMMIT.md
 → final commit / push / Merge Request workflow
+
+execute/heartbeat/HEARTBEAT.md
+→ cross-cutting liveness, bounded waiting, heartbeat and interrupted-turn recovery contract
 ```
 
-Read `../AGENTS.md`, `../ARCHITECTURE.md` and this orchestrator first. Then read the canonical `STEP_X_*.md` file for the step actually being executed, together with any upstream output that step explicitly depends on. Do not load unrelated step rules as competing authorities.
+Read `../AGENTS.md`, `../ARCHITECTURE.md`, this orchestrator, and [`execute/heartbeat/HEARTBEAT.md`](./execute/heartbeat/HEARTBEAT.md) first for any execution that may contain long waits, worker scheduling, long-running tools, or extended autonomous work. Then read the canonical `STEP_X_*.md` file for the step actually being executed, together with any upstream output that step explicitly depends on. Do not load unrelated step rules as competing authorities.
+
+The heartbeat contract is cross-cutting execution governance only. It does not create a new canonical STEP and does not override STEP-specific content, review, ownership, worktree, or final-delivery rules.
 
 In this document, **build a module** means building its learning content and learning relationships. It does **not** mean changing the Gradle build architecture unless the task explicitly requires that.
 
