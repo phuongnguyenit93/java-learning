@@ -25,7 +25,13 @@ The parent module, target child modules, and their branch/worktree locations are
 
 The CURRENT repository governance determines the workflow after the actual requested start STEP.
 
-Long-running parent orchestration must also apply [`../heartbeat/HEARTBEAT.md`](../heartbeat/HEARTBEAT.md). That file owns Prime heartbeat cadence, liveness-safe worker/tool waiting, non-overlapping heartbeat behavior, and interrupted-turn recovery. Read it at Goal start and keep it active across all parent phases.
+### Mandatory rules-folder loading gate
+
+Before this Goal performs any parent orchestration, child authoring/review, worker scheduling, validation, write transfer, phase transition, or long-running wait, it must enumerate and read **every current file** under [`../../rules/`](../../rules/) in full.
+
+Do not cherry-pick only a known rule. The complete current `rules/` folder is mandatory cross-cutting execution context.
+
+If the rules folder changes materially during a long-running parent run, re-enumerate and re-read the complete folder before the next parent phase or canonical STEP begins.
 
 ---
 
@@ -81,18 +87,16 @@ Authority is split as follows:
 ```text
 PARENT_MODULE_STEP_WORKFLOW.md
 → process sibling child modules horizontally by STEP
-→ max-two-sub-worker scheduling with Prime optionally acting as a third execution lane
 → parent-wide phase scheduling across the full target-child set
 → explicit transferable write ownership with no concurrent writers
 → independent-review routing that preserves reviewer-vs-initial-author separation
 → worktree isolation rules
 → STEP barrier across all children
 
-HEARTBEAT.md
-→ Prime liveness while waiting for dispatched workers/tools
-→ bounded heartbeat cadence during quiet orchestration periods
-→ no worker/model ping solely to manufacture activity
-→ interrupted-turn recovery from actual current state
+rules/**
+→ mandatory cross-cutting execution rules loaded in full before work begins
+→ worker concurrency limit is owned outside this Goal
+→ heartbeat/liveness behavior is owned outside this Goal
 
 GENERAL_AGENT_RULES.md
 → CURRENT canonical workflow graph/order
@@ -273,31 +277,33 @@ At Goal start, resolve the actual requested start STEP first.
 For the normal full run:
 
 ```text
-1. inspect current repository/worktree state;
-2. resolve the parent and target child-module inventory;
-3. read CURRENT GENERAL_AGENT_RULES.md from disk;
-4. read CURRENT execute/heartbeat/HEARTBEAT.md from disk;
-5. resolve what CURRENT canonical STEP 2 is and which rule file owns it;
-6. read that CURRENT STEP 2 rule file from disk;
-7. apply the STEP-range context-loading contract above, including relevant Curriculum handling for STEP 2;
-8. verify shared governance compatibility across participating worktrees;
-9. execute STEP 2 horizontally across every target child module while applying the heartbeat contract during quiet/long-running periods.
+1. read CURRENT GENERAL_AGENT_RULES.md from disk;
+2. enumerate CURRENT module-generate-agent/rules/;
+3. read EVERY current file in rules/ in full;
+4. inspect current repository/worktree state;
+5. resolve the parent and target child-module inventory;
+6. resolve what CURRENT canonical STEP 2 is and which rule file owns it;
+7. read that CURRENT STEP 2 rule file from disk;
+8. apply the STEP-range context-loading contract above, including relevant Curriculum handling for STEP 2;
+9. verify shared governance compatibility across participating worktrees;
+10. execute STEP 2 horizontally across every target child module while applying all loaded cross-cutting rules.
 ```
 
 For an explicit STEP 3+ partial/resume run:
 
 ```text
-1. inspect CURRENT repository/worktree state;
-2. resolve the parent and target child-module inventory;
-3. locate the EXISTING correct branch/worktree for every target child;
-4. verify prior STEP state is present there;
-5. read CURRENT GENERAL_AGENT_RULES.md from disk;
-6. read CURRENT execute/heartbeat/HEARTBEAT.md from disk;
-7. resolve the requested canonical STEP and its CURRENT rule file;
-8. read that rule file from disk;
-9. apply the STEP-range context-loading contract above;
-10. verify shared governance compatibility across participating worktrees;
-11. execute the requested STEP horizontally across every target child module while applying the heartbeat contract during quiet/long-running periods.
+1. read CURRENT GENERAL_AGENT_RULES.md from disk;
+2. enumerate CURRENT module-generate-agent/rules/;
+3. read EVERY current file in rules/ in full;
+4. inspect CURRENT repository/worktree state;
+5. resolve the parent and target child-module inventory;
+6. locate the EXISTING correct branch/worktree for every target child;
+7. verify prior STEP state is present there;
+8. resolve the requested canonical STEP and its CURRENT rule file;
+9. read that rule file from disk;
+10. apply the STEP-range context-loading contract above;
+11. verify shared governance compatibility across participating worktrees;
+12. execute the requested STEP horizontally across every target child module while applying all loaded cross-cutting rules.
 ```
 
 Do not replay STEP 2 merely because this Goal's normal full-run entry is STEP 2 when the invoking request explicitly authorizes a later-step partial/resume run.
@@ -334,39 +340,17 @@ Never infer the next STEP from memory, old summaries, numeric guessing, or histo
 
 ---
 
-## 6. MAXIMUM TWO ACTIVE SUB-WORKERS + PRIME AS AN OPTIONAL THIRD LANE
+## 6. CROSS-CUTTING WORKER RULES + WRITE OWNERSHIP
 
-This Goal is designed for:
+The worker-pool limit, ACTIVE + SLEEPING counting semantics, mandatory sleeping-worker reuse-before-spawn rule, and reusable-lane behavior are intentionally **not owned by this Goal**.
 
-```text
-MAX ACTIVE SUB-WORKERS = 2
+They are loaded from the mandatory `../../rules/` set, currently including `WORKER_CONCURRENCY.md`.
 
-PRIME
-→ remains the orchestrator
-→ may also act as one independent execution worker when safe
+This Goal continues to own parent-specific assignment eligibility, phase scheduling, write ownership, review routing, and barriers.
 
-MAX CONCURRENT CHILD-MODULE OWNERS = 3
-→ Prime + Worker 1 + Worker 2
-```
+Prime remains the scheduler and source of parent-orchestration truth even when a cross-cutting rule permits Prime to execute one eligible assignment directly. Before every worker spawn decision, Prime must apply the CURRENT worker-pool state rules from `WORKER_CONCURRENCY.md`.
 
-Do not spawn additional sub-workers merely to increase throughput.
-
-The Prime remains the scheduler and source of orchestration truth even while it owns one child module directly.
-
-Whenever Prime has dispatched work but temporarily has no eligible immediate assignment, Prime must follow `../heartbeat/HEARTBEAT.md` instead of remaining intentionally silent beyond the heartbeat budget. Heartbeat/status checks must not message an already-running worker merely to manufacture activity and must not consume a new worker/model request solely for liveness.
-
-Prime is allowed to perform the same authoring/fix/validation/review role as a sub-worker when safe. Therefore the scheduler may process up to three child-module assignments concurrently when worktree isolation and source-state dependencies remain correct.
-
-Execution lanes are reusable across the entire target-child set within the CURRENT phase:
-
-```text
-Prime / Worker 1 / Worker 2
-→ take one eligible child assignment
-→ finish that assignment safely
-→ then take another eligible child assignment in the SAME CURRENT PHASE
-```
-
-Do not reserve one lane permanently for one child unless that is operationally useful.
+Whenever Prime has dispatched work but temporarily has no eligible immediate assignment, apply the heartbeat/liveness behavior from the mandatory `rules/` set rather than manufacturing worker traffic or filler work.
 
 ### Write ownership is exclusive but transferable
 
@@ -426,15 +410,15 @@ PARENT-LEVEL CONSISTENCY CHECK
 NEXT CANONICAL STEP
 ```
 
-The three available execution lanes are a **concurrency limit**, not a child grouping boundary.
+The execution lanes allowed by the mandatory cross-cutting worker rule are a **worker-pool limit**, not a child grouping boundary. A SLEEPING worker remains in that pool and must be reused according to the cross-cutting rule rather than replaced by a newly spawned worker.
 
 Example with many children:
 
 ```text
 IMPLEMENT PHASE
-Prime    → child A → then child D → then child G ...
-Worker 1 → child B → then child E → then child H ...
-Worker 2 → child C → then child F → then child I ...
+available lane → child A → then another eligible child ...
+available lane → child B → then another eligible child ...
+available lane → child C → then another eligible child ...
 
 When a lane becomes free:
 → take the next eligible child assignment in the same CURRENT parent phase
@@ -925,8 +909,7 @@ OR, WHEN EXPLICITLY REQUESTED:
 
 FOR EACH CURRENT STEP:
 → RE-READ CURRENT GOVERNANCE
-→ PROCESS CHILDREN WITH MAX 2 ACTIVE SUB-WORKERS
-→ PRIME MAY ALSO OWN ONE CHILD, ALLOWING UP TO 3 CONCURRENT CHILD LANES
+→ APPLY THE CURRENT WORKER-CONCURRENCY RULE FROM module-generate-agent/rules/
 → IMPLEMENT ALL TARGET CHILDREN BEFORE OPENING REVIEW #1
 → REUSE FREE LANES ACROSS CHILDREN WITHIN THE CURRENT PHASE
 → REVIEW #1 MUST COVER ALL TARGET CHILDREN

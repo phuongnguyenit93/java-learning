@@ -12,19 +12,19 @@ Canonical navigation:
 
 ```text
 GENERAL_AGENT_RULES.md
-→ ../../GENERAL_AGENT_RULES.md
+→ ../GENERAL_AGENT_RULES.md
 
 FULL_WORKFLOW.md
-→ ../execute-goal/FULL_WORKFLOW.md
+→ ../execute/execute-goal/FULL_WORKFLOW.md
 
 PARENT_MODULE_STEP_WORKFLOW.md
-→ ../module-step-goal/PARENT_MODULE_STEP_WORKFLOW.md
+→ ../execute/module-step-goal/PARENT_MODULE_STEP_WORKFLOW.md
 
 HEARTBEAT.md
 → this cross-cutting liveness / waiting / recovery contract
 ```
 
-`GENERAL_AGENT_RULES.md`, `FULL_WORKFLOW.md`, and `PARENT_MODULE_STEP_WORKFLOW.md` must all navigate to and apply this file when execution can contain long waits, quiet worker periods, long-running tools, or extended orchestration.
+This file is one member of the mandatory `module-generate-agent/rules/` rule set. `GENERAL_AGENT_RULES.md`, `FULL_WORKFLOW.md`, and `PARENT_MODULE_STEP_WORKFLOW.md` must read **every current file in that rules folder** before execution begins, including this file.
 
 ---
 
@@ -321,13 +321,13 @@ This file is cross-cutting and must be applied together with the active orchestr
 
 ```text
 single-module/full-chain execution
-→ ../execute-goal/FULL_WORKFLOW.md
+→ ../execute/execute-goal/FULL_WORKFLOW.md
 
 parent-module/horizontal execution
-→ ../module-step-goal/PARENT_MODULE_STEP_WORKFLOW.md
+→ ../execute/module-step-goal/PARENT_MODULE_STEP_WORKFLOW.md
 
 canonical module-generation governance
-→ ../../GENERAL_AGENT_RULES.md
+→ ../GENERAL_AGENT_RULES.md
 ```
 
 Heartbeat never changes STEP ordering, review requirements, worker ownership, write isolation, Curriculum rules, or Commit/final-delivery authority.

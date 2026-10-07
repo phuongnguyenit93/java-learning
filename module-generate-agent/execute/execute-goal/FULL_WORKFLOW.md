@@ -21,7 +21,13 @@ The target module is supplied by the invoking request/session context.
 
 The CURRENT repository governance determines the workflow after STEP 2.
 
-Long-running execution must also apply [`../heartbeat/HEARTBEAT.md`](../heartbeat/HEARTBEAT.md). That file owns heartbeat cadence, liveness-safe waiting, non-overlapping heartbeat behavior, and interrupted-turn recovery. Read it at Goal start and keep it active for the lifetime of this Goal.
+### Mandatory rules-folder loading gate
+
+Before this Goal performs any module work, STEP routing, validation, review, worker action, or long-running wait, it must enumerate and read **every current file** under [`../../rules/`](../../rules/) in full.
+
+Do not read only a known rule such as `HEARTBEAT.md`. The complete current `rules/` folder is mandatory execution context.
+
+If the rules folder changes materially during the Goal, re-enumerate and re-read the complete folder before the next canonical STEP begins.
 
 ---
 
@@ -62,11 +68,9 @@ FULL_WORKFLOW.md
 → sequential independent-review policy
 → cross-step routing policy
 
-HEARTBEAT.md
-→ long-wait heartbeat cadence
-→ liveness checks without creating overlapping model work
-→ safe scheduler/tool waiting
-→ interrupted-turn recovery behavior
+rules/**
+→ mandatory cross-cutting execution rules loaded in full before work begins
+→ currently includes heartbeat/liveness behavior and worker-concurrency limits
 
 GENERAL_AGENT_RULES.md
 → CURRENT canonical workflow graph/order
@@ -105,13 +109,14 @@ The higher applicable authority wins.
 At Goal start:
 
 ```text
-1. inspect current repository/worktree state;
-2. read CURRENT GENERAL_AGENT_RULES.md from disk;
-3. read CURRENT execute/heartbeat/HEARTBEAT.md from disk;
-4. resolve what CURRENT canonical STEP 2 is and which rule file owns it;
-5. read that CURRENT STEP 2 rule file from disk;
-6. load the context required by those current rules;
-7. execute STEP 2 while applying the heartbeat contract during quiet/long-running periods.
+1. read CURRENT GENERAL_AGENT_RULES.md from disk;
+2. enumerate CURRENT module-generate-agent/rules/;
+3. read EVERY current file in rules/ in full;
+4. inspect current repository/worktree state;
+5. resolve what CURRENT canonical STEP 2 is and which rule file owns it;
+6. read that CURRENT STEP 2 rule file from disk;
+7. load the context required by those current rules;
+8. execute STEP 2 while applying all loaded cross-cutting rules.
 ```
 
 Only `STEP 2` is fixed by this Goal.
@@ -225,7 +230,7 @@ Never use this Goal as a substitute for those sources.
 
 Never execute a STEP only from remembered context captured during an earlier STEP.
 
-`HEARTBEAT.md` remains active across STEP transitions. It does not need to be treated as a STEP artifact, but if that file changes materially during a long-running Goal, re-read it before the next orchestration-controlled wait period.
+The complete `rules/` set remains active across STEP transitions. It is not a STEP artifact. If any file in that folder changes materially during a long-running Goal, re-enumerate and re-read the entire folder before the next STEP begins.
 
 ---
 

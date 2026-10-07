@@ -37,13 +37,31 @@ STEP_9_VALIDATION.md
 STEP_10_COMMIT.md
 → final commit / push / Merge Request workflow
 
-execute/heartbeat/HEARTBEAT.md
-→ cross-cutting liveness, bounded waiting, heartbeat and interrupted-turn recovery contract
+rules/**
+→ mandatory cross-cutting execution rules; every current file in this folder must be read before execution begins
 ```
 
-Read `../AGENTS.md`, `../ARCHITECTURE.md`, this orchestrator, and [`execute/heartbeat/HEARTBEAT.md`](./execute/heartbeat/HEARTBEAT.md) first for any execution that may contain long waits, worker scheduling, long-running tools, or extended autonomous work. Then read the canonical `STEP_X_*.md` file for the step actually being executed, together with any upstream output that step explicitly depends on. Do not load unrelated step rules as competing authorities.
+### Mandatory rules-folder loading gate
 
-The heartbeat contract is cross-cutting execution governance only. It does not create a new canonical STEP and does not override STEP-specific content, review, ownership, worktree, or final-delivery rules.
+Before beginning **any** module-generation execution, authoring, review, worker scheduling, validation, long-running wait, or STEP transition under this orchestrator:
+
+```text
+1. read ../AGENTS.md;
+2. read ../ARCHITECTURE.md;
+3. read CURRENT GENERAL_AGENT_RULES.md;
+4. enumerate module-generate-agent/rules/ from CURRENT disk state;
+5. read EVERY current file in module-generate-agent/rules/ in full;
+6. only then resolve/read the canonical STEP_X_*.md rule and required upstream context;
+7. only then begin execution.
+```
+
+Do not cherry-pick only the rule file that appears relevant. The entire current `rules/` folder is a mandatory cross-cutting rule set so newly added rules automatically become part of execution governance without requiring every caller to know their filenames in advance.
+
+If the contents of `rules/` change materially during a long-running workflow, re-enumerate and re-read the complete folder before the next STEP or parent phase begins.
+
+Do not load unrelated canonical STEP files as competing authorities; only the CURRENT delegated STEP rule is required after the mandatory cross-cutting `rules/` set has been loaded.
+
+Files in `rules/` are cross-cutting execution governance only. They do not create new canonical STEPs and do not override higher repository authority or the applicable STEP-specific content/review/schema contract unless a rule explicitly owns a cross-cutting concern delegated to it.
 
 In this document, **build a module** means building its learning content and learning relationships. It does **not** mean changing the Gradle build architecture unless the task explicitly requires that.
 
