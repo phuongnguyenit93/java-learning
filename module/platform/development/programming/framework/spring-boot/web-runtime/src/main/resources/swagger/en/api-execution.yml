@@ -1,0 +1,34 @@
+WebRuntimeExperimentController:
+  embeddedServer():
+    execution: |-
+      <p><b>Concept:</b> A Boot Servlet application owns an embedded <code>WebServer</code> through <code>ServletWebServerApplicationContext</code>; the server is created and started as part of context refresh.</p>
+      <ol>
+        <li>The service uses the already-running <code>ServletWebServerApplicationContext</code> that serves this request.</li>
+        <li>It calls <code>getWebServer()</code> and records both the concrete context class and concrete server class.</li>
+        <li>The response reads <code>WebServer.getPort()</code>, so it reports the listening port of the initialized server rather than merely echoing configuration.</li>
+      </ol>
+      <p><b>Observation:</b> With the default Servlet starter, the response shows a Servlet web application context backed by Boot's Tomcat web-server implementation.</p>
+      <p><b>Conclusion:</b> Boot web runtime is the layer that connects application-context startup to an embedded server instance; MVC request-processing details begin after that handoff.</p>
+    usage: true
+  serverProperties():
+    execution: |-
+      <p><b>Concept:</b> <code>ServerProperties</code> is Boot's bound model for common <code>server.*</code> configuration while the running <code>WebServer</code> exposes the result after startup.</p>
+      <ol>
+        <li>The service reads configured port, bind address, forwarded-header strategy, and shutdown mode from <code>ServerProperties</code>.</li>
+        <li>It separately reads the actual port from the initialized <code>WebServer</code>.</li>
+        <li>Start the application with <code>--server.port=0</code> to make the configured value <code>0</code> while the actual port is the free port chosen by the operating system.</li>
+      </ol>
+      <p><b>Observation:</b> The response separates the property model from the realized server state and also exposes Boot 3.3's effective shutdown configuration for this process.</p>
+      <p><b>Conclusion:</b> Prefer <code>server.*</code> configuration for supported concerns; use runtime server state when the question is what was actually started.</p>
+    usage: true
+  requestMetadata():
+    execution: |-
+      <p><b>Concept:</b> <code>server.forward-headers-strategy</code> decides whether Boot leaves forwarded metadata untouched, delegates to the embedded server, or enables Spring Framework handling.</p>
+      <ol>
+        <li>Start the lab with <code>--server.forward-headers-strategy=framework</code>.</li>
+        <li>Send a local request with proxy-style headers such as <code>X-Forwarded-Proto: https</code>, <code>X-Forwarded-Host: example.test</code>, <code>X-Forwarded-Port: 443</code>, and <code>X-Forwarded-For: 203.0.113.10</code>.</li>
+        <li>The service reads the request after framework processing and returns the scheme, secure flag, host, port, remote address, and URL visible to application code.</li>
+      </ol>
+      <p><b>Observation:</b> With the FRAMEWORK strategy, application-visible metadata reflects the forwarded values even though the local socket still terminates on the embedded server. The framework may remove the original forwarding headers after applying them.</p>
+      <p><b>Conclusion:</b> Boot owns the strategy switch; detailed request transformation belongs to Spring Framework. Enable forwarding in real deployments only when the proxy path is trusted.</p>
+    usage: true

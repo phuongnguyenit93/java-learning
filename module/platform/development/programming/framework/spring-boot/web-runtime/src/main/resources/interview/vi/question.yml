@@ -27,4 +27,159 @@
 #         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
 # </interview-schema>
 
-questions: []
+questions:
+  - question: >-
+      Lớp web runtime của Spring Boot giải quyết vấn đề gì giữa SpringApplication và Spring MVC hoặc WebFlux, và vì sao cần giữ ranh giới đó rõ ràng khi chẩn đoán ứng dụng web khởi động sai?
+    answer: >-
+      Web runtime của Boot quyết định ứng dụng có thuộc loại web hay không, chọn web ApplicationContext phù hợp, cung cấp và cấu hình embedded server factory, rồi khởi động WebServer trong quá trình refresh context. MVC và WebFlux bắt đầu sau điểm bàn giao đó và sở hữu semantics xử lý request. Giữ ranh giới rõ giúp tránh chẩn đoán sai tầng: lỗi tạo hoặc khởi động embedded server thuộc bootstrap của Boot/server, còn handler mapping, codec, controller và request dispatch thuộc web framework. Nhờ vậy ta không sửa controller để giải quyết lỗi server không khởi động.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Introduction/Introduction.md"
+      anchor: "web-runtime-boundaries"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      WebApplicationType ảnh hưởng thế nào tới phần còn lại của quá trình Spring Boot startup, và điều gì dễ gây bất ngờ khi classpath đồng thời có tín hiệu Servlet lẫn Reactive?
+    answer: >-
+      WebApplicationType là phân loại sớm, ảnh hưởng ApplicationContext mà Boot tạo và nhánh web-server auto-configuration nào có thể match. Vì vậy việc suy ra từ classpath không chỉ là metadata mô tả mà thay đổi runtime model phía sau. Khi tín hiệu Servlet và Reactive cùng tồn tại, Servlet thường có ưu tiên, nên chỉ thêm một reactive library chưa chắc biến ứng dụng thành reactive server application. Nếu ứng dụng thật sự cần model khác, cấu hình tường minh spring.main.web-application-type rõ ràng hơn phụ thuộc vào hỗn hợp dependency tình cờ. Các condition, server factory và framework infrastructure phía sau đều dựa trên application type đã chọn.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.WebApplicationType/WebApplicationType.md"
+      anchor: "servlet-reactive-precedence"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Hãy giải thích quan hệ lifecycle giữa web ApplicationContext, WebServerFactory và WebServer đang chạy. Vì sao listening port thực tế là trạng thái runtime chứ không đơn thuần là giá trị cấu hình?
+    answer: >-
+      Boot lấy WebServerFactory phù hợp từ context, áp dụng configuration và customizer lên factory, tạo WebServer rồi khởi động nó trong quá trình refresh web application context. Factory là abstraction để xây dựng/cấu hình; WebServer là instance runtime đã hiện thực hóa. Cấu hình như server.port biểu đạt ý định nhưng runtime có thể resolve khác. Ví dụ rõ nhất là server.port=0: giá trị cấu hình vẫn là 0 trong khi hệ điều hành cấp một port trống thật sau khi server khởi động. Code cần endpoint đang lắng nghe phải đọc trạng thái server đã khởi tạo thay vì giả định property cấu hình bằng port thực tế.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.EmbeddedServerModel/EmbeddedServerModel.md"
+      anchor: "web-server-context-startup"
+    apiRelated:
+      controller: "WebRuntimeExperimentController"
+      methodSignature: "embeddedServer()"
+
+  - question: >-
+      Một ứng dụng Boot Servlet tự khai báo ServletWebServerFactory bean. Auto-configuration factory mặc định của Boot nên xử lý thế nào, và vì sao hành vi back-off đó quan trọng đối với thiết kế tùy biến?
+    answer: >-
+      Factory mặc định do Boot đóng góp phải back off khi ứng dụng cung cấp ServletWebServerFactory riêng. Ứng dụng đã đưa ra quyết định sở hữu tường minh, nên tạo thêm factory cạnh tranh sẽ làm startup mơ hồ và biến tùy biến thành cuộc đấu với default. Điều này cũng giải thích thứ tự nâng mức tùy biến: property server được hỗ trợ là cách rẻ nhất; WebServerFactoryCustomizer là hook chương trình thông thường khi vẫn để Boot sở hữu factory; custom factory bean là override mạnh nhất khi ứng dụng thực sự cần sở hữu việc xây dựng. Back-off giúp giữ convention mà không lấy mất quyền kiểm soát của ứng dụng.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.ServletServerAutoConfiguration/ServletServerAutoConfiguration.md"
+      anchor: "servlet-server-backoff"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Vì sao khi suy luận về một reactive Boot application cần tách reactive server bootstrap khỏi xử lý request của Spring WebFlux? Hãy nêu một triệu chứng thuộc mỗi phía của ranh giới.
+    answer: >-
+      Reactive server bootstrap chịu trách nhiệm chọn và cấu hình ReactiveWebServerFactory, tạo concrete server và khởi động nó cùng reactive application context. WebFlux sở hữu pipeline request ở tầng cao hơn sau khi server đã chạy. Lỗi không có reactive server factory phù hợp hoặc bind port thất bại thuộc bootstrap. Request đã tới server nhưng route không match, codec negotiation lỗi hoặc handler thực thi thất bại thuộc WebFlux. Trộn hai tầng dễ dẫn tới cách sửa sai như đổi RouterFunction vì thiếu dependency server hoặc thay server chỉ vì codec cấu hình sai.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.ReactiveServerAutoConfiguration/ReactiveServerAutoConfiguration.md"
+      anchor: "reactive-server-webflux-boundary"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Bạn sẽ giải thích khác biệt giữa ServerProperties và WebServer đang chạy như thế nào khi debug cấu hình production? Vì sao nhìn chung nên ưu tiên setting portable trong server.* trước namespace riêng của từng server?
+    answer: >-
+      ServerProperties là model cấu hình đã bind của Boot: nó biểu diễn ý định server.* hiệu lực sau khi external configuration được resolve và bind. WebServer đang chạy là object runtime sau khi chọn factory, customize, bind vào hệ điều hành và startup. So sánh hai phía giúp tách điều được yêu cầu khỏi điều thực tế đã xảy ra. Nên ưu tiên property portable trong server.* khi chúng đủ biểu đạt yêu cầu vì ứng dụng ít phụ thuộc hơn vào chi tiết Tomcat, Jetty, Undertow hoặc Netty. Namespace riêng phù hợp khi yêu cầu thật sự dựa vào feature hay tuning knob nằm ngoài abstraction chung của Boot.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.ServerProperties/ServerProperties.md"
+      anchor: "portable-vs-server-specific-properties"
+    apiRelated:
+      controller: "WebRuntimeExperimentController"
+      methodSignature: "serverProperties()"
+
+  - question: >-
+      Khi tùy biến embedded server, vì sao thứ tự quyết định thường là "properties, rồi WebServerFactoryCustomizer, rồi custom factory bean"? Chi phí bảo trì tăng thế nào ở mỗi mức?
+    answer: >-
+      Property dùng public configuration contract ổn định của Boot và để Boot tiếp tục sở hữu construction, default, ordering cùng lifecycle, nên mức coupling thấp nhất. WebServerFactoryCustomizer phù hợp khi cần cấu hình bằng code hoặc setting chưa có property nhưng vẫn muốn Boot sở hữu factory; lúc này ứng dụng phụ thuộc thêm vào factory API và thứ tự customizer. Tự cung cấp factory bean chuyển quyền sở hữu construction sang ứng dụng và tạo coupling mạnh nhất với loại server cùng cơ chế factory của Boot. Chọn hook ít quyền lực nhất nhưng vẫn diễn đạt đủ yêu cầu thường cho cấu hình portable và dễ nâng cấp nhất.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.ServerCustomization/ServerCustomization.md"
+      anchor: "server-customization-decision-order"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      HTTP/2, compression, giới hạn header, access logging và connection tuning đều có thể trông như "HTTP configuration". Bạn sẽ quyết định dùng setting portable của Boot hay capability riêng của server thế nào?
+    answer: >-
+      Bắt đầu từ yêu cầu hành vi và tìm common Boot property có thể diễn đạt nó trên các server được hỗ trợ. Dùng contract portable khi semantics đó đủ. Chỉ chuyển sang namespace hoặc customizer riêng khi yêu cầu phụ thuộc vào hành vi implementation-specific, chẳng hạn connector option, cơ chế logging hay tuning mà Boot chủ đích không chuẩn hóa. Trade-off là portability so với độ chính xác: control riêng có thể mạnh hơn nhưng cũng buộc configuration, test và kiến thức vận hành vào một implementation. Quyết định cần tường minh để lần thay server sau không âm thầm mang theo giả định sai.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.HttpFeatures/HttpFeatures.md"
+      anchor: "http-feature-portability"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Lợi ích thiết kế của việc áp dụng named SSL bundle cho web server thay vì lặp lại TLS material trong các setting server.ssl.* là gì, và khi nào cấu hình server.ssl trực tiếp vẫn hợp lý?
+    answer: >-
+      Named SSL bundle tạo một danh tính có thể tái sử dụng cho TLS material và options, cho phép nhiều client hoặc server integration tiêu thụ nhất quán. Nó giảm lặp keystore, truststore, certificate và protocol configuration, đồng thời giúp rotation hay thay policy tập trung hơn. server.ssl.* trực tiếp vẫn hợp lý khi TLS chỉ thuộc một web-server endpoint và reuse chỉ làm tăng indirection. Dù dùng cách nào, Boot chỉ tích hợp TLS material với embedded server; certificate issuance, PKI policy, trust architecture và TLS termination ở load balancer vẫn là trách nhiệm vận hành khác, không nên trộn với API cấu hình server của Boot.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "9.TlsSslBundles/TlsSslBundles.md"
+      anchor: "ssl-bundle-consumption"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Vì sao forwarded headers là quyết định về trust boundary chứ không chỉ là tiện ích để tạo URL đúng phía sau proxy? Hãy so sánh NONE, NATIVE và FRAMEWORK ở mức mental model.
+    answer: >-
+      Forwarded header có thể thay đổi scheme, host, port, client address và URL mà application code tin là đến từ network boundary. Tin dữ liệu do attacker tự gửi có thể làm sai redirect, quyết định security, logging và link generation. NONE không áp dụng các header đó. NATIVE giao việc diễn giải cho cơ chế của embedded server. FRAMEWORK để Spring Framework biến đổi request metadata. Strategy đúng phụ thuộc deployment topology và việc bảo đảm chỉ trusted proxy có thể cung cấp hoặc giữ metadata forwarding có thẩm quyền. Boot chọn strategy; độ an toàn của proxy chain và việc sanitize header vẫn là trách nhiệm infrastructure.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "10.ForwardedHeadersProxy/ForwardedHeadersProxy.md"
+      anchor: "forwarded-header-trust-boundary"
+    apiRelated:
+      controller: "WebRuntimeExperimentController"
+      methodSignature: "requestMetadata()"
+
+  - question: >-
+      Hãy mô tả graceful shutdown như một bài toán phối hợp. Vì sao câu "process đã nhận SIGTERM" chưa đủ để kết luận HTTP work đang chạy sẽ hoàn tất an toàn?
+    answer: >-
+      Termination signal chỉ khởi đầu shutdown path. Trong Spring Boot 3.3, server.shutdown mặc định là immediate, vì vậy muốn drain request theo cơ chế graceful thì trước hết phải bật server.shutdown=graceful. Khi đã bật, việc hoàn tất an toàn vẫn còn phụ thuộc ApplicationContext đóng, embedded server đi vào graceful behavior, work mới bị từ chối hoặc drain theo server, và request đang chạy kết thúc trước khi shutdown phase timeout hết hạn. Application availability, thay đổi readiness của orchestrator, background work và downstream timeout cũng ảnh hưởng việc service có dừng sạch hay không. Vì vậy graceful server shutdown chỉ cho một khoảng cơ hội có giới hạn chứ không phải bảo đảm vô hạn. Ở production cần căn timeout của Boot với termination grace period của platform và độ dài request mà service chủ đích cho phép hoàn tất.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "11.GracefulShutdown/GracefulShutdown.md"
+      anchor: "in-flight-request-grace-period"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Bạn tiếp quản một Boot web service có rất nhiều server customization tường minh. Làm sao quyết định setting nào nên giữ và setting nào nên trả về Boot default mà không biến "convention over configuration" thành niềm tin mù quáng?
+    answer: >-
+      Trước tiên phân loại từng customization theo yêu cầu mà nó đáp ứng: correctness, security, deployment topology, observability, bằng chứng performance hay chỉ là di sản lịch sử. Giữ lựa chọn tường minh nếu Boot default sẽ làm vi phạm yêu cầu đó và xác minh bằng runtime evidence tập trung. Loại setting chỉ lặp lại default hoặc bù cho giả định deployment đã lỗi thời vì override không cần thiết che khuất upgrade và tăng coupling. Sau đó kiểm tra lại ownership boundary: request-processing policy thuộc MVC/WebFlux, network và proxy policy có thể thuộc infrastructure, còn embedded-server bootstrap/configuration mới thuộc module này. Convention có giá trị khi nó loại bỏ quyết định ngẫu nhiên nhưng vẫn giữ các quyết định hệ thống thực sự cần.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "12.BootWebDefaults/BootWebDefaults.md"
+      anchor: "web-runtime-end-to-end-model"
+    apiRelated:
+      controller: ""
+      methodSignature: ""

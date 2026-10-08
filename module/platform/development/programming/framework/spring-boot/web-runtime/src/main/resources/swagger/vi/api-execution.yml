@@ -1,0 +1,34 @@
+WebRuntimeExperimentController:
+  embeddedServer():
+    execution: |-
+      <p><b>Concept:</b> Ứng dụng Boot Servlet sở hữu embedded <code>WebServer</code> qua <code>ServletWebServerApplicationContext</code>; server được tạo và khởi động như một phần của quá trình refresh context.</p>
+      <ol>
+        <li>Service dùng chính <code>ServletWebServerApplicationContext</code> đang chạy và phục vụ request này.</li>
+        <li>Nó gọi <code>getWebServer()</code> rồi ghi concrete context class và concrete server class.</li>
+        <li>Response đọc <code>WebServer.getPort()</code>, vì vậy đây là cổng lắng nghe của server đã initialize chứ không chỉ lặp lại cấu hình.</li>
+      </ol>
+      <p><b>Observation:</b> Với Servlet starter mặc định, response cho thấy Servlet web application context được Boot nối với Tomcat web-server implementation.</p>
+      <p><b>Conclusion:</b> Boot web runtime là tầng nối application-context startup với embedded server instance; chi tiết xử lý request của MVC bắt đầu sau điểm bàn giao đó.</p>
+    usage: true
+  serverProperties():
+    execution: |-
+      <p><b>Concept:</b> <code>ServerProperties</code> là mô hình đã bind của Boot cho cấu hình <code>server.*</code> dùng chung, còn <code>WebServer</code> đang chạy thể hiện kết quả sau startup.</p>
+      <ol>
+        <li>Service đọc configured port, bind address, forwarded-header strategy và shutdown mode từ <code>ServerProperties</code>.</li>
+        <li>Nó đọc riêng actual port từ <code>WebServer</code> đã initialize.</li>
+        <li>Khởi động với <code>--server.port=0</code> để configured value vẫn là <code>0</code> trong khi actual port là cổng trống do hệ điều hành chọn.</li>
+      </ol>
+      <p><b>Observation:</b> Response tách property model khỏi server state đã hiện thực hóa và đồng thời cho thấy shutdown configuration hiệu lực của Boot 3.3 cho process này.</p>
+      <p><b>Conclusion:</b> Ưu tiên cấu hình <code>server.*</code> cho các concern Boot hỗ trợ; dùng runtime server state khi câu hỏi là server nào đã thật sự được khởi động.</p>
+    usage: true
+  requestMetadata():
+    execution: |-
+      <p><b>Concept:</b> <code>server.forward-headers-strategy</code> quyết định Boot giữ nguyên forwarded metadata, giao cho embedded server hay bật cơ chế xử lý của Spring Framework.</p>
+      <ol>
+        <li>Khởi động lab với <code>--server.forward-headers-strategy=framework</code>.</li>
+        <li>Gửi local request với các header theo kiểu proxy như <code>X-Forwarded-Proto: https</code>, <code>X-Forwarded-Host: example.test</code>, <code>X-Forwarded-Port: 443</code> và <code>X-Forwarded-For: 203.0.113.10</code>.</li>
+        <li>Service đọc request sau framework processing rồi trả về scheme, secure flag, host, port, remote address và URL mà application code nhìn thấy.</li>
+      </ol>
+      <p><b>Observation:</b> Với strategy FRAMEWORK, metadata application nhìn thấy phản ánh các forwarded value dù local socket vẫn kết thúc tại embedded server. Framework có thể loại bỏ forwarding header gốc sau khi áp dụng.</p>
+      <p><b>Conclusion:</b> Boot sở hữu strategy switch; request transformation chi tiết thuộc Spring Framework. Trong deployment thật chỉ bật forwarding khi proxy path đáng tin cậy.</p>
+    usage: true

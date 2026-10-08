@@ -1,0 +1,83 @@
+WebRuntimeExperimentController:
+  embeddedServer():
+    summary: Quan sát Boot web application context và embedded server đang chạy
+    description: Đọc ServletWebServerApplicationContext đang phục vụ API này rồi trả
+      về concrete context type, concrete WebServer implementation và cổng lắng nghe
+      thực tế.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 3.EmbeddedServerModel/EmbeddedServerModel.md
+      anchor: web-server-context-startup
+    methodName: embeddedServer
+    params: [
+      ]
+    path: com/example/learning/webruntime/controller/WebRuntimeExperimentController.java
+    mapping: '@GetMapping("/server")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /spring-boot/web-runtime/server
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  serverProperties():
+    summary: So sánh cấu hình server của Boot với server đang chạy
+    description: Trả về một số giá trị từ ServerProperties đã bind của Boot cùng cổng
+      lắng nghe thực tế. Khởi động với server.port=0 làm rõ sự khác nhau giữa ý định
+      cấu hình và cổng được cấp cho WebServer đang chạy.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 6.ServerProperties/ServerProperties.md
+      anchor: server-properties-model
+    methodName: serverProperties
+    params: [
+      ]
+    path: com/example/learning/webruntime/controller/WebRuntimeExperimentController.java
+    mapping: '@GetMapping("/server-properties")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /spring-boot/web-runtime/server-properties
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  requestMetadata():
+    summary: Quan sát request metadata sau forwarded-header strategy của Boot
+    description: Trả về scheme, security flag, host, port, remote address, URL và
+      các X-Forwarded header còn nhìn thấy từ application. Lặp lại với server.forward-headers-strategy=framework
+      và các header theo mô hình trusted proxy để quan sát request mà application
+      nhìn thấy thay đổi ra sao.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 10.ForwardedHeadersProxy/ForwardedHeadersProxy.md
+      anchor: forward-header-strategies
+    methodName: requestMetadata
+    params: [
+      ]
+    path: com/example/learning/webruntime/controller/WebRuntimeExperimentController.java
+    mapping: '@GetMapping("/request-metadata")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /spring-boot/web-runtime/request-metadata
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true

@@ -1,0 +1,6 @@
+WebRuntimeExperimentController:
+  description: |-
+    <h2>Web Runtime Experiment Controller</h2>
+    <p>Quan sát Servlet web runtime do Boot quản lý và đang thật sự phục vụ request: embedded server instance, ServerProperties đã bind và request metadata sau khi chiến lược forwarded-header được cấu hình đã áp dụng.</p>
+  readmeRelated:
+    file: 3.EmbeddedServerModel/EmbeddedServerModel.md
