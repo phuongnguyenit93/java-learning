@@ -41,4 +41,107 @@
 # Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: boot-test-bootstrap
+    title: "Khởi động test theo mô hình Spring Boot"
+    purpose: "Hiểu Spring Boot bổ sung điều gì khi test cần ApplicationContext, Boot tìm cấu hình chính của ứng dụng như thế nào, và ranh giới nào thuộc Boot testing thay vì Spring TestContext Framework hay các thư viện test nói chung."
+    relatedKnowledge:
+      - BootTesting
+    objectives:
+      - "Nhận biết spring-boot-test và spring-boot-test-autoconfigure là hai module hỗ trợ test cốt lõi của Boot, thường được dùng thông qua spring-boot-starter-test."
+      - "Hiểu @SpringBootTest tạo ApplicationContext cho test thông qua SpringApplication, nhờ đó external properties và auto-configuration của Boot cùng tham gia quá trình khởi động test."
+      - "Hiểu cách Boot tìm @SpringBootConfiguration chính của ứng dụng khi test không chỉ định class cấu hình, và vì sao vị trí package ảnh hưởng đến quá trình tìm kiếm đó."
+      - "Giữ các cơ chế chung của TestContext như vòng đời và cache context, cùng kiến thức nền về JUnit, Mockito, AssertJ hoặc Hamcrest, ở đúng module chuyên trách."
+    relatedModules:
+      - routeId: SPRING_TESTING
+        label: "Spring Framework Testing"
+        note: "Sở hữu TestContext Framework bên dưới, cơ chế vòng đời/cache context, test transaction và các khả năng integration testing chung mà Boot testing sử dụng."
+
+  - id: full-context-and-web-environment
+    title: "Full application context và WebEnvironment"
+    purpose: "Biết khi nào cần độ sát thực tế của @SpringBootTest và hiểu WebEnvironment thay đổi test từ non-web hoặc mock web context sang test có embedded server thật như thế nào."
+    relatedKnowledge:
+      - SpringBootTest
+      - WebEnvironment
+    objectives:
+      - "Phân biệt WebEnvironment.MOCK, RANDOM_PORT, DEFINED_PORT và NONE dựa trên loại application context và việc có khởi động embedded server thật hay không."
+      - "Chọn mock web khi không cần server thật, và chọn RANDOM_PORT khi hành vi cần đi qua biên HTTP của server thật."
+      - "Nhận biết WebTestClient hoặc TestRestTemplate do Boot hỗ trợ là tiện ích cho web test đã chọn, không phải một chiến lược test độc lập."
+      - "Hiểu hệ quả transaction quan trọng của test chạy server thật: client và server ở các thread khác nhau, nên transaction phía test không tự động rollback phần việc phía server."
+    relatedModules:
+      - routeId: SPRING_BOOT_WEB_RUNTIME
+        label: "Spring Boot Web Runtime"
+        note: "Sở hữu web application type, embedded server, cấu hình server và hành vi runtime production mà Boot testing dùng để kiểm thử."
+
+  - id: slice-selection
+    title: "Chọn test slice nhỏ nhất nhưng đủ dùng"
+    purpose: "Dùng Boot test slice để chỉ tải phần ứng dụng cần cho một mục tiêu test cụ thể, cân bằng tốc độ và mức cô lập với độ đầy đủ của full @SpringBootTest context."
+    relatedKnowledge:
+      - TestSlices
+      - WebLayerTesting
+      - DataLayerTesting
+    objectives:
+      - "Hiểu một Boot test slice giới hạn component scanning và chỉ import tập auto-configuration phù hợp, thay vì tải toàn bộ ứng dụng."
+      - "Chọn web slice như @WebMvcTest hoặc @WebFluxTest khi mục tiêu là web layer và các dependency còn lại có thể được cung cấp riêng."
+      - "Chọn data slice như @DataJpaTest hoặc @JdbcTest khi mục tiêu là hành vi truy cập dữ liệu và hỗ trợ kiểm thử data tập trung của Boot là phù hợp."
+      - "Không kết hợp nhiều annotation slice @...Test trên cùng một test vì Boot không hỗ trợ cách ghép đó; bắt đầu từ một slice rồi bổ sung hỗ trợ có mục tiêu qua annotation @AutoConfigure... tương ứng khi Boot cung cấp."
+
+  - id: test-auto-configuration
+    title: "Hiểu và tùy chỉnh test auto-configuration"
+    purpose: "Hiểu các annotation test của Boot ghép những auto-configuration chuyên biệt như thế nào, rồi biết cách thêm, loại hoặc tùy chỉnh test infrastructure mà vẫn giữ context rõ ràng và tập trung."
+    relatedKnowledge:
+      - TestAutoConfiguration
+    objectives:
+      - "Liên hệ slice annotation với các @AutoConfigure... đi kèm và tập auto-configuration cụ thể mà Boot import cho slice đó."
+      - "Dùng @AutoConfigure... để bổ sung test facility có mục tiêu rõ ràng cho @SpringBootTest hoặc tinh chỉnh một slice hiện có."
+      - "Dùng excludeAutoConfiguration hoặc @ImportAutoConfiguration khi cần loại bỏ hay thêm auto-configuration cụ thể, và không import auto-configuration như user configuration thông thường."
+      - "Khi context thiếu bean, phân biệt bean thật sự bị thiếu với component bị slice cố ý loại khỏi scan hoặc auto-configuration không thỏa điều kiện."
+    relatedModules:
+      - routeId: SPRING_BOOT_AUTO_CONFIGURATION
+        label: "Spring Boot Auto-Configuration"
+        note: "Sở hữu mô hình auto-configuration chung của Boot, conditions, back-off, ordering, exclusion và diagnostics mà test auto-configuration dựa vào."
+
+  - id: test-context-customization
+    title: "Tùy chỉnh properties và thay thế dependency trong test"
+    purpose: "Điều chỉnh Boot test context cho từng kịch bản bằng test-specific properties, cấu hình test, mock, spy hoặc bean riêng, đồng thời hiểu những thay đổi đó ảnh hưởng đến khả năng tái sử dụng context như thế nào."
+    relatedKnowledge:
+      - PropertyOverrides
+      - MockReplacement
+    objectives:
+      - "Dùng thuộc tính của annotation Boot như @SpringBootTest(properties = ...) cho override cục bộ trong test mà không biến nó thành mô hình cấu hình chính của ứng dụng."
+      - "Dùng @TestConfiguration cùng import tường minh khi cần bổ sung bean hoặc cấu hình chỉ phục vụ test bên cạnh cấu hình chính của ứng dụng."
+      - "Dùng @MockBean để thêm hoặc thay thế bean và @SpyBean để bọc bean hiện có khi cần dependency replacement do Boot quản lý; bản thân kỹ thuật Mockito vẫn thuộc module testing tool."
+      - "Nhận biết khác biệt về properties cùng định nghĩa mock/spy có thể thay đổi cache key của test context, làm tăng số context phải khởi tạo và tổng chi phí của test suite."
+    relatedModules:
+      - routeId: SPRING_BOOT_EXTERNALIZED_CONFIGURATION
+        label: "Spring Boot Externalized Configuration"
+        note: "Sở hữu các nguồn cấu hình, precedence, profiles, binding và mô hình @ConfigurationProperties thông thường của Boot mà test có thể override cho từng kịch bản."
+      - routeId: SPRING_TESTING
+        label: "Spring Framework Testing"
+        note: "Sở hữu test property source, dynamic property registration, context caching và các cơ chế TestContext chung bên dưới những tiện ích riêng của Boot."
+
+  - id: service-connected-testcontainers
+    title: "Kết nối integration test với dịch vụ thật bằng Testcontainers"
+    purpose: "Dùng tích hợp Testcontainers của Spring Boot để chuyển endpoint của container thành connection details mà Boot có thể tự tiêu thụ, nhờ đó integration test dùng dịch vụ thật mà không phải tự nối từng connection property."
+    relatedKnowledge:
+      - Testcontainers
+    objectives:
+      - "Hiểu @ServiceConnection là điểm tích hợp của Boot dùng để tạo ConnectionDetails từ container Testcontainers được hỗ trợ, rồi cho auto-configuration sử dụng các thông tin đó."
+      - "Biết service connection details có độ ưu tiên cao hơn các connection properties thông thường và cần test dependency spring-boot-testcontainers."
+      - "Nhận biết hai cách tích hợp thường gặp là container field và container bean trong test configuration, cùng trường hợp GenericContainer cần khai báo tên kết nối để Boot nhận diện đúng."
+      - "Dùng @DynamicPropertySource như phương án thủ công linh hoạt hơn khi service connection không phù hợp; giữ lifecycle, image, network và các cơ chế Testcontainers chung ngoài phạm vi module này."
+
+  - id: integration-test-strategy
+    title: "Xây chiến lược integration test nhất quán cho Spring Boot"
+    purpose: "Kết hợp full context, slice, test customization và service connection thành một test portfolio có chủ đích: đủ sát production để bắt lỗi tích hợp nhưng không trả chi phí khởi động context và hạ tầng ở mọi test."
+    relatedKnowledge:
+      - IntegrationTestingStrategy
+    objectives:
+      - "Chọn giữa unit test thuần, Boot slice, full @SpringBootTest context, test chạy web server thật và integration test có dịch vụ thật dựa trên hành vi cần chứng minh."
+      - "Ưu tiên context nhỏ nhất vẫn đi qua đúng boundary cần kiểm thử, rồi dành full context và real service cho các hành vi tích hợp mà slice không thể chứng minh."
+      - "Giữ cấu hình context có khả năng tái sử dụng giữa các test để tận dụng context cache; tránh tạo nhiều biến thể properties, mock, profile hoặc configuration không cần thiết làm phân mảnh cache."
+      - "Giải thích được mô hình Boot testing từ đầu đến cuối: khởi động đúng context, chỉ chọn test auto-configuration cần thiết, tùy chỉnh dependency/properties có chủ đích, nối tới dịch vụ thật khi cần và quản lý kích thước context như một phần của thiết kế test suite."
+    relatedModules:
+      - routeId: SPRING_TESTING
+        label: "Spring Framework Testing"
+        note: "Cung cấp context cache và vòng đời integration test bên dưới; đặc tính tái sử dụng của chúng ảnh hưởng trực tiếp đến chi phí của một Boot test suite."

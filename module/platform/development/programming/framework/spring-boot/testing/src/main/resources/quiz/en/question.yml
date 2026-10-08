@@ -38,4 +38,453 @@
 #       Internal id of the correct answer. The frontend checks this identity after shuffling.
 # </quiz-schema>
 
-questions: []
+questions:
+  - id: 'q01-boot-aware-context-bootstrap'
+    question: 'A test must verify configuration binding, conditional auto-configuration, and application bean wiring together. Why is Boot-aware test bootstrap useful here?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '1.Introduction/BootTesting.md'
+      anchor: 'springapplication-test-bootstrap'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'It replaces Spring TestContext so Boot can manage the entire test lifecycle independently.'
+        explanation: 'Boot testing builds on Spring TestContext; it does not replace the underlying test-context framework.'
+      - id: B
+        answer: 'It creates the context through SpringApplication so Boot startup features can participate.'
+        explanation: 'Correct. Boot-aware bootstrap reproduces the relevant Boot startup model inside the test context.'
+      - id: C
+        answer: 'It starts every external service used by the production application before the context is created.'
+        explanation: 'Boot-aware bootstrap does not automatically provision all external infrastructure.'
+      - id: D
+        answer: 'It starts a real embedded server as part of Boot-aware bootstrap so the test exercises network behavior.'
+        explanation: 'Starting a real server is a separate WebEnvironment choice, not an inherent property of Boot-aware bootstrap.'
+    correctAnswerId: B
+
+  - id: 'q02-primary-configuration-discovery'
+    question: 'An @SpringBootTest class is moved to a package outside the application package hierarchy and now fails to find a Boot configuration. What is the most likely cause?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '1.Introduction/BootTesting.md'
+      anchor: 'primary-test-configuration-discovery'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'SpringBootTest searches only the package containing the main class, so tests elsewhere cannot use it.'
+        explanation: 'Exact package equality is not required; the issue is how Boot searches upward through the package hierarchy.'
+      - id: B
+        answer: 'Boot disables component scanning whenever the test class is placed below a test source directory.'
+        explanation: 'The source directory is not the cause; configuration discovery is based on package structure.'
+      - id: C
+        answer: 'The test needs a nested @Configuration because Boot test bootstrap expects its primary configuration locally.'
+        explanation: 'Boot normally searches for the primary application configuration when explicit classes are absent.'
+      - id: D
+        answer: 'Boot searches upward from the test package, so the primary @SpringBootConfiguration may no longer be discoverable.'
+        explanation: 'Correct. Moving the test outside the application hierarchy can break Boot primary-configuration discovery.'
+    correctAnswerId: D
+
+  - id: 'q03-springboottest-default-server-behavior'
+    question: 'A test uses @SpringBootTest without specifying webEnvironment. Which statement is correct when a supported web stack is available?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '2.SpringBootTest/SpringBootTest.md'
+      anchor: 'springboottest-context-model'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Boot uses WebEnvironment.MOCK by default, so a web context can exist without starting a real embedded server.'
+        explanation: 'Correct. Full Boot context does not automatically imply a listening network server.'
+      - id: B
+        answer: 'Boot uses RANDOM_PORT by default because a full web application context implies a listening HTTP server.'
+        explanation: 'RANDOM_PORT must be selected explicitly; it is not the default WebEnvironment.'
+      - id: C
+        answer: 'Boot uses NONE by default and disables all web infrastructure until a test client is injected.'
+        explanation: 'NONE is an explicit non-web mode, not the default when web infrastructure is present.'
+      - id: D
+        answer: 'Boot uses DEFINED_PORT by default and binds the same port configured for the production application.'
+        explanation: 'DEFINED_PORT is an explicit real-server mode, not the default.'
+    correctAnswerId: A
+
+  - id: 'q04-random-port-selection'
+    question: 'A CI suite runs the same real-server tests in parallel. Why is WebEnvironment.RANDOM_PORT usually preferable to DEFINED_PORT?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '3.WebEnvironment/WebEnvironment.md'
+      anchor: 'web-environment-real-server'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'RANDOM_PORT replaces the embedded server with MockMvc, avoiding all network allocation.'
+        explanation: 'RANDOM_PORT starts a real server; MockMvc belongs to a mock request-processing path.'
+      - id: B
+        answer: 'RANDOM_PORT shares one process-wide port among all test contexts and serializes access automatically.'
+        explanation: 'It asks for an available port per server instance rather than reserving one shared suite port.'
+      - id: C
+        answer: 'RANDOM_PORT asks for an available port, reducing collisions between concurrently running server tests.'
+        explanation: 'Correct. The actual assigned port can then be injected when a custom client needs it.'
+      - id: D
+        answer: 'RANDOM_PORT disables the web ApplicationContext after startup so later tests can reuse its port.'
+        explanation: 'The web context and server remain part of the test context while it is active.'
+    correctAnswerId: C
+
+  - id: 'q05-real-server-transaction-boundary'
+    question: 'A @Transactional test calls an endpoint in @SpringBootTest(webEnvironment = RANDOM_PORT). The endpoint commits a database change. Why might the change remain after the test method rolls back?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '3.WebEnvironment/WebEnvironment.md'
+      anchor: 'real-server-transaction-boundary'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'RANDOM_PORT disables test-managed transactions whenever a DataSource bean exists.'
+        explanation: 'The test can still have its own test-managed transaction; the issue is the separate server-side transaction.'
+      - id: B
+        answer: 'Client and server run on different threads, so the server transaction is outside the test transaction.'
+        explanation: 'Correct. Rolling back the test thread does not automatically roll back work committed on the server thread.'
+      - id: C
+        answer: 'Assigning the random port commits the test transaction before the server begins handling requests.'
+        explanation: 'Port allocation does not determine transaction commit behavior.'
+      - id: D
+        answer: 'Spring TestContext skips rollback only when the embedded server uses the production port.'
+        explanation: 'The boundary appears in both RANDOM_PORT and DEFINED_PORT real-server arrangements.'
+    correctAnswerId: B
+
+  - id: 'q06-single-slice-rule'
+    question: 'A test needs MVC controller support plus one focused testing facility normally associated with another slice. What is the supported Boot direction?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '4.TestSlices/TestSlices.md'
+      anchor: 'single-slice-rule'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Stack @WebMvcTest and the second @...Test slice so Boot merges both component filters automatically.'
+        explanation: 'Boot does not support composing multiple @...Test slice annotations on the same test.'
+      - id: B
+        answer: 'Replace both slices with a full context because slice customization is not intended to add test facilities.'
+        explanation: 'Slices can be customized with targeted test support when the primary boundary remains appropriate.'
+      - id: C
+        answer: 'Keep adding production component scanning until both slice boundaries become visible in one context.'
+        explanation: 'Broad scanning defeats the focused slice boundary and hides the intended test design.'
+      - id: D
+        answer: 'Choose one primary slice, then add needed support through the relevant @AutoConfigure... or import mechanism.'
+        explanation: 'Correct. One slice defines the boundary; targeted support can refine that context.'
+    correctAnswerId: D
+
+  - id: 'q07-webmvc-missing-service'
+    question: 'An @WebMvcTest for OrderController fails because OrderService is missing. The goal is only to prove request mapping and JSON behavior. What is the best interpretation?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '5.WebLayerTesting/WebLayerTesting.md'
+      anchor: 'webmvc-test-collaborators'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'The service is outside the web slice, so provide a controlled collaborator such as a mock for this test.'
+        explanation: 'Correct. Services are normally outside @WebMvcTest and should be supplied as focused collaborators when needed.'
+      - id: B
+        answer: '@WebMvcTest should include the service automatically; its absence means controller selection narrowed scanning incorrectly.'
+        explanation: 'The slice intentionally excludes most service-layer components.'
+      - id: C
+        answer: 'The missing service shows this behavior requires a full @SpringBootTest instead of a focused web slice.'
+        explanation: 'A full context is not justified merely to supply a collaborator that the focused slice intentionally excludes.'
+      - id: D
+        answer: 'Add repository scanning to the web slice so its persistence dependencies cause the service bean to be created.'
+        explanation: 'Expanding unrelated scanning is not the intended way to satisfy a focused controller collaborator.'
+    correctAnswerId: A
+
+  - id: 'q08-mock-web-vs-real-server'
+    question: 'A test must verify production redirect behavior through the actual embedded server and a real HTTP client. Which boundary is appropriate?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '5.WebLayerTesting/WebLayerTesting.md'
+      anchor: 'mock-web-vs-real-server'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: '@WebMvcTest with MockMvc, because redirect handling can be verified inside the MVC request-processing boundary.'
+        explanation: 'MockMvc can verify framework redirect behavior, but it does not cross the actual embedded-server and network boundary required here.'
+      - id: B
+        answer: '@SpringBootTest with WebEnvironment.MOCK, because a full Boot context is enough to reproduce real client/server transport.'
+        explanation: 'MOCK loads a Boot web context without starting the real embedded server, so it still misses the required transport boundary.'
+      - id: C
+        answer: '@SpringBootTest with a real-server WebEnvironment, because the assertion must cross the embedded-server and HTTP transport boundary.'
+        explanation: 'Correct. RANDOM_PORT or DEFINED_PORT starts the real server so a real HTTP client can exercise the required boundary.'
+      - id: D
+        answer: '@WebMvcTest with a real HTTP client, because the client itself supplies the network boundary even when the slice has no server.'
+        explanation: 'A real client cannot create a server boundary by itself; the selected test context must actually start an embedded server.'
+    correctAnswerId: C
+
+  - id: 'q09-datajpa-transaction-default'
+    question: 'What isolation behavior should a developer normally expect from @DataJpaTest without overriding its transaction settings?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '6.DataLayerTesting/DataLayerTesting.md'
+      anchor: 'datajpa-transaction-model'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Each test commits by default so later repository tests can observe the same database state.'
+        explanation: 'The default focused JPA test model is designed to isolate tests rather than persist changes between them.'
+      - id: B
+        answer: 'The slice is transactional by default, and test changes are normally rolled back after each test.'
+        explanation: 'Correct. This is the usual @DataJpaTest transaction behavior.'
+      - id: C
+        answer: 'Transactions are disabled because JPA repositories are tested without a Spring ApplicationContext.'
+        explanation: '@DataJpaTest loads a focused Spring context and participates in transactional test support.'
+      - id: D
+        answer: 'Rollback occurs only when the slice also starts a RANDOM_PORT embedded server.'
+        explanation: 'The default JPA-slice rollback model does not require a real web server.'
+    correctAnswerId: B
+
+  - id: 'q10-production-database-fidelity'
+    question: 'A repository uses vendor-specific SQL and a database extension that an in-memory test database cannot reproduce. What is the strongest testing choice?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '6.DataLayerTesting/DataLayerTesting.md'
+      anchor: 'data-slice-integration-handoff'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Keep the embedded database and mock the SQL dialect so the slice stays as fast as possible.'
+        explanation: 'Mocking away the product-specific behavior removes the boundary the test is supposed to prove.'
+      - id: B
+        answer: 'Move the test to @WebMvcTest because web slices load a broader set of production infrastructure.'
+        explanation: 'A web slice does not provide realistic database-product behavior.'
+      - id: C
+        answer: 'Use a plain repository unit test because Boot integration should keep database infrastructure out of tests.'
+        explanation: 'Boot tests can use real database services, including Testcontainers-backed integration.'
+      - id: D
+        answer: 'Run the persistence test against the real database product, such as through a service connection.'
+        explanation: 'Correct. Product-specific SQL and extensions justify a real-service integration boundary.'
+    correctAnswerId: D
+
+  - id: 'q11-auto-configure-refines-boundary'
+    question: 'A full @SpringBootTest context is the correct boundary, but the test also needs Boot to configure MockMvc. What should @AutoConfigureMockMvc be understood to do?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '7.TestAutoConfiguration/TestAutoConfiguration.md'
+      anchor: 'auto-configure-annotations'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'It adds focused test support to the existing context without changing the primary boundary.'
+        explanation: 'Correct. @AutoConfigure... annotations refine support inside the context selected by the primary test annotation.'
+      - id: B
+        answer: 'It converts @SpringBootTest into @WebMvcTest and removes all non-MVC application beans.'
+        explanation: 'The annotation configures MockMvc support; it does not replace the primary context model with a web slice.'
+      - id: C
+        answer: 'It starts a second ApplicationContext dedicated to MockMvc and shares beans between both contexts.'
+        explanation: 'It configures support in the existing test context rather than creating a parallel context.'
+      - id: D
+        answer: 'It forces a real HTTP server to start because MockMvc can only operate over network sockets.'
+        explanation: 'MockMvc is specifically designed to exercise MVC request processing without a real HTTP server.'
+    correctAnswerId: A
+
+  - id: 'q12-import-auto-configuration'
+    question: 'A focused slice needs one specific Boot auto-configuration that is not imported by default. Which mechanism best preserves auto-configuration semantics?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '7.TestAutoConfiguration/TestAutoConfiguration.md'
+      anchor: 'import-auto-configuration'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Use ordinary @Import on the auto-configuration class so Boot treats it as user configuration.'
+        explanation: 'Auto-configuration should not be imported as ordinary user configuration when Boot provides a dedicated mechanism.'
+      - id: B
+        answer: 'Add a second @...Test slice because each additional slice contributes one missing auto-configuration.'
+        explanation: 'Multiple slice annotations on one test are not the supported composition model.'
+      - id: C
+        answer: 'Use @ImportAutoConfiguration so Boot retains the special condition and ordering model for that import.'
+        explanation: 'Correct. The dedicated import mechanism preserves Boot auto-configuration semantics.'
+      - id: D
+        answer: 'Enable unrestricted component scanning so the missing auto-configuration class is found as a component.'
+        explanation: 'Broad scanning is not the mechanism for adding a specific Boot auto-configuration to a focused test.'
+    correctAnswerId: C
+
+  - id: 'q13-testconfiguration-additive'
+    question: 'Several integration tests need the same test-only clock bean while still using the normal application configuration. What is an appropriate Boot pattern?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '8.PropertyOverrides/PropertyOverrides.md'
+      anchor: 'testconfiguration-import'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Replace the application @SpringBootApplication with a new top-level production @Configuration used only by tests.'
+        explanation: 'Replacing the primary configuration changes the meaning of the test and leaks test support into the production model.'
+      - id: B
+        answer: 'Define reusable support in @TestConfiguration and import it so it supplements the primary application configuration.'
+        explanation: 'Correct. @TestConfiguration expresses additive, test-only configuration rather than a replacement application entry point.'
+      - id: C
+        answer: 'Put the test bean in the main application package so component scanning discovers it in production and tests.'
+        explanation: 'Test-only support should not become ordinary production configuration.'
+      - id: D
+        answer: 'Use a second @SpringBootTest annotation because each annotation can contribute one extra configuration class.'
+        explanation: 'The solution is explicit test configuration, not repeated primary test annotations.'
+    correctAnswerId: B
+
+  - id: 'q14-mock-refresh-time-limit'
+    question: 'A bean reads a collaborator during context initialization, but the @MockBean return value is stubbed only inside the test method. Why can initialization still fail?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '9.MockReplacement/MockReplacement.md'
+      anchor: 'mock-refresh-time-limit'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: '@MockBean is registered only after the first test method starts, so no mock exists during refresh.'
+        explanation: 'The mock itself can exist before refresh; the timing problem is when the desired stubbing becomes available.'
+      - id: B
+        answer: 'Boot refuses mocked return values during refresh whenever the mock replaces an existing bean.'
+        explanation: 'Boot does not impose a general prohibition on mocked behavior during refresh.'
+      - id: C
+        answer: 'Spring automatically resets all mocks immediately before every bean initialization callback.'
+        explanation: 'The issue is not an automatic reset before each bean initialization.'
+      - id: D
+        answer: 'Test-method stubbing happens after refresh, so initialization behavior must be configured earlier.'
+        explanation: 'Correct. A configured mock bean in test configuration can provide the required behavior before dependent beans initialize.'
+    correctAnswerId: D
+
+  - id: 'q15-context-cache-fragmentation'
+    question: 'A suite has many nearly identical @SpringBootTest classes, each with slightly different inline properties and mock definitions. Why can the suite become unexpectedly slow?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '11.IntegrationTestingStrategy/IntegrationTestingStrategy.md'
+      anchor: 'context-cache-strategy'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Those differences can produce distinct context cache keys, causing similar Boot contexts to start repeatedly.'
+        explanation: 'Correct. Stable effective configurations are important for reusing expensive test contexts.'
+      - id: B
+        answer: 'Boot test annotations use an independent cache, so Spring cannot reuse contexts across Boot tests.'
+        explanation: 'Boot tests can benefit from the Spring context cache; the problem is unnecessary configuration variation.'
+      - id: C
+        answer: 'Inline properties force every test method to start a new JVM before evaluating the ApplicationContext.'
+        explanation: 'Context variation can trigger new contexts, not new JVMs for each method.'
+      - id: D
+        answer: 'Mock definitions are local variables and therefore cannot affect context identity or startup cost.'
+        explanation: 'Boot mock/spy definitions are context customizers and can contribute to cache identity.'
+    correctAnswerId: A
+
+  - id: 'q16-service-connection-precedence'
+    question: 'A test has ordinary datasource properties pointing to localhost, plus a supported database container annotated with @ServiceConnection. Which endpoint should Boot auto-configuration use?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '10.Testcontainers/Testcontainers.md'
+      anchor: 'connection-details-precedence'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'The localhost properties, because externalized configuration always overrides test infrastructure.'
+        explanation: 'Matching ConnectionDetails are intentionally given precedence over connection-related properties.'
+      - id: B
+        answer: 'The localhost properties, if they were loaded before the service connection was registered.'
+        explanation: 'Property loading order does not override the defined precedence of matching ConnectionDetails.'
+      - id: C
+        answer: 'The container endpoint represented by the matching ConnectionDetails produced from the service connection.'
+        explanation: 'Correct. The running service connection becomes authoritative for the relevant connection details.'
+      - id: D
+        answer: 'The container only if the ordinary datasource properties are removed from the test environment first.'
+        explanation: 'Matching service ConnectionDetails can take precedence without first deleting ordinary connection properties.'
+    correctAnswerId: C
+
+  - id: 'q17-generic-container-name-hint'
+    question: 'A @Bean method in @TestConfiguration returns GenericContainer<?> for Redis and is annotated with @ServiceConnection. Why might a name hint be required?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '10.Testcontainers/Testcontainers.md'
+      anchor: 'service-connection-name-hints'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'GenericContainer prevents Spring from managing bean lifecycle, so the name enables lifecycle callbacks.'
+        explanation: 'The name hint is about selecting the connection-details factory, not enabling Spring bean lifecycle.'
+      - id: B
+        answer: 'The return type does not identify the service, so the name helps Boot choose the connection-details factory.'
+        explanation: 'Correct. Boot avoids eagerly invoking the bean method just to inspect the Docker image.'
+      - id: C
+        answer: 'Redis containers can expose several ports, and the name tells Testcontainers which host port to publish.'
+        explanation: 'Port mapping is a Testcontainers concern; the Boot name hint identifies the service integration.'
+      - id: D
+        answer: 'Typed containers require the same name because connection-detail matching uses the image rather than the return type.'
+        explanation: 'Strongly typed container return types often provide enough information without a name hint.'
+    correctAnswerId: B
+
+  - id: 'q18-combined-fidelity-boundaries'
+    question: 'A checkout test must prove an HTTP redirect produced through the real embedded server and SQL behavior specific to the production database. Which portfolio choice best matches those risks?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '11.IntegrationTestingStrategy/IntegrationTestingStrategy.md'
+      anchor: 'testing-strategy-spectrum'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Use @WebMvcTest with an in-memory database because one focused slice should replace all higher-fidelity tests.'
+        explanation: 'That removes both the real server and production database behaviors the scenario must prove.'
+      - id: B
+        answer: 'Use @DataJpaTest only, because database fidelity automatically exercises HTTP and server integration.'
+        explanation: 'A persistence slice does not cross the HTTP server boundary.'
+      - id: C
+        answer: 'Use a plain unit test with mocks for server and database behavior so infrastructure never affects the result.'
+        explanation: 'Mocking both boundaries prevents the test from proving the stated integration risks.'
+      - id: D
+        answer: 'Use a real-server @SpringBootTest and connect it to the real database product through a service connection.'
+        explanation: 'Correct. Both server and database product behavior are explicit risks, so both boundaries justify higher fidelity.'
+    correctAnswerId: D

@@ -1,1 +1,303 @@
-{}
+1.Introduction/BootTesting.md:
+  boot-testing-role:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  boot-testing-problem:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  boot-test-support-modules:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  springapplication-test-bootstrap:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  primary-test-configuration-discovery:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  testing-ownership-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  testing-learning-path:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+2.SpringBootTest/SpringBootTest.md:
+  full-context-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  springboottest-context-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  full-context-configuration-discovery:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  full-context-fidelity-cost:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  full-context-vs-slice:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  web-environment-handoff:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+3.WebEnvironment/WebEnvironment.md:
+  web-environment-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  web-environment-mock:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  web-environment-real-server:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  web-environment-none:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  real-server-test-clients:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  real-server-transaction-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  web-runtime-testing-handoff:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+4.TestSlices/TestSlices.md:
+  test-slice-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  test-slice-context-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  test-slice-auto-configuration-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  single-slice-rule:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  smallest-slice-decision:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  slice-full-context-handoff:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+5.WebLayerTesting/WebLayerTesting.md:
+  webmvc-test-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  webmvc-test-collaborators:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  webflux-test-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  web-slice-auto-configured-clients:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  mock-web-vs-real-server:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  web-testing-framework-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+6.DataLayerTesting/DataLayerTesting.md:
+  data-slice-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  datajpa-test-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  datajpa-transaction-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  jdbc-test-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  data-test-database-customization:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  data-slice-integration-handoff:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  data-testing-framework-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+7.TestAutoConfiguration/TestAutoConfiguration.md:
+  test-auto-configuration-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  slice-imported-auto-configuration:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  auto-configure-annotations:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  exclude-test-auto-configuration:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  import-auto-configuration:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  test-context-missing-bean-diagnosis:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  test-auto-config-ownership-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+8.PropertyOverrides/PropertyOverrides.md:
+  test-context-customization-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  springboottest-properties:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  testconfiguration-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  testconfiguration-import:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  test-property-cache-impact:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  test-configuration-ownership-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+9.MockReplacement/MockReplacement.md:
+  mockbean-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  spybean-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  mock-replacement-context-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  mock-refresh-time-limit:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  mock-spy-cache-impact:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  mockito-testing-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+10.Testcontainers/Testcontainers.md:
+  service-connection-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  spring-boot-testcontainers-dependency:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  connection-details-precedence:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  service-connection-container-field:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  service-connection-container-bean:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  service-connection-name-hints:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  dynamic-property-source-fallback:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  testcontainers-ownership-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+11.IntegrationTestingStrategy/IntegrationTestingStrategy.md:
+  testing-strategy-spectrum:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  smallest-context-strategy:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  real-server-strategy:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  real-service-strategy:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  context-cache-strategy:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  testing-failure-classification:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  testing-module-handoffs:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false

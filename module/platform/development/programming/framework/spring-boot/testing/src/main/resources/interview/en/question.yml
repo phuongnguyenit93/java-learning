@@ -27,4 +27,179 @@
 #         Exact method signature in api-descriptions.yml, for example startVsRun().
 # </interview-schema>
 
-questions: []
+questions:
+  - question: 'Why is a Boot-aware test bootstrap different from loading an ordinary Spring test context, and when does that distinction become important?'
+    answer: 'Spring Boot applications commonly depend on behavior that goes beyond registering beans: externalized configuration, environment processing, auto-configuration, configuration binding, and conditional infrastructure can all affect startup. Boot-aware tests reproduce the relevant Boot startup model through SpringApplication and primary configuration discovery, so failures can reflect the same configuration and condition model used by the application. The distinction matters whenever the behavior under test depends on Boot startup semantics. If the test only needs an object-level unit boundary, bringing in Boot adds unnecessary cost; if the test depends on Boot configuration, a generic context can create false confidence by omitting the very behavior that production uses.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '1.Introduction/BootTesting.md'
+      anchor: 'boot-testing-problem'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: 'How would you decide between @SpringBootTest and a focused test slice, and why is context size a correctness decision as well as a performance decision?'
+    answer: '@SpringBootTest is appropriate when the assertion depends on several layers cooperating, broad auto-configuration, production-style Boot startup, or another cross-cutting application boundary that a slice would deliberately omit. A slice is preferable when one focused boundary such as MVC, WebFlux, JPA, or JDBC contains everything the assertion needs. Smaller contexts start faster and fail with less unrelated noise, but shrinking past the required boundary can hide integration defects or force mocks around the behavior that should have been proven. Full contexts provide more fidelity but enlarge startup cost, external dependency exposure, and the failure surface. The right choice is therefore the smallest context that still includes every collaboration the test is intended to establish.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '2.SpringBootTest/SpringBootTest.md'
+      anchor: 'full-context-vs-slice'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: 'A @SpringBootTest passes with WebEnvironment.MOCK but the same scenario fails with RANDOM_PORT and leaves database changes behind. Explain why both outcomes can be valid and what boundary changed.'
+    answer: 'MOCK builds a web application context without starting the embedded server, so request processing can remain inside the test-side framework boundary. RANDOM_PORT starts a real server and the client request is handled by server-side code on another thread. A test-managed @Transactional transaction around the test method therefore does not automatically contain the transaction opened by application code while serving the HTTP request. The test transaction can roll back its own work while the server transaction may commit. The failure also exposes additional real-server concerns such as networking, connectors, serialization through the client/server path, and production web wiring. The changed result is a signal that the test crossed a different boundary rather than evidence that one mode is universally more correct.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '3.WebEnvironment/WebEnvironment.md'
+      anchor: 'real-server-transaction-boundary'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: 'Why should a Boot test normally start from one @...Test slice instead of stacking several slice annotations, and how should you add one missing testing capability?'
+    answer: 'Each Boot slice defines a primary context boundary through focused scanning and a curated set of auto-configurations. Boot does not support combining multiple @...Test slice annotations as if their contexts could simply be merged. Start with the slice that best matches the behavior being proved. If that boundary is still correct but one facility is missing, add the narrow capability through a matching @AutoConfigure... annotation, @ImportAutoConfiguration for a specific auto-configuration, @Import for ordinary test or user configuration, or an explicit collaborator. If many production pieces must be imported to keep the test alive, the design signal is that the behavior probably belongs in a larger integration context.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '4.TestSlices/TestSlices.md'
+      anchor: 'single-slice-rule'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: 'An @WebMvcTest fails because a controller service dependency is missing. What should you investigate before importing the whole service layer, and what does each possible fix say about the intended boundary?'
+    answer: '@WebMvcTest intentionally selects MVC-oriented components and excludes most services and repositories. A missing service is therefore often expected rather than evidence that component scanning is broken. First ask whether the controller should be tested with that collaborator controlled; if so, supply it explicitly, commonly with a Boot-managed mock bean, and keep the web slice focused on mapping, validation, serialization, advice, or controller behavior. If the assertion actually depends on real service and repository cooperation, broad imports only disguise the fact that the test boundary has expanded. In that case a larger context such as @SpringBootTest is clearer because it states the integration requirement directly.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '5.WebLayerTesting/WebLayerTesting.md'
+      anchor: 'webmvc-test-collaborators'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: 'When can the default test database behavior of @DataJpaTest give misleading confidence, and how would you decide whether to keep an embedded database or use a real service?'
+    answer: '@DataJpaTest can use an embedded test database when one is available, which is useful for fast checks of mappings, repositories, and ordinary JPA behavior. The risk appears when the product-specific database behavior is part of what must be proven. Dialect differences, native SQL, migrations, extensions, isolation behavior, indexing, or driver characteristics may all pass against an in-memory substitute and fail in production. Keep the embedded database when the test contract is portable persistence behavior. Use @AutoConfigureTestDatabase to control replacement when appropriate, or move to a real database through Testcontainers and a service connection when production-specific behavior is part of the risk. The decision should follow the boundary, not a blanket rule that all repository tests must use either fake or real infrastructure.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '6.DataLayerTesting/DataLayerTesting.md'
+      anchor: 'data-test-database-customization'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: 'A focused Boot test reports NoSuchBeanDefinitionException. Describe a diagnostic sequence that avoids turning every missing bean into an import or mock.'
+    answer: 'Begin with the chosen test boundary. Determine whether the missing type should be selected by the slice scanning rules, created by one of the slice auto-configurations, or supplied explicitly as a collaborator. If an auto-configuration should provide it, inspect the relevant conditions and exclusions instead of assuming production configuration must be imported. If the type is outside the intended slice, decide whether a controlled test double is the right collaborator or whether the test objective really crosses into another layer. Only after those questions should you add configuration. This order distinguishes an expected omission from a broken Boot condition and from a test whose stated boundary is too small.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '7.TestAutoConfiguration/TestAutoConfiguration.md'
+      anchor: 'test-context-missing-bean-diagnosis'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: 'Why is @ImportAutoConfiguration different from @Import when extending a test context, and what can go wrong if an auto-configuration class is treated like ordinary user configuration?'
+    answer: '@ImportAutoConfiguration is designed for Boot auto-configuration classes and preserves the auto-configuration model, including condition handling and ordering. @Import is appropriate for ordinary application or test configuration classes. Importing an auto-configuration class as normal user configuration blurs that distinction and can bypass the expectations under which Boot composes auto-configuration. In a focused test, first keep the primary slice boundary, then add only the specific auto-configuration that the scenario requires. This keeps the reason for the extra infrastructure visible and avoids gradually reconstructing the entire production context through ad hoc imports.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '7.TestAutoConfiguration/TestAutoConfiguration.md'
+      anchor: 'import-auto-configuration'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: 'Why can many small inline test-property changes make a Spring Boot suite unexpectedly slow even when each individual test looks lightweight?'
+    answer: 'Spring TestContext reuses an application context only when the effective test configuration is compatible with an existing cache entry. Inline properties, profiles, imported configuration, mock or spy definitions, and other context customizers can contribute to the cache key. If many tests each create a slightly different configuration shape, the suite may repeatedly start nearly identical Boot contexts instead of reusing one expensive startup. The practical response is to group tests around stable context shapes, reuse common test configuration and property sets where they represent the same scenario, and move object-level behavior out of Spring when no context integration is being tested. Context customization is therefore part of suite architecture rather than free per-test setup.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '8.PropertyOverrides/PropertyOverrides.md'
+      anchor: 'test-property-cache-impact'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: 'Explain the design difference between a nested @TestConfiguration and a nested plain @Configuration in a Boot test. Why can confusing the two change what the test actually proves?'
+    answer: '@TestConfiguration expresses additive, test-only configuration. A nested test configuration can be combined with the application primary configuration so the test gains helper beans or alternative infrastructure without redefining the application entry point. A nested plain @Configuration can instead act as the primary test configuration, which changes the configuration model being bootstrapped. That may be intentional for a specialized test, but if it happens accidentally the test can stop representing normal application startup. Use @TestConfiguration when the goal is to supplement production wiring, and use an explicit replacement configuration only when changing the top-level application model is itself part of the test design.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '8.PropertyOverrides/PropertyOverrides.md'
+      anchor: 'testconfiguration-purpose'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: 'Compare @MockBean and @SpyBean as Spring Boot test-context choices. When does each make sense, and why can both affect suite performance?'
+    answer: '@MockBean replaces or adds a Spring bean with a Mockito mock, so it is useful when the Spring context is part of the test boundary but one collaborator should be fully controlled. @SpyBean keeps the real bean and wraps it with a spy, which fits cases where production behavior should mostly execute while selected interactions are observed or overridden. A spy still creates the real bean and its dependencies, so it is not a cheaper mock. Both mechanisms alter the effective bean graph through context customizers, and different mock or spy sets can produce different context-cache keys. Use them when Spring injection of the test double is part of the scenario; plain Mockito is usually clearer for unit tests that do not need a Spring context.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '9.MockReplacement/MockReplacement.md'
+      anchor: 'mock-replacement-context-boundary'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: 'Why can stubbing a @MockBean inside a test method be too late for a bean that needs the mocked value during context initialization, and what pattern solves that timing problem?'
+    answer: '@MockBean makes the mock available to the context before refresh, but ordinary test-method stubbing happens only after the context has already been created. If another bean calls the collaborator while it is being constructed or initialized, the desired stubbed behavior did not exist at the moment it was needed. The failure is therefore about lifecycle timing rather than Mockito syntax. Define and configure the mock through a @Bean method in test configuration when its behavior must be established before dependent beans initialize. That moves the configured test double into the context bootstrap phase and makes the initialization dependency explicit.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '9.MockReplacement/MockReplacement.md'
+      anchor: 'mock-refresh-time-limit'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: 'What problem does @ServiceConnection solve in a Testcontainers-backed Boot test, and why can ConnectionDetails legitimately override ordinary connection properties?'
+    answer: 'Testcontainers can start a real dependency, but the application still needs a host, port, credentials, URL, or another typed connection contract. @ServiceConnection lets Boot derive supported ConnectionDetails from the running container and feed them into normal auto-configuration. Those connection details take precedence over ordinary connection-related properties because the test has a concrete running service whose location is often dynamic and should be authoritative for that context. This avoids copying container values into ad hoc properties. The container lifecycle still belongs to Testcontainers when it is a Testcontainers-managed field, while a container declared as a Spring bean follows the application-context lifecycle.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '10.Testcontainers/Testcontainers.md'
+      anchor: 'service-connection-purpose'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: 'When should a Testcontainers test use @DynamicPropertySource instead of @ServiceConnection, and what does that choice tell you about the integration contract?'
+    answer: '@ServiceConnection is the preferred Boot-specific path when a supported container can be expressed through a typed ConnectionDetails integration. @DynamicPropertySource is the better fallback when no service-connection factory exists, the application consumes a custom property contract, or the test must publish dynamic values that do not map to a supported ConnectionDetails type. The dynamic-property approach is more manual because the test reads container values and registers properties itself. Choosing it should therefore be deliberate evidence that the integration contract is property-based or unsupported by the typed adapter, rather than a default habit that duplicates values Boot already knows how to derive.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '10.Testcontainers/Testcontainers.md'
+      anchor: 'dynamic-property-source-fallback'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: 'Design a Spring Boot test strategy for a feature that has controller mapping, repository queries, full application wiring, and a database-specific SQL feature. Why should one large @SpringBootTest not automatically replace all smaller tests?'
+    answer: 'Use different boundaries for different risks. A focused web slice can prove controller mapping, validation, serialization, and controlled collaboration without paying for persistence. A data slice can prove repository mappings and ordinary queries. A full @SpringBootTest can prove that broader Boot configuration and cross-layer wiring work together. If a database-specific SQL feature is a real product risk, add a focused or full integration test backed by the actual database through Testcontainers and a service connection. One large full-context test may exercise many pieces at once, but it gives slower feedback, a larger failure surface, and less precise diagnosis. The suite is stronger when each test pays only for the fidelity required by the behavior it is meant to prove.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '11.IntegrationTestingStrategy/IntegrationTestingStrategy.md'
+      anchor: 'testing-strategy-spectrum'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: 'A complex integration test fails before the assertion runs. How would you classify the failure so that debugging starts at the earliest incorrect boundary instead of changing test configuration at random?'
+    answer: 'First determine whether Boot found the intended primary configuration and completed context bootstrap. If configuration discovery or startup fails, remain at the bootstrap and condition layer. If a focused context starts but lacks a bean, inspect slice selection, imported test auto-configuration, and whether the collaborator should have been explicit. If the wrong property or bean appears, inspect test properties, imported test configuration, mocks, spies, and other context customizers. If the application is configured correctly but cannot reach a real dependency, inspect service-connection adaptation and then the external service or container. This ordering narrows the failure by the earliest broken boundary and prevents low-level infrastructure debugging before the test context itself is known to be correct.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '11.IntegrationTestingStrategy/IntegrationTestingStrategy.md'
+      anchor: 'testing-failure-classification'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
