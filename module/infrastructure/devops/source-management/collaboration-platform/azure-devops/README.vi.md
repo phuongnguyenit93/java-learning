@@ -1,3 +1,14 @@
+# 📂 README MODULE STRUCTURE (VI)
+
+* [01-azure-repos-collaboration](readme/vi/menu/01-azure-repos-collaboration.md)
+* [02-organizations-projects-repositories](readme/vi/menu/02-organizations-projects-repositories.md)
+* [03-membership-and-access](readme/vi/menu/03-membership-and-access.md)
+* [04-branches-forks-contributions](readme/vi/menu/04-branches-forks-contributions.md)
+* [05-pull-request-review](readme/vi/menu/05-pull-request-review.md)
+* [06-branch-policies-and-bypass](readme/vi/menu/06-branch-policies-and-bypass.md)
+* [07-complete-pull-requests](readme/vi/menu/07-complete-pull-requests.md)
+* [08-end-to-end-azure-repos](readme/vi/menu/08-end-to-end-azure-repos.md)
+
 # Azure Repos: cộng tác và kiểm soát thay đổi mã nguồn
 
 Azure Repos là dịch vụ lưu trữ Git repository và cộng tác mã nguồn trong Azure DevOps. Module này giúp người học hiểu **nơi mã nguồn được sở hữu, ai có quyền tham gia, thay đổi được đánh giá thế nào và vì sao một pull request có thể được hoặc chưa được hợp nhất**. Git chịu trách nhiệm ghi lịch sử; Azure Repos bổ sung môi trường review và quản trị repository.

@@ -1,0 +1,350 @@
+# <interview-schema>
+# Cấu trúc câu hỏi Interview
+# schema-version: 2
+#
+# questions [kiểu: list; bắt buộc; mặc định: []]
+#   Danh sách câu hỏi Interview của module trong language hiện tại.
+#   mỗi phần tử:
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi phỏng vấn hiển thị cho người học.
+#     answer [kiểu: string; bắt buộc; mặc định: ""]
+#       Câu trả lời tham khảo, chỉ hiển thị khi người học chủ động mở.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu nội dung được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu nội dung đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+# </interview-schema>
+
+questions:
+  - question: Phân định vai trò Azure DevOps, Azure Repos, Boards và Pipelines khi một nhóm cần đưa bản sửa lỗi vào mã nguồn chung.
+    answer: Azure DevOps là nền tảng chứa nhiều dịch vụ; Azure Repos quản lý repository Git, Pull Request và bằng chứng review; Boards sở hữu vòng đời work item; Pipelines chạy build và kiểm thử. Khi sửa lỗi, liên kết Bug với PR và kết quả validation giúp theo dấu nguyên nhân đến revision được nhận. Tuy nhiên PR Completed không có nghĩa work item đã đóng, và một pipeline xanh không chứng minh yêu cầu nghiệp vụ đã đúng hoặc bản sửa đã được triển khai.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 01-azure-repos-collaboration.md
+      anchor: azure-devops-vs-azure-repos
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: Vì sao commit Git trên máy chưa phải bằng chứng rằng nhóm đã review hoặc chấp nhận thay đổi trong Azure Repos?
+    answer: "Git ghi snapshot và lịch sử cục bộ ngay cả khi offline, nhưng người khác chưa chắc đọc được commit đó. Sau khi chia sẻ branch lên repository có quyền truy cập phù hợp, tác giả mới mở PR nhắm đúng target để lấy phiếu, thảo luận và chạy checks. Cần phân biệt bốn mốc: recorded tại local, shared trên remote, reviewed trong PR và accepted khi commit đã tích hợp vào target; không được suy một mốc từ mốc trước."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 01-azure-repos-collaboration.md
+      anchor: git-versus-azure-repos-ownership
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: Giải thích PR là một đề xuất chứ không phải lệnh cập nhật target và cách kiểm tra source/target chính xác.
+    answer: Pull Request nối một branch hoặc repository nguồn với branch hoặc repository đích cụ thể. Nó cho reviewer xem diff, ngữ cảnh, comments và validation trước khi thay đổi được đưa vào target. Hai repository đều có thể có nhánh main nên tên branch đơn lẻ không đủ; cần kiểm tra cả cặp endpoint, commit mới nhất và target policies. Tạo PR hoặc nhận một phiếu Approve không tự cập nhật nhánh đích.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 01-azure-repos-collaboration.md
+      anchor: what-is-a-pull-request
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: Vì sao PR đã được Approve vẫn có thể không Complete và nhóm nên dùng bằng chứng nào để chẩn đoán?
+    answer: Reviewer vote là một loại bằng chứng, còn branch policy có thể yêu cầu build validation, reviewer cụ thể, liên kết work item hoặc kiểm tra khác. Một required build đang fail vẫn chặn complete thông thường dù đủ phiếu; ngược lại build xanh chưa chứng minh quyền hoàn tất của actor. Hãy mở trạng thái Policies và lỗi validation tại đúng target, kiểm tra quyền hiệu lực và xung đột thay vì thêm approval hoặc bypass một cách mù quáng.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 01-azure-repos-collaboration.md
+      anchor: reviewer-policy-and-merge-relation
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: Khi nào nên tách nhiều Azure DevOps projects trong một organization thay vì gom mọi thứ vào một repository?
+    answer: "Organization là ranh giới quản trị rộng; project gom dịch vụ, thành viên và quyền theo một sản phẩm hay nhóm; mỗi project có thể có nhiều Git repositories với lịch sử riêng. Tách Warehouse và Checkout thành projects phù hợp khi nhu cầu truy cập, governance và bối cảnh công việc thực sự khác nhau. Tránh tạo project chỉ để chứa từng branch hoặc coi repository như một organization: điều đó làm quyền khó theo dõi mà không tăng tính rõ ràng."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 02-organizations-projects-repositories.md
+      anchor: organization-project-hierarchy
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: Phân tích vì sao một người đọc và push được code nhưng vẫn không thể tạo repository mới.
+    answer: Quyền Git được đánh giá theo thao tác và phạm vi. Read hoặc Contribute trên checkout-api không tương đương quyền Create repository ở cấp project, cũng không tự cấp Manage permissions hay Edit policies. Khi gặp lỗi, xác định thao tác chính xác, project đích, các group mà người đó thuộc về và effective permission; chỉ cấp quyền tối thiểu cần thiết. Nâng toàn bộ người dùng lên Project Administrators để giải quyết một lỗi Create repository là giải pháp dư quyền.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 02-organizations-projects-repositories.md
+      anchor: repository-owner-admin-roles
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: Tại sao project Private không tự trả lời được câu hỏi ai có thể đọc repository bên trong?
+    answer: Private giới hạn đối tượng có thể tiếp cận project, nhưng khả năng clone checkout-api còn phụ thuộc danh tính, membership, access level và quyền Read hiệu lực tại repository. Người ở nhóm Readers có thể được đọc diff nhưng không vì vậy mà được Contribute; người ngoài không tự có quyền chỉ vì biết URL. Trước khi mở rộng visibility, hãy kiểm tra nhánh cấp quyền hiện tại và nhu cầu truy cập của từng vai trò để giữ nguyên nguyên tắc ít quyền nhất.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 02-organizations-projects-repositories.md
+      anchor: project-visibility-versus-repo-access
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: Nhóm có tài liệu cũ hướng dẫn tạo Azure DevOps public project. Bạn xử lý yêu cầu đó trong năm 2026–2027 thế nào?
+    answer: "Cần xác minh thời điểm và sản phẩm thay vì làm theo hướng dẫn cũ: từ tháng 4/2026, Azure DevOps Services đã ngừng hỗ trợ tạo public project mới theo cách thông thường và các public project còn lại dự kiến chuyển sang private trong năm 2027. Microsoft Learn vẫn mô tả ngoại lệ legacy cho organization đã bật sẵn chính sách Allow public project, không phải quyền tự bật mới cho mọi organization; cần kiểm tra tình trạng thực tế thay vì hứa tạo được. Nhóm phải lập kế hoạch truy cập và chia sẻ mã phù hợp, rà liên kết công khai và đối tượng bên ngoài bị ảnh hưởng; không dùng bypass permission để tái tạo hành vi đã ngừng hỗ trợ."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 02-organizations-projects-repositories.md
+      anchor: public-project-retirement-2026
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: So sánh access level với security permission khi người dùng mở Boards được nhưng clone repository bị từ chối.
+    answer: Access level quyết định tập tính năng mà tài khoản được hưởng; security permission quyết định thao tác cụ thể trên project, repository và branch. Một người có giao diện Boards không đồng nghĩa có quyền Read trên checkout-api. Khi troubleshoot, xác nhận entitlement, membership và effective Read/Deny đúng resource trước khi thay role. Tách hai lớp này giúp không nhầm lỗi license/tính năng với lỗi Git ACL.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 03-membership-and-access.md
+      anchor: access-level-vs-security-permission
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: Giải thích vì sao Allow trực tiếp chưa chắc thắng Deny đến từ group và cách xử lý không tạo lỗ hổng.
+    answer: Effective rights được tổng hợp từ các quyền và membership phù hợp tại scope. Deny của một group ở cùng phạm vi có thể khiến thao tác vẫn thất bại dù cá nhân được Allow; riêng các ngoại lệ và mức inheritance phải đối chiếu theo effective permission thực tế. Đừng thêm Allow ngẫu nhiên hoặc trao admin toàn cục; tìm group cấp Deny, lý do kiểm soát và giới hạn scope cần sửa, sau đó thử lại đúng thao tác bị chặn.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 03-membership-and-access.md
+      anchor: direct-and-group-membership
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: Phân biệt Not set và Deny khi đánh giá quyền Read được kế thừa qua nhiều nhóm.
+    answer: Not set nghĩa là entry đó chưa cấp hoặc chặn quyền; nó không phủ nhận một Allow từ Readers hay scope cha. Deny là ràng buộc phủ định có thể tác động lên quyền hiệu lực theo quy tắc scope. Vì vậy chỉ nhìn một dòng quyền cá nhân không đủ kết luận người đó không clone được. Hãy đọc effective permissions cùng đường membership và inheritance để giải thích vì sao thực tế đọc được hoặc bị chặn.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 03-membership-and-access.md
+      anchor: allow-deny-not-set
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: Vì sao không nên khẳng định Deny luôn thắng hoặc branch Allow luôn thắng nếu chưa đọc phạm vi áp quyền?
+    answer: Repository và branch có phạm vi permission khác nhau; inherited entries, direct entries và các quy tắc specificity cần được kết hợp trước khi suy ra quyền hiệu lực. Một log push bị denied trên main không chứng minh quyền Contribute ở feature cũng bị chặn. Hãy so sánh branch và repository cụ thể trong Security UI, kiểm tra group memberships rồi thử một thao tác được phép ở nhánh thử nghiệm để khoanh vùng nguyên nhân mà không làm yếu bảo vệ main.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 03-membership-and-access.md
+      anchor: deny-and-specificity-exceptions
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: Khi nào tạo feature branch trong repository chung và khi nào cần fork để đóng góp?
+    answer: Người đã có quyền tạo branch và Contribute trên repository thường có thể làm việc với branch ngắn hạn rồi mở PR vào target. Contractor hoặc contributor không có quyền ghi upstream dùng fork riêng, chia sẻ source qua PR và vẫn chịu policies của target upstream. Quyết định dựa vào quyền, tổ chức review và chi phí đồng bộ, không dựa vào quan niệm fork tự bỏ qua kiểm soát hoặc nhánh feature luôn an toàn hơn.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 04-branches-forks-contributions.md
+      anchor: shared-branch-versus-fork
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: Một fork cho phép push tự do nhưng PR vào upstream main bị policy chặn. Bạn giải thích và xử lý thế nào?
+    answer: Fork có quyền và lịch sử của nó; PR lại hướng tới upstream/main nên merge-readiness dựa vào branch policies, reviewers và checks của target đó. Cho thêm quyền push trên fork không giải quyết thiếu hai approvals ở upstream. Cần kiểm tra source/target endpoints, đọc thông báo policy, bổ sung bằng chứng hoặc review hợp lệ, và chỉ xét bypass khi có quyền và quy trình phê duyệt ngoại lệ rõ ràng.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 04-branches-forks-contributions.md
+      anchor: fork-permissions-and-policies
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: Vì sao cặp repository/branch nguồn và đích quan trọng hơn tên branch khi review PR từ fork?
+    answer: Một fork và upstream đều có thể có main nhưng hai tên đó không chỉ cùng commit hay cùng tập quyền. PR phải xác định chính xác repository nguồn, source revision, repository đích và target branch; nếu chọn nhầm target, reviewer có thể duyệt đúng diff nhưng tích hợp vào sai dòng phát hành. Trước khi Ready/Complete, đối chiếu endpoints, quyền đọc fork và các policies hiện hành trên destination.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 04-branches-forks-contributions.md
+      anchor: pull-request-source-target
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "So sánh Draft và Ready: điều gì thay đổi, điều gì vẫn phải được chứng minh trước khi merge?"
+    answer: Draft báo rằng tác giả đang cần phản hồi sớm nhưng chưa tuyên bố sẵn cho review chính thức; Ready kích hoạt luồng mời reviewer tương ứng, không biến test còn thiếu thành test đã chạy. Ngay cả PR Ready, reviewer vẫn cần xem diff, mô tả, test evidence, policy và quyền actor trước khi Complete. Đổi trạng thái để né gate sẽ gây hiểu nhầm rằng độ chín của code được xác nhận bởi một nút giao diện.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 04-branches-forks-contributions.md
+      anchor: draft-vs-ready-pull-request
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: Một PR mô tả sửa timeout nhưng diff thay đổi permissions. Reviewer nên suy luận và yêu cầu gì?
+    answer: So sánh intent đã ghi với tập file thay đổi, sau đó hỏi tại sao permission nằm trong phạm vi sửa timeout và điều gì có thể bị ảnh hưởng. Nếu thay đổi không được giải thích hoặc không có test/đánh giá bảo mật, yêu cầu tác giả thu hẹp scope hoặc bổ sung lý do và bằng chứng. Một build xanh chỉ chứng minh những kiểm tra đã chạy, không mặc nhiên cho phép cập nhật security nhạy cảm không được review.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 05-pull-request-review.md
+      anchor: pr-diff-and-description
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: Tại sao resolve comment thread không phải bằng chứng rằng một bug null handling đã được sửa?
+    answer: Thread là hồ sơ trao đổi; nút Resolve chỉ thay trạng thái thảo luận, không chạy code. Sau khi tác giả push commit mới, reviewer cần xem diff mới, tái hiện đường null có liên quan và đối chiếu kết quả test; khi concern được giải quyết mới resolve. Nếu reviewer resolve chỉ để bảng PR trông sạch, nhóm mất khả năng nhận diện rủi ro còn tồn tại và khó truy vết lý do chấp thuận.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 05-pull-request-review.md
+      anchor: line-comments-discussion-threads
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: Khác nhau giữa Wait for author và Reject khi reviewer muốn tác giả bổ sung security test?
+    answer: Wait for author nêu rõ cần sửa hoặc giải thích trước khi xem xét lại; Reject biểu thị phản đối đề xuất hiện tại và có thể mang ý nghĩa mạnh hơn trong chính sách review. Với required reviewer, Wait for author có thể giữ PR không đủ điều kiện đến khi feedback được xử lý và có vote hợp lệ. Tác giả nên bổ sung test, cập nhật diff và mời re-review, không tự động hiểu đây là yêu cầu đóng PR vĩnh viễn.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 05-pull-request-review.md
+      anchor: wait-for-author-versus-reject
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: Reviewer đã Approve rồi tác giả push commit mới. Vì sao phải đánh giá lại trạng thái vote?
+    answer: Một vote phản ánh revision và diff reviewer đã xem; commit mới có thể thay đổi rủi ro, thậm chí làm mất hiệu lực giả định trước đó. Việc reset votes tự động phụ thuộc branch policy của target chứ không phải mọi PR đều reset như nhau. Hãy xem revision mới, tính lại reviewer eligibility và policy status, rồi quyết định cần re-review hay vote mới; đừng coi số lượng avatar xanh cũ là bằng chứng toàn bộ diff hiện tại đã được xét.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 05-pull-request-review.md
+      anchor: author-revisions-and-re-review
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: Mục tiêu thực tế của branch policies là gì và vì sao không nên coi chúng là bảo chứng nghiệp vụ?
+    answer: Policies đặt điều kiện nhận thay đổi vào nhánh chung, thường gồm minimum reviewers, build validation, required reviewers và các liên kết bắt buộc. Chúng hạn chế việc tích hợp chưa có bằng chứng, nhưng không thể đảm bảo logic refund hay thuế đúng trong mọi ngữ cảnh nếu tests và review thiếu phạm vi. Cần kết hợp policy với thiết kế kiểm thử và xác minh nghiệp vụ thay vì tăng thêm checkbox chỉ để tạo cảm giác an toàn.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 06-branch-policies-and-bypass.md
+      anchor: why-protect-target-branches
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: Một optional security scan fail nhưng required build pass. Khi nào PR có thể Complete và rủi ro gì vẫn cần xử lý?
+    answer: "Optional check có thể cảnh báo mà không tự khóa completion; required policy fail mới là một gate bắt buộc, nhưng nhóm vẫn phải kiểm các yêu cầu khác và quyền actor. Vì vậy PR có thể kỹ thuật đủ điều kiện hoàn tất mà vẫn chứa cảnh báo security cần đánh giá hoặc có ngoại lệ được phê duyệt. Đừng xoá optional warning khỏi báo cáo chỉ vì UI cho phép Complete: reviewer phải ghi nhận rủi ro và quyết định phù hợp."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 06-branch-policies-and-bypass.md
+      anchor: required-vs-optional-policies
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: Vì sao chính sách minimum two reviewers có thể vẫn thiếu phiếu khi tác giả cũng chọn Approve?
+    answer: "Một số policy loại vote của tác giả hoặc yêu cầu người duyệt đủ điều kiện độc lập. Hai phiếu hiển thị không đồng nghĩa có hai approvals được tính: nếu An vừa là author vừa vote, phiếu đó không đáp ứng ngưỡng đang loại self-approval. Để xác minh, mở policy và danh sách reviewer được tính tại revision hiện tại; cần thêm người đủ điều kiện thay vì chỉnh quyền tác giả hay tắt policy."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 06-branch-policies-and-bypass.md
+      anchor: minimum-reviewers-and-self-approval
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: Phân biệt bypass policies when completing PR và bypass policies when pushing. Sai lầm vận hành thường gặp là gì?
+    answer: Bypass ở lúc Complete cho phép actor đủ quyền vượt một số điều kiện khi hoàn tất PR theo quy trình ngoại lệ; bypass khi push liên quan đến việc cập nhật trực tiếp branch bị bảo vệ. Đây là các quyền riêng, không suy được quyền thứ hai từ quyền thứ nhất. Trong sự cố khẩn cấp phải xác minh ai được phép làm gì, ghi lý do ngoại lệ và kiểm tra lại target history; dùng bypass như giải pháp cho lỗi policy chưa được chẩn đoán là rất nguy hiểm.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 06-branch-policies-and-bypass.md
+      anchor: bypass-on-pr-versus-push
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: Vì sao đủ votes không sửa được merge conflict và nhóm cần xác minh điều gì sau khi resolve?
+    answer: Reviewer approval đánh giá proposal còn Git conflict xảy ra khi các thay đổi không thể tự kết hợp ở target. Cần giải quyết nội dung file với hiểu biết nghiệp vụ, cập nhật source revision và chạy lại tests/validation tương ứng; thêm approvals không thể chọn hộ một nhánh logic. Sau khi resolve, reviewer phải xem diff cuối cùng và policy state vì mã đã thay đổi so với lúc ban đầu được duyệt.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 07-complete-pull-requests.md
+      anchor: merge-readiness-and-conflicts
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: Set auto-complete giúp gì và không thể giải quyết những blocker nào?
+    answer: Auto-complete chỉ ghi ý định thực hiện completion khi các điều kiện trên target đạt và actor có quyền tương ứng. Nó không sửa failing build, không tạo work-item link, không chọn cách resolve conflict, không cấp quyền và không biến reviewer Wait for author thành approval. Nếu PR đứng chờ lâu, đọc policy status, quyền và validation logs, xử lý từng blocker rồi quan sát điều kiện hoàn tất thay vì bật lại auto-complete liên tục.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 07-complete-pull-requests.md
+      anchor: complete-pr-versus-auto-complete
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: So sánh dấu vết lịch sử khi Complete PR bằng Squash với merge thông thường.
+    answer: Squash tạo một commit tổng hợp mới trên target thay vì đưa nguyên chuỗi commit nguồn theo cùng hình dạng lịch sử; PR Completed vẫn lưu discussions, votes và metadata liên quan. Điều này giúp lịch sử target gọn nhưng có thể che bớt cấu trúc commit phát triển khi chỉ xem log Git. Khi audit cần tra cả PR record và target commit, không suy rằng một commit squash đồng nghĩa không có review hoặc không tồn tại lịch sử ở source.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 07-complete-pull-requests.md
+      anchor: pr-merge-options-and-traceability
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: Vì sao PR Completed, code đã vào main mà Bug 104 vẫn Active không nhất thiết là mâu thuẫn?
+    answer: Completion trong Azure Repos chứng minh một proposal đã tích hợp vào target; trạng thái Bug 104 thuộc quy trình Azure Boards và có thể có bước kiểm thử, xác nhận hoặc transition riêng. Một số automation có thể liên kết/trạng thái theo cấu hình nhưng không phải mọi team đều tự động đóng bug khi merge. Hãy xác minh target revision, linked work item và acceptance evidence trước khi đổi trạng thái, tránh coi merge như bằng chứng deploy hoặc fix nghiệp vụ thành công.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 07-complete-pull-requests.md
+      anchor: completion-record-and-work-item-state
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: Trình bày sơ đồ organization/project/repository khi điều tra một lỗi giữa nhiều nhóm trên Azure DevOps.
+    answer: Bắt đầu ở organization chứa tài khoản và tập projects, xác định project có dịch vụ/nhóm chịu trách nhiệm rồi repository lưu source và branch cụ thể. Với RetailCo/Checkout/checkout-api, thông tin quyền cần tra tại scope tương ứng; Bug trong Boards và policy của main liên quan nhưng không phải cùng đối tượng. Sơ đồ đúng giúp phân biệt ai sở hữu bối cảnh nghiệp vụ, ai có quyền đọc source và nơi PR cần được review.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 08-end-to-end-azure-repos.md
+      anchor: map-org-project-repo
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: Chọn đường đóng góp cho developer có quyền ghi và contractor chỉ có fork, đồng thời giữ một chuẩn nghiệm thu.
+    answer: Developer có quyền Create branches/Contribute ở checkout-api có thể dùng feature branch trong repo chung; contractor không có quyền upstream viết trên fork có thể truy cập rồi tạo PR vào target. Dù source khác nhau, cả hai phải cung cấp diff, mô tả/test và chịu branch policies của target; quyền fork không vượt được review bắt buộc. Hãy đối chiếu source endpoints và danh tính reviewer để bảo đảm đội không bỏ sót bằng chứng do có hai đường đóng góp.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 08-end-to-end-azure-repos.md
+      anchor: choose-contribution-path
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: PR có đủ optional Approve nhưng required reviewer chọn Wait for author. Nhóm nên xử lý ra sao?
+    answer: Optional votes không thay cho approval của reviewer bắt buộc đối với đường dẫn hoặc nhánh đang được bảo vệ. Wait for author báo cần bổ sung giải thích, sửa code hoặc test rồi đánh giá lại; thêm người duyệt không đúng vai trò không đáp ứng gate. Hãy ghi rõ feedback của required reviewer, cập nhật revision và chứng cứ, mời họ re-review rồi xem target policy thực tế đã xanh chưa, thay vì bỏ chọn rule để hợp thức hóa merge.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 08-end-to-end-azure-repos.md
+      anchor: review-and-apply-policies
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: PR đã Approved và không conflict, nhưng vừa thiếu work-item link vừa thiếu quyền Complete. Vì sao phải sửa hai nguyên nhân riêng?
+    answer: Work-item linking là yêu cầu traceability của branch policy; quyền Complete là authorization của người thao tác trên target. Một link Bug hợp lệ không cấp quyền cho actor, và nâng quyền actor cũng không thay thế metadata PR bị thiếu. Để chẩn đoán đúng, xem lỗi Policies, đối chiếu effective target permission rồi giải quyết từng lớp với người sở hữu thích hợp. Không dùng bypass hay thêm approval để che hai blocker độc lập.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 08-end-to-end-azure-repos.md
+      anchor: investigate-blocked-workflow
+    apiRelated:
+      controller: ""
+      methodSignature: ""

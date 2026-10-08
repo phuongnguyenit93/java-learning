@@ -41,4 +41,84 @@
 # Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: azure-repos-collaboration-model
+    relatedKnowledge:
+      - 01-azure-repos-collaboration
+    title: "Vai trò của Azure Repos trong cộng tác mã nguồn"
+    purpose: "Hiểu cách Azure Repos giúp nhóm cùng quản lý repository, thảo luận thay đổi và kiểm soát việc tiếp nhận mã nguồn."
+    objectives:
+      - "Phân biệt khả năng lưu trữ, phân quyền và đánh giá thay đổi của Azure Repos với lịch sử phiên bản và thao tác do Git đảm nhiệm."
+      - "Hình dung mối liên hệ giữa tổ chức, dự án, repository, người đóng góp, pull request và quy tắc hợp nhất."
+      - "Nhận biết Azure Boards và Azure Pipelines là các dịch vụ liên quan nhưng có phạm vi học riêng với quản lý công việc và CI/CD."
+
+  - id: azure-repos-project-structure
+    relatedKnowledge:
+      - 02-organizations-projects-repositories
+    title: "Tổ chức, dự án và repository trên Azure DevOps"
+    purpose: "Biết cách mã nguồn được lưu trữ trong cấu trúc Azure DevOps để xác định phạm vi quản lý và cộng tác của nhóm."
+    objectives:
+      - "Giải thích quan hệ giữa organization, project và một hoặc nhiều Git repository trong Azure Repos."
+      - "Phân biệt phạm vi hiển thị của project với quyền của từng repository; biết Azure DevOps Services đã ngừng tạo project công khai từ năm 2026 và sẽ chuyển các project công khai còn lại sang riêng tư trong năm 2027."
+      - "Nhận diện việc bật hoặc tắt dịch vụ Repos, các thiết lập repository và vai trò của quản trị viên dự án khi tạo, chia sẻ hoặc quản lý mã nguồn."
+
+  - id: azure-repos-access-governance
+    relatedKnowledge:
+      - 03-membership-and-access
+    title: "Thành viên, nhóm bảo mật và quyền truy cập mã nguồn"
+    purpose: "Hiểu cách tổ chức cấp quyền hợp lý cho người dùng và nhóm tại các phạm vi quản trị khác nhau."
+    objectives:
+      - "Phân biệt access level với permission, cũng như các nhóm mặc định như Readers, Contributors và Project Administrators."
+      - "Giải thích quyền ở cấp tổ chức, dự án, repository và nhánh; phân biệt trạng thái thiết lập Allow, Deny, Not set với quyền hiệu lực nhận được do kế thừa."
+      - "Biết cách tìm nguyên nhân không thể đọc, đóng góp hoặc quản lý repository khi quyền hiệu lực đến từ nhiều nhóm; Deny thường ưu tiên hơn Allow cùng phạm vi, còn Not set không tự cấp hoặc chặn quyền."
+
+  - id: azure-repos-contribution-paths
+    relatedKnowledge:
+      - 04-branches-forks-contributions
+    title: "Đề xuất thay đổi từ nhánh chung hoặc repository fork"
+    purpose: "Nắm các cách nhóm gửi thay đổi có thể xem xét trên Azure Repos trước khi cập nhật nhánh đích."
+    objectives:
+      - "So sánh việc mở pull request từ nhánh trong cùng repository với việc đóng góp qua một repository fork."
+      - "Xác định repository và nhánh nguồn, nhánh đích, người tạo đề xuất cùng thông tin mô tả pull request."
+      - "Nhận biết fork là repository riêng, có quyền và quy tắc không tự động sao chép từ repository gốc."
+
+  - id: azure-repos-pull-request-reviews
+    relatedKnowledge:
+      - 05-pull-request-review
+    title: "Thảo luận, đánh giá và phản hồi pull request"
+    purpose: "Biết cách người đóng góp và người đánh giá phối hợp xử lý một thay đổi được đề xuất trên Azure Repos."
+    objectives:
+      - "Đọc phần khác biệt mã nguồn, bình luận theo dòng, luồng thảo luận, người được chỉ định đánh giá và trạng thái nháp của pull request."
+      - "Phân biệt các lựa chọn phản hồi như Approve, Approve with suggestions, Wait for author và Reject với hành động hoàn tất pull request."
+      - "Hiểu cách tác giả cập nhật thay đổi, giải quyết ý kiến góp ý và nhờ người đánh giá xem lại trước khi hợp nhất."
+
+  - id: azure-repos-branch-policies
+    relatedKnowledge:
+      - 06-branch-policies-and-bypass
+    title: "Chính sách nhánh và điều kiện hợp nhất"
+    purpose: "Hiểu cách Azure Repos thực thi yêu cầu đánh giá và kiểm tra đối với pull request nhắm vào các nhánh quan trọng."
+    objectives:
+      - "Giải thích việc áp dụng branch policies theo nhánh đích và sự khác biệt giữa quyền truy cập nhánh với điều kiện bắt buộc để hợp nhất."
+      - "Liên hệ số người phê duyệt tối thiểu, người đánh giá tự động hoặc bắt buộc, giải quyết bình luận và giới hạn kiểu hợp nhất với khả năng hoàn tất pull request."
+      - "Nhận biết kết quả build validation hoặc status checks có thể chặn hợp nhất; cấu hình và triển khai pipeline thuộc phạm vi CI/CD."
+      - "Phân biệt việc đáp ứng branch policy với quyền bỏ qua chính sách trong trường hợp được cấp quyền đặc biệt; không mặc định quản trị viên luôn được phép bỏ qua."
+
+  - id: azure-repos-review-merge-governance
+    relatedKnowledge:
+      - 07-complete-pull-requests
+    title: "Hoàn tất thay đổi và truy vết công việc"
+    purpose: "Biết cách nhóm đưa thay đổi đã được chấp thuận vào nhánh đích và giữ dấu vết quyết định cộng tác."
+    objectives:
+      - "Phân biệt hoàn tất, đặt tự động hoàn tất và hủy bỏ pull request khi điều kiện chính sách hoặc xung đột chưa được giải quyết."
+      - "Giải thích cách liên kết pull request với work item và tác dụng của chính sách bắt buộc liên kết công việc mà không đi sâu vào quản lý Azure Boards."
+      - "Nhận diện các tình huống hợp nhất bị chặn bởi quyền truy cập, phiếu đánh giá, nhánh đích hoặc kiểm tra trạng thái và xác định nơi xử lý."
+
+  - id: azure-repos-team-synthesis
+    relatedKnowledge:
+      - 08-end-to-end-azure-repos
+    title: "Vận dụng quy trình cộng tác Azure Repos từ đầu đến cuối"
+    purpose: "Tổng hợp tổ chức repository, quyền thành viên, pull request và chính sách bảo vệ thành một quy trình làm việc nhóm rõ ràng."
+    objectives:
+      - "Phác họa luồng từ một nhu cầu thay đổi qua nhánh hoặc fork, mở pull request, đánh giá, đáp ứng branch policies và hoàn tất hợp nhất."
+      - "Giải thích ai chịu trách nhiệm quản lý repository, phê duyệt thay đổi và xử lý một pull request không đủ điều kiện hoàn tất."
+      - "Biết khi nào cần học sâu thêm về Git, chiến lược nhánh, Azure Boards hoặc Azure Pipelines thay vì mở rộng phạm vi quản trị Azure Repos."
