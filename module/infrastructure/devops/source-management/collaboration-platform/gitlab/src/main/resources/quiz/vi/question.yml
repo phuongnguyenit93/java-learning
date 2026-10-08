@@ -1,0 +1,1169 @@
+# <quiz-schema>
+# Cấu trúc câu hỏi Quiz
+# schema-version: 3
+#
+# questions [kiểu: list; bắt buộc; mặc định: []; duy nhất theo: id]
+#   Danh sách câu hỏi Quiz của module trong language hiện tại.
+#   mỗi phần tử:
+#     id [kiểu: string; bắt buộc; mặc định: ""]
+#       ID ổn định và duy nhất của câu hỏi.
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi hiển thị cho người học.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu câu hỏi được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu câu hỏi đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+#     answers [kiểu: list; bắt buộc; số phần tử: 4; mặc định: []; duy nhất theo: id]
+#       Chính xác bốn đáp án. ID A/B/C/D là identity nội bộ ổn định, không phải vị trí hiển thị sau khi frontend shuffle.
+#       mỗi phần tử:
+#         id [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#           Identity ổn định của đáp án.
+#         answer [kiểu: string; bắt buộc; mặc định: ""]
+#           Nội dung đáp án hiển thị cho người học.
+#         explanation [kiểu: string; bắt buộc; mặc định: ""]
+#           Giải thích hiển thị khi người học chọn đáp án này, bất kể đúng hay sai.
+#     correctAnswerId [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#       ID nội bộ của đáp án đúng. Frontend kiểm tra bằng identity này sau khi shuffle.
+# </quiz-schema>
+
+questions:
+  - id: "gitlab-001"
+    question: "Ba bản ZIP đều tên final. GitLab bổ sung gì so với lưu chúng trên ổ chung?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-gitlab-foundations.md"
+      anchor: "gitlab-hosting-purpose"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Một kho ZIP có nhãn phiên bản và người đã tải lên"
+        explanation: "Chưa đúng. Đường dẫn không chứng minh quá trình review."
+      - id: B
+        answer: "Lịch sử commit, MR, quyền và quyết định merge"
+        explanation: "Đúng. Theo dõi được bản sửa và cách nhóm chấp nhận."
+      - id: C
+        answer: "Một kho lưu snapshot mới nhất cùng ghi chú bàn giao"
+        explanation: "Chưa đúng. GitLab lưu repository Git có lịch sử."
+      - id: D
+        answer: "Một trang diff có bình luận nhưng thiếu chính sách merge"
+        explanation: "Chưa đúng. Trang diff riêng lẻ không đủ nếu thiếu hồ sơ review và quyền tiếp nhận."
+    correctAnswerId: B
+  - id: "gitlab-002"
+    question: "Issue bảo phải từ chối -1 nhưng MR biến -1 thành 0. Review nên kiểm chứng gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-gitlab-foundations.md"
+      anchor: "unstructured-collaboration-risks"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "So độ lớn diff với các lỗi đầu vào đã sửa trước"
+        explanation: "Chưa đúng. Diff ngắn vẫn có thể sai nghiệp vụ."
+      - id: B
+        answer: "Xem kết quả pipeline tổng thể trên nhánh MR"
+        explanation: "Chưa đúng. Test có thể chưa bao ca số âm."
+      - id: C
+        answer: "Đối chiếu xử lý -1 với quy tắc phải từ chối"
+        explanation: "Đúng. Kỳ vọng là báo lỗi, không phải clamp."
+      - id: D
+        answer: "Đọc cam kết đã sửa lỗi trong MR description"
+        explanation: "Chưa đúng. Tuyên bố không thay cho quan sát."
+    correctAnswerId: C
+  - id: "gitlab-003"
+    question: "An commit offline nhưng chưa mở MR. Kết luận nào có bằng chứng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-gitlab-foundations.md"
+      anchor: "git-versus-gitlab"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Có commit Git local, chưa có hồ sơ MR"
+        explanation: "Đúng. Commit và MR là các bản ghi khác nhau."
+      - id: B
+        answer: "Commit local đã đồng bộ lên nhánh feature remote"
+        explanation: "Chưa đúng. Commit không tự mở MR."
+      - id: C
+        answer: "Commit đã xuất hiện trong target main sau khi push"
+        explanation: "Chưa đúng. Chưa có chứng cứ push hay merge."
+      - id: D
+        answer: "Commit local đã được tích hợp vào lịch sử MR"
+        explanation: "Chưa đúng. Commit local không tạo record MR hay quyết định merge."
+    correctAnswerId: A
+  - id: "gitlab-004"
+    question: "Nhóm muốn quản lý source, Issues, MRs và thành viên cùng một phạm vi. Chọn gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-gitlab-foundations.md"
+      anchor: "gitlab-project-repository"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Một group gateway có thiết lập quyền cho repository con"
+        explanation: "Group tổ chức project/quyền, còn project chứa repository, Issues và MRs."
+      - id: B
+        answer: "Một branch main chứa mã nguồn và phân loại Issues"
+        explanation: "Branch trỏ lịch sử mã, không chứa Issue hay thành viên."
+      - id: C
+        answer: "Một namespace chỉ gom nhãn, issue và release tag"
+        explanation: "Namespace tổ chức group/project; nhãn, Issue và Release thuộc project."
+      - id: D
+        answer: "Một GitLab project bao repo, Issues và MRs"
+        explanation: "Đúng. Project bao repo, Issues, MRs và settings."
+    correctAnswerId: D
+  - id: "gitlab-005"
+    question: "Đường dẫn company/payments/gateway nghĩa là gì trong ví dụ GitLab?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-gitlab-foundations.md"
+      anchor: "gitlab-namespace-basics"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Ba repo liên kết qua remote trong namespace"
+        explanation: "Chưa đúng. Group/subgroup không là repository."
+      - id: B
+        answer: "Group, subgroup rồi project gateway"
+        explanation: "Đúng. Đây là phân cấp namespace."
+      - id: C
+        answer: "Ba branch phân cấp theo quyền truy cập"
+        explanation: "Chưa đúng. Namespace không phải branch graph."
+      - id: D
+        answer: "Một repository có ba cấp đường dẫn tag"
+        explanation: "Chưa đúng. Tên namespace không đại diện tags."
+    correctAnswerId: B
+  - id: "gitlab-006"
+    question: "An là issue assignee; Bình là reviewer MR. Ai được merge main?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-gitlab-foundations.md"
+      anchor: "gitlab-participants"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Issue assignee, nếu họ push được lên nhánh feature"
+        explanation: "Nhận Issue hay được push feature không tự cấp quyền merge nhánh đích."
+      - id: B
+        answer: "MR reviewer, nếu người đó đã bấm Approve"
+        explanation: "Approve thay đổi không tự cấp quyền merge nhánh đích được bảo vệ."
+      - id: C
+        answer: "Mọi Developer của project, nếu pipeline MR xanh"
+        explanation: "Bảo vệ nhánh có thể hạn chế Developer dù pipeline đạt."
+      - id: D
+        answer: "Thành viên được phép merge theo các rule hiệu lực trên main"
+        explanation: "Đúng. Quyền merge hiệu lực trên nhánh đích quyết định ai có thể tích hợp."
+    correctAnswerId: D
+  - id: "gitlab-007"
+    question: "MR fix-rounding → main đang Open chứng minh điều gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-gitlab-foundations.md"
+      anchor: "gitlab-mr-introduction"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Source và target đã có chung commit cuối"
+        explanation: "Chưa đúng. Open không đồng nghĩa Merged."
+      - id: B
+        answer: "Một pipeline của MR đã deploy target branch"
+        explanation: "Chưa đúng. MR state không phải deployment status."
+      - id: C
+        answer: "Có đề xuất đổi source thành target qua MR"
+        explanation: "Đúng. MR biểu diễn nguồn, đích và thảo luận."
+      - id: D
+        answer: "Đã tạo merge commit trong lịch sử target"
+        explanation: "Chưa đúng. MR là đối tượng nền tảng, không là commit."
+    correctAnswerId: C
+  - id: "gitlab-008"
+    question: "MR có Approve nhưng chưa merge. Bằng chứng nào xác nhận source đã được nhóm nhận?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-gitlab-foundations.md"
+      anchor: "gitlab-workflow-concepts"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Target main có revision sau lần merge hợp lệ"
+        explanation: "Đúng. Approval chưa dịch chuyển nhánh đích."
+      - id: B
+        answer: "Issue được cập nhật trạng thái Ready for QA"
+        explanation: "Chuyển trạng thái Issue không chứng minh main đã nhận thay đổi."
+      - id: C
+        answer: "Source branch có pipeline thành công sau push"
+        explanation: "Chưa đúng. Push nguồn khác với merge đích."
+      - id: D
+        answer: "MR có đủ discussion comments từ reviewers"
+        explanation: "Chưa đúng. Thảo luận không cập nhật target ref."
+    correctAnswerId: A
+  - id: "gitlab-009"
+    question: "Gateway chuyển từ namespace cá nhân sang group payments. Điều gì cần rà soát?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02-projects-and-groups.md"
+      anchor: "project-namespace-ownership"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "URL project, nhánh mặc định và tên tag mới nhất"
+        explanation: "Chưa đúng. Tên branch và tag không xác minh membership mới."
+      - id: B
+        answer: "Namespace, effective memberships và integrations"
+        explanation: "Đúng. Chuyển owner thay đường dẫn và phạm vi quản trị."
+      - id: C
+        answer: "Clone URL, branch protection và bản build gần nhất"
+        explanation: "Chưa đúng. SHA và default branch không phản ánh quyền hiệu lực."
+      - id: D
+        answer: "Repository URL, local remotes và SHA đầu nhánh"
+        explanation: "Chưa đúng. Clone/HEAD không bao việc chuyển ownership và tích hợp."
+    correctAnswerId: B
+  - id: "gitlab-010"
+    question: "Muốn rà quyền chung của gateway và billing dưới payments, bắt đầu từ đâu?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02-projects-and-groups.md"
+      anchor: "groups-and-subgroups"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Quyền riêng từng repo, rồi đối chiếu group grants"
+        explanation: "Chưa đúng. Bỏ qua grants ở group cha khiến đánh giá sai quyền gateway."
+      - id: B
+        answer: "Quyền của một project mẫu rồi suy ra cả group"
+        explanation: "Chưa đúng. Một project không phản ánh đầy đủ cả hai scope."
+      - id: C
+        answer: "Quyền trực tiếp tại project, tạm bỏ qua inherited"
+        explanation: "Chưa đúng. Kế thừa subgroup vẫn ảnh hưởng quyền hiệu lực."
+      - id: D
+        answer: "Grants ở group, subgroup lẫn hai project"
+        explanation: "Đúng. Quyền direct và inherited cùng tạo effective access."
+    correctAnswerId: D
+  - id: "gitlab-011"
+    question: "Đã đổi default branch sang main nhưng MR cũ vẫn nhắm master. Kiểm tra gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02-projects-and-groups.md"
+      anchor: "project-repository-settings"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Cặp source/target hiển thị ngay trên MR"
+        explanation: "Đúng. Đổi default không tự đổi đích mọi MR đang có."
+      - id: B
+        answer: "Đầu nhánh mặc định trên các máy của reviewer"
+        explanation: "Chưa đúng. Server setting không tự checkout trong clones."
+      - id: C
+        answer: "SHA của từng commit trước lần chuyển tên nhánh"
+        explanation: "Chưa đúng. Đổi default không rewrite commit history."
+      - id: D
+        answer: "Merge role của Developer trong mọi repository"
+        explanation: "Chưa đúng. Quyền merge còn chịu protected branch rules."
+    correctAnswerId: A
+  - id: "gitlab-012"
+    question: "GitLab.com còn Internal project tạo từ trước. Có tạo Internal mới không?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02-projects-and-groups.md"
+      anchor: "project-visibility-offerings"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Có thể, nếu Owner được quyền tạo Internal legacy"
+        explanation: "Chưa đúng. Quyền giữ project cũ không mở quyền tạo mới."
+      - id: B
+        answer: "Có thể, khi project mới nằm trong cùng namespace"
+        explanation: "Chưa đúng. Namespace không đảo giới hạn offering."
+      - id: C
+        answer: "Không tạo mới theo GitLab.com; legacy vẫn tồn tại"
+        explanation: "Đúng. Tạo mới và duy trì legacy là hai việc khác."
+      - id: D
+        answer: "Không; project legacy đã phải chuyển sang Private"
+        explanation: "Chưa đúng. Project cũ không mặc nhiên đổi Public."
+    correctAnswerId: C
+  - id: "gitlab-013"
+    question: "Contractor được mời trực tiếp vào gateway nhưng không thuộc payments. Hệ quả nào đúng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02-projects-and-groups.md"
+      anchor: "projects-group-collaboration-boundary"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Được quyền ở gateway theo invite, billing xét riêng"
+        explanation: "Đúng. Project invite không cấp quyền cho sibling project."
+      - id: B
+        answer: "Có quyền ở subgroup payments qua quyền gateway"
+        explanation: "Chưa đúng. Project member không thành group owner."
+      - id: C
+        answer: "Có quyền review tất cả MR cùng group payments"
+        explanation: "Chưa đúng. Quyền branch tính riêng theo từng target."
+      - id: D
+        answer: "Có quyền quản lý namespace do sở hữu project"
+        explanation: "Chưa đúng. Owner không được cấp do direct project invite."
+    correctAnswerId: A
+  - id: "gitlab-014"
+    question: "Guest chỉ theo dõi Issue nhưng cần đề xuất sửa code. Cần cân nhắc gì trước khi nâng role?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03-members-and-access.md"
+      anchor: "access-roles-overview"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Cấp quyền Issue trước, sau đó kiểm tra branch policy"
+        explanation: "Chưa đúng. Assignee không cấp quyền source."
+      - id: B
+        answer: "Đặt reviewer role cùng với project visibility"
+        explanation: "Chưa đúng. Reviewer không tự được Developer."
+      - id: C
+        answer: "Rà role tối thiểu, quyền hiệu lực và branch rules"
+        explanation: "Đúng. Cần phân biệt đóng góp thường và quyền trên protected target."
+      - id: D
+        answer: "Tăng số người approve thay cho quyền contributor"
+        explanation: "Chưa đúng. Tắt governance không cấp đúng quyền đóng góp."
+    correctAnswerId: C
+  - id: "gitlab-015"
+    question: "Bình có invite trực tiếp và Developer kế thừa từ group cha. Xóa invite thì sao?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03-members-and-access.md"
+      anchor: "direct-inherited-shared-membership"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Direct invite bị xóa nên access chỉ còn theo share"
+        explanation: "Chưa đúng. Kế thừa group có thể tiếp tục."
+      - id: B
+        answer: "Developer có thể vẫn được kế thừa từ group cha"
+        explanation: "Đúng. Phải kiểm tra tất cả nguồn membership."
+      - id: C
+        answer: "Role hiệu lực có thể tự tăng lên group Owner"
+        explanation: "Chưa đúng. Xóa invite không thăng cấp role."
+      - id: D
+        answer: "Fork cũ có thể bị xóa cùng với direct invite"
+        explanation: "Chưa đúng. Membership và fork lifecycle là khác nhau."
+    correctAnswerId: B
+  - id: "gitlab-016"
+    question: "An là Developer nhưng bị từ chối push lên main. Nên xem gì đầu tiên?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03-members-and-access.md"
+      anchor: "effective-project-permissions"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Kiểm tra An đã được add làm MR reviewer chưa"
+        explanation: "Chưa đúng. Thăng quyền quá rộng, chưa xét nhánh."
+      - id: B
+        answer: "Kiểm tra project visibility có cho phép clone chưa"
+        explanation: "Chưa đúng. Visibility không cấp direct push."
+      - id: C
+        answer: "Kiểm tra issue assignee của branch main là ai"
+        explanation: "Chưa đúng. Approval không nhất thiết gây lỗi push."
+      - id: D
+        answer: "Xem quyền hiệu lực và allowed push trên main"
+        explanation: "Đúng. Protected main có giới hạn ngoài Developer role."
+    correctAnswerId: D
+  - id: "gitlab-017"
+    question: "Contractor không được push upstream nhưng fork được project. Đường gửi sửa nào phù hợp?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03-members-and-access.md"
+      anchor: "access-for-mr-contribution"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Push lên fork rồi mở MR đến target upstream"
+        explanation: "Đúng. Fork tách quyền ghi nguồn khỏi quyền xét MR ở đích."
+      - id: B
+        answer: "Mở MR từ upstream branch mà họ chưa được ghi"
+        explanation: "Contributor thiếu quyền ghi nhánh upstream không thể dùng nhánh đó làm nguồn sửa mã."
+      - id: C
+        answer: "Xin Maintainer ở upstream để tạo nhánh sửa lỗi"
+        explanation: "Chưa đúng. Fork contribution không cần grant Maintainer."
+      - id: D
+        answer: "Đính diff vào Issue rồi yêu cầu người khác merge"
+        explanation: "Chưa đúng. Không có review traceability và có thể vi phạm policy."
+    correctAnswerId: A
+  - id: "gitlab-018"
+    question: "Contractor chỉ cần tạo Issue nhưng được cấp Maintainer cho nhanh. Vấn đề là gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03-members-and-access.md"
+      anchor: "permission-troubleshooting"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Quyền Issue và quyền project quản trị tương đương"
+        explanation: "Chưa đúng. Maintainer có phạm vi quản trị rộng hơn theo thiết lập."
+      - id: B
+        answer: "Quyền Maintainer có thể vượt qua mọi protection"
+        explanation: "Chưa đúng. Branch rules và merge conditions vẫn có thể áp dụng."
+      - id: C
+        answer: "Quyền merge/quản trị vượt quá tác vụ theo dõi Issue"
+        explanation: "Đúng. Least privilege yêu cầu quyền sát việc thực tế."
+      - id: D
+        answer: "Quyền Maintainer chỉ cần cho repository dạng Public"
+        explanation: "Chưa đúng. Vai trò Maintainer không bị giới hạn theo public visibility."
+    correctAnswerId: C
+  - id: "gitlab-019"
+    question: "An push được feature nhưng main protected. Quy trình hợp tác nào thích hợp?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04-merge-request-proposals.md"
+      anchor: "shared-project-contribution"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Đẩy patch vào main nếu đã có approval trên MR"
+        explanation: "Chưa đúng. Protected main giới hạn direct push."
+      - id: B
+        answer: "Tạo tag trỏ đến feature rồi đóng MR đang mở"
+        explanation: "Chưa đúng. Tag không thay nhánh đích."
+      - id: C
+        answer: "Đính diff lên Issue thay cho tạo source branch"
+        explanation: "Chưa đúng. Chat không tạo MR và target change."
+      - id: D
+        answer: "Push feature, mở MR main và chờ checks/review"
+        explanation: "Đúng. Nhánh lưu đề xuất; MR cho review có kiểm soát."
+    correctAnswerId: D
+  - id: "gitlab-020"
+    question: "Fork đã chứa sửa lỗi nhưng gateway upstream vẫn cũ. Làm sao đưa thay đổi tới upstream?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04-merge-request-proposals.md"
+      anchor: "forked-project-contribution"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Sync fork tự động hợp nhất revision với upstream"
+        explanation: "Chưa đúng. Fork không tự merge về project gốc."
+      - id: B
+        answer: "Mở MR fork → upstream, tuân thủ policy target"
+        explanation: "Đúng. Quyền ở fork không thay rules upstream."
+      - id: C
+        answer: "Chủ fork xin quyền merge rồi sửa upstream trực tiếp"
+        explanation: "Chưa đúng. Không cần trao admin cho contributor."
+      - id: D
+        answer: "Đồng bộ tên branch hai project để tự merge"
+        explanation: "Chưa đúng. Tên giống không hợp nhất project."
+    correctAnswerId: B
+  - id: "gitlab-021"
+    question: "MR giữa hai project đều có branch main. Review cần xác nhận những gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04-merge-request-proposals.md"
+      anchor: "source-target-project-branches"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Định danh cả source project/branch và target pair"
+        explanation: "Đúng. Tên nhánh lặp, nên cần đúng cặp bốn yếu tố."
+      - id: B
+        answer: "Chỉ xác nhận commit gần nhất trong source branch"
+        explanation: "Chưa đúng. SHA nguồn không định danh target."
+      - id: C
+        answer: "Xác nhận reviewer có quyền đọc cả hai project"
+        explanation: "Chưa đúng. Reviewer không bảo đảm nhắm đúng đích."
+      - id: D
+        answer: "Chỉ kiểm tra issue liên kết với source project"
+        explanation: "Chưa đúng. Issue count không xác định diff phạm vi."
+    correctAnswerId: A
+  - id: "gitlab-022"
+    question: "MR thiếu test input -1 nhưng tác giả muốn xin phản hồi sớm. Cách mô tả đúng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04-merge-request-proposals.md"
+      anchor: "mr-description-assignee-draft"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Đặt Ready và xem phần test thiếu là điều kiện đã được chấp nhận"
+        explanation: "Chưa đúng. Đánh dấu sẵn sàng dù thiếu kiểm chứng đã thống nhất khiến reviewer hiểu sai."
+      - id: B
+        answer: "Đặt Open/Ready và bỏ phần Acceptance criteria"
+        explanation: "Bỏ tiêu chí nghiệm thu khiến reviewer thiếu bối cảnh góp ý sớm."
+      - id: C
+        answer: "Đặt Draft, ghi ca thiếu và kỳ vọng -1 bị từ chối"
+        explanation: "Đúng. Draft thể hiện chưa sẵn sàng, mô tả trung thực."
+      - id: D
+        answer: "Đóng MR rồi mở Issue để nhận phản hồi trước"
+        explanation: "Chưa đúng. Closed ngừng vòng MR review đang mở."
+    correctAnswerId: C
+  - id: "gitlab-023"
+    question: "An push thêm commit sau khi Bình review MR Open. Hành động nào hợp lý?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04-merge-request-proposals.md"
+      anchor: "mr-lifecycle-states"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Giữ approval hiện tại nếu diff mới nhỏ hơn 10 dòng"
+        explanation: "Chưa đúng. Review cũ có thể chưa bao phần mới."
+      - id: B
+        answer: "Đọc lại diff mới và yêu cầu re-review nếu cần"
+        explanation: "Đúng. Bản đề xuất hiện tại mới là đối tượng đánh giá."
+      - id: C
+        answer: "Chỉ kiểm tra pipeline mới mà không xem phần thay đổi"
+        explanation: "Pipeline xanh không chứng minh đã review hành vi nghiệp vụ mới."
+      - id: D
+        answer: "Đọc lịch sử thảo luận cũ mà bỏ qua commit mới"
+        explanation: "Chưa đúng. Assignee không phản ánh nội dung diff."
+    correctAnswerId: B
+  - id: "gitlab-024"
+    question: "MR sửa cả xử lý -1 lẫn cấu hình xác thực không liên quan. Review Changes nên làm gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05-reviews-and-approvals.md"
+      anchor: "review-context-diff-discussions"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Đọc mỗi diff thống kê rồi phân bổ reviewers theo số dòng"
+        explanation: "Chưa đủ. Số dòng không cho biết file xác thực thuộc phạm vi yêu cầu."
+      - id: B
+        answer: "Chỉ chạy lại pipeline, mặc định scope MR đã được duyệt"
+        explanation: "Chưa đủ. Pipeline xanh không thay cho kiểm tra phạm vi thay đổi."
+      - id: C
+        answer: "Tập trung vào nhãn bug, bỏ qua tệp ngoài scope Issue"
+        explanation: "Chưa đúng. Nhãn issue không xác nhận các tệp sửa ngoài yêu cầu."
+      - id: D
+        answer: "Lần theo các thay đổi và nêu rõ scope vượt yêu cầu"
+        explanation: "Đúng. Đối chiếu từng thay đổi với issue và yêu cầu giải thích phần ngoài scope."
+    correctAnswerId: D
+  - id: "gitlab-025"
+    question: "Assignee là An, reviewer Bình; rule chọn nhóm approver. Phiếu ai được tính?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05-reviews-and-approvals.md"
+      anchor: "mr-reviewers-vs-assignees"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Người thỏa điều kiện approver và membership rule"
+        explanation: "Đúng. Tên trên reviewer list không tự đủ điều kiện."
+      - id: B
+        answer: "Issue assignee có Developer access trong project"
+        explanation: "Chưa đúng. Issue assignee không tương đương eligible approver."
+      - id: C
+        answer: "Reviewer có quyền bình luận trên source diff"
+        explanation: "Chưa đúng. Comment không phải approval hợp lệ."
+      - id: D
+        answer: "Người tham gia nhóm thảo luận của MR"
+        explanation: "Chưa đúng. Read access không đủ điều kiện approval."
+    correctAnswerId: A
+  - id: "gitlab-026"
+    question: "Bình gửi Suggestion đổi logic thuế nhưng chưa Approve. Kết luận nào đúng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05-reviews-and-approvals.md"
+      anchor: "review-comments-vs-approvals"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Phiếu approval được tính sau khi suggestion gửi"
+        explanation: "Chưa đúng. Suggestion không là phiếu Approve."
+      - id: B
+        answer: "Suggestion đã được áp dụng trên nhánh target main"
+        explanation: "Chưa đúng. Suggestion không tự merge target."
+      - id: C
+        answer: "Đã có góp ý code nhưng chưa có phiếu Approve"
+        explanation: "Đúng. Trao đổi và approval là hành động riêng."
+      - id: D
+        answer: "Các discussion được tính resolved ngay khi gợi ý"
+        explanation: "Chưa đúng. Suggestion không khẳng định tất cả resolved."
+    correctAnswerId: C
+  - id: "gitlab-027"
+    question: "Bình muốn chặn MR sai nghiệp vụ bằng Request changes. Điều kiện nào cần kiểm tra?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05-reviews-and-approvals.md"
+      anchor: "request-changes-tier-gate"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Có review comment từ reviewer ở project Free"
+        explanation: "Comment review trên Free không tạo hành động Request changes có chặn của Premium/Ultimate."
+      - id: B
+        answer: "Tier phù hợp và tính năng Request changes khả dụng"
+        explanation: "Đúng. Tính năng chặn qua Request changes có gate gói."
+      - id: C
+        answer: "Có discussion chưa resolved trong một MR trên Free"
+        explanation: "Chưa đúng. Số comment không kích hoạt feature gate."
+      - id: D
+        answer: "Reviewer được phân quyền push trên source branch"
+        explanation: "Chưa đúng. Push không quyết định khả năng Request changes."
+    correctAnswerId: B
+  - id: "gitlab-028"
+    question: "Rule yêu cầu hai approvals từ group, nhưng một người chỉ kế thừa membership qua group khác. Kiểm tra gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05-reviews-and-approvals.md"
+      anchor: "approval-rules-required-approvers"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Reviewer có project membership gián tiếp từ group cha"
+        explanation: "Chưa đúng. Quyền đọc/review không thay membership trong approval rule."
+      - id: B
+        answer: "Mọi thành viên được inherited vào approver group"
+        explanation: "Chưa đúng. Group approver eligibility yêu cầu membership trực tiếp thích hợp."
+      - id: C
+        answer: "Các reviewer được author gắn nhãn bắt buộc trong MR"
+        explanation: "Chưa đúng. Lời mời reviewer không ghi đè danh sách eligible."
+      - id: D
+        answer: "Người trực tiếp đủ điều kiện trong approver group"
+        explanation: "Đúng. Approval group thường xét direct members, không chỉ inherited."
+    correctAnswerId: D
+  - id: "gitlab-029"
+    question: "MR sửa pricing/, CODEOWNERS chỉ định nhóm pricing. Approval chung đã đạt. Điều gì còn có thể bắt buộc?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05-reviews-and-approvals.md"
+      anchor: "code-owners-vs-approval-rules"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Code Owner hợp lệ trên protected target"
+        explanation: "Đúng. Phiếu chung không tự thay owner vote bắt buộc."
+      - id: B
+        answer: "Phiếu của project Maintainer từ rule chung"
+        explanation: "Phiếu chung của Maintainer có thể không phải phiếu bắt buộc từ Code Owner của pricing."
+      - id: C
+        answer: "Reviewer đã được tự động mời qua CODEOWNERS"
+        explanation: "Tự mời Code Owner review khác với việc nhận được phiếu approve."
+      - id: D
+        answer: "Phiếu approve bổ sung của bất kỳ Developer"
+        explanation: "Developer không thuộc Code Owner của pricing không đáp ứng phiếu bắt buộc."
+    correctAnswerId: A
+  - id: "gitlab-030"
+    question: "Bình đã Approve, An push thêm commit và GitLab hiện báo thiếu phiếu. Giải thích nào phù hợp?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05-reviews-and-approvals.md"
+      anchor: "follow-up-reviews"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Merge approval bị đổi vì nhánh target tạo tag mới"
+        explanation: "Chưa đúng. Tag của target không phải tín hiệu reset approvals."
+      - id: B
+        answer: "Approval cũ còn hiệu lực bất kể quy tắc của project"
+        explanation: "Chưa đúng. Project có thể đặt lại approval khi nguồn thay đổi."
+      - id: C
+        answer: "Thiết lập reset approvals on push cần phiếu mới"
+        explanation: "Đúng. Cần xem policy và lấy phiếu từ approver hợp lệ cho diff mới."
+      - id: D
+        answer: "Reviewer tự bị bỏ khỏi membership khi author push"
+        explanation: "Chưa đúng. Push commit không tự hủy membership reviewer."
+    correctAnswerId: C
+  - id: "gitlab-031"
+    question: "Nhánh main cần kiểm soát tích hợp. Protected branch giúp giải quyết điều gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06-protected-branches.md"
+      anchor: "protected-branches-purpose"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Ràng buộc hành vi bằng quy tắc branch, thay cho tests"
+        explanation: "Chưa đúng. Protection không thay kiểm thử nghiệp vụ."
+      - id: B
+        answer: "Giới hạn người có quyền push và merge trên nhánh"
+        explanation: "Đúng. Rào chắn quyền áp trên ref được bảo vệ."
+      - id: C
+        answer: "Đảm bảo CI chạy mà không cần pipeline được thiết lập"
+        explanation: "Branch protection không tự tạo/chạy CI pipeline; phần build cần cấu hình riêng."
+      - id: D
+        answer: "Tự đồng bộ target với source khi MR được approve"
+        explanation: "Chưa đúng. Merge governance khác deployment."
+    correctAnswerId: B
+  - id: "gitlab-032"
+    question: "Main: Allowed to merge=Maintainers, Allowed to push and merge=No one. Kết luận phù hợp?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06-protected-branches.md"
+      anchor: "allowed-to-merge-vs-push"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Maintainers vẫn push trực tiếp nhờ quyền merge MR"
+        explanation: "Chưa đúng. MR không mở quyền direct push."
+      - id: B
+        answer: "No one chặn merge MR vì mọi thao tác đều là push"
+        explanation: "Chưa đúng. Quyền push và merge MR được cấu hình riêng."
+      - id: C
+        answer: "Maintainers chỉ được tạo MR nhưng không hoàn tất"
+        explanation: "Chưa đúng. Allowed to merge chính là quyền tích hợp MR."
+      - id: D
+        answer: "Maintainers merge MR hợp lệ; direct push bị chặn"
+        explanation: "Đúng. Cấu hình tách đường MR và đường push trực tiếp."
+    correctAnswerId: D
+  - id: "gitlab-033"
+    question: "Trên GitLab.com Premium, Owner cần group protected main và dùng group protected-branches API. Phát biểu nào đúng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06-protected-branches.md"
+      anchor: "project-group-branch-rules"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "UI cấp group chỉ có trên Self-Managed, API có trên GitLab.com"
+        explanation: "Chưa đúng. UI group protected branch hỗ trợ GitLab.com, API group không."
+      - id: B
+        answer: "Cả UI và API group bảo vệ main đều có trên GitLab.com"
+        explanation: "Chưa đúng. API group protected branches hiện công bố cho Self-Managed."
+      - id: C
+        answer: "UI group theo tier hỗ trợ; group API chỉ Self-Managed"
+        explanation: "Đúng. UI áp dụng top-level group từ 17.6+, còn group-level API có offering riêng."
+      - id: D
+        answer: "Cả hai đều chỉ là project rule được sao chép thủ công"
+        explanation: "Chưa đúng. Cơ chế group rule thực sự kế thừa xuống các projects."
+    correctAnswerId: C
+  - id: "gitlab-034"
+    question: "main khớp exact No one và wildcard m* cho Developers push. Quy tắc ưu tiên nào áp dụng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06-protected-branches.md"
+      anchor: "overlapping-rule-precedence"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Quyền rộng nhất; Code Owner chặt nhất"
+        explanation: "Đúng. Không mặc định exact name luôn thắng wildcard."
+      - id: B
+        answer: "Exact name ưu tiên wildcard cho mọi loại quyền"
+        explanation: "Chưa đúng. GitLab không dùng ưu tiên exact đơn giản."
+      - id: C
+        answer: "Rule wildcard chỉ mở push, không ảnh hưởng merge"
+        explanation: "Chưa đúng. Code Owner yêu cầu khắt khe giữa các matches."
+      - id: D
+        answer: "Rule tạo sau luôn phủ quyền từ rule trước"
+        explanation: "Chưa đúng. Thứ tự tạo không là mô hình ưu tiên cơ bản."
+    correctAnswerId: A
+  - id: "gitlab-035"
+    question: "Có CODEOWNERS nhưng MR nhắm nhánh chưa được bảo vệ. Khi nào owner approval thành merge gate?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06-protected-branches.md"
+      anchor: "code-owner-approval-protected-target"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "CODEOWNERS tự chặn merge trên cả target không protected"
+        explanation: "Chưa đúng. File CODEOWNERS tự nó không kích hoạt bảo vệ mọi nhánh."
+      - id: B
+        answer: "Reviewer được auto-request đồng nghĩa approval bắt buộc"
+        explanation: "Chưa đúng. Review request không đồng nghĩa approval bắt buộc."
+      - id: C
+        answer: "Project approval rule chung luôn biến owner vote thành bắt buộc"
+        explanation: "Chưa đúng. General approval và owner approval là hai quy tắc riêng."
+      - id: D
+        answer: "Phải bật yêu cầu owner approval cho target protected"
+        explanation: "Đúng. Code Owner approval bắt buộc cần nhánh đích protected và rule owner đã bật."
+    correctAnswerId: D
+  - id: "gitlab-036"
+    question: "MR đủ approval nhưng pipeline Failed và target yêu cầu pipeline thành công. Ai/đâu cung cấp bằng chứng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06-protected-branches.md"
+      anchor: "merge-checks-and-pipeline-boundary"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Issue board và lịch sử thay đổi milestone phát hành"
+        explanation: "Chưa đúng. Issue labels không chứng minh pipeline status."
+      - id: B
+        answer: "MR checks/pipeline status cùng log của job lỗi"
+        explanation: "Đúng. Merge gate đọc check; lỗi thực thi nằm ở CI job."
+      - id: C
+        answer: "Project membership và trạng thái review assignee"
+        explanation: "Chưa đúng. Role không biến build failed thành passed."
+      - id: D
+        answer: "Commit message gần nhất và mã Issue liên quan"
+        explanation: "Chưa đúng. Commit message không thay build result."
+    correctAnswerId: B
+  - id: "gitlab-037"
+    question: "Nút Merge bị vô hiệu dù Bình Approve. Cách chẩn đoán nào giữ an toàn?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06-protected-branches.md"
+      anchor: "blocked-merge-diagnosis"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "So role reviewer trước, rồi tăng toàn bộ lên Owner"
+        explanation: "Chưa đúng. Nâng quyền rộng phá guardrail."
+      - id: B
+        answer: "Thay target bằng unprotected branch để thử merge"
+        explanation: "Chưa đúng. Tắt rules trước khi tìm nguyên nhân là sai."
+      - id: C
+        answer: "Rà actor, target, rules, approvals và pipeline"
+        explanation: "Đúng. Mỗi gate có bằng chứng riêng; không dựa mỗi approval."
+      - id: D
+        answer: "Chạy lại pipeline mà bỏ qua tình trạng policy"
+        explanation: "Chỉ chạy lại CI không giải quyết thiếu quyền nhánh đích hay phiếu approve."
+    correctAnswerId: C
+  - id: "gitlab-038"
+    question: "Khách báo hệ thống nhận số tiền âm. Vì sao tạo Issue trước MR thường hữu ích?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "07-issues-and-releases.md"
+      anchor: "gitlab-issue-purpose"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Ghi expected/observed behavior làm tiêu chuẩn review"
+        explanation: "Đúng. Issue nêu vấn đề và tiêu chí kiểm chứng độc lập với code."
+      - id: B
+        answer: "Chọn một commit cụ thể trước khi mô tả issue"
+        explanation: "Chưa đúng. Vấn đề có thể được mô tả trước khi có patch."
+      - id: C
+        answer: "Đặt assignee Issue để tự đáp ứng rule approvals"
+        explanation: "Chưa đúng. Theo dõi công việc không thay quyết định review."
+      - id: D
+        answer: "Gắn nhãn bug để tự kích hoạt kiểm thử pipeline"
+        explanation: "Chưa đúng. Label không tạo bằng chứng kiểm thử."
+    correctAnswerId: A
+  - id: "gitlab-039"
+    question: "Issue #42 có assignee An, label bug, milestone v1.4. Điều gì có thể kết luận?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "07-issues-and-releases.md"
+      anchor: "issue-assignees-labels-milestones"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Issue đã được xử lý và merge vào nhánh mặc định"
+        explanation: "Chưa đúng. Issue metadata không chứng minh MR merge."
+      - id: B
+        answer: "Đã phân người phụ trách, nhãn và mốc kế hoạch"
+        explanation: "Đúng. Ba thuộc tính tổ chức công việc, không là delivery."
+      - id: C
+        answer: "Release v1.4 đã có artifact trên server"
+        explanation: "Chưa đúng. Milestone không đồng nghĩa published release."
+      - id: D
+        answer: "Lỗi đã được triển khai nhờ mốc milestone"
+        explanation: "Chưa đúng. Work tracking không là deployment evidence."
+    correctAnswerId: B
+  - id: "gitlab-040"
+    question: "MR chứa 'Closes #42' nhưng merge vào branch không mặc định. Issue chắc chắn tự đóng chưa?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "07-issues-and-releases.md"
+      anchor: "issues-linked-to-merge-requests"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Closing pattern sẽ áp dụng với mọi target branch"
+        explanation: "Chưa đúng. Closing phụ thuộc target và policy merge."
+      - id: B
+        answer: "Issue assignee phải là author để được tự đóng"
+        explanation: "Chưa đúng. Assignee không quyết định closing trigger."
+      - id: C
+        answer: "Milestone khớp tên target sẽ kích hoạt tự đóng"
+        explanation: "Chưa đúng. Milestone không kích hoạt close vô điều kiện."
+      - id: D
+        answer: "Cần kiểm tra target default branch và closing settings"
+        explanation: "Đúng. Liên kết và tự đóng là các trạng thái khác nhau."
+    correctAnswerId: D
+  - id: "gitlab-041"
+    question: "Đã tạo Git tag v1.4.0. Điều gì còn thiếu để khẳng định có GitLab Release?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "07-issues-and-releases.md"
+      anchor: "git-tag-vs-gitlab-release"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Mốc commit đã trỏ tới tag nên đủ metadata Release"
+        explanation: "Chưa đúng. Tag khác đối tượng Release trên hosting."
+      - id: B
+        answer: "Feature branch chứa changelog tương đương Release"
+        explanation: "Chưa đúng. Branch không là Release metadata."
+      - id: C
+        answer: "Bản ghi GitLab Release bổ sung notes và assets"
+        explanation: "Đúng. Tag là mốc Git, Release là hồ sơ bổ sung."
+      - id: D
+        answer: "Issue với milestone gắn tag thay thế Release record"
+        explanation: "Chưa đúng. Milestone không tạo GitLab Release."
+    correctAnswerId: C
+  - id: "gitlab-042"
+    question: "Release v1.4 có notes và asset tải xuống. Có thể tuyên bố đang chạy production không?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "07-issues-and-releases.md"
+      anchor: "release-notes-assets-boundary"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Chưa; cần bằng chứng deployment environment thực"
+        explanation: "Đúng. Published Release không là chứng cứ runtime production."
+      - id: B
+        answer: "Có; asset tải được đồng nghĩa bản runtime đang chạy"
+        explanation: "Chưa đúng. Khả dụng để tải khác triển khai."
+      - id: C
+        answer: "Có; release notes ghi Fixed bug thì đã deploy"
+        explanation: "Chưa đúng. Release notes chỉ mô tả bản phát hành."
+      - id: D
+        answer: "Có; tag trỏ đến main nên production nhận mã"
+        explanation: "Chưa đúng. Tag/branch không cho biết môi trường đang chạy."
+    correctAnswerId: A
+  - id: "gitlab-043"
+    question: "Issue được liên kết với MR đã Merged, nhưng tester thấy bug còn. Bằng chứng MR cho biết gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "08-team-workflow.md"
+      anchor: "issue-to-mr-approval-merge"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Issue Closed chứng minh mọi acceptance criteria đúng"
+        explanation: "Chưa đúng. Trạng thái Issue không phải kiểm thử nghiệp vụ."
+      - id: B
+        answer: "Commit count trên feature đủ chứng minh ca lỗi đã sửa"
+        explanation: "Chưa đúng. Số commit không chứng minh chức năng đúng."
+      - id: C
+        answer: "Comment của reviewer xác nhận mọi test trong CI đã chạy"
+        explanation: "Chưa đúng. Nhận xét review không tự cho biết bộ test đầy đủ."
+      - id: D
+        answer: "MR merged cho trace tích hợp, vẫn cần test hành vi"
+        explanation: "Đúng. Merge và lịch sử target chứng minh tích hợp, không chứng minh bug đã hết."
+    correctAnswerId: D
+  - id: "gitlab-044"
+    question: "Contractor không xem được gateway private, Bình xem được nhưng approval không được tính. Cần điều tra gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "08-team-workflow.md"
+      anchor: "roles-access-review-blockers"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Tăng yêu cầu approvals để contractor đọc được private project"
+        explanation: "Chưa đúng. Không giải quyết visibility hay eligibility."
+      - id: B
+        answer: "Xét quyền thấy project và điều kiện eligible approver riêng"
+        explanation: "Đúng. Đọc source và được tính approval là hai quyền khác."
+      - id: C
+        answer: "Sửa pipeline để hai người có cùng review permissions"
+        explanation: "Chưa đúng. CI script không quyết định hai quyền này."
+      - id: D
+        answer: "Chuyển issue assignee để mở quyền reviewer cho Bình"
+        explanation: "Chưa đúng. Giao issue không thay access/approval rules."
+    correctAnswerId: B
+  - id: "gitlab-045"
+    question: "MR đủ approvals, pipeline xanh nhưng merge bị chặn vì unresolved discussions. Nên làm gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "08-team-workflow.md"
+      anchor: "protected-branch-approval-blockers"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Tắt yêu cầu resolved threads để merge rồi sửa sau"
+        explanation: "Chưa đúng. Tắt policy để vượt check không giải quyết review."
+      - id: B
+        answer: "Đổi reviewer có quyền cao hơn để đóng các threads"
+        explanation: "Chưa đúng. Quyền cao hơn không tự giải quyết thảo luận."
+      - id: C
+        answer: "Xử lý feedback, resolve threads rồi kiểm tra widget"
+        explanation: "Đúng. Khi project yêu cầu resolved threads, phải xử lý nội dung và đánh dấu resolved."
+      - id: D
+        answer: "Chuyển MR thành Draft để GitLab bỏ qua discussion gate"
+        explanation: "Chưa đúng. Draft là trạng thái chưa sẵn sàng và không bypass checks."
+    correctAnswerId: C
+  - id: "gitlab-046"
+    question: "MR !57 đã Merged và Issue #42 Closed, nhưng Release v1.4 chưa published. Nói gì là chính xác?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "08-team-workflow.md"
+      anchor: "merge-to-release-metadata"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Source đã merge; Release/deploy xét riêng"
+        explanation: "Đúng. MR, Issue, Release, Deploy là các trạng thái khác nhau."
+      - id: B
+        answer: "MR merge tự xuất bản Release nếu issue đã Closed"
+        explanation: "Chưa đúng. Merge không tự tạo Release record đầy đủ."
+      - id: C
+        answer: "Target main tự đồng bộ mã mới lên production"
+        explanation: "Chưa đúng. Không có deployment evidence."
+      - id: D
+        answer: "Release phải xuất bản trước khi merge được hoàn tất"
+        explanation: "Chưa đúng. MR merge và Release có vòng đời độc lập."
+    correctAnswerId: A
+  - id: "gitlab-047"
+    question: "Muốn biết rebase thay đổi commit SHA, yêu cầu reviewer và job deploy. Phân chia nơi học nào hợp lý?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "08-team-workflow.md"
+      anchor: "handoff-to-git-strategy-ci"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Issue và milestone quyết định cơ chế rebase commit"
+        explanation: "Chưa đúng. Issues theo dõi việc, không quyết định Git/CI."
+      - id: B
+        answer: "Git commits quyết định cả quyền reviewer và CI job"
+        explanation: "Chưa đúng. Git command không quản trị reviewer hay deploy."
+      - id: C
+        answer: "Git giải thích SHA; GitLab quản lý MR; CI lo jobs"
+        explanation: "Đúng. SHA, review rules, pipeline thuộc ba lớp riêng."
+      - id: D
+        answer: "Mọi quyết định do release tags gắn trên main"
+        explanation: "Chưa đúng. Milestone không thay chính sách hay pipeline."
+    correctAnswerId: C

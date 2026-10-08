@@ -1,0 +1,196 @@
+'01-gitlab-foundations.md':
+  'gitlab-hosting-purpose':
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  'unstructured-collaboration-risks':
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  'git-versus-gitlab':
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  'gitlab-project-repository':
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  'gitlab-namespace-basics':
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  'gitlab-participants':
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  'gitlab-mr-introduction':
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  'gitlab-workflow-concepts':
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+'02-projects-and-groups.md':
+  'project-namespace-ownership':
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  'groups-and-subgroups':
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  'project-repository-settings':
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  'project-visibility-offerings':
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  'projects-group-collaboration-boundary':
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+'03-members-and-access.md':
+  'access-roles-overview':
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  'direct-inherited-shared-membership':
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  'effective-project-permissions':
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  'access-for-mr-contribution':
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  'permission-troubleshooting':
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+'04-merge-request-proposals.md':
+  'shared-project-contribution':
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  'forked-project-contribution':
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  'source-target-project-branches':
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  'mr-description-assignee-draft':
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  'mr-lifecycle-states':
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+'05-reviews-and-approvals.md':
+  'review-context-diff-discussions':
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  'mr-reviewers-vs-assignees':
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  'review-comments-vs-approvals':
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  'request-changes-tier-gate':
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  'approval-rules-required-approvers':
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  'code-owners-vs-approval-rules':
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  'follow-up-reviews':
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+'06-protected-branches.md':
+  'protected-branches-purpose':
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  'allowed-to-merge-vs-push':
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  'project-group-branch-rules':
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  'overlapping-rule-precedence':
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  'code-owner-approval-protected-target':
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  'merge-checks-and-pipeline-boundary':
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  'blocked-merge-diagnosis':
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+'07-issues-and-releases.md':
+  'gitlab-issue-purpose':
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  'issue-assignees-labels-milestones':
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  'issues-linked-to-merge-requests':
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  'git-tag-vs-gitlab-release':
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  'release-notes-assets-boundary':
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+'08-team-workflow.md':
+  'issue-to-mr-approval-merge':
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  'roles-access-review-blockers':
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  'protected-branch-approval-blockers':
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  'merge-to-release-metadata':
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  'handoff-to-git-strategy-ci':
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
