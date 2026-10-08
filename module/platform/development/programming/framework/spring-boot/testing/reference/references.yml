@@ -14,3 +14,20 @@
 #
 # Add only curated references that are useful for the module.
 # The build system must not overwrite this file after authored content exists.
+
+references:
+  - title: "Spring Boot 3.3 — Testing"
+    url: "https://docs.spring.io/spring-boot/3.3/reference/testing/index.html"
+    description: "Official entry point for Spring Boot testing support, including Boot test modules, application testing, Testcontainers integration, and test utilities."
+
+  - title: "Spring Boot 3.3 — Testing Spring Boot Applications"
+    url: "https://docs.spring.io/spring-boot/3.3/reference/testing/spring-boot-applications.html"
+    description: "Canonical reference for @SpringBootTest, WebEnvironment, test configuration, mock/spy bean replacement, test slices, and test auto-configuration."
+
+  - title: "Spring Boot 3.3 — Testcontainers"
+    url: "https://docs.spring.io/spring-boot/3.3/reference/testing/testcontainers.html"
+    description: "Official reference for Spring Boot's Testcontainers integration, @ServiceConnection, ConnectionDetails, container beans, and dynamic-property fallback."
+
+  - title: "Spring Boot 3.3 — Test Slices"
+    url: "https://docs.spring.io/spring-boot/3.3/appendix/test-auto-configuration/slices.html"
+    description: "Official appendix listing Boot test-slice annotations and the auto-configuration each slice imports by default."

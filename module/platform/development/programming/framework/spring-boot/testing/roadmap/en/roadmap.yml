@@ -41,4 +41,107 @@
 # The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: boot-test-bootstrap
+    title: "Boot-Aware Test Bootstrap"
+    purpose: "Understand what Spring Boot adds when a test needs an application context, how Boot discovers the application's primary configuration, and where Boot testing stops before Spring TestContext Framework or test-library fundamentals begin."
+    relatedKnowledge:
+      - BootTesting
+    objectives:
+      - "Recognize spring-boot-test and spring-boot-test-autoconfigure as Boot's two core testing support modules, commonly reached through spring-boot-starter-test."
+      - "Understand that @SpringBootTest creates the test ApplicationContext through SpringApplication so Boot features such as external properties and auto-configuration participate in the test bootstrap."
+      - "Understand how Boot searches for the application's primary @SpringBootConfiguration when explicit configuration classes are not supplied, and why package placement affects discovery."
+      - "Keep generic TestContext lifecycle/caching mechanics and JUnit, Mockito, AssertJ, or Hamcrest fundamentals with their dedicated owners."
+    relatedModules:
+      - routeId: SPRING_TESTING
+        label: "Spring Framework Testing"
+        note: "Owns the underlying TestContext Framework, context lifecycle/caching mechanics, test transactions, and generic Spring integration-testing facilities consumed by Boot tests."
+
+  - id: full-context-and-web-environment
+    title: "Full Application Contexts and WebEnvironment"
+    purpose: "Learn when @SpringBootTest is the right fidelity level and how WebEnvironment changes the application context from a non-web or mock-web test into a real embedded-server test."
+    relatedKnowledge:
+      - SpringBootTest
+      - WebEnvironment
+    objectives:
+      - "Distinguish WebEnvironment.MOCK, RANDOM_PORT, DEFINED_PORT, and NONE by whether a web application context and real embedded server are created."
+      - "Choose mock-web testing when server startup is unnecessary and RANDOM_PORT when behavior must cross a real HTTP server boundary."
+      - "Recognize Boot-provided clients such as WebTestClient or TestRestTemplate as conveniences around real or configured web tests rather than separate testing strategies."
+      - "Understand the practical transaction boundary of real-server tests: client and server execute in separate threads, so a test-side transaction does not automatically roll back server-side work."
+    relatedModules:
+      - routeId: SPRING_BOOT_WEB_RUNTIME
+        label: "Spring Boot Web Runtime"
+        note: "Owns the production web-application type, embedded server, server configuration, and runtime behavior that Boot tests exercise."
+
+  - id: slice-selection
+    title: "Choose the Smallest Useful Test Slice"
+    purpose: "Use Boot test slices to load only the application layer needed for a focused test, balancing speed and isolation against the fidelity of a full @SpringBootTest context."
+    relatedKnowledge:
+      - TestSlices
+      - WebLayerTesting
+      - DataLayerTesting
+    objectives:
+      - "Understand that a Boot test slice restricts component scanning and imports a targeted set of auto-configuration rather than loading the entire application."
+      - "Choose web slices such as @WebMvcTest or @WebFluxTest when the test target is the web layer and collaborators can be supplied separately."
+      - "Choose data-oriented slices such as @DataJpaTest or @JdbcTest when the test target is persistence behavior and Boot's focused data test support is appropriate."
+      - "Do not combine multiple @...Test slice annotations on the same test because Boot does not support that composition; start from one slice and add narrowly targeted support through the relevant @AutoConfigure... annotation when available."
+
+  - id: test-auto-configuration
+    title: "Understand and Customize Test Auto-Configuration"
+    purpose: "Understand that Boot test annotations assemble purpose-specific auto-configuration and learn the supported ways to add, exclude, or customize that test infrastructure without turning a focused test into an opaque context."
+    relatedKnowledge:
+      - TestAutoConfiguration
+    objectives:
+      - "Connect slice annotations with their @AutoConfigure... support and the exact auto-configuration set Boot imports for that slice."
+      - "Use @AutoConfigure... annotations to add focused test facilities to @SpringBootTest or to tune an existing slice."
+      - "Use excludeAutoConfiguration or @ImportAutoConfiguration when a test needs to remove or add specific auto-configuration, and avoid importing auto-configuration as ordinary user configuration."
+      - "Reason about failures by separating missing application beans from intentionally excluded slice components and from Boot auto-configuration conditions."
+    relatedModules:
+      - routeId: SPRING_BOOT_AUTO_CONFIGURATION
+        label: "Spring Boot Auto-Configuration"
+        note: "Owns Boot's general auto-configuration model, conditions, back-off, ordering, exclusions, and diagnostics that test auto-configuration builds on."
+
+  - id: test-context-customization
+    title: "Customize Properties and Replace Test Dependencies"
+    purpose: "Adapt a Boot test context for a scenario with test-specific properties, configuration, mocks, spies, or explicit test beans while keeping those customizations visible and understanding their effect on context reuse."
+    relatedKnowledge:
+      - PropertyOverrides
+      - MockReplacement
+    objectives:
+      - "Use Boot annotation properties such as @SpringBootTest(properties = ...) for local test overrides without redefining the application's normal configuration model."
+      - "Use @TestConfiguration plus explicit import when test-only beans or configuration must supplement the application's primary configuration."
+      - "Use @MockBean to add or replace a bean and @SpyBean to wrap an existing bean when Boot-managed dependency replacement is appropriate, while keeping Mockito behavior itself outside this module."
+      - "Recognize that property differences and mock/spy definitions can change the test context cache key, increasing the number of contexts and the total suite cost."
+    relatedModules:
+      - routeId: SPRING_BOOT_EXTERNALIZED_CONFIGURATION
+        label: "Spring Boot Externalized Configuration"
+        note: "Owns Boot's normal configuration sources, precedence, profiles, binding, and @ConfigurationProperties model that tests may override for a scenario."
+      - routeId: SPRING_TESTING
+        label: "Spring Framework Testing"
+        note: "Owns generic test property sources, dynamic property registration, context caching, and other TestContext mechanics beneath Boot-specific conveniences."
+
+  - id: service-connected-testcontainers
+    title: "Connect Integration Tests to Real Services with Testcontainers"
+    purpose: "Use Spring Boot's Testcontainers integration to turn container endpoints into Boot connection details automatically, so integration tests can exercise real service implementations without hand-wiring every connection property."
+    relatedKnowledge:
+      - Testcontainers
+    objectives:
+      - "Understand @ServiceConnection as the Boot integration point that derives ConnectionDetails from supported Testcontainers and lets auto-configuration consume them."
+      - "Know that service-connection details take precedence over ordinary connection-related configuration properties and require the spring-boot-testcontainers test dependency."
+      - "Recognize the supported patterns of container fields or test-configuration container beans, including when a connection name hint is needed for a GenericContainer."
+      - "Use @DynamicPropertySource as a more manual fallback when a service connection is not suitable, while leaving generic Testcontainers lifecycle, image, network, and container mechanics outside this module."
+
+  - id: integration-test-strategy
+    title: "Build a Coherent Boot Integration-Test Strategy"
+    purpose: "Combine full contexts, slices, test customization, and real service connections into a deliberate test portfolio that gives enough production fidelity without paying unnecessary context-startup and infrastructure cost everywhere."
+    relatedKnowledge:
+      - IntegrationTestingStrategy
+    objectives:
+      - "Choose among plain unit tests, Boot slices, full @SpringBootTest contexts, real web-server tests, and service-backed integration tests based on the behavior that must be proven."
+      - "Prefer the smallest context that still crosses the boundary under test, then reserve full-context and real-service tests for integration behavior that focused slices cannot establish."
+      - "Keep context configurations reusable across tests so Spring's context cache can amortize startup cost; avoid gratuitous property, mock, profile, or configuration variations that fragment the cache."
+      - "Explain the end-to-end Boot testing model: bootstrap the right context, select only needed auto-configuration, customize dependencies and properties deliberately, connect realistic services when needed, and control context size as part of suite design."
+    relatedModules:
+      - routeId: SPRING_TESTING
+        label: "Spring Framework Testing"
+        note: "Provides the underlying context cache and integration-test lifecycle whose reuse characteristics shape the cost of a Boot test suite."

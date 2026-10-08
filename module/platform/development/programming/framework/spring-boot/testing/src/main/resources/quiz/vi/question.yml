@@ -38,4 +38,453 @@
 #       ID nội bộ của đáp án đúng. Frontend kiểm tra bằng identity này sau khi shuffle.
 # </quiz-schema>
 
-questions: []
+questions:
+  - id: 'q01-boot-aware-context-bootstrap'
+    question: 'Một test cần kiểm chứng đồng thời configuration binding, conditional auto-configuration và wiring giữa các application bean. Vì sao bootstrap test theo mô hình Boot hữu ích trong trường hợp này?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '1.Introduction/BootTesting.md'
+      anchor: 'springapplication-test-bootstrap'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Nó thay thế Spring TestContext để Boot tự quản lý toàn bộ test lifecycle một cách độc lập.'
+        explanation: 'Boot testing xây trên Spring TestContext, không thay thế test-context framework bên dưới.'
+      - id: B
+        answer: 'Nó tạo context qua SpringApplication để các startup feature của Boot cùng tham gia.'
+        explanation: 'Đúng. Bootstrap nhận biết Boot tái hiện phần startup model cần thiết của Boot bên trong test context.'
+      - id: C
+        answer: 'Nó khởi động mọi external service của production application trước khi tạo context.'
+        explanation: 'Bootstrap theo Boot không tự động cấp phát toàn bộ external infrastructure.'
+      - id: D
+        answer: 'Nó khởi động embedded server thật như một phần của Boot-aware bootstrap để test đi qua network behavior.'
+        explanation: 'Khởi động server thật là lựa chọn WebEnvironment riêng, không phải đặc tính mặc định của Boot-aware bootstrap.'
+    correctAnswerId: B
+
+  - id: 'q02-primary-configuration-discovery'
+    question: 'Một class @SpringBootTest được chuyển ra ngoài package hierarchy của application và sau đó không tìm thấy Boot configuration. Nguyên nhân nào có khả năng nhất?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '1.Introduction/BootTesting.md'
+      anchor: 'primary-test-configuration-discovery'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'SpringBootTest chỉ tìm trong package chứa main class nên test ở nơi khác không thể dùng nó.'
+        explanation: 'Không cần cùng package chính xác; vấn đề nằm ở cách Boot tìm ngược lên package hierarchy.'
+      - id: B
+        answer: 'Boot vô hiệu component scanning khi test class nằm dưới test source directory.'
+        explanation: 'Source directory không phải nguyên nhân; quá trình tìm cấu hình dựa trên package structure.'
+      - id: C
+        answer: 'Test cần nested @Configuration vì Boot test bootstrap mong primary configuration nằm cục bộ.'
+        explanation: 'Khi không truyền class tường minh, Boot thường tìm primary application configuration.'
+      - id: D
+        answer: 'Boot tìm ngược lên từ package của test nên @SpringBootConfiguration chính có thể không còn được tìm thấy.'
+        explanation: 'Đúng. Chuyển test ra ngoài hierarchy của application có thể phá vỡ primary-configuration discovery của Boot.'
+    correctAnswerId: D
+
+  - id: 'q03-springboottest-default-server-behavior'
+    question: 'Một test dùng @SpringBootTest nhưng không chỉ định webEnvironment. Khi có web stack được hỗ trợ, phát biểu nào đúng?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '2.SpringBootTest/SpringBootTest.md'
+      anchor: 'springboottest-context-model'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Boot mặc định dùng WebEnvironment.MOCK, nên có thể có web context mà không khởi động embedded server thật.'
+        explanation: 'Đúng. Full Boot context không đồng nghĩa tự động có network server đang lắng nghe.'
+      - id: B
+        answer: 'Boot mặc định dùng RANDOM_PORT vì full web application context kéo theo một HTTP server đang lắng nghe.'
+        explanation: 'RANDOM_PORT phải được chọn tường minh; nó không phải WebEnvironment mặc định.'
+      - id: C
+        answer: 'Boot mặc định dùng NONE và vô hiệu mọi web infrastructure cho tới khi test client được inject.'
+        explanation: 'NONE là non-web mode phải chọn tường minh, không phải mặc định khi web infrastructure tồn tại.'
+      - id: D
+        answer: 'Boot mặc định dùng DEFINED_PORT và bind cùng cổng đã cấu hình cho production application.'
+        explanation: 'DEFINED_PORT là chế độ server thật phải chọn tường minh, không phải mặc định.'
+    correctAnswerId: A
+
+  - id: 'q04-random-port-selection'
+    question: 'Một CI suite chạy song song các real-server test giống nhau. Vì sao WebEnvironment.RANDOM_PORT thường phù hợp hơn DEFINED_PORT?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '3.WebEnvironment/WebEnvironment.md'
+      anchor: 'web-environment-real-server'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'RANDOM_PORT thay embedded server bằng MockMvc nên tránh hoàn toàn việc cấp phát network.'
+        explanation: 'RANDOM_PORT khởi động server thật; MockMvc thuộc đường kiểm thử request dạng mock.'
+      - id: B
+        answer: 'RANDOM_PORT chia sẻ một port duy nhất cho mọi test context và tự động tuần tự hóa truy cập.'
+        explanation: 'Nó yêu cầu một port khả dụng cho từng server instance, không giữ một suite port dùng chung.'
+      - id: C
+        answer: 'RANDOM_PORT yêu cầu một port còn trống, nhờ đó giảm xung đột giữa các server test chạy đồng thời.'
+        explanation: 'Đúng. Port thực tế sau đó có thể được inject nếu custom client cần dùng.'
+      - id: D
+        answer: 'RANDOM_PORT vô hiệu web ApplicationContext sau startup để test sau có thể tái sử dụng cổng.'
+        explanation: 'Web context và server vẫn thuộc test context trong suốt thời gian context còn hoạt động.'
+    correctAnswerId: C
+
+  - id: 'q05-real-server-transaction-boundary'
+    question: 'Một test @Transactional gọi endpoint trong @SpringBootTest(webEnvironment = RANDOM_PORT). Endpoint commit thay đổi database. Vì sao thay đổi đó có thể vẫn còn sau khi test method rollback?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '3.WebEnvironment/WebEnvironment.md'
+      anchor: 'real-server-transaction-boundary'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'RANDOM_PORT vô hiệu test-managed transaction mỗi khi ApplicationContext có DataSource bean.'
+        explanation: 'Test vẫn có thể có test-managed transaction riêng; vấn đề là server-side transaction nằm ở boundary khác.'
+      - id: B
+        answer: 'Client và server chạy ở các thread khác nhau nên server transaction nằm ngoài test transaction.'
+        explanation: 'Đúng. Rollback trên test thread không tự động rollback công việc đã commit trên server thread.'
+      - id: C
+        answer: 'Việc cấp random port commit test transaction trước khi server bắt đầu xử lý request.'
+        explanation: 'Việc cấp port không quyết định hành vi commit của transaction.'
+      - id: D
+        answer: 'Spring TestContext chỉ bỏ qua rollback khi embedded server dùng production port.'
+        explanation: 'Ranh giới này xuất hiện với cả RANDOM_PORT và DEFINED_PORT khi chạy server thật.'
+    correctAnswerId: B
+
+  - id: 'q06-single-slice-rule'
+    question: 'Một test cần hỗ trợ MVC controller cùng một testing facility tập trung thường gắn với slice khác. Hướng xử lý nào được Boot hỗ trợ?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '4.TestSlices/TestSlices.md'
+      anchor: 'single-slice-rule'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Chồng @WebMvcTest với @...Test thứ hai để Boot tự động merge component filter của cả hai slice.'
+        explanation: 'Boot không hỗ trợ ghép nhiều annotation slice @...Test trên cùng một test.'
+      - id: B
+        answer: 'Thay cả hai slice bằng full context vì slice customization không nhằm bổ sung testing facility.'
+        explanation: 'Slice có thể được bổ sung hỗ trợ có mục tiêu nếu primary boundary vẫn phù hợp.'
+      - id: C
+        answer: 'Tiếp tục mở rộng production component scanning cho tới khi cả hai slice boundary cùng hiện diện.'
+        explanation: 'Scanning quá rộng phá vỡ focused slice boundary và làm test intent khó hiểu.'
+      - id: D
+        answer: 'Chọn một primary slice rồi thêm hỗ trợ cần thiết qua @AutoConfigure... hoặc cơ chế import phù hợp.'
+        explanation: 'Đúng. Một slice xác định boundary chính; hỗ trợ có mục tiêu có thể tinh chỉnh context đó.'
+    correctAnswerId: D
+
+  - id: 'q07-webmvc-missing-service'
+    question: 'Một @WebMvcTest cho OrderController lỗi vì thiếu OrderService. Mục tiêu chỉ là kiểm tra request mapping và JSON behavior. Nên hiểu tình huống này thế nào?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '5.WebLayerTesting/WebLayerTesting.md'
+      anchor: 'webmvc-test-collaborators'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Service nằm ngoài web slice, vì vậy hãy cung cấp một collaborator được kiểm soát như mock cho test này.'
+        explanation: 'Đúng. Service thường nằm ngoài @WebMvcTest và nên được cung cấp như focused collaborator khi cần.'
+      - id: B
+        answer: '@WebMvcTest đáng lẽ tự nạp service; việc thiếu bean cho thấy controller selection đã thu hẹp scanning sai.'
+        explanation: 'Slice cố ý loại phần lớn service-layer component.'
+      - id: C
+        answer: 'Việc thiếu service cho thấy behavior này phải dùng full @SpringBootTest thay vì focused web slice.'
+        explanation: 'Full context không cần thiết chỉ để cung cấp collaborator mà focused slice chủ động loại khỏi boundary.'
+      - id: D
+        answer: 'Bật repository scanning trong web slice để persistence dependency khiến service bean được tạo theo.'
+        explanation: 'Mở rộng unrelated scanning không phải cách đúng để cung cấp collaborator cho focused controller test.'
+    correctAnswerId: A
+
+  - id: 'q08-mock-web-vs-real-server'
+    question: 'Một test phải kiểm chứng redirect behavior production qua embedded server thật và HTTP client thật. Boundary nào phù hợp?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '5.WebLayerTesting/WebLayerTesting.md'
+      anchor: 'mock-web-vs-real-server'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: '@WebMvcTest với MockMvc vì redirect có thể được kiểm tra bên trong ranh giới request processing của MVC.'
+        explanation: 'MockMvc có thể kiểm tra redirect ở tầng framework nhưng không đi qua embedded server và network boundary thật mà tình huống này yêu cầu.'
+      - id: B
+        answer: '@SpringBootTest với WebEnvironment.MOCK vì full Boot context đủ để tái hiện transport client/server thật.'
+        explanation: 'MOCK nạp Boot web context nhưng không khởi động embedded server thật nên vẫn thiếu transport boundary cần kiểm chứng.'
+      - id: C
+        answer: '@SpringBootTest với real-server WebEnvironment vì assertion phải đi qua embedded server và HTTP transport boundary.'
+        explanation: 'Đúng. RANDOM_PORT hoặc DEFINED_PORT khởi động server thật để HTTP client thật có thể đi qua boundary cần kiểm chứng.'
+      - id: D
+        answer: '@WebMvcTest với HTTP client thật vì bản thân client tạo network boundary dù slice không khởi động server.'
+        explanation: 'HTTP client thật không tự tạo server boundary; test context được chọn phải thực sự khởi động embedded server.'
+    correctAnswerId: C
+
+  - id: 'q09-datajpa-transaction-default'
+    question: 'Developer thường nên kỳ vọng hành vi cô lập nào từ @DataJpaTest khi không ghi đè transaction settings mặc định?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '6.DataLayerTesting/DataLayerTesting.md'
+      anchor: 'datajpa-transaction-model'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Mỗi test mặc định commit để repository test sau có thể thấy cùng database state.'
+        explanation: 'Mô hình JPA test tập trung mặc định nhằm cô lập test thay vì giữ thay đổi giữa các test.'
+      - id: B
+        answer: 'Slice mặc định có transaction và thay đổi trong test thường được rollback sau mỗi test.'
+        explanation: 'Đúng. Đây là transaction behavior thông thường của @DataJpaTest.'
+      - id: C
+        answer: 'Transaction bị vô hiệu vì JPA repository được test mà không cần Spring ApplicationContext.'
+        explanation: '@DataJpaTest nạp focused Spring context và tham gia transactional test support.'
+      - id: D
+        answer: 'Rollback chỉ xảy ra khi slice đồng thời khởi động embedded server bằng RANDOM_PORT.'
+        explanation: 'Rollback mặc định của JPA slice không yêu cầu server thật.'
+    correctAnswerId: B
+
+  - id: 'q10-production-database-fidelity'
+    question: 'Một repository dùng vendor-specific SQL và database extension mà in-memory test database không tái hiện được. Lựa chọn kiểm thử mạnh nhất là gì?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '6.DataLayerTesting/DataLayerTesting.md'
+      anchor: 'data-slice-integration-handoff'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Giữ embedded database rồi mock SQL dialect để slice nhanh nhất có thể.'
+        explanation: 'Mock mất product-specific behavior đồng nghĩa loại bỏ boundary mà test cần chứng minh.'
+      - id: B
+        answer: 'Chuyển test sang @WebMvcTest vì web slice nạp nhiều production infrastructure hơn.'
+        explanation: 'Web slice không tạo database-product behavior sát thực tế.'
+      - id: C
+        answer: 'Dùng repository unit test thuần vì Boot integration nên giữ database infrastructure ra ngoài test.'
+        explanation: 'Boot test có thể dùng service database thật, bao gồm integration qua Testcontainers.'
+      - id: D
+        answer: 'Chạy persistence test với đúng database product, chẳng hạn thông qua service connection.'
+        explanation: 'Đúng. SQL và extension riêng của sản phẩm là lý do chính đáng để dùng real-service integration boundary.'
+    correctAnswerId: D
+
+  - id: 'q11-auto-configure-refines-boundary'
+    question: 'Full @SpringBootTest context đã là boundary đúng, nhưng test còn cần Boot cấu hình MockMvc. Nên hiểu @AutoConfigureMockMvc làm gì?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '7.TestAutoConfiguration/TestAutoConfiguration.md'
+      anchor: 'auto-configure-annotations'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Nó thêm focused test support vào context hiện tại mà không đổi primary boundary.'
+        explanation: 'Đúng. @AutoConfigure... tinh chỉnh hỗ trợ trong context đã được primary test annotation chọn.'
+      - id: B
+        answer: 'Nó chuyển @SpringBootTest thành @WebMvcTest và loại mọi application bean không thuộc MVC.'
+        explanation: 'Annotation chỉ cấu hình MockMvc support, không thay full context bằng web slice.'
+      - id: C
+        answer: 'Nó khởi động ApplicationContext thứ hai dành riêng cho MockMvc rồi chia sẻ bean giữa hai context.'
+        explanation: 'Nó cấu hình hỗ trợ trong test context hiện tại, không tạo parallel context.'
+      - id: D
+        answer: 'Nó bắt buộc khởi động HTTP server thật vì MockMvc chỉ hoạt động qua network socket.'
+        explanation: 'MockMvc được thiết kế để chạy MVC request processing mà không cần HTTP server thật.'
+    correctAnswerId: A
+
+  - id: 'q12-import-auto-configuration'
+    question: 'Một focused slice cần đúng một Boot auto-configuration cụ thể không có trong tập import mặc định. Cơ chế nào giữ đúng semantics của auto-configuration nhất?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '7.TestAutoConfiguration/TestAutoConfiguration.md'
+      anchor: 'import-auto-configuration'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Dùng @Import thông thường với auto-configuration class để Boot coi nó như user configuration.'
+        explanation: 'Không nên import auto-configuration như user configuration khi Boot có cơ chế chuyên biệt.'
+      - id: B
+        answer: 'Thêm @...Test slice thứ hai vì mỗi slice bổ sung một phần auto-configuration còn thiếu.'
+        explanation: 'Nhiều slice annotation trên cùng test không phải composition model được hỗ trợ.'
+      - id: C
+        answer: 'Dùng @ImportAutoConfiguration để Boot giữ condition và ordering model dành cho auto-configuration.'
+        explanation: 'Đúng. Cơ chế import chuyên biệt giữ semantics của Boot auto-configuration.'
+      - id: D
+        answer: 'Bật component scanning không giới hạn để auto-configuration class được tìm như component.'
+        explanation: 'Broad scanning không phải cơ chế để thêm một Boot auto-configuration cụ thể vào focused test.'
+    correctAnswerId: C
+
+  - id: 'q13-testconfiguration-additive'
+    question: 'Nhiều integration test cần cùng một test-only clock bean nhưng vẫn phải dùng application configuration bình thường. Pattern nào phù hợp?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '8.PropertyOverrides/PropertyOverrides.md'
+      anchor: 'testconfiguration-import'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Thay @SpringBootApplication của ứng dụng bằng top-level production @Configuration mới chỉ dành cho test.'
+        explanation: 'Thay primary configuration làm đổi ý nghĩa test và làm test support rò vào production model.'
+      - id: B
+        answer: 'Định nghĩa phần hỗ trợ tái sử dụng trong @TestConfiguration rồi import để bổ sung cho primary application configuration.'
+        explanation: 'Đúng. @TestConfiguration biểu diễn cấu hình test bổ sung thay vì thay application entry point.'
+      - id: C
+        answer: 'Đặt test bean trong main application package để component scanning tìm thấy ở cả production lẫn test.'
+        explanation: 'Test-only support không nên trở thành production configuration thông thường.'
+      - id: D
+        answer: 'Dùng @SpringBootTest lần thứ hai vì mỗi annotation có thể đóng góp thêm một configuration class.'
+        explanation: 'Giải pháp là test configuration tường minh, không phải lặp primary test annotation.'
+    correctAnswerId: B
+
+  - id: 'q14-mock-refresh-time-limit'
+    question: 'Một bean đọc collaborator ngay lúc context initialization, nhưng giá trị trả về của @MockBean chỉ được stub trong test method. Vì sao initialization vẫn có thể lỗi?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '9.MockReplacement/MockReplacement.md'
+      anchor: 'mock-refresh-time-limit'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: '@MockBean chỉ được đăng ký sau khi test method đầu tiên chạy nên lúc refresh chưa tồn tại mock.'
+        explanation: 'Mock có thể tồn tại trước refresh; vấn đề là thời điểm desired stubbing trở nên có hiệu lực.'
+      - id: B
+        answer: 'Boot cấm mọi mocked return value trong context refresh nếu mock thay thế bean có sẵn.'
+        explanation: 'Boot không có lệnh cấm chung như vậy đối với mocked behavior trong refresh.'
+      - id: C
+        answer: 'Spring tự động reset mọi mock ngay trước mỗi bean initialization callback.'
+        explanation: 'Vấn đề không phải một lần reset tự động trước từng bean initialization.'
+      - id: D
+        answer: 'Stubbing trong test method diễn ra sau refresh nên behavior lúc initialization phải được cấu hình sớm hơn.'
+        explanation: 'Đúng. Mock bean được cấu hình trong test configuration có thể cung cấp behavior trước khi dependent bean khởi tạo.'
+    correctAnswerId: D
+
+  - id: 'q15-context-cache-fragmentation'
+    question: 'Một suite có nhiều @SpringBootTest class gần giống nhau nhưng mỗi class khác nhẹ về inline property và mock definition. Vì sao suite có thể chậm bất ngờ?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '11.IntegrationTestingStrategy/IntegrationTestingStrategy.md'
+      anchor: 'context-cache-strategy'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Các khác biệt đó có thể tạo context cache key khác nhau, khiến nhiều Boot context tương tự phải khởi động lại.'
+        explanation: 'Đúng. Effective configuration ổn định giúp tái sử dụng test context tốn chi phí khởi động.'
+      - id: B
+        answer: 'Boot test annotation dùng cache độc lập nên Spring không thể tái sử dụng context giữa các Boot test.'
+        explanation: 'Boot test vẫn hưởng lợi từ Spring context cache; vấn đề là variation không cần thiết.'
+      - id: C
+        answer: 'Inline property buộc mỗi test method khởi động JVM mới trước khi tạo ApplicationContext.'
+        explanation: 'Variation có thể tạo context mới, không phải JVM mới cho từng method.'
+      - id: D
+        answer: 'Mock definition chỉ là local variable nên không thể ảnh hưởng context identity hoặc startup cost.'
+        explanation: 'Mock/spy definition do Boot quản lý là context customizer và có thể tham gia cache identity.'
+    correctAnswerId: A
+
+  - id: 'q16-service-connection-precedence'
+    question: 'Một test có datasource property thông thường trỏ tới localhost và một database container được hỗ trợ có @ServiceConnection. Boot auto-configuration nên dùng endpoint nào?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '10.Testcontainers/Testcontainers.md'
+      anchor: 'connection-details-precedence'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Endpoint localhost vì externalized configuration luôn ưu tiên hơn test infrastructure.'
+        explanation: 'Matching ConnectionDetails được thiết kế ưu tiên hơn connection-related properties.'
+      - id: B
+        answer: 'Endpoint localhost nếu các property đó được load trước khi service connection được đăng ký.'
+        explanation: 'Thứ tự nạp property không ghi đè precedence đã định nghĩa của matching ConnectionDetails.'
+      - id: C
+        answer: 'Endpoint của container được biểu diễn bởi matching ConnectionDetails sinh từ service connection.'
+        explanation: 'Đúng. Running service connection trở thành nguồn có thẩm quyền cho connection details liên quan.'
+      - id: D
+        answer: 'Endpoint container chỉ khi ordinary datasource property đã bị xóa khỏi test environment trước.'
+        explanation: 'Matching service ConnectionDetails có thể ưu tiên mà không cần xóa connection property thông thường trước.'
+    correctAnswerId: C
+
+  - id: 'q17-generic-container-name-hint'
+    question: 'Một @Bean method trong @TestConfiguration trả về GenericContainer<?> cho Redis và có @ServiceConnection. Vì sao có thể cần name hint?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '10.Testcontainers/Testcontainers.md'
+      anchor: 'service-connection-name-hints'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'GenericContainer ngăn Spring quản lý bean lifecycle nên name dùng để bật lifecycle callback.'
+        explanation: 'Name hint dùng để chọn connection-details factory, không phải để bật Spring bean lifecycle.'
+      - id: B
+        answer: 'Return type không xác định service nên name giúp Boot chọn connection-details factory phù hợp.'
+        explanation: 'Đúng. Boot tránh gọi sớm bean method chỉ để kiểm tra Docker image.'
+      - id: C
+        answer: 'Redis container có thể expose nhiều port nên name cho Testcontainers biết host port nào phải publish.'
+        explanation: 'Port mapping thuộc Testcontainers; Boot name hint dùng để nhận diện service integration.'
+      - id: D
+        answer: 'Typed container cũng cần cùng name vì connection-detail matching dùng image thay vì return type.'
+        explanation: 'Strongly typed container return type thường đã cung cấp đủ thông tin mà không cần name hint.'
+    correctAnswerId: B
+
+  - id: 'q18-combined-fidelity-boundaries'
+    question: 'Một checkout test phải chứng minh HTTP redirect qua embedded server thật và SQL behavior riêng của production database. Lựa chọn portfolio nào khớp các rủi ro đó nhất?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '11.IntegrationTestingStrategy/IntegrationTestingStrategy.md'
+      anchor: 'testing-strategy-spectrum'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Dùng @WebMvcTest với in-memory database vì một focused slice nên thay toàn bộ higher-fidelity test.'
+        explanation: 'Cách này bỏ cả real server lẫn production database behavior mà kịch bản phải chứng minh.'
+      - id: B
+        answer: 'Chỉ dùng @DataJpaTest vì database fidelity tự động kiểm tra luôn HTTP và server integration.'
+        explanation: 'Persistence slice không đi qua HTTP server boundary.'
+      - id: C
+        answer: 'Dùng unit test thuần với mock cho server và database để infrastructure không bao giờ ảnh hưởng kết quả.'
+        explanation: 'Mock cả hai boundary khiến test không thể chứng minh những integration risk đã nêu.'
+      - id: D
+        answer: 'Dùng real-server @SpringBootTest và kết nối đúng database product thông qua service connection.'
+        explanation: 'Đúng. Cả server lẫn database product behavior đều là rủi ro tường minh nên đều cần fidelity cao hơn.'
+    correctAnswerId: D

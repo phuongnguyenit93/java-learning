@@ -27,4 +27,179 @@
 #         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
 # </interview-schema>
 
-questions: []
+questions:
+  - question: 'Vì sao bootstrap dành riêng cho Spring Boot khác với việc chỉ nạp một Spring test context thông thường, và khi nào khác biệt đó trở nên quan trọng?'
+    answer: 'Ứng dụng Spring Boot thường phụ thuộc vào nhiều hành vi ngoài việc đăng ký bean: externalized configuration, xử lý environment, auto-configuration, configuration binding và hạ tầng theo điều kiện đều có thể ảnh hưởng đến startup. Boot-aware test tái tạo mô hình khởi động Boot liên quan thông qua SpringApplication và cơ chế tìm primary configuration, vì vậy lỗi có thể phản ánh cùng mô hình cấu hình và điều kiện mà ứng dụng thật sử dụng. Khác biệt này quan trọng khi hành vi cần kiểm tra phụ thuộc vào Boot startup semantics. Nếu test chỉ cần boundary ở mức object thì đưa Boot vào làm tăng chi phí không cần thiết; nếu test phụ thuộc vào cấu hình Boot thì một context Spring chung có thể tạo cảm giác an toàn giả do bỏ qua chính hành vi production đang dùng.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '1.Introduction/BootTesting.md'
+      anchor: 'boot-testing-problem'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: 'Bạn quyết định giữa @SpringBootTest và một test slice tập trung như thế nào, và vì sao kích thước context vừa là quyết định về tính đúng vừa là quyết định về hiệu năng?'
+    answer: '@SpringBootTest phù hợp khi assertion phụ thuộc vào nhiều layer phối hợp, auto-configuration trên phạm vi rộng, startup gần với production hoặc một boundary xuyên suốt ứng dụng mà slice cố ý bỏ qua. Slice phù hợp hơn khi một boundary tập trung như MVC, WebFlux, JPA hoặc JDBC đã chứa đủ mọi thứ assertion cần. Context nhỏ hơn khởi động nhanh và giảm lỗi nhiễu không liên quan, nhưng thu nhỏ quá mức boundary cần thiết có thể che giấu lỗi tích hợp hoặc buộc phải mock chính hành vi cần chứng minh. Full context cho fidelity cao hơn nhưng cũng tăng thời gian startup, mức phụ thuộc vào hạ tầng ngoài và failure surface. Vì vậy lựa chọn đúng là context nhỏ nhất vẫn chứa đầy đủ mọi cộng tác mà test có nhiệm vụ chứng minh.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '2.SpringBootTest/SpringBootTest.md'
+      anchor: 'full-context-vs-slice'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: 'Một @SpringBootTest chạy qua với WebEnvironment.MOCK nhưng cùng scenario lại lỗi khi dùng RANDOM_PORT và còn để lại thay đổi trong database. Hãy giải thích vì sao cả hai kết quả đều có thể hợp lý và boundary nào đã thay đổi.'
+    answer: 'MOCK tạo web application context nhưng không khởi động embedded server, vì vậy request processing có thể vẫn nằm trong boundary framework phía test. RANDOM_PORT khởi động server thật và request từ client được xử lý bởi code phía server trên thread khác. Do đó test-managed @Transactional quanh test method không tự động bao luôn transaction mà application code mở khi phục vụ HTTP request. Transaction của test có thể rollback phần việc của nó trong khi transaction phía server đã commit. Chế độ real server còn đưa thêm các mối quan tâm như network, connector, serialization qua đường client/server và web wiring thật. Kết quả khác nhau cho thấy test đã đi qua một boundary khác, không có nghĩa một mode luôn đúng hơn mode kia.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '3.WebEnvironment/WebEnvironment.md'
+      anchor: 'real-server-transaction-boundary'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: 'Vì sao một Boot test thường nên bắt đầu từ một @...Test slice thay vì chồng nhiều slice annotation, và nên bổ sung một test capability còn thiếu bằng cách nào?'
+    answer: 'Mỗi Boot slice định nghĩa một context boundary chính thông qua focused scanning và một tập auto-configuration đã được chọn lọc. Boot không hỗ trợ việc kết hợp nhiều @...Test slice annotation như thể các context của chúng có thể tự động merge. Hãy bắt đầu với slice khớp nhất với hành vi cần chứng minh. Nếu boundary đó vẫn đúng nhưng chỉ thiếu một capability, bổ sung hẹp bằng @AutoConfigure... tương ứng, @ImportAutoConfiguration cho một auto-configuration cụ thể, @Import cho user/test configuration thông thường hoặc một collaborator tường minh. Nếu phải import ngày càng nhiều thành phần production để giữ test chạy được thì đó là dấu hiệu hành vi thực tế phù hợp với một integration context lớn hơn.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '4.TestSlices/TestSlices.md'
+      anchor: 'single-slice-rule'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: 'Một @WebMvcTest thất bại vì thiếu service dependency của controller. Trước khi import toàn bộ service layer, bạn nên điều tra điều gì, và mỗi cách sửa thể hiện gì về boundary dự kiến của test?'
+    answer: '@WebMvcTest chủ động chọn các thành phần thiên về MVC và loại hầu hết service cùng repository. Vì vậy thiếu service thường là hành vi dự kiến của slice chứ chưa phải bằng chứng component scanning bị lỗi. Trước hết hãy hỏi controller có nên được test với collaborator được kiểm soát hay không; nếu có, cung cấp collaborator đó một cách tường minh, thường bằng mock bean tích hợp với Boot, rồi giữ web slice tập trung vào mapping, validation, serialization, advice hoặc hành vi controller. Nếu assertion thật sự phụ thuộc vào service và repository chạy thật cùng nhau thì import rộng chỉ che giấu việc boundary đã mở rộng. Khi đó context lớn hơn như @SpringBootTest diễn đạt yêu cầu tích hợp rõ ràng hơn.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '5.WebLayerTesting/WebLayerTesting.md'
+      anchor: 'webmvc-test-collaborators'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: 'Khi nào hành vi test database mặc định của @DataJpaTest có thể tạo cảm giác an toàn sai, và bạn quyết định giữ embedded database hay dùng service thật dựa trên tiêu chí nào?'
+    answer: '@DataJpaTest có thể dùng embedded test database khi thư viện phù hợp có mặt, rất hữu ích cho kiểm tra nhanh mapping, repository và hành vi JPA thông thường. Rủi ro xuất hiện khi hành vi đặc thù của database production chính là thứ cần được chứng minh. Khác biệt dialect, native SQL, migration, extension, isolation, indexing hoặc driver có thể chạy qua trên in-memory database nhưng lỗi ở production. Giữ embedded database khi contract cần kiểm tra là persistence behavior có tính portable. Dùng @AutoConfigureTestDatabase để điều khiển replacement khi phù hợp, hoặc chuyển sang database thật qua Testcontainers và service connection khi hành vi đặc thù production là một phần của rủi ro. Quyết định nên đi theo boundary chứ không theo quy tắc cứng rằng mọi repository test đều phải dùng fake hoặc service thật.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '6.DataLayerTesting/DataLayerTesting.md'
+      anchor: 'data-test-database-customization'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: 'Một focused Boot test báo NoSuchBeanDefinitionException. Hãy mô tả trình tự chẩn đoán giúp tránh biến mọi missing bean thành một @Import hoặc mock.'
+    answer: 'Bắt đầu từ test boundary đã chọn. Xác định type bị thiếu có đáng lẽ được slice scanning chọn vào, được một slice auto-configuration tạo ra hay phải được cung cấp tường minh dưới dạng collaborator. Nếu một auto-configuration đáng lẽ tạo bean đó, kiểm tra condition và exclusion liên quan thay vì giả định phải import production configuration. Nếu type nằm ngoài boundary dự kiến của slice, quyết định xem test double có phải collaborator phù hợp hay test objective thực tế đã vượt sang layer khác. Chỉ sau các bước đó mới nên bổ sung configuration. Trình tự này phân biệt được omission có chủ đích, Boot condition bị sai và test có boundary quá nhỏ so với hành vi cần chứng minh.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '7.TestAutoConfiguration/TestAutoConfiguration.md'
+      anchor: 'test-context-missing-bean-diagnosis'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: 'Vì sao @ImportAutoConfiguration khác @Import khi mở rộng test context, và chuyện gì có thể xảy ra nếu một auto-configuration class bị đối xử như user configuration thông thường?'
+    answer: '@ImportAutoConfiguration được thiết kế cho các class auto-configuration của Boot và giữ mô hình auto-configuration, gồm condition handling và ordering. @Import phù hợp với application hoặc test configuration thông thường. Import một auto-configuration class như user configuration làm mờ ranh giới đó và có thể bỏ qua những giả định mà Boot dùng khi compose auto-configuration. Trong focused test, trước hết giữ primary slice boundary, sau đó chỉ thêm auto-configuration cụ thể mà scenario thật sự cần. Cách này làm lý do xuất hiện của hạ tầng bổ sung rõ ràng và tránh việc dần dần dựng lại toàn production context bằng các import rời rạc.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '7.TestAutoConfiguration/TestAutoConfiguration.md'
+      anchor: 'import-auto-configuration'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: 'Vì sao nhiều thay đổi inline test property rất nhỏ có thể làm cả Spring Boot test suite chậm bất ngờ dù từng test nhìn riêng lẻ khá nhẹ?'
+    answer: 'Spring TestContext chỉ tái sử dụng ApplicationContext khi effective test configuration tương thích với một cache entry đã có. Inline property, profile, imported configuration, mock hoặc spy definition và các context customizer khác đều có thể tham gia cache key. Nếu nhiều test tạo ra các configuration shape chỉ khác nhau một chút, suite có thể liên tục khởi động những Boot context gần giống nhau thay vì tái sử dụng một startup đắt tiền. Cách xử lý là gom test quanh các context shape ổn định, tái sử dụng test configuration và property set chung khi chúng thể hiện cùng một scenario, đồng thời đưa object-level behavior ra khỏi Spring khi không cần context integration. Vì vậy context customization là một phần của kiến trúc test suite chứ không phải setup miễn phí cho từng test.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '8.PropertyOverrides/PropertyOverrides.md'
+      anchor: 'test-property-cache-impact'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: 'Hãy giải thích khác biệt thiết kế giữa nested @TestConfiguration và nested @Configuration thông thường trong Boot test. Vì sao nhầm hai loại này có thể thay đổi chính điều mà test đang chứng minh?'
+    answer: '@TestConfiguration biểu đạt cấu hình bổ sung chỉ dành cho test. Một nested test configuration có thể được kết hợp với primary configuration của ứng dụng để test có thêm helper bean hoặc alternative infrastructure mà không định nghĩa lại application entry point. Nested @Configuration thông thường lại có thể trở thành primary test configuration, tức là thay đổi mô hình cấu hình được bootstrap. Điều đó có thể là chủ đích trong một test chuyên biệt, nhưng nếu xảy ra ngoài ý muốn thì test có thể không còn đại diện cho startup bình thường của ứng dụng. Dùng @TestConfiguration khi mục tiêu là bổ sung production wiring; chỉ dùng replacement configuration tường minh khi việc thay đổi top-level application model chính là một phần của test design.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '8.PropertyOverrides/PropertyOverrides.md'
+      anchor: 'testconfiguration-purpose'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: 'So sánh @MockBean và @SpyBean dưới góc nhìn thiết kế Spring Boot test context. Khi nào mỗi cơ chế phù hợp, và vì sao cả hai đều có thể ảnh hưởng hiệu năng của suite?'
+    answer: '@MockBean thay hoặc thêm một Spring bean bằng Mockito mock, phù hợp khi Spring context là một phần của test boundary nhưng một collaborator cần được kiểm soát hoàn toàn. @SpyBean giữ bean thật và bọc nó bằng spy, phù hợp khi phần lớn production behavior vẫn nên chạy nhưng test cần quan sát interaction hoặc override một phần nhỏ. Spy vẫn tạo bean thật cùng dependency của nó nên không phải phiên bản rẻ hơn của mock. Cả hai cơ chế đều làm thay đổi effective bean graph thông qua context customizer, và các tập mock/spy khác nhau có thể tạo context-cache key khác nhau. Chỉ nên dùng chúng khi việc đưa test double qua Spring injection là một phần của scenario; với unit test không cần Spring context, Mockito trực tiếp thường rõ hơn.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '9.MockReplacement/MockReplacement.md'
+      anchor: 'mock-replacement-context-boundary'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: 'Vì sao stub một @MockBean bên trong test method có thể quá muộn với bean cần giá trị mock ngay trong lúc context initialization, và pattern nào giải quyết được vấn đề timing này?'
+    answer: '@MockBean làm mock xuất hiện trong context trước refresh, nhưng việc stubbing thông thường trong test method chỉ chạy sau khi context đã được tạo xong. Nếu một bean khác gọi collaborator khi chính nó đang được tạo hoặc initialize, behavior mong muốn của mock chưa tồn tại ở thời điểm cần thiết. Đây là lỗi về lifecycle timing chứ không phải cú pháp Mockito. Khi behavior của mock phải có sẵn trước lúc dependent bean initialize, hãy khai báo và cấu hình mock thông qua một @Bean method trong test configuration. Cách đó đưa test double đã cấu hình vào giai đoạn bootstrap context và làm dependency trong initialization trở nên tường minh.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '9.MockReplacement/MockReplacement.md'
+      anchor: 'mock-refresh-time-limit'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: '@ServiceConnection giải quyết vấn đề gì trong Boot test dùng Testcontainers, và vì sao ConnectionDetails có thể hợp lý khi override connection property thông thường?'
+    answer: 'Testcontainers có thể khởi động dependency thật, nhưng ứng dụng vẫn cần host, port, credential, URL hoặc một typed connection contract khác. @ServiceConnection cho phép Boot suy ra ConnectionDetails được hỗ trợ từ container đang chạy rồi đưa chúng vào auto-configuration bình thường. ConnectionDetails này được ưu tiên hơn connection property thông thường vì test đang có một service thật, vị trí thường động, và endpoint đó nên là nguồn có thẩm quyền trong context hiện tại. Cách này tránh phải copy giá trị từ container sang các property thủ công. Container lifecycle vẫn thuộc Testcontainers nếu đó là field do Testcontainers quản lý, còn container được khai báo thành Spring bean sẽ đi theo application-context lifecycle.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '10.Testcontainers/Testcontainers.md'
+      anchor: 'service-connection-purpose'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: 'Khi nào Testcontainers test nên dùng @DynamicPropertySource thay vì @ServiceConnection, và lựa chọn đó cho biết điều gì về integration contract?'
+    answer: '@ServiceConnection là đường tích hợp đặc trưng của Boot nên được ưu tiên khi container được hỗ trợ có thể biểu diễn bằng typed ConnectionDetails. @DynamicPropertySource là fallback phù hợp khi không có service-connection factory, ứng dụng dùng custom property contract hoặc test phải công bố giá trị động không ánh xạ sang một ConnectionDetails được hỗ trợ. Cách dynamic property thủ công hơn vì test tự đọc giá trị từ container rồi đăng ký property. Vì vậy lựa chọn này nên thể hiện có chủ đích rằng integration contract đang dựa trên property hoặc chưa có typed adapter hỗ trợ, thay vì trở thành thói quen mặc định làm trùng lặp những giá trị Boot đã biết cách suy ra.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '10.Testcontainers/Testcontainers.md'
+      anchor: 'dynamic-property-source-fallback'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: 'Hãy thiết kế chiến lược Spring Boot testing cho một feature có controller mapping, repository query, full application wiring và một tính năng SQL đặc thù database. Vì sao một @SpringBootTest lớn không nên tự động thay thế mọi test nhỏ hơn?'
+    answer: 'Dùng các boundary khác nhau cho các rủi ro khác nhau. Focused web slice có thể chứng minh controller mapping, validation, serialization và collaborator được kiểm soát mà không phải trả chi phí persistence. Data slice có thể chứng minh repository mapping và query thông thường. Full @SpringBootTest có thể chứng minh Boot configuration rộng hơn cùng cross-layer wiring hoạt động đồng thời. Nếu tính năng SQL đặc thù database là rủi ro sản phẩm thật, bổ sung một focused hoặc full integration test dùng database thật qua Testcontainers và service connection. Một full-context test lớn có thể chạy qua nhiều thành phần cùng lúc nhưng feedback chậm hơn, failure surface lớn hơn và khó chẩn đoán chính xác. Suite mạnh hơn khi mỗi test chỉ trả chi phí fidelity mà hành vi nó có nhiệm vụ chứng minh thực sự cần.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '11.IntegrationTestingStrategy/IntegrationTestingStrategy.md'
+      anchor: 'testing-strategy-spectrum'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+
+  - question: 'Một integration test phức tạp thất bại trước khi assertion chạy. Bạn phân loại failure thế nào để bắt đầu debug từ boundary sai sớm nhất thay vì thay đổi test configuration ngẫu nhiên?'
+    answer: 'Trước hết xác định Boot có tìm đúng primary configuration và hoàn thành context bootstrap hay chưa. Nếu configuration discovery hoặc startup thất bại, tiếp tục ở lớp bootstrap và condition. Nếu focused context khởi động được nhưng thiếu bean, kiểm tra slice selection, imported test auto-configuration và xem collaborator có đáng lẽ phải được khai báo tường minh hay không. Nếu property hoặc bean xuất hiện sai, kiểm tra test property, imported test configuration, mock, spy và các context customizer khác. Nếu ứng dụng đã cấu hình đúng nhưng không kết nối được dependency thật, kiểm tra service-connection adaptation rồi mới đi sâu vào external service hoặc container. Trình tự này thu hẹp lỗi theo boundary hỏng sớm nhất và tránh debug hạ tầng thấp hơn trước khi biết test context đã đúng.'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '11.IntegrationTestingStrategy/IntegrationTestingStrategy.md'
+      anchor: 'testing-failure-classification'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
