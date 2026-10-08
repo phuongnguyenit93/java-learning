@@ -41,4 +41,93 @@
 # Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: branching-strategy-purpose
+    relatedKnowledge:
+      - "01-strategy-foundations"
+    title: "Vì sao nhóm cần chiến lược nhánh?"
+    purpose: "Hiểu chiến lược nhánh là cách nhóm quy định nơi tích hợp thay đổi, thời điểm chia sẻ và trách nhiệm giữ mã nguồn chung ổn định."
+    objectives:
+      - "Phân biệt thao tác nhánh của Git với quy ước làm việc, quy trình tích hợp và chính sách do nhóm lựa chọn."
+      - "Xác định các vấn đề chiến lược cần giải quyết: làm song song, kiểm soát chất lượng, hợp nhất thay đổi và phối hợp phát hành."
+      - "Nhận ra mối liên hệ giữa nhánh chính, nhánh công việc, nhánh phát hành và mức độ sẵn sàng của mã nguồn chung."
+
+  - id: branch-lifetime-and-integration-cadence
+    relatedKnowledge:
+      - "02-branch-lifetime-and-cadence"
+    title: "Thời gian tồn tại của nhánh và nhịp tích hợp"
+    purpose: "Hiểu vì sao thay đổi để riêng càng lâu càng dễ phân kỳ và cách nhóm duy trì nhịp tích hợp phù hợp với quy mô công việc."
+    objectives:
+      - "So sánh nhánh ngắn hạn, nhánh dài hạn và tích hợp trực tiếp vào nhánh chính theo chi phí phối hợp, phản hồi và xung đột."
+      - "Giải thích tác động của kích thước thay đổi, tần suất tích hợp và phản hồi sớm lên rủi ro tích hợp muộn."
+      - "Nhận diện nhu cầu chia nhỏ công việc, đánh giá sớm và che giấu tính năng chưa hoàn thiện ở mức chính sách, không đi sâu vào cơ chế triển khai."
+
+  - id: trunk-based-development
+    relatedKnowledge:
+      - "03-trunk-based-development"
+    title: "Làm việc với nhánh chính theo Trunk-Based Development"
+    purpose: "Nắm mô hình tích hợp thường xuyên vào một nhánh chính và điều kiện vận hành giúp nhóm tránh tồn đọng nhánh phát triển."
+    objectives:
+      - "Giải thích vai trò của trunk và nhánh công việc rất ngắn hạn; nhận biết nhóm nhỏ có thể tích hợp trực tiếp còn nhóm khác sử dụng bước đánh giá ngắn."
+      - "Hiểu yêu cầu thay đổi nhỏ, kiểm tra trước khi tích hợp và giữ nhánh chính ở trạng thái đáng tin cậy."
+      - "Nhận diện vai trò hỗ trợ của feature flag, chia nhỏ thay đổi và nhánh phát hành ngắn hạn tùy chu kỳ phát hành, chỉ ở cấp chiến lược."
+
+  - id: github-flow-as-lightweight-strategy
+    relatedKnowledge:
+      - "04-github-flow"
+    title: "Phối hợp bằng GitHub Flow"
+    purpose: "Hiểu mô hình nhánh công việc gọn nhẹ gắn với một nhánh mặc định, vòng phản hồi và hợp nhất rõ ràng."
+    objectives:
+      - "Mô tả vòng đời khái niệm: tách nhánh cho một thay đổi, chia sẻ, xin đánh giá, hoàn thiện và tích hợp trở lại nhánh mặc định."
+      - "Phân tích lợi ích của nhánh có mục đích rõ ràng và phản hồi qua pull request; nhận biết GitHub Flow không tự bảo đảm nhánh sống ngắn hay tích hợp thường xuyên như yêu cầu của Trunk-Based Development."
+      - "Phân biệt chiến lược GitHub Flow với chức năng cấu hình pull request, quyền truy cập và bộ quy tắc bảo vệ của từng nền tảng."
+
+  - id: git-flow-for-versioned-releases
+    relatedKnowledge:
+      - "05-git-flow"
+    title: "Quản lý nhiều dòng phát triển bằng Git Flow"
+    purpose: "Nắm mô hình Git Flow với vai trò nhánh rõ ràng và đánh giá bối cảnh phát hành nào khiến chi phí duy trì nhiều nhánh có thể chấp nhận được."
+    objectives:
+      - "Phân biệt vai trò của nhánh phát triển, nhánh chính thức, nhánh tính năng, nhánh chuẩn bị phát hành và nhánh sửa lỗi khẩn."
+      - "Giải thích cách nhánh phát hành tách giai đoạn ổn định phiên bản sắp công bố khỏi phát triển tiếp; việc bảo trì đồng thời nhiều phiên bản đã phát hành cần thêm quy tắc quản lý nhánh và chuyển bản vá."
+      - "Nhận biết Git Flow phù hợp hơn với lịch phát hành theo đợt; chính tác giả mô hình khuyến nghị quy trình đơn giản hơn cho ứng dụng được phát hành liên tục."
+
+  - id: integration-history-policy
+    relatedKnowledge:
+      - "06-integration-history-policy"
+    title: "Đặt chính sách hợp nhất và lưu vết lịch sử"
+    purpose: "Cân nhắc cách nhóm muốn lịch sử sau tích hợp thể hiện thông tin thay đổi, thay vì chỉ chọn thao tác Git theo thói quen."
+    objectives:
+      - "So sánh chính sách ghi lịch sử lên nhánh đích bằng merge commit, squash merge hoặc rebase-and-merge theo khả năng truy vết, tính tuyến tính và việc giữ hay gộp các commit trung gian."
+      - "Phân biệt kết quả tích hợp trên nhánh đích với việc rebase và sửa commit ở nhánh công việc trước khi hợp nhất; nhận diện rủi ro viết lại lịch sử đã chia sẻ."
+      - "Xác định tiêu chí cho chính sách tích hợp: một thay đổi logic, khả năng hoàn tác, điều tra sự cố và phối hợp đánh giá mã."
+
+  - id: release-and-hotfix-branch-policy
+    relatedKnowledge:
+      - "07-release-hotfix-policy"
+    title: "Phối hợp nhánh phát hành và sửa lỗi khẩn cấp"
+    purpose: "Quyết định khi nào nhóm cần dòng ổn định riêng để hỗ trợ phát hành hoặc vá phiên bản đang sử dụng."
+    objectives:
+      - "Phân biệt phát hành từ nhánh chính với chuẩn bị phát hành trên nhánh riêng theo nhu cầu ổn định và duy trì nhiều phiên bản."
+      - "Thiết lập nguyên tắc cấp chiến lược cho sửa lỗi khẩn, đưa bản sửa trở lại các dòng phát triển cần thiết và tránh bỏ sót bản vá."
+      - "Đánh giá chi phí nhánh phát hành kéo dài, chênh lệch mã nguồn và quy trình phát hành phức tạp mà không mở rộng sang công cụ triển khai hay quản lý phiên bản hiện vật."
+
+  - id: team-integration-governance
+    relatedKnowledge:
+      - "08-team-governance"
+    title: "Thống nhất quy ước và kiểm soát tích hợp ở cấp nhóm"
+    purpose: "Biến lựa chọn chiến lược thành các nguyên tắc hợp tác đủ rõ để mọi thành viên tích hợp thay đổi nhất quán."
+    objectives:
+      - "Xác định quy ước về mục đích, cách đặt tên, vòng đời và thời điểm đóng nhánh, cùng trách nhiệm duy trì nhánh chính."
+      - "Nêu yêu cầu chính sách đối với đánh giá mã, kiểm tra trước hợp nhất, người chịu trách nhiệm và xử lý nhánh bị tồn đọng."
+      - "Phân biệt ý định quản trị ở cấp nhóm với cách thiết lập quyền, branch protection hoặc CI trên một nền tảng cụ thể."
+
+  - id: strategy-selection-and-failure-modes
+    relatedKnowledge:
+      - "09-selection-and-diagnostics"
+    title: "Chọn chiến lược phù hợp và nhận diện cách vận hành sai"
+    purpose: "Biết lựa chọn, kiểm chứng và điều chỉnh chiến lược nhánh theo tình huống thực tế thay vì áp dụng máy móc một mô hình."
+    objectives:
+      - "So sánh Trunk-Based Development, GitHub Flow và Git Flow theo chu kỳ phát hành, nhu cầu hỗ trợ phiên bản, quy mô nhóm và mức độ tự động hóa kiểm tra."
+      - "Chẩn đoán các dấu hiệu như nhánh sống quá lâu, tích hợp dồn cuối kỳ, xung đột lặp lại, lịch sử khó truy vết và bản vá không trở về đủ dòng mã."
+      - "Đề xuất quy tắc thích hợp cho một nhóm mẫu, giải thích đánh đổi và điểm bàn giao sang thao tác Git, nền tảng cộng tác và tự động hóa phân phối."

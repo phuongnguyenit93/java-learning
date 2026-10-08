@@ -14,3 +14,26 @@
 #
 # Add only curated references that are useful for the module.
 # The build system must not overwrite this file after authored content exists.
+
+references:
+  - title: "Trunk Based Development — Introduction"
+    url: "https://trunkbaseddevelopment.com/"
+    description: "Practitioner-maintained explanation of frequent mainline integration, short-lived branches, and release-branch options; presents a pro-trunk perspective."
+  - title: "Trunk Based Development — Short-Lived Feature Branches"
+    url: "https://trunkbaseddevelopment.com/short-lived-feature-branches/"
+    description: "Guidance on keeping branches brief and changes ready to integrate, including trade-offs around review and branch lifespan."
+  - title: "GitHub Docs — GitHub Flow"
+    url: "https://docs.github.com/en/get-started/using-github/github-flow"
+    description: "GitHub-maintained description of its branch and pull-request review workflow; compare its collaboration steps with the stricter integration cadence of Trunk-Based Development."
+  - title: "A Successful Git Branching Model — Vincent Driessen"
+    url: "https://nvie.com/posts/a-successful-git-branching-model/"
+    description: "Original Git Flow proposal and the author's 2020 reflection on when versioned or multi-release products may still benefit from it."
+  - title: "Atlassian Git Tutorials — Gitflow Workflow"
+    url: "https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow"
+    description: "Vendor tutorial mapping Git Flow branch roles, release/hotfix integration, and drawbacks for continuous delivery."
+  - title: "Atlassian Git Tutorials — Git Workflow Comparison"
+    url: "https://www.atlassian.com/git/tutorials/comparing-workflows"
+    description: "Compares workflow families and emphasizes matching a branching model to team and release needs."
+  - title: "GitHub Docs — Pull Request Merges"
+    url: "https://docs.github.com/en/pull-requests/reference/pull-request-merges"
+    description: "Vendor-documented target-branch outcomes of merge commits, squash merges, and rebase merges; supports history-policy trade-offs without replacing Git mechanics."

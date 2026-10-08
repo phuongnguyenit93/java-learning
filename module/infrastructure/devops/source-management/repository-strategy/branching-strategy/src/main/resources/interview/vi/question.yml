@@ -1,0 +1,560 @@
+# <interview-schema>
+# Cấu trúc câu hỏi Interview
+# schema-version: 2
+#
+# questions [kiểu: list; bắt buộc; mặc định: []]
+#   Danh sách câu hỏi Interview của module trong language hiện tại.
+#   mỗi phần tử:
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi phỏng vấn hiển thị cho người học.
+#     answer [kiểu: string; bắt buộc; mặc định: ""]
+#       Câu trả lời tham khảo, chỉ hiển thị khi người học chủ động mở.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu nội dung được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu nội dung đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+# </interview-schema>
+
+questions:
+  - question: "Nhóm sử dụng branch Git thoải mái nhưng cứ tích hợp là bất ngờ. Bạn sẽ định nghĩa chiến lược nhánh vượt khỏi các lệnh Git ra sao?"
+    answer: "Git cung cấp ref, merge và lịch sử nhưng không tự quyết thời hạn review, tuổi branch hay trách nhiệm phát hành. Chiến lược nhánh xác định khi nào công việc hội tụ vào mainline, ai đánh giá, kiểm tra nào phải đạt và ai khôi phục sau lỗi. Trước hết đo sự chậm trễ và khoảng trống owner rồi thống nhất workflow có bằng chứng. Chỉ bắt mở PR hoặc quy ước tên nhánh không tự giải quyết tích hợp muộn."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-strategy-foundations.md"
+      anchor: "why-branching-strategy"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Vì sao chạy git merge thành công chưa đủ để được phép đưa mã vào mainline của nhóm?"
+    answer: "Git merge chỉ tạo biến đổi lịch sử về mặt kỹ thuật, không phải quyết định nhóm. Mã merge sạch vẫn có thể phá contract thanh toán hoặc thiếu review nghiệp vụ. Chính sách tiếp nhận phải xác định chuyên môn reviewer, test, quyền và người chịu trách nhiệm merge. Branch protection trên host có thể thực thi một phần checks nhưng quy ước viết ra không tự được Git chặn. Cần truy cả Git ghi gì và nhóm dựa vào đâu để nhận mã."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-strategy-foundations.md"
+      anchor: "git-mechanics-vs-team-policy"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Hai nhánh phân kỳ ba tuần và sửa cùng config. Bạn định lượng rủi ro trước khi chọn cách tích hợp thế nào?"
+    answer: "Xem merge-base, số và loại file đã sửa, hunk chồng lấn và giả định contract. Tuổi branch và thời gian từ lần tích hợp cuối phản ánh phản hồi bị chậm; đếm commit đơn thuần kém ý nghĩa vì mỗi commit có phạm vi khác nhau. Có thể thử merge/test trong môi trường an toàn thay vì nghĩ cứ sửa chung file là xung đột. Giao owner cho hành vi đang tranh luận và tách những thay đổi độc lập khi được."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-strategy-foundations.md"
+      anchor: "parallel-work-integration-risk"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Giải thích vai trò mainline, work và release branch có thể cùng tồn tại mà không thành quy tắc bắt buộc cho mọi nhóm."
+    answer: "Mainline là mốc tích hợp đã thống nhất, work branch cô lập thay đổi chờ nhận, còn release branch chỉ khi cần để ổn định hoặc bảo trì phiên bản. Đây là vai trò do nhóm đặt, không phải loại object đặc biệt của Git. Đội continuous delivery có thể phát hành thẳng từ trunk đã test mà không cần develop hay release branch cố định. Sản phẩm versioned hỗ trợ lâu có thể cần nhánh và owner backport riêng. Chọn theo yêu cầu phân phối, không chép sơ đồ tên nhánh."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-strategy-foundations.md"
+      anchor: "mainline-work-release-vocabulary"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "PR đã merge vào main nhưng job release chưa chạy. Nhóm có thể khẳng định gì và điều gì chưa biết?"
+    answer: "Nhánh đích đã chứa nguồn tích hợp được chấp nhận nếu kiểm kết quả merge thật. Điều đó không chứng minh artifact đã build, test release đã qua, có tag phiên bản hay production đã cập nhật. Tách chuỗi bằng chứng thành SHA nguồn được nhận, đầu vào/đầu ra build, duyệt release và môi trường deploy. Chiến lược nhánh có thể đặt tên gate và owner, còn CI/CD cùng hệ phân phối mới cung cấp bằng chứng vận hành."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-strategy-foundations.md"
+      anchor: "integrated-vs-releasable"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Chính sách nhánh nên phối hợp với Git, quyền trên host và CI thế nào mà không lặp trách nhiệm của từng lớp?"
+    answer: "Strategy xác định ý định: nhịp tích hợp, owner nhánh, điều kiện tiếp nhận và cam kết phục hồi. Git ghi commit, quan hệ cha và kết quả merge; host quản PR, reviewer và quyền merge; CI trả kết quả checks. Hệ phân phối mới chứng minh release/deploy. Nếu nhóm ghi 'phải có hai Approve' mà chưa bật rule trên host thì chỉ tồn tại quy ước xã hội, chưa có chặn kỹ thuật. Phải kiểm cả quy tắc đã hứa lẫn gate thực tế."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-strategy-foundations.md"
+      anchor: "strategy-decisions-and-handoffs"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Vì sao feature branch tồn tại hai tuần cần cách đánh giá khác một release branch được hỗ trợ cũng hai tuần?"
+    answer: "Feature branch giữ thay đổi ngoài dòng chung khiến lịch sử phân kỳ và phản hồi chậm. Release branch có thể cố ý giữ phiên bản đã giao trong lúc main tiếp tục, tuổi của nó phụ thuộc cam kết hỗ trợ và backport được kiểm chứng. Cần xem mục đích, lần tích hợp gần nhất, owner và chính sách hết hạn trước khi kết luận nhánh xấu. Rủi ro không chỉ là số ngày mà còn là thay đổi không kiểm soát và thiếu dấu vết đồng bộ."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02-branch-lifetime-and-cadence.md"
+      anchor: "short-vs-long-lived-branches"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Điều gì cải thiện khi sửa checkout lớn được chia thành ba phần review độc lập thay vì một PR quá cỡ?"
+    answer: "Các phần nhỏ tương thích rút ngắn khoảng cách từ viết mã đến phản hồi, dễ tìm giả định sai và giới hạn phạm vi revert. Tuy nhiên từng bước phải giữ tương thích API/dữ liệu; chia tùy tiện ba commit nguy hiểm không tự tốt hơn. Mỗi bước vẫn cần test và owner review phù hợp. Cần đo độ trễ review và lỗi tích hợp chứ không chỉ tăng số PR rồi coi là tiến bộ."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02-branch-lifetime-and-cadence.md"
+      anchor: "cadence-change-size-feedback"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Vì sao nhánh ba commit có thể rủi ro hơn nhánh mười chín commit, và bằng chứng nào quyết định?"
+    answer: "Số commit không phản ánh trực tiếp phạm vi ảnh hưởng. Ba commit sửa schema database hay contract nhiều dịch vụ có thể khó tích hợp hơn mười chín commit tài liệu độc lập. Kiểm tuổi merge-base, diff chồng lấn, thứ tự deploy, tương thích consumer và thời gian chưa tích hợp. Thử contract test trên branch tips hiện tại trước khi đánh giá. Conflict lặp lại còn gợi vấn đề owner và nhịp tích hợp, không chỉ style code."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02-branch-lifetime-and-cadence.md"
+      anchor: "divergence-and-conflict-evidence"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Bạn sẽ chia một user story lớn thành thay đổi có thể merge riêng an toàn thế nào mà không đưa hành vi hỏng vào nguồn chung?"
+    answer: "Dùng chuỗi expand-and-contract: thêm interface/schema tương thích ngược trước, chuyển consumer qua đường an toàn rồi mới xóa hành vi cũ khi đã migration. Mỗi phần cần build được, qua contract tests và không phá hành vi production hiện tại. Feature flag tắt có thể tách tích hợp khỏi mở chức năng. Reviewer sẽ xét thay đổi tập trung thay vì một mega-PR cuối kỳ, nhưng story tổng vẫn phải được theo dõi như mục tiêu chung."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02-branch-lifetime-and-cadence.md"
+      anchor: "review-small-increments"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Một feature cần một tháng nhưng nhóm phải tích hợp mỗi ngày. Feature flag giúp thế nào và còn rủi ro gì?"
+    answer: "Flag tắt cho phép đưa các phần triển khai nhỏ vào trunk trong khi người dùng thường chưa vào đường mới. Test cả off/on, giá trị mặc định và ranh giới migration; đừng nghĩ flag tự làm schema hoặc API không tương thích trở nên an toàn. Giao owner, tiêu chí bật dần, giám sát và ngày xóa flag để tránh giữ mã phân nhánh vĩnh viễn. Như vậy việc tích hợp và việc mở chức năng là hai quyết định có kiểm soát riêng."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02-branch-lifetime-and-cadence.md"
+      anchor: "incomplete-work-policy"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Quan sát vận hành nào chứng minh nhóm theo Trunk-Based Development thay vì chỉ đặt tên nhánh main?"
+    answer: "Tìm bằng chứng thay đổi nhỏ được kiểm chứng và hội tụ thường xuyên vào một trunk chung, work branch ngắn nếu dùng, review nhanh và xử lý ngay khi mainline đỏ. Nhóm đợi nhiều tuần rồi mới merge lô feature vào nhánh tên main không thực hiện nhịp phản hồi mong muốn. Commit trực tiếp hoặc PR ngắn đều có thể phù hợp nếu gate và owner thật. Đo tuổi nhánh, thời gian tích hợp và sức khỏe build."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03-trunk-based-development.md"
+      anchor: "tbd-definition-purpose"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Sau merge, trunk CI đỏ. Cam kết phục hồi nào giúp một lỗi không làm cả nhóm tắc nghẽn?"
+    answer: "Giao owner mainline hoặc trực xử lý nhận lỗi sớm, tìm revision nghi vấn rồi chọn revert hay fix nhỏ được kiểm chứng. Giữ trunk là điểm tích hợp chung thay vì âm thầm lập develop thứ hai. Phải đưa checks về xanh và xác nhận hành vi trước khi báo phục hồi, sau đó bổ sung test ngăn tái phát. Mục tiêu là giảm thời gian từ đỏ sang xanh và rõ người chịu trách nhiệm, không dựa hoàn toàn vào PR check cũ."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03-trunk-based-development.md"
+      anchor: "single-trunk-reliable-mainline"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Khi nào commit trực tiếp và nhánh PR ngắn cùng có thể tuân thủ chính sách trunk-based?"
+    answer: "Bất biến quan trọng là thay đổi được kiểm chứng và hội tụ nhanh về trunk chung, không phải bắt buộc một quy trình giao diện. Nhóm có thể dùng commit trực tiếp có kiểm soát và CI ngay; nhóm khác dùng nhánh PR chỉ tồn tại đến khi được review/merge sớm. Cả hai vẫn cần trunk đáng tin và owner khôi phục. Hàng PR đã Approve nhưng đợi cả tuần mới merge làm mất mục tiêu hội tụ dù cuối cùng đều được duyệt."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03-trunk-based-development.md"
+      anchor: "direct-vs-short-branch"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Feature hoàn tiền còn dang dở nhiều tuần. Nhóm có thể đưa từng phần lên trunk mà không mở hành vi thiếu tương thích ra sao?"
+    answer: "Bắt đầu bằng thay đổi dữ liệu/API tương thích, thêm consumer chấp nhận contract cũ và mới rồi test từng trạng thái trung gian. Che hành vi người dùng bằng flag mặc định tắt hoặc branch-by-abstraction khi phù hợp. Di chuyển người dùng từng phần, quan sát kết quả rồi mới xóa đường cũ. Trunk phải build và vận hành được sau mỗi lần merge; chia feature chỉ có giá trị nếu mỗi lát cắt an toàn."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03-trunk-based-development.md"
+      anchor: "frequent-integration-small-changes"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Nhóm trunk-based nên vá release đang hỗ trợ thế nào khi trunk đã tiến, và vì sao hướng lan truyền bản vá quan trọng?"
+    answer: "Tái hiện và sửa lỗi trên trunk cùng test trước, xác nhận qua CI của trunk, rồi cherry-pick có chọn lọc commit cần thiết sang release đang bảo trì và test riêng dòng đó. Hướng này giảm nguy cơ chỉ sửa production rồi quên đem về trunk khiến lỗi quay lại. Nếu không thể tái hiện trên trunk có thể cần xử lý ngoại lệ theo chiều ngược nhưng phải ghi rủi ro. Không merge mọi feature trunk mới vào nhánh ổn định."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03-trunk-based-development.md"
+      anchor: "feature-flags-release-branches"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Bằng chứng nào cho thấy nhóm tự nhận trunk-based nhưng thực chất tích hợp feature chậm?"
+    answer: "Xem thời gian tạo/merge branch, tuổi nhánh điển hình, khoảng merge-base, kích cỡ PR và số ngày thay đổi ở ngoài trunk. Trunk-based khỏe hội tụ nhanh kể cả khi dùng branch để review. Nhiều feature branch tồn tại qua vài sprint cho thấy phân kỳ tăng và phản hồi bị trì hoãn; release branch ngắn phục vụ phiên bản đang hỗ trợ là vai trò khác. Nên xem cùng sức khỏe mainline và thời gian xử lý regression."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03-trunk-based-development.md"
+      anchor: "tbd-evidence-antipatterns"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Trình bày một thay đổi theo GitHub Flow và phân biệt bước thuộc Git với cộng tác trên host."
+    answer: "Bắt đầu từ default branch, tạo work branch tập trung, commit và push thay đổi rồi mở PR để trình bày diff và mời review. Xử lý bình luận cùng checks cần đạt trước khi merge có quyền rồi xác nhận trạng thái nhánh đích. Git ghi cơ chế branch/commit; GitHub lưu hội thoại PR và bằng chứng chính sách. Deploy từ revision đã nhận là workflow riêng nhóm phải quy định và kiểm chứng, không tự xảy ra khi mở PR."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04-github-flow.md"
+      anchor: "github-flow-purpose"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Feature branch đã push và PR đã mở. Điều gì tách biệt công bố, review và chấp nhận?"
+    answer: "Công bố nghĩa là branch/commit đã có trên host dùng chung. PR tạo chỗ so diff và thu thập bằng chứng hoặc phản đối, nhưng mời reviewer hay check xanh không tự đổi ref đích. Tiếp nhận cần merge có quyền rồi kiểm lịch sử nhánh đích theo chính sách nhóm. Triển khai còn là ranh giới khác. Hãy báo trạng thái bằng hồ sơ riêng cho source đã push, quyết định reviewer, kết quả merge và artifact đã deploy."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04-github-flow.md"
+      anchor: "default-branch-pr-cycle"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Vì sao Draft PR từ sớm có thể nâng chất lượng dù code chưa đủ điều kiện merge?"
+    answer: "Draft PR công khai thiết kế từng phần, giả định interface và câu hỏi cụ thể đồng thời báo tác giả chưa xin tiếp nhận. Reviewer có thể phát hiện sai nghiệp vụ hoặc rủi ro migration trước khi branch quá lớn. Tác giả vẫn phải có test và bằng chứng mới trước khi chuyển Ready; Draft không tự bỏ qua CI hay làm mã bất tương thích an toàn. Cần giữ phạm vi PR rõ, trả lời feedback và review diff cuối hiện hành."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04-github-flow.md"
+      anchor: "github-flow-review-value"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Hai nhóm đều dùng branch–PR–merge nhưng chỉ một nhóm tích hợp hằng ngày. So sánh GitHub Flow và Trunk-Based Development thế nào?"
+    answer: "GitHub Flow là mẫu cộng tác gọn quanh default branch, PR và merge. Trunk-Based Development thêm yêu cầu mạnh về độ trễ tích hợp và mức phân kỳ: phần lớn thay đổi phải nhanh hội tụ vào trunk chung. Quy trình PR có thể hỗ trợ TBD nếu nhánh rất ngắn và CI giữ trunk khỏe, nhưng hàng nhánh tồn tại ba tuần không đạt mục tiêu đó dù đều mở PR. Cần so tuổi branch, thời gian chờ review và nhịp merge thực tế."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04-github-flow.md"
+      anchor: "github-flow-vs-tbd"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Nhóm muốn review mã trong một ngày. Phần nào là thỏa thuận nhóm và phần nào host có thể thực thi?"
+    answer: "Thời hạn phản hồi, cách báo động quá hạn và owner review là thỏa thuận con người và vận hành. Host có thể chặn theo số Approve, CODEOWNERS hay checks được hỗ trợ, nhưng PR tồn tại không khiến reviewer tự phản hồi đúng trong ngày. Cần theo dõi PR chờ review và có người thay thế. Tách SLA viết ra khỏi merge block đã cấu hình và kiểm cả hai khi audit."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04-github-flow.md"
+      anchor: "workflow-vs-github-platform"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Khi nào Git Flow cổ điển có giá trị thực so với cách dùng một mainline gọn hơn?"
+    answer: "Mô hình gốc hợp với sản phẩm chuẩn bị các bản phát hành có số phiên bản trong lúc phát triển tiếp và đôi khi cần vá gấp dòng production. Nó đặt vai trò production/develop lâu dài và lộ trình feature, release, hotfix. Đổi lại có nhiều công đồng bộ và có thể tăng lead time của dịch vụ web deploy liên tục. Chính tác giả về sau khuyên mô hình đơn giản cho continuous delivery. Chọn theo nghĩa vụ phát hành/hỗ trợ và bằng chứng chứ không theo trào lưu."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05-git-flow.md"
+      anchor: "git-flow-context"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Vì sao main/master và develop mang bảo đảm khác nhau trong Git Flow cổ điển, và sai lầm nào xảy ra khi coi chúng như nhau?"
+    answer: "Trong mô hình gốc, master/main lưu lịch sử phiên bản production đã chọn và thường có release tags. Develop tích hợp công việc được nhận cho phiên bản sắp tới, chưa chắc đạt mức ổn định phát hành. Đưa feature chưa xong thẳng vào lịch sử production phá ranh giới release; không nhập lại các fix ở nhánh ổn định về develop khiến lỗi trở lại. Cần ghi rõ đích của feature, release, hotfix và kiểm các chuyển tiếp."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05-git-flow.md"
+      anchor: "main-develop-roles"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Giải thích nguồn và đích thông thường của feature, release, hotfix theo Git Flow, kể cả ngoại lệ khi release branch đang mở."
+    answer: "Feature branch tách từ develop và nhập lại develop. Release branch bắt đầu từ develop, chủ yếu sửa ổn định rồi về production main và đưa các fix trở lại develop. Hotfix thường tách từ dòng production rồi cập nhật main cùng dòng phát triển tiếp. Trong mô hình gốc, nếu release branch đang mở, hotfix có thể được nhập vào nhánh release đó thay vì lập tức vào develop; phải ghi rõ đích thật để không làm thất lạc bản vá."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05-git-flow.md"
+      anchor: "feature-release-hotfix-roles"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Release branch Git Flow đã tách trong lúc develop tiếp tục. Bạn quản lý giai đoạn ổn định mà không lẫn feature tương lai thế nào?"
+    answer: "Tách từ revision develop đã có các tính năng dự kiến, rồi giới hạn release branch cho fix cuối, metadata và kiểm thử. Feature mới vẫn tiếp tục ở develop mà không tràn vào bản sắp phát hành. Với từng fix ổn định, ghi test và nhập lại develop khi hoàn tất release, nếu không lỗi có thể quay lại ở bản sau. Xác nhận merge/tag production và việc kết thúc nhánh riêng; đặt tên release không tự tạo bằng chứng chất lượng."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05-git-flow.md"
+      anchor: "release-stabilization-handoffs"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Vì sao sơ đồ Git Flow cơ bản không quy định đầy đủ việc bảo trì ba phiên bản sản phẩm cũ đang hỗ trợ?"
+    answer: "Sơ đồ cơ bản điều phối production, develop và một tiến trình phát hành, không tự quyết ngày hết hỗ trợ hay vá tất cả bản cũ. Ba phiên bản khách hàng có thể cần maintenance line riêng với API/phụ thuộc khác nhau. Lập ma trận version, lỗi bị ảnh hưởng, branch/tag, trạng thái vá, test, owner và ngày ngừng hỗ trợ. Hotfix trên main hiện tại không chứng minh binary cũ đã an toàn. Backport chọn lọc và kiểm từng dòng còn hỗ trợ."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05-git-flow.md"
+      anchor: "multiple-maintained-versions-caveat"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Tác giả Git Flow nêu đánh đổi gì với các nhóm triển khai liên tục tốc độ cao?"
+    answer: "Các bước develop–release–production giúp điều phối bản phát hành theo giai đoạn nhưng tạo thêm đường đồng bộ, độ trễ tích hợp và nguy cơ bỏ sót fix. Dịch vụ web deploy main đã test nhiều lần/ngày có thể chịu thêm thủ tục mà không có lợi ích hỗ trợ phiên bản. Vincent Driessen đã viết năm 2020 rằng cách gọn như GitHub Flow phù hợp hơn với continuous delivery. Nên đo số bản đang hỗ trợ, lead time và việc lan truyền hotfix trước khi chọn độ phức tạp."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05-git-flow.md"
+      anchor: "git-flow-costs-continuous-delivery"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Nhóm nên quyết định dạng lịch sử đích thế nào khi tích hợp PR nhiều commit?"
+    answer: "Chính sách lịch sử cân bằng điều người điều tra cần thấy: ranh giới commit gốc, khả năng revert theo cả PR, đồ thị tuyến tính và mức hữu ích của bisect. Merge commit giữ tổ tiên nhánh, squash tạo một thay đổi logic, còn rebase-and-merge phát lại các patch theo tuyến với SHA mới. Mỗi kiểu thay dấu vết và phạm vi rollback. Hãy thử các đồ thị mẫu theo sự cố thường gặp; không kiểu nào thay thế test hoặc review."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06-integration-history-policy.md"
+      anchor: "target-history-policy-purpose"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Merge commit non-fast-forward giữ điều gì và vì sao lịch sử phong phú hơn có thể vừa giúp vừa gây khó điều tra?"
+    answer: "Merge commit non-fast-forward thường có hai parent, giữ quan hệ giữa tip cũ của đích và lịch sử nhánh được nhập. Các commit feature vẫn truy được, hữu ích khi điều tra từng bước hoặc bisect. Đồ thị phức tạp hơn và revert nguyên merge phải hiểu parent chính; làm bừa dễ sai. Cần kiểm tree sau merge và chạy test vì giữ tổ tiên không tự bảo đảm đúng nghiệp vụ."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06-integration-history-policy.md"
+      anchor: "merge-commit-result"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Khi nào nên squash PR gồm WIP, sửa test và rename, và điều gì mất ở nhánh đích?"
+    answer: "Squash đưa toàn bộ thay đổi logic thành một commit đích mô tả rõ, dễ revert cả đơn vị và giảm nhiễu WIP. Đổi lại các commit trung gian không còn là từng commit riêng trong tổ tiên nhánh đích, giảm chi tiết bisect theo bước. PR nguồn có thể vẫn lưu thảo luận nhưng không nên coi đó luôn thay cho lịch sử đích dài hạn. Cần message rõ mục tiêu và test snapshot tổng hợp."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06-integration-history-policy.md"
+      anchor: "squash-merge-result"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Vì sao rebase-and-merge có thể phù hợp với lịch sử đích tuyến tính, và nó ảnh hưởng danh tính commit thế nào?"
+    answer: "Host có thể phát lại từng patch nguồn lên tip đích hiện tại để có chuỗi tuyến tính thay vì nút merge hai parent. Việc phát lại thường tạo SHA đích mới do parent hoặc metadata khác dù nội dung file tương tự. Cách này giữ các bước patch tốt hơn squash nhưng không giữ danh tính tổ tiên gốc. Cần truyền đạt ánh xạ revision nguồn/đích và chỉ chọn khi nhóm muốn đánh đổi này."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06-integration-history-policy.md"
+      anchor: "rebase-and-merge-result"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Rebase-and-merge của host tại nhánh đích khác gì với rebase local nhánh feature đã chia sẻ?"
+    answer: "Rebase-and-merge trên host có thể tạo commit phát lại trên nhánh đích trong khi ref nguồn của contributor vẫn giữ. Git rebase local chuyển nhánh feature sang commit thay thế; force-push sau khi đồng nghiệp đã fetch lịch sử cũ tạo rủi ro phối hợp. Hai thao tác không giống nhau chỉ vì cùng chữ rebase. Hãy kiểm ref nào đổi, SHA nào được thay và đồng nghiệp có cần hòa giải lịch sử không."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06-integration-history-policy.md"
+      anchor: "server-integration-vs-local-rebase"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "An rebase feature branch đã công bố mà Bình từng fetch. Giải thích rủi ro và quy trình phối hợp an toàn hơn."
+    answer: "Rebase thường tạo commit thay thế với parent và SHA mới. Bình có thể tiếp tục trên H cũ trong khi remote đã chỉ H mới; pull hay force-push không kiểm có thể lặp patch hoặc mất sửa đổi. Phải báo người liên quan, xem hai đồ thị rồi chủ động hòa giải commit trước khi cập nhật ref remote. Nên tránh viết lại nhánh đã chia sẻ, nếu ngoại lệ thì có quy trình thống nhất, ref cứu hộ và kiểm soát force-with-lease."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06-integration-history-policy.md"
+      anchor: "history-rewrite-risk"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Nhóm muốn revert nguyên PR dễ mà vẫn bisect từng bước. Bạn phân tích đánh đổi chính sách lịch sử thế nào?"
+    answer: "Squash tạo một commit đích cho cả PR nhưng làm mất ranh giới bước trung gian trong target bisect. Merge commit giữ các commit feature và điểm nhóm chung nhưng cần cẩn trọng khi revert merge và đọc parent. Rebase-and-merge có chuỗi patch tuyến tính với SHA mới. Hãy mô phỏng sự cố thật cho từng kiểu rồi ghi ưu tiên: đơn vị rollback, truy lịch sử, dấu vết review hay đồ thị dễ đọc."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06-integration-history-policy.md"
+      anchor: "traceability-revert-diagnostics"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Khi nào hợp lý phát hành trực tiếp từ main đã kiểm tra, và khi nào nên tách nhánh ổn định?"
+    answer: "Dịch vụ deploy thường xuyên có checks mainline đáng tin có thể chọn commit main đã kiểm chứng rồi phát hành tiến nhanh, không cần release branch. Phần mềm đóng gói cần cửa sổ ổn định hoặc phải hỗ trợ bản cũ có thể tách từ revision tốt đã chọn trong lúc trunk phát triển tiếp. Giới hạn nhánh đó cho fix cần thiết và test riêng. Quyết định thời điểm tách/đóng từ nghĩa vụ hỗ trợ; tên nhánh hoặc tag không tự chứng nhận release."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "07-release-hotfix-policy.md"
+      anchor: "release-from-main-vs-branch"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Nhóm nên thiết kế lúc tạo, loại thay đổi được nhận và lúc đóng nhánh release/2.0 thế nào khi main vẫn tiến?"
+    answer: "Tách release/2.0 gần lúc cần ổn định từ revision mainline đã xác nhận tốt; không nhất thiết lấy HEAD mới nhất nếu chứa thay đổi chưa phù hợp. Chỉ nhận fix được phép, metadata phiên bản và cập nhật kiểm thử, không dồn feature chưa xong. Cần test riêng dòng release và ghi các bản backport chọn lọc từ trunk. Giữ nhánh khi còn nghĩa vụ hỗ trợ/vá, rồi đóng bằng quyết định owner và tag truy vết được thay vì mặc định duy trì vĩnh viễn."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "07-release-hotfix-policy.md"
+      anchor: "release-branch-lifecycle"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "So sánh đường đi hotfix production theo Git Flow cổ điển với chính sách trunk-first có release branch. Ngoại lệ nào cần biết?"
+    answer: "Git Flow cổ điển thường tách hotfix từ production, đưa vào main production rồi đồng bộ sang dòng phát triển tiếp. Mô hình gốc còn xem release branch đang mở là đích có thể nhận hotfix thay vì nhập ngay develop. Trong trunk-first, tái hiện/sửa trên trunk, kiểm CI rồi cherry-pick sang các release còn hỗ trợ và test từng dòng. Nếu lỗi chỉ có ở nhánh cũ, phải ghi quy trình ngoại lệ và bảo đảm trunk không bỏ sót bản vá."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "07-release-hotfix-policy.md"
+      anchor: "hotfix-targets-and-propagation"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Bằng chứng nào chứng minh bản vá bảo mật đã đến mọi release đang hỗ trợ thay vì chỉ main?"
+    answer: "Giữ ma trận phiên bản bị ảnh hưởng, branch/tag bảo trì, commit vá, kết quả kiểm thử và owner phát hành. Có fix trên main không tự sửa binary 1.9 hay 2.0 đã phát hành. Cần backport chọn lọc theo khác biệt phụ thuộc/API và có thể SHA khác, rồi test và công bố bản vá cho từng dòng còn hỗ trợ. Chỉ báo hoàn thành khi mọi version bị ảnh hưởng đã có bằng chứng khắc phục hoặc quyết định ngừng hỗ trợ minh bạch."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "07-release-hotfix-policy.md"
+      anchor: "backport-forwardport-policy"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Vì sao duy trì bốn nhánh phiên bản vẫn tốn kém dù tạo branch Git rất rẻ?"
+    answer: "Ref branch tạo rất rẻ nhưng mỗi phiên bản được hỗ trợ kéo theo việc kiểm lỗ hổng, vá tương thích, regression test, tái lập build và thông báo release. API/phụ thuộc phân kỳ khiến cherry-pick có thể conflict hoặc áp được nhưng sai hành vi. Giao owner vá, hạn hỗ trợ và ma trận bằng chứng để không bỏ quên khách hàng dùng bản cũ. Chi phí chính nằm ở đồng bộ và xác minh, không phải dung lượng con trỏ branch."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "07-release-hotfix-policy.md"
+      anchor: "release-branch-divergence-cost"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Quy ước tên branch nên truyền đạt điều gì và phần nào vẫn là quyết định chính sách nhóm?"
+    answer: "Tên như feature/checkout hay release/2.0 có thể báo mục đích và đích dự kiến, giúp reviewer và automation phân luồng. Nhưng Git không biết feature branch phải tồn tại một ngày hay release branch cần hỗ trợ sáu tháng. Gắn tên với tài liệu owner, nhịp review và quy tắc dọn nhánh thay vì nghĩ prefix chứng minh tuân thủ. Phải kiểm các lần merge và quyền thật riêng; tên gọi không thay thế quản trị."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "08-team-governance.md"
+      anchor: "branch-purpose-naming"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Work branch không cập nhật 24 ngày. Bạn quyết định tiếp tục, tách hay đóng nó an toàn thế nào?"
+    answer: "Tìm owner, yêu cầu liên quan và trạng thái hiện tại rồi so nhánh với trunk để biết độ phân kỳ và phần việc chưa merge có giá trị. Release branch còn hỗ trợ có thể cần sống lâu; feature branch bỏ dở phải được quyết định. Nếu phạm vi lớn, tách các phần tương thích thành PR nhỏ; nếu không còn cần, giữ bằng chứng rồi mới xóa ref sau khi xác nhận không mất việc. Xóa tự động chỉ theo tuổi có thể làm mất mã hoặc vi phạm hỗ trợ."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "08-team-governance.md"
+      anchor: "branch-lifetime-cleanup"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Bạn sẽ thiết kế thỏa thuận phản hồi review cho PR hóa đơn quan trọng thế nào?"
+    answer: "Xác định reviewer hiểu làm tròn tiền, kịch bản phải kiểm, người dự phòng, hạn phản hồi lần đầu và lúc nào commit mới cần review lại. Chỉ đặt số Approve mà không định phạm vi nghiệp vụ dễ dẫn đến duyệt hời hợt. Đo tuổi PR đang chờ và hiệu quả escalations, đồng thời cấu hình checks được host hỗ trợ cho approvals. Host không chắc chặn được sự chậm trễ của con người nên vận hành vẫn cần owner và giám sát."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "08-team-governance.md"
+      anchor: "review-expectations"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Dashboard PR báo gate xanh. Vì sao chính sách nhánh phải nêu chính xác checks và ngoại lệ thay vì tin màu xanh?"
+    answer: "Màu xanh chỉ cho biết check được đặt tên đã đạt trên revision nào đó; nó có thể thiếu contract test, Approve, security check hoặc kiểm sau merge. Phải xác định gate, commit áp dụng, reviewer cần thiết, ngoại lệ được phép và ai có quyền override. Các host/gói có thể enforce khác nhau so với tài liệu nhóm. Audit cấu hình và PR mẫu để đường tiếp nhận thật khớp cam kết, đặc biệt khi có thay đổi khẩn."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "08-team-governance.md"
+      anchor: "premerge-gates-policy"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Khi CI sau merge làm main đỏ dù PR trước xanh, governance cần phân trách nhiệm và bằng chứng gì?"
+    answer: "Giao owner mainline chịu trách nhiệm triage sớm, tìm commit nghi vấn và chọn revert đã test hoặc fix tiến. PR xanh có thể chưa kiểm tương tác với merge khác hay tree thật sau tích hợp. Cần đưa CI trunk về xanh, chạy regression test liên quan và lưu revision lỗi cùng revision đã phục hồi. Đừng chuyển công việc sang nhánh tích hợp bóng không quản trị; phục hồi nhanh giữ vòng phản hồi của cả đội."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "08-team-governance.md"
+      anchor: "mainline-health-ownership"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Khác nhau thế nào giữa tài liệu yêu cầu hai Approve và rule của host thực sự chặn merge thiếu phiếu?"
+    answer: "Quy ước viết ra thể hiện hành vi mong đợi nhưng refs và commit Git không tự xét phiếu duyệt của người. Host phải hỗ trợ và được cấu hình để enforce rule đúng trên nhánh đích, kể cả kiểm quyền bypass. Một số gói chỉ cảnh báo vài checks. Cần thử PR bằng actor có quyền, kiểm phạm vi rule và báo khoảng cách; suy rằng văn bản tự chặn kỹ thuật sẽ tạo cảm giác an toàn giả."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "08-team-governance.md"
+      anchor: "vendor-enforcement-boundary"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Bạn so sánh TBD, GitHub Flow và Git Flow cổ điển với nhóm thế nào mà không chỉ vẽ tên nhánh?"
+    answer: "TBD ưu tiên đưa thay đổi nhỏ đã test hội tụ nhanh vào trunk và giữ mainline khỏe. GitHub Flow là chu kỳ cộng tác default branch/PR gọn, không tự đặt giới hạn tuổi nhánh; nó có thể hỗ trợ TBD khi review nhanh. Git Flow cổ điển điều phối vai trò production, develop, release và hotfix cho các bản phát hành theo phiên bản. Nên xét nhịp tích hợp, cam kết hỗ trợ, thời gian chờ review và chi phí đồng bộ thay vì đếm tên nhánh."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "09-selection-and-diagnostics.md"
+      anchor: "compare-three-models"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Ứng dụng web deploy hằng ngày và sản phẩm desktop ra bản theo quý cần chính sách nhánh khác nhau. Bạn giải thích lựa chọn thế nào?"
+    answer: "Với web, tích hợp mainline nhanh cùng CI tốt và kiểm soát mở tính năng thường giảm lead time và conflict muộn. Desktop có thể cần ổn định release và maintenance lines cho khách hàng còn chạy bản cũ, nên chính sách phát hành rõ hơn có lý do. Không lựa chọn nào tự suy từ host hay lệnh Git. Ghi nhịp phân phối, khả năng rollback, số bản còn hỗ trợ và bằng chứng test, rồi đánh giá lại khi ràng buộc đổi."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "09-selection-and-diagnostics.md"
+      anchor: "selection-context"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Năm PR mở qua hai sprint còn main tiếp tục tiến. Chỉ số nào phân biệt review hợp lý với phân kỳ nguy hiểm?"
+    answer: "Đo tuổi branch, lần cập nhật từ trunk, khoảng merge-base, phần file sửa chồng lấn, diff chưa review và thời gian chờ phản hồi. Số PR đang mở có thể tăng vì công việc minh bạch hơn nhưng không chứng minh tích hợp nhanh. Chỉ ra contract rủi ro cao rồi nhờ owner tách thay đổi an toàn hoặc đóng đề xuất hết giá trị. Theo dõi merge muộn và lỗi mainline sau đổi chính sách thay vì chỉ mừng khi tổng PR nhỏ."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "09-selection-and-diagnostics.md"
+      anchor: "long-branch-delayed-integration"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Conflict lặp lại ở cùng file config và message commit mơ hồ báo vấn đề quy trình nào, và bạn sẽ điều tra thế nào?"
+    answer: "Tìm dấu hiệu owner contract chung chưa rõ, branch phân kỳ lâu, thiếu phối hợp khi đổi schema và PR không nêu lý do. So diff chồng lấn cùng thời điểm tích hợp thay vì đổ lỗi theo message ngắn. Giao owner contract, bổ sung ngữ cảnh review và test lát cắt tương thích sớm. Đo tần suất conflict, công sửa lại và thời gian phục hồi; đổi tên nhánh không giải quyết các giả định cạnh tranh."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "09-selection-and-diagnostics.md"
+      anchor: "repeat-conflicts-opacity"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Main và release/2.0 đã có patch bảo mật nhưng maintenance/1.9 còn thiếu. Bạn báo trạng thái và việc tiếp theo thế nào?"
+    answer: "Khắc phục chưa hoàn tất khi 1.9 vẫn nằm trong danh sách bản bị ảnh hưởng đang hỗ trợ. Xác định owner và cách backport tương thích, test với phụ thuộc của 1.9 rồi phát hành patch có dấu vết artifact. Cherry-pick có thể tạo SHA khác nên so nội dung và hành vi thay vì đòi hash giống nhau. Nếu ngừng hỗ trợ, phải có quyết định và thông báo khách hàng rõ trước khi loại khỏi ma trận nghĩa vụ."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "09-selection-and-diagnostics.md"
+      anchor: "missing-hotfix-backports"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Thiết kế thử chính sách nhánh cho nhóm checkout sáu người. Đo thế nào để biết có hiệu quả?"
+    answer: "Thử mục tiêu branch ngắn, tích hợp các lát tương thích hằng ngày, review trong ngày, checks liên quan bắt buộc và owner phục hồi mainline. Ghi nền về lead time PR, tuổi lúc merge, lần tích hợp lỗi, thời gian từ đỏ sang xanh và vùng thường conflict. Thử trên lượng công việc có ý nghĩa thay vì đánh giá một tuần yên ắng. Chỉnh chính sách từ số liệu và khả năng xử lý sự cố thật, không chỉ vì số PR tăng."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "09-selection-and-diagnostics.md"
+      anchor: "sample-team-policy-evidence"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Sau khi chọn chiến lược nhánh, trách nhiệm nên bàn giao sang Git, host và CI/CD thế nào để không mất dấu vết chấp nhận?"
+    answer: "Strategy đặt vai trò branch, nhịp tích hợp, owner review/phục hồi và các gate. Git thực hiện commit, merge và refs; host lưu trao đổi PR cùng quyền merge đã cấu hình; CI kiểm nguồn đề xuất; hệ phân phối build và deploy artifact. Kết nối SHA revision và quyết định qua các lớp. PR Merged là bằng chứng tích hợp nguồn, còn sẵn sàng production và rollout đòi checks/hồ sơ riêng."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "09-selection-and-diagnostics.md"
+      anchor: "strategy-handoffs"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
