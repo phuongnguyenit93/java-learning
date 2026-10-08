@@ -1,0 +1,420 @@
+# <interview-schema>
+# Cấu trúc câu hỏi Interview
+# schema-version: 2
+#
+# questions [kiểu: list; bắt buộc; mặc định: []]
+#   Danh sách câu hỏi Interview của module trong language hiện tại.
+#   mỗi phần tử:
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi phỏng vấn hiển thị cho người học.
+#     answer [kiểu: string; bắt buộc; mặc định: ""]
+#       Câu trả lời tham khảo, chỉ hiển thị khi người học chủ động mở.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu nội dung được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu nội dung đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+# </interview-schema>
+
+questions:
+  - question: "Giải thích ranh giới Git và Bitbucket Cloud cho kỹ sư mới. Vì sao đưa mã lên host không đồng nghĩa được duyệt hay phát hành?"
+    answer: "Git lưu objects, commit, branch và lịch sử, kể cả thay đổi chưa lên máy chủ. Bitbucket Cloud lưu trữ repository và cung cấp phân quyền, thảo luận PR, quyết định review, điều kiện merge. Với sửa thuế của An, push chỉ công bố nhánh chứa thay đổi; mở PR là bước riêng để đề xuất review. Reviewer còn phải kiểm tác động, chính sách cho phép tích hợp và quy trình phân phối riêng phải triển khai revision đã nhận. Không được coi các bằng chứng đó là một."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01_BitbucketCollaborationFoundations.md"
+      anchor: "bitbucket-cloud-purpose"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Vì sao chuyển từ gửi thư mục ZIP qua email sang review PR trên host giúp giảm rủi ro mất ngầm thay đổi song song?"
+    answer: "Các bản invoice-final ZIP có thời gian sửa nhưng không xác định base chung hoặc giải thích hai thay đổi được hòa giải thế nào. Commit trong Git repository truy cập được giúp xem chính xác diff và quan hệ lịch sử. PR của Bitbucket liên kết nguồn, đích với bình luận, task và quyết định review. Điều đó không tự làm merge đúng: reviewer vẫn phải test tương tác giữa thuế và làm tròn và xác nhận commit trên nhánh đích."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01_BitbucketCollaborationFoundations.md"
+      anchor: "why-hosted-source-collaboration"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Auditor hỏi mã đổi gì, ai cho phép và đã triển khai chưa. Bạn sẽ tập hợp những lớp bằng chứng nào?"
+    answer: "Dùng commit và diff Git để dựng lại trạng thái mã; dùng hoạt động PR Bitbucket để xác định người tham gia, bình luận, phiếu duyệt, checks và kết quả merge. Liên kết Jira khi có để biết lý do nghiệp vụ. Log release/deployment mới chứng minh bản nào được build và phát hành; PR xanh hay commit đã merge chưa đủ. Ghép các hệ thống theo revision chính xác và nêu rõ phần thiếu, không suy approval từ tên tác giả commit."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01_BitbucketCollaborationFoundations.md"
+      anchor: "git-versus-bitbucket-cloud"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Vì sao đặt hai Git repository trong một Bitbucket project không khiến branch và lịch sử của chúng dùng chung được?"
+    answer: "Bitbucket project nhóm repository để tổ chức và áp chính sách quyền ở cấp project. Mỗi repository vẫn có cơ sở object, đồ thị commit, refs và nội dung Git riêng. invoice-api/main khác lịch sử với billing-docs/main dù trùng tên nhánh. Quyền project chung có thể cho một nhóm đọc hoặc ghi cả hai nhưng không tự đồng bộ commit. Thay đổi xuyên repo vẫn cần phối hợp và bằng chứng tiếp nhận riêng cho từng kho."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01_BitbucketCollaborationFoundations.md"
+      anchor: "workspace-project-repository-model"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Tổ chức nên tách trách nhiệm reviewer, quản trị repository và chuyên môn tính thuế thế nào?"
+    answer: "Quản trị là cấu hình quyền và policy, còn review là đánh giá một thay đổi mã. Một người có khả năng bấm Approve chưa chắc hiểu làm tròn tiền; Admin có thể quản lý quyền mà không đủ cơ sở nhận xét nghiệp vụ. Giao Bình review hành vi thuế và Mai duy trì cấu hình quyền hoặc merge. Khi một người kiêm nhiều vai, vẫn phải ghi rõ ai đã quyết định về nội dung và quy tắc nào cho phép tích hợp."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01_BitbucketCollaborationFoundations.md"
+      anchor: "shared-source-members-and-administrators"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Khi PR được mở và gán reviewer, thực sự điều gì đã diễn ra và còn những quyết định nào?"
+    answer: "Source và destination branch xác định một đề xuất so sánh mã. PR tạo nơi giải thích mục tiêu và xem diff; việc gán reviewer chỉ là lời yêu cầu đánh giá. Lời mời không phải Approve, PR Open cũng chưa cập nhật main. Reviewer có thể yêu cầu test hoặc sửa, còn quyền merge phụ thuộc riêng vào phân quyền và checks đã cấu hình. Chỉ tích hợp được phép mới thay đổi nguồn ở nhánh đích."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01_BitbucketCollaborationFoundations.md"
+      anchor: "pull-request-foundation"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Hãy mô tả bằng chứng để nói một thay đổi Bitbucket đã vào nguồn chung được nhận, thay vì mới đăng lên xin góp ý."
+    answer: "Push thành công chứng minh nhánh đề xuất đã được công bố; hoạt động reviewer chứng minh PR đã có trao đổi. Không bằng chứng nào tự xác nhận nhánh chuẩn đã có bản sửa. Cần kiểm PR thực sự Merged, rồi xem ref hoặc lịch sử nhánh đích chứa commit hay nội dung merge tương ứng. Review, build và task giải thích lý do tiếp nhận. Việc chạy production là ranh giới khác, cần log phân phối riêng."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01_BitbucketCollaborationFoundations.md"
+      anchor: "bitbucket-contribution-overview"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Một thành viên thấy workspace Orchid nhưng không sửa được repo private. Bạn suy luận các cấp quyền ra sao?"
+    answer: "Membership workspace tạo ngữ cảnh tổ chức chứ không tự cấp Write cho mọi repository. Kiểm ai quản lý quyền vào ứng dụng, grant ở project có áp vào repo không và quyền trực tiếp của repo có đủ cho thao tác không. Nếu lỗi xảy ra trên main, kiểm thêm branch restriction sau khi xác minh Write cơ bản. Chỉ cấp đúng quyền thiếu, không nâng Admin hay chuyển repo thành Public."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02_AccessAndRepositoryGovernance.md"
+      anchor: "bitbucket-permission-scopes"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Vì sao xóa một người khỏi nhóm developer chưa chắc thu hồi quyền Write của họ và kiểm toán ra sao?"
+    answer: "Quyền hiệu lực có thể đến từ nhiều nguồn: cấp trực tiếp, nhóm khác, kế thừa project và cấu hình repository. Xóa khỏi billing-developers chỉ gỡ quyền do chính nhóm đó cấp. Cần rà toàn bộ grant còn hiệu lực và branch restrictions theo thao tác cụ thể rồi thử quyền một cách an toàn. Ghi trạng thái trước/sau; việc từng clone thành công không phải bằng chứng vẫn được push."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02_AccessAndRepositoryGovernance.md"
+      anchor: "users-groups-and-administrators"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Điều gì thay đổi khi workspace Bitbucket được Atlassian Administration quản lý thay vì giao diện Bitbucket cũ?"
+    answer: "Cấu trúc nguồn vẫn gồm workspace, project và repository. Tuy nhiên ở môi trường mới do tổ chức quản lý, quyền vào ứng dụng và người dùng workspace được xử lý trong Atlassian Administration thay vì nút mời của Bitbucket kiểu cũ. Quyền nội dung repository và grant project vẫn phải xem trong Bitbucket. Trước tiên xác định mô hình quản trị, tránh làm theo hướng dẫn nút mời lỗi thời rồi cấp quyền quá mức."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02_AccessAndRepositoryGovernance.md"
+      anchor: "workspace-admin-environments"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Một repo payroll nhạy cảm sắp vào project Billing. Vì sao cần rà quyền kế thừa hơn là chỉ đánh dấu Private?"
+    answer: "Để repo Private ngăn người ngoài đọc tự do nhưng không hủy grant ở cấp project. Nếu billing-developers đã có Write trên Billing, repository mới đặt vào đó có thể kế thừa quyền ghi rộng ngay. Cần kiểm kê nhóm và quyền trước khi tạo hoặc chuyển payroll-secrets. Cân nhắc project riêng hoặc grant hẹp hơn rồi kiểm thực tế ai clone, push và quản trị được. Không được nghĩ xóa grant ở repo sẽ tự loại hết quyền kế thừa."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02_AccessAndRepositoryGovernance.md"
+      anchor: "project-permission-inheritance"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Phân biệt public visibility, repository Write và project Create khi review quyền trong Bitbucket Cloud."
+    answer: "Public visibility quyết định ai xem mã repository được mà không cần mời; nó không cho người lạ push. Write của repo cho phép đóng góp mã nhưng vẫn chịu branch restrictions, còn Admin quản cấu hình. Project Create cho phép tạo repository và kế thừa Write trên các repo thuộc project, tức phạm vi rộng hơn quyền cấp riêng một repo. Khi audit phải xét actor, tài nguyên và thao tác cụ thể, sau đó cấp mức quyền hẹp thay vì coi URL công khai là giấy phép sửa mã."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02_AccessAndRepositoryGovernance.md"
+      anchor: "read-write-admin-and-visibility"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "An đọc được PR nhưng không merge được. Hãy trình bày chuỗi điều tra ít quyền nhất và giữ dấu vết lỗi."
+    answer: "Ghi tài khoản thao tác, repository, nhánh nguồn/đích, trạng thái PR và thông báo lỗi chính xác. Phân loại Bitbucket đang từ chối quyền merge ở project/repo/branch hay chỉ cảnh báo review hoặc build chưa đạt. Xét cả tier vì warning khác Premium enforce. Kiểm grant hiệu lực và restrictions khớp trước khi sửa cấu hình. Chỉ đổi đúng quyền hoặc quy tắc có căn cứ, sau đó thử lại bằng chính actor đó."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02_AccessAndRepositoryGovernance.md"
+      anchor: "access-governance-failure-modes"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Pull request giúp truy trách nhiệm tốt hơn thế nào so với chỉ gửi URL branch cho đồng nghiệp?"
+    answer: "URL branch cho người khác xem mã nhưng PR ghi rõ nguồn và đích, gắn thảo luận với diff hiện tại. Reviewer có thể bình luận từng dòng, tạo task theo dõi và ghi quyết định review trước khi tích hợp. Với sửa thuế của An, Bình cần phân tích ca biên và nêu điều kiện chấp nhận. PR có đầy đủ thông tin vẫn chỉ là đề xuất đến khi merge có thẩm quyền cập nhật nhánh đích."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03_PullRequestChangeProposals.md"
+      anchor: "what-is-bitbucket-pull-request"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Chọn sai repository hoặc nhánh đích của PR có thể gây hậu quả vận hành gì?"
+    answer: "Đích không phải nhãn trang trí: nó quyết định diff được so, branch sẽ đổi khi merge và rule tích hợp áp dụng. Bản sửa thuế dành cho main nhưng nhắm release/old có thể vào nhánh bảo trì sai hoặc chịu reviewer/checks khác. Trước khi review cần xem repository nguồn/đích và branch tips. Phải sửa endpoint thật; đổi tiêu đề PR thành main không thay vị trí mã sẽ được tích hợp."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03_PullRequestChangeProposals.md"
+      anchor: "source-destination-and-diff"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Reviewer cần ngữ cảnh gì để đánh giá thay đổi làm tròn tài chính thay vì chỉ bấm duyệt khi build xanh?"
+    answer: "Mô tả hành vi hóa đơn hiện tại và mong muốn bằng số tiền trước/sau, ranh giới làm tròn, trường hợp âm và ảnh hưởng phía sau. Gắn yêu cầu hoặc sự cố với diff, tests và rủi ro chưa xử lý. Mời người như Bình am hiểu làm tròn, không chỉ dựa vào vai trò Admin. Build xanh chứng minh checks tự động đã chạy, không chứng minh mọi giả định về chính sách thuế đều đúng."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03_PullRequestChangeProposals.md"
+      anchor: "review-context-description-and-reviewers"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Vì sao nguy hiểm khi gọi PR đã push và có bình luận là được nhận trong khi main chưa có thay đổi?"
+    answer: "Push nhánh làm bản đề xuất sẵn có; bình luận cho biết còn trao đổi. Cả hai vẫn có thể tồn tại khi PR bị từ chối hoặc đang chờ test. Nguồn chung được nhận cần đáp ứng điều kiện nhóm và tích hợp kết quả vào nhánh chuẩn. Báo hoàn thành sớm khiến lập kế hoạch release sai hoặc triển khai nhầm revision. Cần kiểm kết quả merge và lịch sử nhánh đích, rồi xác minh deployment riêng."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03_PullRequestChangeProposals.md"
+      anchor: "shared-versus-accepted-changes"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Chọn reviewer độc lập cho thay đổi thuế thế nào để vừa đúng quyền vừa đúng chuyên môn?"
+    answer: "Bắt đầu từ rủi ro: tổng hóa đơn, độ chính xác làm tròn, số âm và tương thích. Mời người hiểu các quy tắc đó, xem được test như Bình và có quyền truy cập repository phù hợp. Admin có thể quản lý merge rules nhưng chưa chắc là reviewer nghiệp vụ tốt nhất. Reviewer nên đặt câu hỏi bằng ví dụ thực tế, không chỉ góp ý style. Số phiếu bắt buộc còn tùy policy và gói đang dùng."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04_PullRequestReviewsAndTasks.md"
+      anchor: "review-purpose-and-participants"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Viết bình luận theo dòng thế nào để developer tái hiện và xử lý lo ngại về phép tính tiền?"
+    answer: "Chỉ rõ dòng thao tác làm tròn, đưa đầu vào như hóa đơn 100,05 với thuế 10%, nêu kết quả mong đợi hoặc hỏi quy tắc làm tròn còn chưa thống nhất rồi yêu cầu test phù hợp. Câu 'mã sai' không có bằng chứng và góp ý formatting lạc phạm vi. Theo dõi câu trả lời và revision diff để xác minh lo ngại đã được xử lý; Resolve hội thoại không thay cho kiểm đúng hành vi."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04_PullRequestReviewsAndTasks.md"
+      anchor: "diff-comments-and-discussions"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Trong Bitbucket PR, bình luận và task theo dõi phục vụ hai phần khác nhau của review thế nào?"
+    answer: "Comment ghi câu hỏi, giải thích hoặc lo ngại gắn với diff, có thể giúp thảo luận mà không tạo việc phải làm. Task ghi công việc cụ thể như test hóa đơn âm và có trạng thái mở/đã xử lý. Cả hai hỗ trợ reviewer nhưng đóng task không tự trở thành quyết định Approve. Task đang mở có chặn merge hay không còn tùy merge check áp dụng và cấp gói có enforcement."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04_PullRequestReviewsAndTasks.md"
+      anchor: "feedback-versus-review-tasks"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Vì sao PR đã có một Approve nhưng task còn mở có thể merge ở workspace này mà bị chặn ở workspace khác?"
+    answer: "Approve trả lời một phần câu hỏi review, task lưu công việc chưa xong, còn merge check biểu diễn điều kiện cấu hình. Gói Free hoặc Standard có thể cảnh báo check chưa đạt nhưng vẫn cho merge nếu người thao tác đủ quyền. Premium có thể chặn cứng khi đã bật cấu hình tương ứng. Branch restriction còn có thể từ chối riêng người merge. Phải xem gói, setting, nhánh đích và role thực tế thay vì suy từ biểu tượng Approve."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04_PullRequestReviewsAndTasks.md"
+      anchor: "review-status-versus-merge-eligibility"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Reviewer nên làm gì khi tác giả bổ sung test nhưng đồng thời thay logic đã từng được duyệt?"
+    answer: "So diff PR hiện tại với revision từng được duyệt, không chỉ nhìn tiêu đề hoặc danh sách reviewer. Xác nhận test bổ sung thực sự bao phủ số lẻ và số âm, rồi kiểm sửa đổi logic giảm giá có tạo rủi ro mới không. Mời review lại khi giả định thay đổi; việc hệ thống reset Approve ra sao phụ thuộc cấu hình check và gói Bitbucket. Task Resolve hữu ích để theo dõi nhưng không chứng minh hành vi nghiệp vụ mới đúng."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04_PullRequestReviewsAndTasks.md"
+      anchor: "revisions-and-re-review"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Giải thích vì sao branch restrictions và merge checks là hai lớp kiểm soát riêng, kèm ví dụ trên main."
+    answer: "Branch restriction quản ai được ghi hoặc merge vào nhánh khớp, ví dụ chặn cập nhật trực tiếp main. Merge check mô tả bằng chứng PR cần đạt như phiếu duyệt, task đã đóng hoặc build xanh. Developer có thể có Write trên fix/tax nhưng không có quyền merge vào main; người được merge vẫn có thể vướng check bắt buộc. Tùy gói và cấu hình, check chưa đạt có thể chỉ cảnh báo hoặc chặn, nên phải kiểm cả quyền và điều kiện."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05_BranchRestrictionsAndMergeChecks.md"
+      anchor: "why-protect-important-branches"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "An push được feature nhưng không merge vào main. Làm sao tìm ranh giới quyền chính xác mà không nâng quyền bừa bãi?"
+    answer: "Bắt đầu từ grant Write hiệu lực của An, rồi kiểm branch restriction khớp main quy định user/nhóm nào được merge. Rà rule cấp project và repository có chồng lấn hay không và xem PR có merge checks chưa đạt riêng không. Nhìn thấy PR không đồng nghĩa có quyền merge; nâng Admin để thử sẽ che nguyên nhân thật. Ghi thao tác bị từ chối và kiểm chứng sửa đổi hẹp nhất bằng đúng tài khoản đó."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05_BranchRestrictionsAndMergeChecks.md"
+      anchor: "branch-write-versus-merge-permissions"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Những rủi ro gì xuất hiện khi cấu hình branch restriction cấp project cho project chứa nhiều repository?"
+    answer: "Restriction cấp project có thể áp vào các branch khớp ở nhiều repository thành viên, kể cả repo tạo sau. Nếu Billing có invoice-api và billing-docs, rule cho main có thể tác động cả hai nhưng không khiến lịch sử Git dùng chung. Cấu hình riêng từng repository cũng có thể cùng áp dụng, cần kiểm rule trùng nhau và các actor được phép. Trước khi triển khai rộng, kiểm project, branch pattern và nhu cầu quyền; thử ví dụ ở từng repo, không nghĩ rule chỉ tác động tab đang mở."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05_BranchRestrictionsAndMergeChecks.md"
+      anchor: "project-repository-and-branch-pattern-rules"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Vì sao build xanh chưa đủ chứng minh một pull request Bitbucket đã sẵn sàng merge?"
+    answer: "Build xanh chỉ báo kết quả một pipeline hoặc commit cụ thể; nó không tự chứng minh quy tắc thuế đúng, task hóa đơn âm đã đóng hoặc người thao tác có quyền merge. PR có thể đạt build nhưng vẫn thiếu Approve hay task riêng. Cần kiểm commit đã test, check nào bắt buộc, cảnh báo có được enforce theo gói đang dùng không và actor có được merge vào đích không. Phải xem ca test nghiệp vụ ngoài màu xanh của build."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05_BranchRestrictionsAndMergeChecks.md"
+      anchor: "merge-check-concepts-and-examples"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Nhóm nên xử lý cảnh báo merge check chưa đạt trên Free hoặc Standard thế nào khi UI vẫn cho merge?"
+    answer: "Không bị chặn kỹ thuật không có nghĩa nhóm đã chấp nhận rủi ro. Merge checks thông thường ở Bitbucket Cloud Free/Standard có thể chỉ cảnh báo, nên người đủ quyền vẫn có khả năng merge dù chưa đạt điều kiện. Nhóm cần quy định cách reviewer xác nhận hoặc đóng task, ghi rõ ngoại lệ và xem cảnh báo cụ thể trước khi tiếp tục. Phải tách khỏi branch restrictions vì chúng có thể chặn actor không có quyền dù check chỉ advisory."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05_BranchRestrictionsAndMergeChecks.md"
+      anchor: "advisory-versus-premium-blocking"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "So sánh Standard cảnh báo với Premium chặn cứng trong cùng tình huống task còn mở."
+    answer: "Giữ nguyên nhánh đích, PR, check task và người merge đủ quyền. Ở Standard, merge check thông thường chưa đạt sẽ cảnh báo nhưng không nhất thiết ngăn thao tác hợp quyền. Ở Premium, bật 'Prevent a merge with unresolved merge checks' biến điều kiện chưa đạt thành gate của nền tảng. Premium không tự làm mọi check thành chặn nếu chưa cấu hình. Phải báo rõ tier và setting gây kết quả quan sát, không nhầm với cơ chế lịch sử Git."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05_BranchRestrictionsAndMergeChecks.md"
+      anchor: "merge-check-plan-scenario"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Bạn sẽ điều tra một PR Bitbucket bị chặn bởi các rule cấp project, repository và branch chồng nhau thế nào?"
+    answer: "Ghi lỗi từ chối và danh tính thao tác, sau đó liệt kê quyền project/repository và pattern branch nào khớp đích. Phân biệt quyền ghi, quyền merge, check chặn và cảnh báo advisory vì chúng giải quyết các câu hỏi khác nhau. Không tắt toàn bộ rule vì vừa mất bằng chứng vừa yếu bảo vệ. Chỉ sửa một cấu hình hoặc grant có căn cứ, thử lại thao tác ban đầu rồi ghi policy hiệu lực sau sửa."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05_BranchRestrictionsAndMergeChecks.md"
+      anchor: "overlapping-restrictions-and-diagnostics"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Reviewer thấy diff mã thuế nhưng thiếu lý do nghiệp vụ. Ngữ cảnh nào nên đến từ Jira và ngữ cảnh nào từ PR?"
+    answer: "Jira ghi hành vi yêu cầu, mức ưu tiên, thảo luận nghiệp vụ và ví dụ nghiệm thu của BILL-142. PR Bitbucket trình bày nhánh nguồn/đích, thay đổi mã, bình luận, test và quyết định review. Liên kết chúng giúp Bình so phép tính thuế với quy tắc mong muốn. Jira Done một mình không chứng minh PR đã merge; diff mã cũng chưa chắc giải thích được vì sao chính sách sản phẩm đổi. Phải giữ ranh giới giữa hồ sơ yêu cầu và hồ sơ tiếp nhận mã."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06_JiraConfluenceAndCollaboration.md"
+      anchor: "jira-work-item-context"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Jira không hiển thị hoạt động Bitbucket dù tiêu đề PR có mã work item. Nhóm nên điều tra ra sao?"
+    answer: "Kiểm workspace/repository Bitbucket đã nối đúng Jira instance chưa, quyền ứng dụng/người dùng có cho truy cập không và mã work item có đúng project key không. Xem mã xuất hiện trong branch, commit và PR theo cấu hình tích hợp. Không suy rằng thiếu development panel nghĩa là chưa push commit hoặc phải chờ build xanh. Đối chiếu trực tiếp hồ sơ PR với màn hình Jira rồi ghi rõ độ trễ đồng bộ hoặc lệch key nếu có."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06_JiraConfluenceAndCollaboration.md"
+      anchor: "linking-source-changes-to-jira"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Vì sao @mention và task PR giúp phối hợp nhưng không chứng minh đã Approve hay sẵn sàng merge?"
+    answer: "@mention gửi lời nhắc một người vào thảo luận cụ thể nhưng không ghi nhận họ đã đọc, hiểu hoặc duyệt mã. Task tạo việc theo dõi rõ ràng như test hóa đơn âm và có thể Resolve riêng. Approve là quyết định khác của reviewer; quyền merge còn phụ thuộc actor, branch rules và check nào đang chặn. Cần xem chúng như những bằng chứng riêng, không coi thông báo là chấp nhận."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06_JiraConfluenceAndCollaboration.md"
+      anchor: "mentions-notifications-and-review-tasks"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Kế hoạch migration còn nhắc Issues và Wiki tích hợp của Bitbucket Cloud. Tháng 10/2026 cần cập nhật thế nào?"
+    answer: "Atlassian đã loại Issues và Wikis tích hợp của Bitbucket Cloud khỏi ứng dụng và API tương tác từ 20/08/2026. Không được hứa dùng các tab cũ cho công việc mới hay nghĩ nội dung tự chuyển sang Jira/Confluence. Cần xác định issue hoặc wiki repo/exports đã lưu trước khi ngừng, chuyển công việc và liên kết phù hợp sang Jira, đưa tài liệu bền vững vào Confluence hoặc tài liệu versioned. Phải kiểm bằng chứng migration, không suy tính năng còn dùng từ trang hướng dẫn cũ."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06_JiraConfluenceAndCollaboration.md"
+      anchor: "bitbucket-native-issues-wiki-retirement"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Bạn sẽ chia tài liệu chính sách hóa đơn và hướng dẫn sát mã giữa Confluence và tài liệu repository thế nào?"
+    answer: "Chính sách làm tròn chung xuyên nhóm phù hợp với trang Confluence có domain owner chịu trách nhiệm và lịch sử quyết định rõ ràng. Hướng dẫn triển khai, lệnh và contract sát code nên ở README hoặc file được version control cùng commit. Liên kết hai nguồn thay vì sao chép chính sách vào mọi PR. Wiki tích hợp Bitbucket đã ngừng nên không còn là nơi viết tài liệu tháng 10/2026, và sửa Confluence không tự tạo Git commit."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06_JiraConfluenceAndCollaboration.md"
+      anchor: "confluence-and-external-documentation"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Giải thích chuỗi bằng chứng của bản sửa thuế có kiểm soát từ lúc có quyền đến khi được nhận vào main, chỉ rõ người chịu trách nhiệm từng bước."
+    answer: "Đầu tiên xác nhận An có quyền góp mã. An ghi revision và mở PR đúng nhánh đích, liên kết BILL-142 cùng ví dụ nghiệp vụ. Bình xem diff hiện tại, yêu cầu test và ghi quyết định review; nhóm kiểm branch restriction, merge checks theo tier/cấu hình thật. Người đủ quyền mới tích hợp revision được nhận vào main. Giữ hồ sơ merge và lịch sử nhánh đích; production đã nhận bản sửa hay chưa phải chứng minh bằng log phân phối riêng."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "07_GovernedBitbucketTeamWorkflow.md"
+      anchor: "end-to-end-contribution-flow"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Mai cần checklist gì trước khi nói BILL-142 đã sẵn sàng merge theo cấu hình Bitbucket thật?"
+    answer: "Xác nhận PR nhắm đúng repository/branch, người thao tác có quyền merge và diff hiện tại đã có quyết định reviewer phù hợp. Kiểm task chưa xong, build của đúng revision và Changes requested nếu có. Phân biệt từng check chỉ advisory ở Free/Standard hay được chặn trong Premium bật prevention; branch restriction còn là lớp chặn độc lập. Một biểu tượng xanh đơn lẻ không chứng thực đủ các yếu tố đó."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "07_GovernedBitbucketTeamWorkflow.md"
+      anchor: "review-tasks-and-policy-readiness"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Người dùng báo merge bị chặn dù đã Approve. Hãy mô tả cây quyết định phân biệt thiếu quyền với check lỗi hoặc cảnh báo."
+    answer: "Bắt đầu bằng actor, nhánh đích, trạng thái PR và lỗi Bitbucket chính xác. Kiểm người đó có được merge vào branch theo restrictions cấp project/repository không. Nếu quyền hợp lệ, xem approvals, task, build statuses và chế độ enforcement của gói. Cảnh báo trên Standard không đồng nghĩa bị từ chối cứng; Premium bật prevention có thể chặn. Chỉ sửa vấn đề có bằng chứng rồi thử lại mà không xóa toàn bộ rule cũ."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "07_GovernedBitbucketTeamWorkflow.md"
+      anchor: "diagnosing-a-stalled-pull-request"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Bạn sẽ đưa auditor hồ sơ nào để chứng minh BILL-142 đã review và vào main mà không nói sai là đã deploy?"
+    answer: "Cho xem yêu cầu Jira cùng ví dụ hóa đơn, nhánh nguồn/đích và diff PR của An, bình luận/task của Bình, quyết định review/check và bản ghi PR Merged. Xác nhận lịch sử main chứa thay đổi đã nhận, lưu ý kiểu merge có thể đổi SHA hoặc cấu trúc commit. Nêu check nào chỉ cảnh báo và check nào chặn theo gói sử dụng. Giữ câu hỏi release và production deployment riêng, không suy từ Jira Done hay merge đơn thuần."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "07_GovernedBitbucketTeamWorkflow.md"
+      anchor: "evidence-of-accepted-source-change"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Sau khi PR Bitbucket merge, câu hỏi nào thuộc Git, chiến lược nhánh và tự động hóa phân phối thay vì cộng tác trên nền tảng?"
+    answer: "Bitbucket lưu đề xuất, phản hồi người review, điều kiện cấu hình và hoạt động merge. Git giải thích quan hệ commit, ref di chuyển và merge/squash/rebase ảnh hưởng đồ thị thế nào. Branching Strategy quyết định tuổi branch và nhịp tích hợp. CI/CD hoặc Bitbucket Pipelines build/kiểm artifact, còn log deploy chứng minh thứ gì đã vào production. Phải tách các lớp: nguồn được nhận là đầu vào cho phân phối chứ không phải bằng chứng đã triển khai."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "07_GovernedBitbucketTeamWorkflow.md"
+      anchor: "handoff-to-git-strategy-and-pipelines"
+    apiRelated:
+      controller: ""
+      methodSignature: ""

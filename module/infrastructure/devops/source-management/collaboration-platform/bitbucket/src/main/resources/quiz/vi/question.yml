@@ -1,0 +1,977 @@
+# <quiz-schema>
+# Cấu trúc câu hỏi Quiz
+# schema-version: 3
+#
+# questions [kiểu: list; bắt buộc; mặc định: []; duy nhất theo: id]
+#   Danh sách câu hỏi Quiz của module trong language hiện tại.
+#   mỗi phần tử:
+#     id [kiểu: string; bắt buộc; mặc định: ""]
+#       ID ổn định và duy nhất của câu hỏi.
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi hiển thị cho người học.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu câu hỏi được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu câu hỏi đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+#     answers [kiểu: list; bắt buộc; số phần tử: 4; mặc định: []; duy nhất theo: id]
+#       Chính xác bốn đáp án. ID A/B/C/D là identity nội bộ ổn định, không phải vị trí hiển thị sau khi frontend shuffle.
+#       mỗi phần tử:
+#         id [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#           Identity ổn định của đáp án.
+#         answer [kiểu: string; bắt buộc; mặc định: ""]
+#           Nội dung đáp án hiển thị cho người học.
+#         explanation [kiểu: string; bắt buộc; mặc định: ""]
+#           Giải thích hiển thị khi người học chọn đáp án này, bất kể đúng hay sai.
+#     correctAnswerId [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#       ID nội bộ của đáp án đúng. Frontend kiểm tra bằng identity này sau khi shuffle.
+# </quiz-schema>
+
+questions:
+  - id: "BC-001"
+    question: "An đã push nhánh fix/tax nhưng chưa ai đánh giá. Vai trò phù hợp của Bitbucket Cloud là gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01_BitbucketCollaborationFoundations.md"
+      anchor: "bitbucket-cloud-purpose"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Coi mỗi push mới là revision đã được duyệt rồi tự công bố bản phát hành."
+        explanation: "Lưu commit không chứng minh đã review, merge hay triển khai."
+      - id: B
+        answer: "Cung cấp repository, thảo luận PR, kiểm soát quyền và dấu vết merge."
+        explanation: "Các tính năng lưu trữ này hỗ trợ cộng tác có trách nhiệm quanh lịch sử Git."
+      - id: C
+        answer: "Lưu quyết định duyệt PR trong metadata commit để xem bằng Git log."
+        explanation: "Approve trên PR là dữ liệu nền tảng cộng tác, không nằm sẵn trong commit Git."
+      - id: D
+        answer: "Thay các clone lập trình viên bằng một lịch sử file chung do workspace quản lý."
+        explanation: "Bitbucket lưu trữ repository Git, không thay cơ chế ghi nhận phiên bản của Git."
+    correctAnswerId: B
+  - id: "BC-002"
+    question: "Hai lập trình viên trao đổi các bản invoice-final.zip khác nhau. Cách nào cải thiện khả năng truy vết đánh giá nhất?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01_BitbucketCollaborationFoundations.md"
+      anchor: "why-hosted-source-collaboration"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Lưu ZIP kèm thời gian và chọn tệp mới nhất làm bản chuẩn."
+        explanation: "Mốc thời gian không ghi lại thay đổi nào đã được đánh giá và chấp nhận."
+      - id: B
+        answer: "Ghép hai thư mục rồi giữ biên bản tích hợp thủ công được ký xác nhận."
+        explanation: "Ghép thủ công thiếu diff có thể kiểm tra và dấu vết quyết định review."
+      - id: C
+        answer: "Dùng Git repository chung và PR diff cùng thảo luận của reviewer."
+        explanation: "Repository ghi lịch sử; PR cho phép kiểm tra đề xuất và phản hồi."
+      - id: D
+        answer: "Lưu cả hai ZIP trên ổ chung và gắn phiếu review với phiên bản bảng tính."
+        explanation: "Bảng riêng không gắn chắc quyết định với thay đổi Git cụ thể."
+    correctAnswerId: C
+  - id: "BC-003"
+    question: "Muốn chứng minh mã đã thay đổi gì và ai đã approve, nên kết hợp bằng chứng nào?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01_BitbucketCollaborationFoundations.md"
+      anchor: "git-versus-bitbucket-cloud"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Nhật ký triển khai và URL repository; cả hai ghi rõ danh tính approve."
+        explanation: "Triển khai và vị trí repository không tự chứa quyết định review PR."
+      - id: B
+        answer: "Chỉ biểu đồ commit Git, vì approval được mã hóa trong metadata Git."
+        explanation: "Lịch sử commit Git không tự chứa trạng thái approve PR của Bitbucket."
+      - id: C
+        answer: "Chỉ tiêu đề PR, vì nó nêu cả mã được duyệt và diff chính xác."
+        explanation: "Tiêu đề PR có thể mơ hồ, không thay thế diff hoặc bằng chứng phê duyệt."
+      - id: D
+        answer: "Git commit/diff cho lịch sử mã và hoạt động PR cho phê duyệt."
+        explanation: "Hai lớp bằng chứng trả lời hai câu hỏi khác nhau, không đánh đồng dữ liệu."
+    correctAnswerId: D
+  - id: "BC-004"
+    question: "Project Billing của Orchid có invoice-api và billing-docs. Lịch sử Git của chúng được tổ chức thế nào?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01_BitbucketCollaborationFoundations.md"
+      anchor: "workspace-project-repository-model"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Mỗi repository có lịch sử Git riêng dù cùng nằm trong Bitbucket project."
+        explanation: "Project nhóm repository theo tổ chức, không gộp đồ thị commit."
+      - id: B
+        answer: "Mọi repository trong project dùng chung đồ thị commit và tên nhánh."
+        explanation: "Nhóm trong project Bitbucket không tạo một repository Git chung."
+      - id: C
+        answer: "Workspace giữ một lịch sử; project phân chia theo quyền truy cập."
+        explanation: "Phạm vi workspace nói về tổ chức và quản lý, không phải một lịch sử Git."
+      - id: D
+        answer: "Ở cùng project sẽ tự sao chép commit giữa các repository có nhánh trùng tên."
+        explanation: "Nhánh cùng tên ở các repository khác nhau không tự động đồng bộ."
+    correctAnswerId: A
+  - id: "BC-005"
+    question: "Mai là Admin của repository, Bình được mời review. Có thể kết luận điều gì từ hai nhãn đó?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01_BitbucketCollaborationFoundations.md"
+      anchor: "shared-source-members-and-administrators"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Bình được chỉnh policy repository sau khi nhận lời mời reviewer."
+        explanation: "Được mời review không tự cấp quyền quản trị."
+      - id: B
+        answer: "Quyền Admin của Mai đủ để duyệt tính đúng nghiệp vụ của phép tính thuế."
+        explanation: "Quyền quản trị và chuyên môn nghiệp vụ là hai năng lực khác nhau."
+      - id: C
+        answer: "Trách nhiệm khác nhau; cần kiểm tra quyền thực tế và chuyên môn riêng."
+        explanation: "Phân công review, quyền truy cập và hiểu biết nghiệp vụ cần được xem xét riêng."
+      - id: D
+        answer: "Reviewer và administrator có cùng quyền merge trên PR mà họ cùng xem."
+        explanation: "Tham gia PR không tự xác lập quyền merge trên nhánh cụ thể."
+    correctAnswerId: C
+  - id: "BC-006"
+    question: "An tạo PR từ fix/tax vào main và thêm Bình làm reviewer. Tại thời điểm này có thể khẳng định gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01_BitbucketCollaborationFoundations.md"
+      anchor: "pull-request-foundation"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Lời mời review được xem là Bình đồng ý nếu chưa yêu cầu thay đổi."
+        explanation: "Tên trong danh sách reviewer không chứng minh đã review hoặc approve."
+      - id: B
+        answer: "Đề xuất từ nhánh nguồn sang đích đã có để đánh giá, chưa chắc được chấp nhận."
+        explanation: "Tạo PR công bố thay đổi để đánh giá, chưa hợp nhất chúng."
+      - id: C
+        answer: "Commit đề xuất được xếp vào main ngay từ lúc PR ở trạng thái Open."
+        explanation: "Mở PR không tự đưa commit nguồn vào main."
+      - id: D
+        answer: "Default reviewer đã được gán sẽ được tính vào số approve trừ khi có task mới."
+        explanation: "Trạng thái approve và task là các phần riêng của quản trị PR."
+    correctAnswerId: B
+  - id: "BC-007"
+    question: "Bằng chứng nào chứng minh thay đổi đã review thực sự đến nhánh đích chung của nhóm?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01_BitbucketCollaborationFoundations.md"
+      anchor: "bitbucket-contribution-overview"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Tác giả đã push fix/tax và commit xuất hiện trên trang Branches."
+        explanation: "Nhánh nguồn có thể đã chia sẻ trong khi nhánh đích chưa đổi."
+      - id: B
+        answer: "Reviewer đã approve nhưng PR vẫn đang ở trạng thái Open."
+        explanation: "Reviewer approve là bằng chứng đánh giá, chưa chứng minh đã merge vào đích."
+      - id: C
+        answer: "Các task được xử lý và check đã báo đạt, nhưng PR vẫn Open."
+        explanation: "Task/check có thể đã hoàn tất nhưng nhánh đích vẫn chưa nhận commit."
+      - id: D
+        answer: "PR báo Merged và lịch sử nhánh đích chứa commit cần xác nhận."
+        explanation: "Có thể kiểm tra cả hành động chấp nhận lẫn trạng thái nhánh đích."
+    correctAnswerId: D
+  - id: "BC-008"
+    question: "Một người thấy workspace Orchid nhưng không sửa được repository riêng tư trong Billing. Mai nên kiểm tra gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02_AccessAndRepositoryGovernance.md"
+      anchor: "bitbucket-permission-scopes"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Quyền hiệu lực ở workspace, project và repository đối với thao tác đó."
+        explanation: "Nhìn thấy workspace không xác lập quyền ghi ở tài nguyên con."
+      - id: B
+        answer: "Kiểm membership workspace vì quyền thành viên được cho là phủ hết tài nguyên Billing."
+        explanation: "Chỉ là thành viên workspace không cho quyền sửa mọi repository."
+      - id: C
+        answer: "Kiểm lần clone thành công vì có thể được coi như quyền ghi vĩnh viễn."
+        explanation: "Fetch lịch sử không cấp quyền sửa mã phía máy chủ."
+      - id: D
+        answer: "Kiểm assignee của Jira item vì phân công đó có thể được hiểu là quyền Write project."
+        explanation: "Yêu cầu trên Jira không cấp quyền ghi repository Bitbucket."
+    correctAnswerId: A
+  - id: "BC-009"
+    question: "An rời nhóm billing-developers nhưng vẫn push được invoice-api. Nên kiểm tra giả thuyết nào?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02_AccessAndRepositoryGovernance.md"
+      anchor: "users-groups-and-administrators"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Role nhóm cũ có thể được giữ như Admin trong giai đoạn chuyển tiếp khi rời nhóm."
+        explanation: "Không có quy tắc chung tự cấp quyền Admin tạm sau khi rời nhóm."
+      - id: B
+        answer: "Quyền trực tiếp hoặc quyền kế thừa trong project Billing vẫn có thể cấp Write."
+        explanation: "Quyền hiệu lực có thể đến từ nhiều nguồn ngoài nhóm vừa rời."
+      - id: C
+        answer: "Lời mời reviewer trước đây có thể bị nhầm là quyền Write tồn tại lâu dài."
+        explanation: "Được phân công review không phải quyền truy cập lâu dài."
+      - id: D
+        answer: "Clone An đang giữ có thể bị hiểu là xác thực push mà không cần xét quyền server."
+        explanation: "Bản clone cục bộ không chứng minh quyền ghi hiện tại phía máy chủ."
+    correctAnswerId: B
+  - id: "BC-010"
+    question: "Mai không thấy nút mời người dùng kiểu cũ trong workspace mới. Bước xử lý hợp lý là gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02_AccessAndRepositoryGovernance.md"
+      anchor: "workspace-admin-environments"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Tạo lại workspace thành project công khai để mở lại chức năng mời."
+        explanation: "Độ công khai project/repository không quyết định môi trường quản trị."
+      - id: B
+        answer: "Đổi branch restrictions trên từng repository để cấp quyền mời."
+        explanation: "Branch restrictions quản lý thao tác nhánh, không quản lý lời mời ứng dụng."
+      - id: C
+        answer: "Xác định Atlassian Administration có quản lý quyền vào workspace không."
+        explanation: "Workspace do tổ chức quản lý đặt việc cấp quyền ứng dụng/người dùng trong Atlassian Admin."
+      - id: D
+        answer: "Yêu cầu mọi reviewer approve PR cấp quyền vào workspace."
+        explanation: "Review PR không thay thế thao tác cấp quyền ứng dụng của quản trị viên."
+    correctAnswerId: C
+  - id: "BC-011"
+    question: "Project Billing cấp Write cho nhóm billing-developers. Khi thêm payroll-secrets vào project, điều gì cần lưu ý?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02_AccessAndRepositoryGovernance.md"
+      anchor: "project-permission-inheritance"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Repository mới mặc định riêng tư nên bỏ qua toàn bộ quyền project."
+        explanation: "Chế độ riêng tư không vô hiệu quyền kế thừa từ project."
+      - id: B
+        answer: "Chỉ người tạo repository được ghi cho đến khi mời từng lập trình viên."
+        explanation: "Quyền project có thể áp dụng cho repository hiện tại và tạo sau."
+      - id: C
+        answer: "Write ở project chuyển thành Read trên repository nếu không có branch restrictions."
+        explanation: "Write từ project không tự hạ thành Read do việc tạo repository."
+      - id: D
+        answer: "Nhóm có thể kế thừa Write; cần xem lại project chứa nó và quyền cấp."
+        explanation: "Thêm repository vào project có thể mở rộng quyền kế thừa ngoài mong muốn."
+    correctAnswerId: D
+  - id: "BC-012"
+    question: "Khách lạ đọc được repository invoice-api công khai. Điều nào suy ra về quyền của họ?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02_AccessAndRepositoryGovernance.md"
+      anchor: "read-write-admin-and-visibility"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Chỉ đọc mã nguồn công khai không cấp quyền Write hay Admin."
+        explanation: "Khả năng xem công khai khác với quyền đóng góp hoặc quản trị."
+      - id: B
+        answer: "Khách có thể push lên nhánh tính năng nhưng không đổi cấu hình."
+        explanation: "Chỉ có quyền xem công khai không cấp quyền Write repository."
+      - id: C
+        answer: "Khách kế thừa quyền Create ở project để tạo repository mới."
+        explanation: "Quyền tạo repository trong project cần được cấp thực tế."
+      - id: D
+        answer: "Khách được sửa mã nếu không có hạn chế nhánh main."
+        explanation: "Không có branch restriction không thay thế quyền truy cập cơ bản."
+    correctAnswerId: A
+  - id: "BC-013"
+    question: "An đọc được PR nhưng không merge được. Cách điều tra nào giữ nguyên tắc quyền tối thiểu?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02_AccessAndRepositoryGovernance.md"
+      anchor: "access-governance-failure-modes"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Thử cấp Admin project tạm thời trước để xác minh nguyên nhân rồi thu lại."
+        explanation: "Nâng quyền quá rộng che mất nguyên nhân thiếu quyền hoặc điều kiện chưa đạt."
+      - id: B
+        answer: "Tạm vô hiệu rule nhánh đích để phân biệt lỗi quyền với lỗi check."
+        explanation: "Gỡ các bảo vệ làm mất dấu vết và có thể cho phép tích hợp không an toàn."
+      - id: C
+        answer: "Ghi người thao tác, nhánh đích, thao tác, lỗi; xem quyền và kiểm tra liên quan."
+        explanation: "Thao tác thực tế định hướng điều tra quyền có bằng chứng và phạm vi hẹp."
+      - id: D
+        answer: "Coi task reviewer đang mở là gate duy nhất sau khi xác nhận quyền Read."
+        explanation: "Đóng task có thể không giải quyết được quyền merge thực tế của người dùng."
+    correctAnswerId: C
+  - id: "BC-014"
+    question: "An muốn Bình góp ý có dấu vết và ghi nhận quyết định chấp nhận trước khi main đổi. Nên dùng đối tượng nào của Bitbucket Cloud?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03_PullRequestChangeProposals.md"
+      anchor: "what-is-bitbucket-pull-request"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Nhánh feature đã push có commit để Bình xem diff trực tiếp."
+        explanation: "Có thể xem diff của nhánh nhưng thiếu hồ sơ quyết định review/approve của PR."
+      - id: B
+        answer: "PR từ fix/tax vào main, kèm diff và lời mời reviewer đánh giá."
+        explanation: "PR cho phép kiểm tra diff nguồn–đích và thảo luận trước merge."
+      - id: C
+        answer: "Jira item liên kết mô tả quy tắc thuế cần đạt và mức ưu tiên."
+        explanation: "Jira lưu yêu cầu nhưng không ghi trạng thái review của Bitbucket PR."
+      - id: D
+        answer: "Build status đạt được gắn trên commit nguồn đề xuất."
+        explanation: "Build status phản ánh tự động hóa, không thay quyết định chấp nhận của người review."
+    correctAnswerId: B
+  - id: "BC-015"
+    question: "Một PR nhầm nhánh đích release/old thay vì main. An cần xử lý thông tin gì trước?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03_PullRequestChangeProposals.md"
+      anchor: "source-destination-and-diff"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Kiểm tra source repo/branch và chọn đúng nhánh đích."
+        explanation: "PR so sánh hai đầu mút cụ thể; sai đích làm thay đổi ý nghĩa đề xuất."
+      - id: B
+        answer: "Thêm nhiều reviewer nhưng vẫn giữ nhánh đích đang chọn."
+        explanation: "Tăng số reviewer không sửa PR đang hướng vào nhánh sai."
+      - id: C
+        answer: "Đổi tiêu đề PR để nhấn mạnh main rõ hơn."
+        explanation: "Tiêu đề không thay đổi repository hoặc nhánh đích thực tế."
+      - id: D
+        answer: "Approve diff rồi dựa vào màn hình merge để đoán nhánh đích."
+        explanation: "Approve trước khi xác nhận nguồn/đích có nguy cơ chấp nhận sai đường đi."
+    correctAnswerId: A
+  - id: "BC-016"
+    question: "Bình hiểu quy tắc làm tròn tiền. Nội dung PR nào giúp Bình đánh giá bản sửa thuế tốt nhất?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03_PullRequestChangeProposals.md"
+      anchor: "review-context-description-and-reviewers"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Tóm tắt file ảnh hưởng, link sprint Billing và nhãn fix dùng chung."
+        explanation: "Các thông tin này thiếu hành vi mong muốn và ví dụ kiểm chứng."
+      - id: B
+        answer: "Tóm tắt từng commit, quyền Write của An và build status PR gần đây."
+        explanation: "Số commit và quyền tác giả không giải thích tính đúng nghiệp vụ."
+      - id: C
+        answer: "Tình huống hóa đơn trước/sau, ảnh hưởng, kiểm thử và reviewer phù hợp."
+        explanation: "Nội dung này gắn đề xuất với yêu cầu và kết quả có thể kiểm tra."
+      - id: D
+        answer: "Mã Jira liên kết, tên default reviewers và quy ước đặt tên branch."
+        explanation: "Chỉ gửi thông báo không cung cấp đủ bối cảnh để đánh giá."
+    correctAnswerId: C
+  - id: "BC-017"
+    question: "Bản sửa đã push, PR có bình luận nhưng main chưa chứa commit. Trạng thái phù hợp là gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03_PullRequestChangeProposals.md"
+      anchor: "shared-versus-accepted-changes"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Đã chấp nhận vào nhánh đích vì có hoạt động reviewer."
+        explanation: "Bình luận có thể diễn ra khi đề xuất chưa merge."
+      - id: B
+        answer: "Đã triển khai production vì Bitbucket lưu trữ nhánh nguồn."
+        explanation: "Lưu trữ nhánh không chứng minh ứng dụng đã được triển khai."
+      - id: C
+        answer: "Đã merge nhưng bị ẩn vì reviewer chưa approve diff."
+        explanation: "Nhánh đích không có thay đổi là bằng chứng trái với việc đã tích hợp."
+      - id: D
+        answer: "Đã chia sẻ để review; chưa có bằng chứng merge vào main."
+        explanation: "Công bố và thảo luận PR khác với việc merge."
+    correctAnswerId: D
+  - id: "BC-018"
+    question: "An đổi phép tính thuế hóa đơn. Ai nên đánh giá tác động làm tròn?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04_PullRequestReviewsAndTasks.md"
+      anchor: "review-purpose-and-participants"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Chỉ Admin workspace vì Admin đồng nghĩa hiểu nghiệp vụ."
+        explanation: "Quyền quản trị không chứng minh hiểu quy tắc tính tiền."
+      - id: B
+        answer: "Chỉ chính tác giả vì nhánh chứa thay đổi của họ."
+        explanation: "Tự kiểm tra không thay thế phản hồi độc lập có chuyên môn."
+      - id: C
+        answer: "Reviewer hiểu làm tròn và có kịch bản kiểm thử."
+        explanation: "Review cần bằng chứng nghiệp vụ về hành vi liên quan, không chỉ cú pháp."
+      - id: D
+        answer: "Người có quyền triển khai dù không hiểu hóa đơn."
+        explanation: "Quyền triển khai không trả lời liệu phép tính đúng hay sai."
+    correctAnswerId: C
+  - id: "BC-019"
+    question: "Bình luận nào giúp thảo luận review hóa đơn lẻ có căn cứ nhất?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04_PullRequestReviewsAndTasks.md"
+      anchor: "diff-comments-and-discussions"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Ngay dòng làm tròn: hóa đơn 100,05 với thuế 10% cho kết quả nào?"
+        explanation: "Nó chỉ rõ vị trí, đầu vào có thể tái hiện và hành vi cần xác nhận."
+      - id: B
+        answer: "Tại dòng bị đổi: tên biến hơi khó hiểu; bạn có thể bổ sung chú thích không?"
+        explanation: "Nhận xét thiếu dẫn chứng không có ví dụ thử và vị trí mã liên quan."
+      - id: C
+        answer: "Ở tệp không liên quan: nên định dạng lại toàn repository."
+        explanation: "Dọn dẹp không liên quan làm loãng phạm vi và bằng chứng review thuế."
+      - id: D
+        answer: "Trong chat chung: hãy approve sau khi đọc hết các tệp."
+        explanation: "Lời nhắn chung không giải thích rủi ro làm tròn cụ thể."
+    correctAnswerId: A
+  - id: "BC-020"
+    question: "Bình hỏi về làm tròn và tạo task bổ sung bài test hóa đơn lẻ. Hai thao tác khác nhau ở đâu?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04_PullRequestReviewsAndTasks.md"
+      anchor: "feedback-versus-review-tasks"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Mọi bình luận thành task chưa xử lý cho đến khi Bình approve."
+        explanation: "Bình luận thường và task được theo dõi là hai đối tượng khác nhau."
+      - id: B
+        answer: "Bình luận lưu thảo luận; task ghi việc cần hoàn tất."
+        explanation: "Task làm rõ phần việc cụ thể để theo dõi và hoàn tất."
+      - id: C
+        answer: "Đóng task tự ghi nhận Bình đã approve mã mới."
+        explanation: "Hoàn tất task không tự sinh quyết định approve của reviewer."
+      - id: D
+        answer: "Bình luận quyết định quyền merge còn task cấp quyền Admin."
+        explanation: "Bình luận và task đều không cấp quyền quản trị repository."
+    correctAnswerId: B
+  - id: "BC-021"
+    question: "An có một approve nhưng task kiểm thử hóa đơn âm còn mở. Mai cần xác định gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04_PullRequestReviewsAndTasks.md"
+      anchor: "review-status-versus-merge-eligibility"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Coi một phiếu duyệt là đủ nếu task đã được giao cho An xử lý."
+        explanation: "Quyền merge và check cấu hình có thể quan trọng ngoài trạng thái reviewer."
+      - id: B
+        answer: "Giả định check task sẽ chặn merge vì task completion đã được cấu hình."
+        explanation: "Ở Free/Standard check chưa đạt có thể chỉ cảnh báo."
+      - id: C
+        answer: "Nhờ repository Admin merge vì cho rằng role này bỏ qua việc chặn task."
+        explanation: "Dấu hiệu review không tự vô hiệu giới hạn quyền trên nhánh."
+      - id: D
+        answer: "Quyền merge, check task, gói sử dụng và cấu hình chặn áp dụng."
+        explanation: "Điều kiện merge phụ thuộc phạm vi, quyền và chế độ chặn thực tế."
+    correctAnswerId: D
+  - id: "BC-022"
+    question: "An thêm test hóa đơn theo yêu cầu nhưng cũng sửa logic giảm giá sau khi Bình approve. Nên làm gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04_PullRequestReviewsAndTasks.md"
+      anchor: "revisions-and-re-review"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Giữ approve làm bằng chứng đủ vì tên PR và nhánh đích không đổi."
+        explanation: "Nội dung được review đã đổi dù metadata PR không thay đổi."
+      - id: B
+        answer: "Đóng tất cả task mà không đọc diff mới vì đã thêm test."
+        explanation: "Sửa phần giảm giá không liên quan có thể sinh rủi ro mới."
+      - id: C
+        answer: "Xem thay đổi sau lần review, kiểm chứng và yêu cầu đánh giá lại."
+        explanation: "Review lại đánh giá cả phản hồi đã xử lý lẫn thay đổi mới."
+      - id: D
+        answer: "Bỏ cả PR vì commit sau approve làm PR không còn hợp lệ."
+        explanation: "PR có thể cập nhật; cách xử lý là review lại trên bằng chứng."
+    correctAnswerId: C
+  - id: "BC-023"
+    question: "Orchid muốn giới hạn cập nhật trực tiếp lên main và kiểm tra approve trên PR. Kết hợp nào phù hợp?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05_BranchRestrictionsAndMergeChecks.md"
+      anchor: "why-protect-important-branches"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Branch restrictions quản lý quyền thao tác; merge checks xét điều kiện PR."
+        explanation: "Hai cơ chế tách quyền thao tác khỏi điều kiện sẵn sàng của đề xuất."
+      - id: B
+        answer: "Merge checks quản lý thành viên repository; branch restrictions kiểm tra test."
+        explanation: "Merge checks không cấp quyền thành viên repository."
+      - id: C
+        answer: "Default reviewers kiểm soát push; quyền Read quyết định sẵn sàng merge."
+        explanation: "Danh sách reviewer mặc định không thay kiểm soát nhánh."
+      - id: D
+        answer: "Jira workflow chặn mọi lần ghi; lịch sử Git xác nhận approve."
+        explanation: "Trạng thái Jira hay lịch sử Git không tự thực thi check PR Bitbucket."
+    correctAnswerId: A
+  - id: "BC-024"
+    question: "An có Write ở repository, push được fix/tax nhưng không merge vào main. Khả năng nào hợp lý?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05_BranchRestrictionsAndMergeChecks.md"
+      anchor: "branch-write-versus-merge-permissions"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Jira item chưa xong đã tự thu hồi toàn bộ quyền Write của An."
+        explanation: "Trạng thái Jira không trực tiếp quyết định quyền nhánh Bitbucket."
+      - id: B
+        answer: "Branch restriction cho push feature nhưng giới hạn merge main."
+        explanation: "Ghi trực tiếp và merge PR có thể có tập người được phép khác nhau."
+      - id: C
+        answer: "Lời mời Bình review tự giới hạn quyền push của mọi tác giả."
+        explanation: "Chọn reviewer không tự thay đổi branch restriction."
+      - id: D
+        answer: "Vì nhánh nguồn đã push nên Bitbucket chắc chắn từ chối lịch sử cục bộ."
+        explanation: "Merge bị từ chối có thể do quyền nhánh đích chứ không do lịch sử Git."
+    correctAnswerId: B
+  - id: "BC-025"
+    question: "Billing chứa hai repository; Mai đặt restriction cấp project cho main. Cần dự liệu điều gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05_BranchRestrictionsAndMergeChecks.md"
+      anchor: "project-repository-and-branch-pattern-rules"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Rule project chỉ tác động repository được dùng đầu tiên để cấu hình restriction."
+        explanation: "Rule ở cấp project không giới hạn vào repository đang xem ở tab khác."
+      - id: B
+        answer: "Rule khớp mọi tên branch chứa 'main', dù không đặt wildcard trong pattern."
+        explanation: "Phạm vi khớp phụ thuộc tên nhánh hay mẫu nhánh đã cấu hình."
+      - id: C
+        answer: "Cả hai repo có main khớp rule project; xem cả rule riêng mỗi repo."
+        explanation: "Rule project có thể áp dụng rộng và tồn tại cùng rule repository."
+      - id: D
+        answer: "Rule nhánh cấp project ngầm đồng nhất quyền người dùng của mọi repository."
+        explanation: "Rule nhánh không tự viết lại mọi quyền truy cập."
+    correctAnswerId: C
+  - id: "BC-026"
+    question: "BILL-142 có trạng thái build thành công nhưng task hóa đơn lẻ của Bình còn mở. Điều gì đúng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05_BranchRestrictionsAndMergeChecks.md"
+      anchor: "merge-check-concepts-and-examples"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Build thành công chứng minh quy tắc thuế và task review đã đạt."
+        explanation: "Trạng thái tự động không xác nhận đủ nghiệp vụ hay task đã đóng."
+      - id: B
+        answer: "Task reviewer tương đương check CI đạt ngay khi nhánh được push."
+        explanation: "Task và trạng thái build là tín hiệu PR khác nhau."
+      - id: C
+        answer: "PR không còn điều kiện chưa đạt vì chỉ build lỗi mới quan trọng."
+        explanation: "Check hoàn tất task vẫn có thể chưa đạt dù build xanh."
+      - id: D
+        answer: "Check build có thể đạt còn check task riêng vẫn chưa đạt."
+        explanation: "Các điều kiện cấu hình khác nhau phải được xem độc lập."
+    correctAnswerId: D
+  - id: "BC-027"
+    question: "Ở gói Standard, check task chưa đạt nhưng người merge có đủ quyền. Điều gì có thể xảy ra?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05_BranchRestrictionsAndMergeChecks.md"
+      anchor: "advisory-versus-premium-blocking"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Check task tự chặn merge trên mọi repository gói Standard."
+        explanation: "Check thường chưa đạt ở Standard có thể chỉ cảnh báo."
+      - id: B
+        answer: "Bitbucket cảnh báo task nhưng merge có thể vẫn thực hiện được."
+        explanation: "Gói này có cảnh báo mà không có chặn unresolved check kiểu Premium."
+      - id: C
+        answer: "Chỉ project Admin mới thấy cảnh báo task chưa hoàn tất."
+        explanation: "Không có quy tắc chung rằng chỉ Admin thấy trạng thái check."
+      - id: D
+        answer: "Cảnh báo tự cấp quyền merge dù branch rule khác cấm."
+        explanation: "Cảnh báo không vượt qua branch restriction hay quyền người dùng."
+    correctAnswerId: B
+  - id: "BC-028"
+    question: "Cùng một task mở và check đã cấu hình: Standard so với Premium bật chặn unresolved. Khác biệt gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05_BranchRestrictionsAndMergeChecks.md"
+      anchor: "merge-check-plan-scenario"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Standard có thể cảnh báo; Premium bật chặn ngăn merge đến khi xử lý."
+        explanation: "Giữ nguyên trạng thái PR giúp so đúng gói và cấu hình thực thi."
+      - id: B
+        answer: "Cả hai gói đều chặn merge vì task đã có check được cấu hình."
+        explanation: "Có check cấu hình không đồng nghĩa Standard sẽ chặn bắt buộc."
+      - id: C
+        answer: "Standard chặn qua task check còn Premium cần lời mời review thủ công riêng."
+        explanation: "Phát biểu đảo ngược mô hình cảnh báo/chặn thực tế."
+      - id: D
+        answer: "Premium chỉ chặn build checks; task PR chưa xong vẫn là cảnh báo."
+        explanation: "Premium bật chặn có thể ngăn merge khi check áp dụng chưa đạt."
+    correctAnswerId: A
+  - id: "BC-029"
+    question: "PR đủ approve nhưng An bị từ chối merge. Thứ tự điều tra nào hữu ích nhất?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05_BranchRestrictionsAndMergeChecks.md"
+      anchor: "overlapping-restrictions-and-diagnostics"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Tắt hết rule repository rồi suy đoán rule nào đã gây lỗi."
+        explanation: "Gỡ rule làm mất điều kiện cần để điều tra."
+      - id: B
+        answer: "Yêu cầu mọi reviewer approve lại trước khi xem quyền của người thao tác."
+        explanation: "Approve lại không xử lý được lỗi thiếu quyền merge."
+      - id: C
+        answer: "Cấp An Admin mọi cấp rồi mới phân loại cảnh báo check."
+        explanation: "Quyền quá rộng che nguyên nhân thực và mở rộng rủi ro."
+      - id: D
+        answer: "Ghi người thao tác, đích và lỗi; xem quyền hiệu lực, rule và check."
+        explanation: "Cách này tách thiếu quyền, check chặn thật và cảnh báo tham khảo."
+    correctAnswerId: D
+  - id: "BC-030"
+    question: "Bình đọc diff PR sửa thuế nhưng chưa hiểu vì sao nghiệp vụ đổi. Nên xem ở đâu?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06_JiraConfluenceAndCollaboration.md"
+      anchor: "jira-work-item-context"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Chỉ mã hash commit cuối vì hash mã hóa lý do nghiệp vụ."
+        explanation: "Hash commit không tự mô tả hành vi nghiệp vụ cần đạt."
+      - id: B
+        answer: "Cách merge được chọn vì nó xác định tiêu chí nghiệm thu thuế."
+        explanation: "Chiến lược merge không quy định công thức thuế nghiệp vụ."
+      - id: C
+        answer: "Jira work item liên kết nêu hành vi cần đạt và ví dụ nghiệm thu."
+        explanation: "Work item đưa bối cảnh yêu cầu; PR thể hiện cách triển khai."
+      - id: D
+        answer: "Danh sách quyền repository vì nó ghi chính sách làm tròn hóa đơn."
+        explanation: "Dữ liệu quyền truy cập không thay tài liệu yêu cầu."
+    correctAnswerId: C
+  - id: "BC-031"
+    question: "An ghi BILL-142 vào tiêu đề PR nhưng Jira không thấy liên kết phát triển. Cần kiểm tra gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06_JiraConfluenceAndCollaboration.md"
+      anchor: "linking-source-changes-to-jira"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "PR có ít nhất hai reviewer chưa vì liên kết cần approve."
+        explanation: "Số approve không phải điều kiện tạo liên kết phát triển Jira."
+      - id: B
+        answer: "Tích hợp Bitbucket–Jira, quyền và mã work item chính xác."
+        explanation: "Mã work item chỉ phát huy khi các sản phẩm được kết nối và có quyền."
+      - id: C
+        answer: "Main đã được triển khai chưa vì link Jira chỉ xuất hiện sau triển khai."
+        explanation: "Tích hợp có thể hiện hoạt động PR trước khi triển khai."
+      - id: D
+        answer: "Số lần build; link chỉ hiện sau pipeline thành công."
+        explanation: "Liên kết hoạt động phát triển không yêu cầu build thành công trong mọi trường hợp."
+    correctAnswerId: B
+  - id: "BC-032"
+    question: "Bình được @mention về làm tròn, An nhận task hóa đơn âm. Điều gì được chứng minh?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06_JiraConfluenceAndCollaboration.md"
+      anchor: "mentions-notifications-and-review-tasks"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Có lời nhắc và task cần theo dõi, chưa phải approve."
+        explanation: "Nhắc tên hay giao task không tự ghi nhận reviewer đã chấp nhận."
+      - id: B
+        answer: "Bình đã đọc hết tệp và đồng ý mọi thay đổi trên nhánh nguồn."
+        explanation: "Thông báo không chứng minh đã kiểm tra hay approve."
+      - id: C
+        answer: "An đóng task là Jira work item liên kết tự chuyển Done."
+        explanation: "PR task và chuyển trạng thái workflow Jira là hai cơ chế riêng."
+      - id: D
+        answer: "Merge bị chặn cứng ở mọi gói đến khi task đóng."
+        explanation: "Task còn mở có thể chỉ cảnh báo nếu chưa có cấu hình chặn phù hợp."
+    correctAnswerId: A
+  - id: "BC-033"
+    question: "Hướng dẫn năm 2025 yêu cầu tạo Issues và Wiki tích hợp trên Bitbucket Cloud. Tháng 10/2026 nên hiểu thế nào?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06_JiraConfluenceAndCollaboration.md"
+      anchor: "bitbucket-native-issues-wiki-retirement"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Issue tracker tích hợp vẫn dùng trên repo cũ; chỉ dừng tạo Wiki mới."
+        explanation: "Atlassian đã gỡ cả hai tính năng Cloud tích hợp khỏi UI/API tháng 8/2026."
+      - id: B
+        answer: "Nội dung Wiki tích hợp vẫn đọc được qua API cũ sau khi gỡ UI."
+        explanation: "Thông báo ngừng hỗ trợ bao gồm truy cập qua cả UI và API."
+      - id: C
+        answer: "Việc ngừng tính năng cũng làm vô hiệu dự án Jira và trang Confluence đang liên kết."
+        explanation: "Jira và Confluence là sản phẩm riêng, không phải tab Bitbucket đã ngừng."
+      - id: D
+        answer: "Cả hai tính năng Cloud đã ngừng từ 20/08; dùng công cụ việc và tài liệu riêng."
+        explanation: "Hướng dẫn hiện hành của Atlassian hướng nhóm sang nơi quản lý việc và tài liệu riêng."
+    correctAnswerId: D
+  - id: "BC-034"
+    question: "Orchid có chính sách làm tròn hóa đơn dùng chung và README sát mã. Bố trí nào hợp lý?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06_JiraConfluenceAndCollaboration.md"
+      anchor: "confluence-and-external-documentation"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Sao chép cả hai vào mọi PR và trông chờ reviewer tự giữ nhất quán."
+        explanation: "Các bản sao thiếu chủ sở hữu dễ lệch khi nghiệp vụ và mã thay đổi."
+      - id: B
+        answer: "Chính sách ở Confluence, hướng dẫn sát mã trong README."
+        explanation: "Thông tin có vòng đời khác nhau cần người phụ trách và liên kết rõ."
+      - id: C
+        answer: "Đưa mọi tài liệu nghiệp vụ vào tab Wiki tích hợp đã ngừng."
+        explanation: "Wiki tích hợp trên Cloud hiện không còn nơi lưu tài liệu khả dụng."
+      - id: D
+        answer: "Lưu cả hai thành nhánh Git vì sửa Confluence sẽ sinh commit."
+        explanation: "Chỉnh Confluence không tự sinh commit vào repository Bitbucket."
+    correctAnswerId: B
+  - id: "BC-035"
+    question: "Chuỗi nào thể hiện đúng luồng góp mã có quản trị từ bản sửa thuế của An đến nguồn chung?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "07_GovernedBitbucketTeamWorkflow.md"
+      anchor: "end-to-end-contribution-flow"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Mở PR → main đổi → mời reviewer → tạo commit nguồn."
+        explanation: "Mở PR không tự đổi main; sửa mã nguồn có trước đề xuất."
+      - id: B
+        answer: "Jira Done → triển khai → push nhánh nguồn → nhóm review."
+        explanation: "Trạng thái Jira không thay bằng chứng nhận mã hay triển khai."
+      - id: C
+        answer: "Có quyền → commit → PR đúng đích → review/check → merge."
+        explanation: "Mỗi mốc có bằng chứng riêng trước khi mã nguồn chung thay đổi."
+      - id: D
+        answer: "Cấp Admin repository → build xanh → mọi việc được nhận mà không cần xem PR."
+        explanation: "Quyền Admin và build xanh không thay đánh giá đề xuất."
+    correctAnswerId: C
+  - id: "BC-036"
+    question: "Mai cần biết gì để kết luận BILL-142 sẵn sàng merge theo cấu hình nhóm?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "07_GovernedBitbucketTeamWorkflow.md"
+      anchor: "review-tasks-and-policy-readiness"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "So bình luận tác giả mới nhất và trạng thái Jira rồi kết luận PR sẵn sàng."
+        explanation: "Lời tác giả không chứng minh quyền và các điều kiện PR."
+      - id: B
+        answer: "Kiểm phiếu duyệt và task mở, rồi suy quyền merge từ việc PR tồn tại."
+        explanation: "Trạng thái review không vượt được giới hạn quyền và cấu hình chặn."
+      - id: C
+        answer: "Kiểm build thành công và nhánh đích, xem review còn lại chỉ là cảnh báo."
+        explanation: "Build xanh không hàm ý mọi task, approve và quyền đều đạt."
+      - id: D
+        answer: "Nhánh đích, quyền người thao tác, review/task, check áp dụng và chế độ chặn."
+        explanation: "Sẵn sàng merge phải dựa vào điều kiện chấp nhận đã cấu hình thực tế."
+    correctAnswerId: D
+  - id: "BC-037"
+    question: "An báo 'merge bị chặn' sau khi Bình approve. Bằng chứng ban đầu nào giúp tránh đoán sai?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "07_GovernedBitbucketTeamWorkflow.md"
+      anchor: "diagnosing-a-stalled-pull-request"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Kiểm tra người merge, nhánh đích, trạng thái PR và lỗi hiện trên UI."
+        explanation: "Lỗi quan sát giúp phân biệt thiếu quyền, check chặn và cảnh báo UI."
+      - id: B
+        answer: "Đếm phiếu duyệt hợp lệ rồi dùng kết quả suy An có quyền merge vào main."
+        explanation: "Đủ approval vẫn chưa xác minh người thao tác được quyền merge."
+      - id: C
+        answer: "Kiểm build checks rồi xem màu xanh là đã đáp ứng quyền của người merge."
+        explanation: "Build xanh không chứng minh người thao tác có quyền trên nhánh đích."
+      - id: D
+        answer: "Xem quyền workflow của Jira issue để suy ai được merge nhánh này."
+        explanation: "Jira workflow không cấp hoặc xác nhận quyền merge của Bitbucket."
+    correctAnswerId: A
+  - id: "BC-038"
+    question: "Tập bằng chứng nào xác nhận 'BILL-142 đã review và nhận vào main' mà không suy diễn triển khai?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "07_GovernedBitbucketTeamWorkflow.md"
+      anchor: "evidence-of-accepted-source-change"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Trạng thái Jira, lời báo hoàn tất của tác giả và Release tag trỏ đến bản đề xuất."
+        explanation: "Những tín hiệu đó không chứng minh kết quả review hay lịch sử nhánh đích."
+      - id: B
+        answer: "Yêu cầu, PR diff, review/task/check, dấu vết merge và lịch sử main."
+        explanation: "Kết hợp chúng truy vết lý do, nội dung, quyết định nhận mã và nhánh nguồn chung."
+      - id: C
+        answer: "Ảnh phiếu Approve, commit check xanh và tên branch khớp BILL-142."
+        explanation: "Một nhãn approve không xác nhận task hoặc merge hoàn tất."
+      - id: D
+        answer: "Deployment mới nhất và milestone Jira đã xong nhưng thiếu bản ghi chấp nhận PR."
+        explanation: "Chỉ dấu triển khai không chỉ ra thay đổi cụ thể đã được review và nhận mã."
+    correctAnswerId: B
+  - id: "BC-039"
+    question: "Sau khi BILL-142 merge, nhóm hỏi commit được hợp nhất thế nào và production đã triển khai chưa. Nên học ở đâu?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "07_GovernedBitbucketTeamWorkflow.md"
+      anchor: "handoff-to-git-strategy-and-pipelines"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Quyền repository Bitbucket cho cơ chế merge Git, Jira Releases cho thao tác deploy."
+        explanation: "Quyền truy cập và theo dõi công việc không sở hữu các cơ chế đó."
+      - id: B
+        answer: "Trang kiến trúc Confluence cho Git internals và Wiki Bitbucket cũ cho build jobs."
+        explanation: "Công cụ tài liệu không thay các module Git và CI/CD chuyên biệt."
+      - id: C
+        answer: "Git/Branching Strategy cho lịch sử và cách dùng nhánh; CI/CD/Pipelines cho triển khai."
+        explanation: "Cộng tác dừng ở nhận mã; cơ chế hợp nhất và triển khai cần bằng chứng riêng."
+      - id: D
+        answer: "Task review PR cho quan hệ commit và tổng phiếu duyệt cho bằng chứng rollout production."
+        explanation: "Task và approve không chứng minh cơ chế commit hay đã triển khai thành công."
+    correctAnswerId: C

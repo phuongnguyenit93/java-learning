@@ -41,4 +41,75 @@
 # The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: bitbucket-collaboration-model
+    relatedKnowledge:
+      - 01_BitbucketCollaborationFoundations
+    title: "Bitbucket Cloud and Source Collaboration"
+    purpose: "Understand Bitbucket Cloud's role in hosting Git repositories and coordinating source changes among team members."
+    objectives:
+      - "Distinguish Git history management from Bitbucket Cloud's repository hosting, review, and governance capabilities."
+      - "Explain the relationship between a workspace, a project, and a repository, and why teams use these organizational levels."
+      - "Recognize the roles of shared repositories, members, and administrators in a Bitbucket Cloud project."
+
+  - id: access-and-repository-governance
+    relatedKnowledge:
+      - 02_AccessAndRepositoryGovernance
+    title: "Access Permissions and Repository Governance"
+    purpose: "Understand how Bitbucket Cloud scopes the ability to view, contribute to, and administer team source code."
+    objectives:
+      - "Distinguish workspace, project, and repository permissions and the roles of users and groups."
+      - "Explain how project permissions affect repositories within a project and when repository-specific access matters."
+      - "Recognize the risks of overly broad access, confusing read and write permissions, or unclear administrative responsibility."
+
+  - id: pull-request-change-proposal
+    relatedKnowledge:
+      - 03_PullRequestChangeProposals
+    title: "Pull Requests as Change Proposals"
+    purpose: "Understand pull requests as the Bitbucket Cloud space for describing, discussing, and proposing changes to a destination branch."
+    objectives:
+      - "Identify the source, destination, and change comparison represented by a pull request."
+      - "Explain why a clear title, description, assigned reviewers, and change context support effective collaboration."
+      - "Distinguish publishing changes to a repository from having those changes reviewed and accepted by a team."
+
+  - id: pull-request-review-and-feedback
+    relatedKnowledge:
+      - 04_PullRequestReviewsAndTasks
+    title: "Code Review and Feedback Resolution"
+    purpose: "Understand how teams use Bitbucket Cloud pull request reviews to discuss code, request improvements, and record decisions."
+    objectives:
+      - "Describe reviewing diffs, commenting on files or lines, and discussing findings with the change author."
+      - "Distinguish feedback, actionable review tasks, change requests, and approval states during review."
+      - "Explain why updated changes need renewed inspection before a pull request is accepted."
+
+  - id: branch-restrictions-and-merge-checks
+    relatedKnowledge:
+      - 05_BranchRestrictionsAndMergeChecks
+    title: "Branch Restrictions and Merge Checks"
+    purpose: "Recognize how Bitbucket Cloud uses access restrictions and merge conditions to protect important branches."
+    objectives:
+      - "Distinguish branch restrictions controlling write or merge access from merge checks evaluating conditions before merging."
+      - "Explain how repository scope, project scope, and branch-name patterns affect rule enforcement."
+      - "Distinguish advisory checks that still allow merging on non-Premium plans from Premium's option to prevent merging while required checks remain unresolved."
+      - "Recognize risks from overlapping restrictions or assuming every merge-check warning automatically blocks merging."
+
+  - id: linked-work-items-and-collaboration
+    relatedKnowledge:
+      - 06_JiraConfluenceAndCollaboration
+    title: "Linked Work Items and Team Communication"
+    purpose: "Connect source discussions to the underlying feature or defect using current Bitbucket Cloud collaboration and integration features."
+    objectives:
+      - "Explain how pull requests and source changes link to Jira work items so reviewers can understand the work context."
+      - "Recognize comments, mentions, notifications, and pull request tasks as ways to coordinate review feedback."
+      - "Know that Bitbucket Cloud's built-in Issues and Wiki were removed from its UI and API on August 20, 2026; use Jira or other work trackers for issues and Confluence or separate documentation for wiki content."
+
+  - id: governed-bitbucket-team-flow
+    relatedKnowledge:
+      - 07_GovernedBitbucketTeamWorkflow
+      - 05_BranchRestrictionsAndMergeChecks
+    title: "A Governed Bitbucket Team Workflow"
+    purpose: "Combine repository organization, permissions, pull requests, and policy checks into a reviewable team contribution journey."
+    objectives:
+      - "Describe the flow from repository access and change proposal through review, resolution of checks, and acceptance into shared source."
+      - "Identify which permission, review state, open task, or merge condition to inspect when a pull request cannot progress."
+      - "Distinguish Bitbucket Cloud collaboration from Git operations, team branching strategy decisions, and pipeline implementation in Bitbucket Pipelines."
