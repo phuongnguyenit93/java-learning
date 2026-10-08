@@ -41,4 +41,84 @@
 # Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: gitlab-collaboration-model
+    relatedKnowledge:
+      - "01-gitlab-foundations"
+    title: "GitLab trong quy trình cộng tác mã nguồn"
+    purpose: "Hiểu vì sao nhóm phát triển sử dụng GitLab để chia sẻ mã nguồn, trao đổi về thay đổi và kiểm soát việc tiếp nhận đóng góp."
+    objectives:
+      - "Phân biệt lịch sử phiên bản và thao tác do Git đảm nhiệm với các khả năng lưu trữ và cộng tác trên GitLab."
+      - "Hình dung mối liên hệ giữa project, group, thành viên, merge request và điều kiện hợp nhất."
+      - "Nhận biết giới hạn của module GitLab đối với cơ chế Git, chiến lược nhánh, CI/CD và các hoạt động bảo mật chuyên sâu."
+
+  - id: gitlab-projects-and-groups
+    relatedKnowledge:
+      - "02-projects-and-groups"
+    title: "Tổ chức project, repository và group"
+    purpose: "Nắm mô hình tổ chức repository trong GitLab để xác định nơi sở hữu mã nguồn và phạm vi cộng tác của một nhóm."
+    objectives:
+      - "Giải thích quan hệ giữa project, repository, namespace cá nhân, group và subgroup."
+      - "Phân biệt project công khai và riêng tư; hiểu chế độ nội bộ chỉ áp dụng với GitLab Self-Managed hoặc Dedicated, không còn được tạo mới trên GitLab.com."
+      - "Nhận diện cách cấu trúc group và project tác động đến việc tổ chức nhóm, chia sẻ thông tin và quản trị nhiều repository."
+
+  - id: gitlab-members-and-permissions
+    relatedKnowledge:
+      - "03-members-and-access"
+    title: "Thành viên, vai trò và quyền truy cập"
+    purpose: "Biết cách trao quyền truy cập project và group phù hợp với trách nhiệm của từng người tham gia."
+    objectives:
+      - "Phân biệt các vai trò GitLab như Guest, Planner, Reporter, Developer, Maintainer và Owner theo khả năng truy cập phù hợp."
+      - "Giải thích việc một thành viên nhận quyền trực tiếp tại project hoặc thừa hưởng và nhận chia sẻ quyền qua group."
+      - "Nhận biết các tình huống thiếu quyền, cấp quyền quá rộng và điểm cần kiểm tra khi thay đổi quyền thành viên."
+
+  - id: gitlab-merge-request-proposals
+    relatedKnowledge:
+      - "04-merge-request-proposals"
+    title: "Đề xuất thay đổi bằng merge request"
+    purpose: "Hiểu cách gửi một thay đổi có thể thảo luận và theo dõi trước khi đưa vào repository đích."
+    objectives:
+      - "Phân biệt cách đề xuất thay đổi từ nhánh trong cùng project và từ một project được fork."
+      - "Xác định project và nhánh nguồn/đích, mô tả thay đổi, người phụ trách và trạng thái nháp của merge request."
+      - "Diễn giải vòng đời từ mở đề xuất, cập nhật bản thay đổi, chuyển sang sẵn sàng đánh giá đến hợp nhất hoặc đóng đề xuất."
+
+  - id: gitlab-reviews-and-approvals
+    relatedKnowledge:
+      - "05-reviews-and-approvals"
+    title: "Đánh giá mã nguồn và quy tắc phê duyệt"
+    purpose: "Hiểu cách nhóm đánh giá đề xuất, phản hồi và xác nhận sự chấp thuận trên giao diện cộng tác GitLab."
+    objectives:
+      - "Đọc được phần khác biệt mã nguồn, chuỗi thảo luận, bình luận theo dòng và trạng thái người đánh giá trong merge request."
+      - "Phân biệt việc chỉ định người đánh giá, để lại nhận xét, phê duyệt và yêu cầu sửa; lưu ý tính năng yêu cầu sửa có thể chặn hợp nhất thuộc GitLab Premium/Ultimate."
+      - "Giải thích vai trò của approval rules và Code Owners khi tính năng tương ứng được hỗ trợ bởi gói dịch vụ."
+
+  - id: gitlab-protected-branches
+    relatedKnowledge:
+      - "06-protected-branches"
+    title: "Nhánh được bảo vệ và điều kiện hợp nhất"
+    purpose: "Hiểu cách GitLab thực thi quyền cập nhật nhánh quan trọng và những điều kiện cần đáp ứng trước khi hợp nhất."
+    objectives:
+      - "Phân biệt quyền được đẩy trực tiếp lên nhánh với quyền hợp nhất qua merge request trong cấu hình protected branches."
+      - "Liên hệ quy tắc bảo vệ nhánh, yêu cầu phê duyệt, Code Owners và trạng thái kiểm tra với quyết định cho phép hợp nhất."
+      - "Chẩn đoán các trường hợp bị chặn bởi quyền thành viên, nhánh được bảo vệ, thiếu phê duyệt hoặc kiểm tra chưa đạt; lưu ý khác biệt theo gói dịch vụ."
+      - "Nhận biết khi nhiều quy tắc bảo vệ cùng khớp một nhánh, quyền đẩy/hợp nhất thường theo quy tắc rộng nhất, còn yêu cầu phê duyệt Code Owner theo quy tắc chặt nhất."
+
+  - id: gitlab-issues-and-releases
+    relatedKnowledge:
+      - "07-issues-and-releases"
+    title: "Theo dõi công việc và ghi nhận bản phát hành"
+    purpose: "Biết cách liên kết công việc cần thực hiện với thay đổi mã nguồn và thông tin phát hành của project."
+    objectives:
+      - "Giải thích cách Issues, người phụ trách, nhãn và milestones giúp nhóm trao đổi, phân loại và theo dõi công việc."
+      - "Kết nối một Issue với merge request và hiểu điều kiện đóng Issue khi thay đổi liên quan được hợp nhất."
+      - "Phân biệt Git tag với GitLab Release gồm ghi chú và tài nguyên phát hành; nhận ra ranh giới với quản lý phiên bản và quy trình triển khai."
+
+  - id: gitlab-team-workflow
+    relatedKnowledge:
+      - "08-team-workflow"
+    title: "Vận dụng quy trình cộng tác GitLab từ đầu đến cuối"
+    purpose: "Kết hợp tổ chức project, quyền thành viên, merge request, đánh giá và quy tắc bảo vệ thành một luồng làm việc nhóm nhất quán."
+    objectives:
+      - "Phác họa đường đi từ Issue đến thay đổi ở project, mở merge request, nhận góp ý, đạt điều kiện hợp nhất và ghi nhận thông tin Release."
+      - "Xác định nơi xử lý khi merge request bị chặn vì quyền, yêu cầu phê duyệt hoặc thiết lập bảo vệ nhánh."
+      - "Biết khi nào cần học tiếp về Git, chiến lược nhánh hoặc GitLab CI/CD thay vì mở rộng quy trình cộng tác thành triển khai pipeline."

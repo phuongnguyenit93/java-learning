@@ -41,4 +41,84 @@
 # The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: gitlab-collaboration-model
+    relatedKnowledge:
+      - "01-gitlab-foundations"
+    title: "GitLab in the Source Collaboration Workflow"
+    purpose: "Understand why teams use GitLab to share source code, discuss changes, and govern how contributions are accepted."
+    objectives:
+      - "Distinguish version history and operations owned by Git from repository hosting and collaboration features provided by GitLab."
+      - "Explain how projects, groups, members, merge requests, and merge requirements fit together."
+      - "Recognize the boundaries between GitLab collaboration and Git mechanics, branching strategy, CI/CD, and specialized security workflows."
+
+  - id: gitlab-projects-and-groups
+    relatedKnowledge:
+      - "02-projects-and-groups"
+    title: "Organizing Projects, Repositories, and Groups"
+    purpose: "Learn GitLab's repository organization model to identify source ownership and a team's collaboration boundary."
+    objectives:
+      - "Explain the relationship between projects, repositories, personal namespaces, groups, and subgroups."
+      - "Distinguish public and private projects, and understand that internal visibility is available on GitLab Self-Managed or Dedicated but cannot be selected for new projects on GitLab.com."
+      - "Recognize how group and project structures affect team organization, information sharing, and governance across repositories."
+
+  - id: gitlab-members-and-permissions
+    relatedKnowledge:
+      - "03-members-and-access"
+    title: "Members, Roles, and Access Permissions"
+    purpose: "Understand how to grant access to projects and groups according to contributors' responsibilities."
+    objectives:
+      - "Differentiate GitLab roles such as Guest, Planner, Reporter, Developer, Maintainer, and Owner by their relevant capabilities."
+      - "Explain direct project membership, inherited membership, and access shared through groups."
+      - "Recognize missing or excessive permissions and where to investigate member access changes."
+
+  - id: gitlab-merge-request-proposals
+    relatedKnowledge:
+      - "04-merge-request-proposals"
+    title: "Proposing Changes Through Merge Requests"
+    purpose: "Understand how to submit a traceable and discussable change before it enters the target repository."
+    objectives:
+      - "Distinguish proposing changes from a branch in one project from proposing changes from a fork."
+      - "Identify source and target projects and branches, change descriptions, assignees, and draft status in a merge request."
+      - "Explain the lifecycle from opening and updating a proposal to making it ready for review, merging, or closing it."
+
+  - id: gitlab-reviews-and-approvals
+    relatedKnowledge:
+      - "05-reviews-and-approvals"
+    title: "Code Reviews and Approval Requirements"
+    purpose: "Understand how teams review proposed changes, provide feedback, and record approvals in GitLab."
+    objectives:
+      - "Interpret diffs, discussion threads, inline comments, and reviewer states within a merge request."
+      - "Distinguish reviewer assignment, comments, approvals, and change requests; note that merge-blocking 'Request changes' is a GitLab Premium/Ultimate feature."
+      - "Explain how approval rules and Code Owners influence required reviews when supported by the applicable GitLab tier."
+
+  - id: gitlab-protected-branches
+    relatedKnowledge:
+      - "06-protected-branches"
+    title: "Protected Branches and Merge Requirements"
+    purpose: "Understand how GitLab enforces permissions and checks before changes can enter important branches."
+    objectives:
+      - "Differentiate direct push permission from permission to merge through a merge request under protected branch settings."
+      - "Connect branch protection, approval requirements, Code Owners, and check statuses to merge eligibility."
+      - "Diagnose merges blocked by membership permissions, protected branches, missing approvals, or failing checks, with attention to tier-specific availability."
+      - "Recognize that overlapping protection rules generally apply the most permissive push/merge permissions but the most restrictive Code Owner approval requirement."
+
+  - id: gitlab-issues-and-releases
+    relatedKnowledge:
+      - "07-issues-and-releases"
+    title: "Tracking Issues and Recording Releases"
+    purpose: "Connect work discussions with proposed code changes and project-level release information."
+    objectives:
+      - "Explain how Issues, assignees, labels, and milestones help teams discuss, organize, and track work."
+      - "Relate an Issue to a merge request and understand conditions for closing the Issue when the associated change is merged."
+      - "Distinguish a Git tag from a GitLab Release containing notes and release assets, and recognize the boundary with versioning and deployment processes."
+
+  - id: gitlab-team-workflow
+    relatedKnowledge:
+      - "08-team-workflow"
+    title: "Putting the GitLab Team Workflow Together"
+    purpose: "Combine project organization, member permissions, merge requests, reviews, and branch protection into one coherent team workflow."
+    objectives:
+      - "Trace work from an Issue to a project change, merge request, feedback, merge eligibility, and recorded Release information."
+      - "Identify where to resolve merge blocks caused by access, approval requirements, or protected branch settings."
+      - "Recognize when to continue into Git, branching strategy, or GitLab CI/CD rather than expanding repository collaboration into pipeline implementation."

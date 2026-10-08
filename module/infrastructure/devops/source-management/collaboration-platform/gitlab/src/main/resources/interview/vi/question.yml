@@ -1,0 +1,500 @@
+# <interview-schema>
+# Cấu trúc câu hỏi Interview
+# schema-version: 2
+#
+# questions [kiểu: list; bắt buộc; mặc định: []]
+#   Danh sách câu hỏi Interview của module trong language hiện tại.
+#   mỗi phần tử:
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi phỏng vấn hiển thị cho người học.
+#     answer [kiểu: string; bắt buộc; mặc định: ""]
+#       Câu trả lời tham khảo, chỉ hiển thị khi người học chủ động mở.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu nội dung được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu nội dung đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+# </interview-schema>
+
+questions:
+  - question: "Nhóm đang lưu các bản vá trên ổ chung. Giải thích GitLab cải thiện quyết định kỹ thuật thế nào và vẫn chưa chứng minh được điều gì."
+    answer: "Git ghi lịch sử commit và diff thực tế. Project GitLab bổ sung người phụ trách, quyền truy cập, merge request, thảo luận và nhánh đích đã nhận mã để điều tra được cả thay đổi lẫn quyết định review. MR đã merge vẫn chưa chứng minh nghiệp vụ đúng hay ứng dụng đã triển khai; cần kiểm thử hành vi và bằng chứng delivery."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-gitlab-foundations.md"
+      anchor: "gitlab-hosting-purpose"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Issue quy định hóa đơn -1 phải bị từ chối nhưng MR có pipeline xanh lại ép -1 thành 0. Hãy mô tả cách review và tiêu chí chấp nhận."
+    answer: "Tôi đối chiếu đầu vào -1, kết quả từ chối mong đợi trong Issue với hành vi thực của diff rồi yêu cầu một regression test mà phương án ép về 0 sẽ không vượt qua. Pipeline xanh chỉ chứng minh các job và assertion hiện có đạt; thiếu case -1 thì vẫn xanh khi sai nghiệp vụ. Tôi gắn bình luận đúng dòng thay đổi, xác minh revision và test được bổ sung, sau đó mới cân nhắc Approve theo rule hiện hành."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-gitlab-foundations.md"
+      anchor: "unstructured-collaboration-risks"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Lập trình viên nói 'tôi đã commit local nên GitLab đã phê duyệt'. Phân biệt các hồ sơ và cách xác minh từng mốc."
+    answer: "Commit local ghi nội dung và quan hệ cha trong repository trên máy. Push công bố nhánh trên remote; MR ghi đề xuất, Approve ghi quyết định đánh giá, Merge cập nhật nhánh đích. Tôi đối chiếu SHA, nhánh nguồn, nguồn/đích MR, phiếu duyệt rồi lịch sử nhánh đích; mỗi mốc không mặc nhiên suy ra mốc tiếp theo."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-gitlab-foundations.md"
+      anchor: "git-versus-gitlab"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Vì sao thay đổi mã thường thuộc phạm vi GitLab project, còn khi nào nên dùng group?"
+    answer: "Project có Git repository và hồ sơ Issue/MR/branch riêng, nên khi cần điều tra commit nào được nhận, tôi bắt đầu tại project và nhánh đích cụ thể. Group tập hợp các project và có thể cấp membership hoặc quy tắc quản trị kế thừa để tránh cấu hình lặp. Ví dụ payments chứa gateway và billing: dù chung group, hai project không chia sẻ một commit DAG. Quyền group không thay thế việc xem history và merge status của từng project."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-gitlab-foundations.md"
+      anchor: "gitlab-project-repository"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Project company/payments/gateway được chuyển vào subgroup. Vì sao thiết kế namespace đổi rủi ro dù không đổi commit?"
+    answer: "Vị trí namespace ảnh hưởng chủ sở hữu project, quyền kế thừa, URL và ranh giới tổ chức dù nội dung commit không đổi. Tôi lập sơ đồ quyền từ group cha đến subgroup/project, kiểm tra integration và URL clone sau chuyển, rồi xem vai trò kế thừa có vô tình mở mã nhạy cảm không. Cây namespace không phải cây nhánh Git."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-gitlab-foundations.md"
+      anchor: "gitlab-namespace-basics"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "An nhận Issue #42, Bình review MR !57 và Mai quản lý project. Ai chịu trách nhiệm sửa mã, review và tích hợp?"
+    answer: "Giao việc diễn tả trách nhiệm phối hợp: An thực hiện sửa mã, Bình xác minh hành vi, Mai có thể quản lý quyền. Không nhãn nào tự cấp quyền merge main được bảo vệ hoặc bảo đảm phiếu review hợp lệ. Cần kiểm tra quyền merge hiệu lực và điều kiện approver riêng, sau đó xác định người được phép hoàn tất merge."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-gitlab-foundations.md"
+      anchor: "gitlab-participants"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Với thay đổi pricing rủi ro cao, bạn sẽ lập MR thế nào để reviewer có thể chấp nhận hoặc từ chối có căn cứ?"
+    answer: "Tôi chọn chính xác source project/branch và target main, dẫn Issue yêu cầu từ chối hóa đơn -1, đưa before/after, dữ liệu làm tròn và một test có thể tái hiện lỗi. Reviewer có chuyên môn pricing phải xác nhận hành vi trên diff hiện tại, không chỉ một ảnh pipeline xanh; comment khác với Approve hợp lệ. Trước merge cần xét cả quyền nhánh đích, approval rules và check đang áp dụng. MR chỉ là đề xuất cho tới khi revision thực được tích hợp."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-gitlab-foundations.md"
+      anchor: "gitlab-mr-introduction"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "MR đã có approve nhưng chưa merge. Cần chuỗi bằng chứng nào để kết luận mã đã nhận, sẵn sàng phát hành và đang chạy thật?"
+    answer: "Được nhận vào nguồn chung cần dấu vết merge có quyền và revision thực có trên nhánh đích, không chỉ phiếu Approve. Sẵn sàng phát hành còn cần kiểm thử phù hợp, chọn phiên bản và chuẩn bị release. Đang chạy production phải có bằng chứng môi trường hoặc pipeline xác nhận revision được deploy; riêng trang GitLab Release chưa đủ."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-gitlab-foundations.md"
+      anchor: "gitlab-workflow-concepts"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "So sánh project thuộc namespace cá nhân và group kỹ thuật. Khi một Maintainer nghỉ, cần xử lý gì?"
+    answer: "Namespace cá nhân dễ buộc tính liên tục quản trị vào một tài khoản; group cho ranh giới đội và quyền được phân cấp rõ hơn. Khi chuyển, tôi xác minh đường dẫn project, remote, quyền kế thừa, credential tích hợp và owner. Gỡ người nghỉ không được làm mất chủ thể chịu trách nhiệm hay để sót quyền trực tiếp."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02-projects-and-groups.md"
+      anchor: "project-namespace-ownership"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Hai project cùng nằm trong company/payments. Làm sao cấp quyền cho nhóm review chung mà không giả định mọi quyền đều như nhau?"
+    answer: "Tôi kiểm tra quyền ở group cha, subgroup và từng project, gồm thành viên được mời trực tiếp hay project được share. Vai trò ở group có thể kế thừa xuống, nhưng từng project còn có ngoại lệ hay rule bảo vệ nhánh riêng. Cần ghi quyền hiệu lực cho thao tác review cụ thể, thay vì chỉ nhìn nhãn membership."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02-projects-and-groups.md"
+      anchor: "groups-and-subgroups"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Nhóm đổi default branch master thành main. Trước khi nói mọi MR cũ đã nhắm main, bạn kiểm tra gì?"
+    answer: "Cấu hình default branch hướng dẫn công việc mới; nó không chứng minh mọi MR cũ đã tự đổi target hay lịch sử Git bị viết lại. Tôi kiểm tra nguồn/đích cụ thể của từng MR còn mở, sửa target cũ có chủ đích rồi xem lại protection rule và integration. Clone local cũng có thể giữ cấu hình checkout cũ đến khi người dùng cập nhật."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02-projects-and-groups.md"
+      anchor: "project-repository-settings"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Giải thích thế nào khi GitLab.com không cho tạo Internal project mới nhưng một Internal project cũ vẫn hoạt động?"
+    answer: "Phải phân biệt loại triển khai và trạng thái di sản. GitLab.com không còn cho tạo mới project/group/snippet Internal, nhưng đối tượng Internal cũ có thể giữ thiết lập. GitLab Self-Managed hoặc Dedicated có khả năng khác theo tài liệu. Tôi xác minh offering trước khi hướng dẫn tạo project, không suy từ ví dụ cũ ra tính năng hiện tại."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02-projects-and-groups.md"
+      anchor: "project-visibility-offerings"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Contractor được mời trực tiếp vào gateway nhưng không được vào billing. Bạn bảo đảm ranh giới này theo thời gian thế nào?"
+    answer: "Lời mời trực tiếp vào project có thể chỉ cấp quyền gateway mà không cho vào cả group. Tôi kiểm tra nguồn quyền trực tiếp, kế thừa và share ở cả hai project; thử khả năng xem/đóng góp bằng quyền contractor và rà lại khi công việc thay đổi. Quyền bổ sung ở group cha về sau có thể mở rộng quyền, nên ranh giới cần kiểm tra định kỳ."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02-projects-and-groups.md"
+      anchor: "projects-group-collaboration-boundary"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Guest đang phân loại Issue nhưng nay cần đề xuất sửa mã. Bạn quyết định quyền tối thiểu thế nào?"
+    answer: "Tôi liệt kê thao tác thật: xem mã, push nhánh, mở MR và có cần merge hay không. Vai trò Developer có thể cho đóng góp, nhưng cập nhật nhánh đích vẫn bị protected branch giới hạn; dùng fork có thể tránh phải cấp quyền ghi upstream. Tôi chỉ cấp phần quyền đường đóng góp cần và thử thực tế, không mặc định nâng lên Maintainer."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03-members-and-access.md"
+      anchor: "access-roles-overview"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Một developer có quyền được mời trực tiếp và kế thừa group. Vì sao xóa một lời mời chưa chứng minh thu hồi quyền?"
+    answer: "GitLab tổng hợp quyền hiệu lực từ nhiều đường membership: trực tiếp, kế thừa và có thể qua share. Gỡ lời mời trực tiếp vẫn có thể còn quyền từ group cha. Tôi xác định mọi nguồn cấp quyền của project đích, chỉ sửa đúng nguồn cần thu hồi, rồi thử khả năng xem/ghi bằng tài khoản liên quan; tránh tác động thành viên ở project khác."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03-members-and-access.md"
+      anchor: "direct-inherited-shared-membership"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Developer bị từ chối push vào main. Phân biệt thiếu quyền project với chính sách bảo vệ nhánh thế nào?"
+    answer: "Trước hết xác minh tài khoản xem được repository và push được nhánh làm việc hợp lệ. Tiếp theo kiểm tra mẫu protected branch và quyền Allowed to push and merge hiệu lực của main, không chỉ huy hiệu Developer. Người có thể mở MR vẫn có thể bị cấm push trực tiếp main. Cách giải quyết có thể là theo luồng MR hiện tại, không cần nâng quyền."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03-members-and-access.md"
+      anchor: "effective-project-permissions"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Contractor không ghi được upstream nhưng có quyền fork. Hãy giải thích đánh đổi về bảo mật và review khi dùng MR từ fork."
+    answer: "Fork tạo project nguồn riêng cho contributor ghi commit, còn upstream giữ membership và điều kiện merge độc lập. MR phải ghi đúng hai project và hai nhánh; reviewer cần đọc được phần diff liên quan. Tôi xem dữ liệu nào có thể lộ qua fork rồi áp dụng rule approve/protected branch ở upstream trước khi nhận mã; làm chủ fork không có nghĩa quản trị upstream."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03-members-and-access.md"
+      anchor: "access-for-mr-contribution"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Contractor chỉ quản lý Issue nhưng được cấp Maintainer. Bạn sửa quyền thế nào mà không gián đoạn quy trình?"
+    answer: "Tôi liệt kê thao tác Issue cần làm, xem vai trò thấp nhất được hỗ trợ bởi offering/tier và kiểm tra có quy trình nào khác lệ thuộc quyền cũ không. Sau đó hạ quyền đúng mức vẫn thao tác Issue được, xác nhận trên tình huống thực. Maintainer có quyền repository/quản trị project rộng hơn nhiều so với theo dõi việc, nên giữ vì tiện sẽ tăng rủi ro."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03-members-and-access.md"
+      anchor: "permission-troubleshooting"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "So sánh đóng góp từ nhánh cùng project với từ fork. Reviewer cần giữ bằng chứng gì ở mỗi trường hợp?"
+    answer: "Nhánh cùng project đòi hỏi người góp mã có quyền ghi nhánh nguồn trong project; fork đặt mã đề xuất ở project riêng và upstream giữ chính sách đích. Cả hai cần xác minh project/nhánh nguồn-đích, diff, yêu cầu, phản hồi review và trạng thái merge. Tên nhánh giống nhau không thay được định danh nguồn/đích."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04-merge-request-proposals.md"
+      anchor: "shared-project-contribution"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Contributor cập nhật fork và tưởng upstream tự đổi. Hãy mô tả đường tích hợp đúng."
+    answer: "Đồng bộ fork và upstream chấp nhận mã là hai việc. Contributor push commit lên fork, mở MR vào đúng nhánh upstream, phản hồi review và kiểm tra. Người được phép merge upstream chỉ tích hợp khi rule nhánh đích cho phép. Tôi xác nhận lịch sử upstream sau merge, không xem HEAD của fork là bằng chứng đã nhận mã."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04-merge-request-proposals.md"
+      anchor: "forked-project-contribution"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "MR hiện nguồn gateway-fork/main và đích company/payments/gateway/main. Vì sao chỉ kiểm tra tên main là nguy hiểm?"
+    answer: "Hai nhánh cùng tên main vẫn có thể thuộc hai repository với tip SHA và lịch sử phân kỳ khác nhau. Chỉ nhìn chuỗi main có thể khiến reviewer duyệt nhầm thay đổi của fork vào môi trường hoặc nhánh bảo trì sai. Tôi kiểm tra đầy đủ namespace/project, source và target branch, base SHA và diff mà MR tính ra. Sau khi xác nhận target là gateway upstream mong muốn, tôi mới yêu cầu approval; merge xong phải xác minh SHA nhánh đích chứ không suy từ HEAD của fork."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04-merge-request-proposals.md"
+      anchor: "source-target-project-branches"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Bạn review MR còn thiếu test -1. Khi nào nên để Draft thay vì Ready và mô tả cần những gì?"
+    answer: "Draft thích hợp khi tác giả muốn thảo luận hướng xử lý nhưng test từ chối hóa đơn -1 còn thiếu; trạng thái này không nên bị hiểu là sẵn sàng hợp nhất. Tôi yêu cầu mô tả ghi rõ source/target, hành vi trước/sau, test chưa chạy và câu hỏi cần review sớm. Khi bổ sung test có thể tái hiện, tác giả đưa MR về Ready và mời đánh giá trên revision mới. Ready không tự cộng phiếu Approve, giải quyết discussion hay vượt protected-branch rules."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04-merge-request-proposals.md"
+      anchor: "mr-description-assignee-draft"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Sau khi MR đã được approve, tác giả push thêm commit. Cần làm gì trước khi tin phiếu approve cũ?"
+    answer: "Tôi so revision mới với phần reviewer đã đọc, xem thay đổi tác động nghiệp vụ/rủi ro nào và yêu cầu review lại nếu cần. Cấu hình GitLab có thể reset approve sau commit mới, nên tôi kiểm tra Approval widget và discussion chưa xử lý. Pipeline xanh là bằng chứng hữu ích nhưng không phê duyệt hộ mã chưa được xem; merge phải dựa vào source hiện tại."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04-merge-request-proposals.md"
+      anchor: "mr-lifecycle-states"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "MR sửa tiền âm nhưng đồng thời đổi cấu hình xác thực. Bạn review phạm vi, tính đúng và rủi ro thế nào mà không chỉ nhìn số dòng?"
+    answer: "Tôi lần từ hành vi phải từ chối tiền âm trong Issue đến dòng mã và ca tái hiện cụ thể. Thay đổi xác thực cần lý do rõ hoặc MR riêng vì thuộc vùng rủi ro khác; diff mười dòng vẫn có thể nguy hiểm. Tôi bình luận đúng tệp, yêu cầu test số âm và review bảo mật phù hợp, rồi đối chiếu diff mới và các check trước khi approve."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05-reviews-and-approvals.md"
+      anchor: "review-context-diff-discussions"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Trong GitLab MR, phân biệt assignee, reviewer và người đủ điều kiện approve theo rule. Khi nào nhãn UI dễ gây hiểu sai?"
+    answer: "Assignee điều phối việc, reviewer đánh giá đề xuất, còn approver hợp lệ phải đáp ứng điều kiện membership/rule thì phiếu mới được tính. Giao diện có thể hiện avatar hay comment của reviewer dù phiếu không hợp lệ. Tôi xem Approvals widget và danh sách eligible, gồm membership trực tiếp với kế thừa, rồi mới kết luận đủ rule."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05-reviews-and-approvals.md"
+      anchor: "mr-reviewers-vs-assignees"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Bình gợi ý công thức sửa nhưng chưa bấm Approve. Nhóm chuyển từ thảo luận sang quyết định đáng tin cậy thế nào?"
+    answer: "Suggestion là góp ý có thể áp dụng, không phải phiếu Approve và cũng không chứng minh mã đã sửa. Tác giả cần áp dụng hoặc giải thích, đưa test cho đầu vào yêu cầu, mời Bình xem revision mới. Chỉ hành động Approve của người hợp lệ được tính vào rule; trước merge vẫn kiểm tra quyền nhánh, discussion và pipeline riêng."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05-reviews-and-approvals.md"
+      anchor: "review-comments-vs-approvals"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Nhóm dùng GitLab Free tưởng Request changes sẽ chặn merge. Bạn xây quy trình review thế nào để không giả định sai tính năng?"
+    answer: "Trước hết xác minh offering, gói và tính năng review đang bật. Tài liệu hiện hành mô tả Request changes có chặn merge ở Premium/Ultimate, còn comment thường vẫn hữu ích trên gói khác. Trên Free, tôi quy định rõ kỳ vọng review, tận dụng gate được hỗ trợ và đường báo lỗi, không xem comment là chặn kỹ thuật. Trên Premium/Ultimate cần kiểm tra trạng thái chặn và cách giải quyết."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05-reviews-and-approvals.md"
+      anchor: "request-changes-tier-gate"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Rule cần hai approval từ nhóm chỉ định nhưng một reviewer chỉ được kế thừa quyền gián tiếp. Chẩn đoán phiếu thiếu thế nào?"
+    answer: "Tôi kiểm tra user/group được chọn trong rule và danh sách eligible approver, không chỉ xem người đó đọc project được hay không. GitLab phân biệt thành viên trực tiếp của approver group với quyền thừa hưởng gián tiếp từ một nhóm được share khác. Cần xem đúng group, tier, số phiếu và cấu hình trước khi sửa quyền; mời reviewer hợp lệ khác hoặc chỉnh đúng nguồn membership."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05-reviews-and-approvals.md"
+      anchor: "approval-rules-required-approvers"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Vì sao CODEOWNERS của pricing/ có thể yêu cầu phiếu khác với rule hai reviewer chung, và cơ chế chặn đến từ đâu?"
+    answer: "CODEOWNERS gắn đường dẫn bị sửa với người chịu trách nhiệm; approval rule chung có thể chọn người không theo tệp. Để chặn bắt buộc theo Code Owner, target phải protected và bật rule owner trên gói hỗ trợ. Tôi xem pattern pricing/, quyền owner hợp lệ, nhánh đích được bảo vệ và Approval widget. Phiếu chung của Maintainer không thuộc nhóm owner có thể không đủ."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05-reviews-and-approvals.md"
+      anchor: "code-owners-vs-approval-rules"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Bình approve hôm qua; hôm nay tác giả push commit mới và còn discussion chưa resolved. Bằng chứng nào quyết định MR đã sẵn sàng?"
+    answer: "Tôi so SHA/diff đã review hôm qua với revision hiện tại, xem cấu hình push có reset approve không, rồi xác định thread chưa giải quyết liên quan yêu cầu nào. Sau đó kiểm tra phiếu approve hiện tại, Code Owner và trạng thái check theo commit. Đóng thread mà không sửa hành vi hoặc mù quáng tin approve cũ sẽ che rủi ro."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05-reviews-and-approvals.md"
+      anchor: "follow-up-reviews"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Vì sao cần bảo vệ main, và protection vẫn không ngăn được lỗi nào dù quyền merge đã đúng?"
+    answer: "Protection quản lý ai được push trực tiếp hoặc hợp nhất vào tham chiếu quan trọng và có thể bắt buộc luồng MR. Nó không hiểu nghiệp vụ: Maintainer có quyền vẫn có thể nhận công thức thuế sai nếu review/test bỏ sót. Tôi kết hợp quyền nhánh với phiếu duyệt, bằng chứng kiểm thử và owner khôi phục; không coi protection là bảo đảm mã đúng."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06-protected-branches.md"
+      anchor: "protected-branches-purpose"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Main cho Maintainer merge nhưng Allowed to push and merge đặt No one. Hãy phân biệt merge MR với push trực tiếp."
+    answer: "Allowed to merge cho quyền hợp nhất qua MR nếu các điều kiện khác đều đạt. Allowed to push and merge quản lý cập nhật trực tiếp và cũng có thể cấp merge; đặt No one rõ ràng sẽ chặn push trực tiếp vào nhánh protected. Maintainer vẫn merge MR hợp lệ nếu quyền Allowed to merge cho phép. Cần kiểm tra wildcard khác có vô tình mở rộng quyền không."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06-protected-branches.md"
+      anchor: "allowed-to-merge-vs-push"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Owner GitLab.com Premium muốn rule main cấp top-level group và viết REST script. Phải phân biệt gì theo offering và tier?"
+    answer: "UI group protected branches có trên Premium/Ultimate cho GitLab.com, Self-Managed và Dedicated từ 17.6; quyền cấu hình thuộc Owner của top-level group, không phải subgroup. REST API group-level protected branches riêng hiện ghi Self-Managed only, nên tôi không hứa dùng endpoint đó trên GitLab.com. Rule kế thừa từ group không sửa trực tiếp ở project con."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06-protected-branches.md"
+      anchor: "project-group-branch-rules"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Main protected khớp main: No one push và m*: Developers push. Quyền hiệu lực là gì và Code Owner có ngoại lệ nào?"
+    answer: "GitLab xét các rule nhánh trùng nhau cùng lúc; quyền push/merge/force-push thường lấy mức rộng nhất, nên m* có thể mở quyền Developer dù main exact đặt No one. Yêu cầu Code Owner lại lấy mức khắt khe nhất trong các rule áp dụng. Tôi rà mọi rule exact/wildcard ở project/group và đồng bộ mức bảo vệ; tên exact không mặc định thắng."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06-protected-branches.md"
+      anchor: "overlapping-rule-precedence"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "CODEOWNERS đã chỉ owner nhưng target chưa protected. Trước khi bảo manager owner approval bắt buộc, bạn kiểm tra gì?"
+    answer: "Liệt kê owner theo đường dẫn giúp phối hợp, nhưng muốn bắt buộc phiếu owner cho MR cần target protected và bật Code Owner approval trên gói phù hợp. Tôi kiểm tra CODEOWNERS thực sự được dùng, pattern khớp file đổi, quyền owner hợp lệ, protection và Approval widget. Reviewer được mời tự động chưa chắc là phiếu chặn."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06-protected-branches.md"
+      anchor: "code-owner-approval-protected-target"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "MR có đủ approve nhưng pipeline check thất bại. Phân biệt lỗi CI với lỗi review mà không sửa pipeline code thế nào?"
+    answer: "Tôi bắt đầu từ widget Merge: check nào chặn và pipeline chạy cho revision nào. Job build/test lỗi cần xem pipeline/job log với chủ CI; approvals liên quan người review và phiếu hợp lệ. Chạy lại xanh có thể đạt gate kỹ thuật nhưng không sửa nghiệp vụ sai. Phần collaboration ghi nhận bằng chứng rồi giao triển khai job CI cho người phụ trách CI/CD."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06-protected-branches.md"
+      anchor: "merge-checks-and-pipeline-boundary"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Merge bị khóa dù đã approve và CI xanh. Hãy mô tả cây chẩn đoán an toàn có tính đến rule protected trùng nhau."
+    answer: "Tôi xác minh trạng thái Ready, nguồn/đích cụ thể và người thao tác, rồi đối chiếu thông báo chặn với quyền merge hiệu lực. Tiếp theo kiểm tra số Approve, eligibility Code Owner, Request changes, discussion và các check. Cuối cùng rà mọi pattern group/project cùng khớp, nhớ quyền thông thường lấy mức rộng còn Code Owner lấy mức chặt. Tôi sửa nguyên nhân hẹp nhất thay vì cấp Owner hoặc đổi sang nhánh không bảo vệ."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06-protected-branches.md"
+      anchor: "blocked-merge-diagnosis"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Issue báo hệ thống nhận tiền âm nhưng chưa ai tái hiện được. Cần ghi gì vào Issue trước khi sửa mã?"
+    answer: "Tôi ghi hành vi thực/mong đợi, đầu vào -1, môi trường, các bước tái hiện, tác động nghiệp vụ và bằng chứng kèm theo. Issue định nghĩa vấn đề độc lập với bản vá; MR sau đó dẫn về Issue và cho thấy cách sửa. Tôi không đóng việc chỉ vì ai đó đã commit. Việc đóng Issue, merge và hành vi trên production cần xác minh riêng."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "07-issues-and-releases.md"
+      anchor: "gitlab-issue-purpose"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Issue #42 được giao An, gắn bug và mốc v1.4. Release manager suy ra được gì và không được suy ra gì?"
+    answer: "Assignee cho biết người phối hợp, label phân loại việc, milestone gom Issue/MR theo mục tiêu kế hoạch. Chúng giúp ưu tiên backlog và biết người chịu trách nhiệm. Không thuộc tính nào chứng minh mã đã merge, GitLab Release đã có hay phần mềm được triển khai. Tôi kiểm tra MR liên kết, trạng thái chấp nhận và hồ sơ phát hành/triển khai trước khi công bố sẵn sàng."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "07-issues-and-releases.md"
+      anchor: "issue-assignees-labels-milestones"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "MR ghi 'Closes #42' nhưng nhắm nhánh release thay vì default. Bạn sẽ giải thích gì với người báo lỗi?"
+    answer: "Từ khóa có thể liên kết Issue với MR, nhưng tự đóng thường phụ thuộc việc merge vào default branch và cấu hình closing. Tôi kiểm tra target thực, trạng thái MR, lịch sử Issue và project setting rồi chỉ báo kết quả quan sát được, không hứa chắc Issue tự đóng. Issue đóng vẫn cần bằng chứng hành vi và triển khai để biết khách thật sự thấy bản sửa."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "07-issues-and-releases.md"
+      anchor: "issues-linked-to-merge-requests"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Vì sao có tag v1.4.0 chưa đồng nghĩa có GitLab Release và cả hai đều chưa chứng minh production đã chạy?"
+    answer: "Git tag là tên tham chiếu một revision Git. GitLab Release là hồ sơ công bố riêng gắn tag, có tên, thời điểm, notes và có thể có link asset. Tôi kiểm tra cả hai rồi hỏi hệ thống deploy commit và artifact nào thật sự chạy production. Công bố và triển khai là hai sự kiện khác vòng đời; nhãn không thay được bằng chứng môi trường."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "07-issues-and-releases.md"
+      anchor: "git-tag-vs-gitlab-release"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Trang Release có notes và tệp tải xuống nhưng support nói người dùng vẫn gặp hành vi cũ. Bạn giải quyết khoảng trống bằng chứng ra sao?"
+    answer: "Tôi truy từ tag về commit và MR đã merge, đối chiếu release notes với hành vi đã test rồi xem artifact được build/công bố nào. Sau đó làm việc với người phụ trách triển khai để xác minh môi trường production, phạm vi rollout và revision thực chạy. Tệp tải được không chứng minh client đã nhận hay đang dùng, nên không báo metadata Release như kết quả deploy thành công."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "07-issues-and-releases.md"
+      anchor: "release-notes-assets-boundary"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Hãy kể hành trình từ Issue #42 tới MR !57 và revision đầu tiên được nhận vào main. Bạn đưa bằng chứng gì khi phỏng vấn?"
+    answer: "Tôi trình Issue #42 với ca -1 và tiêu chí nghiệm thu, nhánh/fork của An, cặp nguồn-đích rõ của MR !57, diff, discussion và test bổ sung. Tiếp theo là người approve hợp lệ, protection áp dụng lúc merge, dấu vết merge và SHA của main sau đó. Mỗi hồ sơ chứng minh một bước từ yêu cầu tới mã được nhận; phát hành và deploy vẫn cần kiểm tra riêng."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "08-team-workflow.md"
+      anchor: "issue-to-mr-approval-merge"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Contractor không thấy gateway private, còn Bình review được nhưng phiếu không tính. Giải quyết cả hai với thay đổi quyền tối thiểu thế nào?"
+    answer: "Đây là hai gate khác nhau. Với contractor, tôi xem visibility, quyền trực tiếp/kế thừa/share và đường đóng góp cần dùng, có thể dùng fork hoặc membership vừa đủ. Với Bình, tôi kiểm tra eligible approver thực trong rule, membership trực tiếp của group và cấu hình project. Tôi xác minh đọc mã, đóng góp và phiếu được tính riêng; nâng cả hai thành Owner chỉ che nguyên nhân."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "08-team-workflow.md"
+      anchor: "roles-access-review-blockers"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Pipeline xanh và có hai approve nhưng GitLab vẫn không merge MR vào main. Trình bày thứ tự điều tra trước khi sửa cấu hình."
+    answer: "Xác minh MR Ready, project/nhánh nguồn và đích, người bấm merge và thông báo cụ thể. Sau đó xem quyền merge, số phiếu approve hợp lệ, Code Owner/Request changes, discussion chưa xử lý và revision của pipeline/check. Cuối cùng rà tất cả branch rule group/project trùng nhau và khả năng theo tier. CI xanh và hai avatar không chứng minh đủ gate; tôi chỉ sửa cấu hình khi đã xác định sai thật."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "08-team-workflow.md"
+      anchor: "protected-branch-approval-blockers"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "MR !57 đã merge, Issue #42 đóng nhưng không thấy Release v1.4. Nên báo kết quả gì và còn cần gì?"
+    answer: "Tôi báo mã đã được tích hợp và Issue ghi trạng thái đóng, có SHA main và MR làm bằng chứng. Tôi nói chưa xác minh được việc công bố Release thay vì mặc nhiên khẳng định đã có. Muốn nói v1.4 đã giao, cần tag, Release record, bằng chứng artifact/build và bản ghi môi trường/deploy chứng minh revision đang chạy; chỉ đóng Issue là chưa đủ."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "08-team-workflow.md"
+      anchor: "merge-to-release-metadata"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Nhóm đổ lỗi quyền GitLab vì production không đổi sau merge. Làm sao phân vai Git, chiến lược nhánh, MR governance và CI/CD?"
+    answer: "Git trả lời commit/branch tồn tại và lịch sử đổi thế nào. Chiến lược nhánh đặt nhịp tích hợp và chính sách release branch; GitLab quản lý MR, reviewer, membership và gate merge; CI/CD chạy build và triển khai. Sau khi xác minh MR và SHA đích, tôi kiểm tra pipeline/môi trường với chủ delivery thay vì đổi quyền merge. Mỗi công cụ cho loại bằng chứng riêng, nên chẩn đoán theo ranh giới đang lỗi."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "08-team-workflow.md"
+      anchor: "handoff-to-git-strategy-ci"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
