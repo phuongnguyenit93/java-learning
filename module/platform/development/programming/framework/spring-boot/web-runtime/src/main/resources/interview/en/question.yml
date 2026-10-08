@@ -27,4 +27,159 @@
 #         Exact method signature in api-descriptions.yml, for example startVsRun().
 # </interview-schema>
 
-questions: []
+questions:
+  - question: >-
+      What problem does Spring Boot's web-runtime layer solve between SpringApplication and Spring MVC or WebFlux, and why is it useful to keep that boundary explicit when diagnosing a web application that starts incorrectly?
+    answer: >-
+      Boot's web-runtime layer decides whether the application is web-capable, chooses the appropriate web application context, supplies and configures an embedded server factory, and starts the resulting WebServer as part of context refresh. MVC and WebFlux begin after that handoff and own request-processing semantics. Keeping the boundary explicit prevents category errors: a failure to create or start the embedded server belongs to Boot/server bootstrap, while handler mappings, codecs, controllers, and request dispatch belong to the web framework. The distinction narrows diagnostics and avoids changing controller code to solve a server-startup problem.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Introduction/Introduction.md"
+      anchor: "web-runtime-boundaries"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      How does WebApplicationType influence the rest of Spring Boot startup, and what surprising behavior can occur when both Servlet and Reactive indicators are present on the classpath?
+    answer: >-
+      WebApplicationType is an early classification that affects which ApplicationContext implementation Boot creates and which web-server auto-configuration path can match. Classpath deduction is therefore not just descriptive metadata; it changes the runtime model that follows. When Servlet and Reactive indicators coexist, the Servlet model normally takes precedence, so merely adding a reactive library does not necessarily produce a reactive server application. If the application intentionally needs another model, an explicit spring.main.web-application-type choice is clearer than relying on an accidental dependency mix. This matters because later conditions, server factories, and framework infrastructure are all evaluated in the selected application type.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.WebApplicationType/WebApplicationType.md"
+      anchor: "servlet-reactive-precedence"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Explain the lifecycle relationship between a web ApplicationContext, a WebServerFactory, and the running WebServer. Why is the actual listening port a runtime fact rather than merely a configuration value?
+    answer: >-
+      Boot first obtains a suitable WebServerFactory from the context, applies configuration and customizers to that factory, creates the WebServer, and starts it as part of web-application-context refresh. The factory is the construction/configuration abstraction; the WebServer is the realized runtime instance. Configuration such as server.port expresses intent, but the runtime may resolve it differently. The clearest example is server.port=0: the configured value remains zero while the operating system assigns a real free port after server startup. Code that needs the listening endpoint must therefore inspect the initialized server state rather than assuming the configured property equals the realized port.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.EmbeddedServerModel/EmbeddedServerModel.md"
+      anchor: "web-server-context-startup"
+    apiRelated:
+      controller: "WebRuntimeExperimentController"
+      methodSignature: "embeddedServer()"
+
+  - question: >-
+      A Servlet Boot application defines its own ServletWebServerFactory bean. What should happen to Boot's default server-factory auto-configuration, and why is that back-off behavior important for customization design?
+    answer: >-
+      Boot's default Servlet server-factory contribution should back off when the application supplies its own ServletWebServerFactory. The application has made an explicit ownership decision, so creating another competing factory would make startup ambiguous and turn customization into a fight with defaults. This also explains the preferred escalation path: supported server properties are cheapest, WebServerFactoryCustomizer is the normal programmatic hook when the factory can remain Boot-managed, and a custom factory bean is the strongest override when the application truly needs to own construction. Back-off preserves convention without taking control away from the application.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.ServletServerAutoConfiguration/ServletServerAutoConfiguration.md"
+      anchor: "servlet-server-backoff"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Why should you separate reactive server bootstrap from Spring WebFlux request processing when reasoning about a reactive Boot application? Give an example of a symptom that belongs on each side of the boundary.
+    answer: >-
+      Reactive server bootstrap is responsible for selecting and configuring a ReactiveWebServerFactory, creating the concrete server, and starting it with the reactive application context. WebFlux owns the higher-level request pipeline after the server is running. A failure such as no suitable reactive server factory or a port-binding error belongs to bootstrap. A request that reaches the server but fails route matching, codec negotiation, or handler execution belongs to WebFlux. Mixing the layers leads to poor fixes, such as changing RouterFunction definitions for a missing server dependency or replacing the server because a codec is misconfigured.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.ReactiveServerAutoConfiguration/ReactiveServerAutoConfiguration.md"
+      anchor: "reactive-server-webflux-boundary"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      How would you explain the difference between ServerProperties and the running WebServer to someone debugging production configuration? Why should portable server.* settings generally be preferred before server-specific namespaces?
+    answer: >-
+      ServerProperties is Boot's bound configuration model: it captures the effective supported server.* intent after external configuration has been resolved and bound. The running WebServer is the realized runtime object after factory selection, customization, binding to the operating system, and startup. Comparing the two distinguishes what was requested from what actually happened. Portable server.* properties should be preferred when they express the requirement because they keep the application less coupled to Tomcat, Jetty, Undertow, or Netty details. Server-specific namespaces are appropriate when the requirement genuinely depends on a feature or tuning knob outside Boot's common abstraction.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.ServerProperties/ServerProperties.md"
+      anchor: "portable-vs-server-specific-properties"
+    apiRelated:
+      controller: "WebRuntimeExperimentController"
+      methodSignature: "serverProperties()"
+
+  - question: >-
+      When customizing an embedded server, why is the usual decision order "properties, then WebServerFactoryCustomizer, then a custom factory bean"? What maintenance cost increases at each step?
+    answer: >-
+      Properties use Boot's stable public configuration contract and keep construction, defaults, ordering, and lifecycle ownership with Boot, so they carry the lowest coupling. A WebServerFactoryCustomizer is appropriate when the required setting is programmatic or not represented by a property while still allowing Boot to own the factory; the application now depends on factory APIs and customizer ordering. Supplying the factory bean transfers construction ownership to the application and therefore carries the strongest coupling to server choice and Boot internals around factory creation. Choosing the least powerful hook that expresses the requirement usually produces the most portable and upgrade-friendly configuration.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.ServerCustomization/ServerCustomization.md"
+      anchor: "server-customization-decision-order"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      HTTP/2, compression, header limits, access logging, and connection tuning can all look like "HTTP configuration." How would you decide whether to use a Boot-portable setting or a server-specific capability?
+    answer: >-
+      Start from the behavioral requirement and look for a common Boot property that expresses it across supported servers. Use that portable contract when its semantics are sufficient. Move to a server-specific namespace or customizer only when the requirement depends on implementation-specific behavior, such as a connector option, logging facility, or tuning control that Boot deliberately does not normalize. The trade-off is portability versus precision: server-specific controls can expose more capability but also tie configuration, tests, and operational knowledge to one implementation. The decision should be explicit so a later server replacement does not silently inherit invalid assumptions.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.HttpFeatures/HttpFeatures.md"
+      anchor: "http-feature-portability"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      What is the design advantage of applying a named SSL bundle to the web server instead of repeating discrete TLS material in server.ssl.* settings, and when might direct server.ssl configuration still be reasonable?
+    answer: >-
+      A named SSL bundle gives TLS material and options a reusable identity that can be consumed consistently by more than one client or server integration. It reduces duplicated keystore, truststore, certificate, and protocol configuration and makes rotation or policy changes easier to centralize. Direct server.ssl.* settings remain reasonable when TLS is local to one web-server endpoint and reuse would add indirection without benefit. In either form Boot integrates TLS material with the embedded server; certificate issuance, PKI policy, trust architecture, and external load-balancer termination remain separate operational concerns that should not be confused with Boot's server configuration API.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "9.TlsSslBundles/TlsSslBundles.md"
+      anchor: "ssl-bundle-consumption"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      Why are forwarded headers a trust-boundary decision rather than just a convenience for generating correct URLs behind a proxy? Compare NONE, NATIVE, and FRAMEWORK at a reasoning level.
+    answer: >-
+      Forwarded headers can rewrite the scheme, host, port, client address, and URL that application code believes originated at the network boundary. Trusting attacker-supplied values can therefore corrupt redirects, security decisions, logging, and link generation. NONE leaves those headers unapplied. NATIVE delegates interpretation to the embedded server's own mechanism. FRAMEWORK lets Spring Framework transform request metadata. The correct strategy depends on the deployment topology and on ensuring that only trusted proxies can supply or preserve authoritative forwarding metadata. Boot selects the strategy; the security of the proxy chain and header sanitization remains an infrastructure responsibility.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "10.ForwardedHeadersProxy/ForwardedHeadersProxy.md"
+      anchor: "forwarded-header-trust-boundary"
+    apiRelated:
+      controller: "WebRuntimeExperimentController"
+      methodSignature: "requestMetadata()"
+
+  - question: >-
+      Describe graceful shutdown as a coordination problem. Why is "the process received SIGTERM" not enough to conclude that in-flight HTTP work will complete safely?
+    answer: >-
+      A termination signal only starts the shutdown path. In Spring Boot 3.3, server.shutdown defaults to immediate, so graceful request draining must first be enabled with server.shutdown=graceful. Once enabled, safe completion still depends on the application context closing, the embedded server entering its graceful behavior, new work being rejected or drained according to that server, and in-flight requests finishing before the configured shutdown phase timeout expires. Application availability, orchestration readiness changes, background work, and downstream timeouts also influence whether the overall service shuts down cleanly. Graceful server shutdown therefore provides a bounded opportunity, not an unlimited guarantee. Production settings should align Boot's shutdown timeout with platform termination grace periods and with the longest request work the service intends to finish.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "11.GracefulShutdown/GracefulShutdown.md"
+      anchor: "in-flight-request-grace-period"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: >-
+      You inherit a Boot web service with many explicit server customizations. How would you decide which settings should remain explicit and which should return to Boot defaults without turning "convention over configuration" into blind trust?
+    answer: >-
+      First classify every customization by the requirement it satisfies: correctness, security, deployment topology, observability, performance evidence, or historical accident. Keep explicit choices whose requirement would be violated by the Boot default and verify them with focused runtime evidence. Remove settings that merely restate the default or compensate for an obsolete deployment assumption, because unnecessary overrides hide upgrades and increase coupling. Then re-check the boundary of ownership: request-processing policy belongs to MVC/WebFlux, network and proxy policy may belong to infrastructure, and only embedded-server bootstrap/configuration belongs here. Convention is valuable when it removes accidental decisions while preserving the decisions the system actually needs.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "12.BootWebDefaults/BootWebDefaults.md"
+      anchor: "web-runtime-end-to-end-model"
+    apiRelated:
+      controller: ""
+      methodSignature: ""

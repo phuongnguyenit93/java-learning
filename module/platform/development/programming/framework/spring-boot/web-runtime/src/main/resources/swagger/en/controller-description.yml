@@ -1,0 +1,6 @@
+WebRuntimeExperimentController:
+  description: |-
+    <h2>Web Runtime Experiment Controller</h2>
+    <p>Observes the Boot-managed Servlet web runtime that is actually serving the request: the embedded server instance, bound ServerProperties, and request metadata after the configured forwarded-header strategy has been applied.</p>
+  readmeRelated:
+    file: 3.EmbeddedServerModel/EmbeddedServerModel.md

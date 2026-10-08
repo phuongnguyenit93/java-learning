@@ -38,4 +38,378 @@
 #       ID nội bộ của đáp án đúng. Frontend kiểm tra bằng identity này sau khi shuffle.
 # </quiz-schema>
 
-questions: []
+questions:
+  - id: 'q01-mixed-web-stack-precedence'
+    question: 'Một ứng dụng Spring Boot có cả Spring MVC và Spring WebFlux trên classpath, nhưng không cấu hình tường minh loại ứng dụng web. Theo mặc định Boot sẽ chọn mô hình runtime nào?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '2.WebApplicationType/WebApplicationType.md'
+      anchor: 'servlet-reactive-precedence'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'REACTIVE, vì chỉ cần WebFlux có mặt là nó luôn được ưu tiên hơn MVC.'
+        explanation: 'WebFlux có trên classpath không tự ép ứng dụng sang reactive runtime khi MVC cũng tồn tại.'
+      - id: B
+        answer: 'NONE, vì Boot xem việc có hai web stack là một môi trường web không xác định.'
+        explanation: 'Classpath hỗn hợp vẫn là môi trường web và Boot có quy tắc ưu tiên mặc định rõ ràng.'
+      - id: C
+        answer: 'SERVLET, vì MVC/Servlet được ưu tiên khi cả hai web stack cùng có mặt.'
+        explanation: 'Đúng. Boot mặc định chọn mô hình Servlet/MVC khi đồng thời phát hiện tín hiệu MVC và WebFlux.'
+      - id: D
+        answer: 'Kết quả chỉ phụ thuộc starter nào được khai báo trước trong build file.'
+        explanation: 'Thứ tự khai báo dependency trong build file không phải quy tắc chọn WebApplicationType.'
+    correctAnswerId: C
+
+  - id: 'q02-none-vs-disabled-http-endpoints'
+    question: 'Phát biểu nào phân biệt đúng spring.main.web-application-type=none với server.port=-1?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '6.ServerProperties/ServerProperties.md'
+      anchor: 'port-address-endpoint-controls'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Cả hai đều tạo web ApplicationContext bình thường nhưng ngăn server bind vào một cổng TCP.'
+        explanation: 'Hai thiết lập tác động ở hai tầng khác nhau; web-application-type=none không đi theo web runtime path.'
+      - id: B
+        answer: 'none tạo context không chạy web; server.port=-1 giữ web context nhưng không mở HTTP endpoint.'
+        explanation: 'Đúng. Một thiết lập đổi loại ứng dụng, thiết lập còn lại tắt HTTP listener nhưng vẫn giữ web context.'
+      - id: C
+        answer: 'server.port=-1 đổi loại ứng dụng thành NONE, còn web-application-type=none chỉ thay cổng.'
+        explanation: 'Phát biểu này đảo ngược trách nhiệm của hai thiết lập.'
+      - id: D
+        answer: 'Hai thiết lập là alias; Boot chuẩn hóa cả hai thành cùng một giá trị WebApplicationType.'
+        explanation: 'Đây là hai cơ chế riêng và không được chuẩn hóa thành một thiết lập tương đương.'
+    correctAnswerId: B
+
+  - id: 'q03-replacing-default-server'
+    question: 'Một ứng dụng Servlet dùng spring-boot-starter-web với Tomcat mặc định. Nhóm phát triển muốn chuyển sang Jetty nhưng vẫn giữ mô hình Servlet runtime. Cách làm thông thường theo Boot là gì?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '3.EmbeddedServerModel/EmbeddedServerModel.md'
+      anchor: 'replacing-default-server'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Giữ Tomcat rồi tự khởi động Jetty từ main để hai server cùng cạnh tranh cổng của ứng dụng.'
+        explanation: 'Boot không yêu cầu tự bootstrap server khi chỉ thay một server được hỗ trợ bằng server khác.'
+      - id: B
+        answer: 'Đổi WebApplicationType thành REACTIVE vì Jetty chỉ được hỗ trợ trong nhánh reactive server.'
+        explanation: 'Jetty cũng được hỗ trợ ở Servlet stack; đổi server implementation không đòi hỏi đổi runtime model.'
+      - id: C
+        answer: 'Khai báo custom ServletWebServerFactory bean trước rồi giữ nguyên mọi starter dependency.'
+        explanation: 'Custom factory là mức can thiệp mạnh hơn cần thiết cho một lần thay server thông thường.'
+      - id: D
+        answer: 'Thay starter Tomcat bằng starter Jetty để Boot chọn Servlet factory tương ứng.'
+        explanation: 'Đúng. Thay server được hỗ trợ thường là quyết định về dependency và vẫn giữ vòng đời Boot xung quanh.'
+    correctAnswerId: D
+
+  - id: 'q04-runtime-server-observation'
+    question: 'Vì sao quan sát concrete WebServer từ WebServerApplicationContext đang chạy đáng tin cậy hơn việc chỉ suy ra server từ tên starter?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '3.EmbeddedServerModel/EmbeddedServerModel.md'
+      anchor: 'web-server-context-startup'
+    apiRelated:
+      controller: 'WebRuntimeExperimentController'
+      methodSignature: 'embeddedServer()'
+    answers:
+      - id: A
+        answer: 'Nó cho biết server mà Boot thực sự đã tạo và khởi động sau quá trình chọn từ classpath và auto-configuration.'
+        explanation: 'Đúng. Quan sát runtime nhìn trực tiếp concrete server đang tham gia vào application context hiện tại.'
+      - id: B
+        answer: 'Nó buộc Boot thay server đã cấu hình bằng loại server được endpoint trả về.'
+        explanation: 'Endpoint chỉ quan sát trạng thái runtime, không lựa chọn hay thay thế server.'
+      - id: C
+        answer: 'Nó bỏ qua WebServerFactory rồi hỏi hệ điều hành thư viện Java server nào đang sở hữu cổng.'
+        explanation: 'Boot web application context cung cấp server; hệ điều hành không xác định nhánh factory Java đã tạo server đó.'
+      - id: D
+        answer: 'Nó chứng minh chiến lược controller mapping nào của Spring MVC đang hoạt động bên trong request-processing framework.'
+        explanation: 'Experiment này chứng minh trạng thái context/server ở tầng Boot web runtime, không phải semantics của MVC handler mapping.'
+    correctAnswerId: A
+
+  - id: 'q05-configured-vs-actual-port'
+    question: 'Ứng dụng khởi động với server.port=0. Experiment serverProperties() trả về configuredPort=0 và actualPort=53142. Kết quả này chứng minh điều gì?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '6.ServerProperties/ServerProperties.md'
+      anchor: 'server-properties-model'
+    apiRelated:
+      controller: 'WebRuntimeExperimentController'
+      methodSignature: 'serverProperties()'
+    answers:
+      - id: A
+        answer: 'ServerProperties đã stale vì Boot lẽ ra phải thay configuredPort bằng cổng runtime được cấp.'
+        explanation: 'ServerProperties biểu diễn ý định cấu hình; nó không phải biến đổi thành toàn bộ trạng thái runtime cuối cùng.'
+      - id: B
+        answer: 'server.port=0 yêu cầu một cổng khả dụng; WebServer đang chạy cho biết cổng được cấp lúc startup.'
+        explanation: 'Đúng. server.port=0 là ý định cấu hình và cổng thực tế chỉ biết sau khi server được khởi tạo.'
+      - id: C
+        answer: 'Ứng dụng đã mở hai HTTP listener, một ở cổng 0 và một ở cổng 53142.'
+        explanation: 'Cổng 0 là yêu cầu hệ điều hành cấp cổng khả dụng, không phải một listener thứ hai.'
+      - id: D
+        answer: 'Endpoint đã đổi server.port sau startup nên lần context refresh tiếp theo bắt buộc dùng 53142.'
+        explanation: 'Experiment chỉ đọc giá trị cấu hình và runtime, không ghi ngược lại cấu hình.'
+    correctAnswerId: B
+
+  - id: 'q06-custom-factory-backoff'
+    question: 'Ứng dụng khai báo riêng một ServletWebServerFactory bean. Tác động nào phù hợp nhất với cơ chế server auto-configuration của Boot?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '7.ServerCustomization/ServerCustomization.md'
+      anchor: 'custom-web-server-factory'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Boot bỏ qua bean tùy chỉnh và luôn tạo factory mặc định từ starter trước.'
+        explanation: 'Factory auto-configuration của Boot được thiết kế để back off khi ứng dụng cung cấp bean factory phù hợp.'
+      - id: B
+        answer: 'Boot back off việc chọn implementation-specific factory và đồng thời vô hiệu hóa mọi auto-configured factory customizer.'
+        explanation: 'Back-off khỏi việc tạo factory không đồng nghĩa loại bỏ toàn bộ customization pipeline.'
+      - id: C
+        answer: 'Boot dùng factory được cung cấp, còn các WebServerFactoryCustomizer auto-configure vẫn có thể tùy biến nó.'
+        explanation: 'Đúng. Custom factory thay lựa chọn factory của Boot nhưng vẫn tham gia chuỗi customizer.'
+      - id: D
+        answer: 'Boot chuyển custom Servlet factory thành ReactiveWebServerFactory khi có thư viện reactive trên classpath.'
+        explanation: 'Servlet factory không được chuyển thành reactive factory; runtime model và factory type vẫn là hai khái niệm khác nhau.'
+    correctAnswerId: C
+
+  - id: 'q07-customization-escalation'
+    question: 'Một yêu cầu không thể biểu diễn bằng property server.* dùng chung nhưng có property đã được tài liệu hóa trong server.tomcat.*. Lựa chọn nào giữ đúng mô hình Boot nhất?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '7.ServerCustomization/ServerCustomization.md'
+      anchor: 'server-customization-decision-order'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Dùng property server.tomcat.* trước khi chuyển sang WebServerFactoryCustomizer hoặc thay factory.'
+        explanation: 'Đúng. Thứ tự ưu tiên giữ cấu hình ở dạng khai báo lâu nhất khi property model vẫn biểu diễn được yêu cầu.'
+      - id: B
+        answer: 'Khai báo custom TomcatServletWebServerFactory bean vì server-specific property chỉ dành cho phần nội bộ của Boot.'
+        explanation: 'Namespace riêng theo server là public configuration hook và ít can thiệp hơn việc thay factory.'
+      - id: C
+        answer: 'Tạo WebServerFactoryCustomizer trước vì mọi server-specific property đều khó bảo trì hơn Java code.'
+        explanation: 'Thứ tự quyết định của module ưu tiên property có sẵn trước programmatic customization.'
+      - id: D
+        answer: 'Chuyển thiết lập sang cấu hình Spring MVC vì điều khiển riêng của Tomcat thuộc request mapping.'
+        explanation: 'Cấu hình Tomcat thuộc server runtime boundary, không thuộc MVC request mapping.'
+    correctAnswerId: A
+
+  - id: 'q08-portable-vs-specific-settings'
+    question: 'Khi Boot cung cấp một tính năng qua property server.* dùng chung trên nhiều embedded server, điều đó có ý nghĩa gì?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '6.ServerProperties/ServerProperties.md'
+      anchor: 'portable-vs-server-specific-properties'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Mọi server được hỗ trợ phải triển khai tính năng bằng thuật toán và edge-case behavior giống hệt nhau.'
+        explanation: 'Một ý định cấu hình dùng chung không làm các server implementation trở nên giống nhau ở bên trong.'
+      - id: B
+        answer: 'Boot biểu diễn một ý định portable, còn từng server được hỗ trợ vẫn có thể triển khai khác nhau.'
+        explanation: 'Đúng. Boot đưa ra ý định có tính portable rồi adapter của từng server hiện thực ý định đó.'
+      - id: C
+        answer: 'Property chỉ portable nếu ứng dụng không bao giờ thay embedded server dependency.'
+        explanation: 'Khả năng portable có giá trị chính khi đổi giữa các server được hỗ trợ, không phụ thuộc việc giữ một dependency mãi mãi.'
+      - id: D
+        answer: 'Property dùng chung vô hiệu hóa mọi server-specific namespace để không thể có cấu hình xung đột.'
+        explanation: 'Namespace dùng chung và riêng theo server có thể cùng tồn tại; developer cần chủ động chọn đúng mức.'
+    correctAnswerId: B
+
+  - id: 'q09-response-compression-eligibility'
+    question: 'Đã đặt server.compression.enabled=true nhưng một JSON response nhỏ vẫn không được nén. Giải thích nào phù hợp nhất với mô hình Boot 3.3?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '8.HttpFeatures/HttpFeatures.md'
+      anchor: 'http-response-compression'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Compression chỉ áp dụng cho view của Spring MVC và không bao giờ áp dụng cho JSON response body.'
+        explanation: 'Compression là server-level HTTP feature, không bị giới hạn ở MVC view.'
+      - id: B
+        answer: 'Compression yêu cầu thay embedded server factory mỗi khi ứng dụng đang dùng server mặc định từ starter.'
+        explanation: 'Các embedded server được hỗ trợ có thể cấu hình compression qua property của Boot mà không cần thay factory.'
+      - id: C
+        answer: 'Compression vẫn kiểm tra các điều kiện như kích thước response tối thiểu và MIME type được phép.'
+        explanation: 'Đúng. Enabled switch hoạt động cùng các điều kiện về size và MIME type.'
+      - id: D
+        answer: 'Boot trì hoãn compression tới graceful shutdown để chỉ nén các response đã hoàn tất.'
+        explanation: 'Compression không liên quan tới shutdown lifecycle.'
+    correctAnswerId: C
+
+  - id: 'q10-http2-common-switch'
+    question: 'Vì sao server.http2.enabled=true có thể cho kết quả khác nhau trên hai embedded server đều được Boot hỗ trợ?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '8.HttpFeatures/HttpFeatures.md'
+      anchor: 'http2-support'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Property này chỉ thay Spring MVC routing nên reactive server sẽ bỏ qua hoàn toàn.'
+        explanation: 'Bật HTTP/2 là khả năng của server, không phải thiết lập MVC routing.'
+      - id: B
+        answer: 'Common switch biểu diễn ý định, nhưng server được chọn vẫn có thể cần dependency hoặc protocol support riêng.'
+        explanation: 'Đúng. Property dùng chung không xóa các yêu cầu implementation-specific của server.'
+      - id: C
+        answer: 'Boot chọn ngẫu nhiên giữa h2 và h2c lúc startup dựa trên tải hiện tại và tập client.'
+        explanation: 'Protocol mode phụ thuộc TLS và khả năng của server, không được chọn ngẫu nhiên.'
+      - id: D
+        answer: 'HTTP/2 chỉ hoạt động với custom WebServerFactory bean nên factory từ starter bỏ qua common switch.'
+        explanation: 'Boot hỗ trợ HTTP/2 qua server configuration path thông thường trên các server phù hợp.'
+    correctAnswerId: B
+
+  - id: 'q11-ssl-bundle-option-ownership'
+    question: 'Embedded server được cấu hình bằng server.ssl.bundle=web. Cipher và protocol option cho named bundle này nên được cấu hình ở đâu?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '9.TlsSslBundles/TlsSslBundles.md'
+      anchor: 'bundle-vs-discrete-ssl-properties'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Giữ server.ssl.ciphers và server.ssl.enabled-protocols cạnh server.ssl.bundle để hai mô hình được merge.'
+        explanation: 'Khi dùng bundle, các discrete server SSL option không tạo một mô hình cấu hình thứ hai để cạnh tranh với bundle.'
+      - id: B
+        answer: 'Đặt các option trong cấu hình spring.ssl.bundle có tên để reusable bundle sở hữu chính các thiết lập TLS của nó.'
+        explanation: 'Đúng. Option của bundle thuộc named SSL bundle mà server đang consume.'
+      - id: C
+        answer: 'Chỉ cấu hình qua server-specific WebServerFactoryCustomizer vì bundle không thể chứa protocol option.'
+        explanation: 'Named SSL bundle có thể sở hữu protocol và cipher option; trường hợp bình thường này không cần customizer.'
+      - id: D
+        answer: 'Chuyển chúng vào Spring MVC security configuration vì TLS được áp dụng sau request mapping.'
+        explanation: 'TLS được cấu hình ở embedded-server connection layer trước MVC request processing.'
+    correctAnswerId: B
+
+  - id: 'q12-forwarded-header-strategy-observation'
+    question: 'Một trusted proxy gửi X-Forwarded-Proto=https trong khi hop cục bộ từ proxy tới ứng dụng dùng HTTP. Với server.forward-headers-strategy=framework, experiment requestMetadata() chủ yếu giúp kiểm chứng điều gì?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '10.ForwardedHeadersProxy/ForwardedHeadersProxy.md'
+      anchor: 'forward-header-strategies'
+    apiRelated:
+      controller: 'WebRuntimeExperimentController'
+      methodSignature: 'requestMetadata()'
+    answers:
+      - id: A
+        answer: 'Liệu scheme và host mà ứng dụng nhìn thấy có được suy ra từ forwarded request metadata đáng tin cậy hay không.'
+        explanation: 'Đúng. FRAMEWORK handling có thể biến đổi request view mà application code nhìn thấy dựa trên forwarded metadata đáng tin cậy.'
+      - id: B
+        answer: 'Liệu local server connector có chuyển từ HTTP sang TLS chỉ vì forwarded scheme khai báo HTTPS hay không.'
+        explanation: 'Forwarded-header processing đổi application-visible metadata chứ không đàm phán lại local socket giữa proxy và server.'
+      - id: C
+        answer: 'Liệu Boot có dùng host và scheme do proxy gửi làm cấu hình bind mới cho local server hay không.'
+        explanation: 'Forwarded metadata thay request view; nó không ghi lại địa chỉ bind, port hay TLS connector của local server.'
+      - id: D
+        answer: 'Liệu framework forwarded-header handling có đổi application sang một web runtime type khác hay không.'
+        explanation: 'Thông tin forwarded scheme không thay web stack hay handler model của ứng dụng.'
+    correctAnswerId: A
+
+  - id: 'q13-forwarded-header-trust'
+    question: 'Vì sao chỉ nên bật forwarded-header support khi deployment có ranh giới trusted proxy rõ ràng?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '10.ForwardedHeadersProxy/ForwardedHeadersProxy.md'
+      anchor: 'forwarded-header-trust-boundary'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Vì forwarded headers chỉ hợp lệ cho reactive application và Servlet proxy sẽ làm hỏng chúng.'
+        explanation: 'Cơ chế forwarded-header tồn tại cho cả Servlet và reactive application.'
+      - id: B
+        answer: 'Vì client có thể giả forwarding metadata và làm sai scheme, host hoặc remote address mà ứng dụng nhìn thấy.'
+        explanation: 'Đúng. Deployment phải ngăn client không đáng tin cậy đi vòng qua proxy hoặc tự cung cấp metadata trông như có thẩm quyền.'
+      - id: C
+        answer: 'Vì bật forwarded headers sẽ vô hiệu hóa vĩnh viễn server.port và server.address.'
+        explanation: 'Xử lý forwarded metadata không vô hiệu hóa cấu hình mạng cục bộ của server.'
+      - id: D
+        answer: 'Vì Boot chỉ xử lý forwarding metadata khi proxy và ứng dụng chạy chung một JVM.'
+        explanation: 'Proxy thường là một infrastructure hop riêng; không yêu cầu chạy chung JVM.'
+    correctAnswerId: B
+
+  - id: 'q14-graceful-shutdown-behavior'
+    question: 'Phát biểu nào mô tả đúng nhất graceful shutdown của web server trong Spring Boot 3.3 trên các server được hỗ trợ?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '11.GracefulShutdown/GracefulShutdown.md'
+      anchor: 'server-specific-shutdown-behavior'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Mọi server đóng listening socket ngay lập tức, còn request đang chạy được chuyển sang một process khác để hoàn tất.'
+        explanation: 'Các server không dùng một network mechanism giống hệt nhau và request vẫn thuộc cùng application lifecycle.'
+      - id: B
+        answer: 'Boot cho công việc đang xử lý một grace period có giới hạn, còn cách từ chối công việc mới có thể khác nhau theo server.'
+        explanation: 'Đúng. Hợp đồng chung là cho in-flight work hoàn tất trong giới hạn, còn cơ chế từ chối request mới phụ thuộc server.'
+      - id: C
+        answer: 'Graceful shutdown chờ vô hạn cho tới khi mọi request và background task trong JVM đều kết thúc.'
+        explanation: 'Graceful shutdown bị giới hạn bởi timeout của shutdown phase, không phải chờ vô hạn.'
+      - id: D
+        answer: 'Graceful shutdown chỉ hỗ trợ Servlet vì reactive server không thể tham gia SmartLifecycle shutdown.'
+        explanation: 'Boot hỗ trợ graceful shutdown cho cả Servlet và reactive application trên các embedded server tương ứng.'
+    correctAnswerId: B
+
+  - id: 'q15-runtime-vs-framework-boundary'
+    question: 'Ứng dụng bind đúng cổng mong đợi và embedded server nhận kết nối, nhưng một URL của controller trả 404 vì mapping bị sai. Nên điều tra tầng nào tiếp theo?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '12.BootWebDefaults/BootWebDefaults.md'
+      anchor: 'spring-framework-web-handoff'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Quay lại lựa chọn embedded server, vì mọi 404 đều chứng minh Boot đã chọn sai WebServerFactory.'
+        explanation: 'Server đã lắng nghe cho thấy Boot server bootstrap cơ bản đã thành công; mapping lỗi nằm ở tầng phía trên.'
+      - id: B
+        answer: 'Kiểm tra SSL bundle, vì controller mapping được quyết định từ certificate đang hoạt động của server.'
+        explanation: 'Certificate selection và request mapping là hai mối quan tâm tách biệt.'
+      - id: C
+        answer: 'Đi vào request processing của Spring MVC hoặc WebFlux, nơi handler mapping được xử lý sau khi server khởi động.'
+        explanation: 'Đúng. Khi server runtime đã khỏe, routing/controller behavior thuộc Spring web framework được chọn.'
+      - id: D
+        answer: 'Kiểm tra cấp cổng của hệ điều hành, vì route sai cho thấy cổng đã bind chỉ là tạm thời.'
+        explanation: 'Cổng có thể hoàn toàn hợp lệ trong khi framework không có handler khớp URL.'
+    correctAnswerId: C

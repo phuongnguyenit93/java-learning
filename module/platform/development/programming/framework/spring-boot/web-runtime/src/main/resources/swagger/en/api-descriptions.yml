@@ -1,0 +1,84 @@
+WebRuntimeExperimentController:
+  embeddedServer():
+    summary: Inspect the running Boot web application context and embedded server
+    description: Read the ServletWebServerApplicationContext that is serving this
+      API and expose its concrete context type, concrete WebServer implementation,
+      and actual listening port.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 3.EmbeddedServerModel/EmbeddedServerModel.md
+      anchor: web-server-context-startup
+    methodName: embeddedServer
+    params: [
+      ]
+    path: com/example/learning/webruntime/controller/WebRuntimeExperimentController.java
+    mapping: '@GetMapping("/server")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /spring-boot/web-runtime/server
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  serverProperties():
+    summary: Compare Boot server configuration with the running server
+    description: Return selected values from Boot's bound ServerProperties together
+      with the actual listening port. Starting with server.port=0 makes the distinction
+      between configured intent and the port assigned to the running WebServer directly
+      observable.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 6.ServerProperties/ServerProperties.md
+      anchor: server-properties-model
+    methodName: serverProperties
+    params: [
+      ]
+    path: com/example/learning/webruntime/controller/WebRuntimeExperimentController.java
+    mapping: '@GetMapping("/server-properties")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /spring-boot/web-runtime/server-properties
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  requestMetadata():
+    summary: Observe request metadata after Boot's forwarded-header strategy
+    description: Return the scheme, security flag, host, port, remote address, URL,
+      and any remaining X-Forwarded headers visible to the application. Repeat with
+      server.forward-headers-strategy=framework and trusted-proxy-style headers to
+      observe how the application-visible request changes.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 10.ForwardedHeadersProxy/ForwardedHeadersProxy.md
+      anchor: forward-header-strategies
+    methodName: requestMetadata
+    params: [
+      ]
+    path: com/example/learning/webruntime/controller/WebRuntimeExperimentController.java
+    mapping: '@GetMapping("/request-metadata")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /spring-boot/web-runtime/request-metadata
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true

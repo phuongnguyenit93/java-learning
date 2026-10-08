@@ -38,4 +38,378 @@
 #       Internal id of the correct answer. The frontend checks this identity after shuffling.
 # </quiz-schema>
 
-questions: []
+questions:
+  - id: 'q01-mixed-web-stack-precedence'
+    question: 'A Spring Boot application has both Spring MVC and Spring WebFlux on the classpath. No web application type is configured explicitly. Which runtime model does Boot choose by default?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '2.WebApplicationType/WebApplicationType.md'
+      anchor: 'servlet-reactive-precedence'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'REACTIVE, because WebFlux being present always takes precedence over MVC.'
+        explanation: 'WebFlux being present does not force the reactive runtime when MVC is also available.'
+      - id: B
+        answer: 'NONE, because Boot treats two web stacks as an ambiguous web environment.'
+        explanation: 'A mixed classpath is still a web environment; Boot has a defined default precedence.'
+      - id: C
+        answer: 'SERVLET, because MVC/Servlet takes precedence when both web stacks are present.'
+        explanation: 'Correct. Boot defaults to the Servlet/MVC model when both MVC and WebFlux signals are present.'
+      - id: D
+        answer: 'The result depends only on which starter appears first in the build file.'
+        explanation: 'Build-file declaration order is not the rule that selects the web application type.'
+    correctAnswerId: C
+
+  - id: 'q02-none-vs-disabled-http-endpoints'
+    question: 'Which statement correctly distinguishes spring.main.web-application-type=none from server.port=-1?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '6.ServerProperties/ServerProperties.md'
+      anchor: 'port-address-endpoint-controls'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Both create the normal web ApplicationContext but prevent its server from binding a TCP port.'
+        explanation: 'The two settings act at different layers; web-application-type=none prevents the web runtime path itself.'
+      - id: B
+        answer: 'none creates a non-web context; server.port=-1 keeps a web context but opens no HTTP endpoint.'
+        explanation: 'Correct. One changes the application type; the other disables HTTP listening while retaining the web context.'
+      - id: C
+        answer: 'server.port=-1 changes the application type to NONE, while web-application-type=none only changes the port.'
+        explanation: 'This reverses the responsibilities of the two settings.'
+      - id: D
+        answer: 'They are aliases; Boot normalizes either setting to the same WebApplicationType value.'
+        explanation: 'They are separate controls and do not normalize to one equivalent setting.'
+    correctAnswerId: B
+
+  - id: 'q03-replacing-default-server'
+    question: 'A Servlet application uses spring-boot-starter-web with its default Tomcat server. The team wants Jetty while keeping the Servlet runtime model. What is the normal Boot approach?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '3.EmbeddedServerModel/EmbeddedServerModel.md'
+      anchor: 'replacing-default-server'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Keep Tomcat and register Jetty manually from main so both servers can compete for the application port.'
+        explanation: 'Boot does not require manual server bootstrap for a supported server replacement.'
+      - id: B
+        answer: 'Change WebApplicationType to REACTIVE because Jetty is available only through the reactive server path.'
+        explanation: 'Jetty is supported in the Servlet stack as well; changing server implementation does not require changing runtime model.'
+      - id: C
+        answer: 'Declare a custom ServletWebServerFactory bean first, then leave the starter dependencies unchanged.'
+        explanation: 'A custom factory is a stronger hook than needed for a normal supported server swap.'
+      - id: D
+        answer: 'Swap the Tomcat starter for the Jetty starter so Boot selects the matching Servlet factory.'
+        explanation: 'Correct. Supported server replacement is normally a dependency choice that preserves the surrounding Boot lifecycle.'
+    correctAnswerId: D
+
+  - id: 'q04-runtime-server-observation'
+    question: 'Why is observing the concrete WebServer from the running WebServerApplicationContext more reliable than inferring the server only from a starter name?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '3.EmbeddedServerModel/EmbeddedServerModel.md'
+      anchor: 'web-server-context-startup'
+    apiRelated:
+      controller: 'WebRuntimeExperimentController'
+      methodSignature: 'embeddedServer()'
+    answers:
+      - id: A
+        answer: 'It reports the server that Boot actually created and started after classpath selection and auto-configuration.'
+        explanation: 'Correct. Runtime inspection observes the concrete server participating in the active application context.'
+      - id: B
+        answer: 'It forces Boot to replace the configured server with the server type returned by the endpoint.'
+        explanation: 'The endpoint observes runtime state; it does not select or replace the server.'
+      - id: C
+        answer: 'It bypasses WebServerFactory and asks the operating system which Java server library owns the port.'
+        explanation: 'The server is exposed by the Boot web application context; the operating system does not identify the Java factory path.'
+      - id: D
+        answer: 'It proves which Spring MVC controller mapping strategy is active inside the request-processing framework.'
+        explanation: 'The experiment proves Boot web-runtime context/server state, not MVC handler-mapping semantics.'
+    correctAnswerId: A
+
+  - id: 'q05-configured-vs-actual-port'
+    question: 'The application starts with server.port=0. The serverProperties() experiment returns configuredPort=0 and actualPort=53142. What does this demonstrate?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '6.ServerProperties/ServerProperties.md'
+      anchor: 'server-properties-model'
+    apiRelated:
+      controller: 'WebRuntimeExperimentController'
+      methodSignature: 'serverProperties()'
+    answers:
+      - id: A
+        answer: 'ServerProperties is stale because Boot should replace configuredPort with the assigned runtime port.'
+        explanation: 'ServerProperties represents configured intent; it is not required to mutate into the final runtime state.'
+      - id: B
+        answer: 'server.port=0 requests an ephemeral port; the running WebServer exposes the port assigned at startup.'
+        explanation: 'Correct. server.port=0 is configuration intent and the actual bound port becomes known after server initialization.'
+      - id: C
+        answer: 'The application opened two HTTP listeners, one on port 0 and another on port 53142.'
+        explanation: 'Port 0 is a request for an available port, not a second listening endpoint.'
+      - id: D
+        answer: 'The endpoint changed server.port after startup, so future context refreshes must use 53142.'
+        explanation: 'The experiment only reads configured and runtime values; it does not rewrite configuration.'
+    correctAnswerId: B
+
+  - id: 'q06-custom-factory-backoff'
+    question: 'An application declares its own ServletWebServerFactory bean. Which effect best matches Boot server auto-configuration?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '7.ServerCustomization/ServerCustomization.md'
+      anchor: 'custom-web-server-factory'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Boot ignores the custom bean and always creates the starter default factory first.'
+        explanation: 'Boot factory auto-configuration is designed to back off when the application supplies the relevant factory bean.'
+      - id: B
+        answer: 'Boot backs off from choosing its implementation-specific factory and also disables every auto-configured factory customizer.'
+        explanation: 'Back-off from factory creation does not remove the entire customization pipeline.'
+      - id: C
+        answer: 'Boot uses the supplied factory, and auto-configured WebServerFactoryCustomizer beans can still customize it.'
+        explanation: 'Correct. A custom factory replaces Boot factory selection but still participates in the customizer chain.'
+      - id: D
+        answer: 'Boot converts the custom Servlet factory into a ReactiveWebServerFactory when reactive libraries are present.'
+        explanation: 'A Servlet factory is not converted into a reactive factory; runtime model and factory type remain distinct.'
+    correctAnswerId: C
+
+  - id: 'q07-customization-escalation'
+    question: 'A requirement cannot be expressed by a common server.* property but has a documented property under server.tomcat.*. Which customization choice best preserves the Boot model?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '7.ServerCustomization/ServerCustomization.md'
+      anchor: 'server-customization-decision-order'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Use the server.tomcat.* property before moving to a WebServerFactoryCustomizer or replacing the factory.'
+        explanation: 'Correct. The preferred escalation keeps customization declarative for as long as the property model can express the requirement.'
+      - id: B
+        answer: 'Declare a custom TomcatServletWebServerFactory bean because server-specific properties are intended only for Boot internals.'
+        explanation: 'Server-specific namespaces are public configuration hooks and are less invasive than replacing the factory.'
+      - id: C
+        answer: 'Create a WebServerFactoryCustomizer first because any server-specific property is less maintainable than Java code.'
+        explanation: 'The taught decision order prefers an available property before programmatic customization.'
+      - id: D
+        answer: 'Move the setting into Spring MVC configuration because Tomcat-specific controls are part of request mapping.'
+        explanation: 'Tomcat server configuration belongs to the server runtime boundary, not MVC request mapping.'
+    correctAnswerId: A
+
+  - id: 'q08-portable-vs-specific-settings'
+    question: 'What does it mean when Boot exposes a feature through a common server.* property across several embedded servers?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '6.ServerProperties/ServerProperties.md'
+      anchor: 'portable-vs-server-specific-properties'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Every supported server must implement the feature with identical internal algorithms and edge-case behavior.'
+        explanation: 'A common configuration intent does not make different server implementations internally identical.'
+      - id: B
+        answer: 'Boot expresses one portable intent, while each supported server can still implement it differently.'
+        explanation: 'Correct. Boot provides a portable intent and adapts it to each supported integration.'
+      - id: C
+        answer: 'The property is portable only when the application never changes its embedded server dependency.'
+        explanation: 'Portability is specifically useful across supported server choices; it is not conditioned on keeping one dependency forever.'
+      - id: D
+        answer: 'The property disables every server-specific namespace so conflicting settings cannot be supplied.'
+        explanation: 'Common and server-specific namespaces can coexist; the developer must choose the appropriate level deliberately.'
+    correctAnswerId: B
+
+  - id: 'q09-response-compression-eligibility'
+    question: 'server.compression.enabled=true is set, but a small JSON response is not compressed. Which explanation best fits the Boot 3.3 model?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '8.HttpFeatures/HttpFeatures.md'
+      anchor: 'http-response-compression'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Compression is applied only to Spring MVC views and never to JSON response bodies.'
+        explanation: 'Compression is a server-level HTTP feature and is not limited to MVC views.'
+      - id: B
+        answer: 'Compression requires replacing the embedded server factory whenever the application uses a starter default.'
+        explanation: 'Supported embedded servers can be configured through Boot properties without replacing the factory.'
+      - id: C
+        answer: 'Compression still checks conditions such as minimum response size and allowed MIME types.'
+        explanation: 'Correct. The enabled switch works together with size and MIME-type conditions.'
+      - id: D
+        answer: 'Boot postpones compression until graceful shutdown begins so only completed responses are compressed.'
+        explanation: 'Compression is unrelated to the shutdown lifecycle.'
+    correctAnswerId: C
+
+  - id: 'q10-http2-common-switch'
+    question: 'Why can server.http2.enabled=true behave differently across two supported embedded servers?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '8.HttpFeatures/HttpFeatures.md'
+      anchor: 'http2-support'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'The property changes only Spring MVC routing, so a reactive server ignores it entirely.'
+        explanation: 'HTTP/2 enablement is a server capability and is not an MVC routing setting.'
+      - id: B
+        answer: 'The common switch expresses intent, but the chosen server can still require extra dependencies or protocol support.'
+        explanation: 'Correct. A common property does not erase implementation-specific requirements of the chosen server.'
+      - id: C
+        answer: 'Boot randomly chooses between h2 and h2c at startup according to current load and client mix.'
+        explanation: 'Protocol mode follows TLS and server capabilities; it is not selected randomly.'
+      - id: D
+        answer: 'HTTP/2 works only with a custom WebServerFactory bean, so starter-provided factories ignore the common switch.'
+        explanation: 'Boot supports HTTP/2 through its normal server configuration path on supported servers.'
+    correctAnswerId: B
+
+  - id: 'q11-ssl-bundle-option-ownership'
+    question: 'An embedded server is configured with server.ssl.bundle=web. Where should cipher and protocol options for that named bundle be configured?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '9.TlsSslBundles/TlsSslBundles.md'
+      anchor: 'bundle-vs-discrete-ssl-properties'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Keep server.ssl.ciphers and server.ssl.enabled-protocols beside server.ssl.bundle so both models merge.'
+        explanation: 'When a bundle is used, discrete server SSL material/options do not form a second competing configuration model.'
+      - id: B
+        answer: 'Put the options in the named spring.ssl.bundle configuration so the reusable bundle owns its TLS settings.'
+        explanation: 'Correct. Bundle-specific options belong with the named SSL bundle that the server consumes.'
+      - id: C
+        answer: 'Configure them only through a server-specific WebServerFactoryCustomizer because bundles cannot carry protocol options.'
+        explanation: 'Named SSL bundles can own protocol and cipher options; a customizer is not required for this normal case.'
+      - id: D
+        answer: 'Move them into Spring MVC security configuration because TLS settings are applied after request mapping.'
+        explanation: 'TLS is configured at the embedded-server connection layer, before MVC request processing.'
+    correctAnswerId: B
+
+  - id: 'q12-forwarded-header-strategy-observation'
+    question: 'A trusted proxy sends X-Forwarded-Proto=https while the local proxy-to-app hop is HTTP. With server.forward-headers-strategy=framework, what should the requestMetadata() experiment primarily help verify?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '10.ForwardedHeadersProxy/ForwardedHeadersProxy.md'
+      anchor: 'forward-header-strategies'
+    apiRelated:
+      controller: 'WebRuntimeExperimentController'
+      methodSignature: 'requestMetadata()'
+    answers:
+      - id: A
+        answer: 'Whether application-visible scheme and host metadata are derived from the trusted forwarded request information.'
+        explanation: 'Correct. FRAMEWORK handling can transform the request view seen by application code using trusted forwarded metadata.'
+      - id: B
+        answer: 'Whether the local server connector switches from HTTP to TLS because the forwarded scheme says HTTPS.'
+        explanation: 'Forwarded-header processing changes application-visible metadata; it does not renegotiate the local proxy-to-server socket.'
+      - id: C
+        answer: 'Whether Boot treats proxy-provided host and scheme values as new local server binding configuration.'
+        explanation: 'Forwarded metadata changes the request view; it does not rewrite the local server bind address, port, or TLS connector.'
+      - id: D
+        answer: 'Whether framework forwarded-header handling changes the application from its current web runtime type.'
+        explanation: 'Forwarded scheme information does not change the application web stack or handler model.'
+    correctAnswerId: A
+
+  - id: 'q13-forwarded-header-trust'
+    question: 'Why should forwarded-header support be enabled only when the deployment has a trusted proxy boundary?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '10.ForwardedHeadersProxy/ForwardedHeadersProxy.md'
+      anchor: 'forwarded-header-trust-boundary'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Because forwarded headers are valid only for reactive applications and a Servlet proxy would corrupt them.'
+        explanation: 'Forwarded-header handling exists for both Servlet and reactive applications.'
+      - id: B
+        answer: 'Because clients could forge forwarding metadata and falsify the scheme, host, or remote address seen by the app.'
+        explanation: 'Correct. The deployment must prevent untrusted clients from bypassing the proxy or supplying authoritative-looking metadata directly.'
+      - id: C
+        answer: 'Because enabling forwarded headers permanently disables direct server.port and server.address configuration.'
+        explanation: 'Forwarded metadata handling does not disable the local server network configuration properties.'
+      - id: D
+        answer: 'Because Boot can process forwarding metadata only when the proxy and application share one JVM.'
+        explanation: 'The proxy is normally a separate infrastructure hop; JVM co-location is not required.'
+    correctAnswerId: B
+
+  - id: 'q14-graceful-shutdown-behavior'
+    question: 'Which statement best describes Spring Boot 3.3 graceful web-server shutdown across supported servers?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '11.GracefulShutdown/GracefulShutdown.md'
+      anchor: 'server-specific-shutdown-behavior'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Every server closes its listening socket immediately, while existing requests continue in a separate process.'
+        explanation: 'The implementations do not all use one identical network mechanism, and requests remain part of the same application lifecycle.'
+      - id: B
+        answer: 'Boot allows existing work a bounded grace period, while the mechanism for refusing new work can differ by server.'
+        explanation: 'Correct. The shared contract is bounded completion of in-flight work, with server-specific refusal behavior.'
+      - id: C
+        answer: 'Graceful shutdown waits without a time limit until every request and background task in the JVM finishes.'
+        explanation: 'Graceful shutdown is bounded by the lifecycle shutdown-phase timeout; it is not an unlimited wait.'
+      - id: D
+        answer: 'Graceful shutdown is a Servlet-only feature because reactive servers cannot participate in SmartLifecycle shutdown.'
+        explanation: 'Boot supports graceful shutdown for both Servlet and reactive applications on its supported embedded servers.'
+    correctAnswerId: B
+
+  - id: 'q15-runtime-vs-framework-boundary'
+    question: 'The application binds its expected port and the embedded server accepts connections, but a controller URL returns 404 because its mapping is wrong. Which layer should be investigated next?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '12.BootWebDefaults/BootWebDefaults.md'
+      anchor: 'spring-framework-web-handoff'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Embedded server selection, because any 404 proves Boot chose the wrong WebServerFactory.'
+        explanation: 'A listening server shows that the basic Boot server bootstrap succeeded; a mapping error belongs above that layer.'
+      - id: B
+        answer: 'TLS bundle selection, because controller mappings are evaluated from the active server certificate.'
+        explanation: 'Certificate selection and request mapping are separate concerns.'
+      - id: C
+        answer: 'Spring MVC or WebFlux request processing, where handler mapping is resolved after server startup.'
+        explanation: 'Correct. Once the server runtime is healthy, routing/controller behavior belongs to the selected Spring web framework.'
+      - id: D
+        answer: 'Operating-system port allocation, because a wrong route indicates the bound port was only provisional.'
+        explanation: 'The port can be healthy while the framework has no matching handler for a URL.'
+    correctAnswerId: C

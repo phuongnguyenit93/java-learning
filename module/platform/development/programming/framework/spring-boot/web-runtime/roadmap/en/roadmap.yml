@@ -41,4 +41,87 @@
 # The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: web-runtime-orientation
+    title: "Boot Web Runtime and Application Type"
+    purpose: "Build the mental model for how Spring Boot decides whether an application is non-web, Servlet, or Reactive, and how that decision controls the web application context and embedded-server startup."
+    relatedKnowledge:
+      - Introduction
+      - WebApplicationType
+    objectives:
+      - "Explain classpath-based WebApplicationType deduction and the explicit spring.main.web-application-type override."
+      - "Relate Servlet and Reactive application types to Boot-managed embedded server startup without entering MVC or WebFlux request processing."
+      - "Recognize the boundary between Spring Boot web-runtime responsibilities and Spring Framework web-stack responsibilities."
+
+  - id: embedded-server-selection
+    title: "Embedded Server Selection and Auto-configuration"
+    purpose: "Understand how Boot-supported web starters, classpath contents, and auto-configuration produce the appropriate embedded Servlet or Reactive server factory."
+    relatedKnowledge:
+      - EmbeddedServerModel
+      - ServletServerAutoConfiguration
+      - ReactiveServerAutoConfiguration
+    objectives:
+      - "Identify the default embedded-server choices supplied by the Servlet and Reactive web starters."
+      - "Explain how changing supported server dependencies changes the server selected for the application."
+      - "Reason about Servlet versus Reactive web-server factory auto-configuration and Boot back-off at the integration level."
+
+  - id: declarative-server-configuration
+    title: "Declarative Server Configuration"
+    purpose: "Configure the embedded server through Boot's externalized server property model before reaching for server-specific code."
+    relatedKnowledge:
+      - ServerProperties
+    objectives:
+      - "Use common server.* settings for concerns such as port and bind address."
+      - "Distinguish common server properties from server-specific namespaces such as server.tomcat.*, server.jetty.*, server.undertow.*, and server.netty.*."
+      - "Use ServerProperties as the Boot configuration model while leaving general configuration precedence and binding semantics to the externalized-configuration module."
+
+  - id: programmatic-server-customization
+    title: "Programmatic Server Customization"
+    purpose: "Customize the Boot-managed web server when the available configuration properties do not express a required server behavior."
+    relatedKnowledge:
+      - ServerCustomization
+    objectives:
+      - "Choose WebServerFactoryCustomizer after checking whether an existing server property already solves the requirement."
+      - "Target configurable Servlet, Reactive, or server-specific factory types at the narrowest useful level."
+      - "Understand the implications of supplying a custom WebServerFactory bean and the continued application of Boot's auto-configured customizers."
+
+  - id: http-server-capabilities
+    title: "HTTP Server Capabilities"
+    purpose: "Apply Boot's server-facing HTTP features and know when behavior depends on the selected embedded server."
+    relatedKnowledge:
+      - HttpFeatures
+    objectives:
+      - "Configure response compression, HTTP/2, request-header limits, connection-related settings, and access logging where supported."
+      - "Separate portable server.* controls from implementation-specific options and dependencies."
+      - "Evaluate server feature choices at the Boot integration boundary without teaching HTTP protocol or container internals."
+
+  - id: web-server-tls
+    title: "Web-server TLS and SSL Bundle Consumption"
+    purpose: "Secure the embedded web server with Boot's TLS configuration while reusing the generic SslBundle abstraction owned by application-runtime."
+    relatedKnowledge:
+      - TlsSslBundles
+    objectives:
+      - "Configure web-server TLS through server.ssl.* using keystore, PEM, or a named SSL bundle as appropriate."
+      - "Apply a named bundle with server.ssl.bundle and understand how this changes where TLS options are configured."
+      - "Recognize server-side certificate selection features such as SNI while leaving TLS and PKI fundamentals to their external owners."
+
+  - id: proxy-forwarded-headers
+    title: "Reverse Proxy and Forwarded Headers"
+    purpose: "Keep application-visible scheme, host, port, and client information correct when a Boot web application runs behind a proxy, load balancer, or cloud edge."
+    relatedKnowledge:
+      - ForwardedHeadersProxy
+    objectives:
+      - "Explain why forwarded headers are needed when the external request differs from the server's local connection details."
+      - "Choose among NONE, NATIVE, and FRAMEWORK handling with server.forward-headers-strategy according to the deployment."
+      - "Use server-specific proxy settings only when the common Boot strategy is insufficient, while keeping proxy protocol and trust internals outside this module."
+
+  - id: graceful-shutdown-and-handoff
+    title: "Graceful Shutdown and Runtime Handoff"
+    purpose: "Finish the web-runtime model by shutting down Boot-managed servers predictably and connecting server behavior to the surrounding application-runtime and infrastructure boundaries."
+    relatedKnowledge:
+      - GracefulShutdown
+      - BootWebDefaults
+    objectives:
+      - "Enable graceful server shutdown with server.shutdown and configure the shutdown-phase timeout."
+      - "Understand that supported embedded servers stop or reject new work differently while allowing in-flight requests a grace period."
+      - "Synthesize application type, server selection, configuration, TLS, proxy deployment, and shutdown while keeping MVC/WebFlux processing and container internals with their owning curricula."

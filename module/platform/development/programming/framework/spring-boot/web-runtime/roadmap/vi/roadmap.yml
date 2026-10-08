@@ -41,4 +41,87 @@
 # Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: web-runtime-orientation
+    title: "Web runtime của Boot và loại ứng dụng"
+    purpose: "Xây dựng cách nhìn nền tảng về việc Spring Boot xác định ứng dụng không chạy web, chạy theo Servlet hay chạy theo Reactive, và quyết định đó chi phối ApplicationContext web cùng việc khởi động embedded server như thế nào."
+    relatedKnowledge:
+      - Introduction
+      - WebApplicationType
+    objectives:
+      - "Giải thích cách Boot suy ra WebApplicationType từ classpath và cách ghi đè bằng spring.main.web-application-type."
+      - "Liên hệ loại ứng dụng Servlet hoặc Reactive với việc Boot khởi động embedded server mà không đi vào cơ chế xử lý request của MVC hay WebFlux."
+      - "Phân biệt trách nhiệm của Spring Boot web runtime với trách nhiệm của các web stack thuộc Spring Framework."
+
+  - id: embedded-server-selection
+    title: "Lựa chọn và auto-configuration embedded server"
+    purpose: "Hiểu cách starter web, classpath và auto-configuration của Boot tạo ra factory phù hợp cho embedded server của ứng dụng Servlet hoặc Reactive."
+    relatedKnowledge:
+      - EmbeddedServerModel
+      - ServletServerAutoConfiguration
+      - ReactiveServerAutoConfiguration
+    objectives:
+      - "Nhận biết embedded server mặc định mà starter web Servlet và Reactive cung cấp."
+      - "Giải thích việc thay dependency của server được Boot hỗ trợ sẽ thay đổi server được chọn cho ứng dụng ra sao."
+      - "Hiểu auto-configuration và cơ chế back-off của factory Servlet hoặc Reactive ở đúng tầng tích hợp của Boot."
+
+  - id: declarative-server-configuration
+    title: "Cấu hình server bằng thuộc tính"
+    purpose: "Cấu hình embedded server qua mô hình thuộc tính server của Boot trước khi cần tới code phụ thuộc vào một server cụ thể."
+    relatedKnowledge:
+      - ServerProperties
+    objectives:
+      - "Dùng các thuộc tính server.* chung cho những nhu cầu như cổng lắng nghe và địa chỉ bind."
+      - "Phân biệt thuộc tính server dùng chung với các nhóm thuộc tính riêng như server.tomcat.*, server.jetty.*, server.undertow.* và server.netty.*."
+      - "Hiểu ServerProperties là mô hình cấu hình ở tầng Boot; precedence và binding tổng quát tiếp tục thuộc module externalized-configuration."
+
+  - id: programmatic-server-customization
+    title: "Tùy biến server bằng code"
+    purpose: "Tùy biến web server do Boot quản lý khi các thuộc tính cấu hình sẵn có chưa biểu diễn được yêu cầu cần thiết."
+    relatedKnowledge:
+      - ServerCustomization
+    objectives:
+      - "Chọn WebServerFactoryCustomizer sau khi đã kiểm tra các thuộc tính server có sẵn."
+      - "Tùy biến factory Servlet, Reactive hoặc factory riêng của từng server ở phạm vi hẹp nhất đáp ứng yêu cầu."
+      - "Hiểu hệ quả khi tự cung cấp WebServerFactory bean và việc các customizer do Boot auto-configure vẫn được áp dụng."
+
+  - id: http-server-capabilities
+    title: "Các khả năng HTTP ở tầng server"
+    purpose: "Sử dụng các tính năng HTTP ở tầng server mà Boot cung cấp và nhận biết khi hành vi còn phụ thuộc embedded server được chọn."
+    relatedKnowledge:
+      - HttpFeatures
+    objectives:
+      - "Cấu hình response compression, HTTP/2, giới hạn header của request, các thiết lập liên quan connection và access log khi server hỗ trợ."
+      - "Phân biệt các điều khiển server.* dùng chung với tùy chọn hoặc dependency riêng của từng server."
+      - "Đánh giá các lựa chọn tính năng ở tầng tích hợp của Boot, không mở rộng sang chi tiết giao thức HTTP hay cơ chế nội bộ của container."
+
+  - id: web-server-tls
+    title: "TLS cho web server và cách dùng SSL bundle"
+    purpose: "Bảo vệ embedded web server bằng cấu hình TLS của Boot và tái sử dụng abstraction SslBundle tổng quát do module application-runtime sở hữu."
+    relatedKnowledge:
+      - TlsSslBundles
+    objectives:
+      - "Cấu hình TLS cho web server qua server.ssl.* bằng keystore, PEM hoặc SSL bundle có tên tùy trường hợp."
+      - "Gắn bundle vào server bằng server.ssl.bundle và hiểu việc này thay đổi nơi khai báo các tùy chọn TLS như thế nào."
+      - "Nhận biết các khả năng chọn chứng chỉ phía server như SNI, đồng thời để kiến thức TLS và PKI nền tảng cho module chuyên trách."
+
+  - id: proxy-forwarded-headers
+    title: "Reverse proxy và forwarded headers"
+    purpose: "Giữ thông tin scheme, host, port và client mà ứng dụng nhìn thấy chính xác khi Boot web application chạy sau proxy, load balancer hoặc lớp biên của cloud."
+    relatedKnowledge:
+      - ForwardedHeadersProxy
+    objectives:
+      - "Giải thích vì sao cần forwarded headers khi request bên ngoài khác với kết nối cục bộ tới web server."
+      - "Chọn NONE, NATIVE hoặc FRAMEWORK qua server.forward-headers-strategy theo mô hình triển khai."
+      - "Chỉ dùng cấu hình proxy riêng của từng server khi chiến lược chung của Boot chưa đủ, đồng thời không mở rộng sang cơ chế nội bộ của proxy và mô hình tin cậy."
+
+  - id: graceful-shutdown-and-handoff
+    title: "Graceful shutdown và ranh giới vận hành"
+    purpose: "Hoàn thiện mô hình web runtime bằng cách dừng các server do Boot quản lý một cách có kiểm soát và nối hành vi server với application-runtime cùng hạ tầng triển khai xung quanh."
+    relatedKnowledge:
+      - GracefulShutdown
+      - BootWebDefaults
+    objectives:
+      - "Bật graceful shutdown bằng server.shutdown và cấu hình timeout cho shutdown phase."
+      - "Hiểu các embedded server được hỗ trợ có thể ngừng nhận hoặc từ chối request mới theo cách khác nhau trong khi dành thời gian cho request đang xử lý hoàn tất."
+      - "Kết nối loại ứng dụng, lựa chọn server, cấu hình, TLS, proxy và shutdown thành một cách hiểu thống nhất, đồng thời giữ cơ chế xử lý request của MVC/WebFlux và phần nội bộ của container ở đúng curriculum sở hữu chúng."
