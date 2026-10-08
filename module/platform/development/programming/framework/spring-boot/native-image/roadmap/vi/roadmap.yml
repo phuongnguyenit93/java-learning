@@ -41,4 +41,107 @@
 # Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: native-image-purpose-and-aot-need
+    title: "Vì sao Spring Boot cần AOT cho Native Image"
+    purpose: "Hiểu vì sao mô hình runtime linh hoạt của Spring Boot phải được chuẩn bị trước ở build time để GraalVM có thể tạo native executable, đồng thời hiểu lợi ích nào khiến phần build bổ sung này đáng cân nhắc."
+    objectives:
+      - "So sánh deployment JVM thông thường với native executable ở mức cần thiết cho lập trình viên Spring Boot: phân tích tĩnh lúc build, executable theo từng nền tảng, startup nhanh hơn và thường dùng ít bộ nhớ hơn."
+      - "Giải thích vì sao việc khám phá bean và cấu hình động của Spring cần được chuẩn bị bằng AOT thay vì xem native compilation chỉ là thay java -jar bằng một lệnh build khác."
+      - "Nhìn native image như một dạng runtime thay thế có ràng buộc và đánh đổi riêng, không phải lựa chọn mặc định tốt hơn cho mọi ứng dụng."
+      - "Giữ chi tiết nội bộ của compiler/runtime GraalVM ngoài module này nhưng vẫn nắm mô hình tư duy cấp ứng dụng cần thiết để suy luận hành vi native."
+    relatedKnowledge:
+      - NativeImage
+    relatedModules:
+      - routeId: SPRING_BOOT_APPLICATION_RUNTIME
+        label: "Spring Boot Application Runtime"
+        note: "Cung cấp mô hình runtime JVM thông thường mà AOT/native execution sẽ chủ động thay đổi và giới hạn."
+
+  - id: spring-aot-pipeline
+    title: "Pipeline Spring AOT của Spring Boot"
+    purpose: "Xây mô hình tư duy về cách Spring Boot và Spring AOT phân tích ứng dụng ở build time rồi sinh các artifact cần thiết để bộ công cụ native-image có thể hiểu một Spring ApplicationContext."
+    objectives:
+      - "Theo dõi AOT processing từ application entry point và BeanFactory đã được chuẩn bị đến source, bytecode và metadata hints được sinh ra cho native image."
+      - "Hiểu rằng các điều kiện và quyết định liên quan đến bean definition được đánh giá trong AOT processing dựa trên classpath và environment tại build time."
+      - "Nhận biết các artifact do AOT sinh ra là đầu vào cho bước native compilation phía sau, không thay thế source của ứng dụng hay lấy quyền sở hữu cơ chế Spring Boot auto-configuration."
+      - "Dùng AOT output đã sinh làm bằng chứng chẩn đoán khi hành vi native khác với ứng dụng chạy JVM thông thường."
+    relatedKnowledge:
+      - AOTPipeline
+    relatedModules:
+      - routeId: SPRING_BOOT_AUTO_CONFIGURATION
+        label: "Spring Boot Auto-Configuration"
+        note: "Sở hữu cơ chế conditional auto-configuration mà AOT processing đánh giá trên mô hình ứng dụng cố định tại build time."
+
+  - id: closed-world-application-model
+    title: "Hệ quả của closed-world đối với ứng dụng Boot"
+    purpose: "Hiểu cách giả định closed-world của native image thay đổi những quyết định thiết kế vốn thường được trì hoãn đến runtime trong ứng dụng Spring Boot chạy trên JVM."
+    objectives:
+      - "Suy luận từ classpath cố định tại build time và hiểu vì sao code hoặc type mà phân tích tĩnh không thể reach, hoặc không được mô tả rõ, có thể không xuất hiện trong native executable."
+      - "Hiểu rằng bean graph không thể tự do thay đổi sau AOT processing và các lựa chọn profile/property ảnh hưởng đến sự tồn tại của bean phải tương thích với mô hình build-time."
+      - "Nhận diện hành vi động cần được kiểm tra về mức sẵn sàng cho native mà không dạy lại reflection, proxy, class loading của Java hay chi tiết nội bộ compiler của GraalVM."
+      - "Tách các hạn chế của Spring AOT khỏi cấu hình runtime thông thường để chẩn đoán lỗi đúng tầng."
+    relatedKnowledge:
+      - ClosedWorld
+
+  - id: runtime-hints-for-dynamic-access
+    title: "Runtime Hints cho truy cập động"
+    purpose: "Học cách Spring AOT mô tả những nhu cầu runtime mà phân tích tĩnh không thể suy ra đáng tin cậy, tập trung vào reflection, resource và proxy trong ứng dụng Spring."
+    objectives:
+      - "Hiểu RuntimeHints như contract cấp ứng dụng của Spring để mô tả nhu cầu reflection, resource loading, serialization và JDK proxy cho bộ công cụ native-image."
+      - "Phân biệt những hint Spring có thể tự suy ra với trường hợp mã ứng dụng hoặc thư viện phải cung cấp hint rõ ràng."
+      - "Nhận biết vai trò của RuntimeHintsRegistrar và các annotation hỗ trợ đăng ký hint mà không biến milestone thành danh sách API reflection/proxy cấp thấp."
+      - "Xem lỗi thiếu resource, reflection hoặc proxy như tín hiệu để kiểm tra hint được sinh/tùy chỉnh và reachability metadata của dependency thay vì đoán về chi tiết compiler."
+    relatedKnowledge:
+      - RuntimeHints
+
+  - id: native-build-and-run-workflow
+    title: "Build và chạy ứng dụng Spring Boot Native"
+    purpose: "Hiểu các đường build được hỗ trợ từ AOT processing đến native executable hoặc native container image có thể chạy được, đồng thời giữ đúng ranh giới sở hữu với build-tooling."
+    objectives:
+      - "Dùng tích hợp Maven/Gradle của Spring Boot với GraalVM Native Build Tools để tạo native executable thông qua native profile/nativeCompile workflow."
+      - "Dùng tích hợp Buildpacks của Boot để tạo OCI image chứa native executable khi container packaging là hình thức bàn giao phù hợp."
+      - "Hiểu Boot nối AOT output vào native compilation và executable cuối cùng gắn với nền tảng mục tiêu."
+      - "Giữ cơ chế Gradle/Maven tổng quát, chi tiết nội bộ của Docker/Buildpacks và chiến lược phát hành image ở curriculum sở hữu chúng, trong khi vẫn hiểu các điểm bàn giao của native image."
+    relatedKnowledge:
+      - BuildAndRun
+    relatedModules:
+      - routeId: SPRING_BOOT_BUILD_TOOLING_PACKAGING
+        label: "Spring Boot Build Tooling and Packaging"
+        note: "Sở hữu workflow chung về Boot plugin, packaging và Buildpacks mà module này tái sử dụng để tạo native image."
+
+  - id: native-testing-and-aot-test-processing
+    title: "Kiểm thử AOT và hành vi Native có chủ đích"
+    purpose: "Xây chiến lược kiểm thử cân bằng chi phí để xác nhận hành vi do AOT sinh ra và native execution mà không thay thế workflow test trên JVM vốn cho phản hồi nhanh hơn."
+    objectives:
+      - "Giữ phần lớn vòng phản hồi unit/integration test trên JVM, sau đó tập trung AOT/native testing vào hành vi có thể khác do generated assets, hints hoặc closed-world constraints."
+      - "Khi phù hợp, chạy ứng dụng đã qua AOT trên JVM để kiểm tra generated initialization trước khi chịu toàn bộ chi phí native compilation."
+      - "Hiểu processTestAot/process-test-aot chuẩn bị Spring test ApplicationContexts như thế nào và nativeTest chạy test bên trong native image ra sao."
+      - "Dùng native tests có chọn lọc trong local hoặc CI workflow dựa trên mức độ tin cậy cần đạt và chi phí build thay vì giả định mọi test đều phải chạy native."
+    relatedKnowledge:
+      - NativeTesting
+    relatedModules:
+      - routeId: SPRING_BOOT_TESTING
+        label: "Spring Boot Testing"
+        note: "Sở hữu mô hình testing rộng hơn của Boot; milestone này chỉ tập trung vào AOT/native-specific test processing và execution."
+
+  - id: native-tradeoffs-compatibility-and-metadata
+    title: "Trade-off, compatibility và reachability metadata"
+    purpose: "Quyết định khi nào native image đáng áp dụng và chẩn đoán giới hạn hệ sinh thái bằng cách cân bằng lợi ích runtime với chi phí build, công sức bảo đảm tương thích và chất lượng metadata."
+    objectives:
+      - "Đánh giá startup nhanh hơn và mức sử dụng bộ nhớ thường nhỏ hơn so với build lâu hơn, tốn tài nguyên hơn cùng chi phí kiểm chứng riêng cho native."
+      - "Nhận biết thư viện bên thứ ba có thể cần native support hoặc reachability metadata riêng và Spring không cung cấp hint cho mọi dependency bên ngoài."
+      - "Dùng bằng chứng tương thích, hint được sinh/tùy chỉnh, reachability metadata và native tests có mục tiêu để phân loại lỗi trước khi chọn giải pháp thay thế hoặc mô hình deployment khác."
+      - "Biết khi nào hành vi động, hệ sinh thái dependency hoặc ràng buộc build khiến deployment JVM thông thường là lựa chọn phù hợp hơn."
+    relatedKnowledge:
+      - CompatibilityTradeoffs
+
+  - id: native-image-readiness-synthesis
+    title: "Tổng hợp mức sẵn sàng cho Native Image từ đầu đến cuối"
+    purpose: "Kết nối toàn bộ hành trình native image thành một quy trình suy luận thực tế từ mức sẵn sàng AOT qua build, test, chẩn đoán đến quyết định dạng deployment."
+    objectives:
+      - "Theo dõi một ứng dụng từ mô hình runtime Boot thông thường qua phân tích AOT, generated assets, native compilation, native testing và bước chạy cuối cùng."
+      - "Chẩn đoán lỗi native thuộc cấu hình build-time, closed-world assumption, thiếu hints/metadata, native build integration hay dependency chưa được hỗ trợ."
+      - "Chọn native executable, native container image hoặc deployment JVM thông thường dựa trên yêu cầu startup, memory, build time, compatibility và vận hành."
+      - "Giải thích các điểm bàn giao sang auto-configuration, application-runtime, build-tooling-packaging, testing, các tính năng động của Java và GraalVM runtime/compiler mà không lặp lại curriculum của chúng."
+    relatedKnowledge:
+      - ReadinessSynthesis

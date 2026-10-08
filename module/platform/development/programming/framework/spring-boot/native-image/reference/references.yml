@@ -5,12 +5,34 @@
 # This is the shared module-level reference catalog.
 # It is intentionally not split by MODULE_LANGUAGE.
 #
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
 # Add only curated references that are useful for the module.
 # The build system must not overwrite this file after authored content exists.
+
+references:
+  - title: "Spring Boot 3.3 — GraalVM Native Images"
+    url: "https://docs.spring.io/spring-boot/3.3/reference/packaging/native-image/"
+    description: "Official Spring Boot entry point for native-image support and the relationship between Boot, Spring AOT, and GraalVM Native Image."
+
+  - title: "Spring Boot 3.3 — Introducing GraalVM Native Images"
+    url: "https://docs.spring.io/spring-boot/3.3/reference/packaging/native-image/introducing-graalvm-native-images.html"
+    description: "Canonical explanation of native-image differences, Spring AOT, the closed-world model, generated assets, and native runtime constraints."
+
+  - title: "Spring Boot 3.3 — Advanced Native Images Topics"
+    url: "https://docs.spring.io/spring-boot/3.3/reference/packaging/native-image/advanced-topics.html"
+    description: "Official guidance for custom runtime hints, tracing/diagnostics, static hint metadata, reachability limitations, and advanced native-image integration topics."
+
+  - title: "Spring Boot 3.3 — Developing Your First GraalVM Native Application"
+    url: "https://docs.spring.io/spring-boot/3.3/how-to/native-image/developing-your-first-application.html"
+    description: "Official build-and-run workflows for native executables and native container images using Buildpacks and GraalVM Native Build Tools with Maven or Gradle."
+
+  - title: "Spring Boot 3.3 — Testing GraalVM Native Images"
+    url: "https://docs.spring.io/spring-boot/3.3/how-to/native-image/testing-native-applications.html"
+    description: "Official strategy for JVM AOT validation, native tests, Spring test AOT processing, and Maven/Gradle nativeTest workflows."
+
+  - title: "Spring Boot 3.3 Gradle Plugin — Ahead-of-Time Processing"
+    url: "https://docs.spring.io/spring-boot/3.3/gradle-plugin/aot.html"
+    description: "Official Gradle task integration for processAot, processTestAot, nativeCompile, and nativeTest when GraalVM Native Build Tools are applied."
+
+  - title: "Spring Boot 3.3 Maven Plugin — Ahead-of-Time Processing"
+    url: "https://docs.spring.io/spring-boot/3.3/maven-plugin/aot.html"
+    description: "Official Maven integration for process-aot, native profiles, test AOT processing, and native-image build handoff."

@@ -27,4 +27,224 @@
 #         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
 # </interview-schema>
 
-questions: []
+questions:
+- question: "Hãy giải thích vì sao Spring AOT là cầu nối giữa ứng dụng Boot động thông thường và quá trình biên dịch native theo closed-world của GraalVM, chứ không thay thế Spring hay GraalVM."
+  answer: >-
+    Ứng dụng Spring Boot chạy JVM thông thường có thể trì hoãn nhiều quyết định đến runtime vì vẫn còn classpath, reflection, class loading, resource lookup và khả năng khám phá của framework. Native Image phải suy luận từ code và metadata có ở thời điểm build, nên các giả định động đó cần trở thành bằng chứng build-time. Spring AOT chuẩn bị phần thuộc Spring bằng cách hiện thực hóa BeanFactory model, sinh initialization/proxy asset và thu thập Runtime Hints. Sau đó GraalVM thực hiện reachability analysis và native compilation trên input đã chuẩn bị. Spring vẫn chạy trong application kết quả, còn GraalVM vẫn sở hữu native compilation. Xem AOT như cầu nối giúp hiểu một lỗi native-only có thể nằm ở prepared Spring model hoặc ở reachability/compiler về sau, thay vì gom mọi lỗi thành một vấn đề "native" duy nhất.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 1.Purpose/NativeImage.md
+    anchor: native-image-problem
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Một team báo native executable khởi động nhanh gấp năm lần bản JVM. Vì sao kết quả đó chưa đủ để quyết định triển khai native, và bạn sẽ yêu cầu thêm bằng chứng gì?"
+  answer: >-
+    Startup speed chỉ chứng minh một phần của bài toán runtime. Native compilation chuyển chi phí sang build, tăng nhu cầu CPU/memory cho CI, tạo artifact phụ thuộc nền tảng và thêm công việc compatibility quanh hành vi động cùng dependency bên thứ ba. So sánh runtime còn phải đo memory dưới tải thực tế, throughput, tail latency, CPU, pattern scaling, diagnostics và behavior của JVM sau warm-up. So sánh delivery phải tính thời gian native build, khả năng tái lập, chi phí test, target platform và việc bảo trì hint/workaround. Native phù hợp khi cold start, memory, density hoặc short-lived execution thật sự quan trọng và lợi ích đo được bù chi phí đó. Một con số startup của process idle hoặc workload không tương đương chưa đủ để chứng minh trade-off.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 1.Purpose/NativeImage.md
+    anchor: native-image-cost-model
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Spring AOT có thể sinh những loại asset nào, vì sao chúng là input build thật chứ không chỉ là diagnostic report, và vì sao developer không nên sửa chúng như source of truth?"
+  answer: >-
+    Spring AOT có thể sinh Java source cho context/bean initialization, bytecode như proxy class cần thiết và Runtime Hints hoặc native-image metadata cho khả năng động. Source/bytecode được sinh sẽ được compile cùng application, còn metadata được native-image tooling sử dụng ở stage sau, nên chúng trực tiếp ảnh hưởng executable. Chúng đồng thời là diagnostic evidence vì cho thấy application structure và dynamic requirement nào Spring đã chuẩn bị. Không nên duy trì bằng tay vì lần AOT tiếp theo sẽ sinh lại từ application configuration, dependency, classpath và build-time environment. Nếu output sai, hãy sửa configuration, integration, hint registration hoặc dependency sở hữu nguyên nhân thay vì patch một generated artifact không thể tái lập.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 2.AOTPipeline/AOTPipeline.md
+    anchor: aot-generated-assets
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Vì sao hai build dùng cùng application source vẫn có thể tạo native application model khác nhau khi profile, property, classpath hoặc dependency version khác nhau?"
+  answer: >-
+    AOT processing yêu cầu Spring chuẩn bị application model bằng build-time classpath và environment. Auto-configuration condition, component availability, profile và property vì thế có thể ảnh hưởng bean definition tồn tại và generated asset/hint được tạo. Dependency thay đổi cũng có thể đổi class, native metadata hoặc framework integration dù application source không đổi. Khi structural choice đã được mã hóa vào native build, runtime không thể được giả định sẽ tự dựng lại một BeanFactory trái ngược tùy ý. Vì vậy build-time environment và dependency composition là một phần contract tái lập của native artifact. Team phải version và kiểm soát chúng có kỷ luật như source code, đồng thời phân biệt structural configuration với ordinary runtime value mà bean đã được chuẩn bị vẫn có thể đọc.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 2.AOTPipeline/AOTPipeline.md
+    anchor: aot-entry-model
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Application khởi động thành công ở normal JVM mode, nhưng application đã qua AOT chạy trên JVM lại lỗi trước native compilation. Điều đó cho biết gì, và vì sao inspect generated AOT output hữu ích hơn việc lập tức thêm GraalVM reflection configuration?"
+  answer: >-
+    Failure đã xuất hiện trước khi closed-world executable của GraalVM tham gia, nên boundary sớm nhất chưa được chứng minh là prepared AOT application model của Spring. Generated initialization source có thể cho thấy configuration/bean dự kiến có được đưa vào hay không, proxy asset cho thấy Spring đã chuẩn bị gì, còn hint output và build log cho biết environment nào được dùng lúc processing. Thêm reflection configuration tùy ý sẽ nhắm vào reachability concern ở stage muộn hơn khi chưa có bằng chứng đó là vấn đề hiện tại. Trước tiên hãy sửa AOT model, unsupported registration pattern, build-time condition hoặc preparation issue tương ứng. Chỉ khi AOT-mode behavior đã đúng mới chuyển điều tra sang native compilation và dynamic path chỉ lỗi ở native.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 2.AOTPipeline/AOTPipeline.md
+    anchor: aot-diagnostic-evidence
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Closed-world đôi khi được mô tả là 'mọi thứ đều bị cố định ở build time'. Vì sao mental model đó quá mạnh, và engineer nên dùng distinction nào thay thế?"
+  answer: >-
+    Process Spring Boot native vẫn đọc environment variable và external property, nhận request, kết nối database, schedule work và thay đổi business state ở runtime. Closed-world chủ yếu ràng buộc reachable code, metadata, dynamic capability và framework structure mà build đã chuẩn bị. Đổi database URL là ordinary runtime value change vì bean đã tồn tại có thể dùng giá trị khác. Profile/property cố đưa vào bean definition vắng mặt trong AOT model là structural mismatch. Reflection tới type mà build không giữ lại là reachability problem. Vì vậy distinction hữu ích là thay đổi runtime state/value so với thay đổi đòi hỏi code, member, resource, proxy hoặc bean structure mà executable chưa chứa hoặc chưa mô tả.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 3.ClosedWorld/ClosedWorld.md
+    anchor: closed-world-runtime-boundary
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Một Spring library tái sử dụng đăng ký infrastructure bean bằng cách scan class rồi gọi registerSingleton trong application startup. Vì sao thiết kế này cần được xem xét kỹ cho native image, và một thiết kế tương thích AOT cần đạt điều gì?"
+  answer: >-
+    Spring AOT chuẩn bị một BeanFactory model cụ thể và sinh initialization cho model đó trước khi native executable được tạo. Infrastructure chỉ xuất hiện qua late scanning hoặc singleton registration tùy ý có thể vô hình lúc model được chuẩn bị, nên native runtime không thể giả định sẽ tự tạo một bean graph hoàn toàn khác về sau. Integration tương thích AOT phải làm cấu trúc kết quả nhìn thấy được trong processing hoặc dùng supported Spring extension point có tham gia AOT. Mục tiêu không phải cấm mọi library động; mục tiêu là đảm bảo bean, proxy, resource và requirement khác mà library tạo ra có thể được biểu diễn trong prepared model. Với library author, native readiness vì thế là một phần integration contract chứ không phải reflection workaround để application bổ sung sau cùng.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 3.ClosedWorld/ClosedWorld.md
+    anchor: aot-bean-graph
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Bạn sẽ review application cho native-sensitive dynamic behavior như thế nào mà không rơi vào bẫy đăng ký blanket reflection access cho mọi class?"
+  answer: >-
+    Bắt đầu từ behavior có target được chọn gián tiếp: reflection, resource lookup bằng string, JDK proxy, serialization/binding cần reflective access, runtime class loading hoặc generated bytecode, JNI và configuration chỉ tên class/resource. Sau đó xác định ownership và support đã có. Spring có thể infer nhiều framework pattern phổ biến, còn dependency có thể đã ship reachability metadata. Hãy exercise representative path, inspect generated metadata và chỉ thêm explicit application hint khi còn dynamic requirement thực sự chưa được mô tả. Đăng ký capability nhỏ nhất khớp behavior thay vì cả package. Blanket reflection có thể che contract thật, giữ member/resource không cần, tăng analysis/footprint và khiến không ai giải thích được vì sao access đó tồn tại.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 4.RuntimeHints/RuntimeHints.md
+    anchor: inferred-vs-explicit-hints
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "So sánh reflection, resource, Java serialization, JDK proxy và JNI Runtime Hints. Vì sao chọn đúng category là một phần mô tả runtime contract chứ không chỉ để làm compiler hết lỗi?"
+  answer: >-
+    Mỗi category giữ một capability khác nhau. Reflection hint giữ metadata type/member và reflective operation được phép; resource hint đưa classpath resource cần mở lúc chạy vào executable; Java serialization hint giữ type cần Java serialization; JDK proxy hint mô tả tổ hợp interface phải có để tạo proxy; JNI hint giữ member access cần qua JNI. Các category không thay thế nhau. Ví dụ convert object sang JSON không tự động có nghĩa cần Java serialization metadata; binding library thường cần reflective construction. Chọn category nhỏ và đúng giúp tài liệu hóa behavior thật, làm metadata dễ review và tránh giữ lại thứ không liên quan. Build thành công nhờ metadata quá rộng vẫn có thể là native contract khó hiểu và tốn kém.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 4.RuntimeHints/RuntimeHints.md
+    anchor: reflection-resource-proxy-hints
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Ai nên sở hữu native reachability metadata khi dynamic behavior đến từ Spring, third-party library hoặc application-specific code, và vì sao ownership đó quan trọng theo thời gian?"
+  answer: >-
+    Metadata nên nằm gần nhất có thể với component sở hữu dynamic behavior. Spring và integration được hỗ trợ nên cung cấp hoặc infer hint cho Spring contract. Third-party library tự dùng reflection, resource discovery hoặc proxy nên lý tưởng là ship native support hoặc được bao phủ bởi reachability metadata nhận biết version. Application code nên đóng góp RuntimeHints cho dynamic behavior do chính application tạo. Vị trí ownership quan trọng vì owner biết behavior thay đổi khi nào và có thể test contract chính xác. Application-level workaround cho library đôi lúc cần thiết nhưng có thể stale, quá rộng hoặc sai sau dependency upgrade. Hãy đối xử reachability metadata như code: version, test và xóa workaround khi upstream support làm nó không còn cần thiết.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 4.RuntimeHints/RuntimeHints.md
+    anchor: reachability-metadata
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Cùng resource path và reflection path ít dùng đó chạy đúng trên normal JVM, và native executable cũng start đúng, nhưng khi chạy native thì các path này lần lượt không load được resource và không tìm thấy constructor. Hãy mô tả cách chẩn đoán có kỷ luật thay vì thêm metadata thật rộng cho đến khi hết lỗi."
+  answer: >-
+    JVM, AOT, native compile và native startup đều đã thành công nên focused runtime reachability problem là giả thuyết mạnh. Trước hết xác định từng dynamic operation chính xác: resource path nào được yêu cầu và type/member nào đang reflection. Kiểm tra Spring hoặc dependency đã có supported native path hay chưa, inspect generated reachability metadata và xác nhận target lỗi có được mô tả không. Nếu application sở hữu behavior, thêm resource/reflection hint nhỏ nhất và test registration đó trước khi rebuild focused scenario. Tracing agent có thể giúp discover access nhưng output vẫn phải review vì broad test execution có thể ghi metadata không liên quan. Đổi nhiều hint set cùng lúc sẽ phá evidence dùng để chứng minh contract nào thật sự thiếu.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 4.RuntimeHints/RuntimeHints.md
+    anchor: missing-hint-diagnosis
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Hãy giải thích supported build handoff từ Spring AOT sang GraalVM Native Image. Vì sao gọi native-image trên ordinary artifact không có AOT asset cần thiết không tương đương native workflow của Boot?"
+  answer: >-
+    Supported flow chuẩn bị Spring application trước. AOT-generated Java source được compile, generated bytecode được thêm vào input, còn Runtime Hints/native metadata được đặt ở nơi native-image tooling có thể dùng. GraalVM sau đó thực hiện reachability analysis và machine-code generation trên application model đã được làm giàu. Nếu ordinary Boot artifact thiếu các prepared asset đó, gọi native-image trực tiếp đã bỏ qua stage Spring dùng để biến dynamic framework decision thành build-time evidence. Compiler không thể được kỳ vọng tự dựng lại Spring semantics mà AOT được thiết kế để hiện thực hóa. Build tooling có thể package flow theo cách khác nhau, nhưng semantic order vẫn là Spring AOT trước rồi native compilation. Reproducible configuration phải mã hóa thứ tự đó thay vì phụ thuộc generated file sửa tay.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 5.BuildAndRun/BuildAndRun.md
+    anchor: aot-to-native-compile
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Build assumption nào ẩn sau command như Maven -Pnative hoặc Gradle nativeCompile, và vì sao copy những command đó giữa các project có thể fail dù cả hai đều dùng Spring Boot?"
+  answer: >-
+    Command chỉ là entry point vào build integration đã được cấu hình. Với Maven, documented native profile được cung cấp khi project kế thừa spring-boot-starter-parent; project không dùng parent phải tự cấu hình Boot process-aot và GraalVM Native Build Tools execution tương đương. Với Gradle, native task đến từ GraalVM Native Build Tools plugin, và Spring Boot plugin nối AOT processing vào native flow khi plugin đó có mặt. Vì vậy contract thật là AOT-to-native task graph đã cấu hình chứ không phải spelling của command. Copy command mà thiếu parent/profile hoặc native plugin có thể chọn lifecycle khác hoặc hoàn toàn không có native integration. Hãy chẩn đoán build model trước khi coi missing task/profile là lỗi application compatibility.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 5.BuildAndRun/BuildAndRun.md
+    anchor: graalvm-native-build-tools
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Hãy tách runtime form khỏi packaging form khi chọn giữa native executable, native OCI image, JVM JAR và JVM OCI image. Quyết định nào nên theo deployment platform và quyết định nào nên theo application economics?"
+  answer: >-
+    Native hay JVM là quyết định runtime. Nó thay đổi compilation model, startup/warm-up behavior, compatibility constraint, build cost, memory characteristic và diagnostic capability. Executable hay OCI image chủ yếu là quyết định delivery/packaging. Platform bắt buộc container vẫn có thể chạy native executable trong OCI image, nên containerization không đồng nghĩa JVM và cũng không xóa closed-world constraint của native. Chọn direct binary hay container theo target platform và release contract. Chọn native hay JVM theo startup, memory, throughput, build latency, dependency readiness, operational tooling và maintenance cost đã đo. Tách hai trục giúp tránh chọn native chỉ vì muốn container hoặc bỏ native chỉ vì production yêu cầu OCI delivery.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 8.ReadinessSynthesis/ReadinessSynthesis.md
+    anchor: native-delivery-choice
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Vì sao JVM-first test strategy vẫn tương thích với việc validate native image nghiêm túc, và normal JVM test, AOT-mode JVM execution cùng native test cung cấp bằng chứng khác nhau nào?"
+  answer: >-
+    Phần lớn business logic và ordinary Spring integration behavior được validate nhanh hơn nhiều bằng JVM với tooling trưởng thành, nên compile mọi test thành native sẽ tốn build time mà không chứng minh thêm native-sensitive behavior. AOT-mode JVM execution thêm một intermediate check: nó exercise generated initialization và prepared application model của Spring nhưng không tái tạo toàn bộ closed-world compiler/runtime của GraalVM. Selected native test hoặc smoke test sau đó chứng minh reflection, resource, proxy, dependency integration và startup path đại diện còn sống qua actual native analysis/execution. Các layer trả lời câu hỏi khác nhau và giúp định vị failure. JVM test lỗi thì sửa ordinary behavior trước; chỉ AOT mode lỗi thì inspect preparation; chỉ native lỗi thì điều tra closed-world/reachability hoặc environment difference.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 6.NativeTesting/NativeTesting.md
+    anchor: jvm-first-test-strategy
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Vì sao native test AOT có thể cần xử lý riêng dù main application context đã native-ready, và chi phí native test nên ảnh hưởng coverage CI như thế nào?"
+  answer: >-
+    Test có thể tạo context/configuration mà production application không bao giờ tạo: test-specific bean, dependency replacement, infrastructure bổ sung và property set khác. Spring vì thế AOT-process eligible test context riêng, và test context có thể lộ unsupported runtime dynamism dù main application AOT model đã hợp lệ. Native test cũng đắt hơn ordinary JVM test đáng kể, nên coverage nên target native-sensitive integration path và representative startup/use case thay vì duplicate mọi business test. Developer có thể chạy focused native check khi đổi hint/dependency, còn CI chạy risk-based suite ở pull request, scheduled hoặc release stage. Fresh CI environment vẫn phải reproduce result từ declared input; cache chỉ giảm cost chứ không được trở thành correctness requirement không khai báo.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: ""
+    anchor: ""
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Một third-party library chạy trên JVM nhưng dùng runtime scanning và native support chưa đầy đủ. Team nên cân nhắc application workaround, dependency upgrade, upstream fix hoặc ở lại JVM như thế nào?"
+  answer: >-
+    Bắt đầu bằng native support của đúng library version và kiểm tra library hoặc reachability-metadata ecosystem đã mô tả dynamic behavior chưa. Nếu version mới tương thích có support đúng, upgrade thường giảm ownership dài hạn. Nếu application phải cung cấp workaround, giữ nó hẹp, nhận biết version và có focused test exercise failing path. Private hint set lớn là maintenance debt vì có thể over-retain behavior và âm thầm stale khi library đổi. Ưu tiên upstream fix khi library sở hữu dynamic contract. Nếu dependency là thiết yếu, support vẫn yếu và native runtime benefit nhỏ, ở lại JVM có thể là lựa chọn engineering tốt hơn thay vì mang fragile metadata vô thời hạn.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 7.CompatibilityTradeoffs/CompatibilityTradeoffs.md
+    anchor: dependency-native-readiness
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Hãy mô tả cách phương pháp 'last successful boundary' thay đổi việc troubleshoot native image. Phân loại failure ở JVM startup, AOT processing, native compilation và một dynamic runtime path duy nhất."
+  answer: >-
+    Phương pháp này ngăn mọi native problem biến thành phỏng đoán reflection config. Nếu ordinary JVM startup hoặc test cũng fail, owner đầu tiên là application/configuration bình thường vì native processing chưa tạo evidence riêng. Nếu JVM chạy nhưng AOT processing fail, inspect prepared Spring model, unsupported registration pattern, condition và build-time input. Nếu AOT thành công nhưng native compilation fail, điều tra native build integration, unsupported construct, toolchain và reachability metadata. Nếu native executable compile/start được nhưng một dynamic path fail, tập trung exact reflection, resource, proxy, serialization, JNI hoặc dependency metadata của path đó. Giữ generated asset và build log làm evidence để mỗi boundary thành công loại bớt lớp nguyên nhân trước và khiến thay đổi tiếp theo có thể kiểm chứng.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 7.CompatibilityTradeoffs/CompatibilityTradeoffs.md
+    anchor: native-failure-classification
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Điều gì khiến bạn vẫn khuyến nghị regular JVM deployment dù team đã build và test native executable thành công?"
+  answer: >-
+    Compile thành công chứng minh feasibility chứ không chứng minh value. Service chạy dài và hiếm khi scale có thể nhận ít lợi ích từ cold-start nhưng hưởng nhiều hơn từ JVM JIT optimization, diagnostic trưởng thành, agent support rộng và build/test feedback nhanh. Native cũng có thể không hấp dẫn khi dependency quan trọng cần workaround mong manh, mỗi target platform cần build capacity đắt hoặc runtime memory/startup gain nhỏ dưới production-like measurement. Operational requirement quan trọng không kém performance: incident tooling, profiling, release frequency và rollback path đều có cost. JVM vẫn là deployment model hạng nhất của Boot. Tôi sẽ chọn JVM khi native benefit đo được không bù recurring build, compatibility, testing và operations complexity dù artifact native về kỹ thuật vẫn chạy được.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 7.CompatibilityTradeoffs/CompatibilityTradeoffs.md
+    anchor: when-not-native
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Một team nói service đã 'native-ready' vì một native build đã hoàn tất thành công. Bằng chứng nào biến one-time success đó thành production-readiness claim có thể duy trì?"
+  answer: >-
+    Native readiness là chuỗi bằng chứng được duy trì. Team cần runtime goal đo được, JDK/GraalVM/Boot toolchain có thể tái lập, build-time profile/property được kiểm soát, dependency/version support được hiểu và reachability metadata cho native-sensitive behavior đã được review. Generated AOT asset và build log phải inspect được khi behavior đổi. Focused test phải exercise reflection, resource, proxy, binding hoặc path khác có thể khác dưới native execution, còn CI cần strategy lặp lại được cho từng OS/architecture hỗ trợ. Production-like startup, memory, latency và diagnostics phải biện minh cho runtime choice. Workaround cần test cùng điều kiện xóa khi dependency cải thiện. JVM fallback hoặc rollback path cũng có thể là một phần operational readiness. Một build badge chỉ chứng minh một tập input compile được một lần.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 8.ReadinessSynthesis/ReadinessSynthesis.md
+    anchor: native-evidence-loop
+  apiRelated:
+    controller: ""
+    methodSignature: ""

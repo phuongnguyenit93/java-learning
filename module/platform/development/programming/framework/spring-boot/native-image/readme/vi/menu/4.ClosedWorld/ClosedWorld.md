@@ -1,1 +1,0 @@
-﻿# Closed-world Assumption
