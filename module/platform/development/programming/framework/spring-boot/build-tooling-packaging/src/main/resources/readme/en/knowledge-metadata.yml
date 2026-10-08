@@ -1,0 +1,228 @@
+1.Purpose/Purpose.md:
+  build-tooling-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  build-tooling-problem:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  build-time-runtime-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  build-deployment-handoff:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+2.BuildPlugins/BuildPlugins.md:
+  boot-build-plugins:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  plugin-responsibilities:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  plugin-vs-build-tool:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  plugin-choice-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+3.DependencyManagement/DependencyManagement.md:
+  spring-boot-dependencies:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  maven-parent-vs-bom:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  gradle-dependency-alignment:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  managed-version-override:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+4.BootRun/BootRun.md:
+  boot-aware-development-run:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  gradle-bootrun:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  maven-spring-boot-run:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  build-tool-run-vs-packaged-run:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  run-task-runtime-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+5.BootJarBootWar/BootJarBootWar.md:
+  bootjar-bootwar-repackage:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  executable-vs-plain-archive:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  jar-vs-war-packaging:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  packaging-main-class:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+6.ExecutableArchives/ExecutableArchives.md:
+  nested-archive-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  boot-archive-layout:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  spring-boot-loader-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  archive-indexes:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  archive-extraction-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+7.LayeredArchives/LayeredArchives.md:
+  layered-archive-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  default-layer-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  layer-order-and-cache:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  custom-layering:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  archive-layer-vs-container-runtime:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+8.ReproducibleBuilds/ReproducibleBuilds.md:
+  reproducible-packaging-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  archive-order-and-timestamps:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  reproducibility-expectation:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  reproducibility-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+9.Buildpacks/Buildpacks.md:
+  buildpack-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  buildpack-lifecycle-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  buildpack-layers-and-caches:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  buildpack-customization:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  buildpack-native-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+10.OciImages/OciImages.md:
+  boot-build-image:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  oci-image-output:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  image-builder-connection:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  image-publication:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+11.DockerBuildStrategy/DockerBuildStrategy.md:
+  dockerfile-vs-buildpacks:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  archive-vs-image-layering:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  control-standardization-maintenance:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  image-cache-strategy:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+12.DeploymentHandoff/DeploymentHandoff.md:
+  artifact-strategy:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  delivery-environment-fit:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  deployment-ownership-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  normal-jvm-vs-native-handoff:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  end-to-end-build-flow:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  build-failure-classification:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false

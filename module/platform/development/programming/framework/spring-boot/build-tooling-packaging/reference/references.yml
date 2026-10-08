@@ -1,7 +1,20 @@
-﻿references:
-  - title: "Spring Boot 3.3 Gradle Plugin Reference"
-    url: "https://docs.spring.io/spring-boot/gradle-plugin/index.html"
-    description: "Official Gradle plugin, packaging, and OCI image reference."
-  - title: "Spring Boot 3.3 Maven Plugin Reference"
-    url: "https://docs.spring.io/spring-boot/maven-plugin/index.html"
-    description: "Official Maven plugin, packaging, and OCI image reference."
+references:
+  - title: "Spring Boot 3.3 — Gradle Plugin Reference"
+    url: "https://docs.spring.io/spring-boot/3.3/gradle-plugin/"
+    description: "Official Spring Boot 3.3 Gradle plugin documentation for applying the plugin, dependency management, bootRun, executable archives, layered packaging, and OCI image tasks."
+
+  - title: "Spring Boot 3.3 — Maven Plugin Reference"
+    url: "https://docs.spring.io/spring-boot/3.3/maven-plugin/"
+    description: "Official Spring Boot 3.3 Maven plugin documentation for dependency/build integration, running applications, repackaging executable archives, and building OCI images."
+
+  - title: "Spring Boot 3.3 — Executable Jar Format"
+    url: "https://docs.spring.io/spring-boot/3.3/specification/executable-jar/"
+    description: "Official specification for Spring Boot Loader, nested JAR/WAR layouts, launchers, and archive index files."
+
+  - title: "Spring Boot 3.3 — Container Images"
+    url: "https://docs.spring.io/spring-boot/3.3/reference/packaging/container-images/"
+    description: "Official reference for Boot's container-image guidance, including efficient layered images, Dockerfile integration, and Cloud Native Buildpacks."
+
+  - title: "Spring Boot 3.3 — Efficient Deployments"
+    url: "https://docs.spring.io/spring-boot/3.3/reference/packaging/efficient.html"
+    description: "Official guidance for executable archive extraction and efficient production deployment of Spring Boot applications."

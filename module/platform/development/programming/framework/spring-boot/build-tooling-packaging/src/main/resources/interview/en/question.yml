@@ -27,4 +27,135 @@
 #         Exact method signature in api-descriptions.yml, for example startVsRun().
 # </interview-schema>
 
-questions: []
+questions:
+  - question: "A teammate says that once the Spring Boot Gradle or Maven plugin is applied, Spring Boot now owns compilation, repositories, dependency resolution, and every other build concern. How would you correct that mental model, and how would it change the way you debug a failed build?"
+    answer: "Gradle or Maven remains the build engine: it owns the project model, compilation, repository access, dependency resolution, task or lifecycle execution, and generic build behavior. Spring Boot integrates with that engine and adds Boot-aware operations such as development launch, executable packaging, and OCI image creation. The practical diagnostic rule is to ask whether the same failure could occur in a non-Boot Java build. Repository authentication, compiler setup, or a broken dependency graph should first be investigated at the build-tool layer, while failures involving bootJar, repackage, BOOT-INF, or bootBuildImage point more directly to Boot integration. This boundary prevents the Boot plugin from becoming a catch-all explanation for failures that originate in the underlying build system."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Purpose/Purpose.md"
+      anchor: "build-tooling-purpose"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Gradle and Maven can both launch and package a Spring Boot application, but their plugin models are different. How would you explain the common intent without pretending the integrations are internally identical, and why does that distinction matter when troubleshooting?"
+    answer: "Both integrations target the same Boot outcomes: run the application for development, create an executable archive, and optionally build an OCI image. Gradle expresses those outcomes through tasks such as bootRun, bootJar, bootWar, and bootBuildImage that participate in the Gradle task model, while Maven exposes goals such as run, repackage, and build-image that participate in Maven's lifecycle and goal model. The correct mental model is one Boot application model adapted to two different build systems. Troubleshooting must therefore follow the mechanism of the chosen tool: task wiring and source sets are Gradle concerns, while lifecycle execution and Maven plugin configuration are Maven concerns. Forcing a fake one-to-one syntax mapping hides the actual owner of the failure."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.BuildPlugins/BuildPlugins.md"
+      anchor: "plugin-choice-boundary"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "A team overrides a dependency version managed by Spring Boot because of a security fix. Explain what responsibility the team takes on, how the override mechanism differs between dependency-management approaches, and what evidence you would require before keeping the override."
+    answer: "Boot's managed versions are a tested compatibility baseline, so overriding one means the project accepts responsibility for validating the new combination. The team should confirm why the deviation is necessary, whether related libraries must move together, whether Boot or auto-configuration assumptions still hold, and whether integration tests cover the affected path. With io.spring.dependency-management, a managed family may often be customized through the dependency-management model and its version properties; with Gradle native platform support, the project should use Gradle's constraints or resolution mechanisms instead. The team should also document when the override can be removed, because a temporary security exception can otherwise become permanent maintenance debt. A successful resolution alone is not enough evidence; runtime and integration compatibility still need verification."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.DependencyManagement/DependencyManagement.md"
+      anchor: "managed-version-override"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Why can bootRun or spring-boot:run succeed while the artifact that will be released is still broken? Walk through the different evidence each launch path provides and give one concrete pitfall that only the packaged run may reveal."
+    answer: "A build-tool run launches from compiled output plus the development runtime classpath, so success proves that the application can start from the build model currently assembled by Gradle or Maven. It does not prove that the final archive has the correct manifest, main-class metadata, nested dependency layout, or Boot Loader configuration. Building the executable artifact and launching the exact JAR with java -jar exercises that second boundary. A concrete pitfall is a development-only dependency that is available to bootRun but intentionally excluded from the production archive; the local development launch can work while the packaged application fails because it never contained that component. Release validation should therefore treat the packaged artifact as a separate test subject."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.BootRun/BootRun.md"
+      anchor: "build-tool-run-vs-packaged-run"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "A project produces both a plain JAR and a Spring Boot executable JAR. Why are these not interchangeable artifacts, and what design or publishing problems can appear if the distinction is left ambiguous?"
+    answer: "A plain library JAR is designed to be placed on another application's classpath, while a Boot executable archive is an application delivery unit with application classes, nested runtime dependencies, and launcher metadata for java -jar. Using an executable Boot archive as if it were a normal library can confuse consumers because its dependency layout is optimized for launching, not for ordinary classpath reuse. Conversely, publishing both outputs under ambiguous naming can make CI, repositories, or downstream consumers select the wrong artifact. The build should make ownership explicit: decide which output is the runnable application, which output is a reusable library if one is needed, and configure classifiers or publication coordinates so the distinction remains visible. This is especially important in multi-purpose projects where application delivery and library publication are separate contracts."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.BootJarBootWar/BootJarBootWar.md"
+      anchor: "executable-vs-plain-archive"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "An executable Boot JAR fails before SpringApplication starts because one of its packaged classes cannot be found. Explain why Spring Boot Loader is part of the diagnosis, how nested JARs change normal java -jar behavior, and where you would draw the boundary before investigating Spring beans."
+    answer: "The JVM's ordinary java -jar behavior does not automatically turn arbitrary JARs nested inside another JAR into the application's normal classpath. Spring Boot Loader understands Boot's executable archive layout, builds the effective classpath from BOOT-INF or the corresponding packaged locations, and then invokes the configured application main class. If the launcher cannot find a packaged class or nested dependency, inspect the manifest, archive layout, nested libraries, classpath metadata, and loader configuration first. SpringApplication and the ApplicationContext have not yet started, so bean creation or auto-configuration diagnostics are premature. The useful checkpoint is whether the Boot launcher successfully reached the application's Start-Class; only failures after that handoff belong to the application bootstrap layer."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.ExecutableArchives/ExecutableArchives.md"
+      anchor: "spring-boot-loader-purpose"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "A team enables Spring Boot layered archives but their container builds still invalidate almost every layer after a small code change. Explain why archive layering alone does not guarantee cache reuse and how you would decide whether custom layers are justified."
+    answer: "Boot's layer metadata groups archive content by expected change frequency, but downstream image tooling must actually preserve and consume those boundaries for the cache to benefit. If a Dockerfile copies the entire executable JAR as one opaque file into a single image layer, a logically layered archive still produces poor image-layer reuse. The first check is therefore whether the image build extracts or otherwise maps Boot's logical groups into reusable image layers. Custom layering is justified only when the default assumptions do not match observed change patterns, such as large internal modules that change at different rates from application code. Add custom rules after measuring cache behavior, keep the layer order complete, and avoid creating fine-grained layers that merely mirror source packages without a delivery benefit."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.LayeredArchives/LayeredArchives.md"
+      anchor: "layer-order-and-cache"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Two CI runs use the same source revision and dependency versions, but their Boot JAR hashes differ. Why is 'same source' insufficient to claim reproducibility, and what investigation path would you use before declaring the packaging non-reproducible?"
+    answer: "Reproducibility depends on the complete build input graph, not only the Git revision. Archive entry ordering, timestamps, generated resources, build-info or Git metadata, toolchain versions, plugin configuration, dependency artifacts, locale or time-zone sensitive steps, and other filesystem inputs can all change bytes without a source-code edit. Start by confirming the same declared inputs and toolchain, then compare archive entry lists, dependency versions, manifest data, timestamps, and generated resources before comparing final hashes. Boot archive tasks can participate in deterministic ordering and timestamp control, but they cannot make nondeterministic generated inputs reproducible automatically. The project must define whether it requires logical equivalence or byte-for-byte identity and validate the whole pipeline against that contract."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.ReproducibleBuilds/ReproducibleBuilds.md"
+      anchor: "reproducibility-expectation"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "During a Buildpacks image build, detection fails before any application process is launched. How would you explain the roles of the builder, buildpacks, and run image, and how would the ordered lifecycle help you avoid debugging the wrong subsystem?"
+    answer: "The builder image provides the build environment, lifecycle, and available buildpacks; individual buildpacks detect application needs and contribute build or runtime layers; the run image supplies the base runtime filesystem for the final application image. The lifecycle is intentionally ordered: analyze prior state, detect applicable buildpacks, restore reusable layers, build the application and runtime layers, then export the OCI image. A detection failure means the workflow has not reached application runtime at all, so changing SpringApplication properties is unlikely to help. Instead inspect the selected builder, available buildpacks, application input, and detection logs. If the failure occurs later during export or publication, shift the investigation toward daemon, registry, credentials, or image-output concerns rather than treating every Buildpacks failure as the same problem."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "9.Buildpacks/Buildpacks.md"
+      anchor: "buildpack-lifecycle-boundary"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "bootJar succeeds in CI, but bootBuildImage cannot produce an image. Explain why that does not point first to SpringApplication, and show how you would separate container-engine, builder-network, and registry failures during diagnosis."
+    answer: "A successful bootJar already proves that dependency resolution, compilation, and executable packaging reached a later boundary than ordinary source build failures. bootBuildImage adds a new prerequisite: the Boot plugin must reach a supported container engine so the builder and lifecycle can run. From there separate three connections rather than treating them as one network problem: the build tool must reach the Docker daemon or compatible engine, the builder container may need outbound access to dependency sources, and the image task may need registry access for pull or publish operations. Evidence from each connection should guide the next step because a proxy or credential fix for one path may not affect the others. SpringApplication startup is not the first suspect because the application process has not yet been launched."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "10.OciImages/OciImages.md"
+      anchor: "image-builder-connection"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "How would you choose between Buildpacks and a Dockerfile for a platform with many Spring Boot services? Discuss control, standardization, security updates, and the organizational ownership implied by each choice."
+    answer: "Buildpacks fit well when the organization wants a standardized application-to-image path, shared Java conventions, centrally managed builders or run images, and less per-service image recipe maintenance. A Dockerfile is a better fit when a service genuinely needs explicit low-level control over base-image policy, filesystem steps, OS packages, or process composition. The trade-off is also organizational: updating a managed builder can roll a security or JDK change across many services, while Dockerfile-per-service models often require each repository to update and rebuild its own pinned base. A custom builder or buildpack can sometimes satisfy an organization-wide requirement without forcing every application to own a Dockerfile. Choose based on who should own image policy and maintenance over time, not simply on which syntax the team already knows."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "11.DockerBuildStrategy/DockerBuildStrategy.md"
+      anchor: "control-standardization-maintenance"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "A release pipeline can build and launch an executable JAR, then builds an OCI image successfully, but production later runs the wrong image digest. How would you classify the failure using the latest successful boundary, and what handoff design would make this class of incident easier to diagnose?"
+    answer: "The successful JAR proves the application can be packaged and launched, and the successful OCI build proves the image-construction boundary also completed. If production runs a different digest, the remaining failure is in artifact promotion, registry/tag handling, or deployment selection rather than Boot packaging or SpringApplication startup. The build should record the immutable JAR checksum or image digest it produced, and deployment should promote that exact unit instead of rebuilding or relying only on a mutable tag such as latest. During an incident, compare the digest produced by CI with the digest stored, promoted, and finally pulled by the runtime. Using the latest successful boundary plus immutable artifact identity turns the investigation into a chain of verifiable handoffs rather than guesses across the whole delivery pipeline."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "12.DeploymentHandoff/DeploymentHandoff.md"
+      anchor: "build-failure-classification"
+    apiRelated:
+      controller: ""
+      methodSignature: ""

@@ -38,4 +38,353 @@
 #       Internal id of the correct answer. The frontend checks this identity after shuffling.
 # </quiz-schema>
 
-questions: []
+questions:
+  - id: build-tooling-quiz-01
+    question: "A team says the Spring Boot Gradle plugin should fix a repository-authentication failure because it owns the Boot build. Which reasoning is correct?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Purpose/Purpose.md"
+      anchor: "build-tooling-purpose"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "The Boot plugin owns repository access whenever a Boot task consumes dependencies."
+        explanation: "Repository declaration, authentication, and dependency resolution remain responsibilities of the underlying build tool."
+      - id: B
+        answer: "Gradle still owns repository access; the Boot plugin adds Boot-aware run, package, and image operations on top."
+        explanation: "Correct. Boot integrates application-specific behavior with Gradle without replacing Gradle's project and dependency-resolution model."
+      - id: C
+        answer: "Repository access becomes a SpringApplication runtime concern once the Boot plugin is applied."
+        explanation: "Repository access happens while resolving build inputs, before SpringApplication runtime behavior begins."
+      - id: D
+        answer: "The Boot plugin owns repository access only when the application will later be packaged as an executable JAR."
+        explanation: "Packaging format does not transfer generic repository and dependency-resolution ownership from Gradle to Boot."
+    correctAnswerId: B
+
+  - id: build-tooling-quiz-02
+    question: "A project imports spring-boot-dependencies but never declares a database driver directly or transitively. What should the learner expect?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.DependencyManagement/DependencyManagement.md"
+      anchor: "spring-boot-dependencies"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "The driver is present because every artifact listed in the BOM becomes a managed runtime dependency."
+        explanation: "A BOM manages versions; it does not automatically add every dependency listed in its dependency-management data."
+      - id: B
+        answer: "The driver is present when the Boot plugin is applied because the plugin turns managed entries into dependencies."
+        explanation: "Applying the Boot plugin changes build integration, but a BOM still does not declare all managed libraries as application dependencies."
+      - id: C
+        answer: "The driver is absent unless declared or pulled transitively; the BOM only supplies its managed version."
+        explanation: "Correct. Dependency declaration and version management are separate concerns."
+      - id: D
+        answer: "The driver is resolved for version selection but omitted at runtime because managed artifacts are build-time only."
+        explanation: "Importing the BOM does not require downloading each managed artifact merely to establish the managed version set."
+    correctAnswerId: C
+
+  - id: build-tooling-quiz-03
+    question: "A Gradle build already compiles classes and resolves runtime dependencies correctly. What does applying the Spring Boot plugin add at this boundary?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.BuildPlugins/BuildPlugins.md"
+      anchor: "plugin-responsibilities"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Boot-aware tasks such as bootRun, bootJar, and bootBuildImage that consume the build outputs Gradle already produces."
+        explanation: "Correct. The Boot plugin adds Boot-specific run, package, and image operations on top of Gradle's normal build model."
+      - id: B
+        answer: "A second build engine that replaces Gradle's compilation, dependency resolution, and task graph for Boot projects."
+        explanation: "The Boot plugin integrates with Gradle; it does not replace Gradle's project, compilation, or dependency-resolution model."
+      - id: C
+        answer: "Automatic declarations for every Boot-managed dependency so the project no longer has to choose its application libraries."
+        explanation: "Boot tooling can align versions, but the application still declares the dependencies it actually uses."
+      - id: D
+        answer: "Runtime ownership of SpringApplication events and bean lifecycle so those behaviors execute as Gradle task semantics."
+        explanation: "The plugin can launch the application, but SpringApplication runtime semantics remain runtime concerns."
+    correctAnswerId: A
+
+  - id: build-tooling-quiz-04
+    question: "A Gradle team moves from io.spring.dependency-management to Gradle's native platform support. Which expectation should change?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.DependencyManagement/DependencyManagement.md"
+      anchor: "gradle-dependency-alignment"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Managed dependencies now appear automatically because native platforms also declare the libraries they constrain."
+        explanation: "Neither supported alignment path turns the BOM into a dependency bundle."
+      - id: B
+        answer: "Executable packaging now follows the platform because its constraints become metadata stored inside BOOT-INF."
+        explanation: "Dependency alignment affects selected versions; it does not redefine the executable archive layout."
+      - id: C
+        answer: "Version conflict resolution now follows the imported platform alone because it replaces Gradle's normal resolution rules."
+        explanation: "Native platform support participates in Gradle's own resolution model rather than replacing it."
+      - id: D
+        answer: "Managed-version overrides now use Gradle's constraint/platform model instead of dependency-management plugin properties."
+        explanation: "Correct. The Boot baseline is similar, but the mechanism used to express and override constraints differs."
+    correctAnswerId: D
+
+  - id: build-tooling-quiz-05
+    question: "Why might a team run both bootRun during development and java -jar on the packaged artifact before release?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.BootRun/BootRun.md"
+      anchor: "build-tool-run-vs-packaged-run"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "bootRun executes the packaged JAR, while java -jar executes compiled classes from the source-set classpath."
+        explanation: "The relationship is reversed: bootRun launches from build outputs/classpath, while java -jar exercises the packaged archive."
+      - id: B
+        answer: "bootRun launches the development classpath, while java -jar validates the executable archive produced for handoff."
+        explanation: "Correct. The two launches validate different stages of the delivery path."
+      - id: C
+        answer: "bootRun follows SpringApplication lifecycle, while java -jar starts through Boot Loader without SpringApplication."
+        explanation: "Both paths ultimately start the Boot application lifecycle; the difference is mainly how the launch inputs are prepared."
+      - id: D
+        answer: "bootRun uses only compile dependencies, while java -jar is needed to verify the full runtime dependency graph."
+        explanation: "The choice is about validating the packaged artifact, not about enabling or disabling dependency management."
+    correctAnswerId: B
+
+  - id: build-tooling-quiz-06
+    question: "An executable Spring Boot JAR contains application classes and dependency JARs without flattening all dependency classes together. Which layout is expected?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.ExecutableArchives/ExecutableArchives.md"
+      anchor: "boot-archive-layout"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Application classes and all dependency classes are merged under the archive root."
+        explanation: "That describes a flattened uber-JAR style rather than Boot's nested executable archive layout."
+      - id: B
+        answer: "Application classes are under META-INF/classes and dependency JARs remain beside the archive on disk."
+        explanation: "Boot executable JARs package both application content and nested dependencies inside the archive."
+      - id: C
+        answer: "Application classes are under BOOT-INF/classes and dependency JARs are nested under BOOT-INF/lib."
+        explanation: "Correct. This separation is a core part of the executable JAR layout handled by Spring Boot Loader."
+      - id: D
+        answer: "Application classes are under WEB-INF/classes and dependency JARs are always under WEB-INF/lib."
+        explanation: "WEB-INF is associated with WAR layout; executable JARs use BOOT-INF."
+    correctAnswerId: C
+
+  - id: build-tooling-quiz-07
+    question: "Why does an executable Boot JAR need Spring Boot Loader instead of relying only on the JVM's ordinary classpath handling?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.ExecutableArchives/ExecutableArchives.md"
+      anchor: "spring-boot-loader-purpose"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "It launches application classes while making nested dependency JARs in the Boot archive available to the application."
+        explanation: "Correct. The loader understands Boot's executable archive structure and nested dependencies."
+      - id: B
+        answer: "It recompiles application classes at startup so they match the JDK inside the deployment environment."
+        explanation: "Boot Loader is a launch/class-loading mechanism; it does not recompile the application."
+      - id: C
+        answer: "It resolves missing Maven or Gradle dependencies from remote repositories when the process starts."
+        explanation: "Dependency resolution belongs to the build; the packaged executable archive should already contain the required runtime dependencies."
+      - id: D
+        answer: "It converts the executable JAR into an OCI filesystem before invoking the application's main class."
+        explanation: "OCI image creation is a separate build concern; Boot Loader launches the archive as a JVM application."
+    correctAnswerId: A
+
+  - id: build-tooling-quiz-08
+    question: "A service changes application classes frequently but upgrades external dependencies rarely. Which layer order best supports cache reuse?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.LayeredArchives/LayeredArchives.md"
+      anchor: "layer-order-and-cache"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Place application content before stable dependencies so every rebuild starts from the newest files."
+        explanation: "Putting volatile application content first tends to invalidate later cached layers more often."
+      - id: B
+        answer: "Combine dependencies and application classes into one layer so the cache has only one decision to make."
+        explanation: "Combining stable and volatile content removes the reuse benefit that layering is intended to create."
+      - id: C
+        answer: "Order layers alphabetically because cache reuse depends on layer names rather than change frequency."
+        explanation: "Useful layer ordering is based on content stability and invalidation behavior, not alphabetical naming."
+      - id: D
+        answer: "Place less frequently changing dependency/loader content before the more frequently changing application content."
+        explanation: "Correct. Stable earlier layers are more likely to remain reusable when application code changes."
+    correctAnswerId: D
+
+  - id: build-tooling-quiz-09
+    question: "Two builds use the same source and dependency versions, yet their JAR checksums differ because file timestamps vary. Which concern is most directly involved?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.ReproducibleBuilds/ReproducibleBuilds.md"
+      anchor: "archive-order-and-timestamps"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Runtime reproducibility, because SpringApplication normalizes archive timestamps before loading classes."
+        explanation: "Runtime lifecycle does not rewrite archive metadata to make separate builds byte-for-byte stable."
+      - id: B
+        answer: "Archive reproducibility, because entry timestamps and ordering can change bytes even when logical inputs match."
+        explanation: "Correct. Archive metadata such as timestamps and entry order directly affects reproducibility."
+      - id: C
+        answer: "Dependency reproducibility, because the Boot BOM must align timestamps as well as managed library versions."
+        explanation: "The BOM governs compatible dependency versions, not timestamps of archive entries."
+      - id: D
+        answer: "Image reproducibility, because Buildpacks decide which checksum is stored in the Boot JAR manifest."
+        explanation: "A JAR can be built and compared without Buildpacks; reproducible archive settings are the relevant boundary."
+    correctAnswerId: B
+
+  - id: build-tooling-quiz-10
+    question: "In a Cloud Native Buildpacks workflow, which pairing best describes the builder image and run image?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "9.Buildpacks/Buildpacks.md"
+      anchor: "buildpack-model"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "The builder supplies the runtime base, while the run image supplies buildpacks and build-time tooling."
+        explanation: "The builder participates in detection/build, while the run image contributes the base for the resulting runtime image."
+      - id: B
+        answer: "The builder supplies buildpacks and build tooling, while the run image is only a cache source for dependencies."
+        explanation: "Those are not the defining responsibilities of builder and run images."
+      - id: C
+        answer: "The builder supplies buildpacks and build tooling, while the run image supplies the application's runtime base."
+        explanation: "Correct. They serve distinct build-time and runtime-base roles in the Buildpacks model."
+      - id: D
+        answer: "Builder and run images mainly differ by registry location; either one can serve as the build or runtime base."
+        explanation: "Builder/run-image concepts belong to the Buildpacks workflow and are not divided by that JVM-versus-native rule."
+    correctAnswerId: C
+
+  - id: build-tooling-quiz-11
+    question: "The application compiles and bootJar succeeds, but bootBuildImage fails before producing an image because no container engine can be reached. Where should investigation start?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "10.OciImages/OciImages.md"
+      anchor: "image-builder-connection"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Check the Docker daemon or supported Docker-compatible connection used by the image-building task."
+        explanation: "Correct. A successful JAR build followed by connection failure points to the image builder/container-engine boundary."
+      - id: B
+        answer: "Check SpringApplication event ordering because the runtime lifecycle must initialize the image builder."
+        explanation: "bootBuildImage is a build-time operation and does not depend on SpringApplication starting first."
+      - id: C
+        answer: "Check BOOT-INF class loading because Boot Loader opens the Docker socket from inside the executable archive."
+        explanation: "Boot Loader handles archive launch; it is not the component that connects the build task to a container engine."
+      - id: D
+        answer: "Check Maven or Gradle repository authentication first because image creation always re-resolves the project's source dependencies."
+        explanation: "Repository issues are possible in other phases, but the stated failure is specifically inability to reach the container engine."
+    correctAnswerId: A
+
+  - id: build-tooling-quiz-12
+    question: "A platform team wants one centrally maintained Java image path for many services, while an exceptional service needs custom OS packages and filesystem steps. Which choice matches those ownership needs?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "11.DockerBuildStrategy/DockerBuildStrategy.md"
+      anchor: "dockerfile-vs-buildpacks"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Use one shared Dockerfile template for the common path, and fork that template only for the exceptional service."
+        explanation: "A shared template reduces duplication, but each repository still owns Dockerfile mechanics instead of using one centrally managed application-to-image lifecycle."
+      - id: B
+        answer: "Use centrally managed Buildpacks for every service, and customize the builder to absorb the exceptional OS-package requirements."
+        explanation: "Buildpacks are customizable, but a service that needs explicit low-level filesystem and image-construction steps can justify a Dockerfile boundary."
+      - id: C
+        answer: "Standardize on executable JARs, then let each deployment platform choose its own container recipe for each service."
+        explanation: "That keeps a common application artifact, but it disperses image-construction ownership instead of providing the centrally maintained image path requested here."
+      - id: D
+        answer: "Prefer centrally managed Buildpacks for the common path, and use a Dockerfile where explicit image-level control is actually required."
+        explanation: "Correct. This aligns standardization with central ownership while preserving explicit control for exceptional image requirements."
+    correctAnswerId: D
+
+  - id: build-tooling-quiz-13
+    question: "A company deploys applications into an externally managed servlet container that is part of its platform contract. Which artifact is the most direct fit?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "12.DeploymentHandoff/DeploymentHandoff.md"
+      anchor: "artifact-strategy"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "An executable JAR, because Boot applications should never rely on an external servlet container."
+        explanation: "Executable JAR is the common standalone default, but WAR remains valid when an external servlet-container contract is intentional."
+      - id: B
+        answer: "A WAR, because the target platform explicitly supplies and manages the servlet container."
+        explanation: "Correct. The artifact format should match the target environment's execution contract."
+      - id: C
+        answer: "An OCI image, because every production Boot deployment must be container-based."
+        explanation: "OCI images are appropriate when the platform expects containers, not as a universal maturity requirement."
+      - id: D
+        answer: "An unpacked executable JAR, because external servlet containers require BOOT-INF to be extracted first."
+        explanation: "An external servlet container expects WAR semantics rather than an extracted Boot JAR."
+    correctAnswerId: B
+
+  - id: build-tooling-quiz-14
+    question: "CI can build and run the executable JAR, but bootBuildImage fails during image creation. Which classification uses the latest successful boundary most effectively?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "12.DeploymentHandoff/DeploymentHandoff.md"
+      anchor: "build-failure-classification"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Treat it primarily as an application runtime failure because the JAR contains the same application code."
+        explanation: "The JAR already launches successfully, so runtime bootstrapping is not the first unresolved boundary."
+      - id: B
+        answer: "Treat it primarily as dependency-management failure because every image build starts by invalidating the Boot BOM."
+        explanation: "A successful JAR build is evidence that dependency resolution and packaging have already crossed important earlier boundaries."
+      - id: C
+        answer: "Investigate Buildpacks, builder/container-engine, and image configuration because executable packaging already succeeded."
+        explanation: "Correct. The latest successful boundary narrows the failure to the next image-building stage."
+      - id: D
+        answer: "Investigate deployment rollout policy because bootBuildImage failures occur after the artifact has been promoted."
+        explanation: "Image construction still belongs to the build/delivery preparation path and precedes deployment rollout."
+    correctAnswerId: C
