@@ -1,3 +1,12 @@
+# 📂 README MODULE STRUCTURE (VI)
+
+* [01_SourceManagementFoundations](readme/vi/menu/01_SourceManagementFoundations.md)
+* [02_VersionControlAndHistory](readme/vi/menu/02_VersionControlAndHistory.md)
+* [03_CentralizedAndDistributedModels](readme/vi/menu/03_CentralizedAndDistributedModels.md)
+* [04_LocalAndSharedSource](readme/vi/menu/04_LocalAndSharedSource.md)
+* [05_CollaborationAndStrategyLayers](readme/vi/menu/05_CollaborationAndStrategyLayers.md)
+* [06_GovernedSourceLifecycle](readme/vi/menu/06_GovernedSourceLifecycle.md)
+
 # Tổng quan — Nền tảng quản lý mã nguồn
 
 **Quản lý mã nguồn** là việc lưu giữ, theo dõi và phối hợp những thay đổi của mã nguồn để cá nhân và nhóm biết phiên bản nào đang được sử dụng, thay đổi đến từ đâu và khi nào được chấp nhận vào nguồn chung. Không có cách quản lý rõ ràng, việc chuyển tệp thủ công dễ gây mất thay đổi, nhầm phiên bản và khó giải thích trách nhiệm.
