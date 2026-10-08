@@ -1,0 +1,720 @@
+# <interview-schema>
+# Cấu trúc câu hỏi Interview
+# schema-version: 2
+#
+# questions [kiểu: list; bắt buộc; mặc định: []]
+#   Danh sách câu hỏi Interview của module trong language hiện tại.
+#   mỗi phần tử:
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi phỏng vấn hiển thị cho người học.
+#     answer [kiểu: string; bắt buộc; mặc định: ""]
+#       Câu trả lời tham khảo, chỉ hiển thị khi người học chủ động mở.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu nội dung được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu nội dung đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+# </interview-schema>
+
+questions:
+  - question: "Với Web và API là hai service độc lập, xác định topology repository bằng cách nào và vì sao không thể dựa vào kiến trúc runtime?"
+    answer: "Tôi kiểm tra Git root và lịch sử commit thật sự chứa mã Web/API, không đếm số tiến trình triển khai. Chung một lịch sử là monorepo; có những lịch sử độc lập là nhiều repository. Build target, tên service và đơn vị deploy là trục khác. Cần xác minh remote và ranh giới source trước khi kết luận về governance."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-repository-topology-foundations.md"
+      anchor: "what-is-repository-topology"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Vì sao cùng một yêu cầu đổi tên contract lại có chi phí phối hợp khác nhau tùy ranh giới kho mã?"
+    answer: "Một lịch sử có thể cho reviewer thấy provider và consumer cùng lúc nhưng vẫn phải xét tương thích và owner. Nhiều lịch sử đòi hỏi các MR liên kết, bản phát hành dependency, thời điểm nâng cấp consumer và thứ tự rollout. Không mô hình nào tự cập nhật nguyên tử client đã deploy. Cần đo thời gian chờ, phạm vi test và lỗi thật thay vì chỉ đếm repo."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-repository-topology-foundations.md"
+      anchor: "why-repository-boundaries-matter"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Giải thích vì sao monorepo chứa ba component build riêng vẫn không tự biến thành ứng dụng nguyên khối."
+    answer: "Monorepo mô tả ranh giới lịch sử Git, không phải cách đóng gói runtime. Web, API và Contracts vẫn có thể có build graph, artifact, owner và lịch triển khai riêng dù chung repository. Coupling đến từ interface/chính sách phát hành chứ không chỉ vị trí mã. Cần kiểm tra artifact và rollout thực tế trước khi nói tất cả deploy cùng."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-repository-topology-foundations.md"
+      anchor: "monorepo-definition"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Trong polyrepo, vì sao library có thể lên 2.1 còn consumer dùng 1.9 và cần theo dõi gì?"
+    answer: "Các lịch sử repository riêng cho provider và consumer chuẩn bị/phát hành theo lịch khác nhau. Tự chủ không bảo đảm tương thích runtime: library phải ghi contract được hỗ trợ và thời hạn bỏ phiên bản cũ. Tôi theo dõi dependency version trong build, artifact đã xuất, revision đang chạy, contract test và đường rollback trước khi xóa interface cũ."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-repository-topology-foundations.md"
+      anchor: "polyrepo-definition"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Vì sao cần phân biệt Java package, Gradle module, project và Git repository khi thiết kế trách nhiệm mã nguồn?"
+    answer: "Java package là namespace của ngôn ngữ, Gradle module là đơn vị build khai báo, Git repository là ranh giới lịch sử nguồn. Một project có thể gồm nhiều package/module, và module có thể dùng artifact từ repo khác. Tôi phân owner theo thư mục mã và interface phụ thuộc thật, không suy quyền hay lịch release từ tên package."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-repository-topology-foundations.md"
+      anchor: "repository-versus-project-module"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Web và API cùng lịch sử Git nhưng triển khai riêng. Làm thế nào chứng minh tính độc lập thay vì giả định?"
+    answer: "Tôi xác định artifact riêng, pipeline hay quy trình release cho từng component và bằng chứng lần triển khai một bên mà không ép bên còn lại đổi. Sau đó kiểm tra contract tương thích ngược và rollback từng môi trường. Một commit có thể chứa cả hai mà không bắt buộc deploy đồng thời; chỉ có artifact riêng cũng chưa đủ chứng minh an toàn."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-repository-topology-foundations.md"
+      anchor: "repository-versus-service-deployment"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Quản lý đang nhầm ownership, thay đổi phối hợp và release độc lập. Bạn yêu cầu ba loại bằng chứng nào?"
+    answer: "Ownership cần bản đồ reviewer, maintainer và người xử lý sự cố; thay đổi phối hợp cần chuỗi diff/MR thể hiện các component ảnh hưởng nhau; độc lập release cần version artifact và log triển khai. Chúng liên quan nhưng không đồng nhất: một owner có thể giữ nhiều service, source đổi cùng lúc vẫn có thể deploy nhiều đợt. Nên đánh giá từng trục trước khi chọn topology."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-repository-topology-foundations.md"
+      anchor: "ownership-coordination-independence"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Tại sao monorepo không đồng nghĩa ứng dụng monolith? Giải thích bằng ví dụ ranh giới service."
+    answer: "Checkout và Inventory có thể chạy thành hai process, database và API contract riêng trong khi source vẫn chung một Git repository; đó vẫn có thể là microservice. Ngược lại, mã một ứng dụng nguyên khối có thể nằm ở nhiều repo. Topology quản lý lịch sử/governance, còn kiến trúc runtime nói về process, dữ liệu và giao tiếp. Không được lấy bằng chứng của trục này để kết luận trục kia."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-repository-topology-foundations.md"
+      anchor: "monorepo-is-not-monolith"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Workspace IDE có nhiều project cùng cấp và một Git submodule. Kiểm tra gì trước khi kết luận mono/polyrepo?"
+    answer: "Cây thư mục IDE không xác định được lịch sử mã. Tôi tìm .git root, remote và commit ancestry của từng project, xem thư mục nào là submodule trỏ đến repo độc lập. Repo cha có thể tham chiếu submodule mà không sở hữu toàn bộ commit của nó. Cần báo ranh giới lịch sử thực, kể cả cấu trúc lai, thay vì đếm folder."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-repository-topology-foundations.md"
+      anchor: "recognize-topology-in-examples"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Owner của Contracts dùng chung cần chịu trách nhiệm gì ngoài việc được ghi tên trong file?"
+    answer: "Owner hữu ích phải phản hồi đề xuất sửa, quyết định tương thích, phân reviewer, báo consumer và xử lý khi thư viện gây lỗi. Tôi ghi backup, danh sách consumer và kênh escalation cho migration khẩn. Ownership không tự đồng nghĩa độc quyền đọc mã hay mọi sửa consumer đều phải xin duyệt; phạm vi review dựa trên tác động."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02-boundaries-and-ownership.md"
+      anchor: "what-is-code-ownership"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "PR monorepo sửa Web và Auth. Phân phối review thế nào mà không nhầm CODEOWNERS với quyền truy cập?"
+    answer: "Tôi mời owner của Web và Auth, yêu cầu từng nhóm đánh giá contract thuộc trách nhiệm và dùng rule code-owner/branch trên host nếu phải chặn merge. CODEOWNERS giúp định tuyến người review chứ không tự giấu file Auth khỏi người clone được kho. Cách ly quyền đọc cần ranh giới repository hoặc ACL được hỗ trợ và phải xem riêng."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02-boundaries-and-ownership.md"
+      anchor: "ownership-by-path-or-component"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Vì sao Identity và Checkout nằm ở repository riêng vẫn cần owner contract và quy trình tiếp nhận phiên bản?"
+    answer: "Lịch sử source tách biệt nhưng Checkout vẫn gọi Identity qua interface xác thực chung. Thay đổi không tương thích có thể làm hỏng consumer đang chạy dù mỗi repo đều test xanh. Tôi định nghĩa owner provider, đầu mối consumer, version hỗ trợ, contract check và thứ tự rollout rồi liên kết hồ sơ thay đổi. Tách source không xóa phụ thuộc runtime."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02-boundaries-and-ownership.md"
+      anchor: "ownership-by-repository"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Khó tìm nơi gọi AuthClient trải khắp polyrepo. Đầu tư nào giúp và khi nào chưa cần gộp repo?"
+    answer: "Code search liên repo, API catalog, dependency manifest và ví dụ có chỉ mục giúp tìm nơi dùng mà không đổi quyền sở hữu lịch sử Git. Tôi bổ sung inventory version/consumer để đánh giá tác động khi bỏ API. Gộp repo là quyết định cấu trúc lớn chỉ nên làm khi lợi ích phối hợp vượt chi phí quyền, release và tooling. Chỉ khó search chưa đủ chứng minh topology sai."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02-boundaries-and-ownership.md"
+      anchor: "discoverability-and-reuse"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Vendor clone được monorepo Web+Fraud nhưng không được merge phần Fraud. Mã Fraud có được bảo mật đọc không?"
+    answer: "Không. Quyền merge và CODEOWNERS kiểm soát ai sửa/duyệt, không làm biến mất file Fraud khỏi clone đã cấp cho vendor. Nếu yêu cầu là vendor không được thấy source Fraud, cần ranh giới đọc thật, thường là repo riêng hoặc cơ chế ACL đã xác minh trên nền tảng. Tôi thử quyền xem bằng tài khoản vendor trước khi chấp nhận thiết kế."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02-boundaries-and-ownership.md"
+      anchor: "ownership-versus-access-control"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Khi sơ đồ tổ chức đổi nhưng phụ thuộc source giữ nguyên, nhóm nên xét ownership và topology ra sao?"
+    answer: "Tôi cập nhật đầu mối chịu trách nhiệm, reviewer, backup và escalation trước. Di chuyển repo chỉ để khớp cấp quản lý mới có thể gây chuyển lịch sử, phụ thuộc và CI mà không giải quyết kỹ thuật. Ranh giới source nên theo nhu cầu phối hợp, quyền và governance bền vững. Nếu tái tổ chức làm đổi bảo mật hoặc chủ thể release thì mới đánh giá lại có bằng chứng."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02-boundaries-and-ownership.md"
+      anchor: "team-boundary-versus-repository-boundary"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Năm service deploy độc lập nằm trong một repository. Bạn có thể kết luận chắc chắn điều gì về kiến trúc và governance?"
+    answer: "Tôi chỉ có thể nói có một lịch sử Git chung chứa năm đơn vị deploy. Không thể suy ra monolith, một version phát hành, năm team hay rollout đồng thời. Cần xem contract service, artifact, phạm vi pipeline và owner theo đường dẫn. Deploy độc lập chỉ đáng tin khi kiểm tra tương thích và quy trình release/rollback chứng minh được; chung source không bảo đảm điều đó."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02-boundaries-and-ownership.md"
+      anchor: "service-count-is-not-repository-count"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Thư mục Contracts thiếu owner, người dự phòng và danh sách consumer. Bạn làm gì trước khi quyết định đổi topology?"
+    answer: "Tôi bổ nhiệm maintainer chính/dự phòng, lập bản đồ interface công khai và consumer, ghi yêu cầu review cùng kênh xử lý breaking change. Sau đó kiểm tra incident và PR tồn đọng để biết lỗi có phải do thiếu governance thay vì kích thước repo. Tách/gộp repository khi chưa có trách nhiệm rõ chỉ di chuyển cùng rủi ro sang Git root khác."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02-boundaries-and-ownership.md"
+      anchor: "verify-ownership-boundaries"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "API đổi totalAmount nhưng Web còn gửi trường cũ. Vì sao đây là thay đổi xuyên component chứ không chỉ refactor API?"
+    answer: "Contract của API đang được Web sử dụng nên việc đổi trường có thể phá request ngay cả khi unit test API xanh. Tôi tìm consumer và version client đang chạy, thiết kế giai đoạn mở rộng–chuyển đổi–thu hẹp và test cả request cũ/mới. Số repo ảnh hưởng cách phối hợp revision chứ không xóa nghĩa vụ tương thích lúc chạy."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03-cross-component-coordination.md"
+      anchor: "what-is-cross-component-change"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Ba PR cùng yêu cầu phải chờ những team khác nhau. Đo chi phí phối hợp thật thế nào mà không nhầm với kích thước diff?"
+    answer: "Tôi ghi thời điểm phần sửa đầu sẵn sàng, thời gian đợi từng reviewer, từng lần merge, công bố thư viện, nâng consumer và lần phát hành cuối được kiểm tra. Lead time và các đoạn bị chặn phản ánh chi phí bàn giao mà số dòng hay thời gian CI không nói hết. Cần so thêm lỗi/rework contract; monorepo có thể giảm một vài lượt PR nhưng không bỏ review hay thứ tự triển khai."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03-cross-component-coordination.md"
+      anchor: "why-coordination-gets-expensive"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Một PR monorepo sửa Contracts, API và Web cùng lúc. Điều gì thực sự tốt hơn và còn phải chứng minh gì?"
+    answer: "Reviewer được xem context của Contracts, API, Web trong một diff và có thể phối hợp source bằng một lịch sử. Điều đó không làm mọi consumer đang chạy tự nâng theo commit hay bảo đảm tất cả owner đã duyệt. Tôi tìm dependency gián tiếp, chạy contract/integration test, lấy review đúng miền và kiểm tra sẵn sàng release riêng cho từng artifact."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03-cross-component-coordination.md"
+      anchor: "single-history-coordinated-change"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Ba repository riêng thực hiện cùng TAX-42. Thiết kế bàn giao truy vết được dù merge không đồng thời thế nào?"
+    answer: "Tôi liên kết ba MR với TAX-42 và ghi commit, owner, version đích, dependency cần thiết cùng thứ tự rollout. Provider/consumer phải tương thích ở những trạng thái trung gian vì merge giữa repo không nguyên tử. Ma trận nâng cấp và test giúp vận hành biết tổ hợp nào an toàn và consumer nào còn chờ."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03-cross-component-coordination.md"
+      anchor: "multiple-repositories-linked-changes"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "API công khai cần đổi trường request nhưng mobile nâng chậm. Bạn bảo vệ chuỗi triển khai nào?"
+    answer: "Trước tiên provider hỗ trợ cả dạng cũ và mới, thêm test khi thiếu hoặc hai giá trị xung đột. Triển khai provider tương thích trước khi client dùng field mới, sau đó chuyển consumer và theo dõi tần suất dùng trường cũ. Chỉ loại bỏ sau khi hết nghĩa vụ hỗ trợ và có dữ liệu sử dụng. Chung hay riêng Git history không cho phép bỏ các bước đó."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03-cross-component-coordination.md"
+      anchor: "integration-order-and-compatibility"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "PR đổi interface xác thực và hành vi Web. Ai cần review, vì sao chỉ yêu cầu đủ số approve là chưa đủ?"
+    answer: "Tôi mời owner contract/bảo mật, maintainer phía cung cấp và owner Web cho các phần họ hiểu. Hai phiếu từ cùng miền có thể đủ số lượng nhưng bỏ sót giả định API ở miền khác. Host có thể chặn theo approval rule nhưng nhóm phải xác định trách nhiệm chuyên môn; cần xem quyền và đường dẫn file thực thay vì nhầm review với quyền đọc."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03-cross-component-coordination.md"
+      anchor: "review-responsibility-and-context"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Khách báo regression sau TAX-42. Cần hồ sơ nào để dựng lại version provider/consumer họ thực nhận?"
+    answer: "Tôi lần từ Issue tới các PR/SHA liên kết, artifact, dependency version và bản ghi phát hành/triển khai từng component. Chỉ ngày merge không biết tổ hợp runtime khách đang dùng. Sau đó tái hiện với đúng cặp client-provider và chạy contract test; có thể thấy consumer chưa nâng hoặc release không tương thích dù source check xanh."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03-cross-component-coordination.md"
+      anchor: "traceability-across-components"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Nhóm đổ lỗi polyrepo vì review chậm và client lỗi. Làm sao tách ảnh hưởng topology khỏi thiếu owner hoặc test?"
+    answer: "Tôi phân loại độ trễ do hàng đợi reviewer, bàn giao PR liên repo, nâng version và chờ CI; phân loại lỗi do contract không tương thích hoặc độ bao phủ test. Gộp repo có thể giảm chuyển ngữ cảnh nhưng không tự tạo reviewer hay xóa phụ thuộc runtime. Tôi lập số liệu nền trước/sau và thử thay đổi quy trình nhỏ nhất trước khi di chuyển lịch sử source."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03-cross-component-coordination.md"
+      anchor: "coordination-failure-evidence"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Khi so một PR monorepo với nhiều PR polyrepo liên kết, đo toàn bộ thay đổi xuyên component thế nào cho công bằng?"
+    answer: "Chọn cùng một yêu cầu và đo thời gian tới khi consumer tương thích, phê duyệt đúng owner, kết quả contract test, việc sửa lại và rủi ro release. Diff monorepo có thể dễ quan sát nhưng vẫn phải test consumer; polyrepo cho tự chủ riêng nhưng cần phối hợp rõ. Không nên quyết định chỉ từ số PR, dung lượng Git hay thời điểm merge đầu tiên."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03-cross-component-coordination.md"
+      anchor: "compare-cross-repo-change-scenario"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Trước khi đổi public method của AuthClient, làm sao xác định nơi chịu ảnh hưởng ở cả mono/polyrepo?"
+    answer: "Tôi liệt kê nơi gọi trực tiếp/gián tiếp bằng code search, dependency manifest, version package và owner. Sau đó tách mã có thể đổi cùng một revision khỏi consumer đang chạy có thể nâng chậm, xây contract/integration test cho API công khai. Unit test của provider hay chung repository không tự chứng minh client còn hoạt động."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04-shared-code-and-dependency-compatibility.md"
+      anchor: "shared-library-and-consumers"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Sau khi tách AuthClient ra repo riêng, dependency cycle vẫn còn. Vì sao tách kho không sửa được kiến trúc?"
+    answer: "Git repository quyết định nơi ghi lịch sử chứ không thay hướng phụ thuộc lúc biên dịch. Nếu Web/AuthClient import qua lại thì các cạnh phụ thuộc vẫn tồn tại qua artifact, đôi khi còn khó phối hợp hơn. Tôi vẽ dependency graph, tách interface khỏi implementation, đảo hướng phụ thuộc khi hợp lý và kiểm tra thứ tự build trước khi kết luận đã giảm coupling."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04-shared-code-and-dependency-compatibility.md"
+      anchor: "dependency-boundary-vs-repository-boundary"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Một PR monorepo đổi AuthClient và hai consumer đã biết. Còn rủi ro ẩn nào trước khi duyệt migration?"
+    answer: "Diff chung giúp review nhưng có thể sót consumer thứ ba, integration động hoặc binary đã triển khai còn gọi interface cũ. Tôi tìm dependency declaration/call site, quan hệ gián tiếp, chạy affected tests và xem chính sách tương thích cho artifact phát hành ngoài. Chỉ chạy unit test AuthClient hoặc compile thư mục sửa là chưa đủ."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04-shared-code-and-dependency-compatibility.md"
+      anchor: "coordinated-library-update-in-monorepo"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Library 2.1 đã có nhưng Web dùng 1.9, API dùng 2.1. Quản lý cửa sổ nâng cấp an toàn thế nào?"
+    answer: "Tôi ghi các phiên bản provider hỗ trợ, version consumer khai báo và đang chạy, cùng test theo những tổ hợp thật. Không được mặc định publish là mọi bên tự nâng hoặc Web cũ không quan trọng. Cần thông báo deprecation và chuẩn bị rollback; khi đổi contract chung phải duy trì tương thích đến khi dữ liệu adoption đáp ứng chính sách hỗ trợ."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04-shared-code-and-dependency-compatibility.md"
+      anchor: "version-adoption-across-polyrepos"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Vì sao xóa totalAmount là breaking change dù provider đã tăng số phiên bản đúng quy ước?"
+    answer: "Tính tương thích phụ thuộc request/response mà provider đang chạy chấp nhận, không phải tên version. Client cũ có thể còn gửi totalAmount nên xóa field gây lỗi hoặc đổi ngữ nghĩa. Tôi xem traffic thực, cho chạy song song trường cũ/mới, test nhiều version và chờ tiêu chí deprecation; SemVer cảnh báo rủi ro chứ không tự khắc phục."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04-shared-code-and-dependency-compatibility.md"
+      anchor: "interface-contract-and-compatibility"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Bạn cân nhắc catalog dependency tập trung và tự chủ toolchain theo nhóm ngôn ngữ thế nào mà không biến topology thành giới hạn tuyệt đối?"
+    answer: "Catalog tập trung giúp kiểm toán và nâng version chung, nhưng có thể tăng phối hợp toàn tổ chức. Repo riêng cho phép công cụ và lịch phát hành riêng nhưng dễ lặp chính sách/dependency. Monorepo vẫn có thể có ranh giới build Java, Python, Node. Tôi so độ trôi version, chi phí test, lead time nâng cấp và nghĩa vụ của team thay vì nói Git ép một compiler."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04-shared-code-and-dependency-compatibility.md"
+      anchor: "dependency-consistency-vs-autonomy"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Trong monorepo, Web dùng AuthClient 1.9 còn API dùng 2.1. Khi nào chấp nhận được và có thể lỗi gì?"
+    answer: "Một Git root không bắt buộc mọi module dùng cùng dependency version; các build unit có thể khai báo riêng. Cách này hợp lệ nếu packaging, dependency resolution, API hỗ trợ và contract runtime đã test. Rủi ro là classpath conflict trong artifact chung, khác ngữ nghĩa dữ liệu hoặc vi phạm chính sách dùng bản thống nhất. Cần nhìn build graph và integration test thật."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04-shared-code-and-dependency-compatibility.md"
+      anchor: "co-location-does-not-force-versions"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Migration thư viện đã merge xong trong source. Bằng chứng nào khiến bạn tin mọi consumer hỗ trợ đã sẵn sàng?"
+    answer: "Tôi kiểm tra resolved version, nơi gọi API, contract test và trạng thái phát hành thật của từng consumer còn hỗ trợ. Merge bản sửa thư viện vào repository chỉ chứng minh source có revision mới; binary cũ vẫn có thể đang chạy. Cần đối chiếu artifact/rollback từng consumer và chỉ kết luận khi ma trận hỗ trợ khớp dữ liệu phiên bản thực."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04-shared-code-and-dependency-compatibility.md"
+      anchor: "compare-dependency-migration-evidence"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Một feature phải sửa mã Web và API cùng lúc. Vì sao không bắt buộc deploy đồng bộ?"
+    answer: "Change coupling nghĩa là cả Web và API phải sửa source cho cùng yêu cầu; release coupling phụ thuộc contract runtime và độ tương thích. Nếu API nhận field cũ/mới và Web chạy được với hai phiên bản, hai artifact có thể phát hành từng đợt. Tôi test từng tổ hợp trung gian và rollback thay vì suy một PR hoặc ticket buộc production đổi nguyên tử."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05-release-coupling-and-independence.md"
+      anchor: "change-coupling-vs-release-coupling"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "API cần vá khẩn trong khi Web phát hành hàng tháng. Điều kiện nào cho API deploy một mình an toàn?"
+    answer: "Bản vá phải giữ contract cho Web và client đang chạy, đạt các test provider/consumer, có owner phát hành và rollback. Artifact và quy trình deploy riêng cho phép triển khai; repo tách hay chung không tự bảo đảm. Tôi kiểm tra version hỗ trợ, cấu hình môi trường và telemetry sau rollout trước khi kết luận độc lập."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05-release-coupling-and-independence.md"
+      anchor: "why-independent-release-matters"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Hai service version 3.1 và 5.2 phát hành riêng từ một repo. Điều đó chứng minh gì và chưa chứng minh gì?"
+    answer: "Điều đó cho thấy ranh giới artifact phát hành có thể khác một lịch sử Git chung. Không thể kết luận hai service tách dữ liệu, không gọi nhau hay luôn tương thích ngược. Cần xem contract, nguồn gốc tag/artifact trong pipeline và lịch sử triển khai. Khi shared library đổi, mỗi release vẫn cần test với consumer có thể còn dùng bản cũ."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05-release-coupling-and-independence.md"
+      anchor: "monorepo-can-release-independently"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Vì sao hai service ở hai repository riêng vẫn bị ràng buộc lịch release dù lịch sử Git độc lập?"
+    answer: "Nếu API bỏ field bắt buộc hoặc đổi ngữ nghĩa message, client cũ có thể lỗi đến khi nâng. Hai lịch sử source riêng không làm interface tự tương thích hay đồng bộ deploy. Tôi dùng chuỗi mở rộng–di chuyển–thu hẹp, tiếp tục hỗ trợ client cũ và test contract theo version. Coupling thực là phụ thuộc runtime chứ không phải vị trí kho mã."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05-release-coupling-and-independence.md"
+      anchor: "polyrepo-can-be-release-coupled"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Nâng AuthClient thay đổi interface khi consumer dùng các version khác nhau. Bạn ngăn regression khi release thế nào?"
+    answer: "Tôi lập danh sách consumer được hỗ trợ, map version AuthClient đã resolve và đang chạy, rồi kiểm tra contract khi interface đổi. Nếu client chưa nâng ngay được, cần giai đoạn tương thích, lịch deprecation và owner rõ. Provider build mới không có nghĩa mọi consumer đã dùng nó; phải theo dõi rollout thật và có đường khôi phục cho tổ hợp lỗi."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05-release-coupling-and-independence.md"
+      anchor: "shared-interface-upgrade-release-risks"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Vì sao unit test thư viện xanh vẫn chưa đủ kết luận API phụ thuộc sẵn sàng phát hành?"
+    answer: "Unit test thư viện kiểm hành vi theo fixture riêng, không chứng minh API resolve đúng version, serialize đúng hay làm việc với client thật. Tôi kiểm tra dependency resolution, compile/integration test consumer bị ảnh hưởng, contract và tiêu chí release tại API. Dependency graph có thể gồm thư mục không sửa mã nên chỉ chạy test từ diff có thể bỏ sót."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05-release-coupling-and-independence.md"
+      anchor: "validation-boundaries-and-readiness"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Mobile phát hành mỗi tháng còn API deploy hằng ngày. Chính sách kiến trúc và release nào hỗ trợ nhịp đó an toàn?"
+    answer: "Provider phải giữ contract tương thích ngược trong cửa sổ hỗ trợ xác định, thêm khả năng trước khi bỏ phần cũ. Mobile nâng theo nhịp riêng trong khi API tiến tiếp nếu test bao phủ các client đã cài. Tôi đo bản client còn dùng, thông báo deprecation và tách release gate. Monorepo hay polyrepo đều không thay đổi thực tế app mobile nâng chậm."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05-release-coupling-and-independence.md"
+      anchor: "release-cadence-and-team-coordination"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Hai nhóm đổi cách xử lý thuế. Làm sao xác định kế hoạch deploy thật sự cho phép phát hành từng đợt?"
+    answer: "Tôi lập ma trận Web cũ/mới với API cũ/mới và test từng trạng thái trung gian của rollout. Nếu provider hỗ trợ hai dạng request và client chấp nhận response cũ, có thể phát hành theo đợt; ngược lại vẫn coupling. Phải kiểm tra rollback và feature exposure vì chung commit hay tách repo đều không đủ chứng minh staged release an toàn."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05-release-coupling-and-independence.md"
+      anchor: "analyze-release-independence-scenario"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Vendor được xem Web nhưng không được xem mã Fraud. Thuộc tính nào về quyền repository quyết định thiết kế?"
+    answer: "Ràng buộc cứng là cách ly quyền đọc source, không chỉ cấm ghi hay bắt Fraud owner review. Nếu vendor clone được repository chứa Fraud thì lịch sử Git có thể lộ mã. Tôi tách Fraud ra repo có membership hạn chế hoặc kiểm chứng cơ chế ACL đọc thực của host, rồi thiết kế interface được quản lý giữa hai phần. Tiện review không vượt yêu cầu pháp lý."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06-access-and-repository-governance.md"
+      anchor: "repository-access-boundary"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "PR monorepo sửa security/keys và apps/web. Path owner giúp gì và quyền kiểm soát dừng ở đâu?"
+    answer: "Owner theo đường dẫn chuyển diff đến Security và Web, có thể kết hợp rule host để bắt buộc approve. Nó cải thiện trách nhiệm trong PR nhiều vùng mã nhưng không mã hóa/giấu thư mục security khỏi người clone repository. Tôi kiểm tra độc lập quyền đọc, eligible reviewer và merge gate vì ba cơ chế phục vụ nghĩa vụ khác nhau."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06-access-and-repository-governance.md"
+      anchor: "path-ownership-and-review-governance"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Vì sao CODEOWNERS không thể thay cơ chế giấu mã mật đối với vendor đã được phép clone repository?"
+    answer: "CODEOWNERS xác định người review hoặc chịu trách nhiệm theo path, branch protection kiểm soát sửa đổi; không cơ chế nào tự cấp bảo mật đọc từng file trong clone Git thông thường. Vendor được clone có thể đọc cả lịch sử chứa file mật dù không được push vào đó. Tôi dùng tài khoản quyền tối thiểu thử clone/lịch sử rồi tạo ranh giới source thật trước khi mở quyền."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06-access-and-repository-governance.md"
+      anchor: "review-rules-vs-access-isolation"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Fraud đã tách repo vì pháp lý. Cần kiểm tra gì để ranh giới này thực sự có hiệu lực?"
+    answer: "Tôi rà quyền đọc repository, kế thừa group, token, credential CI, mirror và artifact có thể làm lộ dữ liệu sang chỗ khác. Web chỉ nên nhận contract/package được phép chứ không phải bản sao mã Fraud. Tên repository mới không có giá trị nếu credential chung, mirror hoặc log vẫn phơi source. Cần ghi bằng chứng từ tài khoản bị hạn chế."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06-access-and-repository-governance.md"
+      anchor: "restricted-source-and-compliance"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Mười hai polyrepo phải áp một chính sách review nhưng một kho bị bỏ sót. Bạn thiết kế governance thế nào?"
+    answer: "Xác định chính sách tối thiểu tập trung, tự động cấu hình nếu host hỗ trợ, lập inventory từng repo gồm owner, rule hiệu lực và ngoại lệ được duyệt. Kiểm toán phải đọc setting thật chứ không giả định template đã được áp khắp nơi. Theo dõi độ phủ và policy drift theo thời gian; hạ chuẩn cho đồng nhất là giải sai bài toán."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06-access-and-repository-governance.md"
+      anchor: "governance-consistency-across-polyrepos"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Monorepo có Contracts được dùng rộng nhưng không có maintainer chịu trách nhiệm. Rủi ro trực tiếp đáng lo nhất?"
+    answer: "Khả năng nhìn mã chung giúp tái sử dụng nhưng thiếu owner khiến sửa contract không tương thích đi qua review mơ hồ và phá nhiều consumer. Tôi chỉ định maintainer chính/dự phòng, yêu cầu review đúng miền, lập inventory consumer và contract test/escalation. Tách library ra repo khác không tự tạo trách nhiệm bảo trì."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06-access-and-repository-governance.md"
+      anchor: "monorepo-ownership-gaps"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Repo A có check, Repo B thiếu backup owner, Repo C còn quyền cũ. Vì sao đây là vấn đề governance của topology?"
+    answer: "Mỗi repository là một bề mặt cấu hình độc lập nên tổ chức polyrepo dễ trôi chính sách review, owner và quyền. Tôi kiểm kê rule thực từng project, giao người khắc phục và định kỳ so với chuẩn tổ chức. Giải pháp là governance nhất quán và bằng chứng thực thi, không nhất thiết gộp lịch sử hay giả định repo nhỏ luôn an toàn."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06-access-and-repository-governance.md"
+      anchor: "polyrepo-policy-drift"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Khi monorepo review nhanh hơn nhưng Fraud phải hạn chế đọc, xử lý yêu cầu không thể thỏa hiệp thế nào?"
+    answer: "Trước tiên tôi loại cấu trúc vi phạm bảo mật đọc source hay yêu cầu tuân thủ, dù PR lead time có tốt hơn. Trong các phương án hợp lệ, mới so owner, số thay đổi liên nhóm, tương thích, chi phí release và tooling. Mô hình lai có thể cho Checkout/Web chung nhưng Fraud riêng sau interface ổn định. Không được dùng điểm số đánh đổi yêu cầu cách ly bắt buộc."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06-access-and-repository-governance.md"
+      anchor: "compare-governance-constraints"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Theo dõi các trục nào để biết quy mô repository gây ma sát thay vì chỉ xét dung lượng mã?"
+    answer: "Tôi đo lịch sử và binary, thời gian clone/fetch/index, số người đóng góp, nhịp sửa mã, hàng đợi review và phản hồi build/test theo dependency. Repo lớn có index và affected test tốt có thể thuận lợi hơn repo nhỏ có pipeline kém. Cần phân theo môi trường developer và dependency graph để tìm nút thắt trước khi migration topology tốn kém."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "07-scale-tooling-and-ci-strategy.md"
+      anchor: "repository-scale-dimensions"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Developer than clone/fetch chậm. Làm sao tách lỗi dung lượng repo khỏi mạng, binary history hay cấu hình máy?"
+    answer: "Tôi đo p50/p95 của clone, fetch, index và phản hồi review trên nhiều máy/mạng thật, kèm object count, binary history và cấu hình Git. Một con số dung lượng không chỉ ra thao tác nào chậm. Trước khi tách repo, thử cache, workflow tải chọn lọc hoặc vệ sinh history an toàn rồi so tác động thực với chi phí migration và nghĩa vụ phân quyền."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "07-scale-tooling-and-ci-strategy.md"
+      anchor: "source-history-and-feedback-latency"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Schema Contracts đổi nhưng không có file API/Web nào sửa. Vì sao test API/Web bị ảnh hưởng vẫn cần chạy?"
+    answer: "Phạm vi ảnh hưởng theo dependency chứ không chỉ tên file trong diff. Schema có thể đổi kiểu sinh ra hoặc giả định runtime của API/Web dù source hai bên không sửa. Tôi dùng dependency graph đáng tin để chọn contract, integration và consumer test, chạy rộng hơn khi không chứng minh được vùng không liên quan. Chỉ test thư mục có diff dễ tạo cảm giác an toàn sai."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "07-scale-tooling-and-ci-strategy.md"
+      anchor: "changed-scope-and-affected-work"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Quản lý xem build, test và CI là một. Bạn giải thích vai trò từng phần khi chọn chiến lược CI monorepo thế nào?"
+    answer: "Build biến source thành artifact, test kiểm chứng hành vi, CI tổ chức và báo phản hồi tự động theo revision. Một pipeline có thể gồm cả hai nhưng trạng thái xanh chỉ có nghĩa trong phạm vi job đã cấu hình. Chiến lược topology chọn vùng bị ảnh hưởng, dependency và owner của các check. Không thể nói chung Git root thì mọi commit buộc test toàn bộ component."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "07-scale-tooling-and-ci-strategy.md"
+      anchor: "strategic-build-test-ci-requirements"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Hai mươi repository cần policy review mới nhưng bốn kho chưa cập nhật. Làm sao tránh policy drift và chứng minh hoàn tất?"
+    answer: "Tôi lập inventory tất cả repo và setting, giao owner cùng thời hạn, tự động cập nhật qua template/API được hỗ trợ rồi kiểm tra rule hiệu lực sau áp dụng. Ngoại lệ cần lý do và ngày rà soát. Đối chiếu cấu hình host thật theo thời gian mạnh hơn chỉ một commit template chung; thiếu owner rõ thì lỗi bỏ sót sẽ lặp lại."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "07-scale-tooling-and-ci-strategy.md"
+      anchor: "polyrepo-configuration-duplication"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Monorepo lớn search chậm và mỗi commit phải chạy CI toàn bộ. Bạn ưu tiên tooling nào trước khi đổi ranh giới repo?"
+    answer: "Tôi ưu tiên index mã, metadata owner/dependency có thể tìm, cache local/remote và đồ thị affected-change đáng tin để chọn build/test. Cần số liệu thời gian nền và quy tắc chạy mở rộng khi không biết dependency. Ở quy mô Google, hệ thống hỗ trợ là phần quan trọng khiến lịch sử source chung vận hành được; tách Git root không phải cách duy nhất giảm độ trễ."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "07-scale-tooling-and-ci-strategy.md"
+      anchor: "monorepo-tooling-investment"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Java, Python, Node chung monorepo. Làm sao giữ tự chủ toolchain mà governance vẫn nhất quán?"
+    answer: "Tôi định nghĩa ranh giới build từng component và pin phiên bản công cụ theo vùng, đồng thời giữ quy tắc review và báo cáo CI chung. Contract/dependency check nối các vùng cần thiết, không giả định một compiler duy nhất. Đánh đổi là orchestration/cache phức tạp hơn khi chung repo so với template lặp và policy drift khi nhiều repo. Nhu cầu đội quyết định điểm cân bằng."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "07-scale-tooling-and-ci-strategy.md"
+      anchor: "tooling-choice-and-team-autonomy"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Hàng đợi approve bị gọi là 'lỗi monorepo'. Bạn đo gì trước khi quyết định tách repo?"
+    answer: "Tôi xem phân reviewer, khả năng owner phản hồi, tuổi hàng đợi, số lượt review lại và tỷ lệ thời gian chờ so với chạy checks. Tách repo không tự tạo chuyên gia review hay sửa owner mơ hồ, có khi tăng PR liên kho. Nếu chậm do search/Git thì đo riêng rồi thử tooling trước. Phải chẩn đoán trước khi đổi topology."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "07-scale-tooling-and-ci-strategy.md"
+      anchor: "indicators-of-topology-strain"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Nghiên cứu Google năm 2018 của Jaspan và cộng sự nên ảnh hưởng đề xuất gộp repo thế nào mà không bị xem là chân lý chung?"
+    answer: "Bài 2018 kết hợp khảo sát kỹ sư đã trải nghiệm cả mono/multi-repo với phân tích log công cụ quy mô lớn. Nó ghi nhận lợi ích tìm/reuse mã và quản lý dependency tập trung của monorepo, trong khi nhiều repo thuận về quyền đọc, ổn định và tự chủ toolchain. Không phải bằng chứng nhân quả rằng CI mọi công ty sẽ nhanh hơn. Tôi dùng kết quả làm giả thuyết để đo tại tổ chức mình."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "07-scale-tooling-and-ci-strategy.md"
+      anchor: "evidence-for-scale-tradeoffs"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Bạn chọn topology ra sao khi chỉnh sửa liên nhóm cần nhanh nhưng mã Fraud có yêu cầu bảo mật đọc không thể thỏa hiệp?"
+    answer: "Tôi loại trước mọi thiết kế cho phép người không có quyền clone và đọc mã Fraud, bất kể PR nhanh thế nào. Sau đó so các mô hình hợp lệ như Checkout/Web chung repo và Fraud nằm kho hạn chế, nối qua contract rõ ràng. Trong vùng phương án hợp lệ mới đo lead time, review và độ phức tạp release. Yêu cầu cách ly bắt buộc không thể hạ thành một tiêu chí điểm số tùy chọn."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "08-choose-split-consolidate.md"
+      anchor: "topology-decision-criteria"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Nhiều commit liên quan Web/API/Contracts. Làm sao ước lượng tần suất thực sự phải đổi phối hợp trước khi đề nghị gộp repo?"
+    answer: "Tôi lấy mẫu yêu cầu nghiệp vụ, liên kết PR/commit và xác minh provider/consumer có buộc thay cùng contract hay không. Đo thời gian chờ và cửa sổ nâng version, tách khỏi commit format/bảo trì không liên quan. Nếu đổi phối hợp lặp lại nhiều lần, gộp repo đáng thử nghiệm có kiểm soát, miễn quyền đọc và tính độc lập release vẫn đáp ứng."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "08-choose-split-consolidate.md"
+      anchor: "cross-team-change-frequency"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Trong ma trận quyết định, Checkout/Web chung owner nhưng Fraud cần độc lập quyền đọc. Bạn bảo vệ thiết kế lai thế nào?"
+    answer: "Có thể cho Checkout/Web hay đổi cùng nhau vào kho chung với owner theo đường dẫn, còn Fraud ở repository có quyền riêng và cung cấp interface được kiểm soát. Cách này tránh lựa chọn giả giữa một kho mỗi service và một kho toàn công ty. Tôi test contract qua ranh giới, xác minh quyền vendor rồi đo chi phí CI/review thực."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "08-choose-split-consolidate.md"
+      anchor: "ownership-access-dependency-release-matrix"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Khi nào các migration contract liên repo lặp lại đủ để thử gộp repository và cần điều kiện gì?"
+    answer: "Tôi cân nhắc thử nếu phần lớn công việc phải nối PR provider/consumer, chờ bàn giao lâu hoặc thường phá tương thích, đồng thời các component có thể chia sẻ quyền/owner hợp lý. Trước migration cần xem dependency graph, affected test, khả năng release riêng và rollback. Chung source cải thiện ngữ cảnh review nhưng không xóa nghĩa vụ hỗ trợ client ngoài."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "08-choose-split-consolidate.md"
+      anchor: "when-to-consolidate-repositories"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Vendor cần mã Web nhưng không được thấy Fraud, clone còn chậm. Lý do tách hợp lý nhất và thứ tự thực hiện?"
+    answer: "Cách ly quyền đọc là động lực bắt buộc: Fraud chuyển sang lịch sử thực sự giới hạn, Web chỉ nhận contract được phép. Tôi kiểm kê history cũ, token và mirror, chạy migration thử rồi dùng tài khoản vendor clone để chắc chắn không lấy được Fraud. Clone có thể nhanh hơn nhưng phải đo; tốc độ một mình không biện minh phá dependency hay để lộ history cũ."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "08-choose-split-consolidate.md"
+      anchor: "when-to-split-repository"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Monorepo lâu năm sắp chia thành các lịch sử mới. Bạn diễn tập gì để không mất truy vết và consumer dependency?"
+    answer: "Tôi kiểm kê commit/tag, MR mở, liên kết Issue, sơ đồ owner/quyền, build graph, tên package và version artifact phụ thuộc. Diễn tập tách/lưu history, redirect, CI và rollback trong môi trường thử. Sau đó kiểm tra tham chiếu cũ vẫn truy lại được bằng chứng và consumer resolve version tương thích. Chỉ copy file hiện tại sẽ mất dấu vết nguồn gốc."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "08-choose-split-consolidate.md"
+      anchor: "migration-costs-and-risk"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Pilot gộp repo giảm thời gian PR nhưng affected tests chậm hơn. Quyết định triển khai rộng bằng cách nào?"
+    answer: "Đánh giá nhiều kết quả so với ngưỡng thống nhất trước: lead time, review context, incident version, phản hồi p50/p95, chi phí CI, tuân thủ quyền và khả năng rollback. Merge đầu nhanh có thể che test chậm hoặc consumer chưa phát hành nên không tối ưu một số liệu. So các yêu cầu tương đồng và tách ảnh hưởng đổi tooling; cải thiện affected graph hoặc dừng pilot nếu vi phạm ràng buộc."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "08-choose-split-consolidate.md"
+      anchor: "transition-plan-and-observable-outcomes"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Đề xuất trích nghiên cứu Google 2016 và 2018 để kết luận mọi công ty nên dùng monorepo. Bạn sửa cách viện dẫn thế nào?"
+    answer: "Bài 2016 của Potvin và Levenberg mô tả lịch sử mã chung quy mô rất lớn của Google cùng hạ tầng riêng như Piper, không phải một repo Git thông thường tự chịu nổi mọi quy mô. Công trình 2018 của Jaspan và cộng sự lại khảo sát kỹ sư từng dùng cả hai mô hình và phân tích log công cụ, ghi nhận ưu/nhược theo bối cảnh. Không bài nào chứng minh mọi công ty phải gộp; cần xét ràng buộc và chi phí tooling địa phương."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "08-choose-split-consolidate.md"
+      anchor: "evaluate-monorepo-case-evidence"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Startup thường sửa Web/API cùng lúc còn công ty có kiểm toán phải cách ly Fraud. Vì sao mỗi bên chọn topology khác nhau?"
+    answer: "Với startup, source chung có thể giảm việc nối PR provider/consumer lặp đi lặp lại nếu owner, build test và phát hành riêng được kiểm soát. Với doanh nghiệp bị ràng buộc tuân thủ, cách ly đọc mã bắt buộc quan trọng hơn tiện lợi diff chung, nên cần tách hoặc lai. Phải dùng tần suất đổi mã và yêu cầu quyền thật, không dựa vào nhãn quy mô hay bắt chước công ty nổi tiếng."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "08-choose-split-consolidate.md"
+      anchor: "compare-balanced-case-scenarios"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Sau khi chọn topology, nên phân công ai xử lý migration Git, quyền host, CI và contract service?"
+    answer: "Chiến lược repository quyết định ranh giới source và đánh đổi nhưng triển khai cần nhiều chuyên môn. Người phụ trách Git lập kế hoạch tách history/redirect; quản trị host đặt quyền đọc/review; chủ CI thiết kế affected tests; owner service/API duy trì tương thích và release contract. Tôi ghi tiêu chí nghiệm thu, owner và bằng chứng rollback cho mỗi bàn giao thay vì cho rằng chọn topology là đủ."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "08-choose-split-consolidate.md"
+      anchor: "handoff-to-neighboring-owners"
+    apiRelated:
+      controller: ""
+      methodSignature: ""

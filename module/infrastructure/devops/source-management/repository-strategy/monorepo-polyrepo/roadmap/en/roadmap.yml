@@ -41,4 +41,85 @@
 # The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: repository-topology-mental-model
+    relatedKnowledge:
+      - 01-repository-topology-foundations
+    title: "Repository Topology Mental Model"
+    purpose: "Understand why grouping source into repositories influences collaboration and software change even when the application architecture stays the same."
+    objectives:
+      - "Distinguish a monorepo, which hosts multiple projects or components in one repository, from a polyrepo, which manages them across separate repositories."
+      - "Separate repository boundaries from application, service, and deployment boundaries; a monorepo does not imply a monolithic application."
+      - "Identify the strategic questions behind choosing a topology: who owns the code, how changes are coordinated, and what must remain independent."
+
+  - id: repository-boundaries-and-ownership
+    relatedKnowledge:
+      - 02-boundaries-and-ownership
+    title: "Repository Boundaries and Code Ownership"
+    purpose: "Evaluate how repository structure shapes accountability and clear boundaries between teams."
+    objectives:
+      - "Recognize the visibility and reuse benefits of a shared repository together with the need for explicit ownership of code areas."
+      - "Compare ownership by directory or component within one repository with assigning responsibility to separate repositories."
+      - "Explain why mechanically splitting repositories by organizational chart or by individual service can introduce difficult coordination boundaries."
+
+  - id: cross-repository-change-coordination
+    relatedKnowledge:
+      - 03-cross-component-coordination
+    title: "Coordinating Changes Across Components"
+    purpose: "Understand how repository topology affects visibility, review, and coordination when a change spans multiple projects or teams."
+    objectives:
+      - "Compare recording a coordinated cross-component change in one history with managing several related changes across independent repositories."
+      - "Assess the implications for integration order, review ownership, and end-to-end traceability."
+      - "Recognize that a shared repository does not eliminate team conflicts, while separate repositories do not eliminate cross-component dependencies."
+
+  - id: dependency-sharing-and-compatibility
+    relatedKnowledge:
+      - 04-shared-code-and-dependency-compatibility
+    title: "Shared Code, Dependencies, and Compatibility"
+    purpose: "Understand how repository topology affects library reuse, interface evolution, and the responsibility to maintain compatibility."
+    objectives:
+      - "Explain why a shared library and its consumers can often be examined together in one repository while still requiring clear dependency boundaries."
+      - "Recognize how polyrepo changes often require coordinating versions, compatible interfaces, and consumer adoption schedules."
+      - "Compare dependency consistency with tooling and technology autonomy without assuming that co-located projects must always use identical versions."
+
+  - id: release-coupling-and-independence
+    relatedKnowledge:
+      - 05-release-coupling-and-independence
+    title: "Change Coupling and Release Independence"
+    purpose: "Distinguish repository organization from the degree of independence needed when planning how components reach users."
+    objectives:
+      - "Examine when changes must be coordinated across components and when components can be verified and released independently."
+      - "Recognize that a monorepo does not require synchronized releases and a polyrepo does not guarantee independent change."
+      - "Evaluate the coordination costs of incompatible changes, shared-library upgrades, and differing release schedules in either topology."
+
+  - id: access-control-and-governance
+    relatedKnowledge:
+      - 06-access-and-repository-governance
+    title: "Access Control and Repository Governance"
+    purpose: "Evaluate how repository boundaries shape read and write access, review requirements, and source governance across teams."
+    objectives:
+      - "Distinguish code-area ownership and review policies within a repository from access isolation at separate repository boundaries."
+      - "Recognize when restricted source visibility, regulatory obligations, or security constraints materially affect repository topology."
+      - "Explain why missing ownership rules in monorepos and inconsistent governance across polyrepos both create risks."
+
+  - id: scale-tooling-and-automation-tradeoffs
+    relatedKnowledge:
+      - 07-scale-tooling-and-ci-strategy
+    title: "Scale, Tooling, and Automation Trade-offs"
+    purpose: "Identify the scale and operational considerations of repository topology without implementing specific build or CI mechanisms."
+    objectives:
+      - "Assess the impact of repository size and history, contributor count, change volume, and dependency complexity."
+      - "Explain why large monorepos depend on effective change-scope selection and timely feedback from build, test, and CI tooling."
+      - "Compare duplication of configuration and automation across polyrepos with the tooling, governance, and infrastructure investment needed for monorepos."
+      - "Recognize warning signs that a topology needs review without implementing Git, Gradle, or pipeline procedures."
+
+  - id: choosing-and-evolving-topology
+    relatedKnowledge:
+      - 08-choose-split-consolidate
+    title: "Choosing, Splitting, and Consolidating Repositories"
+    purpose: "Synthesize the trade-offs into an intentional topology decision and identify when product or organizational changes warrant revisiting it."
+    objectives:
+      - "Compare monorepo and polyrepo options using dependency coupling, cross-team change frequency, access constraints, release cadence, and tooling maturity."
+      - "Explain reasons to consolidate when repeated cross-repository coordination becomes costly, or split when ownership, visibility, or operational independence becomes essential."
+      - "Recognize migration costs involving history, access and review policies, dependency changes, and team coordination."
+      - "Present a repository-level strategy while handing build/CI implementation and service decomposition to their respective disciplines."

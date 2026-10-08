@@ -1,3 +1,14 @@
+# 📂 README MODULE STRUCTURE (VI)
+
+* [01-repository-topology-foundations](readme/vi/menu/01-repository-topology-foundations.md)
+* [02-boundaries-and-ownership](readme/vi/menu/02-boundaries-and-ownership.md)
+* [03-cross-component-coordination](readme/vi/menu/03-cross-component-coordination.md)
+* [04-shared-code-and-dependency-compatibility](readme/vi/menu/04-shared-code-and-dependency-compatibility.md)
+* [05-release-coupling-and-independence](readme/vi/menu/05-release-coupling-and-independence.md)
+* [06-access-and-repository-governance](readme/vi/menu/06-access-and-repository-governance.md)
+* [07-scale-tooling-and-ci-strategy](readme/vi/menu/07-scale-tooling-and-ci-strategy.md)
+* [08-choose-split-consolidate](readme/vi/menu/08-choose-split-consolidate.md)
+
 # Monorepo và Polyrepo: chiến lược tổ chức kho mã nguồn
 
 Cách đặt các project, module và thành phần phần mềm vào **một repository (monorepo)** hay **nhiều repository riêng (polyrepo)** là quyết định về khả năng tìm kiếm mã nguồn, quyền sở hữu, phối hợp thay đổi và mức độ độc lập. Không có lựa chọn luôn tốt hơn: cả chi phí phối hợp lẫn năng lực công cụ và yêu cầu phân quyền đều quan trọng.
