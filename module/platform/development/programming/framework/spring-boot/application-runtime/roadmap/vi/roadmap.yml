@@ -41,4 +41,140 @@
 # Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: springapplication-runtime-model
+    title: "Mô hình runtime của SpringApplication"
+    purpose: "Xây mô hình tư duy xuyên suốt về phần Spring Boot chịu trách nhiệm sau khi main() chuyển quyền điều khiển cho SpringApplication, từ chuẩn bị đầu vào runtime và ApplicationContext đến refresh context, các hook lúc khởi động, trạng thái sẵn sàng, giai đoạn chạy ổn định và lúc tiến trình kết thúc."
+    relatedKnowledge:
+      - RuntimeModel
+    objectives:
+      - "Theo dõi các giai đoạn runtime chính mà không lặp lại phần bootstrap tổng quan của Fundamentals hoặc đi sâu vào cơ chế container của Spring Framework."
+      - "Hiểu externalized configuration và auto-configuration định hình runtime trước khi phần việc khởi động riêng của ứng dụng bắt đầu."
+      - "Phân biệt runtime ứng dụng tổng quát của Boot với hành vi riêng của web server, production endpoints và cơ chế lifecycle cấp framework thuộc các module lân cận."
+      - "Dùng mô hình lifecycle làm nền tảng để chọn đúng hook cho các nhu cầu runtime về sau thay vì xem các callback lúc khởi động là tương đương nhau."
+    relatedModules:
+      - routeId: SPRING_BOOT_FUNDAMENTALS
+        label: "Spring Boot Fundamentals"
+        note: "Giới thiệu mô hình bootstrap cấp cao để module này đào sâu thành hành vi runtime chi tiết."
+      - routeId: SPRING_BOOT_EXTERNALIZED_CONFIGURATION
+        label: "Spring Boot Externalized Configuration"
+        note: "Sở hữu các đầu vào cấu hình mà SpringApplication dùng khi chuẩn bị môi trường runtime."
+      - routeId: SPRING_BOOT_AUTO_CONFIGURATION
+        label: "Spring Boot Auto-Configuration"
+        note: "Sở hữu cơ chế tự động cấu hình bean theo điều kiện trong ApplicationContext do runtime tạo ra."
+
+  - id: lifecycle-events-arguments-and-runners
+    title: "Lifecycle events, application arguments và startup runners"
+    purpose: "Học cách quan sát và mở rộng chuỗi khởi động của Boot ở đúng thời điểm bằng application events, arguments đã được parse và các startup runner có thứ tự."
+    relatedKnowledge:
+      - ApplicationLifecycleEvents
+      - ArgumentsAndRunners
+    objectives:
+      - "Suy luận thứ tự các SpringApplication event từ giai đoạn rất sớm trước khi có context đến context refresh, started, ready và failed."
+      - "Hiểu vì sao listener cho event phát ra trước khi ApplicationContext tồn tại phải được đăng ký bên ngoài cách khai báo @Bean thông thường."
+      - "Dùng ApplicationArguments để phân biệt option và non-option input mà không biến command-line arguments thành toàn bộ curriculum về externalized configuration."
+      - "Chọn ApplicationRunner hoặc CommandLineRunner cho công việc cần chạy sau context refresh nhưng trước khi ứng dụng được xem là sẵn sàng, kể cả cách sắp thứ tự khi có nhiều runner."
+      - "Tránh đặt công việc kéo dài trong event listener đồng bộ mặc định khi runner ở giai đoạn sau hoặc cơ chế bất đồng bộ phù hợp hơn."
+
+  - id: availability-failure-and-exit
+    title: "Availability, lỗi khởi động và kết thúc tiến trình"
+    purpose: "Hiểu cách Boot biến tiến trình lifecycle và failure thành trạng thái vận hành: chuyển đổi liveness/readiness, chẩn đoán lỗi khởi động có hướng xử lý, hành vi shutdown và exit code của tiến trình."
+    relatedKnowledge:
+      - AvailabilityFailureExit
+    objectives:
+      - "Phân biệt liveness với readiness và liên hệ các trạng thái mặc định với context refresh, thời điểm runners hoàn tất và lúc ứng dụng bắt đầu nhận traffic."
+      - "Dùng ApplicationAvailability và AvailabilityChangeEvent như mô hình runtime của Boot, còn việc expose health endpoint thuộc module Actuator."
+      - "Hiểu vai trò của FailureAnalyzer và condition evaluation report khi startup thất bại mà không biến milestone này thành bài học chi tiết về diagnostics của auto-configuration."
+      - "Hiểu JVM shutdown hook của SpringApplication cùng vai trò của ExitCodeGenerator/SpringApplication.exit khi tiến trình cần trả exit status."
+      - "Giữ cơ chế graceful shutdown riêng của web server trong web-runtime, còn mô hình đóng process/context tổng quát vẫn thuộc module này."
+    relatedModules:
+      - routeId: SPRING_BOOT_ACTUATOR
+        label: "Spring Boot Actuator"
+        note: "Tiêu thụ availability state của Boot và expose health/diagnostic endpoints phục vụ vận hành."
+      - routeId: SPRING_BOOT_WEB_RUNTIME
+        label: "Spring Boot Web Runtime"
+        note: "Sở hữu graceful shutdown của embedded server và các hành vi shutdown riêng của web runtime."
+
+  - id: task-execution-scheduling-and-virtual-threads
+    title: "Task execution, scheduling và tích hợp virtual threads của Boot"
+    purpose: "Hiểu cách Spring Boot auto-configure executor và scheduler cho ứng dụng, việc tùy biến thay đổi hạ tầng thực thi đó ra sao, và Boot thay đổi gì khi bật virtual threads của Java 21."
+    relatedKnowledge:
+      - TaskExecutionScheduling
+      - VirtualThreads
+    objectives:
+      - "Hiểu điều kiện Boot cung cấp AsyncTaskExecutor và task scheduler cùng các integration chính sử dụng chúng."
+      - "Tinh chỉnh cách thực thi bằng platform thread qua spring.task.execution và spring.task.scheduling, đồng thời nhận biết quy ước về tên/type bean quan trọng khi tự cung cấp executor."
+      - "Hiểu spring.threads.virtual.enabled làm Boot đổi chiến lược executor/scheduler được auto-configure, chứ module này không dạy lại ngữ nghĩa virtual thread của Java."
+      - "Nhận biết các property về kích thước thread pool không còn mô tả cùng một mô hình khi bật virtual threads, và daemon virtual thread có thể yêu cầu spring.main.keep-alive nếu ứng dụng không còn non-daemon thread khác."
+      - "Giữ ngữ nghĩa @Async/@Scheduled ở Spring Framework và kiến thức concurrency tổng quát ở curriculum Java tương ứng."
+
+  - id: startup-tuning-and-runtime-customization
+    title: "Tinh chỉnh startup và ranh giới tùy biến runtime"
+    purpose: "Học cách tinh chỉnh startup có chủ đích và tùy biến SpringApplication mà không che giấu failure, vượt ranh giới sở hữu cấu hình hoặc biến việc tùy biến container tổng quát thành curriculum runtime của Boot."
+    relatedKnowledge:
+      - StartupOptimization
+      - RuntimeCustomization
+    objectives:
+      - "Đánh giá lazy initialization như một trade-off: tạo ít bean sớm hơn có thể rút ngắn startup nhưng cũng dời thời điểm phát hiện cấu hình sai và thay đổi cách phải tính đến bộ nhớ."
+      - "Dùng cơ chế theo dõi startup kiểu ApplicationStartup làm bằng chứng khi điều tra chi phí khởi tạo, còn việc expose dữ liệu qua production endpoint thuộc Actuator."
+      - "Nhận biết các điểm tùy biến của SpringApplication và SpringApplicationBuilder, chỉ dùng chúng khi property cấu hình thông thường hoặc extension point được hỗ trợ không đủ."
+      - "Tách tùy biến runtime của Boot khỏi externalized configuration, việc author auto-configuration, phần nội bộ của Spring Framework container và tùy biến riêng của web server."
+
+  - id: boot-logging-runtime-integration
+    title: "Tích hợp logging ở runtime của Spring Boot"
+    purpose: "Hiểu quá trình Boot khởi tạo logging sớm và mô hình cấu hình logging đủ để điều khiển log runtime có thể dự đoán, nhưng không mở rộng sang kiến trúc logging tổng quát hoặc vận hành hệ thống observability."
+    relatedKnowledge:
+      - Logging
+    objectives:
+      - "Hiểu Boot khởi tạo logging trước ApplicationContext và vì sao thời điểm này giới hạn các cơ chế cấu hình có thể tác động lên logging system."
+      - "Dùng logging properties của Boot cho logger levels, groups, console/file output và các thiết lập rotation được hỗ trợ, đồng thời giữ rõ ranh giới với logging implementation bên dưới."
+      - "Hiểu LoggingSystem là abstraction tích hợp của Boot và vì sao các file cấu hình native dạng -spring cho Boot nhiều quyền kiểm soát hơn trong giai đoạn khởi tạo."
+      - "Phân biệt bootstrap/configuration logging của Boot với log aggregation, lưu trữ, phân tích, correlation và vận hành backend thuộc curriculum observability/logging."
+
+  - id: ssl-bundles-runtime-abstraction
+    title: "SSL bundles như abstraction runtime dùng lại được"
+    purpose: "Hiểu cách Spring Boot biểu diễn key/trust material có tên thành các SSL bundle dùng lại được, để cấu hình một lần rồi cấp cho các runtime client hoặc server được hỗ trợ."
+    relatedKnowledge:
+      - SslBundles
+    objectives:
+      - "Cấu hình SSL bundle JKS/PKCS12 hoặc PEM có tên qua namespace spring.ssl.bundle mà không biến module thành khóa học TLS/PKI."
+      - "Hiểu catalog SslBundles được auto-configure và abstraction SslBundle như ranh giới runtime giữa trust/key material đã cấu hình với consumer."
+      - "Nhận biết bundle có thể cung cấp stores, key/trust managers và material để tạo SSLContext cho các integration được hỗ trợ."
+      - "Bàn giao hành vi TLS của embedded web server và cấu hình SSL riêng của server cho web-runtime, còn mô hình bundle dùng lại được vẫn thuộc module này."
+    relatedModules:
+      - routeId: SPRING_BOOT_WEB_RUNTIME
+        label: "Spring Boot Web Runtime"
+        note: "Tiêu thụ SSL bundles cho TLS của embedded server và sở hữu cấu hình HTTPS riêng của server."
+
+  - id: docker-compose-development-runtime
+    title: "Tích hợp Docker Compose cho runtime development"
+    purpose: "Hiểu cách Spring Boot tích hợp Docker Compose trong giai đoạn phát triển để quản lý lifecycle của Compose project và cung cấp service connection details cho ứng dụng chạy cục bộ."
+    relatedKnowledge:
+      - DockerCompose
+    objectives:
+      - "Hiểu spring-boot-docker-compose làm gì khi phát hiện Compose file: đưa Compose project lên chạy khi project chưa hoạt động và cấu hình lifecycle cho phép, phối hợp shutdown theo lifecycle policy, đồng thời chỉ tạo service connection details cho các container được Boot hỗ trợ."
+      - "Hiểu cách Boot sử dụng mapped ports và thứ tự ưu tiên của service connection mà không dạy lại Docker image, network, volume hoặc cú pháp Compose tổng quát."
+      - "Sử dụng readiness checks, lựa chọn Compose file, profiles, skip controls và lifecycle-management settings của Boot để điều khiển hành vi trong môi trường development."
+      - "Nhận biết hỗ trợ Docker Compose ở đây là tích hợp cho development-time, còn Testcontainers service connections dùng trong test thuộc module testing."
+    relatedModules:
+      - routeId: SPRING_BOOT_TESTING
+        label: "Spring Boot Testing"
+        note: "Sở hữu tích hợp test của Boot và Testcontainers service connections dùng cho kiểm thử tự động."
+
+  - id: runtime-synthesis-and-handoffs
+    title: "Tổng hợp runtime end-to-end và các điểm bàn giao"
+    purpose: "Kết nối toàn bộ runtime ứng dụng thành một mô hình thống nhất về chuyển trạng thái, các điểm mở rộng, dịch vụ runtime do Boot quản lý, chẩn đoán và các điểm bàn giao rõ ràng sang những miền Spring Boot lân cận."
+    relatedKnowledge:
+      - RuntimeSynthesis
+    objectives:
+      - "Theo dõi một ứng dụng thực tế từ lúc SpringApplication khởi động, qua context refresh, runners, availability, background execution và các tích hợp runtime, cho đến khi ứng dụng gặp lỗi hoặc thoát."
+      - "Chọn giữa events, runners, tùy biến executor/scheduler, configuration properties và SpringApplication customization dựa trên thời điểm từng cơ chế tham gia vào lifecycle và ranh giới sở hữu của chúng."
+      - "Chẩn đoán vấn đề runtime bằng cách xác định trước giai đoạn của lifecycle và phân hệ Boot liên quan, thay vì xem mọi triệu chứng khi khởi động hoặc khi ứng dụng đang chạy là cùng một loại lỗi."
+      - "Giải thích các điểm bàn giao sang web-runtime, Actuator, testing, configuration, auto-configuration, Java concurrency, Spring Framework concurrency, hạ tầng logging, TLS/PKI và containerization."
+    relatedModules:
+      - routeId: SPRING_BOOT_WEB_RUNTIME
+        label: "Spring Boot Web Runtime"
+        note: "Mở rộng mô hình runtime tổng quát sang việc lựa chọn và cấu hình embedded web server, sử dụng TLS, xử lý proxy và graceful shutdown."
+      - routeId: SPRING_BOOT_ACTUATOR
+        label: "Spring Boot Actuator"
+        note: "Bổ sung các production endpoints và khả năng quan sát trạng thái cũng như thông tin chẩn đoán của runtime."

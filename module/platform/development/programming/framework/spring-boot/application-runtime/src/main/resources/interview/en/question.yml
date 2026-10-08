@@ -27,4 +27,213 @@
 #         Exact method signature in api-descriptions.yml, for example startVsRun().
 # </interview-schema>
 
-questions: []
+questions:
+- question: "Explain the Spring Boot runtime as a sequence of increasingly complete states. Why are context refresh, ApplicationStartedEvent, liveness, startup runners, ApplicationReadyEvent, and readiness not interchangeable checkpoints?"
+  answer: >-
+    Context refresh means the Spring container has completed refresh, but Boot still has startup work to coordinate. ApplicationStartedEvent is published after refresh and before ApplicationRunner/CommandLineRunner execution. Boot then publishes liveness as CORRECT, runs the startup runners, publishes ApplicationReadyEvent, and only afterward publishes readiness as ACCEPTING_TRAFFIC. Each checkpoint therefore provides a different guarantee. Code that only needs beans can run after refresh, while work that must wait for required startup initialization should treat runner completion or readiness as the stronger boundary. Conflating the checkpoints creates bugs such as accepting traffic while required startup work is still running. The lifecycle experiment is useful evidence because it records these phases from the running application rather than inferring them from names.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 1.RuntimeModel/RuntimeModel.md
+    anchor: runtime-phase-model
+  apiRelated:
+    controller: ApplicationRuntimeExperimentController
+    methodSignature: lifecycleTimeline()
+- question: "A component must observe ApplicationEnvironmentPreparedEvent and also needs an application service bean. Why is a normal bean listener the wrong design, and how would you redesign the responsibility?"
+  answer: >-
+    ApplicationEnvironmentPreparedEvent happens before a normal ApplicationContext bean graph exists, so a listener created as an ordinary bean cannot reliably observe it and cannot depend on application services at that point. A genuinely early listener must be registered before bean creation through SpringApplication, SpringApplicationBuilder, or the supported early-listener mechanism, and its responsibility should stay narrow enough to operate with the state available at that phase. If the real work requires repositories or services, move that work to a later event or startup hook and keep the early listener limited to capturing or preparing bootstrap information. The design principle is to choose the latest lifecycle phase that satisfies the requirement rather than forcing dependency injection into a phase where its prerequisites do not exist.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 2.ApplicationLifecycleEvents/ApplicationLifecycleEvents.md
+    anchor: early-listener-registration
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Compare an application event listener, ApplicationRunner/CommandLineRunner, and a managed executor or scheduler as runtime extension points. How do prerequisites and readiness requirements determine the right choice?"
+  answer: >-
+    An application event listener is appropriate when the intent is to observe or react to a lifecycle transition and the required state exists at that event. A runner is appropriate for bounded startup work that needs the refreshed context and whose successful completion should delay ApplicationReadyEvent and readiness. A managed executor or scheduler is for work that continues independently after startup; an endless loop or long-lived consumer in a runner prevents startup from completing. The decision therefore has two dimensions: what state must already exist, and whether readiness must wait for the work. Choosing by those guarantees also makes failure timing clear: a runner failure is a startup failure, while a later background-task failure belongs to steady-state runtime handling.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 12.RuntimeSynthesis/RuntimeSynthesis.md
+    anchor: runtime-hook-selection
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "When would you choose ApplicationRunner instead of CommandLineRunner, and what does ApplicationArguments add beyond manually parsing String[] args?"
+  answer: >-
+    Both runner interfaces execute in the same Boot startup phase, so the choice is about input semantics rather than timing. CommandLineRunner receives the raw argument sequence, while ApplicationRunner receives ApplicationArguments, which preserves the original arguments and also exposes option names, option values, and non-option arguments. ApplicationRunner is therefore preferable when startup logic treats values such as --mode=demo as structured options; CommandLineRunner is suitable when the exact raw sequence is the useful contract. ApplicationArguments does not replace externalized-configuration precedence, because command-line options may also participate in that broader configuration model. The runtime arguments experiment demonstrates the parsed option/non-option view without requiring custom parsing code.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 3.ArgumentsAndRunners/ArgumentsAndRunners.md
+    anchor: applicationrunner-vs-commandlinerunner
+  apiRelated:
+    controller: ApplicationRuntimeExperimentController
+    methodSignature: applicationArguments()
+- question: "Why can a long-running or endless ApplicationRunner make an application look live but never ready, and why is adding @Order usually not a real fix?"
+  answer: >-
+    Boot publishes the started phase and liveness before invoking runners, but ApplicationReadyEvent and readiness follow only after all runners finish. A runner that blocks indefinitely can therefore leave a valid, live context that never becomes ready. @Order only controls relative ordering among runners; it does not make long-running work asynchronous and does not remove it from the startup critical path. If work must continue after startup, move it to managed background infrastructure. Use runner ordering only when there is a small, explicit startup dependency, and avoid turning numeric priorities into a hidden workflow engine whose failure and dependency model is difficult to reason about.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 3.ArgumentsAndRunners/ArgumentsAndRunners.md
+    anchor: runner-antipatterns
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "A database becomes temporarily unavailable in production. Explain why marking liveness BROKEN may be more dangerous than refusing readiness, and what policy question Spring Boot leaves to the application."
+  answer: >-
+    Liveness asks whether the process is internally healthy enough to keep running or recover; readiness asks whether it should receive new traffic. If every instance converts a shared database outage into broken liveness, the platform may restart all instances even though restarting cannot repair the dependency, creating a restart storm and amplifying the incident. Refusing readiness can stop new traffic while preserving the process for recovery. Boot provides ApplicationAvailability and AvailabilityChangeEvent as the state model and signaling API, but it does not decide which domain condition should change those states. The application must define an operational policy based on whether a failure is internal and unrecoverable or external and potentially transient.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 4.AvailabilityFailureExit/AvailabilityFailureExit.md
+    anchor: liveness-readiness-model
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "How should you investigate a Spring Boot startup failure when a FailureAnalyzer prints a friendly APPLICATION FAILED TO START message? What evidence should remain authoritative?"
+  answer: >-
+    The analyzer output is a diagnostic interpretation of the failure, not a replacement for the underlying exception. Start with the root exception and causal chain, then use any FailureAnalyzer description and action to narrow the likely cause. If auto-configuration decisions are relevant, inspect the condition evaluation report as additional evidence. ApplicationFailedEvent can be used for bootstrap-level observation or telemetry, but a listener should not swallow the fatal exception merely to make startup appear successful. This order prevents trial-and-error property changes from masking the real cause and preserves a failure mode that deployment tooling can detect correctly.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 4.AvailabilityFailureExit/AvailabilityFailureExit.md
+    anchor: startup-failure-analysis
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Explain the difference between changing readiness, closing the ApplicationContext through Boot's shutdown lifecycle, gracefully draining an embedded web server, and returning a process exit code. Why should these remain separate concerns?"
+  answer: >-
+    Readiness is a routing signal that says whether new work should be accepted. Closing the ApplicationContext is the generic application-lifecycle action that runs managed destruction and lifecycle callbacks, normally coordinated by SpringApplication's JVM shutdown hook on a normal JVM exit. Graceful HTTP request draining is server- and protocol-specific behavior owned by the web runtime. An exit code is a process contract: ExitCodeGenerator and SpringApplication.exit can calculate a code, but SpringApplication.exit does not itself terminate the JVM. Keeping these concerns separate avoids assuming that one mechanism automatically supplies the others; for example, a context shutdown hook does not make unmanaged threads orderly, and a readiness change does not define HTTP drain timeouts.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 4.AvailabilityFailureExit/AvailabilityFailureExit.md
+    anchor: shutdown-boundaries
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Why can replacing Boot's default executor to optimize one @Async use case affect unrelated framework behavior? What should you inventory before defining a custom executor?"
+  answer: >-
+    Boot's task executor is shared runtime infrastructure, not merely a convenience bean for one service. Supported integrations can consume it for asynchronous application work, MVC or WebFlux integration, GraphQL callable handling, and related framework needs. Defining an Executor can cause auto-configuration to back off, while some web integrations specifically expect an AsyncTaskExecutor with the conventional applicationTaskExecutor name. Before replacing it, inventory the consumers, required type and bean name, workload isolation needs, lifecycle behavior, and the configuration that the default already provides. A custom executor becomes an application-owned contract, so replacing the default only to reproduce it adds maintenance risk without improving the runtime model.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 5.TaskExecutionScheduling/TaskExecutionScheduling.md
+    anchor: custom-executor-scheduler-boundary
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "What does spring.threads.virtual.enabled=true actually change in Spring Boot 3.3, and what would the task-executor experiment prove about that change without proving that virtual threads make the workload faster?"
+  answer: >-
+    The property tells Boot to choose virtual-thread-backed strategies for supported managed runtime infrastructure. For task execution Boot can use a SimpleAsyncTaskExecutor configured for virtual threads instead of the normal ThreadPoolTaskExecutor, and scheduling uses the corresponding virtual-thread strategy. The task-executor experiment can show the concrete executor class, that work was dispatched to a different worker, and whether the worker reports Thread.isVirtual() as true after restarting with the switch enabled. That proves which Boot-managed execution model is active. It does not prove better throughput or latency, because workload scalability, blocking behavior, CPU limits, downstream capacity, pinning, and other Java concurrency concerns require separate measurement and analysis.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 6.VirtualThreads/VirtualThreads.md
+    anchor: virtual-executor-scheduler
+  apiRelated:
+    controller: ApplicationRuntimeExperimentController
+    methodSignature: taskExecutor()
+- question: "Why is carrying platform-thread pool-size tuning directly into a virtual-thread configuration a conceptual error, and when can spring.main.keep-alive become relevant?"
+  answer: >-
+    Pool-size properties describe capacity management for a bounded set of platform worker threads. Boot's virtual-thread-backed SimpleAsyncTaskExecutor and SimpleAsyncTaskScheduler use a different model, so old pool arithmetic no longer controls parallelism in the same way and some pooling-related scheduler properties are ignored. Virtual threads still consume CPU, memory, connections, and downstream capacity, so limits may still be necessary, but they must be placed where the constrained resource actually exists. Virtual threads are daemon threads, which also creates a process-lifecycle concern: a non-web or scheduling-oriented application may exit when only daemon virtual threads remain. spring.main.keep-alive can keep the JVM alive in that case; it is a lifecycle setting, not a performance knob.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 6.VirtualThreads/VirtualThreads.md
+    anchor: virtual-thread-pool-properties
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "A team enables lazy initialization and celebrates a faster readiness time. What failures or latency might they merely have moved, and how would you decide whether the trade-off is acceptable?"
+  answer: >-
+    Lazy initialization defers creation of eligible beans until first use. That can shorten the startup critical path, but the deferred work still exists. A misconfigured bean that previously failed during deployment can now fail on the first request or background task, and expensive initialization can move from startup latency to first-use latency. The application may still eventually allocate the same steady-state object graph, so startup memory observations are not the whole capacity story. Measure startup and first-use behavior, identify which beans are actually deferred, and preserve eager initialization for components whose failures should be discovered before traffic. The optimization is acceptable only when the operational value of faster startup outweighs delayed failure detection and runtime latency risk.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 7.StartupOptimization/StartupOptimization.md
+    anchor: lazy-initialization-tradeoffs
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Why is 'Spring Boot startup is slow' an insufficient diagnosis, and how does ApplicationStartup change the optimization process?"
+  answer: >-
+    A total startup duration does not identify the owner of the cost. Time can be spent in bean creation, external calls made by startup code, logging setup, a runner, conditional configuration, or another subsystem. ApplicationStartup records structured StartupStep information; an implementation such as BufferingApplicationStartup lets the application retain those steps for later inspection. That turns an unspecific complaint into evidence about which phase or component consumed time. The next optimization should target the owner of the measured slow step and then be compared against a repeatable baseline. Production exposure of buffered startup data may involve Actuator, while the underlying measurement and interpretation remain separate from the endpoint that presents it.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 7.StartupOptimization/StartupOptimization.md
+    anchor: application-startup-tracking
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "When should you prefer a supported Boot property over programmatic SpringApplication customization, and when does SpringApplicationBuilder represent a real architectural choice rather than nicer syntax?"
+  answer: >-
+    Prefer a supported property when it already expresses the behavior because it is visible in configuration metadata, participates in externalized configuration, and preserves Boot's documented lifecycle and back-off conventions. Programmatic SpringApplication customization is appropriate for bootstrap behavior that must be assembled before the normal context and cannot be expressed by the property surface, such as explicit listener or initializer registration. SpringApplicationBuilder becomes architecturally significant when it is used to create parent/child ApplicationContext hierarchies; those contexts share an Environment and have placement constraints for web components. A hierarchy therefore changes runtime structure and ownership. Programmatic bootstrap code should remain small so it does not become a second container-configuration system hidden inside main().
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 8.RuntimeCustomization/RuntimeCustomization.md
+    anchor: property-first-customization
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Why can a property source declared on a normal @Configuration class be too late to influence Boot's earliest logging, and why do logback-spring.xml or log4j2-spring.xml change the integration boundary?"
+  answer: >-
+    Boot initializes logging before the ApplicationContext so startup messages and early failures can be logged. A @PropertySources declaration on a normal configuration class is processed after that bootstrap decision and therefore cannot retroactively configure the earliest logging system. Boot-supported environment properties that are available during early bootstrap can participate. The -spring native configuration variants let Boot control the supported initialization phase and apply Boot extensions such as profile- or environment-aware features before handing behavior to the underlying logging implementation. Use Boot properties for common controls and native configuration for implementation-specific appenders, filters, encoders, or routing; log shipping and centralized analysis remain observability concerns.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 9.Logging/Logging.md
+    anchor: early-logging-bootstrap
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "What problem do named SSL bundles solve, and why does having an SslBundle bean neither define an organization's PKI policy nor automatically configure every third-party client?"
+  answer: >-
+    A named SSL bundle separates reusable key/trust material and SSL options from the consumers that need them. Boot can bind JKS/PKCS12 or PEM configuration, expose it through the SslBundles catalog, and let supported integrations or application code obtain an SslBundle and create the SSL objects they require. The abstraction removes repeated file-path and credential configuration, but consumers still need explicit Boot bundle support or a compatible SSL hook; arbitrary libraries are not rewritten just because a bundle exists. The bundle also expresses configured material, not security policy. Certificate issuance, trust-chain design, rotation, hostname verification, protocol and cipher choices, and other PKI decisions remain security responsibilities.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 10.SslBundles/SslBundles.md
+    anchor: ssl-bundle-consumers
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "A locally running Compose database maps its container port to an ephemeral host port, while application.properties contains a fixed database port. Why can Boot still connect to the ephemeral port, and what should you inspect before changing the property?"
+  answer: >-
+    Spring Boot's Docker Compose integration can create service-connection details for a recognized service and uses the mapped host port that the local JVM can actually reach. Those connection details take precedence over the ordinary connection-related configuration properties consumed by the corresponding auto-configuration. That precedence is intentional because a dynamic host port cannot be known by static configuration in advance. Before editing the property, inspect the current Compose mapping and the service connection that Boot created. Also confirm that the service is recognized or correctly labeled; if no supported connection details exist, then normal application properties may again be the active source.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 11.DockerCompose/DockerCompose.md
+    anchor: compose-mapped-ports-precedence
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Why does Spring Boot distinguish a Compose project it started from one that was already running, and why should Docker Compose development support not become a production orchestration strategy?"
+  answer: >-
+    Lifecycle ownership determines what Boot may safely stop. When Boot starts a discovered Compose project under a lifecycle policy, it can coordinate that project with application startup and normal shutdown. When the project is already running, Boot can still derive supported connection details but should not assume ownership and shut down infrastructure that another developer or process started. The feature is designed to remove local development glue around external services, including readiness and connection discovery. Image construction, networks, volumes, deployment topology, security, and production orchestration remain Docker/container-platform concerns. Using the development integration as a production orchestrator would give Boot responsibility it was not designed to own.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 11.DockerCompose/DockerCompose.md
+    anchor: compose-discovery-lifecycle
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "During an incident the application is live but never becomes ready, logs show normal context refresh, and no requests are being served. How would you classify the problem before changing configuration?"
+  answer: >-
+    Start from the runtime timeline rather than from a random property. A live application has passed context refresh and the started/liveness phase, while readiness still waits for startup runners and the final ready transition. Inspect runner execution, blocking startup work, and availability changes first. If a runner is waiting on an external dependency, decide whether that dependency truly must block readiness or whether the work belongs in managed background infrastructure. If the runner itself was selected because of a configuration or auto-configuration decision, follow that evidence to the owning module next. This classification narrows the search to the phase between liveness and readiness and avoids unrelated changes to logging, web-server settings, or probe configuration.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 12.RuntimeSynthesis/RuntimeSynthesis.md
+    anchor: runtime-problem-classification
+  apiRelated:
+    controller: ""
+    methodSignature: ""
