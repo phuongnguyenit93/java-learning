@@ -1,0 +1,1065 @@
+# <quiz-schema>
+# Cấu trúc câu hỏi Quiz
+# schema-version: 3
+#
+# questions [kiểu: list; bắt buộc; mặc định: []; duy nhất theo: id]
+#   Danh sách câu hỏi Quiz của module trong language hiện tại.
+#   mỗi phần tử:
+#     id [kiểu: string; bắt buộc; mặc định: ""]
+#       ID ổn định và duy nhất của câu hỏi.
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi hiển thị cho người học.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu câu hỏi được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu câu hỏi đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+#     answers [kiểu: list; bắt buộc; số phần tử: 4; mặc định: []; duy nhất theo: id]
+#       Chính xác bốn đáp án. ID A/B/C/D là identity nội bộ ổn định, không phải vị trí hiển thị sau khi frontend shuffle.
+#       mỗi phần tử:
+#         id [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#           Identity ổn định của đáp án.
+#         answer [kiểu: string; bắt buộc; mặc định: ""]
+#           Nội dung đáp án hiển thị cho người học.
+#         explanation [kiểu: string; bắt buộc; mặc định: ""]
+#           Giải thích hiển thị khi người học chọn đáp án này, bất kể đúng hay sai.
+#     correctAnswerId [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#       ID nội bộ của đáp án đúng. Frontend kiểm tra bằng identity này sau khi shuffle.
+# </quiz-schema>
+
+questions:
+  - id: "github-01-01"
+    question: "Git đã quản lý được mã; GitHub bổ sung giá trị gì rõ nhất cho nhóm?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-github-foundations.md"
+      anchor: "github-as-hosting-platform"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Trình xem lịch sử Git từ xa với refs nhánh nhưng không có hồ sơ review chính thức."
+        explanation: "Ghi commit không đồng nghĩa đã có quyết định review hợp lệ."
+      - id: B
+        answer: "Trình quản lý Issue và thảo luận điều phối mã mà không lưu lịch sử Git."
+        explanation: "Issues hỗ trợ trao đổi nhưng không thay lịch sử mã hay review PR."
+      - id: C
+        answer: "Repository Git được lưu trữ kèm pull request, phân quyền và dấu vết review."
+        explanation: "GitHub bổ sung công cụ cộng tác trên lịch sử Git chứ không thay cơ chế quản lý phiên bản."
+      - id: D
+        answer: "Workflow Actions bắt buộc triển khai mỗi thay đổi mã được tiếp nhận."
+        explanation: "Triển khai thuộc quy trình khác và không tự phát sinh từ việc lưu repository."
+    correctAnswerId: C
+
+  - id: "github-01-02"
+    question: "PR sửa làm tròn tiền có commit và test cục bộ xanh nhưng nhóm không giải thích được việc chấp nhận; cần bổ sung gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-github-foundations.md"
+      anchor: "unmanaged-change-collaboration-risks"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Thảo luận reviewer về trường hợp biên và quyết định tiếp nhận."
+        explanation: "Điểm thiếu là ai đã đánh giá hành vi được đề xuất và căn cứ chấp nhận."
+      - id: B
+        answer: "Quy ước Issue/branch thể hiện ai push commit làm tròn gần nhất."
+        explanation: "Tên nhánh giúp truy vết nhưng không chứng minh review hay tính đúng nghiệp vụ."
+      - id: C
+        answer: "Ghi chú owner repository nêu ai bảo trì module làm tròn."
+        explanation: "Metadata repository không ghi nhận quyết định cho thay đổi cụ thể."
+      - id: D
+        answer: "Changelog phát hành mô tả mục tiêu của thay đổi làm tròn."
+        explanation: "Dấu phiên bản không thay kiểm tra và quyết định tiếp nhận đề xuất."
+    correctAnswerId: A
+
+  - id: "github-01-03"
+    question: "Bằng chứng nào có thể tồn tại hoàn toàn trong Git mà không cần GitHub phê duyệt?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-github-foundations.md"
+      anchor: "git-versus-github"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Phiếu Approve của pull request gắn với base branch trên host."
+        explanation: "Approve PR là dữ liệu cộng tác GitHub, không phải thao tác gốc của Git."
+      - id: B
+        answer: "Yêu cầu code owner review tự sinh khi PR chịu bảo vệ."
+        explanation: "Điều hướng code owner phụ thuộc cơ chế quản trị repository GitHub."
+      - id: C
+        answer: "Kết luận required status check do ruleset áp dụng."
+        explanation: "Đánh giá check của ruleset thuộc nền tảng lưu trữ, không phải lịch sử Git."
+      - id: D
+        answer: "Commit và merge hai nhánh phát triển ở máy cục bộ."
+        explanation: "Commit và merge là cơ chế Git; quy tắc review trên host cần bằng chứng khác."
+    correctAnswerId: D
+
+  - id: "github-01-04"
+    question: "PR thêm DiscountPolicy nhưng tab Code tại main chưa có tệp; reviewer cần kiểm tra gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-github-foundations.md"
+      anchor: "repository-and-history"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Cấu hình default branch và commit mới nhất của main, với kỳ vọng file đã có."
+        explanation: "Nhánh mặc định không tự nhận commit được push vào nhánh khác."
+      - id: B
+        answer: "Head/base của PR và màn hình so sánh tại thời điểm đó."
+        explanation: "Thay đổi đề xuất có thể ở head trước khi được merge vào base."
+      - id: C
+        answer: "Các Releases đã xuất bản để tìm diff của đề xuất vẫn chưa merge."
+        explanation: "Release là dữ liệu công bố riêng, không được tạo chỉ vì mở PR."
+      - id: D
+        answer: "Assignee và milestone Issue để suy ra nhánh nào có file."
+        explanation: "Giao Issue không sửa nội dung Git hay lựa chọn nhánh."
+    correctAnswerId: B
+
+  - id: "github-01-05"
+    question: "Hai repository tên gần giống nhau thuộc Alice và RetailCo; yếu tố nào quyết định phạm vi quản trị?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-github-foundations.md"
+      anchor: "accounts-organizations-and-repository-context"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Cấu hình bảo vệ default branch, dùng để suy ra namespace của chủ repo."
+        explanation: "Bảo vệ default branch không xác định namespace chủ sở hữu repository."
+      - id: B
+        answer: "Tác giả commit mới nhất, được cho là quyết định quyền quản trị."
+        explanation: "Tham gia commit không kéo theo quyền quản trị."
+      - id: C
+        answer: "Namespace chủ sở hữu repository: tài khoản cá nhân hay organization."
+        explanation: "Chủ sở hữu xác định ngữ cảnh quản trị dù tên repository giống nhau."
+      - id: D
+        answer: "Danh sách reviewer được mời, dùng để suy ra organization sở hữu."
+        explanation: "Yêu cầu review không cấp quyền sở hữu hoặc admin."
+    correctAnswerId: C
+
+  - id: "github-01-06"
+    question: "Một thành viên được gọi là contributor của repository organization; tên gọi đó đủ cho phép đổi Settings không?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-github-foundations.md"
+      anchor: "participants-and-contribution"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Không; phải xét effective repository role và quyền sửa Settings cụ thể."
+        explanation: "Tên vai trò tham gia không thay việc kiểm tra quyền repository cụ thể."
+      - id: B
+        answer: "Có; Write repository bao gồm chỉnh mọi rule nhánh bảo vệ và Settings."
+        explanation: "Write cho phép đóng góp mã nhưng không đồng nghĩa quyền quản trị chính sách."
+      - id: C
+        answer: "Có; được mời reviewer đồng nghĩa có quyền như maintainer."
+        explanation: "Được giao review và được sửa policy là hai quyền khác nhau."
+      - id: D
+        answer: "Không; chỉ organization owner, thay vì repository admin, sửa được Settings."
+        explanation: "Admin organization được cấp quyền có thể quản lý repository, không phụ thuộc người tạo."
+    correctAnswerId: A
+
+  - id: "github-01-07"
+    question: "Tác giả mở pull request từ feature vào main; điều gì đã được xác lập tại thời điểm đó?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-github-foundations.md"
+      anchor: "pull-request-basics"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Thay đổi được review và tự xếp hàng merge khi checks cấu hình thành công."
+        explanation: "Tạo PR và được phê duyệt là hai trạng thái khác nhau."
+      - id: B
+        answer: "Mục phát hành dự kiến đang chờ công bố commit nhánh feature."
+        explanation: "Phát hành là hoạt động riêng, có thể diễn ra sau vòng đời PR."
+      - id: C
+        answer: "Work item liên kết sẽ Resolved khi PR liên quan thành Open."
+        explanation: "Liên kết giúp truy vết nhưng không chứng minh Issue đã hoàn thành."
+      - id: D
+        answer: "Một đề xuất so sánh để review, còn chấp nhận và merge là bước riêng."
+        explanation: "Mở PR tạo đề xuất để đánh giá, chưa tự hợp nhất nguồn."
+    correctAnswerId: D
+
+  - id: "github-01-08"
+    question: "Reviewer thấy head=fix-rounding và base=main ở PR #57; kết luận nào có căn cứ?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-github-foundations.md"
+      anchor: "github-collaboration-map"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "PR sửa trực tiếp main dù chưa được merge."
+        explanation: "So sánh PR không tự thay đổi nhánh base."
+      - id: B
+        answer: "Đề xuất đưa thay đổi fix-rounding vào main."
+        explanation: "Head là nguồn đề xuất; base là nhánh đích được so sánh và dự kiến tích hợp."
+      - id: C
+        answer: "Reviewer sở hữu fix-rounding vì đã được mời review."
+        explanation: "Yêu cầu review không chuyển quyền sở hữu nhánh hay quyền ghi."
+      - id: D
+        answer: "Head bắt buộc ở cùng repository với base."
+        explanation: "PR từ fork có thể so sánh giữa hai repository."
+    correctAnswerId: B
+
+  - id: "github-02-01"
+    question: "Dịch vụ chuyển từ repository cá nhân của Alice sang organization RetailCo; nhóm cần kiểm tra thay đổi vận hành nào?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02-repository-hosting.md"
+      anchor: "personal-vs-organization-repos"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Việc chuyển repo có viết lại commit SHA và quan hệ cha trong lịch sử không."
+        explanation: "Đổi namespace không tự viết lại commit Git."
+      - id: B
+        answer: "Ai hiện quản trị quyền repository và những chính sách organization nào đang áp dụng."
+        explanation: "Chủ sở hữu organization thay đổi nơi quản lý trách nhiệm và chính sách nhóm."
+      - id: C
+        answer: "Chuyển qua organization có đồng thời đổi nhánh mặc định không."
+        explanation: "Tên nhánh độc lập với tên tài khoản chủ sở hữu."
+      - id: D
+        answer: "Outside collaborators có nhận quyền thành viên organization sau chuyển không."
+        explanation: "Chuyển repository không tự biến người cộng tác bên ngoài thành thành viên organization."
+    correctAnswerId: B
+
+  - id: "github-02-02"
+    question: "RetailCo dùng GitHub Enterprise Cloud và đặt repository ở chế độ Internal; ai thường có thể tìm và đọc?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02-repository-hosting.md"
+      anchor: "repository-visibility-and-plans"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Người đọc thuộc bất kỳ organization nào có cùng gói thanh toán enterprise."
+        explanation: "Đăng nhập GitHub không tự trở thành thành viên enterprise."
+      - id: B
+        answer: "Thành viên organization sở hữu sau khi được mời quyền Read từng repository."
+        explanation: "Repository Internal thường cho thành viên enterprise quyền Read mà không cần mời từng người."
+      - id: C
+        answer: "Outside collaborators được mời vào organization, kể cả người ngoài enterprise."
+        explanation: "Outside collaborators không thuộc đối tượng enterprise member có quyền đọc Internal."
+      - id: D
+        answer: "Thành viên cùng GitHub enterprise theo chính sách quản trị áp dụng."
+        explanation: "Internal mở phạm vi đọc trong enterprise, không chỉ một organization và không công khai Internet."
+    correctAnswerId: D
+
+  - id: "github-02-03"
+    question: "Maintainer đổi default branch của repository từ main sang stable; cần kiểm tra tác động nào trước?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02-repository-hosting.md"
+      anchor: "repository-settings-and-default-branch"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Nhánh tab Code mở mặc định và base ban đầu được gợi ý khi tạo PR."
+        explanation: "Cấu hình default branch ảnh hưởng điều hướng và nhánh đích PR thường được gợi ý."
+      - id: B
+        answer: "Revision đang deploy nào đổi khi nhãn default branch thay đổi."
+        explanation: "Trạng thái triển khai phụ thuộc cấu hình delivery, không suy từ tên default branch."
+      - id: C
+        answer: "Review đã yêu cầu ở PR khác có chuyển thành phiếu chấp nhận merge không."
+        explanation: "Đổi default branch không tự phê duyệt các PR đang mở."
+      - id: D
+        answer: "Maintainer nhánh stable có kế thừa quyền administrator repo không."
+        explanation: "Chọn nhánh không cấp vai trò quản trị repository."
+    correctAnswerId: A
+
+  - id: "github-02-04"
+    question: "Người không đăng nhập đọc được public repository; điều đó có cho họ push vào main không?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02-repository-hosting.md"
+      anchor: "repository-access-and-discovery"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Có; public bao gồm quyền đóng góp trên mọi nhánh."
+        explanation: "Public mô tả đối tượng có thể xem, không tự cho phép ghi."
+      - id: B
+        answer: "Chỉ sau khi đặt nhánh mặc định thành public thay vì main."
+        explanation: "Visibility thuộc repository, không phải quyền dựa trên tên nhánh."
+      - id: C
+        answer: "Không; đọc được không có nghĩa có quyền ghi vào main."
+        explanation: "Khả năng xem public không tự cấp quyền đóng góp hoặc vượt branch protection."
+      - id: D
+        answer: "Chỉ khi từng có reviewer phê duyệt ít nhất một pull request."
+        explanation: "Phiếu duyệt trước đây không cấp quyền push cho người khác."
+    correctAnswerId: C
+
+  - id: "github-03-01"
+    question: "Alice có quyền Write trên repo nhóm nhưng main được bảo vệ; đường đóng góp nào phù hợp?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03-contribution-paths.md"
+      anchor: "shared-repository-contribution"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Xin push trực tiếp vào main được bảo vệ với quyền Write đang có."
+        explanation: "Write trên repo không mặc nhiên vượt yêu cầu của nhánh bảo vệ."
+      - id: B
+        answer: "Dùng release artifact làm dấu vết tích hợp thay cho mở PR."
+        explanation: "Công bố Release không hợp nhất mã vào main."
+      - id: C
+        answer: "Xin bypass Admin tạm cho feature thay vì hoàn tất checks review."
+        explanation: "Người đóng góp có quyền nhánh phù hợp không cần Admin rộng chỉ để đề xuất."
+      - id: D
+        answer: "Push lên feature branch được phép rồi mở PR vào main."
+        explanation: "Nhánh feature trong repo chung giữ đề xuất tách biệt đến khi đạt quy tắc nhánh đích."
+    correctAnswerId: D
+
+  - id: "github-03-02"
+    question: "Người đóng góp fork orchid/payments; phát biểu nào đúng về fork đó?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03-contribution-paths.md"
+      anchor: "fork-and-upstream"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Đó là nhánh được bảo vệ trong orchid/payments dùng chung mọi Settings."
+        explanation: "Fork là repository, không chỉ là nhánh khác trong cùng repo."
+      - id: B
+        answer: "Đó là repository riêng có quyền riêng và mối quan hệ với upstream."
+        explanation: "Fork độc lập nên sửa tại fork không tự thay đổi upstream."
+      - id: C
+        answer: "Nó có thể merge vào upstream main mà không cần tuân quy tắc upstream."
+        explanation: "Quy tắc của repository đích vẫn chi phối việc tích hợp vào base."
+      - id: D
+        answer: "Commit tại fork được đồng bộ tự động lên mọi nhánh upstream."
+        explanation: "Lịch sử fork không tự chuyển vào upstream nếu thiếu thao tác đóng góp/hợp nhất."
+    correctAnswerId: B
+
+  - id: "github-03-03"
+    question: "PR so nhánh fix trong fork với upstream main; cần xác minh gì tại header?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03-contribution-paths.md"
+      anchor: "pr-head-base"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Base repository/branch xác định đề xuất của tác giả; head là đích."
+        explanation: "Phát biểu này đảo hướng PR và hiểu sai cặp so sánh."
+      - id: B
+        answer: "Head và base phải thuộc cùng một repository mới được review."
+        explanation: "PR từ fork có thể so sánh hai repository riêng khi nền tảng hỗ trợ."
+      - id: C
+        answer: "Head là nguồn thay đổi đề xuất; base là repository và nhánh đích."
+        explanation: "Khi so hai repo, cần biết cả repository lẫn nhánh ở mỗi đầu."
+      - id: D
+        answer: "Nhánh mặc định của fork luôn thành nhánh đích tích hợp upstream."
+        explanation: "Base được chọn cụ thể; default branch của fork không quyết định target upstream."
+    correctAnswerId: C
+
+  - id: "github-03-04"
+    question: "PR chưa hoàn tất test và mô tả; nên dùng trạng thái nào trước khi mời review chính thức?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03-contribution-paths.md"
+      anchor: "draft-vs-ready"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Draft, rồi chuyển Ready khi đã bổ sung đủ thông tin đánh giá."
+        explanation: "Draft phản ánh mức sẵn sàng của tác giả, không giả định checks hay approvals đã đạt."
+      - id: B
+        answer: "Giữ PR Ready và thông báo reviewer rằng kiểm thử bắt buộc chưa hoàn tất."
+        explanation: "Approve là quyết định review, không thay việc tác giả chuẩn bị đề xuất."
+      - id: C
+        answer: "Để PR Open nhưng hoãn mời review đến khi code hoàn tất."
+        explanation: "PR Open thông thường thiếu dấu hiệu Draft rõ ràng khi công việc chưa xong."
+      - id: D
+        answer: "Dùng prefix WIP cho tên branch nhưng PR vẫn ở trạng thái Ready."
+        explanation: "Prefix tên nhánh không tạo trạng thái Draft hay giới hạn merge của GitHub."
+    correctAnswerId: A
+
+  - id: "github-03-05"
+    question: "Một PR bị Close without merge; nhóm suy ra điều gì về các commit đề xuất?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03-contribution-paths.md"
+      anchor: "pr-lifecycle"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Nhánh nguồn cũng đóng và các commit đề xuất không còn truy cập được."
+        explanation: "Close PR không tự xóa lịch sử Git liên quan."
+      - id: B
+        answer: "PR vẫn hiện nhưng diff được tính như đã tích hợp vào base."
+        explanation: "Close without merge không đưa thay đổi vào base."
+      - id: C
+        answer: "Các commit của PR đã đóng không thể tái dùng trong PR khác."
+        explanation: "Đóng PR chưa merge không cấm tái dùng commit còn tồn tại trong đề xuất khác."
+      - id: D
+        answer: "Chưa merge vào base; lịch sử nhánh nguồn có thể còn."
+        explanation: "Đóng PR khác xóa nhánh nguồn hoặc đưa commit vào base."
+    correctAnswerId: D
+
+  - id: "github-04-01"
+    question: "PR sửa giảm giá đã pass các check được cấu hình; reviewer vẫn cần hỏi gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04-pull-request-reviews.md"
+      anchor: "pr-context-diffs-and-checks"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Repository có default branch khác head của PR hay không."
+        explanation: "Danh tính nhánh quan trọng cho đích PR, chưa chứng minh công thức đúng."
+      - id: B
+        answer: "Reviewer đã đánh dấu mọi file Viewed trước khi đọc test hay chưa."
+        explanation: "Viewed giúp theo dõi tiến độ xem, không phải khẳng định tính đúng."
+      - id: C
+        answer: "Công thức mới có đúng nghiệp vụ và các ca biên không."
+        explanation: "Check đạt không tự chứng minh hành vi nghiệp vụ chưa được kiểm thử."
+      - id: D
+        answer: "Workflow gần nhất có mới hơn mô tả PR ban đầu hay không."
+        explanation: "Thứ tự thời gian không thay việc đối chiếu hành vi với yêu cầu."
+    correctAnswerId: C
+
+  - id: "github-04-02"
+    question: "Reviewer chỉ bình luận vào một dòng yêu cầu đổi tên biến; PR đã được Approve chính thức chưa?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04-pull-request-reviews.md"
+      anchor: "review-comments-decisions"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Chưa; comment khác review đã gửi với quyết định Approve."
+        explanation: "Phải kiểm tra quyết định review riêng với thảo luận trên dòng mã."
+      - id: B
+        answer: "Rồi; mọi bình luận trên dòng đều tính là một lượt phê duyệt."
+        explanation: "Bình luận trên dòng là phản hồi, không nhất thiết là phê duyệt."
+      - id: C
+        answer: "Rồi; khi tác giả Resolve thread thì hệ thống tính Approve."
+        explanation: "Resolve thread không tạo phiếu Approve thay cho reviewer."
+      - id: D
+        answer: "Chưa; chỉ merge thành công mới sinh bản ghi Approve."
+        explanation: "Approve có thể được gửi trước merge và không sinh ra từ merge."
+    correctAnswerId: A
+
+  - id: "github-04-03"
+    question: "Reviewer yêu cầu test đầu vào âm; tác giả thêm commit mới. Nên làm gì tiếp?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04-pull-request-reviews.md"
+      anchor: "change-request-rework"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Xem phiếu duyệt cũ vẫn đủ vì mã PR không đổi."
+        explanation: "Điều kiện review có thể đổi khi commit mới cập nhật đề xuất."
+      - id: B
+        answer: "Mô tả case đã sửa rồi mời xem lại diff/checks."
+        explanation: "Commit mới có thể thay đổi giả định đằng sau nhận xét hoặc phiếu duyệt trước."
+      - id: C
+        answer: "Resolve thread rồi merge mà không kiểm tra hành vi đã sửa."
+        explanation: "Trạng thái thread không chứng minh case đầu vào âm đã đúng."
+      - id: D
+        answer: "Đóng PR và tạo Release để bắt đầu review lại."
+        explanation: "Tạo Release không liên quan việc review lại PR vừa cập nhật."
+    correctAnswerId: B
+
+  - id: "github-04-04"
+    question: "Thay đổi chạm `/pricing/`, CODEOWNERS ghi `@acme/payments`; GitHub đọc quy tắc sở hữu ở đâu?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04-pull-request-reviews.md"
+      anchor: "reviewer-requests-codeowners"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Từ cây làm việc của tác giả dù tệp chưa được push lên nhánh."
+        explanation: "Tệp cục bộ chưa push không sẵn cho GitHub điều hướng reviewer."
+      - id: B
+        answer: "Từ phiên bản tại head của PR bất kể cấu hình trên nhánh đích."
+        explanation: "CODEOWNERS dùng để match PR được lấy từ base, không phải bản đề xuất riêng trên head."
+      - id: C
+        answer: "Từ bình luận Issue gần nhất có nhắc nhóm payments."
+        explanation: "Nhắc tên team trong Issue không định nghĩa sở hữu theo đường dẫn."
+      - id: D
+        answer: "Đọc CODEOWNERS tại base branch với owner đủ quyền Write."
+        explanation: "Chỉ sửa CODEOWNERS ở head chưa chi phối yêu cầu reviewer hiện tại của PR."
+    correctAnswerId: D
+
+  - id: "github-04-05"
+    question: "PR Ready khớp CODEOWNERS và tự mời reviewer; có nhất thiết phải được code owner Approve mới merge?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04-pull-request-reviews.md"
+      anchor: "code-owner-approval-vs-request"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Có; GitHub yêu cầu từng code owner của path đó phê duyệt riêng."
+        explanation: "Tệp có thể chỉ mời review; không mặc định mọi owner đều phải bỏ phiếu."
+      - id: B
+        answer: "Có; thêm CODEOWNERS tự bật gate bắt buộc code owner review."
+        explanation: "Quy tắc có hiệu lực có thể yêu cầu code owner hợp lệ phê duyệt."
+      - id: C
+        answer: "Chỉ khi branch protection hoặc ruleset có hiệu lực yêu cầu phê duyệt đó."
+        explanation: "Tự động mời reviewer và yêu cầu phê duyệt để merge là hai cơ chế riêng."
+      - id: D
+        answer: "Chỉ khi có review ngoài owner sau khi PR chuyển từ Draft sang Ready."
+        explanation: "Draft thường trì hoãn mời code owner; trạng thái Ready chưa tự tạo điều kiện bắt buộc."
+    correctAnswerId: C
+
+  - id: "github-05-01"
+    question: "Chuyên gia bên ngoài chỉ cần xem một repository của RetailCo; mô hình cấp quyền nào phù hợp?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05-repository-access.md"
+      anchor: "orgs-teams-and-outside-collaborators"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Outside collaborator được cấp quyền cho đúng repository đó."
+        explanation: "Outside collaborator có thể vào repository được phép mà không thành thành viên organization."
+      - id: B
+        answer: "Cấp tư cách thành viên organization để chuyên gia kế thừa quyền team chung."
+        explanation: "Làm thành viên không mặc định ở mọi team và dễ cấp phạm vi quá rộng."
+      - id: C
+        answer: "Chuyển repo Internal để reviewer bên ngoài nhận enterprise Read."
+        explanation: "Internal dành cho thành viên enterprise, không tự cấp quyền cho reviewer bên ngoài."
+      - id: D
+        answer: "Cấp role maintainer tạm của team thay vì mời riêng repository."
+        explanation: "Role maintainer của team vượt quá phạm vi cấp quyền xem riêng một repo."
+    correctAnswerId: A
+
+  - id: "github-05-02"
+    question: "Bộ phận hỗ trợ cần gắn label cho Issue nhưng không được push mã; vai trò repository organization nào phù hợp nhất?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05-repository-access.md"
+      anchor: "repo-roles"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Write, vì label Issue được quản lý bằng quyền giống quyền push source."
+        explanation: "Triage Issue là thao tác khác với push commit Git."
+      - id: B
+        answer: "Maintain, vì gắn nhãn Issue cần quyền bảo trì repository."
+        explanation: "Maintain cho quyền vận hành rộng hơn nhu cầu triage cụ thể."
+      - id: C
+        answer: "Triage, vẫn tùy quyền và hạn chế ở repository/organization."
+        explanation: "Triage cho phép quản lý Issue/PR mà không cần quyền ghi mã rộng như Write."
+      - id: D
+        answer: "Read, vì người xem thảo luận Issue cũng được gắn label."
+        explanation: "Read cho phép xem Issue, còn gắn label cần role như Triage."
+    correctAnswerId: C
+
+  - id: "github-05-03"
+    question: "Developer push được nhánh feature nhưng không đổi branch protection; điều đó cho thấy gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05-repository-access.md"
+      anchor: "review-and-maintenance-permissions"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Nhánh feature hiện ghi được nên quyền sửa chính sách nhánh sẽ kế thừa từ đó."
+        explanation: "Nhánh feature ghi được không cấp quyền sửa bảo vệ branch."
+      - id: B
+        answer: "Người đó có quyền đóng góp mã nhưng thiếu quyền quản trị policy."
+        explanation: "Các thao tác khác nhau cần quyền khác nhau dù cùng repository."
+      - id: C
+        answer: "Trạng thái chờ review tạm hoãn quyền sửa chính sách của contributor."
+        explanation: "Mời review không phải cơ chế thu hồi quyền ghi chung."
+      - id: D
+        answer: "Role repository chỉ chi phối push mã, còn Settings thuộc người viết commit."
+        explanation: "Quản trị policy dựa vào role có hiệu lực, không dựa danh tính tác giả commit."
+    correctAnswerId: B
+
+  - id: "github-05-04"
+    question: "PR bị chặn merge bởi ruleset trên nhánh đích; bước đầu theo least privilege là gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05-repository-access.md"
+      anchor: "least-privilege-pitfalls"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Xin bypass Admin trước khi xem rule bắt buộc nào chưa đạt."
+        explanation: "Tăng quyền là quá sớm khi yêu cầu chưa đạt có thể hoàn tất đúng cách."
+      - id: B
+        answer: "Chuyển ruleset của nhánh đích sang Evaluate khi thu thập bằng chứng lỗi."
+        explanation: "Tắt chế độ thực thi là né yêu cầu thay vì sửa PR."
+      - id: C
+        answer: "Rebase feature lên main để ruleset không còn kiểm merge."
+        explanation: "Rebase không xóa các ruleset hiệu lực đối với nhánh đích."
+      - id: D
+        answer: "Xem rule chưa đạt, actor có quyền và bằng chứng."
+        explanation: "Chẩn đoán đúng điều kiện ngăn cấp quyền rộng hoặc bypass không cần thiết."
+    correctAnswerId: D
+
+  - id: "github-06-01"
+    question: "Hai mẫu branch protection cùng khớp main; maintainer xác định bảo vệ hiệu lực thế nào?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06-branch-protection.md"
+      anchor: "branch-protection-rules"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Cộng mọi tùy chọn được tick ở cả hai mẫu thành bộ điều kiện bắt buộc."
+        explanation: "Các mẫu branch protection chồng lấn không tự tích lũy yêu cầu."
+      - id: B
+        answer: "Xem branch protection rule hiệu lực theo thứ tự ưu tiên."
+        explanation: "Các branch protection rule khớp không tự cộng gộp giống rulesets."
+      - id: C
+        answer: "Bỏ qua hai mẫu nếu PR đã có một phiếu Approve."
+        explanation: "Phiếu Approve không thay việc xác định rule bảo vệ có hiệu lực."
+      - id: D
+        answer: "Chỉ áp dụng rule mới cấu hình nhất bất kể thứ tự ưu tiên."
+        explanation: "Cần xét độ khớp và ưu tiên, không chỉ thời điểm tạo rule."
+    correctAnswerId: B
+
+  - id: "github-06-02"
+    question: "Ruleset organization yêu cầu review và ruleset repository yêu cầu check trên main; cần xét điều kiện merge nào?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06-branch-protection.md"
+      anchor: "rulesets-and-overlap"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Chỉ ruleset của repository vì ở phạm vi gần hơn."
+        explanation: "Ruleset organization có hiệu lực vẫn có thể thêm yêu cầu."
+      - id: B
+        answer: "Chỉ ruleset organization vì có ưu tiên tuyệt đối."
+        explanation: "Rulesets ở repo và organization có thể cùng tác động lên một nhánh."
+      - id: C
+        answer: "Ruleset nào báo xanh đầu tiên vì các check sau chỉ tùy chọn."
+        explanation: "Phải kiểm tra từng rule bắt buộc; một tín hiệu xanh chưa đủ."
+      - id: D
+        answer: "Áp dụng mọi ruleset đang Enforced; Evaluate chỉ theo dõi."
+        explanation: "Rulesets có thể chồng lấn cộng dồn; Evaluate có thể chỉ ghi nhận mà không chặn."
+    correctAnswerId: D
+
+  - id: "github-06-03"
+    question: "PR #57 có một phiếu từ reviewer không phải code owner; base yêu cầu hai phiếu và code owner cho `/pricing/`. Đã merge được chưa?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06-branch-protection.md"
+      anchor: "required-pr-review-and-approval"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Chưa; cần phiếu hợp lệ thứ hai và duyệt từ code owner."
+        explanation: "Phải đạt các điều kiện review đã cấu hình, không chỉ có một thẻ Approve."
+      - id: B
+        answer: "Có; một phiếu hợp lệ đáp ứng cả số lượng và code owner."
+        explanation: "Một phiếu không đủ số lượng lớn hơn và điều kiện code owner riêng."
+      - id: C
+        answer: "Có; tác giả head có thể tự thay phiếu duyệt còn thiếu."
+        explanation: "Tự duyệt hay hợp lệ phụ thuộc rule, không mặc định thay phiếu còn thiếu."
+      - id: D
+        answer: "Chưa cho đến khi mọi người ghi trong CODEOWNERS đều Approve."
+        explanation: "Phê duyệt code owner không nhất thiết đòi mọi owner đều bỏ phiếu."
+    correctAnswerId: A
+
+  - id: "github-06-04"
+    question: "Unit-tests xanh nhưng required security-review trên target còn Pending; chẩn đoán merge nào hợp lý?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06-branch-protection.md"
+      anchor: "checks-and-merge-eligibility"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Unit-tests xanh ghi đè mọi check còn Pending của cùng commit."
+        explanation: "Mỗi required check xét riêng, không lấy số đông tín hiệu xanh."
+      - id: B
+        answer: "PR merge được ngay khi bất kỳ reviewer nào gửi Approve."
+        explanation: "Approve không bỏ qua required status checks độc lập."
+      - id: C
+        answer: "Security-review required vẫn Pending; chưa merge được."
+        explanation: "Check xanh khác không thay kết quả required check đã cấu hình."
+      - id: D
+        answer: "Policy nhánh đích chỉ áp dụng sau khi đã tạo Release."
+        explanation: "Required check chi phối điều kiện merge, không phụ thuộc công bố Release."
+    correctAnswerId: C
+
+  - id: "github-06-05"
+    question: "Developer có Write nhưng không push thẳng vào main, vẫn mở PR từ feature được; cần kiểm tra gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06-branch-protection.md"
+      anchor: "push-bypass-and-troubleshooting"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Kiểm phiếu duyệt PR gần nhất vì PR được duyệt sẽ cấp quyền push thẳng."
+        explanation: "PR được duyệt ảnh hưởng quyền merge đề xuất, không cấp quyền push thẳng."
+      - id: B
+        answer: "Hạn chế push của main, rulesets khớp và quyền bypass của đúng actor."
+        explanation: "Write không mặc nhiên vượt hạn chế push của nhánh bảo vệ."
+      - id: C
+        answer: "Kiểm tag Release mới nhất có mở quyền ghi lên nhánh bảo vệ không."
+        explanation: "Tag Release không cho phép cập nhật trực tiếp nhánh được bảo vệ."
+      - id: D
+        answer: "Chỉ xem role Write vì mọi người có Write đều có quyền bypass nhánh như nhau."
+        explanation: "Người có Write có thể khác nhau về quyền bypass và ruleset áp dụng."
+    correctAnswerId: B
+
+  - id: "github-07-01"
+    question: "Nhóm chưa thống nhất cách xử lý giá trị giảm giá âm; nên ghi thảo luận yêu cầu vào đâu trên GitHub?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "07-issues-and-releases.md"
+      anchor: "issues-as-work-items"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Git tag đánh dấu bản đổi công thức cuối và liên kết commit với milestone sản phẩm."
+        explanation: "Tag đặt tên mốc lịch sử, không cung cấp thảo luận yêu cầu."
+      - id: B
+        answer: "Issue có bước tái hiện, hành vi mong đợi và chuỗi thảo luận."
+        explanation: "Issue theo dõi nhu cầu và căn cứ quyết định trước hoặc song song với đề xuất mã."
+      - id: C
+        answer: "Release asset có tên chứa tỷ lệ mong đợi."
+        explanation: "Tệp đính kèm không thay luồng trao đổi và trạng thái Issue."
+      - id: D
+        answer: "Merge commit PR được tạo trước khi nhóm thống nhất hành vi."
+        explanation: "Merge mã trước không chứng minh đã có quyết định nghiệp vụ."
+    correctAnswerId: B
+
+  - id: "github-07-02"
+    question: "Issue #42 được giao An, gắn nhãn bug và milestone 1.4; điều gì được xác lập?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "07-issues-and-releases.md"
+      anchor: "issue-assignees-labels-milestones"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Phụ trách, phân loại và kế hoạch; chưa chứng minh đã sửa xong."
+        explanation: "Metadata Issue tổ chức công việc mà không chứng minh bản sửa đã merge hay phát hành."
+      - id: B
+        answer: "Milestone được xem như tiếp nhận bản sửa dự kiến dù chưa có PR merge."
+        explanation: "Milestone là nhóm kế hoạch, không phải bằng chứng về mã nguồn."
+      - id: C
+        answer: "Giao Issue đồng thời trao An vai trò maintainer trên các thư mục mã liên quan."
+        explanation: "Giao Issue không biến người nhận thành maintainer của đường dẫn source."
+      - id: D
+        answer: "Issues trong milestone 1.4 kế thừa các required PR checks mới nhất."
+        explanation: "Milestone không gán trạng thái required checks của PR sang Issue."
+    correctAnswerId: A
+
+  - id: "github-07-03"
+    question: "PR #57 ghi `Fixes #42` nhưng nhắm release/1.3 thay vì default branch. GitHub xử lý keyword thế nào?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "07-issues-and-releases.md"
+      anchor: "linking-issues-prs"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Nó liên kết Issue #42 ngay nhưng chờ triển khai release mới đóng Issue."
+        explanation: "Keyword bị bỏ qua khi PR nhắm base khác default, nên không tạo liên kết."
+      - id: B
+        answer: "Nó liên kết Issue #42 rồi đóng khi PR merge vào release/1.3."
+        explanation: "Merge vào release/1.3 không kích hoạt việc liên kết hay tự đóng bằng keyword bị bỏ qua."
+      - id: C
+        answer: "Nó liên kết Issue khi PR chuyển Ready dù base khác nhánh mặc định."
+        explanation: "Chuyển Draft sang Ready không bỏ yêu cầu base mặc định của closing keyword."
+      - id: D
+        answer: "Keyword không tạo link hoặc tự đóng Issue với base này."
+        explanation: "Keyword đóng Issue trong mô tả PR chỉ áp dụng khi target là default branch; liên kết thủ công là thao tác khác."
+    correctAnswerId: D
+
+  - id: "github-07-04"
+    question: "Maintainer tạo Git tag v1.4.0 trên một commit; trước khi công bố GitHub Release đã có gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "07-issues-and-releases.md"
+      anchor: "git-tags-vs-github-releases"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Trang Release đã công bố với notes và assets theo mặc định."
+        explanation: "Chỉ tạo tag chưa công bố trang GitHub Release."
+      - id: B
+        answer: "Production đã tự chạy commit của tag vừa tạo."
+        explanation: "Tag không tự kích hoạt hoặc chứng minh triển khai."
+      - id: C
+        answer: "Một mốc Git có tên, chưa chắc đã công bố Release."
+        explanation: "Tag và GitHub Release là hai đối tượng có trách nhiệm riêng."
+      - id: D
+        answer: "PR đã Completed và Issue liên kết tự Closed."
+        explanation: "Tạo tag độc lập với merge PR và trạng thái Issue."
+    correctAnswerId: C
+
+  - id: "github-07-05"
+    question: "GitHub Release v1.4.0 có ghi chú, ZIP gói cài đặt và source archive tự tạo; kết luận nào có cơ sở?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "07-issues-and-releases.md"
+      anchor: "release-notes-and-assets"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "ZIP là binary đang chạy ở mọi môi trường vì dùng chung release tag."
+        explanation: "Artifact tải được và runtime đã deploy cần bằng chứng riêng."
+      - id: B
+        answer: "Bản công bố có mô tả và tệp tải về; cần xác minh triển khai riêng."
+        explanation: "Công bố Release và người dùng đang chạy phiên bản là hai bằng chứng khác nhau."
+      - id: C
+        answer: "ZIP được maintainer tải lên được bảo đảm build từ mã nguồn của tag."
+        explanation: "Asset được maintainer tải lên không tự được sinh hoặc kiểm chứng từ tag."
+      - id: D
+        answer: "Trang Release chứng minh checks bắt buộc đã qua trên revision gắn tag."
+        explanation: "Xuất bản ghi chú Release không tự chứng thực toàn bộ checks build/runtime."
+    correctAnswerId: B
+
+  - id: "github-08-01"
+    question: "Issue #42 mô tả lỗi làm tròn; chuỗi nào tạo bằng chứng có căn cứ rằng bản sửa đã vào main?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "08-team-workflow.md"
+      anchor: "issue-to-pr-to-merge"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Xem trạng thái Closed của Issue là bằng chứng, rồi tìm PR sau khi ghi Release notes."
+        explanation: "Đóng Issue hoặc tạo tag không đưa commit vào main."
+      - id: B
+        answer: "Push thẳng commit feature đã review vào main rồi kiểm trong lịch sử commit."
+        explanation: "Push thẳng có thể trái policy và thiếu cổng đánh giá PR."
+      - id: C
+        answer: "Tạo feature, PR vào main, review/check và xác minh PR Merged trên target."
+        explanation: "Quy trình nối nhu cầu, đề xuất, điều kiện chấp nhận và bằng chứng tích hợp."
+      - id: D
+        answer: "Mở Draft PR có ảnh test rồi suy ra đã xong khi checks chuyển xanh."
+        explanation: "Draft là đề xuất, chưa phải bằng chứng phê duyệt hay merge."
+    correctAnswerId: C
+
+  - id: "github-08-02"
+    question: "PR không thể mời nhóm payments bắt buộc vì nhóm thiếu quyền repository phù hợp; cách xử lý hẹp nhất là gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "08-team-workflow.md"
+      anchor: "review-and-access-blockers"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Nâng tác giả PR lên Admin để mọi yêu cầu review biến mất."
+        explanation: "Admin cho tác giả rộng hơn nhu cầu hợp lệ hóa reviewer và không mặc nhiên tắt rule."
+      - id: B
+        answer: "Kiểm tra CODEOWNERS ở base cùng quyền và visibility của team."
+        explanation: "Điều hướng code owner phụ thuộc quyền team hợp lệ và cấu hình đang có hiệu lực."
+      - id: C
+        answer: "Đổi repository thành Public để mọi team đều có thể review."
+        explanation: "Cho xem public không tự cấp quyền code owner/reviewer bắt buộc."
+      - id: D
+        answer: "Merge bản sửa CODEOWNERS ở head mà không kiểm tra nhánh đích."
+        explanation: "Cơ chế match hiện tại lấy từ base, chỉ sửa head chưa đủ căn cứ."
+    correctAnswerId: B
+
+  - id: "github-08-03"
+    question: "PR #57 đã có Approve và unit-tests xanh nhưng sau commit mới vẫn không merge; chẩn đoán nào hợp lý?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "08-team-workflow.md"
+      anchor: "protection-and-check-blockers"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Tái dùng check xanh trước vì cả hai revision thuộc PR #57."
+        explanation: "Required check phải xét trên commit và nguồn báo cáo liên quan."
+      - id: B
+        answer: "Xem approval cũ là bằng chứng head mới đã đạt mọi điều kiện bắt buộc."
+        explanation: "Approve không vượt các rulesets đang có hiệu lực cộng dồn."
+      - id: C
+        answer: "Nới rule required checks cho PR sau khi xác nhận unit test vẫn xanh."
+        explanation: "Một kết quả test không bảo đảm toàn bộ nghiệp vụ hay đủ lý do gỡ bảo vệ."
+      - id: D
+        answer: "Kiểm checks của PR mới hoặc test merge, hiệu lực review và rules đang áp dụng."
+        explanation: "Commit mới có thể làm đổi trạng thái check hoặc hiệu lực review; phải xét lại rule đang có."
+    correctAnswerId: D
+
+  - id: "github-08-04"
+    question: "PR #57 đã Merged, Issue đã Closed nhưng không có GitHub Release; báo cáo nào chính xác?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "08-team-workflow.md"
+      anchor: "verify-accepted-change-and-release"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Thay đổi đã merge và Issue đã đóng; chưa có bằng chứng công bố Release."
+        explanation: "Merge PR, trạng thái Issue và công bố Release là các bằng chứng độc lập."
+      - id: B
+        answer: "Bản sửa có trên default branch nên deployment sẽ theo ngay sự kiện merge."
+        explanation: "Merge vào lịch sử mã không tự deploy artifact runtime mới."
+      - id: C
+        answer: "PR đã merge tự tạo mục Draft Release cho version kế tiếp."
+        explanation: "Merge không tự công bố GitHub Release."
+      - id: D
+        answer: "Bản sửa còn chỉ ở PR head đến khi release tag trỏ tới commit."
+        explanation: "PR đã merge có thể đưa mã vào main trước khi có Release."
+    correctAnswerId: A
+
+  - id: "github-08-05"
+    question: "PR đã Merged nhưng production vẫn chạy hành vi cũ; nên kiểm tra lớp trách nhiệm nào tiếp?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "08-team-workflow.md"
+      anchor: "handoffs-to-git-policy-ci"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Kiểm branch protection trước vì PR đã merge vẫn có thể chứa bản sửa chưa review."
+        explanation: "Policy merge không phải bằng chứng chính cho việc đã triển khai."
+      - id: B
+        answer: "Xem mapping milestone với Release để biết bản sửa đã đến runtime chưa."
+        explanation: "Milestone tổ chức công việc, không thực hiện triển khai."
+      - id: C
+        answer: "Bằng chứng build và triển khai CI/CD, đồng thời giữ hồ sơ merge GitHub."
+        explanation: "GitHub ghi nhận tiếp nhận mã; pipeline delivery quyết định phiên bản được triển khai."
+      - id: D
+        answer: "So timestamp tác giả với nhãn version production để suy ra thứ tự commit đã deploy."
+        explanation: "Thời điểm commit không cho biết artifact nào đang chạy tại production."
+    correctAnswerId: C

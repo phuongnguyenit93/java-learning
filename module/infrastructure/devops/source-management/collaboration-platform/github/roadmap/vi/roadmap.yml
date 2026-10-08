@@ -41,4 +41,83 @@
 # Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: github-collaboration-model
+    relatedKnowledge:
+      - "01-github-foundations"
+    title: "GitHub trong quy trình cộng tác phát triển phần mềm"
+    purpose: "Hiểu vì sao nhóm phát triển cần một nền tảng lưu trữ mã nguồn và phối hợp thay đổi trên nền Git."
+    objectives:
+      - "Phân biệt lịch sử và thao tác phiên bản do Git quản lý với các khả năng lưu trữ, thảo luận và kiểm soát thay đổi do GitHub cung cấp."
+      - "Hình dung mối liên hệ giữa repository, người đóng góp, pull request, người đánh giá và các quy tắc tiếp nhận thay đổi."
+      - "Nhận biết ranh giới giữa cộng tác trên GitHub với cách Git vận hành, chiến lược nhánh và việc triển khai CI/CD."
+
+  - id: github-repository-hosting
+    relatedKnowledge:
+      - "02-repository-hosting"
+    title: "Repository trên GitHub và phạm vi truy cập"
+    purpose: "Biết cách một repository được sở hữu, chia sẻ và công bố để chọn điểm bắt đầu phù hợp cho cá nhân hoặc nhóm."
+    objectives:
+      - "Phân biệt repository thuộc tài khoản cá nhân và tổ chức, cùng trách nhiệm của chủ sở hữu và người cộng tác."
+      - "Giải thích tác động của chế độ hiển thị công khai, riêng tư hoặc nội bộ khi gói dịch vụ hỗ trợ."
+      - "Nhận diện các thiết lập và thông tin ở cấp GitHub repository ảnh hưởng đến việc khám phá, truy cập và đóng góp."
+
+  - id: github-contribution-paths
+    relatedKnowledge:
+      - "03-contribution-paths"
+    title: "Đóng góp qua repository chung và fork"
+    purpose: "Hiểu cách gửi một thay đổi đến repository được quản lý thông qua các đường đóng góp GitHub hỗ trợ."
+    objectives:
+      - "So sánh mô hình cùng làm việc trong một repository với mô hình fork và gửi đóng góp về repository gốc."
+      - "Phân biệt fork là repository riêng trên GitHub với nhánh nằm trong một repository."
+      - "Xác định repository và nhánh nguồn/đích của pull request, cũng như khi nào dùng pull request nháp trước lúc yêu cầu đánh giá."
+
+  - id: github-pull-request-review
+    relatedKnowledge:
+      - "04-pull-request-reviews"
+    title: "Trao đổi, đánh giá và hoàn tất pull request"
+    purpose: "Biết cách nhóm xem xét chất lượng và đưa ra quyết định đối với một thay đổi được đề xuất trên GitHub."
+    objectives:
+      - "Đọc được ngữ cảnh của pull request: mô tả, khác biệt mã nguồn, bình luận, người đánh giá và trạng thái kiểm tra."
+      - "Phân biệt nhận xét, chấp thuận và yêu cầu sửa; biết cách phản hồi, cập nhật thay đổi và yêu cầu đánh giá lại."
+      - "Hiểu cách yêu cầu người đánh giá, nhóm đánh giá và CODEOWNERS định tuyến pull request; phân biệt yêu cầu đánh giá tự động với điều kiện bắt buộc phải có phê duyệt khi bảo vệ nhánh được cấu hình."
+
+  - id: github-access-and-teams
+    relatedKnowledge:
+      - "05-repository-access"
+    title: "Quyền repository và cộng tác trong tổ chức"
+    purpose: "Biết cách phân quyền cho thành viên và nhóm để tổ chức cộng tác mà vẫn kiểm soát được trách nhiệm."
+    objectives:
+      - "Phân biệt các vai trò Read, Triage, Write, Maintain và Admin theo mức quyền cần thiết cho công việc."
+      - "Giải thích cách tổ chức, nhóm và người cộng tác bên ngoài nhận quyền truy cập vào repository."
+      - "Nhận biết tình huống thiếu quyền hoặc cấp quyền quá rộng khi mời người đóng góp, phân công đánh giá và quản lý repository."
+
+  - id: github-repository-protection
+    relatedKnowledge:
+      - "06-branch-protection"
+    title: "Bảo vệ nhánh và kiểm soát điều kiện hợp nhất"
+    purpose: "Hiểu cách GitHub thực thi các điều kiện tiếp nhận thay đổi để bảo vệ các nhánh quan trọng."
+    objectives:
+      - "Phân biệt branch protection (mỗi nhánh chỉ khớp một quy tắc bảo vệ) với các ruleset có thể cùng áp dụng; nhận biết phạm vi và giới hạn phụ thuộc gói dịch vụ."
+      - "Liên hệ yêu cầu pull request, phê duyệt đánh giá và kiểm tra trạng thái với khả năng hợp nhất một thay đổi."
+      - "Nhận diện các chướng ngại thường gặp như thiếu phê duyệt, kiểm tra chưa đạt, hạn chế đẩy trực tiếp hoặc ngoại lệ quyền thực thi quy tắc."
+
+  - id: github-issues-and-releases
+    relatedKnowledge:
+      - "07-issues-and-releases"
+    title: "Theo dõi công việc và công bố phiên bản trên GitHub"
+    purpose: "Kết nối thảo luận về công việc với thay đổi mã nguồn và thông tin phát hành ở cấp repository."
+    objectives:
+      - "Sử dụng tư duy quản lý Issues để diễn đạt lỗi, yêu cầu, phân công, nhãn và cột mốc; liên hệ công việc với pull request."
+      - "Phân biệt Git tag với GitHub Release, ghi chú phát hành và tệp đính kèm của một bản phát hành."
+      - "Nhận biết giới hạn của GitHub Issues/Releases đối với phương pháp quản lý dự án và quy trình tạo, đánh số hoặc triển khai bản phát hành."
+
+  - id: github-team-workflow
+    relatedKnowledge:
+      - "08-team-workflow"
+    title: "Vận dụng quy trình cộng tác GitHub từ đầu đến cuối"
+    purpose: "Tổng hợp khả năng lưu trữ, đóng góp, đánh giá, phân quyền và kiểm soát để xử lý một thay đổi của nhóm."
+    objectives:
+      - "Phác họa luồng từ Issue đến đóng góp qua fork hoặc repository chung, mở pull request, nhận đánh giá và hợp nhất khi đủ điều kiện."
+      - "Chẩn đoán được thay đổi bị chặn vì quyền truy cập, yêu cầu đánh giá hay quy tắc bảo vệ và xác định nơi cần xử lý trên GitHub."
+      - "Liên hệ một thay đổi đã được chấp nhận với thông tin Release, đồng thời biết khi nào cần chuyển sang Git, chiến lược nhánh hoặc CI/CD để học sâu hơn."
