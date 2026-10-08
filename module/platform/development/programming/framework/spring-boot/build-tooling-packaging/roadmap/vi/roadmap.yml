@@ -41,4 +41,105 @@
 # Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: build-tooling-purpose-and-boundary
+    title: "Vì sao Spring Boot tích hợp build và packaging"
+    purpose: "Hiểu vai trò của build tooling trong Spring Boot như cầu nối giữa một build JVM thông thường và một ứng dụng Boot có thể chạy, đóng gói và bàn giao, nhưng không biến module này thành khóa học Gradle, Maven, Docker hay CI/CD tổng quát."
+    objectives:
+      - "Giải thích các build plugin của Spring Boot hỗ trợ việc chạy ứng dụng, đóng gói và tạo image như thế nào, đồng thời hiểu spring-boot-dependencies cung cấp tập phiên bản nền để Gradle/Maven căn chỉnh dependency qua cơ chế riêng của từng build tool."
+      - "Phân biệt phần tích hợp build riêng của Boot với kiến thức build-tool tổng quát vẫn thuộc curriculum Gradle hoặc Maven."
+      - "Nhận biết ranh giới bàn giao từ artifact/image do Boot tạo sang hạ tầng triển khai thay vì coi orchestration triển khai là trách nhiệm của Boot build tooling."
+    relatedKnowledge:
+      - Purpose
+    relatedModules:
+      - routeId: SPRING_BOOT_FUNDAMENTALS
+        label: "Spring Boot Fundamentals"
+        note: "Giới thiệu starter, mô hình ứng dụng chạy được và packaging ở mức tổng quan; module này mở rộng chúng thành workflow build cụ thể."
+
+  - id: plugins-and-dependency-alignment
+    title: "Build plugin và căn chỉnh dependency"
+    purpose: "Xây mô hình thực tế về cách áp dụng tích hợp Gradle/Maven của Spring Boot và giữ một tập dependency tương thích thông qua các version do Boot quản lý."
+    objectives:
+      - "Hiểu vai trò của org.springframework.boot Gradle plugin và spring-boot-maven-plugin mà không học lại cơ chế nền tảng của Gradle hoặc Maven."
+      - "Hiểu spring-boot-dependencies như baseline dependency được Boot tuyển chọn, đồng thời phân biệt Maven parent, import BOM và các cách dùng dependency-management/platform phía Gradle."
+      - "Nhận biết đánh đổi giữa việc chấp nhận version do Boot quản lý và chủ động override một dependency khi chính ứng dụng phải chịu trách nhiệm tương thích."
+    relatedKnowledge:
+      - BuildPlugins
+      - DependencyManagement
+
+  - id: development-run-workflow
+    title: "Chạy ứng dụng trong lúc phát triển bằng build tool"
+    purpose: "Hiểu cách Spring Boot hỗ trợ chạy ứng dụng trực tiếp từ kết quả build trong lúc phát triển, qua đó phân biệt cách chạy này với việc thực thi artifact đã đóng gói."
+    objectives:
+      - "Dùng bootRun hoặc goal run của Maven plugin như cơ chế khởi chạy do Spring Boot hỗ trợ trong quá trình phát triển."
+      - "Hiểu task chạy của build tool chỉ cấu hình cách khởi động ứng dụng, không thay thế vòng đời SpringApplication vốn thuộc application-runtime."
+      - "Biết khi nào nên dùng task chạy của build tool và khi nào cần kiểm chứng chính artifact đã đóng gói bằng java -jar."
+    relatedKnowledge:
+      - BootRun
+    relatedModules:
+      - routeId: SPRING_BOOT_APPLICATION_RUNTIME
+        label: "Spring Boot Application Runtime"
+        note: "Sở hữu hành vi bên trong vòng đời ứng dụng sau khi build tool hoặc artifact đã đóng gói khởi động tiến trình."
+
+  - id: executable-archive-model
+    title: "Đóng gói JAR/WAR thực thi và Spring Boot Loader"
+    purpose: "Hiểu cách Boot đóng gói application classes cùng dependencies thành executable archive và vì sao layout nested archive của Boot khác với cách tạo một uber JAR bị flatten theo kiểu truyền thống."
+    objectives:
+      - "Hiểu bootJar/bootWar và Maven repackage là các cơ chế chính để tạo executable archive."
+      - "Nhận biết layout BOOT-INF/classes, BOOT-INF/lib của executable JAR và mô hình tương ứng của executable WAR."
+      - "Giải thích ở mức dành cho learner vì sao Spring Boot Loader cần thiết để khởi chạy classes cùng các dependency JAR lồng bên trong."
+      - "Phân biệt executable archive với library artifact thông thường và hiểu khi nào deployable WAR vẫn phù hợp."
+    relatedKnowledge:
+      - BootJarBootWar
+      - ExecutableArchives
+
+  - id: layered-and-reproducible-packaging
+    title: "Đóng gói theo layer và khả năng tái lập"
+    purpose: "Hiểu các khả năng packaging giúp artifact của Boot thân thiện hơn với cache và dễ dự đoán hơn khi bàn giao, nhưng không đi lệch sang công cụ container hay supply-chain tổng quát."
+    objectives:
+      - "Hiểu metadata của layered JAR/WAR tách dependencies, loader content, snapshot dependencies và application content để tăng khả năng tái sử dụng."
+      - "Suy luận vì sao thứ tự layer nên đặt nội dung ít thay đổi trước application content."
+      - "Nhận biết các mối quan tâm về reproducible build như archive content, ordering và timestamps ổn định là chất lượng packaging chứ không phải hành vi runtime của ứng dụng."
+      - "Hiểu archive layering chuẩn bị nội dung cho việc tạo image hiệu quả nhưng tự nó không định nghĩa hành vi của container runtime."
+    relatedKnowledge:
+      - LayeredArchives
+      - ReproducibleBuilds
+
+  - id: oci-images-with-buildpacks
+    title: "Tạo OCI image bằng Cloud Native Buildpacks"
+    purpose: "Hiểu tích hợp Buildpacks của Spring Boot như một đường do Boot quản lý từ build output của ứng dụng tới OCI image, bao gồm mô hình builder/run image và các điều kiện vận hành của image task."
+    objectives:
+      - "Dùng bootBuildImage hoặc Maven build-image goal như các điểm tích hợp Cloud Native Buildpacks riêng của Boot."
+      - "Hiểu ở mức thực hành vai trò của builder image, buildpacks, run image, layers, caches và thiết lập publish image."
+      - "Nhận biết workflow tạo image cần truy cập container daemon hoặc kết nối được hỗ trợ và có thể tùy chỉnh mà không cần học Docker internals tổng quát trong module này."
+      - "Giữ semantics của native image ngoài milestone này dù Buildpacks cũng có thể tham gia quá trình tạo native image."
+    relatedKnowledge:
+      - Buildpacks
+      - OciImages
+    relatedModules:
+      - routeId: SPRING_BOOT_NATIVE_IMAGE
+        label: "Spring Boot Native Image"
+        note: "Sở hữu AOT, GraalVM, closed-world behavior, runtime hints và semantics của native image; module này chỉ sở hữu phần build invocation dùng để hỗ trợ quá trình đó."
+
+  - id: packaging-and-image-strategy
+    title: "Chọn chiến lược artifact và image"
+    purpose: "Đưa ra lựa chọn có chủ đích giữa executable JAR/WAR, layered artifact, image dựa trên Dockerfile và tích hợp Buildpacks của Boot dựa trên môi trường bàn giao và ranh giới trách nhiệm."
+    objectives:
+      - "So sánh chạy executable archive trực tiếp với đưa Boot artifact vào container image."
+      - "So sánh custom Dockerfile với Cloud Native Buildpacks theo mức kiểm soát cần thiết, tính chuẩn hóa, khả năng cache và trách nhiệm bảo trì."
+      - "Nhận biết khi nào executable WAR, executable JAR, unpacked archive hoặc OCI image là artifact bàn giao phù hợp."
+      - "Bàn giao kiến thức tạo image tổng quát, registry, vận hành container runtime, CI/CD và chiến lược deployment cho các phần kiến thức hạ tầng tương ứng."
+    relatedKnowledge:
+      - DockerBuildStrategy
+      - DeploymentHandoff
+
+  - id: build-packaging-synthesis
+    title: "Tổng hợp luồng build và packaging end-to-end"
+    purpose: "Kết nối toàn bộ đường build của Boot từ căn chỉnh dependency và chạy cục bộ qua executable packaging, layering, image creation đến điểm bàn giao cuối cho hạ tầng triển khai."
+    objectives:
+      - "Theo dõi cùng một ứng dụng từ cấu hình mã nguồn/build đến tiến trình chạy trong lúc phát triển, executable archive và tùy chọn OCI image."
+      - "Chẩn đoán một vấn đề thuộc plugin/dependency setup, archive packaging/loader layout, layering, buildpack image creation hay hạ tầng deployment phía sau."
+      - "Giải thích ranh giới giữa JVM packaging thông thường và phần học AOT/native-image riêng."
+      - "Chọn workflow build/package của Boot trong khi vẫn giữ kiến thức nền về build system, container internals và vận hành triển khai ở đúng module sở hữu."
+    relatedKnowledge:
+      - DeploymentHandoff

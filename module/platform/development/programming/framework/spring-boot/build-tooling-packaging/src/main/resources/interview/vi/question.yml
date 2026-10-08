@@ -27,4 +27,135 @@
 #         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
 # </interview-schema>
 
-questions: []
+questions:
+  - question: "Một đồng đội cho rằng chỉ cần áp dụng Spring Boot Gradle hoặc Maven plugin thì Spring Boot sẽ sở hữu luôn compilation, repository, dependency resolution và mọi vấn đề build khác. Bạn sẽ sửa mental model đó thế nào, và nó thay đổi cách chẩn đoán một build bị lỗi ra sao?"
+    answer: "Gradle hoặc Maven vẫn là build engine: chúng sở hữu project model, compilation, truy cập repository, dependency resolution, task hoặc lifecycle execution và các hành vi build tổng quát. Spring Boot tích hợp vào build engine đó rồi bổ sung các thao tác hiểu Boot như chạy ứng dụng khi phát triển, đóng gói executable archive và tạo OCI image. Quy tắc chẩn đoán thực tế là hỏi xem lỗi tương tự có thể xảy ra trong một Java project không dùng Boot hay không. Repository authentication, compiler setup hoặc dependency graph bị hỏng nên được điều tra trước ở lớp build tool; còn lỗi liên quan bootJar, repackage, BOOT-INF hoặc bootBuildImage thì hướng mạnh hơn tới Boot integration. Ranh giới này ngăn việc biến Boot plugin thành lời giải thích chung cho những lỗi thực sự phát sinh từ build system bên dưới."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Purpose/Purpose.md"
+      anchor: "build-tooling-purpose"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Gradle và Maven đều có thể chạy và đóng gói một ứng dụng Spring Boot, nhưng model plugin của chúng khác nhau. Bạn sẽ giải thích ý định chung thế nào mà không coi hai integration là giống hệt bên trong, và vì sao khác biệt đó quan trọng khi troubleshooting?"
+    answer: "Cả hai integration đều nhắm tới cùng các kết quả Boot: chạy ứng dụng cho phát triển, tạo executable archive và tùy chọn tạo OCI image. Gradle diễn đạt các kết quả đó bằng task như bootRun, bootJar, bootWar và bootBuildImage tham gia vào Gradle task model; Maven cung cấp các goal như run, repackage và build-image tham gia vào lifecycle và goal model của Maven. Mental model đúng là một Boot application model được adapter vào hai build system khác nhau. Vì vậy troubleshooting phải theo cơ chế của công cụ đã chọn: task wiring và source set là mối quan tâm của Gradle, còn lifecycle execution và Maven plugin configuration thuộc Maven. Ép chúng thành ánh xạ cú pháp một-một sẽ che mất subsystem thực sự sở hữu lỗi."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.BuildPlugins/BuildPlugins.md"
+      anchor: "plugin-choice-boundary"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Một nhóm ghi đè version của dependency đang được Spring Boot quản lý để vá lỗ hổng bảo mật. Hãy giải thích trách nhiệm mà nhóm nhận thêm, cơ chế override khác nhau giữa các hướng dependency management ra sao, và bạn cần bằng chứng gì trước khi giữ override đó."
+    answer: "Các managed version của Boot là một compatibility baseline đã được kiểm thử, nên khi override một version thì project nhận trách nhiệm xác minh tổ hợp mới. Nhóm cần chứng minh vì sao deviation là cần thiết, các library liên quan có phải nâng đồng bộ hay không, các giả định của Boot hoặc auto-configuration còn đúng hay không, và integration test có bao phủ đường đi bị ảnh hưởng hay không. Với io.spring.dependency-management, một dependency family thường có thể được tùy biến thông qua model dependency-management và version property của nó; với Gradle native platform support, project nên dùng constraint hoặc resolution mechanism của chính Gradle. Nhóm cũng nên ghi rõ điều kiện loại bỏ override, vì một ngoại lệ tạm thời cho security có thể âm thầm trở thành maintenance debt lâu dài. Việc dependency resolve thành công chưa đủ; vẫn cần kiểm chứng compatibility ở runtime và integration."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.DependencyManagement/DependencyManagement.md"
+      anchor: "managed-version-override"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Vì sao bootRun hoặc spring-boot:run có thể chạy thành công trong khi artifact chuẩn bị release vẫn bị hỏng? Hãy mô tả bằng chứng mà mỗi cách chạy cung cấp và nêu một pitfall cụ thể chỉ có thể lộ ra khi chạy artifact đã đóng gói."
+    answer: "Build-tool run khởi động từ compiled output cùng development runtime classpath, nên thành công chỉ chứng minh ứng dụng có thể chạy từ build model hiện tại do Gradle hoặc Maven lắp ráp. Nó không chứng minh final archive có manifest đúng, main-class metadata đúng, nested dependency layout đúng hoặc Boot Loader configuration đúng. Việc build executable artifact rồi chạy chính JAR đó bằng java -jar sẽ kiểm tra boundary thứ hai này. Một pitfall cụ thể là development-only dependency có mặt trong bootRun nhưng bị loại khỏi production archive theo chủ đích; local development launch vẫn có thể chạy trong khi packaged application thất bại vì component đó không hề được đóng gói. Vì vậy release validation nên xem packaged artifact là một test subject riêng."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.BootRun/BootRun.md"
+      anchor: "build-tool-run-vs-packaged-run"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Một project tạo cả plain JAR và Spring Boot executable JAR. Vì sao hai artifact này không thể thay thế lẫn nhau, và vấn đề thiết kế hoặc publishing nào có thể xuất hiện nếu ranh giới giữa chúng bị để mơ hồ?"
+    answer: "Plain library JAR được thiết kế để nằm trên classpath của một ứng dụng khác, còn Boot executable archive là application delivery unit có application class, nested runtime dependency và launcher metadata để chạy bằng java -jar. Dùng executable Boot archive như một library thông thường có thể làm consumer khó hiểu vì dependency layout của nó tối ưu cho launch chứ không phải classpath reuse. Ngược lại, publish cả hai output dưới tên hoặc classifier mơ hồ có thể khiến CI, repository hoặc downstream consumer chọn nhầm artifact. Build nên thể hiện ownership rõ ràng: output nào là runnable application, output nào là reusable library nếu thực sự cần, rồi cấu hình classifier hoặc publication coordinate để ranh giới luôn nhìn thấy được. Điều này đặc biệt quan trọng với multi-purpose project nơi application delivery và library publication là hai contract riêng."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.BootJarBootWar/BootJarBootWar.md"
+      anchor: "executable-vs-plain-archive"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Một executable Boot JAR lỗi trước khi SpringApplication bắt đầu vì không tìm thấy một packaged class. Hãy giải thích vì sao Spring Boot Loader nằm trong hướng chẩn đoán, nested JAR thay đổi hành vi java -jar thông thường ra sao, và nên dừng ở ranh giới nào trước khi điều tra Spring bean."
+    answer: "Hành vi java -jar thông thường của JVM không tự động biến các JAR lồng bên trong một JAR khác thành application classpath. Spring Boot Loader hiểu executable archive layout của Boot, dựng effective classpath từ BOOT-INF hoặc các vị trí đóng gói tương ứng rồi mới gọi application main class đã cấu hình. Nếu launcher không tìm thấy packaged class hoặc nested dependency, trước hết hãy kiểm tra manifest, archive layout, nested library, classpath metadata và loader configuration. SpringApplication cùng ApplicationContext chưa bắt đầu, nên bean creation hoặc auto-configuration diagnostics còn quá sớm. Checkpoint hữu ích là Boot launcher đã gọi được Start-Class của ứng dụng hay chưa; chỉ các lỗi sau handoff đó mới thuộc lớp application bootstrap."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.ExecutableArchives/ExecutableArchives.md"
+      anchor: "spring-boot-loader-purpose"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Một nhóm đã bật Spring Boot layered archive nhưng container build vẫn invalidate gần như mọi layer sau một thay đổi code nhỏ. Vì sao archive layering tự nó không bảo đảm cache reuse, và bạn sẽ quyết định khi nào custom layer thực sự đáng làm thế nào?"
+    answer: "Layer metadata của Boot nhóm nội dung archive theo tần suất thay đổi dự kiến, nhưng downstream image tooling phải thực sự giữ và tiêu thụ các boundary đó thì cache mới được lợi. Nếu Dockerfile copy toàn bộ executable JAR như một file opaque vào một image layer duy nhất, archive dù được chia logical layer vẫn cho khả năng image-layer reuse rất kém. Vì vậy bước kiểm tra đầu tiên là image build có extract hoặc ánh xạ các logical group của Boot thành reusable image layer hay không. Chỉ nên custom layering khi giả định mặc định không khớp với pattern thay đổi đã quan sát, chẳng hạn các internal module lớn thay đổi với nhịp khác application code. Hãy thêm custom rule sau khi đo cache behavior, giữ layer order đầy đủ và tránh tạo quá nhiều layer chỉ để phản chiếu source package mà không đem lại lợi ích delivery."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.LayeredArchives/LayeredArchives.md"
+      anchor: "layer-order-and-cache"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Hai lần chạy CI dùng cùng source revision và cùng dependency version nhưng hash của Boot JAR khác nhau. Vì sao 'cùng source' chưa đủ để khẳng định reproducibility, và bạn sẽ điều tra theo hướng nào trước khi kết luận packaging không reproducible?"
+    answer: "Reproducibility phụ thuộc vào toàn bộ build input graph chứ không chỉ Git revision. Archive entry order, timestamp, generated resource, build-info hoặc Git metadata, toolchain version, plugin configuration, dependency artifact, locale hoặc time-zone sensitive step và các filesystem input khác đều có thể làm byte thay đổi dù source code không đổi. Trước hết hãy xác nhận cùng declared input và toolchain, sau đó so sánh archive entry list, dependency version, manifest data, timestamp và generated resource trước khi so final hash. Boot archive task có thể tham gia vào deterministic ordering và timestamp control, nhưng không thể tự làm cho generated input không xác định trở nên reproducible. Project phải định nghĩa rõ contract là logical equivalence hay byte-for-byte identity rồi kiểm chứng toàn bộ pipeline theo contract đó."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.ReproducibleBuilds/ReproducibleBuilds.md"
+      anchor: "reproducibility-expectation"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Trong một Buildpacks image build, bước detection thất bại trước khi bất kỳ application process nào được chạy. Bạn sẽ giải thích vai trò của builder, buildpack và run image thế nào, và lifecycle có thứ tự giúp tránh debug sai subsystem ra sao?"
+    answer: "Builder image cung cấp build environment, lifecycle và các buildpack khả dụng; từng buildpack phát hiện nhu cầu của ứng dụng rồi đóng góp build/runtime layer; run image cung cấp base runtime filesystem cho final application image. Lifecycle có thứ tự rõ ràng: analyze prior state, detect buildpack phù hợp, restore reusable layer, build application cùng runtime layer rồi export OCI image. Detection failure nghĩa là workflow chưa hề tới application runtime, nên thay SpringApplication property hầu như không giúp gì. Thay vào đó hãy kiểm tra builder đã chọn, tập buildpack khả dụng, application input và detection log. Nếu lỗi xảy ra muộn hơn ở export hoặc publication, hãy chuyển điều tra sang daemon, registry, credential hoặc image-output concern thay vì coi mọi Buildpacks failure là cùng một loại."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "9.Buildpacks/Buildpacks.md"
+      anchor: "buildpack-lifecycle-boundary"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "bootJar chạy thành công trong CI nhưng bootBuildImage không tạo được image. Hãy giải thích vì sao điều đó không trỏ trước hết tới SpringApplication, và bạn sẽ tách container-engine, builder-network và registry failure khi chẩn đoán như thế nào."
+    answer: "bootJar thành công đã chứng minh dependency resolution, compilation và executable packaging đi qua một boundary muộn hơn các lỗi source build thông thường. bootBuildImage bổ sung một prerequisite mới: Boot plugin phải kết nối được tới container engine được hỗ trợ để builder và lifecycle có thể chạy. Từ đó hãy tách ba connection thay vì coi là một network problem: build tool phải tới được Docker daemon hoặc compatible engine, builder container có thể cần outbound access tới nguồn dependency, và image task có thể cần registry access để pull hoặc publish. Bằng chứng của từng connection nên quyết định bước tiếp theo vì proxy hoặc credential fix cho một đường có thể hoàn toàn không tác động tới đường khác. SpringApplication startup không phải nghi phạm đầu tiên vì application process còn chưa được launch."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "10.OciImages/OciImages.md"
+      anchor: "image-builder-connection"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Bạn sẽ chọn Buildpacks hay Dockerfile cho một platform có nhiều Spring Boot service như thế nào? Hãy phân tích control, standardization, security update và ownership của tổ chức mà mỗi lựa chọn kéo theo."
+    answer: "Buildpacks phù hợp khi tổ chức muốn một application-to-image path chuẩn hóa, Java convention dùng chung, builder hoặc run image được quản lý tập trung và giảm maintenance recipe theo từng service. Dockerfile phù hợp hơn khi một service thực sự cần low-level control rõ ràng đối với base-image policy, filesystem step, OS package hoặc process composition. Trade-off cũng mang tính tổ chức: cập nhật managed builder có thể đưa một security hoặc JDK change tới nhiều service, còn mô hình Dockerfile-per-service thường yêu cầu từng repository cập nhật base image đã pin và rebuild riêng. Custom builder hoặc buildpack đôi khi có thể đáp ứng yêu cầu chung của tổ chức mà không bắt mọi application sở hữu Dockerfile. Hãy chọn dựa trên ai nên sở hữu image policy và maintenance lâu dài, thay vì chỉ dựa trên cú pháp mà nhóm đã quen."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "11.DockerBuildStrategy/DockerBuildStrategy.md"
+      anchor: "control-standardization-maintenance"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Release pipeline build và chạy executable JAR thành công, sau đó tạo OCI image cũng thành công, nhưng production lại chạy sai image digest. Bạn sẽ phân loại lỗi bằng boundary thành công gần nhất thế nào, và thiết kế handoff nào giúp loại incident này dễ chẩn đoán hơn?"
+    answer: "JAR thành công chứng minh ứng dụng có thể được đóng gói và launch, còn OCI build thành công chứng minh image-construction boundary cũng đã hoàn tất. Nếu production chạy digest khác, failure còn lại nằm ở artifact promotion, registry/tag handling hoặc deployment selection chứ không phải Boot packaging hay SpringApplication startup. Build nên ghi lại immutable JAR checksum hoặc image digest mà nó tạo ra, và deployment nên promote đúng unit đó thay vì rebuild hoặc chỉ dựa vào mutable tag như latest. Khi có incident, hãy so digest do CI tạo với digest được lưu, promote và cuối cùng được runtime pull. Dùng boundary thành công gần nhất cùng immutable artifact identity biến việc điều tra thành chuỗi handoff có thể kiểm chứng thay vì phỏng đoán trên toàn delivery pipeline."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "12.DeploymentHandoff/DeploymentHandoff.md"
+      anchor: "build-failure-classification"
+    apiRelated:
+      controller: ""
+      methodSignature: ""

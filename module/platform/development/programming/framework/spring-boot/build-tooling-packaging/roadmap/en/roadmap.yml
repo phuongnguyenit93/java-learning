@@ -41,4 +41,105 @@
 # The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: build-tooling-purpose-and-boundary
+    title: "Why Spring Boot Owns Build and Packaging Integration"
+    purpose: "Understand the role of Spring Boot build tooling as the bridge between an ordinary JVM build and a runnable, packageable Boot application without turning this module into a general Gradle, Maven, Docker, or CI/CD course."
+    objectives:
+      - "Explain how Spring Boot's build plugins support running, packaging, and image creation, and how the spring-boot-dependencies baseline participates in dependency alignment through build-tool-specific mechanisms."
+      - "Distinguish Boot-specific build integration from generic build-tool concepts that remain owned by Gradle or Maven curricula."
+      - "Recognize the handoff from Boot-produced artifacts and images to deployment infrastructure rather than treating deployment orchestration as Boot build-tool ownership."
+    relatedKnowledge:
+      - Purpose
+    relatedModules:
+      - routeId: SPRING_BOOT_FUNDAMENTALS
+        label: "Spring Boot Fundamentals"
+        note: "Introduces starters, the runnable-application model, and high-level packaging concepts that this module expands into concrete build workflows."
+
+  - id: plugins-and-dependency-alignment
+    title: "Build Plugins and Dependency Alignment"
+    purpose: "Build a practical mental model for applying Spring Boot's Gradle or Maven integration and for keeping a compatible dependency set through Boot-managed versions."
+    objectives:
+      - "Understand the role of the org.springframework.boot Gradle plugin and the spring-boot-maven-plugin without re-teaching the underlying build systems."
+      - "Understand spring-boot-dependencies as Boot's curated dependency baseline and distinguish Maven parent-based management from BOM import and Gradle dependency-management/platform approaches."
+      - "Recognize the trade-off between accepting Boot-managed versions and deliberately overriding a managed dependency when compatibility responsibility must be taken explicitly."
+    relatedKnowledge:
+      - BuildPlugins
+      - DependencyManagement
+
+  - id: development-run-workflow
+    title: "Run the Application Through the Build Tool"
+    purpose: "Understand the Boot-specific development run path before packaging so the learner can distinguish running from source/build outputs from executing a packaged artifact."
+    objectives:
+      - "Use bootRun or the Maven plugin run goal as Boot-aware development-time launch mechanisms."
+      - "Understand that build-tool run tasks configure an application launch but do not replace the SpringApplication runtime lifecycle owned by application-runtime."
+      - "Know when to use a build-tool run task versus validating the actual packaged artifact with java -jar."
+    relatedKnowledge:
+      - BootRun
+    relatedModules:
+      - routeId: SPRING_BOOT_APPLICATION_RUNTIME
+        label: "Spring Boot Application Runtime"
+        note: "Owns what happens inside the application lifecycle after a build-tool or packaged launch starts the process."
+
+  - id: executable-archive-model
+    title: "Executable JAR/WAR Packaging and Spring Boot Loader"
+    purpose: "Understand how Boot turns application classes and dependencies into executable archives and why its nested-archive layout differs from a traditional flattened uber JAR."
+    objectives:
+      - "Understand bootJar/bootWar and Maven repackage as the main executable-archive production paths."
+      - "Recognize the BOOT-INF/classes and BOOT-INF/lib layout for executable JARs and the corresponding executable WAR model."
+      - "Explain at a learner-facing level why Spring Boot Loader is needed to launch classes and nested dependency JARs."
+      - "Distinguish an executable archive from a plain library artifact and understand when deployable WAR packaging is still relevant."
+    relatedKnowledge:
+      - BootJarBootWar
+      - ExecutableArchives
+
+  - id: layered-and-reproducible-packaging
+    title: "Layered and Reproducible Packaging"
+    purpose: "Understand packaging features that make Boot artifacts more cache-friendly and predictable for downstream delivery without drifting into generic container or supply-chain tooling."
+    objectives:
+      - "Understand how layered JAR/WAR metadata separates dependencies, loader content, snapshot dependencies, and application content for more efficient reuse."
+      - "Reason about why layer order should place less frequently changing content before application content."
+      - "Recognize reproducible-build concerns such as stable archive content/order/timestamps as packaging quality rather than application-runtime behavior."
+      - "Understand that archive layering prepares content for efficient image construction but does not itself define container-runtime behavior."
+    relatedKnowledge:
+      - LayeredArchives
+      - ReproducibleBuilds
+
+  - id: oci-images-with-buildpacks
+    title: "Build OCI Images with Cloud Native Buildpacks"
+    purpose: "Understand Spring Boot's buildpack integration as a Boot-managed path from application build output to an OCI image, including the builder/run-image model and the operational requirements of the image task."
+    objectives:
+      - "Use bootBuildImage or the Maven build-image goal as Boot-specific Cloud Native Buildpacks integration points."
+      - "Understand at a practical level the roles of builder images, buildpacks, run images, layers, caches, and image publication settings."
+      - "Recognize that the build-image workflow requires access to a container daemon or supported connection and can be customized without learning generic Docker internals here."
+      - "Keep native-image semantics out of this milestone even though buildpacks can also participate in native-image production."
+    relatedKnowledge:
+      - Buildpacks
+      - OciImages
+    relatedModules:
+      - routeId: SPRING_BOOT_NATIVE_IMAGE
+        label: "Spring Boot Native Image"
+        note: "Owns AOT, GraalVM, closed-world behavior, runtime hints, and native-image semantics; this module owns only the supporting build invocation boundary."
+
+  - id: packaging-and-image-strategy
+    title: "Choose an Artifact and Image Strategy"
+    purpose: "Make deliberate choices among executable JAR/WAR delivery, layered artifacts, Dockerfile-based images, and Boot's Buildpacks integration based on the delivery environment and ownership boundary."
+    objectives:
+      - "Compare running an executable archive directly with placing a Boot artifact into a container image."
+      - "Compare a custom Dockerfile path with Cloud Native Buildpacks based on required control, standardization, caching, and maintenance responsibility."
+      - "Recognize when an executable WAR, executable JAR, unpacked archive, or OCI image is an appropriate handoff artifact."
+      - "Hand generic image construction, registries, container runtime operation, CI/CD, and deployment strategy to their infrastructure owners."
+    relatedKnowledge:
+      - DockerBuildStrategy
+      - DeploymentHandoff
+
+  - id: build-packaging-synthesis
+    title: "End-to-End Build and Packaging Flow"
+    purpose: "Synthesize the complete Boot build path from dependency alignment and local execution through executable packaging, layering, image creation, and the final deployment handoff."
+    objectives:
+      - "Trace how the same application moves from source/build configuration to a runnable development process, executable archive, and optionally an OCI image."
+      - "Diagnose whether a problem belongs to plugin/dependency setup, archive packaging/loader layout, layering, buildpack image creation, or downstream deployment infrastructure."
+      - "Explain the boundary between normal JVM packaging and the separate AOT/native-image learning path."
+      - "Choose a Boot build/package workflow while keeping build-system fundamentals, container internals, and deployment operations in their proper owner modules."
+    relatedKnowledge:
+      - DeploymentHandoff

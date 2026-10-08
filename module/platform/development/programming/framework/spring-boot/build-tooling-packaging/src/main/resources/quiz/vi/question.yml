@@ -38,4 +38,353 @@
 #       ID nội bộ của đáp án đúng. Frontend kiểm tra bằng identity này sau khi shuffle.
 # </quiz-schema>
 
-questions: []
+questions:
+  - id: build-tooling-quiz-01
+    question: "Một team cho rằng Spring Boot Gradle plugin phải sửa được lỗi xác thực repository vì plugin này sở hữu build của Boot. Cách suy luận nào đúng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Purpose/Purpose.md"
+      anchor: "build-tooling-purpose"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Boot plugin sở hữu truy cập repository mỗi khi một Boot task dùng dependency."
+        explanation: "Khai báo repository, xác thực và dependency resolution vẫn thuộc trách nhiệm của build tool nền."
+      - id: B
+        answer: "Gradle vẫn sở hữu truy cập repository; Boot plugin bổ sung các thao tác run, package và image dành riêng cho Boot."
+        explanation: "Đúng. Boot tích hợp hành vi riêng của ứng dụng vào Gradle mà không thay thế project model hay dependency resolution của Gradle."
+      - id: C
+        answer: "Truy cập repository trở thành trách nhiệm runtime của SpringApplication ngay khi Boot plugin được apply."
+        explanation: "Repository được dùng khi resolve build input, trước khi hành vi runtime của SpringApplication bắt đầu."
+      - id: D
+        answer: "Boot plugin chỉ sở hữu truy cập repository khi ứng dụng sau đó được đóng gói thành executable JAR."
+        explanation: "Định dạng package không chuyển quyền sở hữu repository và dependency resolution từ Gradle sang Boot."
+    correctAnswerId: B
+
+  - id: build-tooling-quiz-02
+    question: "Một project import spring-boot-dependencies nhưng không khai báo database driver trực tiếp hay gián tiếp. Learner nên kỳ vọng điều gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.DependencyManagement/DependencyManagement.md"
+      anchor: "spring-boot-dependencies"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Driver sẽ có mặt vì mọi artifact được liệt kê trong BOM đều trở thành managed runtime dependency."
+        explanation: "BOM quản lý version; nó không tự động thêm mọi dependency có trong dữ liệu dependency management."
+      - id: B
+        answer: "Driver sẽ có mặt khi Boot plugin được apply vì plugin biến managed entry thành dependency thực tế."
+        explanation: "Boot plugin thay đổi build integration, nhưng BOM vẫn không khai báo toàn bộ managed library thành dependency của ứng dụng."
+      - id: C
+        answer: "Driver sẽ không có nếu không được khai báo hoặc kéo vào transitively; BOM chỉ cung cấp managed version của nó."
+        explanation: "Đúng. Khai báo dependency và quản lý version là hai mối quan tâm khác nhau."
+      - id: D
+        answer: "Driver được resolve để chọn version nhưng bị loại lúc runtime vì managed artifact chỉ phục vụ build-time."
+        explanation: "Import BOM không yêu cầu tải từng managed artifact chỉ để thiết lập tập version được quản lý."
+    correctAnswerId: C
+
+  - id: build-tooling-quiz-03
+    question: "Một Gradle build đã compile class và resolve runtime dependency đúng. Apply Spring Boot plugin sẽ bổ sung gì ở boundary này?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.BuildPlugins/BuildPlugins.md"
+      anchor: "plugin-responsibilities"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Các Boot-aware task như bootRun, bootJar và bootBuildImage tiêu thụ chính build output mà Gradle đã tạo."
+        explanation: "Đúng. Boot plugin bổ sung thao tác run, package và image riêng của Boot trên mô hình build bình thường của Gradle."
+      - id: B
+        answer: "Một build engine thứ hai thay thế compilation, dependency resolution và task graph của Gradle cho project Boot."
+        explanation: "Boot plugin tích hợp với Gradle; nó không thay mô hình project, compilation hay dependency resolution của Gradle."
+      - id: C
+        answer: "Khai báo tự động mọi dependency do Boot quản lý để project không còn phải chọn library mà ứng dụng sử dụng."
+        explanation: "Boot tooling có thể align version, nhưng ứng dụng vẫn khai báo các dependency mà nó thực sự dùng."
+      - id: D
+        answer: "Quyền sở hữu runtime đối với SpringApplication event và bean lifecycle để các behavior đó trở thành Gradle task semantics."
+        explanation: "Plugin có thể launch ứng dụng, nhưng semantics runtime của SpringApplication vẫn thuộc runtime."
+    correctAnswerId: A
+
+  - id: build-tooling-quiz-04
+    question: "Một team Gradle chuyển từ io.spring.dependency-management sang native platform support của Gradle. Kỳ vọng nào cần thay đổi?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.DependencyManagement/DependencyManagement.md"
+      anchor: "gradle-dependency-alignment"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Managed dependency giờ tự xuất hiện vì native platform cũng khai báo các library mà nó đặt constraint."
+        explanation: "Không có cách alignment nào biến BOM thành một bundle dependency."
+      - id: B
+        answer: "Executable packaging giờ đi theo platform vì các constraint của nó trở thành metadata nằm trong BOOT-INF."
+        explanation: "Dependency alignment ảnh hưởng version được chọn; nó không định nghĩa lại layout của executable archive."
+      - id: C
+        answer: "Version conflict resolution giờ chỉ theo imported platform vì platform thay thế resolution rules bình thường của Gradle."
+        explanation: "Native platform support tham gia vào chính resolution model của Gradle thay vì thay thế nó."
+      - id: D
+        answer: "Managed-version override giờ dùng constraint/platform model của Gradle thay vì property của dependency-management plugin."
+        explanation: "Đúng. Boot baseline tương tự, nhưng cơ chế biểu diễn và override constraint đã thay đổi."
+    correctAnswerId: D
+
+  - id: build-tooling-quiz-05
+    question: "Vì sao một team có thể dùng bootRun khi phát triển nhưng vẫn chạy java -jar trên artifact đã package trước khi release?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.BootRun/BootRun.md"
+      anchor: "build-tool-run-vs-packaged-run"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "bootRun chạy packaged JAR, còn java -jar chạy compiled class trực tiếp từ source-set classpath."
+        explanation: "Quan hệ ngược lại: bootRun chạy từ build output/classpath, còn java -jar thực sự chạy packaged archive."
+      - id: B
+        answer: "bootRun chạy development classpath, còn java -jar xác minh executable archive được tạo để bàn giao."
+        explanation: "Đúng. Hai cách launch kiểm tra hai giai đoạn khác nhau của delivery path."
+      - id: C
+        answer: "bootRun đi qua SpringApplication lifecycle, còn java -jar chạy qua Boot Loader mà không dùng SpringApplication."
+        explanation: "Cả hai cuối cùng đều khởi động lifecycle của Boot application; khác biệt chính nằm ở cách chuẩn bị launch input."
+      - id: D
+        answer: "bootRun chỉ dùng compile dependency, còn java -jar cần để xác minh đầy đủ runtime dependency graph."
+        explanation: "Lựa chọn này nhằm xác minh packaged artifact, không liên quan đến bật hay tắt dependency management."
+    correctAnswerId: B
+
+  - id: build-tooling-quiz-06
+    question: "Một executable Spring Boot JAR giữ application classes và dependency JAR riêng thay vì flatten toàn bộ class dependency. Layout nào được kỳ vọng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.ExecutableArchives/ExecutableArchives.md"
+      anchor: "boot-archive-layout"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Application classes và toàn bộ dependency classes được merge ở archive root."
+        explanation: "Đó là kiểu flattened uber-JAR chứ không phải nested executable archive layout của Boot."
+      - id: B
+        answer: "Application classes nằm ở META-INF/classes còn dependency JAR nằm ngoài archive trên filesystem."
+        explanation: "Executable JAR của Boot đóng gói cả application content và nested dependencies bên trong archive."
+      - id: C
+        answer: "Application classes nằm ở BOOT-INF/classes và dependency JAR được lồng dưới BOOT-INF/lib."
+        explanation: "Đúng. Sự phân tách này là phần cốt lõi của executable JAR layout được Spring Boot Loader xử lý."
+      - id: D
+        answer: "Application classes nằm ở WEB-INF/classes và dependency JAR luôn nằm ở WEB-INF/lib."
+        explanation: "WEB-INF gắn với WAR layout; executable JAR sử dụng BOOT-INF."
+    correctAnswerId: C
+
+  - id: build-tooling-quiz-07
+    question: "Vì sao executable Boot JAR cần Spring Boot Loader thay vì chỉ dựa vào cơ chế classpath thông thường của JVM?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.ExecutableArchives/ExecutableArchives.md"
+      anchor: "spring-boot-loader-purpose"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Nó launch application classes đồng thời làm cho nested dependency JAR trong Boot archive khả dụng cho ứng dụng."
+        explanation: "Đúng. Loader hiểu cấu trúc executable archive của Boot và các dependency được lồng bên trong."
+      - id: B
+        answer: "Nó compile lại application classes lúc startup để khớp với JDK của môi trường deployment."
+        explanation: "Boot Loader là cơ chế launch/class loading; nó không compile lại ứng dụng."
+      - id: C
+        answer: "Nó resolve Maven hoặc Gradle dependency còn thiếu từ remote repository khi process bắt đầu."
+        explanation: "Dependency resolution thuộc build; executable archive đã package phải chứa các runtime dependency cần thiết."
+      - id: D
+        answer: "Nó chuyển executable JAR thành OCI filesystem trước khi gọi main class của ứng dụng."
+        explanation: "Tạo OCI image là build concern riêng; Boot Loader launch archive như một JVM application."
+    correctAnswerId: A
+
+  - id: build-tooling-quiz-08
+    question: "Một service thay application classes thường xuyên nhưng hiếm khi nâng cấp external dependency. Thứ tự layer nào hỗ trợ cache reuse tốt nhất?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.LayeredArchives/LayeredArchives.md"
+      anchor: "layer-order-and-cache"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Đặt application content trước stable dependencies để mỗi rebuild bắt đầu từ các file mới nhất."
+        explanation: "Đặt volatile application content trước thường làm các layer phía sau mất cache thường xuyên hơn."
+      - id: B
+        answer: "Gộp dependency và application classes vào một layer để cache chỉ cần đưa ra một quyết định."
+        explanation: "Gộp stable và volatile content làm mất lợi ích reuse mà layering hướng tới."
+      - id: C
+        answer: "Sắp layer theo alphabet vì cache reuse phụ thuộc tên layer thay vì tần suất thay đổi."
+        explanation: "Thứ tự layer hữu ích dựa trên độ ổn định và hành vi invalidation của content, không phải tên alphabet."
+      - id: D
+        answer: "Đặt dependency/loader content ít thay đổi trước application content thay đổi thường xuyên hơn."
+        explanation: "Đúng. Stable layer ở trước có khả năng được tái sử dụng cao hơn khi application code thay đổi."
+    correctAnswerId: D
+
+  - id: build-tooling-quiz-09
+    question: "Hai build dùng cùng source và dependency versions nhưng checksum JAR khác nhau vì timestamp của file thay đổi. Concern nào liên quan trực tiếp nhất?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.ReproducibleBuilds/ReproducibleBuilds.md"
+      anchor: "archive-order-and-timestamps"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Runtime reproducibility, vì SpringApplication chuẩn hóa archive timestamp trước khi load class."
+        explanation: "Runtime lifecycle không rewrite archive metadata để hai build riêng biệt có output byte-for-byte ổn định."
+      - id: B
+        answer: "Archive reproducibility, vì entry timestamp và ordering có thể đổi bytes dù logical input giống nhau."
+        explanation: "Đúng. Archive metadata như timestamp và entry order ảnh hưởng trực tiếp đến reproducibility."
+      - id: C
+        answer: "Dependency reproducibility, vì Boot BOM phải align timestamp cùng với version của managed library."
+        explanation: "BOM quản lý các version dependency tương thích, không quản lý timestamp của archive entry."
+      - id: D
+        answer: "Image reproducibility, vì Buildpacks quyết định checksum nào được ghi vào manifest của Boot JAR."
+        explanation: "JAR có thể được build và so sánh mà không cần Buildpacks; reproducible archive settings mới là boundary liên quan."
+    correctAnswerId: B
+
+  - id: build-tooling-quiz-10
+    question: "Trong workflow Cloud Native Buildpacks, cặp mô tả nào đúng nhất về builder image và run image?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "9.Buildpacks/Buildpacks.md"
+      anchor: "buildpack-model"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Builder cung cấp runtime base, còn run image cung cấp buildpacks và build-time tooling."
+        explanation: "Builder tham gia detection/build, còn run image cung cấp base cho runtime image được tạo ra."
+      - id: B
+        answer: "Builder cung cấp buildpacks và build tooling, còn run image chỉ là cache source cho dependency."
+        explanation: "Đó không phải trách nhiệm định nghĩa của builder image và run image."
+      - id: C
+        answer: "Builder cung cấp buildpacks và build tooling, còn run image cung cấp runtime base cho ứng dụng."
+        explanation: "Đúng. Chúng có vai trò riêng ở build-time và runtime-base trong mô hình Buildpacks."
+      - id: D
+        answer: "Builder và run image chủ yếu khác registry location; image nào cũng có thể làm build hoặc runtime base."
+        explanation: "Khái niệm builder/run image thuộc Buildpacks workflow và không được chia theo quy tắc JVM-versus-native đó."
+    correctAnswerId: C
+
+  - id: build-tooling-quiz-11
+    question: "Ứng dụng compile và bootJar thành công nhưng bootBuildImage thất bại trước khi tạo image vì không kết nối được container engine. Nên bắt đầu điều tra ở đâu?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "10.OciImages/OciImages.md"
+      anchor: "image-builder-connection"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Kiểm tra Docker daemon hoặc kết nối Docker-compatible được image-building task hỗ trợ."
+        explanation: "Đúng. JAR build thành công rồi mới lỗi kết nối cho thấy vấn đề ở boundary image builder/container engine."
+      - id: B
+        answer: "Kiểm tra thứ tự SpringApplication event vì runtime lifecycle phải khởi tạo image builder."
+        explanation: "bootBuildImage là build-time operation và không phụ thuộc việc SpringApplication khởi động trước."
+      - id: C
+        answer: "Kiểm tra BOOT-INF class loading vì Boot Loader mở Docker socket từ bên trong executable archive."
+        explanation: "Boot Loader xử lý việc launch archive; nó không phải component kết nối build task tới container engine."
+      - id: D
+        answer: "Kiểm tra Maven hoặc Gradle repository authentication trước vì image creation luôn re-resolve source dependency của project."
+        explanation: "Repository issue có thể tồn tại ở phase khác, nhưng lỗi đã nêu cụ thể là không thể kết nối container engine."
+    correctAnswerId: A
+
+  - id: build-tooling-quiz-12
+    question: "Một platform team muốn một Java image path được bảo trì tập trung cho nhiều service, còn một service đặc biệt cần custom OS package và filesystem step. Lựa chọn nào phù hợp với ownership đó?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "11.DockerBuildStrategy/DockerBuildStrategy.md"
+      anchor: "dockerfile-vs-buildpacks"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Dùng một Dockerfile template dùng chung cho common path, rồi chỉ fork template đó cho service ngoại lệ."
+        explanation: "Shared template giảm lặp lại, nhưng mỗi repository vẫn sở hữu cơ chế Dockerfile thay vì dùng một application-to-image lifecycle được quản lý tập trung."
+      - id: B
+        answer: "Dùng Buildpacks được quản lý tập trung cho mọi service, rồi tùy biến builder để hấp thụ yêu cầu OS package của service ngoại lệ."
+        explanation: "Buildpacks có thể tùy biến, nhưng service cần các bước filesystem và image construction ở mức thấp một cách explicit có thể hợp lý hơn với Dockerfile."
+      - id: C
+        answer: "Chuẩn hóa executable JAR, sau đó để từng deployment platform tự chọn container recipe cho mỗi service."
+        explanation: "Cách này giữ application artifact chung nhưng phân tán ownership của image construction thay vì tạo image path được bảo trì tập trung như yêu cầu."
+      - id: D
+        answer: "Ưu tiên Buildpacks được quản lý tập trung cho common path, và dùng Dockerfile khi thực sự cần kiểm soát image-level rõ ràng."
+        explanation: "Đúng. Cách này gắn standardization với central ownership nhưng vẫn giữ explicit control cho yêu cầu image đặc biệt."
+    correctAnswerId: D
+
+  - id: build-tooling-quiz-13
+    question: "Một công ty deploy ứng dụng vào external servlet container do platform quản lý và đây là contract chính thức. Artifact nào phù hợp trực tiếp nhất?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "12.DeploymentHandoff/DeploymentHandoff.md"
+      anchor: "artifact-strategy"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Executable JAR, vì Boot application không nên phụ thuộc external servlet container."
+        explanation: "Executable JAR là standalone default phổ biến, nhưng WAR vẫn hợp lệ khi external servlet-container contract là chủ đích."
+      - id: B
+        answer: "WAR, vì target platform đã cung cấp và quản lý servlet container."
+        explanation: "Đúng. Artifact format nên khớp với execution contract của môi trường đích."
+      - id: C
+        answer: "OCI image, vì mọi production deployment của Boot đều phải container-based."
+        explanation: "OCI image phù hợp khi platform yêu cầu container, không phải một maturity requirement áp dụng cho mọi trường hợp."
+      - id: D
+        answer: "Unpacked executable JAR, vì external servlet container yêu cầu BOOT-INF được extract trước."
+        explanation: "External servlet container kỳ vọng WAR semantics chứ không phải một Boot JAR được extract."
+    correctAnswerId: B
+
+  - id: build-tooling-quiz-14
+    question: "CI build và chạy executable JAR thành công nhưng bootBuildImage lỗi trong lúc tạo image. Cách phân loại nào tận dụng tốt nhất boundary thành công gần nhất?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "12.DeploymentHandoff/DeploymentHandoff.md"
+      anchor: "build-failure-classification"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Xem đây chủ yếu là application runtime failure vì JAR chứa cùng application code."
+        explanation: "JAR đã launch thành công nên runtime bootstrapping không phải boundary chưa được giải quyết đầu tiên."
+      - id: B
+        answer: "Xem đây chủ yếu là dependency-management failure vì mọi image build đều vô hiệu hóa Boot BOM trước."
+        explanation: "JAR build thành công là bằng chứng dependency resolution và packaging đã vượt qua các boundary trước đó."
+      - id: C
+        answer: "Điều tra Buildpacks, builder/container engine và image configuration vì executable packaging đã thành công."
+        explanation: "Đúng. Boundary thành công gần nhất thu hẹp lỗi vào stage image-building tiếp theo."
+      - id: D
+        answer: "Điều tra deployment rollout policy vì bootBuildImage chỉ lỗi sau khi artifact đã được promote."
+        explanation: "Image construction vẫn thuộc build/delivery preparation và diễn ra trước deployment rollout."
+    correctAnswerId: C
