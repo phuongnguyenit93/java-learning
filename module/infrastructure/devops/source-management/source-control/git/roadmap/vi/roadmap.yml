@@ -41,4 +41,84 @@
 # Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: git-repository-and-three-areas
+    relatedKnowledge:
+      - 01-git-foundations
+    title: "Hiểu kho Git và vòng đời thay đổi"
+    purpose: "Nắm cách Git quản lý các phiên bản mã nguồn để có thể dự đoán điều gì xảy ra khi sửa, đưa vào vùng chờ và lưu thay đổi."
+    objectives:
+      - "Phân biệt thư mục làm việc (working tree), vùng chờ (index/staging area) và kho dữ liệu Git, đồng thời hiểu vai trò của khởi tạo hoặc sao chép kho."
+      - "Hiểu Git lưu các ảnh chụp trạng thái bằng đối tượng và commit liên kết với nhau, thay vì chỉ lưu một chuỗi thao tác sửa tệp."
+      - "Nhận diện trạng thái đã theo dõi, chưa theo dõi, đã sửa, đã đưa vào vùng chờ và đã commit."
+
+  - id: intentional-snapshots-and-history
+    relatedKnowledge:
+      - 02-recording-commits
+    title: "Ghi lại và đọc lịch sử thay đổi"
+    purpose: "Biết chọn chính xác nội dung cần lưu thành một commit dễ hiểu, rồi kiểm tra được lịch sử đã tạo."
+    objectives:
+      - "Dùng trạng thái, bản khác biệt và quy tắc bỏ qua tệp để phân biệt thay đổi cần ghi nhận với tệp phát sinh không nên theo dõi."
+      - "Đưa thay đổi có chủ đích vào vùng chờ, tạo commit và hiểu vì sao nội dung đã đưa vào vùng chờ có thể khác nội dung đang sửa."
+      - "Đọc lịch sử, quan hệ giữa các commit và so sánh các phiên bản để giải thích một thay đổi xuất hiện từ đâu."
+
+  - id: refs-branches-and-tags
+    relatedKnowledge:
+      - 03-branches-refs-tags
+    title: "Di chuyển trong lịch sử bằng nhánh và tham chiếu"
+    purpose: "Hiểu nhánh là tham chiếu tới commit, từ đó phát triển nhiều hướng thay đổi mà vẫn kiểm soát vị trí hiện tại."
+    objectives:
+      - "Giải thích vai trò của HEAD, nhánh cục bộ và tham chiếu trong đồ thị commit."
+      - "Tạo, chuyển, xem và dọn nhánh; nhận biết trạng thái detached HEAD và tác động khi chuyển nhánh lúc còn thay đổi chưa lưu."
+      - "Dùng tag để đánh dấu một mốc lịch sử; phân biệt tag với nhánh có thể di chuyển theo commit mới."
+
+  - id: merge-and-conflict-resolution
+    relatedKnowledge:
+      - 04-merges-and-conflicts
+    title: "Hợp nhất thay đổi và giải quyết xung đột"
+    purpose: "Kết hợp các hướng phát triển cục bộ một cách có kiểm soát và hiểu cách Git xử lý lịch sử phân nhánh."
+    objectives:
+      - "Phân biệt hợp nhất fast-forward với hợp nhất ba chiều tạo merge commit thông qua tổ tiên chung."
+      - "Đọc trạng thái khi có xung đột, sửa nội dung, đánh dấu đã giải quyết và hoàn tất hoặc hủy thao tác hợp nhất."
+      - "Kiểm tra kết quả sau khi hợp nhất và nhận ra rủi ro mất ý nghĩa thay đổi khi giải quyết xung đột chỉ theo dấu phân cách."
+      - "Phân biệt việc hợp nhất toàn bộ hướng phát triển với chọn lọc áp dụng một commit bằng cherry-pick, kể cả khả năng phát sinh xung đột."
+
+  - id: remotes-and-history-exchange
+    relatedKnowledge:
+      - 05-remotes-and-sync
+    title: "Trao đổi lịch sử với kho từ xa"
+    purpose: "Đưa mô hình commit và tham chiếu từ máy cá nhân sang cộng tác phân tán thông qua một kho Git từ xa."
+    objectives:
+      - "Phân biệt nhánh cục bộ, nhánh trên máy chủ, tham chiếu theo dõi từ xa và quan hệ upstream."
+      - "Giải thích khác biệt giữa fetch, pull và push, cũng như cách chúng ảnh hưởng tới lịch sử và tham chiếu."
+      - "Nhận biết lịch sử phân kỳ, nguyên nhân push bị từ chối và cách đồng bộ an toàn trước khi chia sẻ thay đổi."
+
+  - id: rebase-and-history-rewriting
+    relatedKnowledge:
+      - 06-rebase-and-rewrite
+    title: "Sắp xếp lại lịch sử bằng rebase"
+    purpose: "Hiểu cách Git phát lại commit lên một nền lịch sử khác và cân nhắc tác động khi thay đổi danh tính commit."
+    objectives:
+      - "So sánh kết quả lịch sử của merge với rebase mà không nhầm lẫn chúng với chiến lược làm việc ở cấp tổ chức."
+      - "Hiểu việc phát lại commit, xử lý xung đột trong rebase và tiếp tục hoặc hủy thao tác khi cần."
+      - "Nhận biết khi nào amend hoặc rebase lịch sử cục bộ là phù hợp và vì sao viết lại commit đã chia sẻ có thể gây khó khăn cho người khác."
+
+  - id: stash-and-safe-recovery
+    relatedKnowledge:
+      - 07-stash-undo-recovery
+    title: "Tạm cất công việc và khôi phục thay đổi an toàn"
+    purpose: "Chọn đúng cơ chế Git khi cần tạm dừng, hoàn tác hoặc tìm lại thay đổi mà không vô tình làm mất dữ liệu."
+    objectives:
+      - "Tạm cất và áp dụng lại công việc chưa commit bằng stash; phân biệt tệp đã được theo dõi được lưu theo mặc định với tệp chưa theo dõi hoặc bị bỏ qua cần tùy chọn riêng."
+      - "Phân biệt restore, reset và revert theo tác động lên thư mục làm việc, vùng chờ, nhánh và lịch sử đã chia sẻ."
+      - "Sử dụng reflog cục bộ để tìm lại vị trí tham chiếu trước đó; hiểu các bản ghi có thể hết hạn nên reflog không thay thế bản sao lưu, và đánh giá rủi ro trước khi loại bỏ thay đổi."
+
+  - id: end-to-end-git-workflow
+    relatedKnowledge:
+      - 08-end-to-end-git
+    title: "Vận dụng Git trong một vòng thay đổi hoàn chỉnh"
+    purpose: "Kết nối mô hình dữ liệu, lịch sử và thao tác của Git để tự xử lý một tình huống cộng tác thực tế."
+    objectives:
+      - "Theo dõi một thay đổi từ thư mục làm việc qua commit, nhánh, đồng bộ từ xa và hợp nhất, rồi giải thích trạng thái ở từng chặng."
+      - "Xử lý một tình huống phân kỳ hoặc xung đột và chọn cách hoàn tác thích hợp dựa trên việc commit đã được chia sẻ hay chưa."
+      - "Nhận ra điểm bàn giao từ thao tác Git sang nền tảng pull/merge request và chiến lược nhánh của nhóm."

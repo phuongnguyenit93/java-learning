@@ -41,4 +41,84 @@
 # The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: git-repository-and-three-areas
+    relatedKnowledge:
+      - 01-git-foundations
+    title: "Understand the Git Repository and Change Lifecycle"
+    purpose: "Build a model of how Git tracks source versions so the effects of editing, staging, and recording changes are predictable."
+    objectives:
+      - "Distinguish the working tree, index/staging area, and Git database, and understand the role of initializing or cloning a repository."
+      - "Understand Git snapshots, objects, and connected commits instead of viewing history as only a list of file-editing operations."
+      - "Recognize tracked, untracked, modified, staged, and committed states."
+
+  - id: intentional-snapshots-and-history
+    relatedKnowledge:
+      - 02-recording-commits
+    title: "Record and Inspect Change History"
+    purpose: "Select exactly what belongs in a meaningful commit and inspect the history those commits create."
+    objectives:
+      - "Use status, diffs, and ignore rules to separate intentional source changes from generated or unwanted files."
+      - "Stage selected changes and create commits, including understanding why staged content may differ from later working-tree edits."
+      - "Read commit history, parent relationships, and version differences to explain where a change came from."
+
+  - id: refs-branches-and-tags
+    relatedKnowledge:
+      - 03-branches-refs-tags
+    title: "Navigate History with Branches and References"
+    purpose: "Understand branches as references to commits so multiple lines of development can be explored while tracking the current position."
+    objectives:
+      - "Explain HEAD, local branches, and references within the commit graph."
+      - "Create, switch, inspect, and remove branches; recognize detached HEAD and the impact of switching with uncommitted changes."
+      - "Mark a historical point with a tag and distinguish it from a branch that advances with new commits."
+
+  - id: merge-and-conflict-resolution
+    relatedKnowledge:
+      - 04-merges-and-conflicts
+    title: "Integrate Branches and Resolve Conflicts"
+    purpose: "Combine local lines of development safely and understand how Git handles diverging history."
+    objectives:
+      - "Distinguish fast-forward integration from a three-way merge that creates a merge commit using a common ancestor."
+      - "Inspect merge conflicts, resolve and stage their contents, and complete or abort a merge."
+      - "Verify the merged result and recognize why blindly choosing one side of a conflict can discard intended changes."
+      - "Distinguish integrating an entire line of development from selectively applying a commit with cherry-pick, including potential conflicts."
+
+  - id: remotes-and-history-exchange
+    relatedKnowledge:
+      - 05-remotes-and-sync
+    title: "Exchange History with Remote Repositories"
+    purpose: "Extend the local commit and reference model to distributed collaboration through a remote Git repository."
+    objectives:
+      - "Distinguish local branches, server-side branches, remote-tracking references, and upstream relationships."
+      - "Explain the different effects of fetch, pull, and push on local history and references."
+      - "Recognize diverged history, non-fast-forward push rejection, and safe integration before publishing changes."
+
+  - id: rebase-and-history-rewriting
+    relatedKnowledge:
+      - 06-rebase-and-rewrite
+    title: "Replay and Rewrite History with Rebase"
+    purpose: "Understand how Git replays commits onto another base and evaluate the consequences of changing commit identities."
+    objectives:
+      - "Compare the resulting commit histories of merge and rebase without expanding into organization-wide branching policies."
+      - "Understand commit replay, conflict resolution during rebase, and when to continue or abort the operation."
+      - "Recognize when amending or rebasing local commits makes sense and why rewriting already shared history can disrupt collaborators."
+
+  - id: stash-and-safe-recovery
+    relatedKnowledge:
+      - 07-stash-undo-recovery
+    title: "Set Work Aside and Recover Changes Safely"
+    purpose: "Choose the appropriate Git mechanism for interruptions, undo operations, and recovery without accidentally losing work."
+    objectives:
+      - "Temporarily save and reapply uncommitted work with stash; distinguish tracked-file changes saved by default from untracked or ignored files requiring explicit options."
+      - "Distinguish restore, reset, and revert by their effects on the working tree, index, branch position, and shared history."
+      - "Use the local reference log (reflog) to recover earlier reference positions, recognizing that entries expire and reflog is not a backup; assess data-loss risks before discarding changes."
+
+  - id: end-to-end-git-workflow
+    relatedKnowledge:
+      - 08-end-to-end-git
+    title: "Apply Git Across a Complete Change Lifecycle"
+    purpose: "Connect Git's data model, history, and commands to handle a realistic collaboration scenario independently."
+    objectives:
+      - "Trace a change from the working tree through commit, branch, remote synchronization, and integration, explaining each intermediate state."
+      - "Resolve a divergence or conflict and choose recovery steps based on whether commits have already been shared."
+      - "Recognize when Git mechanics hand off to hosted pull/merge-request workflows and team branching strategy."

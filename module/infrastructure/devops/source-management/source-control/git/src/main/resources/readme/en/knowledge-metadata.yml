@@ -1,0 +1,256 @@
+01-git-foundations.md:
+  what-is-git:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  why-git-snapshots:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  repository-and-working-tree:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  index-and-three-areas:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  git-objects-and-commits:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  file-tracking-and-states:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  initialize-and-clone:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  trace-file-across-areas:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  git-command-reference-and-docs:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+02-recording-commits.md:
+  inspect-status-before-staging:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  ignore-and-track-files:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  working-tree-vs-staged-diff:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  stage-intentional-changes:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  commit-snapshot-and-message:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  read-log-and-parents:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  compare-history-points:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  verify-a-recorded-change:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+03-branches-refs-tags.md:
+  commit-graph-and-references:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  branches-and-head:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  create-inspect-delete-branches:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  switch-and-uncommitted-changes:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  detached-head:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  tags-vs-branches:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  verify-branch-tag-positions:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+04-merges-and-conflicts.md:
+  why-branches-diverge:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  fast-forward-merge:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  merge-base-and-three-way:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  merge-commit-and-parents:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  recognize-merge-conflicts:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  resolve-or-abort-merge:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  cherry-pick-vs-merge:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  verify-merged-outcome:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+05-remotes-and-sync.md:
+  remote-repository-purpose:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  configure-and-inspect-remotes:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  local-remote-and-tracking-refs:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  upstream-relationship:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  fetch-vs-pull:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  push-and-rejected-updates:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  reconcile-divergent-history:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  verify-local-and-remote-history:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+06-rebase-and-rewrite.md:
+  merge-versus-rebase-outcomes:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  rebase-replay-and-commit-ids:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  rebase-local-work:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  resolve-continue-or-abort-rebase:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  amend-a-local-commit:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  shared-history-rewrite-risk:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  verify-history-after-rebase:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+07-stash-undo-recovery.md:
+  classify-uncommitted-and-shared-work:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  stash-work-in-progress:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  stash-tracked-and-untracked:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  restore-worktree-and-index:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  reset-modes-and-risk:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  revert-shared-commit:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  reflog-and-expiration:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  safe-recovery-decision:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+08-end-to-end-git.md:
+  trace-change-to-commit:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  follow-branch-and-remote:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  select-merge-or-rebase-mechanics:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  diagnose-divergence-and-conflict:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  choose-safe-undo-in-context:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  verify-end-to-end-evidence:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  handoff-to-team-collaboration:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false

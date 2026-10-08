@@ -54,7 +54,7 @@
     "BUILD_VIDEO": {
         "DESCRIPTION": "Enable localized video script skeletons mapped from README menu structure",
         "TYPE": "boolean",
-        "VALUE": "FALSE"
+        "VALUE": "TRUE"
     },
     "BUILD_ROADMAP": {
         "DESCRIPTION": "Enable localized roadmap skeletons for this module based on MODULE_LANGUAGE",
@@ -114,7 +114,7 @@
     "USE_TASK": {
         "DESCRIPTION": "Enable it to auto inject task list in file gradle/task/list/task-list.json",
         "TYPE": "boolean",
-        "VALUE": "FALSE",
+        "VALUE": "TRUE",
         "GROUP": "TASK"
     }
 }
