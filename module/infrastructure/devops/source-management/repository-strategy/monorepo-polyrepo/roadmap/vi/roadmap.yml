@@ -41,4 +41,85 @@
 # Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: repository-topology-mental-model
+    relatedKnowledge:
+      - 01-repository-topology-foundations
+    title: "Tư duy tổ chức kho mã nguồn"
+    purpose: "Hiểu vì sao cách phân chia mã nguồn vào các kho lưu trữ ảnh hưởng đến cộng tác và thay đổi phần mềm, dù cấu trúc ứng dụng có thể giống nhau."
+    objectives:
+      - "Phân biệt monorepo, nơi nhiều dự án hoặc thành phần cùng chia sẻ một kho, với polyrepo, nơi chúng được quản lý trong nhiều kho riêng."
+      - "Nhận biết ranh giới kho mã khác với ranh giới ứng dụng, dịch vụ hoặc triển khai; một monorepo không đồng nghĩa với ứng dụng nguyên khối."
+      - "Giải thích các câu hỏi chiến lược cần trả lời trước khi chọn cấu trúc kho: ai sở hữu, ai phối hợp thay đổi và phần nào cần độc lập."
+
+  - id: repository-boundaries-and-ownership
+    relatedKnowledge:
+      - 02-boundaries-and-ownership
+    title: "Ranh giới kho mã và trách nhiệm sở hữu"
+    purpose: "Đánh giá cách cấu trúc kho ảnh hưởng tới việc phân công trách nhiệm và duy trì những ranh giới rõ ràng giữa các nhóm."
+    objectives:
+      - "Nhận ra lợi ích của việc tập trung khả năng tìm kiếm và tái sử dụng mã trong monorepo cùng nhu cầu xác định chủ sở hữu của từng khu vực."
+      - "So sánh việc phân chia sở hữu theo thư mục hoặc thành phần trong một kho với việc gắn trách nhiệm cho từng kho riêng."
+      - "Giải thích vì sao chia kho theo sơ đồ tổ chức hoặc theo từng dịch vụ một cách máy móc có thể tạo ra ranh giới khó phối hợp."
+
+  - id: cross-repository-change-coordination
+    relatedKnowledge:
+      - 03-cross-component-coordination
+    title: "Phối hợp thay đổi giữa nhiều thành phần"
+    purpose: "Hiểu những khác biệt về khả năng quan sát, xem xét và phối hợp khi một yêu cầu ảnh hưởng đến nhiều dự án hoặc nhóm."
+    objectives:
+      - "So sánh khả năng ghi nhận một thay đổi xuyên nhiều thành phần trong cùng lịch sử với nhu cầu phối hợp nhiều thay đổi ở các kho độc lập."
+      - "Phân tích tác động đến thứ tự tích hợp, trách nhiệm đánh giá và khả năng theo dõi một thay đổi từ đầu đến cuối."
+      - "Nhận ra rằng dùng chung kho không tự động loại bỏ xung đột nhóm và dùng nhiều kho không loại bỏ phụ thuộc giữa các thành phần."
+
+  - id: dependency-sharing-and-compatibility
+    relatedKnowledge:
+      - 04-shared-code-and-dependency-compatibility
+    title: "Chia sẻ mã nguồn và quản lý phụ thuộc"
+    purpose: "Nhìn thấy hệ quả của cấu trúc kho đối với tái sử dụng thư viện, đồng bộ thay đổi giao diện và trách nhiệm duy trì tương thích."
+    objectives:
+      - "Giải thích vì sao thay đổi thư viện dùng chung thường dễ được xem xét cùng các nơi sử dụng trong một kho, nhưng vẫn cần ranh giới phụ thuộc rõ."
+      - "Nhận biết trong polyrepo, các thay đổi liên kho thường cần phối hợp phiên bản, giao diện tương thích và lịch cập nhật của bên sử dụng."
+      - "So sánh tính nhất quán của phụ thuộc với quyền tự chủ về công cụ và công nghệ; không đồng nhất việc chung kho với việc mọi thành phần phải dùng cùng phiên bản."
+
+  - id: release-coupling-and-independence
+    relatedKnowledge:
+      - 05-release-coupling-and-independence
+    title: "Mức độ gắn kết giữa thay đổi và phát hành"
+    purpose: "Phân biệt mối liên hệ giữa cách quản lý mã nguồn và mức độ độc lập khi lập kế hoạch đưa các thành phần tới người dùng."
+    objectives:
+      - "Phân tích khi nào thay đổi cần phối hợp giữa nhiều thành phần và khi nào từng thành phần có thể được kiểm chứng, phát hành độc lập."
+      - "Nhận biết monorepo không bắt buộc mọi thành phần phát hành cùng lúc và polyrepo không bảo đảm các thành phần có thể thay đổi độc lập."
+      - "Đánh giá chi phí phối hợp của thay đổi không tương thích, cập nhật thư viện và khác biệt lịch phát hành ở từng cách tổ chức kho."
+
+  - id: access-control-and-governance
+    relatedKnowledge:
+      - 06-access-and-repository-governance
+    title: "Quyền truy cập và kiểm soát trách nhiệm"
+    purpose: "Đánh giá ảnh hưởng của ranh giới kho đến quyền xem, quyền sửa, yêu cầu đánh giá và quản trị mã nguồn khi nhiều nhóm cùng tham gia."
+    objectives:
+      - "Phân biệt việc kiểm soát theo khu vực mã nguồn bằng chủ sở hữu và quy tắc đánh giá với việc giới hạn quyền ở ranh giới từng kho."
+      - "Nhận ra trường hợp mã nguồn cần tách biệt quyền truy cập hoặc có yêu cầu pháp lý và bảo mật làm thay đổi lựa chọn kho."
+      - "Hiểu vì sao thiếu quy tắc sở hữu trong monorepo hay quản trị không nhất quán giữa nhiều kho đều tạo ra rủi ro."
+
+  - id: scale-tooling-and-automation-tradeoffs
+    relatedKnowledge:
+      - 07-scale-tooling-and-ci-strategy
+    title: "Quy mô kho và hệ quả đối với công cụ"
+    purpose: "Biết các yếu tố về quy mô và vận hành cần được cân nhắc khi chọn cấu trúc kho, ở mức chiến lược."
+    objectives:
+      - "Đánh giá ảnh hưởng của kích thước và lịch sử kho, số lượng người đóng góp, tốc độ thay đổi và độ phức tạp của quan hệ phụ thuộc."
+      - "Giải thích vì sao monorepo quy mô lớn đòi hỏi khả năng giới hạn phạm vi công việc bị ảnh hưởng và phản hồi nhanh từ công cụ xây dựng, kiểm thử và CI."
+      - "So sánh chi phí duy trì nhiều cấu hình và luồng tự động hóa ở polyrepo với chi phí đầu tư công cụ, quy tắc và hạ tầng cho monorepo."
+      - "Nhận diện những dấu hiệu cần xem lại cấu trúc kho mà không triển khai chi tiết lệnh Git, Gradle hoặc pipeline."
+
+  - id: choosing-and-evolving-topology
+    relatedKnowledge:
+      - 08-choose-split-consolidate
+    title: "Lựa chọn, tách và hợp nhất kho mã có chủ đích"
+    purpose: "Tổng hợp các đánh đổi để đề xuất cấu trúc kho phù hợp và nhận biết thời điểm cần điều chỉnh khi sản phẩm hoặc tổ chức thay đổi."
+    objectives:
+      - "So sánh monorepo và polyrepo theo mức độ phụ thuộc, tần suất thay đổi xuyên nhóm, quyền truy cập, nhịp phát hành và năng lực công cụ."
+      - "Đề xuất lý do hợp nhất khi việc phối hợp liên kho lặp lại gây trở ngại, hoặc tách kho khi quyền sở hữu, truy cập hay cách vận hành cần độc lập hơn."
+      - "Nhận diện chi phí chuyển đổi: di chuyển lịch sử, thay đổi quyền và quy trình, điều chỉnh phụ thuộc và phối hợp giữa các nhóm."
+      - "Giải thích quyết định tổ chức kho ở cấp chiến lược và bàn giao việc triển khai công cụ xây dựng, CI, kiến trúc dịch vụ cho đúng lĩnh vực phụ trách."

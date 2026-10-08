@@ -14,3 +14,20 @@
 #
 # Add only curated references that are useful for the module.
 # The build system must not overwrite this file after authored content exists.
+
+references:
+  - title: "Why Google Stores Billions of Lines of Code in a Single Repository"
+    url: "https://research.google/pubs/why-google-stores-billions-of-lines-of-code-in-a-single-repository/"
+    description: "Google engineering research on the common-source model, large-scale repository tooling, and trade-offs of monolithic source management."
+  - title: "Advantages and Disadvantages of a Monolithic Codebase"
+    url: "https://research.google/pubs/advantages-and-disadvantages-of-a-monolithic-codebase/"
+    description: "Empirical Google study comparing monolithic and multi-repository development, including visibility, shared dependencies, access control, and tool flexibility."
+  - title: "About code owners — GitHub Docs"
+    url: "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners"
+    description: "Official repository governance documentation illustrating path-level ownership and review policy within a shared codebase."
+  - title: "About projects and scaling your organization — Azure DevOps"
+    url: "https://learn.microsoft.com/en-us/azure/devops/organizations/projects/about-projects"
+    description: "Microsoft guidance on arranging repositories, subprojects, teams, and access boundaries at an organizational level."
+  - title: "Optimize repository performance — Azure Repos"
+    url: "https://learn.microsoft.com/en-us/azure/devops/repos/git/optimize-repository-performance"
+    description: "Official discussion of repository scale, history and structure, and why tooling capabilities matter as a source repository grows."
