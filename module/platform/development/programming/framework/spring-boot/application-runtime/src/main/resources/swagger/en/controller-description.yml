@@ -1,0 +1,6 @@
+ApplicationRuntimeExperimentController:
+  description: |-
+    <h2>Application Runtime Experiment Controller</h2>
+    <p>Runs bounded observations of SpringApplication startup state, parsed application arguments, and Boot-managed task execution. Each endpoint exposes runtime evidence for an existing Knowledge concept rather than restating the chapter text.</p>
+  readmeRelated:
+    file: 2.ApplicationLifecycleEvents/ApplicationLifecycleEvents.md

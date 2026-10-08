@@ -1,10 +1,30 @@
-﻿references:
-  - title: "Spring Boot 3.3 Reference - SpringApplication"
-    url: "https://docs.spring.io/spring-boot/docs/3.3.5/reference/html/features.html#features.spring-application"
-    description: "Official Spring Boot application runtime and lifecycle reference."
-  - title: "Spring Boot 3.3 Reference - Logging"
-    url: "https://docs.spring.io/spring-boot/docs/3.3.5/reference/html/features.html#features.logging"
-    description: "Official Spring Boot logging integration reference."
-  - title: "Spring Boot 3.3 Reference - Docker Compose"
-    url: "https://docs.spring.io/spring-boot/docs/3.3.5/reference/html/features.html#features.docker-compose"
-    description: "Official development-time Docker Compose integration reference."
+# ============================================================
+# MODULE REFERENCE STRUCTURE
+# ============================================================
+#
+# This is the shared module-level reference catalog.
+# It is intentionally not split by MODULE_LANGUAGE.
+#
+# Add only curated references that are useful for the module.
+# The build system must not overwrite this file after authored content exists.
+
+references:
+  - title: "Spring Boot 3.3 — SpringApplication"
+    url: "https://docs.spring.io/spring-boot/3.3/reference/features/spring-application.html"
+    description: "Canonical reference for SpringApplication startup failure, lazy initialization, availability, lifecycle events, application arguments, runners, exit handling, startup tracking, and Boot virtual-thread enablement."
+
+  - title: "Spring Boot 3.3 — Task Execution and Scheduling"
+    url: "https://docs.spring.io/spring-boot/3.3/reference/features/task-execution-and-scheduling.html"
+    description: "Canonical reference for Boot's auto-configured task executor and scheduler, customization properties, integration points, and virtual-thread-backed execution."
+
+  - title: "Spring Boot 3.3 — Logging"
+    url: "https://docs.spring.io/spring-boot/3.3/reference/features/logging.html"
+    description: "Canonical reference for Boot logging bootstrap, levels, groups, file output, rotation, LoggingSystem selection, and custom logging configuration."
+
+  - title: "Spring Boot 3.3 — SSL"
+    url: "https://docs.spring.io/spring-boot/3.3/reference/features/ssl.html"
+    description: "Canonical reference for named JKS/PEM SSL bundles, the SslBundles runtime catalog, and reusable SSL trust/key material."
+
+  - title: "Spring Boot 3.3 — Development-time Services"
+    url: "https://docs.spring.io/spring-boot/3.3/reference/features/dev-services.html"
+    description: "Canonical reference for Spring Boot Docker Compose support, service connections, readiness checks, Compose profiles, and development-time lifecycle management."

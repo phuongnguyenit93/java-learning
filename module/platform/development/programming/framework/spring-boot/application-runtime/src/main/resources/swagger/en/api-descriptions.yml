@@ -1,0 +1,84 @@
+ApplicationRuntimeExperimentController:
+  lifecycleTimeline():
+    summary: Observe startup events, availability transitions, and runner timing
+    description: Return the startup observations captured by a real ApplicationRunner
+      and application-event listener. The sequence makes the boundary between ApplicationStartedEvent,
+      liveness, runner execution, ApplicationReadyEvent, and readiness acceptance
+      visible after startup has completed.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 2.ApplicationLifecycleEvents/ApplicationLifecycleEvents.md
+      anchor: context-started-ready-events
+    methodName: lifecycleTimeline
+    params: [
+      ]
+    path: com/example/learning/applicationruntime/controller/ApplicationRuntimeExperimentController.java
+    mapping: '@GetMapping("/lifecycle")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /spring-boot/runtime/lifecycle
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  applicationArguments():
+    summary: Inspect the ApplicationArguments parsed for this process
+    description: Return the exact source arguments plus Boot's option and non-option
+      views. Restart the application with values such as --mode=demo sample to see
+      how the same command line is classified at runtime.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 3.ArgumentsAndRunners/ArgumentsAndRunners.md
+      anchor: application-arguments-model
+    methodName: applicationArguments
+    params: [
+      ]
+    path: com/example/learning/applicationruntime/controller/ApplicationRuntimeExperimentController.java
+    mapping: '@GetMapping("/arguments")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /spring-boot/runtime/arguments
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  taskExecutor():
+    summary: Observe Boot's auto-configured applicationTaskExecutor
+    description: Submit one bounded task through the Boot-provided applicationTaskExecutor
+      and return the executor implementation plus caller/worker thread identity. The
+      response also reports whether the worker is virtual so the same experiment can
+      be repeated with spring.threads.virtual.enabled=true.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 5.TaskExecutionScheduling/TaskExecutionScheduling.md
+      anchor: application-task-executor
+    methodName: taskExecutor
+    params: [
+      ]
+    path: com/example/learning/applicationruntime/controller/ApplicationRuntimeExperimentController.java
+    mapping: '@GetMapping("/task-executor")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /spring-boot/runtime/task-executor
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true

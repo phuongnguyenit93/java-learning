@@ -38,4 +38,484 @@
 #       Internal id of the correct answer. The frontend checks this identity after shuffling.
 # </quiz-schema>
 
-questions: []
+questions:
+  - id: "application-runtime-q01"
+    question: "A startup runner takes several seconds. Which sequence best matches Spring Boot's default lifecycle around that runner?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.ApplicationLifecycleEvents/ApplicationLifecycleEvents.md"
+      anchor: "context-started-ready-events"
+    apiRelated:
+      controller: "ApplicationRuntimeExperimentController"
+      methodSignature: "lifecycleTimeline()"
+    answers:
+      - id: A
+        answer: "After refresh, ready and readiness acceptance occur before the runner begins."
+        explanation: "Runners execute before `ApplicationReadyEvent`; readiness is not moved to accepting traffic first."
+      - id: B
+        answer: "After refresh, started and liveness occur; the runner runs; ready and readiness acceptance follow."
+        explanation: "This preserves the important distinction between a live context and an application whose required startup runners have finished."
+      - id: C
+        answer: "Before refresh, the runner executes so it can influence which beans are created."
+        explanation: "A runner relies on a refreshed context and is therefore too late to control bean creation that way."
+      - id: D
+        answer: "After refresh, the runner runs; liveness and readiness both change only when it finishes."
+        explanation: "Boot publishes liveness after the started phase, while readiness acceptance follows the ready phase after runners."
+    correctAnswerId: B
+  - id: "application-runtime-q02"
+    question: "A component must observe `ApplicationEnvironmentPreparedEvent`, before the normal bean graph exists. What is the most appropriate registration strategy?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.ApplicationLifecycleEvents/ApplicationLifecycleEvents.md"
+      anchor: "early-listener-registration"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Declare only a normal `@Bean` listener and rely on eager bean creation."
+        explanation: "The event can occur before that bean exists, so eager creation inside the normal context cannot make the listener observe an earlier phase."
+      - id: B
+        answer: "Put the work in an `ApplicationRunner` because runners receive all earlier events retrospectively."
+        explanation: "Runners execute later and do not replay early SpringApplication events."
+      - id: C
+        answer: "Publish a replacement environment event after the context refresh."
+        explanation: "Recreating an event later changes its lifecycle meaning instead of observing the real bootstrap checkpoint."
+      - id: D
+        answer: "Register it through a supported early-listener mechanism on `SpringApplication` or its builder."
+        explanation: "Early events require listener registration outside the ordinary bean lifecycle because the `ApplicationContext` is not yet able to create the listener bean."
+    correctAnswerId: D
+  - id: "application-runtime-q03"
+    question: "Both runner interfaces execute in the same startup phase. When is `ApplicationRunner` the better choice than `CommandLineRunner`?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.ArgumentsAndRunners/ArgumentsAndRunners.md"
+      anchor: "applicationrunner-vs-commandlinerunner"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "When startup logic needs Boot's parsed option and non-option view of command-line input."
+        explanation: "`ApplicationRunner` receives `ApplicationArguments`, which exposes parsed options, non-options, and source arguments."
+      - id: B
+        answer: "When startup logic must run after `ApplicationReadyEvent` instead of before readiness."
+        explanation: "Both runner interfaces execute before `ApplicationReadyEvent`; their difference is not lifecycle timing."
+      - id: C
+        answer: "When startup logic must receive only the raw argument strings without Boot's parsed view."
+        explanation: "`CommandLineRunner` is the interface that directly receives the raw `String...` argument sequence."
+      - id: D
+        answer: "When startup logic must execute asynchronously on a separate managed thread."
+        explanation: "Neither runner interface implies asynchronous execution; both participate in the same startup runner phase."
+    correctAnswerId: A
+  - id: "application-runtime-q04"
+    question: "The application starts with `--mode=demo sample`. What should Boot's `ApplicationArguments` expose?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.ArgumentsAndRunners/ArgumentsAndRunners.md"
+      anchor: "application-arguments-model"
+    apiRelated:
+      controller: "ApplicationRuntimeExperimentController"
+      methodSignature: "applicationArguments()"
+    answers:
+      - id: A
+        answer: "Both tokens become non-option arguments, and the original source arguments are not retained."
+        explanation: "Boot keeps the source arguments and also separates option arguments from positional input."
+      - id: B
+        answer: "`sample` becomes an option, while `--mode=demo` becomes a non-option argument."
+        explanation: "The `--name=value` form is an option; the positional token is the non-option argument."
+      - id: C
+        answer: "`mode` is option value `demo`, `sample` is non-option, and both remain in source arguments."
+        explanation: "That is the parsed view the runtime experiment is designed to expose without manual `String[]` parsing."
+      - id: D
+        answer: "`mode` is option value `demo`, while `sample` is discarded from parsed and source views."
+        explanation: "`ApplicationArguments` preserves non-option arguments as well as the original source arguments."
+    correctAnswerId: C
+  - id: "application-runtime-q05"
+    question: "A temporary database outage prevents requests from succeeding, but the application process itself can recover when the database returns. Which availability response is the safer default mental model?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.AvailabilityFailureExit/AvailabilityFailureExit.md"
+      anchor: "liveness-readiness-model"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Set liveness to broken and leave readiness accepting until the database returns."
+        explanation: "Coupling liveness directly to a shared external dependency can create restart storms and amplify the outage."
+      - id: B
+        answer: "Set readiness to refuse traffic while keeping liveness focused on unrecoverable process state."
+        explanation: "Readiness answers whether traffic should arrive now; liveness should avoid treating every recoverable external outage as a reason to restart the process."
+      - id: C
+        answer: "Keep liveness and readiness accepting because dependency outages are always external to availability."
+        explanation: "Readiness can legitimately reflect whether the application can currently serve traffic."
+      - id: D
+        answer: "Set both liveness and readiness to broken so restart and traffic removal happen together."
+        explanation: "A recoverable shared dependency outage may justify refusing traffic, but treating it as liveness failure can amplify the outage through restarts."
+    correctAnswerId: B
+  - id: "application-runtime-q06"
+    question: "A command-style Boot application calls `SpringApplication.exit(context)` and receives exit code 7. What follows from that call alone?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.AvailabilityFailureExit/AvailabilityFailureExit.md"
+      anchor: "application-exit-codes"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "`SpringApplication.exit` returns code 7 and immediately terminates the JVM."
+        explanation: "`SpringApplication.exit` computes and returns an exit code; it does not itself guarantee JVM termination."
+      - id: B
+        answer: "`SpringApplication.exit` returns code 7 and converts it into an `ApplicationFailedEvent`."
+        explanation: "An application exit code is a process result contract and is not automatically a startup-failure event."
+      - id: C
+        answer: "`SpringApplication.exit` returns code 7 and automatically publishes it to the operating system."
+        explanation: "Command applications can pass the returned value to `System.exit(...)` when process termination is intended."
+      - id: D
+        answer: "`SpringApplication.exit` returns code 7; terminating the JVM or passing that code to the OS is separate."
+        explanation: "This separates Boot's exit-code calculation from the Java process termination action."
+    correctAnswerId: D
+  - id: "application-runtime-q07"
+    question: "The runtime experiment submits one task through the injected `applicationTaskExecutor`. Which returned evidence most directly proves that the task was dispatched away from the HTTP caller thread?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.TaskExecutionScheduling/TaskExecutionScheduling.md"
+      anchor: "application-task-executor"
+    apiRelated:
+      controller: "ApplicationRuntimeExperimentController"
+      methodSignature: "taskExecutor()"
+    answers:
+      - id: A
+        answer: "`differentThread=true`, derived from different caller and worker thread ids."
+        explanation: "The experiment records both thread identities; different ids are direct evidence that the submitted task executed on another thread."
+      - id: B
+        answer: "`virtualThreadsEnabled=true`, regardless of the worker thread identity."
+        explanation: "The property reports configuration, but by itself it does not prove that this particular task executed away from the caller."
+      - id: C
+        answer: "The concrete executor class name contains the word `TaskExecutor`."
+        explanation: "A type name identifies infrastructure but does not prove the observed task crossed a thread boundary."
+      - id: D
+        answer: "The endpoint returns within three seconds."
+        explanation: "The timeout only bounds the experiment; completion time does not establish which thread ran the task."
+    correctAnswerId: A
+  - id: "application-runtime-q08"
+    question: "What is the key effect of setting `spring.threads.virtual.enabled=true` in Spring Boot 3.3?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.VirtualThreads/VirtualThreads.md"
+      anchor: "virtual-thread-switch"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Boot switches supported executors and schedulers to virtual threads and also converts third-party pools."
+        explanation: "The property governs supported Boot-managed infrastructure, not arbitrary executors created elsewhere."
+      - id: B
+        answer: "Boot keeps platform-thread executors and schedulers but changes task submission to non-blocking mode."
+        explanation: "The property changes supported Boot-managed executor and scheduler implementations rather than merely altering task submission semantics."
+      - id: C
+        answer: "Boot switches supported executors and schedulers to virtual threads; Java still defines thread semantics."
+        explanation: "Boot owns the integration switch; Java still owns behavior such as scheduling, pinning, interruption, and workload suitability."
+      - id: D
+        answer: "Boot switches supported executors and schedulers to virtual threads and guarantees CPU-bound throughput gains."
+        explanation: "Virtual threads do not add processors and do not guarantee performance improvements for every workload."
+    correctAnswerId: C
+  - id: "application-runtime-q09"
+    question: "A non-web application schedules all of its ongoing work on virtual threads and unexpectedly exits when no other non-daemon thread remains. Which Boot setting directly addresses that process-lifecycle issue?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.VirtualThreads/VirtualThreads.md"
+      anchor: "virtual-thread-daemon-keepalive"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Set `spring.task.scheduling.pool.size=1` so a platform scheduler thread keeps the JVM alive."
+        explanation: "Pooling properties do not describe the same model when Boot uses its virtual-thread scheduler strategy."
+      - id: B
+        answer: "Set `spring.main.keep-alive=true` so Boot keeps the JVM alive without another non-daemon thread."
+        explanation: "Boot provides this setting specifically for applications that otherwise have no non-daemon thread keeping the process alive."
+      - id: C
+        answer: "Set `spring.main.lazy-initialization=false` so eager bean creation keeps the JVM alive."
+        explanation: "Bean initialization timing does not provide the missing non-daemon process-liveness guarantee."
+      - id: D
+        answer: "Set readiness to accepting so Boot keeps the JVM alive while scheduled work exists."
+        explanation: "Availability state communicates traffic readiness; it does not keep the JVM alive."
+    correctAnswerId: B
+  - id: "application-runtime-q10"
+    question: "Why can global lazy initialization make a deployment look faster while increasing runtime risk?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.StartupOptimization/StartupOptimization.md"
+      anchor: "lazy-initialization-tradeoffs"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Bean creation stays eager, but dependency injection is postponed until the first request."
+        explanation: "Lazy initialization defers eligible bean creation itself; it does not keep eager construction and postpone only injection."
+      - id: B
+        answer: "Bean creation is deferred, but configuration errors are still guaranteed to surface before readiness."
+        explanation: "Some failures can move to first use, so readiness does not guarantee that every lazy bean has already been created successfully."
+      - id: C
+        answer: "Bean creation is deferred, and unused beans are removed permanently after startup."
+        explanation: "Lazy beans remain part of the application graph and can still be created when a later dependency or request needs them."
+      - id: D
+        answer: "Bean creation is deferred, so first-use latency and some failures can move into live traffic."
+        explanation: "A shorter startup path can simply defer work and failure discovery, so optimization should be measured end to end."
+    correctAnswerId: D
+  - id: "application-runtime-q11"
+    question: "What is the strongest reason to configure an `ApplicationStartup` implementation such as `BufferingApplicationStartup` before tuning startup?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.StartupOptimization/StartupOptimization.md"
+      anchor: "application-startup-tracking"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "It records structured startup steps so slow phases or components can be identified before tuning."
+        explanation: "Measurement turns a vague startup complaint into evidence that can support a specific hypothesis."
+      - id: B
+        answer: "It records structured startup steps and automatically replaces the slow bean implementation."
+        explanation: "Startup tracking records evidence; it does not repair the component that caused the cost."
+      - id: C
+        answer: "It records structured startup steps only when Actuator exposes a production endpoint."
+        explanation: "The runtime can record startup steps independently; production endpoint exposure is an Actuator concern."
+      - id: D
+        answer: "It records structured startup steps and normalizes external conditions across repeated runs."
+        explanation: "Repeatable test conditions still have to be controlled by the developer; instrumentation does not remove environmental variance."
+    correctAnswerId: A
+  - id: "application-runtime-q12"
+    question: "Boot already exposes a supported property for a desired runtime behavior. When should application code usually replace that with programmatic `SpringApplication` customization?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.RuntimeCustomization/RuntimeCustomization.md"
+      anchor: "property-first-customization"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "When the same setting needs different values across deployment environments or active profiles."
+        explanation: "Environment and profile variation is exactly what Boot's externalized configuration model is designed to express."
+      - id: B
+        answer: "When `main()` would make an already-supported setting more visible to application developers."
+        explanation: "Code visibility alone does not add a capability or lifecycle requirement that justifies replacing the supported property."
+      - id: C
+        answer: "When the property cannot express the requirement or customization must occur before the normal context exists."
+        explanation: "The narrowest supported owner is preferred; programmatic bootstrap code is justified by a concrete capability or lifecycle need."
+      - id: D
+        answer: "When auto-configuration consumes the property and the application only needs to override its supported default value."
+        explanation: "A supported property already provides that override surface; extra bootstrap code can instead interfere with Boot conventions."
+    correctAnswerId: C
+  - id: "application-runtime-q13"
+    question: "Why can a `@PropertySource` declared on an ordinary `@Configuration` class be too late to control Boot's earliest logging initialization?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "9.Logging/Logging.md"
+      anchor: "early-logging-bootstrap"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "`@PropertySource` is unavailable until after `ApplicationReadyEvent`, so logging cannot see it."
+        explanation: "`@PropertySource` participates during context configuration; the problem is that initial logging setup happens even earlier."
+      - id: B
+        answer: "Logging initializes before ordinary configuration beans, so their property sources can arrive too late."
+        explanation: "Logging must be available during early startup and failure, so Boot prepares it before normal bean configuration."
+      - id: C
+        answer: "Logging initializes after ordinary configuration beans, but ignores their property sources by design."
+        explanation: "The ordering is reversed: Boot prepares logging before ordinary configuration beans are processed."
+      - id: D
+        answer: "Logging reads only JVM system properties, so Environment property sources never participate."
+        explanation: "Boot can read logging properties from the early Environment; the limitation is source timing, not a JVM-only rule."
+    correctAnswerId: B
+  - id: "application-runtime-q14"
+    question: "Why does Boot recommend a file such as `logback-spring.xml` when Boot-specific Logback integration is needed?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "9.Logging/Logging.md"
+      anchor: "spring-logging-config-files"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "It makes the file portable between Logback and Log4j2 without changes."
+        explanation: "The suffix changes when Boot participates in loading/configuration, not the logging protocol."
+      - id: B
+        answer: "It makes appenders available before the logging system itself is initialized."
+        explanation: "Native Logback configuration can define appenders in standard files as well."
+      - id: C
+        answer: "It makes Spring beans available for arbitrary use inside native Logback configuration."
+        explanation: "Logging is initialized during early bootstrap before ordinary application beans are available, so `-spring` support is not a general bean lookup mechanism."
+      - id: D
+        answer: "It lets Boot load native logging config at the right phase and apply Boot extensions."
+        explanation: "The lifecycle timing gives Boot room to integrate Spring profiles and environment-aware extensions."
+    correctAnswerId: D
+  - id: "application-runtime-q15"
+    question: "An application has a named PEM SSL bundle `partner-api`. What does the auto-configured `SslBundles` bean primarily provide?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "10.SslBundles/SslBundles.md"
+      anchor: "sslbundles-catalog"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "A named catalog of SSL material and derived objects that consumers can resolve by bundle name."
+        explanation: "The catalog separates configured key/trust material from consumers and can expose higher-level objects such as an `SSLContext`."
+      - id: B
+        answer: "A named catalog of client instances that Boot automatically rewrites with bundle settings."
+        explanation: "Consumers must explicitly support Boot's bundle integration or accept an SSL object created from the bundle."
+      - id: C
+        answer: "A named catalog of certificates that Boot issues and renews for each configured partner."
+        explanation: "Certificate issuance and PKI lifecycle are outside the SSL bundle abstraction."
+      - id: D
+        answer: "A named catalog of externalized properties that replaces keystore and truststore configuration."
+        explanation: "Bundles are created from configuration; the catalog does not eliminate configuration ownership."
+    correctAnswerId: A
+  - id: "application-runtime-q16"
+    question: "A third-party HTTP client has no Spring Boot SSL-bundle property but accepts an `SSLContext`. How should the application use a configured bundle?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "10.SslBundles/SslBundles.md"
+      anchor: "ssl-bundle-consumers"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Resolve the named bundle and rely on Boot to patch the third-party client automatically."
+        explanation: "Bundle support is explicit; the existence of a named bundle does not rewrite arbitrary third-party clients."
+      - id: B
+        answer: "Resolve the named bundle and copy its certificate files into the client's source package."
+        explanation: "That duplicates security material and bypasses the configured reusable boundary."
+      - id: C
+        answer: "Resolve the named bundle, create its `SSLContext`, and pass that through the client's SSL hook."
+        explanation: "This uses the highest-level SSL object the client accepts while preserving Boot's named-bundle configuration boundary."
+      - id: D
+        answer: "Resolve the named bundle and bind it to `server.ssl.bundle` so the client inherits it."
+        explanation: "Server TLS configuration is a different consumer and does not solve a client integration requirement."
+    correctAnswerId: C
+  - id: "application-runtime-q17"
+    question: "Boot discovers a Docker Compose project that a developer already started before the application. Under the documented default ownership model, what should Boot do?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "11.DockerCompose/DockerCompose.md"
+      anchor: "compose-discovery-lifecycle"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Reuse supported services for connection details and stop the project when the application exits."
+        explanation: "Boot avoids restarting a project that it detects as already running."
+      - id: B
+        answer: "Reuse supported services for connection details and leave shutdown ownership with whoever started the project."
+        explanation: "This prevents Boot from shutting down infrastructure that another process or developer started."
+      - id: C
+        answer: "Ignore the running project and skip creating any service-connection details."
+        explanation: "Boot can still derive supported connection details from already-running Compose services."
+      - id: D
+        answer: "Restart the project under Boot so service-connection details can be created."
+        explanation: "Boot integrates with the existing Compose definition; it does not rewrite the project to acquire ownership."
+    correctAnswerId: B
+  - id: "application-runtime-q18"
+    question: "A Compose database maps its container port to a dynamic host port, and Boot creates a service connection for it. Which connection information should the local application expect Boot to prefer?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "11.DockerCompose/DockerCompose.md"
+      anchor: "compose-mapped-ports-precedence"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Use the container port declared by the image, regardless of the host mapping."
+        explanation: "The application runs outside the container and needs the mapped host endpoint."
+      - id: B
+        answer: "Use ordinary datasource properties first, even when they contain a stale local port."
+        explanation: "For the corresponding auto-configuration, service connection details take precedence so dynamic local endpoints can work."
+      - id: C
+        answer: "Use a new random port chosen by Boot, independent of Compose's host mapping."
+        explanation: "Boot derives the reachable mapped host port rather than inventing a separate endpoint."
+      - id: D
+        answer: "Use the mapped host port from the service connection, ahead of ordinary connection properties."
+        explanation: "This is why a locally assigned port can be consumed without hard-coding it into application configuration."
+    correctAnswerId: D
+  - id: "application-runtime-q19"
+    question: "An application needs a bounded database warm-up after normal beans exist, and traffic must wait until the warm-up succeeds. Which runtime hook best communicates that intent?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "12.RuntimeSynthesis/RuntimeSynthesis.md"
+      anchor: "runtime-hook-selection"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "An ordered startup runner such as `ApplicationRunner`."
+        explanation: "A runner has access to the refreshed context and remains on the startup path before readiness, matching both prerequisites."
+      - id: B
+        answer: "An early `ApplicationEnvironmentPreparedEvent` listener."
+        explanation: "That phase occurs before the ordinary bean graph exists and is too early for a database warm-up using normal beans."
+      - id: C
+        answer: "A perpetual task on a managed scheduler."
+        explanation: "A scheduler is appropriate for ongoing background work, but it does not naturally express a one-time readiness-blocking startup requirement."
+      - id: D
+        answer: "A `SpringApplication` customization that creates the repository manually in `main()`."
+        explanation: "That bypasses normal bean ownership and uses bootstrap customization for work better expressed at the runner phase."
+    correctAnswerId: A
+  - id: "application-runtime-q20"
+    question: "A Boot application has a refreshed context and is live, but never becomes ready. Which area should be investigated first according to the module's runtime classification model?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "12.RuntimeSynthesis/RuntimeSynthesis.md"
+      anchor: "runtime-problem-classification"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Inspect SSL-bundle resolution first, because live-but-not-ready usually means TLS setup is incomplete."
+        explanation: "TLS may be relevant to some applications, but the lifecycle symptom points first to work between live and ready."
+      - id: B
+        answer: "Inspect logging transport first, because live-but-not-ready usually means startup logs were lost."
+        explanation: "Logging can provide evidence, but a backend transport issue does not explain the lifecycle transition by itself."
+      - id: C
+        answer: "Inspect runners and readiness first, because work between live and ready may be blocked or failing."
+        explanation: "Boot becomes live before runners finish and accepts traffic only after the ready phase, so this is the closest lifecycle owner."
+      - id: D
+        answer: "Inspect Docker image layering first, because live-but-not-ready usually means packaging is incomplete."
+        explanation: "Packaging can cause startup failures, but a process that already has a live refreshed context has progressed beyond that generic classification."
+    correctAnswerId: C

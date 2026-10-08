@@ -41,4 +41,140 @@
 # The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: springapplication-runtime-model
+    title: "The SpringApplication Runtime Model"
+    purpose: "Build the end-to-end mental model for what Spring Boot owns after main() hands control to SpringApplication, from preparing runtime inputs and the ApplicationContext through refresh, startup hooks, readiness, steady-state execution, and process exit."
+    relatedKnowledge:
+      - RuntimeModel
+    objectives:
+      - "Trace the major runtime phases without re-teaching the fundamentals module's bootstrap overview or Spring Framework container internals."
+      - "Understand that externalized configuration and auto-configuration shape the runtime before application-specific startup work begins."
+      - "Distinguish Boot's generic application runtime from web-server-specific behavior, production endpoints, and framework-level lifecycle mechanics owned by neighboring modules."
+      - "Use the lifecycle model as the foundation for choosing the correct hook for later runtime concerns instead of treating startup callbacks as interchangeable."
+    relatedModules:
+      - routeId: SPRING_BOOT_FUNDAMENTALS
+        label: "Spring Boot Fundamentals"
+        note: "Introduces the high-level bootstrap model that this module extends into detailed runtime behavior."
+      - routeId: SPRING_BOOT_EXTERNALIZED_CONFIGURATION
+        label: "Spring Boot Externalized Configuration"
+        note: "Owns the configuration inputs that SpringApplication consumes while preparing the runtime environment."
+      - routeId: SPRING_BOOT_AUTO_CONFIGURATION
+        label: "Spring Boot Auto-Configuration"
+        note: "Owns conditional automatic bean configuration that participates in the ApplicationContext created by the runtime."
+
+  - id: lifecycle-events-arguments-and-runners
+    title: "Lifecycle Events, Application Arguments, and Startup Runners"
+    purpose: "Learn how to observe and extend the Boot startup sequence at the right phase using application events, parsed arguments, and ordered startup runners."
+    relatedKnowledge:
+      - ApplicationLifecycleEvents
+      - ArgumentsAndRunners
+    objectives:
+      - "Reason about the ordered SpringApplication events from the earliest pre-context phases through context refresh, started, ready, and failed outcomes."
+      - "Understand why listeners for events published before the ApplicationContext exists must be registered outside ordinary @Bean registration."
+      - "Use ApplicationArguments to distinguish option and non-option inputs without confusing command-line arguments with the full externalized-configuration curriculum."
+      - "Choose ApplicationRunner or CommandLineRunner for startup work that must run after context refresh but before the application is considered ready, including ordering when multiple runners exist."
+      - "Avoid long-running work in default synchronous event listeners when a later runner or asynchronous mechanism is the better lifecycle hook."
+
+  - id: availability-failure-and-exit
+    title: "Availability, Startup Failure, and Process Exit"
+    purpose: "Understand how Boot turns lifecycle progress and failure into operational state: liveness/readiness transitions, actionable startup diagnostics, shutdown behavior, and process exit codes."
+    relatedKnowledge:
+      - AvailabilityFailureExit
+    objectives:
+      - "Distinguish liveness from readiness and relate their default state transitions to context refresh, runner completion, and traffic acceptance."
+      - "Use ApplicationAvailability and AvailabilityChangeEvent as the Boot runtime model while leaving Actuator health endpoint exposure to the Actuator module."
+      - "Understand the role of FailureAnalyzer and the condition evaluation report when startup fails, without turning this milestone into auto-configuration diagnostics training."
+      - "Understand SpringApplication's JVM shutdown hook and the role of ExitCodeGenerator/SpringApplication.exit when a process must communicate an exit status."
+      - "Keep web-server graceful shutdown mechanics in the web-runtime module while retaining the generic process/context shutdown model here."
+    relatedModules:
+      - routeId: SPRING_BOOT_ACTUATOR
+        label: "Spring Boot Actuator"
+        note: "Consumes Boot availability state and exposes production-oriented health and diagnostic endpoints."
+      - routeId: SPRING_BOOT_WEB_RUNTIME
+        label: "Spring Boot Web Runtime"
+        note: "Owns embedded-server graceful shutdown and other server-specific shutdown behavior."
+
+  - id: task-execution-scheduling-and-virtual-threads
+    title: "Task Execution, Scheduling, and Boot Virtual-Thread Integration"
+    purpose: "Understand how Spring Boot auto-configures application task executors and schedulers, how customization changes that backing infrastructure, and what Boot changes when Java 21 virtual threads are enabled."
+    relatedKnowledge:
+      - TaskExecutionScheduling
+      - VirtualThreads
+    objectives:
+      - "Understand the conditions under which Boot provides an AsyncTaskExecutor and task scheduler and the major application integrations that consume them."
+      - "Tune platform-thread execution and scheduling with spring.task.execution and spring.task.scheduling while recognizing executor naming/type conventions that matter when supplying custom beans."
+      - "Understand that spring.threads.virtual.enabled switches Boot's auto-configured executor/scheduler strategy rather than teaching Java virtual-thread semantics themselves."
+      - "Recognize that pool-sizing properties no longer describe the same model when virtual threads are enabled and that daemon virtual threads can require spring.main.keep-alive for applications that otherwise have no non-daemon thread."
+      - "Keep @Async/@Scheduled framework semantics and generic concurrency design in their Spring Framework and Java owners."
+
+  - id: startup-tuning-and-runtime-customization
+    title: "Startup Tuning and Runtime Customization Boundaries"
+    purpose: "Learn how to tune startup deliberately and customize SpringApplication without hiding failures, bypassing configuration ownership, or turning generic container customization into Boot runtime curriculum."
+    relatedKnowledge:
+      - StartupOptimization
+      - RuntimeCustomization
+    objectives:
+      - "Evaluate lazy initialization as a startup-time trade-off: fewer eagerly created beans can shorten startup while deferring misconfiguration failures and shifting memory behavior."
+      - "Use ApplicationStartup-style startup tracking as evidence when investigating initialization cost, while leaving production endpoint exposure to Actuator."
+      - "Recognize SpringApplication and SpringApplicationBuilder customization points and choose them only when a normal configuration property or supported extension point is insufficient."
+      - "Separate Boot runtime customization from externalized configuration, auto-configuration authoring, Spring Framework container internals, and web-server-specific customization."
+
+  - id: boot-logging-runtime-integration
+    title: "Spring Boot Logging Runtime Integration"
+    purpose: "Understand Boot's early logging bootstrap and configuration model well enough to control runtime logs predictably without expanding into general logging architecture or observability operations."
+    relatedKnowledge:
+      - Logging
+    objectives:
+      - "Understand that Boot initializes logging before the ApplicationContext and why that timing limits which configuration mechanisms can affect the logging system."
+      - "Use Boot logging properties for logger levels, groups, console/file output, and supported rotation settings while keeping the underlying logging implementation boundary clear."
+      - "Understand LoggingSystem as Boot's integration abstraction and why -spring variants of native logging configuration files give Boot more control over initialization."
+      - "Distinguish Boot logging bootstrap/configuration from log aggregation, storage, analysis, correlation, and backend operations owned by the observability/logging curriculum."
+
+  - id: ssl-bundles-runtime-abstraction
+    title: "SSL Bundles as a Reusable Runtime Abstraction"
+    purpose: "Understand how Spring Boot represents named key and trust material as reusable SSL bundles that can be configured once and consumed by supported runtime clients or servers."
+    relatedKnowledge:
+      - SslBundles
+    objectives:
+      - "Configure named JKS/PKCS12 or PEM SSL bundles through the spring.ssl.bundle namespace without turning the module into TLS/PKI fundamentals."
+      - "Understand the auto-configured SslBundles catalog and the SslBundle abstraction as the runtime boundary between configured trust/key material and consumers."
+      - "Recognize that a bundle can provide stores, key/trust managers, and SSLContext-oriented material to supported integrations."
+      - "Hand off embedded-web-server TLS behavior and server-specific SSL configuration to web-runtime while retaining the generic reusable bundle model here."
+    relatedModules:
+      - routeId: SPRING_BOOT_WEB_RUNTIME
+        label: "Spring Boot Web Runtime"
+        note: "Consumes SSL bundles for embedded-server TLS and owns server-specific HTTPS configuration."
+
+  - id: docker-compose-development-runtime
+    title: "Docker Compose Development-Time Runtime Integration"
+    purpose: "Understand Spring Boot's development-time Docker Compose integration as a managed source of service connection details and lifecycle coordination for local application runs."
+    relatedKnowledge:
+      - DockerCompose
+    objectives:
+      - "Understand what spring-boot-docker-compose does when it discovers a Compose file: brings up the discovered Compose project when it is not already running and lifecycle configuration permits it, coordinates shutdown according to lifecycle policy, and separately creates service connection details only for supported containers."
+      - "Reason about mapped ports and service connection precedence without re-teaching generic Docker images, networks, volumes, or Compose syntax."
+      - "Use Boot's readiness checks, compose-file selection, profiles, skip controls, and lifecycle-management settings as development-runtime concerns."
+      - "Recognize that Docker Compose support is development-time integration and that Testcontainers test service connections belong to the testing module."
+    relatedModules:
+      - routeId: SPRING_BOOT_TESTING
+        label: "Spring Boot Testing"
+        note: "Owns Boot test integration and Testcontainers service connections used for automated tests."
+
+  - id: runtime-synthesis-and-handoffs
+    title: "End-to-End Runtime Reasoning and Module Handoffs"
+    purpose: "Synthesize the application runtime as one sequence of state transitions, extension points, managed runtime services, diagnostics, and explicit handoffs to neighboring Spring Boot domains."
+    relatedKnowledge:
+      - RuntimeSynthesis
+    objectives:
+      - "Trace a realistic application from SpringApplication startup through context refresh, runners, availability, background execution, runtime integrations, failure, and exit."
+      - "Choose among events, runners, executor/scheduler customization, configuration properties, and SpringApplication customization based on lifecycle timing and ownership."
+      - "Diagnose runtime problems by first locating the lifecycle phase and Boot subsystem involved instead of treating every startup/runtime symptom as the same kind of failure."
+      - "Explain the handoffs to web-runtime, Actuator, testing, configuration, auto-configuration, Java concurrency, Spring Framework concurrency, logging infrastructure, TLS/PKI, and containerization curricula."
+    relatedModules:
+      - routeId: SPRING_BOOT_WEB_RUNTIME
+        label: "Spring Boot Web Runtime"
+        note: "Extends the generic runtime model with embedded web-server selection, configuration, TLS consumption, proxy handling, and graceful shutdown."
+      - routeId: SPRING_BOOT_ACTUATOR
+        label: "Spring Boot Actuator"
+        note: "Adds production endpoints and operational visibility over runtime state and diagnostics."

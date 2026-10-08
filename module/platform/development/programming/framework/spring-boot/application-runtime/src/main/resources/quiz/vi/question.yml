@@ -38,4 +38,484 @@
 #       ID nội bộ của đáp án đúng. Frontend kiểm tra bằng identity này sau khi shuffle.
 # </quiz-schema>
 
-questions: []
+questions:
+  - id: "application-runtime-q01"
+    question: "Một startup runner mất vài giây để hoàn tất. Chuỗi nào khớp nhất với lifecycle mặc định của Spring Boot quanh runner đó?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.ApplicationLifecycleEvents/ApplicationLifecycleEvents.md"
+      anchor: "context-started-ready-events"
+    apiRelated:
+      controller: "ApplicationRuntimeExperimentController"
+      methodSignature: "lifecycleTimeline()"
+    answers:
+      - id: A
+        answer: "Sau refresh, ready và readiness chấp nhận traffic xảy ra trước khi runner bắt đầu."
+        explanation: "Runner chạy trước `ApplicationReadyEvent`; Boot không chuyển readiness sang nhận traffic trước khi runner hoàn tất."
+      - id: B
+        answer: "Sau refresh là started và liveness; runner chạy; ready và readiness chấp nhận traffic diễn ra sau."
+        explanation: "Chuỗi này giữ đúng khác biệt giữa một context đã live và một ứng dụng đã hoàn tất công việc khởi động bắt buộc."
+      - id: C
+        answer: "Trước refresh, runner chạy để có thể ảnh hưởng bean nào được tạo."
+        explanation: "Runner cần context đã refresh nên không thể dùng theo cách đó để điều khiển việc tạo bean ở giai đoạn trước."
+      - id: D
+        answer: "Sau refresh, runner chạy; liveness và readiness đều chỉ đổi khi runner hoàn tất."
+        explanation: "Boot phát liveness sau giai đoạn started, còn readiness chấp nhận traffic sau giai đoạn ready, tức là sau runner."
+    correctAnswerId: B
+  - id: "application-runtime-q02"
+    question: "Một thành phần cần quan sát `ApplicationEnvironmentPreparedEvent`, khi bean graph thông thường chưa tồn tại. Cách đăng ký nào phù hợp nhất?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.ApplicationLifecycleEvents/ApplicationLifecycleEvents.md"
+      anchor: "early-listener-registration"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Chỉ khai báo listener dạng `@Bean` và dựa vào eager bean creation."
+        explanation: "Event có thể xảy ra trước khi bean đó tồn tại, nên bean lifecycle thông thường không thể giúp listener quan sát một mốc sớm hơn."
+      - id: B
+        answer: "Đưa logic vào `ApplicationRunner` vì runner sẽ nhận lại toàn bộ event trước đó."
+        explanation: "Runner chạy ở giai đoạn sau và Spring Boot không replay các SpringApplication event sớm cho runner."
+      - id: C
+        answer: "Tự phát lại một environment event tương tự sau khi context refresh."
+        explanation: "Phát lại event muộn hơn sẽ thay đổi ý nghĩa lifecycle thay vì quan sát đúng checkpoint thật."
+      - id: D
+        answer: "Đăng ký qua cơ chế early-listener được hỗ trợ trên `SpringApplication` hoặc builder của nó."
+        explanation: "Event sớm cần listener nằm ngoài bean lifecycle thông thường vì `ApplicationContext` chưa thể tạo listener bean ở thời điểm đó."
+    correctAnswerId: D
+  - id: "application-runtime-q03"
+    question: "Hai runner interface chạy trong cùng startup phase. Khi nào `ApplicationRunner` là lựa chọn phù hợp hơn `CommandLineRunner`?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.ArgumentsAndRunners/ArgumentsAndRunners.md"
+      anchor: "applicationrunner-vs-commandlinerunner"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Khi startup logic cần góc nhìn option và non-option đã được Boot parse từ command line."
+        explanation: "`ApplicationRunner` nhận `ApplicationArguments`, cung cấp option, non-option và source arguments đã được phân loại."
+      - id: B
+        answer: "Khi startup logic phải chạy sau `ApplicationReadyEvent` thay vì trước readiness."
+        explanation: "Cả hai runner interface đều chạy trước `ApplicationReadyEvent`; khác biệt không nằm ở lifecycle timing."
+      - id: C
+        answer: "Khi startup logic chỉ cần raw argument string mà không cần góc nhìn đã parse của Boot."
+        explanation: "`CommandLineRunner` là interface nhận trực tiếp chuỗi `String...` nguyên bản."
+      - id: D
+        answer: "Khi startup logic phải chạy bất đồng bộ trên một managed thread riêng."
+        explanation: "Không runner interface nào mặc định có ngữ nghĩa async; cả hai cùng tham gia startup runner phase."
+    correctAnswerId: A
+  - id: "application-runtime-q04"
+    question: "Ứng dụng được khởi động với `--mode=demo sample`. `ApplicationArguments` của Boot nên biểu diễn đầu vào này như thế nào?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.ArgumentsAndRunners/ArgumentsAndRunners.md"
+      anchor: "application-arguments-model"
+    apiRelated:
+      controller: "ApplicationRuntimeExperimentController"
+      methodSignature: "applicationArguments()"
+    answers:
+      - id: A
+        answer: "Cả hai token trở thành non-option argument và source arguments ban đầu không được giữ lại."
+        explanation: "Boot giữ source arguments đồng thời tách option argument khỏi đầu vào dạng vị trí."
+      - id: B
+        answer: "`sample` trở thành option, còn `--mode=demo` trở thành non-option argument."
+        explanation: "Dạng `--name=value` là option; token dạng vị trí mới là non-option argument."
+      - id: C
+        answer: "`mode` là option có giá trị `demo`, `sample` là non-option và cả hai vẫn nằm trong source arguments."
+        explanation: "Đây chính là góc nhìn đã parse mà runtime experiment trả về mà không cần tự xử lý `String[]`."
+      - id: D
+        answer: "`mode` là option có giá trị `demo`, còn `sample` bị loại khỏi cả parsed view lẫn source view."
+        explanation: "`ApplicationArguments` vẫn giữ non-option argument và cả source arguments ban đầu."
+    correctAnswerId: C
+  - id: "application-runtime-q05"
+    question: "Database tạm thời bị mất kết nối nên request không thể xử lý, nhưng process có thể tự phục hồi khi database hoạt động lại. Cách nhìn availability nào an toàn hơn theo mô hình của module?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.AvailabilityFailureExit/AvailabilityFailureExit.md"
+      anchor: "liveness-readiness-model"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Chuyển liveness sang broken và vẫn để readiness chấp nhận traffic cho tới khi database phục hồi."
+        explanation: "Gắn liveness trực tiếp với một dependency dùng chung có thể tạo restart storm và làm sự cố nghiêm trọng hơn."
+      - id: B
+        answer: "Chuyển readiness sang từ chối traffic còn liveness tập trung vào trạng thái process không thể tự phục hồi."
+        explanation: "Readiness trả lời có nên nhận traffic lúc này hay không; liveness không nên biến mọi lỗi dependency có thể hồi phục thành lý do restart process."
+      - id: C
+        answer: "Giữ cả liveness và readiness chấp nhận traffic vì dependency outage luôn nằm ngoài availability."
+        explanation: "Readiness hoàn toàn có thể phản ánh việc ứng dụng hiện tại có phục vụ traffic được hay không."
+      - id: D
+        answer: "Chuyển cả liveness và readiness sang broken để restart và loại traffic xảy ra cùng lúc."
+        explanation: "Dependency outage dùng chung có thể khiến readiness từ chối traffic, nhưng coi nó là liveness failure có thể khuếch đại sự cố bằng restart."
+    correctAnswerId: B
+  - id: "application-runtime-q06"
+    question: "Một ứng dụng kiểu command gọi `SpringApplication.exit(context)` và nhận exit code 7. Chỉ từ lời gọi này, điều gì đúng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.AvailabilityFailureExit/AvailabilityFailureExit.md"
+      anchor: "application-exit-codes"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "`SpringApplication.exit` trả code 7 và lập tức kết thúc JVM."
+        explanation: "`SpringApplication.exit` tính và trả về exit code; bản thân nó không bảo đảm JVM sẽ kết thúc."
+      - id: B
+        answer: "`SpringApplication.exit` trả code 7 và chuyển nó thành `ApplicationFailedEvent`."
+        explanation: "Exit code của ứng dụng là contract với process caller và không tự động trở thành startup-failure event."
+      - id: C
+        answer: "`SpringApplication.exit` trả code 7 và tự động publish nó cho operating system."
+        explanation: "Ứng dụng command có thể truyền giá trị trả về cho `System.exit(...)` khi thật sự muốn kết thúc process."
+      - id: D
+        answer: "`SpringApplication.exit` trả code 7; kết thúc JVM hoặc truyền code đó cho OS là bước riêng."
+        explanation: "Mô hình này tách việc Boot tính exit code khỏi hành động kết thúc process của Java."
+    correctAnswerId: D
+  - id: "application-runtime-q07"
+    question: "Runtime experiment submit một task qua `applicationTaskExecutor` được inject. Bằng chứng trả về nào trực tiếp nhất cho thấy task đã rời khỏi HTTP caller thread?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.TaskExecutionScheduling/TaskExecutionScheduling.md"
+      anchor: "application-task-executor"
+    apiRelated:
+      controller: "ApplicationRuntimeExperimentController"
+      methodSignature: "taskExecutor()"
+    answers:
+      - id: A
+        answer: "`differentThread=true`, vì caller thread id và worker thread id khác nhau."
+        explanation: "Experiment ghi lại cả hai thread identity; id khác nhau là bằng chứng trực tiếp task đã chạy trên thread khác."
+      - id: B
+        answer: "`virtualThreadsEnabled=true`, bất kể worker thread thực tế là gì."
+        explanation: "Property cho biết cấu hình nhưng riêng nó không chứng minh task cụ thể đã chạy tách khỏi caller."
+      - id: C
+        answer: "Tên concrete executor class chứa chữ `TaskExecutor`."
+        explanation: "Tên type mô tả hạ tầng nhưng không chứng minh task quan sát được đã vượt qua ranh giới thread."
+      - id: D
+        answer: "Endpoint trả response trong vòng ba giây."
+        explanation: "Timeout chỉ giới hạn experiment; thời gian hoàn tất không cho biết thread nào đã thực thi task."
+    correctAnswerId: A
+  - id: "application-runtime-q08"
+    question: "Tác động chính của `spring.threads.virtual.enabled=true` trong Spring Boot 3.3 là gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.VirtualThreads/VirtualThreads.md"
+      anchor: "virtual-thread-switch"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Boot chuyển executor và scheduler được hỗ trợ sang virtual thread và cũng chuyển cả pool bên thứ ba."
+        explanation: "Property này điều khiển hạ tầng do Boot quản lý và hỗ trợ, không điều khiển tùy ý mọi executor trong ứng dụng."
+      - id: B
+        answer: "Boot giữ platform-thread executor và scheduler nhưng đổi task submission sang chế độ non-blocking."
+        explanation: "Property này đổi implementation của executor/scheduler do Boot hỗ trợ, không chỉ thay đổi semantics của task submission."
+      - id: C
+        answer: "Boot chuyển executor và scheduler được hỗ trợ sang virtual thread; Java vẫn định nghĩa thread semantics."
+        explanation: "Boot sở hữu integration switch; Java vẫn sở hữu các hành vi như scheduling, pinning, interruption và sự phù hợp của workload."
+      - id: D
+        answer: "Boot chuyển executor và scheduler được hỗ trợ sang virtual thread và bảo đảm CPU-bound throughput tăng."
+        explanation: "Virtual thread không tạo thêm CPU và không bảo đảm mọi workload đều nhanh hơn."
+    correctAnswerId: C
+  - id: "application-runtime-q09"
+    question: "Một ứng dụng non-web đặt toàn bộ công việc lâu dài lên virtual thread rồi thoát ngoài ý muốn khi không còn non-daemon thread nào khác. Setting nào của Boot xử lý trực tiếp vấn đề vòng đời process này?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.VirtualThreads/VirtualThreads.md"
+      anchor: "virtual-thread-daemon-keepalive"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Đặt `spring.task.scheduling.pool.size=1` để platform scheduler thread giữ JVM sống."
+        explanation: "Các property về pool không còn mô tả cùng một mô hình khi Boot dùng scheduler dựa trên virtual thread."
+      - id: B
+        answer: "Đặt `spring.main.keep-alive=true` để Boot giữ JVM sống khi không còn non-daemon thread khác."
+        explanation: "Boot cung cấp setting này cho trường hợp không còn non-daemon thread nào khác giữ process hoạt động."
+      - id: C
+        answer: "Đặt `spring.main.lazy-initialization=false` để eager bean creation giữ JVM sống."
+        explanation: "Thời điểm khởi tạo bean không tạo ra bảo đảm non-daemon process liveness đang thiếu."
+      - id: D
+        answer: "Đặt readiness thành accepting để Boot giữ JVM sống khi scheduled work còn tồn tại."
+        explanation: "Availability mô tả khả năng nhận traffic; nó không giữ JVM sống."
+    correctAnswerId: B
+  - id: "application-runtime-q10"
+    question: "Vì sao global lazy initialization có thể làm deployment trông nhanh hơn nhưng tăng rủi ro khi runtime?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.StartupOptimization/StartupOptimization.md"
+      anchor: "lazy-initialization-tradeoffs"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Bean vẫn được tạo eagerly, nhưng dependency injection bị hoãn tới request đầu tiên."
+        explanation: "Lazy initialization trì hoãn chính việc tạo bean phù hợp; nó không giữ eager construction rồi chỉ hoãn injection."
+      - id: B
+        answer: "Bean được tạo muộn hơn, nhưng lỗi cấu hình vẫn luôn được bảo đảm xuất hiện trước readiness."
+        explanation: "Một số failure có thể dời tới first use, nên readiness không bảo đảm mọi lazy bean đã được tạo thành công."
+      - id: C
+        answer: "Bean được tạo muộn hơn và bean chưa dùng sẽ bị loại vĩnh viễn sau startup."
+        explanation: "Lazy bean vẫn thuộc application graph và có thể được tạo khi dependency hay request về sau cần tới."
+      - id: D
+        answer: "Bean được tạo muộn hơn nên first-use latency và một số failure có thể dời sang lúc đang nhận traffic."
+        explanation: "Startup ngắn hơn có thể chỉ là dời công việc và thời điểm phát hiện lỗi, nên cần đo end-to-end."
+    correctAnswerId: D
+  - id: "application-runtime-q11"
+    question: "Lý do mạnh nhất để cấu hình một `ApplicationStartup` implementation như `BufferingApplicationStartup` trước khi tối ưu startup là gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.StartupOptimization/StartupOptimization.md"
+      anchor: "application-startup-tracking"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Nó ghi startup step có cấu trúc để nhận diện phase hoặc component chậm trước khi tối ưu."
+        explanation: "Đo lường biến nhận xét mơ hồ về startup thành bằng chứng cho một giả thuyết tối ưu cụ thể."
+      - id: B
+        answer: "Nó ghi startup step có cấu trúc và tự động thay thế implementation của bean chậm."
+        explanation: "Startup tracking ghi nhận bằng chứng chứ không sửa component gây ra chi phí."
+      - id: C
+        answer: "Nó chỉ ghi startup step có cấu trúc khi Actuator expose production endpoint."
+        explanation: "Runtime có thể ghi startup step độc lập; expose production endpoint mới là trách nhiệm của Actuator."
+      - id: D
+        answer: "Nó ghi startup step có cấu trúc và chuẩn hóa điều kiện bên ngoài giữa các lần chạy."
+        explanation: "Developer vẫn phải kiểm soát điều kiện đo; instrumentation không loại bỏ biến động môi trường."
+    correctAnswerId: A
+  - id: "application-runtime-q12"
+    question: "Boot đã có một property được hỗ trợ để biểu diễn hành vi runtime mong muốn. Khi nào application code thường nên thay thế nó bằng programmatic `SpringApplication` customization?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.RuntimeCustomization/RuntimeCustomization.md"
+      anchor: "property-first-customization"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Khi cùng một setting cần giá trị khác nhau giữa các môi trường deployment hoặc active profile."
+        explanation: "Biến thiên theo môi trường và profile chính là trường hợp mà mô hình externalized configuration của Boot được thiết kế để biểu diễn."
+      - id: B
+        answer: "Khi `main()` sẽ làm một setting đã được hỗ trợ dễ thấy hơn đối với developer của ứng dụng."
+        explanation: "Chỉ tăng độ dễ thấy trong code không tạo thêm capability hay yêu cầu lifecycle để biện minh cho việc thay property được hỗ trợ."
+      - id: C
+        answer: "Khi property không biểu diễn được yêu cầu hoặc customization phải xảy ra trước khi context thông thường tồn tại."
+        explanation: "Nên chọn owner được hỗ trợ và hẹp nhất; bootstrap code chỉ hợp lý khi có nhu cầu capability hoặc timing cụ thể."
+      - id: D
+        answer: "Khi auto-configuration đọc property và ứng dụng chỉ cần override default value được hỗ trợ của nó."
+        explanation: "Property được hỗ trợ đã cung cấp bề mặt override đó; thêm bootstrap code có thể làm phức tạp convention của Boot."
+    correctAnswerId: C
+  - id: "application-runtime-q13"
+    question: "Vì sao `@PropertySource` trên một class `@Configuration` thông thường có thể quá muộn để điều khiển logging ở giai đoạn sớm nhất của Boot?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "9.Logging/Logging.md"
+      anchor: "early-logging-bootstrap"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "`@PropertySource` chỉ có sau `ApplicationReadyEvent`, nên logging không thể nhìn thấy nó."
+        explanation: "`@PropertySource` tham gia trong context configuration; vấn đề là initial logging setup xảy ra còn sớm hơn."
+      - id: B
+        answer: "Logging khởi tạo trước configuration bean thông thường, nên property source của chúng có thể đến quá muộn."
+        explanation: "Logging cần hoạt động ngay trong startup sớm và failure, vì vậy Boot chuẩn bị nó trước bean configuration thông thường."
+      - id: C
+        answer: "Logging khởi tạo sau configuration bean thông thường nhưng chủ động bỏ qua property source của chúng."
+        explanation: "Thứ tự thực tế ngược lại: Boot chuẩn bị logging trước khi configuration bean thông thường được xử lý."
+      - id: D
+        answer: "Logging chỉ đọc JVM system property nên Environment property source không bao giờ tham gia."
+        explanation: "Boot có thể đọc logging property từ Environment được chuẩn bị sớm; giới hạn nằm ở timing của source."
+    correctAnswerId: B
+  - id: "application-runtime-q14"
+    question: "Vì sao Boot khuyến nghị file như `logback-spring.xml` khi cần tích hợp Logback dành riêng cho Boot?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "9.Logging/Logging.md"
+      anchor: "spring-logging-config-files"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Nó làm file portable giữa Logback và Log4j2 mà không cần thay đổi."
+        explanation: "Hậu tố này thay đổi cách Boot tham gia load/configuration, không đổi logging protocol."
+      - id: B
+        answer: "Nó làm appender khả dụng trước khi logging system tự khởi tạo."
+        explanation: "Native Logback configuration vẫn có thể định nghĩa appender trong file chuẩn."
+      - id: C
+        answer: "Nó làm Spring bean khả dụng để dùng tùy ý bên trong native Logback configuration."
+        explanation: "Logging được khởi tạo ở bootstrap sớm trước khi các application bean thông thường khả dụng, nên hỗ trợ `-spring` không phải cơ chế lookup bean tổng quát."
+      - id: D
+        answer: "Nó cho Boot load native logging config đúng phase và áp dụng Boot extension."
+        explanation: "Timing này cho Boot cơ hội tích hợp Spring profile và environment-aware extension."
+    correctAnswerId: D
+  - id: "application-runtime-q15"
+    question: "Ứng dụng có SSL bundle PEM tên `partner-api`. Bean `SslBundles` được auto-configure chủ yếu cung cấp gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "10.SslBundles/SslBundles.md"
+      anchor: "sslbundles-catalog"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Một named catalog của SSL material và derived object để consumer resolve theo bundle name."
+        explanation: "Catalog tách key/trust material đã cấu hình khỏi consumer và có thể cung cấp object cấp cao như `SSLContext`."
+      - id: B
+        answer: "Một named catalog của client instance mà Boot tự động rewrite bằng bundle setting."
+        explanation: "Consumer phải hỗ trợ bundle integration của Boot hoặc nhận một SSL object được tạo từ bundle."
+      - id: C
+        answer: "Một named catalog của certificate mà Boot tự phát hành và gia hạn cho từng partner."
+        explanation: "Việc phát hành certificate và quản lý vòng đời PKI nằm ngoài abstraction SSL bundle."
+      - id: D
+        answer: "Một named catalog của externalized property thay thế cấu hình keystore và truststore."
+        explanation: "Bundle được tạo từ cấu hình; catalog không loại bỏ trách nhiệm cấu hình."
+    correctAnswerId: A
+  - id: "application-runtime-q16"
+    question: "Một third-party HTTP client không có property tích hợp SSL bundle của Boot nhưng nhận được `SSLContext`. Ứng dụng nên dùng bundle đã cấu hình thế nào?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "10.SslBundles/SslBundles.md"
+      anchor: "ssl-bundle-consumers"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Resolve named bundle rồi để Boot tự patch third-party client."
+        explanation: "Bundle support là explicit; có named bundle không đồng nghĩa Boot tự sửa mọi third-party client."
+      - id: B
+        answer: "Resolve named bundle rồi copy certificate file vào source package của client."
+        explanation: "Cách này nhân bản security material và phá vỡ boundary cấu hình dùng lại."
+      - id: C
+        answer: "Resolve named bundle, tạo `SSLContext`, rồi truyền object đó qua SSL hook của client."
+        explanation: "Cách này dùng đúng mức abstraction cao nhất mà client chấp nhận và vẫn giữ named-bundle configuration làm nguồn chuẩn."
+      - id: D
+        answer: "Resolve named bundle rồi bind nó vào `server.ssl.bundle` để client kế thừa."
+        explanation: "Server TLS là một consumer khác và không giải quyết yêu cầu tích hợp client."
+    correctAnswerId: C
+  - id: "application-runtime-q17"
+    question: "Boot phát hiện Docker Compose project đã được developer khởi động trước khi ứng dụng chạy. Theo ownership model mặc định đã mô tả, Boot nên làm gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "11.DockerCompose/DockerCompose.md"
+      anchor: "compose-discovery-lifecycle"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Dùng lại service được hỗ trợ để lấy connection details và dừng project khi application thoát."
+        explanation: "Boot tránh khởi động lại project mà nó phát hiện đang chạy."
+      - id: B
+        answer: "Dùng lại service được hỗ trợ để lấy connection details và giữ shutdown ownership cho bên đã khởi động project."
+        explanation: "Quy tắc này tránh việc Boot tắt hạ tầng do process hoặc developer khác khởi động."
+      - id: C
+        answer: "Bỏ qua project đang chạy và không tạo bất kỳ service-connection detail nào."
+        explanation: "Boot vẫn có thể suy ra connection details cho service được hỗ trợ từ Compose project đang chạy."
+      - id: D
+        answer: "Khởi động lại project dưới quyền Boot để có thể tạo service-connection details."
+        explanation: "Boot tích hợp với Compose definition hiện có; nó không rewrite project để giành ownership."
+    correctAnswerId: B
+  - id: "application-runtime-q18"
+    question: "Một database trong Compose map container port sang host port động và Boot tạo service connection cho nó. Ứng dụng local nên kỳ vọng Boot ưu tiên connection information nào?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "11.DockerCompose/DockerCompose.md"
+      anchor: "compose-mapped-ports-precedence"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Dùng container port được image khai báo, bất kể host mapping."
+        explanation: "Ứng dụng chạy ngoài container cần host endpoint đã được map."
+      - id: B
+        answer: "Dùng ordinary datasource property trước, kể cả khi nó chứa local port đã cũ."
+        explanation: "Với auto-configuration tương ứng, service connection có ưu tiên để endpoint local động hoạt động được."
+      - id: C
+        answer: "Dùng một random port mới do Boot chọn, độc lập với host mapping của Compose."
+        explanation: "Boot dùng mapped host port có thể truy cập chứ không tự phát minh endpoint khác."
+      - id: D
+        answer: "Dùng mapped host port từ service connection, ưu tiên hơn ordinary connection property."
+        explanation: "Nhờ vậy local port được cấp động có thể được dùng mà không hard-code vào application configuration."
+    correctAnswerId: D
+  - id: "application-runtime-q19"
+    question: "Ứng dụng cần warm-up database trong thời gian hữu hạn sau khi các bean thông thường đã tồn tại và traffic phải chờ warm-up thành công. Runtime hook nào thể hiện đúng ý định nhất?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "12.RuntimeSynthesis/RuntimeSynthesis.md"
+      anchor: "runtime-hook-selection"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Một startup runner có thứ tự như `ApplicationRunner`."
+        explanation: "Runner có access tới context đã refresh và vẫn nằm trên startup path trước readiness, phù hợp với cả hai điều kiện."
+      - id: B
+        answer: "Một listener của `ApplicationEnvironmentPreparedEvent` ở giai đoạn sớm."
+        explanation: "Phase đó xảy ra trước bean graph thông thường và quá sớm cho database warm-up dựa trên các bean ứng dụng."
+      - id: C
+        answer: "Một task vô hạn trên managed scheduler."
+        explanation: "Scheduler phù hợp công việc nền dài hạn nhưng không tự nhiên biểu diễn một lần warm-up startup mà readiness phải chờ."
+      - id: D
+        answer: "Một `SpringApplication` customization tự tạo repository trong `main()`."
+        explanation: "Cách đó bỏ qua normal bean ownership và dùng bootstrap customization cho công việc phù hợp với runner phase hơn."
+    correctAnswerId: A
+  - id: "application-runtime-q20"
+    question: "Một ứng dụng Boot đã có context refresh và ở trạng thái live nhưng mãi không thành ready. Theo mô hình phân loại runtime của module, vùng nào nên được kiểm tra đầu tiên?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "12.RuntimeSynthesis/RuntimeSynthesis.md"
+      anchor: "runtime-problem-classification"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Kiểm tra SSL-bundle resolution trước vì live-but-not-ready thường nghĩa là TLS setup chưa xong."
+        explanation: "TLS có thể liên quan ở vài ứng dụng, nhưng triệu chứng lifecycle trước tiên chỉ vào công việc nằm giữa live và ready."
+      - id: B
+        answer: "Kiểm tra logging transport trước vì live-but-not-ready thường nghĩa là startup log đã bị mất."
+        explanation: "Logging có thể cung cấp evidence nhưng sự cố backend không tự giải thích lifecycle transition."
+      - id: C
+        answer: "Kiểm tra runner và readiness trước vì công việc giữa live và ready có thể đang block hoặc fail."
+        explanation: "Boot trở thành live trước khi runner hoàn tất và chỉ chấp nhận traffic sau ready phase, nên đây là owner gần nhất của triệu chứng."
+      - id: D
+        answer: "Kiểm tra Docker image layering trước vì live-but-not-ready thường nghĩa là packaging chưa hoàn tất."
+        explanation: "Packaging có thể gây startup failure, nhưng process đã có live refreshed context đã đi qua giai đoạn đó trong phân loại tổng quát."
+    correctAnswerId: C

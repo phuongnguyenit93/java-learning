@@ -1,0 +1,84 @@
+ApplicationRuntimeExperimentController:
+  lifecycleTimeline():
+    summary: Quan sát startup event, availability transition và thời điểm runner chạy
+    description: Trả về các observation được ghi bởi ApplicationRunner và application-event
+      listener thật. Chuỗi kết quả làm rõ ranh giới giữa ApplicationStartedEvent,
+      liveness, runner execution, ApplicationReadyEvent và thời điểm readiness chuyển
+      sang chấp nhận traffic sau khi startup hoàn tất.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 2.ApplicationLifecycleEvents/ApplicationLifecycleEvents.md
+      anchor: context-started-ready-events
+    methodName: lifecycleTimeline
+    params: [
+      ]
+    path: com/example/learning/applicationruntime/controller/ApplicationRuntimeExperimentController.java
+    mapping: '@GetMapping("/lifecycle")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /spring-boot/runtime/lifecycle
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  applicationArguments():
+    summary: Quan sát ApplicationArguments được parse cho process hiện tại
+    description: Trả về source arguments chính xác cùng hai góc nhìn option và non-option
+      của Boot. Có thể khởi động lại application với giá trị như --mode=demo sample
+      để quan sát command line đó được phân loại thế nào tại runtime.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 3.ArgumentsAndRunners/ArgumentsAndRunners.md
+      anchor: application-arguments-model
+    methodName: applicationArguments
+    params: [
+      ]
+    path: com/example/learning/applicationruntime/controller/ApplicationRuntimeExperimentController.java
+    mapping: '@GetMapping("/arguments")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /spring-boot/runtime/arguments
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  taskExecutor():
+    summary: Quan sát applicationTaskExecutor do Boot auto-configure
+    description: Submit một task có giới hạn qua applicationTaskExecutor do Boot cung
+      cấp rồi trả về implementation của executor và identity của caller/worker thread.
+      Response cũng cho biết worker có phải virtual thread hay không để có thể lặp
+      lại cùng experiment với spring.threads.virtual.enabled=true.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 5.TaskExecutionScheduling/TaskExecutionScheduling.md
+      anchor: application-task-executor
+    methodName: taskExecutor
+    params: [
+      ]
+    path: com/example/learning/applicationruntime/controller/ApplicationRuntimeExperimentController.java
+    mapping: '@GetMapping("/task-executor")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /spring-boot/runtime/task-executor
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true

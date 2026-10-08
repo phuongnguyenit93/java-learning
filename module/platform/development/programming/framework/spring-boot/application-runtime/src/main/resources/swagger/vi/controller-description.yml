@@ -1,0 +1,6 @@
+ApplicationRuntimeExperimentController:
+  description: |-
+    <h2>Application Runtime Experiment Controller</h2>
+    <p>Chạy các quan sát có giới hạn về trạng thái khởi động của SpringApplication, application arguments đã parse và task execution do Boot quản lý. Mỗi endpoint cung cấp bằng chứng runtime cho concept đã có trong Knowledge thay vì lặp lại lý thuyết.</p>
+  readmeRelated:
+    file: 2.ApplicationLifecycleEvents/ApplicationLifecycleEvents.md

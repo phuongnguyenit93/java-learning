@@ -1,0 +1,312 @@
+1.RuntimeModel/RuntimeModel.md:
+  application-runtime-role:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  application-runtime-problem:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  runtime-inputs-and-context:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  runtime-phase-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  steady-state-runtime:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  runtime-ownership-handoffs:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+2.ApplicationLifecycleEvents/ApplicationLifecycleEvents.md:
+  springapplication-event-timeline:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  pre-context-events:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  context-started-ready-events:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  failed-event-path:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  early-listener-registration:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  event-hook-selection:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+3.ArgumentsAndRunners/ArgumentsAndRunners.md:
+  application-arguments-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  runner-timing:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  applicationrunner-vs-commandlinerunner:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  runner-ordering:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  runner-use-cases:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  runner-antipatterns:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+4.AvailabilityFailureExit/AvailabilityFailureExit.md:
+  liveness-readiness-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  availability-state-transitions:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  availability-shutdown-transition:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  availability-api:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  startup-failure-analysis:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  shutdown-hook:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  application-exit-codes:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  shutdown-boundaries:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+5.TaskExecutionScheduling/TaskExecutionScheduling.md:
+  boot-task-execution-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  application-task-executor:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  task-execution-properties:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  boot-task-scheduler:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  task-scheduling-properties:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  custom-executor-scheduler-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  framework-concurrency-handoff:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+6.VirtualThreads/VirtualThreads.md:
+  virtual-thread-switch:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  virtual-executor-scheduler:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  virtual-thread-pool-properties:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  virtual-thread-daemon-keepalive:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  virtual-thread-java-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+7.StartupOptimization/StartupOptimization.md:
+  lazy-initialization-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  lazy-initialization-tradeoffs:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  startup-measurement:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  application-startup-tracking:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  startup-observability-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+8.RuntimeCustomization/RuntimeCustomization.md:
+  runtime-customization-decision:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  property-first-customization:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  springapplication-customization:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  springapplicationbuilder-customization:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  runtime-extension-point-selection:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  customization-ownership-boundaries:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+9.Logging/Logging.md:
+  early-logging-bootstrap:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  logging-system-abstraction:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  boot-logging-properties:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  spring-logging-config-files:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  logging-groups-output-rotation:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  logging-observability-handoff:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+10.SslBundles/SslBundles.md:
+  ssl-bundle-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  ssl-bundle-jks-pem:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  sslbundles-catalog:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  sslbundle-material:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  ssl-bundle-consumers:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  ssl-web-runtime-handoff:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  ssl-pki-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+11.DockerCompose/DockerCompose.md:
+  compose-development-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  compose-discovery-lifecycle:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  compose-service-connections:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  compose-mapped-ports-precedence:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  compose-readiness:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  compose-runtime-controls:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  compose-testing-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  compose-docker-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+12.RuntimeSynthesis/RuntimeSynthesis.md:
+  runtime-end-to-end-flow:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  runtime-hook-selection:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  runtime-state-and-services:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  runtime-problem-classification:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  runtime-module-handoffs:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false

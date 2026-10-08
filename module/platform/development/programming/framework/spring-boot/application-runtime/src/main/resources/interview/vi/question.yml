@@ -27,4 +27,213 @@
 #         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
 # </interview-schema>
 
-questions: []
+questions:
+- question: "Hãy giải thích runtime của Spring Boot như một chuỗi trạng thái ngày càng hoàn chỉnh. Vì sao context refresh, ApplicationStartedEvent, liveness, startup runner, ApplicationReadyEvent và readiness không phải các mốc có thể thay thế cho nhau?"
+  answer: >-
+    Context refresh có nghĩa Spring container đã hoàn tất refresh, nhưng Boot vẫn còn công việc startup phải điều phối. ApplicationStartedEvent được publish sau refresh và trước khi ApplicationRunner/CommandLineRunner chạy. Sau đó Boot publish liveness là CORRECT, chạy các startup runner, publish ApplicationReadyEvent và chỉ sau đó mới publish readiness là ACCEPTING_TRAFFIC. Vì vậy mỗi mốc đưa ra một bảo đảm khác nhau. Code chỉ cần bean có thể chạy sau refresh, còn công việc bắt buộc phải hoàn tất trước khi nhận traffic cần coi runner completion hoặc readiness là ranh giới mạnh hơn. Đánh đồng các mốc dễ tạo lỗi như nhận traffic khi initialization bắt buộc vẫn đang chạy. Experiment lifecycle hữu ích vì ghi lại trực tiếp các phase từ application đang chạy thay vì suy luận từ tên event.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 1.RuntimeModel/RuntimeModel.md
+    anchor: runtime-phase-model
+  apiRelated:
+    controller: ApplicationRuntimeExperimentController
+    methodSignature: lifecycleTimeline()
+- question: "Một component cần quan sát ApplicationEnvironmentPreparedEvent nhưng đồng thời cần một application service bean. Vì sao listener dạng bean thông thường là thiết kế sai, và bạn sẽ tách lại trách nhiệm như thế nào?"
+  answer: >-
+    ApplicationEnvironmentPreparedEvent xảy ra trước khi graph bean thông thường của ApplicationContext tồn tại, nên listener được tạo như bean bình thường không thể tin cậy để quan sát event này và cũng không thể phụ thuộc application service ở thời điểm đó. Listener thực sự cần chạy sớm phải được đăng ký trước bean creation qua SpringApplication, SpringApplicationBuilder hoặc cơ chế early-listener được hỗ trợ, đồng thời trách nhiệm của nó phải đủ hẹp để chỉ dùng state có sẵn ở phase đó. Nếu công việc thật sự cần repository hoặc service, hãy chuyển phần đó sang event hoặc startup hook muộn hơn và chỉ để early listener thu thập hoặc chuẩn bị thông tin bootstrap. Nguyên tắc thiết kế là chọn phase muộn nhất vẫn đáp ứng yêu cầu thay vì ép dependency injection vào phase chưa có đủ prerequisite.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 2.ApplicationLifecycleEvents/ApplicationLifecycleEvents.md
+    anchor: early-listener-registration
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "So sánh application event listener, ApplicationRunner/CommandLineRunner và managed executor hoặc scheduler như các runtime extension point. Prerequisite và yêu cầu về readiness quyết định lựa chọn như thế nào?"
+  answer: >-
+    Application event listener phù hợp khi mục đích là quan sát hoặc phản ứng với lifecycle transition và state cần thiết đã tồn tại ở event đó. Runner phù hợp cho startup work có giới hạn, cần context đã refresh và phải hoàn tất thành công trước ApplicationReadyEvent/readiness. Managed executor hoặc scheduler phù hợp cho công việc tiếp tục độc lập sau startup; vòng lặp vô hạn hoặc consumer chạy lâu trong runner sẽ ngăn startup hoàn tất. Vì vậy quyết định có hai trục: state nào phải tồn tại trước, và readiness có phải chờ công việc này hay không. Chọn theo các bảo đảm đó cũng làm rõ thời điểm lỗi: runner failure là startup failure, còn lỗi của background task về sau thuộc xử lý runtime ổn định.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 12.RuntimeSynthesis/RuntimeSynthesis.md
+    anchor: runtime-hook-selection
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Khi nào bạn chọn ApplicationRunner thay vì CommandLineRunner, và ApplicationArguments cung cấp thêm điều gì so với tự parse String[] args?"
+  answer: >-
+    Hai runner interface chạy trong cùng một startup phase của Boot, nên lựa chọn dựa trên ngữ nghĩa input chứ không phải timing. CommandLineRunner nhận chuỗi argument thô, còn ApplicationRunner nhận ApplicationArguments, vừa giữ source arguments gốc vừa cung cấp option name, option value và non-option arguments. Vì vậy ApplicationRunner phù hợp khi startup logic coi giá trị như --mode=demo là option có cấu trúc; CommandLineRunner phù hợp khi chính thứ tự raw argument là contract cần dùng. ApplicationArguments không thay thế property-source precedence của externalized configuration, vì command-line option còn có thể tham gia model configuration rộng hơn đó. Experiment application arguments chứng minh góc nhìn option/non-option mà không cần code tự parse.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 3.ArgumentsAndRunners/ArgumentsAndRunners.md
+    anchor: applicationrunner-vs-commandlinerunner
+  apiRelated:
+    controller: ApplicationRuntimeExperimentController
+    methodSignature: applicationArguments()
+- question: "Vì sao ApplicationRunner chạy rất lâu hoặc không kết thúc có thể khiến application trông vẫn live nhưng không bao giờ ready, và vì sao thêm @Order thường không phải cách sửa thật sự?"
+  answer: >-
+    Boot publish started phase và liveness trước khi gọi runner, nhưng ApplicationReadyEvent và readiness chỉ đến sau khi toàn bộ runner hoàn tất. Runner bị block vô thời hạn vì thế có thể để lại một context hợp lệ, đang live nhưng không bao giờ ready. @Order chỉ điều khiển thứ tự tương đối giữa các runner; nó không biến công việc dài thành asynchronous và không đưa công việc ra khỏi startup critical path. Nếu công việc phải tiếp tục sau startup, hãy chuyển sang managed background infrastructure. Chỉ dùng runner ordering khi có dependency startup nhỏ và rõ ràng, tránh biến các priority số thành workflow engine ẩn khiến dependency và failure khó lý giải.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 3.ArgumentsAndRunners/ArgumentsAndRunners.md
+    anchor: runner-antipatterns
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Database tạm thời mất kết nối ở production. Hãy giải thích vì sao đánh dấu liveness BROKEN có thể nguy hiểm hơn việc từ chối readiness, và Spring Boot để lại quyết định policy nào cho application?"
+  answer: >-
+    Liveness hỏi process có đủ khỏe để tiếp tục chạy hoặc tự phục hồi hay không; readiness hỏi process có nên nhận traffic mới hay không. Nếu mọi instance chuyển một database outage dùng chung thành broken liveness, platform có thể restart toàn bộ instance dù restart không sửa được dependency, tạo restart storm và làm incident nặng hơn. Refusing readiness có thể chặn traffic mới trong khi giữ process sống để phục hồi. Boot cung cấp ApplicationAvailability và AvailabilityChangeEvent làm model state và API báo hiệu, nhưng Boot không quyết định domain condition nào phải đổi các state đó. Application phải xác định policy vận hành dựa trên việc lỗi là nội bộ, không thể phục hồi hay là dependency bên ngoài có thể chỉ tạm thời gián đoạn.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 4.AvailabilityFailureExit/AvailabilityFailureExit.md
+    anchor: liveness-readiness-model
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Bạn nên điều tra lỗi startup của Spring Boot như thế nào khi FailureAnalyzer đã in ra thông báo APPLICATION FAILED TO START dễ đọc? Bằng chứng nào vẫn phải là nguồn chính?"
+  answer: >-
+    Output của analyzer là diễn giải chẩn đoán cho failure, không thay thế exception gốc. Hãy bắt đầu từ root exception và causal chain, sau đó dùng description/action của FailureAnalyzer để thu hẹp nguyên nhân. Nếu quyết định auto-configuration liên quan, condition evaluation report là bằng chứng bổ sung. ApplicationFailedEvent có thể phục vụ observation hoặc telemetry ở bootstrap, nhưng listener không nên nuốt fatal exception chỉ để startup có vẻ thành công. Thứ tự này tránh việc thử ngẫu nhiên các property cho đến khi chạy được và giữ failure mode rõ ràng để deployment tooling phát hiện chính xác.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 4.AvailabilityFailureExit/AvailabilityFailureExit.md
+    anchor: startup-failure-analysis
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Hãy phân biệt việc đổi readiness, đóng ApplicationContext qua shutdown lifecycle của Boot, graceful drain của embedded web server và trả process exit code. Vì sao các trách nhiệm này nên tách riêng?"
+  answer: >-
+    Readiness là tín hiệu routing cho biết có nên nhận công việc mới hay không. Đóng ApplicationContext là hành động application-lifecycle tổng quát để chạy managed destruction và lifecycle callback, thường do JVM shutdown hook của SpringApplication điều phối khi JVM thoát bình thường. Graceful drain HTTP request là hành vi phụ thuộc server và protocol, thuộc web runtime. Exit code là contract với process caller: ExitCodeGenerator và SpringApplication.exit có thể tính code, nhưng SpringApplication.exit không tự kết thúc JVM. Tách các trách nhiệm tránh giả định một cơ chế tự động cung cấp tất cả phần còn lại; ví dụ shutdown hook của context không làm unmanaged thread trở nên có trật tự, và readiness change không định nghĩa timeout drain HTTP.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 4.AvailabilityFailureExit/AvailabilityFailureExit.md
+    anchor: shutdown-boundaries
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Vì sao thay executor mặc định của Boot chỉ để tối ưu một use case @Async có thể ảnh hưởng các hành vi framework không liên quan? Trước khi định nghĩa custom executor cần kiểm kê điều gì?"
+  answer: >-
+    Task executor của Boot là hạ tầng runtime dùng chung, không chỉ là bean tiện ích cho một service. Các integration được hỗ trợ có thể dùng nó cho asynchronous application work, MVC hoặc WebFlux integration, GraphQL callable và các nhu cầu framework liên quan. Định nghĩa một Executor có thể khiến auto-configuration back off, trong khi một số web integration lại yêu cầu cụ thể AsyncTaskExecutor với tên convention applicationTaskExecutor. Trước khi thay, cần kiểm kê consumer, type và bean name bắt buộc, nhu cầu isolation của workload, lifecycle behavior và configuration mà default đang cung cấp. Custom executor trở thành contract do application sở hữu, nên thay default chỉ để tái tạo cùng behavior sẽ tăng chi phí bảo trì mà không cải thiện runtime model.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 5.TaskExecutionScheduling/TaskExecutionScheduling.md
+    anchor: custom-executor-scheduler-boundary
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "spring.threads.virtual.enabled=true thực sự thay đổi điều gì trong Spring Boot 3.3, và experiment task-executor có thể chứng minh điều gì về thay đổi đó mà không chứng minh virtual thread làm workload nhanh hơn?"
+  answer: >-
+    Property này yêu cầu Boot chọn strategy dựa trên virtual thread cho các hạ tầng runtime được hỗ trợ. Với task execution, Boot có thể dùng SimpleAsyncTaskExecutor cấu hình virtual thread thay cho ThreadPoolTaskExecutor thông thường; scheduling dùng strategy virtual-thread tương ứng. Experiment task-executor có thể cho thấy concrete executor class, task thật sự được dispatch sang worker khác và worker có Thread.isVirtual() bằng true hay không sau khi restart với switch được bật. Những dữ liệu đó chứng minh execution model nào của Boot đang active. Chúng không chứng minh throughput hay latency tốt hơn, vì khả năng mở rộng của workload, blocking behavior, CPU, downstream capacity, pinning và các vấn đề concurrency Java khác cần đo lường và phân tích riêng.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 6.VirtualThreads/VirtualThreads.md
+    anchor: virtual-executor-scheduler
+  apiRelated:
+    controller: ApplicationRuntimeExperimentController
+    methodSignature: taskExecutor()
+- question: "Vì sao mang nguyên cách tune pool-size của platform thread sang cấu hình virtual thread là sai về mental model, và khi nào spring.main.keep-alive có thể trở nên cần thiết?"
+  answer: >-
+    Pool-size property mô tả cách quản lý capacity của một tập worker platform thread có giới hạn. SimpleAsyncTaskExecutor và SimpleAsyncTaskScheduler dựa trên virtual thread của Boot dùng mô hình khác, nên phép tính pool cũ không còn điều khiển parallelism theo cùng cách và một số property liên quan pooling của scheduler bị bỏ qua. Virtual thread vẫn tiêu thụ CPU, memory, connection và downstream capacity, vì vậy vẫn có thể cần giới hạn nhưng phải đặt ở nơi resource bị giới hạn thực sự. Virtual thread là daemon thread, từ đó phát sinh vấn đề process lifecycle: application non-web hoặc thiên về scheduling có thể thoát khi chỉ còn daemon virtual thread. spring.main.keep-alive có thể giữ JVM sống trong trường hợp đó; đây là lifecycle setting chứ không phải performance knob.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 6.VirtualThreads/VirtualThreads.md
+    anchor: virtual-thread-pool-properties
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Một team bật lazy initialization rồi vui mừng vì readiness nhanh hơn. Những failure hoặc latency nào có thể chỉ bị dời sang thời điểm khác, và bạn đánh giá trade-off này như thế nào?"
+  answer: >-
+    Lazy initialization trì hoãn việc tạo các bean phù hợp đến lần dùng đầu tiên. Điều đó có thể rút ngắn startup critical path, nhưng công việc bị trì hoãn vẫn tồn tại. Bean cấu hình sai trước đây fail lúc deployment có thể nay chỉ fail ở request hoặc background task đầu tiên, còn initialization tốn kém có thể chuyển từ startup latency sang first-use latency. Application cuối cùng vẫn có thể tạo toàn bộ steady-state object graph, nên quan sát memory lúc startup không phải toàn bộ bài toán capacity. Hãy đo cả startup và first-use behavior, xác định bean nào thật sự bị defer, và giữ eager initialization cho component mà failure cần được phát hiện trước traffic. Tối ưu chỉ đáng chấp nhận khi giá trị vận hành của startup nhanh hơn lớn hơn rủi ro failure muộn và runtime latency.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 7.StartupOptimization/StartupOptimization.md
+    anchor: lazy-initialization-tradeoffs
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Vì sao câu 'Spring Boot startup chậm' chưa đủ để chẩn đoán, và ApplicationStartup thay đổi quy trình tối ưu như thế nào?"
+  answer: >-
+    Tổng thời gian startup không chỉ ra owner của chi phí. Thời gian có thể nằm ở bean creation, external call trong startup code, logging setup, runner, conditional configuration hoặc subsystem khác. ApplicationStartup ghi dữ liệu StartupStep có cấu trúc; implementation như BufferingApplicationStartup cho phép application giữ các step để kiểm tra sau. Nhờ đó nhận định mơ hồ trở thành bằng chứng về phase hoặc component nào tiêu tốn thời gian. Tối ưu tiếp theo phải nhắm đúng owner của slow step đã đo và được so sánh trên baseline lặp lại được. Production exposure của buffered startup data có thể dùng Actuator, còn measurement và cách diễn giải dữ liệu vẫn tách khỏi endpoint dùng để trình bày nó.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 7.StartupOptimization/StartupOptimization.md
+    anchor: application-startup-tracking
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Khi nào nên ưu tiên property được Boot hỗ trợ thay vì tùy biến SpringApplication bằng code, và khi nào SpringApplicationBuilder là một lựa chọn kiến trúc thật sự thay vì chỉ là syntax dễ đọc hơn?"
+  answer: >-
+    Hãy ưu tiên property khi nó đã diễn tả được behavior vì property xuất hiện trong configuration metadata, tham gia externalized configuration và giữ các convention lifecycle/back-off được Boot tài liệu hóa. Tùy biến SpringApplication bằng code phù hợp cho behavior bootstrap phải được lắp ráp trước context thông thường và không thể biểu diễn bằng property surface, ví dụ đăng ký listener hoặc initializer tường minh. SpringApplicationBuilder trở thành lựa chọn kiến trúc khi dùng để tạo hierarchy ApplicationContext cha/con; các context này chia sẻ Environment và có constraint về nơi đặt web component. Vì vậy hierarchy thay đổi runtime structure và ownership. Bootstrap code nên giữ nhỏ để không biến main() thành một hệ thống container configuration thứ hai bị ẩn.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 8.RuntimeCustomization/RuntimeCustomization.md
+    anchor: property-first-customization
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Vì sao property source khai báo trên @Configuration thông thường có thể quá muộn để ảnh hưởng logging sớm nhất của Boot, và vì sao logback-spring.xml hoặc log4j2-spring.xml thay đổi ranh giới tích hợp?"
+  answer: >-
+    Boot khởi tạo logging trước ApplicationContext để có thể ghi startup message và failure xảy ra sớm. @PropertySources trên configuration class thông thường được xử lý sau quyết định bootstrap đó nên không thể quay lại cấu hình logging system ở thời điểm sớm nhất. Các environment property Boot hỗ trợ và đã có mặt trong early bootstrap có thể tham gia. Biến thể native configuration dạng -spring cho phép Boot kiểm soát phase khởi tạo được hỗ trợ và áp dụng extension của Boot như profile/environment-aware feature trước khi giao behavior cho logging implementation bên dưới. Dùng Boot property cho control chung và native configuration cho appender, filter, encoder hoặc routing đặc thù implementation; log shipping và centralized analysis thuộc observability.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 9.Logging/Logging.md
+    anchor: early-logging-bootstrap
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Named SSL bundle giải quyết vấn đề gì, và vì sao có SslBundle bean không đồng nghĩa Boot đã định nghĩa PKI policy của tổ chức hoặc tự cấu hình mọi third-party client?"
+  answer: >-
+    Named SSL bundle tách key/trust material và SSL option có thể dùng lại khỏi các consumer cần chúng. Boot có thể bind cấu hình JKS/PKCS12 hoặc PEM, expose qua catalog SslBundles, rồi để integration được hỗ trợ hoặc application code lấy SslBundle và tạo SSL object cần thiết. Abstraction này tránh lặp file path và credential configuration, nhưng consumer vẫn cần hỗ trợ bundle của Boot hoặc một SSL hook tương thích; library bất kỳ không tự bị rewiring chỉ vì bundle tồn tại. Bundle cũng chỉ biểu diễn material đã cấu hình chứ không quyết định security policy. Certificate issuance, trust-chain design, rotation, hostname verification, protocol/cipher và các quyết định PKI khác vẫn thuộc trách nhiệm security.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 10.SslBundles/SslBundles.md
+    anchor: ssl-bundle-consumers
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Một Compose database chạy local map container port sang host port ngẫu nhiên, trong khi application.properties chứa database port cố định. Vì sao Boot vẫn có thể kết nối host port ngẫu nhiên, và nên kiểm tra gì trước khi sửa property?"
+  answer: >-
+    Docker Compose integration của Spring Boot có thể tạo service-connection details cho service được nhận diện và sử dụng mapped host port mà JVM local thật sự truy cập được. Các connection detail này có độ ưu tiên cao hơn ordinary connection property mà auto-configuration tương ứng dùng. Độ ưu tiên đó là chủ đích vì static configuration không thể biết trước dynamic host port. Trước khi sửa property, hãy kiểm tra Compose mapping hiện tại và service connection Boot đã tạo. Đồng thời xác nhận service có được nhận diện hoặc gắn label đúng hay không; nếu không có supported connection details thì application property thông thường có thể lại là source đang có hiệu lực.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 11.DockerCompose/DockerCompose.md
+    anchor: compose-mapped-ports-precedence
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Vì sao Spring Boot phân biệt Compose project do chính nó start với project đã chạy sẵn, và vì sao Docker Compose development support không nên trở thành chiến lược production orchestration?"
+  answer: >-
+    Lifecycle ownership quyết định Boot có thể stop thứ gì một cách an toàn. Khi Boot start Compose project được phát hiện theo lifecycle policy, nó có thể điều phối project đó cùng startup và normal shutdown của application. Khi project đã chạy sẵn, Boot vẫn có thể derive supported connection details nhưng không nên giả định ownership rồi tắt infrastructure do developer hoặc process khác khởi động. Feature này được thiết kế để giảm phần glue của local development quanh external service, bao gồm readiness và connection discovery. Image construction, network, volume, deployment topology, security và production orchestration vẫn thuộc Docker/container platform. Dùng development integration làm production orchestrator sẽ trao cho Boot trách nhiệm mà feature này không được thiết kế để sở hữu.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 11.DockerCompose/DockerCompose.md
+    anchor: compose-discovery-lifecycle
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Trong một incident, application đã live nhưng không bao giờ ready, log cho thấy context refresh bình thường và chưa có request nào được phục vụ. Bạn sẽ phân loại vấn đề như thế nào trước khi thay configuration?"
+  answer: >-
+    Bắt đầu từ runtime timeline thay vì chọn ngẫu nhiên một property. Application đã live nghĩa là đã qua context refresh và started/liveness phase, trong khi readiness vẫn phải chờ startup runner và ready transition cuối. Hãy kiểm tra runner execution, startup work đang block và availability change trước. Nếu runner đang chờ external dependency, cần quyết định dependency đó có thật sự phải chặn readiness hay công việc nên chuyển sang managed background infrastructure. Nếu runner tồn tại do một quyết định configuration hoặc auto-configuration, tiếp tục lần theo evidence sang module sở hữu quyết định đó. Cách phân loại này thu hẹp phạm vi vào phase giữa liveness và readiness, tránh sửa không liên quan ở logging, web-server setting hoặc probe configuration.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 12.RuntimeSynthesis/RuntimeSynthesis.md
+    anchor: runtime-problem-classification
+  apiRelated:
+    controller: ""
+    methodSignature: ""

@@ -1,0 +1,36 @@
+ApplicationRuntimeExperimentController:
+  lifecycleTimeline():
+    execution: |-
+      <p><b>Concept:</b> Spring Boot tách riêng thời điểm context đã started, lúc publish liveness, startup runner, ready event và lúc readiness chấp nhận traffic.</p>
+      <ol>
+        <li><code>RuntimeLifecycleProbe</code> đã là bean khi context được refresh publish <code>ApplicationStartedEvent</code>, vì vậy probe ghi lại event này.</li>
+        <li>Sau đó Boot publish thay đổi liveness. Probe ghi trực tiếp state nằm trong event thay vì suy luận lại về sau.</li>
+        <li>Probe đồng thời là một <code>ApplicationRunner</code>; observation trong <code>run</code> vì thế nằm sau started phase và trước khi application ready.</li>
+        <li><code>ApplicationReadyEvent</code> được ghi sau khi runner hoàn tất, tiếp theo là readiness event mang state <code>ACCEPTING_TRAFFIC</code>.</li>
+        <li>Endpoint trả về immutable observation snapshot cùng liveness/readiness hiện tại để có thể kiểm tra startup sequence sau khi application đã phục vụ request.</li>
+      </ol>
+      <p><b>Observation:</b> Các phase trả về giữ đúng thứ tự runtime thực tế và cho thấy runner nằm trước readiness transition cuối.</p>
+      <p><b>Conclusion:</b> Started, live, runner-complete, ready và accepting traffic là các điểm lifecycle liên quan nhưng không đồng nghĩa.</p>
+    usage: true
+  applicationArguments():
+    execution: |-
+      <p><b>Concept:</b> <code>ApplicationArguments</code> là góc nhìn đã parse của Boot đối với command line dùng để khởi động application.</p>
+      <ol>
+        <li>Service đọc lại <code>sourceArgs</code> gốc mà Boot giữ lại.</li>
+        <li>Nó liệt kê option name và các value tương ứng, sau đó trả riêng non-option arguments.</li>
+        <li>Khởi động lại với <code>--mode=demo sample</code> tạo bằng chứng runtime: <code>mode</code> xuất hiện ở option trong khi <code>sample</code> nằm trong non-option list.</li>
+      </ol>
+      <p><b>Observation:</b> Cùng một command line được thể hiện qua hai góc nhìn option và non-option mà không cần tự parse <code>String[] args</code>.</p>
+      <p><b>Conclusion:</b> Dùng <code>ApplicationArguments</code> khi startup work cần parsed argument model của Boot; property-source precedence rộng hơn vẫn thuộc externalized-configuration.</p>
+    usage: true
+  taskExecutor():
+    execution: |-
+      <p><b>Concept:</b> Khi application không thay thế executor, Spring Boot auto-configure <code>applicationTaskExecutor</code> và đổi execution strategy khi virtual threads được bật.</p>
+      <ol>
+        <li>Service inject <code>applicationTaskExecutor</code> theo tên, ghi HTTP caller thread và submit đúng một task.</li>
+        <li>Worker ghi thread name, id và giá trị <code>Thread.isVirtual()</code>, sau đó complete một bounded future.</li>
+        <li>Controller chờ tối đa ba giây rồi trả về cả hai thread identity, concrete executor class và giá trị hiệu lực của <code>spring.threads.virtual.enabled</code>.</li>
+      </ol>
+      <p><b>Observation:</b> <code>differentThread=true</code> chứng minh task đã thật sự được dispatch. Chạy lại application với virtual threads enabled cho phép response thể hiện worker model tương ứng mà không đổi endpoint code.</p>
+      <p><b>Conclusion:</b> Boot sở hữu task-execution infrastructure mặc định và configuration switch của nó; concurrency semantics tổng quát vẫn thuộc Spring Framework và Java concurrency.</p>
+    usage: true

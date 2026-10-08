@@ -1,0 +1,36 @@
+ApplicationRuntimeExperimentController:
+  lifecycleTimeline():
+    execution: |-
+      <p><b>Concept:</b> Spring Boot separates the context-started point, liveness publication, startup runners, the ready event, and readiness acceptance.</p>
+      <ol>
+        <li><code>RuntimeLifecycleProbe</code> is already a bean when the refreshed context publishes <code>ApplicationStartedEvent</code>, so it records that event.</li>
+        <li>Boot then publishes the liveness availability change. The probe records the state carried by that event instead of inferring it later.</li>
+        <li>The same probe is an <code>ApplicationRunner</code>; its <code>run</code> observation is therefore captured after the started phase and before the application is ready.</li>
+        <li><code>ApplicationReadyEvent</code> is recorded after runner completion, followed by the readiness event that carries <code>ACCEPTING_TRAFFIC</code>.</li>
+        <li>The endpoint returns the immutable observation snapshot plus current liveness/readiness so the startup sequence can be inspected after the application is serving requests.</li>
+      </ol>
+      <p><b>Observation:</b> The returned phases preserve the actual runtime ordering and show that runner work sits before the final readiness transition.</p>
+      <p><b>Conclusion:</b> Started, live, runner-complete, ready, and accepting traffic are related lifecycle points but they are not interchangeable.</p>
+    usage: true
+  applicationArguments():
+    execution: |-
+      <p><b>Concept:</b> <code>ApplicationArguments</code> is Boot's parsed view of the command line that started this application.</p>
+      <ol>
+        <li>The service reads the original <code>sourceArgs</code> retained by Boot.</li>
+        <li>It enumerates option names and their values, then separately returns non-option arguments.</li>
+        <li>Restarting with <code>--mode=demo sample</code> produces runtime evidence: <code>mode</code> appears as an option while <code>sample</code> appears in the non-option list.</li>
+      </ol>
+      <p><b>Observation:</b> One command line is exposed through distinct option and non-option views without manually parsing <code>String[] args</code>.</p>
+      <p><b>Conclusion:</b> Use <code>ApplicationArguments</code> when startup work needs Boot's parsed argument model; the broader property-source precedence model remains externalized-configuration ownership.</p>
+    usage: true
+  taskExecutor():
+    execution: |-
+      <p><b>Concept:</b> When no application executor replaces it, Spring Boot auto-configures an <code>applicationTaskExecutor</code> and changes the implementation strategy when virtual threads are enabled.</p>
+      <ol>
+        <li>The service injects the named <code>applicationTaskExecutor</code>, records the HTTP caller thread, and submits exactly one task.</li>
+        <li>The worker records its thread name, id, and <code>Thread.isVirtual()</code> value, then completes a bounded future.</li>
+        <li>The controller waits at most three seconds and returns both identities plus the concrete executor class and the effective <code>spring.threads.virtual.enabled</code> value.</li>
+      </ol>
+      <p><b>Observation:</b> <code>differentThread=true</code> proves real task dispatch. Re-running the application with virtual threads enabled lets the response expose the corresponding worker model without changing endpoint code.</p>
+      <p><b>Conclusion:</b> Boot owns the default task-execution infrastructure and its configuration switch; generic concurrency semantics remain with Spring Framework and Java concurrency.</p>
+    usage: true
