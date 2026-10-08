@@ -1,0 +1,126 @@
+01_SourceManagementFoundations.md:
+  source-management-definition:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  why-manage-shared-source:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  unmanaged-source-problems:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  manual-file-sharing-scenario:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  foundational-source-terms:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  shared-source-and-accountability:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+02_VersionControlAndHistory.md:
+  version-control-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  saving-backups-and-version-history:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  change-provenance:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  compare-inspect-and-restore:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+03_CentralizedAndDistributedModels.md:
+  centralized-vcs-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  distributed-vcs-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  centralized-distributed-tradeoffs:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  history-availability-and-governance:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  offline-history-availability-scenario:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+04_LocalAndSharedSource.md:
+  working-files-vs-versioned-history:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  local-and-remote-repositories:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  synchronization-and-divergence:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  accepted-source-of-truth:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+05_CollaborationAndStrategyLayers.md:
+  vcs-vs-hosted-platform:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  proposing-and-reviewing-changes:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  access-and-change-acceptance:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  branching-policy-vs-git-mechanics:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  repository-topology-strategy:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+06_GovernedSourceLifecycle.md:
+  individual-to-shared-change-flow:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  recorded-shared-reviewed-accepted:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  shared-but-not-accepted-scenario:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  source-collaboration-failure-modes:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  evidence-of-a-governed-change:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  source-to-delivery-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false

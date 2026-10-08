@@ -41,4 +41,74 @@
 # The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: why-source-management
+    relatedKnowledge:
+      - 01_SourceManagementFoundations
+    title: "Why Source Management Matters"
+    purpose: "Build an end-to-end view of how an individual's source changes become a traceable, governable team asset."
+    objectives:
+      - "Recognize the risks of ad hoc file sharing: lost changes, unclear versions, and weak accountability."
+      - "Distinguish files on a developer's machine, preserved source history, and the source state a team accepts."
+      - "Explain why shared source needs traceability, coordination, and rules for accepting changes."
+
+  - id: version-control-and-history
+    relatedKnowledge:
+      - 02_VersionControlAndHistory
+    title: "Version Control and Change History"
+    purpose: "Understand conceptually how version control preserves, compares, and traces changes to source files."
+    objectives:
+      - "Distinguish saving files or backing up directories from maintaining an intentional version history."
+      - "Understand why teams need to know what changed, who changed it, when, and why."
+      - "Identify comparison, inspection, and restoration of prior versions as core needs before learning a specific tool."
+
+  - id: centralized-vs-distributed
+    relatedKnowledge:
+      - 03_CentralizedAndDistributedModels
+    title: "Centralized and Distributed Version Control"
+    purpose: "Compare two ways of organizing source history and the consequences for developer independence and collaboration."
+    objectives:
+      - "Describe the shared server and client roles in a centralized version control model."
+      - "Explain what it means for a distributed model to keep repository history in local copies."
+      - "Compare connectivity needs, local work, administration, and history-protection trade-offs without entering tool-specific operations."
+
+  - id: local-and-shared-source
+    relatedKnowledge:
+      - 04_LocalAndSharedSource
+    title: "Local Source, Remote Repositories, and Synchronization"
+    purpose: "Build a mental model of where changes originate, where history lives, and how source state is shared across a team."
+    objectives:
+      - "Distinguish edited working files, a local versioned repository, and a repository used to exchange changes with others."
+      - "Understand that local and remote histories can diverge until changes are deliberately exchanged."
+      - "Explain why teams designate accepted shared history rather than assuming every copy or shared change is authoritative."
+
+  - id: tools-platforms-and-strategy
+    relatedKnowledge:
+      - 05_CollaborationAndStrategyLayers
+    title: "Source Control, Collaboration Platforms, and Repository Strategy"
+    purpose: "Separate the three major responsibilities of source management so learners know where specific decisions and capabilities belong."
+    objectives:
+      - "Identify version control as the layer responsible for recording history and exchanging changes."
+      - "Recognize repository hosting and collaboration platforms as the layer for proposing, reviewing, authorizing, and governing contributions."
+      - "Distinguish team policies for integration and repository organization from the features of an individual hosted product."
+
+  - id: governed-change-flow
+    relatedKnowledge:
+      - 06_GovernedSourceLifecycle
+    title: "From Individual Changes to Governed Shared History"
+    purpose: "Connect the foundational concepts into a traceable workflow for proposing, reviewing, and accepting team source changes."
+    objectives:
+      - "Describe the journey from local editing and recording history to sharing a proposal, review, and acceptance into shared source."
+      - "Distinguish changes that are recorded, shared, reviewed, and accepted."
+      - "Recognize pitfalls such as treating synchronization as approval, working from stale source, or lacking an agreed source of truth."
+
+  - id: source-to-delivery-handoff
+    relatedKnowledge:
+      - 06_GovernedSourceLifecycle
+      - 05_CollaborationAndStrategyLayers
+    title: "Learning Path and Source-to-Delivery Handoff"
+    purpose: "Complete the mental model of governed source while locating the boundary between source management and downstream delivery automation."
+    objectives:
+      - "Explain why the next stages cover Git, one hosted collaboration platform, and team branching or repository-topology decisions."
+      - "Identify accepted shared source as an input to later build, test, and software delivery activities."
+      - "Retell the full source-management journey without relying on Git commands or a specific platform interface."

@@ -1,0 +1,330 @@
+# <interview-schema>
+# Cấu trúc câu hỏi Interview
+# schema-version: 2
+#
+# questions [kiểu: list; bắt buộc; mặc định: []]
+#   Danh sách câu hỏi Interview của module trong language hiện tại.
+#   mỗi phần tử:
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi phỏng vấn hiển thị cho người học.
+#     answer [kiểu: string; bắt buộc; mặc định: ""]
+#       Câu trả lời tham khảo, chỉ hiển thị khi người học chủ động mở.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu nội dung được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu nội dung đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+# </interview-schema>
+
+questions:
+  - question: "Một nhóm đã dùng Git. Vì sao quản lý mã nguồn vẫn rộng hơn việc lưu lịch sử commit?"
+    answer: "Git ghi snapshot và quan hệ giữa commit. Quy trình quản lý mã nguồn còn xác định bản chung, người được đề xuất sửa, bằng chứng cần review và revision nào được nhóm tiếp nhận. Một developer có thể commit thay đổi hợp lý mà vẫn chưa đạt chính sách phê duyệt. Khi giải thích thực tế, hãy chỉ ra cả diff Git lẫn quyết định chấp nhận vào nhánh chung."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01_SourceManagementFoundations.md"
+      anchor: "source-management-definition"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Hai kỹ sư đồng thời đổi thuế và làm tròn. Quy trình cộng tác đáng tin cần gì ngoài gửi file?"
+    answer: "Hai thay đổi cần bản gốc chung để reviewer nhận diện chính xác phần mỗi người sửa. Nhóm phải xem chỗ chồng lấn, thử hành vi kết hợp và quyết định kết quả nào trở thành nguồn chung. File gửi sau có thể mới hơn nhưng làm mất phần sửa của người kia. Bàn giao phù hợp gồm đề xuất truy vết được, bằng chứng review và revision chung đã xác nhận."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01_SourceManagementFoundations.md"
+      anchor: "why-manage-shared-source"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Vì sao các thư mục tên final-v2 hoặc project-latest không đủ để giải quyết xung đột?"
+    answer: "Tên file chỉ là lời khẳng định, không phải bằng chứng nguồn gốc. Nó không chỉ ra base ổn định, phần mã khác nhau hoặc người đã giải quyết hai sửa đổi cạnh tranh. Thời gian file còn có thể đổi khi sao chép. Cách xử lý tốt là so revision, giải quyết phần bất tương thích có chủ đích và ghi lại kết quả để người bảo trì sau này truy được."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01_SourceManagementFoundations.md"
+      anchor: "unmanaged-source-problems"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Hãy trình bày cách xử lý tình huống đổi thuế và làm tròn sao cho không âm thầm mất thay đổi của ai."
+    answer: "Bắt đầu từ phiên bản gốc mà cả hai cùng dùng. So riêng thay đổi của mỗi người, sau đó hợp nhất hành vi mong muốn thành patch dễ review. Kiểm thử tổng tiền thông thường, ranh giới làm tròn và đầu vào chịu cả hai thay đổi. Nếu quy tắc nghiệp vụ còn mơ hồ, cần quyết định miền nghiệp vụ thay vì chọn thư mục gửi cuối. Cuối cùng mới ghi nguồn hợp nhất và bằng chứng chấp nhận."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01_SourceManagementFoundations.md"
+      anchor: "manual-file-sharing-scenario"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Dùng một ví dụ phân biệt file đang sửa, revision được ghi, repository và bản phát hành sản phẩm."
+    answer: "Sửa Invoice.java làm thay đổi working file. Commit snapshot đã stage tạo revision được ghi trong lịch sử repository. Repository có thể có nhiều nhánh biểu diễn những trạng thái tích hợp khác nhau. Phát hành là quyết định đóng gói hoặc công bố revision đã kiểm chứng riêng, không tự xuất hiện khi Save hay Commit. Nhầm các lớp này dễ dẫn đến báo sai rằng người dùng đã nhận tính năng."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01_SourceManagementFoundations.md"
+      anchor: "foundational-source-terms"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Bằng chứng tối thiểu nào giúp maintainer mới điều tra ai đã chấp nhận thay đổi thuế gây tranh cãi?"
+    answer: "Giữ revision gốc, diff liên quan, lý do đổi, bằng chứng test, reviewer cùng quyết định của họ và revision đích đã được nhận. Tên tác giả chỉ cho biết ai ghi thay đổi, không cho biết ai đồng ý về nghiệp vụ. Nếu cần điều tra production, phải truy riêng artifact hoặc revision đã triển khai. Chuỗi bằng chứng này giúp audit và rollback mà không coi mọi nhánh được push là nguồn chính thức."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01_SourceManagementFoundations.md"
+      anchor: "shared-source-and-accountability"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Vì sao hệ thống kiểm soát phiên bản vẫn hữu ích khi nhóm đã backup thường xuyên?"
+    answer: "Backup bảo vệ bản sao khỏi mất dữ liệu; VCS mô tả chuỗi thay đổi được ghi để so sánh và truy tìm. VCS giúp xác định lúc nào, vì sao công thức đổi và hoàn tác phần mã có chọn lọc. Cả hai không tự kiểm đúng nghiệp vụ hoặc bảo đảm đã deploy. Nhóm vẫn cần backup lịch sử repository và quy trình chấp nhận thay đổi."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02_VersionControlAndHistory.md"
+      anchor: "version-control-purpose"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Đồng nghiệp nói Save, backup và commit tương đương. Bạn minh họa khác biệt bảo đảm của chúng thế nào?"
+    answer: "Save cập nhật file đang làm; backup sao chép một trạng thái tại thời điểm nào đó; commit ghi snapshot được chọn kèm quan hệ lịch sử. Hãy stage một trong hai sửa đổi rồi commit để chứng minh thay đổi còn lại dù đã Save vẫn chưa thuộc revision. So riêng mốc thời gian backup. Không thao tác nào tự chứng minh nhóm đã nhận hoặc production đã cập nhật."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02_VersionControlAndHistory.md"
+      anchor: "saving-backups-and-version-history"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Commit chỉ có message fix. Cần xem gì trước khi giải thích ý định nghiệp vụ của thay đổi?"
+    answer: "Kiểm commit cha và diff để xác định hành vi trước/sau, rồi liên kết Issue hoặc quyết định nêu quy tắc thuế mong muốn. Xem ai review ca biên và test nào chứng minh yêu cầu ấy. Thời gian và tác giả là manh mối hữu ích nhưng không thay được lý do nghiệp vụ. Cần tách hành vi quan sát từ mã khỏi nhận định trong ghi chú."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02_VersionControlAndHistory.md"
+      anchor: "change-provenance"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Sau đổi cách làm tròn, tổng tiền production sai. Vì sao checkout revision mã cũ chưa đủ để khôi phục?"
+    answer: "Revision mã cũ không tự thay hệ thống đang chạy hoặc hoàn tác hóa đơn đã phát hành. Trước hết tìm diff nghi vấn và bản đã release, chọn rollback có kiểm soát hoặc fix tiến rồi kiểm chứng interface phụ thuộc. Việc sửa dữ liệu, cache và consumer phía sau phải xét riêng. Giữ hồ sơ cả thao tác source lẫn tác động vận hành."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02_VersionControlAndHistory.md"
+      anchor: "compare-inspect-and-restore"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Khi máy chủ CVCS bị lỗi, việc nào còn làm được, việc nào bị chặn và vì sao?"
+    answer: "Developer vẫn có thể sửa hoặc xem file đã tải và so các bản cục bộ. Ghi revision mới vào lịch sử chính thường cần server trung tâm, nên việc commit vào kho và chia sẻ lịch sử bị giới hạn khi server mất kết nối. Khả năng offline cụ thể tùy sản phẩm và cách thiết lập. Cần phân biệt sửa file với ghi phiên bản trước khi nói mọi công việc đều dừng."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03_CentralizedAndDistributedModels.md"
+      anchor: "centralized-vcs-model"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Vì sao clone Git đầy đủ có thể commit offline và khả năng đó không bảo đảm điều gì?"
+    answer: "Clone chứa commit objects, quan hệ cha, refs và cơ sở dữ liệu đối tượng để ghi snapshot mới. Git tạo commit local mà không cần hỏi remote. Điều đó không tự công bố commit, chuyển nó sang clone người khác hoặc biến thành nguồn chung đã nhận. Push/fetch và chính sách review vẫn quyết định chuyện chia sẻ và chấp nhận."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03_CentralizedAndDistributedModels.md"
+      anchor: "distributed-vcs-model"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Khi nào mô hình tập trung vẫn có thể phù hợp dù DVCS thuận lợi cho commit offline?"
+    answer: "Mô hình tập trung có thể thuận lợi khi tổ chức cần một lịch sử có thẩm quyền được kiểm soát chặt và phân quyền tập trung, ví dụ quy trình đặc thù hoặc hệ thống cũ. Đổi lại phải chấp nhận chi phí kết nối và độ sẵn sàng server. DVCS giảm lệ thuộc server khi ghi local nhưng tạo nhiều bản sao tiến hóa độc lập, cần đồng bộ và quy định nguồn chung. Nên chọn theo nhu cầu kiểm soát và cộng tác, không theo khẩu hiệu."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03_CentralizedAndDistributedModels.md"
+      anchor: "centralized-distributed-tradeoffs"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Nếu nhiều clone Git có đủ lịch sử, vì sao vẫn cần backup và chính sách nguồn chuẩn?"
+    answer: "Các bản sao tăng khả năng phục hồi nhưng không phải clone nào cũng có mọi nhánh, bản cập nhật trên remote, tag hay hồ sơ review của host. Clone lỗi hoặc cũ có thể thiếu dữ liệu khi cần khôi phục; các bản còn có thể bất đồng về trạng thái nhóm đã chấp nhận. Cần backup kho và metadata chung, xác định nhánh/owner có thẩm quyền và thử phục hồi. Phân tán cải thiện lựa chọn nhưng không loại bỏ quản trị."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03_CentralizedAndDistributedModels.md"
+      anchor: "history-availability-and-governance"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Mạng gián đoạn, Bình commit local còn An vẫn thấy revision cũ. Giải thích phân kỳ và phối hợp lại ra sao?"
+    answer: "Commit của Bình chỉ tồn tại trong lịch sử anh ấy đã cập nhật. Clone của An không tự có commit ấy dù hai kho cùng xuất phát từ một dự án. Khi mạng trở lại, Bình push lên remote thống nhất hoặc trao đổi revision; An fetch rồi kiểm cách tích hợp với base hiện tại. Nhóm sau đó quyết định chấp nhận hai dòng thế nào, không chọn kho chỉ vì có nhiều commit hơn."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03_CentralizedAndDistributedModels.md"
+      anchor: "offline-history-availability-scenario"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Bạn sẽ kiểm chứng thế nào khi developer khẳng định file thuế vừa Save 10% đã thuộc revision chung của nhóm?"
+    answer: "Tách ba trạng thái: file đang làm, snapshot đã stage và commit mới nhất. Kiểm trạng thái local và diff để biết mức 10% đang untracked, chưa stage, đã stage hay đã commit. Tiếp đó kiểm ref đích trên remote và quyết định chấp nhận; ngay cả commit local cũng có thể chưa được chia sẻ hoặc merge. Nhờ vậy nhóm không coi ảnh chụp editor là bằng chứng nguồn chung."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04_LocalAndSharedSource.md"
+      anchor: "working-files-vs-versioned-history"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Vì sao commit local thành công không đồng nghĩa đồng nghiệp hay repository chung đã nhận thay đổi?"
+    answer: "Git ghi commit vào lịch sử object local. Công bố thường cần push refs/objects tới remote được phép, còn đồng nghiệp thường phải fetch mới thấy bản mới. Quyền, mạng và chính sách nhánh có thể chặn push hoặc tiếp nhận. Cần chỉ ra các bằng chứng riêng: SHA local, ref remote, trạng thái clone đã fetch và lần merge vào dòng nguồn chung đã thống nhất."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04_LocalAndSharedSource.md"
+      anchor: "local-and-remote-repositories"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "An và Bình đều có commit sau cùng base. Bạn giải thích đồng bộ và nguy cơ conflict thế nào?"
+    answer: "Hai lịch sử đã rẽ nhánh dù tên branch giống nhau. Fetch chỉ làm commit của phía kia xuất hiện local, không tự hòa hợp ý định hoặc giải quyết các sửa đổi xung đột. Xem merge-base và cả hai diff, tích hợp bằng cơ chế nhóm chọn rồi giải quyết conflict và kiểm hành vi. Merge không xung đột chữ vẫn có thể sai nghiệp vụ, vì vậy phải test và review."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04_LocalAndSharedSource.md"
+      anchor: "synchronization-and-divergence"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Nếu mỗi kỹ sư đều có lịch sử Git hợp lệ, điều gì khiến một branch trở thành nguồn chuẩn của nhóm?"
+    answer: "Có commit hợp lệ khác với quyết định tiếp nhận của tổ chức. Nhóm quy định rõ branch hoặc repository tích hợp, các review/checks bắt buộc và ai được cập nhật. Nhánh đề xuất có thể đã push và nhìn thấy được nhưng chưa đạt điều kiện. Bằng chứng chấp nhận là ref/lịch sử đích sau tích hợp có thẩm quyền, không phải branch local có timestamp mới nhất."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04_LocalAndSharedSource.md"
+      anchor: "accepted-source-of-truth"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Kỹ sư mới cho rằng Git tự quản lý phiếu duyệt pull request. Bạn phân tách Git và hosting ra sao?"
+    answer: "Git tạo commit, branch, quan hệ tổ tiên và kết quả merge có thể xem local. Nền tảng GitHub cung cấp Pull Request (PR), còn GitLab gọi là Merge Request (MR); cả hai có thảo luận, phân quyền, hồ sơ review, bảo vệ branch và tích hợp status gate. Vẫn có thể merge local không qua PR/MR nhưng như vậy có thể vi phạm chính sách nhóm. Hãy hiển thị đồ thị Git và bằng chứng tiếp nhận trên host riêng để không nhầm commit đã ghi với quyết định đã duyệt."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05_CollaborationAndStrategyLayers.md"
+      anchor: "vcs-vs-hosted-platform"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Khi nào đề xuất PR/MR trên nền tảng hosting tạo giá trị vượt lên bản diff dễ đọc?"
+    answer: "PR trên GitHub hoặc MR trên GitLab liên kết mục tiêu, bản sửa, test, câu hỏi reviewer và quyết định tích hợp. Với quy tắc thuế, review cần hỏi ca biên, tương tác làm tròn và tương thích chứ không chỉ cú pháp. Reviewer có thể yêu cầu sửa dù checks xanh vì nghiệp vụ có thể chưa được test. Đây là đề xuất có dấu vết đánh giá, không đồng nghĩa nhánh đích đã nhận mã."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05_CollaborationAndStrategyLayers.md"
+      anchor: "proposing-and-reviewing-changes"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Vì sao người có thể tạo branch feature vẫn có thể không được merge vào mainline chung?"
+    answer: "Quyền ghi mã, tư cách reviewer, checks bắt buộc và quyền merge là các kiểm soát khác nhau. Contributor có thể push nhánh được phép nhưng main bảo vệ yêu cầu PR, phiếu duyệt hoặc trạng thái kiểm thử. Chính sách hiệu lực còn có thể phụ thuộc quyền bypass riêng từng actor; cấp Admin rộng không nên là cách mặc định. Phải chẩn đoán đúng điều kiện chưa đạt trước khi đổi quyền."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05_CollaborationAndStrategyLayers.md"
+      anchor: "access-and-change-acceptance"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Vì sao đặt tên branch là main hoặc feature không chứng minh nhóm thực hành Trunk-Based Development?"
+    answer: "Tên branch trong Git là refs, không phải cam kết nhịp tích hợp. Trunk-Based Development dựa trên tích hợp thường xuyên, thay đổi nhỏ được kiểm chứng, mainline ổn định và kiểm soát việc bật chức năng chưa hoàn thiện khi cần. Nhóm để feature phân kỳ nhiều tuần vẫn gặp rủi ro tích hợp muộn dù tên nhánh thế nào. Nên đo tuổi branch, nhịp merge, độ trễ checks và trách nhiệm khôi phục thay vì nhìn nhãn."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05_CollaborationAndStrategyLayers.md"
+      anchor: "branching-policy-vs-git-mechanics"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Khi nào nên giữ Web và Billing chung repo, và khi nào đáng tách mã nguồn?"
+    answer: "Nếu hai component thường đổi cùng nhau, được đọc chung nguồn và kiểm chứng được contract bị ảnh hưởng, một repo có thể giúp review diff liên quan thuận lợi. Repo riêng có thể cần khi quyền đọc source, vòng đời hoặc ranh giới owner thực sự khác nhau. Độc lập deploy không tự suy từ số repository; polyrepo vẫn có thể bị ràng buộc API. Cần so thời gian bàn giao, nghĩa vụ phân quyền và năng lực công cụ trước khi di chuyển lịch sử."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05_CollaborationAndStrategyLayers.md"
+      anchor: "repository-topology-strategy"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Hãy trình bày hành trình một sửa đổi thuế từ editor đến nguồn chung đã nhận. Quyết định xuất hiện ở đâu?"
+    answer: "Developer sửa, kiểm diff, stage và ghi revision local, rồi công bố đề xuất lên nơi chia sẻ. Nhóm review quy tắc trước/sau, test tình huống bị ảnh hưởng và xác nhận quyền cùng checks bắt buộc. Chỉ tích hợp có thẩm quyền mới cập nhật nhánh nguồn chuẩn. Commit, PR/MR, review và merge là các bằng chứng riêng; phát hành/triển khai thuộc quy trình kế tiếp."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06_GovernedSourceLifecycle.md"
+      anchor: "individual-to-shared-change-flow"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Vì sao gọi commit đã push và có bình luận là đã chấp nhận dù nhánh đích chưa đổi lại có hại?"
+    answer: "Đã ghi nghĩa là revision tồn tại; đã chia sẻ nghĩa là người khác xem hoặc fetch được; đã review là có người đánh giá; đã chấp nhận là dòng tích hợp chuẩn chứa kết quả hợp lệ. Gộp các trạng thái che phản hồi chưa xử lý và khiến nhóm phía sau hiểu sai mức sẵn sàng. Nhánh đã push vẫn có thể bị từ chối sau review. Cần báo đúng giai đoạn và bằng chứng thay vì nói hoàn thành quá sớm."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06_GovernedSourceLifecycle.md"
+      anchor: "recorded-shared-reviewed-accepted"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "An push nhánh đổi thuế rồi mở PR/MR, Bình yêu cầu test làm tròn và main chưa đổi. Owner nên báo tiến độ thế nào?"
+    answer: "Hãy ghi thay đổi đã được ghi và chia sẻ, đang review với yêu cầu test làm tròn chưa giải quyết. Nêu ai chịu trách nhiệm test, kết quả cần đạt và khi nào diff hiện tại được duyệt lại. Không cần xóa công việc hay gọi là đã deploy; nhánh và PR/MR vẫn có thể giữ để xử lý phản hồi. Chấp nhận chỉ xảy ra khi đủ điều kiện nhóm và cập nhật nhánh đích."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06_GovernedSourceLifecycle.md"
+      anchor: "shared-but-not-accepted-scenario"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Rủi ro nào xảy ra khi reviewer duyệt diff cũ hoặc developer tích hợp các revision local mâu thuẫn?"
+    answer: "Reviewer có thể đã kiểm hành vi nay khác sau commit mới; rule host có thể yêu cầu duyệt lại hoặc chạy checks mới. Lịch sử phân kỳ còn có thể gây conflict chữ hoặc merge sạch nhưng sai nghiệp vụ kết hợp. So revision hiện tại với bản từng review, chạy lại test liên quan và mời duyệt lại khi cần. Không nên force viết lại lịch sử chung chỉ để đồ thị đẹp."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06_GovernedSourceLifecycle.md"
+      anchor: "source-collaboration-failure-modes"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Chuỗi bằng chứng nào chứng minh một thay đổi đã được tiếp nhận có trách nhiệm chứ không chỉ được commit?"
+    answer: "Truy từ yêu cầu hoặc sự cố tới revision gốc, diff đề xuất, lý do tác giả, tests, phản hồi review, vấn đề đã xử lý và revision merge đích. Lưu ai có thẩm quyền nhận mã và checks bắt buộc được đáp ứng thế nào. Nếu điều tra production, nối SHA source với hồ sơ release/deploy sau đó nhưng không mặc định hai bước đã xảy ra. Nhờ vậy biết mã đổi gì, vì sao, ai đồng ý và kết quả nằm ở đâu."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06_GovernedSourceLifecycle.md"
+      anchor: "evidence-of-a-governed-change"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Thay đổi đã review và merge vào main nhưng production vẫn chạy hành vi cũ. Cần kiểm gì tiếp theo?"
+    answer: "Tiếp nhận nguồn xác lập mốc tích hợp, không phải artifact đã deploy. Kiểm SHA đầu vào build, phiên bản gói, kết quả CI, duyệt release, môi trường đích và trạng thái rollout/feature flag. Check xanh trên commit không bảo đảm job deploy đã chạy hoặc môi trường đã cập nhật. Nhóm nguồn bàn giao revision đã xác minh cùng dấu vết; hệ thống phân phối cung cấp bằng chứng người dùng đã nhận gì."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06_GovernedSourceLifecycle.md"
+      anchor: "source-to-delivery-boundary"
+    apiRelated:
+      controller: ""
+      methodSignature: ""

@@ -41,4 +41,74 @@
 # Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: why-source-management
+    relatedKnowledge:
+      - 01_SourceManagementFoundations
+    title: "Vì sao cần quản lý mã nguồn?"
+    purpose: "Hình thành bức tranh tổng thể về cách thay đổi mã nguồn của một cá nhân trở thành tài sản chung có thể theo dõi và kiểm soát trong nhóm."
+    objectives:
+      - "Nhận ra rủi ro của việc chia sẻ tệp thủ công: thất lạc thay đổi, khó xác định phiên bản và thiếu trách nhiệm giải trình."
+      - "Phân biệt mã nguồn đang có trên máy với lịch sử được lưu giữ và trạng thái mã nguồn được nhóm công nhận."
+      - "Giải thích vì sao nguồn chung cần có khả năng truy vết, phối hợp và quy tắc tiếp nhận thay đổi."
+
+  - id: version-control-and-history
+    relatedKnowledge:
+      - 02_VersionControlAndHistory
+    title: "Kiểm soát phiên bản và lịch sử thay đổi"
+    purpose: "Hiểu hệ thống kiểm soát phiên bản giải quyết bài toán lưu giữ, so sánh và truy tìm các lần thay đổi mã nguồn như thế nào ở mức khái niệm."
+    objectives:
+      - "Phân biệt việc lưu tệp, sao lưu thư mục và quản lý những phiên bản có lịch sử rõ ràng."
+      - "Hiểu giá trị của việc biết nội dung đã thay đổi, người thực hiện, thời điểm và lý do thay đổi."
+      - "Nhận diện khả năng so sánh, xem lại và khôi phục phiên bản như những nhu cầu cốt lõi trước khi học công cụ cụ thể."
+
+  - id: centralized-vs-distributed
+    relatedKnowledge:
+      - 03_CentralizedAndDistributedModels
+    title: "Mô hình kiểm soát phiên bản tập trung và phân tán"
+    purpose: "So sánh hai cách tổ chức lịch sử phiên bản để biết vì sao các công cụ có khả năng làm việc và phối hợp khác nhau."
+    objectives:
+      - "Mô tả vai trò kho lưu trữ trung tâm và các máy khách trong mô hình tập trung."
+      - "Hiểu ý nghĩa của bản sao kho lưu trữ có lịch sử trên máy cá nhân trong mô hình phân tán."
+      - "So sánh sự phụ thuộc vào kết nối, khả năng làm việc cục bộ, quản trị và trách nhiệm bảo vệ lịch sử mà không đi vào thao tác của từng công cụ."
+
+  - id: local-and-shared-source
+    relatedKnowledge:
+      - 04_LocalAndSharedSource
+    title: "Mã nguồn cục bộ, kho từ xa và sự đồng bộ"
+    purpose: "Xây dựng mô hình tư duy về nơi thay đổi được tạo ra, nơi lịch sử được lưu giữ và cách các thành viên chia sẻ trạng thái mã nguồn."
+    objectives:
+      - "Phân biệt tệp đang chỉnh sửa, kho phiên bản trên máy và kho dùng để trao đổi với người khác."
+      - "Hiểu rằng lịch sử cục bộ và kho từ xa có thể khác nhau cho đến khi có sự trao đổi thay đổi chủ động."
+      - "Giải thích vì sao nhóm cần thống nhất nguồn lịch sử được chấp nhận thay vì mặc định mọi bản sao hay mọi thay đổi đã chia sẻ đều là chính thức."
+
+  - id: tools-platforms-and-strategy
+    relatedKnowledge:
+      - 05_CollaborationAndStrategyLayers
+    title: "Phân biệt công cụ, nền tảng cộng tác và chiến lược kho mã"
+    purpose: "Nhận biết ba lớp trách nhiệm trong quản lý mã nguồn để chọn đúng phần kiến thức cần học khi tham gia dự án."
+    objectives:
+      - "Xác định hệ thống kiểm soát phiên bản chịu trách nhiệm lưu lịch sử và trao đổi thay đổi."
+      - "Nhận ra nền tảng lưu trữ và cộng tác bổ sung cơ chế đề xuất, xem xét, phân quyền và kiểm soát việc tiếp nhận mã nguồn."
+      - "Phân biệt các quyết định cấp nhóm về cách tích hợp thay đổi và tổ chức kho mã với tính năng của một sản phẩm cụ thể."
+
+  - id: governed-change-flow
+    relatedKnowledge:
+      - 06_GovernedSourceLifecycle
+    title: "Từ thay đổi cá nhân đến lịch sử chung được kiểm soát"
+    purpose: "Ghép các lớp khái niệm thành vòng đời của một thay đổi mã nguồn có thể theo dõi, xem xét và tiếp nhận trong nhóm."
+    objectives:
+      - "Mô tả hành trình từ sửa mã nguồn cục bộ, ghi nhận lịch sử, chia sẻ đề xuất đến xem xét và đưa thay đổi vào nguồn chung."
+      - "Phân biệt thay đổi đã được lưu, đã chia sẻ, đã được xem xét và đã được chấp nhận."
+      - "Nhận diện các sai lầm như nhầm đồng bộ với phê duyệt, làm việc trên trạng thái cũ hoặc thiếu nguồn lịch sử thống nhất."
+
+  - id: source-to-delivery-handoff
+    relatedKnowledge:
+      - 06_GovernedSourceLifecycle
+      - 05_CollaborationAndStrategyLayers
+    title: "Kết nối với các bước học tiếp theo và bàn giao mã nguồn"
+    purpose: "Hoàn thiện mô hình từ mã nguồn cá nhân đến nguồn chung có quản trị, đồng thời nhận ra ranh giới giữa quản lý mã nguồn và tự động hóa phân phối phần mềm."
+    objectives:
+      - "Giải thích vai trò tiếp nối của Git, một nền tảng cộng tác và các quyết định về nhánh hay cấu trúc kho mã."
+      - "Mô tả trạng thái nguồn chung đã được chấp nhận như đầu vào cho quy trình xây dựng, kiểm thử và phân phối ở giai đoạn sau."
+      - "Trình bày lại toàn bộ hành trình quản lý mã nguồn mà không phụ thuộc vào lệnh Git hoặc giao diện của một nền tảng cụ thể."

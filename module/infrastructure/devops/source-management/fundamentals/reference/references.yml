@@ -14,3 +14,14 @@
 #
 # Add only curated references that are useful for the module.
 # The build system must not overwrite this file after authored content exists.
+
+references:
+  - title: "Pro Git — About Version Control"
+    url: "https://git-scm.com/book/en/v2/Getting-Started-About-Version-Control.html"
+    description: "Official Git book introduction to why version control exists and how centralized and distributed models differ."
+  - title: "GitHub Docs — About repositories"
+    url: "https://docs.github.com/en/repositories/creating-and-managing-repositories/about-repositories"
+    description: "Official explanation of repository history, shared source, ownership, and the collaboration layer around repositories."
+  - title: "GitLab Docs — Repository"
+    url: "https://docs.gitlab.com/user/project/repository/"
+    description: "Official description of how a Git repository relates to a hosted project and provides versioned source for team collaboration."

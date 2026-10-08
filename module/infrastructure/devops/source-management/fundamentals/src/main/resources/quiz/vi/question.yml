@@ -1,0 +1,790 @@
+# <quiz-schema>
+# Cấu trúc câu hỏi Quiz
+# schema-version: 3
+#
+# questions [kiểu: list; bắt buộc; mặc định: []; duy nhất theo: id]
+#   Danh sách câu hỏi Quiz của module trong language hiện tại.
+#   mỗi phần tử:
+#     id [kiểu: string; bắt buộc; mặc định: ""]
+#       ID ổn định và duy nhất của câu hỏi.
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi hiển thị cho người học.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu câu hỏi được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu câu hỏi đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+#     answers [kiểu: list; bắt buộc; số phần tử: 4; mặc định: []; duy nhất theo: id]
+#       Chính xác bốn đáp án. ID A/B/C/D là identity nội bộ ổn định, không phải vị trí hiển thị sau khi frontend shuffle.
+#       mỗi phần tử:
+#         id [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#           Identity ổn định của đáp án.
+#         answer [kiểu: string; bắt buộc; mặc định: ""]
+#           Nội dung đáp án hiển thị cho người học.
+#         explanation [kiểu: string; bắt buộc; mặc định: ""]
+#           Giải thích hiển thị khi người học chọn đáp án này, bất kể đúng hay sai.
+#     correctAnswerId [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#       ID nội bộ của đáp án đúng. Frontend kiểm tra bằng identity này sau khi shuffle.
+# </quiz-schema>
+
+questions:
+  - id: fundamentals-01
+    question: "Một nhóm đã sao lưu mã mỗi ngày. Vì sao họ vẫn cần quản lý mã nguồn có quy trình?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01_SourceManagementFoundations.md"
+      anchor: "source-management-definition"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Để mỗi người lưu nhiều thư mục độc lập rồi chọn bản mới nhất."
+        explanation: "Tên tệp và giờ lưu không cho biết điều gì đã được nhóm đồng ý."
+      - id: B
+        answer: "Để biết bản nào đã ghi và bản nào được nhóm tiếp nhận."
+        explanation: "Quản lý mã kết hợp lịch sử kỹ thuật với trách nhiệm tiếp nhận."
+      - id: C
+        answer: "Để mọi bản sao cục bộ tự trở thành trạng thái chính thức của dự án."
+        explanation: "Các bản sao có thể phân kỳ; nhóm phải xác định nguồn được công nhận."
+      - id: D
+        answer: "Để việc lưu mã đồng nghĩa với việc kiểm thử và triển khai thành công."
+        explanation: "Lưu lịch sử không tự chứng minh chất lượng hay kết quả triển khai."
+    correctAnswerId: B
+
+  - id: fundamentals-02
+    question: "An sửa thuế còn Bình sửa làm tròn. Cách nào đáp ứng đúng mục tiêu cộng tác?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01_SourceManagementFoundations.md"
+      anchor: "why-manage-shared-source"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Chọn tệp của người gửi sau rồi báo nhóm đã hoàn tất tích hợp."
+        explanation: "Người gửi cuối không bảo đảm tệp chứa cả hai thay đổi."
+      - id: B
+        answer: "Để hai bản sửa riêng tới kỳ phát hành rồi mới so sánh."
+        explanation: "Dồn phản hồi về cuối kỳ khiến phân kỳ và rủi ro tích hợp tăng."
+      - id: C
+        answer: "Chỉ yêu cầu từng người mô tả sửa đổi, không cần xem phần chênh."
+        explanation: "Lý do hữu ích nhưng không thay thế bằng chứng về mã thực tế."
+      - id: D
+        answer: "Đối chiếu các diff, kiểm tra ảnh hưởng và thống nhất bản chung."
+        explanation: "Nhóm cần giữ hai sửa đổi hợp lệ và ghi rõ quyết định của mình."
+    correctAnswerId: D
+
+  - id: fundamentals-03
+    question: "Điểm yếu chính của ba tệp `project-final*.zip` là gì khi hai người sửa cùng một tệp?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01_SourceManagementFoundations.md"
+      anchor: "unmanaged-source-problems"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Tên và thời điểm không mô tả phần chênh hay quyết định giữ sửa đổi."
+        explanation: "Một bản có thể ghi đè sửa đổi khác mà không để lại dấu vết đủ dùng."
+      - id: B
+        answer: "Định dạng ZIP không cho phép lưu nhiều phiên bản theo thời gian."
+        explanation: "ZIP vẫn chứa nhiều bản sao; thiếu cấu trúc lịch sử mới là vấn đề."
+      - id: C
+        answer: "Dự án có nhiều người nên bắt buộc mỗi người giữ một repository riêng."
+        explanation: "Số người không tự quyết định topology hay quy trình chấp nhận."
+      - id: D
+        answer: "Mỗi tệp ZIP tự chứa một lịch sử tác giả và review đầy đủ."
+        explanation: "Tên và nội dung nén không tạo audit trail hay review decision."
+    correctAnswerId: A
+
+  - id: fundamentals-04
+    question: "An và Bình bắt đầu từ cùng bản 8%; An đổi thuế còn Bình thêm làm tròn. Cần làm gì trước khi chọn kết quả?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01_SourceManagementFoundations.md"
+      anchor: "manual-file-sharing-scenario"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Lấy toàn bộ thư mục An gửi trước vì thay đổi thuế có thời điểm rõ."
+        explanation: "Mốc gửi không chứng minh thư mục chứa sửa đổi làm tròn của Bình."
+      - id: B
+        answer: "Chọn thư mục Bình gửi sau và giữ nguyên mà không cần xem diff."
+        explanation: "Việc gửi sau không loại trừ khả năng ghi đè thay đổi thuế."
+      - id: C
+        answer: "So hai sửa đổi với bản gốc, kiểm tra tương tác rồi hợp nhất."
+        explanation: "Cần giữ các sửa đổi hợp lệ và xác minh kết quả tích hợp trước nhận."
+      - id: D
+        answer: "Đổi tên hai ZIP theo hai nhánh nhưng giữ nguyên các tệp riêng."
+        explanation: "Đổi nhãn không xử lý xung đột hay xác định kết quả được nhận."
+    correctAnswerId: C
+
+  - id: fundamentals-05
+    question: "An đã Save `Invoice.java` nhưng chưa ghi nhận trạng thái mới. Phát biểu nào đúng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01_SourceManagementFoundations.md"
+      anchor: "foundational-source-terms"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Save đã tạo revision nên có thể nhận diện bằng lịch sử repository."
+        explanation: "Save thay đổi tệp đang làm việc; không nhất thiết tạo bản ghi VCS."
+      - id: B
+        answer: "Tệp vừa Save có thể khác với commit mới nhất trong repository."
+        explanation: "Tệp trên đĩa và mốc lịch sử là hai trạng thái cần phân biệt."
+      - id: C
+        answer: "Revision luôn phải trùng với số phiên bản sản phẩm được phát hành."
+        explanation: "Revision là mốc source; release có thể chọn mốc phù hợp riêng."
+      - id: D
+        answer: "Một thư mục bất kỳ cũng được gọi repository khi có tệp được Save."
+        explanation: "Repository phải do VCS quản lý, không đơn thuần là thư mục dữ liệu."
+    correctAnswerId: B
+
+  - id: fundamentals-06
+    question: "Một commit sửa thuế đã được đẩy để xin góp ý. Điều nào còn cần trước khi coi là nguồn chung được nhận?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01_SourceManagementFoundations.md"
+      anchor: "shared-source-and-accountability"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Xem commit trên remote là đủ nếu tác giả ghi đúng tên nhánh đích."
+        explanation: "Đã chia sẻ không đồng nghĩa đã qua điều kiện tiếp nhận."
+      - id: B
+        answer: "Dùng message có mã issue thay cho việc review của nhóm."
+        explanation: "Metadata mô tả nguồn gốc nhưng không tự là quyết định phê duyệt."
+      - id: C
+        answer: "Lấy kết quả test local của reviewer làm quyết định tích hợp nhánh."
+        explanation: "Tải xuống và thử riêng không chứng minh nhóm đã đưa vào nguồn chung."
+      - id: D
+        answer: "Cần qua review và tích hợp vào nguồn chung theo quy tắc nhóm."
+        explanation: "Sự chấp nhận gắn với tiêu chí nhóm và trạng thái lịch sử được công nhận."
+    correctAnswerId: D
+
+  - id: fundamentals-07
+    question: "Điều gì khiến một công cụ được xem là VCS chứ không chỉ là nơi chứa tệp?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02_VersionControlAndHistory.md"
+      anchor: "version-control-purpose"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Nó ghi lại các trạng thái và quan hệ lịch sử để so sánh, truy tìm."
+        explanation: "Đó là năng lực cốt lõi để lý giải nguồn gốc của các phiên bản."
+      - id: B
+        answer: "Nó chỉ giữ thư mục có giờ sửa mới nhất cho mỗi thành viên."
+        explanation: "Giữ bản mới nhất không đủ truy lại những trạng thái trung gian."
+      - id: C
+        answer: "Nó chỉ ghi revision khi bản sửa đã vượt qua bước phát hành."
+        explanation: "Kiểm soát phiên bản và triển khai là hai trách nhiệm khác nhau."
+      - id: D
+        answer: "Nó lưu lịch sử và thay reviewer quyết định tiếp nhận từng bản sửa."
+        explanation: "VCS cung cấp chứng cứ lịch sử; review cần quy trình riêng."
+    correctAnswerId: A
+
+  - id: fundamentals-08
+    question: "Một bản backup 11:00 và revision ghi lúc 11:30 khác nhau ở điểm quan trọng nào?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02_VersionControlAndHistory.md"
+      anchor: "saving-backups-and-version-history"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Backup luôn chứa revision mới dù bản sao đã tạo trước đó."
+        explanation: "Bản sao phản ánh thời điểm tạo và không biết sửa đổi tương lai."
+      - id: B
+        answer: "Có VCS thì không còn cần backup khi kho lịch sử bị mất."
+        explanation: "Kho phiên bản vẫn cần bảo vệ và kế hoạch phục hồi riêng."
+      - id: C
+        answer: "Backup giữ bản sao lúc 11:00; revision thuộc lịch sử ghi lúc 11:30."
+        explanation: "Hai lớp có thể kết hợp nhưng không thay vai trò của nhau."
+      - id: D
+        answer: "Save file và revision có cùng tính truy vết bất kể công cụ nào."
+        explanation: "Save không tự tạo quan hệ hoặc thông tin thay đổi trong VCS."
+    correctAnswerId: C
+
+  - id: fundamentals-09
+    question: "Một commit ghi tác giả An và thông điệp `fix`. Cần bổ sung gì để điều tra đổi thuế dễ hơn?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02_VersionControlAndHistory.md"
+      anchor: "change-provenance"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Chỉ thêm thời điểm commit vì giờ ghi là bằng chứng nghiệp vụ."
+        explanation: "Thời gian hữu ích để truy tìm, nhưng không giải thích lý do đổi."
+      - id: B
+        answer: "Nêu thuế trước/sau, lý do đổi và quyết định liên quan."
+        explanation: "Lý do và tác động giúp reviewer kiểm tra giả định khi sự cố phát sinh."
+      - id: C
+        answer: "Thay tên tác giả bằng quản trị viên để metadata đáng tin tuyệt đối."
+        explanation: "Tên khai báo không tự xác thực danh tính hay giải thích thay đổi."
+      - id: D
+        answer: "Ẩn phần chênh mã rồi chỉ giữ mô tả ngắn để giảm công review."
+        explanation: "Thiếu diff khiến không kiểm chứng được điều được mô tả có đúng không."
+    correctAnswerId: B
+
+  - id: fundamentals-10
+    question: "Sau thay đổi làm tròn xuất hiện sai lệch, nhóm muốn trở về cách tính cũ. Nhận định nào phù hợp?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02_VersionControlAndHistory.md"
+      anchor: "compare-inspect-and-restore"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Ưu tiên xóa lịch sử sau mốc cũ trước khi hiểu phạm vi ảnh hưởng."
+        explanation: "Có nhiều cơ chế khôi phục; không phải mọi cách đều xóa lịch sử."
+      - id: B
+        answer: "Xem revision cũ rồi coi đó là hành động khôi phục runtime đang chạy."
+        explanation: "Xem lịch sử không phải thao tác chấp nhận hay triển khai kết quả."
+      - id: C
+        answer: "Lấy diff giữa hai bản làm căn cứ rằng dữ liệu đã phát hành được sửa."
+        explanation: "Sửa mã không tự thay đổi hóa đơn hay dữ liệu ngoài hệ thống."
+      - id: D
+        answer: "Xem diff, chọn cách hoàn tác phù hợp rồi xác minh kết quả."
+        explanation: "Phục hồi đúng cần hiểu phần nào đã sai và phạm vi tác động."
+    correctAnswerId: D
+
+  - id: fundamentals-11
+    question: "Server của hệ CVCS tạm mất kết nối. Hoạt động nào có khả năng bị giới hạn trước tiên?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03_CentralizedAndDistributedModels.md"
+      anchor: "centralized-vcs-model"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Chỉnh sửa nội dung tệp đã có trong working copy trên máy."
+        explanation: "Editor vẫn có thể thay nội dung cục bộ dù server không liên lạc."
+      - id: B
+        answer: "Đọc tệp được tải về trước đó mà không hỏi lịch sử máy chủ."
+        explanation: "Working copy đã có vẫn có thể đọc và chỉnh cục bộ."
+      - id: C
+        answer: "Ghi revision mới vào kho trung tâm khi server không sẵn sàng."
+        explanation: "Trong CVCS kiểu SVN, nhiều thao tác lịch sử cần server sẵn sàng."
+      - id: D
+        answer: "So sánh hai bản sao đã có bằng công cụ diff trên máy cục bộ."
+        explanation: "Lập kế hoạch không phụ thuộc truy cập kho lịch sử tập trung."
+    correctAnswerId: C
+
+  - id: fundamentals-12
+    question: "Vì sao clone Git thông thường có thể tạo commit khi ngoại tuyến?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03_CentralizedAndDistributedModels.md"
+      anchor: "distributed-vcs-model"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Clone đủ lịch sử giữ các commit và object ngay trên máy."
+        explanation: "Commit mới không cần gửi yêu cầu ghi lịch sử tới server mỗi lần."
+      - id: B
+        answer: "Máy khách lưu bản vá tạm, chờ server tạo commit sau khi kết nối."
+        explanation: "Commit local và quyết định review là hai sự kiện khác nhau."
+      - id: C
+        answer: "Chỉ working tree được clone về, lịch sử sẽ tải khi push bản sửa."
+        explanation: "Clone thông thường bao gồm các đối tượng lịch sử đã tải về."
+      - id: D
+        answer: "Commit được xếp hàng gửi đi, chưa tạo object lịch sử ở local."
+        explanation: "Không có kết nối, thay đổi của Bình chưa thể tự đến máy An."
+    correctAnswerId: A
+
+  - id: fundamentals-13
+    question: "Phát biểu nào diễn đạt đúng nhất sự khác biệt CVCS và DVCS?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03_CentralizedAndDistributedModels.md"
+      anchor: "centralized-distributed-tradeoffs"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "CVCS để từng client commit riêng rồi mới tổng hợp lịch sử trên server."
+        explanation: "CVCS điển hình quản lý lịch sử chính tại server dùng chung."
+      - id: B
+        answer: "DVCS cần server xác nhận mỗi commit trước khi lịch sử local thay đổi."
+        explanation: "Nhóm Git vẫn thường dùng remote làm điểm hợp tác có quy tắc."
+      - id: C
+        answer: "CVCS và DVCS khác nhau chủ yếu ở việc có bắt buộc dùng PR hay không."
+        explanation: "Cả hai mô hình đều có thể áp chính sách tiếp nhận chung."
+      - id: D
+        answer: "DVCS có lịch sử local; CVCS thường cần máy chủ để ghi revision."
+        explanation: "Điểm khác là nơi có thể đọc và ghi lịch sử, không phải có server hay không."
+    correctAnswerId: D
+
+  - id: fundamentals-14
+    question: "Clone của An có đầy đủ commit trong lúc server Git ngắt mạng. Điều gì vẫn chưa suy ra được?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03_CentralizedAndDistributedModels.md"
+      anchor: "history-availability-and-governance"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "An có thể xem những revision đã có sẵn trong clone trước đó."
+        explanation: "Với đối tượng đã tải đủ, Git đọc lịch sử mà không cần remote."
+      - id: B
+        answer: "Clone An đang là nguồn được cả nhóm chấp nhận để phát hành."
+        explanation: "Khả năng giữ lịch sử khác với quyền đại diện cho mã chính thức."
+      - id: C
+        answer: "An có thể chuẩn bị bản sửa mới mà chưa chia sẻ cho người khác."
+        explanation: "DVCS hỗ trợ tiến triển lịch sử ở local khi ngoại tuyến."
+      - id: D
+        answer: "Nhóm vẫn cần bảo vệ lịch sử và kiểm soát bản sao được dùng."
+        explanation: "Nhiều clone không tự thay quy trình bảo vệ và quản trị nguồn."
+    correctAnswerId: B
+
+  - id: fundamentals-15
+    question: "Bình đã commit offline, An có một clone cũ, server chung vẫn mất mạng. Trạng thái nào chắc chắn đúng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03_CentralizedAndDistributedModels.md"
+      anchor: "offline-history-availability-scenario"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "An đã thấy commit mới vì hai máy dùng cùng Git repository name."
+        explanation: "Tên repository không có chức năng truyền commit giữa các máy."
+      - id: B
+        answer: "Commit của Bình đã vào nhánh được nhóm chấp nhận dù chưa gửi."
+        explanation: "Lịch sử local của Bình chưa phải quyết định tích hợp nhóm."
+      - id: C
+        answer: "Bình có commit local; An chỉ thấy nếu hai bên đã trao đổi."
+        explanation: "Việc tạo phiên bản, đồng bộ và chấp nhận là ba bước độc lập."
+      - id: D
+        answer: "An phải xóa lịch sử cũ trước khi có thể nhận commit của Bình."
+        explanation: "Có thể trao đổi và tích hợp lịch sử, không cần xóa theo mặc định."
+    correctAnswerId: C
+
+  - id: fundamentals-16
+    question: "Editor của An hiển thị thuế 10%, nhưng commit local cuối vẫn là 8%. Điều này cho thấy gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04_LocalAndSharedSource.md"
+      anchor: "working-files-vs-versioned-history"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Nhánh chung phải chứa mức 10% vì file trên máy đã được lưu."
+        explanation: "Nội dung đang sửa không tự được ghi nhận hay chia sẻ."
+      - id: B
+        answer: "File mới ở working tree chưa chắc đã nằm trong commit."
+        explanation: "Ghi trạng thái phiên bản là bước khác với sửa và Save file."
+      - id: C
+        answer: "Commit Git chỉ chứa người sửa, không chứa nội dung mã đã ghi."
+        explanation: "Commit biểu diễn snapshot của dữ liệu được ghi nhận, không chỉ metadata."
+      - id: D
+        answer: "Mọi diff khi đọc ở local đều phải hỏi server trước mới hiển thị."
+        explanation: "Các thao tác xem dữ liệu local trong Git thường không cần mạng."
+    correctAnswerId: B
+
+  - id: fundamentals-17
+    question: "An có commit C local; remote chưa có C. Bước nào thể hiện đúng cách một nhóm chia sẻ lịch sử?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04_LocalAndSharedSource.md"
+      anchor: "local-and-remote-repositories"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Ngay khi C được commit, tất cả clone đều có bản này."
+        explanation: "Các bản sao chỉ nhận dữ liệu khi có trao đổi phù hợp."
+      - id: B
+        answer: "An cần sửa file trong thư mục remote bằng editor của mình."
+        explanation: "Cộng tác Git trao đổi đối tượng lịch sử theo các cơ chế của VCS."
+      - id: C
+        answer: "Chỉ cần reviewer nhắn đồng ý để C tự cập nhật vào remote."
+        explanation: "Quyết định review khác sự kiện truyền dữ liệu và cập nhật ref."
+      - id: D
+        answer: "An push C tới remote; Bình fetch khi cần cập nhật lịch sử."
+        explanation: "Commit local, chia sẻ và cập nhật working copy là các bước riêng."
+    correctAnswerId: D
+
+  - id: fundamentals-18
+    question: "Hai bản sao cùng có commit B; An tạo C còn remote tạo D. Vì sao C chưa chứa D?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04_LocalAndSharedSource.md"
+      anchor: "synchronization-and-divergence"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "C và D rẽ nhánh từ B nên chưa chứa thay đổi của nhau."
+        explanation: "Cần trao đổi rồi quyết định cách hòa hợp trước khi có kết quả chung."
+      - id: B
+        answer: "Một commit local luôn tự lấy commit mới từ remote làm parent."
+        explanation: "Git không tự chọn commit chưa trao đổi làm parent mới."
+      - id: C
+        answer: "Tên nhánh khác nhau làm mất khả năng nhìn chung lịch sử tổ tiên."
+        explanation: "Tên nhánh không xóa mối quan hệ cha của các commit đã tồn tại."
+      - id: D
+        answer: "Đã cùng repository nên lịch sử hai máy phải luôn trùng từng mốc."
+        explanation: "Local và remote có thể phân kỳ tới khi đồng bộ có chủ đích."
+    correctAnswerId: A
+
+  - id: fundamentals-19
+    question: "An đẩy C lên một nhánh đề xuất; main được nhóm giữ ở B. Bản nào đại diện nguồn đã chấp nhận?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04_LocalAndSharedSource.md"
+      anchor: "accepted-source-of-truth"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "C vì mọi trạng thái được push đều trở thành quyết định chính thức."
+        explanation: "Nhánh đề xuất vẫn phải vượt điều kiện nhận vào nguồn chung."
+      - id: B
+        answer: "Bất kỳ clone nào có nhiều commit hơn vì đó là lịch sử đầy đủ nhất."
+        explanation: "Số lượng commit không xác định quyền đại diện mã được duyệt."
+      - id: C
+        answer: "B trên main đã thống nhất, cho tới khi C được duyệt và tích hợp."
+        explanation: "Nguồn chính thức do nhánh/trạng thái và quy tắc nhóm định nghĩa."
+      - id: D
+        answer: "Cả B và C tự được phát hành cùng lúc vì Git cho phép nhiều nhánh."
+        explanation: "Nhánh và các bản sao không tự quyết định kết quả phân phối."
+    correctAnswerId: C
+
+  - id: fundamentals-20
+    question: "Trong một dự án dùng GitHub, công việc nào vẫn thuộc VCS Git chứ không phải tính năng review của hosting?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05_CollaborationAndStrategyLayers.md"
+      anchor: "vcs-vs-hosted-platform"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Ghi nhận commit local và xem quan hệ lịch sử giữa các revision."
+        explanation: "Lịch sử và commit có thể thao tác trên máy mà không vào GitHub."
+      - id: B
+        answer: "Mời reviewer cụ thể tham gia thảo luận cho một pull request."
+        explanation: "Lời mời review thuộc đối tượng cộng tác của nền tảng hosting."
+      - id: C
+        answer: "Cấp quyền xem repository cho nhóm và quản trị người truy cập."
+        explanation: "Quyền người dùng và nhóm trên hosting không phải Git commit data."
+      - id: D
+        answer: "Đánh dấu một check required để chặn merge vào nhánh chung."
+        explanation: "Cấu hình required checks do hosting quản lý, dùng kết quả kiểm tra."
+    correctAnswerId: A
+
+  - id: fundamentals-21
+    question: "Một pull request sửa thuế có diff rõ nhưng chưa ai review. Tại sao nó vẫn chỉ là đề xuất?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05_CollaborationAndStrategyLayers.md"
+      anchor: "proposing-and-reviewing-changes"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Vì diff chỉ hiện trên laptop nên repository chung không thể đọc."
+        explanation: "PR đã chia sẻ có thể hiển thị diff cho người được phép xem."
+      - id: B
+        answer: "Vì cần một tag phát hành trước khi ghi nhận commit đề xuất."
+        explanation: "Tag release không quyết định commit đã được ghi hay chưa."
+      - id: C
+        answer: "Vì gắn reviewer vào đề xuất đủ để xem đánh giá là hoàn tất."
+        explanation: "Chỉ định người đánh giá chưa phải kết quả xem xét hay chấp nhận."
+      - id: D
+        answer: "Vì đề xuất còn chờ review và điều kiện nhận vào nhánh đích."
+        explanation: "Đã chia sẻ bản sửa không tự chứng minh nó đủ điều kiện tiếp nhận."
+    correctAnswerId: D
+
+  - id: fundamentals-22
+    question: "Bình có quyền Write vào nhánh feature nhưng không được merge vào main. Điều gì giải thích đúng tình huống?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05_CollaborationAndStrategyLayers.md"
+      anchor: "access-and-change-acceptance"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Quyền Write một nơi bảo đảm Bình có quyền quản trị cả repository."
+        explanation: "Phạm vi nhánh và quyền quản trị có thể được cấu hình khác nhau."
+      - id: B
+        answer: "Quyền đóng góp và điều kiện tiếp nhận trên nhánh đích là hai lớp."
+        explanation: "Có quyền tạo đề xuất không loại bỏ review/checks hoặc quyền merge."
+      - id: C
+        answer: "Bất kỳ người được yêu cầu review nào cũng có quyền merge trực tiếp."
+        explanation: "Vai trò reviewer không tự trao quyền cập nhật nhánh bảo vệ."
+      - id: D
+        answer: "Chỉ cần commit đã lên server là branch policy không còn áp dụng."
+        explanation: "Lịch sử đã chia sẻ chưa chắc đạt quy tắc bảo vệ của nhánh đích."
+    correctAnswerId: B
+
+  - id: fundamentals-23
+    question: "Câu nào mô tả branching policy chứ không phải cơ chế Git?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05_CollaborationAndStrategyLayers.md"
+      anchor: "branching-policy-vs-git-mechanics"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Lệnh tạo ref nhánh mới trỏ tới commit hiện tại."
+        explanation: "Tạo ref là năng lực kỹ thuật mà Git hỗ trợ."
+      - id: B
+        answer: "Thao tác merge hai lịch sử đã phân kỳ và xử lý conflict."
+        explanation: "Merge là cách Git xử lý quan hệ lịch sử."
+      - id: C
+        answer: "Nhóm đặt nhịp review và thời hạn tích hợp nhánh công việc."
+        explanation: "Thời hạn, kích thước và trách nhiệm review là quy định nhóm."
+      - id: D
+        answer: "Lệnh đọc commit graph để xem nhánh có bao nhiêu mốc lịch sử."
+        explanation: "Lệnh đọc graph cung cấp bằng chứng chứ không đặt quy tắc làm việc."
+    correctAnswerId: C
+
+  - id: fundamentals-24
+    question: "Nhóm đặt Web và Billing vào một repository. Điều nào KHÔNG thể suy ra chỉ từ topology này?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05_CollaborationAndStrategyLayers.md"
+      anchor: "repository-topology-strategy"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Một repo buộc Web và Billing triển khai cùng một đợt."
+        explanation: "Một repo có thể có nhiều artifact và nhịp triển khai độc lập."
+      - id: B
+        answer: "Hai phần mã có thể cùng xuất hiện trong một lịch sử source."
+        explanation: "Một Git root cho phép thấy thay đổi xuyên hai vùng nguồn."
+      - id: C
+        answer: "Nhóm cần xác định người có trách nhiệm review cho từng vùng mã."
+        explanation: "Sở hữu theo path vẫn quan trọng khi nhiều component cùng repo."
+      - id: D
+        answer: "Một yêu cầu chung có thể thay cả Web và Billing trong một diff."
+        explanation: "Monorepo tạo khả năng xem đồng thời nhưng không bảo đảm đúng."
+    correctAnswerId: A
+
+  - id: fundamentals-25
+    question: "An vừa sửa `Invoice.java` local. Thứ tự nào mô tả đúng hành trình được nhóm chấp nhận?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06_GovernedSourceLifecycle.md"
+      anchor: "individual-to-shared-change-flow"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Chia sẻ tệp → triển khai ngay → bổ sung commit và review sau."
+        explanation: "Triển khai không thay việc ghi nhận, review và quyết định nhận source."
+      - id: B
+        answer: "Ghi revision → mở đề xuất → review → tích hợp vào nguồn chung."
+        explanation: "Mỗi mốc tạo ra bằng chứng riêng, không tự xảy ra chỉ vì mốc trước."
+      - id: C
+        answer: "Kiểm thử cá nhân → đổi tên file `final` → coi bản đó là chung."
+        explanation: "Test và tên file không đủ quy trình lịch sử và tiếp nhận của nhóm."
+      - id: D
+        answer: "Ghi revision → tự đánh dấu đã nhận → bỏ qua trao đổi với nhóm."
+        explanation: "Commit ở local là bằng chứng đã ghi, không phải quyền nhận thay nhóm."
+    correctAnswerId: B
+
+  - id: fundamentals-26
+    question: "Một sửa đổi có commit, xuất hiện trong PR và có bình luận nhưng main chưa đổi. Trạng thái nào mô tả chính xác?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06_GovernedSourceLifecycle.md"
+      anchor: "recorded-shared-reviewed-accepted"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Đã ghi, đã chia sẻ, đã xem xét; chưa chắc đã được chấp nhận."
+        explanation: "Review là quá trình; chỉ khi đủ quy tắc và tích hợp mới thành bản chung."
+      - id: B
+        answer: "Đã chấp nhận vì bình luận của reviewer đã xuất hiện trong PR."
+        explanation: "Bình luận chưa nhất thiết là đồng ý hay hoàn tất tích hợp."
+      - id: C
+        answer: "Mới ghi local vì PR không thể được người khác đọc trước merge."
+        explanation: "Đề xuất có thể được chia sẻ để xin góp ý khi chưa chấp nhận."
+      - id: D
+        answer: "Đã triển khai vì chỉ cần commit và review là đủ phát hành."
+        explanation: "Đưa source vào chung và delivery là các kết quả riêng."
+    correctAnswerId: A
+
+  - id: fundamentals-27
+    question: "PR của An đổi thuế đã có trên remote; Bình yêu cầu test trường hợp làm tròn, main vẫn cũ. Nhận định nào đúng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06_GovernedSourceLifecycle.md"
+      anchor: "shared-but-not-accepted-scenario"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "PR xuất hiện trên remote là bằng chứng main đã nhận thay đổi."
+        explanation: "Remote giữ đề xuất không đồng nghĩa nhánh được duyệt đã đổi."
+      - id: B
+        answer: "Bình đã bình luận nên mọi điều kiện review tự động đạt yêu cầu."
+        explanation: "Yêu cầu kiểm tra bổ sung chưa phải phiếu chấp nhận thay đổi."
+      - id: C
+        answer: "Commit của An phải bị xóa vì bản sửa chưa được chấp nhận."
+        explanation: "Đề xuất có thể tồn tại trong lịch sử cá nhân khi chưa merge."
+      - id: D
+        answer: "Bản sửa đã chia sẻ và đang xét; phải xử lý test trước khi nhận."
+        explanation: "Bằng chứng hiện tại chưa đáp ứng đủ điều kiện nhận vào main."
+    correctAnswerId: D
+
+  - id: fundamentals-28
+    question: "Sau review, nhóm phát hiện Bình đã đọc diff từ commit cũ còn An push sửa mới. Giải pháp đúng là gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06_GovernedSourceLifecycle.md"
+      anchor: "source-collaboration-failure-modes"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Chỉ đối chiếu test của commit mới, giữ nguyên đánh giá trên diff cũ."
+        explanation: "Review bản cũ không chứng minh revision mới đã được kiểm tra."
+      - id: B
+        answer: "Đọc commit message mới rồi giữ approval cũ vì reviewer đã tham gia."
+        explanation: "Nhãn trạng thái không thay đánh giá diff mới và điều kiện cần."
+      - id: C
+        answer: "Xem diff của commit mới rồi yêu cầu Bình đánh giá lại."
+        explanation: "Đề xuất thay đổi sau review cần đối chiếu với bằng chứng mới."
+      - id: D
+        answer: "Bỏ thông tin commit mới ra khỏi lịch sử để khớp ảnh chụp cũ."
+        explanation: "Xóa bằng chứng không giải quyết việc người review đã đọc bản cũ."
+    correctAnswerId: C
+
+  - id: fundamentals-29
+    question: "Khi nghiệm thu sửa thuế, bộ bằng chứng nào đủ hữu ích để người khác truy lại quyết định?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06_GovernedSourceLifecycle.md"
+      anchor: "evidence-of-a-governed-change"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Tên thư mục đã giao cùng ngày chụp màn hình editor của An."
+        explanation: "Ảnh và tên thiếu mốc history, lý do, review và kết quả chấp nhận."
+      - id: B
+        answer: "Revision, diff, lý do, phản hồi review và commit được nhận."
+        explanation: "Các dấu vết này cho thấy thay đổi gì, vì sao và đã được nhận thế nào."
+      - id: C
+        answer: "Chỉ kết quả build xanh ở local cùng tên người vừa chạy kiểm thử."
+        explanation: "Build chỉ là một phần kiểm chứng, không đủ lịch sử quyết định nhóm."
+      - id: D
+        answer: "Chỉ tin nhắn 'done' từ tác giả kèm đường dẫn tới bản ZIP mới."
+        explanation: "Thông báo trạng thái không cung cấp review hay mốc source chính thức."
+    correctAnswerId: B
+
+  - id: fundamentals-30
+    question: "Revision M đã vào nguồn chung theo quy tắc review. Điều gì chưa được chứng minh?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06_GovernedSourceLifecycle.md"
+      anchor: "source-to-delivery-boundary"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "M đã build/test và được triển khai thành công tới người dùng."
+        explanation: "Chấp nhận source là đầu vào, không phải kết quả của delivery automation."
+      - id: B
+        answer: "M là trạng thái source được nhóm dùng làm mốc phối hợp."
+        explanation: "Đó chính là ý nghĩa của nguồn chung đã chấp nhận."
+      - id: C
+        answer: "Nhóm đã có điều kiện tiếp nhận trước khi cập nhật nhánh chung."
+        explanation: "Giả thiết đã nói M được nhận theo quy tắc review của nhóm."
+      - id: D
+        answer: "Có thể dùng M làm nguồn đầu vào cho quy trình kiểm thử sau đó."
+        explanation: "Nguồn được nhận thường có thể đưa sang bước build, test và release."
+    correctAnswerId: A
