@@ -41,4 +41,93 @@
 # The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: branching-strategy-purpose
+    relatedKnowledge:
+      - "01-strategy-foundations"
+    title: "Why Teams Need a Branching Strategy"
+    purpose: "Understand branching strategy as a team agreement on where changes integrate, when work is shared, and who keeps shared source reliable."
+    objectives:
+      - "Distinguish Git branch operations from team conventions, integration workflows, and collectively chosen policies."
+      - "Identify the problems a strategy addresses: parallel work, quality control, change integration, and release coordination."
+      - "Relate mainline, work branches, release branches, and the readiness of shared source."
+
+  - id: branch-lifetime-and-integration-cadence
+    relatedKnowledge:
+      - "02-branch-lifetime-and-cadence"
+    title: "Branch Lifetime and Integration Cadence"
+    purpose: "Understand how prolonged isolation increases divergence and how teams establish an integration rhythm suited to their work."
+    objectives:
+      - "Compare short-lived branches, long-lived branches, and direct mainline integration by coordination cost, feedback, and conflict exposure."
+      - "Explain how change size, integration frequency, and early feedback affect late integration risk."
+      - "Recognize the strategic role of splitting work, early review, and hiding unfinished features without detailing implementation mechanisms."
+
+  - id: trunk-based-development
+    relatedKnowledge:
+      - "03-trunk-based-development"
+    title: "Integrate Frequently with Trunk-Based Development"
+    purpose: "Understand frequent integration into one mainline and the working conditions that prevent a backlog of development branches."
+    objectives:
+      - "Explain trunk and very short-lived work branches; recognize that small teams may integrate directly while others use a brief review stage."
+      - "Understand the need for small changes, pre-integration checks, and maintaining a reliable mainline."
+      - "Recognize feature flags, incremental changes, and optional release branches as strategy-level supports depending on release cadence."
+
+  - id: github-flow-as-lightweight-strategy
+    relatedKnowledge:
+      - "04-github-flow"
+    title: "Collaborate with GitHub Flow"
+    purpose: "Understand a lightweight work-branch model built around one default branch, an explicit feedback cycle, and integration."
+    objectives:
+      - "Describe the conceptual lifecycle: branch for a change, share it, request feedback, refine it, and integrate into the default branch."
+      - "Assess how focused branches and pull request feedback help collaboration; recognize that GitHub Flow does not itself guarantee the short branch lifetimes or frequent integration required by Trunk-Based Development."
+      - "Distinguish GitHub Flow as a workflow strategy from pull-request configuration, access permissions, and platform-specific branch rules."
+
+  - id: git-flow-for-versioned-releases
+    relatedKnowledge:
+      - "05-git-flow"
+    title: "Coordinate Multiple Lines of Development with Git Flow"
+    purpose: "Understand Git Flow's assigned branch roles and the release contexts in which maintaining several branches can justify its costs."
+    objectives:
+      - "Distinguish development, production, feature, release-preparation, and emergency-fix branch roles."
+      - "Explain how release branches separate stabilization of an upcoming version from ongoing development; maintaining multiple already-released versions requires additional branch-maintenance and backport rules."
+      - "Recognize Git Flow as more suited to scheduled release cycles; its author recommends simpler workflows for continuously delivered applications."
+
+  - id: integration-history-policy
+    relatedKnowledge:
+      - "06-integration-history-policy"
+    title: "Define Integration and History Policies"
+    purpose: "Decide what the team wants integrated history to communicate instead of choosing Git operations by habit."
+    objectives:
+      - "Compare merge-commit, squash-merge, and rebase-and-merge policies by traceability, linear history, commit clarity, and preservation of intermediate commits on the target branch."
+      - "Distinguish the resulting target-branch history from rebasing or editing commits on a work branch before integration; recognize the hazards of rewriting shared history."
+      - "Set policy criteria around logical changes, revertability, incident investigation, and effective code review."
+
+  - id: release-and-hotfix-branch-policy
+    relatedKnowledge:
+      - "07-release-hotfix-policy"
+    title: "Coordinate Release and Emergency-Fix Branches"
+    purpose: "Determine when a team needs a separate stable line to prepare releases or patch versions already in use."
+    objectives:
+      - "Compare releasing from mainline with preparing a dedicated release branch according to stability and multi-version support needs."
+      - "Define strategy-level principles for emergency fixes, propagating fixes to all relevant development lines, and avoiding missed backports."
+      - "Assess the cost of prolonged release branches, source divergence, and complex release coordination without entering deployment tooling or artifact-versioning implementation."
+
+  - id: team-integration-governance
+    relatedKnowledge:
+      - "08-team-governance"
+    title: "Agree on Team Integration Governance"
+    purpose: "Turn a chosen strategy into clear collaboration expectations so team members integrate changes consistently."
+    objectives:
+      - "Define conventions for branch purpose, naming, lifetime, closure, and responsibility for mainline health."
+      - "State policy expectations for code review, pre-merge validation, integration ownership, and aging branch handling."
+      - "Separate team governance intent from vendor-specific permissions, branch-protection settings, and CI implementations."
+
+  - id: strategy-selection-and-failure-modes
+    relatedKnowledge:
+      - "09-selection-and-diagnostics"
+    title: "Select a Strategy and Diagnose Failure Modes"
+    purpose: "Choose, validate, and refine a branching approach for a real team rather than mechanically adopting one named model."
+    objectives:
+      - "Compare Trunk-Based Development, GitHub Flow, and Git Flow using release cadence, version-support needs, team size, and automated-check maturity."
+      - "Diagnose long-lived work branches, end-of-cycle integration, recurring conflicts, opaque history, and fixes missing from maintained lines."
+      - "Recommend rules for a sample team, explain the trade-offs, and identify handoffs to Git mechanics, hosted collaboration, and delivery automation."

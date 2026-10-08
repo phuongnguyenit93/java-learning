@@ -1,3 +1,15 @@
+# 📂 README MODULE STRUCTURE (VI)
+
+* [01-strategy-foundations](readme/vi/menu/01-strategy-foundations.md)
+* [02-branch-lifetime-and-cadence](readme/vi/menu/02-branch-lifetime-and-cadence.md)
+* [03-trunk-based-development](readme/vi/menu/03-trunk-based-development.md)
+* [04-github-flow](readme/vi/menu/04-github-flow.md)
+* [05-git-flow](readme/vi/menu/05-git-flow.md)
+* [06-integration-history-policy](readme/vi/menu/06-integration-history-policy.md)
+* [07-release-hotfix-policy](readme/vi/menu/07-release-hotfix-policy.md)
+* [08-team-governance](readme/vi/menu/08-team-governance.md)
+* [09-selection-and-diagnostics](readme/vi/menu/09-selection-and-diagnostics.md)
+
 # Tổng quan: Chiến lược nhánh và tích hợp của nhóm
 
 Chiến lược nhánh là thỏa thuận cấp nhóm về cách tổ chức công việc song song, nhịp đưa thay đổi vào nhánh chính và điều kiện chấp nhận thay đổi. Một nhánh Git tự nó chỉ là cơ chế quản lý lịch sử; thiếu chính sách chung dễ dẫn đến tích hợp muộn, nhánh tồn đọng, review chậm hoặc bỏ sót bản vá.
