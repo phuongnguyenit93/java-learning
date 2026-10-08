@@ -1,0 +1,33 @@
+ActuatorLearningController:
+  setDependencyAvailable(boolean):
+    execution: |-
+      <p><b>Concept:</b> a custom <code>HealthIndicator</code> contributes application-specific health while Actuator owns the HTTP management representation and aggregate health result.</p>
+      <p><b>Flow:</b> call <code>POST /api/actuator-learning/health/false</code> → the learning state changes → <code>LearningDependencyHealthIndicator.health()</code> returns <code>DOWN</code> → inspect <code>/actuator/health/learningDependency</code> and <code>/actuator/health</code>. Restore with <code>POST /api/actuator-learning/health/true</code>.</p>
+      <p><b>Code evidence:</b> <code>LearningDependencyHealthIndicator</code> reads the same state changed by this API and builds either <code>Health.up()</code> or <code>Health.down()</code>. The controller only supplies a deterministic trigger for the experiment.</p>
+      <p><b>Observation:</b> after setting <code>false</code>, the component reports <code>status=DOWN</code> with the configured details and the aggregate health endpoint also becomes DOWN. After restoring <code>true</code>, both return to UP.</p>
+      <p><b>Conclusion:</b> custom health contributors feed Actuator's health model; the management endpoint, aggregation and HTTP representation remain Actuator responsibilities.</p>
+    usage: true
+  recordMetric(String):
+    execution: |-
+      <p><b>Concept:</b> Spring Boot auto-configures Micrometer infrastructure and Actuator exposes a diagnostic view of registered meters.</p>
+      <p><b>Flow:</b> call <code>POST /api/actuator-learning/metrics/success</code> one or more times → the controller increments <code>learning.requests</code> with tag <code>outcome=success</code> → inspect <code>/actuator/metrics/learning.requests?tag=outcome:success</code>.</p>
+      <p><b>Code evidence:</b> the controller creates the counter through <code>Counter.builder("learning.requests")</code>, restricts the outcome to <code>success</code> or <code>failure</code>, registers it with the application <code>MeterRegistry</code>, and increments it.</p>
+      <p><b>Observation:</b> the trigger response returns the current counter value, while the Actuator metrics endpoint reports the same tagged series and supports narrowing it with the <code>tag=key:value</code> query parameter.</p>
+      <p><b>Conclusion:</b> Micrometer owns meter recording and tags; Actuator provides an inspection endpoint over those registered meters. Keeping tag values bounded also demonstrates the cardinality boundary described in Knowledge.</p>
+    usage: true
+  customEndpointState():
+    execution: |-
+      <p><b>Concept:</b> <code>@Endpoint</code> plus <code>@ReadOperation</code> defines a management operation independently of Spring MVC controller mappings.</p>
+      <p><b>Flow:</b> call <code>GET /api/actuator-learning/custom-endpoint</code> to execute the same <code>LearningOperationsEndpoint.readState()</code> implementation, then inspect <code>GET /actuator/learning</code> through Actuator's real HTTP management mapping.</p>
+      <p><b>Code evidence:</b> <code>LearningOperationsEndpoint</code> is annotated with <code>@Endpoint(id="learning")</code>; <code>readState()</code> is annotated with <code>@ReadOperation</code>. The controller is only a Swagger-visible experiment bridge.</p>
+      <p><b>Observation:</b> both surfaces report the same bounded maintenance/dependency state, while only <code>/actuator/learning</code> is the Actuator management endpoint.</p>
+      <p><b>Conclusion:</b> the endpoint operation is transport-neutral application management code; Actuator owns discovery and HTTP exposure.</p>
+    usage: true
+  setMaintenanceMode(boolean):
+    execution: |-
+      <p><b>Concept:</b> <code>@WriteOperation</code> models a bounded management action without turning the endpoint class into an MVC controller.</p>
+      <p><b>Flow:</b> call <code>POST /api/actuator-learning/custom-endpoint/maintenance/true</code> → the bridge invokes <code>LearningOperationsEndpoint.setMaintenance(true)</code> → inspect <code>GET /actuator/learning</code>. Restore with <code>false</code>. The real Actuator write surface is also available at <code>POST /actuator/learning</code> with root JSON property <code>enabled</code>.</p>
+      <p><b>Code evidence:</b> <code>setMaintenance(boolean)</code> is annotated with <code>@WriteOperation</code> and mutates only the bounded learning state shared by the read operation.</p>
+      <p><b>Observation:</b> the subsequent management read reports the changed maintenance value, demonstrating that the write operation and read operation belong to one custom endpoint model.</p>
+      <p><b>Conclusion:</b> a technology-agnostic custom endpoint keeps management intent separate from business APIs while Actuator maps its operations to the configured management transports.</p>
+    usage: true

@@ -27,4 +27,202 @@
 #         Exact method signature in api-descriptions.yml, for example startVsRun().
 # </interview-schema>
 
-questions: []
+questions:
+- question: "Why is it useful to think of Actuator as a management projection over runtime state rather than as the owner of that state? Give examples where fixing the endpoint configuration would not fix the underlying problem."
+  answer: >-
+    Actuator turns operational state produced elsewhere into a consistent management surface. Application runtime owns liveness/readiness transitions, Boot logging owns the running LoggingSystem, Micrometer owns meter state, and ApplicationStartup can own startup-step data. Actuator exposes or controls views over those sources. This distinction guides incident response. If /actuator/health/readiness faithfully reports REFUSING_TRAFFIC, changing the health endpoint does not explain why the runtime changed readiness. If /actuator/loggers reports an inherited level, the source may be logging configuration rather than Actuator. If /actuator/metrics lacks a meter, the first question is whether instrumentation registered it. Treating the endpoint as a projection keeps the fix with the subsystem that produced the evidence instead of repeatedly changing the management surface.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 1.ActuatorPurpose/ActuatorPurpose.md
+    anchor: runtime-state-vs-actuator-view
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Explain the mental model endpoint ID -> operations -> exposure adapter. Why does this make a generic @Endpoint different from a Spring MVC controller even when both are reachable over HTTP?"
+  answer: >-
+    The endpoint ID is the stable management identity, operations express management intent, and the exposure adapter maps that model to HTTP or JMX. A generic @Endpoint therefore does not begin with URL routing or controller semantics. @ReadOperation, @WriteOperation, and @DeleteOperation describe the capability once, after which Actuator can represent it through supported management technologies. A Spring MVC controller begins with the web stack and its request/response contract. The distinction matters for portability, testing, and ownership: a technology-agnostic management capability can survive a transport change without being rewritten as a controller. The learning endpoint experiment demonstrates this by invoking the same @Endpoint implementation through a Swagger bridge and through the real /actuator/learning management route.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 2.EndpointModel/EndpointModel.md
+    anchor: technology-agnostic-endpoints
+  apiRelated:
+    controller: ActuatorLearningController
+    methodSignature: customEndpointState()
+- question: "An Actuator endpoint is enabled, included in web exposure, and still returns 403. Explain why enablement, exposure, network reachability, and authorization must be debugged as separate layers."
+  answer: >-
+    Enablement decides whether the capability exists at all. Exposure decides whether an enabled endpoint is represented through a management technology such as HTTP. Network routing and management-port placement decide whether a client can reach that surface. Authorization then decides whether the reached caller may invoke it. A 403 after the endpoint is known to exist and be exposed therefore points toward the active security policy rather than toward endpoint enablement. Conversely, enabling an endpoint cannot repair a route that is not exposed, and authentication does not make an unexposed endpoint reachable. Debugging the layers in order prevents configuration thrashing and preserves least privilege because each control can keep its own purpose.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 3.EndpointAvailabilityExposure/EndpointAvailabilityExposure.md
+    anchor: endpoint-availability
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "How should a custom HealthIndicator be designed so that it provides useful operational evidence without becoming a repair workflow or creating a new outage source?"
+  answer: >-
+    A HealthIndicator should evaluate one bounded operational condition and return a Health result with a meaningful status and small diagnostic details. It should be fast, side-effect free, and protected by appropriate timeouts when it touches a remote system because platforms may call health frequently. The indicator reports evidence; it should not restart components, repair state, or execute an expensive workflow. Its inclusion also has system consequences because a DOWN leaf can influence an aggregate status and potentially HTTP 503 behavior. Only conditions that materially affect the service's operational usefulness should contribute to the relevant health group. The learning health experiment makes this boundary visible: the controller only changes deterministic state, the custom indicator reports UP or DOWN, and Actuator owns aggregation and the management representation.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 4.Health/Health.md
+    anchor: custom-health-indicators
+  apiRelated:
+    controller: ActuatorLearningController
+    methodSignature: setDependencyAvailable(boolean)
+- question: "A team introduces a custom health Status and configures management.endpoint.health.status.http-mapping for it. Why can this accidentally change the HTTP behavior of DOWN and OUT_OF_SERVICE, and what should the team verify?"
+  answer: >-
+    Health aggregation and HTTP mapping are separate steps. StatusAggregator decides which status wins; HttpCodeStatusMapper then converts the aggregate to an HTTP status. Boot normally maps DOWN and OUT_OF_SERVICE to 503 while UP and UNKNOWN remain 200. Once the application defines any custom management.endpoint.health.status.http-mapping entry, Boot no longer supplies those default DOWN and OUT_OF_SERVICE mappings automatically. The team should explicitly retain the desired 503 mappings alongside the custom status and verify the complete ordered status model, not only the new value. Otherwise the health JSON may correctly say DOWN while the HTTP response unexpectedly remains successful, which can break load balancer or monitoring assumptions.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 4.Health/Health.md
+    anchor: health-status-aggregation
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Why should liveness and readiness health groups usually not contain the same external dependency checks? Analyze the failure mode when a shared database outage is included in liveness."
+  answer: >-
+    Liveness asks whether restarting this process may help; readiness asks whether this instance should receive traffic now. If a shared database outage makes every instance report broken liveness, an orchestrator may restart the whole fleet even though process restarts cannot repair the database. That can create a cascading restart storm and erase useful local state during the incident. Readiness may include an external dependency when the service truly cannot serve useful traffic without it, but even there the team must decide whether removing every replica is better than degraded behavior. Boot deliberately keeps arbitrary external indicators out of the probe groups by default. The correct probe design follows failure semantics, not the convenience of reusing every HealthIndicator everywhere.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 5.AvailabilityProbes/AvailabilityProbes.md
+    anchor: probe-external-dependency-boundary
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "What can go wrong if Kubernetes probes call only a separate Actuator management port, and why can adding /livez and /readyz on the main application port change the failure domain being tested?"
+  answer: >-
+    A separate management server can remain healthy while the main application connector or request path is unable to accept business traffic. A readiness probe that reaches only the management port may therefore report success for the management server while missing failure of the path users depend on. Boot can expose additional liveness/readiness paths on the main server so the platform checks a route that shares more of the business connector's failure domain. This is not automatically superior in every deployment: a dedicated management port still provides isolation and may be required by network design. The point is to choose the probe path according to what failure must remove the instance from service, rather than assuming every HTTP 200 from any local port proves the application path is healthy.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 5.AvailabilityProbes/AvailabilityProbes.md
+    anchor: probe-endpoint-paths
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Why are env and configprops valuable during an incident but still poor candidates for broad exposure even when values are sanitized?"
+  answer: >-
+    These endpoints can reveal which property sources exist, which names are present, how ConfigurationProperties objects are structured, and enough deployment context to explain a configuration problem. Sanitization can mask sensitive values and show-values policies can limit when originals are returned, but masking does not remove all useful metadata from the response. Property names, source names, object topology, and values not recognized as sensitive can still help an attacker. Therefore sanitization is defense in depth rather than an exposure policy or secret-management system. Keep the endpoints restricted by exposure, network placement, and authorization, then hand precedence or binding questions to externalized-configuration once Actuator has shown the runtime view.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 6.InfoEnvironment/InfoEnvironment.md
+    anchor: sensitive-value-sanitization
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "A counter appears in MeterRegistry but an operator cannot find useful history in /actuator/metrics. Explain what the metrics endpoint is designed to answer and which expectations belong to external telemetry infrastructure."
+  answer: >-
+    The metrics endpoint is an on-demand diagnostic view over meters currently known to the application's MeterRegistry. It can answer whether a meter name exists, which measurements are available, and which tags can narrow the current inspection. It is not a time-series database, a durable history, or a cross-instance query engine. Micrometer owns the meter model and registry API; Boot auto-configures supported registries and binders; Actuator exposes the diagnostic management view. Long-term history, aggregation across replicas, alerting, retention, and dashboards belong to a monitoring backend or exporter flow. The learning metric experiment demonstrates the local side by registering and incrementing a tagged counter and then inspecting that same meter through Actuator.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 7.MetricsMicrometer/MetricsMicrometer.md
+    anchor: metrics-endpoint-purpose
+  apiRelated:
+    controller: ActuatorLearningController
+    methodSignature: recordMetric(String)
+- question: "Why does Actuator's tag filtering capability not make high-cardinality tags safe? Use a request ID or user ID tag as the failure example."
+  answer: >-
+    A tag filter such as tag=outcome:success selects from meter identities that already exist; it does not collapse or prevent those identities from being created. If every request ID or user ID becomes a tag value, the application and backend can create an unbounded number of time series, increasing memory, storage, indexing, and query cost. Actuator may reveal the symptom by listing many available tag values, but the fix is instrumentation design: choose bounded dimensions that represent useful categories. The learning counter intentionally restricts outcome to success or failure so the experiment can demonstrate filtering without teaching an unsafe cardinality pattern. Diagnostic convenience cannot compensate for an unbounded metric model.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 7.MetricsMicrometer/MetricsMicrometer.md
+    anchor: tag-filtered-metrics
+  apiRelated:
+    controller: ActuatorLearningController
+    methodSignature: recordMetric(String)
+- question: "Compare /actuator/metrics with a Prometheus scrape endpoint. Why are they both related to metrics but intended for different consumers and workflows?"
+  answer: >-
+    The generic metrics endpoint is designed for interactive inspection of Micrometer meters in one running application. An operator can discover names, measurements, and tag dimensions and narrow a query while diagnosing an instance. A Prometheus endpoint is a transport for a Prometheus server: with the appropriate registry it exposes scrape-format telemetry for collection into an external time-series system. The first is a management diagnostic; the second participates in an export pipeline. Retention, multi-instance queries, recording rules, dashboards, and alerts begin after the telemetry leaves the application. Treating /actuator/metrics as a polling backend would lose the storage and system-wide semantics that dedicated observability infrastructure provides.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 7.MetricsMicrometer/MetricsMicrometer.md
+    anchor: metrics-export-boundary
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "An operator sees effectiveLevel=INFO and configuredLevel=null for a logger, then temporarily sets DEBUG through Actuator. Explain what those values mean and why the change should not be treated as durable configuration."
+  answer: >-
+    configuredLevel describes whether that exact logger has an explicit runtime setting. A null configured level means the logger is inheriting its behavior from its logger ancestors, ultimately including the root logger. effectiveLevel is the resolved level that currently governs emitted events after inheritance. Setting DEBUG through the loggers endpoint creates an explicit runtime configuration for that logger, so both values may then reflect DEBUG. Logger groups can be convenient targets for runtime changes, but they are not the inheritance source represented by configuredLevel=null. The change is operational state inside the running LoggingSystem, not a rewrite of application configuration. A restart normally rebuilds logging from the normal Boot configuration sources and can remove the temporary override. During incidents, target a narrow logger, account for extra I/O and sensitive log content, and restore the level after collecting enough evidence.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 8.LoggersDiagnostics/LoggersDiagnostics.md
+    anchor: configured-effective-log-levels
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Why are thread dump and heap dump endpoints evidence-delivery tools rather than analysis tools, and what production risks should determine whether they are remotely exposed?"
+  answer: >-
+    Actuator can capture and deliver diagnostic artifacts from the running process, but it does not decide whether a blocked thread is pathological, which lock causes a deadlock, which objects dominate retained memory, or why GC pressure exists. Those interpretations belong to JVM, concurrency, and memory-analysis tooling. The endpoint itself also has risk: thread dumps reveal code paths and synchronization state; heap dumps can contain credentials, request data, caches, and other production objects, and generating or downloading a large dump can add load to an already stressed service. Exposure therefore needs both confidentiality and resource-impact analysis, with narrow network/authorization controls and an incident workflow that collects only the evidence needed.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 8.LoggersDiagnostics/LoggersDiagnostics.md
+    anchor: diagnostic-exposure-risk
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "How do @ReadOperation and @WriteOperation preserve management intent without making a custom @Endpoint an MVC controller, and what constraints follow for operation parameters?"
+  answer: >-
+    The annotations describe logical management operations on an endpoint ID. Actuator later adapts those operations to HTTP or JMX, so endpoint code does not need @GetMapping or @PostMapping. Operation parameters are explicit method parameters, required by default and optionally nullable; a @Selector can become a web path segment. Generic endpoint input uses simple parameter values rather than treating one complex DTO as an arbitrary HTTP request body, and parameter names must be retained so Actuator can bind the input. Conversion goes through ApplicationConversionService plus endpoint converters. The learning read experiment demonstrates the read operation by comparing the endpoint implementation with /actuator/learning while the bridge remains only a teaching surface.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 9.CustomEndpoints/CustomEndpoints.md
+    anchor: endpoint-operation-annotations
+  apiRelated:
+    controller: ActuatorLearningController
+    methodSignature: customEndpointState()
+- question: "A custom endpoint needs a maintenance toggle. What design questions should be answered before exposing it as a @WriteOperation, and what does the learning maintenance experiment prove?"
+  answer: >-
+    First establish that the action is an operational management capability rather than a customer workflow. Define a bounded side effect, explicit input, idempotency or retry expectations, authorization audience, audit needs, and what happens if the operation is invoked accidentally or concurrently. A write-capable management surface deserves stricter exposure than a passive status endpoint. The learning experiment changes only a bounded maintenance boolean through the same technology-agnostic endpoint implementation and then reads the state back. That proves that read and write operations can belong to one @Endpoint model and be mapped by Actuator. It does not justify putting arbitrary business mutations behind Actuator or relying on transport defaults as the security policy.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 9.CustomEndpoints/CustomEndpoints.md
+    anchor: custom-endpoint-purpose
+  apiRelated:
+    controller: ActuatorLearningController
+    methodSignature: setMaintenanceMode(boolean)
+- question: "When should a custom management capability remain a generic @Endpoint, use a web/JMX-specific endpoint or extension, or become a normal business/controller API instead?"
+  answer: >-
+    Start from who consumes the capability and what contract it needs. Use generic @Endpoint when the operation is genuinely operational and its meaning does not depend on HTTP or JMX; this preserves transport portability. Use @WebEndpoint, @JmxEndpoint, or a supported endpoint extension when the same operational responsibility requires technology-specific representation or augments a built-in endpoint. Use a normal MVC/WebFlux controller when the requirement truly needs full web framework request/response semantics, and use a business API when domain clients need the capability as part of the product contract. The key trade-off is ownership and portability, not which annotation feels familiar. Forcing a business workflow into Actuator or hiding HTTP-specific behavior inside a generic endpoint makes exposure and maintenance harder to reason about.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 9.CustomEndpoints/CustomEndpoints.md
+    anchor: business-api-boundary
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Why can adding your own SecurityFilterChain silently change the protection assumptions around Actuator, and what should be reviewed after that customization?"
+  answer: >-
+    Boot's Actuator-aware security auto-configuration applies only while the application has not supplied its own SecurityFilterChain. Once application security defines a filter chain, Boot backs off and the team owns the matching and authorization rules. The review must therefore include which management paths or EndpointRequest matchers are covered, which endpoints are permitted or authenticated, how the management port/network is placed, and whether write or sensitive diagnostic endpoints have stronger policy than basic health. Exposure and authorization remain independent: a secure filter chain does not justify exposing every endpoint, and excluding an endpoint from HTTP is not an authentication rule. A 401 or 403 after availability is confirmed should be followed into the active Spring Security policy rather than “fixed” by broadening Actuator exposure.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 10.ManagementAccess/ManagementAccess.md
+    anchor: actuator-security-auto-configuration
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "During an incident, /actuator/health is reachable but shows DOWN, /actuator/metrics does not contain the expected business meter, and a dashboard is also missing data. How would you classify these symptoms before changing Actuator configuration?"
+  answer: >-
+    Treat each symptom according to the layer that already succeeded. A reachable health endpoint means endpoint construction, exposure, routing, and basic access are working; DOWN is evidence from a contributor, so investigate the contributor or subsystem that produced it. A missing meter requires checking whether application instrumentation and the MeterRegistry created that meter before changing metrics endpoint exposure. A dashboard adds another boundary: even if the local meter exists, the export registry, scrape or push path, backend ingestion, query, and retention may fail outside the application. Actuator is most useful when it narrows ownership. Change endpoint configuration only when the failure is actually availability, exposure, representation, or access rather than underlying runtime state or telemetry transport.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 11.ObservabilitySynthesis/ObservabilitySynthesis.md
+    anchor: management-troubleshooting-model
+  apiRelated:
+    controller: ""
+    methodSignature: ""

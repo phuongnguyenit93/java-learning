@@ -27,4 +27,202 @@
 #         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
 # </interview-schema>
 
-questions: []
+questions:
+- question: "Vì sao nên xem Actuator như management projection trên runtime state thay vì owner của state đó? Hãy nêu các ví dụ mà sửa endpoint configuration không sửa được vấn đề gốc."
+  answer: >-
+    Actuator biến operational state do subsystem khác tạo ra thành management surface nhất quán. Application runtime sở hữu transition liveness/readiness, Boot logging sở hữu LoggingSystem đang chạy, Micrometer sở hữu meter state, còn ApplicationStartup có thể sở hữu startup-step data. Actuator expose hoặc điều khiển các góc nhìn trên những source đó. Phân biệt này định hướng incident response. Nếu /actuator/health/readiness trung thực báo REFUSING_TRAFFIC, sửa health endpoint không giải thích vì sao runtime đổi readiness. Nếu /actuator/loggers báo level kế thừa, source có thể là logging configuration. Nếu /actuator/metrics thiếu meter, câu hỏi đầu tiên là instrumentation có đăng ký meter hay chưa. Xem endpoint là projection giúp đặt cách sửa vào subsystem tạo ra evidence thay vì liên tục thay đổi management surface.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 1.ActuatorPurpose/ActuatorPurpose.md
+    anchor: runtime-state-vs-actuator-view
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Hãy giải thích mental model endpoint ID -> operations -> exposure adapter. Vì sao model này làm generic @Endpoint khác Spring MVC controller dù cả hai đều có thể truy cập qua HTTP?"
+  answer: >-
+    Endpoint ID là management identity ổn định, operation diễn tả management intent, còn exposure adapter ánh xạ model đó sang HTTP hoặc JMX. Vì vậy generic @Endpoint không bắt đầu từ URL routing hay controller semantics. @ReadOperation, @WriteOperation và @DeleteOperation mô tả capability một lần, sau đó Actuator có thể biểu diễn nó qua management technology được hỗ trợ. Spring MVC controller bắt đầu từ web stack và request/response contract. Khác biệt này quan trọng với portability, testing và ownership: management capability độc lập công nghệ có thể tồn tại qua thay đổi transport mà không phải viết lại thành controller. Experiment learning endpoint chứng minh điều đó bằng cách gọi cùng @Endpoint implementation qua Swagger bridge và qua management route thật /actuator/learning.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 2.EndpointModel/EndpointModel.md
+    anchor: technology-agnostic-endpoints
+  apiRelated:
+    controller: ActuatorLearningController
+    methodSignature: customEndpointState()
+- question: "Một Actuator endpoint đã enabled, được include trong web exposure nhưng vẫn trả 403. Vì sao enablement, exposure, network reachability và authorization phải được debug như các layer riêng biệt?"
+  answer: >-
+    Enablement quyết định capability có tồn tại hay không. Exposure quyết định endpoint enabled có được biểu diễn qua management technology như HTTP hay không. Network routing và management-port placement quyết định client có chạm được surface đó không. Authorization sau đó quyết định caller đã chạm tới surface có được phép invoke hay không. Vì vậy 403 sau khi biết endpoint tồn tại và đã expose hướng điều tra sang active security policy chứ không phải endpoint enablement. Ngược lại, enabling endpoint không sửa được route chưa expose và authentication không làm endpoint chưa expose trở nên reachable. Debug các layer theo thứ tự tránh configuration thrashing và giữ least privilege vì mỗi control vẫn có mục đích riêng.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 3.EndpointAvailabilityExposure/EndpointAvailabilityExposure.md
+    anchor: endpoint-availability
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Custom HealthIndicator nên được thiết kế thế nào để cung cấp operational evidence hữu ích mà không biến thành repair workflow hoặc tự tạo thêm nguồn outage?"
+  answer: >-
+    HealthIndicator nên đánh giá một operational condition có giới hạn và trả Health với status có ý nghĩa cùng một ít diagnostic detail. Check phải nhanh, side-effect free và có timeout phù hợp nếu chạm remote system vì platform có thể gọi health thường xuyên. Indicator chỉ báo evidence; nó không nên restart component, sửa state hay chạy workflow tốn kém. Việc đưa indicator vào group còn có hệ quả hệ thống vì leaf DOWN có thể ảnh hưởng aggregate status và HTTP 503. Chỉ condition thực sự ảnh hưởng khả năng vận hành của service mới nên nằm trong health group liên quan. Experiment learning health làm ranh giới này rõ: controller chỉ đổi state xác định, custom indicator báo UP/DOWN, còn Actuator sở hữu aggregation và management representation.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 4.Health/Health.md
+    anchor: custom-health-indicators
+  apiRelated:
+    controller: ActuatorLearningController
+    methodSignature: setDependencyAvailable(boolean)
+- question: "Một team thêm custom health Status và cấu hình management.endpoint.health.status.http-mapping cho status đó. Vì sao việc này có thể vô tình đổi HTTP behavior của DOWN và OUT_OF_SERVICE, và team phải kiểm tra gì?"
+  answer: >-
+    Health aggregation và HTTP mapping là hai bước riêng. StatusAggregator quyết định status nào thắng; HttpCodeStatusMapper sau đó chuyển aggregate thành HTTP status. Bình thường Boot map DOWN và OUT_OF_SERVICE sang 503, còn UP và UNKNOWN vẫn là 200. Khi application định nghĩa bất kỳ management.endpoint.health.status.http-mapping tùy chỉnh nào, Boot không còn tự bổ sung các mapping mặc định cho DOWN và OUT_OF_SERVICE. Team phải khai báo rõ các mapping 503 vẫn muốn giữ bên cạnh custom status và kiểm tra toàn bộ ordered status model chứ không chỉ giá trị mới. Nếu không, health JSON có thể đúng là DOWN nhưng HTTP response lại thành successful, phá assumption của load balancer hoặc monitoring.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 4.Health/Health.md
+    anchor: health-status-aggregation
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Vì sao health group liveness và readiness thường không nên chứa cùng các external dependency check? Hãy phân tích failure mode khi shared database outage được đưa vào liveness."
+  answer: >-
+    Liveness hỏi restart process này có thể giúp hay không; readiness hỏi instance này có nên nhận traffic ngay lúc đó hay không. Nếu shared database outage làm mọi instance báo broken liveness, orchestrator có thể restart cả fleet dù restart process không sửa được database. Điều đó dễ tạo cascading restart storm và làm mất local state hữu ích trong incident. Readiness có thể chứa external dependency khi service thật sự không thể phục vụ traffic hữu ích nếu mất dependency đó, nhưng ngay cả khi đó team phải cân nhắc loại toàn bộ replica khỏi service có tốt hơn degraded behavior hay không. Boot chủ động không đưa arbitrary external indicator vào probe group mặc định. Probe design đúng phải theo failure semantics chứ không theo sự tiện lợi của việc tái sử dụng mọi HealthIndicator ở mọi group.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 5.AvailabilityProbes/AvailabilityProbes.md
+    anchor: probe-external-dependency-boundary
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Điều gì có thể sai nếu Kubernetes probe chỉ gọi Actuator management port riêng, và vì sao thêm /livez và /readyz trên main application port làm thay đổi failure domain được kiểm tra?"
+  answer: >-
+    Management server riêng có thể vẫn khỏe trong khi main application connector hoặc request path không thể nhận business traffic. Readiness probe chỉ chạm management port vì thế có thể báo thành công cho management server nhưng bỏ sót failure của path người dùng phụ thuộc. Boot có thể expose thêm path liveness/readiness trên main server để platform kiểm tra route chia sẻ nhiều hơn failure domain của business connector. Điều này không tự động tốt hơn ở mọi deployment: management port riêng vẫn đem lại isolation và có thể là yêu cầu network design. Điểm quan trọng là chọn probe path theo failure nào phải loại instance khỏi service, thay vì giả định HTTP 200 từ bất kỳ local port nào đều chứng minh application path khỏe.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 5.AvailabilityProbes/AvailabilityProbes.md
+    anchor: probe-endpoint-paths
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Vì sao env và configprops rất hữu ích trong incident nhưng vẫn không phù hợp để expose rộng dù các value đã được sanitize?"
+  answer: >-
+    Các endpoint này có thể cho thấy property source nào tồn tại, property name nào có mặt, ConfigurationProperties object có cấu trúc ra sao và đủ deployment context để giải thích configuration problem. Sanitization có thể mask sensitive value và show-values policy có thể giới hạn khi trả original value, nhưng masking không xóa toàn bộ metadata hữu ích khỏi response. Property name, source name, object topology và value không bị nhận diện là sensitive vẫn có thể giúp attacker. Vì vậy sanitization là defense in depth chứ không phải exposure policy hay secret-management system. Hãy hạn chế endpoint bằng exposure, network placement và authorization, rồi bàn giao câu hỏi precedence/binding sang externalized-configuration sau khi Actuator đã cho thấy runtime view.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 6.InfoEnvironment/InfoEnvironment.md
+    anchor: sensitive-value-sanitization
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Một counter có trong MeterRegistry nhưng operator không tìm thấy history hữu ích trong /actuator/metrics. Hãy giải thích metrics endpoint được thiết kế để trả lời gì và expectation nào thuộc external telemetry infrastructure."
+  answer: >-
+    Metrics endpoint là góc nhìn chẩn đoán on-demand trên các meter hiện đang có trong MeterRegistry của application. Nó có thể trả lời meter name có tồn tại không, measurement nào đang có và tag nào có thể dùng để thu hẹp việc inspect hiện tại. Nó không phải time-series database, durable history hay cross-instance query engine. Micrometer sở hữu meter model và registry API; Boot auto-configure registry/binder được hỗ trợ; Actuator expose management view để chẩn đoán. Long-term history, aggregation giữa replica, alerting, retention và dashboard thuộc monitoring backend hoặc exporter flow. Experiment learning metric chứng minh phía local bằng cách đăng ký và tăng tagged counter rồi inspect chính meter đó qua Actuator.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 7.MetricsMicrometer/MetricsMicrometer.md
+    anchor: metrics-endpoint-purpose
+  apiRelated:
+    controller: ActuatorLearningController
+    methodSignature: recordMetric(String)
+- question: "Vì sao khả năng filter theo tag của Actuator không làm high-cardinality tag trở nên an toàn? Hãy dùng request ID hoặc user ID làm ví dụ failure."
+  answer: >-
+    Tag filter như tag=outcome:success chỉ chọn từ các meter identity đã tồn tại; nó không gộp hoặc ngăn các identity đó được tạo. Nếu mỗi request ID hoặc user ID trở thành một tag value, application và backend có thể tạo số lượng time series không giới hạn, làm tăng memory, storage, indexing và query cost. Actuator có thể cho thấy symptom bằng danh sách rất nhiều available tag value, nhưng cách sửa thuộc instrumentation design: chọn dimension có tập giá trị hữu hạn và mang ý nghĩa. Learning counter cố ý giới hạn outcome thành success hoặc failure để experiment chứng minh filtering mà không dạy cardinality pattern nguy hiểm. Diagnostic convenience không thể bù cho metric model không giới hạn.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 7.MetricsMicrometer/MetricsMicrometer.md
+    anchor: tag-filtered-metrics
+  apiRelated:
+    controller: ActuatorLearningController
+    methodSignature: recordMetric(String)
+- question: "So sánh /actuator/metrics với Prometheus scrape endpoint. Vì sao cả hai đều liên quan metrics nhưng hướng tới consumer và workflow khác nhau?"
+  answer: >-
+    Generic metrics endpoint được thiết kế để inspect tương tác các Micrometer meter trong một application đang chạy. Operator có thể khám phá name, measurement, tag dimension và thu hẹp query khi chẩn đoán một instance. Prometheus endpoint là transport cho Prometheus server: với registry phù hợp nó expose telemetry dạng scrape để thu thập vào external time-series system. Cái đầu là management diagnostic; cái sau tham gia export pipeline. Retention, multi-instance query, recording rule, dashboard và alert bắt đầu sau khi telemetry rời application. Dùng /actuator/metrics như polling backend sẽ thiếu storage và system-wide semantics mà observability infrastructure chuyên dụng cung cấp.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 7.MetricsMicrometer/MetricsMicrometer.md
+    anchor: metrics-export-boundary
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Operator thấy effectiveLevel=INFO và configuredLevel=null cho một logger, rồi tạm thời đặt DEBUG qua Actuator. Các giá trị đó nghĩa là gì và vì sao thay đổi này không nên được xem là durable configuration?"
+  answer: >-
+    configuredLevel cho biết chính logger đó có runtime setting tường minh hay không. Configured level null nghĩa logger đang kế thừa hành vi từ chuỗi logger cha, cuối cùng có thể tới root logger. effectiveLevel là level đã resolve đang thật sự điều khiển event sau inheritance. Đặt DEBUG qua loggers endpoint tạo explicit runtime configuration cho logger đó nên cả hai value sau đó có thể phản ánh DEBUG. Logger group có thể là target thuận tiện khi đổi level lúc runtime, nhưng không phải nguồn inheritance được biểu diễn bởi configuredLevel=null. Thay đổi này là operational state bên trong LoggingSystem đang chạy, không phải rewrite application configuration. Restart thường dựng lại logging từ configuration source bình thường của Boot và có thể xóa override tạm thời. Trong incident, chỉ target logger hẹp, tính đến I/O tăng và khả năng log sensitive data, rồi restore level sau khi thu đủ evidence.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 8.LoggersDiagnostics/LoggersDiagnostics.md
+    anchor: configured-effective-log-levels
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Vì sao thread dump và heap dump endpoint là công cụ delivery evidence chứ không phải analysis tool, và production risk nào phải quyết định việc expose chúng từ xa?"
+  answer: >-
+    Actuator có thể capture và cung cấp diagnostic artifact từ process đang chạy nhưng không quyết định blocked thread có bất thường hay không, lock nào gây deadlock, object nào chiếm retained memory lớn nhất hoặc vì sao có GC pressure. Việc diễn giải đó thuộc JVM, concurrency và memory-analysis tooling. Chính endpoint cũng có risk: thread dump lộ code path và synchronization state; heap dump có thể chứa credential, request data, cache và object production khác, còn việc tạo/download dump lớn có thể tăng tải lên service đang gặp sự cố. Vì vậy exposure cần cả phân tích confidentiality lẫn resource impact, với network/authorization hẹp và incident workflow chỉ thu evidence cần thiết.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 8.LoggersDiagnostics/LoggersDiagnostics.md
+    anchor: diagnostic-exposure-risk
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "@ReadOperation và @WriteOperation giữ management intent như thế nào mà không biến custom @Endpoint thành MVC controller, và operation parameter phải tuân theo constraint nào?"
+  answer: >-
+    Các annotation mô tả logical management operation trên endpoint ID. Actuator sau đó adapt các operation sang HTTP hoặc JMX nên endpoint code không cần @GetMapping hay @PostMapping. Operation parameter là method parameter tường minh, mặc định bắt buộc và có thể nullable; @Selector có thể trở thành web path segment. Generic endpoint input dùng các parameter value đơn giản thay vì coi một complex DTO là arbitrary HTTP request body, và parameter name phải được giữ để Actuator bind input. Conversion đi qua ApplicationConversionService cùng endpoint converter. Learning read experiment chứng minh read operation bằng cách so endpoint implementation với /actuator/learning, trong khi bridge chỉ là teaching surface.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 9.CustomEndpoints/CustomEndpoints.md
+    anchor: endpoint-operation-annotations
+  apiRelated:
+    controller: ActuatorLearningController
+    methodSignature: customEndpointState()
+- question: "Một custom endpoint cần maintenance toggle. Trước khi expose nó dưới dạng @WriteOperation phải trả lời các câu hỏi thiết kế nào, và learning maintenance experiment chứng minh điều gì?"
+  answer: >-
+    Trước hết phải xác định action là operational management capability chứ không phải customer workflow. Cần định nghĩa side effect có giới hạn, input tường minh, expectation về idempotency/retry, audience được authorize, nhu cầu audit và chuyện gì xảy ra nếu operation bị gọi nhầm hoặc concurrent. Write-capable management surface xứng đáng policy exposure chặt hơn passive status endpoint. Learning experiment chỉ thay một maintenance boolean có giới hạn qua cùng technology-agnostic endpoint implementation rồi đọc state lại. Nó chứng minh read/write operation có thể thuộc một @Endpoint model và được Actuator mapping. Nó không biện minh cho arbitrary business mutation phía sau Actuator hoặc dùng transport default làm security policy.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 9.CustomEndpoints/CustomEndpoints.md
+    anchor: custom-endpoint-purpose
+  apiRelated:
+    controller: ActuatorLearningController
+    methodSignature: setMaintenanceMode(boolean)
+- question: "Khi nào custom management capability nên giữ generic @Endpoint, dùng web/JMX-specific endpoint hoặc extension, và khi nào nên trở thành normal business/controller API?"
+  answer: >-
+    Bắt đầu từ ai tiêu thụ capability và contract nào thực sự cần. Dùng generic @Endpoint khi operation thật sự mang tính vận hành và ý nghĩa không phụ thuộc HTTP/JMX; điều này giữ portability giữa transport. Dùng @WebEndpoint, @JmxEndpoint hoặc supported endpoint extension khi cùng operational responsibility cần representation riêng của technology hoặc bổ sung built-in endpoint. Dùng normal MVC/WebFlux controller khi requirement thật sự cần đầy đủ web framework request/response semantics, và dùng business API khi domain client cần capability như một phần product contract. Trade-off cốt lõi là ownership và portability chứ không phải annotation nào quen tay. Ép business workflow vào Actuator hoặc giấu HTTP-specific behavior trong generic endpoint sẽ khiến exposure và maintenance khó lý giải.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 9.CustomEndpoints/CustomEndpoints.md
+    anchor: business-api-boundary
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Vì sao thêm SecurityFilterChain của riêng application có thể âm thầm thay đổi assumption bảo vệ Actuator, và sau customization đó cần review những gì?"
+  answer: >-
+    Security auto-configuration có nhận biết Actuator của Boot chỉ áp dụng khi application chưa cung cấp SecurityFilterChain riêng. Khi application security định nghĩa filter chain, Boot back off và team sở hữu matching cùng authorization rule. Vì vậy cần review management path hoặc EndpointRequest matcher nào được cover, endpoint nào được permit/authenticate, management port/network được đặt ở đâu và write/sensitive diagnostic endpoint có policy mạnh hơn basic health hay không. Exposure và authorization vẫn độc lập: secure filter chain không biện minh cho expose mọi endpoint, còn exclude endpoint khỏi HTTP không phải authentication rule. Khi availability đã được xác nhận mà request trả 401/403, hãy theo active Spring Security policy thay vì “sửa” bằng cách mở rộng Actuator exposure.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 10.ManagementAccess/ManagementAccess.md
+    anchor: actuator-security-auto-configuration
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Trong incident, /actuator/health reachable nhưng báo DOWN, /actuator/metrics không có business meter mong đợi, đồng thời dashboard cũng thiếu dữ liệu. Bạn sẽ phân loại các symptom này thế nào trước khi đổi Actuator configuration?"
+  answer: >-
+    Hãy xử lý từng symptom theo layer đã thành công. Health endpoint reachable nghĩa endpoint construction, exposure, routing và basic access đang hoạt động; DOWN là evidence từ contributor nên điều tra contributor hoặc subsystem tạo ra nó. Meter bị thiếu cần kiểm tra application instrumentation và MeterRegistry có tạo meter hay chưa trước khi đổi metrics endpoint exposure. Dashboard thêm một boundary khác: ngay cả khi local meter tồn tại, export registry, scrape/push path, backend ingestion, query hoặc retention có thể fail bên ngoài application. Actuator hữu ích nhất khi giúp thu hẹp ownership. Chỉ đổi endpoint configuration khi failure thật sự nằm ở availability, exposure, representation hoặc access chứ không phải underlying runtime state hay telemetry transport.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 11.ObservabilitySynthesis/ObservabilitySynthesis.md
+    anchor: management-troubleshooting-model
+  apiRelated:
+    controller: ""
+    methodSignature: ""

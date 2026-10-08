@@ -1,0 +1,15 @@
+available:
+  summary: Controlled dependency availability
+  description: Use true to make the learning dependency report UP or false to make
+    it report DOWN through the custom HealthIndicator.
+  usage: true
+outcome:
+  summary: Bounded metric outcome tag
+  description: Use success or failure. The bounded values avoid creating unbounded
+    Micrometer tag cardinality in the learning experiment.
+  usage: true
+enabled:
+  summary: Maintenance mode state
+  description: Use true to enable the bounded maintenance state or false to restore
+    it.
+  usage: true

@@ -5,12 +5,30 @@
 # This is the shared module-level reference catalog.
 # It is intentionally not split by MODULE_LANGUAGE.
 #
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
 # Add only curated references that are useful for the module.
 # The build system must not overwrite this file after authored content exists.
+
+references:
+  - title: "Spring Boot 3.3 — Actuator"
+    url: "https://docs.spring.io/spring-boot/3.3/reference/actuator/index.html"
+    description: "Official Spring Boot 3.3 production-ready features entry point covering Actuator concepts and management capabilities."
+
+  - title: "Spring Boot 3.3 — Endpoints"
+    url: "https://docs.spring.io/spring-boot/3.3/reference/actuator/endpoints.html"
+    description: "Canonical reference for built-in endpoints, availability/exposure, health, loggers, diagnostic endpoints, security considerations, and custom endpoint authoring."
+
+  - title: "Spring Boot 3.3 — Monitoring and Management over HTTP"
+    url: "https://docs.spring.io/spring-boot/3.3/reference/actuator/monitoring.html"
+    description: "Official guidance for Actuator HTTP management paths, dedicated management ports/addresses, and management-specific transport configuration."
+
+  - title: "Spring Boot 3.3 — Metrics"
+    url: "https://docs.spring.io/spring-boot/3.3/reference/actuator/metrics.html"
+    description: "Official reference for Micrometer integration, MeterRegistry auto-configuration, built-in metrics, and the Actuator metrics endpoint."
+
+  - title: "Spring Boot 3.3 — Observability"
+    url: "https://docs.spring.io/spring-boot/3.3/reference/actuator/observability.html"
+    description: "Official reference for Spring Boot observability integration and the boundary between Actuator, Micrometer Observation, metrics, and tracing."
+
+  - title: "Spring Boot 3.3 — Actuator REST API"
+    url: "https://docs.spring.io/spring-boot/3.3/api/rest/actuator/index.html"
+    description: "Official REST contract for Actuator web endpoints, useful when inspecting endpoint request and response behavior."

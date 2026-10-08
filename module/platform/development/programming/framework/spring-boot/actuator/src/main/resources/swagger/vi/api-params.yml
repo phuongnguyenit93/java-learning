@@ -1,0 +1,14 @@
+available:
+  summary: Trạng thái availability của dependency học tập
+  description: Dùng true để dependency học tập báo UP hoặc false để báo DOWN thông
+    qua custom HealthIndicator.
+  usage: true
+outcome:
+  summary: Tag outcome được giới hạn cho metric
+  description: Dùng success hoặc failure. Giá trị được giới hạn để tránh tạo tag cardinality
+    không kiểm soát trong thí nghiệm Micrometer.
+  usage: true
+enabled:
+  summary: Trạng thái maintenance mode
+  description: Dùng true để bật maintenance state có giới hạn hoặc false để khôi phục.
+  usage: true

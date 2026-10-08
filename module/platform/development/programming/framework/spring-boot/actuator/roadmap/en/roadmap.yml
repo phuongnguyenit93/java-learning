@@ -41,4 +41,111 @@
 # The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: actuator-purpose-and-production-model
+    title: "Why Spring Boot Actuator Exists"
+    purpose: "Understand Actuator as Spring Boot's production-ready management surface for inspecting and interacting with a running application without confusing it with an external observability platform."
+    relatedKnowledge:
+      - ActuatorPurpose
+    objectives:
+      - "Explain the problem Actuator solves after an application is running: operational visibility, diagnostics, and controlled management access."
+      - "Recognize that Actuator supplies Boot-managed endpoints and integrations while monitoring backends, telemetry pipelines, and generic observability theory remain separate concerns."
+      - "Distinguish application runtime state owned by application-runtime from the Actuator endpoints that expose selected runtime information."
+    relatedModules:
+      - routeId: SPRING_BOOT_FUNDAMENTALS
+        label: "Spring Boot Fundamentals"
+        note: "Provides the basic Boot application model that Actuator extends with production-ready management capabilities."
+      - routeId: SPRING_BOOT_APPLICATION_RUNTIME
+        label: "Spring Boot Application Runtime"
+        note: "Owns runtime lifecycle and availability state that Actuator can expose operationally."
+
+  - id: endpoint-model-availability-and-exposure
+    title: "Endpoint Model, Enablement, Availability, and Exposure"
+    purpose: "Build the mental model for Actuator endpoints as technology-agnostic management features: enablement and exposure are configured separately, while an endpoint is available through a technology only when the required enablement and exposure conditions are both satisfied."
+    relatedKnowledge:
+      - EndpointModel
+      - EndpointAvailabilityExposure
+    objectives:
+      - "Understand endpoint ids, operations, built-in endpoints, and how web/JMX technologies expose the same logical endpoint model."
+      - "Distinguish enabling an endpoint from exposing it through a management technology, understand that both affect whether it is available there, and treat remote exposure as a deliberate decision."
+      - "Use management.endpoints.* and endpoint-specific settings to control availability and exposure without treating configuration precedence as Actuator ownership."
+      - "Understand the default /actuator web base path and the fact that management paths/ports can be separated from the main application surface."
+
+  - id: health-and-availability-integration
+    title: "Health, Health Contributors, and Availability"
+    purpose: "Understand how Actuator turns application and dependency health into an operational endpoint while consuming Boot availability state rather than redefining the runtime lifecycle."
+    relatedKnowledge:
+      - Health
+      - AvailabilityProbes
+    objectives:
+      - "Understand HealthContributor, HealthIndicator, composite health contribution, and how health status is aggregated for the health endpoint."
+      - "Reason about health detail visibility and endpoint exposure as operational policy rather than application business behavior."
+      - "Relate liveness/readiness state to health groups and probe-oriented operational views while keeping lifecycle ownership in application-runtime."
+      - "Recognize when custom health indicators are useful and when a dependency-specific contributor already exists."
+    relatedModules:
+      - routeId: SPRING_BOOT_APPLICATION_RUNTIME
+        label: "Spring Boot Application Runtime"
+        note: "Owns Boot liveness/readiness state transitions; Actuator consumes and exposes them through health-oriented surfaces."
+
+  - id: info-and-environment-facing-endpoints
+    title: "Info and Environment-facing Operational Endpoints"
+    purpose: "Use Actuator endpoints that reveal build, application, configuration, and environment-oriented information while understanding the sensitivity of what they can expose."
+    relatedKnowledge:
+      - InfoEnvironment
+    objectives:
+      - "Understand the info endpoint and the role of InfoContributor-style contributions for operational metadata."
+      - "Understand what environment/configuration-oriented endpoints can reveal about resolved application state without turning this module into externalized-configuration training."
+      - "Treat potentially sensitive values as an exposure and authorization concern rather than assuming management endpoints are safe to publish by default."
+
+  - id: metrics-and-micrometer-boundary
+    title: "Metrics Endpoint and the Micrometer Boundary"
+    purpose: "Understand how Actuator integrates with Micrometer and exposes collected meters for diagnosis while keeping metrics theory, backend selection, and telemetry architecture in observability curricula."
+    relatedKnowledge:
+      - MetricsMicrometer
+    objectives:
+      - "Understand Boot's MeterRegistry auto-configuration boundary and the role of Micrometer as the metrics facade used by Actuator integrations."
+      - "Use the metrics endpoint to inspect available meter names, measurements, and tag-filtered views."
+      - "Recognize the difference between inspecting metrics through Actuator and exporting metrics to an external monitoring system."
+      - "Keep metric design, cardinality strategy, alerting, dashboards, and backend operation outside this module's primary ownership."
+
+  - id: loggers-and-runtime-diagnostics
+    title: "Loggers and Runtime Diagnostic Endpoints"
+    purpose: "Use Actuator's operational endpoints to inspect or adjust runtime logging and capture JVM-facing diagnostic artifacts without turning endpoint access into logging or JVM-analysis training."
+    relatedKnowledge:
+      - LoggersDiagnostics
+    objectives:
+      - "Understand how the loggers endpoint exposes configured/effective logger levels and allows supported runtime level changes."
+      - "Recognize thread dump and heap dump endpoints as delivery surfaces for diagnostic data, not as the owner of thread/heap analysis techniques."
+      - "Evaluate the operational risk of exposing powerful diagnostic endpoints and treat their access as a security decision."
+
+  - id: custom-endpoint-authoring
+    title: "Author Custom Actuator Endpoints"
+    purpose: "Extend the management surface when application-specific operational actions or views are needed, using Actuator's endpoint abstraction rather than ordinary business HTTP controllers."
+    relatedKnowledge:
+      - CustomEndpoints
+    objectives:
+      - "Understand @Endpoint and operation annotations such as @ReadOperation, @WriteOperation, and @DeleteOperation at the Boot management layer."
+      - "Reason about technology-agnostic custom endpoints versus web-specific endpoint extensions when an existing endpoint needs additional behavior."
+      - "Design endpoint inputs and outputs for operational use while avoiding accidental duplication of normal application APIs."
+
+  - id: management-security-and-access-boundary
+    title: "Management Surface Security and Access Boundaries"
+    purpose: "Treat Actuator exposure, network placement, and authorization as explicit production decisions because management endpoints can reveal or change sensitive runtime state."
+    relatedKnowledge:
+      - ManagementAccess
+    objectives:
+      - "Understand that only a deliberately limited endpoint set should be remotely exposed and that exposure is distinct from authorization."
+      - "Recognize Boot's security auto-configuration behavior around Actuator when Spring Security is present without re-teaching authentication/authorization mechanics."
+      - "Use management-server path/port/address choices and endpoint access policy to reduce unnecessary management-surface risk."
+      - "Hand detailed authentication, authorization, request matching, and security policy design to Spring Security ownership."
+
+  - id: actuator-observability-synthesis
+    title: "Actuator in the Production Observability Architecture"
+    purpose: "Synthesize endpoints, health, metrics, logging diagnostics, custom management features, and access policy into one production mental model with clear handoffs to external observability systems."
+    relatedKnowledge:
+      - ObservabilitySynthesis
+    objectives:
+      - "Trace how a running Boot application exposes selected operational state through Actuator while external systems may scrape, ingest, or correlate telemetry separately."
+      - "Choose an Actuator endpoint or custom endpoint when direct application management/diagnosis is appropriate, and choose observability tooling when the problem is telemetry collection, storage, analysis, alerting, or correlation."
+      - "Explain the relationship between Actuator, Micrometer Observation/metrics integrations, application-runtime availability, logging, and external monitoring infrastructure without merging their ownership boundaries."
+      - "Diagnose management problems by separating endpoint availability, exposure, authorization, data sensitivity, and downstream monitoring concerns."
