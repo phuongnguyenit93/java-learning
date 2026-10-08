@@ -1,24 +1,45 @@
 # 📂 README MODULE STRUCTURE (EN)
 
-* **1.Introduction**
-    * [NativeImage](readme/en/menu/1.Introduction/NativeImage.md)
-* **2.AOTProcessing**
-    * [AOTProcessing](readme/en/menu/2.AOTProcessing/AOTProcessing.md)
-* **3.GraalVM**
-    * [GraalVM](readme/en/menu/3.GraalVM/GraalVM.md)
-* **4.ClosedWorld**
-    * [ClosedWorld](readme/en/menu/4.ClosedWorld/ClosedWorld.md)
-* **5.RuntimeHints**
-    * [RuntimeHints](readme/en/menu/5.RuntimeHints/RuntimeHints.md)
-* **6.ReflectionResourcesProxies**
-    * [ReflectionResourcesProxies](readme/en/menu/6.ReflectionResourcesProxies/ReflectionResourcesProxies.md)
-* **7.BuildAndRun**
-    * [BuildAndRun](readme/en/menu/7.BuildAndRun/BuildAndRun.md)
-* **8.NativeTesting**
-    * [NativeTesting](readme/en/menu/8.NativeTesting/NativeTesting.md)
-* **9.Tradeoffs**
-    * [Tradeoffs](readme/en/menu/9.Tradeoffs/Tradeoffs.md)
-* **10.Limitations**
-    * [Limitations](readme/en/menu/10.Limitations/Limitations.md)
+* **1.Purpose**
+    * [NativeImage](readme/en/menu/1.Purpose/NativeImage.md)
+* **2.AOTPipeline**
+    * [AOTPipeline](readme/en/menu/2.AOTPipeline/AOTPipeline.md)
+* **3.ClosedWorld**
+    * [ClosedWorld](readme/en/menu/3.ClosedWorld/ClosedWorld.md)
+* **4.RuntimeHints**
+    * [RuntimeHints](readme/en/menu/4.RuntimeHints/RuntimeHints.md)
+* **5.BuildAndRun**
+    * [BuildAndRun](readme/en/menu/5.BuildAndRun/BuildAndRun.md)
+* **6.NativeTesting**
+    * [NativeTesting](readme/en/menu/6.NativeTesting/NativeTesting.md)
+* **7.CompatibilityTradeoffs**
+    * [CompatibilityTradeoffs](readme/en/menu/7.CompatibilityTradeoffs/CompatibilityTradeoffs.md)
+* **8.ReadinessSynthesis**
+    * [ReadinessSynthesis](readme/en/menu/8.ReadinessSynthesis/ReadinessSynthesis.md)
 
+# Spring Boot Native Image
 
+This module explains the Spring Boot application-level path from a normal dynamic JVM runtime model to an AOT-prepared native executable. The focus is not GraalVM compiler internals; it is the Boot developer mental model for AOT processing, closed-world consequences, runtime hints, supported native build paths, native-specific testing, ecosystem compatibility, and evidence-based deployment decisions.
+
+## What You Will Learn
+
+You will learn why Spring AOT is required before native compilation, what generated assets the AOT pipeline contributes, how closed-world constraints change assumptions that are normally deferred to runtime, how `RuntimeHints` describe dynamic access that static analysis cannot infer, how Boot integrates Maven/Gradle native build tooling and Buildpacks, how to test native-sensitive behavior deliberately, and how to decide whether native deployment is worth the build and compatibility cost.
+
+## Prerequisites
+
+You should already understand the normal Spring Boot application runtime, auto-configuration, build-tooling/packaging, and Boot testing model. Basic knowledge of reflection, proxies, resources, and JVM deployment is useful. This module does not teach GraalVM compiler/runtime internals, generic Maven/Gradle mechanics, Docker/Buildpacks internals, or the full Java reflection/proxy model.
+
+## Learning Flow
+
+1. Start with the problem native compilation creates for a dynamic Boot application and the benefits that motivate AOT work.
+2. Follow Spring AOT from the application model to generated source, bytecode, and hint metadata.
+3. Understand the closed-world consequences for classpath, bean graph, profiles, properties, and other dynamic behavior.
+4. Learn how runtime hints and third-party reachability metadata describe dynamic access that native-image tooling cannot infer safely.
+5. Build and run native executables or native OCI images through Boot-supported build paths.
+6. Test AOT/native-sensitive behavior selectively instead of moving the entire feedback loop away from the JVM.
+7. Evaluate runtime gains against build cost, metadata quality, dependency support, and compatibility risk.
+8. Synthesize readiness evidence and choose among a native executable, native container image, and normal JVM deployment.
+
+## Module Boundary
+
+This module owns Spring Boot's AOT/native application model, runtime hints, native-readiness reasoning, supported native build handoffs, and native-specific validation strategy. General Boot plugin, executable packaging, Buildpacks, and image-delivery mechanics belong to `build-tooling-packaging`; the normal runtime lifecycle belongs to `application-runtime`; broader Boot testing belongs to `testing`; conditional auto-configuration semantics belong to `auto-configuration`; generic Java reflection/proxy/class-loading mechanics and GraalVM compiler/runtime internals remain with their dedicated owners.

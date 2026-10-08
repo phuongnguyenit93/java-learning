@@ -27,4 +27,224 @@
 #         Exact method signature in api-descriptions.yml, for example startVsRun().
 # </interview-schema>
 
-questions: []
+questions:
+- question: "Explain why Spring AOT is a bridge between a normal dynamic Boot application and GraalVM's closed-world native compilation rather than a replacement for either Spring or GraalVM."
+  answer: >-
+    A normal Spring Boot application can defer many decisions to runtime because the JVM still has a classpath, reflection, class loading, resource lookup, and framework discovery available. Native Image must reason from code and metadata available during the build, so those late assumptions need to become build-time evidence. Spring AOT prepares Spring's side of that handoff by materializing a BeanFactory model, generating initialization and proxy assets, and collecting Runtime Hints. GraalVM then performs reachability analysis and native compilation over that prepared input. Spring still runs in the resulting application, and GraalVM still owns native compilation. Thinking of AOT as a bridge explains why a native-only failure can belong either to the prepared Spring model or to later reachability/compiler behavior instead of treating all failures as one "native" problem.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 1.Purpose/NativeImage.md
+    anchor: native-image-problem
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "A team reports that its native executable starts five times faster than the JVM version. Why is that result insufficient to justify native deployment, and what evidence would you ask for before deciding?"
+  answer: >-
+    Startup speed proves only one part of the runtime economics. Native compilation moves work and cost into the build, adds CPU and memory requirements to CI, creates platform-specific artifacts, and introduces compatibility work around dynamic behavior and third-party dependencies. The runtime comparison should also include memory under representative load, throughput, tail latency, CPU, scaling pattern, diagnostics, and the JVM's behavior after warm-up. The delivery comparison should include native build duration, reproducibility, test cost, supported target platforms, and maintenance of hints or dependency workarounds. Native is attractive when cold start, memory, density, or short-lived execution materially matters and the measured benefit pays for those costs. A headline startup number from an idle or unrelated workload is not enough to establish that trade-off.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 1.Purpose/NativeImage.md
+    anchor: native-image-cost-model
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "What kinds of assets can Spring AOT generate, why are they real build inputs rather than merely diagnostic reports, and why should developers avoid editing them as the source of truth?"
+  answer: >-
+    Spring AOT can generate Java source for context and bean initialization, bytecode such as required proxy classes, and Runtime Hints or native-image metadata for dynamic capabilities. The generated source and bytecode are compiled with the application, while the metadata is consumed later by native-image tooling, so these artifacts directly influence the executable. They are also valuable diagnostic evidence because they reveal which application structure and dynamic requirements Spring prepared. They should not become manually maintained source because the next AOT run derives them again from application configuration, dependencies, classpath, and build-time environment. If a generated result is wrong, fix the owning configuration, integration, hint registration, or dependency rather than patching an output that cannot be reproduced.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 2.AOTPipeline/AOTPipeline.md
+    anchor: aot-generated-assets
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Why can two builds from identical application source produce different native application models when their profiles, properties, classpaths, or dependency versions differ?"
+  answer: >-
+    AOT processing asks Spring to prepare the application model using the build-time classpath and environment. Auto-configuration conditions, component availability, profiles, and properties can therefore influence which bean definitions exist and which generated assets or hints are produced. Dependency changes can also change classes, native metadata, or framework integrations without changing application source. Once those structural choices are encoded into the native build, runtime cannot be assumed to reconstruct an arbitrary contradictory BeanFactory. This makes build-time environment and dependency composition part of the native artifact's reproducibility contract. Teams should version and control those inputs just as deliberately as source code and should distinguish structural configuration from ordinary runtime values that an already-prepared bean can still consume.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 2.AOTPipeline/AOTPipeline.md
+    anchor: aot-entry-model
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "The application starts successfully in normal JVM mode, but running the AOT-processed application on the JVM fails before native compilation. What does that tell you, and why is inspecting generated AOT output more useful than immediately adding GraalVM reflection configuration?"
+  answer: >-
+    The failure already appears before GraalVM's closed-world executable is involved, so the earliest unproven boundary is Spring's prepared AOT application model. Generated initialization source can show whether expected configuration or beans were included, generated proxy assets can reveal what Spring prepared, and hint output plus build logs can show the environment used during processing. Adding arbitrary reflection configuration would target a later reachability concern without evidence that reachability is the current problem. First correct the AOT model, unsupported registration pattern, build-time condition, or other preparation issue. Only after AOT-mode behavior is sound does it make sense to move the investigation forward to native compilation and native-only dynamic paths.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 2.AOTPipeline/AOTPipeline.md
+    anchor: aot-diagnostic-evidence
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Closed-world execution is sometimes described as 'everything is fixed at build time.' Why is that mental model too strong, and what distinction should an engineer use instead?"
+  answer: >-
+    A native Spring Boot process still reads environment variables and external properties, accepts requests, connects to databases, schedules work, and mutates business state at runtime. Closed-world primarily constrains the reachable code, metadata, dynamic capabilities, and framework structure that the build prepared. A database URL changing is an ordinary runtime value change because an existing bean can consume a different value. A profile or property that tries to introduce a bean definition that was absent from the AOT model is a structural mismatch. A reflective call to a type that the build did not preserve is a reachability problem. The useful distinction is therefore runtime state/value changes versus changes that require code, members, resources, proxies, or bean structure the executable did not contain or describe.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 3.ClosedWorld/ClosedWorld.md
+    anchor: closed-world-runtime-boundary
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "A reusable Spring library registers infrastructure beans by scanning classes and calling registerSingleton during application startup. Why should that design receive special scrutiny for native images, and what would an AOT-compatible design need to achieve?"
+  answer: >-
+    Spring AOT prepares a concrete BeanFactory model and generates initialization for it before the native executable is produced. Infrastructure that appears only through arbitrary late scanning or singleton registration may be invisible when that model is prepared, so the native runtime cannot safely assume it can invent an unrelated bean graph later. An AOT-compatible integration needs to make the resulting structure visible during processing or use supported Spring extension points that participate in AOT. The goal is not to ban all dynamic libraries; it is to ensure the beans, proxies, resources, and other requirements the library creates can be represented in the prepared model. For a library author, native readiness therefore becomes part of the integration contract, not an application-level reflection workaround added after the fact.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 3.ClosedWorld/ClosedWorld.md
+    anchor: aot-bean-graph
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "How would you review an application for native-sensitive dynamic behavior without falling into the trap of registering blanket reflection access for every class?"
+  answer: >-
+    Start with behaviors whose target is selected indirectly: reflection, resource lookup by string, JDK proxies, reflective serialization or binding, runtime class loading or generated bytecode, JNI, and configuration that names classes or resources. Then determine ownership and existing support. Spring can infer many common framework patterns, and dependencies may already ship reachability metadata. Exercise representative paths, inspect generated metadata, and add an explicit application hint only where a real dynamic requirement remains undescribed. Register the narrowest capability that matches the behavior rather than whole packages. Blanket reflection can hide the actual contract, retain unnecessary members or resources, increase analysis and footprint, and leave no clear explanation of why the access is needed.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 4.RuntimeHints/RuntimeHints.md
+    anchor: inferred-vs-explicit-hints
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Compare reflection, resource, Java serialization, JDK proxy, and JNI Runtime Hints. Why is choosing the correct category part of explaining the runtime contract rather than just satisfying the compiler?"
+  answer: >-
+    Each category preserves a different capability. Reflection hints retain type or member metadata and allowed reflective operations; resource hints include classpath resources that code will open later; Java serialization hints retain types needed by Java serialization; JDK proxy hints describe interface combinations required for proxy creation; JNI hints preserve member access needed through JNI. These categories are not interchangeable. For example, converting an object to JSON does not automatically mean Java serialization metadata is required; binding libraries often need reflective construction instead. Choosing the smallest correct category documents what the runtime path actually does, keeps metadata reviewable, and avoids retaining unrelated behavior. A build that succeeds because of excessively broad metadata may still have a poorly understood and expensive native contract.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 4.RuntimeHints/RuntimeHints.md
+    anchor: reflection-resource-proxy-hints
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Who should own native reachability metadata when the dynamic behavior comes from Spring, a third-party library, or application-specific code, and why does that ownership matter over time?"
+  answer: >-
+    Metadata should live as close as practical to the component that owns the dynamic behavior. Spring and supported framework integrations should provide or infer hints for Spring contracts. A third-party library that performs its own reflection, resource discovery, or proxy creation should ideally ship native support or be covered by version-aware reachability metadata. Application code should contribute RuntimeHints for dynamic behavior the application itself creates. This placement matters because the owner understands when the behavior changes and can test the exact contract. An application-level workaround for a library may be necessary temporarily, but it can become stale, overly broad, or wrong after a dependency upgrade. Treat reachability metadata like code: version it, test it, and remove workarounds when upstream support makes them unnecessary.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 4.RuntimeHints/RuntimeHints.md
+    anchor: reachability-metadata
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "The same rarely used resource and reflective code paths work on the normal JVM, and the native executable starts correctly, but those paths fail natively to load the resource and find the constructor. Describe a disciplined diagnosis instead of adding broad metadata until the errors disappear."
+  answer: >-
+    The successful JVM, AOT, native compile, and native startup boundaries make a focused runtime reachability problem a strong hypothesis. Identify each exact dynamic operation first: which resource path is requested and which type/member is reflected on. Check whether Spring or the dependency already has a supported native path, inspect generated reachability metadata, and confirm that the failing target is represented. If application code owns the behavior, add the smallest matching resource or reflection hint and test that registration before rebuilding the focused scenario. A tracing agent can help discover accesses, but its output must be reviewed because broad test execution can record unrelated metadata. Changing multiple hint sets at once destroys the evidence that identifies which contract was actually missing.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 4.RuntimeHints/RuntimeHints.md
+    anchor: missing-hint-diagnosis
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Explain the supported build handoff from Spring AOT to GraalVM Native Image. Why is invoking native-image on an ordinary artifact without the required AOT assets not equivalent to Boot's native workflow?"
+  answer: >-
+    The supported flow prepares the Spring application first. AOT-generated Java source is compiled, generated bytecode is added to the inputs, and Runtime Hints/native metadata are placed where native-image tooling can consume them. GraalVM then performs reachability analysis and machine-code generation over that enriched application model. If an ordinary Boot artifact lacks those prepared assets, invoking native-image directly skips Spring's step for converting dynamic framework decisions into build-time evidence. The compiler cannot be expected to reconstruct Spring semantics that AOT was designed to materialize. Build tooling can package the flow differently, but the semantic order remains Spring AOT first and native compilation second. Reproducible configuration should encode that order rather than relying on manual generated files.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 5.BuildAndRun/BuildAndRun.md
+    anchor: aot-to-native-compile
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "What build assumption is hidden behind commands such as Maven -Pnative or Gradle nativeCompile, and why can copying those commands between projects fail even when both projects use Spring Boot?"
+  answer: >-
+    The command is only an entry point into configured build integration. For Maven, the documented native profile is supplied when the project inherits from spring-boot-starter-parent; a project that does not use that parent must configure equivalent Boot process-aot and GraalVM Native Build Tools executions itself. For Gradle, native tasks come from the GraalVM Native Build Tools plugin, and the Spring Boot plugin wires AOT processing into that native flow when the plugin is present. Therefore the real contract is the configured AOT-to-native task graph, not the spelling of a command. Copying a command without the parent/profile or native plugin can select a different lifecycle or no native integration at all. Diagnose the build model before treating a missing task or profile as an application compatibility failure.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 5.BuildAndRun/BuildAndRun.md
+    anchor: graalvm-native-build-tools
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Separate runtime form from packaging form when choosing between a native executable, a native OCI image, a JVM JAR, and a JVM OCI image. Which decision should be driven by deployment platform, and which by application economics?"
+  answer: >-
+    Native versus JVM is the runtime decision. It changes compilation model, startup and warm-up behavior, compatibility constraints, build cost, memory characteristics, and available diagnostics. Executable versus OCI image is primarily a delivery and packaging decision. A platform that requires containers can still run a native executable inside an OCI image, so containerization does not imply a JVM and it does not remove native closed-world constraints. Choose direct binary versus container according to the target platform and release contract. Choose native versus JVM according to measured startup, memory, throughput, build latency, dependency readiness, operational tooling, and maintenance cost. Keeping the axes separate prevents a team from adopting native solely because it wants containers or abandoning native solely because production requires OCI delivery.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 8.ReadinessSynthesis/ReadinessSynthesis.md
+    anchor: native-delivery-choice
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Why is a JVM-first test strategy compatible with serious native-image validation, and what distinct evidence do normal JVM tests, AOT-mode JVM execution, and native tests provide?"
+  answer: >-
+    Most business logic and ordinary Spring integration behavior can be validated much faster with mature JVM tooling, so compiling every test natively would spend large amounts of build time without proving additional native-sensitive behavior. AOT-mode JVM execution adds an intermediate check: it exercises Spring's generated initialization and prepared application model but does not reproduce GraalVM's full closed-world compiler/runtime. Selected native tests or smoke tests then prove that representative reflection, resources, proxies, dependency integrations, and startup paths survive actual native analysis and execution. These layers answer different questions and together localize failures. If the JVM test fails, fix ordinary behavior first; if AOT mode alone fails, inspect preparation; if only native fails, investigate closed-world/reachability or environment differences.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 6.NativeTesting/NativeTesting.md
+    anchor: jvm-first-test-strategy
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Why can native test AOT require work even when the main application context is already native-ready, and how should native-test cost influence CI coverage?"
+  answer: >-
+    Tests can create contexts and configuration that the production application never creates: test-specific beans, replacement dependencies, additional infrastructure, and different property sets. Spring therefore AOT-processes eligible test contexts separately, and a test context can expose unsupported runtime dynamism even when the main application AOT model is valid. Native tests are also substantially more expensive than ordinary JVM tests, so coverage should target native-sensitive integration paths and representative startup/use cases rather than duplicate every business test. Developers can run focused native checks while changing hints or dependencies, while CI can run a risk-based suite at pull-request, scheduled, or release stages. A fresh CI environment must still reproduce the result from declared inputs; caching should reduce cost, not become an undeclared correctness requirement.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: ""
+    anchor: ""
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "A third-party library works on the JVM but uses runtime scanning and has incomplete native support. How should a team choose between an application workaround, a dependency upgrade, an upstream fix, or staying on the JVM?"
+  answer: >-
+    Start by checking native support for the exact library version and whether the library or reachability-metadata ecosystem already describes its dynamic behavior. If a newer compatible version has proper support, upgrading usually gives a smaller long-term ownership burden. If the application must supply a workaround, keep it narrow, version-aware, and covered by a focused test that exercises the failing path. A large private hint set is ongoing maintenance debt because it may over-retain behavior and silently become stale when the library changes. Prefer an upstream fix when the library owns the dynamic contract. If the dependency is essential, support remains weak, and native runtime benefits are modest, staying on the JVM can be the better engineering choice rather than carrying fragile metadata indefinitely.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 7.CompatibilityTradeoffs/CompatibilityTradeoffs.md
+    anchor: dependency-native-readiness
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "Describe how the 'last successful boundary' method changes native-image troubleshooting. Classify failures at JVM startup, AOT processing, native compilation, and a single dynamic runtime path."
+  answer: >-
+    The method prevents every native problem from becoming a reflection-config guess. If ordinary JVM startup or tests fail, the first owner is normal application or configuration behavior because native processing has not yet added unique evidence. If JVM behavior works but AOT processing fails, inspect the prepared Spring model, unsupported registration patterns, conditions, and build-time inputs. If AOT succeeds but native compilation fails, investigate native build integration, unsupported constructs, toolchain, and reachability metadata. If the native executable compiles and starts but one dynamic path fails, focus on the exact reflection, resource, proxy, serialization, JNI, or dependency metadata used by that path. Preserving generated assets and build logs lets each successful boundary rule out earlier classes of failure and makes the next change testable.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 7.CompatibilityTradeoffs/CompatibilityTradeoffs.md
+    anchor: native-failure-classification
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "What would make you recommend a regular JVM deployment even after a team has successfully produced and tested a native executable?"
+  answer: >-
+    Successful compilation proves feasibility, not value. A long-running service that rarely scales may gain little from cold-start improvements and may benefit more from JVM JIT optimization, mature diagnostics, broad agent support, and faster build/test feedback. Native may also be unattractive when critical dependencies require fragile workarounds, each target platform needs expensive build capacity, or the runtime memory and startup gains are small under production-like measurement. Operational requirements can matter as much as raw performance: incident tooling, profiling, release frequency, and rollback paths all have cost. The JVM remains a first-class Boot deployment model. I would recommend it when measured native benefits do not pay for recurring build, compatibility, testing, and operations complexity, even if the native artifact technically works.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 7.CompatibilityTradeoffs/CompatibilityTradeoffs.md
+    anchor: when-not-native
+  apiRelated:
+    controller: ""
+    methodSignature: ""
+- question: "A team says its service is 'native-ready' because one native build completed successfully. What evidence would turn that one-time success into a maintainable production-readiness claim?"
+  answer: >-
+    Native readiness is a maintained evidence chain. The team should have a measurable runtime goal, a reproducible JDK/GraalVM/Boot toolchain, controlled build-time profiles and properties, understood dependency/version support, and reviewed reachability metadata for native-sensitive behavior. Generated AOT assets and build logs should be inspectable when behavior changes. Focused tests should exercise reflection, resources, proxies, binding, or other paths that could diverge under native execution, and CI must have a repeatable strategy for every supported OS/architecture. Production-like startup, memory, latency, and diagnostics should justify the runtime choice. Workarounds need tests and removal criteria when dependencies improve. A JVM fallback or rollback path may also be part of operational readiness. A build badge alone proves only that one set of inputs compiled once.
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: 8.ReadinessSynthesis/ReadinessSynthesis.md
+    anchor: native-evidence-loop
+  apiRelated:
+    controller: ""
+    methodSignature: ""

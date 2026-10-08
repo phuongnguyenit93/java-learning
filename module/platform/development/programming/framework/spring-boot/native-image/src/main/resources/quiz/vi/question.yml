@@ -38,4 +38,353 @@
 #       ID nội bộ của đáp án đúng. Frontend kiểm tra bằng identity này sau khi shuffle.
 # </quiz-schema>
 
-questions: []
+questions:
+  - id: native-image-quiz-01
+    question: "Vì sao Spring Boot native image không chỉ là một cách khác để launch cùng một JAR?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Purpose/NativeImage.md"
+      anchor: "native-image-purpose"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Nó ship ứng dụng dưới dạng bytecode cùng bundled JVM nhưng giữ nguyên cách Boot startup thông thường."
+        explanation: "Native executable được tạo qua AOT preparation và native compilation; nó không chỉ che một JVM launch thông thường."
+      - id: B
+        answer: "Nó precompute dependency version, còn Spring vẫn khám phá toàn bộ application model lúc native startup."
+        explanation: "Native preparation tập trung vào application model và reachability, không chỉ resolve dependency version sớm hơn."
+      - id: C
+        answer: "Nó compile application model đã được AOT chuẩn bị thành executable dành cho platform trước deployment."
+        explanation: "Đúng. Spring AOT chuẩn bị ứng dụng rồi GraalVM Native Image phân tích và compile trước runtime."
+      - id: D
+        answer: "Nó repackage executable JAR thành archive riêng cho platform nhưng vẫn chạy bằng java -jar."
+        explanation: "Native executable không phải JAR wrapper riêng cho platform; nó chạy mà không cần normal java -jar launch."
+    correctAnswerId: C
+
+  - id: native-image-quiz-02
+    question: "Một Boot application trên JVM có thể khám phá nhiều hành vi động lúc startup. Vì sao native-image support cần Spring AOT?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Purpose/NativeImage.md"
+      anchor: "native-image-problem"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Để biến runtime discovery mà closed-world analysis cần thành generated structure và reachability metadata lúc build."
+        explanation: "Đúng. AOT làm application model và các yêu cầu động của Spring trở nên nhìn thấy được trước native compilation."
+      - id: B
+        answer: "Để đóng băng mọi runtime property vào generated source nên application configuration không thể đổi sau build."
+        explanation: "Runtime value vẫn có thể tồn tại; ràng buộc chủ yếu nằm ở structural decision và dynamic capability của prepared model."
+      - id: C
+        answer: "Để trì hoãn component scanning tới native startup cho GraalVM kiểm tra deployment classpath cuối cùng."
+        explanation: "Mục tiêu là giảm open-ended runtime discovery chứ không trì hoãn scanning sang native startup."
+      - id: D
+        answer: "Để chuyển Boot auto-configuration condition thành GraalVM compiler switch được evaluate lúc startup."
+        explanation: "AOT evaluate/materialize quyết định Spring configuration; nó không định nghĩa lại semantics thành compiler flag."
+    correctAnswerId: A
+
+  - id: native-image-quiz-03
+    question: "Một profile được chọn lúc AOT processing làm Bean X tồn tại. Native executable có thể tự do đổi lúc runtime sang profile cần một bean graph hoàn toàn khác không?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.AOTPipeline/AOTPipeline.md"
+      anchor: "aot-condition-timing"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Có; runtime profile được evaluate độc lập với bean model đã chuẩn bị trong AOT processing."
+        explanation: "Structural decision đã capture trong AOT không thể được giả định sẽ dựng lại tùy ý một bean graph khác lúc runtime."
+      - id: B
+        answer: "Có, nếu hai profile dùng cùng application main class và cùng dependency set."
+        explanation: "Cùng main class không bảo đảm prepared BeanFactory hỗ trợ hai structural model khác nhau."
+      - id: C
+        answer: "Không; AOT đóng băng mọi runtime property, kể cả setting không làm thay đổi bean structure."
+        explanation: "Runtime value vẫn có thể thay đổi nếu không đòi hỏi structural change không được hỗ trợ trong prepared application model."
+      - id: D
+        answer: "Chỉ khi runtime profile vẫn tương thích với bean structure đã được chuẩn bị trong AOT processing."
+        explanation: "Đúng. Profile/property build-time ảnh hưởng bean presence là một phần của native build contract."
+    correctAnswerId: D
+
+  - id: native-image-quiz-04
+    question: "Phát biểu nào mô tả đúng nhất output do Spring AOT sinh ra?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.AOTPipeline/AOTPipeline.md"
+      anchor: "aot-generated-assets"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Chúng gồm generated initialization source và proxy bytecode, còn native metadata chỉ do GraalVM sinh ở stage sau."
+        explanation: "Spring AOT cũng có thể sinh Runtime Hints/native metadata để stage native-image phía sau sử dụng."
+      - id: B
+        answer: "Chúng có thể gồm initialization source, generated bytecode như proxy và Runtime Hints/native metadata."
+        explanation: "Đúng. Các output này làm prepared application model của Spring rõ ràng hơn cho compilation và native-image analysis."
+      - id: C
+        answer: "Chúng chỉ chứa native-image metadata; Spring bean registration vẫn được khám phá dynamic lúc runtime."
+        explanation: "AOT có thể sinh bean/context initialization và proxy asset ngoài native metadata."
+      - id: D
+        answer: "Chúng là diagnostic report để kiểm tra AOT decision chứ không phải input được compile vào application."
+        explanation: "Generated AOT asset là input thực cho compilation/native-image stage, đồng thời cũng hữu ích khi chẩn đoán."
+    correctAnswerId: B
+
+  - id: native-image-quiz-05
+    question: "Một library JAR được thêm vào máy deployment sau khi native executable đã build. Vì sao ứng dụng không nên kỳ vọng class mới từ JAR đó tự động khả dụng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.ClosedWorld/ClosedWorld.md"
+      anchor: "fixed-build-time-classpath"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Executable được build từ reachable model lúc build; JAR thêm sau đó nằm ngoài compiled world đó."
+        explanation: "Đúng. Build-time classpath là input của AOT/native analysis và góp phần tạo executable model."
+      - id: B
+        answer: "JAR có thể được load sau nếu class của nó khớp version đã được Spring Boot BOM quản lý."
+        explanation: "Dependency management không làm class post-build trở thành một phần của executable đã compile."
+      - id: C
+        answer: "JAR có thể được load sau nếu nó mang reflection metadata mô tả đầy đủ dynamic access của chính nó."
+        explanation: "Reachability metadata giữ dynamic access cho code có mặt lúc build; nó không thêm post-build code vào executable."
+      - id: D
+        answer: "JAR có thể được Boot Loader load nếu đặt cạnh native executable khi deployment."
+        explanation: "Native executable không được launch như executable Boot JAR thông thường qua Spring Boot Loader."
+    correctAnswerId: A
+
+  - id: native-image-quiz-06
+    question: "Native executable khởi động thành công nhưng một feature ít dùng dựa trên reflection chỉ lỗi khi được gọi. Giả thuyết đầu tiên mạnh nhất là gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.RuntimeHints/RuntimeHints.md"
+      anchor: "missing-hint-diagnosis"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Feature có thể cần thêm AOT bean registration thay vì bất kỳ reflection hoặc resource metadata nào."
+        explanation: "Lỗi cô lập ở reflective access liên quan trực tiếp hơn tới reachability metadata so với ordinary bean registration."
+      - id: B
+        answer: "Library có thể bị initialize sai build/runtime phase nên nên kiểm tra initialization policy trước."
+        explanation: "Initialization timing có thể quan trọng, nhưng reflection-only failure đã nêu trước hết chỉ tới dynamic-access metadata."
+      - id: C
+        answer: "Dynamic path có thể thiếu reflection/resource/proxy reachability metadata nên cần kiểm tra generated/custom hints."
+        explanation: "Đúng. Lỗi native-only cô lập ở dynamic access là tín hiệu mạnh để kiểm tra hints và dependency reachability metadata."
+      - id: D
+        answer: "Dependency có thể có native support yếu nên cần kiểm tra reachability metadata trước khi đổi rộng application config."
+        explanation: "Dependency readiness đáng kiểm tra, nhưng reflective path lỗi sau startup trước hết gợi ý dynamic-access metadata bị thiếu."
+    correctAnswerId: C
+
+  - id: native-image-quiz-07
+    question: "Khi nào application nên đóng góp Runtime Hint explicit thay vì giả định Spring AOT sẽ tự infer mọi thứ?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.RuntimeHints/RuntimeHints.md"
+      anchor: "inferred-vs-explicit-hints"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Khi type đi vào qua starter vì starter-managed class cần application-owned hint."
+        explanation: "Statically reachable code không cần blanket hint chỉ vì nó nằm trên classpath."
+      - id: B
+        answer: "Khi dynamic access không được infer đáng tin cậy và chưa có metadata phù hợp mô tả requirement đó."
+        explanation: "Đúng. Explicit hint mô tả requirement động như reflection, resource, serialization hoặc proxy khi inference chưa đủ."
+      - id: C
+        answer: "Khi AOT thành công nhưng team muốn giữ mọi reflective access chủ động dù chưa có dynamic path cụ thể."
+        explanation: "Hint nên mô tả dynamic requirement thực tế thay vì giữ broad reflective access khi chưa có evidence."
+      - id: D
+        answer: "Khi third-party library đã ship metadata đầy đủ để application duplicate lại metadata đó cục bộ."
+        explanation: "Metadata đầy đủ từ library loại bỏ nhu cầu duplicate cùng requirement trong application-owned hint."
+    correctAnswerId: B
+
+  - id: native-image-quiz-08
+    question: "Quan hệ giữa Spring AOT và GraalVM native compilation trong workflow Boot được hỗ trợ là gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.BuildAndRun/BuildAndRun.md"
+      anchor: "aot-to-native-compile"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "GraalVM phân tích trước và sinh bean registration để Spring AOT package lại ở stage sau."
+        explanation: "Thứ tự ngược lại: Spring AOT chuẩn bị application asset rồi native-image mới analysis/compile."
+      - id: B
+        answer: "Đây là hai pipeline thay thế nhau; Spring AOT đã đủ khi Boot plugin cung cấp native toolchain."
+        explanation: "AOT preparation và native compilation là hai stage bổ sung cho nhau để tạo native executable."
+      - id: C
+        answer: "Spring AOT compile machine code, còn GraalVM chỉ link runtime library và package executable."
+        explanation: "GraalVM Native Image thực hiện native reachability analysis và native code generation."
+      - id: D
+        answer: "Spring AOT chuẩn bị application code/metadata, rồi GraalVM thực hiện native reachability analysis và compilation."
+        explanation: "Đúng. Mỗi stage sở hữu một phần riêng của build handoff."
+    correctAnswerId: D
+
+  - id: native-image-quiz-09
+    question: "Một team muốn lợi ích runtime của native nhưng platform deployment chỉ nhận OCI image. Kết luận nào đúng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.BuildAndRun/BuildAndRun.md"
+      anchor: "native-buildpack-image"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Dùng native Buildpacks path của Boot để đặt native executable bên trong OCI image."
+        explanation: "Đúng. Native runtime form có thể kết hợp với container packaging form."
+      - id: B
+        answer: "Dùng JVM image vì OCI packaging yêu cầu application process phải dựa trên JVM."
+        explanation: "OCI image có thể chứa và launch native executable mà không dùng JVM runtime."
+      - id: C
+        answer: "Đặt cả JVM JAR và native executable trong image để Buildpacks chọn lúc container startup."
+        explanation: "Native image không yêu cầu JVM JAR làm runtime application process."
+      - id: D
+        answer: "Dùng WAR trong OCI image vì servlet-container packaging là portable native container form của Boot."
+        explanation: "WAR packaging phục vụ servlet-container deployment và không phải native executable semantics."
+    correctAnswerId: A
+
+  - id: native-image-quiz-10
+    question: "Normal JVM test đã pass. Trước khi tốn chi phí full native compile, chạy AOT-processed application trên JVM cho biết điều gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.NativeTesting/NativeTesting.md"
+      anchor: "aot-jvm-validation"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Nó validate closed-world reachability đủ sát để native test phía sau hầu như không bổ sung signal."
+        explanation: "AOT-mode JVM execution không tái tạo đầy đủ native compiler/runtime model."
+      - id: B
+        answer: "Nó kiểm tra generated AOT initialization/assets của Spring có biểu diễn và khởi động application trước native compilation hay không."
+        explanation: "Đúng. Lỗi ở đây chỉ về boundary sớm hơn native compilation và giúp chẩn đoán nhanh hơn."
+      - id: C
+        answer: "Nó ước lượng native startup behavior vì AOT JVM mode chạy cùng machine code được sinh cho native image."
+        explanation: "AOT-processed JVM mode vẫn chạy trên JVM và không phải native performance benchmark."
+      - id: D
+        answer: "Nó validate build-plugin wiring trong khi application vẫn startup bằng normal non-AOT context model."
+        explanation: "Application thực sự được chạy với AOT mode nên generated initialization có thể được exercise."
+    correctAnswerId: B
+
+  - id: native-image-quiz-11
+    question: "Vì sao JVM-first test strategy thường hợp lý ngay cả với service sẽ deploy bằng native image?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.NativeTesting/NativeTesting.md"
+      anchor: "jvm-first-test-strategy"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "JVM test cho feedback rộng và nhanh, còn AOT/native test có chọn lọc tập trung vào risk có thể khác dưới closed-world execution."
+        explanation: "Đúng. Native verification có giá trị nhưng đắt nên nên tập trung vào native-sensitive risk."
+      - id: B
+        answer: "Spring ApplicationContext test phải ở JVM vì native test execution chỉ hỗ trợ plain JUnit test."
+        explanation: "Spring test context có thể được AOT-process và chạy qua native test workflow được hỗ trợ."
+      - id: C
+        answer: "JVM test sinh missing hint khi chạy nên native test chủ yếu xác nhận generated hint set đã được lưu."
+        explanation: "Ordinary JVM test không chứng minh dynamic behavior có đủ native reachability metadata."
+      - id: D
+        answer: "Native test nên đợi release build vì test ApplicationContext không thể được AOT-process trong CI bình thường."
+        explanation: "Tooling được hỗ trợ có thể AOT-process test context phù hợp và chạy native test trước deployment, kể cả trong CI."
+    correctAnswerId: A
+
+  - id: native-image-quiz-12
+    question: "Ứng dụng đã native-ready ngoại trừ một third-party library dùng runtime scanning không được mô tả. Bước tiếp theo tốt nhất là gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.CompatibilityTradeoffs/CompatibilityTradeoffs.md"
+      anchor: "dependency-native-readiness"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Thêm broad reflection metadata cho package của library trước vì runtime-scanning failure thường do thiếu type retention."
+        explanation: "Workaround quá rộng có thể che contract thật và giữ lại behavior không cần thiết."
+      - id: B
+        answer: "Pin hoặc thay library ngay vì native support phụ thuộc version và application metadata không nên bù cho nó."
+        explanation: "Đổi version có thể hữu ích, nhưng trước hết cần kiểm tra support/metadata thực tế trước khi kết luận phải thay library."
+      - id: C
+        answer: "Kiểm tra native support và metadata của đúng library/version trước, rồi chỉ thêm workaround tập trung có test nếu cần."
+        explanation: "Đúng. Native readiness phụ thuộc dependency/version và metadata nên ở gần dynamic behavior mà nó mô tả."
+      - id: D
+        answer: "Đăng ký custom RuntimeHintsRegistrar ngay trước khi kiểm tra upstream metadata có sẵn cho behavior đó."
+        explanation: "Application-owned hint chỉ phù hợp khi supported library metadata chưa bao phủ requirement cần thiết."
+    correctAnswerId: C
+
+  - id: native-image-quiz-13
+    question: "Một long-running service hiếm khi scale, hưởng lợi từ JVM JIT và phụ thuộc library có native support yếu. Delivery choice nào hợp lý nhất?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.CompatibilityTradeoffs/CompatibilityTradeoffs.md"
+      anchor: "when-not-native"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Chọn native vì startup/memory gain nên vượt JIT benefit khi application đã native-capable."
+        explanation: "Native image là một trade-off chứ không phải modernization step bắt buộc."
+      - id: B
+        answer: "Chọn native OCI image vì container packaging cô lập weak native support khỏi application runtime."
+        explanation: "Đưa native executable vào container không xóa closed-world hay dependency compatibility constraint."
+      - id: C
+        answer: "Hai runtime form gần tương đương vì long-running service hội tụ về runtime economics giống nhau sau warm-up."
+        explanation: "Chính runtime/build economics phải dẫn dắt lựa chọn."
+      - id: D
+        answer: "Dùng JVM trừ khi native gain đo được đủ lớn để bù build và compatibility cost tăng thêm."
+        explanation: "Đúng. Workload mô tả phù hợp với compatibility, JIT và build/test feedback nhanh của JVM."
+    correctAnswerId: D
+
+  - id: native-image-quiz-14
+    question: "JVM startup hoạt động, AOT processing và native compilation thành công, executable khởi động được, nhưng một classpath resource-loading path chỉ lỗi khi chạy native. Boundary nào nên điều tra trước?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.ReadinessSynthesis/ReadinessSynthesis.md"
+      anchor: "native-failure-location"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Generated AOT bean model, vì resource consumer có thể đã bị loại khỏi generated initialization."
+        explanation: "Failing path đã chạy sau startup thành công nên suspect đầu tiên là native resource reachability chứ không phải basic bean inclusion."
+      - id: B
+        answer: "Native resource/reachability metadata cùng dependency hoặc code path đang load resource đó."
+        explanation: "Đúng. Các boundary đã thành công chỉ tới native-runtime path có thể thiếu resource/reachability evidence."
+      - id: C
+        answer: "Executable-JAR layout ban đầu, vì native resource lookup vẫn phụ thuộc BOOT-INF/lib class-loading semantics."
+        explanation: "Native executable không dựa vào BOOT-INF class-loading model của Boot Loader cho runtime resource reachability."
+      - id: D
+        answer: "OS filesystem layout, vì classpath resource trở thành direct relative-file lookup trong native executable."
+        explanation: "Classpath resource không tự biến thành relative filesystem path; cần kiểm tra native resource inclusion/reachability trước."
+    correctAnswerId: B
