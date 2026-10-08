@@ -14,3 +14,29 @@
 #
 # Add only curated references that are useful for the module.
 # The build system must not overwrite this file after authored content exists.
+
+references:
+  - title: "What is a workspace? — Bitbucket Cloud"
+    url: "https://support.atlassian.com/bitbucket-cloud/docs/what-is-a-workspace/"
+    description: "Atlassian's overview of the Bitbucket Cloud workspace and its relationship to repositories and administration."
+  - title: "Configure project permissions for users and groups"
+    url: "https://support.atlassian.com/bitbucket-cloud/docs/configure-project-permissions-for-users-and-groups/"
+    description: "Official guide to project-level access and how permissions apply to repositories."
+  - title: "Create a pull request for review"
+    url: "https://support.atlassian.com/bitbucket-cloud/docs/create-a-pull-request-for-review/"
+    description: "Official explanation of pull request source, destination, description, and reviewer roles."
+  - title: "Review code in a pull request"
+    url: "https://support.atlassian.com/bitbucket-cloud/docs/review-code-in-a-pull-request/"
+    description: "Official reference for review discussions, feedback tasks, and approval decisions."
+  - title: "Configure a project's branch restrictions"
+    url: "https://support.atlassian.com/bitbucket-cloud/docs/configure-a-projects-branch-restrictions/"
+    description: "Atlassian documentation for branch permissions, project-wide restrictions, and merge-check enforcement."
+  - title: "Suggest or require checks before a merge"
+    url: "https://support.atlassian.com/bitbucket-cloud/docs/suggest-or-require-checks-before-a-merge/"
+    description: "Official plan-specific distinction between advisory merge warnings and Premium-enforced blocking of unresolved merge checks."
+  - title: "Integrate Bitbucket and Jira"
+    url: "https://support.atlassian.com/bitbucket-cloud/docs/use-bitbucket-cloud-and-jira-together/"
+    description: "Official overview of connecting source changes and pull requests to Jira work items."
+  - title: "Announcing sunset of Bitbucket Issues and Wikis"
+    url: "https://community.atlassian.com/forums/Bitbucket-articles/Announcing-sunset-of-Bitbucket-Issues-and-Wikis/ba-p/3193882"
+    description: "Atlassian's 2026 update confirming retirement of Bitbucket Cloud's native issue tracker and wiki."

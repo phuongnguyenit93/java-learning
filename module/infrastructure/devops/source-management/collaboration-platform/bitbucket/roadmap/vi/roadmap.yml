@@ -41,4 +41,75 @@
 # Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: bitbucket-collaboration-model
+    relatedKnowledge:
+      - 01_BitbucketCollaborationFoundations
+    title: "Bitbucket Cloud trong quy trình cộng tác mã nguồn"
+    purpose: "Hiểu vai trò của Bitbucket Cloud trong việc tổ chức kho Git và phối hợp thay đổi mã nguồn giữa các thành viên."
+    objectives:
+      - "Phân biệt việc quản lý lịch sử bằng Git với các chức năng lưu trữ, xem xét và quản trị mã nguồn trên Bitbucket Cloud."
+      - "Giải thích mối quan hệ giữa workspace, project và repository, cũng như lý do nhóm cần các cấp tổ chức này."
+      - "Nhận diện vai trò của kho mã được chia sẻ, thành viên và người quản trị trong một dự án trên Bitbucket Cloud."
+
+  - id: access-and-repository-governance
+    relatedKnowledge:
+      - 02_AccessAndRepositoryGovernance
+    title: "Phân quyền và quản trị phạm vi truy cập"
+    purpose: "Biết cách Bitbucket Cloud giới hạn khả năng xem, đóng góp và quản trị mã nguồn theo phạm vi làm việc của nhóm."
+    objectives:
+      - "Phân biệt quyền ở cấp workspace, project và repository cùng vai trò của người dùng và nhóm người dùng."
+      - "Giải thích tác động của quyền được cấp ở project tới các repository bên trong và khi nào cần quyền riêng cho repository."
+      - "Nhận ra rủi ro khi cấp quyền rộng, nhầm quyền xem với quyền sửa hoặc không xác định rõ người chịu trách nhiệm quản trị."
+
+  - id: pull-request-change-proposal
+    relatedKnowledge:
+      - 03_PullRequestChangeProposals
+    title: "Pull request và hành trình đề xuất thay đổi"
+    purpose: "Hiểu pull request là nơi trình bày, trao đổi và đề nghị đưa thay đổi vào nhánh đích của kho mã trên Bitbucket Cloud."
+    objectives:
+      - "Xác định nguồn thay đổi, đích tiếp nhận và nội dung so sánh trong một pull request."
+      - "Giải thích vai trò của tiêu đề, mô tả, người được yêu cầu xem xét và ngữ cảnh thay đổi đối với chất lượng cộng tác."
+      - "Phân biệt việc gửi thay đổi lên kho với việc nhóm thực sự xem xét và chấp nhận thay đổi đó."
+
+  - id: pull-request-review-and-feedback
+    relatedKnowledge:
+      - 04_PullRequestReviewsAndTasks
+    title: "Đánh giá mã nguồn và xử lý phản hồi"
+    purpose: "Hiểu cách nhóm sử dụng chức năng đánh giá pull request để thảo luận, yêu cầu chỉnh sửa và ghi nhận quyết định."
+    objectives:
+      - "Mô tả việc đọc phần khác biệt, bình luận theo tệp hoặc dòng mã và trao đổi giữa tác giả với người đánh giá."
+      - "Phân biệt ý kiến góp ý, tác vụ cần xử lý, yêu cầu thay đổi và trạng thái chấp thuận trong quá trình đánh giá."
+      - "Giải thích vì sao cần xem lại những thay đổi mới sau phản hồi trước khi chấp nhận pull request."
+
+  - id: branch-restrictions-and-merge-checks
+    relatedKnowledge:
+      - 05_BranchRestrictionsAndMergeChecks
+    title: "Bảo vệ nhánh và điều kiện tiếp nhận thay đổi"
+    purpose: "Nhận biết cách Bitbucket Cloud áp dụng giới hạn truy cập và điều kiện hợp nhất để bảo vệ các nhánh quan trọng."
+    objectives:
+      - "Phân biệt branch restrictions kiểm soát quyền ghi hoặc hợp nhất với merge checks đánh giá các điều kiện trước khi hợp nhất."
+      - "Hiểu cách phạm vi repository, project và mẫu tên nhánh ảnh hưởng tới việc áp dụng quy tắc."
+      - "Phân biệt merge check chỉ cảnh báo nhưng vẫn cho phép hợp nhất ở gói không phải Premium với khả năng chặn hợp nhất khi còn điều kiện chưa đạt được bật trên gói Premium."
+      - "Nhận ra rủi ro của quy tắc chồng lấn hoặc kỳ vọng rằng mọi cảnh báo merge check đều tự động ngăn hợp nhất."
+
+  - id: linked-work-items-and-collaboration
+    relatedKnowledge:
+      - 06_JiraConfluenceAndCollaboration
+    title: "Liên kết công việc và trao đổi trong nhóm"
+    purpose: "Kết nối thảo luận mã nguồn với bối cảnh yêu cầu hoặc lỗi cần xử lý thông qua các chức năng cộng tác hiện hành của Bitbucket Cloud."
+    objectives:
+      - "Giải thích cách liên kết pull request và các thay đổi với Jira work items để người đánh giá hiểu mục đích công việc."
+      - "Sử dụng ở mức khái niệm bình luận, nhắc tên thành viên, thông báo và tác vụ trong pull request để theo dõi phản hồi."
+      - "Biết rằng Issues và Wiki tích hợp của Bitbucket Cloud đã bị gỡ khỏi giao diện và API từ ngày 20/08/2026; dùng Jira hoặc công cụ khác cho công việc và Confluence hoặc tài liệu riêng cho wiki."
+
+  - id: governed-bitbucket-team-flow
+    relatedKnowledge:
+      - 07_GovernedBitbucketTeamWorkflow
+      - 05_BranchRestrictionsAndMergeChecks
+    title: "Quy trình cộng tác Bitbucket và ranh giới với các hệ thống khác"
+    purpose: "Tổng hợp mô hình kho mã, phân quyền, pull request và quy tắc kiểm soát thành một hành trình đóng góp có thể kiểm tra trong nhóm."
+    objectives:
+      - "Trình bày quy trình từ truy cập repository, chuẩn bị đề xuất, đánh giá, xử lý điều kiện kiểm soát đến đưa thay đổi được chấp thuận vào nguồn chung."
+      - "Nhận diện nơi cần xem quyền, trạng thái đánh giá, tác vụ còn mở và điều kiện hợp nhất khi một pull request bị đình lại."
+      - "Phân biệt chức năng cộng tác của Bitbucket Cloud với thao tác Git, quyết định chiến lược nhánh của nhóm và việc xây dựng pipeline trong Bitbucket Pipelines."

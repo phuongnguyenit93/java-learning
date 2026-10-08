@@ -1,0 +1,163 @@
+01_BitbucketCollaborationFoundations.md:
+  bitbucket-cloud-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  why-hosted-source-collaboration:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  git-versus-bitbucket-cloud:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  workspace-project-repository-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  shared-source-members-and-administrators:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  pull-request-foundation:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  bitbucket-contribution-overview:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+02_AccessAndRepositoryGovernance.md:
+  bitbucket-permission-scopes:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  users-groups-and-administrators:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  workspace-admin-environments:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  project-permission-inheritance:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  read-write-admin-and-visibility:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  access-governance-failure-modes:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+03_PullRequestChangeProposals.md:
+  what-is-bitbucket-pull-request:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  source-destination-and-diff:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  review-context-description-and-reviewers:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  shared-versus-accepted-changes:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+04_PullRequestReviewsAndTasks.md:
+  review-purpose-and-participants:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  diff-comments-and-discussions:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  feedback-versus-review-tasks:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  review-status-versus-merge-eligibility:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  revisions-and-re-review:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+05_BranchRestrictionsAndMergeChecks.md:
+  why-protect-important-branches:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  branch-write-versus-merge-permissions:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  project-repository-and-branch-pattern-rules:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  merge-check-concepts-and-examples:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  advisory-versus-premium-blocking:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  merge-check-plan-scenario:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  overlapping-restrictions-and-diagnostics:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+06_JiraConfluenceAndCollaboration.md:
+  jira-work-item-context:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  linking-source-changes-to-jira:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  mentions-notifications-and-review-tasks:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  bitbucket-native-issues-wiki-retirement:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  confluence-and-external-documentation:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+07_GovernedBitbucketTeamWorkflow.md:
+  end-to-end-contribution-flow:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  review-tasks-and-policy-readiness:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  diagnosing-a-stalled-pull-request:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  evidence-of-accepted-source-change:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  handoff-to-git-strategy-and-pipelines:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
