@@ -41,4 +41,83 @@
 # The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: github-collaboration-model
+    relatedKnowledge:
+      - "01-github-foundations"
+    title: "GitHub in the Software Collaboration Workflow"
+    purpose: "Understand why development teams need a Git-backed hosting and collaboration platform."
+    objectives:
+      - "Distinguish the version history and operations managed by Git from the hosting, discussion, and change-governance capabilities supplied by GitHub."
+      - "Explain how repositories, contributors, pull requests, reviewers, and acceptance rules fit together."
+      - "Recognize the boundary between GitHub collaboration, Git mechanics, branching strategy, and CI/CD implementation."
+
+  - id: github-repository-hosting
+    relatedKnowledge:
+      - "02-repository-hosting"
+    title: "GitHub Repository Hosting and Visibility"
+    purpose: "Understand how repository ownership, sharing, and visibility shape collaboration for individuals and teams."
+    objectives:
+      - "Distinguish personal and organization-owned repositories and the responsibilities of owners and collaborators."
+      - "Explain the effects of public, private, and internal visibility when the relevant plan supports it."
+      - "Identify repository-level settings and information that affect discovery, access, and contribution on GitHub."
+
+  - id: github-contribution-paths
+    relatedKnowledge:
+      - "03-contribution-paths"
+    title: "Contributing Through Shared Repositories and Forks"
+    purpose: "Understand the contribution paths GitHub offers for proposing changes to a maintained repository."
+    objectives:
+      - "Compare contributions from branches in a shared repository with contributions from a fork back to its upstream repository."
+      - "Distinguish a fork as a separate GitHub repository from a branch within one repository."
+      - "Identify pull request source and target repositories/branches and when a draft pull request is useful before requesting review."
+
+  - id: github-pull-request-review
+    relatedKnowledge:
+      - "04-pull-request-reviews"
+    title: "Discussing, Reviewing, and Completing Pull Requests"
+    purpose: "Learn how teams assess a proposed change and reach review decisions on GitHub."
+    objectives:
+      - "Interpret pull request descriptions, diffs, comments, reviewers, and check statuses as the context for a change."
+      - "Distinguish comments, approvals, and requests for changes; respond to feedback, update a proposal, and request another review."
+      - "Explain how review requests, review teams, and CODEOWNERS route pull requests; distinguish automatic review requests from mandatory code-owner approval configured through branch protection."
+
+  - id: github-access-and-teams
+    relatedKnowledge:
+      - "05-repository-access"
+    title: "Repository Permissions and Organization Teams"
+    purpose: "Understand how teams delegate repository access while keeping responsibilities and permissions clear."
+    objectives:
+      - "Differentiate Read, Triage, Write, Maintain, and Admin roles according to the work each role needs to perform."
+      - "Explain how organizations, teams, and outside collaborators receive access to repositories."
+      - "Recognize missing or excessive permissions when inviting contributors, assigning reviews, or managing repositories."
+
+  - id: github-repository-protection
+    relatedKnowledge:
+      - "06-branch-protection"
+    title: "Branch Protection and Merge Requirements"
+    purpose: "Understand how GitHub enforces conditions for accepting changes into protected branches."
+    objectives:
+      - "Distinguish the single matching branch protection rule from multiple rulesets that can apply together, including their scope and plan-dependent availability."
+      - "Relate pull request requirements, review approvals, and status checks to whether a change may be merged."
+      - "Identify common blockers such as missing approvals, failing checks, direct-push restrictions, and rule-bypass permissions."
+
+  - id: github-issues-and-releases
+    relatedKnowledge:
+      - "07-issues-and-releases"
+    title: "Tracking Work and Publishing Releases on GitHub"
+    purpose: "Connect discussions about work to proposed code changes and repository-level release information."
+    objectives:
+      - "Use GitHub Issues to reason about bugs, requests, assignees, labels, and milestones, and connect work to pull requests."
+      - "Distinguish a Git tag from a GitHub Release with release notes and downloadable assets."
+      - "Recognize where GitHub Issues and Releases hand off to broader project methodology, versioning, build, and deployment processes."
+
+  - id: github-team-workflow
+    relatedKnowledge:
+      - "08-team-workflow"
+    title: "Putting the GitHub Team Workflow Together"
+    purpose: "Combine hosting, contributions, reviews, permissions, and repository rules to manage a team change end to end."
+    objectives:
+      - "Trace a change from an Issue through a fork or shared repository, pull request review, and a merge that satisfies repository requirements."
+      - "Diagnose whether access, review requirements, or repository rules block a change and identify the relevant GitHub collaboration surface."
+      - "Connect an accepted change to Release information and recognize when deeper Git, branching-strategy, or CI/CD knowledge is needed."

@@ -1,0 +1,440 @@
+# <interview-schema>
+# Cấu trúc câu hỏi Interview
+# schema-version: 2
+#
+# questions [kiểu: list; bắt buộc; mặc định: []]
+#   Danh sách câu hỏi Interview của module trong language hiện tại.
+#   mỗi phần tử:
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi phỏng vấn hiển thị cho người học.
+#     answer [kiểu: string; bắt buộc; mặc định: ""]
+#       Câu trả lời tham khảo, chỉ hiển thị khi người học chủ động mở.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu nội dung được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu nội dung đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+# </interview-schema>
+
+questions:
+  - question: "Giải thích GitHub bổ sung trách nhiệm nào trên Git và vì sao có commit không đủ chứng minh nhóm đã chấp nhận sửa lỗi."
+    answer: "Git ghi cây đối tượng, commit, nhánh và quan hệ merge; các thao tác đó có thể chạy hoàn toàn local. GitHub lưu repository và thêm pull request, quyền truy cập, thảo luận, phiếu review cùng trạng thái check. Một commit chứng minh nội dung mã tại một revision, nhưng không trả lời ai đã đánh giá hay rule nào được thỏa. Khi kiểm toán, nối SHA nguồn với PR, review, quy tắc trên base và lịch sử target. Không suy diễn đã triển khai chỉ vì PR được merge."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-github-foundations.md"
+      anchor: "github-as-hosting-platform"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Một sửa lỗi làm tròn có unit test xanh nhưng không có dấu vết review; bạn đánh giá rủi ro và thiết kế lại luồng chấp nhận như thế nào?"
+    answer: "Test xanh chỉ chứng minh bộ ca kiểm thử đã cấu hình chạy đạt; có thể thiếu các số tiền biên hoặc quy tắc nghiệp vụ. Yêu cầu PR mô tả expected/observed, diff, kiểm chứng và người có chuyên môn thuế. Reviewer đối chiếu ca tiền lẻ, để lại câu hỏi theo dòng, xác nhận lại sau commit sửa. Nhánh đích có thể yêu cầu review và check. Lưu phiếu review và record Merged để giải thích quyết định, đồng thời theo dõi release/deployment riêng."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-github-foundations.md"
+      anchor: "unmanaged-change-collaboration-risks"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Khi phỏng vấn, bạn phân biệt merge Git local với approve PR GitHub bằng ví dụ và cách kiểm chứng ra sao?"
+    answer: "Tôi có thể tạo hai nhánh ở local, commit và chạy git merge khi offline; đối tượng kết quả là lịch sử Git, có thể không tồn tại PR. Approve là sự kiện đánh giá gắn với pull request trên GitHub, có reviewer, nội dung được xét và có thể bị dismiss khi mã đổi theo rule. Kiểm chứng Git bằng SHA và graph; kiểm chứng approve bằng review timeline của PR. Merge local không tự đáp ứng branch protection hay chứng minh một người khác đã chấp thuận."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-github-foundations.md"
+      anchor: "git-versus-github"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "PR thêm tệp mới nhưng bạn không thấy trên main. Trình bày cách dùng head/base để kiểm tra đề xuất và rủi ro chọn nhầm đích."
+    answer: "Head là nhánh/repository mang thay đổi được đề xuất; base là nhánh/repository dự kiến nhận. Trước merge, tab Code ở main không nhất thiết chứa tệp chỉ có tại head. Tôi kiểm tra cả tên repository và branch của mỗi đầu, xem Files changed, revision mới nhất, rồi đối chiếu base hiện hành. PR từ fork càng cần nhận diện repo vì hai bên có thể cùng tên nhánh. Đổi base thay đổi phép so sánh và có thể thay người review/rules cần đạt."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-github-foundations.md"
+      anchor: "repository-and-history"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Hai repository có tên giống nhau ở account cá nhân và organization. Ownership ảnh hưởng gì tới quyền và quy trình cộng tác?"
+    answer: "Namespace của owner quyết định nơi repository được quản trị. Repo cá nhân thường gắn với chủ tài khoản và những collaborator được mời; repo organization có thể dùng team, role, quy tắc organization và ruleset cấp cao. Không suy ra quyền từ tên repo, người commit cuối hay người tạo PR. Khi chuyển repo sang organization, kiểm lại effective access, team grants, policy, tích hợp và URL/remote có liên quan; lịch sử SHA Git không tự bị viết lại vì đổi owner."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-github-foundations.md"
+      anchor: "accounts-organizations-and-repository-context"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Một người được gọi là contributor hoặc reviewer nhưng yêu cầu sửa Settings. Bạn sẽ giải thích nguyên tắc phân quyền nào?"
+    answer: "Contributor hay requested reviewer mô tả sự tham gia, không tương đương role quản trị. Trong organization có Read, Triage, Write, Maintain, Admin và hạn chế bổ sung. Quyền push branch, request review, đổi branch protection hay quản lý repository là các thao tác khác nhau. Tôi lấy identity và operation cụ thể, xem effective role và rules của phạm vi tương ứng, rồi cấp quyền tối thiểu. Không nâng Admin chỉ vì một người từng review hoặc viết commit."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-github-foundations.md"
+      anchor: "participants-and-contribution"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Vì sao mở PR không đồng nghĩa merge, và bạn sẽ mô tả vòng đời proposal cho một người mới như thế nào?"
+    answer: "Tạo PR chỉ đưa ra đề xuất head sang base và cho phép thảo luận diff. PR có thể ở Draft, Ready/Open, được yêu cầu sửa, có checks Pending/Failed, rồi Merged hoặc Closed without merge. Reviewer được mời chưa đồng nghĩa Approve; approvals cũng chưa đủ khi target có check hoặc hạn chế quyền riêng. Tôi kiểm PR timeline và lịch sử base để khẳng định đã tích hợp, không dùng việc mở PR hay push source làm bằng chứng nhận mã."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-github-foundations.md"
+      anchor: "pull-request-basics"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Giải thích head/base cho PR từ fork và hậu quả nếu người review chỉ nhìn tên branch."
+    answer: "Khi PR từ fork, head là nhánh trong repository fork, base là nhánh trong upstream. Cùng tên main ở hai repo có thể trỏ đến SHA và code khác nhau. Tôi xem cặp owner/repo/branch của cả head lẫn base, diff hiện hành, chính sách repository đích và quyền reviewer. Nếu bỏ qua repo, nhóm có thể approve sai nguồn hoặc nhầm đích; quyền ghi tại fork không cấp quyền merge vào upstream. Mọi giới hạn bảo vệ vẫn áp dụng trên base thực tế."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-github-foundations.md"
+      anchor: "github-collaboration-map"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Khi chuyển repository cá nhân sang organization, bạn thiết kế việc rà soát quyền và chính sách thế nào mà không chạm lịch sử Git?"
+    answer: "Đầu tiên xác nhận owner mới và danh sách collaborator/team, vì namespace mới có hệ thống quyền và chính sách organization khác. So sánh người nào giữ Read/Write/Admin, các rulesets áp dụng, CODEOWNERS/team review, webhook/integration và remotes. Việc chuyển chủ thể không mặc nhiên thay commit graph hay default branch, nên không cần rewrite SHA. Một reviewer bên ngoài có thể tiếp tục là outside collaborator được cấp trên repo thay vì biến thành thành viên organization. Tài liệu hóa những thay đổi thực tế và kiểm chứng một PR an toàn."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02-repository-hosting.md"
+      anchor: "personal-vs-organization-repos"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "GitHub Enterprise Cloud có Internal visibility. Vì sao không thể coi đây là Public hoặc chỉ thành viên organization chủ sở hữu được đọc?"
+    answer: "Internal được thiết kế cho phạm vi thành viên enterprise; repository không mở cho mọi người trên Internet nhưng có thể được xem bởi thành viên của các organization khác trong cùng enterprise theo chính sách áp dụng. Outside collaborator nằm ngoài enterprise không tự nhận quyền chỉ vì được mời vào một organization. Public mở cho người dùng Internet, Private phụ thuộc cấp quyền hẹp hơn. Khi thiết kế kho chứa dữ liệu nhạy cảm, rà lại effective audience và chính sách của enterprise trước khi chọn Internal; đừng dùng Internal thay cơ chế chia nhóm bí mật."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02-repository-hosting.md"
+      anchor: "repository-visibility-and-plans"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Việc đổi default branch từ main sang stable tác động gì tới điều hướng và PR, còn điều gì không tự đổi?"
+    answer: "Default branch ảnh hưởng branch hiển thị trên Code tab và base thường được gợi ý khi mở PR mới; một số automation và README links có thể giả định nhánh mặc định. Tôi kiểm tra PR đang mở, rules trên stable, code owner từ base và integration references. Đổi setting không tự chứng minh deployment, không biến review request thành Approve và không cấp Admin cho người sửa stable. Cần thông báo nhóm về target mới và kiểm tra automation theo revision thực."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02-repository-hosting.md"
+      anchor: "repository-settings-and-default-branch"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Repository Public cho ai cũng đọc được: tại sao một người lạ vẫn không thể push main, và nên đóng góp bằng cách nào?"
+    answer: "Visibility trả lời ai được xem hoặc clone mã, còn Write và branch protection trả lời ai được cập nhật ref. Người không có quyền push có thể fork public repository, tạo nhánh trong fork và mở PR đến upstream; owner đánh giá theo rules trên base. Ngay người có Write cũng có thể bị cấm push trực tiếp main bởi yêu cầu PR. Tôi tách kiểm tra visibility, membership, effective role và ruleset thay vì suy diễn từ khả năng đọc mã."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02-repository-hosting.md"
+      anchor: "repository-access-and-discovery"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Một developer có Write trên repository nhưng main được bảo vệ. Hãy trình bày workflow tối thiểu giữ quyền và review."
+    answer: "Developer tạo feature branch mình được ghi, commit thay đổi có phạm vi rõ, push branch và mở PR đến main. Reviewer xem diff và tests, required checks chạy, sau đó người có quyền merge hoàn tất PR theo base rules. Quyền Write để push feature không đồng nghĩa bypass main. Nếu PR chờ sửa, bổ sung commit vào head, thảo luận và re-review; không cấp Admin tạm chỉ để tránh các yêu cầu đã cấu hình. Xác nhận Merged và commit trên main trước khi thông báo code đã tích hợp."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03-contribution-paths.md"
+      anchor: "shared-repository-contribution"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Fork khác feature branch ở chỗ nào, và yếu tố nào quyết định chọn fork khi cộng tác với repository tổ chức?"
+    answer: "Feature branch là ref trong cùng repository và dùng quyền ghi của repository đó; fork là repository riêng có quyền và namespace riêng, liên hệ với upstream. Người không có Write upstream có thể thay đổi fork, mở PR vào upstream; không vì sở hữu fork mà có quyền merge upstream. Chọn shared feature branch cho thành viên có quyền thuận tiện và fork cho contributor bị giới hạn access. Luôn kiểm source repo/branch, target repo/branch và policy bên nhận mã."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03-contribution-paths.md"
+      anchor: "fork-and-upstream"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Bạn review PR từ fork có cả hai bên đều gọi main. Làm sao tránh nhầm source và target, và lỗi nào vẫn có thể xảy ra dù CI xanh?"
+    answer: "Cần ghi rõ owner/repo/branch của head và base, SHA quan trọng và diff nguồn→đích. Một commit ở fork không tự nằm trong upstream. CI xanh chỉ phản ánh tests đã cấu hình, chưa chứng minh diff đúng scope hay target phù hợp. Reviewer kiểm thay đổi ngoài yêu cầu và rule/reviewer của upstream base. Nếu mục tiêu sai, sửa base hoặc tạo lại proposal hợp lệ, rồi chạy lại review/check cần thiết; không merge chỉ vì tên branch trùng."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03-contribution-paths.md"
+      anchor: "pr-head-base"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Khi nào nên dùng Draft PR, và vì sao giữ Ready với prefix WIP không thay thế trạng thái đó?"
+    answer: "Draft diễn đạt tác giả chưa sẵn sàng yêu cầu review chính thức hoặc merge: có thể thiếu tests, mô tả hoặc còn thiết kế. Chuyển Ready khi đã có diff, tiêu chí chấp nhận, kết quả kiểm thử có thể xem; GitHub có hành vi riêng như chưa tự yêu cầu code owners ở Draft. Prefix WIP chỉ là quy ước chữ trong branch/title, không phải trạng thái sản phẩm hay gate merge. Review sớm vẫn có thể diễn ra nhưng cần ghi rõ điểm còn thiếu để reviewer không hiểu nhầm."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03-contribution-paths.md"
+      anchor: "draft-vs-ready"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "PR được Close without merge. Có thể suy ra gì về lịch sử Git, và bạn sẽ tiếp tục đề xuất sửa lỗi bằng cách nào?"
+    answer: "Đóng PR không có merge chứng minh proposal không được chấp nhận vào base tại hành động đó; không có nghĩa branch/commit nguồn bị xóa. Kiểm source ref còn tồn tại không, lý do close và diff hiện hành. Có thể mở lại PR nếu được phép và đúng tình huống, hoặc tạo PR mới dùng commit phù hợp sau khi cập nhật code. Không nhầm Closed với Merged, không coi Release tag là bằng chứng code đã vào main."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03-contribution-paths.md"
+      anchor: "pr-lifecycle"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Vì sao một PR đạt status checks vẫn cần reviewer hiểu nghiệp vụ, và làm sao review tránh lạc sang vấn đề không liên quan?"
+    answer: "Các status checks xác nhận build, lint hay tests đã cấu hình; chúng có thể thiếu tình huống biên. Reviewer cần so expected behavior trong Issue với diff, test và ảnh hưởng bên cạnh: ví dụ thay công thức giảm giá có làm tròn âm sai hay không. Đọc logic tại path liên quan và thảo luận dựa trên input/output tái hiện được. Ghi nhận thay đổi ngoài scope rõ ràng, yêu cầu giải thích hoặc tách PR. Quyết định Approve dựa trên bằng chứng hiện tại, không dựa việc CI đã xanh."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04-pull-request-reviews.md"
+      anchor: "pr-context-diffs-and-checks"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Inline comment, submitted Approve review và resolved thread khác nhau ra sao trong bằng chứng acceptance?"
+    answer: "Inline comment chỉ là ý kiến gắn vào đoạn diff và có thể được gửi mà chưa quyết định review. Một submitted Approve là phiếu rõ ràng của reviewer, có thể chịu tác động bởi nhánh/ruleset và commit mới. Resolved thread đánh dấu cuộc trao đổi đã xử lý, không tự gửi phiếu Approve hay chứng minh code đúng. Để biết sẵn sàng merge, xem trạng thái review được tính, required reviewers, threads theo rule và checks trên commit hiện tại; không lấy số lượng comment để suy ra đủ phiếu."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04-pull-request-reviews.md"
+      anchor: "review-comments-decisions"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Reviewer yêu cầu xử lý đầu vào âm; tác giả push commit mới. Bạn quản lý re-review và stale approval thế nào?"
+    answer: "Đầu tiên đối chiếu diff trước và sau commit, mô tả ca âm và chạy lại test liên quan. GitHub có thể dismiss stale reviews nếu policy bật; nếu không tự dismiss, reviewer vẫn cần đọc phần thay đổi trước khi tái xác nhận. Tôi kiểm required checks gắn với commit/test-merge phù hợp và reviewer hợp lệ trên base. Chỉ Resolve thread sau khi xác nhận concern đã được xử lý. Không coi phiếu trên SHA cũ hoặc test xanh cũ là chứng minh thay đổi mới đúng."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04-pull-request-reviews.md"
+      anchor: "change-request-rework"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "CODEOWNERS được đọc từ nhánh nào cho PR và vì sao sửa file chỉ trên head chưa đủ thay reviewer bắt buộc?"
+    answer: "GitHub tìm CODEOWNERS trong vị trí được hỗ trợ của base branch của PR để xác định path owners. Thay CODEOWNERS chỉ trong head chưa thay hành vi routing hiện tại, vì đề xuất đó chưa là nguồn rule của base. Kiểm team/user hợp lệ có quyền Write cần thiết và path pattern phù hợp; Draft có thể trì hoãn tự động mời owner đến khi Ready. Khi cần đổi owner thật, hoàn tất thay đổi quy tắc vào base theo chính sách rồi kiểm PR tiếp theo; tránh tưởng một commit trong feature sẽ tự thay gate."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04-pull-request-reviews.md"
+      anchor: "reviewer-requests-codeowners"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "CODEOWNERS đã tự mời team payments. Khi nào Approve của code owner là điều kiện merge bắt buộc, và có cần mọi thành viên team bỏ phiếu?"
+    answer: "CODEOWNERS xác định người/nhóm được yêu cầu review cho path nhưng riêng nó không tạo merge gate. Branch protection hoặc ruleset có hiệu lực phải bật yêu cầu code owner review, đồng thời owner phải đủ quyền. Tùy quy tắc, một phiếu hợp lệ từ code owner có thể đáp ứng yêu cầu; không mặc định từng người trong team hay từng entry phải approve. Kiểm tổng số required approvals và điều kiện owner riêng: một phiếu owner có thể vừa được tính vào count vừa đáp ứng gate nếu hợp lệ."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04-pull-request-reviews.md"
+      anchor: "code-owner-approval-vs-request"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Chuyên gia ngoài organization chỉ review một repository private. Vì sao outside collaborator phù hợp hơn cấp organization member?"
+    answer: "Outside collaborator có thể được mời vào đúng repository với mức quyền cần thiết, không phải thừa hưởng vai trò trong organization hoặc team rộng hơn. Với reviewer chỉ đọc/nhận xét, chọn quyền tương ứng với policy và khả năng xem diff; họ không cần Admin, Maintain hay quyền ghi mã. Xác minh thêm SSO, enterprise restrictions và quyền team nếu CODEOWNERS yêu cầu. Khi hết hợp đồng, thu hồi grant ở repo. Không dùng Internal visibility để giả định người ngoài enterprise có Read."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05-repository-access.md"
+      anchor: "orgs-teams-and-outside-collaborators"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Đội hỗ trợ cần label và phân loại Issues nhưng không được push code. Tại sao Triage thay vì Write hoặc Read?"
+    answer: "Role Triage phục vụ phân loại và quản lý Issues/PR mà không cấp khả năng viết mã như Write. Read có thể xem thảo luận nhưng thường không đủ thao tác gắn label; Maintain/Admin vượt trách nhiệm xử lý ticket. Tôi kiểm organization restrictions cùng effective role, cho phép hỗ trợ thử tạo/đổi label trong phạm vi hợp lệ và xác nhận git push vẫn bị từ chối. Dùng role thiết kế theo nhiệm vụ giúp giảm nguy cơ ghi nhầm branch và dễ kiểm toán."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05-repository-access.md"
+      anchor: "repo-roles"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Developer push feature được nhưng không sửa branch protection. Bạn giải thích khác biệt Write và quản trị repository như thế nào?"
+    answer: "Write cho phép đóng góp mã tại refs được phép, không cho quyền thay đổi những quy tắc bảo vệ mà bản thân developer đang chịu. Chỉnh branch protection/rulesets là thao tác Settings cần quyền quản trị hoặc quyền tổ chức phù hợp. Hạn chế push trên main còn có thể làm Write không đủ để push trực tiếp. Tôi giải quyết lỗi bằng cách xác định thao tác, target rule và effective role, ưu tiên PR thay vì cấp bypass Admin khi người dùng chỉ cần đưa bản sửa tới reviewer."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05-repository-access.md"
+      anchor: "review-and-maintenance-permissions"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "PR bị ruleset chặn merge. Hãy mô tả cách điều tra quyền tối thiểu trước khi nghĩ đến bypass."
+    answer: "Ghi identity người merge, base repo/branch, PR state và thông báo cụ thể. Phân tách required review, owner vote, status checks, history restrictions và giới hạn push/merge; xem ruleset ở organization lẫn repository cùng trạng thái Enforced/Evaluate. Check kết quả trên SHA hiện hành và người có quyền hoàn tất. Nếu thiếu test hay phiếu, sửa chính điều kiện đó. Bypass chỉ dành cho actor được ủy quyền và tình huống có lý do rõ, không mặc định có từ Write hay vai trò reviewer."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05-repository-access.md"
+      anchor: "least-privilege-pitfalls"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Hai classic branch protection patterns cùng khớp main. Tại sao không được cộng tất cả checkbox của hai rule?"
+    answer: "Classic branch protection có cách xác định rule khớp hiệu lực dựa vào độ chính xác và ưu tiên pattern; nhiều rule cùng khớp không đồng nghĩa tất cả điều kiện được cộng gộp. Tôi đọc branch thực tế, tên/rule patterns và thứ tự áp dụng từ repository Settings, rồi xem điều kiện đang thực thi. Không dùng rule mới tạo nhất để suy đoán khi chưa xét precedence. Phân biệt với rulesets có khả năng áp nhiều rule Enforced đồng thời, vì nhầm hai cơ chế sẽ chẩn đoán sai lý do PR bị chặn."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06-branch-protection.md"
+      anchor: "branch-protection-rules"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Organization ruleset yêu cầu review, repository ruleset yêu cầu CI, và một ruleset khác ở Evaluate. Trình bày cách tính sẵn sàng merge."
+    answer: "Tôi liệt kê mọi ruleset khớp base main ở cấp organization và repository, kiểm enforcement state. Các ruleset Enforced có thể cộng yêu cầu; phải đủ review và CI của cả hai. Ruleset Evaluate có mục tiêu quan sát tác động và không phải gate chặn trong ví dụ này. Kiểm check tên/nguồn trên revision đúng và phiếu hợp lệ thay vì chọn ruleset gần repository hơn hay tín hiệu xanh đầu tiên. Ghi lại rule gây lỗi để người sửa xử lý đúng chính sách."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06-branch-protection.md"
+      anchor: "rulesets-and-overlap"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "PR chạm pricing có một Approve từ người không phải code owner, nhưng base yêu cầu hai approvals và code owner. Bạn phân tích thiếu gì?"
+    answer: "Một phiếu thường có thể tính vào minimum count nhưng chưa thỏa yêu cầu hai phiếu. Vì phiếu đó không đến từ code owner, điều kiện owner cũng chưa đạt. Team cần thêm phiếu hợp lệ theo reviewer restrictions; một phiếu code owner tiếp theo có thể vừa nâng count lên hai vừa đáp ứng owner gate nếu rules cho phép. Không cần tất cả thành viên CODEOWNERS đều approve, nhưng phải kiểm owner đủ quyền và rule thực sự Enforced. Merge vẫn có thể bị chặn bởi CI hoặc quyền người thực hiện dù số vote đã đủ."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06-branch-protection.md"
+      anchor: "required-pr-review-and-approval"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Unit tests xanh nhưng required security review status còn Pending. Vì sao không nên bỏ check và kiểm tra kết quả thế nào?"
+    answer: "Status checks được định danh riêng theo tên nguồn báo cáo và commit/test-merge phù hợp. Unit tests xanh không bù cho security-review Pending nếu cả hai được yêu cầu. Kiểm status context, người cung cấp, run hiện tại và lý do chờ; có thể pipeline chưa chạy, báo lỗi cấu hình hoặc cần reviewer bảo mật. Sửa vấn đề và rerun trên revision cần thiết thay vì xóa rule để tăng tốc. Nếu có exception khẩn cấp phải theo quyền bypass và cơ chế audit, không gọi đó là check đã pass."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06-branch-protection.md"
+      anchor: "checks-and-merge-eligibility"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Developer có Write nhưng không push được trực tiếp main trong khi PR feature vẫn tạo được. Bạn làm rõ push restriction và bypass thế nào?"
+    answer: "Write cấp khả năng đóng góp repository nhưng ruleset hoặc protection trên main có thể yêu cầu PR, giới hạn actor được push hoặc chặn force push. Tôi so thao tác git push trực tiếp với mở PR, kiểm rule trên main, effective permissions và danh sách bypass actor. Nếu feature ghi được và PR hợp lệ, đó thường là đường đóng góp được thiết kế. Không cấp bypass khi review/check vẫn có thể hoàn tất. Khi cần ngoại lệ phải xác nhận loại bypass, actor, lý do và log để tránh phá lịch sử nhánh chung."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06-branch-protection.md"
+      anchor: "push-bypass-and-troubleshooting"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Nhóm tranh luận hành vi đầu vào giảm giá âm. Vì sao bắt đầu bằng Issue tốt hơn tạo một tag hoặc merge commit?"
+    answer: "Issue cho phép ghi lỗi hoặc nhu cầu, đầu vào tái hiện, expected behavior, người phụ trách và luồng quyết định trước khi sửa mã. Tag đánh dấu một revision của Git; merge commit phản ánh thao tác tích hợp, cả hai không thay thảo luận yêu cầu. Tôi dùng Issue để thống nhất ca âm, rồi PR liên kết Issue giải thích patch và tests. Khi code vào main vẫn cần xác nhận hành vi, trạng thái Issue và release/deployment riêng. Không dùng một status duy nhất thay toàn bộ chuỗi bằng chứng."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "07-issues-and-releases.md"
+      anchor: "issues-as-work-items"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Issue có assignee, bug label và milestone 1.4. Điều đó giúp quản lý gì và chưa chứng minh được gì?"
+    answer: "Assignee làm rõ người theo dõi, label phân loại, milestone nhóm thời điểm dự kiến. Chúng hữu ích cho backlog và báo cáo tiến độ nhưng không xác nhận bug đã được sửa, PR đã merge hay code được triển khai. Để kết luận bản sửa đã vào main, kiểm PR Merged và commit base; để biết production, xem CI/CD. Không cấp quyền Write hoặc maintainer cho assignee chỉ vì Issue được giao, và không suy ra policy PR từ milestone."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "07-issues-and-releases.md"
+      anchor: "issue-assignees-labels-milestones"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "PR có mô tả Fixes #42 nhưng base là release/1.3 không phải default branch. Tại sao Issue có thể không được link/auto-close?"
+    answer: "GitHub xử lý closing keywords trong mô tả PR theo điều kiện nhánh đích; PR nhắm base không phải default branch có thể bị bỏ qua keyword nên không tự tạo liên kết hoặc đóng Issue khi merge. Một liên kết thủ công tới Issue là thao tác riêng cần kiểm tra. Nếu muốn auto-close theo workflow chuẩn, xác nhận PR targeting default branch và syntax keyword hợp lệ; đừng ghi đã sửa Issue chỉ vì có chữ Fixes trong tiêu đề. Nếu cần backport, theo dõi trạng thái từng nhánh riêng."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "07-issues-and-releases.md"
+      anchor: "linking-issues-prs"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Một maintainer tạo tag v1.4.0. GitHub Release khác tag ra sao, và điều gì vẫn chưa được xác nhận?"
+    answer: "Tag là ref Git đặt tên cho một commit, không đòi trang Release hay deployment. GitHub Release là bản ghi công bố bổ sung ghi chú, assets và liên kết đến tag. Tạo tag không tự làm PR Merged, Issue Closed hoặc production chạy revision đó. Khi phát hành cần kiểm tag trỏ SHA nào, Release notes phản ánh nội dung nào, assets do ai build/upload, rồi so artifact với pipeline deployment. Một source archive tự tạo không chứng minh uploaded ZIP được build từ cùng SHA."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "07-issues-and-releases.md"
+      anchor: "git-tags-vs-github-releases"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Trang Release v1.4.0 có ZIP và ghi chú Fixed bug. Bạn sẽ trả lời thế nào khi quản lý hỏi production đã chạy chưa?"
+    answer: "Tôi chỉ có thể nói bản công bố và file tải về đã tồn tại; chưa có bằng chứng runtime được cập nhật. Cần xem workflow CI/CD, run triển khai thành công, environment, artifact digest và phiên bản/SHA đang chạy. Notes không chứng minh smoke tests hay chức năng nghiệp vụ trên production; ZIP do người dùng upload không tự bảo đảm được build từ tag. Kết quả cần phân biệt source merged, tag/Release published và deployment verified. Nếu thiếu log triển khai, báo chưa xác nhận thay vì suy diễn."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "07-issues-and-releases.md"
+      anchor: "release-notes-and-assets"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Bug #42 cần sửa làm tròn; hãy kể workflow có bằng chứng từ yêu cầu đến commit vào main, và đâu là điểm có thể thất bại."
+    answer: "Tôi mô tả Issue có input/expected, tạo feature branch hợp quyền, commit kèm tests, mở PR head→main và gắn Issue. Reviewer hiểu tính tiền xét diff/ca biên; CODEOWNERS và số phiếu được kiểm theo base; required checks chạy trên revision phù hợp. Người được phép merge hoàn tất khi rules đạt, rồi xác minh PR Merged và SHA trên main. Có thể thất bại vì thiếu owner Write, sai base, stale checks, conflict hoặc actor không có merge right. Chứng cứ production phải lấy ở hệ thống delivery riêng."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "08-team-workflow.md"
+      anchor: "issue-to-pr-to-merge"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "PR chạm pricing nhưng team payments không xuất hiện trong danh sách code owner review. Bạn điều tra theo thứ tự nào?"
+    answer: "Kiểm PR là Draft hay Ready, vì tự động owner request có thể chờ Ready. Sau đó xem CODEOWNERS trên base tại vị trí được hỗ trợ, mẫu path /pricing/ có match không, tên user/team hợp lệ và quyền Write/visibility tại repo. Cuối cùng xem nhánh đích có bật required owner approval hay chỉ routing tự động. Nếu owner không đủ quyền, sửa membership/team access đúng phạm vi; không chuyển Public hay cấp Admin cho author. Reevaluate PR sau thay đổi, lưu dấu reviewer thực sự được yêu cầu."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "08-team-workflow.md"
+      anchor: "review-and-access-blockers"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "PR được Approve và unit-tests xanh nhưng commit mới khiến nút merge bị chặn. Bạn phân biệt stale vote, stale check và ruleset như thế nào?"
+    answer: "Tôi ghi commit SHA hiện tại, base, actor và lỗi widget. So review timeline với chính sách dismiss stale reviews hoặc yêu cầu approval trên push mới; xem phiếu hợp lệ còn đủ không. Kiểm required check contexts trên head/test merge mới, vì xanh ở revision cũ không thay trạng thái hiện tại. Tổng hợp mọi organization/repo rulesets Enforced và classic protection rule hiệu lực. Chỉ sửa điều kiện thiếu hoặc quyền đúng người; không nới rule khi chưa biết nguyên nhân. Nếu PR Draft/conflict thì xử lý riêng."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "08-team-workflow.md"
+      anchor: "protection-and-check-blockers"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "PR đã Merged và Issue Closed nhưng chưa có Release. Bạn viết báo cáo tình trạng nào cho người quản lý?"
+    answer: "Báo “thay đổi đã được tiếp nhận vào nhánh đích, Issue hiện Closed”, kèm liên kết PR và SHA main. Chưa có bằng chứng công bố GitHub Release, tạo tag hoặc artifact mới nếu chưa thấy record tương ứng. Đóng Issue có thể do automation/nhóm, không thay verification nghiệp vụ. Production càng phải được kiểm bằng CI/CD logs và phiên bản môi trường. Báo tách từng lớp: accepted source, issue tracking, published release, deployed runtime. Tránh biến status Closed thành kết luận tất cả công đoạn đã xong."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "08-team-workflow.md"
+      anchor: "verify-accepted-change-and-release"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Mã đã merge vào main nhưng production vẫn chạy hành vi cũ. Hãy xác định ranh giới giữa GitHub, Git và CI/CD để tìm lỗi."
+    answer: "Git giải thích revision nào nằm trên main và cấu trúc merge; GitHub chứng minh PR, review, check và quyết định tiếp nhận. Chúng không tự cho biết môi trường production đang chạy artifact nào. Bắt đầu từ SHA được merge, liên kết build pipeline tạo artifact, kiểm deployment job, environment, runtime version, cache/config và smoke test. Nếu build chưa chứa SHA hoặc deploy chưa chạy thì vấn đề nằm ở chuỗi delivery; nếu runtime đúng SHA mà behavior sai, điều tra implementation/config. Giữ audit trace từ Issue → PR → SHA → artifact → deployment."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "08-team-workflow.md"
+      anchor: "handoffs-to-git-policy-ci"
+    apiRelated:
+      controller: ""
+      methodSignature: ""

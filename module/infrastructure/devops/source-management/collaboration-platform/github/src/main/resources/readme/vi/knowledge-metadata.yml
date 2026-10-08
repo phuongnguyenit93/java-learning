@@ -1,0 +1,172 @@
+'01-github-foundations.md':
+  'github-as-hosting-platform':
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  'unmanaged-change-collaboration-risks':
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  'git-versus-github':
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  'repository-and-history':
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  'accounts-organizations-and-repository-context':
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  'participants-and-contribution':
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  'pull-request-basics':
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  'github-collaboration-map':
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+'02-repository-hosting.md':
+  'personal-vs-organization-repos':
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  'repository-visibility-and-plans':
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  'repository-settings-and-default-branch':
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  'repository-access-and-discovery':
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+'03-contribution-paths.md':
+  'shared-repository-contribution':
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  'fork-and-upstream':
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  'pr-head-base':
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  'draft-vs-ready':
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  'pr-lifecycle':
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+'04-pull-request-reviews.md':
+  'pr-context-diffs-and-checks':
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  'review-comments-decisions':
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  'change-request-rework':
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  'reviewer-requests-codeowners':
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  'code-owner-approval-vs-request':
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+'05-repository-access.md':
+  'orgs-teams-and-outside-collaborators':
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  'repo-roles':
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  'review-and-maintenance-permissions':
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  'least-privilege-pitfalls':
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+'06-branch-protection.md':
+  'branch-protection-rules':
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  'rulesets-and-overlap':
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  'required-pr-review-and-approval':
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  'checks-and-merge-eligibility':
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  'push-bypass-and-troubleshooting':
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+'07-issues-and-releases.md':
+  'issues-as-work-items':
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  'issue-assignees-labels-milestones':
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  'linking-issues-prs':
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  'git-tags-vs-github-releases':
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  'release-notes-and-assets':
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+'08-team-workflow.md':
+  'issue-to-pr-to-merge':
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  'review-and-access-blockers':
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  'protection-and-check-blockers':
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  'verify-accepted-change-and-release':
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  'handoffs-to-git-policy-ci':
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
