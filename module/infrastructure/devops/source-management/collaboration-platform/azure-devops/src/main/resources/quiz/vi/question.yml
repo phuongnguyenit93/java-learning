@@ -1,0 +1,1649 @@
+# <quiz-schema>
+# Cấu trúc câu hỏi Quiz
+# schema-version: 3
+#
+# questions [kiểu: list; bắt buộc; mặc định: []; duy nhất theo: id]
+#   Danh sách câu hỏi Quiz của module trong language hiện tại.
+#   mỗi phần tử:
+#     id [kiểu: string; bắt buộc; mặc định: ""]
+#       ID ổn định và duy nhất của câu hỏi.
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi hiển thị cho người học.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu câu hỏi được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu câu hỏi đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+#     answers [kiểu: list; bắt buộc; số phần tử: 4; mặc định: []; duy nhất theo: id]
+#       Chính xác bốn đáp án. ID A/B/C/D là identity nội bộ ổn định, không phải vị trí hiển thị sau khi frontend shuffle.
+#       mỗi phần tử:
+#         id [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#           Identity ổn định của đáp án.
+#         answer [kiểu: string; bắt buộc; mặc định: ""]
+#           Nội dung đáp án hiển thị cho người học.
+#         explanation [kiểu: string; bắt buộc; mặc định: ""]
+#           Giải thích hiển thị khi người học chọn đáp án này, bất kể đúng hay sai.
+#     correctAnswerId [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#       ID nội bộ của đáp án đúng. Frontend kiểm tra bằng identity này sau khi shuffle.
+# </quiz-schema>
+
+questions:
+  - id: "azure-devops-001"
+    question: "Nhóm cần review mã qua PR trong Azure DevOps. Dịch vụ nào sở hữu PR?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-azure-repos-collaboration.md"
+      anchor: "azure-devops-vs-azure-repos"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Azure Boards"
+        explanation: "Boards quản lý work items, không lưu PR mã nguồn"
+      - id: B
+        answer: "Azure Repos (Git)"
+        explanation: "PR và review thuộc Azure Repos; Boards lưu work items, Pipelines tạo kết quả kiểm tra và Artifacts quản lý package, dù chúng có thể liên kết nhau."
+      - id: C
+        answer: "Azure Pipelines"
+        explanation: "Pipelines chạy jobs khi PR được cập nhật"
+      - id: D
+        answer: "Azure Artifacts"
+        explanation: "Azure Artifacts lưu package/version để consumers cài đặt, không lưu phiếu review và kết quả Complete của PR mã."
+    correctAnswerId: B
+  - id: "azure-devops-002"
+    question: "Một nhóm trao đổi bản ZIP qua chat rồi chép lên server. Azure Repos cải thiện điều gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-azure-repos-collaboration.md"
+      anchor: "why-hosted-collaboration"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Dùng Git history chung nhưng giữ quyền xét mã trong danh sách reviewer ngoài hệ thống."
+        explanation: "Chỉ lịch sử và bảng ngoài không cho phép đối chiếu quyền hiện hành, phiếu PR và việc nhận thay đổi trên host."
+      - id: B
+        answer: "Ghi lịch sử nội dung nhưng không gắn reviewer"
+        explanation: "Git đã có lịch sử, đây chưa đủ cộng tác"
+      - id: C
+        answer: "Commit, PR, quyền và quyết định review"
+        explanation: "Git đã ghi commit nhưng Azure Repos bổ sung quyền trên kho, PR, phiếu đánh giá và trạng thái nhánh đích để nhóm phối hợp có dấu vết."
+      - id: D
+        answer: "Tự kiểm chứng yêu cầu nghiệp vụ từ tên file"
+        explanation: "Nền tảng không suy ra đúng sai nghiệp vụ"
+    correctAnswerId: C
+  - id: "azure-devops-003"
+    question: "An commit offline rồi đóng máy. Bằng chứng nào đã tồn tại?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-azure-repos-collaboration.md"
+      anchor: "git-versus-azure-repos-ownership"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Có commit Git local, chưa rõ có PR"
+        explanation: "Tạo commit trên máy chỉ chứng minh Git local đã ghi snapshot; muốn có PR phải chia sẻ nhánh và tạo đề xuất trên hosting riêng."
+      - id: B
+        answer: "Commit offline đã đồng bộ vào remote nhờ tài khoản đăng nhập Azure DevOps."
+        explanation: "Cấu hình danh tính không tự push commit và mở PR; repo local có thể có history không tồn tại trên server."
+      - id: C
+        answer: "Reviewer đã chấp thuận commit khi offline"
+        explanation: "Phiếu Approve gắn với PR trên hosting và người đánh giá; commit local offline chưa tạo dữ liệu review đó."
+      - id: D
+        answer: "Nhánh main remote đã nhận commit của An"
+        explanation: "Local commit chưa chứng minh push và merge"
+    correctAnswerId: A
+  - id: "azure-devops-004"
+    question: "Trong organization RetailCo, project Checkout chứa repository checkout-api. Ai sở hữu phạm vi chứa checkout-api?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-azure-repos-collaboration.md"
+      anchor: "organization-project-repo-vocabulary"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "RetailCo project → Checkout organization → checkout-api repository."
+        explanation: "Organization là phạm vi chứa project; đảo thứ tự này làm sai cách xác định account và project security."
+      - id: B
+        answer: "Project Checkout là một nhánh của repository checkout-api"
+        explanation: "Project Checkout thuộc organization RetailCo và chứa repositories; nhánh main chỉ là ref nằm trong một repository."
+      - id: C
+        answer: "Organization RetailCo chính là repository checkout-api"
+        explanation: "Organization bao nhiều project và dịch vụ"
+      - id: D
+        answer: "RetailCo organization → Checkout project → checkout-api repo"
+        explanation: "Organization chứa nhiều projects; Checkout là phạm vi dịch vụ và thành viên, còn checkout-api là một repository Git có refs và lịch sử trong project."
+    correctAnswerId: D
+  - id: "azure-devops-005"
+    question: "An mở PR feature/tax → main. Hành động nào PR biểu diễn?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-azure-repos-collaboration.md"
+      anchor: "what-is-a-pull-request"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Một commit Git đã xuất hiện trên main"
+        explanation: "Đề xuất chưa phải tích hợp vào target"
+      - id: B
+        answer: "Đề xuất tích hợp feature vào main"
+        explanation: "PR chỉ tham chiếu source feature/tax và target main nhằm đề xuất xét rồi tích hợp; tạo PR không tự cập nhật main."
+      - id: C
+        answer: "Một release artifact cho production"
+        explanation: "Release artifact chỉ xuất hiện nếu pipeline/build publish sau các bước tương ứng; việc tạo PR là đề xuất source, không tạo package."
+      - id: D
+        answer: "Một nhánh mới tên feature/tax trên main"
+        explanation: "PR tham chiếu nhánh, không tạo nhánh con"
+    correctAnswerId: B
+  - id: "azure-devops-006"
+    question: "Bình đã Approve PR nhưng policy yêu cầu build xanh. PR vẫn lỗi build. Kết luận nào đúng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-azure-repos-collaboration.md"
+      anchor: "reviewer-policy-and-merge-relation"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Vote đã tự miễn trừ mọi build policy"
+        explanation: "Phiếu reviewer và build validation là hai policy có thể cùng bắt buộc; vote xanh không thay kết quả required build failed."
+      - id: B
+        answer: "Đủ phiếu reviewer là điều kiện cuối; kết quả build chỉ để hiển thị cảnh báo."
+        explanation: "Ở ví dụ build validation được cấu hình required nên lỗi là chặn thật chứ không phải chỉ mang tính tham khảo."
+      - id: C
+        answer: "Approval đã có; checks chưa đủ Complete"
+        explanation: "Phiếu của Bình đáp ứng khía cạnh review, nhưng required build vẫn thất bại nên chính sách nhánh đích chưa cho complete bình thường."
+      - id: D
+        answer: "PR đã Completed nhưng pipeline hiển thị chậm"
+        explanation: "Không có bằng chứng target được cập nhật"
+    correctAnswerId: C
+  - id: "azure-devops-007"
+    question: "Bug 104 và PR sửa lỗi đều hiện trong Azure DevOps. Ai quản lý work item?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-azure-repos-collaboration.md"
+      anchor: "boards-and-pipelines-boundary"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Azure Repos, vì PR có link tới Bug 104"
+        explanation: "Repos giữ liên kết chứ không sở hữu work item"
+      - id: B
+        answer: "Azure Pipelines, vì bug có test fail"
+        explanation: "Pipelines chạy build/test, không quản lý bug"
+      - id: C
+        answer: "Git, vì commit có thể nhắc tới số bug"
+        explanation: "Commit message không thay work tracking"
+      - id: D
+        answer: "Boards quản lý work item; Repos quản lý PR"
+        explanation: "Azure Boards sở hữu trạng thái Bug 104; Azure Repos chỉ liên kết bug với commit/PR và Azure Pipelines thực hiện build hay kiểm thử."
+    correctAnswerId: D
+  - id: "azure-devops-008"
+    question: "Audit lỗi tax cần biết ai đổi mã, ai vote, và lúc nào vào main. Bằng chứng nào phù hợp?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-azure-repos-collaboration.md"
+      anchor: "trace-collaboration-surface"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Commit, PR votes và lịch sử main"
+        explanation: "Commit cho biết ai ghi source, PR votes cho biết quyết định reviewer, còn lịch sử target cho thấy mã thực sự được tích hợp vào main."
+      - id: B
+        answer: "Chỉ tên branch feature ở máy tác giả"
+        explanation: "Tên branch không ghi quyết định reviewer"
+      - id: C
+        answer: "Chỉ pipeline màu xanh vào tuần trước"
+        explanation: "Build không cho biết ai xét và đã merge chưa"
+      - id: D
+        answer: "Chỉ work item Bug 104 đã đóng"
+        explanation: "Work item không tự là bằng chứng tích hợp"
+    correctAnswerId: A
+  - id: "azure-devops-009"
+    question: "RetailCo muốn tách Warehouse và Checkout nhưng dùng cùng tenant. Cách tổ chức hợp lý?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02-organizations-projects-repositories.md"
+      anchor: "organization-project-hierarchy"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Tạo hai repository Warehouse/Checkout trong cùng project và áp hai nhóm riêng."
+        explanation: "Tách repository chia source history, nhưng không tạo hai phạm vi quản trị project như yêu cầu đã nêu."
+      - id: B
+        answer: "Đặt project nằm bên trong branch main"
+        explanation: "Branch không phải đơn vị chứa project"
+      - id: C
+        answer: "Hai project dưới organization RetailCo"
+        explanation: "Dùng hai projects trong cùng organization giúp phân phạm vi thành viên và dịch vụ nhưng vẫn dùng quản lý tài khoản organization chung."
+      - id: D
+        answer: "Dùng hai tag Git làm ranh giới quản trị"
+        explanation: "Tag là ref ghi mốc lịch sử Git, không xác định danh sách members hoặc quyền Project-level của Warehouse/Checkout."
+    correctAnswerId: C
+  - id: "azure-devops-010"
+    question: "Project Checkout có repository checkout-api. Quyền repository khác project ở điểm nào?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02-organizations-projects-repositories.md"
+      anchor: "project-and-repository-boundary"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Dựa hoàn toàn vào nhóm Project Administrators vì tất cả repo trong project dùng quyền đồng nhất."
+        explanation: "Quyền riêng trên repo/branch có thể thay hiệu lực so với mặc định project, nên không suy mọi repo giống nhau."
+      - id: B
+        answer: "Project chỉ chứa một branch mặc định duy nhất"
+        explanation: "Project có thể chứa nhiều repository"
+      - id: C
+        answer: "Repository là cùng đối tượng với project nên quyền trùng hết"
+        explanation: "Repository checkout-api nằm trong Checkout nhưng có Read/Contribute và nhánh security riêng, có thể khác giá trị mặc định của project."
+      - id: D
+        answer: "checkout-api có Git security riêng trong project Checkout"
+        explanation: "Project Checkout chứa hệ thống dịch vụ/nhóm; checkout-api có permission và branch security riêng, thường kế thừa hoặc điều chỉnh từ project."
+    correctAnswerId: D
+  - id: "azure-devops-011"
+    question: "Một project Checkout có frontend và backend độc lập. Cấu hình nào Azure Repos hỗ trợ?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02-organizations-projects-repositories.md"
+      anchor: "multiple-git-repositories-in-project"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Một repository với hai organization lồng bên trong"
+        explanation: "Organization không thuộc Git repository"
+      - id: B
+        answer: "Hai repository trong cùng Checkout project"
+        explanation: "Một project có thể chứa nhiều Git repositories, mỗi kho có lịch sử/refs riêng trong khi các team dùng chung bối cảnh project."
+      - id: C
+        answer: "Hai project nhưng cả hai bắt buộc có cùng repo"
+        explanation: "Projects không buộc dùng chung repository"
+      - id: D
+        answer: "Một branch đại diện toàn bộ phần backend project"
+        explanation: "Nhánh không là ranh giới mọi repository"
+    correctAnswerId: B
+  - id: "azure-devops-012"
+    question: "Lập trình viên cần tạo repo mới nhưng thiếu quyền. Kiểm tra ở đâu?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02-organizations-projects-repositories.md"
+      anchor: "repository-owner-admin-roles"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Xem quyền tạo repo trong project"
+        explanation: "Create repository là quyền cấp dự án, khác Manage permissions/Edit policies và cũng khác mọi phiếu vote trên PR hiện có."
+      - id: B
+        answer: "Vote reviewer trên PR gần nhất"
+        explanation: "Review vote không cấp quyền tạo kho"
+      - id: C
+        answer: "Kiểm quyền Edit policies ở branch default vì nó điều khiển cả việc tạo repository."
+        explanation: "Edit policies quản lý policy nhánh; muốn tạo kho phải xét Create repository ở project, một quyền khác."
+      - id: D
+        answer: "Trạng thái build của pipeline hiện tại"
+        explanation: "Build result không cấp quyền quản trị repo"
+    correctAnswerId: A
+  - id: "azure-devops-013"
+    question: "Project Checkout đặt Private; An là Reader, Bình là outsider. Khác biệt nào cần xét?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02-organizations-projects-repositories.md"
+      anchor: "project-visibility-versus-repo-access"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Chỉ trạng thái Private, vì mọi Reader đều được push"
+        explanation: "Private hạn chế audience nhưng Readers chỉ có quyền đọc trong phạm vi được cấp; muốn push còn cần Contribute trên nhánh."
+      - id: B
+        answer: "Chỉ có repo URL thì outsider xem được mã"
+        explanation: "Đường dẫn clone là địa chỉ, không phải chứng thực; outsider cần membership và effective Read cho private repo."
+      - id: C
+        answer: "Một lần approve PR tự mở quyền truy cập"
+        explanation: "Approve trong PR biểu thị quyết định review, không thêm outsider vào project hay thay quyền truy cập source."
+      - id: D
+        answer: "Visibility và effective Read từng người"
+        explanation: "Private yêu cầu danh tính đủ điều kiện; quyền Read hiệu lực ở resource xác định ai được đọc, còn Readers không đồng nghĩa được push."
+    correctAnswerId: D
+  - id: "azure-devops-014"
+    question: "Tháng 10/2026 nhóm muốn tạo public project mới trên Azure DevOps Services. Kết luận nào đúng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02-organizations-projects-repositories.md"
+      anchor: "public-project-retirement-2026"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Có thể mở public mới nếu organization tồn tại trước 2026 và member có Basic access."
+        explanation: "License không bỏ giới hạn loại project mới"
+      - id: B
+        answer: "Không tạo public mới; các project public cũ chuyển private trong năm 2027."
+        explanation: "Thông báo Microsoft tháng 4/2026 dừng tạo public projects mới trên Azure DevOps Services; các public projects còn lại tự chuyển private trong năm 2027."
+      - id: C
+        answer: "Chỉ Azure DevOps Server bị giới hạn từ 2026"
+        explanation: "Thông báo kết thúc public projects năm 2026 áp dụng Azure DevOps Services, không được đánh đồng với Azure DevOps Server tự host."
+      - id: D
+        answer: "Tạo được qua REST dù UI đã bỏ nút"
+        explanation: "Không thể dùng REST API để né giới hạn tạo public project mới; backend thực thi chính sách bất kể form UI hay API."
+    correctAnswerId: B
+  - id: "azure-devops-015"
+    question: "Người dùng không thấy menu Repos trong project dù có Read. Kiểm tra gì trước?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02-organizations-projects-repositories.md"
+      anchor: "enable-disable-repos-service"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Tăng quyền Force push trên main"
+        explanation: "Force push không quyết định Repos hub"
+      - id: B
+        answer: "Xem nhánh main có required PR policy nên menu Repos bị ẩn hay không."
+        explanation: "Branch policies ngăn thao tác cập nhật nhánh nhưng không phải công tắc enable/disable của dịch vụ Repos."
+      - id: C
+        answer: "Xem Repos enabled và access entitlement"
+        explanation: "Đã có Read mà Repos hub không hiện thì cần kiểm dịch vụ Repos bật trong project và mức access trước khi thay branch permissions."
+      - id: D
+        answer: "Chuyển mọi reviewer thành Project Administrator"
+        explanation: "Admin grant không sửa cấu hình thiếu rõ ràng"
+    correctAnswerId: C
+  - id: "azure-devops-016"
+    question: "Tài liệu nói Checkout chứa hai repository. Bằng chứng UI nào xác nhận đúng cấu trúc?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02-organizations-projects-repositories.md"
+      anchor: "verify-project-repo-structure"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Xem repository selector tại Checkout"
+        explanation: "Repository selector trong đúng project hiển thị các Git repositories ở phạm vi Checkout; branch list chỉ có các refs của một kho."
+      - id: B
+        answer: "Chỉ đếm branch trong repo đang mở"
+        explanation: "Branch count không xác định số repo"
+      - id: C
+        answer: "Chỉ xem organization Users list"
+        explanation: "Membership không liệt kê repositories"
+      - id: D
+        answer: "Chỉ đọc tên commit message ở main"
+        explanation: "Commit không đại diện cấu trúc project"
+    correctAnswerId: A
+  - id: "azure-devops-017"
+    question: "An xem được Boards nhưng clone private repo bị chặn. Hai loại điều kiện nào phải tách?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03-membership-and-access.md"
+      anchor: "access-level-vs-security-permission"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Work item type và branch naming convention"
+        explanation: "Work-item type là cấu trúc Boards, còn branch naming là Git workflow; cả hai không cấp quyền clone private source."
+      - id: B
+        answer: "Chỉ tăng repository Read vì điều đó sẽ tự nâng Stakeholder lên Basic."
+        explanation: "Permission trên repository không tự thay access entitlement; cả license/access level và resource rights đều cần xét."
+      - id: C
+        answer: "Mốc sprint và số reviewer tối thiểu"
+        explanation: "Backlog/review không cấp quyền clone"
+      - id: D
+        answer: "Access level và security permission"
+        explanation: "Access level xác định tính năng được phép sử dụng, còn effective security permission quyết định quyền Read trên từng repository thực tế."
+    correctAnswerId: D
+  - id: "azure-devops-018"
+    question: "Contractor chỉ cần đọc diff để phản hồi. Nhóm mặc định nào gần yêu cầu nhất?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03-membership-and-access.md"
+      anchor: "readers-contributors-project-admins"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Project Administrators, để chắc chắn xem được"
+        explanation: "Administrator thường cấp quyền quản trị dư thừa"
+      - id: B
+        answer: "Readers group với access level phù hợp cho review"
+        explanation: "Readers thích hợp khi người dùng chỉ cần xem diff nếu license/membership cho phép; cấp Contributors/Admin để đọc đơn thuần là dư quyền."
+      - id: C
+        answer: "Dùng Contributors vì chức năng comment trong PR luôn yêu cầu quyền Contribute branch."
+        explanation: "Quyền tham gia thảo luận PR tách với quyền đẩy commit; yêu cầu chỉ đọc diff không cần Write."
+      - id: D
+        answer: "Collection Administrators cho toàn organization"
+        explanation: "Cấp quyền tổ chức vượt phạm vi kiểm tra diff"
+    correctAnswerId: B
+  - id: "azure-devops-019"
+    question: "Bình có Allow trực tiếp nhưng thuộc group bị Deny ở cùng phạm vi. Vì sao push bị chặn?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03-membership-and-access.md"
+      anchor: "direct-and-group-membership"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Group Deny có thể chi phối effective right"
+        explanation: "Ở cùng phạm vi, Deny từ nhóm có thể thắng Allow cá nhân; phải tính mọi group và các trường hợp đặc biệt của quyền hệ thống/admin."
+      - id: B
+        answer: "Allow cá nhân luôn thắng mọi membership"
+        explanation: "Allow trực tiếp không bảo đảm vượt Deny"
+      - id: C
+        answer: "Quyền nhóm chỉ áp dụng cho branch mới"
+        explanation: "Security group có hiệu lực với scope được gán"
+      - id: D
+        answer: "PR reviewer có quyền bỏ qua group Deny"
+        explanation: "Reviewer designation không cấp bypass"
+    correctAnswerId: A
+  - id: "azure-devops-020"
+    question: "An ghi code lên feature được nhưng main bị từ chối. Chỗ nào cần so quyền?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03-membership-and-access.md"
+      anchor: "permission-scopes-inheritance"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Chỉ organization-level Stakeholder permission"
+        explanation: "License không giải thích branch difference"
+      - id: B
+        answer: "So quyền repository Read và quyền tạo work item trong Boards để giải thích main push bị chặn."
+        explanation: "Read và Boards không thể hiện Contribute trên nhánh main hay policy PR; phải xem scope nhánh cụ thể."
+      - id: C
+        answer: "Repo Contribute và Branch security"
+        explanation: "Quyền Contribute của repo không có nghĩa được push mọi branch: nhánh main có thể áp quyền riêng hoặc PR-required policies."
+      - id: D
+        answer: "Chỉ số reviewer trên PR bất kỳ"
+        explanation: "PR voting không xác định direct push rights"
+    correctAnswerId: C
+  - id: "azure-devops-021"
+    question: "Readers cho Allow Read; Restricted để Not set. An thuộc cả hai. Effective Read có thể thế nào?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03-membership-and-access.md"
+      anchor: "allow-deny-not-set"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Not set buộc từ chối mọi quyền cùng loại"
+        explanation: "Not set tự nó chưa quyết định Allow hay Deny và không chặn Allow nhận từ một nhóm khác nếu không có Deny áp dụng."
+      - id: B
+        answer: "Hai group triệt tiêu nhau thành Not set"
+        explanation: "Không có nguyên tắc cộng trung bình quyền"
+      - id: C
+        answer: "Chỉ direct Allow cá nhân mới hợp lệ"
+        explanation: "Azure DevOps có thể tính Allow từ security group; không bắt buộc người dùng có grant direct ở mỗi repo."
+      - id: D
+        answer: "Read vẫn Allow qua Readers membership"
+        explanation: "Not set không phải Deny; khi Readers cho Allow và Restricted chưa thiết lập quyền, Read có thể nhận từ Readers nếu không có chặn khác."
+    correctAnswerId: D
+  - id: "azure-devops-022"
+    question: "Security UI hiển thị Not set ở An, nhưng clone vẫn được. Giải thích nào hợp lý?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03-membership-and-access.md"
+      anchor: "explicit-inherited-effective-rights"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Effective Read có thể đến từ group"
+        explanation: "Not set trên dòng quyền riêng chỉ nói chưa cấp ở đó; group hoặc scope cha vẫn có thể truyền Allow để quyền Read hiệu lực là có."
+      - id: B
+        answer: "Not set là quyền Read đầy đủ theo mặc định"
+        explanation: "Not set trên user không đồng nghĩa Read được cấp; phải xem membership group và inheritance ở resource thực tế."
+      - id: C
+        answer: "Clone chỉ dựa vào URL không cần Read"
+        explanation: "Private repo vẫn kiểm tra quyền truy cập"
+      - id: D
+        answer: "Một approval vote tạo quyền clone lâu dài"
+        explanation: "Review vote không cấp repository Read"
+    correctAnswerId: A
+  - id: "azure-devops-023"
+    question: "Tạo feature branch và đọc source cần những quyền nào được xét riêng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03-membership-and-access.md"
+      anchor: "access-to-read-contribute-admin"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Read, và quyền Delete repository"
+        explanation: "Delete không cần cho branch thông thường"
+      - id: B
+        answer: "Read, Create branches và Contribute"
+        explanation: "Đọc nguồn, tạo branch mới và ghi commit lên branch là những quyền khác nhau; cần kiểm Read/Create branches/Contribute theo scope."
+      - id: C
+        answer: "Edit policies, và Manage permissions"
+        explanation: "Quản trị không phải quyền tối thiểu tạo feature"
+      - id: D
+        answer: "Read và Contribute là đủ vì Create branches luôn là một phần của Contribute."
+        explanation: "Create branches có thể là quyền riêng; không nên suy từ Contribute ở repo hoặc branch."
+    correctAnswerId: B
+  - id: "azure-devops-024"
+    question: "Parent repo có quyền inherited Deny; một branch có explicit Allow. Kết luận nào an toàn?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03-membership-and-access.md"
+      anchor: "deny-and-specificity-exceptions"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Deny của repo phải thắng Allow trên branch ngay cả khi Allow child explicit."
+        explanation: "Quyền kế thừa object có thể được cấu hình lại tại child; các nhóm và ngoại lệ cần xét bằng effective permission."
+      - id: B
+        answer: "Direct Allow của người dùng luôn thắng mọi group"
+        explanation: "Kết hợp group ở cùng scope có thể Deny"
+      - id: C
+        answer: "Kiểm tra effective right tại branch"
+        explanation: "Không suy Deny luôn thắng mọi cấp hay Allow luôn thắng mọi nhóm; xem kết quả hiệu lực tại branch sau khi hợp nhất inheritance và rules."
+      - id: D
+        answer: "Git sẽ tự chọn quyền theo commit mới nhất"
+        explanation: "Commit không điều khiển security token"
+    correctAnswerId: C
+  - id: "azure-devops-025"
+    question: "An đọc PR và vote được nhưng git push bị denied. Quyền nào phân biệt?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03-membership-and-access.md"
+      anchor: "contribute-to-pr-vs-code"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Reviewer vote tự mở quyền Contribute"
+        explanation: "Reviewer vote là hồ sơ PR, không phải cấp quyền Contribute; cần kiểm bit cho thao tác push vào branch riêng."
+      - id: B
+        answer: "Để push branch thì trước tiên phải có Contribute to pull requests; Contribute branch chỉ cần lúc merge."
+        explanation: "Đẩy commit là cập nhật Git ref nên cần quyền ghi nhánh; Contribute to PR là quyền cộng tác đề xuất riêng."
+      - id: C
+        answer: "Contribute to PR và quyền Edit policies cùng nghĩa"
+        explanation: "Review participation không là quản trị"
+      - id: D
+        answer: "PR participation khác branch Contribute"
+        explanation: "Có quyền bình luận/vote trên PR không chứng minh quyền Contribute để push commit vào branch; các security bits độc lập."
+    correctAnswerId: D
+  - id: "azure-devops-026"
+    question: "Người dùng thấy Repos hub nhưng không clone checkout-api; bạn kiểm tra gì trước khi nâng role?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03-membership-and-access.md"
+      anchor: "troubleshoot-effective-permissions"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Xem effective Read và Deny tại checkout-api"
+        explanation: "Khi clone checkout-api bị chặn, xem effective Read, group Deny, project membership và access level thay vì nâng hàng loạt lên admin."
+      - id: B
+        answer: "Tăng toàn bộ nhóm lên Project Administrators"
+        explanation: "Thăng quyền không xác định nguyên nhân"
+      - id: C
+        answer: "Tắt branch policy main để thử clone"
+        explanation: "Policy merge không quyết định quyền đọc"
+      - id: D
+        answer: "Kiểm Build Service identity vì một clone từ máy cá nhân luôn dùng token pipeline."
+        explanation: "Clone cá nhân thường dùng credential của người dùng, không tự dùng identity runner của pipeline."
+    correctAnswerId: A
+  - id: "azure-devops-027"
+    question: "An có quyền Contribute tại repo checkout-api. Đường sửa thông thường nào ít phức tạp nhất?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04-branches-forks-contributions.md"
+      anchor: "shared-branch-versus-fork"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Fork vào project khác để tránh review policies của nhánh main trên checkout-api."
+        explanation: "PR từ fork vẫn nhắm checkout-api/main nên checks trên target không bị loại bỏ khi source tách repo."
+      - id: B
+        answer: "Tạo feature branch trong checkout-api rồi mở PR"
+        explanation: "Người đã có Create branches/Contribute trên checkout-api thường tạo feature branch trong repo chung và mở PR vào nhánh đích có policy."
+      - id: C
+        answer: "Đề nghị tạo organization thứ hai trước khi sửa"
+        explanation: "Organization mới không cần cho một patch"
+      - id: D
+        answer: "Đẩy thẳng main ngay cả khi branch policy bắt PR"
+        explanation: "Direct push không đáp ứng required policy"
+    correctAnswerId: B
+  - id: "azure-devops-028"
+    question: "Contractor sửa trên fork checkout-api của mình. Từ nào chỉ repo gốc?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04-branches-forks-contributions.md"
+      anchor: "fork-origin-upstream"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Remote origin luôn chỉ source repository gốc, kể cả sau khi clone chính fork."
+        explanation: "Git remote names do người cấu hình; khi clone fork, origin thường trỏ fork, còn upstream thường là tên đặt thêm."
+      - id: B
+        answer: "fork là nhánh thuộc cùng repo gốc"
+        explanation: "Fork là Git repository riêng với refs và quyền của nó; quan hệ nguồn không biến fork thành nhánh nội bộ upstream."
+      - id: C
+        answer: "upstream thường chỉ repository gốc"
+        explanation: "Fork là repository riêng; từ upstream là quy ước remote thường dùng để chỉ nguồn gốc nhưng tên remote do người dùng cấu hình."
+      - id: D
+        answer: "target branch luôn là fork của main"
+        explanation: "Target trong PR có thể thuộc repo khác"
+    correctAnswerId: C
+  - id: "azure-devops-029"
+    question: "Bình có quyền push fork nhưng main upstream có policy hai votes. Khi tạo PR, policy nào xét?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04-branches-forks-contributions.md"
+      anchor: "fork-permissions-and-policies"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Quyền fork của Bình bỏ qua upstream rules"
+        explanation: "Fork write permission không cấp merge quyền target"
+      - id: B
+        answer: "Không policy nào nếu source và target khác repo"
+        explanation: "Tạo PR giữa fork và upstream vẫn chịu policies của branch đích, vì nơi nhận mã cần bảo vệ target history."
+      - id: C
+        answer: "Policy của source fork quyết định yêu cầu review khi PR nhắm main upstream."
+        explanation: "Khi tích hợp, Azure Repos đánh giá branch đích; rules trên fork không thay các điều kiện target."
+      - id: D
+        answer: "Kiểm tra policy của upstream target main"
+        explanation: "Fork có quyền và policy riêng; PR từ fork vẫn phải qua checks/review của target upstream/main, không kế thừa quyền merge từ fork."
+    correctAnswerId: D
+  - id: "azure-devops-030"
+    question: "Hai repo đều có branch main. PR từ fork sang upstream phải xác nhận gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04-branches-forks-contributions.md"
+      anchor: "pull-request-source-target"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Cặp source và target repo/branch"
+        explanation: "Một PR từ fork cần cả repository/branch nguồn và repository/branch đích vì tên main có thể tồn tại ở nhiều Git histories."
+      - id: B
+        answer: "Chỉ ghi source SHA và target branch tên main vì repo đích suy được từ SHA."
+        explanation: "SHA là danh tính commit, không chứa ngữ cảnh repo/branch đích của PR và có thể không có ref nhắm đúng."
+      - id: C
+        answer: "Chỉ project organization, không cần repository"
+        explanation: "Organization không định danh refs PR"
+      - id: D
+        answer: "Chỉ vote của reviewer, vì đã biết main"
+        explanation: "Review vote không chứng minh target đúng"
+    correctAnswerId: A
+  - id: "azure-devops-031"
+    question: "PR tên Fix bug 104 nhưng không nêu hành vi thay đổi. Cần bổ sung gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04-branches-forks-contributions.md"
+      anchor: "create-contribution-request"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Tăng reviewer count để phản hồi chặt chẽ hơn mà không cần thêm test steps."
+        explanation: "Số người duyệt không mô tả hành vi mong đợi và cách chứng minh sửa đúng Bug 104."
+      - id: B
+        answer: "Scope, hành vi và test evidence"
+        explanation: "Mô tả phải nối Bug 104 với mục đích, hành vi thay đổi, phạm vi và test; reviewer không thể kiểm chứng chỉ bằng title."
+      - id: C
+        answer: "Chỉ chuyển nhánh source thành main"
+        explanation: "Đổi tên source branch không bổ sung phạm vi bug hay test đã chạy; nội dung mô tả đề xuất vẫn thiếu."
+      - id: D
+        answer: "Chỉ đính lịch sử công ty lên PR"
+        explanation: "Lịch sử tổ chức không liên quan bug"
+    correctAnswerId: B
+  - id: "azure-devops-032"
+    question: "An mới sửa một phần và cần review sớm. Nên đặt PR ở trạng thái nào?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04-branches-forks-contributions.md"
+      anchor: "draft-vs-ready-pull-request"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Completed với mô tả còn việc cần làm"
+        explanation: "Completed nghĩa là tích hợp thành công"
+      - id: B
+        answer: "Abandoned để người khác vẫn review diff"
+        explanation: "Abandoned dừng đề xuất đang hoạt động"
+      - id: C
+        answer: "Draft, ghi rõ những test còn thiếu"
+        explanation: "Draft cho phép xin phản hồi sớm khi code/test chưa hoàn thiện; đổi Ready chỉ mời review, không phải xác nhận đủ merge policy."
+      - id: D
+        answer: "Đặt Active nhưng ghi là đang chờ feedback; Azure Repos tự hiểu đây là draft."
+        explanation: "Active và Draft là trạng thái workflow riêng; mô tả văn bản không thay đổi hệ thống kiểm soát readiness."
+    correctAnswerId: C
+  - id: "azure-devops-033"
+    question: "An mở PR từ fork sang checkout-api, nhưng tester không thể truy cập source. Cần rà gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04-branches-forks-contributions.md"
+      anchor: "verify-contribution-path"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Chỉ Azure Boards work item trạng thái Active"
+        explanation: "Work state không tạo fork visibility"
+      - id: B
+        answer: "Kiểm service identity của build validation thay vì quyền đọc của tester trên fork."
+        explanation: "CI identity có thể cần quyền riêng nhưng vấn đề quan sát diff của tester phải kiểm quyền nguồn/fork của tester."
+      - id: C
+        answer: "Chỉ tên branch giống target hay không"
+        explanation: "Branch names không quyết định quyền đọc fork"
+      - id: D
+        answer: "Fork visibility, review rights, source/target"
+        explanation: "Kiểm quyền đọc fork, nguồn/đích PR và reviewer để biết tester có thể quan sát diff; đổi tên branch không cấp visibility."
+    correctAnswerId: D
+  - id: "azure-devops-034"
+    question: "PR sửa timeout nhưng đổi cả permission. Reviewer nên bắt đầu từ đâu?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05-pull-request-review.md"
+      anchor: "pr-diff-and-description"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Đối chiếu intent, diff và hậu quả"
+        explanation: "Đối chiếu mô tả sửa timeout với diff có đổi permission; build xanh không chứng minh thay quyền bảo mật là trong scope."
+      - id: B
+        answer: "Chỉ dựa vào tiêu đề Fix timeout"
+        explanation: "Tiêu đề Fix timeout không chứa toàn bộ diff; thay đổi permission ngoài bối cảnh cần được reviewer phát hiện và hỏi lại."
+      - id: C
+        answer: "Build validation xanh có thể xác minh quyền thay đổi nếu security test nằm trong pipeline."
+        explanation: "Một test bảo mật chạy xanh không phải quyết định scope/ủy quyền từ owner thay đổi quyền."
+      - id: D
+        answer: "Chỉ xét số dòng thay đổi tổng cộng"
+        explanation: "Độ dài diff không thể hiện rủi ro phân quyền"
+    correctAnswerId: A
+  - id: "azure-devops-035"
+    question: "PR sửa refund do Bình hiểu luồng hoàn tiền; reviewer nào phù hợp?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05-pull-request-review.md"
+      anchor: "reviewer-assignment-and-context"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Người gần nhất đăng nhập organization bất kể chuyên môn"
+        explanation: "Người vừa đăng nhập có thể không hiểu logic refund hoặc quyền đánh giá source; thời gian online không đo độ phù hợp."
+      - id: B
+        answer: "Bình có repo access và hiểu logic refund nghiệp vụ"
+        explanation: "Bình cần vừa hiểu refund nghiệp vụ vừa có đủ quyền đọc/đánh giá PR; vai trò admin hay online gần đây không thay năng lực đó."
+      - id: C
+        answer: "Project Administrator có thể thay domain reviewer nếu đủ quyền Manage permissions."
+        explanation: "Quyền quản trị host không chứng minh người đó hiểu nghiệp vụ refund hoặc contract rủi ro."
+      - id: D
+        answer: "Người bất kỳ được gắn optional để thay required reviewer"
+        explanation: "Optional vote không tự thỏa required-reviewer policy"
+    correctAnswerId: B
+  - id: "azure-devops-036"
+    question: "Bình comment lỗi null trên một dòng; An push fix. Khi nào resolve thread?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05-pull-request-review.md"
+      anchor: "line-comments-discussion-threads"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Ngay lúc An trả lời Fixed nhưng chưa có diff mới"
+        explanation: "Tác giả nói Fixed chỉ là xác nhận miệng; thread nên resolve sau khi reviewer thấy diff/test chứng minh null case đã xử lý."
+      - id: B
+        answer: "Resolve khi policy comment-resolution đánh dấu green dù chưa đối chiếu test null."
+        explanation: "Một badge chỉ biểu thị trạng thái thread; nên xem logic sửa cùng test trước khi đánh dấu concern được xử lý."
+      - id: C
+        answer: "Khi chuyển comment sang work item khác"
+        explanation: "Move comment không cho thấy sửa đúng"
+      - id: D
+        answer: "Xem diff/test mới rồi resolve concern"
+        explanation: "Chỉ đánh dấu resolved sau khi xem bản diff và test cho null path; trạng thái thread là hồ sơ thảo luận, không là proof code đúng."
+    correctAnswerId: D
+  - id: "azure-devops-037"
+    question: "Bình chọn Approve with suggestions và góp ý rename. Kết luận đúng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05-pull-request-review.md"
+      anchor: "approve-versus-approve-suggestions"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Approve with suggestions chỉ được tính khi tác giả áp dụng mọi rename đã gợi ý."
+        explanation: "Microsoft định nghĩa đó là một phiếu approve, còn suggestion là đề xuất không tự thay code."
+      - id: B
+        answer: "Tên phương thức tự được rename ngay"
+        explanation: "Ý kiến rename trong review không tự sửa method; tác giả phải thay source và gửi commit nếu đồng ý."
+      - id: C
+        answer: "Đã approve; rename cần tác giả sửa"
+        explanation: "Approve with suggestions vẫn là vote approve; tác giả phải tự cân nhắc và áp dụng rename, và PR vẫn chưa được Complete."
+      - id: D
+        answer: "Target main tự nhận commit sau vote"
+        explanation: "Phiếu Approve không chạy Complete và không cập nhật main; quy trình merge còn phải thỏa policies và quyền."
+    correctAnswerId: C
+  - id: "azure-devops-038"
+    question: "PR thiếu security test, reviewer muốn tác giả sửa rồi xét lại. Vote nào diễn đạt phù hợp?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05-pull-request-review.md"
+      anchor: "wait-for-author-versus-reject"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Wait for author, yêu cầu security test"
+        explanation: "Wait for author yêu cầu sửa hoặc giải thích trước khi xét lại; với required reviewer, vote này ngăn đạt policy cho đến khi thay đổi."
+      - id: B
+        answer: "Approve vì tác giả đã hứa bổ sung test"
+        explanation: "Hứa bổ sung test vẫn để thiếu security evidence; approval không phù hợp trước khi tác giả sửa và chứng minh."
+      - id: C
+        answer: "Approve with suggestions vì reviewer muốn tác giả bổ sung test rồi giữ nguyên approval hiện tại."
+        explanation: "Approve with suggestions vẫn là approve; test bắt buộc thiếu cần Vote yêu cầu tác giả thay đổi để review lại."
+      - id: D
+        answer: "Bỏ phiếu bằng cách Complete PR trước"
+        explanation: "Completion không phải phản hồi review"
+    correctAnswerId: A
+  - id: "azure-devops-039"
+    question: "PR có hai Approve nhưng check required chưa đạt. Nhóm nên hiểu trạng thái nào?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05-pull-request-review.md"
+      anchor: "review-vote-vs-pr-completion"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "PR đã Completed vì đủ số vote"
+        explanation: "Review count không đồng nghĩa merge"
+      - id: B
+        answer: "Build xanh sẽ được kế thừa từ PR trước"
+        explanation: "Checks thuộc nội dung và trạng thái hiện tại"
+      - id: C
+        answer: "Reviewer có quyền tự bypass nếu đã Approve"
+        explanation: "Vote không cấp quyền vượt chính sách"
+      - id: D
+        answer: "Approve vẫn có thể bị chặn Complete"
+        explanation: "Hai phiếu approve có thể đủ ngưỡng review nhưng required build chưa đạt vẫn ngăn merge thông thường; cần xem target Policies."
+    correctAnswerId: D
+  - id: "azure-devops-040"
+    question: "An push thêm commit sau khi Bình Approve. Cần suy luận gì về vote?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05-pull-request-review.md"
+      anchor: "author-revisions-and-re-review"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Mỗi push làm reset phiếu vì Azure Repos luôn chọn cấu hình Require approval on last iteration."
+        explanation: "Các tùy chọn reset vote và yêu cầu review vòng mới được cấu hình trên nhánh, không mặc định luôn bật."
+      - id: B
+        answer: "Vote phụ thuộc reset policy; đọc diff mới"
+        explanation: "Khi tác giả push commit mới, vote cũ có bị reset tùy cấu hình; phải đọc lại diff và kết quả kiểm chứng hiện hành."
+      - id: C
+        answer: "Vote luôn bất biến khi PR Active"
+        explanation: "Azure Repos hỗ trợ reset vote theo policy sau cập nhật source; Active không có nghĩa phiếu bất biến."
+      - id: D
+        answer: "Push tự chuyển Approve thành Reject"
+        explanation: "Không có chuyển vote mặc định như vậy"
+    correctAnswerId: B
+  - id: "azure-devops-041"
+    question: "Bảng Overview cho thấy hai reviewer, một Wait for author; cần đọc đâu để kết luận?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05-pull-request-review.md"
+      anchor: "verify-review-state"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Chỉ kiểm tra tên tác giả trong commit mới"
+        explanation: "Author không cho biết policy đủ chưa"
+      - id: B
+        answer: "Chỉ đếm avatars, bỏ qua dấu required"
+        explanation: "Avatar chỉ thể hiện người tham gia; phải đọc vote và required flag để biết đúng số phiếu có giá trị."
+      - id: C
+        answer: "Xem votes, required, threads và Policies"
+        explanation: "Dấu Wait for author, required reviewer, comment threads và Policies quyết định review có đạt hay không; đếm avatars không đủ."
+      - id: D
+        answer: "Chỉ xem số giờ PR đã Active"
+        explanation: "PR age không là phép đo điều kiện Complete; policy kiểm votes/checks ở trạng thái đề xuất hiện hành."
+    correctAnswerId: C
+  - id: "azure-devops-042"
+    question: "Đội Checkout bảo vệ main bằng review hai người và build required. Mục đích chính?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06-branch-policies-and-bypass.md"
+      anchor: "why-protect-target-branches"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Kiểm soát thay đổi trước merge main"
+        explanation: "Branch policies giữ main làm nền chung bằng cách đặt điều kiện reviewer/build/trace trước tích hợp; không phải công cụ đảm bảo logic đúng."
+      - id: B
+        answer: "Bảo đảm mọi thay đổi đúng nghiệp vụ qua tên nhánh"
+        explanation: "Policy không suy ra business correctness"
+      - id: C
+        answer: "Tự cấp quyền Read cho mọi project member"
+        explanation: "Review gate không điều chỉnh access level"
+      - id: D
+        answer: "Tạo commit merge ngay khi mở PR"
+        explanation: "Mở PR chỉ khởi tạo hồ sơ đề xuất; merge commit cần hành động hoàn tất sau review, checks và quyền hợp lệ."
+    correctAnswerId: A
+  - id: "azure-devops-043"
+    question: "An có quyền xem PR nhưng bị báo minimum reviewers not met. Kiểm tra gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06-branch-policies-and-bypass.md"
+      anchor: "branch-permissions-vs-policies"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Đổi repository visibility trước khi xét policy"
+        explanation: "View access đã đủ, blocker là approval gate"
+      - id: B
+        answer: "Tăng Contribute trên main cho người đang review để chính họ được tính phiếu approve."
+        explanation: "Phiếu cần đúng người và policy; quyền đẩy commit không làm biến optional vote thành eligible counted approval."
+      - id: C
+        answer: "Xem target policy và counted approvals"
+        explanation: "Thông báo thiếu minimum reviewers liên quan target policy và phiếu được tính hợp lệ, không phải Read hay Contribute của người xem PR."
+      - id: D
+        answer: "Mở rộng organization access level lên cao nhất"
+        explanation: "Mức access của tổ chức ảnh hưởng entitlement, không thay phiếu reviewer bị thiếu theo minimum-reviewers policy."
+    correctAnswerId: C
+  - id: "azure-devops-044"
+    question: "Nhánh main có security scan optional fail và build validation required pass. Kết luận hợp lý?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06-branch-policies-and-bypass.md"
+      anchor: "required-vs-optional-policies"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Mọi optional warning mặc nhiên chặn PR"
+        explanation: "Optional không luôn tương đương required"
+      - id: B
+        answer: "Optional warning không mặc nhiên chặn"
+        explanation: "Optional scan báo rủi ro nhưng không tự thành blocking gate; trạng thái build required xanh chỉ là một điều kiện trong danh sách."
+      - id: C
+        answer: "Required build xanh đủ cho merge dù optional scan phát hiện lỗi rủi ro chưa được đánh giá."
+        explanation: "Không chặn về policy không đồng nghĩa đánh giá rủi ro tốt; reviewer vẫn cần cân nhắc cảnh báo."
+      - id: D
+        answer: "PR Completed ngay nếu build pass"
+        explanation: "Các gate khác và quyền actor vẫn áp dụng"
+    correctAnswerId: B
+  - id: "azure-devops-045"
+    question: "Rule cần hai approval không tính author. An và Bình vote Approve, An là tác giả. Đếm thế nào?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06-branch-policies-and-bypass.md"
+      anchor: "minimum-reviewers-and-self-approval"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Đủ hai vì cả hai vote đều là Approve"
+        explanation: "Author exclusion thay điều kiện tính"
+      - id: B
+        answer: "Đủ hai nếu tác giả thuộc Contributors và phiếu Approve có nguồn danh tính hợp lệ."
+        explanation: "Rule loại phiếu tác giả dù là Contributors; chỉ reviewer ngoài tác giả được tính trong ví dụ."
+      - id: C
+        answer: "Không có phiếu nào vì tác giả từng vote"
+        explanation: "Phiếu của Bình vẫn có thể hợp lệ; việc tác giả bỏ phiếu không vô hiệu hóa phiếu của người khác."
+      - id: D
+        answer: "Chỉ approval của Bình được tính"
+        explanation: "Chính sách loại phiếu tác giả khỏi ngưỡng tối thiểu nên chỉ Approve của Bình được tính; cần thêm reviewer hợp lệ để đủ hai."
+    correctAnswerId: D
+  - id: "azure-devops-046"
+    question: "PR sửa /payments/ và required reviewer chưa vote, dù đã có hai optional Approve. Điều gì còn thiếu?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06-branch-policies-and-bypass.md"
+      anchor: "required-reviewers-and-comment-resolution"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Chỉ cần đổi tên directory để rule bỏ qua"
+        explanation: "Đổi scope để né review không giải quyết concern"
+      - id: B
+        answer: "Cần đóng mọi work item linked trước"
+        explanation: "Work item state khác required reviewer vote"
+      - id: C
+        answer: "Cần required reviewer phê duyệt"
+        explanation: "Required reviewer phải đưa phiếu được chấp nhận theo rule của /payments/; hai optional approvals không thay vai trò review bắt buộc."
+      - id: D
+        answer: "Cần tăng số reviewer lên ba để các optional phiếu hiện có đủ thay thế người bắt buộc."
+        explanation: "Required identity/path reviewer là một điều kiện khác với số lượng phiếu approval chung."
+    correctAnswerId: C
+  - id: "azure-devops-047"
+    question: "Build validation failed sau push; reviewer vote xanh. Bước xử lý nào đúng phạm vi Repos?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06-branch-policies-and-bypass.md"
+      anchor: "build-validation-status-checks"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Tắt minimum-reviewer policy trước"
+        explanation: "Rule reviewer không là nguyên nhân làm build failed; gỡ rule sẽ bỏ kiểm soát review mà không sửa nguồn đang lỗi."
+      - id: B
+        answer: "Xem failing build rồi sửa và revalidate"
+        explanation: "Repos hiển thị build validation failed; xem log job có lỗi, sửa source và kiểm chứng lại qua Pipelines thay vì thay reviewer policy."
+      - id: C
+        answer: "Dùng work item label Passed để thay pipeline"
+        explanation: "Work-item labels do not record successful pipeline execution; branch policy checks actual build validation status."
+      - id: D
+        answer: "Đổi từ Basic merge sang Squash để pipeline kiểm tập thay đổi nhỏ hơn và có thể xanh."
+        explanation: "Thay merge strategy không sửa lỗi build đang chạy trên nội dung PR được đề xuất."
+    correctAnswerId: B
+  - id: "azure-devops-048"
+    question: "Nhánh chỉ cho Squash trong completion. Tác giả chọn basic merge. Kết quả nào phù hợp?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06-branch-policies-and-bypass.md"
+      anchor: "permitted-merge-types"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Chọn merge type được policy cho phép"
+        explanation: "Policy chỉ cho Squash nên cần chọn cách complete được phép; reviewer approve không thể tự bỏ giới hạn chiến lược merge."
+      - id: B
+        answer: "Cho phép Basic merge nếu đủ reviewer và có build xanh, vì đó là các điều kiện ưu tiên."
+        explanation: "Policies merge type vẫn độc lập và áp dụng khi các vote/build khác đã đạt; cần chọn kiểu được phép."
+      - id: C
+        answer: "Target tự tạo cả basic và squash commit"
+        explanation: "Chỉ một chiến lược được chọn và áp dụng"
+      - id: D
+        answer: "Source branch tự mất vì strategy bị cấm"
+        explanation: "Merge strategy bị chặn khiến thao tác Complete chưa chạy; không tự động xóa source branch khi người dùng thử."
+    correctAnswerId: A
+  - id: "azure-devops-049"
+    question: "Charlie có Bypass policies when completing PR nhưng không có bypass pushing. Tình huống nào đúng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06-branch-policies-and-bypass.md"
+      anchor: "bypass-on-pr-versus-push"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Push main trực tiếp sẽ tự vượt policy vì có PR bypass"
+        explanation: "Bypass on PR completion và Bypass on pushing là hai quyền; có quyền thứ nhất không cho phép direct push bỏ policy."
+      - id: B
+        answer: "Bypass policies when pushing là quyền tương đương Contribute để đẩy cả branch mới."
+        explanation: "Bypass loại điều kiện policy trong trường hợp người dùng đã có quyền push cần thiết; không tự cấp Contribute."
+      - id: C
+        answer: "Có quyền bypass sẽ tự làm mọi review vote hợp lệ"
+        explanation: "Quyền bypass không ghi thêm review vote hay sửa người duyệt; nó chỉ cho actor override gate khi đủ điều kiện."
+      - id: D
+        answer: "Có quyền Override khi Complete PR hợp lệ"
+        explanation: "Bypass completing PR và bypass pushing là hai quyền độc lập; actor phải chọn override khi hoàn tất PR và vẫn đáp ứng quyền tích hợp phù hợp."
+    correctAnswerId: D
+  - id: "azure-devops-050"
+    question: "PR vẫn blocked dù hai reviewer Approve. Cách tìm nguyên nhân hợp lý?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06-branch-policies-and-bypass.md"
+      anchor: "diagnose-policy-failures"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Tắt mọi checks vì approvals đã đạt"
+        explanation: "Approval đủ không nói rằng build, thread hoặc linked work-item policies đã đạt; phải tìm đúng failing gate."
+      - id: B
+        answer: "Tăng quyền Edit policies cho người Complete để trạng thái failing checks biến mất."
+        explanation: "Edit policies chỉ cho sửa cấu hình, không tự làm checks chạy lại hoặc biến fail thành pass."
+      - id: C
+        answer: "Rà target, votes, checks và effective rights"
+        explanation: "Kiểm từng blocker: target policy, reviewer votes, build/status, xung đột và effective rights; thêm approval không giải quyết mọi gate."
+      - id: D
+        answer: "Chuyển target sang branch không có policies"
+        explanation: "Đổi đích né review tạo rủi ro governance"
+    correctAnswerId: C
+  - id: "azure-devops-051"
+    question: "PR có đủ votes nhưng feature và main sửa cùng một dòng không tương thích. Cần làm gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "07-complete-pull-requests.md"
+      anchor: "merge-readiness-and-conflicts"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Dùng bypass policies để bỏ qua merge conflict"
+        explanation: "Bypass không giải quyết nội dung Git"
+      - id: B
+        answer: "Sửa conflict rồi chạy lại tests"
+        explanation: "Một xung đột Git trên cùng dòng phải được giải quyết trong nội dung mergeable; thêm vote hoặc bypass policy không sửa file."
+      - id: C
+        answer: "Xin thêm vote Approve from required reviewer để Git chọn phiên bản của họ khi merge."
+        explanation: "Vote thuộc lớp chính sách; Git vẫn cần resolve conflict content trước khi hoàn tất."
+      - id: D
+        answer: "Đổi branch main thành Public"
+        explanation: "Visibility không sửa xung đột nội dung"
+    correctAnswerId: B
+  - id: "azure-devops-052"
+    question: "PR còn build đang chạy; tác giả chọn Set auto-complete. Hành vi nào đúng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "07-complete-pull-requests.md"
+      anchor: "complete-pr-versus-auto-complete"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Target nhận code ngay khi nút được chọn"
+        explanation: "Set auto-complete lưu ý định, không tự thay source hoặc nhánh target trước khi điều kiện merge và quyền đạt."
+      - id: B
+        answer: "Build lỗi tự được sửa khi auto-complete bật"
+        explanation: "Auto-complete không chạy job sửa code; pipeline vẫn phải hoàn tất và báo trạng thái phù hợp với required checks."
+      - id: C
+        answer: "Chờ đủ checks/policies và quyền rồi mới tự Complete."
+        explanation: "Set auto-complete chỉ lưu ý định hoàn tất khi checks/policies đạt và quyền hợp lệ; nó không tự sửa build hoặc cấp thêm quyền cho tác giả."
+      - id: D
+        answer: "Auto-complete dùng quyền tác giả tạo PR nên vẫn hoàn tất dù actor không có quyền target."
+        explanation: "Auto-complete vẫn phải xét actor permissions/policies tại lúc tích hợp, không tự tạo quyền merge."
+    correctAnswerId: C
+  - id: "azure-devops-053"
+    question: "An Abandon PR chọn sai target. Đội muốn xem lại proposal cũ. Có thể làm gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "07-complete-pull-requests.md"
+      anchor: "abandon-reactivate-versus-complete"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Reactivate rồi đánh giá lại PR hiện tại"
+        explanation: "Abandoned là ngừng đề xuất, không merge; Reactivate tiếp tục hồ sơ PR và cần kiểm lại target, reviewers, diff và policies."
+      - id: B
+        answer: "PR Abandoned có thể tự chuyển Completed nếu branch target tiến đến cùng commit."
+        explanation: "Abandoned là trạng thái đề xuất đã dừng; lịch sử Git giống nhau không tự tạo completion record."
+      - id: C
+        answer: "Xem như source branch đã bị xóa bắt buộc"
+        explanation: "Abandon không tự xóa mọi commit/branch"
+      - id: D
+        answer: "Thay commit history bằng trạng thái Abandoned"
+        explanation: "Trạng thái Abandoned tồn tại ở Azure Repos PR, không thay nội dung Git commit history hay refs trong kho."
+    correctAnswerId: A
+  - id: "azure-devops-054"
+    question: "Nhóm chọn Squash khi Complete PR. Dấu vết nào phù hợp?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "07-complete-pull-requests.md"
+      anchor: "pr-merge-options-and-traceability"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Target nhận mọi commit feature cùng merge commit"
+        explanation: "Basic merge giữ nhánh lịch sử và có thể tạo merge commit; squash thay bằng một commit tổng hợp mới trên target."
+      - id: B
+        answer: "Target bỏ qua PR record sau khi squash"
+        explanation: "PR vẫn có metadata review và kết quả"
+      - id: C
+        answer: "Squash giữ nguyên SHA của feature cuối và chỉ đổi message để tạo một target commit."
+        explanation: "Squash tạo commit hợp nhất mới với nội dung và metadata khác, còn source commits vẫn ở nhánh nguồn nếu được giữ."
+      - id: D
+        answer: "Một commit squash và PR Completed record"
+        explanation: "Squash tạo một commit mới trên target nhưng metadata PR vẫn giữ votes, discussions và trạng thái Completed để truy vết."
+    correctAnswerId: D
+  - id: "azure-devops-055"
+    question: "PR sửa Bug 104 ở Boards. Link work item giúp reviewer điều gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "07-complete-pull-requests.md"
+      anchor: "work-item-and-pr-link"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Liên kết Bug 104 để Azure Boards tự xác nhận mọi test của PR đã đạt."
+        explanation: "Work-item link là quan hệ traceability; trạng thái test là output của tools/chạy thử riêng."
+      - id: B
+        answer: "Đối chiếu bug với patch và bằng chứng"
+        explanation: "Liên kết Bug 104 trong Boards với PR giúp reviewer đối chiếu yêu cầu nghiệp vụ, diff và test; link không chứng minh bug hết hoặc code deployed."
+      - id: C
+        answer: "Tự deploy patch lên production sau merge"
+        explanation: "Link Bug với PR chỉ cho biết lý do sửa; triển khai production cần pipeline/release action và bằng chứng riêng."
+      - id: D
+        answer: "Tự cấp bypass policy khi PR có liên kết"
+        explanation: "Linked work item không tạo quyền bypass policy; các quyền nhánh đích phải được cấp riêng cho danh tính phù hợp."
+    correctAnswerId: B
+  - id: "azure-devops-056"
+    question: "Main bật blocking Check for linked work items; PR thiếu link, build xanh. Phải làm gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "07-complete-pull-requests.md"
+      anchor: "work-item-linking-policy"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Chèn AB#104 vào commit message là đủ thay cho work-item link trên PR."
+        explanation: "Policy yêu cầu liên kết work item được Azure Repos nhận trên PR; text đơn thuần chưa bảo đảm metadata quan hệ."
+      - id: B
+        answer: "Bỏ setting work-item vì build đã xanh"
+        explanation: "Bỏ policy không chứng minh traceability"
+      - id: C
+        answer: "Link work item thật rồi recheck Policies"
+        explanation: "Policy Check for linked work items ở nhánh đích cần liên kết Boards thực, không thể dùng message/merge mode thay thế metadata PR."
+      - id: D
+        answer: "Đổi option Squash thay cho basic merge"
+        explanation: "Merge strategy không lấp work-item requirement"
+    correctAnswerId: C
+  - id: "azure-devops-057"
+    question: "PR đã Completed và target có commit nhưng Bug 104 vẫn Active. Đánh giá nào chính xác?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "07-complete-pull-requests.md"
+      anchor: "completion-record-and-work-item-state"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Completed PR sẽ chuyển Bug Active sang Resolved dù không chọn update work items."
+        explanation: "Work-item transition phụ thuộc process và các completion options; không thể suy chỉ từ PR state."
+      - id: B
+        answer: "Bug Active nghĩa là PR chưa merge"
+        explanation: "State của Boards và Repos tách nhau"
+      - id: C
+        answer: "Bản production chắc chắn chưa deploy vì Bug Active"
+        explanation: "Work item state không chứng minh deployment"
+      - id: D
+        answer: "Code đã merge; bug state xét độc lập"
+        explanation: "Completed PR cùng commit target chứng minh tích hợp; Bug 104 Active vẫn có thể do tùy chọn transition/process và cần theo dõi riêng."
+    correctAnswerId: D
+  - id: "azure-devops-058"
+    question: "Charlie chỉ có quyền bình luận PR; build xanh, approvals đủ. Charlie bấm Complete bị denied. Bắt đầu đâu?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "07-complete-pull-requests.md"
+      anchor: "target-permission-completion-scenario"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Xem effective completion rights tại target"
+        explanation: "Đủ vote/build nhưng actor bị denied phải kiểm permission hiệu lực ở target; quyền bình luận không tương đương quyền complete."
+      - id: B
+        answer: "Số comment trong PR đã vượt giới hạn"
+        explanation: "Comments không quyết định merge authorization"
+      - id: C
+        answer: "Tên fork source của người viết có đúng chữ main không"
+        explanation: "Tên nhánh trong fork không là quyền của Charlie ở target; cần đọc effective target completion permissions."
+      - id: D
+        answer: "Work-item link policy chưa xanh thì Azure Repos báo actor lacks target permission."
+        explanation: "Policy metadata và authorization là hai thông báo/nguồn kiểm riêng; scenario cho biết Complete denied với actor cụ thể."
+    correctAnswerId: A
+  - id: "azure-devops-059"
+    question: "PR không Complete được. Cách phân biệt lỗi code conflict và quyền actor?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "07-complete-pull-requests.md"
+      anchor: "diagnose-uncompleted-pr"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Complete bị disabled là bằng chứng actor thiếu quyền branch, không cần đọc policy report."
+        explanation: "Cùng triệu chứng có thể do conflicts, required check fail hoặc quyền, cần đọc trạng thái chi tiết."
+      - id: B
+        answer: "Xem PR blocker và branch target rights"
+        explanation: "Trang PR phân biệt merge conflict với policy failure và unauthorized; cần đọc blocker cụ thể rồi đối chiếu quyền branch."
+      - id: C
+        answer: "Tạm cấp mọi người Bypass chính sách để thử"
+        explanation: "Cấp bypass đại trà che dấu lỗi review/merge và mở quyền vượt policy không cần thiết; không phải cách debug an toàn."
+      - id: D
+        answer: "Đếm số reviewers và lấy giá trị cao nhất"
+        explanation: "Vote count không phát hiện Git conflict"
+    correctAnswerId: B
+  - id: "azure-devops-060"
+    question: "RetailCo/Checkout/checkout-api có lỗi tax. Sơ đồ điều phối nào đúng cấp?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "08-end-to-end-azure-repos.md"
+      anchor: "map-org-project-repo"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Organization và project có cùng quyền mặc định nên checkout-api repo không cần kiểm branch rights."
+        explanation: "Repo/branch permissions có thể override hoặc kế thừa; không thể suy quyền từ sơ đồ chứa đối tượng."
+      - id: B
+        answer: "Work item trong repo thay thế project membership"
+        explanation: "Boards work item không cấp Git membership"
+      - id: C
+        answer: "RetailCo organization → Checkout → checkout-api repo"
+        explanation: "Organization RetailCo chứa project Checkout và repo checkout-api; theo đúng cấp này mới xác định membership, Git history và chính sách."
+      - id: D
+        answer: "Nhánh main tạo project mới cho mỗi PR"
+        explanation: "Branches không sinh project của organization"
+    correctAnswerId: C
+  - id: "azure-devops-061"
+    question: "An có rights trên checkout-api feature, còn contractor chỉ push được fork. Chọn đường sửa thế nào?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "08-end-to-end-azure-repos.md"
+      anchor: "choose-contribution-path"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Cả hai đều bắt buộc fork dù đã có Contribute"
+        explanation: "An đã có quyền làm nhánh trong repo gốc nên fork mới là bước tăng thêm quản trị, không là điều kiện chung."
+      - id: B
+        answer: "Contractor cần Create repository ở project gốc mới được push lên fork riêng."
+        explanation: "Quyền push tới fork phụ thuộc scope fork; tạo fork mới có yêu cầu riêng, không nhất thiết phải tạo trong upstream project."
+      - id: C
+        answer: "An nên push main bỏ qua PR policy"
+        explanation: "Tác giả vẫn phải đi qua target checks"
+      - id: D
+        answer: "An dùng feature; contractor fork rồi PR"
+        explanation: "An có rights ở repo gốc thì tạo feature branch; contractor dùng fork có quyền riêng rồi đề xuất PR vào target chịu policy."
+    correctAnswerId: D
+  - id: "azure-devops-062"
+    question: "PR Draft đã có diff nhưng chưa đủ test; muốn chuyển Ready cần điều gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "08-end-to-end-azure-repos.md"
+      anchor: "open-draft-and-ready-pr"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Thêm test evidence, xác nhận sẵn review"
+        explanation: "Draft còn thiếu test cần thêm bằng chứng và xác nhận sẵn review rồi mới chuyển Ready; thay quyền hay auto-complete không hoàn thành code."
+      - id: B
+        answer: "Cần mọi reviewer Approve trước khi đổi Ready vì Draft không thể mời review sớm."
+        explanation: "Draft dùng cho phản hồi ban đầu; Ready đánh dấu tác giả đã sẵn sàng để chính thức xét."
+      - id: C
+        answer: "Chọn Auto-complete để giả lập test đủ"
+        explanation: "Auto-complete không tạo test evidence"
+      - id: D
+        answer: "Đổi quyền branch để Draft thành Completed ngay"
+        explanation: "Branch rights không làm code sẵn sàng"
+    correctAnswerId: A
+  - id: "azure-devops-063"
+    question: "PR sửa /payments/ đã có hai optional vote nhưng required reviewer Wait for author. Cần gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "08-end-to-end-azure-repos.md"
+      anchor: "review-and-apply-policies"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Đặt optional reviewer thành owner dự án tự động"
+        explanation: "Role title không thay required review state"
+      - id: B
+        answer: "Giải quyết feedback rồi lấy required vote"
+        explanation: "Phiếu Wait for author của required reviewer chưa đáp ứng gate; sửa feedback và nhận phiếu hợp lệ thay vì thêm optional votes."
+      - id: C
+        answer: "Chuyển target sang feature branch khác để bỏ vote"
+        explanation: "Chuyển target để né required reviewer làm thay mục tiêu nhận mã, không xử lý comment bảo mật hay chấp thuận chuyên môn."
+      - id: D
+        answer: "Nhận thêm một optional approval là đủ vì tổng số Approve sẽ lớn hơn required count."
+        explanation: "Đủ số lượng không loại yêu cầu cá nhân của required reviewer; Wait for author vẫn chưa được xử lý."
+    correctAnswerId: B
+  - id: "azure-devops-064"
+    question: "PR sửa Bug 104 đã đủ checks, cần bàn giao nguồn thay đổi cho tester. Cần bằng chứng gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "08-end-to-end-azure-repos.md"
+      anchor: "complete-with-work-item-trace"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Tên reviewer và work-item link tự xác định commit nào đã xuất hiện trên main."
+        explanation: "Phải có target commit và hồ sơ Completed để xác định bản mã được bàn giao."
+      - id: B
+        answer: "Chỉ số dòng đã thay trong diff"
+        explanation: "Số dòng diff không cho tester biết Bug 104 được sửa ở revision nào hay còn phải kiểm trường hợp gì."
+      - id: C
+        answer: "PR Completed, main và Bug 104"
+        explanation: "PR Completed, commit đã vào main và link Bug 104 tạo dấu vết từ yêu cầu đến thay đổi để tester xác minh đúng revision."
+      - id: D
+        answer: "Chỉ màu xanh của build pipeline cũ"
+        explanation: "Green status riêng không chỉ rõ tích hợp"
+    correctAnswerId: C
+  - id: "azure-devops-065"
+    question: "PR Approved, không xung đột, nhưng không có quyền Complete và thiếu work-item link. Chẩn đoán?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "08-end-to-end-azure-repos.md"
+      anchor: "investigate-blocked-workflow"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Chỉ cấp bypass vì hai lỗi đều là review vote"
+        explanation: "Bypass không thay work item/authorization hợp lệ"
+      - id: B
+        answer: "Đổi merge option sang Rebase sẽ yêu cầu ít quyền và tự tạo linked work item."
+        explanation: "Merge strategy tác động lịch sử commit, không cấp completion rights hoặc work-item metadata."
+      - id: C
+        answer: "Chỉ tăng số approvals đã đủ"
+        explanation: "Phiếu approve đã đủ theo kịch bản; thêm vote không tạo work-item link hay quyền Complete còn thiếu."
+      - id: D
+        answer: "Sửa work-item gate và target rights riêng"
+        explanation: "Thiếu work-item link là policy metadata, còn actor denied là permission; chẩn đoán và sửa độc lập từng lớp không dùng bypass bừa."
+    correctAnswerId: D
+  - id: "azure-devops-066"
+    question: "Nhóm cần xác nhận PR đã tích hợp và reviewer nào phê duyệt. Nguồn nào đủ kiểm tra?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "08-end-to-end-azure-repos.md"
+      anchor: "verify-end-to-end-evidence"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Completed PR, votes và target history"
+        explanation: "PR chứa reviewer votes/quyết định, target history chứng minh merge; phải xem cả hai thay vì chỉ Boards hoặc một pipeline log."
+      - id: B
+        answer: "Chỉ trạng thái Done trên Boards Bug 104"
+        explanation: "Trạng thái Done của Boards chỉ thể hiện quy trình quản lý bug, không ghi chi tiết ai duyệt và target merge commit."
+      - id: C
+        answer: "Pipeline job xanh cùng tên reviewer trong build log đủ thay cho PR review votes."
+        explanation: "Build evidence và review votes do các cơ chế riêng tạo; tên người trong log không phải vote."
+      - id: D
+        answer: "Chỉ branch feature trong clone local"
+        explanation: "Local ref không xác nhận target nhận mã"
+    correctAnswerId: A
+  - id: "azure-devops-067"
+    question: "Cần hiểu vì sao rebase đổi SHA và vì sao work-item state vẫn Active. Chọn đúng module học?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "08-end-to-end-azure-repos.md"
+      anchor: "handoff-to-neighboring-modules"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Tất cả thuộc Azure Pipelines vì có build status"
+        explanation: "Azure Pipelines chạy build/test, không quyết định SHA của Git rebase và cũng không quản lý lifecycle của Bug 104."
+      - id: B
+        answer: "Git giải thích SHA; Boards giải thích work item"
+        explanation: "Thay ID commit do replay/rebase là cơ chế Git; trạng thái Bug 104 thuộc Boards; Azure Repos liên kết chúng nhưng không định nghĩa cả hai."
+      - id: C
+        answer: "Azure Repos quyết định SHA mới khi local rebase nên chỉ cần đọc PR completion settings."
+        explanation: "Local Git tính commit objects/parents khi rebase; hosting chỉ trình bày và lưu dấu trao đổi refs."
+      - id: D
+        answer: "Branching strategy quyết định work item transition engine"
+        explanation: "Quy trình branch không thay state machine Boards"
+    correctAnswerId: B

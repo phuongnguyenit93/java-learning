@@ -41,4 +41,84 @@
 # The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: azure-repos-collaboration-model
+    relatedKnowledge:
+      - 01-azure-repos-collaboration
+    title: "The Role of Azure Repos in Source Collaboration"
+    purpose: "Understand how Azure Repos helps teams host repositories, discuss changes, and govern which contributions are accepted."
+    objectives:
+      - "Distinguish Azure Repos hosting, permissions, and change reviews from version history and operations owned by Git."
+      - "Explain how organizations, projects, repositories, contributors, pull requests, and merge requirements fit together."
+      - "Recognize Azure Boards and Azure Pipelines as adjacent services whose work tracking and CI/CD details have separate learning owners."
+
+  - id: azure-repos-project-structure
+    relatedKnowledge:
+      - 02-organizations-projects-repositories
+    title: "Organizations, Projects, and Repositories in Azure DevOps"
+    purpose: "Learn how Azure DevOps organizes source repositories so a team can establish ownership and collaboration boundaries."
+    objectives:
+      - "Explain how an organization contains projects and how a project can host one or more Git repositories in Azure Repos."
+      - "Distinguish project visibility from repository permissions; recognize that Azure DevOps Services retired creation of public projects in 2026 and will convert existing public projects to private in 2027."
+      - "Recognize the effect of enabling or disabling Repos, repository settings, and the project administrator's role when creating, sharing, or managing hosted source code."
+
+  - id: azure-repos-access-governance
+    relatedKnowledge:
+      - 03-membership-and-access
+    title: "Membership, Security Groups, and Source Access"
+    purpose: "Understand how teams grant appropriate permissions across Azure DevOps governance scopes."
+    objectives:
+      - "Distinguish access levels from permissions and identify default groups such as Readers, Contributors, and Project Administrators."
+      - "Explain organization, project, repository, and branch scopes; distinguish the configured Allow, Deny, and Not set states from effective inherited permissions."
+      - "Investigate effective permissions across groups: Deny generally overrides Allow at the same scope, while Not set neither grants nor blocks other applicable permissions."
+
+  - id: azure-repos-contribution-paths
+    relatedKnowledge:
+      - 04-branches-forks-contributions
+    title: "Proposing Changes from Shared Branches or Forks"
+    purpose: "Learn the contribution paths Azure Repos provides for submitting reviewable changes before updating a target branch."
+    objectives:
+      - "Compare pull requests from branches in one shared repository with contributions from a forked repository."
+      - "Identify source and target repositories or branches, the proposing author, and the pull request description."
+      - "Recognize that a fork is a separate repository whose permissions and policies are not automatically copied from the upstream repository."
+
+  - id: azure-repos-pull-request-reviews
+    relatedKnowledge:
+      - 05-pull-request-review
+    title: "Discussing, Reviewing, and Responding to Pull Requests"
+    purpose: "Learn how contributors and reviewers collaborate on proposed changes through Azure Repos."
+    objectives:
+      - "Read diffs, inline comments, discussion threads, assigned reviewers, and draft status within a pull request."
+      - "Distinguish review choices such as Approve, Approve with suggestions, Wait for author, and Reject from actually completing a pull request."
+      - "Explain how authors update proposed changes, resolve feedback, and invite another review before merging."
+
+  - id: azure-repos-branch-policies
+    relatedKnowledge:
+      - 06-branch-policies-and-bypass
+    title: "Branch Policies and Merge Requirements"
+    purpose: "Understand how Azure Repos enforces review requirements and checks on pull requests targeting important branches."
+    objectives:
+      - "Explain how policies apply to the target branch and distinguish branch access permissions from mandatory merge conditions."
+      - "Connect minimum reviewer counts, automatically included or required reviewers, comment resolution, and allowed merge types to pull request completion."
+      - "Recognize how build validation or status checks can block a merge while pipeline setup and implementation remain part of CI/CD."
+      - "Distinguish satisfying branch policies from bypassing them using separately granted permissions; do not assume administrator status always authorizes a bypass."
+
+  - id: azure-repos-review-merge-governance
+    relatedKnowledge:
+      - 07-complete-pull-requests
+    title: "Completing Changes and Tracing Work"
+    purpose: "Understand how teams complete approved changes and preserve the collaboration decisions associated with them."
+    objectives:
+      - "Distinguish completing, setting auto-complete, and abandoning a pull request when policies or conflicts have not been resolved."
+      - "Explain how work items can be linked to pull requests and why a work-item-linking policy may be required without studying Azure Boards management."
+      - "Diagnose merge blockers involving permissions, review votes, target-branch policies, or checks and locate the relevant control."
+
+  - id: azure-repos-team-synthesis
+    relatedKnowledge:
+      - 08-end-to-end-azure-repos
+    title: "Putting the Azure Repos Team Workflow Together"
+    purpose: "Combine repository organization, member access, pull requests, and branch governance into a coherent team workflow."
+    objectives:
+      - "Trace a proposed change through a branch or fork, pull request creation, review, branch-policy checks, and successful completion."
+      - "Explain who can administer repositories, approve changes, and resolve a pull request that cannot yet complete."
+      - "Identify when the next learning step belongs to Git, branching strategy, Azure Boards, or Azure Pipelines rather than Azure Repos administration."
