@@ -27,4 +27,484 @@
 #         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
 # </interview-schema>
 
-questions: []
+questions:
+  - question: "Một nhóm có mạng bị ngắt nhưng vẫn cần ghi lịch sử mã. Bạn giải thích vì sao Git hoạt động offline và GitHub đóng vai trò gì?"
+    answer: "Git là hệ quản lý phiên bản phân tán; clone local có object database, index, HEAD và refs để ghi commit mà không cần server. GitHub là dịch vụ lưu và cộng tác sau đó: push/fetch trao đổi refs, còn PR/review là metadata ở host. Commit local không đồng nghĩa remote main thay đổi. Khi có mạng, xác minh remote URL, quyền push và branch target trước khi chia sẻ."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-git-foundations.md"
+      anchor: "what-is-git"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Tại sao nói Git lưu snapshot chứ không chỉ ghi dòng diff, và object không đổi có bị sao chép mỗi lần commit không?"
+    answer: "Mỗi commit tham chiếu tới tree mô tả snapshot nội dung đã stage, với blob/tree objects theo content hash. Các object không đổi có thể dùng lại, nên hai commit sửa một file vẫn định nghĩa trạng thái toàn cây mà không cần tạo bản sao vật lý cho mọi file. Git vẫn có thể tính diff giữa hai snapshots để hiển thị. Snapshot không tự bao gồm file ignored hoặc unstaged."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-git-foundations.md"
+      anchor: "why-git-snapshots"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Giải thích ba vùng HEAD/index/working tree bằng trường hợp sửa file A→B, git add, rồi sửa thành C trước commit."
+    answer: "HEAD chỉ phiên bản A đã ghi trước đó. Sau git add, index giữ B; working tree sau lần sửa cuối là C. git commit bình thường chụp index B, còn sửa C vẫn nằm ngoài commit cho tới khi stage lại. Để quan sát, so git diff (working tree↔index), git diff --cached (index↔HEAD), và git status. Đây là lý do phải đọc staged diff trước commit."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-git-foundations.md"
+      anchor: "index-and-three-areas"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Một file tracked hiển thị MM trong git status --short. Hai chữ M có ý nghĩa gì và làm sao chứng minh?"
+    answer: "Cột thứ nhất so index với HEAD, cột thứ hai so working tree với index. MM nghĩa là có cả thay đổi đã stage lẫn thay đổi tiếp theo chưa stage trên cùng file; không phải hai lần merge hoặc hai tác giả. Chạy git diff --cached và git diff trên file để xem từng phần. Nếu muốn commit cả hai, phải stage bản working tree mới rồi đọc lại status."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-git-foundations.md"
+      anchor: "file-tracking-and-states"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "So sánh git init và git clone khi chuẩn bị thực hành trên repo có lịch sử. Những bằng chứng nào khác nhau?"
+    answer: "git init tạo metadata .git mới tại thư mục, thường chưa có commit hoặc remote trừ khi thiết lập thêm. git clone lấy object/history và refs từ nguồn, thường cấu hình origin, tạo local branch checkout và remote-tracking refs. Xác minh bằng git log, git branch -avv và git remote -v. Không kết luận clone đã checkout mọi remote branch thành local branch."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-git-foundations.md"
+      anchor: "initialize-and-clone"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Khi chưa hiểu git restore và sợ mất file đang sửa, bạn điều tra an toàn bằng tài liệu và trạng thái ra sao?"
+    answer: "Bắt đầu bằng git status, git diff và git diff --cached để biết dữ liệu nằm ở đâu. Đọc git help restore hoặc trang git-scm.com/docs/git-restore, chú ý khác biệt --staged, --worktree, --source và phạm vi path. Không thử restore, reset --hard hoặc clean trực tiếp trên working tree chứa dữ liệu quan trọng để học cú pháp. Dùng repo demo hoặc branch/snapshot dự phòng để thực nghiệm."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "01-git-foundations.md"
+      anchor: "git-command-reference-and-docs"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Trước khi commit trong repo nhiều file, vì sao git status vẫn là điểm đầu tốt dù có git log?"
+    answer: "git status mô tả worktree, index, untracked files và nhánh hiện tại; log chỉ liệt kê commit đã ghi. Tôi dùng status chọn file cần stage, đọc diff thường và cached, rồi kiểm status lần cuối sau add. Nếu có file cấu hình bí mật untracked, ngăn đưa vào index trước khi commit. Như vậy commit được tạo từ đúng ý định, không dựa vào lịch sử cũ để đoán dữ liệu đang chờ."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02-recording-commits.md"
+      anchor: "inspect-status-before-staging"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Repo từng commit .env chứa secret rồi thêm .gitignore. Vì sao chưa đủ và cần xử lý lịch sử như thế nào?"
+    answer: ".gitignore chủ yếu ngăn file chưa track xuất hiện để add; file đã tracked không tự mất khỏi index hay commit cũ. Dừng ghi secret mới, thay credential bị lộ, bỏ tracking bằng thao tác phù hợp và phối hợp xóa khỏi history nếu thực sự cần theo chính sách repo. Rewrite shared history có ảnh hưởng clone khác nên phải lên kế hoạch với đội. Ignore không phải cơ chế mã hóa hay thu hồi credential."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02-recording-commits.md"
+      anchor: "ignore-and-track-files"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Bạn staged README rồi sửa tiếp; cần chứng minh phần nào đang staged và phần nào chưa bằng những so sánh nào?"
+    answer: "git diff so working tree với index để thấy phần sửa sau git add. git diff --cached (hoặc --staged) so index với HEAD để thấy snapshot sẽ vào commit. Dùng thêm git status để phân loại và git diff --cached -- README.md để giới hạn đúng path. Nếu staged diff không đúng scope, sửa index trước khi commit; chỉ nhìn editor có thể đánh lừa về nội dung snapshot."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02-recording-commits.md"
+      anchor: "working-tree-vs-staged-diff"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Một file chứa sửa bug lẫn formatting ngoài phạm vi. Vì sao git add -p tốt hơn commit -a, và giới hạn của hunk selection?"
+    answer: "git add -p cho xem từng hunk để đưa riêng phần cần thiết vào index; sau đó dùng git diff --cached xác minh. git commit -a tự stage nhiều chỉnh sửa tracked và không phân biệt mục tiêu nghiệp vụ. Nếu bug và formatting nằm cùng hunk, có thể tách bằng sửa code, split hunk khi hỗ trợ hoặc dùng chế độ edit patch thật cẩn thận. Không coi commit message là cách loại phần ngoài scope đã stage."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02-recording-commits.md"
+      anchor: "stage-intentional-changes"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Terminal báo commit thành công. Bạn chứng minh điều gì từ kết quả đó, và điều gì cần test hay review riêng?"
+    answer: "Commit thành công chứng minh Git tạo snapshot từ index và cập nhật ref tương ứng. Nó không chứng minh tests xanh, công thức đúng, PR đã được duyệt, remote main đã nhận hay file unstaged được ghi. Tôi dùng git show --stat/--patch và git status để kiểm nội dung đã commit, rồi chạy tests và quy trình review/CI riêng. Tránh báo “đã release” chỉ từ một dòng log commit."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02-recording-commits.md"
+      anchor: "commit-snapshot-and-message"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Tại sao git diff A B -- README khác với git diff --cached và git blame khi điều tra một thay đổi cũ?"
+    answer: "git diff A B -- README.md so hai snapshots đã ghi, thích hợp xác định chính xác patch giữa hai revision. git diff --cached nhìn index hiện tại so với HEAD, không mặc định liên quan A và B. git blame cung cấp provenance theo dòng trong một revision, hữu ích tìm commit tác giả nhưng không thay báo cáo delta giữa hai mốc. Tôi xác minh A/B là commit IDs đúng trước khi diễn giải kết quả."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "02-recording-commits.md"
+      anchor: "compare-history-points"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Hai nhánh cùng trỏ commit B; nếu commit C trên feature thì main có tiến theo không? Giải thích cấu trúc refs."
+    answer: "Branch thông thường là ref có thể di chuyển, trỏ tới commit ID; HEAD symbolic ref thường chỉ nhánh hiện tại. Commit C được tạo với parent B rồi feature ref tiến tới C, còn main tiếp tục trỏ B trừ khi có cập nhật riêng. Git không nhân đôi toàn bộ thư mục hay chuyển các nhánh khác cùng lúc. Dùng git log --graph --decorate --all và git show-ref để quan sát commit graph, tránh đoán từ tên nhánh."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03-branches-refs-tags.md"
+      anchor: "commit-graph-and-references"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Vì sao commit mới trong detached HEAD dễ mất dấu khi checkout nơi khác và làm thế nào giữ lại?"
+    answer: "Khi git switch --detach B, HEAD trỏ trực tiếp tới commit B thay vì branch ref. Commit C vẫn là object hợp lệ nhưng HEAD đang detached; khi checkout nơi khác, không branch nào nhất thiết tiếp tục trỏ C. Reflog có thể còn ghi C nhưng có thời hạn và không thay thế ref ổn định. Nếu cần giữ, tạo branch tại C bằng git switch -c <tên> khi vẫn ở C hoặc git branch <tên> <SHA> sau khi tìm lại. Xác minh với git show-ref và log."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03-branches-refs-tags.md"
+      anchor: "detached-head"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Khi có edit chưa commit và git switch sang branch khác, vì sao Git có lúc cho phép, có lúc từ chối?"
+    answer: "Checkout/switch cần cập nhật file trong working tree theo target commit nhưng phải bảo vệ sửa đổi cục bộ không bị ghi đè. Nếu nội dung chưa commit không va chạm các file phải đổi, Git có thể giữ edit; nếu có nguy cơ mất dữ liệu, Git thường từ chối. Tôi kiểm git status và diff trước, sau đó commit/stash có chủ đích hoặc quay lại clean worktree. Không giả định Git tự stash, tự commit, hay luôn hủy sửa."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03-branches-refs-tags.md"
+      anchor: "switch-and-uncommitted-changes"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Xóa feature branch sau merge cần phân biệt -d và -D như thế nào để tránh mất tên ref duy nhất?"
+    answer: "git branch -d yêu cầu Git kiểm điều kiện merged trước khi xóa ref; từ nhánh main nên đọc graph và xác nhận commit đã được giữ ở ref cần thiết. -D bỏ qua kiểm tra này và có thể làm commit không còn tên branch truy cập ổn định. Dù object vẫn có thể tồn tại hoặc tìm bằng reflog, không nên dựa vào thu gom dữ liệu để phục hồi. Tôi không xóa branch đang checkout, kiểm bản local/remote riêng và giữ SHA quan trọng trước tác vụ."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03-branches-refs-tags.md"
+      anchor: "create-inspect-delete-branches"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Vì sao annotated tag v1.0 vẫn ở commit B khi main đã tới C, và tag khác GitHub Release ở điểm nào?"
+    answer: "Branch cập nhật khi commit trên nhánh đó; tag bình thường là tên cố định gắn một mốc lịch sử. Annotated tag có object metadata riêng cho tagger, message và target, nhưng không tự di chuyển khi main tiến. Tag không sửa commit graph hay tạo bản công bố host. GitHub Release là metadata có notes/assets riêng, và cả tag lẫn Release không chứng minh deployment. Kiểm git show v1.0 và git log --decorate trước khi báo phiên bản nào đã được phát hành."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03-branches-refs-tags.md"
+      anchor: "tags-vs-branches"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Sau merge, cặp lệnh nào chứng minh positions của branch/tag và quan hệ DAG thay vì chỉ liệt kê tên?"
+    answer: "git show-ref --heads --tags liệt kê ref name tới object ID, còn git log --graph --decorate --all vẽ ancestry và nhãn tại commits. Cặp này giúp thấy main, feature và version tag cùng hay khác SHA; git branch -avv cũng có ích cho tracking nhưng không phải biểu đồ đầy đủ. Tôi đối chiếu graph với merge kết quả thực, sau đó dùng git diff hay git show để xác nhận nội dung. Đừng suy đoán lịch sử chỉ từ git tag -l."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "03-branches-refs-tags.md"
+      anchor: "verify-branch-tag-positions"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Khi nào Git fast-forward merge mà không tạo merge commit, và điều đó khác merge commit hai parent ở đâu?"
+    answer: "Nếu tip đích B là ancestor của tip nguồn C và policy cho phép fast-forward, Git chỉ cần di chuyển ref đích tới C; C giữ nguyên SHA và không tạo merge commit. Khi hai nhánh đã phân kỳ, cần tích hợp thay đổi bằng three-way merge, thường tạo commit mới có hai parents nếu nội dung giải quyết được. Có thể dùng --no-ff để ghi merge commit dù fast-forward khả thi theo quy trình đội. Dùng git merge-base, log --graph và kiểm tree sau merge để xác nhận kết quả."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04-merges-and-conflicts.md"
+      anchor: "fast-forward-merge"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Hai nhánh cùng tách từ B rồi mỗi bên sửa mã. Vì sao merge cần common ancestor thay vì chỉ so hai bản cuối?"
+    answer: "Three-way merge so snapshot B với hai tips C và D để nhận diện bên nào đổi phần nào. Nếu một phía giữ nguyên còn phía kia sửa, Git có thể chọn thay đổi; nếu cùng vùng có edits cạnh tranh không hòa hợp, phải giải conflict. Chỉ so C và D không cho biết thay đổi nào được đưa vào từ tổ tiên. Tôi kiểm git merge-base C D, đọc diff B..C và B..D, rồi review kết quả tree; không coi xung đột là bằng chứng người nào sai."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04-merges-and-conflicts.md"
+      anchor: "merge-base-and-three-way"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Sau merge bị conflict, hãy giải thích index stages và cách xác nhận còn đường dẫn chưa resolve."
+    answer: "Khi chưa resolve, index có thể chứa stage 1 (base), stage 2 (ours) và stage 3 (theirs) cho path xung đột thay vì một entry stage 0 bình thường. git ls-files -u liệt kê các stage còn unmerged; git status cho biết trạng thái cần xử lý. Tôi đọc file markers hoặc công cụ mergetool, sửa theo nghiệp vụ, chạy test, rồi git add path để đánh dấu đã resolve. Chỉ commit sau khi không còn unmerged entries; không giữ markers xung đột làm mã nguồn."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04-merges-and-conflicts.md"
+      anchor: "recognize-merge-conflicts"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Phát hiện merge đang conflict do giả định sai. So sánh git merge --abort với reset --hard ORIG_HEAD về an toàn."
+    answer: "Nếu merge còn đang diễn ra, đầu tiên đọc git status và diff để phân biệt thay đổi trước merge với thay đổi phát sinh. git merge --abort được thiết kế thử quay về trạng thái trước merge, nhưng có thể không bảo toàn một số chỉnh sửa đang chồng lấn; cần biết trạng thái trước khi chạy. git reset --hard ORIG_HEAD ghi lại index và worktree, có thể xóa sửa cục bộ. Tôi ưu tiên lệnh abort đúng trạng thái, lưu patch nếu cần và kiểm status sau hủy."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04-merges-and-conflicts.md"
+      anchor: "resolve-or-abort-merge"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Nhánh hotfix có bốn commits nhưng bản release cũ chỉ cần một security patch. Vì sao cherry-pick hợp lý và còn rủi ro nào?"
+    answer: "Cherry-pick một SHA mang patch chọn lọc vào nhánh release dưới một commit mới, thay vì merge toàn bộ lịch sử reachable của hotfix. Do base khác nhau, patch có thể conflict, phụ thuộc commit trước đó hoặc tạo behavior không tương thích. Tôi kiểm phạm vi và dependencies, áp dụng commit trên release riêng, giải conflict nếu có rồi test regression. Nếu cherry-pick fail, dùng --abort phù hợp; đừng force-push tags hoặc giả định SHA giữ nguyên khi patch được tái áp dụng."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04-merges-and-conflicts.md"
+      anchor: "cherry-pick-vs-merge"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Lệnh merge thành công rồi; vì sao chưa đủ kết luận sửa bug đúng, và bộ bằng chứng sau merge cần gồm gì?"
+    answer: "Exit status 0 chứng minh thao tác Git hoàn thành trong điều kiện hiện tại, không xác nhận công thức nghiệp vụ hay toàn bộ test. Tôi dùng git status, git log --graph --decorate, git diff so target với mốc trước và git show để xem file thực sự tích hợp. Sau đó chạy kiểm thử đúng ca lỗi, negative và boundary cases, kiểm build/CI nếu có. Nếu merge diễn ra trên local, còn phải xác minh push/server ref và hosted review độc lập trước khi báo thay đổi đã accepted chung."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "04-merges-and-conflicts.md"
+      anchor: "verify-merged-outcome"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "git remote add origin thêm URL vào clone local; tại sao lệnh này không tự làm bare server có main?"
+    answer: "Remote là tên gắn với URL và cấu hình fetch/push; lệnh remote add chỉ ghi config, không truyền commit, không tạo branch ref trên server và cũng chưa bảo đảm quyền. Trong repo bare rỗng, phải có commit trên local main rồi git push -u origin main hoặc thao tác publish phù hợp để tạo remote main. Sau push kiểm git ls-remote origin refs/heads/main và fetch để có remote-tracking origin/main. Không suy ra server có mã từ việc remote -v in đúng URL."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05-remotes-and-sync.md"
+      anchor: "configure-and-inspect-remotes"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "git ls-remote báo server main=C nhưng origin/main local vẫn B. Vì sao không phải Git hỏng dữ liệu?"
+    answer: "origin/main là remote-tracking ref local biểu diễn lần fetch/push gần đây, không phải kết nối live liên tục tới server. git ls-remote hỏi refs thực tại server, nên có thể thấy C mới hơn khi tracking ref còn B. Tôi chạy git fetch origin để cập nhật ref local rồi xem git log main..origin/main hoặc graph. Fetch không mặc định merge C vào main checked out, nên đọc ahead/behind trước khi quyết định pull, merge hay rebase."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05-remotes-and-sync.md"
+      anchor: "local-remote-and-tracking-refs"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "set-upstream-to liên kết main với origin/main để làm gì, và vì sao không được gọi nó là quyền push?"
+    answer: "git branch --set-upstream-to=origin/main main cấu hình nhánh theo dõi để git status/branch -vv tính ahead/behind và git pull có thể chọn nguồn mặc định. Nó không tải object mới, không merge/rebase commit và không cấp quyền Write tại server. Muốn kiểm server dùng ls-remote/fetch, muốn thay local history dùng pull hoặc merge/rebase theo chủ đích, muốn publish phải push có quyền. Phân biệt tracking relationship với token hay branch protection."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05-remotes-and-sync.md"
+      anchor: "upstream-relationship"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Khi main trên server tiến nhưng bạn chưa muốn tích hợp vào worktree hiện tại, vì sao git fetch tốt hơn git pull?"
+    answer: "git fetch cập nhật objects và remote-tracking refs sau khi hỏi remote, để tôi quan sát graph/diff giữa main và origin/main. git pull là fetch cộng bước reconcile tùy config, có thể merge, rebase hoặc fast-forward trên nhánh checked out. Nếu đang giữ local changes, pull có thể gây conflict hoặc làm việc khó theo dõi. Tôi fetch, đọc log --left-right hoặc graph, kiểm status rồi mới chọn integration; không reset --hard để chỉ xem server."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05-remotes-and-sync.md"
+      anchor: "fetch-vs-pull"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Push bị non-fast-forward vì đồng nghiệp đã cập nhật cùng remote branch. Quy trình xử lý nào bảo toàn công việc của cả hai?"
+    answer: "Không force-push ngay: ghi lại local SHA và đọc remote state bằng fetch, so đồ thị local feature với origin/feature để biết divergence. Nếu branch chia sẻ, phối hợp cách merge/rebase theo quy trình; merge thường bảo toàn commit IDs cũ còn rebase replay có thể đòi push history rewrite. Chạy test trên kết quả mới, rồi push thường nếu lịch sử remote vẫn là ancestor phù hợp. Force-with-lease nếu thực sự được phép và đã thống nhất, nhưng vẫn phải hiểu rủi ro thay remote ref."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05-remotes-and-sync.md"
+      anchor: "push-and-rejected-updates"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Sau push feature thành công, làm sao chứng minh server thật sự có đúng SHA mà không chỉ nhìn origin/feature cached?"
+    answer: "Đọc git rev-parse feature hoặc git log -1 tại local để lấy commit ID, rồi git ls-remote origin refs/heads/feature để hỏi tip server trực tiếp. So đúng hash và branch ref, đồng thời ghi exit code của push. Local origin/feature có thể bị stale nếu chưa fetch hoặc bị cập nhật ngoài luồng, nên một ref local đơn lẻ không đủ bằng chứng real-time. Nếu người khác push xen giữa, server SHA có thể đã tiến tiếp; phân biệt việc push đã accepted với server hiện đang ở tip mới."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "05-remotes-and-sync.md"
+      anchor: "verify-local-and-remote-history"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Một feature đã phân kỳ main. So sánh merge và rebase theo commit graph, SHA và dấu vết cộng tác."
+    answer: "Merge thông thường giữ commit objects của hai nhánh và nối ancestry bằng merge commit nếu phân kỳ; với fast-forward có thể chỉ di chuyển ref. Rebase lấy commits ở feature rồi replay trên tip main mới, tạo commits thay thế có parents và thường SHA mới. Final file tree có thể giống nhưng lịch sử và review assumptions khác nhau. Tôi ưu tiên rebase trên feature local chưa chia sẻ, còn merge khi cần bảo toàn lịch sử chung; chạy test và so graph/diff sau tích hợp."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06-rebase-and-rewrite.md"
+      anchor: "merge-versus-rebase-outcomes"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Tại sao rebase có thể thay SHA ngay cả khi patch code không đổi? Giải thích cấu trúc commit object."
+    answer: "Một commit object chứa tree ID, parent IDs, author/committer metadata và message; hash dựa trên toàn bộ nội dung object. Replay commit từ base B lên main D làm parent mới khác, nên commit được tạo lại thường có SHA khác, dù diff tương đương. Đó không phải GitHub bắt đổi ID hay Git mã hóa lại nhánh. Sau rebase so git log --graph, git range-diff nếu phù hợp và tests để bảo đảm không mất patch; không so duy nhất SHA để kết luận code tương đương."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06-rebase-and-rewrite.md"
+      anchor: "rebase-replay-and-commit-ids"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Rebase feature local lên main mới: bạn thiết lập điều kiện an toàn gì trước thao tác và kiểm tra gì sau?"
+    answer: "Đầu tiên xem git status, xác nhận worktree sạch hoặc cất công việc có chủ đích; fetch main mới và đọc graph để biết upstream. Chỉ rebase commits chưa publish hoặc đã được nhóm đồng thuận rewrite. Tạo branch backup/ref nếu thay đổi quan trọng, checkout feature rồi git rebase main ở hướng đúng. Nếu conflict, resolve/test và continue; nếu sai, abort. Sau cùng đối chiếu range-diff, graph, tests và review trước push; không force-push như một bước mặc định."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06-rebase-and-rewrite.md"
+      anchor: "rebase-local-work"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Rebase đang dừng ở conflict do migration sai. Vì sao --abort tốt hơn reset --hard hay xóa metadata sequencer?"
+    answer: "git rebase --abort là lệnh được thiết kế để hủy sequencer rebase và cố trở về trạng thái trước thao tác. Tôi đọc status và giữ bất kỳ edit riêng mới phát sinh trước khi hủy, vì không có thao tác destructive nào nên chạy mù. reset --hard có thể ghi đè index/worktree; xóa .git/rebase-merge bằng tay bỏ metadata cần để Git tiếp tục hoặc rollback đúng. Nếu chỉ một conflict sửa được, resolve, git add rồi rebase --continue; còn giả định sai thì abort."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06-rebase-and-rewrite.md"
+      anchor: "resolve-continue-or-abort-rebase"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "git commit --amend thay message commit cuối khi chưa publish. Điều gì xảy ra với object và vì sao phải dè chừng khi đã share?"
+    answer: "Commit objects là immutable. Amend ghi commit thay thế với tree, parent và metadata/message mới, rồi ref hiện tại chuyển sang ID mới; ngay cả khi tree không đổi, message/committer fields làm hash khác. Nếu commit đã push và đồng nghiệp fetch, rewrite có thể làm remote diverge và khiến họ phụ thuộc SHA cũ. Tôi chỉ amend local unpublished khi hợp lý, kiểm git show sau đó; với lỗi trên shared main, chọn commit sửa riêng hoặc revert thay vì ép mọi người nhận lịch sử mới."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06-rebase-and-rewrite.md"
+      anchor: "amend-a-local-commit"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Đồng nghiệp đã fetch feature, tác giả muốn rebase rồi force-push. Rủi ro và phương án phối hợp là gì?"
+    answer: "Đồng nghiệp có thể đã tạo nhánh hoặc patch dựa trên commit IDs cũ; rebase tạo commit mới khiến refs diverge, patch bị lặp hoặc review/check gắn SHA cũ không còn phù hợp. Đầu tiên hỏi ai đang dùng branch, thảo luận có thật sự cần lịch sử mới không. Merge giữ ancestry cũ nên thường ít gây đứt shared references hơn. Nếu phải rewrite, công bố mapping commits, tạo backup, dùng force-with-lease có kiểm soát và hướng dẫn fetch/rebase từng clone; không force-push main theo thói quen."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "06-rebase-and-rewrite.md"
+      anchor: "shared-history-rewrite-risk"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Stash khác commit thường ở mục tiêu nào, và tại sao áp lại stash có thể conflict?"
+    answer: "git stash ghi trạng thái công việc chưa commit vào local stash stack để tạm dọn working tree; nó không phải commit feature đã review hoặc publish main. Stash apply giữ stash entry; pop cố apply rồi bỏ entry khi thành công, nên cần phân biệt nếu áp lại lỗi. Khi nhánh hoặc file nền thay đổi, patch được cất có thể conflict như merge. Tôi kiểm git stash list/show, status trước/sau và test nội dung đã phục hồi, không coi stash là backup vĩnh viễn."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "07-stash-undo-recovery.md"
+      anchor: "stash-work-in-progress"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Tệp README tracked đã sửa và notes.txt untracked mới tạo. So sánh stash mặc định, -u và -a về phạm vi và rủi ro."
+    answer: "git stash push mặc định lưu sửa tracked (staged/unstaged) nhưng không mặc nhiên gom untracked hay ignored. -u/--include-untracked đưa cả file chưa tracked như notes.txt vào stash, trong khi -a/--all còn gồm ignored files có thể chứa build output hoặc dữ liệu bí mật. Tôi kiểm git status --ignored khi phù hợp, chọn phạm vi tối thiểu và chạy stash list/show để xác nhận. Không dùng -a như lựa chọn an toàn mặc định; phục hồi cẩn thận nếu worktree đã đổi."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "07-stash-undo-recovery.md"
+      anchor: "stash-tracked-and-untracked"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Bạn muốn unstage README nhưng giữ nội dung đang sửa trên ổ đĩa. Vì sao restore --staged khác restore mặc định?"
+    answer: "git restore --staged README.md cập nhật index từ HEAD, thường giữ working tree chưa commit nguyên vẹn. git restore README.md mặc định nhắm worktree và lấy trạng thái index đè lên file đang mở, dễ mất sửa chưa stage. Tôi chạy git status/diff trước, chọn đúng --staged rồi đọc lại status và diff. Nếu file đã có staged và unstaged edits riêng, thao tác unstage có thể làm chúng xuất hiện chung ở diff working tree; nên kiểm kỹ trước commit."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "07-stash-undo-recovery.md"
+      anchor: "restore-worktree-and-index"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Trên hai demo clone sạch, reset --soft và --mixed HEAD~1 khác nhau ở HEAD, index và worktree như thế nào?"
+    answer: "Cả hai di chuyển branch/HEAD về parent commit. --soft giữ index và working tree đúng trước reset: thay đổi từ commit vừa bỏ vẫn ở staging area. --mixed (mặc định) reset index theo HEAD mới nhưng giữ file working tree, nên khác biệt xuất hiện dưới dạng unstaged. --hard còn cập nhật working tree và có thể mất sửa tracked, rủi ro lớn hơn. Tôi xem git status và git diff --cached sau soft/mixed để giải thích, tránh demo trên shared branch hay dữ liệu chưa backup."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "07-stash-undo-recovery.md"
+      anchor: "reset-modes-and-risk"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Commit sai đã ở main và đồng nghiệp fetch. Vì sao revert thường tốt hơn reset/rebase để undo minh bạch?"
+    answer: "Với commit đã chia sẻ, git revert tạo commit mới áp patch ngược, giữ commit sai và các commit khác trong DAG để audit. Reset hoặc rebase làm di chuyển/viết lại refs; force-push có thể làm clone đồng nghiệp phân kỳ. Chọn đúng SHA, đọc phạm vi thay đổi, xử lý conflict của revert nếu có rồi chạy test. Với merge commit, revert cần chỉ định mainline parent phù hợp và kiểm cẩn thận. Báo việc hoàn tác là commit mới, không giả vờ lịch sử cũ biến mất."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "07-stash-undo-recovery.md"
+      anchor: "revert-shared-commit"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Sau reset, reflog giúp tìm commit C bị mất tên nhưng không phải backup. Giới hạn và cách giữ commit nào an toàn?"
+    answer: "git reflog ghi các lần HEAD hoặc ref local di chuyển nên có thể lộ SHA cũ dù branch không còn trỏ tới. Các entry có thể hết hạn, object không reachable có thể bị garbage collection, và reflog local không chứng minh server hoặc đồng nghiệp còn commit. Khi tìm được C, kiểm git show và tạo branch/tag hoặc commit ref hợp lệ để giữ reachable; sau đó xác minh log. Nếu thông tin quan trọng, có backup remote/repository đúng chuẩn thay vì dựa reflog mãi mãi."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "07-stash-undo-recovery.md"
+      anchor: "reflog-and-expiration"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Commit đã thành công nhưng git status vẫn báo modified. Cách giải thích và kiểm chứng điều gì thực sự vào commit?"
+    answer: "Commit chụp staged snapshot từ index, không tự bao gồm mọi edit đang ở working tree. Tôi đọc git show --stat/--patch <SHA> để xác nhận bản ghi, git status cùng git diff để xem phần chưa staged. Nếu cần phần còn lại, stage có chọn lọc và tạo commit tiếp theo sau kiểm tra scope. Không coi status chưa sạch là chứng minh commit thất bại, cũng không suy đoán remote đã nhận dữ liệu chỉ vì commit local thành công."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "08-end-to-end-git.md"
+      anchor: "trace-change-to-commit"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Demo tạo bare remote rỗng rồi muốn so local main với origin/main. Thứ tự chuẩn bị nào tránh tracking ref tưởng tượng?"
+    answer: "Trước tiên tạo commit có thật trên local main, cấu hình origin tới bare remote, push main để server có refs/heads/main. Kiểm git ls-remote origin main để xác nhận ref phía server, rồi git fetch origin và quan sát origin/main local. Nếu chỉ remote add, chưa có server branch; nếu chỉ push feature thì server không nhất thiết tạo main. Sau đó mới tạo feature/divergence và dùng graph/diff minh họa fetch hoặc merge, tránh giả sử có refs khi chưa publish."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "08-end-to-end-git.md"
+      anchor: "follow-branch-and-remote"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Một nhóm chọn merge thay rebase. Tại sao đó chưa nói nhóm đang dùng Git Flow hay trunk-based delivery?"
+    answer: "git merge là thao tác tích hợp commit graph; git rebase replay commits lên một base mới. Git Flow, trunk-based hoặc mô hình nhánh khác là quy ước tuổi thọ branch, lịch release, reviewers và cách hợp tác. Một lần dùng merge không tự tạo lâu dài nhiều release branches, cũng không tự ghi PR approval vào host. Tôi đánh giá branch lifetime, tần suất tích hợp, CI gates và chiến lược phát hành để gọi tên policy; còn lệnh Git chỉ là công cụ triển khai quyết định."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "08-end-to-end-git.md"
+      anchor: "select-merge-or-rebase-mechanics"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Demo hai clone sửa hai file khác nhau không sinh conflict. Làm sao dựng một three-way merge conflict thật và quan sát rõ nguyên nhân?"
+    answer: "Tạo common base B chứa dòng price=...; từ B làm hai nhánh với commit C và D cùng sửa dòng đó theo hai cách cạnh tranh. Fetch/merge từ một nhánh vào nhánh còn lại để Git so B,C,D và báo conflict nếu không tự hòa giải. Quan sát git status, git ls-files -u và markers trong file. Giải thích ours/theirs theo operation cụ thể, chọn behavior đúng, git add rồi commit và test; không tạo conflict bằng cách đổi tag hay xóa branch. Dùng repo demo riêng để tránh mất dữ liệu."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "08-end-to-end-git.md"
+      anchor: "diagnose-divergence-and-conflict"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Shared commit C đã sai nhưng working tree còn edit D chưa commit. Hãy quyết định undo mà không xóa D hoặc rewrite lịch sử chung."
+    answer: "Đầu tiên git status và diff để phân loại D là tracked/unstaged/staged/untracked, giữ D bằng commit riêng hoặc stash/patch phù hợp theo trạng thái. Với C đã publish, ưu tiên git revert C để ghi commit đảo có dấu vết; tránh reset --hard/force push lên shared main. Kiểm revert có conflict hay phụ thuộc commit sau, chạy tests rồi đối chiếu lịch sử. Chỉ khôi phục D khi worktree phù hợp; đọc status cuối cùng. Không gộp xử lý local uncommitted và shared commit vào một lệnh destructive."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "08-end-to-end-git.md"
+      anchor: "choose-safe-undo-in-context"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Git graph cho thấy commit C vào main; team muốn tuyên bố đã review và production deploy. Bạn yêu cầu bộ bằng chứng cuối nào?"
+    answer: "Git graph chứng minh reachability của C từ main tại thời điểm quan sát; nó không lưu phiếu reviewer trên GitHub/GitLab và không biết production chạy artifact nào. Tôi đối chiếu SHA trên remote target, PR Merged và approvals/checks từ hosting, tiếp theo CI build artifact SHA/digest, deployment run, environment và runtime version thực. Issue Closed, release tag hay commit trailer không tự thay các bằng chứng đó. Báo riêng accepted source, hosted review và deployed runtime, nêu rõ mục nào chưa xác nhận."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "08-end-to-end-git.md"
+      anchor: "handoff-to-team-collaboration"
+    apiRelated:
+      controller: ""
+      methodSignature: ""

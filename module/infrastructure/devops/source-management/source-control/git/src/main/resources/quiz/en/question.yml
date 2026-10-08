@@ -38,4 +38,1156 @@
 #       Internal id of the correct answer. The frontend checks this identity after shuffling.
 # </quiz-schema>
 
-questions: []
+questions:
+  - id: git-identity-vcs
+    question: An records a commit on a laptop during a network outage while GitHub is unreachable. Which conclusion reflects Git's role?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 01-git-foundations.md
+      anchor: what-is-git
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: Commits require GitHub to confirm the new revision.
+        explanation: That confuses a distributed version-control tool with a hosting service.
+      - id: B
+        answer: Git can commit locally and share the revision later.
+        explanation: Git owns local history; publication to a hosting service is a separate action.
+      - id: C
+        answer: Only working files can change until connectivity returns.
+        explanation: Local Git can create commits and inspect history without a server.
+      - id: D
+        answer: The local commit appears on hosted main immediately.
+        explanation: Remote refs do not update automatically after a local commit.
+    correctAnswerId: B
+  - id: git-snapshot-model
+    question: Two consecutive commits modify just one tracked file while other files stay unchanged. How should their stored state be understood?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 01-git-foundations.md
+      anchor: why-git-snapshots
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: Each commit is only a log of keystrokes typed by its author.
+        explanation: Git records tracked snapshots, not a transcript of editing actions.
+      - id: B
+        answer: A commit omits unchanged files from its project tree.
+        explanation: Each commit identifies the full recorded tree, reusing unchanged objects.
+      - id: C
+        answer: Commits refer to full tree snapshots and reuse unchanged objects.
+        explanation: Git commits reference snapshots while content-addressed objects avoid needless duplicates.
+      - id: D
+        answer: A commit includes ignored files from the entire working directory.
+        explanation: Commit contents come from the index, not arbitrary ignored disk files.
+    correctAnswerId: C
+  - id: git-staged-again
+    question: An edits README into version B, stages it, then edits the file again into version C. What would an immediate commit record?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 01-git-foundations.md
+      anchor: index-and-three-areas
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: Version A from HEAD before any edits were made.
+        explanation: HEAD is the prior reference; the index was already updated to B.
+      - id: B
+        answer: Version C currently visible in the working tree.
+        explanation: The second edit is not staged merely because the file was staged earlier.
+      - id: C
+        answer: Both B and C as two automatically created commits.
+        explanation: A single commit records the index snapshot and does not split edits automatically.
+      - id: D
+        answer: Version B currently recorded in the staging index.
+        explanation: A commit records the staged content; subsequent working-tree edits remain separate.
+    correctAnswerId: D
+  - id: git-tracked-state-after-add
+    question: For a tracked file, git status --short displays MM in its two status columns. What does that indicate?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 01-git-foundations.md
+      anchor: file-tracking-and-states
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: Both the index and working tree have edits.
+        explanation: The two positions compare index with HEAD and working tree with index.
+      - id: B
+        answer: The file was merged locally and then on the remote.
+        explanation: The XY short-status positions are not two merge-result markers.
+      - id: C
+        answer: The file is new and untracked in both areas.
+        explanation: An untracked file is commonly reported as ?? rather than MM.
+      - id: D
+        answer: Two authors changed the file in the current commit.
+        explanation: The status letters describe file states, not author counts.
+    correctAnswerId: A
+  - id: git-clone-versus-init
+    question: A freshly initialized practice repo has no commits; another repo is cloned from a source with three commits. Which distinction can be observed?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 01-git-foundations.md
+      anchor: initialize-and-clone
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: Both repositories contain those three source commits at creation.
+        explanation: git init creates an empty local history, not a copy of another source.
+      - id: B
+        answer: Clone has source history; fresh init has no commits yet.
+        explanation: Clone fetches existing history; init initializes repository metadata.
+      - id: C
+        answer: Init creates a pull request while clone creates only files.
+        explanation: Pull requests are hosted collaboration features, not git init results.
+      - id: D
+        answer: Cloning checks out every remote-tracking branch as a local branch.
+        explanation: A clone usually checks out one local branch, also recording other remote-tracking refs.
+    correctAnswerId: B
+  - id: git-official-help
+    question: Binh is unsure which git restore options are safe while holding uncommitted work. What should Binh do before experimenting?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 01-git-foundations.md
+      anchor: git-command-reference-and-docs
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: Run git restore --source=HEAD -- . in the working repo.
+        explanation: That can overwrite unstaged content and is not a safe help lookup.
+      - id: B
+        answer: Run git reset --hard to simplify the repository state.
+        explanation: Hard reset can discard changes; it is not documentation access.
+      - id: C
+        answer: Read `git help restore` before changing repository files.
+        explanation: These sources explain behavior and risks without changing repository data.
+      - id: D
+        answer: Run `git restore README.md` on the active worktree to learn its defaults.
+        explanation: Restore can overwrite unstaged edits; destructive experimentation on real work is not a documentation lookup.
+    correctAnswerId: C
+  - id: status-before-add
+    question: An is about to commit on a feature branch but cannot tell which edits are staged. Which inspection addresses that directly?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 02-recording-commits.md
+      anchor: inspect-status-before-staging
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: Check staged and unstaged files with `git status`.
+        explanation: Status is the direct starting point for identifying pending change states.
+      - id: B
+        answer: Run `git log -p` to inspect changes that have not been staged.
+        explanation: Log -p inspects recorded commit patches, not pending uncommitted edits.
+      - id: C
+        answer: Run git show HEAD to enumerate untracked files.
+        explanation: HEAD is an existing commit snapshot, which does not include untracked files.
+      - id: D
+        answer: Run git branch to inspect the index contents.
+        explanation: Branch names and tips cannot replace status for staging information.
+    correctAnswerId: A
+  - id: gitignore-tracked-secret
+    question: A repository previously committed .env. An later adds .env to .gitignore. What is the correct expectation?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 02-recording-commits.md
+      anchor: ignore-and-track-files
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: Git automatically removes the file from every older commit.
+        explanation: Ignore rules do not rewrite published history or erase recorded secrets.
+      - id: B
+        answer: Tracked `.env` stays tracked despite a new ignore rule.
+        explanation: Ignore primarily affects untracked paths; tracked content needs separate action.
+      - id: C
+        answer: Fresh clones can no longer recover any old .env contents.
+        explanation: Historical commits may still contain the file and its sensitive data.
+      - id: D
+        answer: The next commit automatically encrypts the .env contents.
+        explanation: A gitignore pattern controls tracking behavior, not encryption.
+    correctAnswerId: B
+  - id: git-diff-index
+    question: After staging README, An edits it again. Which pair reveals the working-tree-only change and the staged snapshot separately?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 02-recording-commits.md
+      anchor: working-tree-vs-staged-diff
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: git log followed by git branch -vv.
+        explanation: These inspect commit history and refs, not the two current diff boundaries.
+      - id: B
+        answer: git show HEAD followed by git ls-remote.
+        explanation: These show a recorded commit and remote refs, not both pending diff areas.
+      - id: C
+        answer: "`git diff` versus `git diff --cached`."
+        explanation: The first compares worktree to index; the second compares index to HEAD.
+      - id: D
+        answer: git fetch followed by git pull --ff-only.
+        explanation: These exchange and integrate history rather than inspect two staged states.
+    correctAnswerId: C
+  - id: git-add-p-selective
+    question: A file contains both a rounding fix and unrelated formatting. An wants a commit covering only the fix. Which approach fits?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 02-recording-commits.md
+      anchor: stage-intentional-changes
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: Run git add . and make the commit message more precise.
+        explanation: A good message cannot remove unrelated content already staged.
+      - id: B
+        answer: Run git commit -a to skip inspecting the index.
+        explanation: Commit -a includes tracked modifications without selective hunk review.
+      - id: C
+        answer: Push main so the remote receives only the rounding fix.
+        explanation: Push transfers commits; it does not select worktree hunks.
+      - id: D
+        answer: Use git add -p, then inspect git diff --cached.
+        explanation: Patch staging can select relevant hunks, then the index diff verifies selection.
+    correctAnswerId: D
+  - id: commit-does-not-mean-tests
+    question: The terminal reports a new commit Fix rounding. Which claim is justified by that outcome alone?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 02-recording-commits.md
+      anchor: commit-snapshot-and-message
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: The index was committed; tests remain unproven.
+        explanation: A successful commit records history and does not establish business correctness.
+      - id: B
+        answer: The hosted pull request gained an approving reviewer.
+        explanation: Hosted approval is a different collaboration event from git commit.
+      - id: C
+        answer: Remote main now contains the rounding correction.
+        explanation: A local commit does not push or integrate itself into remote main.
+      - id: D
+        answer: Every remaining unstaged edit was included in that commit.
+        explanation: Commits use staged content; separate working-tree modifications may remain.
+    correctAnswerId: A
+  - id: git-compare-revision-history
+    question: Binh needs the README difference between recorded commits A and B, not the current editor state. What comparison fits?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 02-recording-commits.md
+      anchor: compare-history-points
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: Compare git status in two current working trees.
+        explanation: Status describes pending work rather than the diff between two chosen revisions.
+      - id: B
+        answer: Use `git diff A B -- README.md` with verified IDs.
+        explanation: That compares the tracked file snapshots at the two selected history points.
+      - id: C
+        answer: Run git diff --cached in the current working tree.
+        explanation: Cached diff compares index and HEAD, not arbitrary historical commits.
+      - id: D
+        answer: Run git blame and infer the full A-to-B patch.
+        explanation: Blame can help locate provenance but does not replace an explicit two-revision diff.
+    correctAnswerId: B
+  - id: branch-points-to-commit
+    question: Main and feature both point at commit B. An creates commit C while feature is checked out. What must change?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 03-branches-refs-tags.md
+      anchor: commit-graph-and-references
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: Main automatically advances to C because they share ancestry.
+        explanation: One branch does not advance just because another branch receives a commit.
+      - id: B
+        answer: Git physically duplicates every file into two repositories.
+        explanation: Branches refer to commits within shared repository object history.
+      - id: C
+        answer: Feature advances to C while main can remain at B.
+        explanation: The checked-out branch ref moves on commit; another branch need not.
+      - id: D
+        answer: The latest release tag automatically advances with feature.
+        explanation: Tags normally remain at their chosen point rather than following commits.
+    correctAnswerId: C
+  - id: head-detached
+    question: An runs git switch --detach B, then records commit C. Why create a named branch before leaving if C matters?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 03-branches-refs-tags.md
+      anchor: detached-head
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: C appears in reflog and therefore has a stable branch-like reference.
+        explanation: Reflog can aid recovery but does not provide a durable named branch ref.
+      - id: B
+        answer: C is automatically pushed to all remote branches.
+        explanation: Detached state does not publish or manage remote refs.
+      - id: C
+        answer: C automatically makes the main branch point to C.
+        explanation: The existing main ref is not moved just by detached commits.
+      - id: D
+        answer: C can lose its named reference when HEAD moves away.
+        explanation: A new branch provides a durable named reference rather than relying on reflog.
+    correctAnswerId: D
+  - id: branch-switch-dirty
+    question: An has uncommitted README edits and wants to switch to main. Which prediction is the safest?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 03-branches-refs-tags.md
+      anchor: switch-and-uncommitted-changes
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: Git may retain edits or refuse to overwrite them.
+        explanation: The target branch's file differences determine whether switching is safe.
+      - id: B
+        answer: Git always creates a preserving commit before switching.
+        explanation: Switch does not automatically create a commit for pending work.
+      - id: C
+        answer: Git always deletes pending edits on a branch switch.
+        explanation: Git can refuse switches that risk overwriting local modifications.
+      - id: D
+        answer: Git always runs stash and pop invisibly around switch.
+        explanation: An implicit stash cycle is not a guaranteed switch behavior.
+    correctAnswerId: A
+  - id: safe-delete-branch
+    question: A feature has been integrated into main and An wants to delete its local name without discarding unmerged work. What is appropriate?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 03-branches-refs-tags.md
+      anchor: create-inspect-delete-branches
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: Use git branch -D feature regardless of its merge state.
+        explanation: Capital -D bypasses the normal protection against deleting unmerged tips.
+      - id: B
+        answer: From main use `git branch -d feature` after checking history.
+        explanation: Lowercase -d checks the merged state and can refuse an unsafe deletion.
+      - id: C
+        answer: Delete the feature's files under .git/objects manually.
+        explanation: Commit objects are shared history and must not be removed this way.
+      - id: D
+        answer: Run git reset --hard feature before deleting the name.
+        explanation: Hard reset changes branch/worktree state unnecessarily and may destroy edits.
+    correctAnswerId: B
+  - id: tags-versus-moving-branches
+    question: A team creates annotated tag v1.0 at B and later records commit C on main. Which state is normal?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 03-branches-refs-tags.md
+      anchor: tags-vs-branches
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: The tag automatically follows main forward to C.
+        explanation: A tag is not a moving branch label.
+      - id: B
+        answer: An annotated tag creates a hosted release entry by itself.
+        explanation: A Git tag identifies a ref; a hosted release requires a separate workflow.
+      - id: C
+        answer: Main points at C while v1.0 still identifies B.
+        explanation: The branch moves with commits while the version tag normally remains fixed.
+      - id: D
+        answer: The tag removes B's parent edges to freeze history.
+        explanation: Tagging adds a ref and does not rewrite the commit graph.
+    correctAnswerId: C
+  - id: read-ref-evidence
+    question: An needs to verify branch and tag positions after integration rather than trust a drawn graph. Which evidence pair fits?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 03-branches-refs-tags.md
+      anchor: verify-branch-tag-positions
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: git diff and .gitignore to list branch locations.
+        explanation: Diff and ignore patterns do not enumerate branch and tag refs directly.
+      - id: B
+        answer: Use git branch -avv and git tag -l as a complete commit DAG.
+        explanation: These commands list names and tips, not the full decorated commit ancestry.
+      - id: C
+        answer: git stash list and git push to prove parent relationships.
+        explanation: Neither operation directly presents the full local branch/tag positions.
+      - id: D
+        answer: Use `git show-ref` and a decorated commit graph.
+        explanation: Show-ref maps refs to IDs, and a decorated graph explains their positions.
+    correctAnswerId: D
+  - id: ff-requirement
+    question: Main points to B and feature points to descendant C. If a fast-forward merge is allowed, what happens to main?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 04-merges-and-conflicts.md
+      anchor: fast-forward-merge
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: Main advances to C with no new merge commit.
+        explanation: When the target tip is an ancestor of the source tip, moving the ref suffices.
+      - id: B
+        answer: Git must create a new two-parent merge commit.
+        explanation: A new merge commit is unnecessary for a valid fast-forward.
+      - id: C
+        answer: Git rewrites C under a different commit ID.
+        explanation: A fast-forward moves a pointer rather than replaying commits.
+      - id: D
+        answer: Git deletes feature and its history before B.
+        explanation: A fast-forward does not automatically delete the feature branch.
+    correctAnswerId: A
+  - id: merge-base-ancestor
+    question: An's branch C and Binh's branch D both diverged from B. Which snapshots matter for a three-way merge?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 04-merges-and-conflicts.md
+      anchor: merge-base-and-three-way
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: C, D and an arbitrary newer remote revision.
+        explanation: An unrelated remote commit is not necessarily their common merge base.
+      - id: B
+        answer: The common ancestor B together with tips C and D.
+        explanation: Git compares each side against the base to form the integrated result.
+      - id: C
+        answer: Only C and the name of the branch pointing at D.
+        explanation: The base is needed to interpret how both sides changed the content.
+      - id: D
+        answer: An's current index and Binh's uncommitted disk files.
+        explanation: Three-way merge reasons about historical snapshots, not arbitrary folders.
+    correctAnswerId: B
+  - id: merge-conflict-unmerged-index
+    question: After git merge reports a conflict in pricing.java, which evidence shows unresolved paths remain in the index?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 04-merges-and-conflicts.md
+      anchor: recognize-merge-conflicts
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: A diff between main and feature still shows changed lines.
+        explanation: A branch-to-branch diff does not establish whether the current index has unresolved stages.
+      - id: B
+        answer: git branch reports main as checked out.
+        explanation: The branch name alone cannot describe unresolved index stages.
+      - id: C
+        answer: Inspect `git status` and `git ls-files -u`.
+        explanation: Git records the base and competing versions in index stages until resolved.
+      - id: D
+        answer: git remote -v prints the origin address.
+        explanation: A remote URL is unrelated to the merge's unresolved file state.
+    correctAnswerId: C
+  - id: abort-vs-finish-merge
+    question: An discovers a mistaken business assumption while a conflicted merge is still in progress. Which response is appropriate?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 04-merges-and-conflicts.md
+      anchor: resolve-or-abort-merge
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: Immediately hard-reset to ORIG_HEAD without checking pending work.
+        explanation: Hard reset can discard local changes; inspect merge status and use the supported abort operation when appropriate.
+      - id: B
+        answer: Use git clean -fd to erase all conflict state.
+        explanation: Clean targets untracked files and can destroy data without aborting the merge.
+      - id: C
+        answer: Commit conflict markers first and repair later.
+        explanation: Committing unresolved markers risks corrupt source and violates correct merge completion.
+      - id: D
+        answer: Read status, then use `git merge --abort`.
+        explanation: Abort can restore pre-merge state, subject to the repository's pending changes.
+    correctAnswerId: D
+  - id: cherry-pick-selective
+    question: A hotfix branch has four commits, but only one security correction belongs on an older release. What is a suitable approach?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 04-merges-and-conflicts.md
+      anchor: cherry-pick-vs-merge
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: Cherry-pick only the security commit onto release, then test.
+        explanation: Cherry-pick re-applies a chosen change as a new commit on the destination.
+      - id: B
+        answer: Merge the full hotfix branch to guarantee only one patch arrives.
+        explanation: Merging may integrate other reachable changes that were not requested.
+      - id: C
+        answer: Rebase the release branch and force-push all tags.
+        explanation: Rewriting shared release history is risky and not required for this goal.
+      - id: D
+        answer: Create a branch name at the security commit without integrating.
+        explanation: A named ref alone does not apply the patch to the release line.
+    correctAnswerId: A
+  - id: verify-post-merge
+    question: A merge reports success. The team wants proof that history and rounding behavior are both correct. What should it verify?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 04-merges-and-conflicts.md
+      anchor: verify-merged-outcome
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: Only that the git merge command returned successfully.
+        explanation: An exit status does not prove the integrated business result is correct.
+      - id: B
+        answer: Check graph, diff, status and behavior tests.
+        explanation: Recorded integration and correct business behavior require separate evidence.
+      - id: C
+        answer: Only the merged commit message saying Fix rounding.
+        explanation: Messages express intent and cannot replace content inspection or tests.
+      - id: D
+        answer: Only the number of branch names still present.
+        explanation: Branch count does not reveal the integrated content or its correctness.
+    correctAnswerId: B
+  - id: remote-add-does-not-publish
+    question: An has local commit A, creates an empty bare remote, then only runs git remote add origin ../remote.git. What follows?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 05-remotes-and-sync.md
+      anchor: configure-and-inspect-remotes
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: The bare server receives commit A and gains origin/main.
+        explanation: Adding a URL does not push history or establish server refs.
+      - id: B
+        answer: The empty bare server now has commit A without any push.
+        explanation: Adding a remote URL does not transfer commits or create a server ref.
+      - id: C
+        answer: Origin is configured, but A remains local only.
+        explanation: Remote add configures a location, without transferring commits.
+      - id: D
+        answer: The local main branch is renamed to origin.
+        explanation: Origin names a remote and does not rename the current branch.
+    correctAnswerId: C
+  - id: tracking-ref-is-cache
+    question: Local origin/main points to B, while git ls-remote origin main reports C. What is a reasonable explanation?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 05-remotes-and-sync.md
+      anchor: local-remote-and-tracking-refs
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: Remote main must still be B because tracking refs cannot age.
+        explanation: Remote-tracking refs are cached local observations from a past transfer.
+      - id: B
+        answer: Git automatically merged C into the local main branch.
+        explanation: Reading remote information does not integrate a commit into local main.
+      - id: C
+        answer: Both commands read the identical live ref, so Git is corrupt.
+        explanation: One inspects the server's ref while the other is a local tracking ref.
+      - id: D
+        answer: The server reached C; local `origin/main` is stale.
+        explanation: A suitable fetch can update the local observation of origin/main.
+    correctAnswerId: D
+  - id: upstream-is-configuration
+    question: An sets main to track origin/main using git branch --set-upstream-to. What does that action NOT accomplish by itself?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 05-remotes-and-sync.md
+      anchor: upstream-relationship
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: Upstream does not merge commits or grant push access.
+        explanation: Upstream is comparison/default-source configuration, not history or permission transfer.
+      - id: B
+        answer: It can support ahead/behind calculations with existing refs.
+        explanation: Tracking configuration helps Git determine the comparison branch.
+      - id: C
+        answer: It may appear in git branch -vv tracking information.
+        explanation: Verbose branch listings can show the configured upstream.
+      - id: D
+        answer: It may supply a default source for future git pull.
+        explanation: Upstream helps select which branch is tracked for some operations.
+    correctAnswerId: A
+  - id: fetch-versus-pull
+    question: Remote main has advanced, and An wants to inspect its commits before integrating into the checked-out branch. What fits?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 05-remotes-and-sync.md
+      anchor: fetch-vs-pull
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: Run git pull immediately and assume integration is harmless.
+        explanation: Pull performs integration behavior, not only observation.
+      - id: B
+        answer: Fetch origin, then examine history before integrating.
+        explanation: Fetch refreshes tracking refs without automatically merging the current branch.
+      - id: C
+        answer: Push local main to download the remote's new commits.
+        explanation: Push requests a remote update; it does not fetch for inspection.
+      - id: D
+        answer: Hard-reset to origin/main to guarantee identical history.
+        explanation: Hard reset may discard work and is not a safe read-only inspection.
+    correctAnswerId: B
+  - id: non-fast-forward-push
+    question: A push to a feature branch is rejected as non-fast-forward after a colleague published another commit. What should An do?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 05-remotes-and-sync.md
+      anchor: push-and-rejected-updates
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: Immediately force-push An's history over the remote tip.
+        explanation: Force can overwrite a collaborator's shared ref and lose their work.
+      - id: B
+        answer: Push from a newly named local branch to the same rejected remote ref.
+        explanation: Changing the local name does not reconcile a non-fast-forward update to the same remote target.
+      - id: C
+        answer: Fetch, inspect both tips, then reconcile deliberately.
+        explanation: An explicit history comparison prevents accidentally replacing shared work.
+      - id: D
+        answer: Rename the local branch and retry the same target push.
+        explanation: Changing the local label does not resolve a non-fast-forward update.
+    correctAnswerId: C
+  - id: remote-verify-both-sides
+    question: The team needs proof that a feature push updated the server, not only local tracking information. What evidence pair helps?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 05-remotes-and-sync.md
+      anchor: verify-local-and-remote-history
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: Inspect only git status --short in the local worktree.
+        explanation: Working-tree status does not report the live server branch tip.
+      - id: B
+        answer: Inspect only the origin URL in Git configuration.
+        explanation: Knowing a URL does not establish that a ref update succeeded.
+      - id: C
+        answer: Count commits on the local main branch only.
+        explanation: Local main history cannot confirm the remote feature ref's ID.
+      - id: D
+        answer: Compare live `git ls-remote` results with local refs.
+        explanation: Ls-remote queries the server ref and the local graph provides a matching ID.
+    correctAnswerId: D
+  - id: merge-versus-rebase-ids
+    question: A feature branch diverged from main. Which comparison of merge and rebase is accurate?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 06-rebase-and-rewrite.md
+      anchor: merge-versus-rebase-outcomes
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: Merge preserves ancestry; rebase replays onto a new base.
+        explanation: Merge connects history, while rebase usually creates replacement commits.
+      - id: B
+        answer: Merge always changes the IDs of existing feature commits.
+        explanation: Merge normally retains existing commits; replay through rebase may change IDs.
+      - id: C
+        answer: Rebase always creates a new two-parent merge commit.
+        explanation: A normal rebase replays commits rather than creating a merge commit.
+      - id: D
+        answer: Identical final file trees imply identical ancestry and commit IDs.
+        explanation: Commit IDs reflect parents and metadata; equal trees need not have identical history.
+    correctAnswerId: A
+  - id: rebase-commit-new-identities
+    question: An rebases two unpublished feature commits from base B onto a newer main D. Why may their commit IDs change?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 06-rebase-and-rewrite.md
+      anchor: rebase-replay-and-commit-ids
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: Rebase only renames the branch with unchanged commit objects.
+        explanation: Branch labels are not the sole factor in how a commit object is identified.
+      - id: B
+        answer: Replayed commits gain different parents or metadata and new IDs.
+        explanation: Commit IDs reflect immutable object contents including parent references.
+      - id: C
+        answer: GitHub demands fresh IDs for every rebased commit approval.
+        explanation: The local Git object identity is independent of hosted pull-request approval.
+      - id: D
+        answer: Rebase merely shuffles folders while preserving object identities.
+        explanation: Replay on a new base often creates new commit objects with different IDs.
+    correctAnswerId: B
+  - id: rebase-safe-local
+    question: An wants to rebase a private feature branch on an updated main. What is a safer prerequisite?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 06-rebase-and-rewrite.md
+      anchor: rebase-local-work
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: Check out main and rebase main onto the published feature.
+        explanation: That reverses the intended direction and may rewrite shared source.
+      - id: B
+        answer: Ignore git status because rebase protects every local edit.
+        explanation: Uncommitted work can obstruct or complicate a rebase operation.
+      - id: C
+        answer: Require a clean tree and unpublished feature history.
+        explanation: Rebasing private commits avoids invalidating collaborators' published bases.
+      - id: D
+        answer: Force-push feature as a backup before rebasing.
+        explanation: Force-push is neither a reliable backup nor a safe default for shared work.
+    correctAnswerId: C
+  - id: rebase-abort-not-hardreset
+    question: A rebase pauses on a conflict, and An learns the migration assumptions were wrong. What is the appropriate recovery path?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 06-rebase-and-rewrite.md
+      anchor: resolve-continue-or-abort-rebase
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: Immediately run git reset --hard inside the sequencer state.
+        explanation: That can destroy work and bypass the intended rebase recovery flow.
+      - id: B
+        answer: Manually delete .git/rebase-merge to mark the job finished.
+        explanation: Tampering with sequencer metadata may leave repository state inconsistent.
+      - id: C
+        answer: Commit unresolved conflict markers and switch to main.
+        explanation: Unresolved markers are not a valid resolution or completed rebase.
+      - id: D
+        answer: Inspect status; use `git rebase --abort` if appropriate.
+        explanation: Abort is the supported mechanism for leaving an in-progress rebase.
+    correctAnswerId: D
+  - id: amend-rewrites-head
+    question: An amends only the latest local commit message before publishing the commit. What happens?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 06-rebase-and-rewrite.md
+      anchor: amend-a-local-commit
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: Git creates a replacement commit whose ID may differ.
+        explanation: Amend writes a new immutable commit object, even for a message-only change.
+      - id: B
+        answer: Git edits the original object under exactly the same ID.
+        explanation: Content-addressed commit objects are not mutated in place.
+      - id: C
+        answer: The upstream automatically receives the amended commit.
+        explanation: Amend is local and does not automatically publish rewritten history or open a PR.
+      - id: D
+        answer: The commit ID must remain the same because the file tree is unchanged.
+        explanation: Commit metadata, including the message, contributes to object identity.
+    correctAnswerId: A
+  - id: published-rebase-warning
+    question: Binh fetched An's published feature commits. An now plans a rebase followed by a force-push. What is the central risk?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 06-rebase-and-rewrite.md
+      anchor: shared-history-rewrite-risk
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: Binh's clone silently adopts replacement history on its own.
+        explanation: Git does not automatically rewrite commits already in a colleague's clone.
+      - id: B
+        answer: Binh may rely on old commit IDs replaced on the remote.
+        explanation: Replacing shared commits can diverge collaborators' histories or duplicate patches.
+      - id: C
+        answer: The server must lock all operations after any commit was fetched.
+        explanation: Hosting policy varies; the core risk is invalidating shared history expectations.
+      - id: D
+        answer: Rebase changes only tag names, not published commits.
+        explanation: Rebase replays commits and may replace IDs that others already used.
+    correctAnswerId: B
+  - id: stash-tracked-default
+    question: An has uncommitted changes to a tracked file and needs to switch tasks. What is the useful role of git stash?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 07-stash-undo-recovery.md
+      anchor: stash-work-in-progress
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: It publishes the edits as a commit on remote main.
+        explanation: Stash is local temporary work storage and does not publish a branch.
+      - id: B
+        answer: It changes the working tree without retaining recoverable content.
+        explanation: Stash is designed to save local changes for later restoration.
+      - id: C
+        answer: Stash keeps edits for later apply/pop, which may conflict.
+        explanation: Applying saved work onto a changed base can produce conflicts.
+      - id: D
+        answer: It always archives every ignored secret and untracked file.
+        explanation: The default stash scope excludes some untracked and ignored content.
+    correctAnswerId: C
+  - id: stash-untracked-u
+    question: An edits tracked README and creates untracked notes.txt. How can both be included in a demo stash?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 07-stash-undo-recovery.md
+      anchor: stash-tracked-and-untracked
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: The default git stash push includes every ignored file as well.
+        explanation: Default stash does not automatically preserve untracked and ignored content.
+      - id: B
+        answer: Only staging notes.txt can make stash store a new file.
+        explanation: Stash has an explicit option to include untracked files.
+      - id: C
+        answer: git stash push -a is always safer than using -u.
+        explanation: The -a option includes ignored data and may remove more than intended.
+      - id: D
+        answer: Use git stash push -u to include untracked files.
+        explanation: The -u option adds untracked paths while ignored files remain separate.
+    correctAnswerId: D
+  - id: restore-staged-vs-worktree
+    question: An staged a README edit but wants to unstage it while keeping the edited working file. Which operation fits?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 07-stash-undo-recovery.md
+      anchor: restore-worktree-and-index
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: Run git restore --staged README.md and recheck status.
+        explanation: That restores the index from HEAD while generally leaving worktree edits intact.
+      - id: B
+        answer: Run plain git restore README.md to preserve the edit.
+        explanation: Plain restore can overwrite the working file with index content.
+      - id: C
+        answer: Run git reset --hard HEAD to keep the current changes.
+        explanation: Hard reset can overwrite tracked working files as well as index.
+      - id: D
+        answer: Run git clean -fd to change a tracked staged path.
+        explanation: Clean targets untracked files, not the staged state of README.
+    correctAnswerId: A
+  - id: soft-vs-mixed-reset
+    question: Two clean demo clones start at C. Clone A runs reset --soft HEAD~1; clone B runs reset --mixed HEAD~1. What differs?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 07-stash-undo-recovery.md
+      anchor: reset-modes-and-risk
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: Both move HEAD while preserving the original staging index.
+        explanation: Soft preserves the index; mixed resets it to the new HEAD.
+      - id: B
+        answer: Soft keeps the index; mixed resets it while retaining files.
+        explanation: Both move HEAD, but they handle staged content differently.
+      - id: C
+        answer: Mixed preserves the index while soft clears it.
+        explanation: That reverses how the two reset modes treat the staging area.
+      - id: D
+        answer: Both automatically make a new inverse commit like revert.
+        explanation: Reset moves refs; revert creates a separate inverse commit.
+    correctAnswerId: B
+  - id: revert-shared-commit
+    question: A bad commit on main was already fetched by colleagues. The team needs an auditable undo without rewriting shared history. Which fits?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 07-stash-undo-recovery.md
+      anchor: revert-shared-commit
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: Hard-reset HEAD~1 and force-push main.
+        explanation: That risks replacing the shared branch history others depend on.
+      - id: B
+        answer: Amend the original published commit and force-push.
+        explanation: Amend creates a replacement ID and disrupts published ancestry.
+      - id: C
+        answer: Revert the chosen commit; verify its inverse change.
+        explanation: Revert keeps the original in history and adds an explicit inverse commit.
+      - id: D
+        answer: Cherry-pick an earlier revision to cancel the bad patch automatically.
+        explanation: Cherry-picking older changes does not reliably invert a specific shared commit; revert records the undo.
+    correctAnswerId: C
+  - id: reflog-not-a-backup
+    question: After a local reset, An locates an old commit ID in git reflog. Which limitation matters?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 07-stash-undo-recovery.md
+      anchor: reflog-and-expiration
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: Reflog is a permanent backup on every remote Git server.
+        explanation: Local reflogs can expire and do not guarantee remote retention.
+      - id: B
+        answer: Reflog stores only files that were never tracked.
+        explanation: It records local movements of HEAD and other refs, not an untracked-file stash.
+      - id: C
+        answer: Reflog proves every colleague fetched the old commit.
+        explanation: A local ref log cannot establish the state of other clones.
+      - id: D
+        answer: Local reflogs expire; unreachable objects may be collected.
+        explanation: Inspect and preserve valuable commits promptly; do not treat reflog as backup.
+    correctAnswerId: D
+  - id: end-to-end-what-committed
+    question: An stages a selected README patch, commits successfully, then git status still reports modifications. What explains this?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 08-end-to-end-git.md
+      anchor: trace-change-to-commit
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: Only staged content was committed; other edits remain.
+        explanation: A successful commit need not consume every pending edit in the workspace.
+      - id: B
+        answer: The commit necessarily failed because status is not clean.
+        explanation: A commit may succeed even when unrelated changes remain unstaged.
+      - id: C
+        answer: Git automatically creates a branch for each remaining edit.
+        explanation: Modified working files do not automatically create branch refs.
+      - id: D
+        answer: The remote already contains every edit despite local status.
+        explanation: A local commit never automatically publishes changes to remote refs.
+    correctAnswerId: A
+  - id: end-to-end-bare-main-setup
+    question: A demo uses an initially empty bare remote and later needs origin/main to compare against a feature. Which setup is essential?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 08-end-to-end-git.md
+      anchor: follow-branch-and-remote
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: Only git remote add origin is needed to create origin/main.
+        explanation: Configuring the remote URL does not publish any server branch.
+      - id: B
+        answer: Commit on main, push it, then verify fetched refs.
+        explanation: A real server main ref must exist before a tracking ref can be used.
+      - id: C
+        answer: Only push feature; the bare server must create main too.
+        explanation: A bare remote can receive feature while still lacking a main branch.
+      - id: D
+        answer: Delete local main with git branch -d to initialize server main.
+        explanation: Removing a local ref cannot create a branch on the remote.
+    correctAnswerId: B
+  - id: end-to-end-merge-vs-policy
+    question: After fetching, An chooses merge rather than rebase for a feature. Which statement separates Git mechanics from team policy?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 08-end-to-end-git.md
+      anchor: select-merge-or-rebase-mechanics
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: Using merge permanently converts the team to Git Flow.
+        explanation: Branching strategy is chosen by the team, not inferred from one merge command.
+      - id: B
+        answer: Rebase is mandatory whenever a team claims trunk-based delivery.
+        explanation: Integration mechanisms vary with policy and repository constraints.
+      - id: C
+        answer: Merge integrates commits; branch lifetime is team policy.
+        explanation: Git merges history, while team cadence, review and release rules remain separate.
+      - id: D
+        answer: Local merge automatically grants approval in the hosted service.
+        explanation: Native Git merging does not produce hosted reviewer decisions.
+    correctAnswerId: C
+  - id: end-to-end-real-conflict
+    question: Two clones changed different files and merged without a conflict. What must a same-line conflict demo set up?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 08-end-to-end-git.md
+      anchor: diagnose-divergence-and-conflict
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: Rerun the already successful merge to force a conflict.
+        explanation: A completed merge does not spontaneously create opposing same-line edits.
+      - id: B
+        answer: Delete one branch to produce a conflict with the other.
+        explanation: Deleting a branch ref does not create incompatible file modifications.
+      - id: C
+        answer: Add tags to each side's commit to make Git report conflict.
+        explanation: Tags do not change file contents or force a merge collision.
+      - id: D
+        answer: Commit competing edits to one line from a shared base.
+        explanation: Competing edits with shared ancestry create a meaningful conflict to inspect.
+    correctAnswerId: D
+  - id: end-to-end-undo-classification
+    question: Published commit C is wrong, while local working-tree edit D remains uncommitted. What is the safer recovery classification?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 08-end-to-end-git.md
+      anchor: choose-safe-undo-in-context
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: Inspect status, preserve D and consider reverting C.
+        explanation: Shared commits and pending local work need separate risk assessments.
+      - id: B
+        answer: Hard-reset everything to HEAD~1 and force-push.
+        explanation: This can lose D and rewrite history that collaborators already use.
+      - id: C
+        answer: Run git clean -fd to reverse both C and D.
+        explanation: Clean addresses untracked files, not the inverse of a shared commit.
+      - id: D
+        answer: Amend C and assume D is automatically preserved and shared.
+        explanation: Amending published C changes identity and may include unwanted staged content.
+    correctAnswerId: A
+  - id: end-to-end-scope-acceptance
+    question: A Git graph proves commit C reached main. The team also wants to claim approval and production deployment. What evidence is missing?
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 08-end-to-end-git.md
+      anchor: handoff-to-team-collaboration
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: Add tag v1.0, which proves approval and deployment.
+        explanation: A tag names a Git point; it does not record hosted review or live deployment.
+      - id: B
+        answer: Hosted PR approval records and separate deployment evidence.
+        explanation: Git ancestry alone cannot prove who approved or what software is running.
+      - id: C
+        answer: Treat commit trailers naming reviewers and deployments as sufficient proof.
+        explanation: Author-controlled trailers do not prove current hosted approval or a real deployment.
+      - id: D
+        answer: Inspect parent graph because merge covers every release stage.
+        explanation: A commit DAG proves history integration, not governance or delivery.
+    correctAnswerId: B
