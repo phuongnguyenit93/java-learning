@@ -1,0 +1,33 @@
+ActuatorLearningController:
+  setDependencyAvailable(boolean):
+    execution: |-
+      <p><b>Concept:</b> custom <code>HealthIndicator</code> đóng góp health của ứng dụng, còn Actuator sở hữu biểu diễn HTTP quản trị và kết quả health tổng hợp.</p>
+      <p><b>Flow:</b> gọi <code>POST /api/actuator-learning/health/false</code> → trạng thái học tập thay đổi → <code>LearningDependencyHealthIndicator.health()</code> trả <code>DOWN</code> → quan sát <code>/actuator/health/learningDependency</code> và <code>/actuator/health</code>. Khôi phục bằng <code>POST /api/actuator-learning/health/true</code>.</p>
+      <p><b>Code evidence:</b> <code>LearningDependencyHealthIndicator</code> đọc đúng state mà API này thay đổi và tạo <code>Health.up()</code> hoặc <code>Health.down()</code>. Controller chỉ cung cấp trigger xác định cho thí nghiệm.</p>
+      <p><b>Observation:</b> sau khi đặt <code>false</code>, component báo <code>status=DOWN</code> cùng details đã cấu hình và health tổng hợp cũng chuyển thành DOWN. Sau khi khôi phục <code>true</code>, cả hai trở lại UP.</p>
+      <p><b>Conclusion:</b> custom health contributor đi vào health model của Actuator; management endpoint, aggregation và biểu diễn HTTP vẫn do Actuator quản lý.</p>
+    usage: true
+  recordMetric(String):
+    execution: |-
+      <p><b>Concept:</b> Spring Boot auto-configure Micrometer infrastructure và Actuator cung cấp góc nhìn chẩn đoán các meter đã đăng ký.</p>
+      <p><b>Flow:</b> gọi <code>POST /api/actuator-learning/metrics/success</code> một hoặc nhiều lần → controller tăng <code>learning.requests</code> với tag <code>outcome=success</code> → quan sát <code>/actuator/metrics/learning.requests?tag=outcome:success</code>.</p>
+      <p><b>Code evidence:</b> controller tạo counter bằng <code>Counter.builder("learning.requests")</code>, giới hạn outcome thành <code>success</code> hoặc <code>failure</code>, đăng ký với <code>MeterRegistry</code> của ứng dụng rồi tăng counter.</p>
+      <p><b>Observation:</b> response của trigger trả giá trị counter hiện tại, còn Actuator metrics endpoint báo cùng tagged series và cho phép thu hẹp bằng query parameter <code>tag=key:value</code>.</p>
+      <p><b>Conclusion:</b> Micrometer sở hữu việc ghi meter và tag; Actuator cung cấp endpoint để inspect các meter đã đăng ký. Việc giới hạn tag cũng thể hiện boundary về cardinality trong Knowledge.</p>
+    usage: true
+  customEndpointState():
+    execution: |-
+      <p><b>Concept:</b> <code>@Endpoint</code> cùng <code>@ReadOperation</code> định nghĩa management operation độc lập với mapping của Spring MVC controller.</p>
+      <p><b>Flow:</b> gọi <code>GET /api/actuator-learning/custom-endpoint</code> để chạy cùng implementation <code>LearningOperationsEndpoint.readState()</code>, sau đó quan sát <code>GET /actuator/learning</code> qua HTTP management mapping thật của Actuator.</p>
+      <p><b>Code evidence:</b> <code>LearningOperationsEndpoint</code> có <code>@Endpoint(id="learning")</code>; <code>readState()</code> có <code>@ReadOperation</code>. Controller chỉ là experiment bridge để Swagger nhìn thấy.</p>
+      <p><b>Observation:</b> hai surface báo cùng maintenance/dependency state có giới hạn, nhưng chỉ <code>/actuator/learning</code> là Actuator management endpoint.</p>
+      <p><b>Conclusion:</b> endpoint operation là mã quản trị ứng dụng độc lập transport; Actuator sở hữu discovery và HTTP exposure.</p>
+    usage: true
+  setMaintenanceMode(boolean):
+    execution: |-
+      <p><b>Concept:</b> <code>@WriteOperation</code> mô hình hóa một management action có giới hạn mà không biến endpoint class thành MVC controller.</p>
+      <p><b>Flow:</b> gọi <code>POST /api/actuator-learning/custom-endpoint/maintenance/true</code> → bridge gọi <code>LearningOperationsEndpoint.setMaintenance(true)</code> → quan sát <code>GET /actuator/learning</code>. Khôi phục bằng <code>false</code>. Write surface thật của Actuator cũng có tại <code>POST /actuator/learning</code> với root JSON property <code>enabled</code>.</p>
+      <p><b>Code evidence:</b> <code>setMaintenance(boolean)</code> có <code>@WriteOperation</code> và chỉ thay đổi learning state có giới hạn dùng chung với read operation.</p>
+      <p><b>Observation:</b> management read tiếp theo báo maintenance value đã đổi, chứng minh write và read operation thuộc cùng custom endpoint model.</p>
+      <p><b>Conclusion:</b> custom endpoint độc lập công nghệ giữ management intent tách khỏi business API trong khi Actuator ánh xạ operation sang management transport đã cấu hình.</p>
+    usage: true

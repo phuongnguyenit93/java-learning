@@ -1,0 +1,6 @@
+ActuatorLearningController:
+  description: |-
+    <h2>Actuator Learning Controller</h2>
+    <p>Cung cấp các trigger nhỏ để thay đổi trạng thái trong thí nghiệm runtime. Kết quả vận hành được quan sát qua chính Spring Boot Actuator thay vì xem controller này là management surface.</p>
+  readmeRelated:
+    file: 1.ActuatorPurpose/ActuatorPurpose.md

@@ -1,0 +1,108 @@
+ActuatorLearningController:
+  setDependencyAvailable(boolean):
+    summary: Thay đổi custom HealthIndicator và quan sát qua Actuator
+    description: Thay đổi trạng thái dependency có kiểm soát mà LearningDependencyHealthIndicator
+      sử dụng. Learning API chỉ tạo thay đổi trạng thái; bằng chứng được đọc từ health
+      endpoint thật của Actuator.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 4.Health/Health.md
+      anchor: custom-health-indicators
+    methodName: setDependencyAvailable
+    params:
+    - available
+    path: com/example/learning/actuator/ActuatorLearningController.java
+    mapping: '@PostMapping("/health/{available}")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /api/actuator-learning/health/{available}
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  recordMetric(String):
+    summary: Ghi Micrometer counter có tag và quan sát qua Actuator
+    description: Tăng counter learning.requests với tag success hoặc failure đã được
+      giới hạn để có thể quan sát qua metrics endpoint thật của Actuator và bộ lọc
+      tag.
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 7.MetricsMicrometer/MetricsMicrometer.md
+      anchor: tag-filtered-metrics
+    methodName: recordMetric
+    params:
+    - outcome
+    path: com/example/learning/actuator/ActuatorLearningController.java
+    mapping: '@PostMapping("/metrics/{outcome}")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /api/actuator-learning/metrics/{outcome}
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  customEndpointState():
+    summary: Quan sát trạng thái custom Actuator endpoint
+    description: Gọi cùng implementation endpoint độc lập công nghệ mà Actuator expose
+      tại /actuator/learning để có thể quan sát operation model song song với management
+      endpoint thật.
+    enableVideoYoutube: false
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 9.CustomEndpoints/CustomEndpoints.md
+      anchor: endpoint-operation-annotations
+    usage: true
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: customEndpointState
+    params: [
+      ]
+    path: com/example/learning/actuator/ActuatorLearningController.java
+    mapping: '@GetMapping("/custom-endpoint")'
+    httpMethods:
+    - GET
+    mappingPaths:
+    - /api/actuator-learning/custom-endpoint
+    produces: [
+      ]
+    consumes: [
+      ]
+  setMaintenanceMode(boolean):
+    summary: Kích hoạt write operation của custom Actuator endpoint
+    description: Thay đổi maintenance state có giới hạn qua cùng implementation @WriteOperation
+      được Actuator expose, rồi cho phép so sánh với management surface thật tại /actuator/learning.
+    enableVideoYoutube: false
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 9.CustomEndpoints/CustomEndpoints.md
+      anchor: technology-agnostic-custom-endpoints
+    usage: true
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    methodName: setMaintenanceMode
+    params:
+    - enabled
+    path: com/example/learning/actuator/ActuatorLearningController.java
+    mapping: '@PostMapping("/custom-endpoint/maintenance/{enabled}")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /api/actuator-learning/custom-endpoint/maintenance/{enabled}
+    produces: [
+      ]
+    consumes: [
+      ]

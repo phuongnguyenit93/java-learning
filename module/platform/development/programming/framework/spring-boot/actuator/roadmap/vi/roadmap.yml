@@ -41,4 +41,111 @@
 # Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: actuator-purpose-and-production-model
+    title: "Vì sao Spring Boot Actuator tồn tại"
+    purpose: "Hiểu Actuator như bề mặt quản trị sẵn sàng cho production của Spring Boot, dùng để quan sát và tương tác với ứng dụng đang chạy mà không nhầm nó với một nền tảng observability bên ngoài."
+    relatedKnowledge:
+      - ActuatorPurpose
+    objectives:
+      - "Giải thích bài toán Actuator giải quyết sau khi ứng dụng đã chạy: khả năng quan sát vận hành, chẩn đoán và truy cập quản trị có kiểm soát."
+      - "Nhận biết Actuator cung cấp các endpoint và tích hợp do Boot quản lý, còn monitoring backend, telemetry pipeline và lý thuyết observability tổng quát thuộc phần kiến thức khác."
+      - "Phân biệt trạng thái runtime do application-runtime sở hữu với các Actuator endpoint dùng để đưa một phần trạng thái đó ra bề mặt vận hành."
+    relatedModules:
+      - routeId: SPRING_BOOT_FUNDAMENTALS
+        label: "Spring Boot Fundamentals"
+        note: "Cung cấp mô hình ứng dụng Boot cơ bản để Actuator mở rộng bằng các khả năng quản trị dành cho production."
+      - routeId: SPRING_BOOT_APPLICATION_RUNTIME
+        label: "Spring Boot Application Runtime"
+        note: "Sở hữu lifecycle và availability state của runtime mà Actuator có thể đưa ra bề mặt vận hành."
+
+  - id: endpoint-model-availability-and-exposure
+    title: "Mô hình endpoint, enablement, availability và exposure"
+    purpose: "Xây mô hình tư duy về Actuator endpoint như các khả năng quản trị độc lập với công nghệ truyền tải: enablement và exposure được cấu hình riêng, còn một endpoint chỉ available qua một công nghệ khi đồng thời thỏa các điều kiện cần thiết về enablement và exposure."
+    relatedKnowledge:
+      - EndpointModel
+      - EndpointAvailabilityExposure
+    objectives:
+      - "Hiểu endpoint id, operation, các endpoint có sẵn và cách web/JMX cùng expose một mô hình endpoint logic."
+      - "Phân biệt việc enable một endpoint với việc expose endpoint đó qua công nghệ quản trị, hiểu cả hai cùng quyết định endpoint có available ở đó hay không, và xem exposure từ xa là quyết định có chủ đích."
+      - "Dùng management.endpoints.* cùng cấu hình riêng của từng endpoint để kiểm soát availability/exposure mà không biến precedence cấu hình thành trách nhiệm của Actuator."
+      - "Hiểu web endpoint mặc định nằm dưới /actuator và management path/port có thể được tách khỏi bề mặt chính của ứng dụng."
+
+  - id: health-and-availability-integration
+    title: "Health, HealthContributor và availability"
+    purpose: "Hiểu cách Actuator biến sức khỏe của ứng dụng và dependency thành endpoint vận hành, đồng thời chỉ tiêu thụ availability state của Boot chứ không định nghĩa lại lifecycle runtime."
+    relatedKnowledge:
+      - Health
+      - AvailabilityProbes
+    objectives:
+      - "Hiểu HealthContributor, HealthIndicator, health contribution dạng composite và cách health status được tổng hợp cho health endpoint."
+      - "Suy luận mức chi tiết health được hiển thị và exposure của endpoint như chính sách vận hành chứ không phải business behavior."
+      - "Liên hệ liveness/readiness với health groups và cách Actuator trình bày dữ liệu phục vụ probe, trong khi trạng thái lifecycle vẫn thuộc application-runtime."
+      - "Nhận biết khi nào cần custom health indicator và khi nào contributor chuyên cho dependency đã có sẵn."
+    relatedModules:
+      - routeId: SPRING_BOOT_APPLICATION_RUNTIME
+        label: "Spring Boot Application Runtime"
+        note: "Sở hữu quá trình chuyển trạng thái liveness/readiness của Boot; Actuator tiêu thụ và expose chúng qua các bề mặt health."
+
+  - id: info-and-environment-facing-endpoints
+    title: "Các endpoint info và thông tin môi trường vận hành"
+    purpose: "Sử dụng các endpoint Actuator cho biết thông tin build, ứng dụng, cấu hình và môi trường, đồng thời hiểu độ nhạy cảm của dữ liệu mà chúng có thể expose."
+    relatedKnowledge:
+      - InfoEnvironment
+    objectives:
+      - "Hiểu info endpoint và vai trò của các contribution kiểu InfoContributor đối với metadata vận hành."
+      - "Hiểu các endpoint hướng tới environment/configuration có thể cho biết gì về trạng thái cấu hình sau khi ứng dụng đã phân giải giá trị, mà không biến module này thành bài học externalized configuration."
+      - "Xem các giá trị có khả năng nhạy cảm như vấn đề exposure và authorization thay vì mặc định management endpoint nào cũng an toàn để công khai."
+
+  - id: metrics-and-micrometer-boundary
+    title: "Metrics endpoint và ranh giới với Micrometer"
+    purpose: "Hiểu cách Actuator tích hợp Micrometer và expose các meter đã thu thập để chẩn đoán, trong khi lý thuyết metrics, lựa chọn backend và kiến trúc telemetry vẫn thuộc curriculum observability."
+    relatedKnowledge:
+      - MetricsMicrometer
+    objectives:
+      - "Hiểu ranh giới auto-configuration của MeterRegistry trong Boot và vai trò Micrometer như lớp API thống nhất cho metrics mà các tích hợp Actuator sử dụng."
+      - "Dùng metrics endpoint để xem danh sách meter, measurement và lọc theo tag khi cần chẩn đoán."
+      - "Phân biệt việc xem metrics qua Actuator với việc export metrics sang hệ thống monitoring bên ngoài."
+      - "Giữ metric design, chiến lược cardinality, alerting, dashboard và vận hành backend ngoài phạm vi sở hữu chính của module này."
+
+  - id: loggers-and-runtime-diagnostics
+    title: "Loggers và các endpoint chẩn đoán runtime"
+    purpose: "Dùng các endpoint vận hành của Actuator để quan sát hoặc điều chỉnh logging lúc chạy và lấy dữ liệu chẩn đoán liên quan JVM mà không biến module thành khóa học logging hay phân tích JVM."
+    relatedKnowledge:
+      - LoggersDiagnostics
+    objectives:
+      - "Hiểu loggers endpoint expose logger level đã cấu hình/effective và cho phép thay đổi level lúc chạy trong phạm vi được hỗ trợ."
+      - "Nhận biết thread dump và heap dump endpoint là bề mặt cung cấp dữ liệu chẩn đoán, không phải nơi sở hữu kỹ thuật phân tích thread/heap."
+      - "Đánh giá rủi ro vận hành khi expose các endpoint chẩn đoán mạnh và xem quyền truy cập chúng như một quyết định bảo mật."
+
+  - id: custom-endpoint-authoring
+    title: "Tạo custom Actuator endpoint"
+    purpose: "Mở rộng bề mặt quản trị khi ứng dụng cần thao tác hoặc thông tin vận hành riêng, sử dụng abstraction endpoint của Actuator thay vì biến chúng thành business HTTP controller thông thường."
+    relatedKnowledge:
+      - CustomEndpoints
+    objectives:
+      - "Hiểu @Endpoint và các operation annotation như @ReadOperation, @WriteOperation, @DeleteOperation ở tầng quản trị của Boot."
+      - "Phân biệt custom endpoint độc lập công nghệ với web-specific endpoint extension khi cần bổ sung hành vi cho endpoint có sẵn."
+      - "Thiết kế input/output cho mục đích vận hành và tránh nhân bản API nghiệp vụ của ứng dụng."
+
+  - id: management-security-and-access-boundary
+    title: "Bảo mật bề mặt quản trị và ranh giới truy cập"
+    purpose: "Xem exposure, vị trí mạng và authorization của Actuator như các quyết định production rõ ràng vì management endpoint có thể tiết lộ hoặc thay đổi trạng thái runtime nhạy cảm."
+    relatedKnowledge:
+      - ManagementAccess
+    objectives:
+      - "Hiểu chỉ nên expose từ xa một tập endpoint cần thiết và exposure là khái niệm khác với authorization."
+      - "Nhận biết hành vi security auto-configuration của Boot quanh Actuator khi Spring Security có mặt mà không dạy lại cơ chế authentication/authorization."
+      - "Dùng lựa chọn về management server path/port/address cùng access policy của endpoint để giảm bề mặt quản trị không cần thiết."
+      - "Bàn giao thiết kế authentication, authorization, request matching và security policy chi tiết cho Spring Security."
+
+  - id: actuator-observability-synthesis
+    title: "Actuator trong kiến trúc observability production"
+    purpose: "Kết nối endpoint, health, metrics, chẩn đoán logging, khả năng quản trị tùy chỉnh và chính sách truy cập thành một mô hình production thống nhất với các điểm bàn giao rõ ràng sang hệ thống observability bên ngoài."
+    relatedKnowledge:
+      - ObservabilitySynthesis
+    objectives:
+      - "Theo dõi cách một ứng dụng Boot đang chạy expose trạng thái vận hành đã chọn qua Actuator, trong khi hệ thống bên ngoài có thể scrape, ingest hoặc correlate telemetry theo cách riêng."
+      - "Chọn Actuator endpoint hoặc custom endpoint khi cần quản trị/chẩn đoán trực tiếp ứng dụng, và chọn observability tooling khi bài toán là thu thập, lưu trữ, phân tích, alerting hoặc correlation telemetry."
+      - "Giải thích quan hệ giữa Actuator, tích hợp Micrometer Observation/metrics, availability của application-runtime, logging và hạ tầng monitoring bên ngoài mà không trộn lẫn ranh giới sở hữu."
+      - "Chẩn đoán vấn đề quản trị bằng cách tách endpoint availability, exposure, authorization, độ nhạy cảm dữ liệu và các vấn đề monitoring phía sau."

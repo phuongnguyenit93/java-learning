@@ -1,1 +1,275 @@
-{}
+1.ActuatorPurpose/ActuatorPurpose.md:
+  actuator-role:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  actuator-problem:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  production-management-surface:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  runtime-state-vs-actuator-view:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  actuator-boundaries:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  actuator-learning-path:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+2.EndpointModel/EndpointModel.md:
+  actuator-endpoint-abstraction:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  endpoint-id-and-operations:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  built-in-endpoint-catalog:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  technology-agnostic-endpoints:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  endpoint-configuration-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+3.EndpointAvailabilityExposure/EndpointAvailabilityExposure.md:
+  endpoint-enablement:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  endpoint-exposure:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  endpoint-availability:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  web-endpoint-surface:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  jmx-endpoint-surface:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  actuator-base-path:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  exposure-defaults-and-risk:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+4.Health/Health.md:
+  health-endpoint-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  health-contributor-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  composite-health-contributors:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  health-status-aggregation:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  health-detail-visibility:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  custom-health-indicators:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+5.AvailabilityProbes/AvailabilityProbes.md:
+  availability-health-handoff:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  liveness-readiness-health-groups:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  probe-endpoint-paths:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  probe-external-dependency-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  application-runtime-availability-ownership:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+6.InfoEnvironment/InfoEnvironment.md:
+  info-endpoint-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  info-contributors:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  environment-facing-endpoints:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  sensitive-value-sanitization:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  info-env-access-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  externalized-config-handoff:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+7.MetricsMicrometer/MetricsMicrometer.md:
+  micrometer-meter-registry-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  metrics-endpoint-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  meter-name-measurements:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  tag-filtered-metrics:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  metrics-export-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  metric-design-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+8.LoggersDiagnostics/LoggersDiagnostics.md:
+  loggers-endpoint:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  configured-effective-log-levels:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  runtime-log-level-changes:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  threaddump-endpoint:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  heapdump-endpoint:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  diagnostic-analysis-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  diagnostic-exposure-risk:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+9.CustomEndpoints/CustomEndpoints.md:
+  custom-endpoint-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  endpoint-operation-annotations:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  technology-agnostic-custom-endpoints:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  web-jmx-specific-endpoints:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  endpoint-extensions:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  business-api-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+10.ManagementAccess/ManagementAccess.md:
+  minimal-management-exposure:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  management-base-path:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  management-port-address:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  exposure-vs-authorization:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  actuator-security-auto-configuration:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  spring-security-handoff:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+11.ObservabilitySynthesis/ObservabilitySynthesis.md:
+  actuator-production-flow:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  direct-management-vs-telemetry:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  health-metrics-logging-relation:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  external-observability-handoff:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  management-troubleshooting-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  actuator-end-to-end-boundaries:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false

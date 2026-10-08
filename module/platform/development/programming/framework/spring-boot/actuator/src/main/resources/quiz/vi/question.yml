@@ -38,4 +38,484 @@
 #       ID nội bộ của đáp án đúng. Frontend kiểm tra bằng identity này sau khi shuffle.
 # </quiz-schema>
 
-questions: []
+questions:
+  - id: "actuator-q01"
+    question: "Phát biểu nào mô tả đúng nhất vai trò của Spring Boot Actuator trong một ứng dụng đang chạy?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.ActuatorPurpose/ActuatorPurpose.md"
+      anchor: "runtime-state-vs-actuator-view"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Nó tạo lifecycle và health state rồi expose các state đó qua management endpoint."
+        explanation: "Application runtime sở hữu lifecycle và availability transition; Actuator chỉ có thể expose các trạng thái đó."
+      - id: B
+        answer: "Nó expose operational state được chọn, còn subsystem tạo ra state vẫn giữ ownership."
+        explanation: "Mô hình consumer-view này giải thích health, availability, metrics, logging và startup diagnostics mà không chuyển ownership nguồn state sang Actuator."
+      - id: C
+        answer: "Nó lưu operational state trên các replica nên external observability infrastructure trở thành tùy chọn."
+        explanation: "Actuator cung cấp management view cục bộ theo application; collection bền vững và phân tích cross-instance thuộc observability infrastructure."
+      - id: D
+        answer: "Nó chuyển domain API thành management operation để hai surface dùng chung một contract."
+        explanation: "Actuator thêm một management surface riêng; business API thông thường vẫn là contract hướng domain."
+    correctAnswerId: B
+  - id: "actuator-q02"
+    question: "Vì sao nên xem Actuator endpoint ID là management identity thay vì một HTTP path hard-code?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.EndpointModel/EndpointModel.md"
+      anchor: "endpoint-id-and-operations"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Vì ID được suy ra từ active management port còn operation name vẫn transport-neutral."
+        explanation: "Endpoint ID là management identity ổn định và không được suy ra từ server port."
+      - id: B
+        answer: "Vì ID chỉ xác định JMX object name còn HTTP dùng route identifier không liên quan."
+        explanation: "Cùng một logical endpoint có thể được expose qua HTTP, JMX hoặc cả hai."
+      - id: C
+        answer: "Vì ID xác định response format còn operation annotation xác định endpoint identity."
+        explanation: "Endpoint ID xác định capability; operation và exposure adapter quyết định representation theo transport."
+      - id: D
+        answer: "Vì ID đặt tên management capability, còn operation và exposure adapter tạo HTTP hoặc JMX representation."
+        explanation: "Cách nhìn này giữ management intent độc lập với transport dùng để expose nó."
+    correctAnswerId: D
+  - id: "actuator-q03"
+    question: "Một endpoint bean cần tồn tại để dùng nội bộ nhưng không được reachable qua HTTP. Nên dựa vào distinction nào khi cấu hình?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.EndpointAvailabilityExposure/EndpointAvailabilityExposure.md"
+      anchor: "endpoint-exposure"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Giữ endpoint enabled nhưng exclude ID của nó khỏi web exposure."
+        explanation: "Enablement quyết định capability có tồn tại hay không; web exposure độc lập quyết định HTTP reachability."
+      - id: B
+        answer: "Disable endpoint rồi dựa vào Spring Security để bean vẫn còn dùng nội bộ."
+        explanation: "Disable sẽ loại endpoint capability thay vì chỉ bảo vệ HTTP route."
+      - id: C
+        answer: "Đổi `/actuator` base path vì path khác sẽ khiến endpoint chỉ còn nội bộ."
+        explanation: "Đổi path chỉ thay routing, không thay exposure hay authorization."
+      - id: D
+        answer: "Expose qua HTTP và bỏ authorization vì internal caller sẽ bypass management surface."
+        explanation: "HTTP exposure tạo reachability; authorization của caller vẫn là quyết định riêng."
+    correctAnswerId: A
+  - id: "actuator-q04"
+    question: "Một management URL trả 404 cho endpoint mà team kỳ vọng sử dụng. Chuỗi kiểm tra đầu tiên nào hợp lý nhất?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.EndpointAvailabilityExposure/EndpointAvailabilityExposure.md"
+      anchor: "endpoint-availability"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Kiểm tra authorization trước, rồi mới xem endpoint enablement và exposure nếu policy cho phép."
+        explanation: "Authorization nên được xem xét sau khi xác nhận endpoint availability và exposure."
+      - id: B
+        answer: "Kiểm tra management base path và route mapping trước, rồi mới xác nhận endpoint capability có tồn tại."
+        explanation: "Routing nằm sau việc xác nhận endpoint capability và transport exposure thực sự tồn tại."
+      - id: C
+        answer: "Kiểm tra enablement và transport prerequisite, rồi exposure, routing và cuối cùng authorization."
+        explanation: "Thứ tự này tách missing capability khỏi missing transport mapping trước khi đi sang network/security."
+      - id: D
+        answer: "Tạm mở rộng exposure trước, rồi thu hẹp lại sau khi missing route xuất hiện."
+        explanation: "Broad exposure không phải diagnostic default an toàn và có thể làm endpoint nhạy cảm reachable."
+    correctAnswerId: C
+  - id: "actuator-q05"
+    question: "Learning API đặt simulated dependency thành unavailable. Điều gì nên xảy ra trong custom-health experiment?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.Health/Health.md"
+      anchor: "custom-health-indicators"
+    apiRelated:
+      controller: "ActuatorLearningController"
+      methodSignature: "setDependencyAvailable(boolean)"
+    answers:
+      - id: A
+        answer: "Controller tự report DOWN trực tiếp, còn HealthIndicator chỉ là background check."
+        explanation: "Controller chỉ là deterministic trigger; health endpoint lấy evidence từ HealthIndicator."
+      - id: B
+        answer: "Controller đổi shared state; HealthIndicator báo DOWN; Actuator aggregate và hiển thị kết quả."
+        explanation: "Shared state làm thay đổi evidence của contributor; Actuator vẫn chịu trách nhiệm aggregate và management representation."
+      - id: C
+        answer: "Controller đổi shared state; Actuator yêu cầu HealthIndicator repair dependency trước khi report."
+        explanation: "Health contributor báo bounded evidence; repair behavior nằm ngoài trách nhiệm của nó."
+      - id: D
+        answer: "Controller đổi shared state; metrics counter trở thành nguồn cho aggregate health."
+        explanation: "Experiment này nối vào HealthIndicator chứ không phải metric."
+    correctAnswerId: B
+  - id: "actuator-q06"
+    question: "Ứng dụng thêm custom health status và cấu hình một entry `management.endpoint.health.status.http-mapping.*`. Cần lưu ý hành vi HTTP tinh tế nào?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.Health/Health.md"
+      anchor: "health-status-aggregation"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Custom mapping chỉ đổi custom status; default mapping của DOWN và OUT_OF_SERVICE vẫn tự động giữ nguyên."
+        explanation: "Khi có custom status HTTP mapping, default mapping behavior thay đổi nên hai default 503 không còn được giữ tự động."
+      - id: B
+        answer: "Custom mapping đổi status ordering nhưng HTTP translation vẫn cố định bởi Boot."
+        explanation: "HTTP health status mapping có thể cấu hình trực tiếp."
+      - id: C
+        answer: "Custom mapping thay health aggregation bằng HTTP code riêng cho từng contributor."
+        explanation: "Health aggregation vẫn diễn ra; mapping chỉ điều khiển việc đổi aggregate health status sang HTTP status."
+      - id: D
+        answer: "Custom mapping bỏ default 503 cho DOWN và OUT_OF_SERVICE trừ khi team khai báo lại rõ ràng."
+        explanation: "Boot không còn tự áp dụng hai default mapping 503 này khi custom status HTTP mappings được cung cấp."
+    correctAnswerId: D
+  - id: "actuator-q07"
+    question: "Load balancer chỉ cần health status, còn operator cần contributor details. Thiết kế Actuator nào phù hợp cho cả hai audience?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.Health/Health.md"
+      anchor: "health-detail-visibility"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Expose basic status rộng hơn nhưng gate component và details bằng visibility cùng authorization policy rõ ràng."
+        explanation: "Actuator hỗ trợ show-components/show-details riêng nên các operational audience không bắt buộc nhận cùng mức evidence."
+      - id: B
+        answer: "Expose full details rộng hơn nhưng đặt credentials trong payload để chỉ operator hiểu response."
+        explanation: "Health detail không nên chứa secret; access policy mới là nơi bảo vệ detail nhạy cảm."
+      - id: C
+        answer: "Tạo business API thứ hai cho operator detail vì Actuator health không thể đổi detail visibility."
+        explanation: "Actuator đã có control cho visibility của component và details."
+      - id: D
+        answer: "Trả full details cho caller đã authenticate và dựa vào masking để bảo vệ contributor value nhạy cảm."
+        explanation: "Cách bảo thủ là expose đúng lượng detail mà từng audience cần."
+    correctAnswerId: A
+  - id: "actuator-q08"
+    question: "Vì sao copy mọi external dependency check vào cả liveness và readiness group thường là thiết kế probe kém?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.AvailabilityProbes/AvailabilityProbes.md"
+      anchor: "probe-external-dependency-boundary"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Đưa mỗi external dependency vào cả hai probe để probe nào fail cũng có thể loại hoặc restart instance."
+        explanation: "Đưa shared dependency vào liveness có thể làm mọi instance restart vô ích trong lúc external outage."
+      - id: B
+        answer: "Đưa mỗi external dependency chỉ vào liveness vì restart là phản ứng chuẩn khi mất connectivity."
+        explanation: "Shared external outage có thể không được sửa bằng restart process, nên liveness nên tập trung vào internal failure mà restart có thể giúp."
+      - id: C
+        answer: "Dùng readiness khi mất dependency nên dừng traffic, còn liveness dành cho failure mà restart có thể giúp."
+        explanation: "Liveness tập trung vào việc restart có thể giúp hay không; readiness trả lời instance có nên nhận traffic lúc này hay không."
+      - id: D
+        answer: "Loại external dependency khỏi cả hai probe vì readiness chỉ nên mô tả JVM-local state."
+        explanation: "Readiness có thể hợp lý khi chứa dependency nếu mất dependency nghĩa là instance nên ngừng nhận traffic."
+    correctAnswerId: C
+  - id: "actuator-q09"
+    question: "Management endpoint chạy ở port riêng nhưng platform phải phát hiện failure của main HTTP connector. Probe arrangement nào phù hợp nhất?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.AvailabilityProbes/AvailabilityProbes.md"
+      anchor: "probe-endpoint-paths"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Chỉ probe management port vì management listener healthy đại diện cho cả hai HTTP connector."
+        explanation: "Management listener riêng có thể vẫn healthy trong khi main request path đã hỏng."
+      - id: B
+        answer: "Bật `/livez` và `/readyz` trên main server khi probe phải bao gồm main connector."
+        explanation: "Boot cung cấp main-port probe paths để probe có thể bao gồm listener thật sự phục vụ application request."
+      - id: C
+        answer: "Probe một business URL thông thường rồi bỏ readiness vì management port đang tách riêng."
+        explanation: "Không nên gộp business và management surface chỉ để giải quyết probe placement."
+      - id: D
+        answer: "Chuyển toàn bộ management endpoint về main port vì additional probe path không được hỗ trợ."
+        explanation: "Separate placement không xóa đi ý nghĩa vận hành khác nhau của readiness."
+    correctAnswerId: B
+  - id: "actuator-q10"
+    question: "`env` endpoint cho thấy một resolved property value khác kỳ vọng. Sau khi xác nhận Actuator report đúng, investigation nên chuyển sang đâu?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.InfoEnvironment/InfoEnvironment.md"
+      anchor: "externalized-config-handoff"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Theo health-contributor ordering vì env endpoint resolve value từ aggregate health state."
+        explanation: "Environment inspection và health contribution là hai endpoint model riêng."
+      - id: B
+        answer: "Theo Micrometer meter filter vì env endpoint resolve value từ registry."
+        explanation: "Env endpoint project Spring Environment/property-source state chứ không đọc meter state."
+      - id: C
+        answer: "Theo management route mapping vì endpoint path khác có thể chọn property source khác."
+        explanation: "Routing không giải thích property-source precedence hay binding."
+      - id: D
+        answer: "Theo externalized-configuration source, precedence, profile và binding đã tạo resolved value."
+        explanation: "Actuator là runtime inspection surface; quy tắc tạo resolved value thuộc externalized configuration."
+    correctAnswerId: D
+  - id: "actuator-q11"
+    question: "Vì sao sanitization trên `env` hoặc `configprops` nên được xem là defense in depth thay vì security boundary chính?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.InfoEnvironment/InfoEnvironment.md"
+      anchor: "sensitive-value-sanitization"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Xem masking là giảm disclosure; vẫn giới hạn endpoint exposure và authorization."
+        explanation: "Sanitization giảm accidental disclosure nhưng không làm privileged diagnostic endpoint an toàn để expose rộng."
+      - id: B
+        answer: "Xem masking tương đương encryption at rest, chỉ còn transport security cần cấu hình."
+        explanation: "Actuator sanitization liên quan endpoint representation, không phải storage encryption."
+      - id: C
+        answer: "Xem masking là đủ nếu sensitive key khớp known pattern, nên authorization có thể bỏ."
+        explanation: "Pattern-based masking có thể bỏ sót sensitive value, nên endpoint authorization vẫn là control riêng."
+      - id: D
+        answer: "Xem masking là JMX access-control boundary, nên HTTP exposure có thể mở rộng."
+        explanation: "Show-values authorization semantics không thay thế JMX connectivity và access control."
+    correctAnswerId: A
+  - id: "actuator-q12"
+    question: "Sau khi gọi learning metrics API với `success`, experiment muốn minh họa boundary trách nhiệm nào?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.MetricsMicrometer/MetricsMicrometer.md"
+      anchor: "tag-filtered-metrics"
+    apiRelated:
+      controller: "ActuatorLearningController"
+      methodSignature: "recordMetric(String)"
+    answers:
+      - id: A
+        answer: "Actuator sở hữu counter state còn Micrometer chỉ render management response."
+        explanation: "Counter được tạo và lưu qua Micrometer; Actuator cung cấp management inspection surface."
+      - id: B
+        answer: "Controller ghi backend time series còn Actuator chọn application replica để inspect."
+        explanation: "Experiment đăng ký local Micrometer counter và không triển khai external telemetry backend."
+      - id: C
+        answer: "Micrometer sở hữu tagged meter; Actuator inspect `learning.requests` và có thể narrow view theo tag."
+        explanation: "Điều này khớp trigger-and-observe flow và giữ đúng boundary giữa instrumentation với management inspection."
+      - id: D
+        answer: "Mỗi tag value trở thành một Actuator endpoint riêng được backing bởi cùng Micrometer meter."
+        explanation: "Tag chọn meter identity bên trong metrics endpoint, không tạo endpoint ID."
+    correctAnswerId: C
+  - id: "actuator-q13"
+    question: "Team muốn tag `learning.requests` bằng raw user ID vì Actuator có thể filter tag. Kết luận nào tốt hơn?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.MetricsMicrometer/MetricsMicrometer.md"
+      anchor: "metric-design-boundary"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Dùng raw user ID vì filtering metrics endpoint sẽ giới hạn backend cardinality."
+        explanation: "Filtering management view không làm giảm cardinality đã tạo trong meter model/backend."
+      - id: B
+        answer: "Giữ tag value hữu hạn; filtering management view không làm giảm meter hay backend cardinality."
+        explanation: "Identifier không giới hạn có thể làm time-series cardinality tăng nhanh dù metrics endpoint filter được."
+      - id: C
+        answer: "Đưa raw user ID vào health details để metric tránh high-cardinality tag."
+        explanation: "Health details không phải telemetry model thay thế và còn tạo nguy cơ disclosure khác."
+      - id: D
+        answer: "Tạo một management endpoint cho mỗi user để meter giữ tag set hữu hạn."
+        explanation: "Cách đó làm management surface bùng nổ và biến business identity thành endpoint identity."
+    correctAnswerId: B
+  - id: "actuator-q14"
+    question: "Một package logger hiển thị `configuredLevel=null` và `effectiveLevel=INFO`. Điều đó nghĩa là gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.LoggersDiagnostics/LoggersDiagnostics.md"
+      anchor: "configured-effective-log-levels"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Logger bị disabled vì không có level được cấu hình trực tiếp."
+        explanation: "Không có configured level nghĩa là inheritance vẫn có thể cung cấp effective level."
+      - id: B
+        answer: "INFO đã được ghi vào logging config nhưng Actuator đọc thất bại."
+        explanation: "Distinction này chủ động tách direct configuration khỏi inherited effective behavior."
+      - id: C
+        answer: "Root logger không ảnh hưởng package vì chỉ exact logger name mới cung cấp level."
+        explanation: "Logger hierarchy cho phép package logger inherit từ ancestor như root."
+      - id: D
+        answer: "Chính logger đó không có explicit level nhưng inheritance hiện làm INFO chi phối logging."
+        explanation: "Configured và effective level trả lời hai câu hỏi khác nhau về nguồn của runtime behavior."
+    correctAnswerId: D
+  - id: "actuator-q15"
+    question: "Operator tạm đặt DEBUG qua loggers endpoint trong incident. Sau một normal restart nên kỳ vọng điều gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.LoggersDiagnostics/LoggersDiagnostics.md"
+      anchor: "runtime-log-level-changes"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Restart reload normal logging configuration nên runtime DEBUG override không mặc nhiên persist."
+        explanation: "Loggers endpoint đổi current runtime state; durable configuration vẫn nằm ở nguồn logging config thông thường."
+      - id: B
+        answer: "Restart reload logger override gần nhất của Actuator trước khi áp dụng normal logging config."
+        explanation: "Runtime override không phải durable state mà Boot replay trước normal logging configuration."
+      - id: C
+        answer: "Restart persist authenticated logger override vào logging configuration của application."
+        explanation: "Restart reinitialize logging từ config; nó không disable target logger."
+      - id: D
+        answer: "Restart restore runtime logger level từ Micrometer registry mà endpoint sử dụng."
+        explanation: "Logger configuration không được persist dưới dạng Micrometer meter."
+    correctAnswerId: A
+  - id: "actuator-q16"
+    question: "Một heap dump đã được download thành công qua Actuator. Ownership boundary đúng cho bước tiếp theo là gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.LoggersDiagnostics/LoggersDiagnostics.md"
+      anchor: "diagnostic-analysis-boundary"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Tiếp tục dùng Actuator vì heap-dump endpoint cũng sở hữu retained-object analysis."
+        explanation: "Exposure điều khiển access chứ không thực hiện heap-retention analysis."
+      - id: B
+        answer: "Dùng health endpoint vì health aggregation có thể rank object theo retained size."
+        explanation: "Health aggregation làm việc với health status, không phải heap graph."
+      - id: C
+        answer: "Dùng JVM heap-analysis tooling; Actuator cung cấp artifact nhưng không diễn giải retention."
+        explanation: "Actuator cung cấp diagnostic artifact; tooling JVM chuyên biệt mới diễn giải nội dung của nó."
+      - id: D
+        answer: "Dùng metrics endpoint vì heap sample phải trở thành meter trước khi phân tích retention."
+        explanation: "Heap analysis không phải trách nhiệm của metrics endpoint."
+    correctAnswerId: C
+  - id: "actuator-q17"
+    question: "Vì sao learning custom endpoint có thể được quan sát qua cả Swagger-visible bridge lẫn `/actuator/learning` mà core operation không trở thành MVC controller?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "9.CustomEndpoints/CustomEndpoints.md"
+      anchor: "endpoint-operation-annotations"
+    apiRelated:
+      controller: "ActuatorLearningController"
+      methodSignature: "customEndpointState()"
+    answers:
+      - id: A
+        answer: "`@GetMapping` trên bridge biến service method được gọi thành một Actuator operation."
+        explanation: "Bridge và Actuator endpoint là hai mapping riêng cùng gọi một implementation."
+      - id: B
+        answer: "`@Endpoint` cùng `@ReadOperation` định nghĩa operation; bridge và Actuator invoke hoặc expose nó riêng."
+        explanation: "Endpoint method biểu diễn management intent độc lập và Actuator sở hữu discovery/exposure của `/actuator/learning`."
+      - id: C
+        answer: "Việc trả `Map` đánh dấu method là management operation cho cả Actuator và bridge."
+        explanation: "Actuator discover endpoint annotation và operation, không dựa vào return type tùy ý."
+      - id: D
+        answer: "`/actuator/learning` redirect sang bridge controller nên thực tế chỉ có một HTTP mapping."
+        explanation: "Management route là Actuator endpoint mapping thực sự, không phải redirect."
+    correctAnswerId: B
+  - id: "actuator-q18"
+    question: "Maintenance experiment minh họa điều gì về một `@WriteOperation` technology-agnostic?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "9.CustomEndpoints/CustomEndpoints.md"
+      anchor: "technology-agnostic-custom-endpoints"
+    apiRelated:
+      controller: "ActuatorLearningController"
+      methodSignature: "setMaintenanceMode(boolean)"
+    answers:
+      - id: A
+        answer: "Dùng MVC `@PostMapping` trên endpoint class để Actuator nhận diện management mutation."
+        explanation: "Endpoint implementation dùng Actuator operation annotation thay vì MVC mapping."
+      - id: B
+        answer: "Dùng `@WriteOperation` nhưng xem nó là HTTP-only vì JMX không biểu diễn được parameter."
+        explanation: "Generic endpoint operation có thể được map bởi management technology được hỗ trợ."
+      - id: C
+        answer: "Dùng `@WriteOperation` cho domain CRUD để business và management workflow dùng chung operation."
+        explanation: "Custom endpoint dành cho bounded operational management, không phải product-domain workflow."
+      - id: D
+        answer: "Dùng `@WriteOperation` cho bounded management action; Actuator map nó lên management transport được hỗ trợ."
+        explanation: "Experiment đổi shared maintenance state qua `@WriteOperation`, còn Swagger bridge chỉ là learning trigger khác."
+    correctAnswerId: D
+  - id: "actuator-q19"
+    question: "Spring Security có mặt và ứng dụng tự định nghĩa `SecurityFilterChain`. Kết luận nào mô tả đúng ownership của Actuator security?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "10.ManagementAccess/ManagementAccess.md"
+      anchor: "actuator-security-auto-configuration"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Default Actuator security của Boot back off, nên application security phải định nghĩa Actuator policy mong muốn."
+        explanation: "Boot backs off default Actuator security khi application security configuration nhận ownership."
+      - id: B
+        answer: "Default Actuator security của Boot vẫn chạy cạnh custom chain và authorize exposed endpoint."
+        explanation: "Khi application security configuration nhận ownership, Boot back off default Actuator security configuration."
+      - id: C
+        answer: "Đổi management base path trở thành authorization boundary chính khi custom chain tồn tại."
+        explanation: "Path relocation giúp routing nhưng không phải authorization boundary."
+      - id: D
+        answer: "Endpoint enablement và exposure control bị disable vì custom chain đã sở hữu mọi management control."
+        explanation: "Security policy và endpoint enablement là hai control riêng."
+    correctAnswerId: A
+  - id: "actuator-q20"
+    question: "Operator cần lịch sử năm phút trên hai mươi replica và alert khi error trend tăng. Boundary công cụ nào phù hợp?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "11.ObservabilitySynthesis/ObservabilitySynthesis.md"
+      anchor: "direct-management-vs-telemetry"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Dùng Actuator metrics polling làm durable multi-replica store và nguồn đánh giá alert."
+        explanation: "Metrics endpoint là diagnostic view cục bộ theo application, không phải durable cross-instance storage."
+      - id: B
+        answer: "Dùng health details để tích lũy history theo replica và merge trend trong mỗi health request."
+        explanation: "Health là current operational status model và không nên trở thành time-series database."
+      - id: C
+        answer: "Dùng external telemetry cho collection, retention, aggregation và alert; dùng Actuator để inspect cục bộ."
+        explanation: "Yêu cầu trải qua thời gian và nhiều instance nên thuộc phía observability infrastructure của boundary."
+      - id: D
+        answer: "Dùng custom endpoint giữ rolling sample trong từng replica rồi query tất cả replica để lấy trend."
+        explanation: "In-process management endpoint không cung cấp durable system-wide history và còn thêm state không an toàn."
+    correctAnswerId: C

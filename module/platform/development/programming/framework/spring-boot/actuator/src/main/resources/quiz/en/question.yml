@@ -38,4 +38,484 @@
 #       Internal id of the correct answer. The frontend checks this identity after shuffling.
 # </quiz-schema>
 
-questions: []
+questions:
+  - id: "actuator-q01"
+    question: "Which statement best captures Spring Boot Actuator's role in a running application?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.ActuatorPurpose/ActuatorPurpose.md"
+      anchor: "runtime-state-vs-actuator-view"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "It produces lifecycle and health state, then exposes that state through management endpoints."
+        explanation: "Application runtime owns lifecycle and availability transitions; Actuator can expose those states."
+      - id: B
+        answer: "It exposes selected operational state while the subsystem that produces that state keeps ownership."
+        explanation: "This consumer-view model explains health, availability, metrics, logging, and startup diagnostics without moving their source ownership into Actuator."
+      - id: C
+        answer: "It stores operational state across replicas so external observability infrastructure is optional."
+        explanation: "Actuator provides application-local management views; durable collection and cross-instance analysis belong to observability infrastructure."
+      - id: D
+        answer: "It converts domain APIs into management operations so both surfaces share one contract."
+        explanation: "Actuator adds a separate management surface; normal business APIs remain domain-facing contracts."
+    correctAnswerId: B
+  - id: "actuator-q02"
+    question: "Why is an Actuator endpoint ID better treated as a management identity than as a hard-coded HTTP path?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.EndpointModel/EndpointModel.md"
+      anchor: "endpoint-id-and-operations"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Because the ID is derived from the active management port while operation names stay transport-neutral."
+        explanation: "Endpoint IDs are stable management identities and do not derive from the server port."
+      - id: B
+        answer: "Because the ID identifies only a JMX object name while HTTP uses unrelated route identifiers."
+        explanation: "The same logical endpoint may be exposed through HTTP, JMX, or both."
+      - id: C
+        answer: "Because the ID identifies the response format while operation annotations determine endpoint identity."
+        explanation: "The endpoint ID identifies the capability; operations and exposure adapters determine transport representation."
+      - id: D
+        answer: "Because the ID names the management capability, while operations and exposure adapters produce its HTTP or JMX representation."
+        explanation: "This keeps management intent independent from the transport that exposes it."
+    correctAnswerId: D
+  - id: "actuator-q03"
+    question: "An endpoint bean should exist for internal use but must not be reachable over HTTP. Which distinction should guide the configuration?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.EndpointAvailabilityExposure/EndpointAvailabilityExposure.md"
+      anchor: "endpoint-exposure"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Keep the endpoint enabled but exclude its ID from web exposure."
+        explanation: "Enablement controls whether the capability exists; web exposure separately controls HTTP reachability."
+      - id: B
+        answer: "Disable the endpoint and rely on Spring Security to keep the bean available internally."
+        explanation: "Disabling removes the endpoint capability rather than merely protecting its HTTP route."
+      - id: C
+        answer: "Change the `/actuator` base path because a different path makes the endpoint internal-only."
+        explanation: "Changing a path changes routing, not exposure or authorization."
+      - id: D
+        answer: "Expose it through HTTP and omit authorization because internal callers bypass the management surface."
+        explanation: "HTTP exposure creates reachability; caller authorization remains a separate decision."
+    correctAnswerId: A
+  - id: "actuator-q04"
+    question: "A management URL returns 404 for an endpoint that a team expects to use. What is the best first diagnostic sequence?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.EndpointAvailabilityExposure/EndpointAvailabilityExposure.md"
+      anchor: "endpoint-availability"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Check authorization first, then inspect endpoint enablement and exposure if the policy permits access."
+        explanation: "Authorization should be investigated after confirming endpoint availability and exposure."
+      - id: B
+        answer: "Check the management base path and route mapping first, then verify whether the endpoint capability exists."
+        explanation: "Routing is downstream of whether the endpoint capability and its transport exposure actually exist."
+      - id: C
+        answer: "Check enablement and transport prerequisites, then exposure, routing, and finally authorization."
+        explanation: "This order distinguishes a missing capability from a missing transport mapping before moving to network or security causes."
+      - id: D
+        answer: "Temporarily broaden exposure first, then narrow it again after the missing route becomes visible."
+        explanation: "Broad exposure is not a safe diagnostic default and can make sensitive endpoints reachable."
+    correctAnswerId: C
+  - id: "actuator-q05"
+    question: "The learning API sets its simulated dependency to unavailable. What should happen in the custom-health experiment?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.Health/Health.md"
+      anchor: "custom-health-indicators"
+    apiRelated:
+      controller: "ActuatorLearningController"
+      methodSignature: "setDependencyAvailable(boolean)"
+    answers:
+      - id: A
+        answer: "The controller should report DOWN directly, while the HealthIndicator remains only a background check."
+        explanation: "The controller is only a deterministic trigger; the health endpoint obtains evidence from the HealthIndicator."
+      - id: B
+        answer: "The controller changes shared state; the HealthIndicator reports DOWN; Actuator aggregates and displays it."
+        explanation: "The shared state changes the contributor's evidence; Actuator remains responsible for health aggregation and management representation."
+      - id: C
+        answer: "The controller changes shared state; Actuator asks the HealthIndicator to repair the dependency before reporting."
+        explanation: "A health contributor reports bounded evidence; repair behavior is outside its responsibility."
+      - id: D
+        answer: "The controller changes shared state; a metrics counter becomes the source for aggregate health."
+        explanation: "This experiment is wired to a HealthIndicator, not to a metric."
+    correctAnswerId: B
+  - id: "actuator-q06"
+    question: "An application adds a custom health status and configures one `management.endpoint.health.status.http-mapping.*` entry. What subtle HTTP behavior must be considered?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.Health/Health.md"
+      anchor: "health-status-aggregation"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "A custom mapping changes only the custom status; default DOWN and OUT_OF_SERVICE mappings remain automatic."
+        explanation: "Supplying custom status HTTP mappings changes the default mapping behavior, so those 503 defaults are not retained automatically."
+      - id: B
+        answer: "A custom mapping changes status ordering, but HTTP translation remains fixed by Boot."
+        explanation: "HTTP health status mapping is explicitly configurable."
+      - id: C
+        answer: "A custom mapping replaces health aggregation with separate HTTP codes for each contributor."
+        explanation: "Health aggregation still occurs; the mapping controls translation from aggregate health status to HTTP status."
+      - id: D
+        answer: "A custom mapping removes the default DOWN and OUT_OF_SERVICE 503 mappings unless they are added explicitly."
+        explanation: "Boot stops applying those default 503 mappings when custom status HTTP mappings are supplied."
+    correctAnswerId: D
+  - id: "actuator-q07"
+    question: "A load balancer needs only health status, while operators need contributor details. Which Actuator design fits both audiences?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.Health/Health.md"
+      anchor: "health-detail-visibility"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Expose basic status broadly, but gate components and details with explicit visibility and authorization policy."
+        explanation: "Actuator supports separate show-components/show-details policies so different operational audiences need not receive the same evidence."
+      - id: B
+        answer: "Expose full details broadly, but place credentials in the payload so only operators can interpret the response."
+        explanation: "Health detail payloads should not contain secrets; access policy should protect sensitive detail."
+      - id: C
+        answer: "Create a second business API for operator detail because Actuator health cannot vary detail visibility."
+        explanation: "Actuator already has visibility controls for components and details."
+      - id: D
+        answer: "Return full details to authenticated callers and rely on masking to protect sensitive contributor values."
+        explanation: "The conservative approach is to expose only the detail each audience requires."
+    correctAnswerId: A
+  - id: "actuator-q08"
+    question: "Why is copying every external dependency check into both liveness and readiness groups usually a bad probe design?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.AvailabilityProbes/AvailabilityProbes.md"
+      anchor: "probe-external-dependency-boundary"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Put each external dependency in both probes so either probe can remove or restart an unhealthy instance."
+        explanation: "Duplicating a shared dependency into liveness can cause pointless restarts across all instances during an external outage."
+      - id: B
+        answer: "Put each external dependency only in liveness because restart is the normal response to lost connectivity."
+        explanation: "A shared external outage may not be repaired by restarting the process, so liveness should focus on restart-worthy internal failure."
+      - id: C
+        answer: "Use readiness when dependency loss should stop traffic, while keeping liveness for failures where restart can help."
+        explanation: "Liveness should focus on whether restart may help; readiness answers whether this instance should currently receive traffic."
+      - id: D
+        answer: "Exclude external dependencies from both probes because readiness should describe only JVM-local state."
+        explanation: "Readiness can legitimately include a dependency when losing it means the instance should stop receiving traffic."
+    correctAnswerId: C
+  - id: "actuator-q09"
+    question: "Management endpoints run on a separate port, but the platform must detect failure of the main HTTP connector. Which probe arrangement best addresses that failure domain?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.AvailabilityProbes/AvailabilityProbes.md"
+      anchor: "probe-endpoint-paths"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Probe the management port only because a healthy management listener represents both HTTP connectors."
+        explanation: "A separate management listener can remain healthy while the main request path has failed."
+      - id: B
+        answer: "Enable `/livez` and `/readyz` on the main server when the probe must include the main connector."
+        explanation: "Boot provides main-port probe paths specifically so the probe can include the application's actual request listener in the failure domain."
+      - id: C
+        answer: "Probe a normal business URL instead and stop using readiness because the management port is separate."
+        explanation: "Business and management surfaces should not be merged to solve probe placement."
+      - id: D
+        answer: "Move all management endpoints back to the main port because additional probe paths are unsupported."
+        explanation: "Separate placement does not remove the distinct operational meaning of readiness."
+    correctAnswerId: B
+  - id: "actuator-q10"
+    question: "The `env` endpoint shows an unexpected resolved property value. Where should the investigation go next after confirming what Actuator reports?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.InfoEnvironment/InfoEnvironment.md"
+      anchor: "externalized-config-handoff"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Follow health-contributor ordering because the env endpoint resolves values from aggregate health state."
+        explanation: "Environment inspection and health contribution are separate endpoint models."
+      - id: B
+        answer: "Follow Micrometer meter filters because the env endpoint resolves values from the registry."
+        explanation: "The env endpoint projects Spring Environment/property-source state, not meter state."
+      - id: C
+        answer: "Follow management route mappings because different endpoint paths can select different property sources."
+        explanation: "Routing does not explain property-source precedence or binding."
+      - id: D
+        answer: "Follow externalized-configuration sources, precedence, profiles, and binding that produced the resolved value."
+        explanation: "Actuator is the runtime inspection surface; the rules that produced the resolved value belong to externalized configuration."
+    correctAnswerId: D
+  - id: "actuator-q11"
+    question: "Why should sanitization on `env` or `configprops` be treated as defense in depth rather than the main security boundary?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.InfoEnvironment/InfoEnvironment.md"
+      anchor: "sensitive-value-sanitization"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Treat masking as reduced disclosure; still restrict endpoint exposure and authorization."
+        explanation: "Sanitization reduces accidental value disclosure but does not make a privileged diagnostic endpoint safe for broad access."
+      - id: B
+        answer: "Treat masking as equivalent to encryption at rest, leaving only transport security to configure."
+        explanation: "Actuator sanitization is about endpoint representation, not storage encryption."
+      - id: C
+        answer: "Treat masking as sufficient when sensitive keys match known patterns, making authorization optional."
+        explanation: "Pattern-based masking can miss sensitive values, so endpoint authorization remains a separate control."
+      - id: D
+        answer: "Treat masking as the JMX access-control boundary, allowing broader HTTP exposure."
+        explanation: "Its show-values authorization semantics do not replace JMX connectivity and access controls."
+    correctAnswerId: A
+  - id: "actuator-q12"
+    question: "After calling the learning metrics API with `success`, what division of responsibility is the experiment meant to demonstrate?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.MetricsMicrometer/MetricsMicrometer.md"
+      anchor: "tag-filtered-metrics"
+    apiRelated:
+      controller: "ActuatorLearningController"
+      methodSignature: "recordMetric(String)"
+    answers:
+      - id: A
+        answer: "Actuator owns the counter state, while Micrometer only renders the management response."
+        explanation: "The counter is created and stored through Micrometer; Actuator provides the management inspection surface."
+      - id: B
+        answer: "The controller writes backend time series, while Actuator selects which application replica to inspect."
+        explanation: "The experiment registers a local Micrometer counter and does not implement an external telemetry backend."
+      - id: C
+        answer: "Micrometer owns the tagged meter; Actuator inspects `learning.requests` and can narrow the view by tag."
+        explanation: "This matches the experiment's trigger-and-observe flow and preserves the boundary between instrumentation and management inspection."
+      - id: D
+        answer: "Each tag value becomes a separate Actuator endpoint backed by the same Micrometer meter."
+        explanation: "Tags select meter identities inside the metrics endpoint; they do not create endpoint IDs."
+    correctAnswerId: C
+  - id: "actuator-q13"
+    question: "A team wants to tag `learning.requests` with raw user IDs because Actuator can filter tags. What is the better conclusion?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.MetricsMicrometer/MetricsMicrometer.md"
+      anchor: "metric-design-boundary"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Use raw user IDs because filtering the metrics endpoint bounds backend cardinality."
+        explanation: "Filtering a management view does not reduce the cardinality created in the meter model/backend."
+      - id: B
+        answer: "Keep tag values bounded; filtering a management view does not reduce meter or backend cardinality."
+        explanation: "Unbounded identifiers can create rapidly growing time-series cardinality regardless of whether the metrics endpoint can filter them."
+      - id: C
+        answer: "Move raw user IDs into health details so the metric avoids high-cardinality tags."
+        explanation: "Health details are not a replacement telemetry model and can create a different disclosure problem."
+      - id: D
+        answer: "Create one management endpoint per user so the meter can keep a bounded tag set."
+        explanation: "That would explode the management surface and model business identity as endpoint identity."
+    correctAnswerId: B
+  - id: "actuator-q14"
+    question: "A package logger shows `configuredLevel=null` and `effectiveLevel=INFO`. What does that mean?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.LoggersDiagnostics/LoggersDiagnostics.md"
+      anchor: "configured-effective-log-levels"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "The logger is disabled because no level was configured directly."
+        explanation: "An absent configured level means inheritance can supply the effective level."
+      - id: B
+        answer: "INFO was written into the logger configuration file but Actuator failed to read it."
+        explanation: "The distinction intentionally separates direct configuration from inherited effective behavior."
+      - id: C
+        answer: "The root logger has no effect on the package because only exact logger names can supply a level."
+        explanation: "Logger hierarchy allows a package logger to inherit from ancestors such as root."
+      - id: D
+        answer: "That exact logger has no explicit level, but inheritance currently makes INFO govern its logging."
+        explanation: "Configured and effective levels answer different questions about where runtime behavior comes from."
+    correctAnswerId: D
+  - id: "actuator-q15"
+    question: "An operator temporarily sets DEBUG through the loggers endpoint during an incident. What should they expect after a normal restart?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.LoggersDiagnostics/LoggersDiagnostics.md"
+      anchor: "runtime-log-level-changes"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Restart reloads normal logging configuration, so the runtime DEBUG override is not assumed to persist."
+        explanation: "The loggers endpoint changes current runtime state; durable configuration remains in the application's normal logging sources."
+      - id: B
+        answer: "Restart reloads Actuator's last logger override before applying the normal logging configuration."
+        explanation: "The runtime override is not durable state that Boot replays before normal logging configuration."
+      - id: C
+        answer: "Restart persists an authenticated logger override into the application's logging configuration."
+        explanation: "A restart reinitializes logging from configuration; it does not disable the target logger."
+      - id: D
+        answer: "Restart restores the runtime logger level from the Micrometer registry used by the endpoint."
+        explanation: "Logger configuration is not persisted as a Micrometer meter."
+    correctAnswerId: A
+  - id: "actuator-q16"
+    question: "A heap dump was successfully downloaded through Actuator. What is the correct next ownership boundary?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.LoggersDiagnostics/LoggersDiagnostics.md"
+      anchor: "diagnostic-analysis-boundary"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Keep using Actuator because the heap-dump endpoint also owns retained-object analysis."
+        explanation: "Exposure governs access; it does not perform heap-retention analysis."
+      - id: B
+        answer: "Use the health endpoint because health aggregation can rank objects by retained size."
+        explanation: "Health aggregation works with health statuses, not heap graphs."
+      - id: C
+        answer: "Use JVM heap-analysis tooling; Actuator delivered the artifact but does not interpret retention."
+        explanation: "Actuator delivers the diagnostic artifact; specialist JVM tools interpret its contents."
+      - id: D
+        answer: "Use the metrics endpoint because heap samples must become meters before retention analysis."
+        explanation: "Heap analysis is not a metrics-endpoint responsibility."
+    correctAnswerId: C
+  - id: "actuator-q17"
+    question: "Why can the learning custom endpoint be observed both through the Swagger-visible bridge and through `/actuator/learning` without making its core operation an MVC controller?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "9.CustomEndpoints/CustomEndpoints.md"
+      anchor: "endpoint-operation-annotations"
+    apiRelated:
+      controller: "ActuatorLearningController"
+      methodSignature: "customEndpointState()"
+    answers:
+      - id: A
+        answer: "`@GetMapping` on the bridge turns the called service method into an Actuator operation."
+        explanation: "The bridge and the Actuator endpoint are separate mappings that happen to call the same implementation."
+      - id: B
+        answer: "`@Endpoint` plus `@ReadOperation` defines the operation; the bridge and Actuator invoke or expose it separately."
+        explanation: "The endpoint method expresses management intent independently, and Actuator owns discovery/exposure of `/actuator/learning`."
+      - id: C
+        answer: "Returning a `Map` marks the method as a management operation for both Actuator and the bridge."
+        explanation: "Actuator discovers endpoint annotations and operations, not arbitrary return types."
+      - id: D
+        answer: "`/actuator/learning` redirects to the bridge controller, so only one HTTP mapping really exists."
+        explanation: "The management route is a real Actuator endpoint mapping, not a redirect."
+    correctAnswerId: B
+  - id: "actuator-q18"
+    question: "What does the maintenance experiment demonstrate about a technology-agnostic `@WriteOperation`?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "9.CustomEndpoints/CustomEndpoints.md"
+      anchor: "technology-agnostic-custom-endpoints"
+    apiRelated:
+      controller: "ActuatorLearningController"
+      methodSignature: "setMaintenanceMode(boolean)"
+    answers:
+      - id: A
+        answer: "Use MVC `@PostMapping` on the endpoint class so Actuator can detect the management mutation."
+        explanation: "The endpoint implementation uses Actuator operation annotations rather than MVC mappings."
+      - id: B
+        answer: "Use `@WriteOperation`, but treat it as HTTP-only because JMX cannot represent its parameters."
+        explanation: "Generic endpoint operations can be mapped by supported management technologies."
+      - id: C
+        answer: "Use `@WriteOperation` for domain CRUD so business and management workflows share one operation."
+        explanation: "The custom endpoint is for bounded operational management, not product-domain workflow."
+      - id: D
+        answer: "Use `@WriteOperation` for a bounded management action; Actuator maps it to supported management transports."
+        explanation: "The experiment changes shared maintenance state through `@WriteOperation`, while the Swagger bridge is only an alternate learning trigger."
+    correctAnswerId: D
+  - id: "actuator-q19"
+    question: "Spring Security is present and the application defines its own `SecurityFilterChain`. Which conclusion correctly describes Actuator security ownership?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "10.ManagementAccess/ManagementAccess.md"
+      anchor: "actuator-security-auto-configuration"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Boot's default Actuator security backs off, so application security must define the desired Actuator policy."
+        explanation: "Boot backs off its default Actuator security when application security configuration takes ownership."
+      - id: B
+        answer: "Boot's default Actuator security remains active beside the custom chain and authorizes exposed endpoints."
+        explanation: "Once application security configuration takes ownership, Boot backs off its default Actuator security configuration."
+      - id: C
+        answer: "Changing the management base path becomes the primary authorization boundary once a custom chain exists."
+        explanation: "Path relocation helps routing but is not an authorization boundary."
+      - id: D
+        answer: "Endpoint enablement and exposure controls are disabled because the custom chain now owns all management controls."
+        explanation: "Security policy and endpoint enablement are separate controls."
+    correctAnswerId: A
+  - id: "actuator-q20"
+    question: "An operator needs a five-minute history across twenty replicas and an alert on a rising error trend. Which tool boundary fits that requirement?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "11.ObservabilitySynthesis/ObservabilitySynthesis.md"
+      anchor: "direct-management-vs-telemetry"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Use Actuator metrics polling as the durable multi-replica store and the source for alert evaluation."
+        explanation: "The metrics endpoint is an application-local diagnostic view, not durable cross-instance storage."
+      - id: B
+        answer: "Use health details to accumulate per-replica history and merge the trend during each health request."
+        explanation: "Health is a current operational status model and should not become a time-series database."
+      - id: C
+        answer: "Use external telemetry for collection, retention, aggregation, and alerts; use Actuator for local inspection."
+        explanation: "The requirement spans time and instances, which is the observability-infrastructure side of the boundary."
+      - id: D
+        answer: "Use a custom endpoint to keep rolling samples in each replica and query all replicas for the trend."
+        explanation: "An in-process management endpoint cannot provide durable system-wide history and adds unsafe state."
+    correctAnswerId: C
