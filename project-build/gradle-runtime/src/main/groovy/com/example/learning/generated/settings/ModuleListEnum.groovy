@@ -2436,7 +2436,7 @@ enum ModuleListEnum {
     SPRING_BOOT_ACTUATOR(
             'module:platform:development:programming:framework:spring-boot:actuator',
             'module/platform/development/programming/framework/spring-boot/actuator',
-            'LIBRARY',
+            'SERVLET',
             'Spring Boot Actuator knowledge: production-ready endpoints, health, metrics, diagnostics, security and observability',
             false,
             []
@@ -2445,7 +2445,7 @@ enum ModuleListEnum {
     SPRING_BOOT_APPLICATION_RUNTIME(
             'module:platform:development:programming:framework:spring-boot:application-runtime',
             'module/platform/development/programming/framework/spring-boot/application-runtime',
-            'LIBRARY',
+            'SERVLET',
             'Spring Boot application runtime lifecycle, execution, logging, TLS, Docker Compose integration, and runtime customization',
             false,
             []
@@ -2508,7 +2508,7 @@ enum ModuleListEnum {
     SPRING_BOOT_WEB_RUNTIME(
             'module:platform:development:programming:framework:spring-boot:web-runtime',
             'module/platform/development/programming/framework/spring-boot/web-runtime',
-            'LIBRARY',
+            'SERVLET',
             'Spring Boot web runtime, embedded servers, server auto-configuration, TLS, proxy handling, and graceful shutdown',
             false,
             []

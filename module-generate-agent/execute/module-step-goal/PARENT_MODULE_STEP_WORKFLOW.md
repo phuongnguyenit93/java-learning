@@ -356,7 +356,7 @@ Whenever Prime has dispatched work but temporarily has no eligible immediate ass
 
 Every child branch/worktree has at most **one active writer at a time**.
 
-The initial author is the preferred fixer when convenient because that preserves context, but fix ownership may be transferred to Prime or another worker when that is simpler or more efficient.
+For review findings, the reviewer that discovered the findings is also the required fixer for that review round. This avoids an unnecessary reviewer → Prime → fixer approval/transfer hop and preserves the reviewer's fresh context.
 
 Transfer rules:
 
@@ -369,12 +369,16 @@ before writing:
 
 when ownership transfers:
 → previous writer stops writing that child
-→ Prime records/knows the new write owner
+→ no concurrent writer remains on that child
 → new writer uses the SAME child branch/worktree
 → never allow concurrent writers
 ```
 
-A reviewer may become the fixer after the review has finished. Review independence is preserved by requiring the reviewer to be different from the **initial author** of that child for the CURRENT STEP; the reviewer is not required to remain permanently read-only afterward.
+A reviewer becomes the fixer immediately after that review has finished when valid findings exist. No Prime approval round-trip is required before those fixes. Review independence is preserved by requiring the reviewer to be different from the **initial author** of that child for the CURRENT STEP; the reviewer is read-only only while producing the review result, not permanently afterward.
+
+The reviewer must still verify that no other writer is active before mutating the child. The reviewer then fixes the findings in the SAME child branch/worktree, revalidates, and reports the completed review/fix/revalidation result to Prime. Prime learns/records the resulting ownership/state from that report rather than acting as an approval gate before the fix.
+
+Only a genuine governance / ownership / Curriculum / shared-infrastructure blocker that the reviewer cannot safely resolve locally should interrupt this direct review→fix flow and be routed to Prime/canonical ownership before mutation.
 
 The initial author must still be tracked durably because reviewer eligibility depends on it even if later write ownership changes.
 
@@ -452,10 +456,11 @@ When one child's Review #1 finishes:
 
 ```text
 Review #1 child A complete
-→ adjudicate findings
-→ transfer/assign write ownership if needed
-→ fix accepted findings immediately
+→ reviewer classifies its own findings
+→ reviewer becomes the sole writer for child A if fixes are needed
+→ reviewer fixes all valid findings immediately
 → revalidate child A immediately
+→ reviewer reports final review/fix/revalidation result to Prime
 ```
 
 Do **not** force child A to wait for Review #1 of every sibling before applying its own Review #1 fixes.
@@ -468,7 +473,7 @@ Review #2 for any child may begin only after:
 
 ```text
 1. Review #1 has been completed for ALL target children; and
-2. that specific child's Review #1 findings have been adjudicated;
+2. that specific child's Review #1 findings have been resolved by its reviewer/fixer;
 3. all accepted fixes for that child have been applied; and
 4. that child has completed required revalidation.
 ```
@@ -595,7 +600,7 @@ Review #1 and Review #2:
 - may be performed by Prime or either sub-worker as long as the reviewer is not the child's initial author;
 - must still satisfy source-state sequencing rules.
 
-A reviewer may write fixes **after its review has ended** if Prime explicitly establishes/transfers write ownership first.
+A reviewer that finds valid issues must write those fixes **after its read-only review has ended**. It does not wait for Prime approval or a separate Prime-mediated ownership-transfer round-trip. Before writing, it must establish that no other writer is active, then it becomes the sole writer for that child until its fixes and revalidation are complete.
 
 For example, all of these are valid:
 
@@ -604,18 +609,20 @@ initial author = Worker 1
 Review #1      = Worker 2
 Fix #1         = Worker 2
 Review #2      = Worker 2
+Fix #2         = Worker 2
 ```
 
-or:
+or, when Prime itself is the eligible independent reviewer:
 
 ```text
 initial author = Worker 1
-Review #1      = Worker 2
+Review #1      = Prime
 Fix #1         = Prime
-Review #2      = Worker 2
+Review #2      = Prime
+Fix #2         = Prime
 ```
 
-provided Review #2 occurs only after Review #1 findings are fully adjudicated/applied as required and the current child source has been revalidated.
+provided Review #2 occurs only after Review #1 findings are fully fixed as required and the current child source has been revalidated.
 
 Write isolation remains strict:
 
@@ -623,7 +630,8 @@ Write isolation remains strict:
 one child branch/worktree
 → at most one active writer
 → every writer uses that exact child branch/worktree
-→ ownership transfer must be clear before writing starts
+→ reviewer establishes sole write ownership locally after review and before fixes
+→ no Prime approval wait is required for ordinary review findings
 ```
 
 Do not confuse reviewer eligibility with write ownership. Reviewer independence is measured against the **initial author**; write ownership may change later.
@@ -645,24 +653,30 @@ CHILD SOURCE STATE V1
         ↓
 ELIGIBLE INDEPENDENT REVIEWER performs FRESH REVIEW #1
         ↓
-review findings → Prime
+review result is complete while source is still READ-ONLY
         ↓
-Prime adjudicates / routes findings
+valid findings?
+   ├─ NO  → report CLEAN Review #1 result to Prime
+   └─ YES → same reviewer establishes sole write ownership
         ↓
-CURRENT WRITE OWNER fixes all valid MUST FIX
+SAME REVIEWER fixes all valid MUST FIX
 + fixes all valid SHOULD IMPROVE
         ↓
 revalidate
+        ↓
+report Review #1 + fixes + validation result to Prime
         ↓
 CHILD SOURCE STATE V2
         ↓
 ELIGIBLE INDEPENDENT REVIEWER performs FRESH FULL REVIEW #2 OF CURRENT V2
         ↓
-findings → Prime → assigned/current write owner
+review result is complete while source is still READ-ONLY
         ↓
-CURRENT WRITE OWNER fixes valid findings
+same reviewer fixes valid findings immediately when present
         ↓
 revalidate
+        ↓
+report Review #2 + fixes + validation result to Prime
         ↓
 CLEAN?
    ├─ YES → child complete for CURRENT STEP
@@ -799,7 +813,7 @@ owned worktree root
 allowed edit scope
 ```
 
-While actively performing a review, a reviewer must treat the reviewed child's worktree as **READ-ONLY** so the review result is produced before any fix mutation. After that review is complete, the same person may become the child's writer/fixer only after write ownership is explicitly transferred/established and no other writer is active.
+While actively performing a review, a reviewer must treat the reviewed child's worktree as **READ-ONLY** so the review result is produced before any fix mutation. Once that review result is complete, the same reviewer immediately becomes the fixer for any valid findings, after verifying no other writer is active. No Prime approval or separate Prime-mediated transfer is required. The reviewer fixes in place, revalidates, and only then reports the completed outcome to Prime.
 
 ---
 
@@ -913,8 +927,9 @@ FOR EACH CURRENT STEP:
 → IMPLEMENT ALL TARGET CHILDREN BEFORE OPENING REVIEW #1
 → REUSE FREE LANES ACROSS CHILDREN WITHIN THE CURRENT PHASE
 → REVIEW #1 MUST COVER ALL TARGET CHILDREN
-→ EACH CHILD MAY APPLY REVIEW #1 FIXES + REVALIDATE IMMEDIATELY AFTER ITS REVIEW #1
-→ WRITE OWNERSHIP MAY TRANSFER, BUT NEVER ALLOW CONCURRENT WRITERS
+→ EACH REVIEWER MUST APPLY ITS OWN VALID REVIEW FINDINGS + REVALIDATE IMMEDIATELY AFTER THAT REVIEW
+→ DO NOT WAIT FOR PRIME APPROVAL BETWEEN REVIEW AND FIX FOR ORDINARY FINDINGS
+→ REVIEWER BECOMES SOLE FIXER AFTER REVIEW; NEVER ALLOW CONCURRENT WRITERS
 → REVIEWER MUST DIFFER FROM THE CHILD'S INITIAL AUTHOR
 → AFTER ALL CHILDREN HAVE COMPLETED REVIEW #1, OPEN REVIEW #2 GLOBALLY
 → REVIEW #2 FOR A CHILD REQUIRES THAT CHILD'S REVIEW #1 FIXES + REVALIDATION TO BE COMPLETE

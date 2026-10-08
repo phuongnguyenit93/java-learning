@@ -62,6 +62,8 @@ recovering from an interrupted stream while backend work may still be alive
 
 If real visible progress is already occurring before the currently selected heartbeat deadline, no synthetic heartbeat is required. Reset/reconsider the next heartbeat interval from the new CURRENT state instead of blindly repeating the previous delay.
 
+Workers use the same principle, but they do not own an independent wall-clock scheduler. A long-running ACTIVE worker may emit a cooperative heartbeat only when execution naturally returns to a real tool/checkpoint boundary. Hidden reasoning is not interruptible merely because a heartbeat deadline passed. During that quiet period, Prime must rely on the runtime's passive worker-liveness projection rather than sending a new prompt into the worker.
+
 ---
 
 ## 3. Heartbeat must be independent of a new model request
@@ -88,6 +90,8 @@ non-mutating worker/supervisor status read
 bounded terminal wait that returns a short marker
 existing tool/session liveness check
 ```
+
+For Chat On Steroids workers, `agents status` may expose a **passive worker heartbeat** derived from already-owned runtime evidence such as an exactly owned running local tool, a fresh worker page `generating` report, or recent accepted worker work. This passive heartbeat is read-only evidence: it must not create another worker turn, renew a worker lifecycle lease, wake a sleeping worker, or manufacture new work.
 
 The heartbeat itself must not require a fresh reasoning worker.
 
@@ -125,6 +129,7 @@ worker status explicitly indicates RUNNING / active execution
 worker/runtime explicitly reports waiting on an owned in-flight dependency
 terminal process/session still exists
 tool call is still active
+COS passive worker heartbeat reports fresh authoritative liveness evidence
 the scheduler is intentionally waiting for already-dispatched work
 backend/session status confirms the turn is still in progress
 ```
@@ -199,6 +204,29 @@ worker result available?
 Do not manufacture filler repository work while waiting.
 
 Do not repeatedly message a worker that is already RUNNING solely for liveness. Do not revive a SLEEPING worker merely to create heartbeat activity. A worker message/revival is for a real task, handoff, or correction, not for heartbeat traffic.
+
+### Worker cooperative heartbeat
+
+An ACTIVE worker may report its own liveness to Prime with a concise `agents action=message to="prime"` heartbeat when all of the following are true:
+
+```text
+the assignment is genuinely long-running
+→ execution has naturally reached a real tool/checkpoint boundary
+→ no material result/report is ready yet
+→ a heartbeat would prevent a misleading long silent period
+```
+
+The worker heartbeat must be short and factual, for example:
+
+```text
+[HEARTBEAT] Still working on the assigned review; validation is still running and no final result is ready yet.
+```
+
+This is cooperative reporting from the worker's **current active turn**. It is not a timer-driven request and it does not authorize a new model turn. The worker must not call a tool, poll status, run a command, edit/touch a file, or create any other side effect solely so that it has an opportunity to send a heartbeat.
+
+If the worker is in hidden reasoning and no natural checkpoint is available, it stays quiet. Prime should use COS passive heartbeat/liveness evidence at its own bounded scheduler checkpoint instead of pinging that worker. If passive liveness is no longer fresh, treat the worker as UNKNOWN and verify/recover actual state; do not fake a heartbeat.
+
+A `SLEEPING`, `FINISHED`, or `FAILED` worker never sends cooperative heartbeat traffic. `SLEEPING` remains a reusable stopped state, not proof of active execution.
 
 ---
 
@@ -288,6 +316,7 @@ Heartbeat messages must be short and factual, for example:
 
 ```text
 [HEARTBEAT] Worker execution is still active; no new result yet.
+[HEARTBEAT] worker-2 is still active according to COS passive liveness; no final worker report yet.
 [HEARTBEAT] Terminal process is still running; continuing to wait.
 [HEARTBEAT] Prime scheduler is active; waiting for dispatched work.
 ```

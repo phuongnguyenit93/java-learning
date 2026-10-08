@@ -13,46 +13,63 @@ Those orchestration rules remain in their canonical workflow files.
 ## 2. Mandatory worker-pool cap
 
 ```text
-MAX WORKERS IN POOL = 2
+MAX WORKERS IN POOL = 3
 
 COUNTED STATES
 → ACTIVE
 → SLEEPING
 ```
 
-Prime remains the orchestrator.
+Prime remains the orchestrator, reviewer coordinator, scheduler, and integration owner.
 
 The cap is based on the number of reusable worker sessions that currently occupy the pool, not only on workers that are actively computing.
 
 Therefore:
 
 ```text
-2 ACTIVE
+3 ACTIVE
 → pool full
 
-1 ACTIVE + 1 SLEEPING
+2 ACTIVE + 1 SLEEPING
 → pool full
 
-2 SLEEPING
+1 ACTIVE + 2 SLEEPING
 → pool full
 
-1 SLEEPING
+3 SLEEPING
+→ pool full
+
+1 or 2 SLEEPING
 → one numerical slot may appear unused
 → BUT spawning is still forbidden while that sleeping worker exists
 ```
 
 `FINISHED` / `FAILED` workers that are no longer reusable worker sessions do not count toward this ACTIVE + SLEEPING pool. When runtime state is ambiguous, verify actual worker state before deciding that a slot is free.
 
-Prime may also act as one independent execution lane when safe and when doing so does not compromise scheduling, write isolation, review independence, or orchestration visibility.
-
-Therefore, when Prime also owns one eligible assignment:
+Normal execution mode is:
 
 ```text
-MAX CONCURRENT EXECUTION OWNERS = 3
-→ Prime + up to 2 workers from the worker pool
+3 worker execution lanes maximum
+→ Prime does NOT act as a default fourth implementation lane
+→ Prime stays available for dispatch, worker-state inspection, heartbeat/liveness checks,
+  review routing, barrier decisions, relation/parity checks, integration and recovery
 ```
 
-This does not mean both workers must be ACTIVE. A sleeping worker still occupies one of the two worker-pool slots.
+This keeps Prime's own turns bounded and preserves orchestration visibility while long-running implementation, review, build, validation, or content-generation work is delegated to workers.
+
+Prime may still perform implementation work only as a **bounded exception**, not as normal scheduling policy. All of the following must be true:
+
+```text
+the task is small and clearly bounded
+→ no suitable worker lane is immediately usable for that task
+→ taking the task does not compromise scheduling / heartbeat visibility
+→ it does not weaken write isolation, reviewer independence, phase barriers, or STEP barriers
+→ Prime can return promptly to orchestration duty
+```
+
+If the work is expected to become a long implementation/review/build/test lane, Prime should wait for or reuse an eligible worker instead of becoming a sustained fourth execution owner.
+
+A sleeping worker still occupies one of the three worker-pool slots.
 
 ---
 
@@ -77,18 +94,19 @@ check worker pool state first
 any SLEEPING worker exists?
    ├─ YES → spawning is forbidden
    │        → reuse/revive a sleeping worker for a real eligible assignment when possible
-   │        → otherwise use Prime / another eligible existing lane / wait or reroute work
+   │        → otherwise use another eligible existing lane / wait or reroute work
+   │        → Prime may take the work only under the bounded-exception rule above
    │
    └─ NO
         ↓
 count ACTIVE + SLEEPING workers
         ↓
-count < 2 ?
+count < 3 ?
    ├─ YES → a new worker may be spawned if there is a real eligible assignment
    └─ NO  → spawning is forbidden
 ```
 
-Do not create a third worker session because an existing worker is sleeping.
+Do not create a fourth worker session because an existing worker is sleeping.
 
 Do not create a replacement worker merely because a sleeping worker is inconvenient for the next assignment.
 
@@ -114,14 +132,14 @@ eligible execution lane
 
 Do not reserve one worker permanently for one child unless there is a concrete operational reason to do so.
 
-When a retained worker becomes SLEEPING, it remains part of the two-worker pool and should be revived/reused for subsequent eligible work instead of creating a fresh worker session.
+When a retained worker becomes SLEEPING, it remains part of the three-worker pool and should be revived/reused for subsequent eligible work instead of creating a fresh worker session.
 
 The active orchestration workflow still decides:
 
 ```text
 which phase is open
 which child assignment is eligible
-whether Prime may safely own an assignment
+whether Prime may safely own a bounded exception assignment
 reviewer eligibility
 write ownership
 STEP barriers
