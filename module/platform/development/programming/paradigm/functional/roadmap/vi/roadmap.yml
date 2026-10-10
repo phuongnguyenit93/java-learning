@@ -41,4 +41,94 @@
 # Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: fp-foundation
+    relatedKnowledge:
+      - FunctionalProgramming
+    title: "Lập trình hàm: Mục đích và mô hình tư duy"
+    purpose: >-
+      Hiểu lập trình hàm là cách diễn đạt phép tính bằng hàm và phép biến đổi
+      giá trị; nhận ra vì sao trạng thái dùng chung bị thay đổi khó kiểm soát
+      khiến chương trình khó giải thích và kiểm thử.
+    objectives:
+      - "So sánh chuỗi lệnh thay đổi trạng thái với phép biến đổi từ đầu vào sang đầu ra; hai cách viết có thể cùng xuất hiện trong một chương trình."
+      - "Nêu lợi ích, quan hệ với lối viết khai báo và giới hạn của module so với các API Java."
+
+  - id: fp-purity
+    relatedKnowledge:
+      - PureFunctions
+    title: "Hàm thuần và kết quả có thể dự đoán"
+    purpose: >-
+      Nắm ý nghĩa của hàm thuần, tính thay thế biểu thức bằng giá trị và đầu
+      vào/đầu ra tường minh trước khi học ghép nhiều phép biến đổi.
+    objectives:
+      - "Nhận diện trường hợp cùng đầu vào cho cùng kết quả, không phát sinh tác động quan sát được ra bên ngoài và vì sao có thể thay lời gọi hàm bằng kết quả."
+      - "Phát hiện đầu vào ẩn, trạng thái dùng chung và tác động phụ làm mất khả năng suy luận này."
+
+  - id: fp-immutable-values
+    relatedKnowledge:
+      - Immutability
+    title: "Giá trị bất biến và trạng thái thay đổi theo thời gian"
+    purpose: >-
+      Phân biệt một giá trị không đổi với trạng thái ứng dụng có thể đổi;
+      hiểu cách tạo giá trị mới để biểu diễn một lần chuyển trạng thái.
+    objectives:
+      - "Đối chiếu sửa trực tiếp dữ liệu với tạo giá trị mới mà vẫn giữ được giá trị cũ để so sánh và suy luận."
+      - "Hiểu lợi ích và chi phí của bất biến/chia sẻ giá trị, không suy diễn rằng toàn bộ chương trình mặc nhiên an toàn luồng."
+
+  - id: fp-functions-as-values
+    relatedKnowledge:
+      - FunctionsComposition
+    title: "Hàm như giá trị và hàm bậc cao"
+    purpose: >-
+      Hiểu việc truyền, nhận lại và kết hợp hàm như một giá trị, thay vì
+      chỉ xem hàm là một lệnh có tên được gọi trực tiếp.
+    objectives:
+      - "Giải thích hàm như giá trị và hàm bậc cao bằng ví dụ độc lập ngôn ngữ."
+      - "Phân biệt khái niệm lập trình hàm với functional interface, cú pháp lambda, method reference và biến được capture trong Java."
+
+  - id: fp-composition
+    relatedKnowledge:
+      - FunctionsComposition
+      - PureFunctions
+    title: "Ghép hàm và biến đổi dữ liệu"
+    purpose: >-
+      Ghép các hàm nhỏ thành chuỗi biến đổi có thể hiểu được và giải thích
+      vai trò của giá trị trung gian, quan hệ phụ thuộc trong cả luồng xử lý.
+    dependsOn:
+      - fp-purity
+      - fp-functions-as-values
+      - fp-immutable-values
+    objectives:
+      - "Giải thích phép ghép hàm, ý tưởng map, filter, reduce ở cấp khái niệm, không biến thành bài hướng dẫn Java Stream API."
+      - "Theo dõi đầu vào đến đầu ra trong ví dụ hoàn chỉnh; nhận biết khi chuỗi hàm rườm rà làm ý định khó hiểu."
+
+  - id: fp-effect-boundaries
+    relatedKnowledge:
+      - SideEffects
+      - PureFunctions
+    title: "Quản lý tác động phụ tại ranh giới chương trình"
+    purpose: >-
+      Hiểu chương trình thực tế vẫn có thể giữ phần tính toán theo lối hàm
+      và chủ động xử lý vào/ra, lỗi, thời gian cùng trạng thái thay đổi.
+    dependsOn:
+      - fp-purity
+      - fp-immutable-values
+    objectives:
+      - "Phân biệt phép tính thuần với thao tác có tác động phụ như đọc tệp, gọi dịch vụ hoặc cập nhật hệ thống bên ngoài."
+      - "Giải thích cách cô lập, sắp thứ tự và kiểm thử tác động phụ, không kết luận chương trình hàm không cần I/O."
+
+  - id: fp-synthesis
+    relatedKnowledge:
+      - Tradeoffs
+      - SideEffects
+    title: "Lựa chọn và kết hợp các lối lập trình"
+    purpose: >-
+      Hình thành cách quyết định khi nào dùng ý tưởng lập trình hàm cùng
+      lệnh tuần tự hoặc đối tượng, dựa trên lợi ích và đánh đổi thực tế.
+    dependsOn:
+      - fp-composition
+      - fp-effect-boundaries
+    objectives:
+      - "Đánh giá khả năng đọc hiểu, chi phí tạo dữ liệu, hiệu năng, việc gỡ lỗi và độ phức tạp khi chọn biến đổi bất biến hay cập nhật trực tiếp."
+      - "Nhận ra ranh giới với API hàm/Stream của Java, lập trình hướng dữ liệu và luồng reactive có yếu tố thời gian."

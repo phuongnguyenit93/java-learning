@@ -11,11 +11,128 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+  functional-prerequisites:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
   functional-solution:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
   functional-when:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  functional-learning-journey:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+2.PureFunctions/PureFunctions.md:
+  purity-concept:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  purity-motivation:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  purity-input-output:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  referential-transparency:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  purity-boundaries:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+3.Immutability/Immutability.md:
+  immutable-values:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  value-vs-state:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  immutable-updates:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  sharing-and-cost:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  immutability-limits:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+4.FunctionsComposition/FunctionsComposition.md:
+  functions-as-values:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  higher-order-functions:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  function-composition:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  map-filter-reduce:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  transformation-walkthrough:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  composition-limits:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+5.SideEffects/SideEffects.md:
+  effect-concept:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  pure-core-effects:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  effect-coordination:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  effect-testing:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  effects-real-world:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+6.Tradeoffs/Tradeoffs.md:
+  functional-use-cases:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  functional-costs:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  functional-vs-other-styles:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  functional-end-to-end:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  functional-boundaries:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false

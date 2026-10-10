@@ -1,0 +1,833 @@
+# <quiz-schema>
+# Cấu trúc câu hỏi Quiz
+# schema-version: 3
+#
+# questions [kiểu: list; bắt buộc; mặc định: []; duy nhất theo: id]
+#   Danh sách câu hỏi Quiz của module trong language hiện tại.
+#   mỗi phần tử:
+#     id [kiểu: string; bắt buộc; mặc định: ""]
+#       ID ổn định và duy nhất của câu hỏi.
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi hiển thị cho người học.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu câu hỏi được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu câu hỏi đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+#     answers [kiểu: list; bắt buộc; số phần tử: 4; mặc định: []; duy nhất theo: id]
+#       Chính xác bốn đáp án. ID A/B/C/D là identity nội bộ ổn định, không phải vị trí hiển thị sau khi frontend shuffle.
+#       mỗi phần tử:
+#         id [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#           Identity ổn định của đáp án.
+#         answer [kiểu: string; bắt buộc; mặc định: ""]
+#           Nội dung đáp án hiển thị cho người học.
+#         explanation [kiểu: string; bắt buộc; mặc định: ""]
+#           Giải thích hiển thị khi người học chọn đáp án này, bất kể đúng hay sai.
+#     correctAnswerId [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#       ID nội bộ của đáp án đúng. Frontend kiểm tra bằng identity này sau khi shuffle.
+# </quiz-schema>
+
+questions:
+  - id: functional-q01
+    question: 'Một mô-đun tính tiền nhận đơn A và tỷ lệ giảm, trả số tiền mới mà không lưu đơn. Lối tư duy nào đang được ưu tiên?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '1.Introduction/FunctionalProgramming.md'
+      anchor: 'functional-what'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Mô tả chính xác thứ tự tăng biến tổng tiền khi lần lượt duyệt qua từng dòng món hàng'
+        explanation: 'Các lệnh tăng biến là cách tiếp cận mệnh lệnh, không phải trọng tâm giá trị qua hàm.'
+      - id: B
+        answer: 'Mô tả phép biến đổi từ đầu vào sang kết quả'
+        explanation: 'Đầu vào và kết quả tường minh làm phép tính có thể xét độc lập.'
+      - id: C
+        answer: 'Mô tả quan hệ sở hữu giữa các đối tượng'
+        explanation: 'Quyền sở hữu đối tượng là mối quan tâm OOP, không đủ mô tả phép biến đổi.'
+      - id: D
+        answer: 'Mô tả lịch chạy của các yêu cầu mạng'
+        explanation: 'Lịch yêu cầu mạng thuộc điều phối hiệu ứng, không giải thích phép tính giá.'
+    correctAnswerId: B
+  - id: functional-q02
+    question: 'Hai lần gọi tính giá với cùng tham số cho 90 và 80. Bằng chứng nào nên kiểm tra trước?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '1.Introduction/FunctionalProgramming.md'
+      anchor: 'functional-why'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Giá trị khuyến mãi dùng chung đã thay đổi'
+        explanation: 'Một phụ thuộc ngoài chữ ký như khuyến mãi toàn cục có thể đổi kết quả.'
+      - id: B
+        answer: 'Trình biên dịch đổi thứ tự phép nhân'
+        explanation: 'Đổi thứ tự phép nhân không giải thích hai lần gọi cùng một hàm đã xác định.'
+      - id: C
+        answer: 'Đối tượng đơn có cùng định danh'
+        explanation: 'Định danh đơn không xác định mức giảm nếu chính sách ở ngoài.'
+      - id: D
+        answer: 'Thời gian khởi động của ứng dụng khác nhau'
+        explanation: 'Thời gian khởi động chỉ liên quan khi hàm thật sự đọc nó như phụ thuộc.'
+    correctAnswerId: A
+  - id: functional-q03
+    question: 'Khi nào vòng lặp cộng dồn mệnh lệnh vẫn là lựa chọn hợp lý?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '1.Introduction/FunctionalProgramming.md'
+      anchor: 'functional-without'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Khi mọi giá trị đầu vào và mọi thành phần lồng bên trong đều bắt buộc phải bất biến sâu'
+        explanation: 'Bất biến sâu không phải tiền đề bắt buộc cho vòng lặp đúng.'
+      - id: B
+        answer: 'Khi phải che mọi bước tính để ngắn code'
+        explanation: 'Che bước xử lý làm tăng chi phí đọc hiểu, không tự tạo lợi thế.'
+      - id: C
+        answer: 'Khi accumulator cục bộ rõ và không sửa dữ liệu chung'
+        explanation: 'Biến cục bộ có phạm vi rõ có thể đơn giản và dễ kiểm tra.'
+      - id: D
+        answer: 'Khi vòng lặp luôn tránh được mọi side effect'
+        explanation: 'Vòng lặp không tự loại bỏ hiệu ứng; hành vi của thân vòng lặp quyết định.'
+    correctAnswerId: C
+  - id: functional-q04
+    question: 'Để đọc ví dụ lọc rồi cộng tổng mà chưa học cú pháp Java Stream, kiến thức nền nào đã đủ?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '1.Introduction/FunctionalProgramming.md'
+      anchor: 'functional-prerequisites'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Giá trị, phép tính và cách cây bất biến chia sẻ nhánh'
+        explanation: 'Chia sẻ cấu trúc của cây bất biến là kiến thức tối ưu, không cần để lọc danh sách đơn giản.'
+      - id: B
+        answer: 'Giá trị, vòng lặp và cách công bố dữ liệu giữa các luồng'
+        explanation: 'Điều phối cập nhật đồng thời tách khỏi việc hiểu phép lọc trên một danh sách.'
+      - id: C
+        answer: 'Danh sách, điều kiện và cú pháp callback bậc cao chi tiết'
+        explanation: 'Chưa cần biết cú pháp callback riêng của ngôn ngữ để theo dõi giá trị đầu ra.'
+      - id: D
+        answer: 'Giá trị, hàm nhận tham số và điều kiện lọc'
+        explanation: 'Giá trị, hàm, danh sách và điều kiện đủ để lần theo phép biến đổi.'
+    correctAnswerId: D
+  - id: functional-q05
+    question: 'Đơn A giá 100, giảm 10%, thuế 5% trên giá sau giảm. Cặp giá trị trung gian/cuối nào đúng?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '1.Introduction/FunctionalProgramming.md'
+      anchor: 'functional-solution'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: '90 rồi 95, tính thuế trên giá gốc'
+        explanation: 'Thuế của bài toán tính trên 90 chứ không phải trên 100.'
+      - id: B
+        answer: '90 rồi 94,5, tính thuế trên giá đã giảm'
+        explanation: '90 cộng 4,5 thuế chính là 94,5, hai bước có đầu ra rõ.'
+      - id: C
+        answer: '95 rồi 94,5, giảm sau khi tính thuế'
+        explanation: 'Giá 95 không phải kết quả của giảm giá 10% từ 100.'
+      - id: D
+        answer: '100 rồi 105, bỏ qua chính sách giảm'
+        explanation: 'Bỏ bước giảm làm thay đổi quy tắc nghiệp vụ được cung cấp.'
+    correctAnswerId: B
+  - id: functional-q06
+    question: 'Trong hệ thống vừa tính giá vừa thu tiền, phần nào có thể xem là thuần nếu thiết kế tách biệt?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '1.Introduction/FunctionalProgramming.md'
+      anchor: 'functional-when'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Tính từ ảnh chụp giá và quy tắc cố định'
+        explanation: 'Phép tính từ dữ kiện ổn định có thể không quan sát hiệu ứng ngoài.'
+      - id: B
+        answer: 'Gọi cổng thanh toán và dựa vào phản hồi hiện tại của nhà cung cấp để tính tiếp'
+        explanation: 'Gọi gateway có I/O và phụ thuộc phản hồi bên ngoài.'
+      - id: C
+        answer: 'Lưu trạng thái hóa đơn vừa thanh toán'
+        explanation: 'Lưu trạng thái thay đổi kho dữ liệu nên là hiệu ứng.'
+      - id: D
+        answer: 'Gửi email biên nhận cho khách hàng'
+        explanation: 'Gửi email làm thay đổi thế giới bên ngoài và có thể thất bại.'
+    correctAnswerId: A
+  - id: functional-q07
+    question: 'Vì sao nên học hàm thuần và giá trị ổn định trước khi phân tích nhiều bước ghép hàm?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '1.Introduction/FunctionalProgramming.md'
+      anchor: 'functional-learning-journey'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Vì ghép các bước sẽ không cần kiểm tra đầu vào nữa'
+        explanation: 'Ngay cả hàm thuần vẫn cần hợp đồng đầu vào đúng và khả năng kiểm thử riêng.'
+      - id: B
+        answer: 'Vì đầu vào bất biến bảo đảm mọi hàm trong chuỗi đều thuần'
+        explanation: 'Hàm vẫn có thể ghi log hoặc gọi mạng dù đầu vào không sửa được.'
+      - id: C
+        answer: 'Vì pipeline tự bảo đảm thứ tự mọi thao tác bên ngoài'
+        explanation: 'Ghép hàm không tự điều phối thanh toán, lưu trữ hoặc retry.'
+      - id: D
+        answer: 'Vì đầu vào ổn định giúp giải thích kết quả ở từng bước'
+        explanation: 'Phụ thuộc rõ và ảnh chụp không đổi giúp tái hiện giá trị trung gian.'
+    correctAnswerId: D
+  - id: functional-q08
+    question: 'Một hàm giảm giá luôn trả 90 nhưng âm thầm ghi log mỗi lần. Đánh giá nào đúng?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '2.PureFunctions/PureFunctions.md'
+      anchor: 'purity-concept'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Vẫn thuần vì cùng một phép nhân luôn trả ra số tiền như cũ dù có lệnh ghi log'
+        explanation: 'Kết quả bằng nhau chưa đủ vì lần gọi có hành vi bên ngoài.'
+      - id: B
+        answer: 'Không thuần vì có hiệu ứng quan sát ngoài kết quả'
+        explanation: 'Ghi log là tác động quan sát được nên vi phạm tính thuần.'
+      - id: C
+        answer: 'Thuần nếu log được ghi dưới dạng JSON'
+        explanation: 'Định dạng log không làm thao tác ghi trở thành phép tính thuần.'
+      - id: D
+        answer: 'Không thuần chỉ khi kết quả tính thay đổi'
+        explanation: 'Thay đổi kết quả là một tiêu chí; hiệu ứng là tiêu chí độc lập.'
+    correctAnswerId: B
+  - id: functional-q09
+    question: 'Hàm đổi tiền đọc tỷ giá online mỗi lần, khiến unit test khó lặp. Cách sửa ranh giới tốt nhất?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '2.PureFunctions/PureFunctions.md'
+      anchor: 'purity-motivation'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Đặt nguyên lời gọi lấy tỷ giá online vào một vòng lặp thử lại khi kết quả khác kỳ vọng'
+        explanation: 'Lặp lại không loại bỏ giá trị tỷ giá thay đổi theo thời gian.'
+      - id: B
+        answer: 'Lấy tỷ giá từ biến global đọc khi tính'
+        explanation: 'Biến global giữ nguyên phụ thuộc ngầm cần tái tạo trong test.'
+      - id: C
+        answer: 'Đọc tỷ giá bên ngoài rồi truyền tỷ giá đã chụp vào hàm'
+        explanation: 'Đưa tỷ giá vào tham số làm đầu vào thực của phép đổi tiền rõ ràng.'
+      - id: D
+        answer: 'Ẩn truy vấn mạng sau tên hàm convertPure'
+        explanation: 'Tên hàm không quyết định purity nếu thân vẫn gọi I/O.'
+    correctAnswerId: C
+  - id: functional-q10
+    question: 'Một hàm nhận order làm tham số rồi thêm món C vào order.items được chia sẻ. Điều gì sai?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '2.PureFunctions/PureFunctions.md'
+      anchor: 'purity-input-output'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Tham số có tên nhưng hàm vẫn sửa dữ liệu ngoài phạm vi kết quả'
+        explanation: 'Đầu vào tường minh không cho phép mutation của đối tượng người gọi.'
+      - id: B
+        answer: 'Lỗi vì mọi hàm nhận object phải chạy trên server'
+        explanation: 'Nơi chạy không quyết định tính thuần của việc sửa danh sách.'
+      - id: C
+        answer: 'Lỗi vì mọi list đều bị JVM tự động sao chép'
+        explanation: 'List có thể là mutable và không tự sao chép khi truyền tham chiếu.'
+      - id: D
+        answer: 'Thao tác đúng vì output trả về vẫn ổn định'
+        explanation: 'Giá trị trả về ổn định không che được tác động lên order.items.'
+    correctAnswerId: A
+  - id: functional-q11
+    question: 'Vì sao có thể thay twice(4)+twice(4) bằng 8+8 khi twice thuần?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '2.PureFunctions/PureFunctions.md'
+      anchor: 'referential-transparency'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Vì JVM tự loại bỏ cả hai lời gọi hàm ở mọi môi trường và không cần xét side effect'
+        explanation: 'Tối ưu hóa JVM không phải điều kiện định nghĩa minh bạch tham chiếu.'
+      - id: B
+        answer: 'Vì mọi hàm tên twice đều không lỗi'
+        explanation: 'Tên hàm không chứng minh nó không đọc state hay tạo effect.'
+      - id: C
+        answer: 'Vì hai biểu thức có cùng số lần cấp phát'
+        explanation: 'Cấp phát có thể khác nhưng không nhất thiết ảnh hưởng quan sát.'
+      - id: D
+        answer: 'Vì phép thay thế không đổi hành vi quan sát được'
+        explanation: 'Cùng dữ kiện cho 8, không side effect, nên thay mỗi lời gọi bằng 8 an toàn.'
+    correctAnswerId: D
+  - id: functional-q12
+    question: 'Kiểm thử lỗi nào thuộc adapter lấy tỷ giá trực tuyến, thay vì hàm đổi tiền thuần?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '2.PureFunctions/PureFunctions.md'
+      anchor: 'purity-boundaries'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Kiểm tra làm tròn khi truyền tỷ giá cố định'
+        explanation: 'Làm tròn là quy tắc số học xác định, thuộc hợp đồng tính toán thuần.'
+      - id: B
+        answer: 'Kiểm tra timeout và phản hồi tỷ giá sai định dạng'
+        explanation: 'Các lỗi xuất hiện khi liên lạc với nhà cung cấp bên ngoài đang thay đổi.'
+      - id: C
+        answer: 'Kiểm tra đổi số tiền bằng không với tỷ giá đã cho'
+        explanation: 'Đầu vào bằng không là ca số học, không chứng minh cách hồi phục khi mất mạng.'
+      - id: D
+        answer: 'Kiểm tra tính lặp lại của phép đổi tiền với tỷ giá cố định'
+        explanation: 'Ca đó đo tính ổn định của phép tính, không kiểm tra adapter khi timeout.'
+    correctAnswerId: B
+  - id: functional-q13
+    question: 'Thêm C vào đơn immutable [A,B] nên tạo kết quả nào?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '3.Immutability/Immutability.md'
+      anchor: 'immutable-values'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Ghi đè danh sách cũ thành [A,B,C] và trả nó'
+        explanation: 'Sửa trực tiếp old phá điều kiện giá trị cũ không bị đổi.'
+      - id: B
+        answer: 'Chỉ đổi tên tham chiếu cũ sang next'
+        explanation: 'Đổi tên tham chiếu không đủ nếu dữ liệu bên dưới vẫn là cũ.'
+      - id: C
+        answer: 'Giữ old=[A,B] và tạo next=[A,B,C]'
+        explanation: 'Tạo giá trị mới bảo toàn snapshot cũ và có phiên bản mới.'
+      - id: D
+        answer: 'Giữ old và next trỏ vào cùng list mutable'
+        explanation: 'Cùng list mutable cho phép sửa next ảnh hưởng old bất ngờ.'
+    correctAnswerId: C
+  - id: functional-q14
+    question: 'Order A từng pending rồi paid trong mô hình immutable. Thành phần nào quyết định bản hiện hành?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '3.Immutability/Immutability.md'
+      anchor: 'value-vs-state'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Bộ điều phối trạng thái gắn với danh tính A'
+        explanation: 'Ứng dụng vẫn phải lưu và chọn phiên bản hiện hành theo danh tính.'
+      - id: B
+        answer: 'Giá trị pending tự chuyển thành paid'
+        explanation: 'Giá trị bất biến không tự cập nhật chính nó qua thời gian.'
+      - id: C
+        answer: 'Bộ nhớ JVM tự chọn bản mới nhất'
+        explanation: 'JVM không hiểu khái niệm phiên bản nghiệp vụ của order.'
+      - id: D
+        answer: 'Phép so sánh hai số tiền trong order'
+        explanation: 'So tiền không xác định trạng thái hiện hành giữa các snapshot.'
+    correctAnswerId: A
+  - id: functional-q15
+    question: 'Hàm transition(pending, PaymentApproved) tạo bản paid mới. Kết luận nào hợp lệ?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '3.Immutability/Immutability.md'
+      anchor: 'immutable-updates'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Chắc chắn khách đã được trừ tiền thực'
+        explanation: 'Tạo giá trị không chứng minh thanh toán ngoài đời.'
+      - id: B
+        answer: 'Hàm đã gọi gateway thành công hai lần'
+        explanation: 'Một phép biến đổi thuần không hàm ý gọi provider.'
+      - id: C
+        answer: 'Mọi lỗi từ gateway tự động biến mất'
+        explanation: 'Lỗi gateway vẫn cần bộ điều phối xử lý rõ ràng ở ranh giới bên ngoài.'
+      - id: D
+        answer: 'Nó tạo trạng thái mới từ sự kiện đã xác nhận'
+        explanation: 'Nếu đã có sự kiện approved hợp lệ, hàm mới suy ra snapshot paid.'
+    correctAnswerId: D
+  - id: functional-q16
+    question: 'Structural sharing giảm chi phí tạo immutable tree theo cách nào?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '3.Immutability/Immutability.md'
+      anchor: 'sharing-and-cost'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Mọi lần cập nhật đều sửa trực tiếp node được chia sẻ bởi phiên bản cây cũ và phiên bản mới'
+        explanation: 'Sửa node chung phá snapshot cũ nếu cùng tham chiếu.'
+      - id: B
+        answer: 'Tạo đường dẫn mới, tái dùng nhánh cũ thực sự bất biến'
+        explanation: 'Các nhánh an toàn không đổi có thể được chia sẻ qua hai gốc.'
+      - id: C
+        answer: 'Mọi collection bất biến tự động chỉ dùng một bản sao'
+        explanation: 'Không phải mọi collection immutable đều dùng persistent structure.'
+      - id: D
+        answer: 'Xóa snapshot cũ ngay khi có giá trị mới'
+        explanation: 'Xóa lịch sử không phải bản chất hay cách đảm bảo structural sharing.'
+    correctAnswerId: B
+  - id: functional-q17
+    question: 'Hai request cùng đọc order v3, mỗi request tạo snapshot v4 khác nhau. Điều nào còn thiếu?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '3.Immutability/Immutability.md'
+      anchor: 'immutability-limits'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Thêm các hàm map biến đổi cục bộ trên từng snapshot rồi chọn bản nào ghi sau'
+        explanation: 'Map là biến đổi giá trị, không giải quyết cuộc đua ghi.'
+      - id: B
+        answer: 'Giữ cả hai v4 làm current cùng lúc'
+        explanation: 'Một thực thể không thể tùy tiện có hai bản current mâu thuẫn.'
+      - id: C
+        answer: 'Kiểm tra phiên bản khi cập nhật kho dữ liệu'
+        explanation: 'Version check hoặc khóa xác định một cập nhật hợp lệ.'
+      - id: D
+        answer: 'Buộc snapshot v3 thành mutable để khóa'
+        explanation: 'Chuyển sang mutable không tự giải quyết cạnh tranh ghi.'
+    correctAnswerId: C
+  - id: functional-q18
+    question: 'Hệ thống chọn rule VIP rồi sau đó mới gọi rule(100). Điều đó chứng minh đặc điểm nào?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '4.FunctionsComposition/FunctionsComposition.md'
+      anchor: 'functions-as-values'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Một hàm có thể được chọn như giá trị trước khi thực thi'
+        explanation: 'Hàm là giá trị nên có thể truyền hoặc lưu mà chưa chạy.'
+      - id: B
+        answer: 'Mọi hàm được truyền dưới dạng giá trị đều mặc định không thể đọc state hay tạo tác động phụ'
+        explanation: 'Hàm được truyền vẫn có thể đọc state hoặc tạo tác động phụ.'
+      - id: C
+        answer: 'Bất kỳ hàm được chọn nào cũng tự chạy ngay'
+        explanation: 'Chọn hàm không đồng nghĩa đánh giá hàm với đầu vào.'
+      - id: D
+        answer: 'Rule VIP bắt buộc phải sửa giá trị nguồn'
+        explanation: 'Phép biến đổi giá có thể trả 90 mà không mutation nguồn.'
+    correctAnswerId: A
+  - id: functional-q19
+    question: 'Một hàm transform(items, rule) dùng cùng vòng duyệt cho double và add5. Vì sao nó là hàm bậc cao?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '4.FunctionsComposition/FunctionsComposition.md'
+      anchor: 'higher-order-functions'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Vì nó dùng một vòng lặp có thể tái sử dụng'
+        explanation: 'Vòng lặp dùng lại không đủ để định nghĩa hàm bậc cao.'
+      - id: B
+        answer: 'Vì nó trả một danh sách cùng kiểu phần tử'
+        explanation: 'Kiểu kết quả không quyết định hàm có nhận tham số là hàm khác hay không.'
+      - id: C
+        answer: 'Vì nó có thể tạo list mới mà không sửa list cũ'
+        explanation: 'Có thể ánh xạ danh sách không sửa nguồn mà chẳng nhận hàm như một giá trị.'
+      - id: D
+        answer: 'Vì nó nhận chính quy tắc xử lý dưới dạng một hàm'
+        explanation: 'Nhận hành vi qua tham số là đặc điểm khiến phép duyệt này là hàm bậc cao.'
+    correctAnswerId: D
+  - id: functional-q20
+    question: 'Áp dụng giảm 10% rồi thuế 5% trên số sau giảm cho 100. Phép ghép nào đúng?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '4.FunctionsComposition/FunctionsComposition.md'
+      anchor: 'function-composition'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'tax(100,5%) rồi discount(100,10%)'
+        explanation: 'Hai phép gọi độc lập không truyền kết quả bước trước cho bước sau.'
+      - id: B
+        answer: 'taxOnDiscount(discount(100,10%),5%)'
+        explanation: '90 là đầu vào của phép tính thuế, tổng cuối đúng 94,5.'
+      - id: C
+        answer: 'discount(100,tax(100,5%))'
+        explanation: 'Dùng số thuế làm tỷ lệ giảm không đúng hợp đồng hai hàm.'
+      - id: D
+        answer: 'discount(100,10%) bỏ qua giai đoạn thuế'
+        explanation: 'Bỏ thuế khiến phép tính không đủ các bước nghiệp vụ.'
+    correctAnswerId: B
+  - id: functional-q21
+    question: 'Với [20,40,50], giữ giá trị >=30 rồi giảm 10% từng giá trị và cộng từ 0. Kết quả là bao nhiêu?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '4.FunctionsComposition/FunctionsComposition.md'
+      anchor: 'map-filter-reduce'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: '90, vì đó là tổng chưa giảm của hai phần tử'
+        explanation: '90 chỉ là tổng sau lọc nhưng trước bước map giảm giá.'
+      - id: B
+        answer: '110, vì cộng cả ba phần tử ban đầu'
+        explanation: '110 cộng cả 20 đã bị filter loại, dù điều kiện ban đầu chỉ giữ khoản từ 30.'
+      - id: C
+        answer: '81, vì 40→36 và 50→45'
+        explanation: 'Sau filter được [40,50], map thành [36,45], reduce ra 81.'
+      - id: D
+        answer: '99, vì giảm 10% trên tổng ban đầu'
+        explanation: '99 chiết khấu cả phần tử 20, trái điều kiện lọc.'
+    correctAnswerId: C
+  - id: functional-q22
+    question: 'Chính sách chỉ nhận đơn approved: A(approved,40), B(pending,20), C(approved,50) giảm 10% ra 81. Khi thêm D(pending,100), lọc thế nào để kết quả vẫn là 81?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '4.FunctionsComposition/FunctionsComposition.md'
+      anchor: 'transformation-walkthrough'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Chỉ giữ các đơn approved A và C'
+        explanation: 'D vẫn pending nên chỉ A giá 40 và C giá 50 được giảm 10%, tổng vẫn là 81.'
+      - id: B
+        answer: 'Chỉ giữ các đơn có số tiền ít nhất 30'
+        explanation: 'Điều kiện tiền vẫn nhận D pending giá 100, khiến tổng sau giảm thay đổi.'
+      - id: C
+        answer: 'Chỉ giữ hai đơn có số tiền cao nhất'
+        explanation: 'Khi có D, hai đơn cao nhất là D giá 100 và C giá 50, không còn A và C.'
+      - id: D
+        answer: 'Chỉ giữ các đơn có số tiền lớn hơn 20'
+        explanation: 'Lọc theo tiền sẽ nhận cả D dù nó đang pending và bị chính sách loại.'
+    correctAnswerId: A
+  - id: functional-q23
+    question: 'Chuỗi f1→f2→...→f10 khó debug dù toàn hàm thuần. Cách cải thiện nào có cơ sở nhất?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '4.FunctionsComposition/FunctionsComposition.md'
+      anchor: 'composition-limits'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Tách tiếp từng phép tính thành các callback ẩn danh nhỏ hơn'
+        explanation: 'Nhiều đoạn không tên khiến khó nhận ra bước nghiệp vụ nào tạo giá trị sai.'
+      - id: B
+        answer: 'Ghép các bước thành một khối chỉ trả kết quả cuối'
+        explanation: 'Giấu đầu ra trung gian làm khó xác định quy tắc bắt đầu sinh lỗi.'
+      - id: C
+        answer: 'Chỉ ghi log kết quả cuối thay vì theo dõi giá trị trung gian'
+        explanation: 'Kết quả cuối không chỉ ra lỗi bắt đầu ở bước kiểm tra hay chiết khấu.'
+      - id: D
+        answer: 'Đặt tên từng bước nghiệp vụ và kiểm tra kết quả trung gian'
+        explanation: 'Các bước kiểm tra, giảm giá, biên nhận cho thấy nơi giá trị bắt đầu sai.'
+    correctAnswerId: D
+  - id: functional-q24
+    question: 'Hàm calculate(100) trả đúng tiền nhưng giảm stock từ 8 xuống 7. Đánh giá nào chính xác?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '5.SideEffects/SideEffects.md'
+      anchor: 'effect-concept'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Vẫn là hàm thuần vì giá trị return chỉ do phép tính xác định, dù stock bị trừ một đơn vị'
+        explanation: 'Kết quả đúng không xóa hiệu ứng lên tài nguyên dùng chung.'
+      - id: B
+        answer: 'Có side effect vì tồn kho thay đổi ngoài kết quả'
+        explanation: 'Mutation tồn kho là thay đổi có thể quan sát được ngoài return.'
+      - id: C
+        answer: 'Không side effect vì stock nằm trong bộ nhớ'
+        explanation: 'Vị trí lưu không quyết định việc thay đổi có bị người khác quan sát.'
+      - id: D
+        answer: 'Chỉ có side effect nếu xuất hiện exception'
+        explanation: 'Hiệu ứng có thể xảy ra trên đường thành công không cần exception.'
+    correctAnswerId: B
+  - id: functional-q25
+    question: 'Sơ đồ load order → calculateTotal → charge/save đặt ranh giới thuần ở đâu?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '5.SideEffects/SideEffects.md'
+      anchor: 'pure-core-effects'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Toàn bộ chuỗi đều thuần nếu dùng immutable order'
+        explanation: 'Immutable order không biến network và persistence thành pure.'
+      - id: B
+        answer: 'Chỉ phần load order và truy vấn chính sách'
+        explanation: 'Load order là I/O thường phụ thuộc trạng thái bên ngoài.'
+      - id: C
+        answer: 'Chỉ phép tính giá từ snapshot và quy tắc cố định'
+        explanation: 'CalculateTotal với đầu vào rõ và không hiệu ứng có thể unit test độc lập.'
+      - id: D
+        answer: 'Chỉ phần charge nếu hệ thống trả kết quả số'
+        explanation: 'Charge là tác động ngoài dù API trả số giao dịch.'
+    correctAnswerId: C
+  - id: functional-q26
+    question: 'Chương trình ghi paid rồi gateway trả declined. Nguyên nhân chính là gì?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '5.SideEffects/SideEffects.md'
+      anchor: 'effect-coordination'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Hiệu ứng lưu trạng thái xảy ra trước xác nhận thanh toán'
+        explanation: 'Thứ tự effect đã tạo một lời khẳng định paid khi chưa có evidence.'
+      - id: B
+        answer: 'Hàm chiết khấu đã làm tròn sai vài xu nên trạng thái paid có thể được lưu trước'
+        explanation: 'Làm tròn có thể sai số tiền nhưng không giải thích trạng thái paid trước phản hồi.'
+      - id: C
+        answer: 'Ảnh chụp dữ liệu là immutable thay vì mutable'
+        explanation: 'Bất biến không quy định lúc nào được gán trạng thái nghiệp vụ.'
+      - id: D
+        answer: 'Phép map và filter dùng thứ tự khác nhau'
+        explanation: 'Map/filter không liên quan đến thời điểm xác nhận provider.'
+    correctAnswerId: A
+  - id: functional-q27
+    question: 'Một unit test tính giá pass, nhưng gateway đôi lúc timeout. Cần bổ sung loại kiểm thử nào?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '5.SideEffects/SideEffects.md'
+      anchor: 'effect-testing'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Kiểm tra thêm nhiều tổ hợp giảm giá và thuế cố định để tăng bao phủ unit test hàm tính giá'
+        explanation: 'Nhiều ca số học hơn vẫn không xác nhận cách xử lý timeout mạng.'
+      - id: B
+        answer: 'Xác nhận hai lần tính thuần cho cùng số tiền bằng nhau'
+        explanation: 'Chạy lại tính toán thuần không thử được adapter thanh toán.'
+      - id: C
+        answer: 'Kiểm tra làm tròn giá và đầu vào số không hợp lệ'
+        explanation: 'Các kiểm thử lõi hữu ích nhưng không bao phủ lỗi gateway.'
+      - id: D
+        answer: 'Mô phỏng timeout, từ chối thanh toán và lỗi lưu dữ liệu'
+        explanation: 'Ranh giới tích hợp cần được thử các lỗi vận hành và cách phục hồi tương ứng.'
+    correctAnswerId: D
+  - id: functional-q28
+    question: 'Ứng dụng HTTP chứa hàm tính giá thuần. Hai request đọc v3 rồi cập nhật cùng order. Ranh giới nào phải kiểm soát?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '5.SideEffects/SideEffects.md'
+      anchor: 'effects-real-world'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Bên trong phép nhân 100×0,9 của hàm thuần'
+        explanation: 'Phép nhân không điều khiển xung đột ghi trạng thái.'
+      - id: B
+        answer: 'Bước lưu/điều phối áp dụng version check'
+        explanation: 'Bước save quyết định bản hiện hành nên phải phối hợp hai request.'
+      - id: C
+        answer: 'Đầu ra trả về của hàm cộng thuế'
+        explanation: 'Tổng đã tính có thể đúng cho cả hai snapshot nhưng vẫn ghi xung đột.'
+      - id: D
+        answer: 'Tên route dùng để trả phản hồi HTTP'
+        explanation: 'Route chỉ định đường request, không đảm bảo đồng nhất phiên bản.'
+    correctAnswerId: B
+  - id: functional-q29
+    question: 'Bài toán nào nên bắt đầu bằng chuỗi hàm biến đổi dữ liệu?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '6.Tradeoffs/Tradeoffs.md'
+      anchor: 'functional-use-cases'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Duy trì kết nối thiết bị với sự kiện liên tục'
+        explanation: 'Kết nối thiết bị cần quản lý tương tác trạng thái dài hạn.'
+      - id: B
+        answer: 'Điều phối chuyển tiền phân tán nhiều bước'
+        explanation: 'Chuyển tiền cần effect coordination và nhất quán hệ thống.'
+      - id: C
+        answer: 'Chuẩn hóa báo cáo từ ảnh chụp dữ liệu xác định'
+        explanation: 'Đầu vào cố định và quy tắc rõ là ứng viên tốt cho phép biến đổi.'
+      - id: D
+        answer: 'Xác định lịch retry của cổng thanh toán'
+        explanation: 'Retry gateway thuộc điều phối tác động phụ, không chỉ transformation.'
+    correctAnswerId: C
+  - id: functional-q30
+    question: 'So sánh phiên bản bất biến với vòng lặp cục bộ, cách đánh giá nào xét CẢ tài nguyên lẫn khả năng gỡ lỗi?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '6.Tradeoffs/Tradeoffs.md'
+      anchor: 'functional-costs'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Đo cấp phát, GC và truy vết các bước nghiệp vụ trung gian'
+        explanation: 'Cần xét cả tài nguyên khi tạo snapshot và mức dễ tìm lỗi qua từng bước.'
+      - id: B
+        answer: 'Chỉ đo chi phí cấp phát và GC dưới tải đại diện, bỏ qua khả năng truy vết bước tính sai'
+        explanation: 'Đo tài nguyên giúp đánh giá chi phí, chưa cho biết lỗi xuất phát ở bước nào.'
+      - id: C
+        answer: 'Đo CPU và đỉnh bộ nhớ khi giữ các snapshot cũ'
+        explanation: 'Kiểm tra chi phí runtime nhưng chưa đánh giá khả năng tìm lỗi.'
+      - id: D
+        answer: 'Xem độ lồng callback và cách đặt tên kết quả trung gian'
+        explanation: 'Đây là đánh giá độ dễ đọc, chưa đo chi phí bộ nhớ và cấp phát.'
+    correctAnswerId: A
+  - id: functional-q31
+    question: 'Tổ chức checkout có Order, priceFunction và coordinator. Vai trò nào hợp lý?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '6.Tradeoffs/Tradeoffs.md'
+      anchor: 'functional-vs-other-styles'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Cho Order trực tiếp gọi gateway, tự lưu trạng thái thanh toán và xử lý retry thay coordinator'
+        explanation: 'Đối tượng domain không cần ôm trọn giao dịch ngoài để bảo vệ invariant.'
+      - id: B
+        answer: 'PriceFunction sở hữu persistence và retry'
+        explanation: 'Một hàm tính thuần không sở hữu kết nối và trạng thái lưu.'
+      - id: C
+        answer: 'Coordinator phải biến mọi phép tính thành side effect'
+        explanation: 'Coordinator có thể dùng phép tính thuần và không cần mutation trong mọi bước.'
+      - id: D
+        answer: 'Order giữ invariant, hàm tính giá và coordinator xử lý I/O'
+        explanation: 'Các trách nhiệm phối hợp: invariant OOP, giá functional, effect điều phối.'
+    correctAnswerId: D
+  - id: functional-q32
+    question: 'Tổng 94,5 tính đúng, nhưng gateway từ chối. Kết luận nào được dữ liệu chứng minh?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '6.Tradeoffs/Tradeoffs.md'
+      anchor: 'functional-end-to-end'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'Order đã được thanh toán vì phép tính pass'
+        explanation: 'Tính toán đúng không là bằng chứng charge thành công.'
+      - id: B
+        answer: 'Giá dự kiến là 94,5 còn trạng thái thanh toán thất bại'
+        explanation: 'Bằng chứng giá và bằng chứng thanh toán thuộc hai hợp đồng riêng.'
+      - id: C
+        answer: 'Mọi kết quả trước gateway đều cần bỏ đi'
+        explanation: 'Kết quả số học vẫn đúng với chính sách, dù I/O thất bại.'
+      - id: D
+        answer: 'Tính thuần tự động retry thu tiền hợp lệ'
+        explanation: 'Pure computation không tự tạo retry hay xử lý idempotency.'
+    correctAnswerId: B
+  - id: functional-q33
+    question: 'Lập trình hàm, DOP và reactive đều ghép bước xử lý. Phân biệt nào chính xác?'
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '6.Tradeoffs/Tradeoffs.md'
+      anchor: 'functional-boundaries'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+    answers:
+      - id: A
+        answer: 'FP: phép tính thuần và ghép hàm; DOP: tối ưu bố trí dữ liệu cho CPU cache; reactive: luồng sự kiện theo thời gian'
+        explanation: 'DOD hiệu năng về bố trí cache khác DOP tổ chức dữ liệu và thao tác.'
+      - id: B
+        answer: 'FP: hàm thuần; DOP: chỉ record có kiểu; reactive: tín hiệu yêu cầu'
+        explanation: 'DOP còn có mô hình map phổ dụng và schema độc lập, không chỉ record có kiểu.'
+      - id: C
+        answer: 'FP: biến đổi giá trị; DOP: cấu trúc dữ liệu/thao tác; reactive: tín hiệu theo thời gian'
+        explanation: 'Tính thuần, tổ chức dữ liệu và luồng tín hiệu có các trọng tâm khác nhau.'
+      - id: D
+        answer: 'FP: dữ liệu bất biến; DOP: điều phối I/O; reactive: xử lý song song'
+        explanation: 'DOP không định nghĩa việc điều phối I/O, reactive cũng không bắt buộc song song.'
+    correctAnswerId: C
