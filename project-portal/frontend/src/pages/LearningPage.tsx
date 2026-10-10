@@ -295,7 +295,7 @@ export function LearningPage() {
     }
 
     if (!moduleId || !requestedModule) {
-      navigate(`/learning/${activeModuleNode.routeId}`, { replace: true });
+      navigate(`/learning/java/knowledge/${activeModuleNode.routeId}`, { replace: true });
     }
   }, [activeModuleNode, catalog, moduleId, navigate, requestedModule]);
 

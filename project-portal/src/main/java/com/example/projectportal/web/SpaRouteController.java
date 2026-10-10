@@ -12,7 +12,15 @@ public class SpaRouteController {
             "/learning",
             "/learning/",
             "/learning/{moduleId}",
-            "/learning/{moduleId}/"
+            "/learning/{moduleId}/",
+            "/learning/java/knowledge/{moduleId}",
+            "/learning/java/knowledge/{moduleId}/",
+            "/learning/java/knowledge",
+            "/learning/java/knowledge/",
+            "/learning/java/project",
+            "/learning/java/project/",
+            "/learning/java",
+            "/learning/java/"
     })
     public String forwardSpaRoute() {
         return "forward:/index.html";

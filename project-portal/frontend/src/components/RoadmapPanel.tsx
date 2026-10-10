@@ -190,7 +190,7 @@ export function RoadmapPanel({
                     <RelatedModules
                       items={relatedModules}
                       language={language}
-                      onNavigate={(routeId) => navigate(`/learning/${routeId}`)}
+                      onNavigate={(routeId) => navigate(`/learning/java/knowledge/${routeId}`)}
                     />
                   )}
 
@@ -204,7 +204,7 @@ export function RoadmapPanel({
                     <RelatedModules
                       items={relatedModules}
                       language={language}
-                      onNavigate={(routeId) => navigate(`/learning/${routeId}`)}
+                      onNavigate={(routeId) => navigate(`/learning/java/knowledge/${routeId}`)}
                     />
                   )}
                 </div>

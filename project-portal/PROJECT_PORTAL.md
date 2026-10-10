@@ -73,7 +73,8 @@ http://localhost:9098
 Current production Learning route ví dụ:
 
 ```text
-http://localhost:9098/learning/THREAD
+http://localhost:9098/learning
+http://localhost:9098/learning/java/knowledge/THREAD
 ```
 
 ### 1.2 Current build and serve model
@@ -128,7 +129,7 @@ BrowserRouter
 pages/components
 ```
 
-Portal hiện dùng `BrowserRouter` để URL client sạch, ví dụ `/my-cv` và `/learning/THREAD`. Spring MVC chỉ forward các route SPA đã biết về `index.html`; URL trên browser được giữ nguyên để React Router resolve đúng page khi deep-link hoặc refresh trực tiếp. Frontend còn normalize legacy `/#/...` URL sang clean path bằng `history.replaceState` để bookmark/link cũ tiếp tục hoạt động.
+Portal hiện dùng `BrowserRouter` để URL client sạch, ví dụ `/my-cv` và `/learning/java/knowledge/THREAD`. Spring MVC chỉ forward các route SPA đã biết về `index.html`; URL trên browser được giữ nguyên để React Router resolve đúng page khi deep-link hoặc refresh trực tiếp. Frontend còn normalize legacy `/#/...` URL sang clean path bằng `history.replaceState` để bookmark/link cũ tiếp tục hoạt động.
 
 ### 1.3 Vai trò của React / TypeScript / Vite / React Router
 
@@ -279,6 +280,23 @@ Spring runtime chỉ là một capability tùy chọn.
 ---
 
 ## 4. Trang module hiện tại và mục tiêu
+
+Learning hiện có hai lớp điều hướng trước khi tới module dashboard:
+
+```text
+Header: Home | Learning | My CV
+   ↓
+/learning
+   → Topic picker: Java | JavaScript | NodeJS
+   → Java opens /learning/java/knowledge
+   → JavaScript / NodeJS show localized, animated unavailable-content dialog
+   ↓
+Java section navigation: Knowledge | Project
+   → Knowledge contains the existing module tree/dashboard/tabs
+   → Project is a localized updating-content placeholder
+```
+
+Đây là **navigation/presentation hierarchy** mới; `Java → Knowledge` bao bọc **toàn bộ** learning module UI hiện tại và không đồng nghĩa với tab `Knowledge` nằm bên trong một module. Java section navigation nằm giữa, ngay dưới global header. Khi chuyển Knowledge → Project → Knowledge trong cùng Java section, frontend ghi nhớ URL module vừa xem. VI/EN áp dụng cho cả unavailable modal và Project placeholder.
 
 Ví dụ với module runnable `THREAD`:
 
@@ -1201,8 +1219,12 @@ Current routing dùng `BrowserRouter`:
 /
 /my-cv
 /learning
-/learning/THREAD
-/learning/ASPECT
+/learning/java               → redirect /learning/java/knowledge
+/learning/java/knowledge     → Java module learning, chọn module đầu khi chưa có ID
+/learning/java/knowledge/THREAD
+/learning/java/knowledge/ASPECT
+/learning/java/project       → Java Project placeholder
+/learning/THREAD             → legacy redirect sang /learning/java/knowledge/THREAD
 ```
 
 Logical `SERVICE_NAME` đang là lựa chọn phù hợp cho module route identity trong fake/current phase.
@@ -1213,9 +1235,13 @@ Spring MVC có SPA fallback explicit cho các client route hiện tại:
 /my-cv
 /learning
 /learning/{moduleId}
+/learning/java
+/learning/java/knowledge
+/learning/java/knowledge/{moduleId}
+/learning/java/project
 ```
 
-Các route trên forward nội bộ về `/index.html`; đây không phải redirect về `/`, nên refresh `/my-cv` vẫn giữ URL `/my-cv` và React Router tiếp tục render `MyCvPage`. Static assets, generated Portal data và `/api/**` không đi qua fallback này. Static production host cũng phải giữ contract SPA fallback tương đương cho các clean client routes.
+Các route trên (cùng trailing slash tương ứng) forward nội bộ về `/index.html`; đây không phải redirect về `/`, nên refresh `/my-cv` vẫn giữ URL `/my-cv` và React Router tiếp tục render `MyCvPage`. Với `/learning/{moduleId}` cũ, React Router thực hiện client redirect sang Java Knowledge và giữ query/hash để không phá bookmark tới Knowledge section. Static assets, generated Portal data và `/api/**` không đi qua fallback này. Static production host cũng phải giữ contract SPA fallback tương đương cho các clean client routes.
 
 ---
 
@@ -1632,7 +1658,7 @@ MVP đã bắt đầu implementation. Current phase đã có:
 6. VI/EN frontend language switch
 7. Light/Dark theme theo OS + localStorage persistence
 8. ProjectStructureService-generated `module-catalog.json`
-9. real module hierarchy sidebar + dynamic `/learning/{routeId}` routing
+9. real module hierarchy sidebar + dynamic `/learning/java/knowledge/{routeId}` routing (vẫn hỗ trợ redirect từ legacy `/learning/{routeId}`)
 10. sidebar module search với self-match/descendant-match semantics
 11. Full tree / Real modules switch, prune nhưng giữ ancestor hierarchy
 12. sidebar interaction theo capability: child-only row toggle toàn row, dashboard-only module navigate toàn row, hybrid row chia click tại `+`/`−`; hover hybrid kích hoạt đồng thời hai directional waves nhưng mỗi wave bị clip đúng vùng; không còn circular `>` trên từng module
@@ -1656,10 +1682,11 @@ MVP đã bắt đầu implementation. Current phase đã có:
 30. Gradle plugin stub generator đã Linux-safe về filename casing để CI không tạo duplicate plugin khác casing
 31. Quiz source/generator đã migrate thật: `BUILD_QUIZ` → orchestration → localized `question.yml`; canonical schema drive localized comment + validation; Portal copy static projection, shuffle answer position một lần khi load và giữ stable answer identity để check đúng/sai. THREAD hiện có 52 câu VI và 52 câu EN dựa trên README, kèm governance + optional Knowledge/API relations
 32. Interview source/generator đã migrate thật: `BUILD_INTERVIEW` → orchestration → localized `question.yml`; canonical schema drive localized comment + validation; Portal copy static projection, preload count và render reference answer collapsed/expandable với governance + Related Knowledge/API. THREAD hiện có 46 câu VI và 46 câu EN dựa trên README
-33. top-level module tabs hiện theo thứ tự `Overview → Menu → Roadmap → Knowledge → API Docs → Quiz → Interview → Local Run`
+33. top-level **module** tabs hiện theo thứ tự `Overview → Roadmap → Reference (nếu có) → Menu → Knowledge → API Docs → Quiz → Interview → Local Run (nếu runnable)`, với Feedback action riêng. Java section-level `Knowledge | Project` nằm ngoài các module tabs này
 34. Roadmap build projection đã implement: root task `generatePortalRoadmap` copy localized `roadmap/<lang>/roadmap.yml` của các module có `BUILD_ROADMAP=TRUE` vào `project-portal/build/generated/portal-data/module/{ROUTE_ID}/roadmap/<lang>/roadmap.yml`; `generatePortalData` đã include task này
 35. Roadmap frontend đã implement: vertical center timeline, milestone card xen kẽ trái/phải, numbered ring marker, `relatedKnowledge` luôn hiển thị ở phía đối diện milestone, và `relatedModules` satellite cards nối dotted line; responsive layout collapse về single-column timeline trên màn hình nhỏ
 36. Roadmap Related Knowledge prototype đã implement cho `JAVA_LANGUAGE_BASICS`: marker giữ pulse nhẹ nhưng không còn mở popup; Related Knowledge luôn visible, resolve category/count từ Knowledge index và click item chuyển sang Knowledge tab với đúng category active; current mapping chỉ là provisional mapping trên Knowledge cũ và không được coi là curriculum proof
+37. Learning topic picker trên `/learning` hiện có Java/JavaScript/NodeJS; Java mở module UI cũ trong `/learning/java/knowledge`, các topic chưa sẵn sàng hiển thị localized animated dialog; Java section navigation có Knowledge/Project, Project hiện là localized placeholder. Spring Boot SPA fallback hỗ trợ deep-link mới và legacy module paths vẫn được client redirect.
 ```
 
 Chưa implement trong current phase:

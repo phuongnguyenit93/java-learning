@@ -351,7 +351,7 @@ function ModulePickerPopup({
               className={`module-picker__item${active ? ' is-active' : ''}`}
               onClick={() => {
                 onClose();
-                navigate(`/learning/${routeId}`);
+                navigate(`/learning/java/knowledge/${routeId}`);
               }}
             >
               <span className="module-picker__sequence" aria-label={`Order ${sequence}`}>
@@ -759,7 +759,7 @@ function TreeNode({
 
   const navigateToModule = () => {
     if (isModule && node.routeId) {
-      navigate(`/learning/${node.routeId}`);
+      navigate(`/learning/java/knowledge/${node.routeId}`);
     }
   };
 
@@ -1025,7 +1025,7 @@ export function ModuleSidebar({
     }
 
     setKnowledgeSearchInput('');
-    navigate(`/learning/${document.moduleId}?${params.toString()}`);
+    navigate(`/learning/java/knowledge/${document.moduleId}?${params.toString()}`);
   };
 
   const displayedModuleCount = knowledgeSearchActive
