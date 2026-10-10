@@ -1,0 +1,390 @@
+# <interview-schema>
+# Cấu trúc câu hỏi Interview
+# schema-version: 2
+#
+# questions [kiểu: list; bắt buộc; mặc định: []]
+#   Danh sách câu hỏi Interview của module trong language hiện tại.
+#   mỗi phần tử:
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi phỏng vấn hiển thị cho người học.
+#     answer [kiểu: string; bắt buộc; mặc định: ""]
+#       Câu trả lời tham khảo, chỉ hiển thị khi người học chủ động mở.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu nội dung được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu nội dung đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+# </interview-schema>
+
+questions:
+  - question: >-
+      Trong buổi phỏng vấn, có người khẳng định một chương trình chỉ được gọi là mệnh lệnh nếu từng câu lệnh đều sửa biến. Bạn phản biện bằng mô hình nào?
+    answer: >-
+      Điểm định nghĩa là chương trình chỉ rõ chuỗi thao tác cần thực hiện và cách điều khiển sang thao tác kế tiếp, không phải số lần gán. Một bước đọc balance, tính biểu thức hoặc in cảnh báo vẫn là một hành động được thực thi theo thứ tự; chúng có thể giữ nguyên trạng thái lưu. Tôi sẽ phân tách lệnh, giá trị vừa tính, đầu ra và lần ghi thực sự, rồi dùng bảng trước/sau để chỉ chỗ nào trạng thái đổi. Cách đó tránh nhầm tác động quan sát được với cập nhật tài khoản.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '1.Introduction/ImperativeProgramming.md'
+      anchor: 'imperative-what'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+  - question: >-
+      Bạn thiết kế thủ tục rút tiền từ tài khoản có invariant không âm. Vì sao không nên trừ trước, thấy âm rồi sửa bù sau?
+    answer: >-
+      Tôi xác định điều kiện đầu vào amount lớn hơn 0 và đủ balance hiện tại, kiểm chúng trước lần ghi, sau đó mới trừ và báo kết quả. Nếu trừ trước rồi bù, trạng thái âm bị cấm đã tồn tại giữa hai bước; log, callback hay thủ tục khác có thể quan sát nó. Vết chạy cần chứng minh nhánh từ chối không chạm vào ô lưu, kể cả khi vẫn tạo thông báo. Lối mệnh lệnh hữu ích chính ở khả năng diễn tả ranh giới kiểm tra trước tác động này.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '1.Introduction/ImperativeProgramming.md'
+      anchor: 'imperative-why'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+  - question: >-
+      Nếu code và công thức đều đưa số dư từ 100 xuống 70, bạn cần thêm chứng cứ gì để chứng minh một lần rút 30 là đúng nghiệp vụ?
+    answer: >-
+      Số cuối chỉ chứng minh phép trừ cho kết quả số học. Tôi muốn thấy số tiền rút dương, số dư được đọc lúc xét điều kiện, nhánh được chọn, đúng một lần ghi 100 thành 70 và thông báo chỉ xuất sau quyết định. Thêm ca thiếu tiền để xác nhận cùng đường đi không vô tình trừ. Điều này phân biệt chương trình đúng với một biểu thức trùng đáp số nhưng bỏ kiểm tra tiền điều kiện.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '1.Introduction/ImperativeProgramming.md'
+      anchor: 'imperative-before'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+  - question: >-
+      Hãy hướng dẫn một người debug khi balance vẫn là 100 dù màn hình đã hiện kết quả thử tính 70. Bạn sẽ tìm điều gì?
+    answer: >-
+      Trước hết tôi tách biểu thức 100 trừ 30 khỏi lệnh gán: biểu thức có thể tạo giá trị 70 nhưng không tự ghi vào balance. Tôi theo luồng thực thi để tìm nơi biến kết quả được gán vào ô lưu, kiểm điều kiện có cho phép nhánh ấy chạy không và xác minh không có gán sau đó ghi đè. Bảng lệnh, trạng thái trước, giá trị tính và trạng thái sau sẽ chỉ rõ lỗi là thiếu ghi hay sai thứ tự.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '1.Introduction/ImperativeProgramming.md'
+      anchor: 'imperative-solution'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+  - question: >-
+      Một hệ thống có đối tượng Account, quy tắc chỉ rút khi đủ tiền và một method gồm if rồi ghi. Tại sao không phải chọn duy nhất OOP, declarative hoặc imperative?
+    answer: >-
+      Ba cách nhìn trả lời ba câu hỏi khác nhau. Account có thể sở hữu trạng thái và trách nhiệm bảo vệ nó; điều kiện chỉ rút khoản dương khi đủ tiền diễn đạt điều phải đúng; các lệnh if, return và gán mô tả các bước để thực hiện quy tắc. Một method của đối tượng hoàn toàn có thể chứa luồng mệnh lệnh, còn việc tách phép tính thuần không loại bỏ các bước cập nhật khác. Tôi phân loại từng vai trò, không dán một nhãn cho mọi chi tiết.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '1.Introduction/ImperativeProgramming.md'
+      anchor: 'imperative-boundary'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+  - question: >-
+      Khi đào tạo người mới để đọc một thủ tục rút tiền có nhiều nhánh, bạn sắp xếp kiến thức nền theo thứ tự nào, và vì sao?
+    answer: >-
+      Tôi bắt đầu từ giá trị, biến đang lưu và phân biệt đọc so với ghi. Tiếp theo là điều kiện chọn nhánh tại thời điểm thực thi và vòng lặp có cập nhật biến tiến triển. Sau đó mới đặt thủ tục cùng hợp đồng đầu vào, đầu ra và tác động phụ. Nếu học điều kiện trước khi hiểu trạng thái, học viên có thể tưởng lần kiểm tra đã sửa tài khoản; nếu học thủ tục trước khi hiểu vết, họ có thể tin tên hàm thay cho bằng chứng.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '1.Introduction/ImperativeProgramming.md'
+      anchor: 'imperative-learning-path'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+  - question: >-
+      Một chương trình in cảnh báo từ chối nhưng balance vẫn là 70. Bạn sẽ giải thích khác nhau giữa state và output với người đang đọc log ra sao?
+    answer: >-
+      State là các giá trị hiện đang được lưu như balance 70, khác với lịch sử các sự kiện đã in. Một lệnh có thể tạo output từ chối mà không ghi vào tài khoản; vì thế có log mới không đồng nghĩa có state mới. Trong vết tôi ghi tách cột trạng thái trước/sau và cột thông báo. Khi debug, việc ghép output vào state sẽ làm ta suy ra nhầm một bước kiểm tra thành lần trừ tiền.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '2.StateAndCommands/StateAndCommands.md'
+      anchor: 'imperative-state-model'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+  - question: >-
+      Bạn nhìn thấy biểu thức balance - fee cho 95 khi balance là 100 và fee là 5. Làm sao biết nó có gây tác động phụ không?
+    answer: >-
+      Một biểu thức tính toán số học chỉ đọc các giá trị và cho ra số 95; nếu không có phép gán, balance vẫn là 100. Tôi tìm câu lệnh ghi rõ ràng, hoặc hàm được gọi bên trong có tác động phụ, thay vì suy đoán từ việc biến xuất hiện trong biểu thức. Việc in 95 cũng tạo tác động đầu ra riêng nhưng chưa sửa balance. Cách kiểm chứng là so snapshot lưu trước và sau từng lệnh có quyền ghi.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '2.StateAndCommands/StateAndCommands.md'
+      anchor: 'imperative-commands-values'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+  - question: >-
+      Trong balance = balance - 30, tại sao đọc vế phải trước khi ghi vế trái lại quan trọng khi giải thích phép gán?
+    answer: >-
+      Dấu bằng ở đây là phép gán, không phát biểu đẳng thức toán học. Với balance ban đầu 100, vế phải đọc 100 và trừ 30 để được 70, rồi ô lưu balance nhận 70. Một lần thực thi không tự trừ thêm lần nữa. Nếu muốn rút tiền đúng, điều kiện amount dương và đủ số dư phải được kiểm tra trước phép gán đó, vì bản thân phép gán không bảo vệ invariant.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '2.StateAndCommands/StateAndCommands.md'
+      anchor: 'imperative-assignment'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+  - question: >-
+      Bạn review hệ thống bán 3 món giá 20 và giảm 5. Vì sao tính 55 và 45 đều có phép toán đúng nhưng chỉ một đúng nghiệp vụ?
+    answer: >-
+      Giảm một lần cho cả đơn là 20 nhân 3 trừ 5, cho 55. Giảm 5 trên từng món là 20 trừ 5 rồi nhân 3, cho 45. Cả hai là số học đúng dưới hai hợp đồng khác nhau; không thể tối ưu hay đổi thứ tự một bước trừ qua phép nhân mà bỏ qua ý nghĩa giảm giá. Tôi yêu cầu mô tả giảm giá áp dụng cho đơn hay cho đơn vị hàng trước khi chốt lệnh và ca kiểm thử.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '2.StateAndCommands/StateAndCommands.md'
+      anchor: 'imperative-sequencing'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+  - question: >-
+      Hãy diễn giải từng cột của trace khi rút 30 rồi rút 90 từ balance ban đầu 100. Chi tiết nào chứng minh nhánh từ chối đúng?
+    answer: >-
+      Tôi ghi số tiền yêu cầu, điều kiện ở thời điểm kiểm tra, balance trước, balance sau và output. Lần đầu balance 100 đủ để rút 30 nên ghi 70. Lần sau phải so 90 với balance hiện tại 70, không so với số mở đầu 100; điều kiện thất bại, balance 70 được giữ nguyên, chỉ phát lý do từ chối. Dãy 100 thành 70 thành 70 quan trọng hơn một ảnh chụp kết quả cuối.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '2.StateAndCommands/StateAndCommands.md'
+      anchor: 'imperative-state-tracing'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+  - question: >-
+      Một hàm displayBalance bị phát hiện âm thầm trừ phí mỗi lần gọi. Bạn xử lý hợp đồng và thiết kế thế nào?
+    answer: >-
+      Một thao tác có tên và mục tiêu quan sát trạng thái không nên bất ngờ làm số dư thay đổi. Tôi chứng minh lỗi bằng hai lần đọc liên tiếp và trace ghi, sau đó tách thao tác đọc khỏi thu phí hoặc công bố hợp đồng effects rõ nếu thu phí là yêu cầu thật. Việc chỉ đổi tên hoặc cache giá trị hiển thị không loại bỏ tác động sai. Nên giới hạn nơi được phép ghi balance và kiểm hậu điều kiện no-write cho thao tác read-only.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '2.StateAndCommands/StateAndCommands.md'
+      anchor: 'imperative-unexpected-mutation'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+  - question: >-
+      Vì sao điều kiện đúng/sai chưa đủ bảo đảm an toàn nếu lệnh cập nhật vẫn nằm ngoài if?
+    answer: >-
+      Điều khiển luồng có trách nhiệm quyết định lệnh nào được thực thi. Một Boolean sai chỉ là dữ liệu tính được; nếu phép trừ vẫn chạy sau if dù điều kiện thất bại, số dư âm vẫn xuất hiện. Tôi muốn nhánh hợp lệ bao kín lần cập nhật và nhánh lỗi chỉ trả lý do, rồi kiểm bằng trace cả hai đường. Đây là khác biệt giữa tính ra một điều kiện và dùng nó để bảo vệ một tác động thực.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '3.ControlFlow/ControlFlow.md'
+      anchor: 'imperative-control-purpose'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+  - question: >-
+      Một đoạn mã dùng điều kiện balance >= amount để rút tiền. Hãy tìm counterexample và thiết kế guard đúng hơn.
+    answer: >-
+      Nếu balance là 70 còn amount là -10, điều kiện đủ tiền vẫn đúng; phép trừ số âm lại cộng thêm 10 vào số dư. Vì vậy hợp đồng rút thông thường cần amount lớn hơn 0 và balance hiện tại lớn hơn hoặc bằng amount. Tôi kiểm tra cả số âm, bằng 0, bằng số dư và lớn hơn số dư, sau đó yêu cầu nhánh từ chối không ghi. Một điều kiện nhìn có vẻ hợp lý vẫn có thể thiếu tiền điều kiện quan trọng.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '3.ControlFlow/ControlFlow.md'
+      anchor: 'imperative-branch-selection'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+  - question: >-
+      Bạn phải cộng ba khoản thu 10, 20, 5. Làm sao chứng minh vòng lặp xử lý từng khoản đúng một lần thay vì chỉ so đáp số cuối?
+    answer: >-
+      Tôi khởi tạo total bằng 0, duyệt ba mục và ghi trạng thái sau mỗi lần: 0 thành 10, 10 thành 30, 30 thành 35. Đồng thời ghi chỉ số và giá trị mục được đọc để bắt trường hợp một mục bị lặp còn mục khác bị bỏ dù tổng tình cờ bằng 35. Vòng lặp đúng đòi hỏi duyệt đúng phạm vi, cập nhật accumulator và tiến sang mục kế tiếp theo quy tắc; số cuối chỉ là một phần của bằng chứng.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '3.ControlFlow/ControlFlow.md'
+      anchor: 'imperative-repetition'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+  - question: >-
+      Một vòng lặp có đúng ba lượt nhưng số tiền tổng sai. Những cột trace nào giúp bạn tìm off-by-one?
+    answer: >-
+      Đếm lượt không chứng minh ba mục khác nhau đã được duyệt. Tôi ghi số lượt, chỉ số ở đầu lượt, phần tử hiện tại, tổng trước và sau, rồi chỉ số sau bước tiến. Với [10,20,5], sau hai lượt chuẩn phải là total 30 và còn đúng mục 5. Nếu chỉ số tăng quá sớm sẽ bỏ 10; nếu không tăng đúng chỗ có thể đọc 20 hai lần. Trace chỉ nơi vi phạm thay vì đoán từ tổng cuối.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '3.ControlFlow/ControlFlow.md'
+      anchor: 'imperative-loop-progress'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+  - question: >-
+      Vòng while có điều kiện remaining > 0, remaining khởi đầu bằng 3 nhưng trong thân không bao giờ đổi. Bạn đánh giá tính dừng thế nào?
+    answer: >-
+      Nếu không có break, return hoặc thay đổi bên ngoài được hợp đồng quy định, điều kiện vẫn đúng và vòng có thể chạy mãi. Giá trị ban đầu 3 không biến thành số lượt lặp tự động. Tôi xác định biến tiến triển hoặc thước đo giảm theo mỗi lượt và chứng minh nó cuối cùng làm điều kiện sai. Nhưng giảm thiếu kiểm soát lại có thể phá invariant remaining không âm; vì vậy cần xem cả sự tiến triển lẫn ranh giới giá trị hợp lệ.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '3.ControlFlow/ControlFlow.md'
+      anchor: 'imperative-termination'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+  - question: >-
+      Hãy mô tả cách debug luồng giao dịch [+20,-30,-200] từ số dư 100; vì sao cần ghi cả nhánh từ chối?
+    answer: >-
+      Vòng lặp xét đủ ba phần tử. Gửi 20 làm balance từ 100 lên 120; rút 30 hợp lệ làm 120 xuống 90; rút 200 vượt 90 nên nhánh lỗi giữ nguyên 90. Tôi ghi tổng cộng ba lần đánh giá nhưng chỉ hai lần ghi thành công. Nếu hệ thống chỉ ghi các giao dịch thành công, người review có thể không biết yêu cầu thứ ba đã được xét và từ chối; log riêng điều kiện và output giúp tái dựng chính xác.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '3.ControlFlow/ControlFlow.md'
+      anchor: 'imperative-control-trace'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+  - question: >-
+      Khi nào bạn gom CHECK, DEBIT, REPORT thành withdraw(amount), và khi nào việc tách nhỏ thành nhiều hàm sẽ phản tác dụng?
+    answer: >-
+      Tôi tạo một thủ tục khi nó có một trách nhiệm đủ rõ: thực hiện yêu cầu rút hợp lệ và trả kết quả có thể kiểm thử. Hợp đồng bao gồm tiền điều kiện, lần ghi được phép, kết quả thành công/thất bại và effects phải công bố. Nếu xé từng phép so sánh hoặc mỗi câu gán thành thủ tục không có ý nghĩa riêng, luồng sẽ khó lần hơn. Tên withdraw không tự làm code thuần, an toàn đồng thời hay có transaction; tôi vẫn phải nhìn bên trong và test.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '4.ProceduralProgramming/ProceduralProgramming.md'
+      anchor: 'imperative-procedure-purpose'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+  - question: >-
+      Hãy thiết kế hợp đồng withdraw(amount) sao cho caller hiểu cả lần thành công lẫn lần thiếu tiền.
+    answer: >-
+      Tôi quy định amount nguyên hoặc số tiền hợp lệ theo đơn vị đã thống nhất, lớn hơn 0; thành công chỉ khi balance hiện tại đủ. Hậu điều kiện thành công: balance mới bằng balance cũ trừ amount, không âm và có đúng một cập nhật được phép. Nếu thiếu tiền hoặc amount không hợp lệ, thủ tục trả lý do và bảo toàn số dư, không tự ghi bù. Logging, sự kiện hoặc phí nếu có phải được nói rõ trong hợp đồng, không ẩn vào implementation.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '4.ProceduralProgramming/ProceduralProgramming.md'
+      anchor: 'imperative-procedure-contract'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+  - question: >-
+      Vì sao tính newBalance=70 trong một biến cục bộ chưa chứng minh tài khoản thực đã được cập nhật?
+    answer: >-
+      Biến cục bộ có thể là một giá trị thử chỉ tồn tại trong lần gọi, độc lập với trường account.balance còn 100. Để hoàn thành cập nhật cần bước ghi có quyền, sau khi kiểm hợp đồng. Tôi phân biệt tính toán dự kiến, kiểm tra nó hợp lệ và commit vào shared state. Khi unit test, kiểm cả giá trị tạm lẫn state cuối, vì có code trả đúng 70 nhưng quên gán nên lần đọc sau vẫn thấy 100.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '4.ProceduralProgramming/ProceduralProgramming.md'
+      anchor: 'imperative-procedure-local-state'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+  - question: >-
+      Một thủ tục trả đúng số dư nhưng còn gửi log, cập nhật cache và trừ phí. Làm sao review các tác động khó nhìn thấy?
+    answer: >-
+      Tôi liệt kê các loại effect riêng: output, ghi shared state, I/O ngoài và hành động có thể lặp khi retry. Mỗi effect cần điều kiện thực hiện và số lần được phép; tên hàm hoặc kiểu trả về không đủ mô tả. Tôi thêm ca gọi lặp và nhánh lỗi để xác nhận không có trừ phí ngoài dự kiến. Nếu một effect không thuộc trách nhiệm đọc số dư, nên tách nó hoặc thiết lập hợp đồng minh bạch để caller biết chi phí và rủi ro.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '4.ProceduralProgramming/ProceduralProgramming.md'
+      anchor: 'imperative-procedure-effects'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+  - question: >-
+      Một transfer gồm validate, debit A, credit B, record. Credit B lỗi sau khi debit A thành công. Bạn suy luận gì và đề xuất xử lý ra sao?
+    answer: >-
+      Các thủ tục tách trách nhiệm giúp tôi xác định debit đã ghi nhưng credit thất bại; chỉ riêng việc phân hàm không tự rollback debit. Tôi ghi rõ trạng thái từng tài khoản, đường lỗi và hậu điều kiện chuyển tiền chưa được đáp ứng. Ở tầng ứng dụng thực, cần giao dịch có bảo đảm phù hợp nếu cùng kho lưu hoặc chính sách phục hồi/bù trừ và idempotency nếu qua hệ thống phân tán. Không được báo chuyển tiền thành công chỉ vì thủ tục debit trả thành công.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '4.ProceduralProgramming/ProceduralProgramming.md'
+      anchor: 'imperative-procedure-decomposition'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+  - question: >-
+      Tại sao withdraw(30) với cùng đối số có thể trả kết quả khác nhau khi được gọi ở hai thời điểm?
+    answer: >-
+      Ngoài amount, thủ tục còn đọc balance của tài khoản đang thay đổi; đó là đầu vào hiệu lực nhưng bị ẩn khỏi chữ ký. Lần đầu tại balance 100 có thể để lại 70, lần sau tại balance 70 để lại 40, hoặc bị từ chối nếu điều kiện khác thay đổi. Tôi đề xuất tài liệu hóa dữ liệu dùng chung, giảm quyền ghi không cần thiết, và test theo chuỗi trạng thái chứ không coi chữ ký amount là toàn bộ điều kiện. Cùng tham số không đồng nghĩa cùng hành vi khi có hidden state.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '4.ProceduralProgramming/ProceduralProgramming.md'
+      anchor: 'imperative-procedure-limitations'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+  - question: >-
+      Bạn xây ma trận kiểm thử tối thiểu cho hợp đồng rút tiền từ balance 100 như thế nào để phát hiện lỗi nhánh?
+    answer: >-
+      Tôi thử rút 30 thành công: balance phải thành 70 và chỉ một write hợp lệ. Ngay sau đó thử rút 90: điều kiện dùng balance hiện tại 70, nên từ chối và giữ 70, dù có output lỗi. Tôi bổ sung ca số âm và bằng 0 để kiểm tiền điều kiện, ca bằng đúng số dư để xác nhận ranh giới. Mỗi ca so giá trị trước/sau và nhánh chạy, không chỉ so thông báo hoặc phép tính riêng.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '5.Tradeoffs/Tradeoffs.md'
+      anchor: 'imperative-correctness'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+  - question: >-
+      Một phí dịch vụ đã bị trừ hai lần sau retry, dù phép tính phí mỗi lần đều đúng. Bạn tìm nguyên nhân bằng cách nào?
+    answer: >-
+      Tôi bắt đầu từ lịch sử ghi state, không bắt đầu từ công thức tính phí. Hai invocation có thể đều áp dụng một khoản phí lên cùng tài khoản mà không phân biệt yêu cầu đã xử lý; số cuối sai dù mỗi lần trừ đúng lượng tiền. Tôi ghi request identity nếu có, thời điểm đọc balance, nhánh và thao tác ghi để thấy tác động bị lặp. Việc cố định phí thành hằng số không giải quyết vấn đề; cơ chế ngăn retry lặp và transaction thuộc tầng xử lý trạng thái phù hợp.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '5.Tradeoffs/Tradeoffs.md'
+      anchor: 'imperative-state-risks'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+  - question: >-
+      Sau hai lần rút 30 rồi 90 từ 100, bug để lại -20. Trace nào giúp bạn tìm đúng lệnh phá invariant?
+    answer: >-
+      Tôi ghi dòng đầu: trước 100, yêu cầu 30 hợp lệ, sau 70. Dòng thứ hai: trước 70, kiểm 70 không đủ cho 90, nhưng code vẫn thực hiện phép ghi trừ 90 để thành -20. Dòng thứ hai chỉ ra chính xác nhánh từ chối không bao kín lệnh trừ hoặc bỏ quên return. Tôi sửa vị trí guard rồi kiểm cả nhánh thành công và nhánh lỗi. Chỉ số cuối -20 nói có sai, còn vết mới chỉ ra sai ở đâu.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '5.Tradeoffs/Tradeoffs.md'
+      anchor: 'imperative-debug-tracing'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+  - question: >-
+      Khi nào việc thể hiện từng lệnh và chỉ số giúp tính đúng đắn, còn khi nào nó che mất ý định?
+    answer: >-
+      Luồng có thứ tự effects bắt buộc như kiểm điều kiện rồi debit, hoặc tắt thiết bị theo an toàn, hưởng lợi khi các bước hiện rõ. Với yêu cầu chỉ lấy tổng khoản dương trong một danh sách, mô tả tính chất phần tử có thể diễn đạt mục tiêu dễ hơn vòng lặp dài và chỉ số. Tôi chọn dựa vào điều gì người review cần kiểm: thứ tự thao tác hay hợp đồng kết quả. Lối khai báo vẫn có evaluator chạy thật, nên không nên hứa nó không có chi phí.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '5.Tradeoffs/Tradeoffs.md'
+      anchor: 'imperative-control-tradeoffs'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+  - question: >-
+      Hãy so sánh hai cách tính tổng số dương của [10,-2,25] mà không nói lối khai báo bỏ hết thao tác máy tính.
+    answer: >-
+      Một lối mệnh lệnh sẽ khởi tạo accumulator, duyệt ba phần tử, kiểm mỗi phần tử dương rồi cộng 10 và 25, cho 35. Một đặc tả khai báo nói lấy tổng các số lớn hơn 0, cũng cho 35 nhưng không bắt người viết mô tả chỉ số và lệnh gán. Engine vẫn cần kiểm dữ liệu và cộng các giá trị thực tế. Khác biệt là mức điều khiển chi tiết biểu lộ trong lời giải, không phải có hay không có hoạt động tính toán.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '5.Tradeoffs/Tradeoffs.md'
+      anchor: 'imperative-declarative-contrast'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+  - question: >-
+      Một method Account duyệt các yêu cầu, gọi phép tính phí thuần rồi cập nhật balance. Bạn phân tích ba phong cách lập trình cùng tồn tại ra sao?
+    answer: >-
+      Account sở hữu trạng thái và invariant là góc nhìn hướng đối tượng; vòng lặp, nhánh kiểm và thao tác ghi có thứ tự là góc nhìn mệnh lệnh; phép tính phí nhận input và trả giá trị không tác động bên ngoài thể hiện phần thuần có thể tái sử dụng. Toàn method không nhất thiết thuần chỉ vì một bước tính thuần. Tôi kiểm hợp đồng giữa bước tính và lần ghi, kể cả lỗi giữa các bước. Đây là phối hợp trách nhiệm, không phải ba paradigm loại trừ nhau.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '5.Tradeoffs/Tradeoffs.md'
+      anchor: 'imperative-paradigm-bridges'
+    apiRelated:
+      controller: ''
+      methodSignature: ''

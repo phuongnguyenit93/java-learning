@@ -1,3 +1,16 @@
+# 📂 README MODULE STRUCTURE (VI)
+
+* **1.Introduction**
+    * [ImperativeProgramming](readme/vi/menu/1.Introduction/ImperativeProgramming.md)
+* **2.StateAndCommands**
+    * [StateAndCommands](readme/vi/menu/2.StateAndCommands/StateAndCommands.md)
+* **3.ControlFlow**
+    * [ControlFlow](readme/vi/menu/3.ControlFlow/ControlFlow.md)
+* **4.ProceduralProgramming**
+    * [ProceduralProgramming](readme/vi/menu/4.ProceduralProgramming/ProceduralProgramming.md)
+* **5.Tradeoffs**
+    * [Tradeoffs](readme/vi/menu/5.Tradeoffs/Tradeoffs.md)
+
 # Học lập trình mệnh lệnh
 
 Lập trình mệnh lệnh mô tả chương trình bằng những thao tác được thực hiện theo thứ tự; một số thao tác thay đổi trạng thái, nhưng không phải thao tác nào cũng làm biến đổi dữ liệu. Cách nhìn này giúp lý giải hành vi chương trình khi thứ tự, rẽ nhánh và lặp quyết định kết quả.

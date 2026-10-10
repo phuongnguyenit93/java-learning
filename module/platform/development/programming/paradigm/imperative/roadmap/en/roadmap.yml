@@ -41,4 +41,54 @@
 # The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: imperative-mental-model
+    relatedKnowledge:
+      - ImperativeProgramming
+    title: "Imperative Programming: Meaning, Purpose, and Scope"
+    purpose: "Understand imperative programming as specifying an ordered sequence of actions and why this model helps when explicit execution control matters; individual actions need not all change state."
+    objectives:
+      - "Explain commands, calculated values, optional observable effects, and state changes using language-neutral examples; not every imperative step mutates state."
+      - "Distinguish specifying execution steps from specifying only a desired outcome."
+  - id: state-and-sequencing
+    relatedKnowledge:
+      - StateAndCommands
+    title: "Program State and Action Sequencing"
+    purpose: "Build a before-and-after state model to see why the placement and order of updates determine results."
+    objectives:
+      - "Trace assignment, mutable state, and the effects of consecutive actions."
+      - "Distinguish computed values from state-changing effects when predicting behavior."
+  - id: branching-and-repetition
+    relatedKnowledge:
+      - ControlFlow
+    title: "Control Flow through Decisions and Repetition"
+    purpose: "Understand how conditions and repetition create different execution paths over the same state model."
+    objectives:
+      - "Describe branching and repetition conceptually, including continuation and termination conditions."
+      - "Trace state and execution counts to recognize wrong branches, nonterminating loops, and misplaced updates."
+  - id: procedural-organization
+    relatedKnowledge:
+      - ProceduralProgramming
+    title: "Organizing Actions into Procedures"
+    purpose: "Understand how grouping actions into procedures supports reuse and manageability while retaining imperative behavior."
+    objectives:
+      - "Explain a procedure's inputs, outputs, local state, and side effects when it is called."
+      - "Recognize when procedure boundaries clarify responsibility and when hidden external state impairs reasoning."
+  - id: effects-and-correctness
+    relatedKnowledge:
+      - StateAndCommands
+      - Tradeoffs
+    title: "Reasoning about State, Effects, and Correctness"
+    purpose: "Learn to check an imperative solution through its initial state, transitions, and required final conditions."
+    objectives:
+      - "Trace a state-changing execution to establish the result and locate faults."
+      - "Identify order dependence, unintended mutation, and shared-state risks without entering Java memory or concurrency mechanics."
+  - id: tradeoffs-and-handoff
+    relatedKnowledge:
+      - Tradeoffs
+      - ProceduralProgramming
+    title: "Imperative Trade-offs and Connections to Other Paradigms"
+    purpose: "Synthesize when step-by-step control improves clarity and when intent-based descriptions or other responsibility structures help."
+    objectives:
+      - "Compare an imperative solution with an intent-oriented description at the conceptual level."
+      - "Explain procedural organization as part of imperative programming, and how OOP or functional code can still include imperative sections without duplicating their curricula."

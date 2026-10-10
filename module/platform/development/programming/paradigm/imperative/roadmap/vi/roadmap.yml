@@ -41,4 +41,54 @@
 # Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: imperative-mental-model
+    relatedKnowledge:
+      - ImperativeProgramming
+    title: "Lập trình mệnh lệnh: khái niệm, mục đích và phạm vi"
+    purpose: "Hiểu lập trình mệnh lệnh là cách chỉ rõ chuỗi thao tác có thứ tự, vì sao mô hình này hữu ích khi cần điều khiển quá trình thực thi; không phải thao tác nào cũng làm thay đổi trạng thái."
+    objectives:
+      - "Diễn giải lệnh, giá trị tính được, tác động có thể quan sát và sự thay đổi trạng thái bằng ví dụ trung tính; không phải bước mệnh lệnh nào cũng sửa dữ liệu."
+      - "Phân biệt việc mô tả các bước thực hiện với việc chỉ mô tả kết quả mong muốn."
+  - id: state-and-sequencing
+    relatedKnowledge:
+      - StateAndCommands
+    title: "Trạng thái chương trình và thứ tự thao tác"
+    purpose: "Nắm mô hình trạng thái trước/sau mỗi lệnh để hiểu tại sao vị trí và thứ tự cập nhật quyết định kết quả."
+    objectives:
+      - "Theo dõi phép gán, trạng thái có thể thay đổi và ảnh hưởng của các lệnh thực hiện liên tiếp."
+      - "Phân biệt giá trị được tính ra với tác động làm thay đổi trạng thái để dự đoán kết quả chương trình."
+  - id: branching-and-repetition
+    relatedKnowledge:
+      - ControlFlow
+    title: "Điều khiển luồng qua lựa chọn và lặp"
+    purpose: "Giải thích cách điều kiện và việc lặp tạo ra các đường thực thi khác nhau trên cùng một mô hình trạng thái."
+    objectives:
+      - "Mô tả sự lựa chọn nhánh và lặp ở cấp ý tưởng, bao gồm điều kiện tiếp tục hoặc kết thúc."
+      - "Lần theo trạng thái và số lần thực hiện để phát hiện nhánh sai, lặp vô hạn hoặc cập nhật không đúng thứ tự."
+  - id: procedural-organization
+    relatedKnowledge:
+      - ProceduralProgramming
+    title: "Tổ chức thao tác thành thủ tục"
+    purpose: "Hiểu vì sao nhóm các bước vào thủ tục giúp tái sử dụng và kiểm soát độ phức tạp mà vẫn giữ bản chất mệnh lệnh."
+    objectives:
+      - "Giải thích đầu vào, đầu ra, trạng thái cục bộ và tác động phụ của một thủ tục khi được gọi."
+      - "Nhận biết khi nào việc tách thủ tục giúp rõ trách nhiệm và khi nào phụ thuộc vào trạng thái bên ngoài gây khó theo dõi."
+  - id: effects-and-correctness
+    relatedKnowledge:
+      - StateAndCommands
+      - Tradeoffs
+    title: "Suy luận tính đúng đắn qua trạng thái và tác động phụ"
+    purpose: "Biết kiểm tra lời giải mệnh lệnh bằng cách xác định trạng thái ban đầu, các bước chuyển và điều kiện sau khi hoàn tất."
+    objectives:
+      - "Theo dõi một luồng thao tác có thay đổi trạng thái để xác định kết quả và điểm phát sinh lỗi."
+      - "Nhận ra rủi ro phụ thuộc thứ tự, thay đổi dữ liệu ngoài dự kiến và trạng thái chia sẻ; không đi sâu vào mô hình bộ nhớ hoặc concurrency của Java."
+  - id: tradeoffs-and-handoff
+    relatedKnowledge:
+      - Tradeoffs
+      - ProceduralProgramming
+    title: "Lựa chọn cách lập trình mệnh lệnh và kết nối các paradigm"
+    purpose: "Tổng hợp khi nào điều khiển từng bước giúp chương trình dễ hiểu và khi nào việc mô tả ý định hoặc tổ chức trách nhiệm có lợi hơn."
+    objectives:
+      - "So sánh một bài toán ở mức khái niệm giữa lời giải mệnh lệnh và cách mô tả kết quả theo hướng khai báo."
+      - "Giải thích lập trình thủ tục là một cách tổ chức thuộc mệnh lệnh, còn OOP hay functional có thể kết hợp các đoạn mệnh lệnh; để các module kia dạy sâu phần thuộc sở hữu của họ."
