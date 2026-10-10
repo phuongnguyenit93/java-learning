@@ -1,1 +1,168 @@
-{}
+1.DataOrientedProgramming/DataOrientedProgramming.md:
+  dop-concept:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  dop-motivation:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  dop-prerequisites:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  dop-context:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  dop-sharvit-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  dop-terminology:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  dop-learning-path:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+2.CodeDataSeparation/CodeDataSeparation.md:
+  code-data-concept:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  behavior-coupling:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  data-visibility:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  separation-tradeoffs:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+3.GenericData/GenericData.md:
+  generic-concept:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  generic-domain-example:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  generic-operations:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  generic-failure-modes:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  generic-contracts:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+4.ImmutableData/ImmutableData.md:
+  dop-immutable-principle:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  dop-state-update:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  dop-state-history:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  dop-state-coordination:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+5.DataSchema/DataSchema.md:
+  dop-schema-concept:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  dop-schema-optional:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  dop-validation-boundaries:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  dop-validation-failure:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  dop-schema-tradeoffs:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+6.DataFlow/DataFlow.md:
+  dop-flow-scenario:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  dop-flow-validate:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  dop-flow-transform:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  dop-flow-coordinate:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  dop-flow-observe:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+7.JavaPerspective/JavaPerspective.md:
+  amber-definition:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  amber-transparent-data:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  amber-valid-variants:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  amber-separate-operations:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  amber-sharvit-comparison:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+8.Tradeoffs/Tradeoffs.md:
+  dop-choose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  dop-costs:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  dop-functional-relation:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  dop-versus-dod:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  dop-handoff:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false

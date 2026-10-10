@@ -1,0 +1,15 @@
+OrderPreviewController:
+  preview(Map<String,Object>,int):
+    execution: |-
+      <p><b>Concept:</b> Sharvit-style DOP keeps generic data, an independent schema, and transforming operations separate. The HTTP boundary lets you vary an untrusted nested data shape instead of looking at only a fixed example.</p>
+      <ol>
+        <li><b>Setup:</b> POST the following order with <code>discountPercent=10</code>: <code>{"id":"A","status":"pending","lines":[{"sku":"P","qty":2,"price":30},{"sku":"Q","qty":1,"price":40}]}</code>.</li>
+        <li><b>Validation:</b> <code>OrderShapeSchema</code> checks required fields, nested element types, positive quantities and prices. It is separate from both the generic JSON representation and the transformation service.</li>
+        <li><b>Calculation:</b> independent code sums <code>2*30 + 1*40 = 100</code>, creates a defensive, immutable input snapshot and derives a distinct result snapshot with a discount of 10%, yielding <code>90.00</code>.</li>
+        <li><b>Schema failure test:</b> set the second quantity to <code>-3</code>, omit <code>price</code>, change <code>status</code> to <code>paid</code>, or use an <code>id</code> longer than 64 characters. The server returns HTTP 422, <code>accepted=false</code>, and bounded field-specific diagnostics instead of a plausible incorrect total.</li>
+        <li><b>Invalid JSON:</b> send malformed JSON or repeat <code>status</code> in the same JSON object. The parser returns HTTP 400 before the independent shape validator, rather than silently accepting the last duplicate value.</li>
+        <li><b>Boundary:</b> there is no database, shared state, gateway call, or implicit transaction. An HTTP request itself is not proof that business effects happened.</li>
+      </ol>
+      <p><b>Observation:</b> Valid and invalid payloads take different paths; a valid response shows both before and after values without modifying the original map, and the schema remains separately inspectable.</p>
+      <p><b>Conclusion:</b> Data, independent validation rules, and reusable operations are distinct DOP responsibilities. An external JSON boundary supplies the variable real input that makes this experiment worth executing rather than merely returning static theory.</p>
+    usage: true

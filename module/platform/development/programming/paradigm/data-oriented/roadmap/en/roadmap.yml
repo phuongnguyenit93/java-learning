@@ -41,4 +41,118 @@
 # The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: dop-foundation
+    relatedKnowledge:
+      - DataOrientedProgramming
+    title: "Data-Oriented Programming: Problem, Scope, and Model"
+    purpose: >-
+      Introduce data-oriented programming (DOP) from the beginning: why
+      mixing operations with mutable application data can hinder reuse and
+      comprehension, and how a data-first view changes the design.
+    objectives:
+      - "Contrast objects owning behavior with data that can be inspected and transformed by separate functions, using a simple beginner example."
+      - "Identify this module's primary Sharvit-style DOP model and recognize that Java/Project Amber DOP and performance-focused data-oriented design (DOD) use related but different ideas."
+
+  - id: dop-code-data-separation
+    relatedKnowledge:
+      - CodeDataSeparation
+    title: "Separating Code from Data"
+    purpose: >-
+      Learn the first DOP principle: organize operations separately from
+      application data so multiple processes can reuse and inspect the values.
+    objectives:
+      - "Explain the distinction among a stored value, the shape of that value, and a function operating on it."
+      - "Recognize when behavior hidden inside objects or closures couples otherwise reusable data to a particular operation; avoid equating this principle with mandatory purity."
+
+  - id: dop-generic-representation
+    relatedKnowledge:
+      - GenericData
+    title: "Representing Data with Generic Structures"
+    purpose: >-
+      Understand why Sharvit-style DOP favors visible structures such as
+      maps and lists rather than requiring a new behavior-bearing type for
+      every data shape.
+    objectives:
+      - "Describe a simple domain example as nested generic values and explain how common operations can inspect or transform them."
+      - "Identify the risks of unchecked keys, inconsistent shapes, and weaker static contracts before adding validation and schema guidance."
+
+  - id: dop-immutable-state
+    relatedKnowledge:
+      - ImmutableData
+    title: "Immutable Data and State Transitions"
+    purpose: >-
+      Model change by producing a new data value rather than mutating an
+      existing shared value, without confusing immutable data with a
+      completely stateless application.
+    objectives:
+      - "Trace an update from old data to new data while preserving the previous snapshot for comparison, testing, and debugging."
+      - "Distinguish immutable value transformations from the separate concern of synchronizing updates to shared application state."
+
+  - id: dop-schema-boundaries
+    relatedKnowledge:
+      - DataSchema
+      - GenericData
+    title: "Data Schemas and Boundary Validation"
+    purpose: >-
+      Understand the fourth Sharvit DOP principle: a data schema describes
+      expected shape and constraints independently of the represented value,
+      so validation can happen explicitly at trust boundaries.
+    dependsOn:
+      - dop-generic-representation
+    objectives:
+      - "Distinguish representation, schema, and validation results using valid and invalid inputs."
+      - "Explain why validation is important with flexible data without turning this module into a JSON Schema, ORM, database, or serialization implementation course."
+
+  - id: dop-application-flow
+    relatedKnowledge:
+      - DataFlow
+      - DataSchema
+      - ImmutableData
+    title: "Building a Complete Data Transformation Flow"
+    purpose: >-
+      Apply the principles to a small application journey: receive data,
+      validate it, transform immutable values, and hand a result to an
+      external boundary.
+    dependsOn:
+      - dop-code-data-separation
+      - dop-generic-representation
+      - dop-immutable-state
+      - dop-schema-boundaries
+    objectives:
+      - "Explain the responsibilities of representation, reusable operations, state coordination, and boundary checks throughout one example."
+      - "Reason about testability, inspection, and failure handling without claiming generic maps or immutability remove all errors or concurrency races."
+
+  - id: dop-java-amber-perspective
+    relatedKnowledge:
+      - JavaPerspective
+      - DataOrientedProgramming
+    title: "A Related Java DOP Perspective"
+    purpose: >-
+      Recognize the related Java/Project Amber use of the term DOP:
+      model data immutably and transparently, capture the whole data and
+      nothing but the data, make illegal states unrepresentable through
+      valid variants, and separate operations from data.
+    dependsOn:
+      - dop-code-data-separation
+      - dop-immutable-state
+    objectives:
+      - "Compare Java's precise modeling of complete and valid data variants with Sharvit's generic structures and separate schemas; identify shared goals without conflating these two DOP perspectives."
+      - "Understand how records, sealed hierarchies, and pattern matching conceptually support transparent data, valid alternatives, and case handling, leaving Java syntax and version-specific rules to language modules."
+
+  - id: dop-synthesis
+    relatedKnowledge:
+      - Tradeoffs
+      - DataFlow
+      - JavaPerspective
+    title: "When Data-Oriented Programming Fits"
+    purpose: >-
+      Decide when a data-centric design improves a system, when explicit
+      object responsibilities or other models are clearer, and why DOP is
+      different from hardware-oriented DOD.
+    dependsOn:
+      - dop-application-flow
+      - dop-java-amber-perspective
+    objectives:
+      - "Compare DOP with object-oriented and functional approaches while evaluating validation cost, loss of encapsulation, generic data flexibility, and change management."
+      - "Distinguish program representation from memory-layout/cache/SIMD optimization; hand Java records, persistence, domain modeling, and low-level performance mechanics to their own modules."

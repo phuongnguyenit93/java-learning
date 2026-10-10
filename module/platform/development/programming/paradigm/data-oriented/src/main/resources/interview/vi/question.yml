@@ -1,0 +1,431 @@
+# <interview-schema>
+# Cấu trúc câu hỏi Interview
+# schema-version: 2
+#
+# questions [kiểu: list; bắt buộc; mặc định: []]
+#   Danh sách câu hỏi Interview của module trong language hiện tại.
+#   mỗi phần tử:
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi phỏng vấn hiển thị cho người học.
+#     answer [kiểu: string; bắt buộc; mặc định: ""]
+#       Câu trả lời tham khảo, chỉ hiển thị khi người học chủ động mở.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu nội dung được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu nội dung đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+# </interview-schema>
+
+questions:
+  - question: "Một nhóm cần thêm trình đọc báo cáo vào hệ thống Order hiện tại. Bạn sẽ giải thích nguyên tắc DOP theo Sharvit như thế nào và vì sao không nhất thiết bỏ mọi đối tượng?"
+    answer: "Tôi tách biểu diễn order thành dữ liệu có hình dạng rõ và cung cấp các phép báo cáo/định giá đứng ngoài, để nhiều bên đọc cùng một snapshot mà không lệ thuộc phương thức entity. Dữ liệu phổ dụng không tự bảo vệ invariant; đối tượng vẫn hữu ích ở nơi cần sở hữu quyền ghi. Tối thiểu phải định nghĩa schema cho bên nhận, lọc trường nhạy cảm và đặt effect ở ranh giới."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.DataOrientedProgramming/DataOrientedProgramming.md"
+      anchor: "dop-concept"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Nếu một entity gộp tính giá, xuất báo cáo và audit, bạn sẽ chỉ ra chi phí coupling nào trước khi đề xuất data-first?"
+    answer: "Các nhóm thay đổi báo cáo có thể phải sửa class có nghiệp vụ tính giá, khó tái sử dụng riêng danh sách lines. Tôi sẽ đo tần suất thay đổi, số caller và quyền truy cập thay vì hô hào map luôn tốt hơn. Tách các hàm đọc giúp mở rộng độc lập, nhưng phụ thuộc vào tên khóa và schema sẽ lan rộng nếu không version và kiểm tra hợp đồng."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.DataOrientedProgramming/DataOrientedProgramming.md"
+      anchor: "dop-motivation"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Hãy hướng dẫn người mới vẽ đơn A gồm id, status và hai dòng P/Q trước khi nói đến HTTP hay Java records. Vì sao thứ tự đó quan trọng?"
+    answer: "Tôi dùng map `{id,status,lines}`, trong đó lines là list map `{sku,qty,price}` và chỉ rõ P(2,30), Q(1,40). Người học trước hết nhìn thấy 2×30+1×40=100 và phân biệt dữ liệu với hàm `subtotal`. Sau đó mới đặt hợp đồng kiểu, khoảng giá trị và cách kiểm tra JSON. Nếu chỉ xem tổng tiền hoặc phương thức ẩn, không thấy cấu trúc cần kiểm chứng."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.DataOrientedProgramming/DataOrientedProgramming.md"
+      anchor: "dop-prerequisites"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Một hàm nhận map và gửi email; một hàm khác có class bao quanh nhưng chỉ tính tổng thuần. Vì sao không thể suy ra purity chỉ từ map hay class?"
+    answer: "DOP nói về cách biểu diễn dữ liệu và vị trí của thao tác; purity nói về việc hàm có phụ thuộc hoặc hiệu ứng quan sát ngoài kết quả hay không. Hàm gửi email vẫn làm I/O dù tham số là map. Method tính tổng có thể thuần nếu chỉ dùng snapshot và không ghi dữ liệu. Tôi kiểm tra thân hàm, tham chiếu mutable và nguồn thời gian/DB thay vì dựa vào tên kiểu."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.DataOrientedProgramming/DataOrientedProgramming.md"
+      anchor: "dop-context"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Hệ thống đã tách code và dùng map bất biến nhưng vẫn nhận qty='2' dạng chuỗi từ client. Theo bốn nguyên tắc Sharvit, thiếu ranh giới gì?"
+    answer: "Cần schema độc lập mô tả kiểu/range ở lối vào và validator chạy trước hàm tính toán. Ba nguyên tắc còn lại là tách code khỏi data, biểu diễn bằng cấu trúc phổ dụng và giữ dữ liệu bất biến. JSON hợp lệ cú pháp không làm qty chuỗi thành integer; phải trả lỗi shape, không ép kiểu âm thầm rồi tạo số tiền sai. Một schema cũng phải theo phiên bản bên đọc."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.DataOrientedProgramming/DataOrientedProgramming.md"
+      anchor: "dop-sharvit-model"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Giải thích cho đội kỹ thuật vì sao Sharvit DOP, Project Amber Java DOP và performance DOD không được dùng thay thế nhau trong một ADR."
+    answer: "Sharvit nhấn dữ liệu phổ dụng, thao tác tách riêng, bất biến và schema độc lập; Java Amber nhấn giá trị có kiểu minh bạch, biến thể hợp lệ và pattern matching; DOD hiệu năng tối ưu layout dữ liệu, locality, cache hoặc SIMD. Map bất biến không tự tăng cache hit; record có kiểu không đồng nghĩa schema JSON runtime. ADR nên ghi vấn đề muốn giải quyết và bằng chứng benchmark hay contract tương ứng."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.DataOrientedProgramming/DataOrientedProgramming.md"
+      anchor: "dop-terminology"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Bạn sẽ thiết kế lộ trình bài tập DOP như thế nào để người học không nhầm thành công của phép tính với tính an toàn của input?"
+    answer: "Bắt đầu từ đọc map/list và trace 100; tiếp theo kiểm schema và thử qty sai, thiếu price, khóa lạ; rồi tạo snapshot mới không sửa bản cũ, cuối cùng quan sát HTTP 200/422/400 ở ranh giới. Cho người học phân biệt hợp đồng nhận data với thuật toán tính và việc lưu hay thu tiền. Kết quả đúng một fixture không chứng minh mọi input hợp lệ hoặc giao dịch đã được thực hiện."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.DataOrientedProgramming/DataOrientedProgramming.md"
+      anchor: "dop-learning-path"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+
+  - question: "Một order map được gửi cho cả calculator và exporter. Hãy giải thích ranh giới dữ liệu/thao tác mà không biến map thành đối tượng tự hành xử."
+    answer: "Map chỉ mô tả id, status, lines; `subtotal(order)` tính số còn `export(order)` định dạng theo quyền bên nhận. Hai hàm đứng ngoài dữ liệu nên có thể tiến hóa riêng nếu schema ổn định. Bên nhận vẫn phải biết kiểu và tên trường, và chỉ cung cấp bản chiếu an toàn; tách hành vi không đồng nghĩa bỏ kiểm soát trạng thái."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.CodeDataSeparation/CodeDataSeparation.md"
+      anchor: "code-data-concept"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Một Order có invariant phức tạp nhưng mười nhóm cần báo cáo lines. Bạn chọn cách kết hợp OOP và DOP để bảo vệ quyền ghi như thế nào?"
+    answer: "Tôi giữ lệnh thay đổi trạng thái tại chủ sở hữu Order và trả snapshot chỉ đọc đã lọc cho các hàm báo cáo. Không cho các báo cáo tự sửa `balance`, status hoặc list nguồn; nếu dùng map mutable cần copy ở ranh giới. Lợi ích là các phép đọc tái sử dụng dữ liệu nhưng invariant vẫn do domain quyết định; tôi kiểm tra cả leak trường nhạy cảm."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.CodeDataSeparation/CodeDataSeparation.md"
+      anchor: "behavior-coupling"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Cùng một snapshot tính được subtotal100 và báo cáo hai dòng. Vì sao không thể gửi nguyên bản map cho mọi bên?"
+    answer: "Khả năng nhìn thấy trường không phải quyền được nhận trường đó; id có thể nhận dạng khách, lines có thể chứa thông tin không cần cho người xem. Tôi xây bản chiếu phù hợp mục đích và version hợp đồng xuất. Mỗi consumer có thể cần schema khác, nên thử cả quyền đọc, thay đổi tên khóa và việc snapshot bị sửa qua alias."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.CodeDataSeparation/CodeDataSeparation.md"
+      anchor: "data-visibility"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Đổi khóa qty thành quantity làm mười hai hàm đọc lỗi. Vì sao tách thao tác ra ngoài không có nghĩa đã xóa coupling?"
+    answer: "Các hàm không phụ thuộc method của entity nhưng cùng dựa vào shape dữ liệu. Đổi khóa là thay API dữ liệu và phải cập nhật schema, bộ tạo, consumer, test hoặc thêm adapter tương thích. Tôi đo số nơi đọc khóa, cần migration rõ và không coi compile-time type an toàn khi đang dùng map động."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.CodeDataSeparation/CodeDataSeparation.md"
+      anchor: "separation-tradeoffs"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Bạn biểu diễn order A dưới dạng dữ liệu phổ dụng để người đọc có thể inspect trực tiếp. Vì sao map/list vừa linh hoạt vừa nguy hiểm?"
+    answer: "Map chứa id,status,lines; mỗi line có sku,qty,price. Nhiều thao tác có thể dùng cấu trúc này mà không cần class cho từng mục, nhưng dữ liệu chưa tin cậy có thể thiếu price, sai qty hoặc có trường lạ. Tôi giữ schema độc lập với phép xử lý, validate trước khi tính và tránh lộ map mutable qua nhiều nơi."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.GenericData/GenericData.md"
+      anchor: "generic-concept"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Với P(2,30), Q(1,40), bạn thiết kế test chứng minh phép subtotal100 đúng và chỉ ra API preview không phải checkout thật như thế nào?"
+    answer: "Cho schema chấp nhận hai dòng, nhân số lượng với đơn giá 2×30+1×40=100, dùng discountPercent10 cho discountedTotal90; kiểm before.status vẫn pending. Gửi POST preview và xác nhận HTTP200, accepted=true, before và after riêng. Không có bước lưu DB, ghi paid hay charge; kết quả 90 chỉ là giá dự kiến."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.GenericData/GenericData.md"
+      anchor: "generic-domain-example"
+    apiRelated:
+      controller: "OrderPreviewController"
+      methodSignature: "preview(Map<String,Object>,int)"
+  - question: "Hai thao tác cùng đọc order map nhưng một tính tổng và một xuất CSV. Vì sao không cần cùng kiểu trả về hay dùng biến global?"
+    answer: "Cả hai dựa vào cùng dữ liệu có shape rõ, nhưng output và trách nhiệm khác nhau: `subtotal` trả số, `export` trả text đã lọc. Dùng global sẽ tạo phụ thuộc ẩn và mutation ngoài hợp đồng. Để mở rộng, chúng nhận order snapshot như tham số, kiểm đầu vào ở ranh giới cần thiết và không tự thêm tác động thanh toán."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.GenericData/GenericData.md"
+      anchor: "generic-operations"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Caller gửi `qty:\"2\"`, `qty:-3` hoặc thiếu `price`. Vì sao trường hợp JSON hợp lệ vẫn phải bị từ chối, và phản hồi nào hợp lý?"
+    answer: "Cả ba JSON có thể parse thành map nhưng vi phạm schema: qty phải integer 1..10000 và price integer 0..1000000. Validator trả 422 accepted=false cùng đường dẫn `lines[i].qty` hay `lines[i].price` trước subtotal. Parser 400 chỉ dành cho cú pháp/tài liệu JSON mơ hồ như khóa trùng khi strict detection bật. Không được ép chuỗi sang số âm thầm."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.GenericData/GenericData.md"
+      anchor: "generic-failure-modes"
+    apiRelated:
+      controller: "OrderPreviewController"
+      methodSignature: "preview(Map<String,Object>,int)"
+  - question: "Bạn có map nội bộ chỉ gồm id và total đã được kiểm, nhưng map từ HTTP chứa lines lồng nhau. Có nên dùng cùng schema ở mọi bước không?"
+    answer: "Schema cần khớp hợp đồng và độ tin cậy tại từng ranh giới. Đầu vào HTTP phải kiểm id,status,lines và từng giá/số lượng, còn bản chiếu nội bộ có thể dùng schema hẹp cho id,total. Ép schema đơn đầy đủ sau mọi phép tính sẽ loại dữ liệu hợp lệ và thêm chi phí; bỏ hoàn toàn validation lại rủi ro. Version hợp đồng khi producer và consumer thay đổi."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.GenericData/GenericData.md"
+      anchor: "generic-contracts"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Tạo map kết quả mới nhưng chia sẻ list lines mutable của order cũ. Vì sao chưa đủ hứa snapshot bất biến?"
+    answer: "Bất biến của map ngoài không đảm bảo cả graph giá trị. Caller sửa list P từ qty2 lên qty3 sẽ khiến before đã báo cáo thay đổi theo, dù chưa gọi biến đổi mới. Tôi tạo các map line độc lập hoặc cấu trúc bất biến sâu, dùng `List.copyOf` sau khi các phần tử cũng an toàn, rồi thử alias mutation. Đọc được cùng dữ liệu khác với cho phép sửa cùng tham chiếu."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.ImmutableData/ImmutableData.md"
+      anchor: "dop-immutable-principle"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Hàm updateQuantity(order,P,3) nhận order có P qty2. Bạn sẽ viết hợp đồng trước/sau ra sao để chứng minh không sửa dữ liệu nguồn?"
+    answer: "Tôi giữ `before.lines.P.qty=2`, tạo line P mới qty3, và danh sách lines mới trong after, các dòng Q không đổi. Test giữ reference before trước lời gọi, đối chiếu cả content sau đó và thay đổi nested ở after (nếu được phép) không thể ảnh hưởng before. Tạo map ngoài rồi sửa chung list cũ là shallow copy sai. Việc tạo dữ liệu mới chưa hề lưu vào DB."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.ImmutableData/ImmutableData.md"
+      anchor: "dop-state-update"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "API preview trả before và after. Hãy phân biệt bằng chứng chuyển đổi trong response với lịch sử bền vững của đơn hàng."
+    answer: "Hai giá trị cho phép đối chiếu phép tính 100→90 và id/status/lines được giữ, nên minh họa chuyển đổi dữ liệu không sửa input. Nhưng chúng chỉ sống trong response; không có bảng phiên bản, ghi DB hay transaction. Muốn lịch sử bền vững phải định nghĩa chủ sở hữu bản hiện hành và thao tác lưu có điều kiện. Nếu API chạy hai lần không có nghĩa có hai lần thanh toán."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.ImmutableData/ImmutableData.md"
+      anchor: "dop-state-history"
+    apiRelated:
+      controller: "OrderPreviewController"
+      methodSignature: "preview(Map<String,Object>,int)"
+  - question: "Hai worker cùng tạo v5 từ v4 bất biến và đều muốn lưu. Vì sao chỉ dùng map immutable không chống lost update?"
+    answer: "Immutable bảo vệ từng snapshot không bị sửa tại chỗ, nhưng quyền thay bản current vẫn là shared state. Nếu lưu đè không kiểm v4, bản ghi sau xóa thay đổi của worker trước. Tôi đặt compare-and-swap, optimistic version check hoặc lock tại kho dữ liệu và định nghĩa chiến lược conflict/retry. API preview không thực hiện phần phối hợp này và không nên tuyên bố có tính nguyên tử."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.ImmutableData/ImmutableData.md"
+      anchor: "dop-state-coordination"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Một map có qty=2 còn schema quy định qty integer 1..10000. Giải thích tại sao schema phải là hợp đồng tách khỏi giá trị dữ liệu cụ thể."
+    answer: "`qty=2` mô tả một lần nhập cụ thể, không chứng minh rằng qty âm, chuỗi hoặc null đều hợp lệ. Schema riêng ghi tên trường, kiểu, range, status pending, số dòng 1..20 và quy tắc trường lạ. Nó áp dụng cho nhiều input và có thể version độc lập. Parser JSON chỉ tạo map từ cú pháp hợp lệ; validator mới đặt giới hạn domain trước khi tính tiền."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.DataSchema/DataSchema.md"
+      anchor: "dop-schema-concept"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Map projection nội bộ chỉ có id,total có cần schema đơn đầy đủ như payload HTTP không? Giải thích theo hậu quả khi tin sai."
+    answer: "Không nhất thiết. Đầu vào HTTP chưa tin cậy phải kiểm sâu vì thiếu price hay sai qty có thể tạo số tiền sai; bản chiếu id,total đã tính và kiểm có hợp đồng hẹp của consumer. Tuy nhiên dữ liệu gửi cho đối tác khác hoặc dùng ghi tiền vẫn cần validation theo rủi ro mới. Dùng một schema global sau mọi bước gây loại dữ liệu hợp lệ, còn bỏ schema ở biên ngoài là nguy hiểm."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.DataSchema/DataSchema.md"
+      anchor: "dop-schema-optional"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Thiết kế request preview để phân biệt lỗi JSON trùng khóa với qty sai kiểu; bạn đặt trách nhiệm ở tầng nào?"
+    answer: "Jackson với strict duplicate detection từ chối tài liệu có hai khóa `qty` trước khi tạo map, nên kết quả parser-level HTTP400. Khi JSON hợp lệ nhưng `qty:\"2\"`, validator schema trả HTTP422 accepted=false kèm đường dẫn `lines[0].qty`; sau khi không còn issue mới cho chạy subtotal. Quan sát này là bằng chứng ranh giới tin cậy thực, không phải một quy tắc mà trình biên dịch Java tự đảm bảo."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.DataSchema/DataSchema.md"
+      anchor: "dop-validation-boundaries"
+    apiRelated:
+      controller: "OrderPreviewController"
+      methodSignature: "preview(Map<String,Object>,int)"
+  - question: "Một request có lines[1].qty=-3 và request khác chứa khóa qty lặp. Làm sao kiểm tra mã lỗi và thông tin phản hồi không gây lộ dữ liệu?"
+    answer: "`-3` hợp lệ về token nhưng trái range, nên 422, accepted=false, stage boundaryValidation và error path lines[1].qty. Khóa lặp làm JSON mơ hồ nên bị parser 400, không đi vào schema. Tôi test cả hai, xác nhận không trả after hay thực hiện tính/charge, và không echo toàn bộ nội dung bí mật của input; field path và bounded error value đủ để chẩn đoán."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.DataSchema/DataSchema.md"
+      anchor: "dop-validation-failure"
+    apiRelated:
+      controller: "OrderPreviewController"
+      methodSignature: "preview(Map<String,Object>,int)"
+  - question: "Team muốn thêm trường bắt buộc currency vào v2 khi client v1 vẫn gửi payload cũ. Bạn thiết kế migration không che sai đơn vị tiền ra sao?"
+    answer: "Tôi công bố version schema và chính sách tương thích: có thể endpoint v1 riêng, adapter chuyển đổi có điều kiện rõ hoặc cho currency optional trong giai đoạn chuyển. Không suy currency từ số lines hay chọn mặc định tùy ý vì dễ nhân sai đơn vị. Theo dõi client cũ, test cả version và chỉ bật bắt buộc sau lộ trình nâng cấp. Mọi consumer map dùng tên trường mới cần được cập nhật."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.DataSchema/DataSchema.md"
+      anchor: "dop-schema-tradeoffs"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Hãy trình bày end-to-end thử nghiệm preview đơn A với P(2,30), Q(1,40) và discountPercent10. Kết quả này không chứng minh điều gì?"
+    answer: "JSON đi vào parser, schema kiểm id/status pending và hai lines, subtotal=2×30+1×40=100, tính discountedTotal=90, HTTP200 với before/after. Kết quả minh họa dữ liệu phổ dụng, hợp đồng và biến đổi không sửa snapshot. Nó không chứng minh tiền đã được thu, trạng thái paid, transaction hay có bản ghi database; endpoint chỉ là thí nghiệm tính giá giới hạn."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.DataFlow/DataFlow.md"
+      anchor: "dop-flow-scenario"
+    apiRelated:
+      controller: "OrderPreviewController"
+      methodSignature: "preview(Map<String,Object>,int)"
+  - question: "Thiết kế test các ranh giới input của preview gồm duplicate JSON, missing price, qty âm, field lạ và discount ngoài 0..100."
+    answer: "Tài liệu JSON trùng khóa dừng tại parser 400. JSON parse được nhưng thiếu price hoặc qty âm tạo 422 với field path; field lạ bị schema từ chối, và `discountPercent` ngoài [0,100] cũng tạo 422 với path tương ứng. Request hợp lệ trả 200. Tôi kiểm tra cả status và body để không nhầm lỗi cú pháp với lỗi domain; không có request invalid nào được phép biến thành charge hoặc lưu trữ."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.DataFlow/DataFlow.md"
+      anchor: "dop-flow-validate"
+    apiRelated:
+      controller: "OrderPreviewController"
+      methodSignature: "preview(Map<String,Object>,int)"
+  - question: "Bạn muốn kiểm chứng before và after trong một response 200 thật; vì sao subtotal/discountedTotal có thể thay đổi mà lines và status phải giữ?"
+    answer: "Service tạo snapshot `before` từ những lines đã kiểm, sau đó `after` có các trường subtotal,discountPercent,discountedTotal mới nhưng dùng giá trị dòng hàng an toàn và status pending. Discount10 chỉ thay số tiền dự kiến 100→90, không quyết định thanh toán. Test so toàn bộ lines và status giữa hai snapshot và kiểm observation `externalPaymentOrPersistencePerformed=false`, chứ không chỉ nhìn số 90."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.DataFlow/DataFlow.md"
+      anchor: "dop-flow-transform"
+    apiRelated:
+      controller: "OrderPreviewController"
+      methodSignature: "preview(Map<String,Object>,int)"
+  - question: "Một người muốn nối bước persist và charge vào preview để gọi nó là checkout. Các hậu quả đồng thời và lỗi một phần nào xuất hiện?"
+    answer: "Lúc này phải có chủ sở hữu bản hiện hành, version check khi hai request tranh v4, idempotency key cho retry charge và trạng thái xử lý approved/declined. Nếu đã debit nhưng ghi DB lỗi, không có guarantee rollback phân tán; cần phục hồi/đối soát rõ. Mô hình data-first và snapshot bất biến không tự cung cấp transaction. Đây là công việc của module điều phối thanh toán, không phải API preview hiện tại."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.DataFlow/DataFlow.md"
+      anchor: "dop-flow-coordinate"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Khi API trả 422, vì sao quan sát field path quan trọng hơn chỉ thấy một status code, và các ca nào chứng minh 400 khác 422?"
+    answer: "Tôi quan sát stage boundaryValidation, accepted=false và đường `lines[1].qty` hay `lines[1].price` để biết dữ liệu bị từ chối trước phép tính. JSON hai khóa `qty` bị parser phát hiện sớm nên 400, không có map cho validator. Trong test matrix, 200 trên P/Q hợp lệ còn 422 cho sai kiểu, thiếu field, discount vượt range. Lỗi cần bounded diagnostics và không echo raw payload nhạy cảm."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.DataFlow/DataFlow.md"
+      anchor: "dop-flow-observe"
+    apiRelated:
+      controller: "OrderPreviewController"
+      methodSignature: "preview(Map<String,Object>,int)"
+  - question: "Project Amber dùng tên Data-Oriented Programming nhưng tại sao không đồng nghĩa phải thay mọi domain object bằng Map<String,Object>?"
+    answer: "Amber nhấn model dữ liệu có kiểu, minh bạch, bất biến và một tập biến thể đầy đủ để compiler hỗ trợ pattern matching. Một sealed hierarchy Payment có Pending,Paid,Rejected không cùng biểu diễn với map phổ dụng của Sharvit; cả hai đều tách phép xử lý khỏi việc bao giấu logic trong entity. Không nên dùng tên giống nhau để kết luận khả năng kiểm kiểu hoặc schema runtime giống nhau."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.JavaPerspective/JavaPerspective.md"
+      anchor: "amber-definition"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Một Java record chứa `List<Line>` và team khẳng định mọi snapshot an toàn. Bạn phản biện bằng alias nào?"
+    answer: "Record có field final và cấu trúc dễ đọc, nhưng list hoặc Line có thể mutable. Giữ reference tới list khi xây record rồi `add` một phần tử sẽ làm record quan sát dữ liệu khác; constructor cần defensive copy và Line bên trong phải ổn định nếu cam kết bất biến sâu. Ngược lại DOP theo Sharvit có thể dùng map/list bất biến ở runtime, nhưng không tự nhận type safety của record."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.JavaPerspective/JavaPerspective.md"
+      anchor: "amber-transparent-data"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Hệ thống có `paid=true` và `rejected=true` đồng thời. Hãy thiết kế lại trạng thái Java để loại lỗi ở tầng mô hình."
+    answer: "Tôi dùng biến thể độc quyền `Pending`, `Paid(receipt)` và `Rejected(reason)` trong sealed interface, mỗi instance chỉ có một trường hợp hợp lệ. Constructor validate payload receipt/reason; pattern match ở thao tác riêng phải xử lý hết các variant. Điều này ngăn một số trạng thái mâu thuẫn ở compile/model level, nhưng không tự chứng minh provider đã trả tiền hay giải quyết cạnh tranh lưu phiên bản."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.JavaPerspective/JavaPerspective.md"
+      anchor: "amber-valid-variants"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Một hàm `describe(payment)` phải phục vụ Pending, Paid và Rejected. Điểm nào cho thấy tách operation khỏi dữ liệu là hữu ích?"
+    answer: "Một cây dữ liệu có kiểu mô tả các trường hợp; `describe` xử lý bằng pattern match và trả text, thao tác `audit` khác có thể đọc cùng cấu trúc mà không thêm method cho từng class. Với sealed variant, khi thêm case mới, compiler có thể giúp phát hiện switch thiếu nhánh. Tuy vậy data model và operation phải tiến hóa cùng nhau, và I/O trong operation vẫn là side effect."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.JavaPerspective/JavaPerspective.md"
+      anchor: "amber-separate-operations"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Trong thiết kế phải nhận JSON động từ HTTP nhưng tính toán nội bộ bằng Java record có kiểu. Bạn sẽ dùng hai mô hình như thế nào?"
+    answer: "Ở biên nhận map chưa tin cậy, dùng parser strict và schema runtime kiểm sâu, trả 400/422 rõ. Chỉ sau khi hợp lệ mới chuyển sang record/variant có kiểu cho logic nội bộ; thao tác tính có thể tách riêng. Record không thay thế validation đối với input ngoài, và map không thay thế invariant của dữ liệu có kiểu. Chọn ranh giới theo quyền tin cậy và hậu quả, không tranh cãi map hay record luôn tốt hơn."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.JavaPerspective/JavaPerspective.md"
+      anchor: "amber-sharvit-comparison"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Một đơn có invariant phức tạp và rất nhiều hàm báo cáo cùng đọc. Khi nào giữ encapsulation OOP, khi nào xuất bản data-first projection?"
+    answer: "Tôi giữ quyền ghi và điều kiện trạng thái hợp lệ trong đối tượng domain; chỉ xuất snapshot/bản chiếu đọc theo schema đã công bố cho nhiều phép xử lý. Nếu dữ liệu có thông tin nhạy cảm, mỗi consumer nhận đúng trường được phép. Chi phí của DOP là version shape và validation; chi phí của OOP là coupling hành vi nếu chỉ muốn xem dữ liệu. Quyết định dựa trên trách nhiệm thực, không dựa vào số class ít hay nhiều."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.Tradeoffs/Tradeoffs.md"
+      anchor: "dop-choose"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Mười hai hàm đang đọc key lines của map, sau đó data producer muốn đổi thành items. Bạn đánh giá chi phí và kế hoạch tương thích ra sao?"
+    answer: "Tôi liệt kê consumer, contract test và báo cáo đang đọc lines, rồi chọn migration qua schema version, adapter tương thích hoặc hỗ trợ hai key có kiểm soát trong giai đoạn chuyển. Nếu chỉ đổi bên tạo, các hàm đọc có thể nhận null hoặc bỏ dữ liệu, không được trình bày như refactor miễn phí. Đồng thời đo chi phí copy snapshot, quyền truy cập trường và khả năng debug; tách code/data chuyển chỗ coupling chứ không làm nó biến mất."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.Tradeoffs/Tradeoffs.md"
+      anchor: "dop-costs"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Hàm nhận map phổ dụng nhưng đọc tỷ giá từ DB rồi tính discount. Vì sao nó thuộc lối data-first mà không hề thuần, và sửa thế nào?"
+    answer: "DOP quyết định biểu diễn và nơi đặt operation, còn purity đòi mọi input thực rõ và không có tác động/phụ thuộc ngoài. Đọc DB là phụ thuộc vào thời điểm và I/O, nên phép tính cùng map có thể ra số khác. Tôi cho adapter chụp tỷ giá và truyền snapshot vào hàm tính thuần, vẫn giữ schema cho map chưa tin cậy. Cả DOP lẫn FP có thể dùng chung dữ liệu nhưng không đồng nghĩa nhau."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.Tradeoffs/Tradeoffs.md"
+      anchor: "dop-functional-relation"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Nhóm khẳng định chuyển sang map bất biến sẽ tăng CPU cache locality. Bạn cần bằng chứng nào để phân biệt DOP kiến trúc và DOD hiệu năng?"
+    answer: "Sharvit DOP nói cách tách dữ liệu và thao tác, tính bất biến và schema; nó không đảm bảo layout liên tiếp trên RAM. DOD hiệu năng xem layout, allocation, pointer chasing, cache miss và SIMD theo workload. Tôi benchmark cả cách map và biểu diễn array/struct phù hợp, đo throughput, GC, cache hoặc memory footprint trước khi kết luận. Không lấy số lượng class đã xóa làm số liệu hiệu năng."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.Tradeoffs/Tradeoffs.md"
+      anchor: "dop-versus-dod"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "API preview trả 200 với subtotal100, discountedTotal90, status pending. Khi được hỏi đưa tính năng vào production checkout, bạn chia những phần nào sang module khác?"
+    answer: "Preview chỉ chứng minh đầu vào hợp schema, phép subtotal/discount và before/after không ghi state. Checkout thật cần hợp đồng order identity/invariant, lưu phiên bản chống lost update, adapter thanh toán có timeout/idempotency, diễn giải approved/declined và phục hồi khi charge thành công nhưng save lỗi. Không được nói preview đã thu tiền hay đảm bảo transaction. Tôi dùng 200/422/400 để kiểm biên dữ liệu, không dùng chúng làm bằng chứng tài chính."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.Tradeoffs/Tradeoffs.md"
+      anchor: "dop-handoff"
+    apiRelated:
+      controller: "OrderPreviewController"
+      methodSignature: "preview(Map<String,Object>,int)"

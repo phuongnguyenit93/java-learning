@@ -1,0 +1,6 @@
+OrderPreviewController:
+  description: |-
+    <h2>Thí nghiệm đơn hàng theo DOP</h2>
+    <p>Thí nghiệm HTTP có giới hạn, không giữ trạng thái: dữ liệu đơn hàng bằng map/list được schema độc lập kiểm tra tại ranh giới tin cậy rồi các hàm riêng tạo giá trị mới. Phản hồi chứa lỗi theo trường hoặc hai bản dữ liệu trước/sau, không giả vờ đã thanh toán hay ghi cơ sở dữ liệu.</p>
+  readmeRelated:
+    file: 6.DataFlow/DataFlow.md

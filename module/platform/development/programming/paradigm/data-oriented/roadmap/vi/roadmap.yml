@@ -41,4 +41,119 @@
 # Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: dop-foundation
+    relatedKnowledge:
+      - DataOrientedProgramming
+    title: "Lập trình hướng dữ liệu: Vấn đề, phạm vi và mô hình tư duy"
+    purpose: >-
+      Làm quen với lập trình hướng dữ liệu (DOP) từ đầu: vì sao gắn chặt
+      thao tác với dữ liệu ứng dụng có thể thay đổi làm giảm khả năng tái
+      sử dụng, và cách nhìn tập trung vào dữ liệu thay đổi thiết kế.
+    objectives:
+      - "Đối chiếu đối tượng tự nắm giữ hành vi với dữ liệu có thể quan sát và được biến đổi bằng các hàm riêng, qua ví dụ đơn giản."
+      - "Nhận diện trọng tâm DOP theo Yehonathan Sharvit; phân biệt hướng DOP trong Java/Project Amber và Data-Oriented Design (DOD) chú trọng hiệu năng bộ nhớ."
+
+  - id: dop-code-data-separation
+    relatedKnowledge:
+      - CodeDataSeparation
+    title: "Tách hành vi xử lý khỏi dữ liệu"
+    purpose: >-
+      Hiểu nguyên tắc DOP đầu tiên: tổ chức phép xử lý độc lập với dữ
+      liệu ứng dụng để nhiều quy trình có thể quan sát và tái sử dụng
+      cùng một giá trị.
+    objectives:
+      - "Phân biệt giá trị được lưu giữ, cấu trúc của giá trị và hàm xử lý giá trị đó."
+      - "Nhận ra việc giấu hành vi trong đối tượng hoặc vùng bao của hàm có thể làm dữ liệu lệ thuộc vào một thao tác; không đồng nhất nguyên tắc này với yêu cầu mọi hàm đều thuần."
+
+  - id: dop-generic-representation
+    relatedKnowledge:
+      - GenericData
+    title: "Biểu diễn dữ liệu bằng cấu trúc phổ dụng"
+    purpose: >-
+      Hiểu vì sao DOP theo Sharvit ưu tiên cấu trúc dễ quan sát như map
+      và list, thay vì bắt buộc tạo loại đối tượng mang hành vi riêng
+      cho mỗi hình dạng dữ liệu.
+    objectives:
+      - "Biểu diễn ví dụ nghiệp vụ đơn giản bằng dữ liệu lồng nhau và giải thích cách xử lý chung có thể đọc hoặc biến đổi dữ liệu."
+      - "Nhận biết rủi ro sai tên khóa, sai cấu trúc và thiếu hợp đồng kiểu tĩnh trước khi học mô tả dữ liệu và kiểm tra hợp lệ."
+
+  - id: dop-immutable-state
+    relatedKnowledge:
+      - ImmutableData
+    title: "Dữ liệu bất biến và chuyển đổi trạng thái"
+    purpose: >-
+      Diễn đạt sự thay đổi bằng cách tạo giá trị mới thay vì sửa trực
+      tiếp giá trị dùng chung, nhưng vẫn phân biệt dữ liệu bất biến
+      với ứng dụng hoàn toàn không có trạng thái.
+    objectives:
+      - "Theo dõi cập nhật từ giá trị cũ sang giá trị mới, giữ được bản cũ để đối chiếu, kiểm thử và gỡ lỗi."
+      - "Phân biệt biến đổi giá trị bất biến với yêu cầu đồng bộ khi nhiều tác nhân cùng cập nhật trạng thái ứng dụng."
+
+  - id: dop-schema-boundaries
+    relatedKnowledge:
+      - DataSchema
+      - GenericData
+    title: "Mô tả cấu trúc dữ liệu và kiểm tra tại ranh giới"
+    purpose: >-
+      Hiểu nguyên tắc DOP thứ tư của Sharvit: bản mô tả cấu trúc và ràng
+      buộc tồn tại độc lập với dữ liệu đang được biểu diễn, nhờ đó có
+      thể kiểm tra đầu vào rõ ràng ở ranh giới tin cậy.
+    dependsOn:
+      - dop-generic-representation
+    objectives:
+      - "Phân biệt dữ liệu cụ thể, mô tả cấu trúc (schema) và kết quả kiểm tra thông qua đầu vào hợp lệ, không hợp lệ."
+      - "Giải thích vì sao dữ liệu linh hoạt cần được kiểm tra, không biến module thành hướng dẫn JSON Schema, ORM, cơ sở dữ liệu hoặc thư viện tuần tự hóa."
+
+  - id: dop-application-flow
+    relatedKnowledge:
+      - DataFlow
+      - DataSchema
+      - ImmutableData
+    title: "Kết hợp thành luồng xử lý dữ liệu hoàn chỉnh"
+    purpose: >-
+      Áp dụng các nguyên tắc vào một tình huống thực tế: tiếp nhận dữ
+      liệu, kiểm tra, tạo kết quả bất biến và chuyển kết quả qua ranh
+      giới với hệ thống khác.
+    dependsOn:
+      - dop-code-data-separation
+      - dop-generic-representation
+      - dop-immutable-state
+      - dop-schema-boundaries
+    objectives:
+      - "Giải thích vai trò của biểu diễn dữ liệu, hàm xử lý dùng lại, điều phối trạng thái và kiểm tra ranh giới trong cùng ví dụ."
+      - "Đánh giá khả năng kiểm thử, quan sát và xử lý lỗi mà không cho rằng map phổ dụng hay dữ liệu bất biến sẽ loại bỏ mọi lỗi hoặc tranh chấp đồng thời."
+
+  - id: dop-java-amber-perspective
+    relatedKnowledge:
+      - JavaPerspective
+      - DataOrientedProgramming
+    title: "Góc nhìn DOP liên quan trong Java"
+    purpose: >-
+      Nhận biết cách Java/Project Amber cũng dùng tên DOP: mô hình dữ liệu
+      bất biến và minh bạch, thể hiện đầy đủ và chỉ đúng dữ liệu cần thiết,
+      biểu diễn các trường hợp hợp lệ để loại trừ trạng thái bất hợp lệ,
+      đồng thời tách thao tác khỏi dữ liệu.
+    dependsOn:
+      - dop-code-data-separation
+      - dop-immutable-state
+    objectives:
+      - "So sánh cách Java mô hình hóa đầy đủ và đúng các biến thể dữ liệu hợp lệ với cấu trúc dữ liệu phổ dụng và schema tách rời của Sharvit; nhận ra đây là hai cách diễn giải DOP có điểm chung nhưng không đồng nhất."
+      - "Hiểu ở mức ý tưởng vì sao record, sealed hierarchy và pattern matching hỗ trợ dữ liệu minh bạch, xác định biến thể hợp lệ và xử lý các trường hợp; để cú pháp/quy tắc theo phiên bản Java cho module ngôn ngữ."
+
+  - id: dop-synthesis
+    relatedKnowledge:
+      - Tradeoffs
+      - DataFlow
+      - JavaPerspective
+    title: "Lựa chọn cách thiết kế hướng dữ liệu phù hợp"
+    purpose: >-
+      Quyết định khi nào cách tổ chức tập trung vào dữ liệu giúp hệ
+      thống dễ hiểu hơn, khi nào trách nhiệm trong đối tượng phù hợp
+      hơn, và vì sao DOP khác DOD chú trọng phần cứng.
+    dependsOn:
+      - dop-application-flow
+      - dop-java-amber-perspective
+    objectives:
+      - "So sánh DOP với lập trình hướng đối tượng và lập trình hàm, cân nhắc chi phí kiểm tra dữ liệu, giảm đóng gói, tính linh hoạt và bảo trì."
+      - "Phân biệt cách biểu diễn chương trình với tối ưu bố trí bộ nhớ, cache và SIMD; chuyển kỹ thuật record Java, persistence, thiết kế miền và tối ưu cấp thấp về đúng module chuyên sâu."

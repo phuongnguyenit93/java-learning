@@ -1,0 +1,15 @@
+OrderPreviewController:
+  preview(Map<String,Object>,int):
+    execution: |-
+      <p><b>Khái niệm:</b> DOP theo Sharvit tách dữ liệu phổ dụng, schema và các hàm xử lý. Qua ranh giới HTTP, người học có thể tự gửi nhiều hình dạng dữ liệu chưa được tin cậy để quan sát thay vì chỉ đọc một ví dụ cố định.</p>
+      <ol>
+        <li><b>Chuẩn bị:</b> POST với <code>discountPercent=10</code> và dữ liệu <code>{"id":"A","status":"pending","lines":[{"sku":"P","qty":2,"price":30},{"sku":"Q","qty":1,"price":40}]}</code>.</li>
+        <li><b>Kiểm tra:</b> <code>OrderShapeSchema</code> độc lập kiểm tra trường bắt buộc, cấu trúc lồng nhau, số lượng nguyên dương và giá hợp lệ, trước khi tính toán.</li>
+        <li><b>Biến đổi:</b> hàm riêng tính <code>2*30 + 1*40 = 100</code>, giữ một bản dữ liệu đầu vào bất biến và tạo bản kết quả mới giảm 10% còn <code>90.00</code>.</li>
+        <li><b>Thử đường lỗi schema:</b> đổi số lượng ở dòng hai thành <code>-3</code>, bỏ <code>price</code>, đổi <code>status</code> thành <code>paid</code> hoặc cho <code>id</code> dài hơn 64 ký tự. HTTP 422 trả <code>accepted=false</code>, vị trí như <code>lines[1].qty</code> và mô tả giá trị sai có độ dài giới hạn; không tự gán 0.</li>
+        <li><b>Thử lỗi JSON:</b> gửi JSON sai cú pháp hoặc lặp lại khóa <code>status</code> trong cùng object. Parser từ chối HTTP 400 trước bước kiểm tra schema, thay vì âm thầm chỉ giữ giá trị cuối.</li>
+        <li><b>Giới hạn:</b> không có cơ sở dữ liệu, trạng thái dùng chung, thao tác thu tiền hoặc giao dịch giả. Trả JSON không đồng nghĩa một tác động nghiệp vụ ngoài đời đã xảy ra.</li>
+      </ol>
+      <p><b>Bằng chứng:</b> cùng endpoint xử lý đầu vào hợp lệ và không hợp lệ theo hai đường, kèm cấu trúc dữ liệu gốc/mới và lỗi theo trường; schema có thể quan sát độc lập.</p>
+      <p><b>Kết luận:</b> biểu diễn dữ liệu, kiểm tra ranh giới và hàm biến đổi độc lập là những trách nhiệm khác nhau. Chính payload JSON do người học tự thay đổi tạo bằng chứng chạy thật vượt quá ví dụ tĩnh.</p>
+    usage: true
