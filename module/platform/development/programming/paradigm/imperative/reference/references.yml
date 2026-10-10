@@ -14,3 +14,14 @@
 #
 # Add only curated references that are useful for the module.
 # The build system must not overwrite this file after authored content exists.
+
+references:
+  - title: "Java Language Specification, Java SE 21 — Chapter 14: Blocks, Statements, and Patterns"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-14.html"
+    description: "Official statement and execution-order semantics; use as Java evidence for the language-neutral imperative mental model."
+  - title: "The Java Tutorials — Control Flow Statements"
+    url: "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/flow.html"
+    description: "Official beginner-oriented examples of sequencing, branching, and looping; Java syntax details belong to Java language modules."
+  - title: "Structure and Interpretation of Computer Programs — Assignment and Local State"
+    url: "https://sicp.sourceacademy.org/chapters/3.1.html"
+    description: "Primary textbook treatment of mutable state, assignment, and history-dependent computation, with a useful contrast to pure computation."

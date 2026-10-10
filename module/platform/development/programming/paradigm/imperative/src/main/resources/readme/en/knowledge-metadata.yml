@@ -19,3 +19,107 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+  imperative-learning-path:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+2.StateAndCommands/StateAndCommands.md:
+  imperative-state-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  imperative-commands-values:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  imperative-assignment:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  imperative-sequencing:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  imperative-state-tracing:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  imperative-unexpected-mutation:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+3.ControlFlow/ControlFlow.md:
+  imperative-control-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  imperative-branch-selection:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  imperative-repetition:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  imperative-loop-progress:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  imperative-termination:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  imperative-control-trace:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+4.ProceduralProgramming/ProceduralProgramming.md:
+  imperative-procedure-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  imperative-procedure-contract:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  imperative-procedure-local-state:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  imperative-procedure-effects:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  imperative-procedure-decomposition:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  imperative-procedure-limitations:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+5.Tradeoffs/Tradeoffs.md:
+  imperative-correctness:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  imperative-state-risks:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  imperative-debug-tracing:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  imperative-control-tradeoffs:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  imperative-declarative-contrast:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  imperative-paradigm-bridges:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false

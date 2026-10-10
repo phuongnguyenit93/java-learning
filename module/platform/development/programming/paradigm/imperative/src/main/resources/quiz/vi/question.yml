@@ -1,0 +1,762 @@
+# <quiz-schema>
+# Cấu trúc câu hỏi Quiz
+# schema-version: 3
+#
+# questions [kiểu: list; bắt buộc; mặc định: []; duy nhất theo: id]
+#   Danh sách câu hỏi Quiz của module trong language hiện tại.
+#   mỗi phần tử:
+#     id [kiểu: string; bắt buộc; mặc định: ""]
+#       ID ổn định và duy nhất của câu hỏi.
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi hiển thị cho người học.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu câu hỏi được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu câu hỏi đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+#     answers [kiểu: list; bắt buộc; số phần tử: 4; mặc định: []; duy nhất theo: id]
+#       Chính xác bốn đáp án. ID A/B/C/D là identity nội bộ ổn định, không phải vị trí hiển thị sau khi frontend shuffle.
+#       mỗi phần tử:
+#         id [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#           Identity ổn định của đáp án.
+#         answer [kiểu: string; bắt buộc; mặc định: ""]
+#           Nội dung đáp án hiển thị cho người học.
+#         explanation [kiểu: string; bắt buộc; mặc định: ""]
+#           Giải thích hiển thị khi người học chọn đáp án này, bất kể đúng hay sai.
+#     correctAnswerId [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#       ID nội bộ của đáp án đúng. Frontend kiểm tra bằng identity này sau khi shuffle.
+# </quiz-schema>
+
+
+questions:
+  - id: "imperative-imperative-what"
+    question: "Một báo cáo chỉ in số dư hiện tại mà không sửa dữ liệu. Vì sao bước đó vẫn thuộc lối mệnh lệnh?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Introduction/ImperativeProgramming.md"
+      anchor: "imperative-what"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Nó cấp phát kết quả bất biến thay vì cập nhật một trường."
+        explanation: "Giá trị bất biến dùng được ở nhiều lối lập trình, không phải dấu hiệu quyết định."
+      - id: B
+        answer: "Nó là một thao tác được chỉ định trong trình tự chương trình."
+        explanation: "In là một hành động dù dữ liệu lưu không đổi; lối mệnh lệnh nhấn mạnh luồng thực thi."
+      - id: C
+        answer: "Nó chỉ mô tả kết quả cần đạt mà không chỉ định thao tác."
+        explanation: "Lệnh in nói rõ thao tác phải chạy, không chỉ nêu kết quả đích."
+      - id: D
+        answer: "Nó phải sửa bộ nhớ trước khi báo cáo được tạo."
+        explanation: "Đọc và in vẫn có thể giữ nguyên mọi biến đang lưu."
+    correctAnswerId: B
+  - id: "imperative-imperative-why"
+    question: "Một lần rút có thể làm tài khoản âm. Trình tự nào giữ đúng quy tắc không âm?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Introduction/ImperativeProgramming.md"
+      anchor: "imperative-why"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Trừ trước rồi mới báo phép trừ có hợp lệ hay không."
+        explanation: "Kiểm tra sau khi ghi có thể làm trạng thái tạm thời bị sai."
+      - id: B
+        answer: "In số dư dự kiến rồi trừ mà không kiểm tra."
+        explanation: "In một số dự kiến không kiểm soát được lệnh ghi phía sau."
+      - id: C
+        answer: "Trừ rồi khôi phục nếu kết quả âm."
+        explanation: "Ghi bù sau đó vẫn cho phép trạng thái bị cấm xuất hiện."
+      - id: D
+        answer: "Kiểm tra yêu cầu và số dư trước khi cho phép trừ."
+        explanation: "Điều kiện chặn không cho lệnh ghi sai chạy ngay từ đầu."
+    correctAnswerId: D
+  - id: "imperative-imperative-before"
+    question: "Số dư đầu là 100, yêu cầu rút hợp lệ 30. Bằng chứng nào nói lên nhiều hơn mỗi đáp số 70?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Introduction/ImperativeProgramming.md"
+      anchor: "imperative-before"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Vết gồm tiền rút dương, đủ số dư và sau đó đúng một lần ghi."
+        explanation: "Vết chứng minh kết quả đến từ đúng trình tự được phép."
+      - id: B
+        answer: "Một phép trừ 100 trừ 30 không có ghi nhận nhánh."
+        explanation: "Chỉ phép tính không nói được các kiểm tra có chạy hay không."
+      - id: C
+        answer: "Một dòng log in ra trước khi kiểm tra số dư."
+        explanation: "Dòng log chưa chứng minh đường đi hợp lệ và việc ghi trạng thái."
+      - id: D
+        answer: "Một yêu cầu thứ hai tình cờ trả cùng số."
+        explanation: "Hai đầu ra bằng nhau chưa chứng minh điều kiện và thứ tự đúng."
+    correctAnswerId: A
+  - id: "imperative-imperative-solution"
+    question: "Sau khi tính 100 trừ 30, biến balance vẫn lưu 100. Bước nào thực sự đổi trạng thái?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Introduction/ImperativeProgramming.md"
+      anchor: "imperative-solution"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Đọc lại số dư ban đầu để so sánh."
+        explanation: "Bước đọc có thể cho giá trị mà không sửa ô lưu."
+      - id: B
+        answer: "Kiểm tra 100 đủ lớn hơn hoặc bằng 30 và nhận đúng."
+        explanation: "Điều kiện trả Boolean nhưng chưa gán số dư mới."
+      - id: C
+        answer: "Gán kết quả tính 70 vào biến balance."
+        explanation: "Phép gán đưa kết quả đã tính vào ô lưu hiện hành."
+      - id: D
+        answer: "Định dạng số 70 thành thông báo cho bên gọi."
+        explanation: "Có thể tạo thông báo mà tài khoản vẫn không đổi."
+    correctAnswerId: C
+  - id: "imperative-imperative-boundary"
+    question: "Phát biểu nào mô tả đúng quan hệ giữa mệnh lệnh, khai báo và hướng đối tượng trong thao tác rút tiền?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Introduction/ImperativeProgramming.md"
+      anchor: "imperative-boundary"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Một lần rút phải chọn duy nhất một paradigm cho toàn bộ phần triển khai."
+        explanation: "Các góc nhìn tổ chức khác nhau có thể cùng xuất hiện."
+      - id: B
+        answer: "Quy tắc khai báo ngăn đối tượng tài khoản sở hữu số dư."
+        explanation: "Quy tắc mô tả điều kiện không loại bỏ chủ sở hữu trạng thái."
+      - id: C
+        answer: "Phương thức hướng đối tượng không thể chứa lệnh tuần tự hay rẽ nhánh."
+        explanation: "Phương thức thường chạy các câu lệnh mệnh lệnh trong đối tượng."
+      - id: D
+        answer: "Đối tượng tài khoản giữ trạng thái còn các kiểm tra tuần tự thi hành quy tắc."
+        explanation: "Quyền sở hữu, điều kiện nghiệp vụ và thứ tự chạy bổ sung cho nhau."
+    correctAnswerId: D
+  - id: "imperative-imperative-learning-path"
+    question: "Thứ tự học nào giúp người mới lý giải an toàn một yêu cầu rút bị từ chối bên trong thủ tục?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Introduction/ImperativeProgramming.md"
+      anchor: "imperative-learning-path"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Học hợp đồng thủ tục trước, rồi mới tìm hiểu trạng thái mà hợp đồng điều chỉnh."
+        explanation: "Thiếu mô hình trạng thái khiến tiền điều kiện và hậu điều kiện khó diễn giải."
+      - id: B
+        answer: "Hiểu giá trị và trạng thái, rồi nhánh/vòng lặp, sau đó hợp đồng thủ tục."
+        explanation: "Mỗi giai đoạn cung cấp mô hình cần có để lần theo bước sau."
+      - id: C
+        answer: "Học vòng lặp và rẽ nhánh trước, rồi mới phân biệt đọc giá trị với ghi trạng thái."
+        explanation: "Thiếu mô hình đọc và ghi khiến điều kiện dễ bị nhầm với lệnh cập nhật."
+      - id: D
+        answer: "Bắt đầu từ kết quả thủ tục, rồi suy ngược tiền điều kiện mà không lập vết chạy."
+        explanation: "Một kết quả đúng đơn lẻ không cho thấy nhánh nào đã chặn việc ghi."
+    correctAnswerId: B
+  - id: "imperative-imperative-state-model"
+    question: "Một lần rút bị từ chối in cảnh báo nhưng số dư vẫn 70. Cách hiểu trạng thái nào đúng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.StateAndCommands/StateAndCommands.md"
+      anchor: "imperative-state-model"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Trạng thái lưu vẫn là 70; thông báo là một đầu ra riêng."
+        explanation: "Có thể phát thông báo mà không ghi lại số dư."
+      - id: B
+        answer: "Cảnh báo trở thành giá trị số mới lưu trong balance."
+        explanation: "Thông báo đầu ra không tự được gán vào trạng thái tài khoản."
+      - id: C
+        answer: "Trạng thái phải đổi vì một lệnh đã phát đầu ra."
+        explanation: "Lệnh tạo đầu ra không nhất thiết sửa biến lưu."
+      - id: D
+        answer: "Trạng thái chính là toàn bộ lịch sử các cảnh báo đã in."
+        explanation: "Trạng thái là ảnh chụp hiện tại, lịch sử là chuỗi sự kiện riêng."
+    correctAnswerId: A
+  - id: "imperative-imperative-commands-values"
+    question: "Với balance=100 và fee=5, điều gì xảy ra khi chỉ tính balance-fee mà không gán?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.StateAndCommands/StateAndCommands.md"
+      anchor: "imperative-commands-values"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Số dư lưu thành 95 vì biểu thức có nhắc tên biến."
+        explanation: "Nhắc tên biến trong phép tính không tạo thao tác ghi ngược."
+      - id: B
+        answer: "Biểu thức trả đúng nếu có đủ tiền."
+        explanation: "Phép trừ cho một con số, không phải điều kiện đủ tiền."
+      - id: C
+        answer: "Phép tính cho 95 còn số dư được lưu vẫn là 100."
+        explanation: "Chỉ thao tác đổi trạng thái tường minh mới ghi giá trị mới."
+      - id: D
+        answer: "Phép tính trả 100 cho tới khi lệnh ghi bật tính toán."
+        explanation: "Biểu thức có thể được tính độc lập trước bước gán."
+    correctAnswerId: C
+  - id: "imperative-imperative-assignment"
+    question: "Tài khoản có balance bằng 100. Câu lệnh balance=balance-30 thực hiện ra sao?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.StateAndCommands/StateAndCommands.md"
+      anchor: "imperative-assignment"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Vế trái thành 70 trước, rồi vế phải đọc lại 70."
+        explanation: "Biểu thức vế phải đọc giá trị cũ trước bước ghi."
+      - id: B
+        answer: "Hai vế được so bằng nhau theo toán học và không ghi gì."
+        explanation: "Phép gán thực hiện ghi chứ không kiểm tra đẳng thức toán học."
+      - id: C
+        answer: "Một khoản 30 nữa tự bị trừ sau khi câu lệnh kết thúc."
+        explanation: "Một lần thực thi gây một cập nhật, không tự lặp."
+      - id: D
+        answer: "Nó đọc 100, tính 70, rồi ghi 70 vào balance."
+        explanation: "Vết đọc–tính–ghi mô tả chính xác lần chuyển trạng thái."
+    correctAnswerId: D
+  - id: "imperative-imperative-sequencing"
+    question: "Giá món là 20, số lượng 3, giảm 5. Vì sao hai thứ tự tính cho 55 và 45?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.StateAndCommands/StateAndCommands.md"
+      anchor: "imperative-sequencing"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Giảm 5 được hiểu thành tỷ lệ phần trăm của tổng giá trị đơn."
+        explanation: "Một tỷ lệ phần trăm là quy tắc khác, không cho đúng hai phép tính 55 và 45."
+      - id: B
+        answer: "Giảm một lần cho cả đơn khác với giảm trên từng sản phẩm."
+        explanation: "20×3−5 bằng 55, còn (20−5)×3 bằng 45."
+      - id: C
+        answer: "Hai biểu thức bắt buộc bằng nhau theo ưu tiên toán tử."
+        explanation: "Dấu ngoặc đổi ý nghĩa nghiệp vụ và thứ tự tính."
+      - id: D
+        answer: "Cả hai đều giảm 5 đúng một lần, chỉ khác cách gom phép nhân."
+        explanation: "Trường hợp kết quả 45 đã giảm 5 trên mỗi sản phẩm, không phải một lần cho cả đơn."
+    correctAnswerId: B
+  - id: "imperative-imperative-state-tracing"
+    question: "Số dư đầu 100; rút 30 thành công, tiếp đó rút 90 bị từ chối. Vết nào đúng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.StateAndCommands/StateAndCommands.md"
+      anchor: "imperative-state-tracing"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "100→70→-20, sau khi trừ mới báo lỗi."
+        explanation: "Nhánh từ chối không được ghi giá trị âm bị cấm."
+      - id: B
+        answer: "100→70→100, vì từ chối đưa về số dư mở đầu."
+        explanation: "Từ chối giữ trạng thái hiện tại 70, không phải ban đầu 100."
+      - id: C
+        answer: "100→70→70, kèm thông báo từ chối ở bước cuối."
+        explanation: "Điều kiện so 70 với 90 rồi bỏ qua lệnh ghi."
+      - id: D
+        answer: "100→100→70, vì kiểm tra không được đổi trạng thái."
+        explanation: "Yêu cầu đầu hợp lệ vẫn phải trừ tiền đúng một lần."
+    correctAnswerId: C
+  - id: "imperative-imperative-unexpected-mutation"
+    question: "Hàm displayBalance âm thầm trừ 5 mỗi lần in. Vấn đề thực sự là gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.StateAndCommands/StateAndCommands.md"
+      anchor: "imperative-unexpected-mutation"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Thao tác dự kiến chỉ quan sát lại ghi trạng thái không được công bố."
+        explanation: "Ghi ẩn làm số dư phụ thuộc số lần người dùng chỉ xem."
+      - id: B
+        answer: "Phần hiển thị dùng biến tạm nên ghi số dư gốc không cần đưa vào hợp đồng."
+        explanation: "Tên biến tạm không loại bỏ tác động ghi vào tài khoản thực sự."
+      - id: C
+        answer: "Vì in vốn là tác động phụ, hàm cũng được quyền sửa số dư chung."
+        explanation: "Tạo đầu ra không mặc nhiên cho phép một thao tác ghi số dư khác."
+      - id: D
+        answer: "Chỉ cần bên gọi đánh dấu số dư là chỉ đọc, không cần xét thân hàm."
+        explanation: "Kỳ vọng ở bên gọi không ngăn thân hàm âm thầm ghi trạng thái."
+    correctAnswerId: A
+  - id: "imperative-imperative-control-purpose"
+    question: "Một lần rút sai được kiểm tra rồi từ chối. Vai trò của điều khiển luồng là gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.ControlFlow/ControlFlow.md"
+      anchor: "imperative-control-purpose"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Nó bảo đảm mọi câu lệnh đều chạy một lần trước khi báo kết quả."
+        explanation: "Nhánh từ chối phải bỏ qua lệnh trừ làm thay đổi số dư."
+      - id: B
+        answer: "Nó chọn nhánh từ chối và bỏ qua cập nhật không được phép."
+        explanation: "Rẽ nhánh xác định lệnh được chạy tiếp chứ không chỉ tạo đáp số."
+      - id: C
+        answer: "Nó chạy mọi nhánh rồi lấy số dư nhỏ nhất."
+        explanation: "Chạy nhiều nhánh mâu thuẫn sẽ phá trình tự nghiệp vụ."
+      - id: D
+        answer: "Nó sửa trạng thái trước rồi để vòng lặp hoàn tác."
+        explanation: "Rẽ nhánh giúp tránh ghi sai thay vì phải bù trừ sau đó."
+    correctAnswerId: B
+  - id: "imperative-imperative-branch-selection"
+    question: "Số dư là 70 và yêu cầu rút -10. Điều kiện nào đủ cho thao tác rút tiền thông thường?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.ControlFlow/ControlFlow.md"
+      anchor: "imperative-branch-selection"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Chấp nhận khi balance >= amount, không xét dấu của số tiền."
+        explanation: "Kiểm tra này nhận -10, phép trừ số âm có thể làm số dư tăng."
+      - id: B
+        answer: "Chấp nhận khi số dư cuối không thấp hơn số dư đầu."
+        explanation: "Điều đó không nói yêu cầu rút phải dương."
+      - id: C
+        answer: "Chấp nhận nếu số tiền yêu cầu nhỏ hơn 100."
+        explanation: "Giới hạn trên tùy ý không loại bỏ số tiền âm."
+      - id: D
+        answer: "Yêu cầu amount > 0 và số dư hiện tại đủ tiền trước khi ghi."
+        explanation: "Cần cả điều kiện tiền rút dương lẫn đủ số dư hiện hành."
+    correctAnswerId: D
+  - id: "imperative-imperative-repetition"
+    question: "Vòng lặp xử lý các khoản thu 10, 20 và 5 từ tổng 0. Bằng chứng nào cho thấy việc lặp đúng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.ControlFlow/ControlFlow.md"
+      anchor: "imperative-repetition"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Biến cộng dồn đổi 0→10→30→35 qua ba phần tử."
+        explanation: "Mỗi khoản được đọc, cộng và đưa tổng tiến lên đúng một lần."
+      - id: B
+        answer: "Tổng nhảy thẳng 0 lên 35 trước khi đọc phần tử."
+        explanation: "Chỉ tổng cuối không thể hiện vết xử lý lặp."
+      - id: C
+        answer: "Khoản thu cuối ghi đè tổng, kết thúc ở 5."
+        explanation: "Ghi đè làm mất các khoản đã cộng trước."
+      - id: D
+        answer: "Vòng lặp cộng khoản cuối hai lần để bù bước duyệt."
+        explanation: "Danh sách ba phần tử cần mỗi khoản được xử lý đúng một lần."
+    correctAnswerId: A
+  - id: "imperative-imperative-loop-progress"
+    question: "Sau khoản thu thứ hai, tổng bằng 30 và còn một mục. Quan sát nào bắt được lỗi lệch chỉ số?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.ControlFlow/ControlFlow.md"
+      anchor: "imperative-loop-progress"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Chỉ so tổng cuối với đáp số sau khi hoàn tất."
+        explanation: "Có lỗi đọc lặp hoặc bỏ sót vẫn có thể trùng tổng cuối."
+      - id: B
+        answer: "Đếm đủ ba lượt lặp mà không ghi phần tử đã được đọc ở mỗi lượt."
+        explanation: "Ba lượt vẫn có thể bỏ một phần tử và xử lý lặp một phần tử khác."
+      - id: C
+        answer: "Ghi lượt lặp, chỉ số, mục hiện tại và tổng sau từng bước."
+        explanation: "Vết này lộ việc bỏ mục đầu hay đọc lặp mục cuối."
+      - id: D
+        answer: "Ghi tổng sau mỗi lượt nhưng bỏ qua chỉ số và mục được duyệt."
+        explanation: "Chỉ thấy các tổng chưa định vị được phần tử nào bị bỏ hay đọc lặp."
+    correctAnswerId: C
+  - id: "imperative-imperative-termination"
+    question: "Vòng while kiểm tra remaining>0 nhưng không đổi remaining, bắt đầu ở 3. Điều gì xảy ra?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.ControlFlow/ControlFlow.md"
+      anchor: "imperative-termination"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Nó tự thoát sau đúng ba lượt theo giá trị ban đầu."
+        explanation: "Giá trị ban đầu không tự là bộ đếm số lượt."
+      - id: B
+        answer: "Nó có thể lặp vô hạn vì điều kiện tiếp tục luôn đúng."
+        explanation: "Không có bước tiến nào làm remaining>0 trở thành sai."
+      - id: C
+        answer: "Nó thoát ngay vì remaining chỉ được đọc mà không ghi."
+        explanation: "Điều kiện chỉ đọc vẫn đúng khi remaining là 3."
+      - id: D
+        answer: "Nó tự đặt remaining về 0 sau thân vòng đầu tiên."
+        explanation: "Ngôn ngữ không tự sinh lệnh giảm khi mã không viết."
+    correctAnswerId: B
+  - id: "imperative-imperative-control-trace"
+    question: "Từ số dư 100 xử lý [+20,-30,-200] theo thứ tự, từ chối âm. Vết nào đúng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.ControlFlow/ControlFlow.md"
+      anchor: "imperative-control-trace"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "100→120→90→-110, vì mọi mục đều sửa số dư."
+        explanation: "Yêu cầu rút cuối bị từ chối và phải giữ 90."
+      - id: B
+        answer: "100→80→110→110, coi tiền gửi như tiền rút."
+        explanation: "Khoản gửi dương làm số dư tăng chứ không bị trừ."
+      - id: C
+        answer: "100→120→120→90, bỏ qua yêu cầu rút 30 hợp lệ."
+        explanation: "Yêu cầu thứ hai hợp lệ và phải làm 120 thành 90."
+      - id: D
+        answer: "100→120→90→90, duyệt ba mục nhưng chỉ ghi hai lần."
+        explanation: "Gửi và rút đầu cập nhật; nhánh rút quá mức không ghi."
+    correctAnswerId: D
+  - id: "imperative-imperative-procedure-purpose"
+    question: "Vì sao nên tạo thủ tục rút tiền thay vì lặp CHECK→DEBIT→REPORT ở nhiều nơi?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.ProceduralProgramming/ProceduralProgramming.md"
+      anchor: "imperative-procedure-purpose"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Mọi thủ tục được tách đều trở thành thuần và không có tác động."
+        explanation: "Thủ tục vẫn có thể sửa tài khoản và làm I/O."
+      - id: B
+        answer: "Thủ tục đảm bảo nguyên tử cho mọi bước bên trong."
+        explanation: "Đặt tên nhóm thao tác không tạo bảo đảm giao dịch."
+      - id: C
+        answer: "Nó gom một nhiệm vụ rõ nghĩa vào ranh giới để dùng lại và kiểm thử."
+        explanation: "Lợi ích là trách nhiệm rõ và giảm lặp, không phải hành vi tự động."
+      - id: D
+        answer: "Nó làm mọi lần gọi sau không còn cần xét dữ liệu hợp lệ."
+        explanation: "Thủ tục vẫn phải kiểm tra hợp đồng đầu vào và trạng thái."
+    correctAnswerId: C
+  - id: "imperative-imperative-procedure-contract"
+    question: "Số dư hiện tại 70 và gọi withdraw(90). Kết quả nào đúng với hợp đồng rút tiền?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.ProceduralProgramming/ProceduralProgramming.md"
+      anchor: "imperative-procedure-contract"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Từ chối có lý do và giữ số dư ở 70."
+        explanation: "Điều kiện đủ tiền sai nên không được ghi trạng thái."
+      - id: B
+        answer: "Trừ 90 và trả thành công sau khi ghi cảnh báo."
+        explanation: "Thao tác sẽ vi phạm hậu điều kiện số dư không âm."
+      - id: C
+        answer: "Trả kết quả dự kiến -20 mà không kiểm tra số dư."
+        explanation: "Hợp đồng yêu cầu chặn ghi chứ không chỉ tính thử."
+      - id: D
+        answer: "Đưa tài khoản về số 100 ban đầu sau khi từ chối."
+        explanation: "Nhánh lỗi phải giữ số dư hiện tại 70, không phải bản cũ."
+    correctAnswerId: A
+  - id: "imperative-imperative-procedure-local-state"
+    question: "Trong withdraw tính newBalance=70 còn account.balance vẫn là 100. Điều đó nghĩa là gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.ProceduralProgramming/ProceduralProgramming.md"
+      anchor: "imperative-procedure-local-state"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Tài khoản đã được cập nhật thông qua tên biến cục bộ."
+        explanation: "Phép tính cục bộ không tự ghi vào ô lưu tài khoản chung."
+      - id: B
+        answer: "Giá trị cục bộ chưa hợp lệ cho tới khi được in ra console."
+        explanation: "In ra không quyết định tính hợp lệ của giá trị thử."
+      - id: C
+        answer: "Hai biến bắt buộc cùng trỏ đến một ô lưu."
+        explanation: "Biến tạm và trường dùng chung có thể lưu ở những nơi riêng."
+      - id: D
+        answer: "Giá trị tính thử vẫn riêng cho đến khi có lệnh ghi được phép."
+        explanation: "Phân biệt này tách việc tính thử với ghi trạng thái tài khoản."
+    correctAnswerId: D
+  - id: "imperative-imperative-procedure-effects"
+    question: "Gọi displayBalance hai lần ra hai số dư khác vì nó âm thầm thu phí. Điều gì cần làm rõ?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.ProceduralProgramming/ProceduralProgramming.md"
+      anchor: "imperative-procedure-effects"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Chỉ mô tả kiểu trả về; quyền ghi số dư có thể để là chi tiết nội bộ."
+        explanation: "Kiểu dữ liệu trả về không thay cho hợp đồng về tác động đến tài khoản."
+      - id: B
+        answer: "Hợp đồng phải nêu rõ hoặc loại bỏ tác động ghi đó."
+        explanation: "Đọc và trừ là trách nhiệm khác nhau mà người gọi phải biết."
+      - id: C
+        answer: "Bên gọi nên cache lần đọc đầu để không còn thấy các kết quả khác nhau."
+        explanation: "Cache che triệu chứng nhưng không sửa việc ghi phí nếu thủ tục vẫn chạy."
+      - id: D
+        answer: "Chỉ đổi tên thành displayWithFee mà không xét hợp đồng và chỗ gọi."
+        explanation: "Tên gợi ý chưa quy định khi nào được trừ, mức phí và quyền ghi."
+    correctAnswerId: B
+  - id: "imperative-imperative-procedure-decomposition"
+    question: "Chuyển tiền trừ ở A rồi bước cộng B thất bại. Việc chia thành thủ tục chứng minh điều gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.ProceduralProgramming/ProceduralProgramming.md"
+      anchor: "imperative-procedure-decomposition"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Mọi cập nhật tự rollback khi bất kỳ thủ tục nào lỗi."
+        explanation: "Chỉ gọi thủ tục riêng không có bảo đảm rollback."
+      - id: B
+        answer: "Bước trừ không thể xảy ra trước khi thủ tục cộng kết thúc."
+        explanation: "Luồng tuần tự có thể trừ trước rồi mới gặp lỗi."
+      - id: C
+        answer: "Trách nhiệm được tách rõ, nhưng phục hồi vẫn cần chính sách."
+        explanation: "Tổ chức rõ giúp quan sát lỗi mà không tự tạo tính nguyên tử."
+      - id: D
+        answer: "Tài khoản đích bắt buộc đã nhận tiền theo hợp đồng."
+        explanation: "Bước cộng lỗi khiến hậu điều kiện chưa được đảm bảo."
+    correctAnswerId: C
+  - id: "imperative-imperative-procedure-limitations"
+    question: "Hai lần gọi withdraw(30) có cùng tham số nhưng số dư là 100 rồi 70. Điều gì giải thích khác biệt?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.ProceduralProgramming/ProceduralProgramming.md"
+      anchor: "imperative-procedure-limitations"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Cùng tên thủ tục nghĩa là mọi lần gọi có số dư mặc định như nhau."
+        explanation: "Số dư dùng chung tồn tại qua các lần gọi, không tự đặt lại."
+      - id: B
+        answer: "Mã đã biên dịch hẳn phải bị thay đổi giữa hai lần gọi."
+        explanation: "Trạng thái bên ngoài đổi có thể đổi kết quả dù mã giữ nguyên."
+      - id: C
+        answer: "Số tiền đối số là đầu vào đầy đủ nên kết quả không thể khác."
+        explanation: "Số dư là đầu vào thực khác dù bị giấu khỏi chữ ký."
+      - id: D
+        answer: "Thủ tục phụ thuộc số dư dùng chung đã đổi ở lần trước."
+        explanation: "Đọc dữ liệu ẩn khiến cùng đối số tường minh có thể cho hành vi khác."
+    correctAnswerId: D
+  - id: "imperative-imperative-correctness"
+    question: "Cặp kiểm thử nào xác nhận tốt nhất hợp đồng rút tiền từ số dư 100?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.Tradeoffs/Tradeoffs.md"
+      anchor: "imperative-correctness"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Rút 30 thành công còn 70; sau đó rút 90 bị từ chối và giữ 70."
+        explanation: "Cặp ca thử cả hậu điều kiện thành công lẫn cam kết nhánh lỗi không ghi."
+      - id: B
+        answer: "Rút 30 hai lần, chỉ xem thông báo thành công."
+        explanation: "Thông báo thành công có thể che việc ghi số dư sai."
+      - id: C
+        answer: "Rút 90 trước, giả định bị từ chối vì lớn hơn 70."
+        explanation: "Số dư đầu là 100, giả định dùng sai trạng thái."
+      - id: D
+        answer: "Tính 100 trừ 30 rồi không gọi thủ tục rút tiền."
+        explanation: "Phép trừ đơn thuần không thử rẽ nhánh và ghi trạng thái."
+    correctAnswerId: A
+  - id: "imperative-imperative-state-risks"
+    question: "Phí bị trừ hai lần khi retry. Cách suy luận nào nhận diện đúng rủi ro mệnh lệnh?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.Tradeoffs/Tradeoffs.md"
+      anchor: "imperative-state-risks"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Chỉ cần kiểm tra mức phí của mỗi lần gọi đều được tính đúng."
+        explanation: "Từng lần tính đúng không ngăn cùng một khoản phí bị ghi hai lần."
+      - id: B
+        answer: "Chỉ cần so số dư cuối, không phải lần theo từng lệnh ghi."
+        explanation: "Số dư cuối cho thấy hậu quả nhưng không định vị lần cập nhật trùng."
+      - id: C
+        answer: "Phải lần thứ tự chạy và ghi lặp riêng với việc kiểm tra số học."
+        explanation: "Rủi ro nằm ở một thao tác ghi vào trạng thái được chạy nhiều lần."
+      - id: D
+        answer: "Đặt số tiền phí là hằng số để retry không làm thay đổi kết quả tính."
+        explanation: "Hằng số chỉ cố định số tiền, không ngăn nhiều lần ghi vào số dư."
+    correctAnswerId: C
+  - id: "imperative-imperative-debug-tracing"
+    question: "Lỗi tạo -20 sau khi rút 30 rồi 90 từ 100. Bằng chứng vết nào chỉ ra nguyên nhân?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.Tradeoffs/Tradeoffs.md"
+      anchor: "imperative-debug-tracing"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Chỉ giá trị âm cuối mà không biết nhánh đã chạy."
+        explanation: "Nó chứng minh sai nhưng không cho biết lệnh nào đã ghi."
+      - id: B
+        answer: "Tên phương thức và thời gian chạy."
+        explanation: "Hai thứ không chỉ ra nhánh đã chạy và trạng thái bị ghi."
+      - id: C
+        answer: "Hai phép trừ viết riêng ngoài ngữ cảnh chạy."
+        explanation: "Số học đúng, điều kiện chặn bị thiếu mới là lỗi."
+      - id: D
+        answer: "Before=70, điều kiện 70<90, nhưng lệnh trừ/ghi vẫn chạy thành -20."
+        explanation: "Điều kiện và thao tác ghi cho thấy phép trừ chạy ngoài nhánh bảo vệ."
+    correctAnswerId: D
+  - id: "imperative-imperative-control-tradeoffs"
+    question: "Với bài toán nào việc trình bày mọi lệnh và chỉ số có thể che ý định chính?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.Tradeoffs/Tradeoffs.md"
+      anchor: "imperative-control-tradeoffs"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Chuyển tiền mà bước trừ chỉ được chạy sau kiểm tra."
+        explanation: "Thứ tự hành động là yêu cầu cốt lõi của bài toán này."
+      - id: B
+        answer: "Tìm tổng các khoản dương trong một danh sách nhỏ."
+        explanation: "Mô tả kết quả đích có thể dễ hiểu hơn quản lý vết vòng lặp dài."
+      - id: C
+        answer: "Điều phối tắt thiết bị có các điều kiện an toàn."
+        explanation: "Các bước thực thi tường minh có thể rất cần cho an toàn."
+      - id: D
+        answer: "Theo dõi tài khoản bị trừ và cộng theo thứ tự nào."
+        explanation: "Thứ tự tác động là phần của hợp đồng đúng đắn."
+    correctAnswerId: B
+  - id: "imperative-imperative-declarative-contrast"
+    question: "Cả vòng lặp mệnh lệnh và mô tả khai báo đều cộng khoản dương trong [10,-2,25]. Điều gì khác?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.Tradeoffs/Tradeoffs.md"
+      anchor: "imperative-declarative-contrast"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Chỉ mã mệnh lệnh mới tính danh sách ra 35."
+        explanation: "Bộ đánh giá khai báo vẫn thực hiện tính toán để cho 35."
+      - id: B
+        answer: "Mã khai báo không hề có bước chạy hay duyệt dữ liệu lúc runtime."
+        explanation: "Cách khai báo trừu tượng hóa chiến lược, không xóa việc thực thi."
+      - id: C
+        answer: "Lối mệnh lệnh nêu các bước; lối khai báo nêu kết quả cần đạt."
+        explanation: "Cả hai có thể ra 35 nhưng bộc lộ mức chi tiết luồng khác nhau."
+      - id: D
+        answer: "Hai lối mô tả bắt buộc chọn các phần tử dương khác nhau."
+        explanation: "Đầu vào và điều kiện chọn có thể hoàn toàn giống nhau."
+    correctAnswerId: C
+  - id: "imperative-imperative-paradigm-bridges"
+    question: "Một phương thức Account dùng vòng lặp và phép tính giá thuần trước khi cập nhật trạng thái. Phân loại nào đúng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.Tradeoffs/Tradeoffs.md"
+      anchor: "imperative-paradigm-bridges"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Sở hữu theo OOP, trình tự mệnh lệnh và phép tính kiểu hàm có thể cùng tồn tại."
+        explanation: "Các paradigm diễn tả các khía cạnh bổ sung của cùng quy trình."
+      - id: B
+        answer: "Có một phép tính thuần làm toàn bộ phương thức trở thành thuần."
+        explanation: "Ghi trạng thái phía sau vẫn là tác động dù một bước thuần."
+      - id: C
+        answer: "Quyền sở hữu của đối tượng tự quyết định cách mọi bước bên trong phải chạy."
+        explanation: "Đối tượng có thể giữ trạng thái còn phương thức dùng trình tự mệnh lệnh."
+      - id: D
+        answer: "Gom các bước vào một thủ tục khiến mọi phép tính bên trong đều có tác động phụ."
+        explanation: "Một phép tính trung gian thuần vẫn có thể nằm trong thủ tục mang tác động."
+    correctAnswerId: A
