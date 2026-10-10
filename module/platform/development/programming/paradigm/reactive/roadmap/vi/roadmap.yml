@@ -41,4 +41,79 @@
 # Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: reactive-motivation
+    relatedKnowledge:
+      - ReactiveProgramming
+    title: "Tư duy reactive trước dòng sự kiện thay đổi theo thời gian"
+    purpose: "Hiểu Reactive Programming là cách biểu diễn và lan truyền thay đổi trong dữ liệu/sự kiện theo thời gian, cùng vấn đề xuất hiện khi xử lý luồng bằng callback rời rạc."
+    objectives:
+      - "Phân biệt giá trị có sẵn với chuỗi giá trị/sự kiện có thể đến ở những thời điểm khác nhau."
+      - "Giải thích nhu cầu mô tả luồng xử lý, lỗi và dừng luồng thành một mô hình thống nhất."
+      - "Nhận ra reactive là một paradigm, không mặc nhiên là đa luồng, xử lý song song hay luôn non-blocking."
+
+  - id: flow-and-propagation
+    relatedKnowledge:
+      - DataFlow
+    title: "Nguồn dữ liệu, biến đổi và lan truyền tín hiệu"
+    purpose: "Nhìn được một luồng từ producer/source qua các bước biến đổi, lọc và kết hợp tới consumer, thay vì chỉ thấy từng callback độc lập."
+    objectives:
+      - "Diễn giải quan hệ source → processing stages → consumer bằng một ví dụ sự kiện liên tục."
+      - "Phân biệt ý nghĩa đẩy dữ liệu (push), yêu cầu dữ liệu (pull) và mô hình phối hợp cả hai."
+      - "Liên hệ composition với tư duy functional mà không nhầm reactive stream với hàm thuần hoặc Java Stream API."
+
+  - id: subscription-lifecycle
+    relatedKnowledge:
+      - DataFlow
+      - ReactiveStreams
+      - ErrorCancellation
+    title: "Đăng ký theo dõi và vòng đời producer–consumer"
+    purpose: "Hiểu ý nghĩa của việc consumer đăng ký nhận tín hiệu, quan hệ nguồn–người nhận và các trạng thái chính trong vòng đời một luồng."
+    objectives:
+      - "Mô tả subscribe, quá trình phát/nhận và thời điểm quan hệ theo dõi kết thúc ở mức khái niệm."
+      - "Phân biệt dữ liệu được khai báo xử lý với việc luồng thực sự bắt đầu phát; thời điểm thực thi phụ thuộc implementation."
+      - "Nhận biết consumer có thể ngừng quan tâm trước khi nguồn phát xong."
+
+  - id: demand-and-backpressure
+    relatedKnowledge:
+      - Backpressure
+      - ReactiveStreams
+    title: "Chênh lệch tốc độ và điều phối nhu cầu (backpressure)"
+    purpose: "Giải thích nguy cơ producer phát nhanh hơn consumer xử lý và cách demand giúp giới hạn khối lượng đang chờ trong các mô hình hỗ trợ backpressure."
+    objectives:
+      - "Phân tích nguy cơ tồn đọng dữ liệu, bộ đệm tăng không kiểm soát hoặc mất dữ liệu khi tốc độ lệch nhau."
+      - "Phân biệt request/demand với việc producer cứ phát rồi consumer phải nhận; nhận ra các lựa chọn buffer, drop hoặc giảm tốc có trade-off."
+      - "Hiểu demand-based backpressure là contract cụ thể của Reactive Streams, không phải thuộc tính bắt buộc của mọi reactive/observable API."
+
+  - id: reactive-streams-contract
+    relatedKnowledge:
+      - ReactiveStreams
+    title: "Reactive Streams: hợp đồng trao đổi dữ liệu bất đồng bộ"
+    purpose: "Liên hệ mô hình reactive với đặc tả Reactive Streams về tương tác producer–consumer, backpressure không chặn và tín hiệu giao thức."
+    objectives:
+      - "Mô tả vai trò liên quan của Publisher, Subscriber, Subscription và Processor mà không biến milestone thành danh sách API."
+      - "Giải thích thứ tự giao thức: onSubscribe trước, sau đó có thể có nhiều onNext và tối đa một tín hiệu kết thúc onError hoặc onComplete; request(n) cộng thêm nhu cầu nhận khi n dương."
+      - "Giải thích onNext không được vượt tổng nhu cầu đã yêu cầu, request(n) không dương gây lỗi giao thức, còn hoàn tất hoặc báo lỗi có thể đến ngay cả khi chưa yêu cầu dữ liệu."
+      - "Phân biệt paradigm reactive với hợp đồng tương tác Reactive Streams và các thư viện thực thi hợp đồng này."
+
+  - id: termination-and-failure
+    relatedKnowledge:
+      - ErrorCancellation
+      - ReactiveStreams
+    title: "Lỗi, hoàn tất và hủy đăng ký trong vòng đời luồng"
+    purpose: "Hiểu các kết cục của luồng và tác động của lỗi hoặc hủy đến việc phát tiếp, nhận tiếp và tài nguyên liên quan."
+    objectives:
+      - "Phân biệt onNext phụ thuộc demand với hoàn tất thành công hoặc kết thúc do lỗi không cần chờ demand; sau onComplete hoặc onError không được phát thêm tín hiệu."
+      - "Giải thích hủy đăng ký là yêu cầu của Subscriber để ngừng trao đổi: nguồn phải dần ngừng phát tín hiệu, dù tín hiệu bất đồng bộ đang trên đường truyền vẫn có thể đến; khác với nguồn tự hoàn tất hoặc báo lỗi."
+      - "Lần theo đường lan truyền lỗi, kết thúc và hủy để nhận diện xử lý tài nguyên hoặc nhánh xử lý thiếu."
+
+  - id: reactive-decision-and-boundaries
+    relatedKnowledge:
+      - Tradeoffs
+      - ReactiveProgramming
+    title: "Đánh giá lựa chọn reactive và ranh giới hệ sinh thái"
+    purpose: "Tổng hợp một luồng thực tế để chọn reactive phù hợp, phân biệt lợi ích composition/demand với chi phí vận hành và nhận diện phần thuộc thư viện/framework."
+    objectives:
+      - "Thiết kế ở mức mô hình luồng sự kiện gồm source, stages, subscriber, demand, error/completion và cancellation."
+      - "Đánh giá tính dễ hiểu, tracing, tài nguyên, blocking và độ phức tạp so với xử lý tuần tự hoặc callback tường minh."
+      - "Phân biệt bất đồng bộ, song song và thread scheduling; định vị Reactor, Spring WebFlux và Java Flow API là các lớp triển khai/công nghệ cần học riêng."

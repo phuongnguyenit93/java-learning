@@ -14,3 +14,17 @@
 #
 # Add only curated references that are useful for the module.
 # The build system must not overwrite this file after authored content exists.
+
+references:
+  - title: "Reactive Streams"
+    url: "https://www.reactive-streams.org/"
+    description: "Official initiative overview explaining the scope of asynchronous stream processing with non-blocking backpressure."
+  - title: "Reactive Streams Specification for the JVM"
+    url: "https://github.com/reactive-streams/reactive-streams-jvm"
+    description: "Normative protocol and interaction rules for Publisher, Subscriber, Subscription, Processor, demand, and terminal signals."
+  - title: "Reactor Core Reference Guide — Getting Started"
+    url: "https://projectreactor.io/docs/core/release/reference/gettingStarted.html"
+    description: "Official example of a library implementing Reactive Streams with its own composable abstractions, separate from the reactive paradigm."
+  - title: "Spring WebFlux — Spring Framework"
+    url: "https://docs.spring.io/spring-framework/reference/web/webflux.html"
+    description: "Official reactive web-framework documentation showing how an application stack builds on Reactive Streams and adds its own runtime model."
