@@ -41,4 +41,54 @@
 # Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: declarative-mental-model
+    relatedKnowledge:
+      - DeclarativeProgramming
+    title: "Lập trình khai báo: khái niệm, động cơ và phạm vi"
+    purpose: "Hiểu cách biểu đạt kết quả, quan hệ hoặc quy tắc mong muốn và vì sao có thể tách ý định khỏi chuỗi thao tác thực hiện."
+    objectives:
+      - "Nêu ý nghĩa của mô tả khai báo và khác biệt với việc chỉ dẫn từng bước theo hướng mệnh lệnh."
+      - "Nhận ra khi nào lập trình viên cần tập trung vào đặc tả kết quả thay vì chi tiết triển khai."
+  - id: intent-and-constraints
+    relatedKnowledge:
+      - IntentVsProcedure
+    title: "Biểu đạt ý định bằng kết quả và ràng buộc"
+    purpose: "Xây dựng cách hiểu về đặc tả: điều gì phải đúng, dữ liệu nào phù hợp, và những giới hạn nào cần được bảo đảm."
+    objectives:
+      - "Phân biệt mô tả kết quả, điều kiện lọc, quan hệ và ràng buộc với một thuật toán chỉ rõ từng thao tác."
+      - "Nhận biết đặc tả còn thiếu hoặc mơ hồ có thể tạo ra nhiều kết quả hợp lệ hay một kết quả không như mong đợi."
+  - id: evaluation-and-strategy
+    relatedKnowledge:
+      - IntentVsProcedure
+      - QueryRuleStyles
+    title: "Từ đặc tả đến quá trình thực thi"
+    purpose: "Hiểu vai trò của bộ đánh giá, công cụ hoặc thư viện khi diễn giải mô tả khai báo thành thao tác thực tế."
+    objectives:
+      - "Phân biệt ngữ nghĩa/kết quả được yêu cầu với chiến lược đánh giá hay kế hoạch xử lý do hệ thống sử dụng."
+      - "Giải thích vì sao hai chiến lược thực thi có thể đáp ứng cùng một đặc tả, nhưng hiệu năng, thứ tự quan sát hoặc tác động phụ có thể cần xét riêng."
+  - id: logic-and-rule-models
+    relatedKnowledge:
+      - LogicProgramming
+    title: "Sự kiện logic (fact), quan hệ và quy tắc"
+    purpose: "Hiểu logic/rule programming như một họ cách mô tả quan hệ và điều kiện suy ra kết luận, thay vì liệt kê lệnh xử lý."
+    objectives:
+      - "Mô tả ở mức khái niệm sự kiện logic (fact), quy tắc, mục tiêu/truy vấn và mối quan hệ giữa chúng; không nhầm fact với sự kiện xảy ra theo thời gian."
+      - "Hiểu giới hạn: cách tìm lời giải, chiến lược suy diễn và cú pháp Prolog/rule engine thuộc triển khai cụ thể."
+  - id: queries-and-declarative-examples
+    relatedKnowledge:
+      - QueryRuleStyles
+      - LogicProgramming
+    title: "Truy vấn và các cách biểu đạt khai báo trong thực tế"
+    purpose: "Liên hệ mô hình khai báo với các ví dụ truy vấn, chính sách và quy tắc logic; không mặc định mọi biểu thức điều kiện đều là khai báo."
+    objectives:
+      - "Đối chiếu cách SQL chỉ rõ những dòng cần trả về với việc tự lặp qua dữ liệu; dòng kết quả không mặc nhiên duy nhất hoặc có thứ tự nếu không yêu cầu rõ."
+      - "Phân biệt tính khai báo của một phần biểu thức với toàn bộ hệ thống: cấu hình hay DSL không mặc nhiên hoàn toàn khai báo."
+  - id: tradeoffs-and-paradigm-relations
+    relatedKnowledge:
+      - Tradeoffs
+    title: "Giới hạn, đánh đổi và quan hệ với các paradigm khác"
+    purpose: "Biết lựa chọn cách khai báo khi ý định rõ ràng, đồng thời hiểu chi phí của việc phụ thuộc vào engine và nguy cơ che khuất quá trình thực thi."
+    objectives:
+      - "Đánh giá tình huống có lợi từ trừu tượng hóa cách thực hiện so với tình huống cần kiểm soát từng bước hoặc quan sát tác động phụ."
+      - "Giải thích declarative là một góc nhìn rộng có giao với functional, logic và query style, nhưng không đồng nhất với bất kỳ cách nào trong số đó."

@@ -14,3 +14,17 @@
 #
 # Add only curated references that are useful for the module.
 # The build system must not overwrite this file after authored content exists.
+
+references:
+  - title: "PostgreSQL Documentation — SELECT"
+    url: "https://www.postgresql.org/docs/current/sql-select.html"
+    description: "Official specification of query-result selection and filtering, a concrete example of describing a result set."
+  - title: "PostgreSQL Documentation — The Path of a Query"
+    url: "https://www.postgresql.org/docs/current/query-path.html"
+    description: "Official illustration of the distinction between a query specification and the planner/executor's strategy."
+  - title: "SWI-Prolog Reference Manual — Overview"
+    url: "https://www.swi-prolog.org/pldoc/man?section=overview"
+    description: "Project-maintained orientation to adding rules and asking queries, grounding logic-programming examples without making Prolog syntax this module's scope."
+  - title: "SWI-Prolog Reference Manual — Glossary of Terms"
+    url: "https://www.swi-prolog.org/pldoc/man?section=glossary"
+    description: "Authoritative terminology for facts, clauses, goals, and predicates in rule-based/logic examples."

@@ -41,4 +41,54 @@
 # The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: declarative-mental-model
+    relatedKnowledge:
+      - DeclarativeProgramming
+    title: "Declarative Programming: Meaning, Motivation, and Scope"
+    purpose: "Understand expressing desired results, relations, or rules and why intent can be separated from a sequence of execution steps."
+    objectives:
+      - "Describe what a declarative specification communicates and how it differs from imperative instructions."
+      - "Recognize situations in which specifying an outcome is more useful than controlling implementation steps."
+  - id: intent-and-constraints
+    relatedKnowledge:
+      - IntentVsProcedure
+    title: "Expressing Intent through Results and Constraints"
+    purpose: "Build a specification mental model: what must hold, which data qualifies, and which restrictions must be satisfied."
+    objectives:
+      - "Distinguish outcome descriptions, predicates, relations, and constraints from step-by-step algorithms."
+      - "Recognize how incomplete or ambiguous specifications may admit multiple valid outcomes or surprising results."
+  - id: evaluation-and-strategy
+    relatedKnowledge:
+      - IntentVsProcedure
+      - QueryRuleStyles
+    title: "From Specification to Execution Strategy"
+    purpose: "Understand how an evaluator, engine, or library turns a declarative description into actual operations."
+    objectives:
+      - "Separate the required meaning or result from the evaluation strategy or plan used to produce it."
+      - "Explain how different execution strategies can satisfy a specification while performance, observable ordering, or side effects may need separate consideration."
+  - id: logic-and-rule-models
+    relatedKnowledge:
+      - LogicProgramming
+    title: "Facts, Relations, and Logic Rules"
+    purpose: "Understand logic and rule programming as ways to state relations and inference conditions rather than enumerating processing commands."
+    objectives:
+      - "Describe logical facts, rules, goals/queries, and their relationships at a conceptual level; distinguish a fact stating a relation from an event occurring in time."
+      - "Respect the boundary: search strategy, inference mechanics, and Prolog or rule-engine syntax belong to individual technologies."
+  - id: queries-and-declarative-examples
+    relatedKnowledge:
+      - QueryRuleStyles
+      - LogicProgramming
+    title: "Queries and Declarative Expressions in Practice"
+    purpose: "Connect the declarative model to query, policy, and logic-rule examples, identifying similarities and limits without labeling every conditional expression declarative."
+    objectives:
+      - "Contrast specifying which rows an SQL query should return with manually looping through data; rows need not be unique or ordered unless explicitly constrained."
+      - "Distinguish a declarative part of an expression from an entire system; configuration and DSLs are not inherently declarative."
+  - id: tradeoffs-and-paradigm-relations
+    relatedKnowledge:
+      - Tradeoffs
+    title: "Trade-offs and Relationships with Other Paradigms"
+    purpose: "Choose declarative descriptions when intent is clear while recognizing the costs of relying on an evaluator and less-visible execution."
+    objectives:
+      - "Assess when abstracting execution is helpful and when direct step control or effect visibility is more important."
+      - "Explain declarative as a broad perspective overlapping functional, logic, and query styles without being identical to any of them."

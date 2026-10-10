@@ -1,0 +1,762 @@
+# <quiz-schema>
+# Cấu trúc câu hỏi Quiz
+# schema-version: 3
+#
+# questions [kiểu: list; bắt buộc; mặc định: []; duy nhất theo: id]
+#   Danh sách câu hỏi Quiz của module trong language hiện tại.
+#   mỗi phần tử:
+#     id [kiểu: string; bắt buộc; mặc định: ""]
+#       ID ổn định và duy nhất của câu hỏi.
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi hiển thị cho người học.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu câu hỏi được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu câu hỏi đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+#     answers [kiểu: list; bắt buộc; số phần tử: 4; mặc định: []; duy nhất theo: id]
+#       Chính xác bốn đáp án. ID A/B/C/D là identity nội bộ ổn định, không phải vị trí hiển thị sau khi frontend shuffle.
+#       mỗi phần tử:
+#         id [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#           Identity ổn định của đáp án.
+#         answer [kiểu: string; bắt buộc; mặc định: ""]
+#           Nội dung đáp án hiển thị cho người học.
+#         explanation [kiểu: string; bắt buộc; mặc định: ""]
+#           Giải thích hiển thị khi người học chọn đáp án này, bất kể đúng hay sai.
+#     correctAnswerId [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#       ID nội bộ của đáp án đúng. Frontend kiểm tra bằng identity này sau khi shuffle.
+# </quiz-schema>
+
+questions:
+  - id: "declarative-quiz-01"
+    question: "Hai lời giải đều lấy khoản dương từ [10,-2,25]. Mô tả nào thể hiện rõ trách nhiệm khai báo?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Introduction/DeclarativeProgramming.md"
+      anchor: "declarative-what"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Chỉ rõ chỉ số i rồi append các khoản dương theo thứ tự duyệt."
+        explanation: "Đây là kế hoạch duyệt do người viết chỉ rõ, dù vẫn cho [10,25]."
+      - id: B
+        answer: "Nêu tính chất amount>0 và để evaluator chọn cách duyệt."
+        explanation: "Đặc tả mô tả phần tử đạt yêu cầu, không quyết định vòng lặp phải viết thế nào."
+      - id: C
+        answer: "Đọc 10, ghi accumulator rồi bỏ -2 và ghi thêm 25."
+        explanation: "Chuỗi lệnh nêu HOW thay vì đặc tả tập kết quả muốn có."
+      - id: D
+        answer: "In [10,25] từ cache mà không cần kiểm điều kiện."
+        explanation: "Một đầu ra đúng ví dụ không định nghĩa quy tắc cho input khác."
+    correctAnswerId: B
+  - id: "declarative-quiz-02"
+    question: "Ba report đều dùng điều kiện tài khoản A và amount>0. Đánh đổi nào đáng đưa vào review?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Introduction/DeclarativeProgramming.md"
+      anchor: "declarative-why"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Dùng hợp đồng lọc chung nhưng kiểm đủ điều kiện và quyền đọc."
+        explanation: "Giảm lặp điều kiện không có nghĩa tự bảo đảm riêng tư hoặc ý định đầy đủ."
+      - id: B
+        answer: "Chỉ lọc amount>0 và trông chờ bộ đánh giá tự kiểm quyền truy cập."
+        explanation: "Đã làm mất điều kiện account=A bảo vệ dữ liệu của người dùng."
+      - id: C
+        answer: "Giữ ba bản logic vì SQL hoặc predicate luôn tự đồng bộ."
+        explanation: "Nhiều bản có thể lệch khi thay chính sách và khó audit."
+      - id: D
+        answer: "Cho evaluator tự nhận biết tài khoản có quyền truy cập."
+        explanation: "Bộ đánh giá không thể suy ra một quyền chưa có trong đặc tả."
+    correctAnswerId: A
+  - id: "declarative-quiz-03"
+    question: "Một vòng lặp `for + if + append` và đặc tả amount>0 đều trả [10,25]. Khác biệt cần nói là gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Introduction/DeclarativeProgramming.md"
+      anchor: "declarative-before"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Máy có thể tạo kết quả mà không phải xét từng hàng đầu vào."
+        explanation: "Evaluator vẫn phải kiểm phần tử hoặc áp một chiến lược tương đương."
+      - id: B
+        answer: "Vòng lặp có thứ tự nên kết quả mặc định khác dù cùng predicate."
+        explanation: "Dữ liệu đủ điều kiện có thể giống nhau, thứ tự tùy hợp đồng."
+      - id: C
+        answer: "Khai báo là cú pháp không có biến, bất kể ý nghĩa từng lệnh."
+        explanation: "Phân loại theo trách nhiệm mô tả, không chỉ theo tên cú pháp."
+      - id: D
+        answer: "Lời giải khai báo bỏ quyết định bước duyệt khỏi hợp đồng người viết."
+        explanation: "Evaluator vẫn phải tính, nhưng quyền quyết định HOW được tách khỏi WHAT."
+    correctAnswerId: D
+  - id: "declarative-quiz-04"
+    question: "Slide có declaration, evaluator, result. Nếu đổi từ scan sang index, điều gì phải giữ?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Introduction/DeclarativeProgramming.md"
+      anchor: "declarative-solution"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Đổi sang cách quét nhanh hơn và bỏ bộ lọc account=A."
+        explanation: "Tối ưu HOW không thể xóa điều kiện của WHAT."
+      - id: B
+        answer: "Mọi truy vấn có index đều phải trả hàng theo thứ tự khóa."
+        explanation: "Không có ORDER BY thì một thứ tự quan sát không thành cam kết."
+      - id: C
+        answer: "Tập hàng đúng predicate và mọi ràng buộc ngữ nghĩa đã cam kết."
+        explanation: "Plan thay đổi nhưng kết quả theo hợp đồng vẫn được duy trì."
+      - id: D
+        answer: "Thay plan có thể biến hai hàng 50 giống nhau thành một."
+        explanation: "Số bản sao theo ngữ nghĩa SELECT ALL phải được giữ."
+    correctAnswerId: C
+  - id: "declarative-quiz-05"
+    question: "Logic fact/rule, SQL query và pipeline hàm đều có mô tả WHAT. Vì sao không được coi là cùng một hệ?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Introduction/DeclarativeProgramming.md"
+      anchor: "declarative-relations"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Logic solver và pipeline hàm đều là cách viết SQL khác."
+        explanation: "Logic solver và hàm biến đổi không nhất thiết là SQL engine."
+      - id: B
+        answer: "Chúng chia sẻ ý định nhưng khác ngữ nghĩa fact, bag và giá trị biến đổi."
+        explanation: "Trùng phong cách không xóa mô hình dữ liệu hay luật thực thi riêng."
+      - id: C
+        answer: "Vì fact luôn là event và pipeline luôn có backpressure."
+        explanation: "Fact logic không đồng nghĩa tín hiệu thời gian hay Reactive Streams."
+      - id: D
+        answer: "Vì cả ba loại luôn tự loại duplicate và sắp xếp tăng dần."
+        explanation: "SQL bag, logic answers và sequence có hợp đồng bản sao khác nhau."
+    correctAnswerId: B
+  - id: "declarative-quiz-06"
+    question: "Người mới muốn học truy vấn và suy luận. Trình tự nào giúp hiểu mà chưa cần biết optimizer/Prolog thật?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Introduction/DeclarativeProgramming.md"
+      anchor: "declarative-learning-path"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Nắm dữ liệu/predicate → WHAT/HOW → fact/rule/goal → duplicate/order."
+        explanation: "Khái niệm và phản ví dụ làm nền trước ngôn ngữ và công cụ cụ thể."
+      - id: B
+        answer: "Tối ưu kế hoạch thực thi trước rồi mới tìm hiểu predicate dữ liệu."
+        explanation: "Plan đo hiệu năng không thay thế ngữ nghĩa hàng được chọn."
+      - id: C
+        answer: "Tập Prolog clause ordering trước khi biết fact hay goal."
+        explanation: "Chi tiết tìm kiếm nên xây trên mô hình suy luận."
+      - id: D
+        answer: "Chỉ học cú pháp YAML vì mọi YAML đều là khai báo."
+        explanation: "Một file YAML cũng có thể liệt kê các bước thủ tục."
+    correctAnswerId: A
+
+  - id: "declarative-quiz-07"
+    question: "Đặc tả 'lấy ba giao dịch lớn nhất' còn thiếu gì khi các amount bằng nhau?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.IntentVsProcedure/IntentVsProcedure.md"
+      anchor: "declarative-result-spec"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Dùng thứ tự đầu vào làm tiêu chí ngầm khi các số tiền bằng nhau."
+        explanation: "Chiến lược duyệt không tự xác định tiêu chí chọn ba mục."
+      - id: B
+        answer: "Cho optimizer trả bất kỳ ba khoản kể cả không lớn nhất."
+        explanation: "Kế hoạch vẫn phải tuân thủ điều kiện lớn nhất."
+      - id: C
+        answer: "Giữ ba hàng đầu do database trả khi không có ORDER BY."
+        explanation: "Thứ tự tình cờ không phải hợp đồng xếp hạng."
+      - id: D
+        answer: "Nêu tiêu chí so sánh, giới hạn ba mục và khóa phụ khi đồng hạng."
+        explanation: "Thiếu tie-breaker khiến nhiều tập kết quả đều có thể hợp lệ."
+    correctAnswerId: D
+  - id: "declarative-quiz-08"
+    question: "A:50, B:10 và A:-5. Điều kiện nào chỉ cho phép hàng dương của A?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.IntentVsProcedure/IntentVsProcedure.md"
+      anchor: "declarative-predicates"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "amount>0 OR account=A, do một vế đúng đã đủ."
+        explanation: "OR nhận cả B:10 lẫn A:-5, không đạt giao hai yêu cầu."
+      - id: B
+        answer: "Chỉ amount>0 vì account thuộc trách nhiệm của index."
+        explanation: "Một index không tự thêm điều kiện quyền truy cập còn thiếu."
+      - id: C
+        answer: "account=A AND amount>0, với cả hai điều kiện cùng đúng."
+        explanation: "Chỉ kiểm số dương sẽ lộ B:10, chỉ kiểm account sẽ nhận A:-5."
+      - id: D
+        answer: "Chỉ account=A rồi giả mọi khoản của A là dương."
+        explanation: "A:-5 phản ví dụ rõ cho việc bỏ điều kiện về số tiền."
+    correctAnswerId: C
+  - id: "declarative-quiz-09"
+    question: "Yêu cầu 'ba giao dịch gần đây' không ghi createdAt hay postedAt. Sai sót chính là gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.IntentVsProcedure/IntentVsProcedure.md"
+      anchor: "declarative-spec-completeness"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Đổi sang index để engine tự diễn giải thế nào là gần đây."
+        explanation: "Thiếu nghĩa xuất hiện trước khi chọn chiến lược thực thi."
+      - id: B
+        answer: "Đặc tả thiếu thước đo thời gian và điều kiện đồng hạng."
+        explanation: "Engine có thể thực hiện đúng một nghĩa nhưng khác ý người dùng."
+      - id: C
+        answer: "Giá trị gần đây luôn được quyết định bởi tên cột đầu tiên."
+        explanation: "Vị trí cột không được xem là định nghĩa nghiệp vụ."
+      - id: D
+        answer: "Dùng DISTINCT là đủ để suy được trường thời gian cần lọc."
+        explanation: "Loại bản sao không giải quyết ý nghĩa của recent."
+    correctAnswerId: B
+  - id: "declarative-quiz-10"
+    question: "Cùng một đặc tả account=A và amount>0, optimizer chọn index thay scan. Điều gì không được thay đổi?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.IntentVsProcedure/IntentVsProcedure.md"
+      anchor: "declarative-evaluator-role"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Các hàng đủ cả hai predicate và những bảo đảm ngữ nghĩa khác."
+        explanation: "Engine được đổi cách lấy dữ liệu, không được sửa yêu cầu lọc."
+      - id: B
+        answer: "Dùng index và bỏ điều kiện account=A để giảm chi phí."
+        explanation: "Đó là vi phạm hợp đồng truy vấn và phạm vi truy cập."
+      - id: C
+        answer: "Dùng index bắt buộc mọi kết quả có thứ tự ổn định."
+        explanation: "Nếu không có ORDER BY thì thứ tự không được hứa hẹn."
+      - id: D
+        answer: "Optimizer phải chọn plan có ít dòng code nhất trong nguồn."
+        explanation: "Kế hoạch được quyết định bởi engine và dữ liệu, không độ dài code."
+    correctAnswerId: A
+  - id: "declarative-quiz-11"
+    question: "Hai plan trả cùng hai giao dịch nhưng đảo thứ tự, truy vấn không ORDER BY. Đánh giá nào đúng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.IntentVsProcedure/IntentVsProcedure.md"
+      anchor: "declarative-semantics-plan"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Xem thứ tự từ index là thứ tự kết quả đã được bảo đảm."
+        explanation: "Index ordering không thay thế một yêu cầu ORDER BY tường minh."
+      - id: B
+        answer: "Plan sau sai vì hai lần chạy phải có byte-for-byte output."
+        explanation: "Hợp đồng không yêu cầu thứ tự nên so byte là yêu cầu quá mức."
+      - id: C
+        answer: "Cần DISTINCT để giữ thứ tự ổn định giữa hai execution plan."
+        explanation: "DISTINCT xử lý bản sao, không bảo đảm thứ tự sắp xếp."
+      - id: D
+        answer: "Cùng tập hàng và số bản sao theo hợp đồng; thứ tự không bắt buộc."
+        explanation: "Không ORDER BY thì hoán vị hiển thị không vi phạm ngữ nghĩa."
+    correctAnswerId: D
+  - id: "declarative-quiz-12"
+    question: "Một truy vấn chuyển từ table100 sang 1 triệu hàng rồi chậm; phản ứng nào có căn cứ?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.IntentVsProcedure/IntentVsProcedure.md"
+      anchor: "declarative-execution-tradeoffs"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Tin engine luôn tự chọn kế hoạch nhanh nhất trên mọi dữ liệu."
+        explanation: "Optimizer không có cam kết tối ưu tuyệt đối mọi hoàn cảnh."
+      - id: B
+        answer: "Bỏ account predicate để scan ít điều kiện hơn cho nhanh."
+        explanation: "Tăng tốc bằng phá quyền truy cập không hợp lệ."
+      - id: C
+        answer: "Kiểm plan/index/thống kê và đo workload thật, giữ nguyên predicate."
+        explanation: "Diễn đạt ngắn không miễn CPU, I/O hay trách nhiệm effect."
+      - id: D
+        answer: "Đổi thứ tự log và ghi trạng thái tùy ý như hoán vị phép cộng."
+        explanation: "Tác động phụ làm thứ tự có thể quan sát và thay đổi kết quả."
+    correctAnswerId: C
+  - id: "declarative-quiz-13"
+    question: "Có parent(An,Binh) và parent(Binh,Chi). Câu nào là kết luận có căn cứ theo quy tắc ông bà?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.LogicProgramming/LogicProgramming.md"
+      anchor: "declarative-logic-model"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "parent(An,Chi) vì quan hệ cha mẹ có tính bắc cầu."
+        explanation: "Quan hệ parent không mặc nhiên bắc cầu qua một thế hệ."
+      - id: B
+        answer: "grandparent(An,Chi), với Binh làm nhân chứng ở giữa."
+        explanation: "Hai cạnh parent tạo đúng tiền đề của quy tắc quan hệ."
+      - id: C
+        answer: "grandparent(Chi,An) vì cùng một chuỗi quan hệ."
+        explanation: "Thứ tự đối số quyết định hướng quan hệ, không thể đảo tùy ý."
+      - id: D
+        answer: "grandparent(Binh,An) vì An đứng đầu dãy dữ kiện."
+        explanation: "Vị trí trình bày fact không tạo tiền đề để Binh là ông bà An."
+    correctAnswerId: B
+  - id: "declarative-quiz-14"
+    question: "Một người gộp `parent(An,Binh)` với sự kiện 'user clicked at 10:20'. Vấn đề khái niệm là gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.LogicProgramming/LogicProgramming.md"
+      anchor: "declarative-facts-relations"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Fact khẳng định quan hệ được chấp nhận, còn click là sự kiện có thời điểm."
+        explanation: "Logic relation và stream event có ngữ nghĩa, thời điểm khác nhau."
+      - id: B
+        answer: "Coi fact như thông báo chỉ tồn tại đến sự kiện tiếp theo."
+        explanation: "Cơ sở tri thức không mặc định vận hành như luồng event."
+      - id: C
+        answer: "Mọi fact phải có timestamp để solver cho kết quả."
+        explanation: "Ví dụ parent không cần đồng hồ để biểu diễn quan hệ."
+      - id: D
+        answer: "Click là một rule có hai tiền đề parent khác nhau."
+        explanation: "Một sự kiện không tự định nghĩa quy tắc suy diễn ông bà."
+    correctAnswerId: A
+  - id: "declarative-quiz-15"
+    question: "Quy tắc grandparent(x,z) cần y sao cho parent(x,y), parent(y,z). Điều gì xảy ra khi thiếu cạnh thứ hai?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.LogicProgramming/LogicProgramming.md"
+      anchor: "declarative-inference-rules"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Suy ra grandparent chỉ từ một cạnh quan hệ parent."
+        explanation: "Luật nêu hội của hai mệnh đề, không phải một trong hai."
+      - id: B
+        answer: "Tự tạo fact parent(y,z) để luật luôn chạy được."
+        explanation: "Solver không được bịa dữ kiện cần chứng minh."
+      - id: C
+        answer: "Đổi hướng parent(z,y) là đủ để thay tiền đề thiếu."
+        explanation: "Đảo chiều thay nghĩa và không bù được cạnh cần có."
+      - id: D
+        answer: "Chưa suy ra grandparent(x,z) bằng quy tắc đó từ dữ kiện hiện có."
+        explanation: "Thiếu một tiền đề thì chứng minh dùng luật đó chưa hoàn chỉnh."
+    correctAnswerId: D
+  - id: "declarative-quiz-16"
+    question: "Trên mạng An→Binh→Chi, goal `grandparent(Who,Chi)` có đáp án nào?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.LogicProgramming/LogicProgramming.md"
+      anchor: "declarative-goal-queries"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Who=Binh vì Binh là cha mẹ trực tiếp của Chi."
+        explanation: "Binh là nhân chứng y, không phải x của grandparent(x,Chi)."
+      - id: B
+        answer: "Who=Chi vì goal chứa Chi ở vị trí cuối."
+        explanation: "Tham số cuối là người cháu, không nhất thiết là ông bà."
+      - id: C
+        answer: "Who=An, vì có chuỗi parent qua Binh."
+        explanation: "Goal với biến tìm giá trị thỏa luật, không đếm thứ tự duyệt."
+      - id: D
+        answer: "Who là mọi người vì query dùng một biến chưa gán."
+        explanation: "Biến bị ràng buộc bởi fact và rule, không phải wildcard vô điều kiện."
+    correctAnswerId: C
+  - id: "declarative-quiz-17"
+    question: "Hai solver cùng rule có chiến lược forward và backward khác nhau. Điều nào vẫn có thể khác mà không đổi logic?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.LogicProgramming/LogicProgramming.md"
+      anchor: "declarative-search-boundary"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Cho solver tự thay đổi parent thành grandparent để tìm nhanh."
+        explanation: "Chiến lược không được âm thầm thay luật đã công bố."
+      - id: B
+        answer: "Chi phí, thứ tự tìm đáp án và khả năng dừng trong ca đệ quy."
+        explanation: "Ngữ nghĩa quan hệ tách khỏi thuật toán tìm kiếm cụ thể."
+      - id: C
+        answer: "Nếu chưa thấy đáp án sau một bước thì chứng minh false."
+        explanation: "Tìm kiếm chưa xong không phải luôn là chứng minh phủ định."
+      - id: D
+        answer: "Đầu ra nào tới trước cũng được coi là đáp án duy nhất."
+        explanation: "Luật có thể hỗ trợ nhiều lời giải, cần xét toàn bộ điều kiện."
+    correctAnswerId: B
+  - id: "declarative-quiz-18"
+    question: "Một slide ghi fact/rule/goal kiểu Prolog nhưng không chạy interpreter. Khẳng định nào trung thực?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.LogicProgramming/LogicProgramming.md"
+      anchor: "declarative-prolog-boundary"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Đã minh họa khái niệm logic, chưa xác nhận cú pháp hay runtime Prolog thật."
+        explanation: "Unification, clause order và search cần kiểm trên công cụ thật."
+      - id: B
+        answer: "Sơ đồ fact/rule/goal đủ để khẳng định thứ tự giải của Prolog mà không cần chạy interpreter."
+        explanation: "Thứ tự tìm kiếm phải quan sát trong interpreter cụ thể."
+      - id: C
+        answer: "Các fact trên slide bảo đảm mọi rule đệ quy đều kết thúc."
+        explanation: "Rule đệ quy và thứ tự chọn clause có thể dẫn tới không dừng."
+      - id: D
+        answer: "Có ký hiệu parent tức là đã kiểm thử live Prolog."
+        explanation: "Ký hiệu mô tả không phải bằng chứng thực thi tool."
+    correctAnswerId: A
+  - id: "declarative-quiz-19"
+    question: "Có hai giao dịch khác ID đều amount=50. `SELECT amount` (mặc định ALL) và DISTINCT khác nhau thế nào?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.QueryRuleStyles/QueryRuleStyles.md"
+      anchor: "declarative-query-result"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "SELECT mặc định bỏ trùng còn DISTINCT giữ nguyên hai hàng."
+        explanation: "Đã đảo ngược ngữ nghĩa ALL và DISTINCT của SQL."
+      - id: B
+        answer: "Cả hai trả hai hàng vì giao dịch có ID khác nhau."
+        explanation: "Projection chỉ lấy amount; DISTINCT so giá trị được chiếu."
+      - id: C
+        answer: "Cả hai luôn trả một hàng vì 50 xuất hiện hai lần."
+        explanation: "Mặc định SQL không tự tạo tập giá trị duy nhất."
+      - id: D
+        answer: "ALL trả [50,50], DISTINCT trả một giá trị 50 được chiếu."
+        explanation: "SQL bag giữ bản sao theo projection trừ khi yêu cầu loại trùng."
+    correctAnswerId: D
+  - id: "declarative-quiz-20"
+    question: "Bốn hàng có A:50, A:50, B:10, A:-5. Lọc `account=A AND amount>0` cho gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.QueryRuleStyles/QueryRuleStyles.md"
+      anchor: "declarative-query-filter"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Giữ cả B:10 vì một trong hai predicate đã thỏa."
+        explanation: "B không đạt predicate account=A nên không được nhận."
+      - id: B
+        answer: "Chỉ một A:50 vì điều kiện lọc tự loại giao dịch trùng."
+        explanation: "WHERE lọc hàng, không thay SELECT ALL bằng DISTINCT."
+      - id: C
+        answer: "Hai giao dịch A:50, kể cả cùng amount vì chưa có DISTINCT."
+        explanation: "Cả chủ tài khoản và số dương phải đúng; bản sao vẫn có thể tồn tại."
+      - id: D
+        answer: "Gồm A:-5 vì A đúng tài khoản dù amount không dương."
+        explanation: "Hội các điều kiện loại khoản âm của A."
+    correctAnswerId: C
+  - id: "declarative-quiz-21"
+    question: "Slide `SELECT ALL` [50,50] và `DISTINCT` [50]; ví dụ khác [25,10] cần sắp xếp. Chọn giải thích nào đúng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.QueryRuleStyles/QueryRuleStyles.md"
+      anchor: "declarative-query-order"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "DISTINCT vừa bỏ trùng vừa sắp xếp kết quả tăng dần."
+        explanation: "SQL không hứa thứ tự nếu không yêu cầu ORDER BY."
+      - id: B
+        answer: "DISTINCT kiểm bản sao; ORDER BY ASC xếp [25,10] thành [10,25]."
+        explanation: "Hai cam kết độc lập, không dùng DISTINCT thay cho ORDER BY."
+      - id: C
+        answer: "ORDER BY luôn bỏ trùng khi amounts có cùng giá trị."
+        explanation: "Sắp xếp không thay đổi multiplicity của SELECT ALL."
+      - id: D
+        answer: "Một thứ tự quan sát từ index là cam kết ổn định mãi."
+        explanation: "Plan có thể đổi và thứ tự không được bảo đảm ngầm."
+    correctAnswerId: B
+  - id: "declarative-quiz-22"
+    question: "Một YAML mô tả `open→write→close`, khác policy 'chỉ chủ tài khoản xem balance' ở đâu?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.QueryRuleStyles/QueryRuleStyles.md"
+      anchor: "declarative-policy-config"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "YAML đang chỉ chuỗi HOW; policy nêu WHAT được cho phép."
+        explanation: "Đuôi file không quyết định paradigm; ý nghĩa của câu mô tả mới quyết định."
+      - id: B
+        answer: "Mọi YAML đều khai báo vì thụt lề thay cho vòng lặp."
+        explanation: "YAML có thể biểu diễn thứ tự lệnh thủ tục rất rõ."
+      - id: C
+        answer: "Policy luôn mệnh lệnh vì có một điều kiện Boolean."
+        explanation: "Predicate mô tả giới hạn kết quả, không tự là chuỗi lệnh."
+      - id: D
+        answer: "Cả hai đều giống nhau vì cùng có ký tự mũi tên."
+        explanation: "Ký hiệu trình bày không xác định quyền chọn execution."
+    correctAnswerId: A
+  - id: "declarative-quiz-23"
+    question: "Cùng truy vấn A:50,A:50 có scan và index plan. Điều nào là trách nhiệm của mọi plan hợp lệ?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.QueryRuleStyles/QueryRuleStyles.md"
+      anchor: "declarative-query-strategy"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Được xóa một bản sao vì index đã tìm thấy cùng amount."
+        explanation: "Trùng amount của hai giao dịch vẫn là hai hàng theo ALL."
+      - id: B
+        answer: "Tự chọn trả B:10 nếu tìm thấy nhanh hơn qua index."
+        explanation: "Chọn plan không cho bỏ predicate account=A."
+      - id: C
+        answer: "Bắt buộc luôn scan dù có index phù hợp để giữ đúng."
+        explanation: "Kết quả đúng không buộc chỉ một chiến lược truy cập."
+      - id: D
+        answer: "Cả predicate account=A, amount>0 và hai bản sao của SELECT ALL."
+        explanation: "Plan khác HOW nhưng không được đổi điều kiện và multiplicity."
+    correctAnswerId: D
+  - id: "declarative-quiz-24"
+    question: "Một DSL viết tuần tự `step1,step2,step3` nhưng tên 'rule'. Kết luận nào hợp lý nhất?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.QueryRuleStyles/QueryRuleStyles.md"
+      anchor: "declarative-dsl-limit"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Không có từ khóa for thì DSL phải là khai báo."
+        explanation: "Không có for không đồng nghĩa giao quyền chọn chiến lược."
+      - id: B
+        answer: "Mọi DSL là logic programming nếu có biến và điều kiện."
+        explanation: "Logic cần ngữ nghĩa fact/rule/goal, không chỉ tên biến."
+      - id: C
+        answer: "Nếu người viết ấn định từng bước/thứ tự, mô tả vẫn thiên thủ tục."
+        explanation: "Tên rule và cú pháp tùy ý không chứng minh nêu WHAT thay HOW."
+      - id: D
+        answer: "Nó là functional thuần vì tên lệnh được tách bằng dấu phẩy."
+        explanation: "Lệnh vẫn có thể ghi state, log hoặc gọi I/O."
+    correctAnswerId: C
+  - id: "declarative-quiz-25"
+    question: "Đặc tả `account=A AND amount>0` ngắn hơn loop nhưng thiếu kiểm quyền cho actor. Đánh giá nào đúng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.Tradeoffs/Tradeoffs.md"
+      anchor: "declarative-intent-benefits"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Query ngắn giúp engine tự bổ sung kiểm tra quyền còn thiếu."
+        explanation: "Dòng code không đo tính đầy đủ của hợp đồng bảo mật."
+      - id: B
+        answer: "Lời viết ngắn chỉ hữu ích khi nêu đủ điều kiện nghiệp vụ và quyền."
+        explanation: "Thiếu authorization không được engine tự suy ra từ cú pháp."
+      - id: C
+        answer: "Optimizer phải tự thêm actor permission vì là khai báo."
+        explanation: "Bộ tối ưu không được tự sáng tác predicate domain bị bỏ quên."
+      - id: D
+        answer: "Lỗi chỉ do lập trình mệnh lệnh vì có account=A."
+        explanation: "Predicate không biến câu khai báo thành chuỗi thao tác."
+    correctAnswerId: B
+  - id: "declarative-quiz-26"
+    question: "Cùng truy vấn từ 100 sang triệu hàng bắt đầu chậm. Cần làm gì thay vì tin 'khai báo tự tối ưu'?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.Tradeoffs/Tradeoffs.md"
+      anchor: "declarative-engine-costs"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Đo execution plan và workload với index/thống kê, giữ nguyên ngữ nghĩa."
+        explanation: "Không có bảo đảm mọi plan đều nhanh nhất hoặc ít I/O."
+      - id: B
+        answer: "Thay SELECT ALL bằng DISTINCT vì luôn giảm thời gian xử lý."
+        explanation: "Đó là thay semantics bản sao, đôi khi tốn thêm công sức."
+      - id: C
+        answer: "Bỏ account=A vì đây là điều kiện tăng chi phí tìm kiếm."
+        explanation: "Tối ưu không được phá hợp đồng lọc và quyền truy cập."
+      - id: D
+        answer: "Tin SQL engine không cần chạy CPU nhờ mô tả WHAT."
+        explanation: "Evaluator thực hiện công việc trên tài nguyên thực tế."
+    correctAnswerId: A
+  - id: "declarative-quiz-27"
+    question: "UI bất ngờ có hai hàng 50, thứ tự thay đổi và cả giao dịch B. Sai sót nào cần tìm trước?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.Tradeoffs/Tradeoffs.md"
+      anchor: "declarative-spec-pitfalls"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Chỉ cần thay index vì lỗi kết quả luôn do optimizer."
+        explanation: "Index không định nghĩa quyền xem, bản sao hoặc thứ tự cần có."
+      - id: B
+        answer: "Thêm DISTINCT rồi mặc định loại luôn giao dịch B và cố định thứ tự."
+        explanation: "DISTINCT chỉ so giá trị projection, không lọc account hay sắp xếp."
+      - id: C
+        answer: "Chấp nhận B:10 vì nó dương và không thể sửa predicate nữa."
+        explanation: "Thiếu account predicate cần bổ sung đúng hợp đồng."
+      - id: D
+        answer: "Xem yêu cầu DISTINCT, ORDER BY và ownership predicate đã nêu đủ chưa."
+        explanation: "Ba hiện tượng có nguyên nhân contract khác nhau, không chỉ do plan."
+    correctAnswerId: D
+  - id: "declarative-quiz-28"
+    question: "Có các tác động `write balance` và `notify`. Vì sao không được tùy ý hoán đổi thứ tự như phép cộng thuần?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.Tradeoffs/Tradeoffs.md"
+      anchor: "declarative-effect-limits"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Thao tác ghi trở thành thuần khi khai báo bằng DSL."
+        explanation: "Cú pháp khai báo không loại bỏ I/O hay mutation."
+      - id: B
+        answer: "Hai tác động luôn commute chỉ vì chúng dùng hai service."
+        explanation: "Khác service vẫn có phụ thuộc về kết quả và thứ tự."
+      - id: C
+        answer: "Người nhận có thể thấy thông báo trước khi balance ghi, tạo lịch sử sai."
+        explanation: "Thứ tự tác động bên ngoài quan sát được phải thuộc hợp đồng."
+      - id: D
+        answer: "Chỉ cần in thông báo trước rồi retry thì bảo đảm atomic."
+        explanation: "Retry không tự đảo ngược tác động đã nhìn thấy."
+    correctAnswerId: C
+  - id: "declarative-quiz-29"
+    question: "Với [10,-2,25], hai lối đều tính tổng số dương 35. Kết luận so sánh nào có căn cứ?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.Tradeoffs/Tradeoffs.md"
+      anchor: "declarative-imperative-contrast"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Engine không cần cộng dữ liệu vì đặc tả đã nêu kết quả."
+        explanation: "Engine vẫn phải xử lý giá trị và tính tổng theo cách tương ứng."
+      - id: B
+        answer: "Mệnh lệnh mô tả duyệt/if/cộng, khai báo nêu predicate và tổng mong muốn."
+        explanation: "Cùng phép toán thực nhưng phân chia quyền chỉ định HOW khác nhau."
+      - id: C
+        answer: "Mệnh lệnh không thể kiểm đúng vì dùng accumulator mutable."
+        explanation: "Vòng lặp cục bộ có thể đúng, minh bạch và kiểm được."
+      - id: D
+        answer: "Chỉ cú pháp dấu ngoặc quyết định code thuộc lối nào."
+        explanation: "Đặc tả và quyền chọn plan mới là khác biệt chính."
+    correctAnswerId: B
+  - id: "declarative-quiz-30"
+    question: "Người học nhầm SQL, Prolog, Functional và Reactive vì đều có 'map' hoặc 'query'. Phân biệt nào đúng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.Tradeoffs/Tradeoffs.md"
+      anchor: "declarative-paradigm-handoff"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Chúng dùng ý định nhưng khác bag rows, logic facts, purity và demand theo thời gian."
+        explanation: "Học paradigm trước rồi kiểm semantics bằng công cụ chuyên ngành tương ứng."
+      - id: B
+        answer: "Chỉ cần biết một SQL query thì đã hiểu Prolog unification."
+        explanation: "Rule logic có goal, biến và chiến lược giải khác SQL."
+      - id: C
+        answer: "Mọi functional pipeline đều tự tạo Reactive Streams backpressure."
+        explanation: "Map/filter thuần không tự sinh Subscription.request(n)."
+      - id: D
+        answer: "DOD hiệu năng là từ đồng nghĩa với query khai báo."
+        explanation: "Bố trí bộ nhớ/cache khác với mô hình query intent."
+    correctAnswerId: A

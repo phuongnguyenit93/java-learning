@@ -1,0 +1,330 @@
+# <interview-schema>
+# Cấu trúc câu hỏi Interview
+# schema-version: 2
+#
+# questions [kiểu: list; bắt buộc; mặc định: []]
+#   Danh sách câu hỏi Interview của module trong language hiện tại.
+#   mỗi phần tử:
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi phỏng vấn hiển thị cho người học.
+#     answer [kiểu: string; bắt buộc; mặc định: ""]
+#       Câu trả lời tham khảo, chỉ hiển thị khi người học chủ động mở.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu nội dung được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu nội dung đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+# </interview-schema>
+
+questions:
+  - question: "Khi xem bộ lọc giao dịch dương, làm sao xác định thiết kế có tính khai báo và những điều gì không được phép suy ra?"
+    answer: "Hãy xem người viết quyết định điều gì: đặc tả khai báo nêu giao dịch hợp lệ, chẳng hạn amount lớn hơn không, còn evaluator chọn cách duyệt và cơ chế thực hiện. Máy vẫn phải làm việc và tuân mọi giới hạn đã nêu. Một điều kiện giống WHERE ngắn không tự bảo đảm thứ tự hàng, chi phí thấp, quyền truy cập đúng hay thực thi nonblocking; các thuộc tính đó cần hợp đồng và bằng chứng riêng."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Introduction/DeclarativeProgramming.md"
+      anchor: "declarative-what"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Ba dịch vụ đều lặp bộ lọc account=A và amount>0. Vì sao nên gom thành đặc tả dùng lại, và rủi ro nào vẫn còn?"
+    answer: "Predicate chung giúp thấy rõ điều kiện nghiệp vụ và giảm nguy cơ ba vòng lặp lệch nhau khi chính sách đổi. Hợp đồng vẫn phải giữ cả số tiền dương lẫn quyền truy cập tài khoản; chỉ gom amount lớn hơn không có thể làm mã ngắn hơn nhưng kém an toàn. Nên kiểm với A:50, B:10, A:-5 và nhiều danh tính người gọi, vì evaluator không thể tự đoán điều kiện phân quyền đã bị bỏ."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Introduction/DeclarativeProgramming.md"
+      anchor: "declarative-why"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "So sánh for/if/append với điều kiện lọc trên [10,-2,25]. Vì sao cả hai cùng đúng nhưng chia trách nhiệm khác nhau?"
+    answer: "Lời giải mệnh lệnh tạo danh sách, duyệt từng phần tử theo thứ tự viết sẵn, kiểm số dương rồi thêm 10 và 25. Lời giải khai báo nêu các giá trị dương mong muốn và để evaluator chọn cách lọc; cả hai có thể trả [10,25]. Khác biệt là quyền quyết định cách thực hiện, không phải engine có dùng vòng lặp hay không. Nếu chính thứ tự [10,25] là yêu cầu, đặc tả còn phải nói rõ thứ tự."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Introduction/DeclarativeProgramming.md"
+      anchor: "declarative-before"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Truy vấn đổi từ table scan sang index plan. Hãy giải thích mô hình specification/evaluator/result và bất biến cần kiểm."
+    answer: "Specification nêu hàng nào hợp lệ, evaluator chọn chiến lược truy cập vật lý, còn kết quả phải thỏa ngữ nghĩa công bố. Dùng index có thể đổi chi phí và thứ tự tìm thấy tình cờ nhưng không được tự bỏ account=A, thay điều kiện số dương hay gộp hai bản sao khi SELECT ALL. Cần kiểm membership và multiplicity trên cùng dữ liệu; chỉ kiểm thứ tự khi đã nêu ORDER BY. Đổi plan không có nghĩa được sửa đáp án nghiệp vụ."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Introduction/DeclarativeProgramming.md"
+      anchor: "declarative-solution"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Vì sao SQL query, suy luận logic và biến đổi hàm đều có thể khai báo nhưng không có cùng ngữ nghĩa?"
+    answer: "Cả ba có thể mô tả quan hệ hay biến đổi mong muốn thay vì liệt kê từng lệnh, nhưng hợp đồng khác nhau. SQL SELECT ALL trả bag các hàng được chiếu và có thể có bản sao; quy tắc logic suy ra quan hệ từ fact và tiền đề; pipeline hàm ghép phép biến đổi giá trị và có thể thuần. Reactive Streams còn có quy tắc demand theo thời gian tại giao diện tương thích, không tự có trong mọi biểu thức khai báo. Phải xác định mô hình và evaluator trước khi suy luận thứ tự, hiệu ứng hay đồng thời."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Introduction/DeclarativeProgramming.md"
+      anchor: "declarative-relations"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Bạn sẽ dạy tư duy truy vấn và logic khai báo cho người biết giá trị, điều kiện, vòng lặp nhưng chưa học optimizer hay Prolog ra sao?"
+    answer: "Bắt đầu lần theo vòng lặp [10,-2,25] và điều kiện tương đương để hiểu WHAT khác HOW. Tiếp đó nêu đặc tả đầy đủ, kể cả quyền tài khoản và xử lý đồng hạng, rồi mới minh họa scan so với index. Sau đó suy grandparent(An,Chi) từ parent fact và phân biệt fact với sự kiện có thời điểm. Cuối cùng học SQL bag [50,50], DISTINCT [50], ORDER BY và ranh giới tác động. Trình tự này giúp nhận ra hợp đồng sai trước khi đi sâu cú pháp chuyên ngành."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Introduction/DeclarativeProgramming.md"
+      anchor: "declarative-learning-path"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Chủ sản phẩm yêu cầu ba giao dịch lớn nhất. Cần làm rõ điều gì trước khi bàn đến index?"
+    answer: "Phải nêu tài khoản hoặc khoảng thời gian, giá trị dùng để xếp hạng, ba là số hàng hay số amount duy nhất và cách chọn khi đồng hạng tại vị trí thứ ba. ORDER BY amount DESC kèm khóa phụ ổn định là một hợp đồng phù hợp nếu cần đúng ba hàng có danh tính. Truy vấn chọn ngẫu nhiên một hàng đồng hạng vẫn có thể đúng theo yêu cầu mơ hồ; index không quyết định chính sách thiếu của nghiệp vụ. Hãy test giá trị bằng nhau và phạm vi phân quyền trước khi tối ưu."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.IntentVsProcedure/IntentVsProcedure.md"
+      anchor: "declarative-result-spec"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Với A:50, B:10, A:-5, vì sao account=A AND amount>0 khác OR, và ai chịu trách nhiệm phân quyền?"
+    answer: "Phép AND chỉ giữ A:50 vì từng đầu ra phải thỏa cả tài khoản lẫn số tiền dương. OR làm lọt B:10 và A:-5, cho thấy một biểu thức có vẻ hợp lý về số vẫn có thể sai phạm vi. Người xây dịch vụ phải nêu tài khoản được phép của actor hoặc kiểm tại ranh giới bảo mật rõ ràng; optimizer hay index không tự thêm quyền thiếu. Test nên chứa cả tài khoản không được xem và giá trị âm."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.IntentVsProcedure/IntentVsProcedure.md"
+      anchor: "declarative-predicates"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Yêu cầu ba giao dịch gần đây nhưng không nói createdAt hay postedAt. Bộ đánh giá đúng vẫn có thể cho kết quả sai ý nào?"
+    answer: "Evaluator có thể so thời gian chính xác nhưng chọn nhầm đồng hồ nghiệp vụ. Thời điểm tạo, hạch toán và cập nhật gần nhất có thể xếp cùng các hàng theo nhiều thứ tự; thời điểm bằng nhau còn cần khóa phụ nếu muốn tái lập ổn định. Đây là lỗi thiếu đặc tả, không nhất thiết do query plan. Cần hỏi trường thời gian, múi giờ, khóa đồng hạng, phạm vi quyền xem và số hàng, rồi test các ca biên trước khi bàn tối ưu."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.IntentVsProcedure/IntentVsProcedure.md"
+      anchor: "declarative-spec-completeness"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Optimizer thay account scan bằng index lookup. Nó được tối ưu điều gì và không được tự suy diễn điều gì?"
+    answer: "Evaluator có thể chọn scan, index, thứ tự join hay chiến lược khác nếu vẫn giữ mọi ngữ nghĩa truy vấn. Nó có thể giảm lượng công việc nhờ thống kê nhưng không được coi account=A là tùy chọn, tự đổi amount>0 hoặc gộp bản sao khi SELECT ALL. Chủ nghiệp vụ xác định hợp đồng kết quả và quyền truy cập; evaluator thực hiện bằng CPU, bộ nhớ và I/O thật. Hãy so hai plan trên cùng bộ dữ liệu phản ví dụ và đếm cả số hàng trùng."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.IntentVsProcedure/IntentVsProcedure.md"
+      anchor: "declarative-evaluator-role"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Hai SQL plan trả cùng các giao dịch và bản sao nhưng đảo thứ tự khi không ORDER BY. Ngữ nghĩa có khác không?"
+    answer: "Với SELECT ALL mặc định, kết quả tương đương phải giữ các giá trị đạt điều kiện và số bản sao của chúng. Khi không có ORDER BY, thứ tự trình bày không được bảo đảm nên đảo thứ tự chưa chắc là vi phạm. DISTINCT đổi số bản sao chứ không cam kết sắp xếp. Nếu báo cáo hay phân trang cần thứ tự ổn định, phải thêm ORDER BY kèm khóa phụ đủ phân biệt rồi so plan lại. Đừng lấy thứ tự từ một index làm hợp đồng ngầm."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.IntentVsProcedure/IntentVsProcedure.md"
+      anchor: "declarative-semantics-plan"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Truy vấn khai báo chậm khi lên một triệu hàng. Cần bằng chứng gì để tối ưu mà không đổi ý nghĩa?"
+    answer: "Đo workload thực, độ chọn lọc predicate, index, execution plan, bộ nhớ và I/O thay vì tin mô tả ngắn thì không tốn chi phí. So các chiến lược nhưng vẫn giữ quyền tài khoản, bản sao, NULL và ORDER BY đã yêu cầu. Thay SELECT ALL bằng DISTINCT có thể đổi dữ liệu trả về lại còn thêm xử lý, nên không phải cách tăng tốc chung. Nếu luồng có tác động như gửi thông báo, cũng không thể tùy ý đổi thứ tự như cộng số thuần."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.IntentVsProcedure/IntentVsProcedure.md"
+      anchor: "declarative-execution-tradeoffs"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Từ parent(An,Binh) và parent(Binh,Chi), vì sao suy được quan hệ ông bà mà không suy ra parent(An,Chi)?"
+    answer: "Quy tắc grandparent(x,z) đúng khi có y thỏa parent(x,y) và parent(y,z). Ở đây Binh làm nhân chứng nên suy ra grandparent(An,Chi). Không được tự suy parent(An,Chi) vì quan hệ cha mẹ chưa được định nghĩa bắc cầu; sửa ý nghĩa đó làm sai knowledge base. Quy tắc khai báo nêu chứng cứ để suy kết luận, còn solver vẫn phải chọn chiến lược tìm kiếm. Đây là quan hệ logic chứ không phải dòng sự kiện theo thời gian."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.LogicProgramming/LogicProgramming.md"
+      anchor: "declarative-logic-model"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Phân biệt parent(An,Binh) với cú click lúc 10:20 như thế nào, và khác biệt đó ảnh hưởng quy tắc suy luận ra sao?"
+    answer: "Biểu thức parent là fact khẳng định quan hệ trong mô hình tri thức đã chọn. Cú click là event có thời điểm, cho biết điều gì vừa xảy ra. Quy tắc ông bà cần các fact parent liên kết, không phải bất kỳ event nào có hai trường dữ liệu. Ứng dụng có thể quyết định biến event thành fact theo một quy tắc riêng, nhưng phải định nghĩa cách suy quan hệ, không thể đồng nhất thông điệp thời gian với mệnh đề logic đã được chấp nhận."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.LogicProgramming/LogicProgramming.md"
+      anchor: "declarative-facts-relations"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Quy tắc grandparent(x,z) đòi parent(x,y) và parent(y,z). Thiếu tiền đề thứ hai thì có thể kết luận điều gì?"
+    answer: "Với dữ kiện hiện có, quy tắc chưa chứng minh được grandparent(x,z), vì chưa có y thỏa cả hai tiền đề. Điều đó không tự động chứng minh quan hệ hoàn toàn sai: logic thế giới đóng và mở có cách hiểu việc thiếu chứng cứ khác nhau. Tự bịa parent(y,z), đảo chiều quan hệ hoặc coi timeout là phủ định đều làm lệch suy luận. Khi gỡ lỗi, nên xem biến y đã gán gì và tiền đề nào thiếu, rồi kiểm knowledge base cùng ngữ nghĩa phủ định cụ thể."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.LogicProgramming/LogicProgramming.md"
+      anchor: "declarative-inference-rules"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Giải thích goal grandparent(Who,Chi) trên chuỗi An→Binh→Chi và ý nghĩa của biến Who."
+    answer: "Goal yêu cầu tìm giá trị thay cho Who sao cho quan hệ grandparent đúng, không đơn thuần hỏi một dòng lệnh có chạy không. Gắn quy tắc với goal cho z=Chi; hai fact parent(Binh,Chi) và parent(An,Binh) cung cấp y=Binh, x=An, nên Who=An. Biến bị ràng buộc bởi mạng fact/rule chứ không phải wildcard vô điều kiện; knowledge base lớn hơn có thể có nhiều đáp án. Thứ tự tìm thấy phụ thuộc solver nếu chưa có ràng buộc sắp xếp."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.LogicProgramming/LogicProgramming.md"
+      anchor: "declarative-goal-queries"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Hai solver chạy cùng luật grandparent theo forward hoặc backward chaining. Khác biệt nào hợp lệ, khác biệt nào không?"
+    answer: "Chúng có thể khác thứ tự duyệt, quan hệ trung gian, bộ nhớ, lúc tìm ra đáp án và khả năng dừng khi có đệ quy. Chúng không được tự xem parent là quan hệ bắc cầu, tự tạo fact thiếu hoặc trả kết luận trái luật. Trong tìm kiếm không kết thúc, chưa thấy đáp án không phải luôn là chứng minh goal sai. Hãy kiểm ngữ nghĩa trên ca hữu hạn rồi đo riêng chiến lược tìm kiếm và đệ quy, vì tính đúng và chi phí vận hành cần bằng chứng khác nhau."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.LogicProgramming/LogicProgramming.md"
+      anchor: "declarative-search-boundary"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Slide suy grandparent(An,Chi) bằng ký hiệu giống Prolog nhưng chưa chạy interpreter. Có thể khẳng định chính xác điều gì?"
+    answer: "Sơ đồ minh họa mô hình fact/rule/goal và nhân chứng logic nối hai fact parent. Nó chưa xác nhận chương trình Prolog cụ thể parse được, chọn clause theo thứ tự nào, đáp án đầu tiên là gì hay có dừng khi đệ quy. Các hành vi đó phụ thuộc cú pháp, unification và chiến lược tìm kiếm thực, cần test trong interpreter. Nên coi slide là mô hình dạy học và chuyển cơ chế thực thi Prolog sang module chuyên trách thay vì xem hình vẽ là bằng chứng chạy."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.LogicProgramming/LogicProgramming.md"
+      anchor: "declarative-prolog-boundary"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Hai giao dịch khác ID cùng amount=50. Vì sao SELECT amount trả [50,50] còn DISTINCT trả [50], và không được suy điều gì?"
+    answer: "SQL SELECT ALL mặc định có ngữ nghĩa bag với hàng được chiếu, nên hai giao dịch khác nhau vẫn tạo hai hàng amount=50 giống hệt. SELECT DISTINCT loại trùng trên giá trị đã chọn nên còn một 50. ID giao dịch không nằm trong projection không ngăn việc gộp đó. Cả hai không hứa sắp xếp tăng dần nếu thiếu ORDER BY, và việc chọn dữ liệu không đồng nghĩa UPDATE hay thanh toán. Test cần giữ đúng số bản sao, cột được chọn và ý định kết quả."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.QueryRuleStyles/QueryRuleStyles.md"
+      anchor: "declarative-query-result"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Cho A:50, A:50, B:10, A:-5. Hãy lần điều kiện account=A AND amount>0 và giải thích hai hàng 50 có còn không."
+    answer: "Cả hai A:50 đều thỏa tài khoản A và số tiền dương nên vẫn qua WHERE với SELECT ALL mặc định. B:10 sai tài khoản dù dương; A:-5 sai số tiền dù đúng tài khoản. Hai số 50 vẫn là hai hàng được chiếu cho tới khi nêu DISTINCT. Ví dụ chống hai lỗi khác nhau: đổi AND thành OR làm rò dữ liệu ngoài quyền, còn tưởng WHERE tự loại trùng làm đếm thiếu giao dịch. Index plan hợp lệ cũng phải giữ kết quả bag này."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.QueryRuleStyles/QueryRuleStyles.md"
+      anchor: "declarative-query-filter"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Vì sao DISTINCT [50] và ORDER BY ASC biến [25,10] thành [10,25] giải hai vấn đề khác nhau?"
+    answer: "DISTINCT kiểm số bản sao của hàng được chiếu: ALL có thể ra [50,50] còn DISTINCT chỉ một 50. ORDER BY kiểm thứ tự hiển thị nên tăng dần của 25 và 10 là [10,25]; nó không xóa các hàng 50 trùng. DISTINCT mà thiếu ORDER BY vẫn không cam kết một thứ tự cụ thể. Phân trang ổn định khi giá trị sắp xếp trùng cần khóa phụ duy nhất. Thấy index scan trả đúng thứ tự một lần không biến nó thành hợp đồng lâu dài."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.QueryRuleStyles/QueryRuleStyles.md"
+      anchor: "declarative-query-order"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Một YAML liệt kê open→write→close, YAML khác nói chỉ chủ sở hữu mới xem được số dư. Cái nào thiên khai báo và vì sao?"
+    answer: "File đầu quy định thứ tự lệnh có tác động bên ngoài dù viết bằng YAML, nên chủ yếu là HOW thủ tục. File sau nêu thuộc tính quyền truy cập mà evaluator hoặc policy engine phải bảo đảm, tức WHAT khai báo, miễn là actor và phạm vi đã được nêu đúng. Đuôi file hay ký hiệu không quyết định paradigm. Khi review phải xem hợp đồng ngữ nghĩa, ai thực thi policy, lỗi có chặn truy cập không và điều gì xảy ra nếu quên điều kiện chủ tài khoản."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.QueryRuleStyles/QueryRuleStyles.md"
+      anchor: "declarative-policy-config"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Scan và index plan cùng chạy account=A AND amount>0 khi có hai hàng A:50. Bằng chứng nào cho thấy cả hai đều đúng?"
+    answer: "Chạy cả hai trên A:50, A:50, B:10 và A:-5 rồi so bag kết quả thay vì vị trí hàng tình cờ. Cả hai phải giữ hai giao dịch A dương, bỏ B và hàng A âm. Không plan nào được loại trùng trong SELECT ALL chỉ vì index trả cùng khóa. Bằng chứng hiệu năng như selectivity, I/O và chi phí plan tách khỏi kiểm tính đúng. Nếu cần thứ tự thì nêu ORDER BY và test thêm điều kiện đó; plan nhanh mà đổi ngữ nghĩa vẫn sai."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.QueryRuleStyles/QueryRuleStyles.md"
+      anchor: "declarative-query-strategy"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "DSL tự gọi là ngôn ngữ rule nhưng chỉ định step1, step2, step3. Phân loại ra sao để không đoán theo cú pháp?"
+    answer: "Hãy đọc DSL yêu cầu evaluator làm gì. Nếu người viết cố định chuỗi thao tác và tác động thì đó là hướng thủ tục, kể cả tên keyword là rule hay trình bày bằng YAML. Policy khai báo chủ yếu phải nêu kết quả hoặc ràng buộc mong muốn và giao quyền chọn plan. Một biểu thức Boolean đơn lẻ trong workflow mệnh lệnh không làm toàn bộ chương trình thành khai báo. Cần review tác động quan sát được và khả năng đổi thứ tự theo ngữ nghĩa thực, không theo tên DSL."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.QueryRuleStyles/QueryRuleStyles.md"
+      anchor: "declarative-dsl-limit"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Query ngắn có account=A AND amount>0 nhưng không kiểm quyền của người gọi. Bài học thực về tính rõ của khai báo là gì?"
+    answer: "Lời viết gọn chỉ hữu ích khi đặc tả đã có đủ điều kiện chấp nhận. Predicate này chọn hàng của tài khoản A nhưng chưa chứng minh actor hiện tại được phép đọc A. Phân quyền phải nằm ở ranh giới rõ hoặc trong ràng buộc đã nêu, không thể trông chờ optimizer tự tốt bụng. Khi review đặc tả, hỏi điều gì phải đúng cho mọi hàng trả về, ai được xem và những ca nào bị loại; kiểm thêm một chủ tài khoản khác."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.Tradeoffs/Tradeoffs.md"
+      anchor: "declarative-intent-benefits"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Query với một trăm hàng chạy nhanh nhưng một triệu hàng lại chậm. Bạn gỡ lỗi mà không phá đặc tả thế nào?"
+    answer: "Thu execution plan thật, số hàng, độ chọn lọc predicate, index, thống kê và mức dùng tài nguyên trên tải đại diện. So scan và index mà không bỏ quyền tài khoản hoặc đổi số bản sao của SELECT ALL. DISTINCT có thể thêm chi phí loại trùng đồng thời đổi kết quả, nên không thể thêm mù quáng để tăng tốc. Khai báo giúp tác giả không phải chỉ từng bước, chứ runtime vẫn dùng CPU, RAM và I/O. Hãy ghi riêng bằng chứng tính đúng và hiệu năng."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.Tradeoffs/Tradeoffs.md"
+      anchor: "declarative-engine-costs"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Báo cáo bất ngờ có hai hàng amount=50, thứ tự lúc đổi lúc không, và giao dịch B. Hãy chẩn đoán riêng ba hiện tượng."
+    answer: "Hai số 50 có thể đúng theo bag semantics của SELECT ALL; chỉ dùng DISTINCT nếu nghiệp vụ thực sự muốn amount được chiếu duy nhất. Thứ tự hiển thị thay đổi do thiếu ORDER BY; cần khóa sắp xếp và khóa đồng hạng nếu muốn ổn định. Giao dịch B cho thấy predicate tài khoản hoặc phạm vi phân quyền bị thiếu hay sai; DISTINCT và sort không chữa được rò rỉ đó. Test bằng hai A:50, B:10, A:-5 và timestamp trùng trước khi tối ưu plan."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.Tradeoffs/Tradeoffs.md"
+      anchor: "declarative-spec-pitfalls"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Workflow trông khai báo nhưng có writeBalance và notifyCustomer. Vì sao evaluator không được tùy ý đảo hoặc retry hai bước?"
+    answer: "Cả hai đều có tác động bên ngoài. Nếu thông báo gửi trước khi số dư lưu thành công, người dùng có thể thấy kết quả sai với trạng thái ghi nhận. Retry thông báo còn có thể gửi trùng nếu chưa thiết kế idempotency hay hợp đồng phát tin. Cú pháp khai báo không tự tạo giao dịch nguyên tử, rollback hay exactly-once delivery. Phải nêu thứ tự, nhánh thất bại, phục hồi và điều gì người dùng được phép quan sát, thay vì coi tác động như phép tính thuần hoán đổi được."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.Tradeoffs/Tradeoffs.md"
+      anchor: "declarative-effect-limits"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Vòng lặp và biểu thức khai báo cùng cộng các số dương trong [10,-2,25] thành 35. Khi nào nên chọn mỗi cách?"
+    answer: "Vòng lặp duyệt ba số, kiểm dương rồi cập nhật accumulator để được 10+25=35. Biểu thức khai báo chỉ nêu yêu cầu lọc và tổng hợp, giao evaluator cách thực hiện. Chọn biểu thức khi hợp đồng kết quả rõ và engine xử lý được thao tác duyệt thông thường; chọn bước tường minh khi cần điều khiển chặt trạng thái, tác động hay gỡ lỗi. Cả hai vẫn cần test số âm, bản sao, tràn số hoặc giả định về thứ tự."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.Tradeoffs/Tradeoffs.md"
+      anchor: "declarative-imperative-contrast"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Người phỏng vấn đánh đồng SQL, Prolog, pipeline hàm và Reactive Streams vì đều giống truy vấn. Bạn giải thích ranh giới ra sao?"
+    answer: "Bắt đầu từ điểm chung là diễn đạt ý định, rồi tách ngữ nghĩa: SQL chiếu bag các hàng và chỉ hứa thứ tự khi ORDER BY, logic suy quan hệ từ fact và rule, còn functional ghép phép biến đổi với tính thuần là thuộc tính riêng. Reactive Streams quy định tín hiệu subscription, demand và cancel theo thời gian, không phải ngôn ngữ truy vấn chung. SQL optimizer thật, Prolog unification, quản lý hiệu ứng hàm và reactive scheduler có module chuyên trách. Bố trí dữ liệu cho phần cứng lại là bài toán hiệu năng khác."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.Tradeoffs/Tradeoffs.md"
+      anchor: "declarative-paradigm-handoff"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
