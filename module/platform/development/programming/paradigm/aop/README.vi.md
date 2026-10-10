@@ -1,3 +1,14 @@
+# 📂 README MODULE STRUCTURE (VI)
+
+* **1.Introduction**
+    * [AOP](readme/vi/menu/1.Introduction/AOP.md)
+* **2.Terminology**
+    * [Terminology](readme/vi/menu/2.Terminology/Terminology.md)
+* **3.ImplementationModels**
+    * [ImplementationModels](readme/vi/menu/3.ImplementationModels/ImplementationModels.md)
+* **4.Tradeoffs**
+    * [Tradeoffs](readme/vi/menu/4.Tradeoffs/Tradeoffs.md)
+
 # Lập trình hướng khía cạnh (Aspect-Oriented Programming — AOP)
 
 AOP là một cách tổ chức **mối quan tâm xuyên suốt** như ghi log, đo thời gian hoặc kiểm toán khi cùng một chính sách xuất hiện ở nhiều thành phần. AOP không thay thế logic nghiệp vụ hay toàn bộ lập trình hướng đối tượng: nó mô tả hành vi bổ sung và nơi hành vi đó được ghép vào luồng thực thi.

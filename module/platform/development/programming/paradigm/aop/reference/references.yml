@@ -14,3 +14,17 @@
 #
 # Add only curated references that are useful for the module.
 # The build system must not overwrite this file after authored content exists.
+
+references:
+  - title: "The AspectJ Programming Guide"
+    url: "https://eclipse.dev/aspectj/doc/latest/progguide/progguide.html"
+    description: "Eclipse AspectJ's primary explanations of crosscutting concerns, join points, pointcuts, advice, and the AspectJ model."
+  - title: "Aspect Oriented Programming with Spring"
+    url: "https://docs.spring.io/spring-framework/reference/core/aop.html"
+    description: "Official Spring Framework introduction distinguishing Spring's AOP capabilities and proxy approach from the wider AOP paradigm."
+  - title: "Declaring a Pointcut — Spring Framework"
+    url: "https://docs.spring.io/spring-framework/reference/core/aop/ataspectj/pointcuts.html"
+    description: "Official confirmation of Spring AOP's method-execution join point boundary, useful when comparing implementation models."
+  - title: "Proxying Mechanisms — Spring Framework"
+    url: "https://docs.spring.io/spring-framework/reference/core/aop/proxying.html"
+    description: "Official explanation of JDK interface-based versus class-based proxies and why self-invocation bypasses Spring AOP advice."

@@ -41,4 +41,77 @@
 # Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: crosscutting-concerns
+    relatedKnowledge:
+      - AOP
+    title: "Vấn đề xuyên suốt nhiều thành phần và vai trò của AOP"
+    purpose: "Hiểu vì sao một hành vi như ghi log, đo thời gian hoặc kiểm toán có thể lặp lại trong nhiều đối tượng, và AOP tổ chức mối quan tâm xuyên suốt đó như thế nào."
+    objectives:
+      - "Nhận diện logic nghiệp vụ chính và mối quan tâm xuyên suốt nhiều thành phần trong một tình huống quen thuộc."
+      - "Giải thích AOP bổ trợ cho cách chia trách nhiệm theo đối tượng, thay vì thay thế OOP hoặc toàn bộ nguyên lý phân tách mối quan tâm."
+
+  - id: explicit-versus-aspect
+    relatedKnowledge:
+      - AOP
+      - Terminology
+    title: "Từ lời gọi tường minh đến mô hình aspect"
+    purpose: "So sánh cách gọi helper, wrapper hoặc decorator trực tiếp với cách tách hành vi dùng chung và khai báo nơi áp dụng nó."
+    objectives:
+      - "Mô tả được vì sao lặp lời gọi thủ công vừa dễ quan sát vừa có nguy cơ bỏ sót hoặc phân tán chính sách."
+      - "Nêu vai trò của aspect trong việc tập trung một mối quan tâm và quy tắc áp dụng của nó."
+
+  - id: joinpoint-pointcut-advice
+    relatedKnowledge:
+      - Terminology
+    title: "Mô hình cốt lõi: join point, pointcut và advice"
+    purpose: "Xây dựng mô hình về vị trí có thể bổ sung hành vi, quy tắc lựa chọn vị trí và hành vi thực thi tại vị trí đã chọn."
+    objectives:
+      - "Phân biệt join point là điểm trong mô hình thực thi, pointcut là điều kiện chọn điểm và advice là hành vi bổ sung."
+      - "Liên hệ aspect và target với ba khái niệm trên bằng một ví dụ theo dõi thao tác nghiệp vụ."
+      - "Nhận ra các loại join point khả dụng phụ thuộc mô hình triển khai, không phải đặc tính cố định của mọi AOP framework."
+
+  - id: advice-composition
+    relatedKnowledge:
+      - Terminology
+      - ImplementationModels
+    title: "Ghép hành vi và luồng thực thi hiệu lực"
+    purpose: "Hiểu cách hành vi bổ sung tham gia trước, sau hoặc bao quanh hành vi chính và ý nghĩa khái niệm của weaving/composition."
+    objectives:
+      - "Lần theo một luồng từ lời gọi tới target, advice và kết quả khi áp dụng aspect."
+      - "Phân biệt before, after và around advice: around có thể cho chạy tiếp hoặc bỏ qua hành vi đích, còn advice có thể ảnh hưởng kết quả, lỗi và luồng thực thi quan sát được."
+      - "Hiểu weaving là việc kết hợp aspect với target, còn thời điểm và kỹ thuật kết hợp do implementation quyết định."
+
+  - id: implementation-boundaries
+    relatedKnowledge:
+      - ImplementationModels
+    title: "Giới hạn giữa paradigm và các mô hình triển khai AOP"
+    purpose: "Nhận biết vì sao weaving và proxy/interception cung cấp phạm vi quan sát khác nhau, tránh suy từ một framework thành định nghĩa chung của AOP."
+    objectives:
+      - "Phân biệt ở mức khái niệm compile-time weaving, load-time weaving và interception khi chạy."
+      - "So sánh AspectJ có weaving và mô hình join point rộng hơn với Spring AOP chặn lời gọi phương thức qua proxy trên Spring bean; dùng cú pháp khai báo @AspectJ trong Spring không đồng nghĩa đã weaving bytecode."
+      - "Nhận biết proxy theo interface và proxy theo class trong Spring có giới hạn chặn lời gọi khác nhau; lời gọi nội bộ trong target không đi qua proxy nên không được advice, còn cơ chế chi tiết thuộc module Spring."
+      - "Xác định kỹ thuật pointcut, proxy, bean lifecycle và compiler/weaver thuộc các module công nghệ chuyên trách."
+
+  - id: visibility-and-tradeoffs
+    relatedKnowledge:
+      - ImplementationModels
+      - Tradeoffs
+    title: "Lợi ích, chi phí và lỗi thiết kế dễ gặp"
+    purpose: "Đánh giá lợi ích giảm lặp cùng chi phí hành vi ngầm, phụ thuộc vào quy tắc chọn điểm và khó khăn khi truy vết."
+    objectives:
+      - "Phát hiện pointcut quá rộng, advice chồng lấn hoặc thứ tự xử lý khó theo dõi trong một kịch bản."
+      - "Cân nhắc ảnh hưởng của AOP đến khả năng đọc code, debug, kiểm thử và mức độ coupling ẩn."
+      - "Nhận biết luồng nghiệp vụ chủ đạo thường cần biểu diễn tường minh hơn là giấu trong aspect."
+
+  - id: end-to-end-aop-decision
+    relatedKnowledge:
+      - AOP
+      - Terminology
+      - Tradeoffs
+    title: "Thiết kế và đánh giá một trường hợp AOP hoàn chỉnh"
+    purpose: "Tổng hợp cách chọn mối quan tâm, xác định phạm vi áp dụng, hình dung hành vi hiệu lực và quyết định khi nào nên dùng AOP."
+    objectives:
+      - "Đi từ nhu cầu logging/auditing lặp lại tới aspect, join point, pointcut, advice và kết quả quan sát được."
+      - "Lý giải khi nào helper, wrapper hoặc decorator tường minh đơn giản và an toàn hơn."
+      - "Chỉ ra ranh giới với Spring AOP, AspectJ implementation và transaction management để học tiếp mà không nhầm phạm vi."

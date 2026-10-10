@@ -1,0 +1,330 @@
+# <interview-schema>
+# Cấu trúc câu hỏi Interview
+# schema-version: 2
+#
+# questions [kiểu: list; bắt buộc; mặc định: []]
+#   Danh sách câu hỏi Interview của module trong language hiện tại.
+#   mỗi phần tử:
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi phỏng vấn hiển thị cho người học.
+#     answer [kiểu: string; bắt buộc; mặc định: ""]
+#       Câu trả lời tham khảo, chỉ hiển thị khi người học chủ động mở.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu nội dung được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu nội dung đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+# </interview-schema>
+
+questions:
+  - question: >-
+      Bạn được yêu cầu đo độ trễ ở ba nghiệp vụ chuyển tiền, lập hóa đơn và kiểm kho. Hãy lập luận phần nào thuộc domain, phần nào là cross-cutting concern, và tại sao không chỉ đơn giản đặt mọi thứ vào một service chung?
+    answer: >-
+      Ba nghiệp vụ giữ các bất biến và kết quả riêng: chuyển tiền bảo vệ số dư, hóa đơn xác định giá và kiểm kho quản lý số lượng. Chính sách đo elapsed time, gắn correlation ID hay định dạng audit cần nhất quán ở nhiều đường thực thi nên là concern xuyên suốt. Một service khổng lồ gom cả ba nghiệp vụ sẽ trộn quyền sở hữu và tạo coupling. AOP cung cấp một trục ghép hành vi bổ sung tại các điểm chọn được; nó không sở hữu kết quả chuyển tiền và không thay thế việc kiểm tra đúng sai của domain.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '1.Introduction/AOP.md'
+      anchor: 'aop-what'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+  - question: >-
+      Năm nhóm đã tự chép mã startTimer và logElapsed vào năm service. Khi có yêu cầu che dữ liệu nhạy cảm và đo cả đường lỗi, bạn sẽ tìm rủi ro ở đâu trước khi quyết định dùng AOP?
+    answer: >-
+      Tôi kiểm từng bản sao ở đường thành công, return sớm và exception, tìm nơi thiếu finally và nơi log raw account number. Một thay đổi định dạng thực hiện ở bốn nơi nhưng quên nơi thứ năm chính là policy drift. Centralize có thể giảm các bản sao, nhưng rule chọn điểm quá rộng cũng gây rủi ro mới. Trước khi dùng aspect, tôi xác định rõ dịch vụ nào cần timing, yêu cầu redaction, failure semantics và cách test tập matched/unmatched; không lấy số dòng giảm làm bằng chứng duy nhất.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '1.Introduction/AOP.md'
+      anchor: 'aop-why'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+  - question: >-
+      Một hệ thống chỉ có hai đường gọi cần timing. Hãy thiết kế helper, wrapper hoặc decorator phù hợp, rồi nêu điều kiện thực sự khiến bạn đổi sang aspect.
+    answer: >-
+      Helper dễ dùng khi caller chủ động gọi đo trước và sau nhưng phải nhớ cả nhánh lỗi. Wrapper bao quanh lời gọi, giữ start và finally cùng một chỗ; decorator giữ nguyên hợp đồng interface rồi delegate sang target. Với hai call site, đường gọi tường minh dễ review hơn pointcut ẩn. Tôi chỉ cân nhắc aspect khi concern lan qua nhiều boundary ổn định, việc đăng ký wrapper thủ công dễ bỏ sót và có thể đo kiểm chính xác phạm vi được chọn.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '1.Introduction/AOP.md'
+      anchor: 'aop-without'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+  - question: >-
+      Một policy audit bị bỏ ở nhánh return sớm của một service, nhưng team muốn chỉ thêm aspect rồi coi như xong. Bạn sẽ lập test coverage và chỉ ra rủi ro mới thế nào?
+    answer: >-
+      Tôi lập ma trận các điểm thực thi dự kiến có audit, gồm success, early return và thrown error, rồi thêm các điểm ngoài phạm vi để kiểm overmatch. Một aspect có thể xử lý tập trung nhưng pointcut sai lại bỏ sót đồng loạt hoặc audit nhầm thao tác nhạy cảm. Nếu dùng before/after phải xác định loại advice nào bao đường lỗi; không giả định after-returning chạy khi ném ngoại lệ. Test cần đi qua interceptor/weaver thực, không chỉ gọi trực tiếp target.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '1.Introduction/AOP.md'
+      anchor: 'aop-limit'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+  - question: >-
+      Giải thích cho đồng nghiệp tại sao nhìn source transferFunds không đủ dự đoán trace runtime khi aspect timing xuất hiện và khi nào around có thể đổi luôn ý nghĩa nghiệp vụ.
+    answer: >-
+      Target chịu trách nhiệm chuyển tiền, aspect định nghĩa đo thời gian, pointcut chọn join point đủ điều kiện và advice chèn hành vi vào execution. Trace qua boundary có thể là timing-start, target, result, timing-end; gọi renderPage ngoài rule không có timing. Một around advice có quyền không gọi proceed và tự trả kết quả; khi đó caller có thể thấy thành công giả dù transfer không xảy ra. Vì vậy review phải xét effective execution và hợp đồng trả về, không chỉ các dòng nằm trong target.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '1.Introduction/AOP.md'
+      anchor: 'aop-solution'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+  - question: >-
+      Một team chuyển kiểm tra số dư từ TransferService sang aspect ghi log vì muốn giảm duplicate. Bạn phản biện bằng nguyên lý phân tách mối quan tâm và ranh giới trách nhiệm như thế nào?
+    answer: >-
+      Separation of concerns là nguyên lý rộng; AOP chỉ là một kỹ thuật tổ chức concern xuyên qua nhiều đối tượng. Kiểm tra đủ tiền quyết định tính hợp lệ của một chuyển khoản và invariant tài khoản, nên phải ở thành phần domain có quyền sở hữu quyết định đó. Timing, tracing và chuẩn hóa audit dùng chung có thể đặt ở aspect độc lập nếu selection rõ. Giấu balance validation vào timing aspect khiến lời gọi bypass aspect có thể sai nghiệp vụ và lỗi khó truy vết; giảm số dòng không bù được mất quyền sở hữu.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '1.Introduction/AOP.md'
+      anchor: 'aop-object-responsibility-bridge'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+  - question: >-
+      Bạn review một class có các hàm logStart/logEnd được gọi thủ công từ service. Điều gì còn thiếu để gọi nó là một aspect hoàn chỉnh theo mental model AOP?
+    answer: >-
+      Hai helper chỉ cung cấp hành vi, caller còn phải biết lúc nào gọi chúng. Một aspect mô-đun hóa cùng concern và mô tả tiêu chí chọn những execution points nhận advice, qua cơ chế ghép mà implementation hỗ trợ. Tôi phải xem pointcut có chọn đúng phạm vi, advice có giữ nguyên outcome và cách các đường lỗi được xử lý không. Một class đặt tên Aspect hoặc gắn annotation không chứng minh đã có weaving/interception thật; bản chất nằm ở hành vi runtime được ghép.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '2.Terminology/Terminology.md'
+      anchor: 'aop-aspect'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+  - question: >-
+      Nếu nghiệp vụ muốn ghi nhận mỗi lần field balance bị ghi và mỗi lần transferFunds thực thi, bạn sẽ lựa chọn AOP model dựa trên join point ra sao?
+    answer: >-
+      Join point là loại sự kiện trong execution model mà cơ chế AOP có thể quan sát, không phải chuỗi tên phương thức. Spring AOP proxy chủ yếu intercept method execution trên managed bean, không có field-set join point; nới pointcut không mở thêm loại sự kiện. AspectJ weaving hỗ trợ mô hình rộng hơn, trong đó có một số field access và constructor join point. Tôi sẽ xác định bằng chứng runtime cần quan sát, rồi chọn module công nghệ sở hữu việc thiết lập weaving; không hứa Spring @Aspect tự bắt được phép gán.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '2.Terminology/Terminology.md'
+      anchor: 'aop-join-point'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+  - question: >-
+      Bạn có pointcut dựa theo tên save* nhưng đội nghiệp vụ đổi tên persistOrder và xuất hiện saveDraft không cần audit. Bạn xây chiến lược test và rule bền vững hơn thế nào?
+    answer: >-
+      Tôi coi rule chọn điểm như một predicate cần kiểm cả false negative và false positive: persistOrder phải được chọn nếu thuộc phạm vi, còn saveDraft phải loại nếu không thuộc. Chỉ thấy một lời gọi saveOrder có log là bằng chứng rất yếu. Chọn theo responsibility boundary ổn định hơn wildcard tên tuỳ tiện; khi đổi tên hay module phải chạy lại coverage matrix. Một rule đúng cú pháp vẫn có thể sai semantics, và đổi loại advice không chữa được lựa chọn sai.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '2.Terminology/Terminology.md'
+      anchor: 'aop-pointcut'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+  - question: >-
+      Một timing advice vừa ghi thời lượng vừa gọi một dịch vụ ngoài dễ ném lỗi. Bạn đánh giá tính an toàn của advice so với nghiệp vụ gốc thế nào?
+    answer: >-
+      Advice thêm hành vi tại join point được chọn nhưng bản thân nó có thể ném exception, sửa return hoặc đổi đường thực thi. Tôi xác định chính sách: với timing thông thường, lỗi của dịch vụ metric không được thay đổi kết quả chuyển tiền. Tôi đo cả nhánh thành công và ném lỗi bằng cleanup kiểu finally, đồng thời phải bắt và cô lập lỗi khi gửi metric theo chính sách đó; nếu telemetry ném lỗi ngay trong finally, nó có thể che exception gốc hoặc khiến giao dịch đã thành công bị báo thất bại. Ghi nhận lỗi telemetry riêng, không lộ số tài khoản, giữ nguyên kết quả hoặc exception nghiệp vụ; kiểm đủ tổ hợp target thành công/thất bại, telemetry thành công/thất bại và điểm không khớp.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '2.Terminology/Terminology.md'
+      anchor: 'aop-advice'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+  - question: >-
+      Giả sử tất cả timing advice bị tắt nhưng transferFunds vẫn chuyển được tiền. Hợp đồng nào phải tiếp tục đúng và tại sao?
+    answer: >-
+      Target vẫn phải kiểm điều kiện tài khoản, bảo toàn bất biến, phát hiện thiếu tiền và quản lý state chuyển khoản đúng như cam kết. Aspect đo thời gian hay correlation chỉ quan sát hoặc bổ sung concern dùng chung, không được là nơi duy nhất kiểm số dư. Nếu logic domain chỉ đúng khi advice có mặt, việc direct target call hay thay công nghệ interceptor sẽ khiến hệ thống sai. Tôi dùng test target để xác nhận bất biến và integration test qua aspect để xác nhận phần cross-cutting.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '2.Terminology/Terminology.md'
+      anchor: 'aop-target'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+  - question: >-
+      Hai dự án cùng dùng cú pháp @Aspect nhưng một dự án chỉ bật Spring AOP proxy, dự án kia có AspectJ weaving. Bạn diễn giải khác biệt cho người review thế nào?
+    answer: >-
+      Cú pháp @Aspect mô tả aspect, không chứng minh class bytecode đã bị dệt. Với Spring proxy, caller phải đi qua proxy trên method đủ điều kiện; gọi trực tiếp target hoặc self-invocation có thể bỏ qua advice. Với AspectJ, weaving có thể sửa bytecode lúc build hoặc lúc load và hỗ trợ các join point khác như một số field access. Khi điều tra thiếu log, tôi kiểm cơ chế ghép thực tế, loại join point, eligibility và đường gọi; không chỉ nhìn annotation.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '2.Terminology/Terminology.md'
+      anchor: 'aop-weaving'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+  - question: >-
+      Bạn cần timer ghi đầy đủ trên cả success và exception. Phân tích vì sao after-returning khác after-throwing, và khi nào around/finally là lựa chọn phù hợp.
+    answer: >-
+      After-returning chỉ chạy khi hoàn thành bình thường, after-throwing xử lý đường ném lỗi, còn after-finally chạy ở cả hai đường nhưng bản thân nó chưa giữ được thời điểm bắt đầu. Around phù hợp khi cùng một advice cần lưu mốc bắt đầu và tính elapsed time: ghi thời điểm, gọi proceed đúng một lần, đo thời lượng trong finally rồi giữ nguyên return hoặc ném tiếp exception gốc. Nếu chính bước xuất metric có thể lỗi thì cũng phải cô lập nó khi chính sách không cho phép che kết quả nghiệp vụ. Before chạy trước target và vẫn có thể ngăn target nếu ném lỗi. Hãy chọn advice hẹp nhất đủ dùng vì bỏ hoặc lặp proceed thay đổi luôn thao tác chuyển tiền.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '2.Terminology/Terminology.md'
+      anchor: 'aop-advice-kinds'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+  - question: >-
+      Một reviewer đề xuất around advice gọi proceed hai lần để khắc phục lỗi tạm thời trong transferFunds. Bạn lập trace cho 0, 1 và 2 lần proceed và đánh giá rủi ro thực tế.
+    answer: >-
+      Với 0 proceed, target không chạy; nếu advice trả success, caller có thể tưởng tiền đã được chuyển. Với 1 proceed, target thực thi một lần và advice nên truyền nguyên result hoặc exception sau khi ghi timing. Với 2 proceed trong model cho phép, target có thể chuyển tiền hai lần, không chỉ sinh hai log; nếu lượt đầu thành công còn lượt sau lỗi, state càng khó suy luận. Retry nghiệp vụ cần hợp đồng idempotency và transaction riêng, không thể mặc định từ timing aspect.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '2.Terminology/Terminology.md'
+      anchor: 'aop-effective-execution'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+  - question: >-
+      Khi source của target không chứa lệnh audit nhưng bytecode chạy thật lại có audit từ AspectJ compile-time weaving, bạn chứng minh điều gì về ranh giới source và execution?
+    answer: >-
+      Compile-time weaving đưa behavior được chọn vào bytecode tạo khi build. Vì thế đọc riêng source target không đủ thấy mọi thao tác được thực thi; cần kiểm cấu hình build và output class đã weave. Đây không phải runtime proxy chỉ bọc lời gọi và cũng không phải load-time transformation khi class loader đang nạp. Để debug, tôi xác nhận artifact đang chạy chứa weaving mong đợi, cùng test matched/unmatched và đường exception, không khẳng định một annotation đơn lẻ đã kích hoạt trình dệt.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '3.ImplementationModels/ImplementationModels.md'
+      anchor: 'aop-compile-time'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+  - question: >-
+      Production chạy thiếu advice dù môi trường phát triển có load-time weaving. Bạn phân tích nguyên nhân tiềm năng theo lifecycle mà không nhầm sang proxy ra sao?
+    answer: >-
+      Load-time weaving biến đổi bytecode lúc class được nạp, trước khi chạy bình thường; sự khác biệt về thời điểm class load, class loader và cấu hình instrumentation có thể khiến class chưa được weave như dự định. Tôi kiểm evidence class đã biến đổi, rule có match và agent có hiệu lực trước khi class cần xử lý được load. Đây là một ranh giới khác compile-time weaving ngay trong build và khác proxy cần caller đi qua đối tượng trung gian. Việc triển khai agent cụ thể thuộc module AspectJ.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '3.ImplementationModels/ImplementationModels.md'
+      anchor: 'aop-load-time'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+  - question: >-
+      Một service có phương thức verify hợp lệ để advice, nhưng gọi trực tiếp target không có log trong khi gọi proxy.verify lại có. Bạn giải thích và chọn test đúng thế nào?
+    answer: >-
+      Proxy là lớp trung gian nhận call từ caller, chạy advice khi method đủ điều kiện và delegate tới target. Lời gọi trực tiếp tới target đi vòng ngoài proxy nên không được chặn, dù method cùng tên và có annotation liên quan. Tôi kiểm đường external caller → proxy → target và so với direct target, không chỉ kiểm method declaration. Integration test phải đi qua bean proxy thực để chứng minh coverage của Spring AOP; kiểm target riêng vẫn hữu ích cho domain nhưng không đủ cho advice.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '3.ImplementationModels/ImplementationModels.md'
+      anchor: 'aop-runtime'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+  - question: >-
+      Một yêu cầu compliance nói phải audit mọi lần gán trực tiếp balance, kể cả khi không gọi setter. Nếu chỉ có Spring AOP, bạn đề xuất hướng xử lý nào và nói rõ giới hạn gì?
+    answer: >-
+      Spring AOP proxy chỉ quan sát method execution đủ điều kiện, nên không thể bắt trực tiếp mọi field assignment bằng cách mở rộng pointcut. Setter advice chỉ thấy đường gọi setter đi qua proxy; lệnh ghi field nội bộ không nhất thiết đi qua nó. Có thể thay đổi thiết kế để tập trung cập nhật qua một boundary được kiểm soát, hoặc dùng weaving có join point loại field-set phù hợp. Mỗi lựa chọn cần test đường bypass và đánh giá chi phí, không đưa ra lời hứa capture mọi phép ghi.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '3.ImplementationModels/ImplementationModels.md'
+      anchor: 'aop-model-boundary'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+  - question: >-
+      Trace external→proxy.execute()→target.this.verify() không xuất hiện advice của verify. Vì sao đây không phải lỗi pointcut, và giải pháp đặt ở đâu?
+    answer: >-
+      External call đến proxy.execute có thể được advice, sau đó thân execute trên target gọi this.verify trực tiếp mà không quay qua proxy. Advice của verify thuộc lớp interceptor proxy nên không thấy self-invocation, dù rule có thể match một lần proxy.verify từ bên ngoài. Đây là đặc điểm call path chứ không nhất thiết lỗi tên pointcut. Tôi cân nhắc điều chỉnh đường đi qua boundary được quản lý, tách trách nhiệm đúng lớp hoặc dùng model weaving khác; cơ chế Spring chi tiết thuộc module framework.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '3.ImplementationModels/ImplementationModels.md'
+      anchor: 'aop-interception-limits'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+  - question: >-
+      Một nhóm muốn thay ba wrapper timing bằng một aspect vì nghĩ sẽ tự giảm mọi lỗi. Bạn lập điều kiện acceptance nào để lợi ích tập trung policy là có thật?
+    answer: >-
+      Lợi ích là một nơi giữ định dạng timing và rule chọn execution points thay vì ba bản cập nhật dễ lệch. Nhưng tôi yêu cầu tập matched gồm đúng các thao tác cần đo, unmatched không bị ảnh hưởng, success và failure đều ghi thời lượng, error/result không đổi và dữ liệu nhạy cảm được che. Nếu pointcut dựa tên dễ đổi hoặc cấu trúc quá rộng, centralization có thể tăng coupling thay vì giảm. So với wrapper, phải đánh giá chi phí truy vết hành vi ngoài source.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '4.Tradeoffs/Tradeoffs.md'
+      anchor: 'aop-benefits'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+  - question: >-
+      Một bug xuất hiện chỉ khi ứng dụng bật aspect và source của transferFunds không có log. Hãy dựng trình tự điều tra thay vì chỉ đọc target.
+    answer: >-
+      Đầu tiên tôi xác nhận request đi qua proxy/weaver nào và pointcut nào match. Tiếp theo tôi ghi trace nesting advice, thời điểm proceed, kết quả cuối và exception, rồi đối chiếu target-only với integration path. Nếu nhiều around advice cùng match, thứ tự lồng và quyền thay return có thể giải thích sự khác biệt. Gọi trực tiếp target có ích để cô lập nghiệp vụ nhưng không chứng minh effective execution. Tôi cũng kiểm policy redaction để trace phục vụ debug mà không lộ tài khoản.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '4.Tradeoffs/Tradeoffs.md'
+      anchor: 'aop-cost'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+  - question: >-
+      Bạn phải chọn giữa đặt correlation ID vào aspect dùng chung và đặt quy tắc phê duyệt chuyển tiền vào aspect. Hãy giải thích quyết định dưới góc nhìn ổn định của policy.
+    answer: >-
+      Correlation ID hoặc timing có thể áp dụng tương tự trên nhiều operation, ít phụ thuộc ý nghĩa từng account, và rule chọn service boundary có thể kiểm được, nên là ứng viên aspect. Quy tắc duyệt chuyển tiền phụ thuộc số dư, trạng thái và rủi ro của domain; nó cần chủ sở hữu nghiệp vụ rõ ràng và dễ thấy trong control flow. Tôi chỉ dùng cross-cutting mechanism khi có selection ổn định, thất bại kiểm soát được và có test matched/unmatched. Security là cross-cutting nhưng vẫn phải nêu quyền hạn và failure policy cụ thể.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '4.Tradeoffs/Tradeoffs.md'
+      anchor: 'aop-good-fit'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+  - question: >-
+      Một thiết kế tách CHECK, DEBIT, CREDIT thành ba advice chạy quanh transferFunds. Vì sao đây có thể làm hỏng khả năng chứng minh tính đúng đắn dù mã service ngắn hơn?
+    answer: >-
+      Thứ tự kiểm tra, trừ và cộng tiền là luồng nghiệp vụ có tác động trạng thái, cần nhìn được điểm thất bại và ai chịu trách nhiệm rollback hoặc phục hồi. Nếu ba advice có precedence không rõ, một exception có thể xảy ra sau debit nhưng trước credit trong khi service trông như đã hoàn thành. Aspect không tự biến thao tác thành transaction. Tôi sẽ giữ orchestration trong domain coordinator, tách policy timing/audit dùng chung ra ngoài và test partial failure cùng hậu điều kiện trạng thái.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '4.Tradeoffs/Tradeoffs.md'
+      anchor: 'aop-bad-fit'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+  - question: >-
+      Hai around advice đều match transferFunds; mỗi advice chỉ log đúng một dòng, nhưng kết quả cuối đôi lúc khác nhau. Test nào có khả năng chứng minh nguyên nhân?
+    answer: >-
+      Chỉ kiểm hai annotation có mặt hoặc đếm mỗi advice chạy một lần chưa xác định thứ tự. Tôi cần trace có dấu mốc vào/ra từng advice, thứ tự proceed, số lần target chạy, return và exception được nhìn từ lớp ngoài và trong. Đổi precedence có thể khiến một advice nuốt lỗi hoặc sửa response trước khi advice kia thấy. Cùng lúc tôi thử matched và unmatched để phát hiện pointcut quá rộng hoặc thiếu. Nên mô tả precedence rõ trong contract thay vì dựa vào thứ tự tình cờ.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '4.Tradeoffs/Tradeoffs.md'
+      anchor: 'aop-pointcut-pitfalls'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
+  - question: >-
+      Bạn phải triển khai timing cho transferFunds và createInvoice, bao cả lỗi nhưng không được lộ số tài khoản. Hãy đưa một ma trận kiểm chứng đủ để duyệt thiết kế.
+    answer: >-
+      Tôi liệt kê matched transfer và invoice success, matched thrown failure và các lời gọi unmatched như renderPage. Hai nhóm matched phải có elapsed timing ngay cả khi lỗi; unmatched không có timing; response và exception gốc giữ nguyên trừ khi contract nói khác. Log chỉ chứa correlation ID đã kiểm quyền và thông tin lỗi an toàn, không raw account number hoặc credential. Thêm ca around 0/1/2 proceed và nhiều advice overlap để phát hiện thay đổi tác động nghiệp vụ; dùng integration path đúng proxy/weaver, không giả lập HTTP response trong module paradigm.
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: '4.Tradeoffs/Tradeoffs.md'
+      anchor: 'aop-design-walkthrough'
+    apiRelated:
+      controller: ''
+      methodSignature: ''
