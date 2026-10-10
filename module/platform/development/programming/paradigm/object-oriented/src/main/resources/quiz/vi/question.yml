@@ -1,0 +1,858 @@
+# <quiz-schema>
+# Cấu trúc câu hỏi Quiz
+# schema-version: 3
+#
+# questions [kiểu: list; bắt buộc; mặc định: []; duy nhất theo: id]
+#   Danh sách câu hỏi Quiz của module trong language hiện tại.
+#   mỗi phần tử:
+#     id [kiểu: string; bắt buộc; mặc định: ""]
+#       ID ổn định và duy nhất của câu hỏi.
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi hiển thị cho người học.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu câu hỏi được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu câu hỏi đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+#     answers [kiểu: list; bắt buộc; số phần tử: 4; mặc định: []; duy nhất theo: id]
+#       Chính xác bốn đáp án. ID A/B/C/D là identity nội bộ ổn định, không phải vị trí hiển thị sau khi frontend shuffle.
+#       mỗi phần tử:
+#         id [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#           Identity ổn định của đáp án.
+#         answer [kiểu: string; bắt buộc; mặc định: ""]
+#           Nội dung đáp án hiển thị cho người học.
+#         explanation [kiểu: string; bắt buộc; mặc định: ""]
+#           Giải thích hiển thị khi người học chọn đáp án này, bất kể đúng hay sai.
+#     correctAnswerId [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#       ID nội bộ của đáp án đúng. Frontend kiểm tra bằng identity này sau khi shuffle.
+# </quiz-schema>
+
+questions:
+  - id: "oop-quiz-01"
+    question: "Hai tài khoản có cùng số dư 100. Vì sao vẫn có thể là hai đối tượng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Introduction/ObjectOrientedProgramming.md"
+      anchor: "oop-what"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Số dư bằng nhau nghĩa là hai tài khoản phải có cùng danh tính."
+        explanation: "Giá trị quan sát bằng nhau không chứng minh hai tài khoản là một thực thể."
+      - id: B
+        answer: "Vì danh tính và trách nhiệm của từng tài khoản khác nhau."
+        explanation: "Số dư giống nhau không đồng nghĩa cùng thực thể; rút ở A không sửa B."
+      - id: C
+        answer: "Vì đối tượng chỉ tồn tại khi có lệnh thay đổi trạng thái."
+        explanation: "Đối tượng bất biến cũng là đối tượng."
+      - id: D
+        answer: "Vì mỗi tài khoản bắt buộc có một class nguồn riêng."
+        explanation: "Nhiều đối tượng tạo từ một class vẫn có thể giữ danh tính khác nhau."
+    correctAnswerId: B
+  - id: "oop-quiz-02"
+    question: "Màn hình, batch và checkout đều tự kiểm tra số dư. Khi quy tắc thấu chi đổi, nên cải thiện gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Introduction/ObjectOrientedProgramming.md"
+      anchor: "oop-why"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Giao quyết định đủ tiền cho ranh giới chịu trách nhiệm của Account."
+        explanation: "Một hợp đồng chung ngăn nhiều caller tự triển khai quy tắc dễ lệch nhau."
+      - id: B
+        answer: "Giữ ba bản kiểm tra ở từng caller nhưng lập checklist đồng bộ mỗi khi quy tắc thấu chi thay đổi trong tương lai."
+        explanation: "Sao chép làm lần đổi sau vẫn dễ thiếu một nơi."
+      - id: C
+        answer: "Cho Checkout sửa thẳng balance nếu batch không làm được."
+        explanation: "Quyền ghi phân tán làm khó bảo vệ invariant."
+      - id: D
+        answer: "Dời quy tắc sang giao diện mà vẫn cho caller tính số dư tùy ý."
+        explanation: "Tên interface không loại bỏ quyền quyết định bị phân tán."
+    correctAnswerId: A
+  - id: "oop-quiz-03"
+    question: "Một thủ tục withdraw(account,amount) duy nhất đã kiểm tra số dư chính xác. Đánh giá nào phù hợp?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Introduction/ObjectOrientedProgramming.md"
+      anchor: "oop-before"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Chuyển thủ tục đã đúng sang class Account dù chưa có trách nhiệm riêng cần đóng gói."
+        explanation: "Thủ tục cũng có tiền điều kiện và hậu điều kiện."
+      - id: B
+        answer: "Dữ liệu tách khỏi thủ tục không thể phân biệt hai tài khoản có cùng số dư."
+        explanation: "Tham số account xác định đúng thực thể dù hành vi được tổ chức thành thủ tục hay phương thức của đối tượng."
+      - id: C
+        answer: "Có thủ tục withdraw riêng là đủ để chặn mọi nơi khác ghi AccountData."
+        explanation: "Tách hàm không tự giới hạn quyền ghi của mọi caller."
+      - id: D
+        answer: "Thủ tục vẫn hợp lệ; dùng OOP khi cần thêm trách nhiệm và cộng tác."
+        explanation: "Khác biệt là cách tổ chức trách nhiệm, không phải phép trừ có đúng hay không."
+    correctAnswerId: D
+  - id: "oop-quiz-04"
+    question: "Checkout muốn rút 30 từ Account A có 100. Vết cộng tác nào giữ trách nhiệm đúng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Introduction/ObjectOrientedProgramming.md"
+      anchor: "oop-solution"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Cho Checkout tự kiểm tra số dư và gọi setBalance(70), vì bên gọi hiểu rõ số tiền cần rút hơn chính Account."
+        explanation: "Caller chiếm quyền giữ invariant của A."
+      - id: B
+        answer: "Checkout gửi yêu cầu cho cả A lẫn B vì số dư ban đầu bằng nhau."
+        explanation: "Giá trị giống nhau không làm danh tính trùng nhau."
+      - id: C
+        answer: "Checkout yêu cầu A.withdraw(30), A kiểm tra rồi giữ 70 và trả kết quả."
+        explanation: "Bên gọi yêu cầu hành vi, đối tượng quản lý trạng thái của chính mình."
+      - id: D
+        answer: "Account chỉ in thông báo; Checkout quyết định tiền rút hợp lệ."
+        explanation: "Quy tắc số dư nên do chủ sở hữu tài khoản quyết định."
+    correctAnswerId: C
+  - id: "oop-quiz-05"
+    question: "Một sơ đồ nêu identity, invariant và hợp đồng mà chưa dùng từ khóa Java. Đó có phải kiến thức OOP?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Introduction/ObjectOrientedProgramming.md"
+      anchor: "oop-boundary"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Không; trước hết phải mô tả mô hình OOP bằng class, interface và private của Java."
+        explanation: "Đóng gói là ranh giới hành vi, private chỉ là công cụ."
+      - id: B
+        answer: "Có; đây là mô hình trách nhiệm độc lập với cú pháp class/interface cụ thể."
+        explanation: "Tư duy paradigm đi trước chi tiết Java về quyền truy cập và dispatch."
+      - id: C
+        answer: "Không; hợp đồng chỉ tồn tại khi biên dịch Java interface."
+        explanation: "Hợp đồng còn gồm kỳ vọng kết quả và lỗi quan sát được."
+      - id: D
+        answer: "Có, nhưng lập sơ đồ đủ để tự bảo đảm atomic transfer."
+        explanation: "Sơ đồ trách nhiệm không tạo transaction guarantee."
+    correctAnswerId: B
+  - id: "oop-quiz-06"
+    question: "Người mới muốn giải thích việc rút tiền bị từ chối rồi học đa hình. Thứ tự nào có nền tảng tốt?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Introduction/ObjectOrientedProgramming.md"
+      anchor: "oop-learning-path"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Hiểu danh tính/trạng thái → invariant → trách nhiệm/hợp đồng → đa hình → đánh đổi."
+        explanation: "Mỗi bước cung cấp ý nghĩa cần có để xét hợp đồng thay thế."
+      - id: B
+        answer: "Học inheritance và các biến thể pay trước, rồi dựa vào tên phương thức để suy ra ai có quyền giữ invariant của tài khoản."
+        explanation: "Kế thừa không định nghĩa danh tính hay quyền sở hữu state."
+      - id: C
+        answer: "Học cấu trúc transaction trước rồi coi invariant tự được giữ."
+        explanation: "Transaction không thay thế hợp đồng hành vi."
+      - id: D
+        answer: "Học đa hình trước, bỏ qua hợp đồng vì caller có chung tên phương thức."
+        explanation: "Cùng tên không bảo đảm hành vi thay thế hợp lệ."
+    correctAnswerId: A
+
+  - id: "oop-quiz-07"
+    question: "A và B đều có 100, còn hai giá trị 100 VND thì giống nhau. Phân biệt nào đúng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.EncapsulationAbstraction/EncapsulationAbstraction.md"
+      anchor: "oop-object-identity"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Hai tài khoản có cùng số dư nên được coi là một thực thể nghiệp vụ dù chúng có mã và lịch sử giao dịch riêng."
+        explanation: "Số dư bằng không chứng minh cùng thực thể."
+      - id: B
+        answer: "Hai giá trị tiền khác nhau vì được tạo tại hai thời điểm."
+        explanation: "Nhiều value object so sánh nội dung, không phải nơi tạo."
+      - id: C
+        answer: "Danh tính do cú pháp cấp phát biến quyết định trong mọi ngôn ngữ."
+        explanation: "Danh tính phải phản ánh thực thể/ngữ nghĩa của domain."
+      - id: D
+        answer: "A/B khác danh tính dù số dư bằng; hai giá trị tiền có thể bằng nhau theo nội dung."
+        explanation: "Danh tính thực thể khác bình đẳng giá trị; rút A không được ảnh hưởng B."
+    correctAnswerId: D
+  - id: "oop-quiz-08"
+    question: "Account A có balance100. canWithdraw(30) và withdraw(30) khác nhau ở điều gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.EncapsulationAbstraction/EncapsulationAbstraction.md"
+      anchor: "oop-state-behavior"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Cả canWithdraw và withdraw phải cập nhật balance vì đều xử lý cùng một amount."
+        explanation: "Tham số giống nhau không quyết định side effect."
+      - id: B
+        answer: "canWithdraw phải là static vì không được sửa state."
+        explanation: "Hành vi đọc vẫn có thể thuộc về một instance."
+      - id: C
+        answer: "canWithdraw có thể chỉ đọc; withdraw có thể ghi nếu hợp lệ."
+        explanation: "Hành vi OOP không đồng nghĩa mọi lời gọi đều có mutation."
+      - id: D
+        answer: "withdraw phải ghi kể cả khi số dư không đủ."
+        explanation: "Hành vi ghi có tiền điều kiện và nhánh từ chối."
+    correctAnswerId: C
+  - id: "oop-quiz-09"
+    question: "Checkout trực tiếp gán balance=-50. Sửa thiết kế nào thực sự bảo vệ Account?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.EncapsulationAbstraction/EncapsulationAbstraction.md"
+      anchor: "oop-encapsulation-purpose"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Chỉ cần đổi balance thành _balance và yêu cầu mọi caller kiểm tra thủ công trước khi ghi vào trường này."
+        explanation: "Tên trường không cấm đường ghi trái quy tắc."
+      - id: B
+        answer: "Để Account sở hữu hành vi rút và kiểm tra đủ tiền qua ranh giới công bố."
+        explanation: "Đóng gói bảo vệ quyền quyết định và invariant, không chỉ đổi tên trường."
+      - id: C
+        answer: "Cho Checkout gọi setBalance(value) sau khi tự tính ở nhiều nơi."
+        explanation: "Mỗi caller vẫn sở hữu quyết định rút và có thể sai."
+      - id: D
+        answer: "Chỉ giấu giá trị qua getter nhưng cho phép setter không kiểm tra."
+        explanation: "Setter tự do vẫn phá invariant."
+    correctAnswerId: B
+  - id: "oop-quiz-10"
+    question: "balance=70, yêu cầu withdraw(120). Vết nào giữ invariant balance≥0?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.EncapsulationAbstraction/EncapsulationAbstraction.md"
+      anchor: "oop-object-invariants"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Từ chối và giữ 70, không ghi giá trị âm tạm thời."
+        explanation: "Invariant giới hạn trạng thái hợp lệ được công bố, không cấm mọi thay đổi."
+      - id: B
+        answer: "Cho phép ghi -50 tạm rồi khôi phục sau, vì invariant chỉ cần đúng ở request sau."
+        explanation: "Tính đúng số học không làm trạng thái âm hợp lệ."
+      - id: C
+        answer: "Ghi -50 rồi hẹn hoàn tác nhưng cho caller nhìn thấy."
+        explanation: "Trạng thái không hợp lệ đã bị công bố ở ranh giới."
+      - id: D
+        answer: "Đặt số dư về 100 vì đó là trạng thái gốc của ví dụ trước."
+        explanation: "Lỗi phải giữ trạng thái hiện tại 70."
+    correctAnswerId: A
+  - id: "oop-quiz-11"
+    question: "Account chuyển 100→70 vẫn hợp lệ; record amount=-5 bất biến. Nhận xét nào chính xác?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.EncapsulationAbstraction/EncapsulationAbstraction.md"
+      anchor: "oop-invariant-vs-immutability"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Record bất biến vẫn hợp lệ vì amount âm không thể sửa về sau."
+        explanation: "Giá trị cấm vẫn sai dù không bị sửa sau khi tạo."
+      - id: B
+        answer: "Invariant cấm Account chuyển từ 100 xuống 70."
+        explanation: "Quy tắc balance≥0 vẫn đúng sau phép rút."
+      - id: C
+        answer: "Invariant chỉ giữ được khi số dư của đối tượng không đổi."
+        explanation: "Số dư có thể đổi từ 100 xuống 70 mà vẫn không âm."
+      - id: D
+        answer: "State thay đổi vẫn giữ invariant; dữ liệu bất biến có thể sai ngay từ lúc tạo."
+        explanation: "Bất biến về quy tắc khác dữ liệu không đổi; cần validate dữ liệu tạo ra."
+    correctAnswerId: D
+  - id: "oop-quiz-12"
+    question: "Muốn đổi cách lưu balance thành ledger mà caller không sửa. Bên ngoài nên phụ thuộc gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.EncapsulationAbstraction/EncapsulationAbstraction.md"
+      anchor: "oop-behavior-boundary"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Checkout cần biết tên field balance và từng ledger row như một phần hợp đồng."
+        explanation: "Phụ thuộc cấu trúc làm thay đổi lan ra caller."
+      - id: B
+        answer: "Lệnh setBalance được gọi từ Checkout theo công thức riêng."
+        explanation: "Caller tự ghi phá quyền sở hữu invariant."
+      - id: C
+        answer: "Yêu cầu withdraw(amount) cùng kết quả và tác động được cam kết."
+        explanation: "Hợp đồng cho phép giấu cách lưu, không giấu side effect quan trọng."
+      - id: D
+        answer: "Toàn bộ thuật toán phí, kể cả thứ tự bước nội bộ."
+        explanation: "Caller chỉ cần lời hứa có thể quan sát."
+    correctAnswerId: C
+  - id: "oop-quiz-13"
+    question: "Checkout gọi pay(30) từ ví hoặc ngân hàng. Abstraction hữu ích cần nêu gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.EncapsulationAbstraction/EncapsulationAbstraction.md"
+      anchor: "oop-abstraction-value"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Mọi PaymentMethod phải dùng cùng private field để caller gọi pay thống nhất."
+        explanation: "Caller không cần ràng buộc chi tiết lưu trữ."
+      - id: B
+        answer: "Điều kiện đầu vào và kết quả thành công/thất bại quan sát được."
+        explanation: "Abstraction nói đối tượng làm gì, không bắt các kiểu dùng cùng thuật toán."
+      - id: C
+        answer: "Mọi số dương bắt buộc thanh toán thành công tuyệt đối."
+        explanation: "Đủ điều kiện để xử lý không đảm bảo nhà cung cấp chấp nhận."
+      - id: D
+        answer: "Chỉ định doEverything() mà không nói lỗi và kết quả."
+        explanation: "Tên quá rộng không đủ thành hợp đồng kiểm thử."
+    correctAnswerId: B
+  - id: "oop-quiz-14"
+    question: "Đổi nội dung email thông báo khiến phải sửa phép kiểm tra số dư. Dấu hiệu thiết kế nào xuất hiện?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.Responsibility/Responsibility.md"
+      anchor: "oop-responsibility-purpose"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Trách nhiệm thông báo và bảo vệ số dư đang bị trộn trong cùng ranh giới."
+        explanation: "Hai lý do thay đổi độc lập không nên buộc sửa cùng logic nghiệp vụ."
+      - id: B
+        answer: "Gom email và kiểm tra số dư vào Account, rồi thêm biến cục bộ để tiện thay đổi thông báo mà không tạo cộng tác viên mới."
+        explanation: "Số biến không giải thích việc thay đổi lan giữa trách nhiệm."
+      - id: C
+        answer: "Mọi đối tượng phải sở hữu cả thông báo lẫn tiền để giảm số lớp."
+        explanation: "Dồn trách nhiệm làm thay đổi lan rộng."
+      - id: D
+        answer: "Notifier cần quyết định số tiền có được trừ trước khi gửi thư."
+        explanation: "Quy tắc số dư thuộc Account, không thuộc Notifier."
+    correctAnswerId: A
+  - id: "oop-quiz-15"
+    question: "Checkout muốn biết tài khoản A có đủ tiền rút 50. Ai có quyền quyết định cuối cùng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.Responsibility/Responsibility.md"
+      anchor: "oop-behavior-owner"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Checkout nên kiểm tra đủ tiền trước, rồi ra lệnh cho Account ghi balance đã tính."
+        explanation: "Caller không nên thay chủ sở hữu trong việc bảo vệ invariant."
+      - id: B
+        answer: "Application service duyệt dựa vào balance đã cache, Account chỉ lưu kết quả."
+        explanation: "Quyết định trên cache có thể dùng trạng thái cũ và bỏ qua trách nhiệm giữ invariant của Account."
+      - id: C
+        answer: "FeePolicy duyệt theo số dư đã tính phí, Account chỉ thực hiện ghi."
+        explanation: "FeePolicy có thể tính phí nhưng Account vẫn phải quyết định đủ điều kiện rút và quyền sửa state."
+      - id: D
+        answer: "Account A xác thực yêu cầu và quyết định có cập nhật số dư hay không."
+        explanation: "Chủ sở hữu dữ liệu bảo vệ điều kiện no-overdraft."
+    correctAnswerId: D
+  - id: "oop-quiz-16"
+    question: "Một EverythingManager giữ số dư, gửi email và vẽ báo cáo. Cách nào cải thiện cohesion?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.Responsibility/Responsibility.md"
+      anchor: "oop-responsibility-cohesion"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Đổi EverythingManager thành AccountService và mở rộng một interface chung để các phần email, báo cáo và số dư cùng triển khai."
+        explanation: "Đổi tên không làm trách nhiệm gắn kết hơn."
+      - id: B
+        answer: "Thêm lớp wrapper quanh từng getter mà giữ manager nguyên."
+        explanation: "Wrapper không cần thiết chỉ làm đường đi dài hơn."
+      - id: C
+        answer: "Tách Account bảo vệ số dư, Notifier gửi thông báo, Reporter trình bày dữ liệu."
+        explanation: "Các chức năng có lý do thay đổi khác nhau cần chủ sở hữu rõ."
+      - id: D
+        answer: "Chuyển phép trừ số dư sang Notifier vì Notifier được gọi cuối."
+        explanation: "Thứ tự gọi không quyết định trách nhiệm nghiệp vụ."
+    correctAnswerId: C
+  - id: "oop-quiz-17"
+    question: "PaymentMethod nhận pay(30). Nhà cung cấp từ chối giao dịch. Kết quả nào giữ hợp đồng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.Responsibility/Responsibility.md"
+      anchor: "oop-behavioral-contract"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Vì pay(30) dương, mọi provider phải trả SUCCESS trước khi xử lý kết quả bị từ chối."
+        explanation: "Dương chỉ là tiền điều kiện, không phải xác nhận thanh toán."
+      - id: B
+        answer: "Trả FAILURE có lý do, không tuyên bố đã thanh toán."
+        explanation: "Đầu vào hợp lệ cho xử lý không hứa kết quả luôn thành công."
+      - id: C
+        answer: "Không trả kết quả vì đã gọi provider xong."
+        explanation: "Hợp đồng cần mô tả cả đường lỗi quan sát được."
+      - id: D
+        answer: "Ghi đã thanh toán rồi để Checkout tự phát hiện từ chối."
+        explanation: "Báo thành công giả phá lời hứa và quyết định ở caller."
+    correctAnswerId: B
+  - id: "oop-quiz-18"
+    question: "TransferCoordinator chuyển 30 từ A=100 sang B=20. Sau debit(A), credit(B) thất bại. Điều gì đúng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.Responsibility/Responsibility.md"
+      anchor: "oop-collaboration-flow"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Trạng thái có thể A=70, B=20; cần chính sách phục hồi hay transaction riêng."
+        explanation: "Phân quyền trách nhiệm không làm hai cập nhật tự trở thành nguyên tử."
+      - id: B
+        answer: "Account tự hoàn tác A/B khi credit lỗi, kể cả thiếu transaction ở coordinator."
+        explanation: "OOP không cung cấp rollback mặc định."
+      - id: C
+        answer: "B chắc chắn là 50 vì lời gọi credit đã bắt đầu."
+        explanation: "Lời gọi bắt đầu không bảo đảm hoàn thành thành công."
+      - id: D
+        answer: "TransferCoordinator không thể biết credit lỗi do đóng gói."
+        explanation: "Hợp đồng có thể trả kết quả lỗi rõ ràng."
+    correctAnswerId: A
+  - id: "oop-quiz-19"
+    question: "Checkout có Account, FeePolicy và Notifier. Quan hệ nào phù hợp hơn để thay chính sách phí?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.Responsibility/Responsibility.md"
+      anchor: "oop-object-composition"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "FeePolicy nên kế thừa Account để dùng lại field balance và các kiểu tiền chung."
+        explanation: "Giống kiểu dữ liệu không tạo quan hệ is-a hợp lệ."
+      - id: B
+        answer: "Checkout kế thừa mọi Notifier để gửi thư."
+        explanation: "Checkout sử dụng Notifier, không là một Notifier."
+      - id: C
+        answer: "Đặt logic phí thẳng vào mọi caller để khỏi cần hợp đồng."
+        explanation: "Sao chép tạo các quy tắc phí dễ lệch nhau."
+      - id: D
+        answer: "Composition: Checkout dùng FeePolicy qua hợp đồng rồi hoán đổi đối tượng cộng tác."
+        explanation: "Chính sách phí là phần cộng tác, không phải một loại tài khoản."
+    correctAnswerId: D
+  - id: "oop-quiz-20"
+    question: "Account đổi lưu balance field sang ledger. Lựa chọn nào ít gây thay đổi lan sang Checkout?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.Responsibility/Responsibility.md"
+      anchor: "oop-collaboration-coupling"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Checkout tự đọc ledger và tính balance vì đây là cách kiểm soát thay đổi nội bộ."
+        explanation: "Biết chi tiết làm Checkout phải sửa khi Account đổi cách lưu."
+      - id: B
+        answer: "Checkout giữ bản sao quy tắc không âm riêng."
+        explanation: "Chính sách trùng vẫn có nguy cơ lệch và coupling nghiệp vụ."
+      - id: C
+        answer: "Checkout chỉ gọi withdraw/deposit theo hợp đồng, không truy cập định dạng lưu."
+        explanation: "Coupling theo lời hứa ổn định ít nhạy với chi tiết bị che."
+      - id: D
+        answer: "Đặt tất cả vào một lớp để không còn message giữa đối tượng."
+        explanation: "Dồn nhiệm vụ làm chi phí thay đổi khó quản lý."
+    correctAnswerId: C
+  - id: "oop-quiz-21"
+    question: "Checkout dùng pay(amount) cho ví và ngân hàng. Điều nào là lợi ích chính của đa hình?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.RelationshipsPolymorphism/RelationshipsPolymorphism.md"
+      anchor: "oop-polymorphism-purpose"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Ví và ngân hàng đều phải giữ cùng field và cùng thuật toán tính phí nội bộ thì Checkout mới loại bỏ được if-else."
+        explanation: "Hợp đồng ngoài không bắt nội bộ giống nhau."
+      - id: B
+        answer: "Caller dùng cùng hợp đồng còn mỗi biến thể có cách thực hiện riêng."
+        explanation: "Hành vi có thể mở rộng mà không rải kiểm tra kiểu ra mọi caller."
+      - id: C
+        answer: "Mọi giao dịch dương chắc chắn thành công khi dùng đa hình."
+        explanation: "Provider vẫn có thể từ chối theo hợp đồng."
+      - id: D
+        answer: "Checkout vẫn cần if-wallet và if-bank cho từng lời gọi."
+        explanation: "Đó là sự phụ thuộc theo biến thể muốn tránh ở caller."
+    correctAnswerId: B
+  - id: "oop-quiz-22"
+    question: "Cả Wallet và Bank nhận pay(30) nhưng provider có thể từ chối. Hợp đồng chung nào hợp lý?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.RelationshipsPolymorphism/RelationshipsPolymorphism.md"
+      anchor: "oop-shared-behavior-contract"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Đầu vào dương được xử lý; thành công trả xác nhận, từ chối trả FAILURE có lý do."
+        explanation: "Nhận request để xử lý khác với hứa giao dịch luôn thành công."
+      - id: B
+        answer: "Khi amount dương thì pay luôn có nghĩa là thanh toán đã hoàn tất, nên không cần mô hình hóa kết quả provider từ chối."
+        explanation: "Provider có thể từ chối hợp lệ."
+      - id: C
+        answer: "Khi lỗi provider, các kiểu có thể tùy ý trả SUCCESS."
+        explanation: "Báo thành công giả phá kỳ vọng chung."
+      - id: D
+        answer: "Một kiểu trả Boolean, kiểu kia ném lỗi không công bố cho cùng trường hợp."
+        explanation: "Caller không thể xử lý ổn định các kết quả không tương thích."
+    correctAnswerId: A
+  - id: "oop-quiz-23"
+    question: "PaymentMethod nhận mọi số tiền dương để xử lý; Wallet tự cấm dưới 50 và ném lỗi lạ khi pay(30). Tại sao sai?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.RelationshipsPolymorphism/RelationshipsPolymorphism.md"
+      anchor: "oop-subtype-relation"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Wallet phải giữ thuật toán tính phí cha, nếu không pay sẽ không tương thích."
+        explanation: "Thuật toán có thể khác nếu giữ kết quả quan sát đúng."
+      - id: B
+        answer: "Vì mọi khoản 30 phải thành công bất kể provider từ chối."
+        explanation: "Từ chối đúng hợp đồng vẫn có thể hợp lệ."
+      - id: C
+        answer: "Vì inheritance luôn ngăn gọi pay từ caller."
+        explanation: "Vấn đề là hợp đồng hành vi, không phải khả năng gọi phương thức."
+      - id: D
+        answer: "Subtype siết tiền điều kiện và đưa lỗi ngoài hợp đồng."
+        explanation: "Caller hợp lệ theo kiểu cha không còn dùng được Wallet thay thế."
+    correctAnswerId: D
+  - id: "oop-quiz-24"
+    question: "Wallet kế thừa code tính phí của Payment nhưng thay đổi ý nghĩa success. Có thể kết luận gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.RelationshipsPolymorphism/RelationshipsPolymorphism.md"
+      anchor: "oop-inheritance-concept"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Kế thừa code tính phí đủ chứng minh Wallet giữ hợp đồng SUCCESS/FAILURE của cha."
+        explanation: "Cùng code không kiểm soát tiền/hậu điều kiện mới."
+      - id: B
+        answer: "Nếu biên dịch được thì không thể trả SUCCESS sai."
+        explanation: "Kiểu có thể đúng nhưng hành vi vẫn phá cam kết."
+      - id: C
+        answer: "Dùng lại mã không chứng minh kiểu con tuân thủ hợp đồng hành vi."
+        explanation: "Inheritance và substitutability phải đánh giá riêng bằng các ca tương thích."
+      - id: D
+        answer: "Phải đưa toàn bộ nghiệp vụ Checkout vào kiểu cha."
+        explanation: "Tăng trách nhiệm của cha không sửa vi phạm hợp đồng."
+    correctAnswerId: C
+  - id: "oop-quiz-25"
+    question: "Wallet trả SUCCESS sau khi provider báo thất bại, Bank trả FAILURE đúng. Kiểm thử nào trực tiếp phát hiện lỗi thay thế?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.RelationshipsPolymorphism/RelationshipsPolymorphism.md"
+      anchor: "oop-substitutability"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Chỉ cần hai lớp có pay(amount) cùng kiểu return để chứng minh thay thế được mọi trường hợp."
+        explanation: "Chữ ký không chứng minh nhánh lỗi trả đúng."
+      - id: B
+        answer: "Chạy cùng trường hợp provider decline cho cả hai và kiểm tra phản hồi đúng hợp đồng."
+        explanation: "Hợp đồng kiểm thử quan sát được phải áp dụng như nhau cho mọi implementation."
+      - id: C
+        answer: "Đếm số dòng code khác nhau giữa Wallet và Bank."
+        explanation: "Khác độ dài code không nói gì về lời hứa cho caller."
+      - id: D
+        answer: "Chỉ thử trường hợp provider thành công rồi suy ra đường lỗi."
+        explanation: "Nhánh bị từ chối cần bằng chứng riêng."
+    correctAnswerId: B
+  - id: "oop-quiz-26"
+    question: "FeePolicy được dùng bởi PaymentService nhưng không phải một PaymentMethod. Quan hệ nào nên thể hiện?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.RelationshipsPolymorphism/RelationshipsPolymorphism.md"
+      anchor: "oop-composition-vs-inheritance"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "PaymentService has-a FeePolicy qua composition."
+        explanation: "Chọn has-a khi cần cộng tác viên; is-a cần hợp đồng subtype thật."
+      - id: B
+        answer: "FeePolicy nên kế thừa PaymentMethod vì cùng nhận amount và cho ra phí thanh toán."
+        explanation: "Dùng cùng kiểu dữ liệu không đủ quan hệ kiểu."
+      - id: C
+        answer: "PaymentService kế thừa FeePolicy để override phép tính phí theo từng trường hợp."
+        explanation: "PaymentService sử dụng chính sách phí, không trở thành subtype của chính sách chỉ vì gọi tới nó."
+      - id: D
+        answer: "Mỗi FeePolicy kế thừa Account để dùng balance khi tính phí."
+        explanation: "Chính sách phí không sở hữu trạng thái tài khoản."
+    correctAnswerId: A
+  - id: "oop-quiz-27"
+    question: "Thêm FastTransferPayment mới. Điều gì cần giữ để Checkout không phải sửa logic kết quả?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.RelationshipsPolymorphism/RelationshipsPolymorphism.md"
+      anchor: "oop-behavior-variants"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Biến thể mới được tùy ý trả SUCCESS cho lỗi provider."
+        explanation: "Đây là thay đổi nghĩa kết quả và phá hợp đồng."
+      - id: B
+        answer: "Checkout phải thêm if-fastTransfer cho mọi lần gọi."
+        explanation: "Caller sẽ tiếp tục coupling vào danh sách biến thể."
+      - id: C
+        answer: "Mọi biến thể phải copy code y hệt nhau, kể cả xử lý provider."
+        explanation: "Đa hình cho phép implementation khác khi hợp đồng giữ nguyên."
+      - id: D
+        answer: "Biến thể mới xử lý pay theo cùng quy tắc input và success/decline đã công bố."
+        explanation: "Đa hình chỉ bền khi hành vi mới giữ kỳ vọng của caller."
+    correctAnswerId: D
+  - id: "oop-quiz-28"
+    question: "Chuyển 30 từ A=100 sang B=20. Phân chia trách nhiệm nào giải thích kết quả thành công A=70/B=50 VÀ rủi ro nếu credit lỗi sau debit?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.Tradeoffs/Tradeoffs.md"
+      anchor: "oop-design-walkthrough"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Mỗi Account tự kiểm số dư; đóng gói sẽ tự rollback cả hai khi credit lỗi."
+        explanation: "Bảo vệ từng tài khoản không tạo transaction nguyên tử giữa nhiều tài khoản."
+      - id: B
+        answer: "TransferCoordinator tự tính rồi ghi A=70/B=50 bằng setter công khai."
+        explanation: "Ghi trực tiếp từ bên ngoài bỏ qua quyền kiểm tra debit/credit của Account."
+      - id: C
+        answer: "Mỗi Account kiểm debit/credit; coordinator lo thứ tự và xử lý lỗi một phần."
+        explanation: "Thành công thì A=70/B=50; nếu credit lỗi sau debit có thể còn A=70/B=20, cần chính sách phục hồi riêng."
+      - id: D
+        answer: "Notifier thực hiện cập nhật cả hai số dư vì nó biết kết quả gửi thông báo."
+        explanation: "Bộ thông báo chỉ truyền kết quả, không chịu trách nhiệm nhất quán chuyển tiền."
+    correctAnswerId: C
+  - id: "oop-quiz-29"
+    question: "Account đổi lưu số dư từ field sang ledger mà Checkout vẫn gọi withdraw. Điều nào phản ánh lợi ích và chi phí?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.Tradeoffs/Tradeoffs.md"
+      anchor: "oop-encapsulation-benefits"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Mọi lớp thêm mới luôn tăng chất lượng dù không bảo vệ gì."
+        explanation: "Lớp dư có thể làm đường điều tra dài hơn."
+      - id: B
+        answer: "Caller ổn định nhờ hợp đồng; quá nhiều lớp mỏng vẫn có thể làm khó debug."
+        explanation: "Đóng gói giảm phụ thuộc chi tiết nhưng cần ranh giới thực sự có giá trị."
+      - id: C
+        answer: "Nếu ledger thay đổi thì buộc mọi caller đọc lại bảng ledger."
+        explanation: "Đó là phụ thuộc chi tiết mà encapsulation muốn tránh."
+      - id: D
+        answer: "Chỉ cần tên withdraw giống cũ thì được phép đổi ý nghĩa lỗi."
+        explanation: "Hợp đồng gồm cả kết quả và tác động quan sát được."
+    correctAnswerId: B
+  - id: "oop-quiz-30"
+    question: "EverythingManager xử lý tài khoản, email, báo cáo; thêm năm wrapper cho phép cộng đơn giản. Đâu là chẩn đoán hợp lý?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.Tradeoffs/Tradeoffs.md"
+      anchor: "oop-overdesign-risks"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Gom trách nhiệm không liên quan và thêm nhiều lớp chuyển tiếp vô ích."
+        explanation: "Ranh giới nên bảo vệ invariant hoặc biến thể có thật, không tối đa số đối tượng."
+      - id: B
+        answer: "Có thể giữ manager cũ và bổ sung các wrapper chuyển tiếp để phân lớp."
+        explanation: "Lớp chuyển tiếp không tách được lý do thay đổi và quyền quyết định."
+      - id: C
+        answer: "Một manager gắn kết hơn vì có thể sửa mọi tính năng tại một class."
+        explanation: "Tập trung một chỗ không có nghĩa các trách nhiệm phục vụ cùng mục đích."
+      - id: D
+        answer: "Các lớp trung gian làm cộng tác rõ dù không có hợp đồng riêng biệt."
+        explanation: "Lớp không có hợp đồng hữu ích chỉ khiến lời gọi đi vòng nhiều hơn."
+    correctAnswerId: A
+  - id: "oop-quiz-31"
+    question: "Subtype Wallet coi pay(30) là INPUT SAI vì thêm amount≥50, trong khi hợp đồng cha nhận mọi số dương để xử lý và trả kết quả theo quy ước. Rủi ro nào xảy ra?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.Tradeoffs/Tradeoffs.md"
+      anchor: "oop-fragile-inheritance"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Kế thừa luôn tự sinh bộ kiểm thử đảm bảo hợp đồng."
+        explanation: "Kế thừa mã không thực hiện kiểm thử hậu điều kiện."
+      - id: B
+        answer: "Subtype bắt buộc thay tất cả tên phương thức của cha."
+        explanation: "Tên phương thức không phải gốc rủi ro ở đây."
+      - id: C
+        answer: "Điều kiện chặt hơn luôn an toàn vì từ chối nhiều hơn."
+        explanation: "Từ chối đầu vào cha cho phép có thể phá caller."
+      - id: D
+        answer: "Caller hợp lệ với kiểu cha có thể thất bại ngoài hợp đồng khi thay Wallet."
+        explanation: "Làm chặt tiền điều kiện phá khả năng thay thế; cùng chữ ký vẫn không đủ."
+    correctAnswerId: D
+  - id: "oop-quiz-32"
+    question: "Account A và B chia sẻ cùng list mutable giao dịch ngoài ý muốn. Điều gì có thể xảy ra?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.Tradeoffs/Tradeoffs.md"
+      anchor: "oop-shared-state-risks"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Mỗi object đương nhiên có bản copy riêng của mọi list."
+        explanation: "Hai tham chiếu có thể chỉ vào cùng một list."
+      - id: B
+        answer: "Chỉ getter đọc list sẽ tự động làm nó bất biến sâu."
+        explanation: "Đối tượng trả ra mutable reference vẫn có thể bị sửa."
+      - id: C
+        answer: "Ghi ở A có thể làm B quan sát thay đổi không thuộc trách nhiệm của B."
+        explanation: "Shared mutation/aliasing có thể phá ranh giới danh tính và hợp đồng."
+      - id: D
+        answer: "Vì B giữ balance riêng, dữ liệu giao dịch chung không ảnh hưởng gì."
+        explanation: "Hợp đồng B có thể liên quan lịch sử và quan sát dữ liệu."
+    correctAnswerId: C
+  - id: "oop-quiz-33"
+    question: "Một tác vụ chỉ lọc danh sách bất biến và tính tổng, không có thực thể giữ quy tắc riêng. Cách nào phù hợp?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.Tradeoffs/Tradeoffs.md"
+      anchor: "oop-alternative-paradigms"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Tạo hệ phân cấp các chiến lược cộng dù không có biến thể hành vi."
+        explanation: "Không cần hệ phân cấp khi không có trách nhiệm hay cách xử lý khác nhau."
+      - id: B
+        answer: "Một hàm biến đổi giá trị bất biến có thể đơn giản hơn hệ phân cấp."
+        explanation: "Chỉ thêm object khi trách nhiệm, identity hay biến thể hành vi thực sự cần."
+      - id: C
+        answer: "Tạo đối tượng Account có trạng thái để giữ tổng của một danh sách."
+        explanation: "Danh tính tài khoản giả tạo không giúp phép cộng độc lập dễ hiểu hơn."
+      - id: D
+        answer: "Dùng đối tượng lưu tổng dù danh sách nguồn đã là dữ liệu ổn định."
+        explanation: "Giữ tổng như trạng thái tạo thêm điều phối không cần thiết cho phép tính đơn."
+    correctAnswerId: B
+  - id: "oop-quiz-34"
+    question: "Muốn học từ khóa interface/private, transaction, DDD aggregate và AOP logging. Ranh giới nào đúng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.Tradeoffs/Tradeoffs.md"
+      anchor: "oop-owner-handoff"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "OOP dạy hợp đồng; Java Core, giao dịch, DDD và AOP dạy cơ chế riêng."
+        explanation: "Phân biệt mô hình tư duy với kỹ thuật và lĩnh vực chuyên sâu."
+      - id: B
+        answer: "OOP dạy cả hợp đồng, weaving bytecode Java và dispatch method."
+        explanation: "Weaving thuộc AOP, còn chi tiết phương thức ngôn ngữ thuộc Java Core."
+      - id: C
+        answer: "Java Core dạy cú pháp đối tượng và bảo đảm giao dịch thanh toán phân tán."
+        explanation: "Tính năng ngôn ngữ không tự bảo đảm transaction hay khôi phục lỗi."
+      - id: D
+        answer: "DDD chỉ đặt tên class; OOP cơ bản đã bảo đảm transaction nguyên tử."
+        explanation: "Aggregate có hợp đồng miền riêng và object model không tự cung cấp atomicity."
+    correctAnswerId: A

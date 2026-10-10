@@ -41,4 +41,63 @@
 # The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: oop-purpose-and-identity
+    relatedKnowledge:
+      - ObjectOrientedProgramming
+      - EncapsulationAbstraction
+    title: "Object-Oriented Programming: Motivation and Core Model"
+    purpose: "Understand why organizing programs around objects with identity, state, behavior, and responsibility can help manage change."
+    objectives:
+      - "Recognize an object through identity and behavior with associated state where relevant, not merely a file or a class; object state need not be mutable."
+      - "Conceptually contrast bundling state and behavior within objects with procedural organization over separate data."
+  - id: state-behavior-and-invariants
+    relatedKnowledge:
+      - EncapsulationAbstraction
+    title: "State, Behavior, and Encapsulation Boundaries"
+    purpose: "Understand how objects expose behavior, can manage state transitions where relevant, and protect conditions that must remain true."
+    objectives:
+      - "Explain the relationship among internal state, exposed behavior, and object invariants (conditions that must hold), distinct from immutable values."
+      - "Recognize how unrestricted external mutation can break consistency, at the principle level rather than through Java access modifiers."
+  - id: responsibilities-and-contracts
+    relatedKnowledge:
+      - Responsibility
+    title: "Object Responsibilities and Behavioral Contracts"
+    purpose: "Learn how to assign behavior to responsible objects and treat exposed behavior as a contract between collaborators."
+    objectives:
+      - "Distinguish an object's responsibility, behavioral contract, and hidden implementation details."
+      - "Recognize scattered responsibilities and overly broad objects, then propose clearer boundaries."
+  - id: collaboration-and-composition
+    relatedKnowledge:
+      - Responsibility
+    title: "Object Collaboration and Composition"
+    purpose: "Understand how object-oriented systems coordinate responsibilities through interactions and build larger behavior through composition."
+    objectives:
+      - "Describe collaboration and composition at the object-model level without depending on class syntax."
+      - "Trace a use case across collaborators to reason about responsibility cohesion and coupling."
+  - id: polymorphism-and-substitution
+    relatedKnowledge:
+      - RelationshipsPolymorphism
+    title: "Polymorphism, Type Relationships, and Substitutability"
+    purpose: "Understand how different objects honor one behavioral contract and why substitutability matters beyond code reuse."
+    objectives:
+      - "Explain polymorphism through a common behavioral contract and valid alternative implementations."
+      - "Distinguish subtyping, inheritance, and composition; inheritance can support reuse but does not itself guarantee substitutability."
+  - id: tradeoffs-and-failure-modes
+    relatedKnowledge:
+      - Tradeoffs
+      - RelationshipsPolymorphism
+    title: "Design Trade-offs and Object-Model Failure Modes"
+    purpose: "Weigh encapsulation, abstraction, and behavioral extensibility against poor cohesion, tight coupling, and hard-to-manage state."
+    objectives:
+      - "Identify needless object layers, fragile inheritance, and unintended shared mutable state."
+      - "Choose simpler procedures or data transformations when a problem does not require several collaborating objects with distinct behavioral responsibilities."
+  - id: oop-synthesis-and-boundaries
+    relatedKnowledge:
+      - Tradeoffs
+      - Responsibility
+    title: "Object-Oriented Design Synthesis and Boundaries"
+    purpose: "Build an end-to-end model from requirements to objects, responsibilities, contracts, collaborations, and behavior variation while respecting scope."
+    objectives:
+      - "Sketch a language-neutral example and justify the object responsible for each behavior."
+      - "Separate the OOP paradigm from Java class/interface mechanics, DDD domain modeling, and AOP cross-cutting concerns, each owned by its dedicated module."

@@ -1,3 +1,16 @@
+# 📂 README MODULE STRUCTURE (VI)
+
+* **1.Introduction**
+    * [ObjectOrientedProgramming](readme/vi/menu/1.Introduction/ObjectOrientedProgramming.md)
+* **2.EncapsulationAbstraction**
+    * [EncapsulationAbstraction](readme/vi/menu/2.EncapsulationAbstraction/EncapsulationAbstraction.md)
+* **3.Responsibility**
+    * [Responsibility](readme/vi/menu/3.Responsibility/Responsibility.md)
+* **4.RelationshipsPolymorphism**
+    * [RelationshipsPolymorphism](readme/vi/menu/4.RelationshipsPolymorphism/RelationshipsPolymorphism.md)
+* **5.Tradeoffs**
+    * [Tradeoffs](readme/vi/menu/5.Tradeoffs/Tradeoffs.md)
+
 # Học lập trình hướng đối tượng
 
 Lập trình hướng đối tượng (OOP) tổ chức chương trình quanh các đối tượng có **danh tính, hành vi, trạng thái khi cần và trách nhiệm**. Các đối tượng cộng tác qua những hợp đồng hành vi để hạn chế việc phân tán quy tắc xử lý và quản lý thay đổi. OOP không đơn thuần là chia mã nguồn thành nhiều class.

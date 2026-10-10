@@ -1,0 +1,370 @@
+# <interview-schema>
+# Cấu trúc câu hỏi Interview
+# schema-version: 2
+#
+# questions [kiểu: list; bắt buộc; mặc định: []]
+#   Danh sách câu hỏi Interview của module trong language hiện tại.
+#   mỗi phần tử:
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi phỏng vấn hiển thị cho người học.
+#     answer [kiểu: string; bắt buộc; mặc định: ""]
+#       Câu trả lời tham khảo, chỉ hiển thị khi người học chủ động mở.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu nội dung được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu nội dung đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+# </interview-schema>
+
+questions:
+  - question: "Trong một codebase có rất nhiều class nhưng quy tắc rút tiền vẫn nằm ở các màn hình, bạn giải thích vì sao đó chưa chắc là thiết kế OOP tốt như thế nào?"
+    answer: "Tôi bắt đầu từ thực thể Account có danh tính và trách nhiệm bảo đảm hành vi rút tiền, thay vì đếm số lượng class. Nếu UI và batch đều tự trừ balance thì hai nơi có thể xử lý trường hợp thiếu tiền khác nhau. Tôi xác định contract withdraw(amount), điều kiện trước/sau và ai được thay đổi trạng thái. Một object bất biến vẫn có thể thuộc mô hình OOP; dùng class và private chỉ là công cụ, không tự đặt đúng trách nhiệm. Tôi yêu cầu trace thay đổi nghiệp vụ ở một chỗ và kiểm thử với hai tài khoản riêng."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Introduction/ObjectOrientedProgramming.md"
+      anchor: "oop-what"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Khi quy tắc không cho âm tiền thay đổi, bạn chọn đặt quyết định tại Account hay tại Checkout? Hãy lý giải theo trách nhiệm và tác động sửa đổi."
+    answer: "Account quản lý số dư và quyết định liệu withdraw có hợp lệ với invariant balance>=0; Checkout điều phối yêu cầu mua hàng chứ không được tự tính balance mới rồi gán. Nếu quy tắc nằm ở UI, service và tác vụ nền, một thay đổi sẽ phải sửa ba nơi với nguy cơ sai khác. Tôi tìm owner bằng câu hỏi thành phần nào có đủ dữ liệu và quyền bảo đảm quy tắc, sau đó cho caller nhận kết quả thành công/thất bại rõ ràng. Điều này không bảo đảm giao dịch liên hệ nhiều hệ thống tự động nguyên tử."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Introduction/ObjectOrientedProgramming.md"
+      anchor: "oop-why"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Một phép xử lý danh sách đơn giản đã dùng thủ tục withdraw(accountData,amount). Khi nào bạn giữ cách thủ tục, và bằng chứng nào khiến bạn chuyển sang đối tượng cộng tác?"
+    answer: "Tôi không xem lối thủ tục là sai: với một cấu trúc dữ liệu và hàm xử lý rõ ràng, ít vòng đời, cách này có thể dễ đọc, dễ test. Khi nhiều Account có danh tính, lịch sử, chính sách phí và các caller độc lập cùng thay đổi quy tắc, một owner hành vi trở nên có ích. Tôi lập bản đồ ai kiểm tra số dư, ai gửi notification và thay đổi nào kéo theo sửa ở những nơi không liên quan. Chỉ chuyển sang thiết kế object nếu ranh giới trách nhiệm và hợp đồng làm giảm sự phân tán thật sự, không vì tiêu chí số class."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Introduction/ObjectOrientedProgramming.md"
+      anchor: "oop-before"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Hai Account A và B đều có số dư 100. Hãy dựng một lần rút ở A và chỉ ra danh tính, trạng thái, hành vi và quan hệ cộng tác khác nhau ra sao."
+    answer: "A và B là hai thực thể riêng dù balance cùng bằng 100; mỗi tài khoản có lịch sử và quyền truy cập độc lập. Checkout gửi A.withdraw(30), Account A kiểm tra và cập nhật 100→70, còn B giữ 100. Số dư là trạng thái, withdraw là hành vi chịu trách nhiệm bảo vệ điều kiện và phản hồi kết quả, Checkout chỉ phối hợp. Nếu dùng một record giá trị số tiền 100 thì so sánh nội dung là đủ ở ngữ cảnh khác, nhưng không thể suy hai Account cùng danh tính. Tôi kiểm test đọc cả A và B sau giao dịch."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Introduction/ObjectOrientedProgramming.md"
+      anchor: "oop-solution"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Bạn được yêu cầu dạy OOP cho người chưa biết Java: nên giải thích hợp đồng thanh toán trước hay bắt đầu bằng cú pháp interface/private/override? Vì sao?"
+    answer: "Tôi bắt đầu bằng lời hứa hành vi: pay(amount) nhận số dương đủ điều kiện xử lý và báo thành công hoặc thất bại theo nhà cung cấp; Account bảo vệ rút tiền. Sau đó mới hỏi ngôn ngữ nào hiện thực boundary và cách kiểm tra kết quả quan sát được. Từ khóa interface, private hay cơ chế method dispatch cụ thể thuộc Java Core, không phải định nghĩa của OOP. Cách dạy này tránh nhầm viết private field là đóng gói đúng hoặc dùng inheritance là đã có substitutability; đồng thời không bịa contract HTTP trong module LIBRARY."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Introduction/ObjectOrientedProgramming.md"
+      anchor: "oop-boundary"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Bạn tổ chức lộ trình học một ví dụ Account từ zero đến thiết kế đa hình như thế nào để người học không nhảy thẳng vào inheritance?"
+    answer: "Tôi dùng Account A/B cùng balance100 để phân biệt identity với value, sau đó cho A rút30 thành70 và thử rút120 bị từ chối, rút ra invariant thay vì bất biến dữ liệu. Tiếp theo xác định Account, Checkout, Notifier sở hữu quyết định nào và contract caller thấy gì. Khi đó mới xét thay đổi provider Wallet/Card qua hợp đồng pay chung, điều kiện kiểu con và lựa chọn composition. Cuối cùng cho chuyển tiền nhiều bước gặp lỗi credit để làm rõ ranh giới OOP với tính nguyên tử của transaction; không bỏ qua những câu hỏi WHY trước cú pháp."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Introduction/ObjectOrientedProgramming.md"
+      anchor: "oop-learning-path"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Hai tài khoản có balance100 và cùng loại Account: bạn quyết định khi nào so sánh danh tính, khi nào so sánh giá trị bằng ví dụ audit thế nào?"
+    answer: "Tôi kiểm cùng một chủ sở hữu và account id chứ không suy từ balance. Account A và B đều 100 nhưng lịch sử giao dịch, quyền xem và trách nhiệm khác nhau; audit ghi A.withdraw(30) không được quy cho B. Ngược lại hai Money(100,VND) độc lập có thể tương đương về nội dung nếu đơn vị và ngữ cảnh đúng. Nếu dùng equals theo balance để định danh tài khoản, hệ thống dễ gửi thông báo nhầm người. Tôi viết test cho A≠B về identity, cùng balance lúc đầu và quan sát sau thao tác khác nhau."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.EncapsulationAbstraction/EncapsulationAbstraction.md"
+      anchor: "oop-object-identity"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Bạn gặp một đối tượng Account có canWithdraw và withdraw. Tại sao phân biệt truy vấn không sửa trạng thái với lệnh sửa là quan trọng, kể cả OOP có đối tượng bất biến?"
+    answer: "canWithdraw(30) có thể chỉ trả kết quả dựa vào balance100 mà không ghi lại số dư; withdraw(30) thực hiện thay đổi hợp lệ thành70 hoặc từ chối theo contract. Không nên nghĩ hễ có method là state thay đổi, cũng không nên tin mọi đối tượng OOP phải mutable. FeePolicy hoặc Money bất biến có thể trả giá trị tính toán hữu ích. Tôi kiểm trạng thái trước/sau cả hai lời gọi và tác động audit nếu có, thay vì nhìn tên method rồi khẳng định side effect."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.EncapsulationAbstraction/EncapsulationAbstraction.md"
+      anchor: "oop-state-behavior"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "UI đề xuất công khai setBalance(value) để thanh toán tự trừ tiền. Bạn phản biện bằng một lỗ hổng cụ thể và đề xuất API bảo vệ như thế nào?"
+    answer: "Với setBalance(-50), bất kỳ caller nào đều có thể phá quy tắc không thấu chi mà Account không biết điều kiện gì phải kiểm. Thay vào đó UI yêu cầu withdraw(amount), Account xác nhận số dương, đủ số dư và cập nhật thống nhất, rồi trả kết quả có ý nghĩa. Việc đổi trường sang private hỗ trợ enforcement nhưng không đủ nếu setter vẫn cho ghi tùy ý. Tôi test rút quá mức không đổi balance và audit rõ nguyên nhân; Checkout không sở hữu thao tác gán nội bộ."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.EncapsulationAbstraction/EncapsulationAbstraction.md"
+      anchor: "oop-encapsulation-purpose"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Đang có balance100, người dùng rút30 rồi thử rút120. Bạn định nghĩa invariant và thiết kế kiểm thử nào để chứng minh mọi trạng thái được công bố đều hợp lệ?"
+    answer: "Điều kiện của tài khoản không thấu chi là balance>=0 ở trạng thái hợp lệ. Rút30 từ100 có thể commit balance70, vẫn đúng invariant; tiếp tục rút120 phải thất bại, balance vẫn70 thay vì -50. Tôi thử cả khởi tạo âm, amount không hợp lệ, trạng thái sau khi exception và đường caller lặp lại; một kiểm tra canWithdraw tách rời không tự bảo đảm withdraw an toàn dưới cạnh tranh. Nếu nhiều luồng cùng cập nhật, cần thêm cơ chế đồng bộ bên ngoài mental model OOP cơ bản."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.EncapsulationAbstraction/EncapsulationAbstraction.md"
+      anchor: "oop-object-invariants"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Một đồng nghiệp cho rằng dùng immutable record Transaction(-20) sẽ bảo đảm business correctness. Bạn chỉ rõ hai khái niệm khác nhau và cách bảo vệ chúng ra sao?"
+    answer: "Immutability chỉ nói một giá trị sau khi tạo không bị sửa; nó không nói số tiền -20 là hợp lệ. Nếu domain yêu cầu amount>0, factory hoặc constructor phải xác thực ngay từ đầu, kể cả dữ liệu đến từ deserialization. Ngược lại Account mutable vẫn giữ invariant balance>=0 khi balance thay100→70 đúng contract. Tôi kiểm cả thời điểm tạo và mọi chuyển trạng thái, và không suy từ cú pháp record hay final rằng domain đã chính xác."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.EncapsulationAbstraction/EncapsulationAbstraction.md"
+      anchor: "oop-invariant-vs-immutability"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Tại sao API withdraw(amount) là contract tốt hơn việc để caller đọc balance rồi tự setBalance(balance-amount), và không nên ẩn những tác động nào?"
+    answer: "Chuỗi caller đọc100, tự tính70 rồi ghi khiến validation và cập nhật bị chia ở hai nơi, đồng thời có nguy cơ dữ liệu cũ nếu caller khác cũng rút. withdraw diễn đạt ý định, gom quyết định hợp lệ và kết quả success/failure tại owner Account; chi tiết lưu trữ có thể đổi sau hợp đồng. Nhưng nếu hành vi ghi lịch sử, thu phí hoặc phát sự kiện quan trọng thì contract phải diễn tả để caller không tưởng là một phép tính thuần. Tôi test observable postconditions và thất bại không làm trạng thái bị sửa một phần."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.EncapsulationAbstraction/EncapsulationAbstraction.md"
+      anchor: "oop-behavior-boundary"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Hợp đồng pay(30) của PaymentMethod nên công bố những gì để Checkout thay được Card bằng Wallet, và điều gì không được hứa trước?"
+    answer: "Checkout cần biết amount hợp lệ, cách nhận success/failure và tác động quan sát được; nó không cần chi tiết các bước provider kiểm tra phí. Số30>0 chỉ có nghĩa request đủ điều kiện thử xử lý, không cam kết provider sẽ duyệt; Wallet bị decline theo contract vẫn hoàn toàn hợp lệ. Tôi mô tả failure mode, retry/idempotency khi bên ngoài có tác động và kiểm thay implementation bằng test contract chung. Trừu tượng không nên mơ hồ doEverything cũng không lộ mọi field nội bộ."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.EncapsulationAbstraction/EncapsulationAbstraction.md"
+      anchor: "oop-abstraction-value"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Với Account, Checkout và Notifier, bạn phân công trách nhiệm ra sao khi một đơn thanh toán bị từ chối vì thiếu tiền?"
+    answer: "Account chịu trách nhiệm quyết định rút tiền có giữ balance>=0 hay không và trả lý do thất bại; Checkout điều phối đơn và diễn giải kết quả cho luồng mua; Notifier chuyển thông báo theo yêu cầu chứ không quyết định số dư. Tôi phân biệt một trách nhiệm với một method: Account có thể có nhiều hành vi cùng phục vụ bảo toàn số dư. Khi chính sách thấu chi thay đổi, chỉ owner của quy tắc cần thay đổi, trong khi template email của Notifier không bị kéo vào việc tính tiền. Tôi kiểm lỗi đi đúng đường mà không ghi trạng thái giả thành công."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.Responsibility/Responsibility.md"
+      anchor: "oop-responsibility-purpose"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Một service đang gọi account.balance() rồi tự tính trừ phí; hãy mô tả dấu hiệu owner sai và cách chuyển hành vi mà không làm Checkout ôm mọi thứ."
+    answer: "Service biết chi tiết balance, kiểm toán tự viết quy tắc và ghi lại số dư là dấu hiệu quyết định đã rơi ra khỏi Account. Tôi chuyển nghiệp vụ rút vào Account.withdraw(amount), cho Checkout gửi yêu cầu và phản hồi, còn FeePolicy có thể tính phí theo một hợp đồng riêng nếu nó thực sự sở hữu policy. Tôi xác định đâu là quy tắc phải cùng thay đổi theo thời gian rồi phân trách nhiệm theo đó, tránh chuyển toàn bộ provider, thông báo và audit vào Account. Cuối cùng kiểm fail rút quá mức vẫn giữ số dư và không tạo success giả."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.Responsibility/Responsibility.md"
+      anchor: "oop-behavior-owner"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Một lớp Account xử lý withdraw, render HTML hóa đơn, retry network và đổi màu nút UI. Bạn đánh giá cohesion bằng tình huống thay đổi nào?"
+    answer: "withdraw/deposit cùng bảo vệ số dư nên liên quan một trách nhiệm; render HTML, retry network và màu UI thay đổi vì những lý do khác, kéo nhiều actor chỉnh một lớp. Tôi dùng kịch bản đổi hạn mức rút, đổi thiết kế giao diện và đổi retry provider để đo phạm vi sửa, không dùng số method làm thước đo duy nhất. Tôi tách Account, trình bày và adapter kết nối thành owner phù hợp, nối qua contract rõ ràng. Tuy vậy cũng tránh chia mọi một-dòng logic thành lớp riêng khiến call chain khó theo dõi."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.Responsibility/Responsibility.md"
+      anchor: "oop-responsibility-cohesion"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "PaymentMethod.pay có hai provider Card và Wallet, Wallet đôi khi decline. Bạn phát biểu tiền điều kiện, kết quả và ngoại lệ sao cho hai implementation cùng thay thế được?"
+    answer: "Hợp đồng chung có thể nhận amount>0, trả approved hoặc declined và công bố lỗi provider một cách nhất quán. Decline của Wallet là một kết quả được phép nếu contract không hứa thành công cho mọi amount; đây khác việc kiểu con bí mật chỉ chấp nhận amount>=50. Tôi viết test contract cho amount30 và các đường thất bại, kiểm Checkout không giả approved chỉ vì method trả về. Các hiệu ứng thật như trừ tiền ngoài hệ thống cần chỉ rõ ranh giới và idempotency riêng, không do chữ ký pay tự bảo đảm."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.Responsibility/Responsibility.md"
+      anchor: "oop-behavioral-contract"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Trong chuyển khoản A100→B20 với amount30, bạn vẽ đường phối hợp và hai kết quả khác nhau thế nào để không gọi nhầm là transaction?"
+    answer: "Coordinator yêu cầu Account A debit30: A còn70; sau đó yêu cầu B credit30: thành công thì B từ20→50, nên cặp cuối A70/B50. Nếu credit B thất bại sau debit A, trạng thái có thể là A70/B20, không tự khôi phục A100. OOP giúp xác định owner debit, credit và orchestration nhưng không biến nhiều bước thành thao tác nguyên tử. Tôi yêu cầu định nghĩa compensation, transaction boundary hoặc phương án phục hồi ở layer phù hợp, cùng test failure injection tại điểm giữa, không giả chức năng HTTP hay database."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.Responsibility/Responsibility.md"
+      anchor: "oop-collaboration-flow"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Checkout cần FeePolicy có thể thay đổi. Hãy giải thích vì sao 'Checkout có một FeePolicy' là hợp thành hữu ích và không bắt FeePolicy là subtype Account."
+    answer: "Tôi cho Checkout phụ thuộc hợp đồng FeePolicy.calculate(amount) hoặc biến thể tương tự để chọn phí, trong khi Account vẫn bảo vệ balance. Đây là quan hệ has-a/cộng tác, không phải is-a: FeePolicy không phải một Account và không hứa withdraw. Có thể thay policy trong test để xem Checkout quyết định tổng tiền đúng mà không phải kế thừa lớp tài khoản. Tôi cũng kiểm tránh circular dependency, owner lifetime và việc thay policy có làm đổi contract thanh toán theo cách caller phải biết hay không."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.Responsibility/Responsibility.md"
+      anchor: "oop-object-composition"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Một lần thay provider thanh toán buộc sửa Account, Notifier và UI. Bạn tìm coupling sai ở đâu, và làm sao tránh abstraction quá rộng?"
+    answer: "Tôi vẽ dependency theo lời gọi và dữ liệu trao đổi: nếu Account biết loại Card cụ thể, Notifier tự đọc phí nội bộ hoặc UI phải chuyển mã provider đặc thù thì abstraction đang rò rỉ. Tôi đưa khác biệt provider sau hợp đồng PaymentMethod đã mô tả outcome và lỗi, giữ trách nhiệm Account/Notifier độc lập. Sau đó test thay Card bằng Wallet mà các client không cần sửa khi contract còn đúng. Không tạo interface doEverything chỉ để che mọi API; một abstraction tốt ổn định ở nhu cầu chung nhưng vẫn nêu rõ failure và tác động phụ."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.Responsibility/Responsibility.md"
+      anchor: "oop-collaboration-coupling"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Checkout đang có if(type==Card) và if(type==Wallet) để gọi thanh toán. Bạn giải thích động cơ đa hình và cách đánh giá có thật sự giúp giảm thay đổi như thế nào?"
+    answer: "Checkout nên phụ thuộc PaymentMethod.pay(amount) với outcome đã công bố, còn Card và Wallet quyết định xử lý riêng. Khi thêm provider mới, tôi so số nơi phải sửa và kiểm contract của provider để không di chuyển if sang một lớp trung tâm khác. Đa hình hữu ích khi có biến thể hành vi thật, chứ không phải khi chỉ muốn nhiều lớp. Positive amount30 là input hợp lệ để thử xử lý, không bắt Card hoặc Wallet đều approved; decline đúng contract vẫn giữ khả năng thay thế."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.RelationshipsPolymorphism/RelationshipsPolymorphism.md"
+      anchor: "oop-polymorphism-purpose"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Một interface PaymentMethod có phương thức pay(amount), nhưng implementation trả boolean còn implementation khác ném exception cho mọi lần decline. Có thật đã có hợp đồng chung không?"
+    answer: "Chữ ký giống nhau chưa đủ: caller phải biết amount nào được nhận, approved và decline được biểu diễn ra sao, lỗi hệ thống nào có thể xảy ra và các hiệu ứng nào được phép. Nếu một provider biến decline bình thường thành exception không hứa trước, Checkout có thể coi là lỗi kỹ thuật và retry sai. Tôi thống nhất contract outcome rõ ràng và chạy một bộ test giống nhau trên Card, Wallet, fake provider. Tính chung được đánh giá bằng hành vi quan sát, không bằng việc implement cùng một keyword interface."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.RelationshipsPolymorphism/RelationshipsPolymorphism.md"
+      anchor: "oop-shared-behavior-contract"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Một lớp VipAccount extends Account nhưng tự thêm quy tắc rút tối thiểu 50. Hãy giải thích vì sao quan hệ extends chưa chứng minh VipAccount thay thế được Account."
+    answer: "Nếu Account.withdraw nhận mọi amount dương trong phạm vi đủ số dư, caller có thể gọi withdraw(30) trên Account balance100. VipAccount bí mật từ chối amount30 vì yêu cầu >=50 là làm chặt tiền điều kiện, phá lời hứa được thừa hưởng dù tên và signature vẫn khớp. Tôi so tập request hợp lệ và hậu điều kiện của hai loại, viết contract test cùng một caller. Nếu quy tắc VIP thật sự khác, chọn abstraction/hợp đồng riêng phù hợp thay vì khai báo is-a không đúng ngữ nghĩa."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.RelationshipsPolymorphism/RelationshipsPolymorphism.md"
+      anchor: "oop-subtype-relation"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Bạn có hai loại thanh toán giống phần logging nên muốn cho Wallet kế thừa Card. Khi nào kế thừa ở đây sai mô hình, và dùng cách tái sử dụng nào tốt hơn?"
+    answer: "Việc cùng log hoặc tính phí không biến Wallet thành một Card. Kế thừa tạo lời hứa kiểu con và phụ thuộc triển khai lớp cha, nên thay Card internals có thể phá Wallet dù domain hai provider khác nhau. Tôi tách logging/correlation thành collaborator hoặc decorator, FeePolicy thành object có trách nhiệm riêng và chia sẻ logic qua composition khi thích hợp. Chỉ dùng inheritance nếu quan hệ loại thực sự là is-a, contract chung ổn định và mọi subtype giữ điều kiện của caller, không vì tránh sao chép vài dòng code."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.RelationshipsPolymorphism/RelationshipsPolymorphism.md"
+      anchor: "oop-inheritance-concept"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "PaymentMethod có thể decline hợp lệ, nhưng một Wallet subclass từ chối amount30 vì đặt ngưỡng tối thiểu50. Hãy phân biệt decline với phá LSP bằng test nào?"
+    answer: "Trước hết contract pay(amount>0) cho phép trả approved hoặc provider-declined, nên Wallet nhận30, thử xử lý và báo decline theo quy tắc là hợp lệ. Ngược lại từ chối ngay amount30 như input không hợp lệ vì thêm min50 làm chặt tiền điều kiện của subtype và phá khả năng thay thế. Tôi test cùng caller với Card/Wallet và tách expected outcomes khỏi accepted inputs, cũng kiểm exception/failure khác nhau. Không yêu cầu tất cả provider luôn thành công; yêu cầu chúng giữ lời hứa observable mà client dựa vào."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.RelationshipsPolymorphism/RelationshipsPolymorphism.md"
+      anchor: "oop-substitutability"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Checkout chọn FeePolicy linh động khi có chương trình khuyến mãi. Bạn dùng composition hay một lớp con CheckoutFestival, và dựa tiêu chí gì?"
+    answer: "Nếu điều cần đổi chỉ là cách tính phí, giữ Checkout cộng tác với FeePolicy thay vì tạo cây CheckoutFestival/CheckoutWeekend dễ nở vô hạn. Policy là has-a dependency, không là is-a Account hay Checkout, nên thay được tại test boundary mà không đụng hợp đồng thanh toán. Tôi cân nhắc số biến thể thực, lifetime policy, khả năng phát hiện cấu hình sai và nơi kiểm invariant. Inheritance chỉ hợp lý nếu loại con thực sự giữ mọi cam kết loại cha; không dùng nó để mô tả chiến lược cấu hình."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.RelationshipsPolymorphism/RelationshipsPolymorphism.md"
+      anchor: "oop-composition-vs-inheritance"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Đội thêm QRPayment sau Card và Wallet. Bạn chứng minh đa hình giúp mở rộng hệ thống ở đâu nhưng không che lỗi provider thế nào?"
+    answer: "Checkout gọi hợp đồng pay với positive amount và xử lý các outcome, còn QRPayment sở hữu chi tiết giao tiếp QR. Một test tích hợp dùng fake implementation chứng minh luồng checkout không cần thêm nhánh if tên provider, nhưng contract test cho QR vẫn phải xác minh decline, timeout và side effect đã công bố. Tôi cũng chỉ ra phần phải sửa hợp lý như wiring hoặc capability mới, thay vì hứa 'không bao giờ sửa code cũ'. Đa hình giảm coupling của biến thể hành vi chứ không mang lại bảo đảm giao dịch hay bảo mật tự động."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.RelationshipsPolymorphism/RelationshipsPolymorphism.md"
+      anchor: "oop-behavior-variants"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Bạn nhận yêu cầu chuyển30 giữa A100 và B20, thu phí và gửi thông báo. Hãy dựng thiết kế từ hợp đồng đến test chứ không bắt đầu bằng sơ đồ class."
+    answer: "Tôi liệt kê quy tắc trước: Account A kiểm debit hợp lệ và giữ balance>=0, B chịu trách nhiệm credit; coordinator điều phối, FeePolicy tính phí nếu contract yêu cầu và Notifier gửi sau outcome đã xác định. Thành công không phí cho A70/B50; nếu credit fail sau A debit, có thể A70/B20 và phải có transaction/compensation/recovery rõ ràng. Tôi viết test success, insufficient funds, provider decline và fault injection tại giữa hai bước. Class và interface chỉ đến sau khi biết trách nhiệm và kết quả phải quan sát."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.Tradeoffs/Tradeoffs.md"
+      anchor: "oop-design-walkthrough"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Đóng gói Account giảm lỗi gán balance trực tiếp, nhưng nó tạo chi phí nào khi cần debug và mở rộng nghiệp vụ?"
+    answer: "Nhờ withdraw(amount) thay setBalance, caller không dễ bỏ qua invariant và việc đổi cách lưu số dư có thể nằm sau contract ổn định. Đổi lại cần hiểu boundary, viết contract test, quản lý nhiều collaborator và giữ khả năng quan sát các lỗi/audit hợp lệ. Tôi cung cấp phương thức đọc/truy vấn an toàn và trace outcome thay vì cho UI chọc vào field; cũng tránh giấu side effect quan trọng. Nếu logic chỉ là một phép cộng thuần, chi phí object boundary có thể vượt lợi ích."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.Tradeoffs/Tradeoffs.md"
+      anchor: "oop-encapsulation-benefits"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Một dự án chỉ cần lọc và cộng ba số nhưng có RepositoryFactory, SumStrategy, Manager, Coordinator. Bạn làm sao chứng minh đây là overdesign mà không phủ nhận OOP?"
+    answer: "Tôi hỏi mỗi lớp sở hữu quy tắc và vòng đời nào, tình huống thay đổi nào khiến abstraction riêng có giá trị. Nếu chỉ map/filter rồi reduce một danh sách bất biến, hàm thuần hoặc vòng lặp ngắn đã đủ; chuỗi factory/manager/coordinator thêm navigation, mock và phụ thuộc vô ích. Tôi so số nhánh đổi code, độ dễ test và mức rủi ro khi thêm một biến thể thật, thay vì kết luận mọi class là xấu. OOP phù hợp hơn khi entity identity, invariant và collaborator contract thực sự tồn tại."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.Tradeoffs/Tradeoffs.md"
+      anchor: "oop-overdesign-risks"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Wallet kế thừa Card để chia sẻ retry và tự đặt ngưỡng amount>=50. Bạn mô tả hai rủi ro khác nhau và phương án sửa nào?"
+    answer: "Rủi ro thứ nhất là mô hình is-a giả: Wallet không phải Card nhưng phụ thuộc các chi tiết triển khai mà Card có thể thay đổi, khiến subclass mong manh. Rủi ro thứ hai là contract: PaymentMethod cho amount>0 nhưng Wallet từ chối amount30 chỉ vì tiền điều kiện mới, phá khả năng thay thế. Tôi tách retry thành adapter/collaborator chung, chọn composition và xác định lại hợp đồng nếu thực sự có sản phẩm riêng với min50. Provider decline có công bố vẫn hợp lệ và khác việc tự làm chặt đầu vào."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.Tradeoffs/Tradeoffs.md"
+      anchor: "oop-fragile-inheritance"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Hai Account khác danh tính vô tình cùng tham chiếu một mutable transaction list. Lỗi nào có thể xảy ra dù balance của mỗi tài khoản vẫn riêng?"
+    answer: "Nếu A.appendTransaction(x) sửa list chung, B có thể hiển thị giao dịch của A, làm audit sai và rò dữ liệu dù hai số dư tách biệt. Danh tính object không tự động cô lập mọi nested mutable reference; getter trả list gốc cũng có thể để caller sửa trực tiếp. Tôi kiểm tạo bản sao hoặc immutable view phù hợp, owner của lịch sử và test aliasing giữa A/B; dưới concurrency còn phải kiểm thứ tự truy cập. Không dùng keyword private làm bằng chứng chắc chắn list đã bất biến sâu."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.Tradeoffs/Tradeoffs.md"
+      anchor: "oop-shared-state-risks"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Một nghiệp vụ chỉ tính tổng hóa đơn từ list bất biến, không giữ identity hoặc invariant dài hạn. Vì sao hàm thuần hay thủ tục có thể tốt hơn nhóm đối tượng?"
+    answer: "Tôi quan sát hợp đồng: input list giá trị → output số tổng, không có state cần quản lý, quyền quyết định của entity hay biến thể hành vi cần thay thế. Một hàm thuần dễ truyền input mẫu, test và so sánh kết quả; một vòng lặp thủ tục cũng có thể rõ ràng. Thêm Account, Strategy hierarchy và event coordinator vào phép cộng đơn thuần tạo trạng thái và coupling không cần thiết. Nếu sau này có discount policy với outcome riêng hoặc account identity, tôi xem lại ranh giới; không biến lựa chọn paradigm thành giáo điều."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.Tradeoffs/Tradeoffs.md"
+      anchor: "oop-alternative-paradigms"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Trong phỏng vấn OOP, ứng viên nói interface, DDD aggregate, AOP logging và distributed transaction đều là OOP thuần. Bạn phân loại ranh giới kiến thức và kế hoạch kiểm chứng như thế nào?"
+    answer: "OOP tập trung vào object identity, responsibility, behavioral contract, encapsulation, composition và substitutability. Java Core giải thích cú pháp interface/private, dispatch và inheritance cụ thể; DDD aggregate quản lý ranh giới bất biến miền ở cấp riêng, AOP logging/cross-cutting có cơ chế riêng, transaction/lock/compensation thuộc persistence và distributed systems. Tôi vẫn dùng ví dụ Account A100/B20 transfer30 để chỉ ra A70/B50 khi thành công và A70/B20 khi credit fail, không bao giờ bảo OOP tạo rollback. Tôi chuyển người học sang module chuyên môn đúng khi cần kiểm tra runtime."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.Tradeoffs/Tradeoffs.md"
+      anchor: "oop-owner-handoff"
+    apiRelated:
+      controller: ""
+      methodSignature: ""

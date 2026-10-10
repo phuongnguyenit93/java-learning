@@ -1,1 +1,0 @@
-# Objects, Responsibility, and Collaboration
