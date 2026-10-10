@@ -300,6 +300,8 @@ Java section navigation: Knowledge | Project
 
 `Java → Project` hiện có ba thẻ domain study: Banking, Logistics, E-commerce. Các thẻ xếp dọc, chiếm toàn bộ chiều rộng của content area; tông màu khác nhau theo từng domain. Trạng thái thường dùng linear gradient đậm → nhạt từ trái sang phải; trên hover/focus/click, đường chéo chuyển thành split thẳng đứng với vùng logo và vùng mô tả là hai nền **màu phẳng** khác tông. Logo SVG luôn một màu, vị trí icon và split pane luân phiên hai phía theo từng thẻ. Mỗi thẻ là một nút disclosure chỉ mở mô tả, chưa dẫn tới một module/project implementation. Touch click toggle, keyboard focus và `prefers-reduced-motion` đều được hỗ trợ; mô tả được localized VI/EN.
 
+Global header brand thay đổi theo route: chỉ các route `/learning/java/**` hiển thị **Java Learning** với SVG Java; `/my-cv` hiển thị **Nguyen Do Dinh Phuong** với toàn bộ tên màu xanh và biểu tượng cũ; các route còn lại (bao gồm `/learning` topic picker) hiển thị **Learning Platform** với biểu tượng cũ. Ba topic card trên `/learning` hiển thị SVG logo Java/JavaScript/NodeJS thay cho chữ viết tắt; logo được đóng gói trực tiếp từ `frontend/src/assets/logos/` (Devicon, kèm MIT license), không fetch logo qua CDN lúc runtime.
+
 Ví dụ với module runnable `THREAD`:
 
 ```text
@@ -1689,6 +1691,7 @@ MVP đã bắt đầu implementation. Current phase đã có:
 35. Roadmap frontend đã implement: vertical center timeline, milestone card xen kẽ trái/phải, numbered ring marker, `relatedKnowledge` luôn hiển thị ở phía đối diện milestone, và `relatedModules` satellite cards nối dotted line; responsive layout collapse về single-column timeline trên màn hình nhỏ
 36. Roadmap Related Knowledge prototype đã implement cho `JAVA_LANGUAGE_BASICS`: marker giữ pulse nhẹ nhưng không còn mở popup; Related Knowledge luôn visible, resolve category/count từ Knowledge index và click item chuyển sang Knowledge tab với đúng category active; current mapping chỉ là provisional mapping trên Knowledge cũ và không được coi là curriculum proof
 37. Learning topic picker trên `/learning` hiện có Java/JavaScript/NodeJS; Java mở module UI cũ trong `/learning/java/knowledge`, các topic chưa sẵn sàng hiển thị localized animated dialog; Java section navigation có Knowledge/Project, Project hiển thị ba interactive split-cards Banking/Logistics/E-commerce với gradient thông thường, flat-color hover reveal, alternating sides, responsive touch toggle và VI/EN. Spring Boot SPA fallback hỗ trợ deep-link mới và legacy module paths vẫn được client redirect.
+38. Global header dùng brand theo route: `Java Learning` + Java SVG chỉ trong `/learning/java/**`; `Nguyen Do Dinh Phuong` màu xanh + icon cũ trên `/my-cv`; `Learning Platform` + icon cũ trên các route khác. Topic picker có ba SVG Java/JavaScript/NodeJS từ local Devicon assets và license nội bộ.
 ```
 
 Chưa implement trong current phase:

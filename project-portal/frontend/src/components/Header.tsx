@@ -1,4 +1,5 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
+import javaLogo from '../assets/logos/java.svg';
 import { useLanguage } from '../state/LanguageContext';
 import { useTheme } from '../state/ThemeContext';
 
@@ -20,15 +21,26 @@ const labels = {
 };
 
 export function Header() {
+  const { pathname } = useLocation();
   const { language, toggleLanguage } = useLanguage();
   const { theme, toggleTheme } = useTheme();
   const text = labels[language];
+  const isJavaLearning = pathname === '/learning/java' || pathname.startsWith('/learning/java/');
+  const isMyCv = pathname === '/my-cv' || pathname === '/my-cv/';
 
   return (
     <header className="topbar">
-      <div className="topbar__brand">
-        <span className="topbar__brand-icon" aria-hidden="true">☕</span>
-        <span>Java <strong>Learning</strong></span>
+      <div className={`topbar__brand${isMyCv ? ' topbar__brand--cv' : ''}`}>
+        <span className="topbar__brand-icon" aria-hidden="true">
+          {isJavaLearning ? <img src={javaLogo} alt="" /> : '☕'}
+        </span>
+        {isMyCv ? (
+          <span className="topbar__brand-name">Nguyen Do Dinh Phuong</span>
+        ) : isJavaLearning ? (
+          <span>Java <strong>Learning</strong></span>
+        ) : (
+          <span>Learning <strong>Platform</strong></span>
+        )}
       </div>
 
       <nav className="topbar__nav" aria-label="Primary navigation">

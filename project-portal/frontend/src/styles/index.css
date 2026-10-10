@@ -308,12 +308,24 @@ pre {
   color: var(--blue);
 }
 
+.topbar__brand--cv .topbar__brand-name {
+  color: var(--blue);
+  font-weight: 750;
+}
+
 .topbar__brand-icon {
   display: grid;
   place-items: center;
   width: 25px;
   height: 25px;
   font-size: 17px;
+}
+
+.topbar__brand-icon img {
+  display: block;
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
 }
 
 .topbar__nav {
@@ -5927,19 +5939,23 @@ pre {
   letter-spacing: -0.08em;
 }
 
+.learning-topic-card__logo {
+  display: block;
+  width: 58px;
+  height: 58px;
+  object-fit: contain;
+}
+
 .learning-topic-card__emblem--java {
-  background: #3a2027;
-  color: #ffb3a8;
+  background: #243544;
 }
 
 .learning-topic-card__emblem--javascript {
-  background: #3f3616;
-  color: #ffe184;
+  background: #302d24;
 }
 
 .learning-topic-card__emblem--nodejs {
-  background: #193a2a;
-  color: #9fe2a5;
+  background: #203528;
 }
 
 .learning-topic-card__name {

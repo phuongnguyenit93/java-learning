@@ -1,13 +1,16 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import javaLogo from '../assets/logos/java.svg';
+import javascriptLogo from '../assets/logos/javascript.svg';
+import nodejsLogo from '../assets/logos/nodejs.svg';
 import { useLanguage } from '../state/LanguageContext';
 
 type UnavailableTopic = 'JavaScript' | 'NodeJS';
 
 const topics = [
-  { name: 'Java', emblem: 'J', detail: 'JVM', status: 'available' },
-  { name: 'JavaScript', emblem: 'JS', detail: 'WEB', status: 'unavailable' },
-  { name: 'NodeJS', emblem: 'N', detail: 'RUNTIME', status: 'unavailable' },
+  { name: 'Java', logo: javaLogo, detail: 'JVM', status: 'available' },
+  { name: 'JavaScript', logo: javascriptLogo, detail: 'WEB', status: 'unavailable' },
+  { name: 'NodeJS', logo: nodejsLogo, detail: 'RUNTIME', status: 'unavailable' },
 ] as const;
 
 export function LearningTopicsPage() {
@@ -49,7 +52,7 @@ export function LearningTopicsPage() {
                 <span className="learning-topic-card__arrow" aria-hidden="true">↗</span>
               </span>
               <span className={`learning-topic-card__emblem learning-topic-card__emblem--${topic.name.toLowerCase()}`} aria-hidden="true">
-                {topic.emblem}
+                <img className="learning-topic-card__logo" src={topic.logo} alt="" draggable={false} />
               </span>
               <span className="learning-topic-card__name">{topic.name}</span>
               <span className="learning-topic-card__detail">{topic.detail}</span>
