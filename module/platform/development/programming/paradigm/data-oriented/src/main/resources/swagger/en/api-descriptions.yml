@@ -1,0 +1,34 @@
+OrderPreviewController:
+  preview(Map<String,Object>,int):
+    summary: Validate an untrusted order map and inspect an immutable data transformation
+    description: Submit a JSON object with id, status=pending, and nested lines containing
+      sku, qty, and price. An independent schema checks the shape at the HTTP trust
+      boundary before any calculation. On success observe the original nested snapshot
+      and the separately derived discounted order; on failure inspect field paths
+      such as lines[1].qty. Duplicate JSON keys or malformed JSON return HTTP 400
+      before schema validation; valid JSON with a wrong shape returns HTTP 422. No
+      payment, storage, or external mutation occurs.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 6.DataFlow/DataFlow.md
+      anchor: dop-flow-scenario
+    methodName: preview
+    params:
+    - order
+    - discountPercent
+    path: com/example/learning/dop/OrderPreviewController.java
+    mapping: '@PostMapping(path = "/preview", consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /paradigm/data-oriented/orders/preview
+    produces:
+    - MediaType.APPLICATION_JSON_VALUE
+    consumes:
+    - MediaType.APPLICATION_JSON_VALUE
+    usage: true

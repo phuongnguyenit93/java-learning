@@ -14,3 +14,20 @@
 #
 # Add only curated references that are useful for the module.
 # The build system must not overwrite this file after authored content exists.
+
+references:
+  - title: "Principles of Data-Oriented Programming"
+    url: "https://blog.klipse.tech/dop/2022/06/22/principles-of-dop.html"
+    description: "Yehonathan Sharvit's primary exposition of the four principles used as the main learning model in this module."
+  - title: "Data-Oriented Programming"
+    url: "https://www.manning.com/books/data-oriented-programming"
+    description: "Author and publisher's book overview covering generic data, non-mutating transformations, data validation, and pragmatic trade-offs."
+  - title: "Separate Data Schema from Data Representation"
+    url: "https://blog.klipse.tech/databook/2022/06/22/data-validation.html"
+    description: "Author-written example clarifying the difference between flexible data representation, a schema, and boundary validation."
+  - title: "Data-Oriented Programming in Java - Version 1.1"
+    url: "https://inside.java/2024/05/23/dop-v1-1-introduction/"
+    description: "Official Java-team discussion of immutable transparent data, precise data modeling, unrepresentable illegal states, and operations separated from data."
+  - title: "Data-Oriented Design"
+    url: "https://www.dataorienteddesign.com/dodbook/"
+    description: "Richard Fabian's original book on performance- and hardware-oriented data layout; a boundary reference, not the DOP curriculum itself."

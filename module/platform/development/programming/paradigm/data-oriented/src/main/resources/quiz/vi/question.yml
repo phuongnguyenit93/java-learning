@@ -1,0 +1,1002 @@
+# <quiz-schema>
+# Cấu trúc câu hỏi Quiz
+# schema-version: 3
+#
+# questions [kiểu: list; bắt buộc; mặc định: []; duy nhất theo: id]
+#   Danh sách câu hỏi Quiz của module trong language hiện tại.
+#   mỗi phần tử:
+#     id [kiểu: string; bắt buộc; mặc định: ""]
+#       ID ổn định và duy nhất của câu hỏi.
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi hiển thị cho người học.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu câu hỏi được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu câu hỏi đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+#     answers [kiểu: list; bắt buộc; số phần tử: 4; mặc định: []; duy nhất theo: id]
+#       Chính xác bốn đáp án. ID A/B/C/D là identity nội bộ ổn định, không phải vị trí hiển thị sau khi frontend shuffle.
+#       mỗi phần tử:
+#         id [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#           Identity ổn định của đáp án.
+#         answer [kiểu: string; bắt buộc; mặc định: ""]
+#           Nội dung đáp án hiển thị cho người học.
+#         explanation [kiểu: string; bắt buộc; mặc định: ""]
+#           Giải thích hiển thị khi người học chọn đáp án này, bất kể đúng hay sai.
+#     correctAnswerId [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#       ID nội bộ của đáp án đúng. Frontend kiểm tra bằng identity này sau khi shuffle.
+# </quiz-schema>
+
+
+questions:
+  - id: "dop-quiz-dop-concept"
+    question: "Nhóm báo cáo cần đọc cùng đơn hàng với nhóm tính giá. Thay đổi nào thể hiện rõ nhất DOP theo Sharvit?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.DataOrientedProgramming/DataOrientedProgramming.md"
+      anchor: "dop-concept"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Đưa toàn bộ báo cáo vào entity Order có thể sửa, đồng thời giao việc tính tổng lẫn định dạng báo cáo cho phương thức của nó."
+        explanation: "Làm vậy vẫn gắn chặt thao tác vào đối tượng mang dữ liệu."
+      - id: B
+        answer: "Chia sẻ giá trị đơn dễ quan sát cho hàm báo cáo và tính giá riêng."
+        explanation: "Cùng biểu diễn tường minh phục vụ nhiều phép xử lý mà không phải chứa phương thức của chúng."
+      - id: C
+        answer: "Thay map đơn bằng phản hồi cổng thanh toán bị che chi tiết."
+        explanation: "Phản hồi bị che làm khó quan sát và trộn vào tác động thanh toán bên ngoài."
+      - id: D
+        answer: "Lưu đơn thành singleton cho mọi nơi cùng dùng một đối tượng."
+        explanation: "Cùng tham chiếu đối tượng không chứng minh đã tách dữ liệu khỏi thao tác."
+    correctAnswerId: B
+  - id: "dop-quiz-dop-motivation"
+    question: "Một đối tượng gộp định giá, audit và xuất đơn. Nhóm phân tích chỉ cần danh sách dòng. Đánh đổi nào thúc đẩy cách thiết kế data-first?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.DataOrientedProgramming/DataOrientedProgramming.md"
+      anchor: "dop-motivation"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Nó loại bỏ nhu cầu định nghĩa trạng thái tài khoản hợp lệ vì cấu trúc map đã tách khỏi mọi quyết định nghiệp vụ."
+        explanation: "Tách hành vi khiến việc giữ bất biến cần hợp đồng tường minh, không phải mất đi."
+      - id: B
+        answer: "Nó bảo đảm bên xuất dữ liệu không phụ thuộc tên trường."
+        explanation: "Đọc map trực tiếp vẫn tạo phụ thuộc vào tên khóa."
+      - id: C
+        answer: "Nó giúp nhóm phân tích bỏ qua kiểm tra quyền truy cập."
+        explanation: "Dữ liệu dễ thấy không xóa nghĩa vụ kiểm soát quyền."
+      - id: D
+        answer: "Nó tách bên đọc độc lập nhưng tăng trách nhiệm về hợp đồng dữ liệu."
+        explanation: "Lợi ích là tái sử dụng, còn chi phí là quản lý hợp đồng và kiểm tra."
+    correctAnswerId: D
+  - id: "dop-quiz-dop-prerequisites"
+    question: "Trước khi học schema của các dòng hàng, nền tảng tối thiểu nào hữu ích nhất cho người mới?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.DataOrientedProgramming/DataOrientedProgramming.md"
+      anchor: "dop-prerequisites"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Map các trường đơn hàng, chứa danh sách map dòng hàng."
+        explanation: "Nó đủ để đọc cấu trúc trước khi tìm hiểu kiểm tra schema."
+      - id: B
+        answer: "Danh sách phẳng chỉ chứa các tổng tiền, không cần khóa trường."
+        explanation: "Danh sách tổng không thể biểu diễn id, status và các thuộc tính khác của dòng hàng."
+      - id: C
+        answer: "Map duy nhất lưu tất cả mặt hàng bằng khóa nối sku và qty."
+        explanation: "Dồn mọi trường về một cấp làm mất cấu trúc danh sách các dòng hàng cần quan sát."
+      - id: D
+        answer: "Đối tượng Order che toàn bộ fields sau phương thức total()."
+        explanation: "Một giá trị tổng bị che không giúp người mới hiểu map, list và trường lồng nhau."
+    correctAnswerId: A
+  - id: "dop-quiz-dop-context"
+    question: "Hàm nhận map đơn hàng nhưng có gửi email. Kết luận nào đúng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.DataOrientedProgramming/DataOrientedProgramming.md"
+      anchor: "dop-context"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Hàm thuần vì đầu vào là dữ liệu phổ dụng."
+        explanation: "Hình thức đầu vào không loại bỏ tác động ra bên ngoài."
+      - id: B
+        answer: "Nó là hướng đối tượng vì tạo email."
+        explanation: "Một tác động không quyết định hàm có gắn với đối tượng hay không."
+      - id: C
+        answer: "Thao tác tách dữ liệu, nhưng gửi email vẫn là tác động phụ."
+        explanation: "Tách code/data và tính thuần là hai quyết định thiết kế khác nhau."
+      - id: D
+        answer: "Nó khiến mọi lần đọc map phía sau đều bất biến."
+        explanation: "Gửi email không chứng minh cấu trúc map lồng nhau bất biến."
+    correctAnswerId: C
+  - id: "dop-quiz-dop-sharvit-model"
+    question: "Nhóm dùng map phổ dụng và phép biến đổi thuần nhưng vẫn nhận trường lồng nhau sai. Nguyên tắc Sharvit nào yếu nhất?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.DataOrientedProgramming/DataOrientedProgramming.md"
+      anchor: "dop-sharvit-model"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Tách mã tính toán khỏi dữ liệu đơn được lưu bằng cách chuyển các phép tính sang lớp hỗ trợ mà vẫn giữ schema như cũ."
+        explanation: "Đề bài đã nêu thao tác tính toán đứng riêng."
+      - id: B
+        answer: "Mô tả và áp dụng schema độc lập tại nơi nhận dữ liệu."
+        explanation: "Biểu diễn linh hoạt nhưng hợp đồng hình dạng chưa được kiểm tra."
+      - id: C
+        answer: "Biểu diễn đơn bằng cấu trúc map và list phổ dụng."
+        explanation: "Đề bài đã dùng biểu diễn phổ dụng như yêu cầu."
+      - id: D
+        answer: "Tạo giá trị bất biến mới thay vì sửa bản chụp cũ."
+        explanation: "Phép biến đổi đã thuần; vấn đề là đầu vào sai lọt qua."
+    correctAnswerId: B
+  - id: "dop-quiz-dop-terminology"
+    question: "So sánh nào phân biệt đúng ba cách dùng tên hướng dữ liệu?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.DataOrientedProgramming/DataOrientedProgramming.md"
+      anchor: "dop-terminology"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Sharvit DOP chủ yếu nghiên cứu SIMD còn Java Amber bắt dùng map không kiểu."
+        explanation: "SIMD thuộc tối ưu bộ nhớ; Java Amber nhấn mạnh mô hình có kiểu."
+      - id: B
+        answer: "Java Amber và Sharvit đều bắt biểu diễn bằng map phổ dụng như nhau."
+        explanation: "Biến thể Java có kiểu khác đáng kể với map phổ dụng."
+      - id: C
+        answer: "DOD hiệu năng dùng để kiểm tra hợp đồng JSON qua HTTP."
+        explanation: "Kiểm tra dữ liệu đầu vào thuộc ranh giới DOP ứng dụng."
+      - id: D
+        answer: "Sharvit nhấn dữ liệu phổ dụng/schema, Java Amber biến thể có kiểu, DOD bố trí bộ nhớ."
+        explanation: "Ba hướng trả lời các câu hỏi biểu diễn và vận hành khác nhau."
+    correctAnswerId: D
+  - id: "dop-quiz-dop-learning-path"
+    question: "Người học đã đọc được các trường đơn lồng nhau nhưng chưa kiểm tra hợp lệ. Thứ tự tiếp theo nào tránh tin đầu vào sai?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.DataOrientedProgramming/DataOrientedProgramming.md"
+      anchor: "dop-learning-path"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Đặt và kiểm tra hợp đồng hình dạng, rồi biến đổi dữ liệu hợp lệ, điều phối tác động sau."
+        explanation: "Cần xác lập ranh giới tin cậy trước phép tính và điều phối bên ngoài."
+      - id: B
+        answer: "Tính tổng trước rồi kiểm schema trên kết quả, vì số tiền tính được đã đủ chứng minh các trường lồng nhau đúng kiểu."
+        explanation: "Kiểm số tổng sau tính không phát hiện được thiếu khóa hoặc sai kiểu ở từng dòng."
+      - id: C
+        answer: "Chuẩn hóa mọi trường thiếu thành 0 trước khi áp dụng schema."
+        explanation: "Tự gán 0 che khuất dữ liệu đầu vào không hợp lệ và có thể làm sai số tiền."
+      - id: D
+        answer: "Tạo một bản map mới rồi cho phép kiểm tra trường sau khi trả kết quả."
+        explanation: "Sao chép giá trị không bảo đảm đầu vào đã hợp lệ trước bước tính và phản hồi."
+    correctAnswerId: A
+  - id: "dop-quiz-code-data-concept"
+    question: "Map đơn có id, status và lines; hàm tinhTong(don) nằm bên ngoài. Map giữ trách nhiệm gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.CodeDataSeparation/CodeDataSeparation.md"
+      anchor: "code-data-concept"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Cài quy tắc tính subtotal vào trong mỗi dòng dữ liệu."
+        explanation: "Dòng dữ liệu chỉ mô tả sku, qty, price; phép tính nên được đặt ở thao tác riêng."
+      - id: B
+        answer: "Tự diễn giải các trường để kiểm tra và xuất báo cáo."
+        explanation: "Map mang các giá trị, còn diễn giải và kiểm tra là trách nhiệm hàm sử dụng."
+      - id: C
+        answer: "Biểu diễn các giá trị hiện có để hàm xử lý có thể đọc."
+        explanation: "Dữ liệu cho biết có thông tin gì; hàm riêng quyết định cách sử dụng."
+      - id: D
+        answer: "Tự phát sinh subtotal mỗi khi một hàm đọc thuộc tính lines."
+        explanation: "Đọc trường không tự kích hoạt tính toán; hàm riêng cần yêu cầu phép biến đổi."
+    correctAnswerId: C
+  - id: "dop-quiz-behavior-coupling"
+    question: "Order giữ một bất biến quan trọng còn báo cáo chỉ đọc dòng hàng. Ranh giới nào hợp lý?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.CodeDataSeparation/CodeDataSeparation.md"
+      anchor: "behavior-coupling"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Giữ quyền sửa trạng thái có kiểm soát nhưng cung cấp bản dữ liệu an toàn cho báo cáo."
+        explanation: "Đóng gói và dữ liệu phục vụ đọc có thể kết hợp."
+      - id: B
+        answer: "Biến mọi kiểm tra bất biến thành tùy chọn khi có báo cáo mới."
+        explanation: "Yêu cầu báo cáo không làm mất bất biến nghiệp vụ."
+      - id: C
+        answer: "Cho mọi báo cáo sửa trường trực tiếp để khỏi cần adapter."
+        explanation: "Mở quyền ghi cho nhiều nơi khiến kiểm soát bất biến yếu đi."
+      - id: D
+        answer: "Buộc báo cáo chạy transaction để đọc từng trường."
+        explanation: "Cơ chế transaction không quyết định ranh giới hành vi đọc."
+    correctAnswerId: A
+  - id: "dop-quiz-data-visibility"
+    question: "Tính giá được 100, báo cáo đếm hai dòng từ cùng snapshot. Trước khi chia sẻ ra ngoài còn phải kiểm tra gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.CodeDataSeparation/CodeDataSeparation.md"
+      anchor: "data-visibility"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Rằng hai hàm dùng cùng snapshot chứa toàn bộ trường gốc trước khi gửi nguyên bản snapshot tới từng nhóm báo cáo bên ngoài."
+        explanation: "Cùng một dữ liệu đầu vào chưa cho phép gửi hết các trường nhạy cảm cho mọi người nhận."
+      - id: B
+        answer: "Rằng map đã bất biến sâu nên có thể xuất toàn bộ trường."
+        explanation: "Dữ liệu không thể sửa vẫn có thể chứa bí mật vượt quá quyền của bên đọc."
+      - id: C
+        answer: "Rằng chỉ ẩn id, còn status và lines mặc định đều an toàn."
+        explanation: "Che một khóa không chứng minh các trường còn lại đáp ứng quyền truy cập."
+      - id: D
+        answer: "Rằng các trường được phép xuất và cấu trúc đầu vào ổn định."
+        explanation: "Chia sẻ vẫn cần hợp đồng quyền truy cập và hình dạng dữ liệu."
+    correctAnswerId: D
+  - id: "dop-quiz-separation-tradeoffs"
+    question: "Nhiều hàm độc lập đọc khóa qty. Bên tạo đổi thành quantity. Đổi tên làm lộ chi phí nào?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.CodeDataSeparation/CodeDataSeparation.md"
+      anchor: "separation-tradeoffs"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Các hàm đọc đúng kiểu số sẽ không cần sửa tên khóa, vì kiểm tra kiểu số của qty sẽ tự làm nó tương thích với quantity."
+        explanation: "Kiểu dữ liệu phù hợp không cứu hàm vẫn đọc khóa qty đã bị đổi tên."
+      - id: B
+        answer: "Hợp đồng ngầm dùng chung giữa các hàm phải được chuyển đổi đồng bộ."
+        explanation: "Giảm phụ thuộc vào lớp có thể tăng phụ thuộc vào hình dạng dữ liệu."
+      - id: C
+        answer: "Chỉ sửa schema của bên tạo, các hàm đọc sẽ tự thích nghi."
+        explanation: "Schema mới không tự cập nhật mã nguồn của bên dùng đang tìm khóa qty."
+      - id: D
+        answer: "Chỉ cần alias khi xuất JSON, bỏ qua các hàm nội bộ đọc map."
+        explanation: "Đổi tên ở cổng xuất không bảo đảm hàm đọc bên trong cũng tìm đúng khóa."
+    correctAnswerId: B
+  - id: "dop-quiz-generic-concept"
+    question: "Biểu diễn nào giúp đọc đơn rõ ràng mà không phải tạo lớp chứa hành vi cho mỗi dòng hàng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.GenericData/GenericData.md"
+      anchor: "generic-concept"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Một map phẳng có chuỗi chứa toàn bộ dòng hàng đã nối lại."
+        explanation: "Chuỗi ghép các dòng không cho thao tác đọc từng sku, qty, price như dữ liệu lồng nhau."
+      - id: B
+        answer: "Một danh sách chỉ gồm subtotal, không lưu id hoặc dòng hàng."
+        explanation: "Danh sách tổng tiền bỏ thông tin từng mặt hàng cần thiết cho kiểm tra và báo cáo."
+      - id: C
+        answer: "Map chứa id/status và danh sách map có sku, qty, price."
+        explanation: "Map và list diễn đạt cấu trúc lồng nhau phổ dụng."
+      - id: D
+        answer: "Một map có dòng hàng dưới mỗi khóa sku nhưng không ghi qty."
+        explanation: "Dùng sku làm khóa có thể được nhưng mất qty nên không đủ mô tả đơn có số lượng."
+    correctAnswerId: C
+  - id: "dop-quiz-generic-domain-example"
+    question: "Đơn A có P số lượng 2 giá 30, Q số lượng 1 giá 40. API preview phải tính tổng trước giảm bao nhiêu?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.GenericData/GenericData.md"
+      anchor: "generic-domain-example"
+    apiRelated:
+      controller: "OrderPreviewController"
+      methodSignature: "preview(Map<String,Object>,int)"
+    answers:
+      - id: A
+        answer: "100, vì phải cộng thành tiền của cả hai dòng."
+        explanation: "Tổng là 2×30 cộng 1×40, bằng 100."
+      - id: B
+        answer: "70, vì chỉ cộng hai đơn giá."
+        explanation: "Chỉ cộng giá sẽ bỏ qua số lượng hai của P."
+      - id: C
+        answer: "90, vì giảm 10 phần trăm chính là tổng trước giảm."
+        explanation: "Chín mươi là tổng sau giảm, không phải subtotal ban đầu."
+      - id: D
+        answer: "140, vì cả hai dòng đều bị coi số lượng là hai."
+        explanation: "Q chỉ có số lượng một nên đóng góp 40."
+    correctAnswerId: A
+  - id: "dop-quiz-generic-operations"
+    question: "Một hàm tính tổng, hàm khác ghi mã đơn và số dòng. Điều gì khiến cả hai dùng lại được?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.GenericData/GenericData.md"
+      anchor: "generic-operations"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Cả hai âm thầm sửa một biến đơn hàng toàn cục."
+        explanation: "Ghi ẩn khiến dữ liệu dùng chung khó kiểm soát."
+      - id: B
+        answer: "Cả hai phải có cùng tên và kiểu kết quả."
+        explanation: "Một hàm trả tiền, hàm kia trả chuỗi; chỉ cần chung hình dạng đầu vào."
+      - id: C
+        answer: "Mỗi hàm tạo một phiên bản schema đầy đủ khác nhau."
+        explanation: "Lặp mô tả schema làm hợp đồng dễ lệch nhau."
+      - id: D
+        answer: "Chúng nhận cùng cấu trúc có hợp đồng rõ nhưng làm hai việc khác nhau."
+        explanation: "Các thao tác riêng có thể dùng chung giá trị mà không cần chung hành vi."
+    correctAnswerId: D
+  - id: "dop-quiz-generic-failure-modes"
+    question: "Caller gửi qty là chuỗi \"2\" thay vì số nguyên 2. Schema hiện tại phải xử lý ra sao?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.GenericData/GenericData.md"
+      anchor: "generic-failure-modes"
+    apiRelated:
+      controller: "OrderPreviewController"
+      methodSignature: "preview(Map<String,Object>,int)"
+    answers:
+      - id: A
+        answer: "HTTP 200 sau khi tự đổi mọi chuỗi giống số."
+        explanation: "Schema cần giá trị số nguyên, không phải chuỗi có thể ép."
+      - id: B
+        answer: "HTTP 422 nêu đường dẫn trường sai, trước khi tính tiền."
+        explanation: "JSON đúng cú pháp vẫn có thể sai kiểu theo schema."
+      - id: C
+        answer: "HTTP 400 vì dấu ngoặc kép khiến JSON sai cú pháp."
+        explanation: "Chuỗi có dấu ngoặc kép là JSON hợp lệ, chỉ sai schema."
+      - id: D
+        answer: "HTTP 200 nhưng bỏ số lượng, chỉ cộng đơn giá."
+        explanation: "Bỏ số lượng sẽ tạo tổng nhìn hợp lý nhưng sai."
+    correctAnswerId: B
+  - id: "dop-quiz-generic-contracts"
+    question: "Khi nào schema độc lập có giá trị lớn nhất với map linh hoạt?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.GenericData/GenericData.md"
+      anchor: "generic-contracts"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Với mọi map tạm kể cả khi không vượt ranh giới tin cậy."
+        explanation: "Nhu cầu kiểm tra cần dựa trên mức tin cậy và hậu quả."
+      - id: B
+        answer: "Chỉ sau khi số tiền đã được lưu."
+        explanation: "Cần kiểm tra hình dạng trước tác động dùng giá trị chưa tin cậy."
+      - id: C
+        answer: "Ở ranh giới ngoài có hợp đồng trường và kiểu dữ liệu."
+        explanation: "Dữ liệu phổ dụng thiếu một số bảo đảm kiểu tĩnh nên kiểm tra ranh giới là quan trọng."
+      - id: D
+        answer: "Chỉ khi parser JSON tạo token chuỗi."
+        explanation: "Phân tích cú pháp tách biệt kiểm tra hình dạng và ý nghĩa dữ liệu."
+    correctAnswerId: C
+  - id: "dop-quiz-dop-immutable-principle"
+    question: "Tạo map giảm giá mới nhưng list dòng hàng vẫn dùng chung và sửa được. Điều gì chưa được chứng minh?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.ImmutableData/ImmutableData.md"
+      anchor: "dop-immutable-principle"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Rằng map ngoài mới là một giá trị khác bản gốc."
+        explanation: "Map ngoài đã riêng, vấn đề nằm ở cấu trúc lồng nhau."
+      - id: B
+        answer: "Rằng toàn bộ snapshot không thể đổi về sau qua tham chiếu dùng chung."
+        explanation: "Bất biến sâu cần bảo vệ cả các giá trị lồng nhau có thể truy cập."
+      - id: C
+        answer: "Rằng phép trừ là phép tính hợp lệ cho số tiền."
+        explanation: "Phép tính độc lập với rủi ro dùng chung tham chiếu sửa được."
+      - id: D
+        answer: "Rằng route HTTP nhận được đối tượng JSON."
+        explanation: "Nhận JSON không chứng minh dữ liệu lồng nhau ổn định."
+    correctAnswerId: B
+  - id: "dop-quiz-dop-state-update"
+    question: "updateQuantity(order,P,3) phải giữ bản P ban đầu số lượng 2. Cách cập nhật nào phù hợp?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.ImmutableData/ImmutableData.md"
+      anchor: "dop-state-update"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Sửa dòng P dùng chung tại chỗ rồi trả cùng map."
+        explanation: "Nó thay dữ liệu mà đơn gốc vẫn đang tham chiếu."
+      - id: B
+        answer: "Sửa list dòng gốc rồi chỉ sao chép trường id ở map ngoài."
+        explanation: "Sao chép trường ngoài không phục hồi danh sách đã bị sửa."
+      - id: C
+        answer: "Buộc client quên đơn v1 sau khi nhận phản hồi."
+        explanation: "Bỏ tham chiếu không chứng minh dữ liệu gốc không bị thay đổi."
+      - id: D
+        answer: "Tạo dòng P thay thế và danh sách dòng mới cho đơn mới."
+        explanation: "Cấu trúc mới giữ dòng cũ trong bản trước và áp dụng số mới vào bản sau."
+    correctAnswerId: D
+  - id: "dop-quiz-dop-state-history"
+    question: "Response preview có snapshot before và after. Quan sát mạnh nhất có căn cứ là gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.ImmutableData/ImmutableData.md"
+      anchor: "dop-state-history"
+    apiRelated:
+      controller: "OrderPreviewController"
+      methodSignature: "preview(Map<String,Object>,int)"
+    answers:
+      - id: A
+        answer: "Yêu cầu hợp lệ cho thấy hai giá trị mà không ghi cơ sở dữ liệu."
+        explanation: "Đối chiếu snapshot chứng minh phép biến đổi phản hồi, không phải lịch sử bền vững."
+      - id: B
+        answer: "Cả hai snapshot đã được lưu như phiên bản bền vững."
+        explanation: "Ứng dụng chủ ý không có bước lưu trữ."
+      - id: C
+        answer: "Cổng thanh toán đã giữ số tiền sau giảm."
+        explanation: "Preview không gọi cổng thanh toán."
+      - id: D
+        answer: "Mọi lần ghi đồng thời vào đơn từ nay không còn xung đột."
+        explanation: "Hai giá trị trong phản hồi không điều phối các bên ghi trạng thái chung."
+    correctAnswerId: A
+  - id: "dop-quiz-dop-state-coordination"
+    question: "Hai worker cùng đọc phiên bản lưu 4 rồi tạo hai map phiên bản 5 khác nhau. Điều gì quyết định bản hiện hành?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.ImmutableData/ImmutableData.md"
+      anchor: "dop-state-coordination"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Việc cả hai giá trị bất biến trước khi lưu."
+        explanation: "Bất biến bảo vệ từng giá trị, không giải quyết cập nhật chung."
+      - id: B
+        answer: "Timestamp mới hơn trong yêu cầu của một client."
+        explanation: "Giờ phía client không phải cơ chế kiểm soát cạnh tranh tin cậy."
+      - id: C
+        answer: "Quy tắc điều phối như kiểm phiên bản, CAS hay transaction."
+        explanation: "Nơi lưu phải xử lý ghi dựa trên bản cũ và xung đột."
+      - id: D
+        answer: "Số lượng trường lớn hơn của một map đề xuất."
+        explanation: "Số trường không quyết định an toàn khi công bố trạng thái mới."
+    correctAnswerId: C
+  - id: "dop-quiz-dop-schema-concept"
+    question: "Đơn A có qty=2 còn schema riêng quy định qty nguyên dương. Schema là gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.DataSchema/DataSchema.md"
+      anchor: "dop-schema-concept"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Chính giá trị đơn hàng đang chứa số lượng hai."
+        explanation: "Map là bản dữ liệu cụ thể, không phải quy tắc của mọi bản."
+      - id: B
+        answer: "Bản log ghi đơn nào được gửi trước."
+        explanation: "Lịch sử sự kiện không quy định kiểu và khoảng của trường."
+      - id: C
+        answer: "Bộ tuần tự hóa quyết định số khoảng trắng của JSON."
+        explanation: "Định dạng tách khỏi ràng buộc hình dạng có ý nghĩa."
+      - id: D
+        answer: "Hợp đồng độc lập quy định tên, kiểu và ràng buộc của trường."
+        explanation: "Hợp đồng có thể kiểm tra nhiều map đơn khác nhau."
+    correctAnswerId: D
+  - id: "dop-quiz-dop-schema-optional"
+    question: "Một bản chiếu cục bộ đã kiểm tra chỉ gồm id và total. Nên chọn kiểm schema thế nào?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.DataSchema/DataSchema.md"
+      anchor: "dop-schema-optional"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Luôn dùng toàn bộ schema đơn công khai sau mọi biểu thức."
+        explanation: "Nó có thể loại bản chiếu hợp lệ và lặp kiểm tra nội bộ."
+      - id: B
+        answer: "Chọn quy tắc theo ranh giới tin cậy và hợp đồng bên dùng, không ép một shape toàn cục."
+        explanation: "Bản chiếu hẹp và đơn nhận từ ngoài có nhu cầu kiểm tra khác nhau."
+      - id: C
+        answer: "Bỏ mọi kiểm tra vì bản chiếu dùng map phổ dụng."
+        explanation: "Dữ liệu phổ dụng vẫn cần hợp đồng khi rủi ro đáng kể."
+      - id: D
+        answer: "Chỉ kiểm số khóa ngoài, không kiểm dữ liệu lồng nhau."
+        explanation: "Số lượng và giá lồng nhau cần được kiểm tại đầu vào chưa tin cậy."
+    correctAnswerId: B
+  - id: "dop-quiz-dop-validation-boundaries"
+    question: "HTTP POST có hai dòng hàng hợp lệ và discountPercent=10. Điều gì phải xảy ra trước khi tính subtotal?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.DataSchema/DataSchema.md"
+      anchor: "dop-validation-boundaries"
+    apiRelated:
+      controller: "OrderPreviewController"
+      methodSignature: "preview(Map<String,Object>,int)"
+    answers:
+      - id: A
+        answer: "Schema độc lập kiểm tên trường, kiểu lồng nhau, khoảng và trạng thái."
+        explanation: "Ranh giới bảo vệ hàm tính khỏi dữ liệu chưa đáng tin."
+      - id: B
+        answer: "Thu tiền ngay bằng thông tin thẻ đầu vào rồi mới xác thực các field của đơn sau khi provider trả kết quả."
+        explanation: "Preview không thực hiện thu tiền bên ngoài."
+      - id: C
+        answer: "Lưu toàn bộ map nhận vào cache dùng chung bền vững."
+        explanation: "Thí nghiệm không có lưu trữ dùng chung."
+      - id: D
+        answer: "Giả định parser JSON đã kiểm mọi quy tắc nghiệp vụ."
+        explanation: "JSON đúng cú pháp chưa chứng minh số lượng dương hay trạng thái hợp lệ."
+    correctAnswerId: A
+  - id: "dop-quiz-dop-validation-failure"
+    question: "Yêu cầu đúng cú pháp có dòng thứ hai qty=-3. Kết quả nào đúng API hiện tại?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.DataSchema/DataSchema.md"
+      anchor: "dop-validation-failure"
+    apiRelated:
+      controller: "OrderPreviewController"
+      methodSignature: "preview(Map<String,Object>,int)"
+    answers:
+      - id: A
+        answer: "HTTP 400 do token JSON không hợp lệ trước khi tạo map."
+        explanation: "Âm ba đúng cú pháp JSON, chỉ sai hợp đồng dữ liệu."
+      - id: B
+        answer: "HTTP 200, tự làm số lượng âm thành không."
+        explanation: "Bộ kiểm tra từ chối dữ liệu sai chứ không tự sửa ngầm."
+      - id: C
+        answer: "HTTP 422, accepted=false và đường lỗi lines[1].qty."
+        explanation: "Schema chặn giá trị sai nghiệp vụ trước khi tính tổng."
+      - id: D
+        answer: "HTTP 200, tính lại tổng bằng trị tuyệt đối số lượng ba."
+        explanation: "Đổi thành trị tuyệt đối sẽ che giấu yêu cầu không hợp lệ."
+    correctAnswerId: C
+  - id: "dop-quiz-dop-schema-tradeoffs"
+    question: "Schema v2 dự định bắt buộc thêm currency. Quyết định nào bảo vệ tương thích client v1?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.DataSchema/DataSchema.md"
+      anchor: "dop-schema-tradeoffs"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Âm thầm bắt trường mới mà không báo client v1 sẽ bị từ chối."
+        explanation: "Client cũ không thể gửi trường bắt buộc chưa được công bố."
+      - id: B
+        answer: "Gán mọi currency thiếu bằng giá trị mặc định tùy ý."
+        explanation: "Giá trị mặc định sai đơn vị tiền có thể nguy hiểm."
+      - id: C
+        answer: "Suy currency từ số lượng dòng hàng client gửi."
+        explanation: "Số dòng không có ý nghĩa xác định loại tiền."
+      - id: D
+        answer: "Định nghĩa chính sách optional, default hay migrate rõ trước khi bật v2."
+        explanation: "Thay schema là thay hợp đồng bên gửi/nhận nên phải chuyển đổi có kế hoạch."
+    correctAnswerId: D
+  - id: "dop-quiz-dop-flow-scenario"
+    question: "Với đơn preview hợp lệ, luồng nào khớp phần triển khai thực tế?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.DataFlow/DataFlow.md"
+      anchor: "dop-flow-scenario"
+    apiRelated:
+      controller: "OrderPreviewController"
+      methodSignature: "preview(Map<String,Object>,int)"
+    answers:
+      - id: A
+        answer: "Nhận JSON → kiểm schema → tổng 100 → tạo bản 90 → trả lời mà không lưu."
+        explanation: "Endpoint dừng ở phản hồi và cho xem các snapshot được tính."
+      - id: B
+        answer: "Nhận JSON → thu tiền → kiểm schema → tính tổng → lưu, rồi giả định thanh toán và ghi dữ liệu đã thành công khi nhận JSON."
+        explanation: "API không có cổng thu tiền hay kho lưu và kiểm tra phải có trước phép tính."
+      - id: C
+        answer: "Nhận JSON → lưu map chưa kiểm → sửa kiểu trường → thu tiền."
+        explanation: "Dữ liệu sai bị từ chối trước biến đổi; không có bước lưu."
+      - id: D
+        answer: "Nhận JSON → đổi trạng thái paid → retry lưu khi xung đột."
+        explanation: "Preview giữ pending và không điều phối trạng thái có phiên bản."
+    correctAnswerId: A
+  - id: "dop-quiz-dop-flow-validate"
+    question: "Hai yêu cầu lỗi: một thiếu giá dòng thứ hai, một lặp khóa qty trong JSON. Cần phân biệt điều gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.DataFlow/DataFlow.md"
+      anchor: "dop-flow-validate"
+    apiRelated:
+      controller: "OrderPreviewController"
+      methodSignature: "preview(Map<String,Object>,int)"
+    answers:
+      - id: A
+        answer: "Cả hai trả HTTP 200 kèm after rỗng, để người dùng xem đầu vào sai như các phép biến đổi hoàn tất."
+        explanation: "Không trường hợp nào tạo phép biến đổi được chấp nhận."
+      - id: B
+        answer: "Cả hai lỗi phát sinh khi tính giảm giá trên đơn hợp lệ."
+        explanation: "Một bên sai hợp đồng dữ liệu, bên kia là văn bản JSON mơ hồ."
+      - id: C
+        answer: "Cả hai phải đi qua schema validator trước khi bị từ chối."
+        explanation: "Khóa trùng bị parser chặn trước khi tạo map."
+      - id: D
+        answer: "Thiếu price là lỗi shape 422; khóa JSON trùng là lỗi parser 400."
+        explanation: "Mã phản hồi cho biết lớp nào tại ranh giới từ chối dữ liệu."
+    correctAnswerId: D
+  - id: "dop-quiz-dop-flow-transform"
+    question: "Phản hồi hợp lệ có before.lines P(2,30),Q(1,40) và after.discountedTotal=90.00. Kết luận nào có căn cứ?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.DataFlow/DataFlow.md"
+      anchor: "dop-flow-transform"
+    apiRelated:
+      controller: "OrderPreviewController"
+      methodSignature: "preview(Map<String,Object>,int)"
+    answers:
+      - id: A
+        answer: "Server đã sửa danh sách dòng gốc để áp dụng giảm giá."
+        explanation: "Before và after trong phản hồi vẫn giữ nguyên từng dòng."
+      - id: B
+        answer: "Đầu vào đã qua schema tạo số tiền mới nhưng giữ nguyên trường mặt hàng."
+        explanation: "Snapshot gốc vẫn có để đối chiếu, bản mới bổ sung số tiền tính được."
+      - id: C
+        answer: "Trạng thái đổi pending thành paid vì tổng giảm."
+        explanation: "Tính giá không cho phép tự đổi sang trạng thái đã thanh toán."
+      - id: D
+        answer: "Cổng thanh toán đã chạy một lần vì có kết quả mới."
+        explanation: "Preview hoàn toàn không gọi cổng thanh toán."
+    correctAnswerId: B
+  - id: "dop-quiz-dop-flow-coordinate"
+    question: "Checkout thật cần lưu một trong hai snapshot và có thể lỗi thanh toán. Điều gì nằm ngoài API preview?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.DataFlow/DataFlow.md"
+      anchor: "dop-flow-coordinate"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Trả subtotal từ map hợp lệ và xem đó là đủ bằng chứng rằng thao tác ghi trạng thái và thu tiền cũng an toàn."
+        explanation: "Preview đã thực hiện phép tính độc lập."
+      - id: B
+        answer: "Từ chối số lượng âm kèm đường dẫn trường lồng nhau."
+        explanation: "Schema hiện có đã cung cấp bằng chứng từ chối này."
+      - id: C
+        answer: "Điều phối phiên bản lưu, kết quả thanh toán và lỗi một phần."
+        explanation: "Đó là bảo đảm về tác động và trạng thái chung, không đến từ giá trị bất biến."
+      - id: D
+        answer: "Tạo map before và after riêng cho một đơn được chấp nhận."
+        explanation: "Preview đã cho xem hai giá trị không lưu trữ này."
+    correctAnswerId: C
+  - id: "dop-quiz-dop-flow-observe"
+    question: "Bảng kiểm thử nào kiểm tra tốt nhất ranh giới API preview hiện tại?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.DataFlow/DataFlow.md"
+      anchor: "dop-flow-observe"
+    apiRelated:
+      controller: "OrderPreviewController"
+      methodSignature: "preview(Map<String,Object>,int)"
+    answers:
+      - id: A
+        answer: "Hợp lệ 200 tổng100/giảm90; qty sai 422; JSON trùng khóa 400; không thanh toán."
+        explanation: "Mỗi dòng kiểm một hành vi hoặc nhánh từ chối khác nhau của endpoint thật."
+      - id: B
+        answer: "Hợp lệ 200 với 100/90; qty sai nhận 400; JSON trùng khóa nhận 422."
+        explanation: "Ma trận nhầm tầng parser 400 với kiểm schema 422, dù cùng kiểm đủ nhánh."
+      - id: C
+        answer: "Hợp lệ 200 với 100/90; qty âm tự đổi thành 0 rồi trả 200; khóa trùng 400."
+        explanation: "Schema hiện tại phải từ chối qty âm bằng 422 chứ không chuẩn hóa ngầm."
+      - id: D
+        answer: "Hợp lệ 200 với 100/90; qty sai nhận 422; JSON trùng khóa được giữ giá trị cuối."
+        explanation: "Parser bật strict duplicate detection nên không nhận quy tắc last-write-wins."
+    correctAnswerId: A
+  - id: "dop-quiz-amber-definition"
+    question: "Phát biểu nào mô tả DOP Java/Project Amber v1.1 thay vì mô hình map phổ dụng của Sharvit?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.JavaPerspective/JavaPerspective.md"
+      anchor: "amber-definition"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Nó bắt mọi trạng thái miền dùng hash map sửa được."
+        explanation: "Amber nhấn mạnh mô hình có kiểu chính xác và thường bất biến."
+      - id: B
+        answer: "Nó ưu tiên bố trí cache CPU và xử lý hàng loạt SIMD."
+        explanation: "Đó là DOD tối ưu hiệu năng, không phải mô hình Amber."
+      - id: C
+        answer: "Nó ưu tiên kiểu dữ liệu bất biến minh bạch, biến thể đầy đủ, thao tác tách riêng."
+        explanation: "Các nguyên tắc Java mới giúp loại một số trạng thái sai khỏi mô hình."
+      - id: D
+        answer: "Nó nhúng schema không kiểu riêng vào từng giá trị yêu cầu."
+        explanation: "Schema riêng của Sharvit đứng ngoài từng bản dữ liệu."
+    correctAnswerId: C
+  - id: "dop-quiz-amber-transparent-data"
+    question: "Một Java record chứa List dòng hàng có thể sửa. Giới hạn nào vẫn quan trọng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.JavaPerspective/JavaPerspective.md"
+      anchor: "amber-transparent-data"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Record có cấu trúc minh bạch nhưng list bên trong vẫn có thể bị sửa."
+        explanation: "Tham chiếu thành phần cố định không đảm bảo bất biến sâu."
+      - id: B
+        answer: "Mọi thành phần record tự bất biến đệ quy nhờ khai báo, ngay cả khi field chứa một List mutable được chia sẻ ra ngoài."
+        explanation: "Record Java không tự đóng băng collection lồng bên trong."
+      - id: C
+        answer: "Record bắt buộc dùng map phổ dụng thay thành phần có kiểu."
+        explanation: "Trường có kiểu chính là điểm mạnh của mô hình record Java."
+      - id: D
+        answer: "Record không thể được hàm bên ngoài đọc để báo cáo."
+        explanation: "Thành phần dữ liệu minh bạch có thể được hàm riêng xử lý."
+    correctAnswerId: A
+  - id: "dop-quiz-amber-valid-variants"
+    question: "Mô hình cho phép paid=true và rejected=true cùng lúc. Thiết kế có kiểu nào loại mâu thuẫn tốt hơn?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.JavaPerspective/JavaPerspective.md"
+      anchor: "amber-valid-variants"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Giữ hai cờ và chỉ kiểm khi in biên nhận cuối."
+        explanation: "Giá trị mâu thuẫn vẫn tồn tại trong luồng trước khi in."
+      - id: B
+        answer: "Dùng hai Boolean tùy chọn độc lập và mô tả tên."
+        explanation: "Các cờ độc lập vẫn giữ khả năng tổ hợp mâu thuẫn."
+      - id: C
+        answer: "Đổi paid và rejected thành chuỗi khác chữ hoa."
+        explanation: "Đổi dạng chữ không loại tổ hợp trạng thái sai."
+      - id: D
+        answer: "Dùng biến thể riêng Pending, Paid(receipt) hoặc Rejected(reason)."
+        explanation: "Các biến thể loại trừ nhau nên một giá trị không thể vừa paid vừa rejected."
+    correctAnswerId: D
+  - id: "dop-quiz-amber-separate-operations"
+    question: "Hàm riêng describe(payment) xử lý đầy đủ Pending, Paid(receipt) và Rejected(reason). Bài học mô hình hóa là gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.JavaPerspective/JavaPerspective.md"
+      anchor: "amber-separate-operations"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Mọi biến thể dữ liệu phải tự chứa phương thức describe giống nhau."
+        explanation: "Biến thể chỉ chứa dữ liệu; hàm độc lập có thể mô tả đủ mọi trường hợp."
+      - id: B
+        answer: "Hàm độc lập có thể chọn xử lý theo biến thể dữ liệu hợp lệ."
+        explanation: "Họ biến thể đóng giúp nhận diện trường hợp bị bỏ sót."
+      - id: C
+        answer: "Hàm riêng có thể bỏ qua Rejected vì đã dùng biến thể có kiểu."
+        explanation: "Mô hình có Rejected vẫn yêu cầu thao tác xử lý nó theo hợp đồng."
+      - id: D
+        answer: "Pattern matching cho phép bỏ kiểm dữ liệu nhận từ JSON ngoài."
+        explanation: "Dữ liệu ngoại lai cần kiểm tra dù thao tác dùng biến thể có kiểu."
+    correctAnswerId: B
+  - id: "dop-quiz-amber-sharvit-comparison"
+    question: "Client JSON ngoài gửi số lượng sai tới server Java có kiểu chặt. Điều gì vẫn cần?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "7.JavaPerspective/JavaPerspective.md"
+      anchor: "amber-sharvit-comparison"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Giả định trình biên dịch Java đã kiểm JSON của client trước khi Jackson deserialize map lồng nhau và chạy validator runtime."
+        explanation: "Văn bản JSON ngoài không được biên dịch cùng kiểu server."
+      - id: B
+        answer: "Tắt kiểm ranh giới vì record Java thể hiện tên trường rõ."
+        explanation: "Khai báo trường có kiểu không làm payload mạng đáng tin."
+      - id: C
+        answer: "Kiểm hoặc giải mã đầu vào chưa tin cậy theo hợp đồng lúc chạy."
+        explanation: "Mô hình có kiểu và validation runtime giải quyết các mặt đúng đắn khác nhau."
+      - id: D
+        answer: "Thay biến thể typed bằng mảng tối ưu cache tại cổng nhận mạng."
+        explanation: "Bố trí bộ nhớ không kiểm tra hình dạng dữ liệu miền nhận vào."
+    correctAnswerId: C
+  - id: "dop-quiz-dop-choose"
+    question: "Một đối tượng nhỏ có bất biến phức tạp và chỉ một bên dùng; cấu trúc khác phục vụ nhiều báo cáo. Nhóm nên chọn thế nào?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.Tradeoffs/Tradeoffs.md"
+      anchor: "dop-choose"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Tách hết hàm của đối tượng có bất biến thành thao tác đọc map chung."
+        explanation: "Phân tán quyền sửa ra nhiều nơi làm quy tắc khó kiểm soát khi chỉ một bên dùng."
+      - id: B
+        answer: "Giữ bất biến trong đối tượng; dùng dữ liệu chung cho nhiều hàm đọc."
+        explanation: "Lựa chọn dựa trên trách nhiệm và số phép xử lý cần dữ liệu chung."
+      - id: C
+        answer: "Giữ cả hai trong một đối tượng lớn sở hữu mọi báo cáo và chỉnh sửa."
+        explanation: "Dồn nhiều báo cáo độc lập vào một đối tượng làm tăng coupling và lý do thay đổi."
+      - id: D
+        answer: "Chỉ chọn data-first khi mọi map đều bất biến và không bao giờ sai schema."
+        explanation: "Bất biến vẫn cần kiểm tra hợp đồng; hai mô hình có thể kết hợp đúng ranh giới."
+    correctAnswerId: B
+  - id: "dop-quiz-dop-costs"
+    question: "Map đơn được mười hai hàm đọc. Thay đổi nào tạo rủi ro bảo trì thực tế?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.Tradeoffs/Tradeoffs.md"
+      anchor: "dop-costs"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Tách phép tính giảm giá khỏi việc giải mã JSON."
+        explanation: "Tách trách nhiệm rõ có thể giảm phụ thuộc."
+      - id: B
+        answer: "Giữ số lượng dòng gốc sau khi tính giá."
+        explanation: "Giữ snapshot gốc thường giúp kiểm thử rõ hơn."
+      - id: C
+        answer: "Mô tả các khóa đầu vào được phép trong schema chung."
+        explanation: "Hợp đồng rõ giúp giảm lệch tên trường ngoài ý muốn."
+      - id: D
+        answer: "Đổi lines thành items mà không chuyển các hàm đang đọc khóa cũ."
+        explanation: "Nhiều bên đọc phụ thuộc trực tiếp cấu trúc cũ."
+    correctAnswerId: D
+  - id: "dop-quiz-dop-functional-relation"
+    question: "Hàm dùng map đơn hàng phổ dụng nhưng đọc database hiện hành trước khi giảm giá. Có thể kết luận gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.Tradeoffs/Tradeoffs.md"
+      anchor: "dop-functional-relation"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Nó dùng biểu diễn data-first nhưng có tác động phụ, không nhất thiết thuần."
+        explanation: "Cấu trúc đầu vào và tính thuần là hai thuộc tính khác nhau."
+      - id: B
+        answer: "Nó thành thuần vì map là cấu trúc phổ dụng, dù nó đọc database đang thay đổi để lấy thông tin mới nhất."
+        explanation: "Đọc database có thể thay đổi ngoài các đối số tường minh."
+      - id: C
+        answer: "Nó bắt buộc là pattern match trên sealed variant Java Amber."
+        explanation: "Đọc database không kéo theo xử lý biến thể typed."
+      - id: D
+        answer: "Nó tự tuần tự hóa mọi tác động thành transaction an toàn."
+        explanation: "Biểu diễn dữ liệu không cung cấp cơ chế điều phối giao dịch."
+    correctAnswerId: A
+  - id: "dop-quiz-dop-versus-dod"
+    question: "Nhóm đổi sang map bất biến phổ dụng và khẳng định locality cache CPU chắc chắn tốt hơn. Họ thiếu gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.Tradeoffs/Tradeoffs.md"
+      anchor: "dop-versus-dod"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Số lớp dữ liệu đã bỏ đi có thể suy ra hiệu quả truy cập bộ nhớ dù chưa đo cache miss hoặc allocation của workload."
+        explanation: "Ít lớp không cho biết map trải trong cache hoặc cấp phát ra sao."
+      - id: B
+        answer: "Kiểm shape qua schema rồi suy ra locality từ dữ liệu hợp lệ."
+        explanation: "Schema chứng minh dữ liệu đúng hợp đồng chứ không đo cache misses."
+      - id: C
+        answer: "Benchmark tải thực và phân tích bố trí bộ nhớ theo DOD hiệu năng."
+        explanation: "Hiệu năng phải được đo, không suy từ tên gọi DOP."
+      - id: D
+        answer: "Đếm số map bất biến được tạo rồi suy ra chắc tốc độ truy cập."
+        explanation: "Đếm map không cho biết layout, cache misses hoặc độ trễ thực tế."
+    correctAnswerId: C
+  - id: "dop-quiz-dop-handoff"
+    question: "Endpoint thật trả 200 với tổng100 giảm còn90. Câu hỏi tiếp theo nào nằm ngoài module preview DOP?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "8.Tradeoffs/Tradeoffs.md"
+      anchor: "dop-handoff"
+    apiRelated:
+      controller: "OrderPreviewController"
+      methodSignature: "preview(Map<String,Object>,int)"
+    answers:
+      - id: A
+        answer: "Snapshot before có còn giữ số lượng gốc không, coi việc đối chiếu đó là đủ xác nhận giao dịch đã hoàn tất."
+        explanation: "Phản hồi preview đã cho kiểm các giá trị đó."
+      - id: B
+        answer: "Làm sao cam kết đơn đã trả khi lưu trữ hoặc cổng thanh toán lỗi."
+        explanation: "Giao dịch và phục hồi ngoài đời không được triển khai bởi phép biến đổi giá trị này."
+      - id: C
+        answer: "Qty dòng thứ hai sai có tạo lỗi schema theo trường không."
+        explanation: "Schema và phản hồi 422 đã cho bằng chứng."
+      - id: D
+        answer: "Đơn A và bản sau có cùng trạng thái pending không."
+        explanation: "Cả hai snapshot có trong phản hồi được chấp nhận."
+    correctAnswerId: B

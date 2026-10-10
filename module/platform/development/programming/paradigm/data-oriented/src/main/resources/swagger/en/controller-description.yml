@@ -1,0 +1,6 @@
+OrderPreviewController:
+  description: |-
+    <h2>Data-Oriented Order Experiment</h2>
+    <p>One bounded, state-free HTTP trust-boundary experiment: generic order data is checked by a separate schema and processed by independent operations into a new value. Its response exposes field-specific rejection or the original and derived snapshots without pretending to execute payment or persistence.</p>
+  readmeRelated:
+    file: 6.DataFlow/DataFlow.md

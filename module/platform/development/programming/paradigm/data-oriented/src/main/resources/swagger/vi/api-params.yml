@@ -1,0 +1,12 @@
+order:
+  summary: Dữ liệu đơn hàng lồng nhau dạng map/list
+  description: JSON gồm id và sku là chuỗi không trắng dài tối đa 64 ký tự, status=pending,
+    1..20 dòng với qty nguyên dương và price nguyên không âm. Hãy thử thiếu trường
+    hoặc qty=-3. Tên trường trùng nhau trong cùng object JSON bị từ chối HTTP 400;
+    JSON đúng cú pháp nhưng sai schema nhận HTTP 422 kèm đường dẫn trường.
+  usage: true
+discountPercent:
+  summary: Phần trăm giảm giá từ 0 đến 100
+  description: Tham số truy vấn tùy chọn, mặc định 10. Kết quả giảm giá làm tròn hai
+    chữ số thập phân trên đơn vị tiền minh họa.
+  usage: true

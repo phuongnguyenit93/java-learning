@@ -1,0 +1,13 @@
+order:
+  summary: Generic nested order data
+  description: JSON object with nonblank id and sku strings of at most 64 characters,
+    status=pending, and 1..20 lines with positive integer qty and nonnegative integer
+    price. Try a missing field or -3 quantity. Duplicate JSON object keys are rejected
+    with HTTP 400 before shape validation; syntactically valid schema failures return
+    422.
+  usage: true
+discountPercent:
+  summary: Discount as whole percent from 0 to 100
+  description: Optional query parameter, default 10. The preview computes a rounded
+    two-decimal total in illustrative price units.
+  usage: true

@@ -1,0 +1,33 @@
+OrderPreviewController:
+  preview(Map<String,Object>,int):
+    summary: Kiểm tra map đơn hàng từ bên ngoài và quan sát phép biến đổi bất biến
+    description: Gửi JSON gồm id, status=pending và danh sách lines chứa sku, qty,
+      price. Schema độc lập kiểm tra hình dạng tại ranh giới HTTP trước khi tính tiền.
+      Đầu vào hợp lệ trả hai snapshot trước/sau giảm giá; đầu vào sai trả lỗi chỉ
+      rõ trường như lines[1].qty. API không thu tiền, không lưu và không thay đổi
+      trạng thái dùng chung. Tên trường JSON trùng nhau hoặc cú pháp JSON lỗi bị từ
+      chối HTTP 400; dữ liệu đúng cú pháp nhưng sai schema nhận HTTP 422.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: 6.DataFlow/DataFlow.md
+      anchor: dop-flow-scenario
+    methodName: preview
+    params:
+    - order
+    - discountPercent
+    path: com/example/learning/dop/OrderPreviewController.java
+    mapping: '@PostMapping(path = "/preview", consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /paradigm/data-oriented/orders/preview
+    produces:
+    - MediaType.APPLICATION_JSON_VALUE
+    consumes:
+    - MediaType.APPLICATION_JSON_VALUE
+    usage: true
