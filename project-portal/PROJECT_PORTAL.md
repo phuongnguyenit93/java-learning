@@ -1186,33 +1186,22 @@ Spring Boot executable JAR
 
 Backend hiện không cung cấp business REST API cho frontend. Spring Boot trước mắt đóng vai trò host static bundle và là chỗ để bổ sung server-side capability về sau khi thật sự cần.
 
-Public production hiện được deploy theo static path riêng:
+**Production ownership đã chuyển sang repository độc lập `learning-platform`.**
+Custom domain `nguyendodinhphuong.name.vn` hiện phục vụ React/Vite app từ
+Cloudflare Workers `learning-platform`, không được deploy từ `java-learning`.
 
-```text
-push/merge vào main hoặc workflow_dispatch
-        ↓
-.github/workflows/deploy-portal.yml
-        ↓
-GitHub Actions + JDK 21
-        ↓
-./gradlew :project-portal:buildFrontend --no-daemon
-        ↓
-project-portal/frontend/dist
-        ↓ Cloudflare Wrangler
-Cloudflare Pages Direct Upload
-        ↓
-https://java-learning-cly.pages.dev
-```
+Workflow `.github/workflows/deploy-portal.yml` (trước đây chạy khi push/merge
+`main` hoặc `workflow_dispatch` và upload lên Cloudflare Pages project
+`java-learning`) đã được **disable trên GitHub và xóa khỏi repository này**.
+Các lần push/merge Java tiếp theo không được build/deploy Portal production.
+`local-run-build.yml` là workflow riêng, vẫn được giữ lại cho khả năng build JAR.
 
-Workflow không dùng Cloudflare Git integration; GitHub Actions là CI/CD owner và upload build output vào Pages project đã tạo theo Direct Upload. Hai credential `CLOUDFLARE_ACCOUNT_ID` và `CLOUDFLARE_API_TOKEN` chỉ tồn tại dưới GitHub Repository Secrets. Merge Pull Request vào `main` cũng kích hoạt workflow vì `main` nhận commit mới và phát sinh `push` event.
-
-Cloudflare project identifier dùng trong Wrangler là **`java-learning`**; `java-learning-cly.pages.dev` là public hostname, không phải project name. Current deploy command vì vậy giữ contract:
-
-```text
-pages deploy project-portal/frontend/dist --project-name=java-learning --branch=main
-```
-
-GitHub Actions chạy trên Linux. Các Gradle generator tham gia `:project-portal:buildFrontend` phải an toàn với case-sensitive filesystem; plugin stub generator hiện reuse existing filename theo case-insensitive match và fail nếu có nhiều match mơ hồ để tránh tạo duplicate khác casing.
+Phần Spring Boot + React legacy trong `project-portal/` vẫn giữ nguyên để phục
+vụ local build/test và các Gradle projection generator. Dữ liệu Java trong
+`learning-platform` hiện là static snapshot đã copy; pipeline xuất bản/sync
+artifact tự động giữa hai repository là một công việc riêng chưa triển khai.
+Giữ các Gradle generator Linux-safe về filename casing khi xây dựng pipeline
+data export mới.
 
 ---
 
@@ -1689,7 +1678,7 @@ MVP đã bắt đầu implementation. Current phase đã có:
 26. semantic capability colors dùng chung cho sidebar/tabs và giữ nguyên giữa Light/Dark
 27. `Local Run` là label hiện tại của internal `execution` tab; frontend luôn gọi relative `/api/local-run/*`; local dùng Spring Boot adapter còn production dùng Cloudflare Pages Functions adapter; cả hai dispatch/poll GitHub Actions và check rolling GitHub Release Asset theo module-scoped `sourceFingerprint`; không còn mock và hai môi trường không phụ thuộc nhau
 28. production static bundle vẫn có thể được serve bởi Spring Boot khi chạy packaged application
-29. public static Portal deploy lên Cloudflare Pages (`java-learning-cly.pages.dev`) bằng `.github/workflows/deploy-portal.yml`; Wrangler project name là `java-learning`; push/merge `main` hoặc `workflow_dispatch` → JDK 21 → `:project-portal:buildFrontend` → Wrangler Pages deploy
+29. Lịch sử: public static Portal từng được deploy lên Cloudflare Pages (`java-learning-cly.pages.dev`) bằng `.github/workflows/deploy-portal.yml` với Wrangler project name `java-learning`; workflow này đã nghỉ hoạt động sau khi production chuyển sang repo `learning-platform`
 30. Gradle plugin stub generator đã Linux-safe về filename casing để CI không tạo duplicate plugin khác casing
 31. Quiz source/generator đã migrate thật: `BUILD_QUIZ` → orchestration → localized `question.yml`; canonical schema drive localized comment + validation; Portal copy static projection, shuffle answer position một lần khi load và giữ stable answer identity để check đúng/sai. THREAD hiện có 52 câu VI và 52 câu EN dựa trên README, kèm governance + optional Knowledge/API relations
 32. Interview source/generator đã migrate thật: `BUILD_INTERVIEW` → orchestration → localized `question.yml`; canonical schema drive localized comment + validation; Portal copy static projection, preload count và render reference answer collapsed/expandable với governance + Related Knowledge/API. THREAD hiện có 46 câu VI và 46 câu EN dựa trên README
@@ -1702,6 +1691,7 @@ MVP đã bắt đầu implementation. Current phase đã có:
 39. Favicon và title trong tab trình duyệt được điều chỉnh theo route bởi `PageMetadata`: Java Knowledge/Project dùng logo Java, Home/Learning/My CV dùng favicon mặc định; title tương ứng với branding của từng trang.
 40. Main navigation `My CV` đổi thành `About Me` trên `/about-me` (legacy `/my-cv` redirect). Download My CV hiện căn giữa với PDF và Word DOCX; Google Docs viewer mặc định đóng, mở/đóng qua nút VI/EN và hiển thị trong khung rộng 80%, cao cố định có scroll, responsive 100% trên màn nhỏ.
 41. Primary header thêm `Project` ngay bên phải `Learning`, vào thẳng `/project` không chọn Java/JS/NodeJS. `ProjectPage.tsx` chỉ render trên `/project`; Java secondary nav chỉ còn Knowledge. Legacy `/learning/java/project` client-redirect sang `/project`, không render cards dưới Java; trang Project dùng eyebrow `Project` và bỏ dòng hướng dẫn hover/chạm; ba animated domain cards giữ nguyên.
+42. Production Portal đã tách sang repo `learning-platform` và Cloudflare Workers; workflow GitHub Actions `deploy-portal.yml` trong `java-learning` được disable trên GitHub và xóa khỏi source để tránh deploy Portal cũ mỗi lần push Java. `local-run-build.yml` vẫn giữ nguyên; Java Portal data export/sync liên repo sẽ triển khai sau.
 ```
 
 Chưa implement trong current phase:
