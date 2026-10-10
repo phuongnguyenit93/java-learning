@@ -1,3 +1,16 @@
+# 📂 README MODULE STRUCTURE (VI)
+
+* **1.Introduction**
+    * [DeclarativeProgramming](readme/vi/menu/1.Introduction/DeclarativeProgramming.md)
+* **2.IntentVsProcedure**
+    * [IntentVsProcedure](readme/vi/menu/2.IntentVsProcedure/IntentVsProcedure.md)
+* **3.LogicProgramming**
+    * [LogicProgramming](readme/vi/menu/3.LogicProgramming/LogicProgramming.md)
+* **4.QueryRuleStyles**
+    * [QueryRuleStyles](readme/vi/menu/4.QueryRuleStyles/QueryRuleStyles.md)
+* **5.Tradeoffs**
+    * [Tradeoffs](readme/vi/menu/5.Tradeoffs/Tradeoffs.md)
+
 # Học lập trình khai báo
 
 Lập trình khai báo ưu tiên mô tả **kết quả, quan hệ hoặc điều kiện phải thỏa mãn** thay vì quyết định từng lệnh thực hiện. Bộ đánh giá hay công cụ tiếp nhận đặc tả và lựa chọn cách xử lý; hai cách thực hiện khác nhau có thể hướng đến cùng ý nghĩa đã yêu cầu.

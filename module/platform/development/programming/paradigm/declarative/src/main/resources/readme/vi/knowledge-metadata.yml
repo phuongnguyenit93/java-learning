@@ -19,3 +19,107 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+  declarative-learning-path:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+2.IntentVsProcedure/IntentVsProcedure.md:
+  declarative-result-spec:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  declarative-predicates:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  declarative-spec-completeness:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  declarative-evaluator-role:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  declarative-semantics-plan:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  declarative-execution-tradeoffs:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+3.LogicProgramming/LogicProgramming.md:
+  declarative-logic-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  declarative-facts-relations:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  declarative-inference-rules:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  declarative-goal-queries:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  declarative-search-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  declarative-prolog-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+4.QueryRuleStyles/QueryRuleStyles.md:
+  declarative-query-result:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  declarative-query-filter:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  declarative-query-order:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  declarative-policy-config:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  declarative-query-strategy:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  declarative-dsl-limit:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+5.Tradeoffs/Tradeoffs.md:
+  declarative-intent-benefits:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  declarative-engine-costs:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  declarative-spec-pitfalls:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  declarative-effect-limits:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  declarative-imperative-contrast:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  declarative-paradigm-handoff:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
