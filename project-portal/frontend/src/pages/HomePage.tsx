@@ -22,7 +22,7 @@ export function HomePage() {
   return (
     <main className="home-page" aria-label="Home page">
       <section className="home-placeholder">
-        <span className="home-placeholder__eyebrow">Java Learning</span>
+        <span className="home-placeholder__eyebrow">Learning Platform</span>
         <h1>{content.title}</h1>
         <p>{content.description}</p>
         <Link className="home-placeholder__action" to="/learning">

@@ -6,13 +6,18 @@ import { LearningPage } from './pages/LearningPage';
 import { JavaLearningLayout } from './pages/JavaLearningLayout';
 import { LearningTopicsPage } from './pages/LearningTopicsPage';
 import { JavaProjectPage } from './pages/JavaProjectPage';
-import { MyCvPage } from './pages/MyCvPage';
+import { AboutMePage } from './pages/AboutMePage';
 
 function LegacyLearningRedirect() {
   const { moduleId } = useParams();
   const { search, hash } = useLocation();
 
   return <Navigate to={`/learning/java/knowledge/${encodeURIComponent(moduleId ?? '')}${search}${hash}`} replace />;
+}
+
+function LegacyMyCvRedirect() {
+  const { search, hash } = useLocation();
+  return <Navigate to={`/about-me${search}${hash}`} replace />;
 }
 
 export function App() {
@@ -30,7 +35,8 @@ export function App() {
           <Route path="project" element={<JavaProjectPage />} />
         </Route>
         <Route path="/learning/:moduleId" element={<LegacyLearningRedirect />} />
-        <Route path="/my-cv" element={<MyCvPage />} />
+        <Route path="/about-me" element={<AboutMePage />} />
+        <Route path="/my-cv" element={<LegacyMyCvRedirect />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </div>

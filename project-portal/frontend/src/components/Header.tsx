@@ -7,14 +7,14 @@ const labels = {
   vi: {
     home: 'Trang chủ',
     learning: 'Learning',
-    myCv: 'My CV',
+    myCv: 'About Me',
     search: 'Tìm kiếm...',
     searchLabel: 'Tìm kiếm toàn portal',
   },
   en: {
     home: 'Home',
     learning: 'Learning',
-    myCv: 'My CV',
+    myCv: 'About Me',
     search: 'Search...',
     searchLabel: 'Search the portal',
   },
@@ -26,7 +26,7 @@ export function Header() {
   const { theme, toggleTheme } = useTheme();
   const text = labels[language];
   const isJavaLearning = pathname === '/learning/java' || pathname.startsWith('/learning/java/');
-  const isMyCv = pathname === '/my-cv' || pathname === '/my-cv/';
+  const isMyCv = pathname === '/about-me' || pathname === '/about-me/';
 
   return (
     <header className="topbar">
@@ -50,7 +50,7 @@ export function Header() {
         <NavLink to="/learning" className={({ isActive }) => `topbar__nav-link${isActive ? ' is-active' : ''}`}>
           {text.learning}
         </NavLink>
-        <NavLink to="/my-cv" className={({ isActive }) => `topbar__nav-link${isActive ? ' is-active' : ''}`}>
+        <NavLink to="/about-me" className={({ isActive }) => `topbar__nav-link${isActive ? ' is-active' : ''}`}>
           {text.myCv}
         </NavLink>
       </nav>

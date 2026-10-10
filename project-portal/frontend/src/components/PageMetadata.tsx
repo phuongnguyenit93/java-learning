@@ -12,7 +12,7 @@ export function PageMetadata() {
 
   useEffect(() => {
     const isJavaLearning = pathname === '/learning/java' || pathname.startsWith('/learning/java/');
-    const isMyCv = pathname === '/my-cv' || pathname === '/my-cv/';
+    const isMyCv = pathname === '/about-me' || pathname === '/about-me/';
 
     const title = isMyCv
       ? 'Nguyen Do Dinh Phuong'
