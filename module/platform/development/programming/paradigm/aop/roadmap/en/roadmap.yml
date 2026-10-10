@@ -41,4 +41,77 @@
 # The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: crosscutting-concerns
+    relatedKnowledge:
+      - AOP
+    title: "Cross-Cutting Concerns and the Purpose of AOP"
+    purpose: "Understand why behavior such as logging, timing, or auditing recurs across objects, and how AOP organizes that cross-cutting concern."
+    objectives:
+      - "Recognize primary business logic and cross-cutting concerns in a familiar scenario."
+      - "Explain how AOP complements object responsibility boundaries rather than replacing OOP or the broader separation-of-concerns principle."
+
+  - id: explicit-versus-aspect
+    relatedKnowledge:
+      - AOP
+      - Terminology
+    title: "From Explicit Calls to Aspects"
+    purpose: "Compare direct helpers, wrappers, or decorators with separating shared behavior and describing where it applies."
+    objectives:
+      - "Describe why manual calls are visible but may be omitted or scatter a policy across many places."
+      - "Explain how an aspect groups a concern with its application rule."
+
+  - id: joinpoint-pointcut-advice
+    relatedKnowledge:
+      - Terminology
+    title: "Core Model: Join Points, Pointcuts, and Advice"
+    purpose: "Build a model of eligible execution points, rules selecting those points, and behavior executed at the selected points."
+    objectives:
+      - "Distinguish a join point as a point in an execution model, a pointcut as a selection rule, and advice as added behavior."
+      - "Relate an aspect and its target to those concepts through a business-operation tracing example."
+      - "Recognize that available join point kinds depend on the implementation model, rather than being universal across AOP frameworks."
+
+  - id: advice-composition
+    relatedKnowledge:
+      - Terminology
+      - ImplementationModels
+    title: "Behavior Composition and Effective Execution Flow"
+    purpose: "Understand how extra behavior participates before, after, or around primary behavior, and the conceptual meaning of weaving/composition."
+    objectives:
+      - "Trace a call through the target, advice, and resulting observable behavior when an aspect applies."
+      - "Explain before, after, and around advice conceptually: around advice can continue to the target or skip it, and advice can affect results, failures, and observable execution flow."
+      - "Understand weaving as combining an aspect with a target while leaving timing and technique to the implementation."
+
+  - id: implementation-boundaries
+    relatedKnowledge:
+      - ImplementationModels
+    title: "AOP Paradigm and Implementation Boundaries"
+    purpose: "Recognize why weaving and proxy/interception models cover different execution points without treating one framework as the definition of AOP."
+    objectives:
+      - "Distinguish compile-time weaving, load-time weaving, and runtime interception at a conceptual level."
+      - "Contrast AspectJ's broader woven join point model with Spring AOP's proxy-based method interception on Spring beans; using @AspectJ-style declarations in Spring does not itself weave bytecode."
+      - "Recognize that Spring's JDK interface-based and class-based proxies expose different interception boundaries, and that calls within the target bypass its proxy; reserve the detailed mechanics for the Spring module."
+      - "Identify detailed pointcut syntax, proxies, bean lifecycle, and compiler/weaver mechanics as technology-specific follow-up topics."
+
+  - id: visibility-and-tradeoffs
+    relatedKnowledge:
+      - ImplementationModels
+      - Tradeoffs
+    title: "Benefits, Costs, and Design Pitfalls"
+    purpose: "Evaluate reduced duplication against implicit behavior, selection-rule coupling, and difficulty tracing execution."
+    objectives:
+      - "Spot overly broad pointcuts, overlapping advice, or difficult-to-follow execution order in a scenario."
+      - "Evaluate AOP's impact on code readability, debugging, testing, and hidden coupling."
+      - "Recognize when primary business control flow should remain explicit rather than hidden in aspects."
+
+  - id: end-to-end-aop-decision
+    relatedKnowledge:
+      - AOP
+      - Terminology
+      - Tradeoffs
+    title: "Designing and Evaluating an AOP Use Case"
+    purpose: "Synthesize how to choose a concern, define where it applies, reason about effective behavior, and decide whether AOP is appropriate."
+    objectives:
+      - "Work from repeated logging/auditing needs to an aspect, join points, pointcut, advice, and observed outcome."
+      - "Justify when an explicit helper, wrapper, or decorator is simpler and safer."
+      - "Explain the handoff to Spring AOP, AspectJ implementation, and transaction management without blurring their scope."

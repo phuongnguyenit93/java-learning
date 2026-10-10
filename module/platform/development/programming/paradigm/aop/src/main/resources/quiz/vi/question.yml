@@ -1,0 +1,641 @@
+# <quiz-schema>
+# Cấu trúc câu hỏi Quiz
+# schema-version: 3
+#
+# questions [kiểu: list; bắt buộc; mặc định: []; duy nhất theo: id]
+#   Danh sách câu hỏi Quiz của module trong language hiện tại.
+#   mỗi phần tử:
+#     id [kiểu: string; bắt buộc; mặc định: ""]
+#       ID ổn định và duy nhất của câu hỏi.
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi hiển thị cho người học.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu câu hỏi được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu câu hỏi đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+#     answers [kiểu: list; bắt buộc; số phần tử: 4; mặc định: []; duy nhất theo: id]
+#       Chính xác bốn đáp án. ID A/B/C/D là identity nội bộ ổn định, không phải vị trí hiển thị sau khi frontend shuffle.
+#       mỗi phần tử:
+#         id [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#           Identity ổn định của đáp án.
+#         answer [kiểu: string; bắt buộc; mặc định: ""]
+#           Nội dung đáp án hiển thị cho người học.
+#         explanation [kiểu: string; bắt buộc; mặc định: ""]
+#           Giải thích hiển thị khi người học chọn đáp án này, bất kể đúng hay sai.
+#     correctAnswerId [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#       ID nội bộ của đáp án đúng. Frontend kiểm tra bằng identity này sau khi shuffle.
+# </quiz-schema>
+
+questions:
+- id: 'aop-q01-crosscutting'
+  question: 'Ba dịch vụ đều cần đo thời gian nhưng mỗi dịch vụ có nghiệp vụ khác nhau. Đâu là mối quan tâm xuyên suốt?'
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: '1.Introduction/AOP.md'
+    anchor: 'aop-what'
+  apiRelated:
+    controller: ''
+    methodSignature: ''
+  answers:
+    - id: A
+      answer: 'Quy tắc chuyển tiền của từng dịch vụ'
+      explanation: 'Đây là hành vi nghiệp vụ riêng, không phải chính sách dùng chung qua nhiều trách nhiệm.'
+    - id: B
+      answer: 'Chính sách đo thời gian cho các lần thực thi được chọn'
+      explanation: 'Đo thời gian có thể áp dụng nhất quán cho nhiều nghiệp vụ mà không sở hữu kết quả của chúng.'
+    - id: C
+      answer: 'Quy trình cập nhật số dư sau từng giao dịch'
+      explanation: 'Thay đổi số dư là bất biến nghiệp vụ cần chủ sở hữu riêng.'
+    - id: D
+      answer: 'Quy tắc chọn mặt hàng và lập hóa đơn'
+      explanation: 'Hai quy tắc này thuộc nghiệp vụ cụ thể, không tạo thành một timing concern.'
+  correctAnswerId: B
+- id: 'aop-q02-policy-drift'
+  question: 'Mã đo thời gian được sao chép sang ba service. Đâu là bằng chứng rõ nhất về rủi ro khi thay đổi chính sách?'
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: '1.Introduction/AOP.md'
+    anchor: 'aop-why'
+  apiRelated:
+    controller: ''
+    methodSignature: ''
+  answers:
+    - id: A
+      answer: 'Một service chạy chậm hơn do thuật toán nghiệp vụ'
+      explanation: 'Đây là khác biệt về thuật toán đích, chưa chứng minh logic đo bị lệch.'
+    - id: B
+      answer: 'Ba service dùng các tham số đầu vào khác nhau'
+      explanation: 'Dữ liệu đầu vào khác nhau không tự nói ba bản sao timer thiếu nhất quán.'
+    - id: C
+      answer: 'Một service ghi nhiều dòng log hơn vì nhiều khách hàng'
+      explanation: 'Khác số lượt gọi chưa chứng minh định dạng hoặc đường lỗi đã lệch.'
+    - id: D
+      answer: 'Một service quên nhánh ghi thời lượng khi ném lỗi'
+      explanation: 'Một bản sao thiếu finally làm chính sách không bao phủ đường lỗi như các bản còn lại.'
+  correctAnswerId: D
+- id: 'aop-q03-wrapper-or-aspect'
+  question: 'Chỉ hai lời gọi cần được đo, đường gọi đã rất rõ. Thiết kế nào thường dễ kiểm soát hơn?'
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: '1.Introduction/AOP.md'
+    anchor: 'aop-without'
+  apiRelated:
+    controller: ''
+    methodSignature: ''
+  answers:
+    - id: A
+      answer: 'Một wrapper tường minh bao quanh hai lời gọi'
+      explanation: 'Wrapper cho phép thấy chính xác nơi đo và ít cần cơ chế chọn điểm ẩn.'
+    - id: B
+      answer: 'Một aspect khớp mọi phương thức trong ứng dụng'
+      explanation: 'Phạm vi toàn ứng dụng rộng hơn yêu cầu và khó đánh giá tác động phụ.'
+    - id: C
+      answer: 'Một advice chặn mọi lần trả về bình thường'
+      explanation: 'Chặn mọi kết quả vẫn mở rộng phạm vi và có thể bỏ qua đường lỗi.'
+    - id: D
+      answer: 'Một proxy với pointcut bao phủ toàn bộ method của hai service'
+      explanation: 'Proxy áp dụng được method advice nhưng việc match mọi method vẫn rộng hơn hai lời gọi cần đo.'
+  correctAnswerId: A
+- id: 'aop-q04-missed-call'
+  question: 'Một helper audit được gọi thủ công trong mọi đường thành công nhưng không ở nhánh trả về sớm. Điều gì cần kiểm thử?'
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: '1.Introduction/AOP.md'
+    anchor: 'aop-limit'
+  apiRelated:
+    controller: ''
+    methodSignature: ''
+  answers:
+    - id: A
+      answer: 'Điểm thực thi có cùng tên phương thức hay không'
+      explanation: 'Cùng tên không đủ để bảo đảm các đường gọi hay trả về đều được bao phủ.'
+    - id: B
+      answer: 'Trình biên dịch có tự thêm helper tại mọi nhánh không'
+      explanation: 'Trình biên dịch không tự biến lời gọi helper thủ công thành policy tự động.'
+    - id: C
+      answer: 'Các đường kết thúc, kể cả lỗi và trả về sớm, có audit đúng không'
+      explanation: 'Bỏ sót coverage thường xảy ra ở nhánh rẽ không đi qua lệnh helper.'
+    - id: D
+      answer: 'Mọi lời gọi không liên quan cũng có audit hay không'
+      explanation: 'Audit toàn bộ hệ thống không khắc phục được thiếu coverage đúng phạm vi.'
+  correctAnswerId: C
+- id: 'aop-q05-selection'
+  question: 'Aspect đo thời gian chỉ nên áp dụng cho thao tác thanh toán. Trace nào phù hợp với thiết kế?'
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: '1.Introduction/AOP.md'
+    anchor: 'aop-solution'
+  apiRelated:
+    controller: ''
+    methodSignature: ''
+  answers:
+    - id: A
+      answer: 'transferFunds không đo; renderPage lại được đo'
+      explanation: 'Điểm được chọn và điểm bị loại đang đảo ngược.'
+    - id: B
+      answer: 'transferFunds có timing; renderPage chạy không timing'
+      explanation: 'Một chính sách chọn đúng phải phân biệt cả lần khớp và không khớp.'
+    - id: C
+      answer: 'Cả hai cùng được đo do đều là method execution'
+      explanation: 'Join point đủ điều kiện không có nghĩa pointcut phải chọn tất cả.'
+    - id: D
+      answer: 'Cả hai đều không đo vì AOP không thể chọn phương thức'
+      explanation: 'Lần thực thi phương thức là phạm vi Spring AOP proxy hỗ trợ.'
+  correctAnswerId: B
+- id: 'aop-q06-ownership'
+  question: 'Một nhóm đề nghị đưa kiểm tra số dư vào timing aspect để giảm số dòng TransferService. Ranh giới nào cần giữ?'
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: '1.Introduction/AOP.md'
+    anchor: 'aop-object-responsibility-bridge'
+  apiRelated:
+    controller: ''
+    methodSignature: ''
+  answers:
+    - id: A
+      answer: 'Aspect quyết định nghiệp vụ; target chỉ gọi hàm tiện ích'
+      explanation: 'Đưa điều kiện số dư vào aspect che luồng nghiệp vụ và thẩm quyền.'
+    - id: B
+      answer: 'Pointcut quyết định số tiền chuyển; target chỉ ghi log'
+      explanation: 'Pointcut chọn điểm thực thi, không tính nghiệp vụ chuyển tiền.'
+    - id: C
+      answer: 'Proxy quyết định rollback; target chỉ trả response'
+      explanation: 'Proxy không tự tạo bảo đảm transaction hoặc khôi phục giao dịch.'
+    - id: D
+      answer: 'Target giữ kiểm tra số dư; aspect chỉ giữ timing dùng chung'
+      explanation: 'Trách nhiệm OOP đối với nghiệp vụ vẫn riêng với concern xuyên suốt.'
+  correctAnswerId: D
+- id: 'aop-q07-aspect'
+  question: 'Đâu là điểm khác biệt cốt lõi giữa aspect đo thời gian và helper đo thời gian?'
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: '2.Terminology/Terminology.md'
+    anchor: 'aop-aspect'
+  apiRelated:
+    controller: ''
+    methodSignature: ''
+  answers:
+    - id: A
+      answer: 'Aspect gắn hành vi đo với quy tắc chọn điểm áp dụng'
+      explanation: 'Aspect sở hữu concern và phạm vi áp dụng, không sở hữu phép chuyển tiền.'
+    - id: B
+      answer: 'Aspect quyết định kết quả chuyển tiền thay cho target'
+      explanation: 'Kết quả chuyển tiền vẫn là trách nhiệm của target.'
+    - id: C
+      answer: 'Aspect khiến mọi lời gọi bắt buộc qua một proxy chung'
+      explanation: 'Weaving và proxy có đường ghép khác nhau.'
+    - id: D
+      answer: 'Aspect tự áp dụng cho mọi lần gọi target mà không cần rule chọn điểm'
+      explanation: 'Aspect cần mô hình chọn join point; khai báo concern không đồng nghĩa mọi target call đều được advice.'
+  correctAnswerId: A
+- id: 'aop-q08-joinpoint'
+  question: 'Một field-set được AspectJ woven chọn nhưng Spring proxy không chọn. Điều này chứng minh điều gì?'
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: '2.Terminology/Terminology.md'
+    anchor: 'aop-join-point'
+  apiRelated:
+    controller: ''
+    methodSignature: ''
+  answers:
+    - id: A
+      answer: 'Join point luôn do tên phương thức quyết định'
+      explanation: 'Loại sự kiện khả dụng không giới hạn ở tên phương thức.'
+    - id: B
+      answer: 'Mọi framework AOP quan sát cùng tập sự kiện'
+      explanation: 'Các mô hình có tập join point khác nhau.'
+    - id: C
+      answer: 'Tập join point phụ thuộc cơ chế triển khai'
+      explanation: 'Pointcut chỉ chọn trong các sự kiện mà cơ chế hỗ trợ.'
+    - id: D
+      answer: 'Field-set buộc phải chuyển thành phương thức mới'
+      explanation: 'AspectJ có thể weave field-set trực tiếp.'
+  correctAnswerId: C
+- id: 'aop-q09-pointcut'
+  question: 'Một mẫu save* chọn nhầm saveDraft nhưng bỏ sót persistOrder. Cách kiểm chứng nào phù hợp?'
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: '2.Terminology/Terminology.md'
+    anchor: 'aop-pointcut'
+  apiRelated:
+    controller: ''
+    methodSignature: ''
+  answers:
+    - id: A
+      answer: 'Chỉ thử lời gọi thành công của saveOrder'
+      explanation: 'Một trường hợp khớp chưa phát hiện overmatch và missed match.'
+    - id: B
+      answer: 'Đổi mọi hàm thành tên bắt đầu bằng save'
+      explanation: 'Đổi tên chỉ để thỏa pointcut làm coupling ngầm lớn hơn.'
+    - id: C
+      answer: 'Đổi loại advice từ around sang before'
+      explanation: 'Loại advice không sửa predicate chọn.'
+    - id: D
+      answer: 'Thử cả tập MATCH/NO MATCH theo trách nhiệm'
+      explanation: 'Pointcut có thể hợp lệ về cú pháp nhưng sai phạm vi.'
+  correctAnswerId: D
+- id: 'aop-q10-advice'
+  question: 'Pointcut đã chọn transferFunds. Thành phần nào định nghĩa thao tác đo thêm vào?'
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: '2.Terminology/Terminology.md'
+    anchor: 'aop-advice'
+  apiRelated:
+    controller: ''
+    methodSignature: ''
+  answers:
+    - id: A
+      answer: 'Join point định nghĩa chi tiết ghi log'
+      explanation: 'Join point là điểm thực thi, không phải mã thêm.'
+    - id: B
+      answer: 'Advice định nghĩa hành vi trước/sau lời gọi'
+      explanation: 'Pointcut chọn nơi, advice xác định việc được làm.'
+    - id: C
+      answer: 'Target chọn phạm vi mọi service'
+      explanation: 'Target sở hữu nghiệp vụ gốc, không phải selection policy.'
+    - id: D
+      answer: 'Weaver chọn nơi ghép hành vi dựa trên pointcut'
+      explanation: 'Weaver có thể thực hiện ghép theo rule, nhưng nội dung timer vẫn do advice định nghĩa.'
+  correctAnswerId: B
+- id: 'aop-q11-target'
+  question: 'Bỏ timing advice thì điều kiện đủ số dư vẫn phải đúng. Ranh giới nào được thể hiện?'
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: '2.Terminology/Terminology.md'
+    anchor: 'aop-target'
+  apiRelated:
+    controller: ''
+    methodSignature: ''
+  answers:
+    - id: A
+      answer: 'Target giữ trách nhiệm bảo vệ bất biến nghiệp vụ'
+      explanation: 'Advice timing không chuyển quyền quyết định nghiệp vụ.'
+    - id: B
+      answer: 'Aspect giữ số dư hợp lệ thay target'
+      explanation: 'Aspect timing không nên giấu kiểm tra số dư.'
+    - id: C
+      answer: 'Pointcut thay thế kiểm tra ở target'
+      explanation: 'Pointcut chỉ là quy tắc chọn join point.'
+    - id: D
+      answer: 'Proxy tự phục hồi trạng thái khi lỗi'
+      explanation: 'Proxy không mặc nhiên tạo rollback.'
+  correctAnswerId: A
+- id: 'aop-q12-weaving'
+  question: 'Hai ứng dụng cùng khai báo @Aspect nhưng chỉ một có AspectJ weaving. Điều gì có thể khác?'
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: '2.Terminology/Terminology.md'
+    anchor: 'aop-weaving'
+  apiRelated:
+    controller: ''
+    methodSignature: ''
+  answers:
+    - id: A
+      answer: 'Annotation luôn khiến bytecode của cả hai được weave'
+      explanation: 'Cú pháp @Aspect không tự bật weaver.'
+    - id: B
+      answer: 'Cả hai quan sát field-set như nhau'
+      explanation: 'Proxy Spring không có field-set join point.'
+    - id: C
+      answer: 'Cơ chế ghép và tập join point được hỗ trợ'
+      explanation: 'Weaving vào bytecode khác với chặn lời gọi qua proxy.'
+    - id: D
+      answer: 'Pointcut sẽ tự điều chỉnh theo JVM'
+      explanation: 'Cấu hình cơ chế quyết định biên giới thực thi.'
+  correctAnswerId: C
+- id: 'aop-q13-advice-kinds'
+  question: 'Muốn ghi thời gian cả khi target ném lỗi mà vẫn giữ lỗi gốc, cách nào phù hợp?'
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: '2.Terminology/Terminology.md'
+    anchor: 'aop-advice-kinds'
+  apiRelated:
+    controller: ''
+    methodSignature: ''
+  answers:
+    - id: A
+      answer: 'Chỉ log sau khi proceed trả về bình thường'
+      explanation: 'Khi proceed ném lỗi, phần log phía sau có thể bị bỏ qua.'
+    - id: B
+      answer: 'Dùng after-returning thay thế exception bằng giá trị'
+      explanation: 'After-returning không thực thi cho đường ném lỗi.'
+    - id: C
+      answer: 'Bắt mọi lỗi và trả success cho người gọi'
+      explanation: 'Nuốt lỗi làm sai hợp đồng của target.'
+    - id: D
+      answer: 'Dùng cleanup kiểu finally rồi truyền tiếp lỗi'
+      explanation: 'Phần dọn dẹp quan sát cả thành công và thất bại.'
+  correctAnswerId: D
+- id: 'aop-q14-proceed'
+  question: 'Một around advice gọi proceed hai lần trong mô hình cho phép. Rủi ro là gì?'
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: '2.Terminology/Terminology.md'
+    anchor: 'aop-effective-execution'
+  apiRelated:
+    controller: ''
+    methodSignature: ''
+  answers:
+    - id: A
+      answer: 'Chỉ có hai dòng log nhưng target chạy đúng một lần'
+      explanation: 'Proceed có thể thực thi lại target, không chỉ ghi log.'
+    - id: B
+      answer: 'Target có thể chuyển tiền hai lần'
+      explanation: 'Gọi lặp target có tác động phụ có thể gây chuyển tiền lặp.'
+    - id: C
+      answer: 'Pointcut tự mở rộng sang hai hàm khác'
+      explanation: 'Số lần proceed không sửa rule chọn điểm.'
+    - id: D
+      answer: 'Around biến thành before advice ở lần thứ hai'
+      explanation: 'Loại advice giữ nguyên dù gọi proceed nhiều lần.'
+  correctAnswerId: B
+- id: 'aop-q15-compile-time'
+  question: 'Khi AspectJ compile-time weaving được dùng, vì sao đọc riêng source của target có thể thiếu hành vi lúc chạy?'
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: '3.ImplementationModels/ImplementationModels.md'
+    anchor: 'aop-compile-time'
+  apiRelated:
+    controller: ''
+    methodSignature: ''
+  answers:
+    - id: A
+      answer: 'Cấu hình proxy sửa source của target trong lúc chạy'
+      explanation: 'Proxy bọc lời gọi đủ điều kiện chứ không sửa nội dung source gốc.'
+    - id: B
+      answer: 'Khi nạp lớp có thể biến đổi bytecode sau khi biên dịch'
+      explanation: 'Biến đổi lúc class được nạp là load-time weaving, không phải bước ghép tại thời điểm build.'
+    - id: C
+      answer: 'Aspect được ghép vào bytecode đầu ra khi build'
+      explanation: 'Mã nguồn riêng của target không biểu diễn đầy đủ đường thực thi đã weave.'
+    - id: D
+      answer: 'Method execution chỉ được chặn qua proxy ở runtime'
+      explanation: 'Proxy interception là cơ chế khác, AspectJ có thể ghép bytecode lúc build.'
+  correctAnswerId: C
+- id: 'aop-q16-load-time'
+  question: 'Hai cơ chế đều ghép aspect ngoài source. Tình huống nào mô tả load-time weaving thay vì compile-time weaving?'
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: '3.ImplementationModels/ImplementationModels.md'
+    anchor: 'aop-load-time'
+  apiRelated:
+    controller: ''
+    methodSignature: ''
+  answers:
+    - id: A
+      answer: 'Biến đổi bytecode khi trình biên dịch tạo class file'
+      explanation: 'Đây là compile-time weaving.'
+    - id: B
+      answer: 'Biến đổi class khi class loader nạp nó theo cấu hình'
+      explanation: 'Tại thời điểm nạp, class được weave trước khi dùng.'
+    - id: C
+      answer: 'Đặt proxy làm đối tượng nhận lời gọi từ caller'
+      explanation: 'Đây là proxy interception, không phải load-time weaving.'
+    - id: D
+      answer: 'Gọi helper đo thời gian trực tiếp trong target'
+      explanation: 'Lời gọi helper không dùng kỹ thuật weaving.'
+  correctAnswerId: B
+- id: 'aop-q17-runtime-proxy'
+  question: 'Cùng method verify được gọi qua proxy bên ngoài và trực tiếp trên target. Lời gọi nào đi qua Spring AOP advice?'
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: '3.ImplementationModels/ImplementationModels.md'
+    anchor: 'aop-runtime'
+  apiRelated:
+    controller: ''
+    methodSignature: ''
+  answers:
+    - id: A
+      answer: 'Lời gọi qua proxy khi method đủ điều kiện'
+      explanation: 'Proxy đứng trên đường caller và mới có cơ hội chạy interceptor.'
+    - id: B
+      answer: 'Lời gọi trực tiếp trên target vì tên hàm giống nhau'
+      explanation: 'Tên hàm không đưa lời gọi trực tiếp trở lại proxy.'
+    - id: C
+      answer: 'Cả hai vì method được khai báo trong Spring bean'
+      explanation: 'Bean có proxy không đồng nghĩa mọi đường gọi tới target đều bị chặn.'
+    - id: D
+      answer: 'Không lời gọi nào vì Spring không hỗ trợ method advice'
+      explanation: 'Spring AOP chủ yếu hỗ trợ method execution qua proxy.'
+  correctAnswerId: A
+- id: 'aop-q18-model-scope'
+  question: 'Nhóm muốn advice cho từng phép gán field. Vì sao tăng độ rộng pointcut Spring AOP chưa giải quyết yêu cầu?'
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: '3.ImplementationModels/ImplementationModels.md'
+    anchor: 'aop-model-boundary'
+  apiRelated:
+    controller: ''
+    methodSignature: ''
+  answers:
+    - id: A
+      answer: 'Pointcut chỉ cần chọn thêm nhiều tên method'
+      explanation: 'Nới rộng tên method không giúp proxy bắt các sự kiện gán field.'
+    - id: B
+      answer: 'Đổi class-based proxy sẽ cho phép chặn các phép gán field'
+      explanation: 'Loại proxy có thể ảnh hưởng method interception, không tạo field-set join point.'
+    - id: C
+      answer: 'Đặt around advice lên setter sẽ chặn mọi lần đổi trường'
+      explanation: 'Ghi field trực tiếp không nhất thiết gọi setter để đi qua proxy.'
+    - id: D
+      answer: 'Proxy Spring không cung cấp field-set join point'
+      explanation: 'Mẫu pointcut không thể chọn loại sự kiện implementation không hỗ trợ.'
+  correctAnswerId: D
+- id: 'aop-q19-self-invocation'
+  question: 'external → proxy.execute() → target.this.verify(). Advice của verify có chạy ở lời gọi nội bộ không?'
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: '3.ImplementationModels/ImplementationModels.md'
+    anchor: 'aop-interception-limits'
+  apiRelated:
+    controller: ''
+    methodSignature: ''
+  answers:
+    - id: A
+      answer: 'Có, vì external caller đã vào proxy.execute'
+      explanation: 'Advice của execute và verify khác nhau; this.verify không quay qua proxy.'
+    - id: B
+      answer: 'Không, this.verify gọi trực tiếp trên target'
+      explanation: 'Self-invocation bỏ qua proxy nên advice dành riêng verify không được gọi.'
+    - id: C
+      answer: 'Có, vì AspectJ annotation luôn weave method'
+      explanation: 'Khai báo annotation Spring không tự dệt bytecode.'
+    - id: D
+      answer: 'Không, vì Spring không bao giờ advice cho verify'
+      explanation: 'Gọi proxy.verify từ bên ngoài vẫn có thể được advice.'
+  correctAnswerId: B
+- id: 'aop-q20-central-policy'
+  question: 'Gom ba timer vào một aspect có lợi khi điều kiện nào được đáp ứng?'
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: '4.Tradeoffs/Tradeoffs.md'
+    anchor: 'aop-benefits'
+  apiRelated:
+    controller: ''
+    methodSignature: ''
+  answers:
+    - id: A
+      answer: 'Khi mọi operation đều được advice dù không cần'
+      explanation: 'Coverage quá rộng làm tăng coupling và chi phí vận hành.'
+    - id: B
+      answer: 'Khi tên method thay đổi nhưng không cần kiểm tra pointcut'
+      explanation: 'Tên thay đổi có thể thay đổi rule chọn điểm.'
+    - id: C
+      answer: 'Khi chính sách chung có điểm chọn rõ và test được'
+      explanation: 'Tập trung code có ích nếu coverage nhất quán và dễ khám phá.'
+    - id: D
+      answer: 'Khi aspect thay mọi trách nhiệm của các service'
+      explanation: 'Business invariants vẫn thuộc service đích.'
+  correctAnswerId: C
+- id: 'aop-q21-hidden-behavior'
+  question: 'Source của transferFunds không ghi timer nhưng trace có elapsed. Lúc debug phải làm gì?'
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: '4.Tradeoffs/Tradeoffs.md'
+    anchor: 'aop-cost'
+  apiRelated:
+    controller: ''
+    methodSignature: ''
+  answers:
+    - id: A
+      answer: 'Kiểm tra aspect khớp và đường gọi qua proxy hoặc weaving'
+      explanation: 'Effective execution gồm cả hành vi bên ngoài method body.'
+    - id: B
+      answer: 'Chỉ tìm phép gán biến timer bên trong transferFunds'
+      explanation: 'Advice có thể ở ngoài target nên tìm trong method là thiếu.'
+    - id: C
+      answer: 'Chỉ kiểm tra annotation aspect mà bỏ qua call path thực tế'
+      explanation: 'Annotation chỉ cho thấy khai báo, không chứng minh pointcut match hay proxy/weaver được đi qua.'
+    - id: D
+      answer: 'Chỉ unit test trực tiếp target rồi coi đó là đủ bằng chứng'
+      explanation: 'Gọi target trực tiếp có thể bỏ qua lớp advice; cần kiểm đường gọi đúng interception boundary.'
+  correctAnswerId: A
+- id: 'aop-q22-concern-fit'
+  question: 'Ba service cần correlation ID và một service cần quy tắc phê duyệt chuyển tiền. Phần nào phù hợp hơn để thành aspect?'
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: '4.Tradeoffs/Tradeoffs.md'
+    anchor: 'aop-good-fit'
+  apiRelated:
+    controller: ''
+    methodSignature: ''
+  answers:
+    - id: A
+      answer: 'Quy tắc phê duyệt phụ thuộc số dư từng tài khoản'
+      explanation: 'Đây là business decision cần chủ sở hữu nghiệp vụ.'
+    - id: B
+      answer: 'Chính sách correlation ID dùng chung nhiều lời gọi'
+      explanation: 'Concern độc lập có thể áp dụng qua nhiều ranh giới khi pointcut rõ.'
+    - id: C
+      answer: 'Bước debit/credit phải chạy theo thứ tự của giao dịch'
+      explanation: 'Đó là thuật toán nghiệp vụ chứ không phải metadata đồng nhất.'
+    - id: D
+      answer: 'Quy tắc xử lý bù trừ khi chuyển tiền thất bại'
+      explanation: 'Bù trừ liên quan trạng thái và hậu quả nghiệp vụ.'
+  correctAnswerId: B
+- id: 'aop-q23-business-flow'
+  question: 'Một thiết kế đặt CHECK, DEBIT và CREDIT trong ba advice quanh transferFunds. Lỗ hổng lớn nhất là gì?'
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: '4.Tradeoffs/Tradeoffs.md'
+    anchor: 'aop-bad-fit'
+  apiRelated:
+    controller: ''
+    methodSignature: ''
+  answers:
+    - id: A
+      answer: 'Nó khiến việc chọn policy phụ thuộc số bước chuyển tiền'
+      explanation: 'Có thể kiểm phạm vi chọn, nhưng việc giấu luồng nghiệp vụ mới là vấn đề lớn.'
+    - id: B
+      answer: 'Nó có thể khiến nhiều pointcut cùng khớp một lần chuyển tiền'
+      explanation: 'Advice chồng lấn có rủi ro, nhưng chưa xác định ai giữ bất biến luồng tiền.'
+    - id: C
+      answer: 'Nó đòi hỏi kiểm thử method có khớp và không khớp'
+      explanation: 'Kiểm coverage có ích nhưng không thay được trách nhiệm debit/credit tường minh.'
+    - id: D
+      answer: 'Nó che thứ tự và lỗi của các tác động chuyển tiền'
+      explanation: 'Luồng tiền cần lộ rõ chủ sở hữu, thứ tự và xử lý lỗi.'
+  correctAnswerId: D
+- id: 'aop-q24-pointcut-overlap'
+  question: 'Hai around advice cùng khớp transferFunds. Bộ kiểm thử nào phát hiện được rủi ro thứ tự?'
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: '4.Tradeoffs/Tradeoffs.md'
+    anchor: 'aop-pointcut-pitfalls'
+  apiRelated:
+    controller: ''
+    methodSignature: ''
+  answers:
+    - id: A
+      answer: 'Ghi trace thứ tự lồng advice cùng kết quả và ngoại lệ'
+      explanation: 'Lớp advice ngoài/trong có thể thấy lỗi và kết quả khác nhau.'
+    - id: B
+      answer: 'Chỉ kiểm tra cả hai annotation có tồn tại'
+      explanation: 'Khai báo không chứng minh thứ tự thực thi hoặc coverage.'
+    - id: C
+      answer: 'Chỉ đo thời gian method khi không có advice'
+      explanation: 'Target-only behavior bỏ qua rủi ro composition.'
+    - id: D
+      answer: 'Chỉ đếm số lần mỗi advice chạy, không ghi lớp lồng hay kết quả'
+      explanation: 'Cả hai advice chạy một lần vẫn có thể lồng sai thứ tự và xử lý lỗi hoặc return khác nhau.'
+  correctAnswerId: A
+- id: 'aop-q25-decision-matrix'
+  question: 'Chính sách timing yêu cầu cả đường lỗi, không lộ số tài khoản. Ma trận kiểm chứng nào đúng?'
+  aiGenerated: true
+  reviewed: false
+  readmeRelated:
+    file: '4.Tradeoffs/Tradeoffs.md'
+    anchor: 'aop-design-walkthrough'
+  apiRelated:
+    controller: ''
+    methodSignature: ''
+  answers:
+    - id: A
+      answer: 'Matched success có timing và che dữ liệu; failure chỉ ghi loại lỗi'
+      explanation: 'Đường thất bại vẫn thiếu thời lượng dù không làm lộ tài khoản.'
+    - id: B
+      answer: 'Matched success/failure có timing; unmatched không; log che dữ liệu nhạy cảm'
+      explanation: 'Ma trận kiểm tra selection, exception và quyền riêng tư cùng lúc.'
+    - id: C
+      answer: 'Matched success/failure có timing, che dữ liệu; unmatched cũng có timing'
+      explanation: 'Có bảo mật và đo lỗi nhưng pointcut vẫn chọn quá rộng so với yêu cầu.'
+    - id: D
+      answer: 'Matched success/failure có timing; unmatched không; ghi nguyên số tài khoản'
+      explanation: 'Phạm vi và đường lỗi đúng nhưng lại làm lộ dữ liệu nhạy cảm.'
+  correctAnswerId: B

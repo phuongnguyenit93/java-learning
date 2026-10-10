@@ -23,6 +23,14 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+  aop-object-responsibility-bridge:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  aop-learning-journey:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
 2.Terminology/Terminology.md:
   aop-aspect:
     difficulty: BASIC
@@ -48,6 +56,18 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+  aop-advice-kinds:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  aop-effective-execution:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  aop-selection-example:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
 3.ImplementationModels/ImplementationModels.md:
   aop-compile-time:
     difficulty: BASIC
@@ -63,6 +83,14 @@
     reviewed: false
   aop-model-boundary:
     difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  aop-aspectj-spring-boundary:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  aop-interception-limits:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
 4.Tradeoffs/Tradeoffs.md:
@@ -84,5 +112,17 @@
     reviewed: false
   aop-boundary:
     difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  aop-pointcut-pitfalls:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  aop-design-walkthrough:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  aop-explicit-alternative-decision:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
