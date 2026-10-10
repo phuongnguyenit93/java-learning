@@ -302,6 +302,8 @@ Java section navigation: Knowledge | Project
 
 Global header brand thay đổi theo route: chỉ các route `/learning/java/**` hiển thị **Java Learning** với SVG Java; `/my-cv` hiển thị **Nguyen Do Dinh Phuong** với toàn bộ tên màu xanh và biểu tượng cũ; các route còn lại (bao gồm `/learning` topic picker) hiển thị **Learning Platform** với biểu tượng cũ. Ba topic card trên `/learning` hiển thị SVG logo Java/JavaScript/NodeJS thay cho chữ viết tắt; logo được đóng gói trực tiếp từ `frontend/src/assets/logos/` (Devicon, kèm MIT license), không fetch logo qua CDN lúc runtime.
 
+`PageMetadata.tsx` cập nhật favicon và `document.title` theo React Router location, độc lập với Header: `/` và `/learning` dùng favicon gốc + `Learning Platform`; `/learning/java/knowledge/**` dùng SVG Java + `Java Learning - Knowledge`; `/learning/java/project` dùng SVG Java + `Java Learning - Project`; `/my-cv` dùng favicon gốc + `Nguyen Do Dinh Phuong`. Khi client-side navigate, browser-tab metadata đổi không cần reload. `index.html` giữ fallback title `Learning Platform`.
+
 Ví dụ với module runnable `THREAD`:
 
 ```text
@@ -1692,6 +1694,7 @@ MVP đã bắt đầu implementation. Current phase đã có:
 36. Roadmap Related Knowledge prototype đã implement cho `JAVA_LANGUAGE_BASICS`: marker giữ pulse nhẹ nhưng không còn mở popup; Related Knowledge luôn visible, resolve category/count từ Knowledge index và click item chuyển sang Knowledge tab với đúng category active; current mapping chỉ là provisional mapping trên Knowledge cũ và không được coi là curriculum proof
 37. Learning topic picker trên `/learning` hiện có Java/JavaScript/NodeJS; Java mở module UI cũ trong `/learning/java/knowledge`, các topic chưa sẵn sàng hiển thị localized animated dialog; Java section navigation có Knowledge/Project, Project hiển thị ba interactive split-cards Banking/Logistics/E-commerce với gradient thông thường, flat-color hover reveal, alternating sides, responsive touch toggle và VI/EN. Spring Boot SPA fallback hỗ trợ deep-link mới và legacy module paths vẫn được client redirect.
 38. Global header dùng brand theo route: `Java Learning` + Java SVG chỉ trong `/learning/java/**`; `Nguyen Do Dinh Phuong` màu xanh + icon cũ trên `/my-cv`; `Learning Platform` + icon cũ trên các route khác. Topic picker có ba SVG Java/JavaScript/NodeJS từ local Devicon assets và license nội bộ.
+39. Favicon và title trong tab trình duyệt được điều chỉnh theo route bởi `PageMetadata`: Java Knowledge/Project dùng logo Java, Home/Learning/My CV dùng favicon mặc định; title tương ứng với branding của từng trang.
 ```
 
 Chưa implement trong current phase:
