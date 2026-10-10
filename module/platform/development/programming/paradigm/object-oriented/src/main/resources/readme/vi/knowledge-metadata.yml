@@ -19,3 +19,123 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+  oop-learning-path:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+2.EncapsulationAbstraction/EncapsulationAbstraction.md:
+  oop-object-identity:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  oop-state-behavior:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  oop-encapsulation-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  oop-object-invariants:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  oop-invariant-vs-immutability:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  oop-behavior-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  oop-abstraction-value:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+3.Responsibility/Responsibility.md:
+  oop-responsibility-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  oop-behavior-owner:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  oop-responsibility-cohesion:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  oop-behavioral-contract:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  oop-collaboration-flow:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  oop-object-composition:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  oop-collaboration-coupling:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+4.RelationshipsPolymorphism/RelationshipsPolymorphism.md:
+  oop-polymorphism-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  oop-shared-behavior-contract:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  oop-subtype-relation:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  oop-inheritance-concept:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  oop-substitutability:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  oop-composition-vs-inheritance:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  oop-behavior-variants:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+5.Tradeoffs/Tradeoffs.md:
+  oop-design-walkthrough:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  oop-encapsulation-benefits:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  oop-overdesign-risks:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  oop-fragile-inheritance:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  oop-shared-state-risks:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  oop-alternative-paradigms:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  oop-owner-handoff:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false

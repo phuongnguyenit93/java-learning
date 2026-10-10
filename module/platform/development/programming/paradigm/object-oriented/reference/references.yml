@@ -14,3 +14,17 @@
 #
 # Add only curated references that are useful for the module.
 # The build system must not overwrite this file after authored content exists.
+
+references:
+  - title: "The Java Tutorials — Object-Oriented Programming Concepts"
+    url: "https://docs.oracle.com/javase/tutorial/java/concepts/index.html"
+    description: "Official introductory explanation of objects, encapsulation, interfaces, and inheritance; use the conceptual model here and leave Java syntax to Java Core."
+  - title: "The Python Tutorial — Classes"
+    url: "https://docs.python.org/3/tutorial/classes.html"
+    description: "Official second-language perspective on object identity, state, behavior, inheritance and overriding; supports separating universal OOP ideas from Java-specific syntax."
+  - title: "The Java Tutorials — Polymorphism"
+    url: "https://docs.oracle.com/javase/tutorial/java/IandI/polymorphism.html"
+    description: "Official concrete example of multiple implementations exhibiting different behaviors through a common abstraction."
+  - title: "Java Language Specification, Java SE 21 — Chapter 8: Classes"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-8.html"
+    description: "Authoritative Java boundary reference for class and inheritance mechanics, intentionally separate from paradigm-level ownership."

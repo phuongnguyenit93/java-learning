@@ -41,4 +41,63 @@
 # Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: oop-purpose-and-identity
+    relatedKnowledge:
+      - ObjectOrientedProgramming
+      - EncapsulationAbstraction
+    title: "Lập trình hướng đối tượng: động cơ và mô hình tổng quan"
+    purpose: "Hiểu vì sao tổ chức chương trình quanh các đối tượng có danh tính, trạng thái, hành vi và trách nhiệm có thể giúp quản lý thay đổi."
+    objectives:
+      - "Nhận biết đối tượng qua danh tính và hành vi, có thể có trạng thái liên quan nhưng trạng thái không bắt buộc phải thay đổi; đối tượng không đồng nghĩa với một tệp hay một lớp."
+      - "So sánh cách gom trạng thái/hành vi trong đối tượng với tổ chức thủ tục xử lý dữ liệu tách rời ở cấp ý tưởng."
+  - id: state-behavior-and-invariants
+    relatedKnowledge:
+      - EncapsulationAbstraction
+    title: "Trạng thái, hành vi và ranh giới đóng gói"
+    purpose: "Hiểu cách đối tượng công bố hành vi, quản lý thay đổi trạng thái khi cần và bảo vệ những điều kiện phải luôn đúng."
+    objectives:
+      - "Giải thích quan hệ giữa trạng thái nội bộ, hành vi được công bố và điều kiện bất biến (invariant) phải luôn đúng, khác với dữ liệu bất biến không được sửa."
+      - "Nhận biết vì sao việc cho phép mã bên ngoài tùy ý sửa trạng thái có thể làm mất tính nhất quán, ở mức nguyên lý không gắn với access modifier Java."
+  - id: responsibilities-and-contracts
+    relatedKnowledge:
+      - Responsibility
+    title: "Trách nhiệm đối tượng và hợp đồng hành vi"
+    purpose: "Nắm cách xác định đối tượng chịu trách nhiệm cho một hành vi và cách giao diện hành vi trở thành cam kết giữa các đối tượng."
+    objectives:
+      - "Phân biệt trách nhiệm của đối tượng, hợp đồng hành vi và chi tiết triển khai bị che giấu."
+      - "Nhận ra các dấu hiệu trách nhiệm bị phân tán hoặc một đối tượng gánh quá nhiều việc, từ đó đề xuất ranh giới phù hợp."
+  - id: collaboration-and-composition
+    relatedKnowledge:
+      - Responsibility
+    title: "Sự cộng tác và hợp thành đối tượng"
+    purpose: "Hiểu hệ thống hướng đối tượng vận hành nhờ các đối tượng trao đổi yêu cầu, phối hợp trách nhiệm và cấu thành hành vi lớn hơn."
+    objectives:
+      - "Mô tả sự cộng tác và hợp thành (composition) ở cấp mô hình đối tượng mà không lệ thuộc cú pháp class."
+      - "Theo dõi một tình huống sử dụng qua nhiều đối tượng để thấy vai trò của tính gắn kết trách nhiệm và mức độ phụ thuộc giữa các thành phần."
+  - id: polymorphism-and-substitution
+    relatedKnowledge:
+      - RelationshipsPolymorphism
+    title: "Đa hình, quan hệ kiểu và khả năng thay thế"
+    purpose: "Hiểu việc nhiều đối tượng có thể đáp ứng cùng một hợp đồng với hành vi khác nhau và vì sao khả năng thay thế quan trọng hơn chỉ tái sử dụng mã."
+    objectives:
+      - "Giải thích đa hình thông qua hợp đồng hành vi chung và các triển khai có thể thay thế đúng kỳ vọng."
+      - "Phân biệt khái niệm subtyping, inheritance và composition; hiểu inheritance có thể hỗ trợ tái sử dụng nhưng không tự bảo đảm hợp đồng thay thế."
+  - id: tradeoffs-and-failure-modes
+    relatedKnowledge:
+      - Tradeoffs
+      - RelationshipsPolymorphism
+    title: "Đánh đổi thiết kế và những rủi ro của mô hình đối tượng"
+    purpose: "Cân nhắc lợi ích của đóng gói, trừu tượng hóa và mở rộng hành vi so với chi phí do tính gắn kết kém, phụ thuộc chặt và đối tượng có trạng thái khó kiểm soát."
+    objectives:
+      - "Nhận diện mô hình đối tượng quá rườm rà, quan hệ kế thừa mong manh và trạng thái bị chia sẻ ngoài ý muốn."
+      - "Lựa chọn giữa cộng tác đối tượng với thủ tục hoặc phép biến đổi dữ liệu đơn giản khi bài toán không cần nhiều thực thể có hành vi."
+  - id: oop-synthesis-and-boundaries
+    relatedKnowledge:
+      - Tradeoffs
+      - Responsibility
+    title: "Tổng hợp thiết kế hướng đối tượng và liên hệ các mô hình khác"
+    purpose: "Xây dựng mô hình đầu cuối từ yêu cầu tới đối tượng, trách nhiệm, hợp đồng, cộng tác và biến thể hành vi, đồng thời nhận biết giới hạn của chủ đề."
+    objectives:
+      - "Phác thảo một ví dụ không phụ thuộc ngôn ngữ và giải thích vì sao mỗi hành vi thuộc về đối tượng tương ứng."
+      - "Phân biệt tư duy hướng đối tượng với cú pháp Java class/interface, mô hình miền DDD và cross-cutting concerns của AOP; các cơ chế cụ thể thuộc module chuyên trách."
