@@ -41,4 +41,94 @@
 # The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: fp-foundation
+    relatedKnowledge:
+      - FunctionalProgramming
+    title: "Functional Programming: Purpose and Mental Model"
+    purpose: >-
+      Understand functional programming as an approach to expressing computations
+      through functions and value transformations, and why uncontrolled shared
+      mutable state makes programs harder to reason about.
+    objectives:
+      - "Contrast a sequence of state-changing commands with an input-to-output transformation, without treating imperative and functional styles as mutually exclusive."
+      - "Explain what the functional approach offers, its relationship with declarative programming, and what this module does not teach about Java APIs."
+
+  - id: fp-purity
+    relatedKnowledge:
+      - PureFunctions
+    title: "Pure Functions and Predictable Results"
+    purpose: >-
+      Learn the meaning and motivation of purity, referential transparency, and
+      explicit inputs/outputs before composing more complex transformations.
+    objectives:
+      - "Recognize when equal inputs yield equal results without observable side effects, and why substituting a pure expression with its value is safe."
+      - "Identify hidden inputs, shared mutable state, and externally visible effects that break these reasoning guarantees."
+
+  - id: fp-immutable-values
+    relatedKnowledge:
+      - Immutability
+    title: "Immutable Values and Evolving State"
+    purpose: >-
+      Understand the difference between an immutable value and a changing
+      application state, and how a new value can represent a state transition.
+    objectives:
+      - "Compare in-place mutation with deriving a new value while retaining the old value for safe reasoning."
+      - "Explain the roles and costs of immutability and value sharing without promising that all code becomes thread-safe."
+
+  - id: fp-functions-as-values
+    relatedKnowledge:
+      - FunctionsComposition
+    title: "Functions as Values and Higher-Order Behavior"
+    purpose: >-
+      Understand what it means to pass, return, and combine functions as
+      values, rather than treating functions only as named commands.
+    objectives:
+      - "Explain first-class functions and higher-order functions using language-neutral examples."
+      - "Separate the paradigm-level idea from Java functional interfaces, lambda syntax, method references, and variable capture."
+
+  - id: fp-composition
+    relatedKnowledge:
+      - FunctionsComposition
+      - PureFunctions
+    title: "Composition and Data Transformation"
+    purpose: >-
+      Combine small functions into understandable transformations and reason
+      about the intermediate values and dependencies in a processing flow.
+    dependsOn:
+      - fp-purity
+      - fp-functions-as-values
+      - fp-immutable-values
+    objectives:
+      - "Explain function composition and the conceptual roles of map, filter, and reduce without turning the roadmap into a Java Stream API guide."
+      - "Trace a small end-to-end input-to-output transformation and recognize when a composed pipeline obscures rather than clarifies intent."
+
+  - id: fp-effect-boundaries
+    relatedKnowledge:
+      - SideEffects
+      - PureFunctions
+    title: "Managing Effects at Program Boundaries"
+    purpose: >-
+      Learn how real programs can keep useful functional computation while
+      deliberately handling input/output, failures, time, and changing state.
+    dependsOn:
+      - fp-purity
+      - fp-immutable-values
+    objectives:
+      - "Distinguish pure calculations from effectful operations such as reading a file, calling a service, or updating an external system."
+      - "Explain how to isolate, sequence, and test effects without claiming that functional programs never perform I/O."
+
+  - id: fp-synthesis
+    relatedKnowledge:
+      - Tradeoffs
+      - SideEffects
+    title: "Choosing and Combining Programming Styles"
+    purpose: >-
+      Build a coherent decision model for applying functional ideas selectively
+      alongside imperative and object-oriented code, with practical trade-offs.
+    dependsOn:
+      - fp-composition
+      - fp-effect-boundaries
+    objectives:
+      - "Evaluate readability, allocation/performance, debugging, and complexity when choosing immutable transformations or explicit mutable steps."
+      - "Explain the handoff to Java functional APIs/Stream pipelines, data-oriented programming, and time-dependent reactive flows without re-teaching those domains."

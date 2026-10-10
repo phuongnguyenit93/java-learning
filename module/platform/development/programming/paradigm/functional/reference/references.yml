@@ -14,3 +14,17 @@
 #
 # Add only curated references that are useful for the module.
 # The build system must not overwrite this file after authored content exists.
+
+references:
+  - title: "Clojure - Functional Programming"
+    url: "https://clojure.org/about/functional_programming"
+    description: "Project-maintained explanation of first-class functions, immutable values, higher-order use, and pragmatic functional style."
+  - title: "Values and Change: Clojure's Approach to Identity and State"
+    url: "https://clojure.org/about/state"
+    description: "Language authors' conceptual treatment of values, identities, immutable state snapshots, and functional calculations."
+  - title: "Haskell 2010 Language Report"
+    url: "https://www.haskell.org/definition/haskell2010.pdf"
+    description: "Official pure-functional language report illustrating higher-order functions and the distinction between pure evaluation and effects."
+  - title: "Why Functional Programming Matters"
+    url: "https://www.cse.chalmers.se/~rjmh/Papers/whyfp.pdf"
+    description: "John Hughes' original research paper on function composition, modularity, and the motivation behind functional programming."

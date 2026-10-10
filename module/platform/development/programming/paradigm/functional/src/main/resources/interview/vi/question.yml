@@ -1,0 +1,360 @@
+# <interview-schema>
+# Cấu trúc câu hỏi Interview
+# schema-version: 2
+#
+# questions [kiểu: list; bắt buộc; mặc định: []]
+#   Danh sách câu hỏi Interview của module trong language hiện tại.
+#   mỗi phần tử:
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi phỏng vấn hiển thị cho người học.
+#     answer [kiểu: string; bắt buộc; mặc định: ""]
+#       Câu trả lời tham khảo, chỉ hiển thị khi người học chủ động mở.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu nội dung được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu nội dung đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+# </interview-schema>
+
+questions:
+  - question: "Thiết kế một bộ tính giá cho đơn A. Bạn sẽ giải thích tư duy lập trình hàm cho đồng nghiệp vốn quen sửa biến tổng qua từng bước như thế nào?"
+    answer: "Tôi bắt đầu từ hợp đồng `price(snapshot, rule) -> amount`: đầu vào nào quyết định giá, đầu ra là gì, và thao tác nào không được thực hiện. Chẳng hạn A giá 100, giảm 10% trả 90 mà không sửa đơn gốc. Vòng lặp cục bộ vẫn có thể đúng; điểm khác là ưu tiên biểu diễn phép biến đổi rõ dữ kiện và kiểm tra độc lập. Lưu đơn hoặc thu tiền là trách nhiệm khác, không gọi chúng là thuần chỉ vì code dùng hàm."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Introduction/FunctionalProgramming.md"
+      anchor: "functional-what"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Hai lần tính giá với tham số hiển thị như nhau cho 90 và 80. Bạn sẽ điều tra nguyên nhân và thiết kế lại để test có thể tái hiện ra sao?"
+    answer: "Trước hết kiểm tra biến khuyến mãi dùng chung, đồng hồ, cấu hình và dữ liệu mutable mà hàm âm thầm đọc; cùng tham số hiển thị chưa chắc cùng toàn bộ input thực. Chụp quy tắc giá, thời điểm áp dụng và đơn hàng ở ranh giới, rồi truyền vào phép tính thuần. Test phải chứng minh snapshot 100 với giảm 10% luôn ra 90, còn tỷ lệ khác phải xuất hiện tường minh trong input, không do lịch chạy."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Introduction/FunctionalProgramming.md"
+      anchor: "functional-why"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Khi nào bạn giữ một vòng lặp cộng dồn cục bộ thay vì chuyển ngay sang nhiều map/filter/reduce, và cần chứng minh điều gì?"
+    answer: "Vòng lặp với accumulator thuộc phạm vi hàm, duyệt rõ danh sách và không sửa dữ liệu dùng chung có thể là giải pháp đơn giản, tiết kiệm cấp phát. Tôi sẽ kiểm tra đầu vào [20,40,50], thứ tự và điều kiện lọc, sau đó so kết quả với phép biến đổi khai báo tương đương. Nếu vòng lặp gọi I/O, thay đổi order của caller hoặc phụ thuộc biến global, việc chỉ viết lại bằng map không tự sửa được vấn đề."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Introduction/FunctionalProgramming.md"
+      anchor: "functional-without"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Một junior tin rằng phải thuộc Java Stream trước khi hiểu pipeline giảm giá. Bạn sẽ xây mô hình nền tảng nào không phụ thuộc cú pháp?"
+    answer: "Tôi cho bạn ấy xem một danh sách giá trị, một điều kiện `>=30`, hàm giảm giá và phép cộng từ 0. Trên [20,40,50], điều kiện giữ [40,50], phép biến đổi cho [36,45] rồi cộng thành 81. Chỉ cần hiểu hàm, tham số, danh sách, điều kiện và kết quả trung gian. Stream/lambda Java là cơ chế biểu diễn sau, không phải tiền đề của ý tưởng giá trị chạy qua các bước."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Introduction/FunctionalProgramming.md"
+      anchor: "functional-prerequisites"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Hãy review thiết kế trả 94.5 từ A=100 bằng giảm 10% rồi thuế 5%. Bạn cần thấy bằng chứng nào trước khi kết luận dễ bảo trì?"
+    answer: "Tôi muốn tên bước rõ và ảnh chụp 100→90→94,5, với thuế tính trên 90 chứ không âm thầm dùng giá gốc. `discount` và `taxAfterDiscount` có hợp đồng đầu vào/đầu ra riêng và test từng phép tính. Khi thay quy tắc thuế, chỉ một bước cần đổi; khi kết quả sai, có thể chỉ ra giá trị bắt đầu lệch. Nhưng pipeline không nên che ranh giới gọi gateway hoặc lưu trạng thái."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Introduction/FunctionalProgramming.md"
+      anchor: "functional-solution"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Nhóm đề xuất áp dụng functional style cho toàn bộ checkout. Bạn chọn phần nào và từ chối khẳng định nào?"
+    answer: "Tôi chọn phép tính giá, kiểm tra dữ liệu và biến đổi snapshot từ rule cố định làm lõi thuần. Gateway thanh toán, gửi email và cập nhật phiên bản order ở kho dữ liệu phải nằm ngoài lõi với kết quả, lỗi và retry được điều phối. Tôi từ chối khẳng định dùng immutable data là tự có transaction hoặc mọi kết nối mạng trở nên thuần. Kiến trúc tốt cho phép phần thuần đơn giản nhưng vẫn chủ động xử lý effect thất bại."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Introduction/FunctionalProgramming.md"
+      anchor: "functional-when"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Nếu ứng viên chỉ nhớ tên `pure`, `immutable`, `higher-order`, bạn đặt chuỗi bài tập nào để kiểm tra họ hiểu thật?"
+    answer: "Tôi bắt đầu bằng tìm phụ thuộc ẩn trong hàm tính giá, yêu cầu tách tỷ lệ giảm ra tham số. Tiếp theo tạo `next` mà giữ `old`, cho người học kiểm tra list lồng nhau. Rồi ghép `filter→map→reduce` với đầu ra [40,50]→[36,45]→81. Cuối cùng đặt timeout gateway và hai request tranh cập nhật phiên bản; ứng viên phải chỉ ra việc nào không thể giải quyết bằng hàm thuần. Chuỗi này kiểm tra lý do lẫn giới hạn."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Introduction/FunctionalProgramming.md"
+      anchor: "functional-learning-journey"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Một `price(100)` luôn trả 90 nhưng cũng ghi log. Tại sao bằng kết quả chưa đủ kết luận thuần, và thay đổi nào hợp lý?"
+    answer: "Tính thuần đòi kết quả do input xác định và không có hiệu ứng quan sát được ngoài kết quả. Việc ghi log là I/O dù con số vẫn luôn 90. Tôi tách `price(100,10%) -> 90` khỏi một adapter gọi hàm rồi ghi nhận telemetry. Unit test của lõi chỉ kiểm tra giá; kiểm thử adapter xét log hoặc lỗi ghi log. Không nên khẳng định đổi sang logger async khiến phép tính có log trở nên thuần."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.PureFunctions/PureFunctions.md"
+      anchor: "purity-concept"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Bộ đổi tiền gọi API tỷ giá bên trong và test lúc pass lúc fail. Bạn chuyển phụ thuộc ra ngoài bằng cách nào, và điểm nào vẫn cần integration test?"
+    answer: "Tôi bóc hàm `convert(amount, rateSnapshot)` chỉ tính số với quy tắc làm tròn cố định. Adapter lấy tỷ giá, kiểm tra timestamp/đơn vị/định dạng và quyết định cache hay từ chối khi timeout. Test thuần chạy lại nhiều lần với cùng snapshot phải cho cùng kết quả. Nhưng lỗi DNS, mạng chậm và phản hồi tỷ giá sai vẫn phải test tại adapter; chuyển input không làm hệ thống khỏi phụ thuộc provider."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.PureFunctions/PureFunctions.md"
+      anchor: "purity-motivation"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Một hàm nhận order qua tham số nhưng âm thầm thêm phần tử C vào order.items. Vì sao chữ ký có input tường minh vẫn chưa đảm bảo tính thuần?"
+    answer: "Tham số order có thể trỏ cùng list mutable của caller; sửa nested list thay đổi dữ liệu quan sát ngoài giá trị trả về. Tôi yêu cầu tạo danh sách mới hoặc dùng cấu trúc bất biến, và so sánh old=[A,B] với next=[A,B,C] sau lời gọi. Đồng thời kiểm tra global variables và I/O khác trong thân hàm. Truyền object qua tham số là điều kiện làm phụ thuộc rõ hơn, không phải cam kết nó sẽ không bị sửa."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.PureFunctions/PureFunctions.md"
+      anchor: "purity-input-output"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Làm sao chứng minh có thể thay `twice(4)+twice(4)` bằng `8+8`, và trường hợp nào làm phép thay thế không an toàn?"
+    answer: "Với `twice(x)=2*x` thuần, mỗi `twice(4)` bằng 8 và không làm thay đổi gì có thể quan sát được, nên thay biểu thức con bằng giá trị giữ nguyên nghĩa chương trình. Nếu hàm tăng counter, ghi log hoặc đọc tỷ giá thay đổi, việc thay lời gọi bằng số 8 sẽ xóa hiệu ứng hay bỏ qua phụ thuộc. Referential transparency nói về khả năng thay thế theo ngữ nghĩa, không phải JVM nhất thiết tối ưu hàm."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.PureFunctions/PureFunctions.md"
+      anchor: "referential-transparency"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Khi tách converter và adapter tỷ giá, hãy mô tả test matrix để không nhầm test toán với test hệ thống."
+    answer: "Lõi thuần nhận số tiền và tỷ giá cố định: test zero, tỷ giá hợp lệ, làm tròn, đầu vào không hợp lệ và tính lặp lại. Adapter: test timeout, provider trả JSON sai, tỷ giá đã quá hạn, retry policy và ánh xạ lỗi. End-to-end: xác nhận adapter truyền snapshot đúng sang lõi, không tự sửa tài khoản hoặc lặp charge. Ranh giới test phải trùng với ranh giới side effect chứ không chỉ khác package."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.PureFunctions/PureFunctions.md"
+      anchor: "purity-boundaries"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Một developer nói `final order` chứng minh mọi dữ liệu bên trong bất biến. Bạn phản biện bằng ví dụ nào và đề xuất cách kiểm tra?"
+    answer: "`final` có thể chỉ cấm gán lại biến, trong khi `order.items` vẫn là list mutable và nhiều tham chiếu cùng sửa được nó. Tôi tạo old chứa [A,B], cho bên khác thêm C rồi kiểm tra old có bị đổi hay không. Muốn giữ snapshot, cần copy phòng vệ hoặc cấu trúc sâu không đổi, đồng thời tránh lộ reference có thể ghi. Chi phí copy cũng phải đo nếu danh sách lớn; bất biến sâu là hợp đồng giá trị, không phải tên modifier."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.Immutability/Immutability.md"
+      anchor: "immutable-values"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Order A có hai snapshot pending và paid. Vì sao giá trị bất biến không tự biết bản nào hiện hành, và đâu là bài toán danh tính?"
+    answer: "Mỗi snapshot mô tả một giá trị tại thời điểm nào đó; không snapshot nào tự sửa hoặc tự quyết định quyền ghi. Ứng dụng giữ danh tính A và một vị trí tham chiếu hay record phiên bản hiện hành do bộ điều phối quản lý. `transition(pending, approved)` có thể tạo paid mà không chứng minh provider đã charge thật. Vì vậy giá trị, trạng thái có thẩm quyền và bằng chứng I/O là ba trách nhiệm cần phân biệt."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.Immutability/Immutability.md"
+      anchor: "value-vs-state"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Bạn thiết kế phép thêm món C vào order nhưng phải còn đọc được bản [A,B] khi audit. Phác thảo API và test chứng minh gì?"
+    answer: "Tôi dùng `addItem(old, C) -> next` thay vì hàm void chỉnh `old.items`. Trong test, giữ reference old, gọi hàm, sau đó xác nhận old.items=[A,B] và next.items=[A,B,C]; sửa các thành phần nested ở next cũng không được làm old đổi nếu hợp đồng yêu cầu bất biến sâu. Với một bản audit, không lưu reference tới list mutable của người gọi; snapshot phải đứng vững sau khi request kết thúc."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.Immutability/Immutability.md"
+      anchor: "immutable-updates"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Cây bất biến lớn được cập nhật một lá. Giải thích structural sharing và điều kiện để việc tái dùng nhánh an toàn."
+    answer: "Một persistent tree tạo các node trên đường từ gốc tới lá bị đổi, còn các nhánh khác có thể chia sẻ giữa old và next vì chúng thực sự không cho sửa. Nếu một nhánh chia sẻ chứa mutable child, thay đổi từ một bên có thể làm hỏng cả hai phiên bản. Tôi sẽ so cấp phát và GC với copy toàn bộ cây trên workload đại diện, không hứa mọi immutable collection đều tự áp dụng sharing. An toàn ngữ nghĩa phải đến trước tối ưu."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.Immutability/Immutability.md"
+      anchor: "sharing-and-cost"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Hai request đọc order v3, tạo hai v4 hợp lệ nhưng khác nhau. Vì sao immutable state không ngăn lost update, và bạn chọn ranh giới sửa ở đâu?"
+    answer: "Cả hai phép tính trên snapshot v3 đều có thể thuần và đúng cục bộ, nhưng kho dữ liệu chỉ được chọn một bản v4 có thẩm quyền. Nếu ghi đè không kiểm tra, cập nhật sau có thể mất thay đổi trước. Tôi áp version check/CAS hoặc khóa tại bước lưu, nhận biết conflict và quyết định retry có đọc lại state mới hay trả lỗi. Không giải quyết bằng cách thêm `map` hoặc chuyển snapshot v3 thành mutable."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.Immutability/Immutability.md"
+      anchor: "immutability-limits"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Một checkout chọn quy tắc giảm giá VIP theo loại khách hàng. Hãy tách việc chọn một hàm khỏi việc thực thi hàm và chỉ ra rủi ro khi chính hàm được chọn có hiệu ứng."
+    answer: "Bộ chọn có thể trả về một giá trị hành vi, ví dụ `rule = vipDiscount`, chưa tính tiền hay sửa đơn. Chỉ khi gọi `rule(100)` mới tạo ra kết quả 90. Khả năng truyền/lưu một hàm như giá trị giúp caller không cần nhánh if trùng lặp. Nhưng một hàm được truyền vẫn có thể đọc config mutable, log hoặc gọi mạng; higher-order và first-class không tự biến nó thành pure. Hợp đồng cần nói rõ input, output và effect được phép."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.FunctionsComposition/FunctionsComposition.md"
+      anchor: "functions-as-values"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Bạn có `transform(items, rule)` dùng lại duyệt danh sách cho hai cách tính. Khi nào abstraction nhận hàm là tốt, khi nào chỉ làm code khó đọc?"
+    answer: "`transform` là higher-order vì nhận hành vi `rule` dưới dạng tham số; vòng duyệt dùng lại chỉ là chi tiết triển khai. Nó hữu ích khi hai quy tắc có cùng hình dạng đầu vào/đầu ra và có nhiều caller chọn biến thể rõ tên. Nhưng truyền callback ẩn danh dài, giấu mutation hoặc phải đoán closure đọc gì sẽ làm khó trace. Tôi đòi test hai rule với cùng input và xác nhận dữ liệu nguồn không bị sửa nếu đã công bố tính thuần."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.FunctionsComposition/FunctionsComposition.md"
+      anchor: "higher-order-functions"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Một lỗi làm số tiền cuối là 95 thay vì 94.5. Bạn điều tra ghép giảm giá/thuế bằng giá trị trung gian như thế nào?"
+    answer: "Bắt đầu từ hợp đồng: giá gốc 100, discount10% phải cho 90, tax5% trên 90 là 4,5 nên cuối 94,5. Tôi ghi vết output sau từng hàm để thấy tính thuế nhầm trên 100 hay thiếu bước giảm. Chẳng hạn `tax(discount(100, 10%),5%)` biểu diễn phụ thuộc đúng, còn gọi tax(100) độc lập sẽ ra lỗi. Tôi đặt tên bước theo nghiệp vụ và test từng phép trước khi ghép, tránh một biểu thức lồng khó kiểm tra."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.FunctionsComposition/FunctionsComposition.md"
+      anchor: "function-composition"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Một đồng nghiệp giảm giá cả [20,40,50] rồi mới lọc theo giá đã giảm; bạn chứng minh khác biệt với chính sách lọc giá gốc ≥30 ra sao?"
+    answer: "Theo chính sách gốc, filter `[20,40,50]` với `>=30` giữ `[40,50]`, map giảm 10% cho `[36,45]`, reduce từ 0 được 81. Nếu đảo map trước rồi lọc theo kết quả đã giảm, điều kiện đã đổi đối tượng đo, dù trong dữ liệu này vẫn có thể cho cùng tập. Tôi dùng phản ví dụ 32: lọc 32 trước cho 28,8, nhưng giảm trước khiến 28,8 không đạt ngưỡng 30 và bị loại. Do đó phải xác định điều kiện được áp dụng trước hay sau phép biến đổi."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.FunctionsComposition/FunctionsComposition.md"
+      anchor: "map-filter-reduce"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Chính sách chỉ giảm giá đơn `approved`. Khi thêm D(pending,100) vào A(approved,40), B(pending,20), C(approved,50), hãy nêu các checkpoint và cách phát hiện bộ lọc sai."
+    answer: "Tôi hiển thị dữ liệu đầu vào có cả trạng thái và số tiền, rồi lọc theo `status==approved`, thu được A40 và C50; giảm 10% thành A36 và C45, cuối cùng sum81. Bộ lọc theo số tiền `>=30` trước đó tình cờ ra 81 khi chưa có D, nhưng giờ nhận thêm D100 và ra 171. Chỉ so tổng cuối trên một fixture chưa đủ; test cần kiểm tra cả danh sách trung gian, và bổ sung pending có giá lớn để bắt lỗi predicate."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.FunctionsComposition/FunctionsComposition.md"
+      anchor: "transformation-walkthrough"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Pipeline thuần có mười phép biến đổi nhỏ và test tổng đúng nhưng khó bảo trì. Tiêu chí nào để gộp/tách bước mà không mất khả năng debug?"
+    answer: "Tôi xem mỗi bước có tên nghiệp vụ và một bất biến đầu ra rõ không. Ghép các thao tác kỹ thuật vô nghĩa thành một phép có tên, nhưng giữ checkpoint ở ranh giới quan trọng như validate, discount, tax và receipt. Test từng checkpoint và đo chi phí tạo list trung gian trên input thực. Pure không đồng nghĩa ít code hay không cần profiling; nhiều callback ẩn danh vẫn khiến review khó và allocation lớn."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.FunctionsComposition/FunctionsComposition.md"
+      anchor: "composition-limits"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Một hàm tính total trả đúng nhưng giảm stock từ 8 xuống 7. Bạn giải thích cho team vì sao đây là effect, kể cả khi không truy cập mạng?"
+    answer: "Effect là bất kỳ thay đổi hoặc phụ thuộc bên ngoài kết quả mà thành phần khác có thể quan sát. Ghi stock shared từ 8 còn 7 là mutation của hệ thống dù chỉ trong RAM; ghi log hay đọc đồng hồ cũng ảnh hưởng ngữ nghĩa tương tự. Test `calculate` cần xác nhận stock còn 8 nếu hợp đồng chỉ tính giá; thao tác reserveInventory riêng trả kết quả/ lỗi rõ. Tính thuần không phụ thuộc việc effect chạy trong tiến trình hay trên server."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.SideEffects/SideEffects.md"
+      anchor: "effect-concept"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Thiết kế checkout sao cho có thể kiểm thử giá 94.5 offline nhưng thanh toán thực vẫn an toàn. Bạn vẽ các đường biên nào?"
+    answer: "Lõi nhận order snapshot và rule đã chụp, trả tổng/discount/tax mà không đọc gateway hay lưu DB. Adapter nạp dữ liệu, xác nhận version và gọi lõi; bộ điều phối charge gateway, xem bằng chứng approved/declined rồi mới quyết định lưu trạng thái. Test lõi chứng minh 100→90→94,5; test adapter dùng provider fake cho timeout, response lỗi và retry. Không gọi lớp chứa gateway là pure chỉ vì nó sử dụng immutable object."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.SideEffects/SideEffects.md"
+      anchor: "pure-core-effects"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Provider từ chối sau khi hệ thống đã ghi `paid`. Bạn giải thích lỗi thứ tự và đề xuất recovery theo mức nguyên lý như thế nào?"
+    answer: "Hệ thống đã công bố thanh toán thành công trước khi có bằng chứng approved từ provider. Tách state `pending`, `paid`, `declined` và gắn kết quả với operation ID để xử lý callback trùng; đừng đánh đồng retry mạng với thu phí an toàn. Nếu bước charge và bước lưu không thể atomic cùng nhau, cần chính sách reconcile/compensate và quan sát trạng thái trung gian. Hàm pure transition chỉ suy ra trạng thái từ sự kiện đã được xác thực, không tự tạo sự kiện."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.SideEffects/SideEffects.md"
+      anchor: "effect-coordination"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Unit test của hàm thuần pass nhưng production lỗi timeout payment. Bạn viết test plan theo tầng và tiêu chí đạt nào?"
+    answer: "Lõi: giảm giá, thuế, rounding và input không hợp lệ trên dữ liệu cố định. Adapter: timeout, phản hồi sai định dạng, nhà cung cấp từ chối, lỗi lưu, retry trùng và gián đoạn mạng. Luồng tích hợp: không ghi paid nếu chưa có approved, không charge hai lần khi retry, và conflict version được phát hiện. Thuần giúp kiểm thử toán dễ, không chứng minh tính đúng của điều phối effect. Tiêu chí đạt phải kiểm chứng cả trạng thái cuối lẫn sự kiện thực tế."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.SideEffects/SideEffects.md"
+      anchor: "effect-testing"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Một đội định chuyển mọi I/O vào hàm callback trong pipeline để giữ code đẹp. Vấn đề production nào vẫn cần chủ sở hữu rõ?"
+    answer: "Callback vẫn thực hiện tác động thật: gửi tiền, lưu dữ liệu, email và gọi nhà cung cấp. Tôi chỉ rõ nơi retry, timeout, idempotency key, giới hạn đồng thời, log an toàn và xử lý kết quả từng lần gọi. Khi callback ném exception giữa chuỗi, phải biết hiệu ứng trước đã commit hay chưa; map/filter không rollback chúng. Việc gom các bước thành một pipeline chỉ là hình thức tổ chức, không phải hợp đồng vận hành."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.SideEffects/SideEffects.md"
+      anchor: "effects-real-world"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Bạn được chọn giữa pipeline thuần và mô hình đối tượng cho báo cáo tháng từ snapshot cố định. Hãy giải thích chọn gì và điều kiện nào làm đổi quyết định."
+    answer: "Nếu dữ liệu đã cố định và nhiệm vụ chủ yếu là lọc, chuẩn hóa, tính tổng, tôi bắt đầu từ các hàm có đầu vào/đầu ra rõ. Nó dễ test với snapshot và ít cần danh tính đối tượng. Khi xuất hiện thực thể có invariant, quyền chuyển trạng thái hoặc nhiều tương tác dài hạn, đối tượng chịu trách nhiệm có thể hữu ích hơn. Không nên ép mọi bước báo cáo thành class, cũng không nên ép mọi domain invariant thành hàm rời không có chủ sở hữu."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.Tradeoffs/Tradeoffs.md"
+      anchor: "functional-use-cases"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Thiết kế immutable snapshots gây tăng GC, nhưng mutable loop rất khó debug. Bạn sẽ đo và đưa quyết định theo dữ liệu như thế nào?"
+    answer: "Tôi đo CPU, allocation, peak memory và GC trên input thật, đồng thời đánh giá mức dễ trace `validate→discount→tax` khi kết quả sai. Thử persistent structure/structural sharing khi hợp với dữ liệu, so với accumulator cục bộ không sửa shared state. Nếu vòng lặp ngắn vừa rõ vừa hiệu quả, nó là lựa chọn hợp lệ. Quyết định phải ghi trade-off về tài nguyên và lỗi vận hành, không dựa vào khẩu hiệu rằng functional luôn nhanh hoặc chậm."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.Tradeoffs/Tradeoffs.md"
+      anchor: "functional-costs"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Checkout có Order bảo vệ invariant, phép tính giá thuần và coordinator lưu/trả tiền. Bạn sẽ chống tranh luận 'chỉ được chọn một paradigm' ra sao?"
+    answer: "Tôi chia trách nhiệm theo bằng chứng: Order giữ điều kiện trạng thái hợp lệ và quyền thay đổi, hàm giá biến đổi snapshot 100→90→94,5, coordinator gọi gateway và quản lý persistence/retry. Các phần có thể dùng phong cách khác nhau mà không mâu thuẫn, miễn contract giữa chúng rõ. FP không thay thế OOP identity, còn OOP không khiến charge atomic. DOP có trọng tâm biểu diễn data và schema; reactive quan tâm tín hiệu theo thời gian, không đồng nghĩa FP."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.Tradeoffs/Tradeoffs.md"
+      anchor: "functional-vs-other-styles"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Bạn trình bày một checkout nhỏ trong phỏng vấn từ request đến kết quả khi gateway trả decline. Nêu vết dữ liệu và những điều không được suy ra."
+    answer: "Bắt đầu với snapshot A giá100, discount10%→90, tax5% của 90→94,5. Giá 94,5 là kết quả dự kiến có thể tính thuần. Adapter gửi yêu cầu charge, provider báo declined; coordinator giữ hoặc ghi trạng thái thất bại có kiểm tra phiên bản, không công bố paid. Không được suy rằng giá đúng nghĩa là đã trừ tiền, một snapshot paid tự chứng minh charge, hay retry luôn an toàn. Test phải đối chiếu cả trace giá, sự kiện gateway và trạng thái được lưu."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.Tradeoffs/Tradeoffs.md"
+      anchor: "functional-end-to-end"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+  - question: "Một đồng nghiệp gọi Java Stream, Reactor và data-oriented design đều là FP vì có map. Hãy đặt ranh giới chính xác và hệ quả khi học sai."
+    answer: "Phép `map` là thao tác có mặt ở nhiều nơi, không quyết định paradigm. FP đặt trọng tâm purity, referential transparency và ghép phép biến đổi; Java Stream là API ngôn ngữ với execution semantics riêng; Reactor/Reactive Streams thêm Publisher/Subscriber/demand, thời gian và backpressure; Sharvit DOP nhấn dữ liệu phổ dụng, thao tác tách riêng và schema. Nhầm các khái niệm sẽ khiến người học tưởng dùng Stream là tự pure hoặc reactive là tự song song."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.Tradeoffs/Tradeoffs.md"
+      anchor: "functional-boundaries"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
