@@ -2,6 +2,8 @@
 
 Step 9 là integrated validation + Coverage Review cho cả **new module** và **refactor module**. Đây là step cuối trước khi coi learning build hoàn tất.
 
+**Cross-cutting quality authority:** kiểm tra learning coherence theo `rules/MODULE_CONTENT_RULES.md` trên source hiện tại. Step 9 là integration/review gate; **không tự định nghĩa lại** learner baseline, WHAT/WHY progression, title policy hoặc plain-text cross-module bridge contract.
+
 ### General Agent Rules context guard
 
 Trước khi thực hiện Step 9:
@@ -54,6 +56,8 @@ Ask:
 
 ```text
 Can a beginner explain what this module is about after the entry chapter?
+Were module-owned core concepts introduced at WHAT/WHY level before dependent HOW/API/lifecycle sections?
+Are assumed prerequisite concepts actually taught in the declared earlier learning path?
 Does the entry chapter introduce the major terminology and roadmap before deep mechanics?
 Can the learner see why the major chapters belong to the same module?
 Does each important concept explain the problem/motivation before technical rules?
@@ -69,6 +73,8 @@ Are Video Scene/Transition visuals, narration and evidence technically consisten
 Does Quiz test understanding rather than memorize wording?
 Does Interview add explanation/reasoning depth rather than duplicate Quiz?
 Are relations exact and useful?
+Do H1/H2 use descriptive learning-topic labels rather than interview-style questions?
+Are outside-module foundational concepts correctly introduced with concise prose when needed, without inventing navigation artifacts?
 Is important content missing?
 Is any content present only to inflate counts?
 ```
@@ -129,7 +135,10 @@ Classify findings by importance instead of blindly adding content:
 ```text
 MUST FIX
 → incorrect, contradictory, orphaned, missing critical concept, invalid relation,
-  or a nontrivial module with no usable beginner orientation/roadmap
+  a nontrivial module with no usable beginner orientation/roadmap,
+  missing essential WHAT/WHY or required prerequisite before advanced use,
+  systematically interview-question-style Knowledge H1/H2,
+  or an incorrect cross-module concept/ownership claim
 
 SHOULD IMPROVE
 → meaningful curriculum gap, weak motivation, poor chapter transition,
@@ -152,6 +161,10 @@ Before declaring a module learning build complete, confirm:
 [ ] module identity/type/languages/capabilities were inspected
 [ ] module topic map reflects actual module intent/source
 [ ] the first/equivalent entry chapter explains what the module is, why it exists and what the learner will encounter
+[ ] core terms have an evidenced prerequisite or an intelligible early WHAT/WHY foundation before technical detail
+[ ] approved Menu WHAT/WHY/RELATION learning focuses are fulfilled by actual Step 4 Knowledge bodies
+[ ] Knowledge H1/H2 titles are descriptive concept/topic labels, not Quiz/Interview prompts
+[ ] necessary cross-module concept introductions use accurate, concise plain text without invented navigation
 [ ] the entry chapter provides a major terminology map / learning roadmap
 [ ] the chapter order has an explainable learning narrative rather than only a numeric sequence
 [ ] important concepts explain problem/motivation → relation → Java mechanism before deep rules

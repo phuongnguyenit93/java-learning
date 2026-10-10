@@ -196,6 +196,10 @@ module
 │               ├── hashicorp-vault
 │               └── secret-lifecycle
 ├── integration
+│   ├── api
+│   │   ├── fundamentals
+│   │   ├── rest
+│   │   └── soap
 │   ├── http
 │   │   ├── request-response
 │   │   │   └── client

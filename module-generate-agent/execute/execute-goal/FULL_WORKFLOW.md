@@ -254,7 +254,7 @@ If a generator creates repository-wide side effects, identify ownership precisel
 
 ## 8. MANDATORY SEQUENTIAL REVIEW LIFECYCLE
 
-For every non-Commit STEP that CURRENT governance requires to pass the learning/content review gate, require at least **two fresh independent full reviews** unless CURRENT canonical rules explicitly define a stronger requirement.
+For every non-Commit STEP that CURRENT governance requires to pass the learning/content review gate, normally require at least **two fresh independent full reviews** unless the CURRENT canonical STEP rule explicitly sets a different minimum. In particular, `STEP_5_API.md` allows **one independent full review** when an initial `NOT REQUIRED` API decision is independently confirmed; if that decision is overturned and API is built, **two NEW post-build full reviews** are mandatory (the previous no-API review does not count).
 
 Reviews are **sequential source-state reviews**, never parallel reviews of one snapshot.
 

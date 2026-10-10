@@ -2,6 +2,8 @@
 
 Step 3 dùng cho **cả new module và existing/refactor module**. Mục tiêu là ổn định Menu/chapter/title skeleton từ Step 1 Curriculum + Step 2 ROADMAP đã approve trước khi viết/refactor full Knowledge.
 
+**Mandatory shared pedagogy:** áp dụng `rules/MODULE_CONTENT_RULES.md` cho learner baseline, foundational progression, descriptive H1/H2 và cross-module plain-text bridges. **STEP 3 sở hữu cách materialize, phân bổ và review các learning focus đó qua H1/H2**. Menu đúng schema/anchors nhưng không dạy được nền tảng hoặc có title kiểu Quiz/Interview vẫn là **MUST FIX**. Áp dụng cho cả VI/EN, new và refactor modules.
+
 ### General Agent Rules + Curriculum Map context guard
 
 Trước khi thực hiện Step 3:
@@ -173,7 +175,7 @@ Ví dụ:
 ```markdown
 # Generics
 
-## <a id="generic-purpose">Generics là gì và vì sao cần?</a>
+## <a id="generic-purpose">Generics: Khái niệm và mục đích</a>
 
 ## <a id="generic-types">Generic Types</a>
 
@@ -285,53 +287,79 @@ ROADMAP milestone
 → "Understand why the Spring IoC Container exists"
 
 Step 3 có thể materialize thành:
-→ What Is the Spring IoC Container?
-→ Why Is a Container Needed?
-→ What Is a Spring Bean?
-→ Managed Bean vs Plain Object
-→ What Is IoC?
-→ How Dependency Injection Implements IoC
+→ Spring IoC Container: Concept and Role
+→ The Problem Solved by a Managed Container
+→ Spring Beans and Their Lifecycle Context
+→ Managed Beans and Plain Objects
+→ Inversion of Control (IoC): Core Model
+→ Dependency Injection as an IoC Mechanism
 ```
 
 Các H2 trên vẫn cùng phục vụ một milestone nếu chúng không tạo learning goal mới ngoài ROADMAP.
 
-### Entry-chapter foundation gate
+### Step 3 learner baseline and foundation-focus gate
 
-Trước khi finalize chapter đầu tiên hoặc entry chapter tương đương, Step 3 phải kiểm tra learner có stable H2 identities để trả lời những câu hỏi nền tảng sau hay chưa:
+Follow `rules/MODULE_CONTENT_RULES.md` as the **sole source of shared learning-content quality**: assume no prior understanding of module-owned core concepts unless a verified prerequisite establishes it; teach WHAT/WHY/RELATION before depending on HOW; do not treat the title of a module/H2 as proof that its meaning was taught.
+
+**Step 3's own deliverable is structural**, not full Knowledge prose. Using Step 1 ownership, approved Step 2 Roadmap and real prerequisite evidence, allocate each important term/learning focus to appropriate **existing or newly planned anchored H2 identities**, in learner-facing order:
+
+- Record mentally/in the review result which H2 establishes **WHAT**, which explains **WHY**, and which establishes **RELATION**, before the first H2 using the concept for advanced HOW.
+- One H2 **may carry both WHAT and WHY** when its focused scope allows; neither a distinct H2 per label nor literal WHAT/WHY words in the title are required. But missing foundational focus is a **MUST FIX**, not an excuse to hide it in an unrelated technical section's future body.
+- Distinguish terms already taught by real prerequisites from terms only named in an upstream module. Provide an entry/bridge focus where needed, or report the proper Curriculum/Roadmap gap.
+- Before approving Menu, ask whether Step 4 can fully realize each focus **without adding/splitting/reordering H2**. If not, fix the Step 3 skeleton before handoff.
+
+For example, the Spring Boot application-runtime entry flow should introduce the meaning of application runtime and why its lifecycle matters **before** Boot-specific hooks. A suitable descriptive sequence is `Application Runtime: Khái niệm và phạm vi` → `Vai trò của runtime trong quá trình thực thi ứng dụng` → `Spring Boot trong quá trình điều phối Application Runtime` → `Vòng đời của SpringApplication`. These are illustrative learning focuses, not mandatory exact H2 identities.
+
+For a foundational term **owned by another module**, Step 3 identifies the first suitable H2 where Step 4 can author a short **plain-text contextual bridge** under the shared rule. Do **not** add a special navigation H2, module link, route, `relatedModules`, `readmeRelated` or metadata solely to refer to the other module. This optional prose bridge never replaces a genuine missing prerequisite.
+
+### Chapter 1 mandatory minimum — extensible foundation, NOT a fixed H2 template
+
+**Mỗi new hoặc refactor module bắt buộc có một Chapter 1 / first learner-facing chapter đủ làm điểm vào cho người mới học chủ đề đó.** Chapter 1 là vị trí mở đầu **thực tế theo generated Menu order**, không nhất thiết tên file là `1.Introduction` hay H1 phải viết `Tổng quan`. Đây là **minimum learning coverage**, không phải maximum content, giới hạn số H2 hay template đặt tên.
+
+Khi Step 3 materialize các anchored H2 của Chapter 1, phải bảo đảm người học có thể tiếp cận **tối thiểu năm nhóm nội dung sau** trong Chapter 1:
+
+1. **WHAT — Khái niệm và phạm vi:** chủ đề/module này thực chất là gì, không phải là gì, phạm vi module sở hữu. Không được dùng tên chủ đề như một thuật ngữ hiển nhiên người học đã biết.
+2. **WHY — Mục đích, vai trò và động cơ học:** vì sao concept tồn tại hoặc vì sao quan trọng phải hiểu nó; vấn đề/hạn chế/tình huống thực tế mà nó giúp giải thích hoặc xử lý. Không sáng tác một `problem solved` giả cho những chủ đề mang tính mô tả tự nhiên như application runtime.
+3. **CORE MODEL — Các thành tố/khái niệm chính và mối quan hệ:** giới thiệu mental model ban đầu; chỉ nêu thành phần, trạng thái, giai đoạn, abstraction hoặc quan hệ **thật sự tồn tại**. Không ép mọi concept phải có `components` hay `lifecycle` riêng khi bản chất không có.
+4. **PREREQUISITE ORIENTATION — Điểm xuất phát của learner:** chỉ rõ tối thiểu vốn từ/kiến thức nào cần để đọc tiếp, giải thích hoặc dành một short bridge cho term thiết yếu chưa được học, phân biệt nội dung module tự sở hữu với module khác. Nếu không cần prerequisite bổ sung, không tạo H2 rỗng mang tên `Prerequisites`; vẫn phải xác nhận entry không có hidden prerequisite.
+5. **LEARNING JOURNEY — Bản đồ đường học tiếp:** cho learner biết các nhóm kiến thức/chương tiếp theo sẽ đi theo hướng nào và liên hệ ra sao với foundation vừa học. Không viết lại toàn bộ ROADMAP, tạo bản ROADMAP khác hoặc bắt buộc một H2 `Lộ trình học` nếu có thể giới thiệu tự nhiên trong focused section.
+
+**Năm nhóm nội dung trên là sàn tối thiểu, không phải danh sách đóng.** Step 3 **phải bổ sung H2/focus nhập môn khác khi cần** để làm rõ vocabulary, vấn đề thực tế, so sánh cơ chế cũ/mới, ví dụ nền, bối cảnh lịch sử có ích, ranh giới ownership hoặc cầu nối đến chapter sau. Không được dừng ở đúng năm mục vì đã tick checklist; không được thêm mục hình thức chỉ để tăng số lượng.
+
+**Materialization contract:**
+
+- Mỗi nhóm phải có **một hoặc nhiều H2 phù hợp về scope** trong Chapter 1 để Step 4 có thể hiện thực hóa nội dung; **một H2 có thể đáp ứng nhiều nhóm** nếu vẫn có một learning focus rõ ràng. Năm nhóm **không đồng nghĩa** phải có năm H2.
+- WHAT/WHY và mental model phải có learner-facing **anchored foundation identity**, không được giấu toàn bộ trong BASE.md, một lời mở đầu không anchor, hoặc đoạn prose của H2 chuyên sâu đang giả định người học đã biết chúng.
+- PREREQUISITE ORIENTATION và LEARNING JOURNEY có thể được diễn đạt tự nhiên **bên trong body của một H2 nhập môn phù hợp**, không bắt buộc H2 riêng; Step 3 vẫn phải kiểm tra rằng structure có đúng chỗ để Step 4 viết đủ chúng.
+- Dùng **statement/topic-style H1/H2 tự nhiên cho từng module**, không copy các nhãn `WHAT`, `WHY`, `CORE MODEL`, `PREREQUISITES`, `LEARNING JOURNEY` thành title literal của mọi module.
+- Nếu một khái niệm quan trọng đã được prerequisite thực sự dạy, Chapter 1 có thể dùng bridge ngắn và đi thẳng vào **góc nhìn mới thuộc module hiện tại**; không dạy lại toàn bộ owner module. Không vì thế mà bỏ qua phần nhập môn của core concept do module hiện tại sở hữu.
+- Nếu năm nhóm không thể được phân bổ vào Chapter 1 từ approved Roadmap mà không thay đổi milestone/ownership, report upstream `ROADMAP GAP` / `CURRICULUM GAP` theo đúng owner. Nếu chỉ cần mở rộng, split, merge hoặc reorder H2 trong existing approved milestone, đó là công việc Step 3 bình thường.
+
+**Ví dụ, không phải universal template:**
 
 ```text
-What is this module/core concept?
-        ↓
-Why does it exist?
-        ↓
-What concrete problem exists without it?
-        ↓
-What foundational terms will later sections assume?
-        ↓
-Have those terms been introduced before they are used?
-        ↓
-How do the foundational concepts relate to each other?
-        ↓
-What should the learner study next?
+Git — first chapter
+→ Git: Khái niệm và mục đích
+→ Bài toán quản lý phiên bản mã nguồn
+→ Repository, Working Tree, Staging Area và Commit
+→ Bối cảnh học và mối liên hệ với các chương thao tác Git
+
+Spring Boot Application Runtime — first chapter
+→ Application Runtime: Khái niệm và phạm vi
+→ Vai trò của việc hiểu Application Runtime
+→ Các trạng thái và thành tố chính trong quá trình thực thi ứng dụng
+→ Spring Boot trong mô hình Application Runtime
 ```
 
-Không bắt buộc mỗi câu hỏi phải là một H2 riêng. Có thể gộp khi một section vẫn có một learning focus rõ ràng, ví dụ `What Is Generics and Why Is It Needed?` hoặc `What Is the Spring IoC Container and Why Is It Needed?`.
+Trong ví dụ, prerequisite orientation và preview các chương sau có thể nằm **bên trong H2 nhập môn tương ứng**; ví dụ không có ý nói bốn H2 luôn đủ cho mọi module. Module khó hơn có thể cần sáu, tám hoặc nhiều H2 nhập môn nếu từng H2 có focus riêng và không vượt boundary. Step 4 vẫn là owner viết full body.
 
-Nhưng không được chỉ nhét định nghĩa quan trọng vào một đoạn prose không có stable identity nếu term đó là foundation mà nhiều chapter sau sẽ giả định learner đã hiểu.
+**Chapter 1 review gate — mandatory cho mỗi language:** reviewer đọc full Chapter 1 H1/H2 theo thứ tự render, ánh xạ **cả năm nhóm** vào H2 thích hợp, kiểm tra core WHAT/WHY xuất hiện trước API/lifecycle/deep HOW, kiểm tra không có hidden prerequisite, và xác nhận mỗi section đủ scope để Step 4 triển khai. Nếu thiếu bất kỳ nhóm nào mà không có lý do hợp lệ về cách thực hiện trong H2 hiện có thì **MUST FIX trong Step 3**; title-only scaffold hay lời hứa `Step 4 sẽ tự thêm` không phải bằng chứng đạt gate.
 
-### Foundational terminology rule
+### Step 3 descriptive-title gate
 
-Step 3 phải lấy terminology ownership từ Curriculum + ROADMAP và hỏi:
+Apply the `MODULE_CONTENT_RULES.md` **descriptive topic/statement title** contract to **every actual H1/anchored H2 in VI and EN**. Choose clear topic identities such as `Vòng đời của SpringApplication` instead of question prompts such as `Có những vòng đời nào?`. Rewrite semantically, not by deleting question marks. Keep each title consistent with the H2's approved WHAT/WHY/RELATION/HOW focus and distinct from neighboring H2s.
 
-```text
-term này có phải learner sẽ gặp lại nhiều lần trong module không?
-term này có phải prerequisite để hiểu chapter sau không?
-module hiện tại có phải primary owner chịu trách nhiệm giới thiệu term này không?
-```
-
-Nếu câu trả lời là có, term đó phải được giới thiệu ở một vị trí learner-facing rõ ràng trước khi downstream section sử dụng nó như vocabulary đã biết.
-
-Ví dụ với `core-container`, nếu Curriculum xác định module này own IoC Container / Bean / Dependency Injection / ApplicationContext thì Step 3 phải bảo đảm các foundation đó được materialize đủ rõ trong Menu/H2 flow; không được để Step 4 lần đầu tiên "cứu" chúng bằng body prose.
+When the current Menu has real downstream consumers, preserve an anchor/path if its concept identity is unchanged. Otherwise handle explicit migration and validate dependent Video, API, Quiz, Interview, Roadmap/Knowledge relations under the applicable owner; do not silently break them.
 
 ### Khi nào là ROADMAP GAP thật sự?
 
@@ -373,6 +401,28 @@ WHAT
 ```
 
 Nếu câu trả lời là không, phải sửa Menu/H2 ngay trong Step 3 hoặc report upstream gap phù hợp. Không được chuyển một structural pedagogy gap xuống Step 4 rồi kỳ vọng Step 4 tự thêm section ngoài approved skeleton.
+
+### Mandatory beginner-first / title-style review procedure
+
+Trong mọi authoring pass, independent review và recheck/fix của Step 3, ngoài structural/file validation phải thực hiện **một lần full visible-title audit cho từng language**:
+
+```text
+1. Read Curriculum ownership + approved ROADMAP and declared prerequisites.
+2. Read ALL current H1 + anchored H2 in learner-facing order for that language.
+3. Mark each new essential term's first appearance and its introduction/bridge location.
+4. Walk through the first chapters as the declared target learner, not as a Spring/Java expert.
+4a. Audit the actual first learner-facing Chapter 1 against all FIVE mandatory minimum content groups; allow and require extra foundational H2 when the topic needs them.
+5. Check WHAT / WHY / core relations BEFORE lifecycle, internals, configuration or APIs.
+6. Evaluate EVERY H1/H2 as a descriptive topic statement, not an interview question.
+7. Identify H2 ownership of the WHAT/WHY/RELATION focus, including any needed plain-text cross-module bridge inside an existing lesson.
+8. Verify VI/EN semantic scope/order parity without assuming literal translations.
+9. Confirm Step 4 can teach within the approved titles/anchors; no structural rescue needed.
+10. Classify real defects as MUST FIX, repair Step 3-owned issues, and re-audit the current titles.
+```
+
+Không đạt khi review chỉ chạy generator, chỉ so YAML/Markdown schema, chỉ tìm dấu `?`, hoặc chỉ đọc diff mà không đọc current learning journey. **Review #2 phải bắt đầu từ source hiện tại sau fixes**, không chấp nhận checklist/report của Review #1 làm evidence thay cho full title audit. Số vòng review và reviewer eligibility tuân thủ active orchestration; mục này bổ sung nội dung bắt buộc cần review chứ không thay đổi phase barriers.
+
+Nếu title đổi mà anchored H2 id vẫn biểu thị **đúng cùng concept**, giữ id và cập nhật generated internal navigation/language parity. Nếu cần thêm/split/reorder H2 để sửa prerequisite gap, cũng phải kiểm tra exact relations trong `relatedKnowledge`, Video mirror/scene mapping, `readmeRelated`, Quiz/Interview references hoặc metadata nếu chúng đã tồn tại. Không rewrite body theo kiểu Step 4 trong Step 3; lập migration mapping và route downstream repairs tới canonical owner tương ứng.
 
 ---
 
@@ -696,6 +746,16 @@ Step 3 hoàn thành khi, cho cả new và existing module:
 Menu structure tương thích với Step 1 Curriculum khi Curriculum Map tồn tại; nếu isolated fallback thì tương thích với reconstructed scope/boundary đã được kiểm chứng từ current content + authoritative real-world knowledge
 ROADMAP milestone/order được phản ánh hợp lý
 ROADMAP milestone đã được phân rã thành đủ learner-facing Knowledge identities; không áp dụng máy móc 1 milestone = 1 H2
+learner baseline + prerequisites được xác định từ evidence, không mặc định core term trong tên module đã được biết
+full visible-title audit chứng minh core concept có intro/bridge rõ ràng trước khi dùng ở lifecycle/mechanics/API/decision
+entry flow có WHAT + WHY + concrete motivation + foundational relation đủ cho người mới theo đúng module prerequisite
+Chapter 1 (first learner-facing chapter) có đủ 5 minimum content groups WHAT, WHY, CORE MODEL, PREREQUISITE ORIENTATION và LEARNING JOURNEY; được bổ sung foundation sections khi cần, không ép fixed H2 count/title
+mọi nhóm minimum được map vào H2 thực tế có learning focus phù hợp và có thể triển khai body ở Step 4, không chỉ dựa vào BASE/placeholder
+WHAT/WHY/RELATION learning focus được phân bổ rõ cho các H2 hợp lệ để Step 4 triển khai; không mặc định một H2 riêng cho từng vai trò
+cross-module foundational terms có body-level bridge ngắn tại vị trí thích hợp khi cần; không phát sinh navigation/link/route/metadata chỉ cho lời nhắc văn bản
+không còn beginner-critical undefined term hoặc hidden prerequisite trong H1/H2 learning progression
+mọi H1/anchored H2 sử dụng descriptive topic/statement titles thay vì question-style Quiz/Interview headings
+title naming/semantic granularity/VI-EN semantic parity được review trên toàn bộ current H1/H2, không chỉ generator/diff
 chapter order ổn định
 paths ổn định
 localized H1 titles ổn định
@@ -713,6 +773,7 @@ generateFinalReadme đã chạy thành công
 LIST.md và final README phản ánh đúng Menu/BASE source
 existing structural content đã được audit/migrated khi có
 không còn structural gap buộc Step 4 phải redesign Menu
+final independent reviewer đã đọc lại toàn bộ current learning journey và xác nhận không còn MUST FIX về entry foundation, learning sequence hoặc title quality
 ```
 
 Downstream:

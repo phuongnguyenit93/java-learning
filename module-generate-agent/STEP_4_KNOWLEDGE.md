@@ -96,8 +96,9 @@ The H2 visible title should behave like a compact learning/navigation label:
 ```text
 short
 → easy to scan in the Portal card/index
-→ names the concept or learner question directly
+→ names the concept, mechanism, lifecycle or other concrete learning topic directly
 → matches the opening focus of the section
+→ descriptive statement/topic title rather than a Quiz/Interview-style question
 ```
 
 Do not make the visible title carry the whole explanation, conclusion, motivation, or contrast. Put those in the body instead.
@@ -105,11 +106,11 @@ Do not make the visible title carry the whole explanation, conclusion, motivatio
 Prefer:
 
 ```text
-OOP là gì?
-Đóng gói là gì?
+OOP: Khái niệm và mục đích
+Đóng gói: Nguyên lý và vai trò
 Rủi ro của kế thừa
 Dynamic Dispatch
-What Is OOP?
+OOP: Concept and Purpose
 Inheritance Risks
 ```
 
@@ -122,7 +123,15 @@ Objects as collaborating state + behavior
 Encapsulation is more than private fields
 ```
 
-Visible titles may be refined during curriculum editing without changing the stable anchor id. VI/EN titles should be naturally localized and conceptually equivalent, not literal copies of each other.
+Title wording may be refined within the **same approved Step 3 focus/identity** without changing the stable anchor id; any real concept/section redesign must be routed to Step 3. VI/EN titles should be naturally localized and conceptually equivalent, not literal copies of each other. The canonical title-style rule belongs to `rules/MODULE_CONTENT_RULES.md`.
+
+### Fulfill the Step 3 learning-focus contract
+
+Apply the shared `rules/MODULE_CONTENT_RULES.md` baseline/WHAT→WHY→RELATION→HOW→EVIDENCE and plain-text cross-module bridge rules **when writing actual Knowledge bodies**. Step 4 consumes each H2's approved learning focus: if one H2 owns WHAT and WHY, **write both**; a title alone is not an explanation. A later lifecycle/API H2 does not have to repeat foundations already taught by an earlier H2 or verified prerequisite.
+
+Inside an existing relevant H2, briefly explain an external module's foundational concept, its relationship to this lesson and, when useful, name the verified owner module **in plain text**. Do not fabricate links, routes, `relatedModules`, `readmeRelated`, extra headings or metadata solely for this bridge. Do not absorb its full curriculum.
+
+**STEP 4 accountability:** missing explanation/evidence within an appropriately approved H2 is a Step 4 content defect and must be fixed here. If an essential WHAT/WHY/RELATION focus has **no suitable H2** or cannot fit the approved order/identity, report `MENU GAP` and return to Step 3 rather than adding an H2 or hiding a prerequisite in an unrelated section. Do not force every H2 to repeat every learning layer.
 
 Knowledge should normally progress from mental model to practical behavior:
 
@@ -304,56 +313,9 @@ At the end of the Knowledge authoring/refactor step, the module should have a co
 
 ### Pedagogical coherence is a first-class requirement
 
-Technical coverage is not the same thing as a good curriculum.
+The canonical criteria for beginner-first, prerequisites, WHAT → WHY → RELATION → HOW → EVIDENCE, descriptive titles and optional plain-text cross-module bridges live in `rules/MODULE_CONTENT_RULES.md`. Do not redefine their semantics here.
 
-A module can be technically correct and still be a poor learning experience when it only presents a catalog of definitions:
-
-```text
-term A
-→ definition
-
-term B
-→ definition
-
-term C
-→ definition
-```
-
-That structure may produce valid Knowledge anchors, API relations, Quiz questions and Interview questions while still leaving the learner asking:
-
-```text
-What is this module actually about?
-Why do these concepts belong together?
-What problem caused this concept to exist?
-How does this term connect to the previous one?
-Where does Java code enter the picture?
-```
-
-Therefore **coverage correctness and pedagogical correctness are separate acceptance dimensions**.
-
-The preferred learning chain is:
-
-```text
-WHAT
-→ what is this domain/concept?
-
-WHY
-→ what problem or limitation makes it useful?
-
-RELATION
-→ how does it connect to the other concepts in this module?
-
-HOW
-→ how does Java represent or implement the idea?
-
-EVIDENCE
-→ what code/runtime behavior makes the idea observable?
-
-PRACTICE / PRESENTATION
-→ how do Video / Quiz / Interview / API experiments reinforce or present it?
-```
-
-Do not treat a complete H2 inventory as proof that the module teaches well.
+**Step 4 authors actual teaching**, not an isolated glossary or a collection of completed H2 placeholders. Give each section its assigned motivation/mental model, connect it to previous and next concepts where appropriate, and substantiate technical rules with real examples or observations. A mechanically complete anchor inventory is not evidence of pedagogical coherence.
 
 ### Vietnamese authoring policy
 
@@ -414,7 +376,7 @@ THỰC HÀNH
 GIỚI HẠN
 ```
 
-The exact visible heading may vary by chapter, but the underlying learning role must remain equivalent to `WHAT → WHY → RELATION → HOW → EVIDENCE → PRACTICE`.
+These labels describe **learning roles inside the explanation**, not a directive to create generic H2 titles named only `KHÁI NIỆM` or `VÌ SAO`. The actual anchored H1/H2 must follow the shared descriptive-title contract, while body progression remains consistent with `WHAT → WHY → RELATION → HOW → EVIDENCE → PRACTICE`.
 
 ### Mandatory three-layer curriculum model
 
@@ -422,63 +384,9 @@ Every mature learning module should be understandable at **three nested layers**
 
 #### Layer 1 — Approved Module Roadmap
 
-The learner needs an explicit orientation layer before deep terminology. This layer is now a first-class upstream curriculum artifact, not merely a diagram embedded after the README has already been authored.
+The first chapter/equivalent entry section must **write the beginner-friendly foundation and reasons for learning the module's owned concept** required by `MODULE_CONTENT_RULES.md`, within the **actual anchored H2 focus approved at Step 3**. Reflect the approved Roadmap and declared learner baseline; do not substitute a detached overview or an assumed prior definition. A learner must be able to understand what the module teaches and why its chapters connect **before** deep terminology or mechanisms.
 
-At minimum, the first chapter or equivalent entry chapter must explain in beginner-friendly language:
-
-```text
-What is this thing?
-Why does this domain/topic exist?
-What broad problem does it help solve?
-What are the major terms the learner will encounter?
-How do those terms relate to each other?
-What order should they be learned in?
-What should the learner understand by the end of the module?
-```
-
-The chapter does not have to be literally named `MentalModel`, but it must perform this function.
-
-The first chapter should **reflect and explain the approved roadmap**, for example:
-
-```text
-core idea
-    ↓
-concept A — solves one problem
-    ↓
-concept B — introduces another capability
-    ↓
-concept C — explains runtime behavior
-    ↓
-concept D — alternative / trade-off
-```
-
-The goal is that a learner can answer:
-
-```text
-"I know what I am about to learn and why these chapters belong in one module."
-```
-
-For a module whose module/topic name is itself a concept the learner is expected to understand — for example `collection`, `generics`, `reflection`, `annotation`, `classloader`, `exception`, or `OOP` — do not rely on an unanchored introductory paragraph to establish that concept. The entry chapter should normally contain an early stable Knowledge section that explicitly answers:
-
-```text
-What is <topic> in beginner language?
-        ↓
-What concrete problem exists without it?
-        ↓
-What simpler/older mechanism could solve part of the problem, and where does it stop being enough?
-        ↓
-Why would application code choose this concept/mechanism?
-        ↓
-Only then: what taxonomy, hierarchy, subtypes or advanced mechanics exist?
-```
-
-For example, a Collections module should not begin conceptually with `Collection → List → Set → Queue`. It should first make the learner understand why grouping dynamic data is a problem at all, what arrays already solve, what the Collections Framework adds, and only then use the hierarchy as a map of different behavioral contracts.
-
-The same rule applies elsewhere: do not start Generics with type-parameter syntax before establishing the duplication/type-safety problem; do not start Reflection with `Class` APIs before explaining why runtime inspection exists; do not start ClassLoader with delegation mechanics before explaining why class bytes must be located and defined.
-
-Do not open a module with advanced definitions while the learner still lacks the vocabulary required to understand why the definitions matter.
-
-The entry chapter is downstream from the roadmap: if it needs a milestone that the roadmap does not contain, fix/review the roadmap first rather than letting README structure diverge.
+For example, a Collections lesson should establish the problem of grouping/changing sets of data, what arrays can already do and what the Collections Framework adds **before** relying on List/Set/Queue taxonomy. In Generics, Reflection or ClassLoader, teach the respective motivation before advanced syntax/API/behaviors. If the necessary foundational focus cannot fit any approved H2, report `MENU GAP` rather than redesigning Step 3 here.
 
 #### Layer 2 — Concept / chapter story
 

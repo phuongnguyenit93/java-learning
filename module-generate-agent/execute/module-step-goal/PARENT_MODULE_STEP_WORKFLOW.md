@@ -403,7 +403,8 @@ ALL N HAVE COMPLETED REVIEW #1
         ↓
 PHASE C — REVIEW #2 BECOMES GLOBALLY ELIGIBLE
         ↓
-EVERY CHILD EVENTUALLY COMPLETES REVIEW #2
+EVERY CHILD COMPLETES ITS CURRENT STEP-SPECIFIC REVIEW REQUIREMENT
+(Review #2 where required; STEP 5 confirmed NOT REQUIRED may need only Review #1)
         ↓
 REVIEW #3+ ONLY FOR AFFECTED CHILDREN WHEN NEEDED
         ↓
@@ -493,6 +494,8 @@ child C → Review #1 fixed + revalidated → Review #2 eligible now
 Free lanes may immediately start Review #2 for A/C while B continues its Review #1 fix/revalidation work.
 
 Never start Review #2 from a pre-fix source state.
+
+**STEP 5 exception:** a child whose initial API applicability pass is `NOT REQUIRED` and whose independent Review #1 confirms `NOT REQUIRED` may be marked CLEAN after that **one** full review and required cleanup/revalidation. It has **no Review #2 assignment**. If any review overturns that decision and API is subsequently built, the child owes **two new sequential independent full post-build reviews** (the earlier no-API review does not count); respect this parent phase's Review #1 global barrier before starting post-build review work. Other children retain their normal review obligations. No child advances alone to the next STEP.
 
 ### Severe governance blocker may interrupt the current review phase
 
@@ -708,7 +711,7 @@ SOURCE V1
 
 The implementation owner's own self-check never substitutes for a mandatory independent review.
 
-Minimum review count is **two for every target child** even when Review #1 reports no findings.
+Minimum review count is **two for every target child subject to the common two-review rule**, even when Review #1 reports no findings. **Step 5 exception:** if initial API applicability is `NOT REQUIRED` and an eligible independent Review #1 confirms `NOT REQUIRED`, the child needs only that one review (plus any necessary no-API fixes/revalidation). If an independent review or later recheck establishes that API **must be built**, build and validate it, then perform **two fresh sequential independent post-build reviews** by reviewer(s) eligible against the actual API builder as well as the original Step author. The earlier no-API review never counts toward those two. Follow `STEP_5_API.md` for detailed conditions; do not use the exception for a child that actually builds API.
 
 Review #3 / #4 / later rounds are required only for affected children that still have unresolved findings, substantial post-review changes, or another reason under CURRENT rules to reopen review.
 
@@ -728,7 +731,8 @@ Use any otherwise free eligible lane when helpful, while preserving:
 reviewer ≠ initial author
 correct child branch/worktree
 single active writer
-Review #1 → fix/revalidate → Review #2 source ordering
+Review #1 → fix/revalidate → Review #2 source ordering when TWO reviews are required
+Step 5 verified NOT REQUIRED → one independent full review under STEP_5_API.md
 ```
 
 Do not downgrade review independence merely because only one child assignment remains.
@@ -784,6 +788,79 @@ Only perform checks that are required or materially relevant under CURRENT gover
 Do not invent a new giant parent-level authoring pass that rewrites already CLEAN child content merely for stylistic uniformity.
 
 If a parent-level check exposes a real defect in one child, reopen that child's CURRENT STEP gate, fix it through its owner, and re-review/revalidate as required before advancing.
+
+---
+
+## 12A. FINALIZATION FAST PATH — STOP WAITING WHEN THE GATE IS RESOLVED
+
+This is a **parent-orchestration fast path**, not a shortcut around any CURRENT STEP rule, review, fix, validation, parent barrier, or final-delivery requirement. It applies when Prime is close to completing a CURRENT STEP, an explicitly requested partial run, or the entire parent Goal. Follow the cross-cutting `rules/HEARTBEAT.md` for all heartbeat and interrupted-stream mechanics.
+
+### Trigger: reconcile once, then act
+
+After the last required worker report or owned validation result becomes available, Prime must promptly reconcile the CURRENT state instead of starting another routine heartbeat/wait cycle:
+
+```text
+last expected worker / validation result arrives
+        ↓
+collect and reconcile outstanding results (one status read only if needed)
+        ↓
+for EVERY target child, verify CURRENT STEP evidence:
+→ required implementation and pre-review validation completed
+→ independent Review #1 completed; valid findings fixed and revalidated
+→ fresh full Review #2 completed on eligible post-Review-#1 source IF required by the CURRENT STEP (Step 5 confirmed NOT REQUIRED is exempt)
+→ if a no-API Step 5 finding triggered API build, TWO new full sequential post-build reviews completed
+→ any required later reviews/fixes/revalidation completed
+→ current child branch/worktree and write-ownership evidence agrees
+        ↓
+run ONLY outstanding required parent/current-STEP checks
+        ↓
+any real unresolved task, unreceived report, running dependency, or defect?
+   ├─ YES → record exact remaining ownership/work; schedule or recover it
+   │        → heartbeat only while genuinely awaiting confirmed live work
+   └─ NO  → CURRENT STEP barrier resolved
+            → STOP heartbeat / no-op Start-Sleep / status polling
+            → immediately perform the authorized next transition or final delivery
+```
+
+Do not schedule another `Start-Sleep`, heartbeat marker, broad audit, duplicate build, or repeat worker review **merely to keep the Prime response alive** once the CURRENT barrier is resolved. Do not demand an extra worker acknowledgment if its authoritative result has already arrived and no assigned work remains. `SLEEPING` alone is not active work; `FINISHED`/`FAILED` alone is not a reason to keep waiting. A failed worker's **unreported assignment**, however, is still outstanding and must be reassigned or handled as a real blocker.
+
+### Decide the correct exit; a CLEAN STEP is not necessarily a completed Goal
+
+```text
+CURRENT STEP all children CLEAN + parent checks PASS
+        ↓
+is another canonical STEP still required by this invocation?
+   ├─ YES → transition promptly under Section 5 and the next CURRENT STEP rule
+   │        → DO NOT claim the full parent Goal is done
+   └─ NO
+       ↓
+is this an explicitly STEP-scoped / partial-run request?
+   ├─ YES → deliver a concise CURRENT-STEP completion report immediately
+   │        → state clearly that later STEPs / Commit delivery are not claimed
+   └─ NO → only after ALL canonical Commit/final-delivery obligations
+            have actually succeeded for ALL target children:
+            → deliver the final parent-Goal report immediately
+```
+
+If the actual requested scope is blocked, report the exact blocker and evidence promptly rather than continuing heartbeat indefinitely. For a full parent Goal, Sections 16–17 still govern what counts as complete; an intermediate Review #2 CLEAN or STEP 4 CLEAN is never permission to skip later STEPs, commits, pushes, PR/MRs, merges, or required verification.
+
+### Minimal checkpoint and interrupted-stream recovery
+
+Before a terminal report, retain a **compact, evidence-based finalization checkpoint** using the already available durable worker reports, tool/session records, and repository/worktree state. It should identify the invoking scope, CURRENT STEP, target children, each child's review/fix/validation verdict, required parent checks, any pending work, and whether final delivery is actually complete. Prefer existing orchestration/session recording; do not edit learning content or create gratuitous repository files just to produce a checkpoint.
+
+If the Prime response stream disconnects or reports `resume HTTP 404` near completion:
+
+```text
+recover/reconnect through the host's existing safe mechanism
+        ↓
+read the retained checkpoint AND verify current worker/tool/repository evidence
+        ↓
+already completed and independently confirmed?
+   ├─ YES → send the missing concise result / proceed with the authorized transition
+   └─ NO  → execute ONLY genuinely outstanding work and its required validation
+```
+
+Never infer completion from silence, the HTTP 404 itself, a sleeping worker, or a lost final assistant message. Never blindly replay a completed review, build, source edit, commit, push, or merge after recovery. This fast path **reduces unnecessary tail-time**, but does not claim to prevent or repair ChatGPT's underlying response-stream 404.
 
 ---
 
@@ -936,9 +1013,14 @@ FOR EACH CURRENT STEP:
 → REVIEW #1 AND REVIEW #2 MAY USE THE SAME ELIGIBLE REVIEWER
 → REVIEW #3+ ONLY FOR AFFECTED CHILDREN WHEN REQUIRED
 → EVERY FRESH SUB-WORKER SESSION GETS AN EXACT `CHATGPT CONVERSATION TITLE` BLOCK USING `STEP <N> - ...`
-→ REVIEW #1 → FIX → REVALIDATE → REVIEW #2 OF CURRENT SOURCE
+→ REVIEW #1 → FIX → REVALIDATE → REVIEW #2 OF CURRENT SOURCE WHEN TWO REVIEWS ARE REQUIRED
+→ STEP 5 INITIAL NOT REQUIRED + ONE INDEPENDENT NO-API CONFIRMATION → ONE REVIEW SUFFICES
+→ STEP 5 LATER API BUILD → TWO FRESH FULL POST-BUILD REVIEWS; EARLIER NO-API REVIEW DOES NOT COUNT
 → DO NOT ADVANCE ANY CHILD ALONE TO NEXT STEP
 → ADVANCE ONLY WHEN ALL TARGET CHILDREN ARE CLEAN
+→ AFTER THE LAST REQUIRED RESULT, RECONCILE THE CURRENT BARRIER PROMPTLY
+→ WHEN THE BARRIER IS RESOLVED, STOP HEARTBEAT/NO-OP WAITS AND TRANSITION OR REPORT
+→ ON STREAM RECOVERY, VERIFY DURABLE EVIDENCE; NEVER REPLAY COMPLETED WORK
 
 STOP ONLY AFTER:
 → THE DYNAMICALLY DISCOVERED CANONICAL COMMIT / FINAL-DELIVERY STEP

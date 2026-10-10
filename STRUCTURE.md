@@ -883,6 +883,22 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <ul>
 <li>
 <details>
+  <summary><b><a href='./module/integration/api'>📁 api</a></b></summary>
+<ul>
+<li>
+  <a href='./module/integration/api/fundamentals'>🪄 fundamentals</a>
+</li>
+<li>
+  <a href='./module/integration/api/rest'>🪄 rest</a>
+</li>
+<li>
+  <a href='./module/integration/api/soap'>🪄 soap</a>
+</li>
+</ul>
+</details>
+</li>
+<li>
+<details>
   <summary><b><a href='./module/integration/http'>📁 http</a></b></summary>
 <ul>
 <li>

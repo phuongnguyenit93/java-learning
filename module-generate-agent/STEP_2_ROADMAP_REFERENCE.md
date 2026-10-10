@@ -2,6 +2,8 @@
 
 Tài liệu này là **canonical source-of-truth duy nhất cho Step 2 — Build / Review / Refactor Module ROADMAP** sau khi scope, ownership và boundary cấp area đã được xác định ở [`STEP_1_CURRICULUM_RULES.md`](./STEP_1_CURRICULUM_RULES.md).
 
+**Cross-cutting learning quality:** `rules/MODULE_CONTENT_RULES.md` là canonical owner của learner baseline, beginner-first WHAT/WHY/RELATION→HOW/EVIDENCE, prerequisite evidence, descriptive Knowledge titles và cross-module plain-text bridges. Step 2 **chỉ** chuyển những nguyên tắc này thành **milestone-level learning journey**; không quyết định H1/H2, không author Knowledge body và không tạo navigation/metadata mới cho plain-text bridge.
+
 ### General Agent Rules + Curriculum Map context guard
 
 Trước khi thực hiện Step 2:
@@ -668,6 +670,8 @@ Reviewer phải kiểm tra:
 ```text
 missing prerequisite?
 wrong learning order?
+module-owned core topic receives an intelligible WHAT/WHY foundation before advanced milestones?
+learner baseline relies only on real prerequisite/ownership evidence?
 scope leakage into another module?
 missing practical concern?
 milestone too implementation-specific?

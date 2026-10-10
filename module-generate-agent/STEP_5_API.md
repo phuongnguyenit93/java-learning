@@ -177,6 +177,45 @@ Không dùng câu trả lời kiểu:
 
 ---
 
+## Step 5 conditional independent-review count (API applicability exception)
+
+**This Step-specific exception overrides the generic two-review minimum ONLY when the initial Step 5 implementation/applicability pass concludes that no learning API should be built.** It applies per module/child, not to an entire parent batch based on one child's result.
+
+```text
+INITIAL STEP 5 IMPLEMENTATION/APPLICABILITY PASS
+        ↓
+NOT REQUIRED — no learning API to build
+        ↓
+ONE fresh independent FULL applicability review is required
+        ├─ confirms NOT REQUIRED
+        │    → fix/reconcile any valid stale config/API findings
+        │    → revalidate as required
+        │    → STEP 5 CLEAN with ONE independent review
+        │
+        └─ finds learning API IS REQUIRED
+             → initial NOT REQUIRED decision is invalidated
+             → build/refactor the justified API + docs from Knowledge
+             → complete required config/setup/build/projection validation
+             → TWO NEW sequential independent FULL reviews of POST-BUILD state
+             → fix/revalidate between reviews under normal governance
+             → STEP 5 CLEAN only after both post-build reviews pass
+
+INITIAL STEP 5 PASS = REQUIRED
+        → build/refactor API + validate
+        → normal TWO independent full reviews
+```
+
+Rules:
+
+- The single no-API review **must still be independent of the initial Step 5 decision/author**, inspect current approved Curriculum/Roadmap/Menu/Knowledge and API learning value, then check current runtime/config for stale contradictions. A self-check or `BUILD_SWAGGER=FALSE` is **not** this review.
+- If the independent reviewer confirms `NOT REQUIRED`, the reviewer may correct valid no-API cleanup/config findings with exclusive write ownership and revalidate. Do not impose an automatic second review merely because no-API cleanup was required; route substantial changed-scope/ownership concerns through normal governance.
+- If **any later review/recheck** overturns the no-API result and establishes `REQUIRED`, the exception **immediately ends**: implement the API and restart the **full two-review sequence on the completed post-build source**. The earlier no-API applicability review **does not count** as Review #1 or Review #2 of the built API.
+- Both post-build reviews must be fresh, full, sequential source-state reviews with an eligible independent reviewer **different from the actual API builder** (and satisfying the active workflow's original-author independence rule), fixes and revalidation in between as necessary; they must not run in parallel on one pre-fix snapshot. If the initial no-API reviewer becomes the API builder, they cannot review their own built API.
+- A false-negative `NOT REQUIRED` decision must not be kept merely to save one review. The decision continues to depend on learning value, not current module config.
+- Preserve the active parent-wide implementation/review eligibility barriers, per-child worktree/write isolation and subsequent STEP transition gate. This changes **only the per-child minimum independent-review count for confirmed no-API Step 5**.
+
+---
+
 ## Reconcile module configuration with the learning decision
 
 Sau khi Step 5 applicability đã được quyết định từ learning design, agent phải audit implementation hiện tại.
@@ -565,6 +604,7 @@ Step 5 hoàn thành khi:
 [ ] MODULE_TYPE / BUILD_SWAGGER / source hiện tại chỉ được dùng như implementation evidence
 [ ] Nếu Step 5 REQUIRED, canonical module config đã được sửa để support runtime/API capability cần thiết
 [ ] Nếu Step 5 NOT REQUIRED, stale API/config contradiction đã được review/reconcile
+[ ] Review count đúng nhánh: initial NOT REQUIRED + independently confirmed NOT REQUIRED → one full independent review; REQUIRED ngay từ đầu hoặc discovered later → two independent POST-BUILD full reviews (earlier no-API review not counted)
 [ ] Repository setup/sync đã được chạy khi canonical config thay đổi
 [ ] Generated/derived config không bị hand-edit thay cho source-of-truth config
 [ ] Mỗi learning API có learning intent rõ

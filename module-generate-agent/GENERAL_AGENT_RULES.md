@@ -39,6 +39,8 @@ STEP_10_COMMIT.md
 
 rules/**
 → mandatory cross-cutting execution rules; every current file in this folder must be read before execution begins
+→ MODULE_CONTENT_RULES.md is canonical for beginner-first pedagogy,
+  prerequisite evidence, WHAT/WHY/RELATION→HOW/EVIDENCE and Knowledge title quality
 ```
 
 ### Mandatory rules-folder loading gate
