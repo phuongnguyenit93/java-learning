@@ -41,4 +41,79 @@
 # The skeleton must not force every module to have the same number of nodes. It is a thinking framework, not a rigid template.
 # </roadmap-schema>
 
-roadmap: []
+roadmap:
+  - id: reactive-motivation
+    relatedKnowledge:
+      - ReactiveProgramming
+    title: "Reactive Thinking for Events That Change Over Time"
+    purpose: "Understand Reactive Programming as a way to represent and propagate changes in data/events over time, and the limitations of handling a stream through disconnected callbacks."
+    objectives:
+      - "Distinguish an immediately available value from a sequence of values/events arriving at different times."
+      - "Explain why flow processing, failures, and stopping need a coherent model."
+      - "Recognize that reactive is a paradigm, not a promise of multiple threads, parallel execution, or universally non-blocking behavior."
+
+  - id: flow-and-propagation
+    relatedKnowledge:
+      - DataFlow
+    title: "Sources, Transformations, and Signal Propagation"
+    purpose: "Visualize a flow from a producer/source through transforming, filtering, and combining stages to a consumer, instead of isolated callbacks."
+    objectives:
+      - "Explain source → processing stages → consumer through a continuous-event example."
+      - "Distinguish data push, data pull, and models that combine both."
+      - "Connect composition with functional thinking without equating reactive streams to pure functions or Java Stream APIs."
+
+  - id: subscription-lifecycle
+    relatedKnowledge:
+      - DataFlow
+      - ReactiveStreams
+      - ErrorCancellation
+    title: "Subscription and the Producer–Consumer Lifecycle"
+    purpose: "Understand what it means for a consumer to subscribe to signals, the source–receiver relationship, and major stages of a stream lifecycle."
+    objectives:
+      - "Describe subscribing, emission/reception, and ending a subscription conceptually."
+      - "Distinguish describing a flow from actually starting emission; execution timing depends on the implementation."
+      - "Recognize that a consumer can lose interest before the producer is finished."
+
+  - id: demand-and-backpressure
+    relatedKnowledge:
+      - Backpressure
+      - ReactiveStreams
+    title: "Unequal Processing Rates, Demand, and Backpressure"
+    purpose: "Explain how a fast producer can overwhelm a slower consumer, and how demand can bound pending work in models that support backpressure."
+    objectives:
+      - "Analyze growing queues, unbounded buffering, or dropped data when producer and consumer speeds differ."
+      - "Contrast request/demand with unconditional emission and understand trade-offs of buffering, dropping, or throttling."
+      - "Recognize demand-based backpressure as a specific Reactive Streams contract, not a universal requirement of all reactive/observable APIs."
+
+  - id: reactive-streams-contract
+    relatedKnowledge:
+      - ReactiveStreams
+    title: "Reactive Streams: An Asynchronous Exchange Contract"
+    purpose: "Connect the reactive model to the Reactive Streams specification for producer–consumer interaction, non-blocking backpressure, and protocol signals."
+    objectives:
+      - "Relate Publisher, Subscriber, Subscription, and Processor by role without turning the milestone into an API inventory."
+      - "Explain protocol order: onSubscribe first, then zero or more onNext signals and at most one terminal onError or onComplete; request(n) adds demand only when n is positive."
+      - "Explain that onNext cannot exceed accumulated requested demand, nonpositive request(n) causes a protocol error, and completion or failure may arrive without an outstanding request."
+      - "Distinguish the reactive paradigm from the Reactive Streams interoperability contract and libraries that implement it."
+
+  - id: termination-and-failure
+    relatedKnowledge:
+      - ErrorCancellation
+      - ReactiveStreams
+    title: "Errors, Completion, and Cancellation in Stream Lifecycles"
+    purpose: "Understand stream endings and how failure or cancellation affects further emission, consumption, and associated resources."
+    objectives:
+      - "Distinguish demand-governed onNext emission from successful completion or error termination, which need not wait for demand; after onComplete or onError, no further signals are permitted."
+      - "Explain cancellation as a Subscriber's request to end the exchange: signals must eventually cease, although already-in-flight asynchronous signals may arrive, unlike terminal completion or failure."
+      - "Trace propagation of failure, completion, and cancellation to find missing handling or resource cleanup."
+
+  - id: reactive-decision-and-boundaries
+    relatedKnowledge:
+      - Tradeoffs
+      - ReactiveProgramming
+    title: "Choosing Reactive and Understanding Ecosystem Boundaries"
+    purpose: "Synthesize a practical flow to judge when reactive fits, weigh composition/demand benefits against operational costs, and identify library/framework responsibilities."
+    objectives:
+      - "Sketch an event flow with a source, processing stages, subscriber, demand, error/completion, and cancellation."
+      - "Evaluate readability, tracing, resource use, blocking, and complexity against sequential processing or explicit callbacks."
+      - "Distinguish asynchrony, parallelism, and thread scheduling; locate Reactor, Spring WebFlux, and Java Flow APIs in their own implementation/technology layers."

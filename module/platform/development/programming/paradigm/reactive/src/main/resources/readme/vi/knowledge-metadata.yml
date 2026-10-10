@@ -19,3 +19,140 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+  reactive-values-vs-streams:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  reactive-foundation-bridge:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  reactive-learning-path:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+2.DataFlow/DataFlow.md:
+  reactive-source-producer-consumer:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  reactive-transform-combine:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  reactive-push-pull:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  reactive-composition:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  reactive-subscribe-lifecycle:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  reactive-execution-timing:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  reactive-flow-trace:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+3.Backpressure/Backpressure.md:
+  reactive-rate-mismatch:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  reactive-queue-overflow:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  reactive-demand-flow-control:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  reactive-overload-strategies:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  reactive-backpressure-boundary:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+4.ReactiveStreams/ReactiveStreams.md:
+  reactive-spec-scope:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  reactive-four-roles:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  reactive-signal-sequence:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  reactive-request-n:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  reactive-protocol-failures:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  reactive-interoperability:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+5.ErrorCancellation/ErrorCancellation.md:
+  reactive-terminal-success:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  reactive-terminal-failure:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  reactive-cancellation:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  reactive-inflight-signals:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  reactive-resource-cleanup:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  reactive-lifecycle-trace:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+6.Tradeoffs/Tradeoffs.md:
+  reactive-end-to-end-example:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  reactive-compare-callback:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  reactive-async-parallel-boundary:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  reactive-debug-complexity:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  reactive-framework-handoff:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  reactive-final-decision:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false

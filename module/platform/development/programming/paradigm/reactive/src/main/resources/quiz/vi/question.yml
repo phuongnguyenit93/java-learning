@@ -1,0 +1,954 @@
+# <quiz-schema>
+# Cấu trúc câu hỏi Quiz
+# schema-version: 3
+#
+# questions [kiểu: list; bắt buộc; mặc định: []; duy nhất theo: id]
+#   Danh sách câu hỏi Quiz của module trong language hiện tại.
+#   mỗi phần tử:
+#     id [kiểu: string; bắt buộc; mặc định: ""]
+#       ID ổn định và duy nhất của câu hỏi.
+#     question [kiểu: string; bắt buộc; mặc định: ""]
+#       Nội dung câu hỏi hiển thị cho người học.
+#     aiGenerated [kiểu: boolean; bắt buộc; mặc định: true]
+#       Đánh dấu câu hỏi được sinh bởi AI. Mặc định true cho nội dung mới.
+#     reviewed [kiểu: boolean; bắt buộc; mặc định: false]
+#       Đánh dấu câu hỏi đã được con người kiểm tra và chỉnh sửa. Mặc định false.
+#     readmeRelated [kiểu: object; bắt buộc; mặc định: {file: "", anchor: ""}]
+#       Liên kết tùy chọn tới một section Knowledge trong README. Có thể để trống cả file và anchor.
+#       file [kiểu: string; bắt buộc; mặc định: ""]
+#         Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
+#       anchor [kiểu: string; bắt buộc; mặc định: ""]
+#         ID section Knowledge chính xác trong README đã chỉ định.
+#     apiRelated [kiểu: object; bắt buộc; mặc định: {controller: "", methodSignature: ""}]
+#       Liên kết tùy chọn tới một API đang hoạt động trong Swagger metadata. Có thể để trống cả controller và methodSignature.
+#       controller [kiểu: string; bắt buộc; mặc định: ""]
+#         Tên controller chính xác, ví dụ BasicThreadController.
+#       methodSignature [kiểu: string; bắt buộc; mặc định: ""]
+#         Method signature chính xác trong api-descriptions.yml, ví dụ startVsRun().
+#     answers [kiểu: list; bắt buộc; số phần tử: 4; mặc định: []; duy nhất theo: id]
+#       Chính xác bốn đáp án. ID A/B/C/D là identity nội bộ ổn định, không phải vị trí hiển thị sau khi frontend shuffle.
+#       mỗi phần tử:
+#         id [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#           Identity ổn định của đáp án.
+#         answer [kiểu: string; bắt buộc; mặc định: ""]
+#           Nội dung đáp án hiển thị cho người học.
+#         explanation [kiểu: string; bắt buộc; mặc định: ""]
+#           Giải thích hiển thị khi người học chọn đáp án này, bất kể đúng hay sai.
+#     correctAnswerId [kiểu: enum; bắt buộc; giá trị hợp lệ: A, B, C, D; mặc định: ""]
+#       ID nội bộ của đáp án đúng. Frontend kiểm tra bằng identity này sau khi shuffle.
+# </quiz-schema>
+
+questions:
+  - id: "reactive-quiz-01"
+    question: "Bảng nhiệt độ nhận 27°C lúc 09:00, 29°C lúc 09:01 và 33°C lúc 09:02. Yếu tố nào làm đây là bài toán reactive?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Introduction/ReactiveProgramming.md"
+      anchor: "reactive-what"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Ba mốc nhận số đo khác nhau chứng minh ba lõi CPU đã xử lý chúng song song."
+        explanation: "Dữ liệu đến nhiều thời điểm không chứng minh có nhiều CPU hoạt động đồng thời."
+      - id: B
+        answer: "Phản ứng với những giá trị mới xuất hiện theo thời gian, chưa biết trước độ dài dòng."
+        explanation: "Nguồn tiếp tục phát sau khi màn hình mở; cần mô tả hành vi theo từng lần đến."
+      - id: C
+        answer: "Chỉ cần chuyển số đo thành HTTP endpoint là có thiết kế reactive."
+        explanation: "HTTP là hình thức giao tiếp; dòng sự kiện và vòng đời mới là trọng tâm."
+      - id: D
+        answer: "Một hàm trả duy nhất 27 ngay lập tức đã mô tả cả dòng bất định."
+        explanation: "Một giá trị đã có không mô tả dữ liệu mới hay cách kết thúc theo dõi."
+    correctAnswerId: B
+  - id: "reactive-quiz-02"
+    question: "Sensor cần lọc dữ liệu, xử lý lỗi và giải phóng kết nối khi người xem rời. Động cơ nào hợp lý để ghép luồng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Introduction/ReactiveProgramming.md"
+      anchor: "reactive-why"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Đặt biến đổi, lỗi và vòng đời dưới những hợp đồng nối nhau để dễ truy vết."
+        explanation: "Callback riêng vẫn dùng được; khó khăn tăng khi nhiều nhánh phải điều phối."
+      - id: B
+        answer: "Vì từng callback riêng lẻ không thể biểu diễn một đường xử lý lỗi hay dọn dẹp tài nguyên."
+        explanation: "Callback đơn giản có thể đúng; đây là đánh đổi độ phức tạp điều phối."
+      - id: C
+        answer: "Vì mọi pipeline reactive tự đóng mọi thiết bị vật lý khi hủy."
+        explanation: "Giải phóng tài nguyên cần xác định owner và chính sách, không tự suy từ tên."
+      - id: D
+        answer: "Vì thuật toán lọc bằng pipeline không bao giờ có side effect."
+        explanation: "Stage cập nhật UI hoặc gọi I/O vẫn có effect dù viết dạng operator."
+    correctAnswerId: A
+  - id: "reactive-quiz-03"
+    question: "Đã có giá trị 27 nhưng sensor có thể gửi giá trị tiếp bất kỳ lúc nào. Khác biệt nào cần đưa vào thiết kế?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Introduction/ReactiveProgramming.md"
+      anchor: "reactive-values-vs-streams"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Một giá trị scalar cũng cần vòng đời Subscription.request(n) giống luồng dữ liệu liên tục."
+        explanation: "Quy tắc RS là giao thức cụ thể, không áp lên mọi biểu thức với một số."
+      - id: B
+        answer: "Vì dữ liệu tương lai chắc chắn đến đều đặn mỗi 60 giây."
+        explanation: "Ví dụ chỉ cho lịch quan sát, không chứng minh chu kỳ luôn cố định."
+      - id: C
+        answer: "Chỉ dữ liệu đã lưu DB mới được xem là luồng dữ liệu hợp lệ."
+        explanation: "Sensor trực tiếp cũng tạo sự kiện theo thời gian không cần lưu trước."
+      - id: D
+        answer: "Dòng sự kiện cần mô tả lúc bắt đầu nhận, lỗi và dừng theo dõi ngoài phép tính mỗi phần tử."
+        explanation: "Một giá trị sẵn có có thể tính tức thì; lịch phát dữ liệu mới chưa biết trước."
+    correctAnswerId: D
+  - id: "reactive-quiz-04"
+    question: "Pipeline lọc→phân loại số đo được khai báo từ trước. Điều gì chưa được chứng minh chỉ bằng khai báo?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Introduction/ReactiveProgramming.md"
+      anchor: "reactive-foundation-bridge"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Việc ghép sẵn các bước lọc và phân loại chứng minh subscriber và thread thực thi đã được kích hoạt."
+        explanation: "Đó chính là điều sơ đồ cho thấy; thiếu bằng chứng là lifecycle thực tế."
+      - id: B
+        answer: "Ta có thể kiểm các hàm phân loại bằng input cố định độc lập."
+        explanation: "Có thể test phép tính riêng mà không cần luồng live."
+      - id: C
+        answer: "Pipeline đã được chạy, có subscriber hay có thread riêng và đã nhận dữ liệu."
+        explanation: "Định nghĩa phép biến đổi không đồng nhất với thời điểm phát hay placement."
+      - id: D
+        answer: "Các kiểu dữ liệu mà hai hàm biến đổi mong đợi phải tương thích."
+        explanation: "Đây là ràng buộc thiết kế hợp lý, không phải sự thật runtime đã xảy ra."
+    correctAnswerId: C
+  - id: "reactive-quiz-05"
+    question: "Nguồn [27,-300,33] qua validate rồi classify. Dòng nào phản ánh đúng hành vi filter và display?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Introduction/ReactiveProgramming.md"
+      anchor: "reactive-solution"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "27 và -300 đi tiếp, 33 bị loại vì vượt ngưỡng."
+        explanation: "Cảnh báo không đồng nghĩa bỏ 33, còn -300 là số đo bất khả thi."
+      - id: B
+        answer: "27 được giữ, -300 bị loại, 33 đi tiếp và tạo cảnh báo."
+        explanation: "Filter có thể phát 0 phần tử cho -300; UI chỉ thấy đầu ra hợp lệ."
+      - id: C
+        answer: "Tất cả số đo đều tới display vì pipeline bảo toàn số phần tử."
+        explanation: "Filter có thể thay đổi cardinality, kể cả làm mất phần tử."
+      - id: D
+        answer: "Một khi -300 bị lọc, cả subscription phải báo onError."
+        explanation: "Loại phần tử không nhất thiết là lỗi terminal của giao thức."
+    correctAnswerId: B
+  - id: "reactive-quiz-06"
+    question: "Một hệ thống tự push sự kiện khi có số đo nhưng không có request(n). Kết luận nào chính xác?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Introduction/ReactiveProgramming.md"
+      anchor: "reactive-streams-boundary"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Có thể dùng tư duy reactive nhưng chưa chứng minh tuân Reactive Streams."
+        explanation: "RS đòi hợp đồng demand/backpressure cụ thể; paradigm rộng hơn."
+      - id: B
+        answer: "Nguồn hữu hạn phải phát đủ số item đã được request trước khi được phép onComplete."
+        explanation: "RS cho phép ít hơn số yêu cầu, còn reactive nói chung không buộc dùng request."
+      - id: C
+        answer: "Chỉ cần callback onError là hệ thống đã đủ toàn bộ quy tắc RS."
+        explanation: "Còn thứ tự tín hiệu, yêu cầu demand và cancel phải đúng theo contract."
+      - id: D
+        answer: "WebFlux sẽ tự làm một event source bất kỳ thành RS-conformant."
+        explanation: "Framework không thể đảm bảo upstream tùy ý chấp hành demand nếu nó không hỗ trợ."
+    correctAnswerId: A
+  - id: "reactive-quiz-07"
+    question: "Nhóm gọi Reactor, RxJava và WebFlux là cùng một framework nên cùng backpressure. Nhận xét nào đúng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Introduction/ReactiveProgramming.md"
+      anchor: "reactive-framework-boundary"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Reactor và RxJava cung cấp cùng chức năng HTTP và hợp đồng demand như WebFlux."
+        explanation: "Thư viện, framework và blocking calls cần phân biệt thực tế."
+      - id: B
+        answer: "RxJava chỉ có một kiểu stream và luôn tuân toàn bộ RS như nhau."
+        explanation: "RxJava có nhiều kiểu, không phải mọi kiểu cùng dùng request(n)."
+      - id: C
+        answer: "Gọi Flux đồng nghĩa lập trình song song thực sự trên nhiều CPU."
+        explanation: "Chọn kiểu Flux không tự cấp scheduler hoặc thread song song."
+      - id: D
+        answer: "Reactor/RxJava là thư viện với kiểu khác nhau; WebFlux là web framework, và demand tùy API."
+        explanation: "Các kiểu Observable và Flowable không có cùng backpressure contract."
+    correctAnswerId: D
+  - id: "reactive-quiz-08"
+    question: "Với sensor100/s và display40/s, thứ tự học nào hợp lý trước khi đi vào thư viện cụ thể?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "1.Introduction/ReactiveProgramming.md"
+      anchor: "reactive-learning-path"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Chọn scheduler nhanh hơn trước, còn demand và giới hạn queue để thư viện tự quyết định."
+        explanation: "Tốc độ đến và xử lý không tự đổi bởi chọn scheduler."
+      - id: B
+        answer: "Triển khai HTTP endpoint trước để chứng minh mọi nguồn non-blocking."
+        explanation: "HTTP không chứng minh source hỗ trợ demand hoặc không chặn."
+      - id: C
+        answer: "Trace dữ liệu/lifecycle → đo backlog → học demand/backpressure → phân biệt completion,error,cancel."
+        explanation: "Mỗi bước xây trên chứng cứ của bước trước thay vì giả định API tự giải quyết tải."
+      - id: D
+        answer: "Dùng unbounded buffer trước rồi không cần học terminal signals."
+        explanation: "Bộ nhớ hữu hạn và vòng đời vẫn phải được thiết kế."
+    correctAnswerId: C
+
+  - id: "reactive-quiz-09"
+    question: "Một sensor vật lý phát 33, adapter đẩy lên luồng, bước validate lọc, dashboard hiển thị. Ai là consumer cuối và vì sao validate có hai vai?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.DataFlow/DataFlow.md"
+      anchor: "reactive-source-producer-consumer"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Sensor vật lý luôn là Subscriber trong giao thức, còn dashboard là Publisher."
+        explanation: "Vai trò phải căn cứ ai cung cấp và nhận tín hiệu thực tế."
+      - id: B
+        answer: "Dashboard là consumer cuối; validate vừa nhận từ upstream vừa phát tiếp downstream."
+        explanation: "Bước giữa đóng vai consumer/producer; không vì có bốn hộp mà có bốn thread."
+      - id: C
+        answer: "Validate chỉ được phép là consumer cuối, không thể chuyển tiếp dữ liệu."
+        explanation: "Thành phần trung gian có thể đồng thời nhận và gửi dữ liệu."
+      - id: D
+        answer: "Mỗi hộp phải là một thread riêng và mới gọi là reactive."
+        explanation: "Số stage không quyết định số thread hay tính song song."
+    correctAnswerId: B
+  - id: "reactive-quiz-10"
+    question: "Input 27,-300,33 qua lọc hợp lệ và đổi 27°C thành Fahrenheit. Sự thật nào về số phần tử và giá trị?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.DataFlow/DataFlow.md"
+      anchor: "reactive-transform-combine"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "-300 có thể biến mất, còn 27°C đổi thành 80.6°F; không cần bảo toàn cardinality."
+        explanation: "Phép filter phát 0 cho item sai; mapping chỉ đổi dữ liệu được giữ."
+      - id: B
+        answer: "-300 phải trở thành onError và không còn được xử lý 33. do phép lọc sai số đo được coi là exception của toàn bộ subscription."
+        explanation: "Bỏ một mẫu không nhất thiết kết thúc cả stream; tùy hợp đồng lỗi."
+      - id: C
+        answer: "27°C đổi đơn vị sẽ có 27°F vì mapping không được đổi số."
+        explanation: "Chuyển °C→°F theo 27×9/5+32=80.6, không chỉ đổi nhãn."
+      - id: D
+        answer: "Luồng luôn trả ba phần tử ra vì đầu vào có ba số đo."
+        explanation: "Filter có thể làm số lượng đầu ra ít hơn nguồn."
+    correctAnswerId: A
+  - id: "reactive-quiz-11"
+    question: "Adapter push mỗi 100ms nhưng dashboard xử lý mỗi 500ms. Lựa chọn nào chính xác về demand?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.DataFlow/DataFlow.md"
+      anchor: "reactive-push-pull"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Kết nối dashboard có hỗ trợ demand sẽ tự chuyển sensor vật lý sang nguồn pull thuần túy."
+        explanation: "Nguồn push có thể không điều chỉnh tốc độ ngoài hợp đồng demand."
+      - id: B
+        answer: "Push, pull và RS request(n) đều cùng hệt nhau trên mọi thư viện."
+        explanation: "RS là một giao thức demand cụ thể, không phải tên chung cho mọi push."
+      - id: C
+        answer: "Có callback là producer sẽ không cần buffer dù nhanh gấp năm lần."
+        explanation: "Tải dư vẫn cần backpressure, bộ đệm, drop hoặc chính sách khác."
+      - id: D
+        answer: "Demand có ích khi các boundary/upstream liên quan thực sự tuân lượt request."
+        explanation: "Có tên reactive không tự giảm tốc sensor vật lý."
+    correctAnswerId: D
+  - id: "reactive-quiz-12"
+    question: "Pipeline sensor→validate→classify→dashboard: classify là hàm thuần nhưng dashboard cập nhật UI. Điều nào đúng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.DataFlow/DataFlow.md"
+      anchor: "reactive-composition"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Ghép các operator khiến việc thay đổi UI và ghi log trở thành các phép biến đổi thuần."
+        explanation: "I/O và mutation không biến mất khi được giấu trong operator."
+      - id: B
+        answer: "Thay ngưỡng cảnh báo bắt buộc sửa luôn adapter sensor."
+        explanation: "Boundary tốt cho phép thay thuật toán phân loại mà không đổi nguồn."
+      - id: C
+        answer: "Có thể thay rule phân loại độc lập, nhưng cập nhật UI vẫn là side effect."
+        explanation: "Ghép bước rõ contract không làm mất ý nghĩa của lỗi, cancel và tác động."
+      - id: D
+        answer: "Nếu có `map` thì lỗi và hủy không còn là vấn đề thiết kế."
+        explanation: "Lifecycle vẫn cần hợp đồng ngoài các phép biến đổi."
+    correctAnswerId: C
+  - id: "reactive-quiz-13"
+    question: "Subscriber nhận onSubscribe(subscription), nhưng chưa request. Chọn chiều gọi tiếp theo đúng RS."
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.DataFlow/DataFlow.md"
+      anchor: "reactive-subscribe-lifecycle"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Publisher gọi Subscriber.request(n) để ép subscriber nhận năm giá trị."
+        explanation: "request là method trên Subscription mà phía nhận gọi."
+      - id: B
+        answer: "Subscriber gọi Subscription.request(n) để cấp lượt hoặc cancel() để hủy."
+        explanation: "onSubscribe trao Subscription; lượt `onNext` phải dựa vào demand."
+      - id: C
+        answer: "Subscriber gọi Publisher.onNext(A) ngay sau subscribe."
+        explanation: "onNext là callback dữ liệu từ Publisher đến Subscriber."
+      - id: D
+        answer: "Không có request thì onSubscribe bản thân đã cấp quyền phát vô hạn."
+        explanation: "Bắt tay không tự tương đương cấp vô hạn phần tử."
+    correctAnswerId: B
+  - id: "reactive-quiz-14"
+    question: "Người A subscribe cold source lúc 09:00, B subscribe lúc 09:02; sensor hot vẫn chạy. Phát biểu nào không nhầm hai mô hình?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.DataFlow/DataFlow.md"
+      anchor: "reactive-execution-timing"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Cold source thường có phiên phát riêng theo subscriber; B ở hot source có thể bỏ lỡ mẫu cũ."
+        explanation: "Cold/hot nói về quan hệ nguồn với subscriber, không đảm bảo replay lịch sử."
+      - id: B
+        answer: "Nguồn hot và cold đều tự phát lại toàn bộ lịch sử cho mỗi subscriber mới."
+        explanation: "Hot source có thể phát dù chưa có viewer và không tự replay."
+      - id: C
+        answer: "Nguồn cold không bao giờ phát giá trị vì chờ request mãi mãi."
+        explanation: "Subscriber có thể request; cách bắt đầu thuộc implementation."
+      - id: D
+        answer: "Nguồn hot luôn chứng minh nhà sản xuất tuân RS demand."
+        explanation: "Hot chỉ mô tả tính liên tục, không chứng minh protocol backpressure."
+    correctAnswerId: A
+  - id: "reactive-quiz-15"
+    question: "Timeline: 09:00 có27, 09:01 có-300, viewer hủy lúc09:01:30, 09:02 có33. Kết luận nào thận trọng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "2.DataFlow/DataFlow.md"
+      anchor: "reactive-flow-trace"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Hủy một subscription sẽ tắt ngay nguồn vật lý chung của tất cả những người đang xem."
+        explanation: "Các subscriber khác có thể vẫn dùng sensor hot chung."
+      - id: B
+        answer: "-300 sẽ tạo onNext(-300) ở dashboard vì mỗi nguồn giữ số lượng."
+        explanation: "Validate có thể loại số đo bất hợp lệ trước consumer."
+      - id: C
+        answer: "33 phát sau cancel chắc chắn được giao trước khi đóng kết nối."
+        explanation: "Protocol chỉ cho phép race in-flight, không cam kết phần tử mới sau hủy."
+      - id: D
+        answer: "27 có thể hiển thị, -300 bị lọc; 33 không mặc định đến viewer đã hủy."
+        explanation: "Sau cancel nguồn eventually ngừng gửi cho subscriber; item in-flight vẫn có thể đến trễ."
+    correctAnswerId: D
+  - id: "reactive-quiz-16"
+    question: "Producer phát100 mẫu/s, consumer xử lý40 mẫu/s, không drop và backlog ban đầu rỗng. Sau 10s tồn gần bao nhiêu?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.Backpressure/Backpressure.md"
+      anchor: "reactive-rate-mismatch"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Khoảng 400 vì consumer xử lý40 mỗi giây trong 10 giây."
+        explanation: "Đó là lượng đã xử lý, không phải tồn đọng."
+      - id: B
+        answer: "Khoảng 1000 vì mọi mẫu mới vẫn ở hàng chờ mãi mãi."
+        explanation: "Đã bỏ qua 400 mẫu consumer xử lý trong 10 giây."
+      - id: C
+        answer: "Khoảng 600 mẫu vì mỗi giây dư 100−40=60."
+        explanation: "Mô hình đơn giản giả định tốc độ đều, không đổi source hay consumer."
+      - id: D
+        answer: "Bằng 0 vì reactive pipeline luôn tự backpressure nguồn vật lý."
+        explanation: "Không có bằng chứng source có thể giảm tốc theo demand."
+    correctAnswerId: C
+  - id: "reactive-quiz-17"
+    question: "Với tốc độ dư 60/s, queue sức chứa 120 bắt đầu rỗng. Khi nào đầy trong mô hình tuyến tính?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.Backpressure/Backpressure.md"
+      anchor: "reactive-queue-overflow"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Sau ba giây vì phải cộng thêm một giây để bắt đầu phát."
+        explanation: "Không có độ trễ khởi động trong giả thiết bài toán."
+      - id: B
+        answer: "Sau khoảng hai giây; rồi cần chính sách overload."
+        explanation: "120/60=2; hàng chờ hữu hạn không tự quyết định drop hay block."
+      - id: C
+        answer: "Không bao giờ đầy vì queue 120 có thể giãn vô hạn."
+        explanation: "Sức chứa cố định là giới hạn thiết kế thực."
+      - id: D
+        answer: "Sau nửa giây vì phải chia 120 cho tổng tốc độ 240/s."
+        explanation: "Tốc độ tăng queue là phần chênh lệch, không phải tổng."
+    correctAnswerId: B
+  - id: "reactive-quiz-18"
+    question: "Subscriber đang còn demand=2. Nó request thêm3, rồi nhận ba onNext. Bao nhiêu allowance chưa dùng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.Backpressure/Backpressure.md"
+      anchor: "reactive-demand-flow-control"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Còn 2 vì 2+3−3=2 trên cùng Subscription."
+        explanation: "request tích lũy, và chỉ onNext tiêu thụ đơn vị demand."
+      - id: B
+        answer: "Còn 0 vì request(3) đã thay thế demand(2)."
+        explanation: "RS demand cộng dồn chứ không tự reset về request mới."
+      - id: C
+        answer: "Còn 5 vì onNext không ảnh hưởng bộ đếm yêu cầu."
+        explanation: "Mỗi onNext hợp lệ đáp ứng một phần tử trong demand."
+      - id: D
+        answer: "Không thể biết vì onComplete cũng luôn tiêu thụ một demand."
+        explanation: "Terminal signal không tiêu thụ và không phải chờ demand."
+    correctAnswerId: A
+  - id: "reactive-quiz-19"
+    question: "Sensor nóng không hỗ trợ giảm tốc, queue 120 sắp đầy. Biện pháp nào giải quyết trung thực trade-off?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.Backpressure/Backpressure.md"
+      anchor: "reactive-overload-strategies"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Dùng queue không giới hạn để hấp thụ tốc độ nguồn mà không cần chính sách mất dữ liệu."
+        explanation: "Unbounded buffer có thể làm cạn RAM và cho số đo lỗi thời."
+      - id: B
+        answer: "Đặt tên phương thức onBackpressure rồi giả nguồn đã giảm tốc."
+        explanation: "Tên operator không thay đổi khả năng vật lý của producer."
+      - id: C
+        answer: "Bỏ hết diagnostics vì chính sách drop không quan sát được."
+        explanation: "Counters, oldest-age và queue-depth có thể đo mất dữ liệu."
+      - id: D
+        answer: "Đặt policy drop/coalesce/latest hoặc báo lỗi quá tải và đo mẫu mất, độ trễ."
+        explanation: "Nguồn không nghe demand nên phải chủ động quản lý buffer và freshness."
+    correctAnswerId: D
+  - id: "reactive-quiz-20"
+    question: "Một API được gọi 'reactive' nhưng chỉ có callback push. Phát biểu nào đúng về guarantee request(n)?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "3.Backpressure/Backpressure.md"
+      anchor: "reactive-backpressure-boundary"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "API callback bất đồng bộ được mặc định có demand theo Reactive Streams dù không có Subscription."
+        explanation: "Bất đồng bộ không tự đảm bảo backpressure hay không chặn."
+      - id: B
+        answer: "Số lượng callback bằng số request dù API không có Subscription."
+        explanation: "Không tồn tại bằng chứng bộ đếm demand nếu API không cung cấp."
+      - id: C
+        answer: "Không suy ra RS demand: chỉ được hứa khi API/boundary thực hiện contract đó."
+        explanation: "Reactive nói về tư duy; Reactive Streams là giao thức chuẩn cụ thể."
+      - id: D
+        answer: "WebFlux hoặc tên Flow trên adapter tự làm callback push thành chuẩn RS."
+        explanation: "Interop đòi các bên tuân contract thay vì chỉ cùng thuật ngữ."
+    correctAnswerId: C
+  - id: "reactive-quiz-21"
+    question: "Một team dùng Reactive Streams để thiết kế mọi operator SQL và endpoint HTTP. Vấn đề phạm vi là gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.ReactiveStreams/ReactiveStreams.md"
+      anchor: "reactive-spec-scope"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Spec quy định mọi producer phải cung cấp cách truy vấn nguồn dữ liệu bằng SQL."
+        explanation: "SQL không nằm trong bốn vai trò và thứ tự tín hiệu RS."
+      - id: B
+        answer: "Spec quy định tín hiệu/boundary/backpressure giữa thành phần, không chọn toàn bộ operator hay HTTP."
+        explanation: "RS là contract tương tác bất đồng bộ, không phải catalogue framework."
+      - id: C
+        answer: "Spec bắt mỗi Publisher chọn số thread CPU cố định cho mọi Subscriber."
+        explanation: "Giao thức không hứa số worker thread của một ứng dụng."
+      - id: D
+        answer: "Spec bảo đảm mọi lời gọi mạng và database trở thành nonblocking khi ghép vào luồng."
+        explanation: "Ứng dụng vẫn có thể chứa blocking call không do giao thức loại bỏ."
+    correctAnswerId: B
+  - id: "reactive-quiz-22"
+    question: "Một Processor validate nhận upstream và phát downstream. Điều gì đúng về demand qua hai boundary?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.ReactiveStreams/ReactiveStreams.md"
+      anchor: "reactive-four-roles"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Processor có hai vai và có thể ánh xạ demand khác nhau do filter bỏ phần tử."
+        explanation: "Request downstream(3) không nhất thiết bằng upstream request(3) máy móc."
+      - id: B
+        answer: "Processor buộc chuyển nguyên số lượt request qua cùng một Subscription dù đã lọc bớt item."
+        explanation: "Mỗi cặp subscriber-publisher có control relationship riêng."
+      - id: C
+        answer: "Publisher nhận onNext từ downstream và gửi lên nguồn."
+        explanation: "onNext là tín hiệu dữ liệu từ Publisher đến Subscriber."
+      - id: D
+        answer: "Filter luôn giữ số phần tử nên không cần chuyển đổi demand."
+        explanation: "Filter -300 chứng minh một upstream item có thể mất."
+    correctAnswerId: A
+  - id: "reactive-quiz-23"
+    question: "Subscriber đã nhận onSubscribe và request(2); Publisher phát A,B. Kết thúc nào hợp lệ?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.ReactiveStreams/ReactiveStreams.md"
+      anchor: "reactive-signal-sequence"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Publisher gửi onNext(C) trước onComplete dù hai onNext trước đã dùng hết lượt request(2)."
+        explanation: "C là onNext thứ ba vượt demand2."
+      - id: B
+        answer: "Gửi onComplete rồi tiếp tục onNext(C) để xả queue."
+        explanation: "Sau terminal không còn onNext hay terminal khác."
+      - id: C
+        answer: "Gửi onError và onComplete liên tục vì hai tín hiệu đều kết thúc."
+        explanation: "Một subscription chỉ có một terminal outcome."
+      - id: D
+        answer: "Một terminal onComplete hoặc onError, không cả hai và không onNext sau đó."
+        explanation: "Callback của một Subscriber cần serialized, terminal kết thúc quan hệ."
+    correctAnswerId: D
+  - id: "reactive-quiz-24"
+    question: "Trong cùng Subscription gọi request(2), request(3), đã gửi onNext A,B,C. Khẳng định nào đúng về phép đếm?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.ReactiveStreams/ReactiveStreams.md"
+      anchor: "reactive-request-n"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Phải tiếp tục gửi D,E rồi mới được onComplete bất kể nguồn đã cạn."
+        explanation: "Demand là mức tối đa có thể phát, không phải lời hứa đủ số."
+      - id: B
+        answer: "Mỗi request mới reset demand nên chỉ tối đa ba item."
+        explanation: "Cùng Subscription phải cộng lượng yêu cầu còn hiệu lực."
+      - id: C
+        answer: "Cấp tổng năm, dùng ba, còn hai; có thể onComplete sớm khi nguồn hết."
+        explanation: "request cộng dồn, onComplete không cần dùng hết lượt và không bị tính như item."
+      - id: D
+        answer: "Được gửi onNext thứ sáu vì tổng đã từng request hai lần."
+        explanation: "Số lệnh request không cho thêm allowance ngoài tổng n."
+    correctAnswerId: C
+  - id: "reactive-quiz-25"
+    question: "Subscriber gọi request(0) để 'tạm dừng' và nguồn rỗng hoàn tất ngay. Điều nào đúng theo RS?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.ReactiveStreams/ReactiveStreams.md"
+      anchor: "reactive-protocol-failures"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "request(0) là cách tạm dừng Subscription hợp lệ mà không gây lỗi giao thức."
+        explanation: "Hủy dùng Subscription.cancel(), không dùng request không hợp lệ."
+      - id: B
+        answer: "request(0) vi phạm rule3.9 và phải báo onError(IllegalArgumentException), không phải pause."
+        explanation: "Terminal không cần demand; nhưng request không dương là lỗi giao thức riêng."
+      - id: C
+        answer: "Publisher phải gửi onComplete rồi onError cho request0 để báo rõ."
+        explanation: "Không có chuỗi hai terminal cho cùng subscriber."
+      - id: D
+        answer: "Cấm onComplete/onError cho tới khi được request(1)."
+        explanation: "Chỉ onNext bị ràng buộc demand, terminal có thể đến khi demand=0."
+    correctAnswerId: B
+  - id: "reactive-quiz-26"
+    question: "Publisher từ library A và Subscriber library B nối được với nhau khi nào?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "4.ReactiveStreams/ReactiveStreams.md"
+      anchor: "reactive-interoperability"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Khi các thành phần cùng tuân tín hiệu/demand/cancel của Reactive Streams."
+        explanation: "Tương thích dựa contract; TCK giúp kiểm hành vi thực."
+      - id: B
+        answer: "Khi hai thư viện dùng cùng tên operator map/filter và cùng chữ ký phương thức."
+        explanation: "Tên operator không chứng minh trình tự callback hay giới hạn request."
+      - id: C
+        answer: "Khi cùng chạy trong WebFlux HTTP và dùng một thread duy nhất."
+        explanation: "Transport và số thread không phải điều kiện interop RS."
+      - id: D
+        answer: "Khi bỏ request và luôn buffer vô hạn để tránh thiếu item."
+        explanation: "Bỏ demand phá hợp đồng backpressure thay vì tương thích."
+    correctAnswerId: A
+  - id: "reactive-quiz-27"
+    question: "Nguồn rỗng gọi onSubscribe rồi onComplete khi subscriber chưa request. Hành vi nào hợp lệ?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.ErrorCancellation/ErrorCancellation.md"
+      anchor: "reactive-terminal-success"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Không hợp lệ vì phải request ít nhất một item để nhận completion."
+        explanation: "RS demand quản onNext, không chặn terminal."
+      - id: B
+        answer: "Phải phát một onNext(null) để tiêu thụ slot trước khi kết thúc."
+        explanation: "Không được bịa item hoặc dùng null để báo kết thúc."
+      - id: C
+        answer: "Hợp lệ nếu sau onComplete vẫn được đẩy onNext của queue."
+        explanation: "Tín hiệu sau terminal sẽ phá quy tắc vòng đời."
+      - id: D
+        answer: "Hợp lệ: onComplete có thể đến khi demand=0, không onNext sau đó."
+        explanation: "Terminal không dùng slot dữ liệu; subscription đã kết thúc."
+    correctAnswerId: D
+  - id: "reactive-quiz-28"
+    question: "Sensor mất kết nối, Publisher đã gửi onError. Sau đó việc nào bị cấm với cùng Subscriber?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.ErrorCancellation/ErrorCancellation.md"
+      anchor: "reactive-terminal-failure"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Ghi nguyên nhân lỗi an toàn vào hệ thống chẩn đoán riêng, không phát thêm signal."
+        explanation: "Chẩn đoán ngoài stream vẫn có thể thực hiện theo policy."
+      - id: B
+        answer: "Tạo một subscription mới khi chính sách retry cho phép."
+        explanation: "Retry không tái sử dụng lifecycle terminal cũ."
+      - id: C
+        answer: "Gửi thêm onNext hoặc onComplete trên Subscription đã terminal."
+        explanation: "onError là terminal độc quyền; retry phải là vòng đời mới."
+      - id: D
+        answer: "Nhận onError ngay sau onSubscribe mà không demand."
+        explanation: "Terminal lỗi có thể đến độc lập với request(n)."
+    correctAnswerId: C
+  - id: "reactive-quiz-29"
+    question: "Viewer đóng dashboard nhưng nguồn cảm biến hot còn phục vụ người B. Tín hiệu điều khiển nào đúng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.ErrorCancellation/ErrorCancellation.md"
+      anchor: "reactive-cancellation"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Publisher phát onComplete cho tất cả người xem khi subscriber A đóng bảng của mình."
+        explanation: "Một viewer rời đi không có nghĩa toàn nguồn hoàn tất."
+      - id: B
+        answer: "Subscriber A gọi Subscription.cancel(); sensor có thể tiếp tục phục vụ B."
+        explanation: "Hủy theo quan hệ từng subscriber, không tự dừng nguồn chung hay gửi onComplete."
+      - id: C
+        answer: "Subscriber A gửi onNext(CANCEL) ngược lên Publisher."
+        explanation: "onNext là callback dữ liệu theo hướng xuống, không phải lệnh điều khiển."
+      - id: D
+        answer: "Gọi request(0) thay cancel để không kích hoạt lỗi giao thức."
+        explanation: "Request không dương chính là lỗi; cancel có method riêng."
+    correctAnswerId: B
+  - id: "reactive-quiz-30"
+    question: "Một mẫu 33 đã rời upstream lúc09:01:59; Subscriber cancel lúc09:02:00. Có thể thấy 33 sau khi cancel trả về không?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.ErrorCancellation/ErrorCancellation.md"
+      anchor: "reactive-inflight-signals"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Có thể, do tín hiệu đang bay qua boundary bất đồng bộ; publisher phải eventually stop."
+        explanation: "Cancel không bảo đảm thu hồi tức thì item đã gửi hay xóa queue một cách nguyên tử."
+      - id: B
+        answer: "Không, cancel phải xóa đồng bộ cả tín hiệu trong queue và đang truyền trước khi trả về."
+        explanation: "RS cho phép race và yêu cầu dừng cuối cùng, không teleport item."
+      - id: C
+        answer: "Có thể nhận vô hạn sau cancel miễn mỗi item còn demand."
+        explanation: "Eventual stop vẫn là nghĩa vụ dù trước đó đã request."
+      - id: D
+        answer: "Mẫu 33 bắt buộc trở thành onComplete để thông báo đã hủy."
+        explanation: "Cancel không phải terminal message từ Publisher tới Subscriber."
+    correctAnswerId: A
+  - id: "reactive-quiz-31"
+    question: "Ba đường COMPLETE, ERROR, CANCEL đi qua nguồn hot dùng chung. Cleanup đúng là gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.ErrorCancellation/ErrorCancellation.md"
+      anchor: "reactive-resource-cleanup"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Mọi đường kết thúc phải đóng ngay sensor chung và queue của các subscriber khác."
+        explanation: "Một subscription không mặc định sở hữu kết nối dùng chung."
+      - id: B
+        answer: "Chỉ đường onComplete mới cần cleanup, ERROR/CANCEL không cần."
+        explanation: "Cả ba lối kết thúc đều cần quản lý tài nguyên theo trách nhiệm."
+      - id: C
+        answer: "Bỏ qua queue vì bộ nhớ tự do vô hạn trong runtime reactive."
+        explanation: "Bộ đệm hữu hạn và in-flight vẫn cần quan sát khi dừng."
+      - id: D
+        answer: "Giải phóng tài nguyên thuộc subscription và kiểm connection/queue eventually ổn định."
+        explanation: "Không được hủy kết nối của người khác chỉ vì một viewer hủy."
+    correctAnswerId: D
+  - id: "reactive-quiz-32"
+    question: "Ba vết SUCCESS, FAILURE, CANCEL có cùng onSubscribe. Phân biệt nào đúng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "5.ErrorCancellation/ErrorCancellation.md"
+      anchor: "reactive-lifecycle-trace"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Cả hoàn tất, lỗi và hủy đều phải phát onComplete để dùng chung một nhánh cleanup."
+        explanation: "Cấm tự biến failure/cancel thành completion nếu không đúng contract."
+      - id: B
+        answer: "FAILURE luôn được tiếp nối bằng onNext retry trên subscription cũ."
+        explanation: "Retry có lifecycle mới và không nối thêm signal vào terminal cũ."
+      - id: C
+        answer: "SUCCESS kết thúc onComplete; FAILURE onError; CANCEL là lệnh control, không cần terminal callback."
+        explanation: "Chỉ completion/error là terminal signals từ Publisher; cancel do Subscriber gọi."
+      - id: D
+        answer: "CANCEL bắt buộc phát onError(IllegalArgumentException) như request(0)."
+        explanation: "Lệnh cancel hợp lệ khác với demand không dương."
+    correctAnswerId: C
+  - id: "reactive-quiz-33"
+    question: "Sơ đồ data sensor→validate→dashboard và control dashboard→Subscription cần thêm điều gì để chịu nổi nguồn100/s, màn hình40/s?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.Tradeoffs/Tradeoffs.md"
+      anchor: "reactive-end-to-end-example"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Cho request đi xuôi chiều với dữ liệu để điều tiết tải mà không cần giới hạn buffer."
+        explanation: "Hướng điều khiển và policy hàng đợi là phần khác nhau."
+      - id: B
+        answer: "Dung lượng và policy overload ở từng boundary, kèm trace complete/error/cancel."
+        explanation: "Data đi xuống còn request/cancel bắt đầu downstream và chỉ hữu ích nếu upstream hỗ trợ."
+      - id: C
+        answer: "Giả mọi stage cùng giữ chính xác 100 phần tử/s dù có filter."
+        explanation: "Validate có thể bỏ -300; số phần tử qua boundary thay đổi."
+      - id: D
+        answer: "Thêm WebFlux HTTP endpoint là tự dừng sensor khi queue đầy."
+        explanation: "HTTP layer không thể tự tạo demand cho upstream bất kỳ."
+    correctAnswerId: B
+  - id: "reactive-quiz-34"
+    question: "Một danh sách cố định 20 số đã ở bộ nhớ chỉ cần tính trung bình. Nên chọn gì?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.Tradeoffs/Tradeoffs.md"
+      anchor: "reactive-compare-callback"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Một vòng lặp/hàm thuần đơn giản, khi không có nhu cầu lifecycle liên tục."
+        explanation: "Pipeline reactive mang thêm subscription/cancel/backpressure nếu bài toán không cần."
+      - id: B
+        answer: "Dùng Publisher và demand cho cả phép tính trung bình trên danh sách đã có sẵn."
+        explanation: "Dữ liệu hữu hạn sẵn có không bắt buộc có giao thức RS."
+      - id: C
+        answer: "Chuyển mọi số thành HTTP event để bảo đảm không có loop."
+        explanation: "Chuyển transport không cải thiện phép tính trung bình đơn giản."
+      - id: D
+        answer: "Callback rời rạc luôn sai về logic, kể cả không có cleanup."
+        explanation: "Callback ít và rõ ownership có thể là giải pháp đủ tốt."
+    correctAnswerId: A
+  - id: "reactive-quiz-35"
+    question: "Ứng dụng dùng Flux nhưng có Thread.sleep trong map; câu nào phân biệt đúng async/nonblocking/parallelism?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.Tradeoffs/Tradeoffs.md"
+      anchor: "reactive-async-parallel-boundary"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Flux tự cấp thread riêng cho từng operator nên Thread.sleep trong map không ảnh hưởng nơi nhận."
+        explanation: "Không có bằng chứng scheduler tự đổi hay loại chặn."
+      - id: B
+        answer: "Vì có stream nên bất kỳ sleep nào cũng trở thành nonblocking."
+        explanation: "Lệnh blocking vẫn giữ thread khi chờ bất kể cú pháp bao quanh."
+      - id: C
+        answer: "Không thể chạy reactive đồng bộ một thread theo định nghĩa."
+        explanation: "Pipeline có thể đồng bộ tùy nguồn và scheduler đã chọn."
+      - id: D
+        answer: "Reactive API không tự làm đoạn blocking thành nonblocking hay tự song song."
+        explanation: "Async là kết quả đến sau, parallel là đồng thời, scheduling chọn nơi thực hiện."
+    correctAnswerId: D
+  - id: "reactive-quiz-36"
+    question: "Cảnh báo từ mẫu33 biến mất. Debug kiểu nào phân biệt filter, queue drop, demand, cancel và onError?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.Tradeoffs/Tradeoffs.md"
+      anchor: "reactive-debug-complexity"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Bật thêm thread rồi coi đó là giải pháp chung cho mọi nguyên nhân."
+        explanation: "Scheduler không chữa predicate lọc sai hoặc subscription đã hủy."
+      - id: B
+        answer: "Giả số đo 33 đã bị filter chỉ vì không thấy trên UI."
+        explanation: "Nó cũng có thể nằm trong queue, thiếu demand hoặc đã có lỗi."
+      - id: C
+        answer: "Đo counter từng stage, queue depth, outstanding demand và timestamp cancel/terminal."
+        explanation: "Cùng một triệu chứng có năm nguyên nhân khác nhau phải phân biệt bằng bằng chứng."
+      - id: D
+        answer: "In toàn bộ payload có thông tin riêng tư vào log mọi operator."
+        explanation: "Ghi log bừa bãi làm tăng rủi ro và không thay thế metrics ranh giới."
+    correctAnswerId: C
+  - id: "reactive-quiz-37"
+    question: "Một review khẳng định RxJava Observable, Flowable, Reactor Flux và WebFlux đều có request(n) giống nhau. Đáp án nào đúng?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.Tradeoffs/Tradeoffs.md"
+      anchor: "reactive-framework-handoff"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Framework mang tên reactive sẽ bảo đảm mọi operator ứng dụng đều không chặn thread."
+        explanation: "Blocking call vẫn có thể được viết vào pipeline."
+      - id: B
+        answer: "Cần kiểm kiểu và boundary: Observable không đồng nhất Flowable; WebFlux là framework web."
+        explanation: "RS demand áp trên contract tương thích, không trên mọi API có chữ reactive."
+      - id: C
+        answer: "Mọi Java Flow và RxJava dùng cùng chính xác operator API."
+        explanation: "Giao diện chuẩn và thư viện operator không trùng nhau hoàn toàn."
+      - id: D
+        answer: "Chỉ WebFlux mới có Publisher, còn Reactor Flux không có Publisher."
+        explanation: "Flux là kiểu tương thích Publisher, WebFlux xây trên công cụ reactive."
+    correctAnswerId: B
+  - id: "reactive-quiz-38"
+    question: "Bạn chọn kiến trúc cho hệ thống cảm biến không ngừng, viewer thường rời đi, nguồn nhanh hơn UI. Điều kiện nào có căn cứ?"
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: "6.Tradeoffs/Tradeoffs.md"
+      anchor: "reactive-final-decision"
+    apiRelated:
+      controller: ""
+      methodSignature: ""
+    answers:
+      - id: A
+        answer: "Dùng reactive khi đã xác định hỗ trợ demand, giới hạn buffer, overload và cả ba lối dừng."
+        explanation: "Paradigm hữu ích cho vòng đời phức tạp nhưng implementation phải chứng minh."
+      - id: B
+        answer: "Ngay cả hai mươi số đã tải vào bộ nhớ cũng nên dùng reactive để tối ưu tốc độ tính trung bình."
+        explanation: "Với input hữu hạn, loop/hàm đơn giản thường đủ và dễ kiểm hơn."
+      - id: C
+        answer: "Dùng unbounded queue và bỏ xử lý cancel nếu subscriber đã rời."
+        explanation: "Bộ nhớ và tài nguyên vẫn hữu hạn, người nhận không cần làm mãi."
+      - id: D
+        answer: "Chỉ cần chọn scheduler nhiều thread để xóa chênh lệch input/output."
+        explanation: "Nguồn vật lý nhanh hơn consumer vẫn cần điều phối tốc độ và mất dữ liệu."
+    correctAnswerId: A

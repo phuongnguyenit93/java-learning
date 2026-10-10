@@ -1,3 +1,18 @@
+# 📂 README MODULE STRUCTURE (VI)
+
+* **1.Introduction**
+    * [ReactiveProgramming](readme/vi/menu/1.Introduction/ReactiveProgramming.md)
+* **2.DataFlow**
+    * [DataFlow](readme/vi/menu/2.DataFlow/DataFlow.md)
+* **3.Backpressure**
+    * [Backpressure](readme/vi/menu/3.Backpressure/Backpressure.md)
+* **4.ReactiveStreams**
+    * [ReactiveStreams](readme/vi/menu/4.ReactiveStreams/ReactiveStreams.md)
+* **5.ErrorCancellation**
+    * [ErrorCancellation](readme/vi/menu/5.ErrorCancellation/ErrorCancellation.md)
+* **6.Tradeoffs**
+    * [Tradeoffs](readme/vi/menu/6.Tradeoffs/Tradeoffs.md)
+
 # Lập trình phản ứng (Reactive Programming)
 
 Reactive Programming tập trung vào cách **mô tả và lan truyền các giá trị hoặc sự kiện đến theo thời gian** qua một dòng xử lý. Thay vì nối nhiều callback rời rạc, người học nhìn luồng từ nguồn qua các bước biến đổi đến người nhận, đồng thời suy luận về thời điểm phát, lỗi và việc dừng nhận.
