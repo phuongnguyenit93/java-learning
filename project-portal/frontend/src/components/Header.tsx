@@ -7,6 +7,7 @@ const labels = {
   vi: {
     home: 'Trang chủ',
     learning: 'Learning',
+    project: 'Project',
     myCv: 'About Me',
     search: 'Tìm kiếm...',
     searchLabel: 'Tìm kiếm toàn portal',
@@ -14,6 +15,7 @@ const labels = {
   en: {
     home: 'Home',
     learning: 'Learning',
+    project: 'Project',
     myCv: 'About Me',
     search: 'Search...',
     searchLabel: 'Search the portal',
@@ -49,6 +51,9 @@ export function Header() {
         </NavLink>
         <NavLink to="/learning" className={({ isActive }) => `topbar__nav-link${isActive ? ' is-active' : ''}`}>
           {text.learning}
+        </NavLink>
+        <NavLink to="/project" className={({ isActive }) => `topbar__nav-link${isActive ? ' is-active' : ''}`}>
+          {text.project}
         </NavLink>
         <NavLink to="/about-me" className={({ isActive }) => `topbar__nav-link${isActive ? ' is-active' : ''}`}>
           {text.myCv}

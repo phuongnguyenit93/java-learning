@@ -5,7 +5,7 @@ import { HomePage } from './pages/HomePage';
 import { LearningPage } from './pages/LearningPage';
 import { JavaLearningLayout } from './pages/JavaLearningLayout';
 import { LearningTopicsPage } from './pages/LearningTopicsPage';
-import { JavaProjectPage } from './pages/JavaProjectPage';
+import { ProjectPage } from './pages/ProjectPage';
 import { AboutMePage } from './pages/AboutMePage';
 
 function LegacyLearningRedirect() {
@@ -20,6 +20,11 @@ function LegacyMyCvRedirect() {
   return <Navigate to={`/about-me${search}${hash}`} replace />;
 }
 
+function LegacyJavaProjectRedirect() {
+  const { search, hash } = useLocation();
+  return <Navigate to={`/project${search}${hash}`} replace />;
+}
+
 export function App() {
   return (
     <div className="app-shell">
@@ -28,11 +33,12 @@ export function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/learning" element={<LearningTopicsPage />} />
+        <Route path="/project" element={<ProjectPage />} />
+        <Route path="/learning/java/project" element={<LegacyJavaProjectRedirect />} />
         <Route path="/learning/java" element={<JavaLearningLayout />}>
           <Route index element={<Navigate to="knowledge" replace />} />
           <Route path="knowledge" element={<LearningPage />} />
           <Route path="knowledge/:moduleId" element={<LearningPage />} />
-          <Route path="project" element={<JavaProjectPage />} />
         </Route>
         <Route path="/learning/:moduleId" element={<LegacyLearningRedirect />} />
         <Route path="/about-me" element={<AboutMePage />} />

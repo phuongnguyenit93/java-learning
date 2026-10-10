@@ -284,25 +284,24 @@ Spring runtime chỉ là một capability tùy chọn.
 Learning hiện có hai lớp điều hướng trước khi tới module dashboard:
 
 ```text
-Header: Home | Learning | About Me
+Header: Home | Learning | Project | About Me
    ↓
 /learning
    → Topic picker: Java | JavaScript | NodeJS
    → Java opens /learning/java/knowledge
    → JavaScript / NodeJS show localized, animated unavailable-content dialog
    ↓
-Java section navigation: Knowledge | Project
+Java section navigation: Knowledge
    → Knowledge contains the existing module tree/dashboard/tabs
-   → Project presents three interactive domain cards: Banking, Logistics and E-commerce
 ```
 
-Đây là **navigation/presentation hierarchy** mới; `Java → Knowledge` bao bọc **toàn bộ** learning module UI hiện tại và không đồng nghĩa với tab `Knowledge` nằm bên trong một module. Java section navigation nằm giữa, ngay dưới global header. Khi chuyển Knowledge → Project → Knowledge trong cùng Java section, frontend ghi nhớ URL module vừa xem. VI/EN áp dụng cho cả unavailable modal và nội dung Project.
+Đây là **navigation/presentation hierarchy** mới; `Java → Knowledge` bao bọc **toàn bộ** learning module UI hiện tại và không đồng nghĩa với tab `Knowledge` nằm bên trong một module. Java section navigation nằm giữa, ngay dưới global header, chỉ còn mục Knowledge và nút quay lại danh sách chủ đề. Project là một mục độc lập của primary header, không nằm trong Java Learning. VI/EN áp dụng cho cả unavailable modal và nội dung Project.
 
-`Java → Project` hiện có ba thẻ domain study: Banking, Logistics, E-commerce. Các thẻ xếp dọc, chiếm toàn bộ chiều rộng của content area; tông màu khác nhau theo từng domain. Trạng thái thường dùng linear gradient đậm → nhạt từ trái sang phải; trên hover/focus/click, đường chéo chuyển thành split thẳng đứng với vùng logo và vùng mô tả là hai nền **màu phẳng** khác tông. Logo SVG luôn một màu, vị trí icon và split pane luân phiên hai phía theo từng thẻ. Mỗi thẻ là một nút disclosure chỉ mở mô tả, chưa dẫn tới một module/project implementation. Touch click toggle, keyboard focus và `prefers-reduced-motion` đều được hỗ trợ; mô tả được localized VI/EN.
+`Project` hiện có route canonical duy nhất `/project`, được truy cập trực tiếp từ primary header bên phải Learning **không cần chọn ngôn ngữ**. `/learning/java/project` không còn render Project trong Java; đường cũ chỉ redirect sang `/project` và giữ query/hash. Component `ProjectPage.tsx` có ba thẻ domain study Banking, Logistics, E-commerce; eyebrow chỉ là `Project`, không còn nhãn `JAVA / PROJECT` hoặc dòng hướng dẫn hover/chạm. Các thẻ xếp dọc, chiếm toàn bộ chiều rộng của content area; tông màu khác nhau theo từng domain. Trạng thái thường dùng linear gradient đậm → nhạt từ trái sang phải; trên hover/focus/click, đường chéo chuyển thành split thẳng đứng với vùng logo và vùng mô tả là hai nền **màu phẳng** khác tông. Logo SVG luôn một màu, vị trí icon và split pane luân phiên hai phía theo từng thẻ. Mỗi thẻ là một nút disclosure chỉ mở mô tả, chưa dẫn tới một module/project implementation. Touch click toggle, keyboard focus và `prefers-reduced-motion` đều được hỗ trợ; mô tả được localized VI/EN.
 
 Global header brand thay đổi theo route: chỉ các route `/learning/java/**` hiển thị **Java Learning** với SVG Java; `/about-me` hiển thị **Nguyen Do Dinh Phuong** với toàn bộ tên màu xanh và biểu tượng cũ; các route còn lại (bao gồm `/learning` topic picker) hiển thị **Learning Platform** với biểu tượng cũ. Ba topic card trên `/learning` hiển thị SVG logo Java/JavaScript/NodeJS thay cho chữ viết tắt; logo được đóng gói trực tiếp từ `frontend/src/assets/logos/` (Devicon, kèm MIT license), không fetch logo qua CDN lúc runtime.
 
-`PageMetadata.tsx` cập nhật favicon và `document.title` theo React Router location, độc lập với Header: `/` và `/learning` dùng favicon gốc + `Learning Platform`; `/learning/java/knowledge/**` dùng SVG Java + `Java Learning - Knowledge`; `/learning/java/project` dùng SVG Java + `Java Learning - Project`; `/about-me` dùng favicon gốc + `Nguyen Do Dinh Phuong`. Khi client-side navigate, browser-tab metadata đổi không cần reload. `index.html` giữ fallback title `Learning Platform`.
+`PageMetadata.tsx` cập nhật favicon và `document.title` theo React Router location, độc lập với Header: `/` và `/learning` dùng favicon gốc + `Learning Platform`; `/learning/java/knowledge/**` dùng SVG Java + `Java Learning - Knowledge`; `/project` dùng favicon gốc + `Project - Learning Platform`; `/about-me` dùng favicon gốc + `Nguyen Do Dinh Phuong`. Khi client-side navigate, browser-tab metadata đổi không cần reload. `index.html` giữ fallback title `Learning Platform`.
 
 `About Me` (canonical route `/about-me`, legacy `/my-cv` redirects client-side) hiển thị phần tải CV căn giữa: heading **Download My CV**, hai nút PDF/DOC. PDF dùng Google Docs `export?format=pdf`; DOC dùng `export?format=docx` (tệp Microsoft Word .docx). Phía dưới có nút localized `Xem CV Online`/`Ẩn CV của tôi`, lazy-mount iframe Google Docs hiện tại chỉ khi người dùng bật; viewer căn giữa, rộng 80% (100% ở màn hình nhỏ), cao cố định 620px desktop/480px mobile với scroll nội bộ để chừa không gian cho nội dung sau này. Legacy query/hash được giữ khi redirect.
 
@@ -1228,11 +1227,12 @@ Current routing dùng `BrowserRouter`:
 /about-me
 /my-cv                     → legacy redirect /about-me
 /learning
+/project                   → Domain cards trực tiếp, không cần chọn language
 /learning/java               → redirect /learning/java/knowledge
 /learning/java/knowledge     → Java module learning, chọn module đầu khi chưa có ID
 /learning/java/knowledge/THREAD
 /learning/java/knowledge/ASPECT
-/learning/java/project       → Java Project domain cards
+/learning/java/project       → legacy redirect /project (không render Java subnav)
 /learning/THREAD             → legacy redirect sang /learning/java/knowledge/THREAD
 ```
 
@@ -1244,6 +1244,7 @@ Spring MVC có SPA fallback explicit cho các client route hiện tại:
 /about-me
 /my-cv
 /learning
+/project
 /learning/{moduleId}
 /learning/java
 /learning/java/knowledge
@@ -1251,7 +1252,7 @@ Spring MVC có SPA fallback explicit cho các client route hiện tại:
 /learning/java/project
 ```
 
-Các route trên (cùng trailing slash tương ứng) forward nội bộ về `/index.html`; đây không phải redirect về `/`, nên refresh `/about-me` vẫn giữ URL `/about-me` và React Router tiếp tục render `AboutMePage`. `/my-cv` cũ client-redirect tới `/about-me`, giữ query/hash. Với `/learning/{moduleId}` cũ, React Router thực hiện client redirect sang Java Knowledge và giữ query/hash để không phá bookmark tới Knowledge section. Static assets, generated Portal data và `/api/**` không đi qua fallback này. Static production host cũng phải giữ contract SPA fallback tương đương cho các clean client routes.
+Các route trên (cùng trailing slash tương ứng) forward nội bộ về `/index.html`; đây không phải redirect về `/`, nên refresh `/about-me` vẫn giữ URL `/about-me` và React Router tiếp tục render `AboutMePage`. `/my-cv` cũ client-redirect tới `/about-me`; `/learning/java/project` cũ redirect tới `/project`; cả hai đều giữ query/hash. Với `/learning/{moduleId}` cũ, React Router thực hiện client redirect sang Java Knowledge và giữ query/hash để không phá bookmark tới Knowledge section. Static assets, generated Portal data và `/api/**` không đi qua fallback này. Static production host cũng phải giữ contract SPA fallback tương đương cho các clean client routes.
 
 ---
 
@@ -1692,14 +1693,15 @@ MVP đã bắt đầu implementation. Current phase đã có:
 30. Gradle plugin stub generator đã Linux-safe về filename casing để CI không tạo duplicate plugin khác casing
 31. Quiz source/generator đã migrate thật: `BUILD_QUIZ` → orchestration → localized `question.yml`; canonical schema drive localized comment + validation; Portal copy static projection, shuffle answer position một lần khi load và giữ stable answer identity để check đúng/sai. THREAD hiện có 52 câu VI và 52 câu EN dựa trên README, kèm governance + optional Knowledge/API relations
 32. Interview source/generator đã migrate thật: `BUILD_INTERVIEW` → orchestration → localized `question.yml`; canonical schema drive localized comment + validation; Portal copy static projection, preload count và render reference answer collapsed/expandable với governance + Related Knowledge/API. THREAD hiện có 46 câu VI và 46 câu EN dựa trên README
-33. top-level **module** tabs hiện theo thứ tự `Overview → Roadmap → Reference (nếu có) → Menu → Knowledge → API Docs → Quiz → Interview → Local Run (nếu runnable)`, với Feedback action riêng. Java section-level `Knowledge | Project` nằm ngoài các module tabs này
+33. top-level **module** tabs hiện theo thứ tự `Overview → Roadmap → Reference (nếu có) → Menu → Knowledge → API Docs → Quiz → Interview → Local Run (nếu runnable)`, với Feedback action riêng. Java section-level `Knowledge` nằm ngoài các module tabs này
 34. Roadmap build projection đã implement: root task `generatePortalRoadmap` copy localized `roadmap/<lang>/roadmap.yml` của các module có `BUILD_ROADMAP=TRUE` vào `project-portal/build/generated/portal-data/module/{ROUTE_ID}/roadmap/<lang>/roadmap.yml`; `generatePortalData` đã include task này
 35. Roadmap frontend đã implement: vertical center timeline, milestone card xen kẽ trái/phải, numbered ring marker, `relatedKnowledge` luôn hiển thị ở phía đối diện milestone, và `relatedModules` satellite cards nối dotted line; responsive layout collapse về single-column timeline trên màn hình nhỏ
 36. Roadmap Related Knowledge prototype đã implement cho `JAVA_LANGUAGE_BASICS`: marker giữ pulse nhẹ nhưng không còn mở popup; Related Knowledge luôn visible, resolve category/count từ Knowledge index và click item chuyển sang Knowledge tab với đúng category active; current mapping chỉ là provisional mapping trên Knowledge cũ và không được coi là curriculum proof
-37. Learning topic picker trên `/learning` hiện có Java/JavaScript/NodeJS; Java mở module UI cũ trong `/learning/java/knowledge`, các topic chưa sẵn sàng hiển thị localized animated dialog; Java section navigation có Knowledge/Project, Project hiển thị ba interactive split-cards Banking/Logistics/E-commerce với gradient thông thường, flat-color hover reveal, alternating sides, responsive touch toggle và VI/EN. Spring Boot SPA fallback hỗ trợ deep-link mới và legacy module paths vẫn được client redirect.
+37. Learning topic picker trên `/learning` hiện có Java/JavaScript/NodeJS; Java mở module UI cũ trong `/learning/java/knowledge`, các topic chưa sẵn sàng hiển thị localized animated dialog; Java section navigation chỉ còn Knowledge. Project độc lập tại `/project`, hiển thị ba interactive split-cards Banking/Logistics/E-commerce với gradient thông thường, flat-color hover reveal, alternating sides, responsive touch toggle và VI/EN. Spring Boot SPA fallback hỗ trợ deep-link mới và legacy module paths vẫn được client redirect.
 38. Global header dùng brand theo route: `Java Learning` + Java SVG chỉ trong `/learning/java/**`; `Nguyen Do Dinh Phuong` màu xanh + icon cũ trên `/about-me`; `Learning Platform` + icon cũ trên các route khác. Topic picker có ba SVG Java/JavaScript/NodeJS từ local Devicon assets và license nội bộ.
 39. Favicon và title trong tab trình duyệt được điều chỉnh theo route bởi `PageMetadata`: Java Knowledge/Project dùng logo Java, Home/Learning/My CV dùng favicon mặc định; title tương ứng với branding của từng trang.
 40. Main navigation `My CV` đổi thành `About Me` trên `/about-me` (legacy `/my-cv` redirect). Download My CV hiện căn giữa với PDF và Word DOCX; Google Docs viewer mặc định đóng, mở/đóng qua nút VI/EN và hiển thị trong khung rộng 80%, cao cố định có scroll, responsive 100% trên màn nhỏ.
+41. Primary header thêm `Project` ngay bên phải `Learning`, vào thẳng `/project` không chọn Java/JS/NodeJS. `ProjectPage.tsx` chỉ render trên `/project`; Java secondary nav chỉ còn Knowledge. Legacy `/learning/java/project` client-redirect sang `/project`, không render cards dưới Java; trang Project dùng eyebrow `Project` và bỏ dòng hướng dẫn hover/chạm; ba animated domain cards giữ nguyên.
 ```
 
 Chưa implement trong current phase:

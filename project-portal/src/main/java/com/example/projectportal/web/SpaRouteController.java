@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class SpaRouteController {
 
     @GetMapping({
+            "/project",
+            "/project/",
             "/about-me",
             "/about-me/",
             "/my-cv",

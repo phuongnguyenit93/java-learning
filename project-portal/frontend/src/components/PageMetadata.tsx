@@ -16,8 +16,8 @@ export function PageMetadata() {
 
     const title = isMyCv
       ? 'Nguyen Do Dinh Phuong'
-      : pathname.startsWith('/learning/java/project')
-        ? 'Java Learning - Project'
+      : pathname === '/project' || pathname === '/project/'
+        ? 'Project - Learning Platform'
         : isJavaLearning
           ? 'Java Learning - Knowledge'
           : 'Learning Platform';

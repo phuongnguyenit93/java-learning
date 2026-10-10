@@ -28,12 +28,6 @@ export function JavaLearningLayout() {
           >
             Knowledge
           </NavLink>
-          <NavLink
-            to="/learning/java/project"
-            className={({ isActive }) => `java-section-nav__tab${isActive ? ' is-active' : ''}`}
-          >
-            Project
-          </NavLink>
         </div>
 
         <span className="java-section-nav__context" aria-hidden="true">JAVA</span>

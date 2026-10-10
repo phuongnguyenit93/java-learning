@@ -71,7 +71,7 @@ function DomainIcon({ domain }: { domain: DomainId }) {
   }
 }
 
-export function JavaProjectPage() {
+export function ProjectPage() {
   const { language } = useLanguage();
   const [expandedDomain, setExpandedDomain] = useState<DomainId | null>(null);
 
@@ -79,7 +79,7 @@ export function JavaProjectPage() {
     <main className="java-project-page">
       <div className="java-project-content">
         <header className="java-project-intro">
-          <span className="java-project-intro__eyebrow">JAVA / PROJECT</span>
+          <span className="java-project-intro__eyebrow">Project</span>
           <h1>{language === 'vi' ? 'Khám phá lĩnh vực dự án' : 'Explore Project Domains'}</h1>
           <p>
             {language === 'vi'
@@ -115,11 +115,6 @@ export function JavaProjectPage() {
           })}
         </section>
 
-        <p className="java-project-hint">
-          {language === 'vi'
-            ? 'Di chuột lên thẻ hoặc chạm để khám phá từng lĩnh vực.'
-            : 'Hover over a card or tap to explore each domain.'}
-        </p>
       </div>
     </main>
   );
