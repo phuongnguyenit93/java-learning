@@ -14,7 +14,7 @@ import java.nio.file.Path
 class PortalReferenceProjectionService {
 
     private static final String OUTPUT_DIRECTORY =
-            'project-portal/build/generated/portal-data/module'
+            LearningDataPaths.MODULE_DIRECTORY
 
 
     private static final String REFERENCE_FILE =

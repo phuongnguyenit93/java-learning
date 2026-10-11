@@ -27,11 +27,11 @@ class ProjectStructureService {
 
 
     private static final String PORTAL_CATALOG_PATH =
-            'project-portal/build/generated/portal-data/module-catalog.json'
+            LearningDataPaths.CATALOG_FILE
 
 
     private static final String PORTAL_MODULE_DIRECTORY =
-            'project-portal/build/generated/portal-data/module'
+            LearningDataPaths.MODULE_DIRECTORY
 
 
     private final Logger logger

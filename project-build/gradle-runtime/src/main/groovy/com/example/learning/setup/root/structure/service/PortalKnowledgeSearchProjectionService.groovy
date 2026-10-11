@@ -16,7 +16,7 @@ import java.net.URLDecoder
 class PortalKnowledgeSearchProjectionService {
 
     private static final String PORTAL_DATA_DIRECTORY =
-            'project-portal/build/generated/portal-data'
+            LearningDataPaths.ROOT_DIRECTORY
 
     private static final String MODULE_DIRECTORY =
             "${PORTAL_DATA_DIRECTORY}/module"

@@ -14,7 +14,7 @@ import java.nio.file.Path
 class PortalInterviewProjectionService {
 
     private static final String OUTPUT_DIRECTORY =
-            'project-portal/build/generated/portal-data/module'
+            LearningDataPaths.MODULE_DIRECTORY
 
     private static final String INTERVIEW_DIRECTORY =
             'src/main/resources/interview'

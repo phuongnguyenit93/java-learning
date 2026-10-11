@@ -31,7 +31,7 @@ tasks.register('buildFrontend', NpmTask) {
     inputs.file(file('frontend/tsconfig.app.json'))
     inputs.file(file('frontend/vite.config.ts'))
     inputs.dir(file('frontend/src'))
-    inputs.dir(layout.buildDirectory.dir('generated/portal-data'))
+    inputs.dir(rootProject.layout.buildDirectory.dir('learning-data/java'))
     outputs.dir(file('frontend/dist'))
 }
 

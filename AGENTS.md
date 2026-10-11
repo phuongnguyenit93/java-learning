@@ -156,25 +156,17 @@ project-portal/
 ├── src/main/java/.../ProjectPortalApplication.java
 ├── src/main/resources/
 │   └── application.yml                  # server.port=9098
-├── build/generated/portal-data/         # generated; never source-owned
-│   ├── module-catalog.json
-│   └── module/{ROUTE_ID}/
-│       ├── overview/{lang}.md
-│       ├── knowledge/{lang}/...
-│       ├── video/{lang}/...
-│       ├── quiz/{lang}/question.yml
-│       ├── interview/{lang}/question.yml
-│       └── api/{lang}/
-│           ├── api-descriptions.yml
-│           ├── api-execution.yml
-│           ├── api-params.yml
-│           └── controller-description.yml
 ├── frontend/                            # React + TypeScript + Vite
 │   └── src/
 └── build.gradle                         # Node/Vite → Spring static-resource wiring
+
+build/learning-data/java/                # generated at repository root, not source-owned
+├── module-catalog.json
+├── module/{ROUTE_ID}/{feature}/...
+└── search/knowledge-search.{lang}.json
 ```
 
-The Portal remains **static-first for learning content**. Module hierarchy/routing comes from generated `module-catalog.json`; Overview, Knowledge, Video, Quiz, Interview, and raw localized Swagger/API metadata projections are generated under `project-portal/build/generated/portal-data`. The frontend consumes Overview, Menu/Knowledge, embedded Video presentation, Quiz, Interview, and API Docs directly from those generated/static projections. `Local Run` is the narrow exception: when the Portal runs locally, Spring Boot owns `/api/local-run/*` and calls GitHub Actions server-side.
+The Portal remains **static-first for learning content**. Module hierarchy/routing comes from generated `module-catalog.json`; Overview, Knowledge, Video, Quiz, Interview, and raw localized Swagger/API metadata projections are generated under `build/learning-data/java`. The frontend consumes Overview, Menu/Knowledge, embedded Video presentation, Quiz, Interview, and API Docs directly from those generated/static projections. `Local Run` is the narrow exception: when the Portal runs locally, Spring Boot owns `/api/local-run/*` and calls GitHub Actions server-side.
 
 Do not move fake frontend data into Spring controllers merely because the application has a backend. Static/generated knowledge should stay static until a server-side requirement actually exists.
 
@@ -680,7 +672,7 @@ Path mapping is the relationship model; there is deliberately no stable file id.
 
 In the canonical module-generation workflow, Video authoring is downstream of stable Knowledge and any applicable API/runtime evidence. One README Menu Markdown file maps to one Video by default; each H2 maps to one Video section/chapter. Each section requires at least one Scene; from the second section onward the script must also contain a Transition from the previous section. Video narration may rephrase Knowledge for spoken delivery, but it must not silently create a competing technical source of truth. The exact workflow position and current detailed authoring/mapping rule must be resolved through `module-generate-agent/GENERAL_AGENT_RULES.md`.
 
-Current implementation includes localized Video source skeleton generation, build-time Portal Video projection, and frontend rendering inside the Knowledge flow. Authored Video Markdown is projected to `project-portal/build/generated/portal-data/module/{ROUTE_ID}/video/{lang}/index.json` and per-category `content/{categoryId}/script.json`; only languages with authored Scene content are exposed through `module-catalog.json`. Vite/publicDir and `processResources` carry those generated files into the final static resources automatically. The frontend loads the localized Video index, maps authored items by Knowledge `categoryId`, renders the Video block before the corresponding lessons, and lazy-loads the script only when the collapsed script panel is opened. Supported player handling includes YouTube/Vimeo embeds and direct video files; an empty `video.url` keeps the authored script available while showing the unpublished-video state.
+Current implementation includes localized Video source skeleton generation, build-time Portal Video projection, and frontend rendering inside the Knowledge flow. Authored Video Markdown is projected to `build/learning-data/java/module/{ROUTE_ID}/video/{lang}/index.json` and per-category `content/{categoryId}/script.json`; only languages with authored Scene content are exposed through `module-catalog.json`. Vite/publicDir and `processResources` carry those generated files into the final static resources automatically. The frontend loads the localized Video index, maps authored items by Knowledge `categoryId`, renders the Video block before the corresponding lessons, and lazy-loads the script only when the collapsed script panel is opened. Supported player handling includes YouTube/Vimeo embeds and direct video files; an empty `video.url` keeps the authored script available while showing the unpublished-video state.
 
 Quiz follows the same build/orchestration boundary. `BUILD_QUIZ=TRUE` is declared in canonical `automation/master.json`; `project-orchestration` only decides whether to apply `QUIZ_SETUP_PLUGIN`; the actual structure generation lives in `project-build/gradle-runtime`. Active `MODULE_LANGUAGE` values receive `src/main/resources/quiz/{lang}/question.yml`. The generated comment block between `# <quiz-schema>` and `# </quiz-schema>` is derived from canonical `gradle-runtime/src/main/resources/quiz/question-schema.yml` and may be refreshed when the schema changes; the `questions:` content below it is human-owned and must not be overwritten.
 
@@ -808,11 +800,11 @@ Project tree documentation
 
 Portal module/catalog data [current]
 → filesystem/module metadata via ProjectStructureService
-→ `project-portal/build/generated/portal-data/module-catalog.json`
+→ `build/learning-data/java/module-catalog.json`
 
 Portal module-scoped projections [current/future]
 → canonical README content + localized Knowledge metadata / quiz / Swagger / artifact state
-→ `project-portal/build/generated/portal-data/module/{ROUTE_ID}/{feature}/...`
+→ `build/learning-data/java/module/{ROUTE_ID}/{feature}/...`
 
 Task DSL reference
 → task definition resources + enabled module features → generated task.gradle
@@ -833,20 +825,20 @@ DatabaseListEnum
 module-depend.json
 STRUCTURE.md
 module-structure.txt
-project-portal/build/generated/portal-data/module-catalog.json
-project-portal/build/generated/portal-data/module/{ROUTE_ID}/overview/...
-project-portal/build/generated/portal-data/module/{ROUTE_ID}/knowledge/...
-project-portal/build/generated/portal-data/module/{ROUTE_ID}/video/{lang}/...
-project-portal/build/generated/portal-data/module/{ROUTE_ID}/quiz/{lang}/question.yml
-project-portal/build/generated/portal-data/module/{ROUTE_ID}/interview/{lang}/question.yml
-project-portal/build/generated/portal-data/module/{ROUTE_ID}/api/{lang}/...
+build/learning-data/java/module-catalog.json
+build/learning-data/java/module/{ROUTE_ID}/overview/...
+build/learning-data/java/module/{ROUTE_ID}/knowledge/...
+build/learning-data/java/module/{ROUTE_ID}/video/{lang}/...
+build/learning-data/java/module/{ROUTE_ID}/quiz/{lang}/question.yml
+build/learning-data/java/module/{ROUTE_ID}/interview/{lang}/question.yml
+build/learning-data/java/module/{ROUTE_ID}/api/{lang}/...
 task.gradle
 application-merged.yml
 generated README/menu fragments
 META-INF/execution-context/source-context.json
 ```
 
-Portal generated data is build-only and must never be written back into `project-portal/src/main/resources`. `module-catalog.json` stays at the root of generated `portal-data`; module-owned projections are namespaced under `portal-data/module/{ROUTE_ID}/`. Overview and Knowledge are transformed projections; Video is a transformed static projection from authored `video/{lang}/menu/**/*.md`; Quiz and Interview are exact localized `question.yml` copies after build-time schema validation; API metadata is an exact build-time copy of the four canonical localized Swagger YAML files when the complete set exists. Quiz/Interview/API YAML is parsed in-browser, and API rich execution HTML is sanitized before rendering. These projections must follow deterministic/idempotent/write-if-changed rules. The browser must not parse `module-structure.txt` as canonical data.
+Portal generated data is build-only and must never be written back into `project-portal/src/main/resources`. `module-catalog.json` stays at the root of `build/learning-data/java`; module-owned projections are namespaced under `build/learning-data/java/module/{ROUTE_ID}/`. Overview and Knowledge are transformed projections; Video is a transformed static projection from authored `video/{lang}/menu/**/*.md`; Quiz and Interview are exact localized `question.yml` copies after build-time schema validation; API metadata is an exact build-time copy of the four canonical localized Swagger YAML files when the complete set exists. Quiz/Interview/API YAML is parsed in-browser, and API rich execution HTML is sanitized before rendering. These projections must follow deterministic/idempotent/write-if-changed rules. The browser must not parse `module-structure.txt` as canonical data.
 
 Generated output must prefer:
 
@@ -2388,9 +2380,9 @@ Project Portal
 → Gradle buildFrontend → Vite dist → processResources → classpath:/static
 → browser executes React; Spring Boot serves the static bundle and owns the local-only `/api/local-run/*` adapter
 → BrowserRouter owns clean `/my-cv` and `/learning/{routeId}` client navigation; explicit Spring MVC SPA forwards keep local deep-links/F5 on the same path
-→ ProjectStructureService generates build-only `portal-data/module-catalog.json` for real hierarchy/routing
-→ module-scoped generated data lives under `portal-data/module/{ROUTE_ID}/...`; current Overview, Knowledge, Video, Quiz, Interview, and API metadata projections follow this layout
-→ Vite `publicDir` points at `build/generated/portal-data`; `npm run dev` prepares generated data before starting Vite
+→ ProjectStructureService generates build-only `build/learning-data/java/module-catalog.json` for real hierarchy/routing
+→ module-scoped generated data lives under `build/learning-data/java/module/{ROUTE_ID}/...`; current Overview, Knowledge, Video, Quiz, Interview, and API metadata projections follow this layout
+→ Vite `publicDir` points at `build/learning-data/java`; `npm run dev` prepares generated data before starting Vite
 → Menu/Knowledge UI consumes the generated Knowledge index and lazy section Markdown; authored Video projection is mapped by Knowledge category and rendered as the presentation layer before the corresponding lessons; Knowledge supports multiple open sections and keeps panel state across tab switches
 → API Docs consumes the generated localized four-file Swagger projection, follows README-derived controller/method order, renders sanitized `execution` HTML, and is reference-only rather than a live runner/debugger
 → Quiz consumes localized generated `question.yml`, shows four shuffled answer positions, and reveals the selected answer's explanation while checking correctness by stable internal answer id

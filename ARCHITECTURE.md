@@ -166,15 +166,6 @@ project-portal/
 │   └── ProjectPortalApplication.java
 ├── src/main/resources/
 │   └── application.yml             # port 9098
-├── build/generated/portal-data/
-│   ├── module-catalog.json          # generated global Portal catalog
-│   └── module/{ROUTE_ID}/
-│       ├── overview/{lang}.md
-│       ├── knowledge/{lang}/...
-│       ├── video/{lang}/...
-│       ├── quiz/{lang}/question.yml
-│       ├── interview/{lang}/question.yml
-│       └── api/{lang}/              # copied complete Swagger metadata set
 └── frontend/
     ├── package.json
     ├── vite.config.ts
@@ -186,6 +177,11 @@ project-portal/
         ├── data/
         ├── state/
         └── styles/
+
+build/learning-data/java/          # generated at repository root
+├── module-catalog.json
+├── module/{ROUTE_ID}/{feature}/...
+└── search/knowledge-search.{lang}.json
 ```
 
 Current build/serve flow:
@@ -195,7 +191,7 @@ module/ filesystem + module metadata
         ↓
 Portal build-time generators
         ↓
-build/generated/portal-data
+build/learning-data/java
 ├── module-catalog.json
 └── module/{ROUTE_ID}/{feature}/...
         ↓ Vite static input
@@ -1385,11 +1381,11 @@ Canonical unit ở cấp kiến trúc là **one Knowledge Menu Markdown file →
 Current implementation đã có `BUILD_VIDEO` + localized skeleton synchronization + build-time Portal Video projection. `PortalVideoProjectionService` đọc authored `video/{lang}/menu/**/*.md`, bỏ qua skeleton chưa có Scene, validate Scene/Transition fields, rồi generate:
 
 ```text
-project-portal/build/generated/portal-data/module/{ROUTE_ID}/video/{lang}/index.json
-project-portal/build/generated/portal-data/module/{ROUTE_ID}/video/{lang}/content/{categoryId}/script.json
+build/learning-data/java/module/{ROUTE_ID}/video/{lang}/index.json
+build/learning-data/java/module/{ROUTE_ID}/video/{lang}/content/{categoryId}/script.json
 ```
 
-`ProjectStructureService` chỉ expose `video.{lang}` trong `module-catalog.json` khi language đó thực sự có authored Scene content. Vite dùng `project-portal/build/generated/portal-data` làm `publicDir`, sau đó `processResources` copy frontend build vào `classpath:/static`, nên Video projection đi cùng static-first Portal pipeline mà không cần REST endpoint hay copy mechanism riêng.
+`ProjectStructureService` chỉ expose `video.{lang}` trong `module-catalog.json` khi language đó thực sự có authored Scene content. Vite dùng `build/learning-data/java` làm `publicDir`, sau đó `processResources` copy frontend build vào `classpath:/static`, nên Video projection đi cùng static-first Portal pipeline mà không cần REST endpoint hay copy mechanism riêng.
 
 **Embedded video và script-table UI vẫn chưa được implement**. Source vẫn phải là `video/{lang}/menu/**/*.md`; generated Portal data chỉ là downstream projection và không được write-back vào source.
 
@@ -2385,13 +2381,13 @@ trừ khi architecture contract của artifact đó được thay đổi rõ rà
 | Repository structure | filesystem/module discovery | `STRUCTURE.md` |
 | Execution Context enablement | `BUILD_EXECUTION_CONTEXT` | orchestration/runtime dependency selection |
 | Execution source context | Java source + build-time scanner/generator | `META-INF/execution-context/source-context.json` |
-| Portal module hierarchy/catalog | filesystem/module discovery + module metadata via `ProjectStructureService` | `project-portal/build/generated/portal-data/module-catalog.json` |
-| Portal module Overview | `module/**/readme/{lang}/BASE.md` | `project-portal/build/generated/portal-data/module/{ROUTE_ID}/overview/{lang}.md` |
-| Portal Knowledge | `module/**/readme/{lang}/menu/**/*.md` anchored sections + `src/main/resources/readme/{lang}/knowledge-metadata.yml` governance | `project-portal/build/generated/portal-data/module/{ROUTE_ID}/knowledge/{lang}/...` |
-| Portal Video | authored `module/**/video/{lang}/menu/**/*.md` when `BUILD_VIDEO=TRUE` | `project-portal/build/generated/portal-data/module/{ROUTE_ID}/video/{lang}/index.json` + `content/{categoryId}/script.json` + catalog `video` path |
-| Portal Quiz | `BUILD_QUIZ=TRUE` + `module/**/src/main/resources/quiz/{lang}/question.yml` validated by canonical Quiz schema | `project-portal/build/generated/portal-data/module/{ROUTE_ID}/quiz/{lang}/question.yml` + catalog `quiz` path |
-| Portal Interview | `BUILD_INTERVIEW=TRUE` + `module/**/src/main/resources/interview/{lang}/question.yml` validated by canonical Interview schema | `project-portal/build/generated/portal-data/module/{ROUTE_ID}/interview/{lang}/question.yml` + catalog `interview` path |
-| Portal API metadata | complete `module/**/src/main/resources/swagger/{lang}` four-file set | `project-portal/build/generated/portal-data/module/{ROUTE_ID}/api/{lang}/...` + catalog `api` base path |
+| Portal module hierarchy/catalog | filesystem/module discovery + module metadata via `ProjectStructureService` | `build/learning-data/java/module-catalog.json` |
+| Portal module Overview | `module/**/readme/{lang}/BASE.md` | `build/learning-data/java/module/{ROUTE_ID}/overview/{lang}.md` |
+| Portal Knowledge | `module/**/readme/{lang}/menu/**/*.md` anchored sections + `src/main/resources/readme/{lang}/knowledge-metadata.yml` governance | `build/learning-data/java/module/{ROUTE_ID}/knowledge/{lang}/...` |
+| Portal Video | authored `module/**/video/{lang}/menu/**/*.md` when `BUILD_VIDEO=TRUE` | `build/learning-data/java/module/{ROUTE_ID}/video/{lang}/index.json` + `content/{categoryId}/script.json` + catalog `video` path |
+| Portal Quiz | `BUILD_QUIZ=TRUE` + `module/**/src/main/resources/quiz/{lang}/question.yml` validated by canonical Quiz schema | `build/learning-data/java/module/{ROUTE_ID}/quiz/{lang}/question.yml` + catalog `quiz` path |
+| Portal Interview | `BUILD_INTERVIEW=TRUE` + `module/**/src/main/resources/interview/{lang}/question.yml` validated by canonical Interview schema | `build/learning-data/java/module/{ROUTE_ID}/interview/{lang}/question.yml` + catalog `interview` path |
+| Portal API metadata | complete `module/**/src/main/resources/swagger/{lang}` four-file set | `build/learning-data/java/module/{ROUTE_ID}/api/{lang}/...` + catalog `api` base path |
 | Portal production frontend | React/TypeScript source | Vite `dist` → Spring `classpath:/static` |
 
 ---
@@ -2775,7 +2771,7 @@ project-portal
 ```text
 filesystem/module metadata
         ↓ ProjectStructureService
-build/generated/portal-data/module-catalog.json
+build/learning-data/java/module-catalog.json
         ↓
         + module-scoped generated Overview/Knowledge/Video/Quiz/Interview/API projections
         ↓

@@ -19,7 +19,7 @@ import java.util.regex.Pattern
 class PortalKnowledgeProjectionService {
 
     private static final String OUTPUT_DIRECTORY =
-            'project-portal/build/generated/portal-data/module'
+            LearningDataPaths.MODULE_DIRECTORY
 
 
     private static final Pattern BACK_TO_TOP_ANCHOR_PATTERN =

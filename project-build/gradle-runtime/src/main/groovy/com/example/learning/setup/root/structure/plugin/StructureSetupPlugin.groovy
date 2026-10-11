@@ -153,8 +153,8 @@ ${project.path}
                                 'learning portal'
 
 
-                        task.description =
-                                'Remove obsolete Portal generated-data layouts from the build directory.'
+            task.description =
+                    'Remove obsolete generated-data layouts from the Java learning data output.'
 
 
                         task.doLast {
@@ -162,15 +162,15 @@ ${project.path}
                             project.delete(
                                     new File(
                                             project.projectDir,
-                                            'project-portal/build/generated/portal-data/data'
+                                            'build/learning-data/java/data'
                                     ),
                                     new File(
                                             project.projectDir,
-                                            'project-portal/build/generated/portal-data/overview'
+                                            'build/learning-data/java/overview'
                                     ),
                                     new File(
                                             project.projectDir,
-                                            'project-portal/build/generated/portal-data/knowledge'
+                                            'build/learning-data/java/knowledge'
                                     )
                             )
                         }

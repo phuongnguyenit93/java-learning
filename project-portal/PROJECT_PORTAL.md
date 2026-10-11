@@ -35,20 +35,6 @@ project-portal/
 │   └── ProjectPortalApplication.java
 ├── src/main/resources/
 │   └── application.yml
-├── build/generated/portal-data/
-│   ├── module-catalog.json
-│   └── module/
-│       └── {ROUTE_ID}/
-│           ├── overview/
-│           ├── knowledge/
-│           ├── roadmap/{lang}/roadmap.yml
-│           ├── quiz/{lang}/question.yml
-│           ├── interview/{lang}/question.yml
-│           └── api/{lang}/
-│               ├── api-descriptions.yml
-│               ├── api-execution.yml
-│               ├── api-params.yml
-│               └── controller-description.yml
 └── frontend/
     ├── package.json
     ├── vite.config.ts
@@ -60,6 +46,17 @@ project-portal/
         ├── data/
         ├── state/
         └── styles/
+
+build/learning-data/java/          # root-project generated output
+├── module-catalog.json
+├── module/{ROUTE_ID}/
+│   ├── overview/
+│   ├── knowledge/
+│   ├── roadmap/{lang}/roadmap.yml
+│   ├── quiz/{lang}/question.yml
+│   ├── interview/{lang}/question.yml
+│   └── api/{lang}/...
+└── search/
 ```
 
 `project-portal/gradle.properties` hiện có `IS_MODULE=TRUE`; đồng thời theo real-module contract hiện tại, chính sự tồn tại của local `gradle.properties` làm repository scanner nhận diện/include project này.
@@ -88,7 +85,7 @@ module/ filesystem + module metadata
         ↓
 Portal build-time generators
         ↓
-build/generated/portal-data/
+build/learning-data/java/
 ├── module-catalog.json
 └── module/{ROUTE_ID}/{feature}/...
         ↓ Vite static input
@@ -432,7 +429,7 @@ Canonical module structure/model
         │
         ├── generate → module-structure.txt
         ├── generate → STRUCTURE.md
-        └── generate → project-portal/build/generated/portal-data/module-catalog.json
+        └── generate → build/learning-data/java/module-catalog.json
 ```
 
 Portal consume machine-readable catalog này trực tiếp; frontend không parse `module-structure.txt`.
@@ -598,7 +595,7 @@ Markdown renderer
 Ví dụ generated assets:
 
 ```text
-project-portal/build/generated/portal-data/
+build/learning-data/java/
 └── module/
     └── THREAD/
         └── knowledge/
@@ -893,7 +890,7 @@ src/main/resources/swagger/{lang}/
 generator copy nguyên bộ sang:
 
 ```text
-project-portal/build/generated/portal-data/module/{ROUTE_ID}/api/{lang}/
+build/learning-data/java/module/{ROUTE_ID}/api/{lang}/
 ```
 
 và `module-catalog.json` expose base path `api.{lang}`. Language Swagger bị thiếu một trong bốn file không được publish thành Portal API projection hoàn chỉnh. Frontend API Docs hiện consume trực tiếp các file static này; không cần module runtime và không cần Portal REST API.
@@ -1683,7 +1680,7 @@ MVP đã bắt đầu implementation. Current phase đã có:
 31. Quiz source/generator đã migrate thật: `BUILD_QUIZ` → orchestration → localized `question.yml`; canonical schema drive localized comment + validation; Portal copy static projection, shuffle answer position một lần khi load và giữ stable answer identity để check đúng/sai. THREAD hiện có 52 câu VI và 52 câu EN dựa trên README, kèm governance + optional Knowledge/API relations
 32. Interview source/generator đã migrate thật: `BUILD_INTERVIEW` → orchestration → localized `question.yml`; canonical schema drive localized comment + validation; Portal copy static projection, preload count và render reference answer collapsed/expandable với governance + Related Knowledge/API. THREAD hiện có 46 câu VI và 46 câu EN dựa trên README
 33. top-level **module** tabs hiện theo thứ tự `Overview → Roadmap → Reference (nếu có) → Menu → Knowledge → API Docs → Quiz → Interview → Local Run (nếu runnable)`, với Feedback action riêng. Java section-level `Knowledge` nằm ngoài các module tabs này
-34. Roadmap build projection đã implement: root task `generatePortalRoadmap` copy localized `roadmap/<lang>/roadmap.yml` của các module có `BUILD_ROADMAP=TRUE` vào `project-portal/build/generated/portal-data/module/{ROUTE_ID}/roadmap/<lang>/roadmap.yml`; `generatePortalData` đã include task này
+34. Roadmap build projection đã implement: root task `generatePortalRoadmap` copy localized `roadmap/<lang>/roadmap.yml` của các module có `BUILD_ROADMAP=TRUE` vào `build/learning-data/java/module/{ROUTE_ID}/roadmap/<lang>/roadmap.yml`; `generatePortalData` đã include task này
 35. Roadmap frontend đã implement: vertical center timeline, milestone card xen kẽ trái/phải, numbered ring marker, `relatedKnowledge` luôn hiển thị ở phía đối diện milestone, và `relatedModules` satellite cards nối dotted line; responsive layout collapse về single-column timeline trên màn hình nhỏ
 36. Roadmap Related Knowledge prototype đã implement cho `JAVA_LANGUAGE_BASICS`: marker giữ pulse nhẹ nhưng không còn mở popup; Related Knowledge luôn visible, resolve category/count từ Knowledge index và click item chuyển sang Knowledge tab với đúng category active; current mapping chỉ là provisional mapping trên Knowledge cũ và không được coi là curriculum proof
 37. Learning topic picker trên `/learning` hiện có Java/JavaScript/NodeJS; Java mở module UI cũ trong `/learning/java/knowledge`, các topic chưa sẵn sàng hiển thị localized animated dialog; Java section navigation chỉ còn Knowledge. Project độc lập tại `/project`, hiển thị ba interactive split-cards Banking/Logistics/E-commerce với gradient thông thường, flat-color hover reveal, alternating sides, responsive touch toggle và VI/EN. Spring Boot SPA fallback hỗ trợ deep-link mới và legacy module paths vẫn được client redirect.

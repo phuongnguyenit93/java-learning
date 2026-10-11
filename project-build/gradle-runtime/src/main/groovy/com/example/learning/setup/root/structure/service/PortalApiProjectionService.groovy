@@ -13,7 +13,7 @@ import java.nio.file.Path
 class PortalApiProjectionService {
 
     private static final String OUTPUT_DIRECTORY =
-            'project-portal/build/generated/portal-data/module'
+            LearningDataPaths.MODULE_DIRECTORY
 
 
     private static final String SWAGGER_DIRECTORY =
