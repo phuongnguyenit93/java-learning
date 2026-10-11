@@ -44,7 +44,7 @@
 roadmap:
   - id: io-mental-model
     title: I/O Data-Flow Model and Resource Lifetime
-    purpose: Understand why I/O exists: programs need one model for reading data from a source and writing data to a sink whether that endpoint is a file, console, memory region, or another resource, while accounting for representation, completion behavior, buffering, encoding, and resource lifetime.
+    purpose: "Understand why I/O exists: programs need one model for reading data from a source and writing data to a sink whether that endpoint is a file, console, memory region, or another resource, while accounting for representation, completion behavior, buffering, encoding, and resource lifetime."
     relatedKnowledge:
       - MentalModel
     objectives:
