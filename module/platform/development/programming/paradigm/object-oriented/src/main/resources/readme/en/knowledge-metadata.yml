@@ -15,6 +15,10 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+  oop-class-vs-object:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
   oop-boundary:
     difficulty: BASIC
     aiGenerated: true
@@ -70,6 +74,10 @@
     aiGenerated: true
     reviewed: false
   oop-collaboration-flow:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  oop-association-dependency:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
