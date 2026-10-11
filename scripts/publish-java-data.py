@@ -21,6 +21,7 @@ EXPOSED_FIELDS = (
     "overview", "knowledge", "roadmap", "video", "quiz",
     "interview", "api", "reference",
 )
+ALLOWED_EXTENSIONS = frozenset({".json", ".yml", ".yaml", ".md"})
 SHA_RE = re.compile(r"^[0-9a-f]{40}$")
 
 
@@ -63,7 +64,7 @@ def validate(directory):
     files = sorted(directory.rglob("*"))
     regular = []
     casefolded = set()
-    counts = {".json": 0, ".yml": 0, ".yaml": 0, ".md": 0}
+    counts = {extension: 0 for extension in ALLOWED_EXTENSIONS}
     for file in files:
         if file.is_symlink():
             fail(f"Symbolic links are forbidden in the artifact: {file}")
@@ -76,11 +77,15 @@ def validate(directory):
         if folded in casefolded:
             fail(f"Case-insensitive duplicate generated path: {relative}")
         casefolded.add(folded)
+        suffix = file.suffix.lower()
+        if suffix not in ALLOWED_EXTENSIONS:
+            fail(
+                f"Forbidden generated file type: {relative} "
+                f"(allowed: {', '.join(sorted(ALLOWED_EXTENSIONS))})"
+            )
         if file.stat().st_size == 0:
             fail(f"Empty generated file: {relative}")
-        suffix = file.suffix.lower()
-        if suffix in counts:
-            counts[suffix] += 1
+        counts[suffix] += 1
         if suffix == ".json":
             try:
                 with file.open(encoding="utf-8-sig") as stream:

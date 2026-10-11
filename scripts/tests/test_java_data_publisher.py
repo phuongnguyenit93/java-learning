@@ -95,6 +95,27 @@ class JavaDataPublisherTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Malformed YAML"):
             publisher.validate(self.data)
 
+    def test_yaml_extension_is_allowed(self):
+        self.write_text(self.module / "roadmap" / "vi" / "roadmap.yaml", "roadmap: []\n")
+        files, _, _, _ = publisher.validate(self.data)
+        self.assertTrue(any(file.suffix == ".yaml" for file in files))
+
+    def test_forbidden_extensions_and_extensionless_files_are_rejected(self):
+        for name in ("application.jar", "Example.class", "build.gradle", "notes.txt", "LICENSE"):
+            with self.subTest(name=name):
+                forbidden = self.module / "knowledge" / "vi" / "content" / name
+                self.write_text(forbidden, "not allowed\n")
+                with self.assertRaisesRegex(ValueError, "Forbidden generated file type"):
+                    publisher.validate(self.data)
+                forbidden.unlink()
+
+    def test_package_rejects_forbidden_file_before_creating_archive(self):
+        self.write_text(self.module / "hidden.jar", "not allowed\n")
+        output = self.root / "release"
+        with self.assertRaisesRegex(ValueError, "Forbidden generated file type"):
+            publisher.package(self.data, output, "a" * 40, "2026-01-01T00:00:00Z")
+        self.assertFalse((output / "java-learning-data.zip").exists())
+
     def test_unsafe_public_asset_path_is_rejected(self):
         with self.assertRaisesRegex(ValueError, "Unsafe public asset path"):
             publisher.resolve_asset(self.data, "/module/%2e%2e/secret.txt")

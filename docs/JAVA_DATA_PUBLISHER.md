@@ -65,9 +65,13 @@ cd build/java-data-release && sha256sum -c java-learning-data.zip.sha256
 ```
 
 Validation fails on missing catalog/search data, invalid JSON/YAML, symlinks,
-empty generated files, duplicate case-insensitive output paths, unsafe paths,
-duplicate module route IDs, missing catalog capability paths, and missing
-lazy-loaded Knowledge/Video assets. This is an **export/integrity validation**,
+empty generated files, **any file whose extension is not `.json`, `.yml`,
+`.yaml`, or `.md`** (including `.jar`, `.class`, `.gradle`, and extensionless
+files), duplicate case-insensitive output paths, unsafe paths, duplicate module
+route IDs, missing catalog capability paths, and missing lazy-loaded
+Knowledge/Video assets. File extensions are checked before packaging, so an
+unexpected file blocks Release publication rather than being silently skipped.
+This is an **export/integrity validation**,
 not a substitute for each module generator's full learning-content schema
 validation.
 
