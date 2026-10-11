@@ -46,58 +46,67 @@ roadmap:
     relatedKnowledge:
       - ObjectOrientedProgramming
       - EncapsulationAbstraction
-    title: "Lập trình hướng đối tượng: động cơ và mô hình tổng quan"
-    purpose: "Hiểu vì sao tổ chức chương trình quanh các đối tượng có danh tính, trạng thái, hành vi và trách nhiệm có thể giúp quản lý thay đổi."
+    title: "Lập trình hướng đối tượng (OOP): Mục đích và mô hình đối tượng"
+    purpose: "Nhận ra vấn đề khi dữ liệu và quy tắc xử lý nằm rải rác; hình dung OOP như cách các đối tượng có danh tính nhận yêu cầu và cùng thực hiện công việc."
     objectives:
-      - "Nhận biết đối tượng qua danh tính và hành vi, có thể có trạng thái liên quan nhưng trạng thái không bắt buộc phải thay đổi; đối tượng không đồng nghĩa với một tệp hay một lớp."
-      - "So sánh cách gom trạng thái/hành vi trong đối tượng với tổ chức thủ tục xử lý dữ liệu tách rời ở cấp ý tưởng."
+      - "Giải thích OOP bằng lời giản dị; từ một ví dụ xử lý đơn hàng bằng thủ tục, chỉ ra vì sao quy tắc bị phân tán khiến thay đổi khó kiểm soát và đối tượng có thể giúp phân chia công việc."
+      - "Nhận biết object cụ thể qua danh tính (identity), trạng thái (state), hành vi (behavior) và vai trò; phân biệt 'cùng đối tượng' với 'cùng giá trị', đồng thời hiểu trạng thái đối tượng có thể không thay đổi."
+      - "Phân biệt object đang tham gia thực thi với class là bản mô tả để tạo object trong ngôn ngữ dựa trên class; không coi class, file mã nguồn hay mô hình vật thể đời thực là định nghĩa đầy đủ của OOP."
   - id: state-behavior-and-invariants
     relatedKnowledge:
       - EncapsulationAbstraction
-    title: "Trạng thái, hành vi và ranh giới đóng gói"
-    purpose: "Hiểu cách đối tượng công bố hành vi, quản lý thay đổi trạng thái khi cần và bảo vệ những điều kiện phải luôn đúng."
+    title: "Đóng gói, che giấu thông tin và trừu tượng hóa"
+    purpose: "Biết vì sao bên ngoài nên yêu cầu đối tượng thực hiện hành vi thay vì tự sửa dữ liệu nội bộ; phân biệt ranh giới đóng gói, quyết định cần che giấu và điều được công bố."
     objectives:
-      - "Giải thích quan hệ giữa trạng thái nội bộ, hành vi được công bố và điều kiện bất biến (invariant) phải luôn đúng, khác với dữ liệu bất biến không được sửa."
-      - "Nhận biết vì sao việc cho phép mã bên ngoài tùy ý sửa trạng thái có thể làm mất tính nhất quán, ở mức nguyên lý không gắn với access modifier Java."
+      - "Phân biệt encapsulation (đóng gói và kiểm soát tương tác), information hiding (che cách lưu/quyết định có thể thay đổi) và abstraction (công bố hành vi thiết yếu); không đồng nhất ba ý này với từ khóa private."
+      - "Dùng tình huống tài khoản để giải thích invariant là điều kiện nhất quán phải được giữ sau thao tác; phân biệt invariant với immutability là dữ liệu không bị sửa đổi."
+      - "Dự đoán lỗi khi bên ngoài sửa số dư trực tiếp; đề xuất hành vi rút tiền có kiểm tra đầu vào, bảo toàn trạng thái hợp lệ và che cách biểu diễn bên trong."
   - id: responsibilities-and-contracts
     relatedKnowledge:
       - Responsibility
-    title: "Trách nhiệm đối tượng và hợp đồng hành vi"
-    purpose: "Nắm cách xác định đối tượng chịu trách nhiệm cho một hành vi và cách giao diện hành vi trở thành cam kết giữa các đối tượng."
+    title: "Phân chia trách nhiệm và hợp đồng hành vi giữa các đối tượng"
+    purpose: "Chọn nơi đặt một quy tắc và xác định điều mỗi đối tượng phải bảo đảm khi nhận yêu cầu từ đối tượng khác."
     objectives:
-      - "Phân biệt trách nhiệm của đối tượng, hợp đồng hành vi và chi tiết triển khai bị che giấu."
-      - "Nhận ra các dấu hiệu trách nhiệm bị phân tán hoặc một đối tượng gánh quá nhiều việc, từ đó đề xuất ranh giới phù hợp."
+      - "Phân biệt trách nhiệm (đối tượng chịu trách nhiệm việc gì) với responsibility assignment (quyết định giao hành vi đó cho ai); nhận diện quy tắc ở sai nơi trong ví dụ thanh toán."
+      - "Diễn đạt hợp đồng hành vi bằng yêu cầu đầu vào, kết quả hoặc lỗi được cam kết và quy tắc nhất quán; phân biệt hợp đồng với chữ ký phương thức hay chi tiết triển khai."
+      - "Phân tích sơ bộ cohesion (các hành vi cùng phục vụ một nhiệm vụ) như dấu hiệu phân chia trách nhiệm hợp lý, không biến milestone thành giáo trình nguyên lý thiết kế SOLID."
   - id: collaboration-and-composition
     relatedKnowledge:
       - Responsibility
-    title: "Sự cộng tác và hợp thành đối tượng"
-    purpose: "Hiểu hệ thống hướng đối tượng vận hành nhờ các đối tượng trao đổi yêu cầu, phối hợp trách nhiệm và cấu thành hành vi lớn hơn."
+      - RelationshipsPolymorphism
+    title: "Cộng tác đối tượng: liên kết, phụ thuộc và hợp thành"
+    purpose: "Hiểu cách nhiều đối tượng giải quyết một yêu cầu bằng việc gọi nhau theo hợp đồng, và chọn dạng quan hệ phù hợp thay vì gom mọi xử lý vào một đối tượng."
     objectives:
-      - "Mô tả sự cộng tác và hợp thành (composition) ở cấp mô hình đối tượng mà không lệ thuộc cú pháp class."
-      - "Theo dõi một tình huống sử dụng qua nhiều đối tượng để thấy vai trò của tính gắn kết trách nhiệm và mức độ phụ thuộc giữa các thành phần."
+      - "Theo dõi luồng gửi yêu cầu, nhận kết quả và xử lý nhánh thất bại giữa giỏ hàng, chính sách giá, thanh toán và thông báo; mỗi đối tượng chỉ làm phần việc đã nhận."
+      - "Phân biệt association (có quan hệ/biết nhau), dependency (cần dùng khả năng của nhau) với hợp thành các thành phần để tạo hành vi lớn hơn; quan hệ uses-a hay has-a đơn giản không tự là UML composition có sở hữu/vòng đời mạnh."
+      - "Thử thay cộng tác viên phía sau cùng một hợp đồng và giải thích vì sao giảm phụ thuộc vào chi tiết bên trong giúp dễ sửa đổi; coupling là tiêu chí áp dụng ngắn, phần nguyên lý tổng quát thuộc module thiết kế."
   - id: polymorphism-and-substitution
     relatedKnowledge:
       - RelationshipsPolymorphism
-    title: "Đa hình, quan hệ kiểu và khả năng thay thế"
-    purpose: "Hiểu việc nhiều đối tượng có thể đáp ứng cùng một hợp đồng với hành vi khác nhau và vì sao khả năng thay thế quan trọng hơn chỉ tái sử dụng mã."
+    title: "Đa hình và khả năng thay thế: phân biệt kiểu con và kế thừa"
+    purpose: "Hiểu cách một lời gọi theo hợp đồng chung dẫn đến các hành vi cụ thể khác nhau mà bên gọi không cần kiểm tra loại đối tượng."
     objectives:
-      - "Giải thích đa hình thông qua hợp đồng hành vi chung và các triển khai có thể thay thế đúng kỳ vọng."
-      - "Phân biệt khái niệm subtyping, inheritance và composition; hiểu inheritance có thể hỗ trợ tái sử dụng nhưng không tự bảo đảm hợp đồng thay thế."
+      - "Dùng hai cách thanh toán để mô tả polymorphism: bên gọi giữ một yêu cầu/hợp đồng chung, còn mỗi object xử lý theo cách riêng."
+      - "Phân biệt subtype như cam kết có thể dùng thay theo hợp đồng với inheritance như cách tổ chức/tái sử dụng đặc điểm; có quan hệ kế thừa không tự chứng minh thay thế hợp lệ."
+      - "Kiểm tra một biến thể bằng tình huống đầu vào hợp lệ, bị từ chối và lỗi; giải thích vì sao phá điều kiện/kết quả cam kết là vi phạm substitutability, còn lỗi được trả đúng hợp đồng thì không."
   - id: tradeoffs-and-failure-modes
     relatedKnowledge:
       - Tradeoffs
       - RelationshipsPolymorphism
-    title: "Đánh đổi thiết kế và những rủi ro của mô hình đối tượng"
-    purpose: "Cân nhắc lợi ích của đóng gói, trừu tượng hóa và mở rộng hành vi so với chi phí do tính gắn kết kém, phụ thuộc chặt và đối tượng có trạng thái khó kiểm soát."
+    title: "Khi OOP hữu ích và khi mô hình đối tượng quá phức tạp"
+    purpose: "Đánh giá lợi ích kiểm soát thay đổi của OOP cùng chi phí phát sinh từ quá nhiều đối tượng, quan hệ khó theo dõi và trạng thái dùng chung."
     objectives:
-      - "Nhận diện mô hình đối tượng quá rườm rà, quan hệ kế thừa mong manh và trạng thái bị chia sẻ ngoài ý muốn."
-      - "Lựa chọn giữa cộng tác đối tượng với thủ tục hoặc phép biến đổi dữ liệu đơn giản khi bài toán không cần nhiều thực thể có hành vi."
+      - "Nhận ra object chỉ chứa dữ liệu bị xử lý từ bên ngoài, object làm quá nhiều việc, lớp trung gian vô nghĩa, kế thừa mong manh và nhiều bên cùng sửa trạng thái."
+      - "Dùng cohesion/coupling và composition so với inheritance như tiêu chí đánh giá tình huống cụ thể; lý thuyết đầy đủ về SOLID, Law of Demeter hay design patterns thuộc chủ đề thiết kế riêng."
+      - "Giải thích khi nào xử lý bằng thủ tục hoặc biến đổi dữ liệu đơn giản là đủ, và khi nào cần đối tượng có hành vi, quy tắc và cộng tác rõ ràng."
   - id: oop-synthesis-and-boundaries
     relatedKnowledge:
       - Tradeoffs
       - Responsibility
-    title: "Tổng hợp thiết kế hướng đối tượng và liên hệ các mô hình khác"
-    purpose: "Xây dựng mô hình đầu cuối từ yêu cầu tới đối tượng, trách nhiệm, hợp đồng, cộng tác và biến thể hành vi, đồng thời nhận biết giới hạn của chủ đề."
+      - ObjectOrientedProgramming
+    title: "Tổng hợp: từ một yêu cầu đến hệ thống đối tượng cộng tác"
+    purpose: "Áp dụng trọn vẹn mô hình tư duy OOP vào một tình huống nhỏ và giải thích từng quyết định trước khi chuyển sang cơ chế Java hoặc thiết kế chuyên sâu."
     objectives:
-      - "Phác thảo một ví dụ không phụ thuộc ngôn ngữ và giải thích vì sao mỗi hành vi thuộc về đối tượng tương ứng."
-      - "Phân biệt tư duy hướng đối tượng với cú pháp Java class/interface, mô hình miền DDD và cross-cutting concerns của AOP; các cơ chế cụ thể thuộc module chuyên trách."
+      - "Bắt đầu từ yêu cầu thanh toán đơn giản, phác họa các object và hợp đồng, theo dõi một luồng thành công/thất bại; giải thích cách đóng gói, phân công trách nhiệm, cộng tác và đa hình cùng giải quyết vấn đề ban đầu."
+      - "Đề xuất một thay đổi yêu cầu (ví dụ thêm hình thức thanh toán) và chỉ rõ phần nào cần sửa, phần nào ổn định; chấp nhận phương án đơn giản hơn nếu OOP không mang lại lợi ích."
+      - "Chỉ đúng nơi học tiếp: cú pháp và cơ chế class/interface/override ở Java Core, nguyên lý thiết kế tổng quát ở design-principle, DDD ở domain modeling và AOP ở cross-cutting concerns."

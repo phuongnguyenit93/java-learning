@@ -46,58 +46,67 @@ roadmap:
     relatedKnowledge:
       - ObjectOrientedProgramming
       - EncapsulationAbstraction
-    title: "Object-Oriented Programming: Motivation and Core Model"
-    purpose: "Understand why organizing programs around objects with identity, state, behavior, and responsibility can help manage change."
+    title: "Object-Oriented Programming (OOP): Purpose and Object Model"
+    purpose: "Recognize the problem of scattered data and rules, and see OOP as a way for identifiable objects to receive requests and work together."
     objectives:
-      - "Recognize an object through identity and behavior with associated state where relevant, not merely a file or a class; object state need not be mutable."
-      - "Conceptually contrast bundling state and behavior within objects with procedural organization over separate data."
+      - "Explain OOP plainly; starting with a procedural order-processing example, show how scattered rules make change harder and how distinct objects could take on the work."
+      - "Recognize a concrete object through identity, state, behavior, and role; distinguish 'the same object' from 'the same value', and note that object state need not change."
+      - "Distinguish a participating runtime object from a class, which describes how objects are made in class-based languages; neither a class, source file, nor real-world entity is a complete definition of OOP."
   - id: state-behavior-and-invariants
     relatedKnowledge:
       - EncapsulationAbstraction
-    title: "State, Behavior, and Encapsulation Boundaries"
-    purpose: "Understand how objects expose behavior, can manage state transitions where relevant, and protect conditions that must remain true."
+    title: "Encapsulation, Information Hiding, and Abstraction"
+    purpose: "Understand why clients should request meaningful behavior rather than directly modify internal data, and distinguish the object boundary, hidden decisions, and exposed capabilities."
     objectives:
-      - "Explain the relationship among internal state, exposed behavior, and object invariants (conditions that must hold), distinct from immutable values."
-      - "Recognize how unrestricted external mutation can break consistency, at the principle level rather than through Java access modifiers."
+      - "Distinguish encapsulation (bundling and controlled interaction), information hiding (concealing changeable representation and decisions), and abstraction (exposing essential capabilities); none is merely the Java private keyword."
+      - "Use an account scenario to explain an invariant as a consistency rule preserved after operations, distinct from immutability, in which data does not change."
+      - "Predict the failure caused by direct external balance changes; propose a withdrawal operation that validates input, maintains a valid state, and hides its internal representation."
   - id: responsibilities-and-contracts
     relatedKnowledge:
       - Responsibility
-    title: "Object Responsibilities and Behavioral Contracts"
-    purpose: "Learn how to assign behavior to responsible objects and treat exposed behavior as a contract between collaborators."
+    title: "Assigning Object Responsibilities and Behavioral Contracts"
+    purpose: "Decide where a business rule belongs and what each object must guarantee when another object requests its behavior."
     objectives:
-      - "Distinguish an object's responsibility, behavioral contract, and hidden implementation details."
-      - "Recognize scattered responsibilities and overly broad objects, then propose clearer boundaries."
+      - "Distinguish responsibility (what an object is accountable for) from responsibility assignment (deciding which object should own a behavior); spot a misplaced rule in a payment example."
+      - "Describe a behavioral contract through accepted inputs, promised outcomes or errors, and consistency rules; do not confuse it with a method signature or implementation detail."
+      - "Apply cohesion (behaviors serving a coherent purpose) as a brief criterion for sensible assignment without turning this milestone into a full SOLID or general design-principles course."
   - id: collaboration-and-composition
     relatedKnowledge:
       - Responsibility
-    title: "Object Collaboration and Composition"
-    purpose: "Understand how object-oriented systems coordinate responsibilities through interactions and build larger behavior through composition."
+      - RelationshipsPolymorphism
+    title: "Object Collaboration: Associations, Dependencies, and Composition"
+    purpose: "Understand how objects fulfill a request by invoking one another through contracts and choose suitable relationships instead of putting every task in one object."
     objectives:
-      - "Describe collaboration and composition at the object-model level without depending on class syntax."
-      - "Trace a use case across collaborators to reason about responsibility cohesion and coupling."
+      - "Trace requests, results, and failure branches among a cart, pricing policy, payment component, and notifier; each collaborator performs only the responsibility it owns."
+      - "Distinguish association (objects are related or know one another), dependency (using another object's capability), and assembling collaborators into larger behavior; a simple uses-a or has-a relationship is not automatically UML composition with strong ownership/lifetime semantics."
+      - "Replace one collaborator behind an unchanged contract and explain why depending less on internals reduces change impact; use coupling briefly as an applied criterion, leaving the full principle to its design module."
   - id: polymorphism-and-substitution
     relatedKnowledge:
       - RelationshipsPolymorphism
-    title: "Polymorphism, Type Relationships, and Substitutability"
-    purpose: "Understand how different objects honor one behavioral contract and why substitutability matters beyond code reuse."
+    title: "Polymorphism and Substitutability: Subtyping vs. Inheritance"
+    purpose: "Understand how one request through a shared contract can produce different concrete behaviors without the caller checking object types."
     objectives:
-      - "Explain polymorphism through a common behavioral contract and valid alternative implementations."
-      - "Distinguish subtyping, inheritance, and composition; inheritance can support reuse but does not itself guarantee substitutability."
+      - "Use two payment methods to show polymorphism: the caller issues one contract-based request while each object handles it in its own way."
+      - "Distinguish subtyping as a behavioral promise of valid replacement from inheritance as a mechanism for organization and reuse; an inheritance relationship does not by itself prove substitutability."
+      - "Test a variant using valid input, rejection, and failure cases; explain why violating promised conditions or results breaks substitutability, while an agreed failure result does not."
   - id: tradeoffs-and-failure-modes
     relatedKnowledge:
       - Tradeoffs
       - RelationshipsPolymorphism
-    title: "Design Trade-offs and Object-Model Failure Modes"
-    purpose: "Weigh encapsulation, abstraction, and behavioral extensibility against poor cohesion, tight coupling, and hard-to-manage state."
+    title: "When OOP Helps and When Object Models Become Too Complex"
+    purpose: "Evaluate OOP's ability to contain change alongside the costs of excessive object layers, hard-to-follow relations, and shared mutable state."
     objectives:
-      - "Identify needless object layers, fragile inheritance, and unintended shared mutable state."
-      - "Choose simpler procedures or data transformations when a problem does not require several collaborating objects with distinct behavioral responsibilities."
+      - "Recognize an object that only holds externally manipulated data, an object with too many responsibilities, needless forwarding layers, fragile inheritance, and uncontrolled shared state."
+      - "Use cohesion, coupling, and composition versus inheritance as concise scenario-based criteria; comprehensive SOLID, Law of Demeter, and design patterns belong in separate design topics."
+      - "Justify when a simple procedure or data transformation is enough and when objects with meaningful behaviors, rules, and collaboration earn their complexity."
   - id: oop-synthesis-and-boundaries
     relatedKnowledge:
       - Tradeoffs
       - Responsibility
-    title: "Object-Oriented Design Synthesis and Boundaries"
-    purpose: "Build an end-to-end model from requirements to objects, responsibilities, contracts, collaborations, and behavior variation while respecting scope."
+      - ObjectOrientedProgramming
+    title: "Putting It Together: From a Requirement to Collaborating Objects"
+    purpose: "Apply the full OOP mental model to a small scenario and justify each decision before moving to Java mechanisms or specialized software design."
     objectives:
-      - "Sketch a language-neutral example and justify the object responsible for each behavior."
-      - "Separate the OOP paradigm from Java class/interface mechanics, DDD domain modeling, and AOP cross-cutting concerns, each owned by its dedicated module."
+      - "Start with a simple checkout requirement, sketch objects and contracts, then trace success and failure; explain how encapsulation, responsibility assignment, collaboration, and polymorphism address the original problem together."
+      - "Introduce a changed requirement (such as another payment method) and identify what changes and what stays stable; accept a simpler design when OOP adds no value."
+      - "Locate further study correctly: Java Core for class/interface/override syntax and mechanics, design-principle for general design rules, domain modeling for DDD, and AOP for cross-cutting concerns."
