@@ -1,0 +1,105 @@
+name: Publish Java Learning Data
+
+# Start manually until both producer validation and Portal consumer are proven.
+# This workflow does NOT deploy the website or call any Cloudflare hook.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: java-data-publish-${{ github.sha }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Generate, validate and publish Java data
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Restrict publishing to main
+        shell: bash
+        run: |
+          if [[ "${GITHUB_REF}" != "refs/heads/main" ]]; then
+            echo "::error::Java data is published only from main (got ${GITHUB_REF})."
+            exit 1
+          fi
+
+      - name: Checkout exact source revision
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Setup JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: gradle
+
+      - name: Setup Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install YAML parser
+        run: python -m pip install 'PyYAML==6.0.2'
+
+      - name: Test exporter validation and reproducible ZIP
+        run: python -m unittest discover -s scripts/tests -p 'test_java_data_publisher.py' -v
+
+      - name: Generate Java learning data
+        shell: bash
+        run: |
+          chmod +x ./gradlew
+          ./gradlew generatePortalData --no-daemon --console=plain
+
+      - name: Validate Java data
+        run: python scripts/publish-java-data.py validate
+
+      - name: Package Java data
+        shell: bash
+        run: |
+          if [[ "$(git rev-parse HEAD)" != "${GITHUB_SHA}" ]]; then
+            echo "::error::Checked-out revision differs from workflow commit."
+            exit 1
+          fi
+          python scripts/publish-java-data.py package \
+            --source-commit "${GITHUB_SHA}" \
+            --source-commit-time "$(git show -s --format=%cI HEAD)"
+          (cd build/java-data-release && sha256sum --check java-learning-data.zip.sha256)
+
+      - name: Publish immutable GitHub Release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          tag="java-data-${GITHUB_SHA}"
+          zip="build/java-data-release/java-learning-data.zip"
+          checksum="build/java-data-release/java-learning-data.zip.sha256"
+
+          if gh release view "${tag}" --repo "${GITHUB_REPOSITORY}" >/dev/null 2>&1; then
+            # A manual retry must not replace a previously published artifact.
+            # Check BOTH release assets and fail if they differ.
+            mkdir -p build/java-data-existing
+            gh release download "${tag}" \
+              --repo "${GITHUB_REPOSITORY}" \
+              --pattern 'java-learning-data.zip' \
+              --pattern 'java-learning-data.zip.sha256' \
+              --dir build/java-data-existing
+            cmp "${zip}" build/java-data-existing/java-learning-data.zip
+            cmp "${checksum}" build/java-data-existing/java-learning-data.zip.sha256
+            echo "Existing immutable release ${tag} matches generated package."
+            exit 0
+          fi
+
+          gh release create "${tag}" "${zip}" "${checksum}" \
+            --repo "${GITHUB_REPOSITORY}" \
+            --target "${GITHUB_SHA}" \
+            --title "Java Learning Data ${GITHUB_SHA:0:12}" \
+            --notes "Static Java learning dataset produced by generatePortalData at commit ${GITHUB_SHA}. Includes manifest.json, catalog, module projections and search indexes. This release is separate from local-run artifacts." \
+            --latest=false
+
+          gh release view "${tag}" --repo "${GITHUB_REPOSITORY}"
