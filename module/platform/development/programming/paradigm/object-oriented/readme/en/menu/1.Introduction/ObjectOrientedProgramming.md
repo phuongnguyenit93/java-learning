@@ -16,15 +16,213 @@
 <details>
 <summary>Click for details</summary>
 
-Object-Oriented Programming is a paradigm that organizes programs around **objects with identity, state, behavior, and responsibility**, with objects collaborating through clear contracts.
+**Object-oriented programming** (**OOP**) is a way of organizing a program around **objects**. Each object has **its own data**, **actions it can perform**, and **responsibilities** for the part of the system it manages.
 
-OOP does not mean simply splitting code into many classes. A class is only one mechanism that some languages use to build an object model.
+For example, in a banking application, we can think of objects such as `BankAccount` (an account), `Customer` (a customer), and `Transaction` (a transaction). Instead of having one place handle all the data, we assign each object the work that belongs to it. These objects collaborate through the actions they provide.
 
-An **object** is more than a data bundle: it has an identity, a responsibility in the system, and behavior others may request. Two accounts with equal balances remain distinct objects representing different accounts and histories. State may change, but immutable objects are equally compatible with OOP.
+> **Core idea:** When something needs to be done, ask: “Which object is responsible for doing this?” and “How should the objects work together?”
 
-**Start with a request, not a class diagram.** Account A and Account B each have 100 units. Checkout requests `A.withdraw(30)`; A decides whether the request is valid, changes **A: 100 → 70**, and reports success. **B stays 100**. Identity answers *which account received the request*; state answers *what information that account currently holds*; behavior answers *what the account can do in response*; and responsibility answers *who is entitled to make the decision*. Collaboration means that one object requests work from another under an agreed behavioral promise.
+### 1. Start with a familiar situation
 
-If A instead receives `withdraw(120)` while holding 100, the non-overdraft rule rejects the request, leaving A at 100. These are **conceptual observations**, not a claim that every OOP application resembles a bank or that all objects must mutate. A fee policy can be an immutable object and still have meaningful behavior. **Check your understanding:** why do A and B remain separate objects when their balances happen to match?
+Suppose you are programming a feature to **withdraw money from a bank account**. The program needs to know the current balance, the amount the user wants to withdraw, and the rules for deciding whether the transaction is valid.
+
+If we only think in terms of processing steps, the sequence is: check the amount → check the balance → deduct the money. When thinking in OOP terms, we ask another question: **Who should be responsible for ensuring that the account balance always remains valid?**
+
+A reasonable answer is **the account object itself**. The user interface sends a request through `account.withdraw(amount)`; the account checks the request and changes its balance only when the operation is allowed.
+
+```mermaid
+flowchart LR
+    A[User requests a withdrawal] --> B[Banking application]
+    B --> C[account.withdraw(amount)]
+    C --> D{Valid request and sufficient funds?}
+    D -->|Yes| E[Deduct balance and return success]
+    D -->|No| F[Keep balance unchanged and return failure]
+```
+
+The banking application does not need to change the balance inside the account directly. It only needs to know how to **send a request** and **receive the result**. The rule that protects the balance is kept in the object that actually owns that responsibility.
+
+### 2. What characteristics does an object have?
+
+Consider Lan's account, which currently holds 100,000 VND:
+
+| Component | Meaning | Example |
+| --- | --- | --- |
+| **State** | Data describing the object's current condition | Account holder: Lan; balance: 100,000 VND |
+| **Behavior** | Actions the object can perform | `deposit(soTien)`, `withdraw(soTien)` |
+| **Identity** | What makes each object a distinct entity | Lan's account and Minh's account are two different accounts |
+| **Responsibility** | What the object must manage and ensure | Do not allow withdrawals beyond the balance; reject negative withdrawal amounts |
+
+Identity matters: two accounts can have **the same balance** while still being **two different objects**. When Lan withdraws money, Minh's balance does not change as a result.
+
+#### How are classes and objects different?
+
+- **Class:** a description of the common structure and behavior of a type of object, such as `BankAccount`.
+- **Object:** a specific instance created from a class, such as `lanAccount` or `minhAccount`.
+
+You can think of a class as **a blueprint**, and an object as **an individual product made from that blueprint**. Each product has its own state. Two objects belonging to the same class do not necessarily share the same balance variable.
+
+### 3. Java example: an object protects its own state
+
+The following program creates Lan's account with 100,000 VND, withdraws 30,000 VND, and then attempts to withdraw another 120,000 VND.
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        BankAccount account = new BankAccount("Lan", 100_000);
+
+        System.out.println(account.withdraw(30_000));
+        System.out.println(account.getBalance());
+
+        System.out.println(account.withdraw(120_000));
+        System.out.println(account.getBalance());
+    }
+}
+
+class BankAccount {
+    private final String owner;
+    private long balance;
+
+    public BankAccount(String owner, long openingBalance) {
+        if (owner == null || owner.isBlank()) {
+            throw new IllegalArgumentException("Tên chủ tài khoản không hợp lệ");
+        }
+        if (openingBalance < 0) {
+            throw new IllegalArgumentException("Số dư ban đầu không thể âm");
+        }
+        this.owner = owner;
+        this.balance = openingBalance;
+    }
+
+    public boolean withdraw(long amount) {
+        if (amount <= 0 || amount > balance) {
+            return false;
+        }
+        balance -= amount;
+        return true;
+    }
+
+    public long getBalance() {
+        return balance;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+}
+```
+
+**Output:**
+
+```text
+true
+70000
+false
+70000
+```
+
+| Point in time | What happens | Balance after processing |
+| --- | --- | ---: |
+| Initially | Lan's account is created | 100,000 |
+| Withdraw 30,000 | The amount is valid, so the account allows the withdrawal | 70,000 |
+| Withdraw 120,000 | The amount exceeds the balance, so the account rejects the request | **70,000 (unchanged)** |
+
+Looking at the code, you can see that:
+
+1. `balance` is the account's **state**.
+2. `withdraw()` is a **behavior** that checks the request and then decides whether to change the state.
+3. `balance` is declared `private`, so other code cannot arbitrarily assign `account.balance = -5000`.
+
+The rule that the “balance must not be negative” is an example of an **invariant**: a condition that must remain true after every valid operation. This is a simplified example for understanding an object's responsibility; a real banking system must also handle persistence, transactions, and concurrent requests.
+
+### 4. Why is OOP useful as programs grow?
+
+Imagine the same withdrawal feature being used at an **ATM**, in a **mobile app**, and at a **bank counter**. If each place implements its own logic for deducting money, one might overlook a case. When the rules change, we would have to find and update multiple locations.
+
+When the rule is placed in `BankAccount.withdraw()`, all those places call the same behavior. Responsibilities become clearer: the screen handles input and display, while the account checks the request and updates the balance.
+
+With this organization, OOP can help make a program:
+
+- **Easier to understand and maintain:** we know which object is responsible for each rule.
+- **Less affected by changes:** changing how an object works internally has less impact on callers that use its stable interface.
+- **More reusable:** different parts of the program can use the same objects and shared contracts.
+- **Easier to extend and test:** we can replace specific components or test a responsibility on its own.
+
+These benefits depend on **the quality of the design**. Having a large number of classes does not necessarily make a program well designed in OOP terms.
+
+### 5. Four concepts commonly discussed in OOP
+
+You do not need to master all four concepts to understand the basic idea, but you should recognize the problems each concept helps solve.
+
+| Concept | Question it helps answer | Example |
+| --- | --- | --- |
+| **Encapsulation** | Who may change an object's state, and under what rules? | `balance` is `private`; withdrawals go through `withdraw()` |
+| **Abstraction** | What does someone using a component need to know, and which details can be hidden? | You can call `withdraw()` without knowing which statements it uses internally to validate the request |
+| **Inheritance** | When an “is-a” relationship exists, how can a subclass receive and extend common characteristics? | `SavingsAccount` could be a kind of `BankAccount` if that matches the business domain |
+| **Polymorphism** | How can we call one common behavior while each type of object implements it differently? | Calling `pay()` to pay by card or e-wallet |
+
+#### A short example of polymorphism and collaboration
+
+Suppose a store supports multiple payment methods. Instead of requiring the checkout process to know the details of every payment provider, we define a **shared contract**:
+
+```java
+interface PaymentMethod {
+    boolean pay(long amount);
+}
+
+class CheckoutService {
+    boolean checkout(PaymentMethod paymentMethod, long total) {
+        return paymentMethod.pay(total);
+    }
+}
+```
+
+`CardPayment` and `EWalletPayment` objects can both implement `PaymentMethod`, while each has its own logic for `pay()`. `CheckoutService` only needs to know that it is collaborating with an object capable of processing payment according to that contract.
+
+```text
+                  PaymentMethod
+                       |
+CheckoutService -> pay(total)
+                       |
+             +---------+---------+
+             |                   |
+        CardPayment       EWalletPayment
+           (card)             (e-wallet)
+```
+
+This example shows that OOP is more than having data and methods inside the same class. A system also consists of **multiple objects sending requests to one another**, with each object managing its own part of the responsibility. Combining collaborating objects in this way is called *composition*; you do not necessarily need to build a complex inheritance hierarchy.
+
+### 6. How does OOP differ from procedural programming?
+
+Both approaches can solve the same problem. The difference often lies in **how data and responsibilities are organized**.
+
+| Perspective | Procedural approach | Object-oriented approach |
+| --- | --- | --- |
+| Design question | “Which functions are needed, and what steps should they perform?” | “Which objects are responsible, and how do they collaborate?” |
+| Organization | Functions operate on data passed to them | Objects manage state and expose behaviors |
+| Example call | `withdraw(accountData, amount)` | `account.withdraw(amount)` |
+| Common strength | Simple, clear, sequential processing flow | Clear boundaries of responsibility between components |
+
+Simply changing the syntax from `withdraw(accountData, amount)` to `account.withdraw(amount)` **does not automatically produce a good design**. What matters is whether business rules are placed appropriately, state is protected, and responsibilities make sense.
+
+Procedural programming remains suitable for many programs, especially small tasks or linear computational workflows. OOP is one way to organize software, not a mandatory solution to every problem.
+
+### 7. Common misconceptions
+
+- **“OOP means everything must be a class.”** No. Create a class when there is a clear responsibility; you do not need an additional class for every small function.
+- **“An object must represent something that exists in the real world.”** No. `Validator`, `PaymentPolicy`, and `Scheduler` can also be useful objects.
+- **“Encapsulation just means adding the `private` keyword.”** `private` is a tool. The real goal is to protect the object's state and rules.
+- **“Learning OOP means you must use inheritance.”** No. Interfaces and composition are often useful; use inheritance only when the relationship truly fits.
+- **“Writing OOP code automatically makes it safe when multiple threads run at once.”** No. If an object has shared state, you still need to design how concurrent access is handled.
+
+### 8. Try answering three questions yourself
+
+Suppose `lanAccount` and `minhAccount` are both created from `BankAccount`, each with a balance of 100,000 VND.
+
+1. **If Lan withdraws 20,000 VND, does Minh's balance decrease?** No, because the two accounts are separate objects with their own states.
+2. **Who should reject a withdrawal when the amount exceeds the balance?** The account object, because it is responsible for protecting its own balance.
+3. **Does the screen need to know the name of the balance variable and how to update it?** No; the screen uses the `withdraw()` behavior and the result it returns.
+
+When you begin designing a system with OOP, ask yourself: **What objects are there? What is each object responsible for? How should they call one another to complete a task?** These questions provide a starting point for deciding which classes, attributes, methods, and interfaces to create.
 
 </details>
 
