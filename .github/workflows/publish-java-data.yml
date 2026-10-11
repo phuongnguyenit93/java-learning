@@ -1,12 +1,14 @@
 name: Publish Java Learning Data
 
-# Start manually until both producer validation and Portal consumer are proven.
-# This workflow does NOT deploy the website or call any Cloudflare hook.
+# Main publishes Java data automatically. Only a VERIFIED release may trigger
+# the separate frontend's build-only workflow. No Cloudflare deployment here.
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   # One rolling release; never let two publisher runs replace assets together.
@@ -18,6 +20,11 @@ jobs:
     name: Generate, validate and publish Java data
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    permissions:
+      contents: write
+    outputs:
+      source_commit: ${{ steps.publish_release.outputs.source_commit }}
+      data_sha256: ${{ steps.publish_release.outputs.data_sha256 }}
     steps:
       - name: Restrict publishing to main
         shell: bash
@@ -72,6 +79,7 @@ jobs:
           (cd build/java-data-release && sha256sum --check java-learning-data.zip.sha256)
 
       - name: Publish rolling GitHub Release
+        id: publish_release
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
@@ -140,3 +148,47 @@ jobs:
           (cd build/java-data-verified && sha256sum --check java-learning-data.zip.sha256)
 
           gh release view "${tag}" --repo "${GITHUB_REPOSITORY}"
+          echo "source_commit=${commit_sha}" >> "${GITHUB_OUTPUT}"
+          echo "data_sha256=${data_sha}" >> "${GITHUB_OUTPUT}"
+
+  dispatch:
+    name: Trigger learning-platform build after verified Release
+    needs: publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - name: Require cross-repository dispatch credential
+        env:
+          DISPATCH_TOKEN: ${{ secrets.LEARNING_PLATFORM_DISPATCH_TOKEN }}
+        shell: bash
+        run: |
+          if [[ -z "${DISPATCH_TOKEN}" ]]; then
+            echo "::error::Missing LEARNING_PLATFORM_DISPATCH_TOKEN secret in java-learning. Use a fine-grained token with learning-platform Contents: Read and write to send repository_dispatch."
+            exit 1
+          fi
+
+      - name: Trigger verified Java data build (not deployment)
+        env:
+          GH_TOKEN: ${{ secrets.LEARNING_PLATFORM_DISPATCH_TOKEN }}
+          SOURCE_COMMIT: ${{ needs.publish.outputs.source_commit }}
+          DATA_SHA256: ${{ needs.publish.outputs.data_sha256 }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "${SOURCE_COMMIT}" =~ ^[0-9a-f]{40}$ ]] || { echo "::error::Invalid published source commit"; exit 1; }
+          [[ "${DATA_SHA256}" =~ ^[0-9a-f]{64}$ ]] || { echo "::error::Invalid published ZIP checksum"; exit 1; }
+
+          # The consumer uses these exact expectations when downloading the
+          # rolling Release. Any newer/mismatched Release fails its build.
+          jq -n \
+            --arg source_commit "${SOURCE_COMMIT}" \
+            --arg data_sha256 "${DATA_SHA256}" \
+            '{event_type: "java-data-published", client_payload: {source_commit: $source_commit, data_sha256: $data_sha256}}' \
+            > "${RUNNER_TEMP}/java-data-dispatch.json"
+
+          gh api --method POST \
+            repos/phuongnguyenit93/learning-platform/dispatches \
+            --input "${RUNNER_TEMP}/java-data-dispatch.json"
+          echo "Triggered learning-platform build for Java commit ${SOURCE_COMMIT}, ZIP ${DATA_SHA256}."
