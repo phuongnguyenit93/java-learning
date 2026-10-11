@@ -9,7 +9,8 @@ permissions:
   contents: write
 
 concurrency:
-  group: java-data-publish-${{ github.sha }}
+  # One rolling release; never let two publisher runs replace assets together.
+  group: java-data-publish
   cancel-in-progress: false
 
 jobs:
@@ -70,36 +71,72 @@ jobs:
             --source-commit-time "$(git show -s --format=%cI HEAD)"
           (cd build/java-data-release && sha256sum --check java-learning-data.zip.sha256)
 
-      - name: Publish immutable GitHub Release
+      - name: Publish rolling GitHub Release
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          tag="java-data-${GITHUB_SHA}"
+          tag="java-data"
           zip="build/java-data-release/java-learning-data.zip"
           checksum="build/java-data-release/java-learning-data.zip.sha256"
+          commit_sha="${GITHUB_SHA}"
+          data_sha="$(awk '{print $1}' "${checksum}")"
+          if [[ ! "${data_sha}" =~ ^[0-9a-f]{64}$ ]]; then
+            echo "::error::Invalid ZIP SHA-256."
+            exit 1
+          fi
+
+          # Do not let an outdated manual run overwrite a newer publication.
+          current_main="$(gh api "repos/${GITHUB_REPOSITORY}/git/ref/heads/main" --jq '.object.sha')"
+          if [[ "${current_main}" != "${commit_sha}" ]]; then
+            echo "::error::Source commit ${commit_sha} is no longer main HEAD (${current_main}). Re-run on current main."
+            exit 1
+          fi
+
+          notes="$(printf 'Rolling Java Learning Data release.\n\nSource commit: `%s`\nZIP SHA-256: `%s`\n\nDownload both assets and verify the checksum before consuming this dataset. The release tag remains fixed; the tag commit is not the source-version authority. Read manifest.json from the ZIP for the authoritative sourceCommit.\n' "${commit_sha}" "${data_sha}")"
 
           if gh release view "${tag}" --repo "${GITHUB_REPOSITORY}" >/dev/null 2>&1; then
-            # A manual retry must not replace a previously published artifact.
-            # Check BOTH release assets and fail if they differ.
+            # Re-running the same commit is harmless. Do not delete/re-upload
+            # matching assets, but replace them when the generated data changes.
             mkdir -p build/java-data-existing
-            gh release download "${tag}" \
+            if gh release download "${tag}" \
               --repo "${GITHUB_REPOSITORY}" \
               --pattern 'java-learning-data.zip' \
               --pattern 'java-learning-data.zip.sha256' \
-              --dir build/java-data-existing
-            cmp "${zip}" build/java-data-existing/java-learning-data.zip
-            cmp "${checksum}" build/java-data-existing/java-learning-data.zip.sha256
-            echo "Existing immutable release ${tag} matches generated package."
-            exit 0
+              --dir build/java-data-existing \
+              && cmp -s "${zip}" build/java-data-existing/java-learning-data.zip \
+              && cmp -s "${checksum}" build/java-data-existing/java-learning-data.zip.sha256; then
+              echo "Rolling release already contains identical assets."
+            else
+              # ZIP first, checksum last. Consumer must download both and retry
+              # if checksum verification fails during a replacement window.
+              gh release upload "${tag}" "${zip}" --repo "${GITHUB_REPOSITORY}" --clobber
+              gh release upload "${tag}" "${checksum}" --repo "${GITHUB_REPOSITORY}" --clobber
+            fi
+            gh release edit "${tag}" \
+              --repo "${GITHUB_REPOSITORY}" \
+              --title "Java Learning Data" \
+              --notes "${notes}" \
+              --latest=false
+          else
+            gh release create "${tag}" "${zip}" "${checksum}" \
+              --repo "${GITHUB_REPOSITORY}" \
+              --target "${commit_sha}" \
+              --title "Java Learning Data" \
+              --notes "${notes}" \
+              --latest=false
           fi
 
-          gh release create "${tag}" "${zip}" "${checksum}" \
+          # Verify the uploaded asset bytes, not just the command exit status.
+          mkdir -p build/java-data-verified
+          gh release download "${tag}" \
             --repo "${GITHUB_REPOSITORY}" \
-            --target "${GITHUB_SHA}" \
-            --title "Java Learning Data ${GITHUB_SHA:0:12}" \
-            --notes "Static Java learning dataset produced by generatePortalData at commit ${GITHUB_SHA}. Includes manifest.json, catalog, module projections and search indexes. This release is separate from local-run artifacts." \
-            --latest=false
+            --pattern 'java-learning-data.zip' \
+            --pattern 'java-learning-data.zip.sha256' \
+            --dir build/java-data-verified
+          cmp "${zip}" build/java-data-verified/java-learning-data.zip
+          cmp "${checksum}" build/java-data-verified/java-learning-data.zip.sha256
+          (cd build/java-data-verified && sha256sum --check java-learning-data.zip.sha256)
 
           gh release view "${tag}" --repo "${GITHUB_REPOSITORY}"
