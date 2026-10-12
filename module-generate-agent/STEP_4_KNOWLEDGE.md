@@ -1,6 +1,6 @@
 # Step 4 - Knowledge Rules
 
-Step 4 là canonical authoring/refactor step cho **Knowledge** sau khi Step 3 đã ổn định Menu structure.
+Step 4 là canonical authoring/refactor step cho **Knowledge** sau khi Step 3 đã ổn định Menu structure. **Trước khi viết/refactor full Knowledge body, bắt buộc thực hiện Teaching Blueprint Gate theo `STEP_3_5_TEACHING_BLUEPRINT.md` như Phase A của Step 4**, không phải canonical STEP mới.
 
 ### General Agent Rules + Curriculum Map context guard
 
@@ -23,6 +23,8 @@ Ngoài General Agent Rules, Step 4 phải đọc và nắm context của các ar
 + approved Step 3 Menu structure
 ```
 
+`STEP_3_5_TEACHING_BLUEPRINT.md` là **mandatory companion rule** phải đọc cho mọi Step 4 new/refactor/isolated authoring. Plan cho từng approved anchored H2, xác định **primary/secondary teaching intent** (khái niệm, WHY, HOW, quan hệ, learning journey, comparison, application, correctness hoặc intent khác phù hợp), áp dụng **intent-specific blueprint** cùng mental model, ví dụ và evidence thích hợp, sau đó **PASS Blueprint Gate trước khi triển khai full prose**. Đừng ép mọi H2 vào cùng template hay dùng riêng tiêu đề để chọn kiểu; đặc biệt H2 Learning Journey phải giải thích điểm xuất phát, sự tiến bộ giữa các milestone và đích đến, không chỉ liệt kê chủ đề. Với isolated review/validation chỉ đọc existing content, áp dụng các tiêu chí comprehension tương ứng mà không yêu cầu tạo lại toàn bộ planning note hay chỉnh sửa file nếu chưa được giao authoring.
+
 Curriculum Map cung cấp area/module ownership và boundary; ROADMAP cung cấp module learning journey; Step 3 Menu cung cấp chapter/path/title/section structure mà Knowledge phải triển khai.
 
 Nếu Curriculum Map không tồn tại và Step 4 được gọi như một **isolated Knowledge review/refactor**, không block chỉ vì thiếu file. Dùng current Roadmap/Menu/Knowledge/source/reference/metadata, neighboring ownership evidence và authoritative external documentation/real-world behavior để validate/refactor Knowledge theo scope thực tế. Existing Knowledge phải được preserve khi valid nhưng không được giữ technical claim sai chỉ vì historical content đã tồn tại.
@@ -34,10 +36,12 @@ Không suy đoán các orchestration, preservation, gap-routing hoặc cross-ste
 ```text
 NEW MODULE
 → consume Step 3 Menu skeleton
+→ Step 3.5 Teaching Blueprint + Gate (inside Step 4)
 → write full Knowledge
 
 REFACTOR MODULE
 → consume the reviewed/refactored Step 3 Menu skeleton
+→ Step 3.5 Teaching Blueprint + Gate (inside Step 4)
 → migrate/refactor existing Knowledge into that approved structure
 ```
 
@@ -99,9 +103,23 @@ short
 → names the concept, mechanism, lifecycle or other concrete learning topic directly
 → matches the opening focus of the section
 → descriptive statement/topic title rather than a Quiz/Interview-style question
+→ intelligible at this point to a learner with only verified earlier knowledge;
+   a new technical term can pair with a short plain-language angle
 ```
 
 Do not make the visible title carry the whole explanation, conclusion, motivation, or contrast. Put those in the body instead.
+
+**Title clarity check during authoring/refactor:** `rules/MODULE_CONTENT_RULES.md` also requires judging **beginner-facing meaning**, not only a short descriptive/no-question style. Before relying on an H2 title as orientation, see whether a learner reading its Portal card could predict the actual lesson focus without consulting the body. If an approved title is abstract, vague, misleading or indistinguishable from neighboring H2s, report its specific `MENU GAP` to Step 3; use the established same-focus/same-anchor wording-refinement process when authorized, preserving VI/EN and downstream relations. A technically excellent body does not make an opaque title usable, but a title need not define its entire technical subject.
+
+**Named-concept title/body consistency:** when an approved H2 owns a recognized technical concept, check that the learner can identify its established term from the title and that the body actually **introduces, explains and grounds that same concept**, including a localized plain-language bridge where necessary. Do not hide all standard terminology behind polished design-language paraphrases or assume a heading alone teaches the concept. Check adjacent H2s contribute distinct capabilities (e.g., understanding a responsibility vs assigning it vs evaluating cohesion). Route real Menu identity/title gaps back to Step 3; do not silently expand the body into a duplicate concept syllabus.
+
+**Approved concept-home delivery:** author each H2 as the actual learning role assigned by Step 3's canonical concept-family map. When it is the **primary first-teaching home**, define and illustrate the recognized concept locally at declared learner depth before relying on it; when it is a later comparison/application, build on its **already taught** meaning and teach the genuinely new skill instead of repeating the original full definition. If a neighboring owner has the deep implementation, give only the necessary first-use conceptual bridge and preserve that ownership. Keep the source's existing chapter path + anchored H2 identity and actual approved milestone; do not invent `conceptId`-based links or treat a generated Menu label as proof of learning.
+
+**Consume the reviewed integrated design preview, not a new syllabus:** when available from Step 3's existing author/reviewer result, verify it still matches the **current** Roadmap and approved actual chapter/H2 identities before writing. Use its concept homes, progression and abilities to select appropriate teaching evidence; do not copy its topic list as Knowledge prose or make it an additional tracked source of truth. A mismatch in grouping/focus/prerequisites is an upstream `MENU GAP` / `ROADMAP GAP`, not permission for Step 4 to silently redesign the curriculum.
+
+**Narrative-support content is not automatically a lesson:** teach WHAT, WHY, core model, prerequisite orientation and learning journey **inside appropriately scoped concept-centered H2 bodies** rather than adding separate H2s to satisfy each instructional concern. When an already-approved H2 is an abstract purpose/overview/boundary/learning-path essay with no independently substantial outcome, or two H2s only restate the same motivation, report a **Step 3 MENU GAP** for consolidation and downstream anchor migration; do not mask the issue by making each body longer or renaming only the title. Preserve a distinct approved origin, comparison or practice H2 if its actual teaching evidence justifies its identity. Step 4 must not silently restructure approved H2s itself.
+
+**Milestone-specific Knowledge-role delivery:** for each approved milestone learning outcome, check that its **PRIMARY** designated H2 contributor(s) actually teach enough to achieve it, using explanations/examples appropriate to their intents; **PREREQUISITE** learning was truly taught earlier; **RELATED/EXTENSION** material is not silently essential for completion. A shared chapter can support multiple milestones with different H2s, and a revisited H2 may build a genuinely different ability. Do not consider a category's mere link in `relatedKnowledge`, a shared heading, or an optional related concept as evidence of a fully taught milestone. Flag missing or incorrectly assigned primary teaching as `MENU GAP`/`ROADMAP GAP` according to ownership; don't inflate Step 4 with an invented curriculum.
 
 Prefer:
 
@@ -151,6 +169,45 @@ problem / motivation
 ```
 
 Not every section needs all layers. The content should fit the actual topic rather than follow a rigid template mechanically.
+
+### Author a teachable explanation, not only complete content slots
+
+Apply the **learner comprehension and grounded teaching evidence** contract in `rules/MODULE_CONTENT_RULES.md` Section 4 while writing **actual H2 bodies**. A correct definition plus an isolated WHY sentence or example mention is not automatically a sufficiently taught concept. Check that someone entering with the approved learner baseline can follow the essential meaning, motivation and causal/relational steps **without the author silently supplying missing knowledge**.
+
+For each important module-owned concept, author within its approved H2 focus and valid earlier lessons:
+
+```text
+first useful encounter
+→ introduce essential terms in plain language before relying on them
+→ show a concrete problem/scenario and why the concept matters
+→ work through the key actions, decisions or conceptual relationships
+→ make the outcome/observation/conclusion explicit
+→ connect that evidence back to the concept and the next learning focus
+```
+
+This is a **teaching logic**, not a literal H2/H3 template or a requirement to repeat every stage in every section. When an important mechanism has observable behavior, prefer a focused worked example with intermediate steps (such as initial state → operation/decision → changed or unchanged state → observed result). When code is useful, make its relevant outcome intelligible; when code is inappropriate, use a concrete scenario, contrast, diagram or reasoned counterexample. Reuse and progressively extend a small example across related sections where that adds understanding; do not merely restate the same example or definition under multiple H2s.
+
+**Bridge representations rather than stacking them:** when a Knowledge H2 combines an everyday scenario, process description, Java/pseudocode, a trace and/or printed output, explicitly connect the critical real-world actions to the corresponding conditions/operations, explain which branch actually runs for the stated input, and reconcile the final state and output with the teaching point. Do not put a plausible story above unrelated code or show expected output without enough information to derive it. When explaining several related core terms (such as state, command and control flow), point to their **specific roles in the same example** rather than defining them only in a detached glossary. Keep first-contact explanations concise and defer the detailed mechanism to the approved later focus; Java is not required when another representation is clearer.
+
+**First-contact core WHAT H2:** author the approved introductory H2 so its *own body* explains the concept in plain language and offers a small concrete mental picture when a definition alone remains abstract. A learner should understand that basic meaning **without needing to read a later WHY, HOW or comparison section**. Later H2s deepen the idea rather than retroactively supply its first intelligible meaning. This is local intelligibility, **not** a requirement for every H2 to repeat the whole WHAT→WHY→HOW chain or contain standalone executable code. Respect Step 3's approved focus, and report `MENU GAP` if that focus cannot support a viable entry explanation.
+
+**Java example integrity:** if an authored Java block is claimed runnable or is used as proof of actual Java behavior, ensure its syntax, declared dependencies/Java version, initial conditions and resulting output/state/exception agree; prefer a small complete compilation/execution context that a learner can reproduce. Compile/run meaningful examples with an available compatible toolchain when feasible, and report actual validation honestly. Mark conceptual pseudocode and intentionally partial snippets explicitly; do not portray them as standalone runnable code. Do not require Java code merely because the larger project teaches Java: a paradigm or purely conceptual lesson can use an appropriately explained scenario/trace instead.
+
+**Relevant concept contrasts:** where novices may conflate an important concept with another paradigm/mechanism, make the difference observable with a focused comparison or one shared scenario. Explain *what dimension differs*, *where they overlap* and *what the contrast does not imply*; e.g., an imperative-versus-declarative explanation must not imply all declarative implementations have no execution order or state effects. Teach only the comparison needed for this module and expand it in the approved later comparison H2 if one exists; do not silently move that H2's full lesson into an introductory WHAT section or invent an unrelated cross-module lesson.
+
+**Entry-chapter responsibility:** after the introductory Knowledge has been read in its actual order, a beginner should be able to explain the module's core topic in ordinary language and illustrate it with a meaningful example. If a core term first appears there but its definition is deferred to a later chapter, provide the necessary short foundation **at first use** unless a real prerequisite already taught it. The later deep-dive section remains valid and can expand on the earlier introduction. `BASE.md`, a title, Menu link or metadata cannot substitute for this teaching.
+
+**Learning Journey H2 delivery (when owned by the approved Menu):** write more than a list of upcoming concepts. For the important upcoming milestones, explain the specific learner capability gained, **why** the next stage builds on that capability, and a short task/observation that can indicate readiness. Give a realistic destination and, where justified, a small set of completion self-checks; keep the detailed teaching and exercises in their owning later H2s. If a running example/project is appropriate, preview **how it grows with the milestones**, then actually reuse/extend it where the later approved content permits. Do not impose the same project or amount of code on every conceptual module, claim a fixed completion duration, reproduce the Roadmap verbatim, or promise later topics that are missing from the approved scope. Optional reading should use verified authoritative/curated references under the existing Step 2 module Reference and Step 4 section-reference contracts rather than invented links.
+
+**Historical-origin H2 delivery (when owned by approved Menu):** follow the `ORIGIN / HISTORY` intent in `STEP_3_5_TEACHING_BLUEPRINT.md`, not a generic modern “WHY useful” paragraph. Answer the historically supportable origin question, situate the earlier limitation, explain the pivotal change(s) with accurate chronology and attribution, distinguish **historical causation** from illustrative comparison, and reconnect to the topic without losing its scope. In particular, do not equate **stored-program architecture**, **machine/assembly/high-level language evolution** and a **programming paradigm** or claim a single inventor/date without evidence. Verify substantial names/dates/firsts and priority disputes from reputable historical sources; use current section References where helpful. Clearly identify modern pseudocode/Java as pedagogical analogy rather than a period artifact, and avoid inventing historical quotes or details to make the narrative vivid. A historical subsection is optional for topics where history would not improve the approved learning outcome.
+
+**Taxonomy / multi-level concept overview (when owned by approved Menu):** implement the `TAXONOMY / MAP` intent in `STEP_3_5_TEACHING_BLUEPRINT.md` by explaining **why the chosen categories differ**, what the representative concepts in each mean, and how important categories connect in a shared situation. A table/list may orient the learner but must not substitute for the explanation of levels and interactions. Distinguish **entity/property**, **design principle**, **object/type relationship** and **language implementation mechanism** where relevant; do not present a popular “four pillars” list as a complete mandatory definition of OOP. Keep the overview within the approved H2 focus, refer deeper concepts to real later H2s or their actual owner, and ensure conceptual examples/diagrams do not claim objects or states that the displayed code never constructs/produces. A focused core-model H2 needs to teach its **named elements and their meaningful cooperation**, not list the entire broad topic.
+
+**Intentional reinforcement vs duplicate lessons:** when a concept appears in several modules/chapters, introduce only the meaning required by this H2's learning purpose and verified prerequisites; show **the new viewpoint, capability or decision** being taught here. Do not repeat full Java language mechanics, testing frameworks, SOLID or design-pattern inventories inside a paradigm lesson to maximize vocabulary coverage. Conversely, do not omit the short explanation needed to make first-use core concepts understandable merely because a sibling module owns the deep dive.
+
+Before closing Step 4 authoring/refactor, perform a brief source-grounded self-check with representative learner questions (normally an entry WHAT/WHY question, a mechanism/trace question and an application/boundary question when applicable). For each, verify that the necessary explanation can be reconstructed from **current authored Markdown and verified prerequisites**, identify the H2(s) supplying the evidence, and revise any absent or fragmentary teaching. For core introductory WHAT H2s, also attempt a basic explain-it-back answer using **that H2 and verified earlier prerequisites only**; audit meaningful Java code claims and comparisons against the shared rule. Do this for configured VI/EN paths with equivalent conceptual outcomes, without adding report YAML, assessment items or artificial per-H2 content quotas. This author self-check does not replace either independent review or Step 9's integrated validation.
+
+If all needed teaching fits existing approved H2 identities, fix it in Step 4. If meaningful first-contact teaching or progression **requires new/split/reordered H2 identities**, report `MENU GAP` to Step 3; do not silently redesign Menu. Route missing milestone or curriculum prerequisites to their established owners. Preserve valid prior content and downstream stable identities according to the existing refactor contract.
 
 ### Section-level References
 
@@ -228,6 +285,8 @@ relatedKnowledge
 → Knowledge nào trong cùng module giúp learner hoàn thành milestone đó?
 ```
 
+**Keep navigation and teaching-role evidence separate:** the current `relatedKnowledge` is an **untyped same-module category link**, not a `PRIMARY`/`PREREQUISITE`/`RELATED` classification and not an H2-level learning coverage ledger. When auditing links, compare each milestone's unique learning objectives to **actual primary teaching H2s** identified in Step 3's existing preview and confirmed in written Knowledge. A reused category ID is acceptable when it legitimately helps more than one milestone; different H2s within it may serve different teaching roles. Neither presence nor absence of a category link alone proves that content is complete/missing. Do not add unsupported role-specific YAML keys, silently change Roadmap order, or remove useful shared navigation simply because its title is the same for multiple milestones.
+
 Contract bắt buộc:
 
 ```text
@@ -267,6 +326,8 @@ Step 4 review phải kiểm tra ít nhất:
 [ ] every existing relatedKnowledge target still exists
 [ ] no stale Knowledge identity remains in Roadmap mapping
 [ ] important Roadmap milestones that should navigate to Knowledge are mapped when useful
+[ ] every material milestone learning outcome has sufficient actual PRIMARY teaching H2s;
+    genuine prerequisites are earlier and related-only links do not mask missing teaching
 [ ] mapping reflects CURRENT Knowledge, not historical Menu/Knowledge layout
 [ ] relatedKnowledge remains supporting navigation metadata, not curriculum authority
 ```

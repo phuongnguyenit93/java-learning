@@ -2375,22 +2375,22 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <summary><b><a href='./module/platform/development/programming/paradigm'>📁 paradigm</a></b></summary>
 <ul>
 <li>
-  <a href='./module/platform/development/programming/paradigm/aop'>🪄 aop</a>
-</li>
-<li>
-  <a href='./module/platform/development/programming/paradigm/data-oriented'>🪄 data-oriented</a>
+  <a href='./module/platform/development/programming/paradigm/imperative'>🪄 imperative</a>
 </li>
 <li>
   <a href='./module/platform/development/programming/paradigm/declarative'>🪄 declarative</a>
 </li>
 <li>
+  <a href='./module/platform/development/programming/paradigm/object-oriented'>🪄 object-oriented</a>
+</li>
+<li>
   <a href='./module/platform/development/programming/paradigm/functional'>🪄 functional</a>
 </li>
 <li>
-  <a href='./module/platform/development/programming/paradigm/imperative'>🪄 imperative</a>
+  <a href='./module/platform/development/programming/paradigm/data-oriented'>🪄 data-oriented</a>
 </li>
 <li>
-  <a href='./module/platform/development/programming/paradigm/object-oriented'>🪄 object-oriented</a>
+  <a href='./module/platform/development/programming/paradigm/aop'>🪄 aop</a>
 </li>
 <li>
   <a href='./module/platform/development/programming/paradigm/reactive'>🪄 reactive</a>

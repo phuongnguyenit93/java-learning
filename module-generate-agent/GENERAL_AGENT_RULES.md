@@ -25,6 +25,9 @@ STEP_2_ROADMAP_REFERENCE.md
 STEP_3_MENU.md
 → Menu + title skeleton/review for both new and existing modules
 
+STEP_3_5_TEACHING_BLUEPRINT.md
+→ mandatory Teaching Blueprint design gate inside Step 4, after approved Step 3 Menu and before full Knowledge prose; not an extra canonical Step
+
 STEP_4_KNOWLEDGE.md
 → Knowledge authoring/refactor against the approved Step 3 Menu
 
@@ -225,7 +228,7 @@ Step 2 — ROADMAP + Module Reference
         ↓
 Step 3 — Menu + title only
         ↓
-Step 4 — Knowledge
+Step 4 — Teaching Blueprint Gate (STEP_3_5_TEACHING_BLUEPRINT.md), then Knowledge
         ↓
 Step 5 — API learning documentation when applicable
         ↓
@@ -241,6 +244,8 @@ Step 10 — Commit / Push / Merge Request
 ```
 
 The step number and execution order are stable across new and refactor workflows. Existing content may change what must be audited, but it does not remove Step 3 from the canonical sequence.
+
+`STEP_3_5_TEACHING_BLUEPRINT.md` is a **mandatory companion of canonical Step 4**, not its own numbered execution unit. All Step 4 **authoring/refactor** assignments run its design gate before full Knowledge prose; Step 4-only read/review passes use its teaching quality criteria without manufacturing a separate blueprint artifact. Do not introduce a new horizontal child barrier, initial author/reviewer turn or Step transition for this subphase.
 
 ### New module workflow
 
@@ -509,6 +514,7 @@ Menu worker
 
 Knowledge worker
 → executes Step 4
+→ first performs the Step 3.5 Teaching Blueprint + readiness gate on approved H2 identities
 → writes/reviews README Knowledge + metadata
 → consumes the approved Step 3 Menu for both new and existing modules
 → migrates/refactors existing Knowledge into that approved structure when needed

@@ -420,6 +420,26 @@ what learner should understand before moving on
 which conceptual area downstream Knowledge may expand
 ```
 
+**Milestone competence and practice contract (planning, not a new roadmap schema):** besides naming the knowledge, the designer must be able to explain what the learner can **do, explain, predict, trace or justify** after each major milestone; what essential previous understanding it relies on; and which **small realistic task or observation** could demonstrate readiness to advance. A milestone is not learner-ready merely because its title and a list of covered keywords exist. This is a design/review obligation; use the CURRENT supported roadmap fields and review evidence, **do not invent** `practice`, `duration`, `completionChecklist` or `capstone` YAML properties.
+
+When an incremental project or running problem would materially improve the module, plan **which distinct capability each major milestone adds to the SAME growing task** and how the final synthesis tests their cooperation. Keep it within actual Curriculum ownership and approved milestone scope; one mandatory bank simulator, console app, Java dependency, capstone project or exercise **for every milestone** would be artificial in many conceptual modules. Concepts that demand deep prerequisites or belong to neighboring modules may be signposted as later extension instead of inserted into the core path.
+
+**Core vs optional depth and pacing:** check that each milestone's essential outcome is distinguished from useful advanced enrichment and that introductory examples do not demand later mechanisms without a bridge. If a learner-facing duration/weekly plan is helpful, treat it as a **conditional estimate with stated prerequisites and study assumptions**, not as an authoritative fixed duration or a reason to reorder content. Actual learning and mastery criteria outrank arbitrary week/day quotas.
+
+**Historical origin as a conditional milestone/focus:** include the evolution of a concept, technology or paradigm only when authoritative evidence and approved module ownership make that history materially useful to the learning goal. Distinguish historically **documented inventions**, **enabling architecture**, **language evolution** and **later paradigm classification**; do not invent a single origin, inventor, predecessor or year merely to manufacture a WHY milestone. A brief grounding anecdote may fit a later Knowledge H2 instead of a dedicated Roadmap node; substantial historical learning requires the normal approved milestone/prerequisite routing.
+
+**Multi-layer concept landscapes:** when the module contains several related kinds of concepts, the Roadmap must distinguish their learning roles and owners before choosing the learning order: e.g., foundational entities/properties, design principles, relationships among entities, and language-specific implementation mechanisms are **different conceptual levels**, not one flat mandatory feature inventory. Keep broad orientation distinct from milestones requiring deep mastery; route implementation-specific depth to its real owner when the current module teaches a language-independent paradigm. Do not infer that a popular numbered taxonomy (such as “four pillars”) is complete, obligatory in every program, or a prerequisite in that exact order without evidence.
+
+**Broad external syllabus vs module curriculum — overlap/depth audit:** a comprehensive external topic inventory may combine paradigm ideas, language-specific syntax/runtime behavior, independent design principles, testing, patterns and advanced concurrency. Do **not** copy every listed item into the current module, and do **not** infer a missing Roadmap milestone from an item's absence alone. For each material concept family, decide from verified Curriculum/repository ownership and the learner outcome whether to **(a) teach deeply here because this module owns it, (b) introduce a short first-use conceptual bridge here but teach deeply elsewhere, (c) signpost as related/later learning only, or (d) exclude as optional/out of scope**. Distinguish intentional cross-module reinforcement (same concept, different lens/depth) from redundant full lessons. Assess **learner capability and missing prerequisite reasoning**, not raw keyword coverage or a target number of chapters. This is an author/reviewer analysis in existing results, **not** a new YAML field, artifact or mandatory navigation relation. If ownership itself is unresolved, route a Curriculum gap to Step 1 rather than silently assigning it.
+
+**Canonical concept-family coverage BEFORE final milestone approval:** within the already-approved module boundary, identify the significant **recognized technical concepts and meaningful conceptual families** needed to achieve each milestone (e.g., Encapsulation / Data Hiding / Object Invariants). Use authoritative terminology, record known localized names/aliases where useful, and separate **foundation, constituent concept, related mechanism, design application, optional enrichment**. For each major concept/family, establish: the learning outcome it supports, its prerequisite concepts or verified earlier module, whether it has a genuine primary in-module learning home or only a first-use bridge/out-of-scope handoff, and why its intended milestone order enables understanding. A concept's mere appearance in a Roadmap title or list is **not evidence it will actually be taught**. This is a **compact intellectual coverage review**, not an instruction to turn every concept into a Roadmap node, allocate invented permanent `conceptId`s, mandate one exact flat taxonomy, or duplicate Step 1's cross-module ownership map. Detailed chapter/anchored-H2 placement belongs exclusively to Step 3.
+
+**Dependency is not just numbering:** Roadmap item order is the default readable learner path, but unrelated or parallel concepts need not be presented as a false strict dependency chain. Express non-obvious **milestone-level** prerequisites with the CURRENT supported `dependsOn` only where it adds information; do not assign unsupported H2-level prerequisite fields. Distinguish *must already know to understand* from *helpful to study beforehand*, and ensure every claimed prerequisite can be learned before first dependent use along the intended default path.
+
+**Reviewable milestone-to-concept outline (Step 2 evidence, not Menu design):** before approving the Roadmap, expose in the **existing author/reviewer result** a concise, grouped outline for **every material milestone**: its approved ID/name, target learner capability, significant recognized concept families/examples, true prerequisite milestones, local teaching depth versus neighboring-owner handoff, and a small demonstration of progress where appropriate. This is a **reviewable explanation of milestone coverage**, not an extra committed file/YAML field or a draft H1/H2 inventory. The reviewer must independently compare the outline with the current Roadmap and relevant technical/curriculum evidence; a list of 4 stages and 12 attractive topic titles is not proof of learning completeness. Retain genuine parallel concepts and optional extensions without inventing a false mandatory sequence. Step 3 alone assigns actual chapters/H2 identities after this milestone contract is approved.
+
+**Milestone coverage vs navigation (three semantic roles):** before leaving Step 2, distinguish concept families that will **directly teach/prove this milestone's new capability** from **genuinely required prior knowledge** and **related/optional context**. Do not treat all nearby concepts as equally required, or assume that a `relatedKnowledge` item means the corresponding milestone has a direct primary lesson. Step 2 defines these roles at the **outcome/concept-family level only**; Step 3 identifies exact teaching H1/H2 homes and prior-use sequence, while Step 4 checks the real authored bodies. The three roles are **pedagogical review categories**, not new `primaryKnowledge`, `prerequisiteKnowledge` or typed-relation Roadmap YAML fields. A single Knowledge category can eventually support multiple milestones for different outcomes; its existence or repeated navigation link alone does not prove direct learning coverage.
+
 Ví dụ granularity hợp lý:
 
 ```text
@@ -467,6 +487,8 @@ Knowledge Architect
 ### `relatedKnowledge`
 
 `relatedKnowledge` chỉ trỏ tới Knowledge category ids trong **cùng module** để hỗ trợ navigation.
+
+**Important semantic distinction:** its values are **untyped category-level navigation targets**. They may lead to a chapter that contains primary teaching for a milestone, revisited prior knowledge, or legitimate supplementary material; the current schema/Portal **does not assert which**. The `relatedKnowledge` label is not a formal learning-relationship type. Preserve all valid links when they help navigation, but independently establish actual PRIMARY teaching versus PREREQUISITE and RELATED context in the Step 3/4 review evidence using exact H2/lesson identities. Do not interpret a repeated category link as either verified mastery or automatic duplicate content.
 
 Nó:
 
@@ -602,6 +624,15 @@ Learning order có phù hợp với beginner không?
 Module boundary có khớp area Curriculum không?
 Có scope leakage sang module owner khác không?
 ROADMAP có practical concern quan trọng nào bị thiếu không?
+Major milestone có outcome quan sát/giải thích/áp dụng được và một minh chứng học tập hợp lý không?
+Milestone dependency có lý do rõ ràng hay chỉ là các keyword được xếp tuần tự?
+Nếu cần progressive practical project, mỗi giai đoạn có tăng năng lực thật và final synthesis có kiểm tra phối hợp không?
+Core learning goal có bị lẫn với optional advanced depth hoặc bị ép vào thời lượng suy đoán không?
+Các nhóm khái niệm khác cấp độ (entity/property, principle, relationship, mechanism) có bị nhập làm một danh sách khiến learner hiểu sai dependency/ownership không?
+Mỗi concept family cốt lõi có verified terminology, learner outcome, correct milestone placement và prerequisite/owner depth, không chỉ xuất hiện như keyword chưa có nơi dạy không?
+Milestone prerequisites có phân biệt real dependency với thứ tự trình bày mặc định, tránh suy ra dependency sai chỉ từ số thứ tự không?
+Với external syllabus lớn, các concept family đã phân biệt owner + độ sâu (teach, bridge, signpost, exclude) và intentional overlap vs full-content duplication chưa?
+Historical-origin milestone (nếu có) có đúng ownership, nguồn sử liệu, và không đánh đồng công nghệ hỗ trợ với khái niệm/paradigm không?
 VI wording có tự nhiên và tránh English filler không cần thiết không?
 ```
 
@@ -679,6 +710,12 @@ milestone too granular?
 duplicate responsibility?
 important concept isolated from its motivation?
 learner can explain the module end-to-end after following the path?
+major milestone outcomes can be demonstrated by an appropriate small task, trace or explanation?
+the learner's readiness to progress is intelligible without requiring a fixed timetable or unapproved advanced topics?
+the existing Step 2 review result explains each material milestone's concept-family coverage,
+real prerequisites, learner capability and depth/owner boundary without pre-authoring H2s?
+are concepts that directly deliver each milestone's ability distinct from required prior
+foundations and useful related/optional concepts, regardless of `relatedKnowledge` links?
 ```
 
 Approval không có nghĩa ROADMAP bất biến tuyệt đối. Correctness issue thật sự vẫn có thể buộc phải sửa, nhưng downstream không được tự redesign ROADMAP mà không quay lại Step 2.
@@ -823,6 +860,7 @@ Checklist:
 [ ] ROADMAP không được reverse-engineer từ Menu cũ
 [ ] Milestone ở đúng granularity
 [ ] Major prerequisite đã có
+[ ] Milestone-to-concept outline có reviewable evidence trong existing result: outcome, core families, real prerequisites, owner/depth và progress check; không dựa vào tiêu đề đẹp hay đếm topics
 [ ] Learning order có rationale rõ
 [ ] Beginner có thể theo được journey
 [ ] Scope không leak sang module khác

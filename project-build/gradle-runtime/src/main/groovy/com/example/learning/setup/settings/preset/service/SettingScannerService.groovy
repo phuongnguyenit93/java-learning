@@ -197,7 +197,7 @@ class SettingScannerService {
             if (
                     name == 'build' ||
                             name == '.gradle' ||
-                            name == '.worktrees'
+                            name == '.worktrees' || name == ".wt"
             ) {
 
                 return true

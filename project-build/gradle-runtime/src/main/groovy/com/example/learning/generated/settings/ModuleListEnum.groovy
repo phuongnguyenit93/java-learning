@@ -159,7 +159,7 @@ enum ModuleListEnum {
     DATA_ORIENTED_PROGRAMMING(
             'module:platform:development:programming:paradigm:data-oriented',
             'module/platform/development/programming/paradigm/data-oriented',
-            'LIBRARY',
+            'SERVLET',
             'Data-Oriented Programming principles and data-centric program design',
             false,
             []

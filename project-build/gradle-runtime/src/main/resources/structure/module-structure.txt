@@ -578,12 +578,12 @@ module
     │   │   │               ├── process-api-updates [JAVA_9_PROCESS_API_UPDATES] : Java 9 - Process API Updates
     │   │   │               └── stack-walking-api [JAVA_9_STACK_WALKING_API] : Java 9 - Stack-Walking API
     │   │   └── paradigm
-    │   │       ├── aop [ASPECT_ORIENTED_PROGRAMMING] : Aspect-Oriented Programming concepts, cross-cutting concerns, terminology and implementation models
-    │   │       ├── data-oriented [DATA_ORIENTED_PROGRAMMING] : Data-Oriented Programming principles and data-centric program design
-    │   │       ├── declarative [DECLARATIVE_PROGRAMMING] : Declarative Programming paradigm, intent-oriented specification and related styles
-    │   │       ├── functional [FUNCTIONAL_PROGRAMMING] : Functional Programming paradigm concepts and trade-offs
     │   │       ├── imperative [IMPERATIVE_PROGRAMMING] : Imperative Programming paradigm, state, commands and procedural organization
+    │   │       ├── declarative [DECLARATIVE_PROGRAMMING] : Declarative Programming paradigm, intent-oriented specification and related styles
     │   │       ├── object-oriented [OBJECT_ORIENTED_PROGRAMMING] : Object-Oriented Programming paradigm concepts and object collaboration
+    │   │       ├── functional [FUNCTIONAL_PROGRAMMING] : Functional Programming paradigm concepts and trade-offs
+    │   │       ├── data-oriented [DATA_ORIENTED_PROGRAMMING] : Data-Oriented Programming principles and data-centric program design
+    │   │       ├── aop [ASPECT_ORIENTED_PROGRAMMING] : Aspect-Oriented Programming concepts, cross-cutting concerns, terminology and implementation models
     │   │       └── reactive [REACTIVE_PROGRAMMING] : Reactive Programming paradigm, data flow and backpressure concepts
     │   ├── software-design
     │   │   ├── architecture

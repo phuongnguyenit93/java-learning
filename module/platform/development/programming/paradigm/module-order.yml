@@ -1,0 +1,16 @@
+version: 1
+children:
+  imperative:
+    order: 10
+  declarative:
+    order: 20
+  object-oriented:
+    order: 30
+  functional:
+    order: 40
+  data-oriented:
+    order: 50
+  aop:
+    order: 60
+  reactive:
+    order: 70

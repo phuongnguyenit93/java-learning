@@ -264,6 +264,8 @@ roadmap → Knowledge structure
 
 This is the lowest-cost point to correct chapter numbering, file placement and title structure before downstream metadata and relations depend on them.
 
+**Handoff to Teaching Blueprint:** approved chapter/H2 identities, their learner-facing order and assigned learning focuses are the fixed inputs for the mandatory **Step 4 pre-authoring phase** defined in `STEP_3_5_TEACHING_BLUEPRINT.md`. Step 3 does **not** write the blueprint's worked examples or full Knowledge prose. If the blueprint reveals that a required teaching focus cannot fit any approved H2, route the structural defect back to Step 3 instead of inventing new H2s in Step 4. This handoff is **not** an extra canonical Step or parent STEP barrier.
+
 ---
 
 ## Pedagogical decomposition từ ROADMAP sang Knowledge H2
@@ -297,6 +299,72 @@ Step 3 có thể materialize thành:
 
 Các H2 trên vẫn cùng phục vụ một milestone nếu chúng không tạo learning goal mới ngoài ROADMAP.
 
+### Canonical Concept Architecture Gate — BEFORE choosing chapter/H2 titles
+
+**Knowledge architecture precedes menu wording.** Within the **approved** Step 1 module ownership and Step 2 milestone outcomes/order, build a compact **concept-to-teaching coverage map** in the existing Step 3 working/review reasoning, **before** inventing H1/H2 visible names or grouping lessons by similar-looking titles. For each material module-owned concept or concept family, resolve:
+
+1. **Canonical identity and aliases:** its **verified, recognized technical term** (when one exists), natural localized display name, relevant synonyms/aliases and meaning; do not invent an official standard term or assume English translation is canonical in every locale. This is a semantic identity for planning, **not** a newly persisted `conceptId` or required schema.
+2. **Parent/family and type of relationship:** which real conceptual family or chapter topic it belongs to, and whether links to neighbors mean **part-of / kind-of / uses / contrasted-with / prerequisite / application**. These relationships are not interchangeable; similarity of words does **not** establish parentage or learning order. Classify by educational/technical relationship, not by the phrase the AI happened to generate for a title.
+3. **First intelligible teaching home and depth:** identify the **primary place within this module** where essential WHAT and relevant mechanism/relationship are actually introduced, versus optional bridges, later deeper treatment or a different module's canonical owner. A single concept may legitimately recur for a different outcome; repeated **full definitions** in unrelated H2s are not the desired structure. Do not mistake one concept = one H2, or first brief mention = mastery.
+4. **Real prerequisite and progression:** distinguish prior concepts strictly needed to understand this item from useful background; prove that essential vocabulary and mental models arrive **before** the H2 that depends on them. Identify where sibling concepts can branch after common foundation without inventing an artificial single-file dependency chain.
+5. **Learning objective and section role:** what unique learner capability the concept contributes, whether the planned H2 teaches **WHAT, WHY, HOW, RELATION, APPLICATION or a deliberate combination**, and why adjacent H2s will not duplicate each other's teaching. A chapter title is a meaningful family; H2 titles are discoverable lessons with a specific focus, **not** an unrelated glossary or interchangeable task prompts.
+6. **Milestone-to-H2 traceability:** for every important Step 2 outcome, locate one or more prospective chapter/H2 teaching homes; for every proposed H2, point **back** to an approved milestone outcome and ownership. Expose missing owned concepts, orphan H2s, hidden prerequisites and misleading grouping **before** materializing scaffold or approving stable anchors.
+
+**Role-aware learning relation test:** for each major milestone **outcome** (not merely each roadmap node), explicitly distinguish in the existing Step 3 design/review result: **PRIMARY TEACHING** — the actual one or more H1/anchored H2 teaching homes that introduce or develop the *new capability*; **PREREQUISITE KNOWLEDGE** — previously taught essential concepts/H2s whose understanding is required before the primary content; **RELATED / EXTENSION** — useful comparison, optional enrichment or separate deeper lesson not required to claim milestone completion. The concept's first principal home and the milestone's direct teaching contributors are different questions; the same chapter/H2 may legitimately be PRIMARY for more than one distinct objective if its real teaching covers each. A chapter can include several H2s with different roles. Do not automatically classify every H2 of a linked chapter as PRIMARY or require a single PRIMARY H2 per milestone/concept.
+
+**Prerequisite evidence test:** a prerequisite must be established **earlier in the learner's valid path**, by exact existing prior H2 teaching or a verified prerequisite module, not just named in another title, mentioned in a related list or placed nearby. If a needed foundation exists only later, repair first-use placement inside Step 3 scope or route genuine milestone/ownership gaps to Step 2/1. An optional related concept must not be silently treated as a completion requirement. Preserve legitimate revisits at different learning depths without repeating whole lessons.
+
+**Planning illustration, not a new repository format:** milestone about maintaining valid object state → conceptual family `Encapsulation` → focused teaching for `Encapsulation` / `Data Hiding` / `Object Invariants` **only when each needs distinct learning depth**. If Java `private` semantics are owned by another module, introduce only enough context for this paradigm lesson and defer Java language details. Prefer `Data Hiding — Che giấu dữ liệu` to a vague title that hides the standard concept; do not split a focused, coherent explanation solely to make the inventory longer.
+
+**Gate:** Step 3 must fix any **Step 3-owned** grouping/identity/teaching-home/first-use gap before H2 approval; a genuine missing milestone/dependency routes to `ROADMAP GAP` (Step 2), and a cross-module ownership conflict routes to `CURRICULUM GAP` (Step 1). Do not create or write new persistent `conceptId`, `canonicalName`, `parentTopic`, `prerequisites`, `knowledgeRefs` or UI data models as a workaround; the current stable chapter path + anchored H2 identities, Roadmap schema and relation contracts remain authoritative. This audit can be concise and recorded within the **existing Step 3 result**, not as a new tracked planning artifact, mandatory extra review round or generator stage.
+
+**Concept-first H2 materialization — separate SUBJECT from EXPLANATION:** every proposed H2 must have one **defensible primary teaching unit**: (A) a recognized technical concept/family with canonical discoverable naming, or (B) a clearly distinct substantive comparison, historical explanation, problem analysis, process, practice/decision or synthesis outcome. A unit in category B is not a loophole to turn `WHY`, `purpose`, `concept map`, `where to start`, `relation to Java`, or each Roadmap slogan into standalone H2s merely because they are important to mention. Unless there is an independently teachable and approved learning outcome, place such orientation **inside** the relevant concept-focused H2 (or a concise appropriate existing entry section); then verify its presence in Step 4. An existing H2 focused on `OOP` can legitimately introduce why OOP matters, its object mental model and the next learning steps **in one coherent lesson**. Do not create an additional H2 that simply rephrases the same motivation. Conversely, do not compress a genuine technical topic into a one-line glossary entry or omit a separate HOW/comparison that is substantive and necessary.
+
+**H2 necessity / merge-split challenge:** before creating or keeping each anchored H2, ask: **what would a learner specifically fail to understand or do if this H2 were merged into its nearest concept lesson?** If the answer is only “we need a WHY paragraph / title for learning journey / outline of later chapters”, the H2 is not independently warranted. Compare neighboring lessons' **actual promised learner abilities**, not merely whether their titles differ. If two lessons compare the same previous approach to the same OOP benefit, merge or re-scope unless they provide provably different analyses. A module with real scope and prerequisite needs may require many H2s; neither a fixed maximum nor an artificial quota of canonical-name H2s is permitted.
+
+### Reviewable Integrated Roadmap → Menu Design Preview (Step 3 evidence)
+
+**Do not leave the concept architecture only in the author's head.** In the **existing Step 3 author/reviewer result**, provide a compact **learner-order preview** that makes the Stage/Progression → approved Roadmap milestone → concept family/chapter → focused H2 lessons relationship inspectable **before accepting the Menu scaffold**. A major module can use a grouped table or indented outline; smaller modules need only a concise readable mapping. This is **not** a new tracked blueprint, a new hierarchy in the Roadmap schema, an extra canonical Step, or a Portal UI requirement.
+
+For each approved milestone and its material learning concepts, the preview must make the following independently checkable:
+
+- **Roadmap anchor:** actual approved milestone ID/name and its measurable learner outcome; group into broad stages/waves **only when such grouping helps explain progression**, not because an external example used four stages. Stage names in the preview are explanatory and do not create new curriculum nodes.
+- **Topic/concept structure:** one or more meaningful proposed chapter/concept families and the **canonical recognized terms** to introduce within them, including their **primary teaching home versus short bridge/later deep-dive elsewhere**. Do not treat `Class`, `Encapsulation`, `Composition` and `Dynamic Dispatch` as interchangeable component types.
+- **Lesson decomposition:** proposed or current H1 + anchored H2 identities/titles and **one distinguishing learner outcome per meaningful H2**. A concept may be taught coherently in one H2 or through several H2s with different intents; do not force a one-concept/one-H2 mapping or invent filler lessons.
+- **Prerequisite and reason for order:** essential already-taught knowledge and the explanatory reason why major groups follow one another; clearly label a **strict prerequisite** versus a sensible default presentation order or optional parallel branch.
+- **Boundary and depth:** concepts owned deeply by this module, first-contact contextual bridges, and advanced topics owned elsewhere; mark material omissions, excessive repetition, unapproved scope or orphan H2s as findings rather than silently adding content.
+- **Practice/readiness preview:** for significant chapter/milestone transitions, a compact indication of **what a learner can do or explain afterward and how to check it**; detailed exercises belong to Step 4 and later assessments.
+- **Three learning roles for each important outcome:** identify the **PRIMARY teaching H2(s)** that actually build the approved skill, **PREREQUISITE** concepts with their verified earlier teaching homes, and useful **RELATED/EXTENSION** chapters/H2s (if any). Give a short teaching-evidence rationale so the roles cannot be inferred from word similarity or chapter co-location; no role needs a new persisted relation field.
+
+**Illustration only — partial OOP row, NOT a mandated OOP Roadmap:**
+
+```text
+Approved milestone: state-behavior-and-invariants
+  Goal: explain how a valid object state is protected by its published behavior
+  Family / chapter candidate: Encapsulation (object-state boundary)
+  Canonical concepts to teach: Encapsulation; Data Hiding; Object Invariants
+  Prerequisite: basic Object + State meaning already introduced
+  Proposed H2 teaching homes:
+    PRIMARY: Encapsulation — Why external changes need a boundary [CONCEPT / WHY]
+    PRIMARY: Object Invariants — Conditions that must remain valid [WHAT / APPLICATION]
+    PREREQUISITE: earlier Object + State introduction (verify actual H2/source)
+    RELATED: later Java access-modifier mechanism (different owner; optional deep dive)
+  Demonstration: trace one valid update and one rejected invalid update
+  Handoff: detailed Java access modifiers belong to the verified Java owner
+```
+
+**Two review moments within the existing Step 3 author/review work (not new rounds):** (1) compare the proposed map **against the real approved Roadmap and references** before creating H2 scaffolds; (2) after materializing/refining the actual Menu, reconcile the preview with **every current H1 + anchored H2 ID/title** in learner order, not just the examples or changed lines. **Both directions** must hold: each important approved outcome has a real teaching home, and each actual H2 is justified by an approved outcome. A reviewer must inspect current source and record concrete gaps; copying an author's preview without checking current files is NOT review. For VI/EN, verify semantic concept/learning-order parity without assuming identical wording, IDs or counts where the existing language contracts do not require them.
+
+**Concept vs narrative balance check:** mark the H2s that **teach the first usable meaning of a core concept** and the H2s that merely **discuss the course, roadmap or benefits of concepts taught elsewhere**. The latter cannot be accepted as full conceptual coverage; require a compelling distinct outcome for each such H2. In particular, a first chapter consisting predominantly of broad motivation, boundaries, concept lists and orientation while actual named building blocks only appear in later chapters must be checked for **unnecessary narrative fragmentation** and delayed first-contact teaching. This is a qualitative gate, not a rule that every first chapter must teach all later detailed topics or reach a fixed concept-to-narrative ratio.
+
+**Current Roadmap binding boundary:** `relatedKnowledge` maps milestones to **same-module Knowledge categories**, not individual H2s and not a typed PRIMARY/PREREQUISITE/RELATED relationship. A shared category link may be useful at several milestones while different H2s inside it are the actual direct teachers. Review the exact current H2 homes separately; reject a milestone with **only navigational/related** support and no content capable of teaching its unique objective. Conversely, do not delete a legitimate repeated `relatedKnowledge` entry just because categories overlap. Never invent `primaryKnowledge`/`prerequisiteKnowledge` YAML keys or pretend the present Portal shows role-specific badges; implementing a typed UI would require a separately authorized schema/Portal change.
+
+**Pass condition:** a novice looking at just the ordered chapter/H2 titles should recognize the broad concept families and important standard terms, see meaningful progression rather than a flat collection, and reasonably anticipate what each lesson teaches. This **title-only usability test complements**, but does not replace, the concept/ownership/dependency checks or actual Knowledge teaching in Step 4. A richly formatted or collapsible Menu does not compensate for incorrect underlying concept architecture.
+
+**Multi-level conceptual overview vs focused H2:** when a learner asks for the “components” of a broad topic, check whether the approved Roadmap actually contains **distinct conceptual levels** (e.g., entity model, design principles, relationships and implementation mechanisms). Step 3 assigns each level to a coherent chapter/H2 focus and first-use order, with a compact overview/bridge where useful; do not cram an entire multi-chapter taxonomy into an H2 approved only to introduce one core model, or silently leave a genuinely required level untaught. Conversely, do not split every glossary term into its own H2 or treat language-specific syntax as part of a language-independent paradigm without ownership evidence. For an overview H2, ensure its title/focus clearly promises **orientation** rather than full deep teaching; for a focused H2, require enough room for the meaningful relationship among its named concepts.
+
+**Breadth-vs-depth Menu gate for overlapping subjects:** apply Step 2's broad-syllabus ownership/depth decisions when converting an extensive external checklist to H2s. Materialize in-depth H2 identities for **module-owned** outcomes; give legitimately needed outside terms a concise first-use bridge inside a relevant H2, not their own duplicate chapter; merely orient/signpost optional related subjects where genuinely helpful; exclude unrelated advanced features. Do not copy an entire sibling module's design-pattern, language-mechanism or testing syllabus merely to appear complete. Nor may this rule excuse omitting a module-owned foundation necessary to understand approved later H2s. When two related H2s seem repetitive, confirm they teach **different capabilities, viewpoints or levels of depth** before retaining both. Preserve the existing approved Roadmap and stable-anchor migration contracts.
+
 ### Step 3 learner baseline and foundation-focus gate
 
 Follow `rules/MODULE_CONTENT_RULES.md` as the **sole source of shared learning-content quality**: assume no prior understanding of module-owned core concepts unless a verified prerequisite establishes it; teach WHAT/WHY/RELATION before depending on HOW; do not treat the title of a module/H2 as proof that its meaning was taught.
@@ -308,7 +376,7 @@ Follow `rules/MODULE_CONTENT_RULES.md` as the **sole source of shared learning-c
 - Distinguish terms already taught by real prerequisites from terms only named in an upstream module. Provide an entry/bridge focus where needed, or report the proper Curriculum/Roadmap gap.
 - Before approving Menu, ask whether Step 4 can fully realize each focus **without adding/splitting/reordering H2**. If not, fix the Step 3 skeleton before handoff.
 
-For example, the Spring Boot application-runtime entry flow should introduce the meaning of application runtime and why its lifecycle matters **before** Boot-specific hooks. A suitable descriptive sequence is `Application Runtime: Khái niệm và phạm vi` → `Vai trò của runtime trong quá trình thực thi ứng dụng` → `Spring Boot trong quá trình điều phối Application Runtime` → `Vòng đời của SpringApplication`. These are illustrative learning focuses, not mandatory exact H2 identities.
+For example, the Spring Boot application-runtime entry flow should introduce the meaning of application runtime and why its lifecycle matters **before** Boot-specific hooks. The *motivation for understanding runtime* can be taught **inside** an `Application Runtime — Khái niệm và phạm vi` H2; actual next H2s should identify distinct subjects such as `SpringApplication — Vai trò trong khởi động ứng dụng` or `SpringApplication — Vòng đời và các giai đoạn chính` **only when each adds its own approved capability**. Do not automatically create an additional standalone `Vai trò của runtime trong quá trình thực thi ứng dụng` merely to give WHY a separate H2.
 
 For a foundational term **owned by another module**, Step 3 identifies the first suitable H2 where Step 4 can author a short **plain-text contextual bridge** under the shared rule. Do **not** add a special navigation H2, module link, route, `relatedModules`, `readmeRelated` or metadata solely to refer to the other module. This optional prose bridge never replaces a genuine missing prerequisite.
 
@@ -322,15 +390,18 @@ Khi Step 3 materialize các anchored H2 của Chapter 1, phải bảo đảm ng�
 2. **WHY — Mục đích, vai trò và động cơ học:** vì sao concept tồn tại hoặc vì sao quan trọng phải hiểu nó; vấn đề/hạn chế/tình huống thực tế mà nó giúp giải thích hoặc xử lý. Không sáng tác một `problem solved` giả cho những chủ đề mang tính mô tả tự nhiên như application runtime.
 3. **CORE MODEL — Các thành tố/khái niệm chính và mối quan hệ:** giới thiệu mental model ban đầu; chỉ nêu thành phần, trạng thái, giai đoạn, abstraction hoặc quan hệ **thật sự tồn tại**. Không ép mọi concept phải có `components` hay `lifecycle` riêng khi bản chất không có.
 4. **PREREQUISITE ORIENTATION — Điểm xuất phát của learner:** chỉ rõ tối thiểu vốn từ/kiến thức nào cần để đọc tiếp, giải thích hoặc dành một short bridge cho term thiết yếu chưa được học, phân biệt nội dung module tự sở hữu với module khác. Nếu không cần prerequisite bổ sung, không tạo H2 rỗng mang tên `Prerequisites`; vẫn phải xác nhận entry không có hidden prerequisite.
-5. **LEARNING JOURNEY — Bản đồ đường học tiếp:** cho learner biết các nhóm kiến thức/chương tiếp theo sẽ đi theo hướng nào và liên hệ ra sao với foundation vừa học. Không viết lại toàn bộ ROADMAP, tạo bản ROADMAP khác hoặc bắt buộc một H2 `Lộ trình học` nếu có thể giới thiệu tự nhiên trong focused section.
+5. **LEARNING JOURNEY — Bản đồ đường học tiếp:** cho learner biết các nhóm kiến thức/chương tiếp theo sẽ đi theo hướng nào, mỗi chặng phát triển năng lực gì và liên hệ ra sao với foundation vừa học. Bảo đảm có H2 scope phù hợp để Step 4 giới thiệu những bài thực hành/minh chứng năng lực quan trọng và một ví dụ phát triển xuyên suốt **khi được approved Roadmap hỗ trợ**, không buộc mọi chặng có H2 bài tập riêng. Không viết lại toàn bộ ROADMAP, tạo bản ROADMAP khác hoặc bắt buộc một H2 `Lộ trình học` nếu có thể giới thiệu tự nhiên trong focused section.
 
-**Năm nhóm nội dung trên là sàn tối thiểu, không phải danh sách đóng.** Step 3 **phải bổ sung H2/focus nhập môn khác khi cần** để làm rõ vocabulary, vấn đề thực tế, so sánh cơ chế cũ/mới, ví dụ nền, bối cảnh lịch sử có ích, ranh giới ownership hoặc cầu nối đến chapter sau. Không được dừng ở đúng năm mục vì đã tick checklist; không được thêm mục hình thức chỉ để tăng số lượng.
+**Năm nhóm nội dung trên là sàn tối thiểu về NỘI DUNG, không phải năm đơn vị H2.** Step 3 chỉ **bổ sung H2 nhập môn khi có teaching unit thực sự độc lập** cần cho vocabulary, cơ chế, so sánh đáng học, lịch sử có scope riêng hoặc prerequisite; còn phần bối cảnh, vì sao hữu ích, bản đồ nội dung và learning journey ngắn phải được tích hợp tự nhiên vào body của H2 có concept/focus thích hợp. Không được dừng ở đúng năm mục vì đã tick checklist; cũng không được sinh thêm bài mang tiêu đề văn vẻ để đủ từng mục trong năm nhóm.
+
+**Historical WHY vs conceptual WHY focus:** khi approved scope thật sự cần giải thích **nguồn gốc/quá trình hình thành**, dành H2 hoặc một phần focus phù hợp cho câu hỏi lịch sử khác với H2 giải thích **vai trò/lợi ích hiện tại**. Tiêu đề phải phản ánh trọng tâm thật (ví dụ, nguồn gốc và sự phát triển khác với vai trò và mục đích), không ép mọi module thêm chapter lịch sử. Bảo đảm có chỗ để Step 4 giải thích bối cảnh → biến đổi được kiểm chứng → ranh giới khái niệm → ý nghĩa hiện tại, không bắt Step 3 tự viết sử liệu. Nếu việc bổ sung cần milestone mới hay thay đổi ownership, route về Step 2/1 theo contract.
 
 **Materialization contract:**
 
 - Mỗi nhóm phải có **một hoặc nhiều H2 phù hợp về scope** trong Chapter 1 để Step 4 có thể hiện thực hóa nội dung; **một H2 có thể đáp ứng nhiều nhóm** nếu vẫn có một learning focus rõ ràng. Năm nhóm **không đồng nghĩa** phải có năm H2.
 - WHAT/WHY và mental model phải có learner-facing **anchored foundation identity**, không được giấu toàn bộ trong BASE.md, một lời mở đầu không anchor, hoặc đoạn prose của H2 chuyên sâu đang giả định người học đã biết chúng.
 - PREREQUISITE ORIENTATION và LEARNING JOURNEY có thể được diễn đạt tự nhiên **bên trong body của một H2 nhập môn phù hợp**, không bắt buộc H2 riêng; Step 3 vẫn phải kiểm tra rằng structure có đúng chỗ để Step 4 viết đủ chúng.
+- **WHY và CORE MODEL cũng không mặc định cần H2 riêng** nếu H2 nhập môn đã giải thích đầy đủ vấn đề, động cơ, khái niệm và quan hệ cốt lõi. Một `concept map` chỉ liệt kê thuật ngữ, hay bài `learning path` chỉ giới thiệu chương sau, là **supporting exposition**, không phải bằng chứng có một teaching unit độc lập. H2 chuyên về lịch sử hoặc comparison vẫn phù hợp khi có mục tiêu riêng thực chất.
 - Dùng **statement/topic-style H1/H2 tự nhiên cho từng module**, không copy các nhãn `WHAT`, `WHY`, `CORE MODEL`, `PREREQUISITES`, `LEARNING JOURNEY` thành title literal của mọi module.
 - Nếu một khái niệm quan trọng đã được prerequisite thực sự dạy, Chapter 1 có thể dùng bridge ngắn và đi thẳng vào **góc nhìn mới thuộc module hiện tại**; không dạy lại toàn bộ owner module. Không vì thế mà bỏ qua phần nhập môn của core concept do module hiện tại sở hữu.
 - Nếu năm nhóm không thể được phân bổ vào Chapter 1 từ approved Roadmap mà không thay đổi milestone/ownership, report upstream `ROADMAP GAP` / `CURRICULUM GAP` theo đúng owner. Nếu chỉ cần mở rộng, split, merge hoặc reorder H2 trong existing approved milestone, đó là công việc Step 3 bình thường.
@@ -340,24 +411,34 @@ Khi Step 3 materialize các anchored H2 của Chapter 1, phải bảo đảm ng�
 ```text
 Git — first chapter
 → Git: Khái niệm và mục đích
-→ Bài toán quản lý phiên bản mã nguồn
 → Repository, Working Tree, Staging Area và Commit
-→ Bối cảnh học và mối liên hệ với các chương thao tác Git
+→ Bối cảnh trước Git, động cơ học và hướng sang thao tác Git
+  are SHORT explanations inside the relevant H2 body unless they each have
+  a distinct, substantial approved comparison or practice objective.
 
 Spring Boot Application Runtime — first chapter
 → Application Runtime: Khái niệm và phạm vi
-→ Vai trò của việc hiểu Application Runtime
-→ Các trạng thái và thành tố chính trong quá trình thực thi ứng dụng
-→ Spring Boot trong mô hình Application Runtime
+→ SpringApplication: Vai trò trong khởi động ứng dụng (if owned here)
+→ SpringApplication: Vòng đời và các giai đoạn chính (if distinct/approved)
+→ WHY, conceptual map and learning-path preview stay in the relevant lesson
+  bodies rather than being mechanically promoted into extra H2 identities.
 ```
 
 Trong ví dụ, prerequisite orientation và preview các chương sau có thể nằm **bên trong H2 nhập môn tương ứng**; ví dụ không có ý nói bốn H2 luôn đủ cho mọi module. Module khó hơn có thể cần sáu, tám hoặc nhiều H2 nhập môn nếu từng H2 có focus riêng và không vượt boundary. Step 4 vẫn là owner viết full body.
 
 **Chapter 1 review gate — mandatory cho mỗi language:** reviewer đọc full Chapter 1 H1/H2 theo thứ tự render, ánh xạ **cả năm nhóm** vào H2 thích hợp, kiểm tra core WHAT/WHY xuất hiện trước API/lifecycle/deep HOW, kiểm tra không có hidden prerequisite, và xác nhận mỗi section đủ scope để Step 4 triển khai. Nếu thiếu bất kỳ nhóm nào mà không có lý do hợp lệ về cách thực hiện trong H2 hiện có thì **MUST FIX trong Step 3**; title-only scaffold hay lời hứa `Step 4 sẽ tự thêm` không phải bằng chứng đạt gate.
 
+**Chapter 1 anti-fragmentation MUST FIX gate:** before approving the first chapter, temporarily remove each standalone `WHY / origin / purpose / concept map / scope boundary / starting point / next journey` title and ask whether its distinct approved learning outcome would be lost if the explanation moved into a real foundational concept H2. If not, merge/rehome the prose focus instead of preserving the standalone H2. Read the **full first-chapter title cluster** and identify needless overlaps (e.g., two H2s both explain why dispersed data/rules motivate OOP); a reviewer must not PASS the chapter solely for satisfying all five coverage groups. Also verify that early concept vocabulary (`Object`, `Identity`, `State`, `Behavior`, or the topic's actual foundational concepts) has understandable first-contact homes in valid learner order, here or in genuinely appropriate early downstream H2s. Never force Java Class/Constructor detail into a language-independent paradigm merely to increase the number of technical headings.
+
 ### Step 3 descriptive-title gate
 
 Apply the `MODULE_CONTENT_RULES.md` **descriptive topic/statement title** contract to **every actual H1/anchored H2 in VI and EN**. Choose clear topic identities such as `Vòng đời của SpringApplication` instead of question prompts such as `Có những vòng đời nào?`. Rewrite semantically, not by deleting question marks. Keep each title consistent with the H2's approved WHAT/WHY/RELATION/HOW focus and distinct from neighboring H2s.
+
+**Canonical concept + learning-focus identity gate:** do NOT approve a technically themed H2 merely because its title is short, descriptive and easily paraphrased. For **each actual H2 in the learner-facing sequence**, resolve (without new tracked schema): (a) its actual primary named concept **if one exists**, using reliable terminology rather than invention; (b) the distinct learner question/intent it answers about that concept; (c) the observable new ability the learner gains; (d) the essential first-use prerequisite/neighboring H2 dependency; and (e) its module-owner/depth boundary. If the H2 is primarily a known concept such as `Cohesion` or `Coupling`, its **visible title must make that concept discoverable**, ideally through the established technical label paired with a natural explanatory phrase when needed. If it is truly a workflow/application/comparison, use its real focus instead of manufacturing a named concept. A title like `Tính gắn kết giữa các hành vi cùng trách nhiệm` may describe Cohesion correctly yet remain an inadequate technical-learning index if its actual canonical concept is hidden. Verify VI/EN names are semantically aligned, not machine-translated; preserve stable anchors when only wording changes.
+
+**Menu is the projection of the approved concept architecture, not a second Curriculum/Roadmap:** a Knowledge category/H1 can represent a useful conceptual family and multiple H2s its focused lessons. The learner-facing list should reveal **which broader topic contains this lesson**, what recognized concept/angle it teaches, and its intended order, without requiring a separate Portal UI feature. Step 1 still owns **area-level Curriculum**; Step 2 still owns **module milestones/dependencies**; Step 3 owns **chapter/H2 grouping**. No `Roadmap → arbitrary new Topics → conceptId → H2` schema is implied. The CURRENT Roadmap `relatedKnowledge` links to **same-module Knowledge category ids**, not H2/concept ids, and is a secondary navigation mapping refined after the Menu structure is established. Do not reverse-engineer milestones from that mapping, create one relation per term or assume a new collapsible tree/progress UI exists. Any Portal layout redesign must be separately scoped and implemented by its owner.
+
+**Adjacent H2 learning-identity test:** compare overlapping titles **as a group**, not merely one by one. In particular, `Object Responsibility` (WHAT), `Responsibility Assignment` (HOW/DECISION), and `Cohesion` (RELATION/QUALITY) can merit separate H2s when each has unique taught content and progression, whereas three near-synonymous titles about assigning responsibility without distinct learner outcomes do not. Conversely, do not collapse clearly different named concepts solely because their names share `object`, `responsibility` or `behavior`. Repair unclear scope/split/merge within Step 3 ownership; escalate a genuine milestone/ownership change through the existing Roadmap/Curriculum gap contracts. Do not invent one-H2-per-term quotas or require the WHAT→WHY→HOW→EXAMPLE chain as separate H2 headings for every concept.
 
 When the current Menu has real downstream consumers, preserve an anchor/path if its concept identity is unchanged. Otherwise handle explicit migration and validate dependent Video, API, Quiz, Interview, Roadmap/Knowledge relations under the applicable owner; do not silently break them.
 
@@ -406,17 +487,35 @@ Nếu câu trả lời là không, phải sửa Menu/H2 ngay trong Step 3 hoặc
 
 Trong mọi authoring pass, independent review và recheck/fix của Step 3, ngoài structural/file validation phải thực hiện **một lần full visible-title audit cho từng language**:
 
+**Title preview / novice comprehension gate:** apply the `rules/MODULE_CONTENT_RULES.md` beginner-first **standalone title clarity test AND canonical-concept discoverability test**, independently of the existing rule against interview-style titles. Reviewers must actually read the current **visible H1/H2 titles as Portal/index cards in learner order**, temporarily without their bodies, and judge whether the declared beginner can infer the lesson's concrete subject/angle and recognize a named technical concept when one is the primary focus. A title does **not** PASS merely because it is grammatically descriptive, short, technically valid, or lacks a `?`. Reject clusters of abstract nominalizations that only make sense after an expert reads the body; check that adjacent labels distinguish real learning focuses rather than repeat synonyms. Preserve accurate technical terms and add a short explanatory angle when it meaningfully improves first contact. If body and approved focus match, fix **visible wording** rather than inventing a new Roadmap milestone/H2 or copying the lesson into the title. Title changes with downstream references follow the existing anchor/migration contract.
+
 ```text
-1. Read Curriculum ownership + approved ROADMAP and declared prerequisites.
+1. Read Curriculum ownership + approved ROADMAP and declared prerequisites;
+   verify the canonical concept-family coverage and milestone→H2 teaching-home map.
 2. Read ALL current H1 + anchored H2 in learner-facing order for that language.
 3. Mark each new essential term's first appearance and its introduction/bridge location.
 4. Walk through the first chapters as the declared target learner, not as a Spring/Java expert.
 4a. Audit the actual first learner-facing Chapter 1 against all FIVE mandatory minimum content groups; allow and require extra foundational H2 when the topic needs them.
 5. Check WHAT / WHY / core relations BEFORE lifecycle, internals, configuration or APIs.
-6. Evaluate EVERY H1/H2 as a descriptive topic statement, not an interview question.
+6. Evaluate EVERY H1/H2 for BOTH descriptive (non-interview) style AND beginner-first
+   standalone clarity: subject + distinguishing angle, useful first-use wording,
+   honest approved scope, and distinguishability from adjacent titles.
+6a. For named-concept H2s, verify the recognized term is visible and findable;
+    for EVERY adjacent cluster, contrast canonical concept (if applicable),
+    learning intent, new learner ability, prerequisite order and depth/owner.
 7. Identify H2 ownership of the WHAT/WHY/RELATION focus, including any needed plain-text cross-module bridge inside an existing lesson.
 8. Verify VI/EN semantic scope/order parity without assuming literal translations.
 9. Confirm Step 4 can teach within the approved titles/anchors; no structural rescue needed.
+9a. Audit BOTH directions: each approved milestone outcome has real H2 teaching coverage,
+    and each H2 can justify its milestone/family/prerequisites and distinct learner outcome.
+9b. Independently reconcile the reviewable integrated design preview with CURRENT
+    Roadmap + every actual H1/H2; record any mismatch/omission/duplicate/dependency gap.
+9c. For each milestone outcome, separate PRIMARY direct teaching H2s from VERIFIED
+    prerequisite homes and RELATED context; never derive those roles from an untyped
+    `relatedKnowledge` category link or the number of linked categories.
+9d. First-chapter anti-fragmentation: try merging each orientation/WHY/meta H2 into
+    its nearest concept H2; retain it only if a distinct substantial teaching
+    objective would otherwise be lost. Check duplicate motivation comparisons.
 10. Classify real defects as MUST FIX, repair Step 3-owned issues, and re-audit the current titles.
 ```
 
@@ -746,15 +845,24 @@ Step 3 hoàn thành khi, cho cả new và existing module:
 Menu structure tương thích với Step 1 Curriculum khi Curriculum Map tồn tại; nếu isolated fallback thì tương thích với reconstructed scope/boundary đã được kiểm chứng từ current content + authoritative real-world knowledge
 ROADMAP milestone/order được phản ánh hợp lý
 ROADMAP milestone đã được phân rã thành đủ learner-facing Knowledge identities; không áp dụng máy móc 1 milestone = 1 H2
+trước khi chốt H1/H2 titles đã kiểm tra canonical concept-family architecture từ approved milestone, ownership, prerequisites và meaningful conceptual grouping; không nhóm bài từ các title do AI tự nghĩ
+concept coverage được trace hai chiều từ milestone outcomes → H2 teaching homes và H2 → approved outcome; không còn orphan H2 hoặc concept cốt lõi chỉ được nêu tên mà chưa có nơi dạy
+existing Step 3 result chứa learner-order integrated design preview đủ để reviewer kiểm tra milestone → family → canonical concepts → actual H1/H2 focus, prerequisites, owner/depth và năng lực đầu ra
+independent reviewer đã đối chiếu preview với CURRENT Roadmap/H1/H2 thực tế (cả VI/EN), không chấp nhận plan đẹp nhưng scaffold/learning progression sai
+major milestone outcomes có PRIMARY learning H2s đủ khả năng dạy mục tiêu; prerequisites có bằng chứng đã dạy trước, related content chỉ đóng vai trò bổ trợ; untyped relatedKnowledge không bị nhầm là role/coverage proof
 learner baseline + prerequisites được xác định từ evidence, không mặc định core term trong tên module đã được biết
 full visible-title audit chứng minh core concept có intro/bridge rõ ràng trước khi dùng ở lifecycle/mechanics/API/decision
 entry flow có WHAT + WHY + concrete motivation + foundational relation đủ cho người mới theo đúng module prerequisite
 Chapter 1 (first learner-facing chapter) có đủ 5 minimum content groups WHAT, WHY, CORE MODEL, PREREQUISITE ORIENTATION và LEARNING JOURNEY; được bổ sung foundation sections khi cần, không ép fixed H2 count/title
+Chapter 1 vượt anti-fragmentation gate: five groups được dạy như nội dung trong concept-led lesson, không nâng từng WHY/purpose/map/learning-path thành H2 vô nghĩa; mọi narrative H2 giữ lại có objective và evidence riêng
 mọi nhóm minimum được map vào H2 thực tế có learning focus phù hợp và có thể triển khai body ở Step 4, không chỉ dựa vào BASE/placeholder
 WHAT/WHY/RELATION learning focus được phân bổ rõ cho các H2 hợp lệ để Step 4 triển khai; không mặc định một H2 riêng cho từng vai trò
 cross-module foundational terms có body-level bridge ngắn tại vị trí thích hợp khi cần; không phát sinh navigation/link/route/metadata chỉ cho lời nhắc văn bản
 không còn beginner-critical undefined term hoặc hidden prerequisite trong H1/H2 learning progression
 mọi H1/anchored H2 sử dụng descriptive topic/statement titles thay vì question-style Quiz/Interview headings
+mọi visible H1/H2 vượt qua novice title-preview check ở đúng learner order, không chỉ technically correct nhưng khó hiểu hoặc lặp lại các cụm danh từ trừu tượng
+H2 dạy named technical concept thể hiện thuật ngữ được công nhận đủ để nhận diện/tra cứu, có bridge ngắn khi cần; không ép mọi H2 song ngữ/English hoặc invent canonical names
+các H2 gần nhau đã được đối chiếu identity + intent + learner outcome + prerequisite/ownership, không split theo từ khóa hay chỉ khác cách diễn đạt
 title naming/semantic granularity/VI-EN semantic parity được review trên toàn bộ current H1/H2, không chỉ generator/diff
 chapter order ổn định
 paths ổn định
@@ -783,6 +891,8 @@ approved Menu + anchored lesson-title scaffold
 + internal-menu generated scaffold
 + approved BASE.md
 + generated LIST/final README
+        ↓
+Step 4 Teaching Blueprint Gate (STEP_3_5_TEACHING_BLUEPRINT.md)
         ↓
 STEP_4_KNOWLEDGE.md
 ```
