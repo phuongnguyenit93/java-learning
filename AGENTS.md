@@ -15,7 +15,7 @@ AGENTS.md       → how an AI should work in this repository
 ARCHITECTURE.md → why the repository is structured this way
 README.md       → high-level project orientation
 module-generate-agent/GENERAL_AGENT_RULES.md → canonical source of truth for the module-generation workflow, step ordering, routing, prerequisites and delegated step rules
-project-portal/PROJECT_PORTAL.md → detailed Learning Portal design/current implementation
+learning-platform/ARCHITECTURE.md (separate repository) → standalone website product/frontend architecture
 STRUCTURE.md    → generated module tree/navigation
 ```
 
@@ -63,7 +63,7 @@ For repository-level work, read in this order:
 7. project-orchestration/
 8. project-build/gradle-runtime/
 9. project-build/springboot-runtime/
-10. project-portal/ and project-portal/PROJECT_PORTAL.md when portal/frontend work is involved
+10. learning-platform/ARCHITECTURE.md in the separate frontend repository for website, Cloudflare Worker and Local Run work
 11. STRUCTURE.md when module navigation is needed
 12. module metadata/build.gradle for the concrete task
 13. module source packages only when the requested work requires them
@@ -116,8 +116,6 @@ Repository shape:
 java-learning/
 ├── module/                         # learning/application modules
 ├── internal/                       # internal supporting modules/resources
-├── project-portal/                 # repository-level Java Learning portal
-│   └── PROJECT_PORTAL.md           # Portal design/current implementation
 ├── project-build/
 │   ├── gradle-runtime/             # Gradle/build-time implementation
 │   └── springboot-runtime/         # shared Spring Boot runtime implementation
@@ -145,73 +143,42 @@ project-build/springboot-runtime
 
 Do not move code between these boundaries just to reduce file count.
 
-### Project Portal boundary
+### Standalone Learning Platform boundary
 
-`project-portal/` is a repository-level application used to present learning content. It is intentionally outside `module/` because it is **where learning content is presented**, not a learning topic itself.
+The former `project-portal/` Spring Boot + Vite application has been **retired and deleted**. Do not recreate a Java portal host, `:project-portal` Gradle module, Cloudflare Pages Functions adapter, or duplicate frontend. `java-learning` owns module source, build conventions, `generatePortalData` data production, and on-demand executable JAR compilation.
 
-Current implementation:
+The independent `learning-platform` repository owns React website/UI and Cloudflare Worker + Durable Object Local Run API. Java static data flows from `publish-java-data.yml` through the verified `java-data` GitHub Release and `repository_dispatch` to the standalone frontend CI/CD.
 
-```text
-project-portal/
-├── src/main/java/.../ProjectPortalApplication.java
-├── src/main/resources/
-│   └── application.yml                  # server.port=9098
-├── frontend/                            # React + TypeScript + Vite
-│   └── src/
-└── build.gradle                         # Node/Vite → Spring static-resource wiring
+A Build JAR button calls the site's Worker, which validates the published fingerprint, reserves a per-module SQLite DO job, checks for a fresh Release/existing workflow, rate-limits only truly new dispatches and invokes `java-learning/.github/workflows/local-run-build.yml`. GitHub Actions resolves the Gradle project itself, uses JDK 21, runs `<resolved-project>:bootJar`, rechecks fingerprint V2 and publishes the `local-run` Release asset. Reused jobs do not dispatch twice; there is no custom FIFO/queue ETA or website-hosted JVM. The GitHub token is a Cloudflare Worker secret, never a browser or project-local `.env` token.
 
-build/learning-data/java/                # generated at repository root, not source-owned
-├── module-catalog.json
-├── module/{ROUTE_ID}/{feature}/...
-└── search/knowledge-search.{lang}.json
+### Separate `learning-platform` delivery pipeline and future update notifications
+
+The standalone site uses **Cloudflare Workers** at `https://nguyendodinhphuong.name.vn`, backed by Worker `learning-platform` and its SQLite Durable Object. No Pages deployment or Java portal application remains. Website delivery is owned by `learning-platform/.github/workflows/verify-and-preview.yml`; this repository owns `.github/workflows/publish-java-data.yml` and `.github/workflows/local-run-build.yml`.
+
+**Implemented today (cross-repository CI/CD):**
+
+```mermaid
+flowchart TD
+    J["Push java-learning/main"] --> P["Generate, validate and publish Java Data Release"]
+    P -->|Release verified| D["repository_dispatch: java-data-published"]
+    D --> B["learning-platform: test, build and verify dist"]
+    L["Push learning-platform/main"] --> B
+    B -->|PASS| C["Cloudflare Workers production deploy"]
+    B -->|FAIL| Stop["Stop; do not deploy"]
+    C --> V["Verify live files on Worker URL and custom domain"]
+    V -->|PASS| Ready["Production publication confirmed"]
+    V -->|FAIL| Alarm["Flag production verification failure"]
+    Ready -. future only .-> N["Detect changed Knowledge and notify"]
 ```
 
-The Portal remains **static-first for learning content**. Module hierarchy/routing comes from generated `module-catalog.json`; Overview, Knowledge, Video, Quiz, Interview, and raw localized Swagger/API metadata projections are generated under `build/learning-data/java`. The frontend consumes Overview, Menu/Knowledge, embedded Video presentation, Quiz, Interview, and API Docs directly from those generated/static projections. `Local Run` is the narrow exception: when the Portal runs locally, Spring Boot owns `/api/local-run/*` and calls GitHub Actions server-side.
-
-Do not move fake frontend data into Spring controllers merely because the application has a backend. Static/generated knowledge should stay static until a server-side requirement actually exists.
-
-The current frontend contract is:
-
-```text
-React source
-project-portal/frontend/src
-        ↓ npm run build
-Vite output
-project-portal/frontend/dist
-        ↓ Gradle processResources
-classpath:/static/
-        ↓ Spring Boot static-resource handling
-browser
-```
-
-`ProjectPortalApplication` therefore does not need a controller to render the React UI. Spring Boot automatically serves `classpath:/static/index.html` and its generated assets.
-
-Current client routing uses `BrowserRouter`, so routes such as:
-
-```text
-http://localhost:9098/my-cv
-http://localhost:9098/learning/THREAD
-```
-
-use clean path-based URLs. Local Spring Boot owns an explicit SPA fallback only for the known client routes `/my-cv`, `/learning`, and `/learning/{moduleId}`; those mappings internally forward to `/index.html` without redirecting the browser, so direct deep-links and `F5` preserve the requested URL and React Router resolves the correct page. Static assets/generated Portal data and `/api/**` must not be swallowed by a broad wildcard fallback. Legacy `/#/...` links are normalized client-side to the equivalent clean path with `history.replaceState`.
-
-Production static deployment currently uses Cloudflare Pages. The deployment contract is:
-
-```text
-push/merge to main or workflow_dispatch
-        ↓
-.github/workflows/deploy-portal.yml
-        ↓
-GitHub Actions + JDK 21
-        ↓
-:project-portal:buildFrontend
-        ↓
-project-portal/frontend/dist
-        ↓ Wrangler
-Cloudflare Pages: java-learning-cly.pages.dev
-```
-
-The Cloudflare project is a Direct Upload Pages project; GitHub Actions is the CI/CD owner rather than Cloudflare Git integration. The Wrangler **project name is `java-learning`**; `java-learning-cly.pages.dev` is the public hostname and must not be substituted for `--project-name`. Keep Cloudflare credentials only in GitHub Repository Secrets named `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN`. Never place their values in workflow YAML, Gradle files, frontend source, documentation, or generated Portal data. A Pull Request merge into `main` updates `main`, therefore it satisfies the current `push.branches: [main]` deployment trigger.
+- Java is the content producer; its rolling `java-data` GitHub Release contains the verified ZIP and checksum. A successful Publisher sends the cross-repository dispatch only **after** verifying uploaded Release bytes. Frontend builds triggered by the event must confirm its source commit and ZIP SHA-256 against the event payload.
+- `learning-platform` consumes and verifies Java static data under `dist/language/java/`, builds React, then deploys the **verified artifact** only when the frontend `main` is pushed or `java-data-published` is received. Pull requests and manual Preview runs do not deploy production. The production job validates deployed content (including Knowledge) against the artifact on both URLs.
+- **Future feature only — NOT IMPLEMENTED:** add a Post-Deployment Content Notification stage **after successful production verification**, not merely after a successful Java push, Release upload or frontend build. No Telegram/Email notifications are currently sent by this pipeline.
+- Detect **actual content changes**, not every deployment: compare per-file content hashes for Knowledge Markdown, keyed by module route id, language (VI/EN) and stable lesson path/section identity, against a durable **last successfully published/notified baseline**. Distinguish added/updated/removed lessons; an unchanged Knowledge snapshot, UI-only push or ZIP-level/metadata-only checksum change must not announce a new lesson. Expand to Roadmap/Quiz/etc. only by separate explicit scope.
+- Persist a baseline outside ephemeral GitHub Actions artifacts and outside the mutable rolling `java-data` Release; retries and reruns must be idempotent. Track per-channel delivery results so a failed Email delivery does not re-send an already successful Telegram notification. Advance a channel's checkpoint only after its send succeeds; decide and document how removals are represented.
+- Generate a concise localized update digest with module, affected lesson titles, change type and links to the **live** site. Do not claim to know a prose summary of semantic changes from file hashes alone; use a validated source diff/summary or provide only factual file-level change details.
+- Telegram Bot and Email are **separate optional adapters** receiving the same computed change set. Keep `TELEGRAM_BOT_TOKEN`, chat destinations, Email provider API/SMTP credentials and subscriber configuration in scoped secrets/configuration, never in repository Markdown, static assets, release ZIP or browser code. Public mail subscribers require consent and unsubscribe handling. Delivery failures should be visible/retryable **without changing a successfully verified deploy into a deploy failure**.
+- No notification implementation, workflow editing, external sends, bot setup, or new GitHub secrets are authorized by this architecture note alone; implement those only when the user requests them.
 
 Current top-level UI direction:
 
@@ -239,15 +206,15 @@ Learning
 └── Download action
 ```
 
-`Overview` uses generated catalog metadata and generated BASE.md projections. `Menu` and `Knowledge` consume the generated Knowledge index/section projections. `Quiz` and `Interview` consume localized generated `question.yml` projections advertised through catalog `quiz` and `interview` language paths. `API Docs` consumes the complete localized four-file Swagger projection advertised through catalog `api` language base paths. Knowledge/Quiz/Interview/API counts in the sidebar are preloaded from generated/static projections for the active language. `Local Run` is the display label for the internal `execution` tab and has one frontend contract with two environment adapters. Locally, React calls same-origin Spring Boot `/api/local-run/*`; Spring Boot reads `GITHUB_ACTION_TOKEN` from the process environment or local ignored `project-portal/.env`, then talks directly to GitHub. In production, the same relative API contract is implemented by Cloudflare Pages Functions using a Cloudflare secret. Both adapters dispatch/poll GitHub Actions and read the shared rolling GitHub Release `local-run`; neither path exposes the GitHub token to the browser, and there is no mock Local Run adapter.
+`Overview`, Menu/Knowledge, Roadmap, Quiz, Interview and API Docs consume validated static projections from the Java data publisher; frontend renders this dataset from Cloudflare Static Assets, with lightweight navigation, module details and counts loaded independently. The `Local Run` tab is enabled in Production for published runnable modules. It uses the site's same-origin Cloudflare Worker `/api/local-run/{build,status,artifact}` API and a browser-side public GitHub Release lookup with authenticated Worker fallback. There is no local Spring adapter and no Cloudflare Pages Functions implementation.
 
 Module sibling order may be customized by an optional `module-order.yml` stored in the parent directory being ordered. It governs direct child directories only. Lower numeric `order` sorts first; equal values fall back to alphabetical name order; missing/null order sorts after ordered children and then alphabetically. Without the file, alphabetical behavior remains unchanged. `generateModuleOrder --path=<path-relative-to-module>` is the explicit root authoring task: it preserves existing human-owned order values, adds newly discovered direct children with null order, and removes stale entries. Ordinary Gradle sync/generation must only read this file. `ProjectStructureService` is the sole consumer that applies the order before producing STRUCTURE/module-catalog projections; Portal code must preserve catalog order rather than reread or reinterpret `module-order.yml`.
 
-Local Run artifact freshness is module-scoped. `ProjectStructureService` projects the committed Git tree SHA of each real module directory as `sourceFingerprint` in `module-catalog.json`. The workflow independently recomputes `git rev-parse HEAD:<module-path>` and rejects a stale caller fingerprint. The rolling release keeps one stable-named asset per runnable module (`thread.jar`, `aspect.jar`, ...); the human-readable asset label is `<MODULE_ID> · fingerprint:<tree-sha>`. A module is downloadable only when the asset label matches the catalog fingerprint. Changing files under module A therefore invalidates A without invalidating unrelated module B. This current fingerprint intentionally covers the module directory itself, not transitive dependency/build-input closure.
+Local Run artifact freshness uses **Fingerprint V2** (64-character lowercase SHA-256; version marker `local-run-fingerprint-v2`). `ProjectStructureService` hashes a sorted manifest of committed Git object IDs: the module itself, its explicit transitive module dependencies from `properties.json` or literal `build.gradle project(':...')`, and repository-wide Gradle/build inputs listed in `project-build/gradle-runtime/src/main/resources/local-run/fingerprint-v2-roots.txt`. The workflow recomputes the same algorithm with `scripts/local-run-fingerprint-v2.py` both before build and immediately before Release upload, comparing current `main` on the latter check. `module-catalog.json` publishes the result as `sourceFingerprint`, and the rolling Release label remains `<MODULE_ID> · fingerprint:<sourceFingerprint>`. Legacy V1 assets are STALE automatically. Shared build directories (including `internal/`) are deliberately conservative and can invalidate multiple modules; unpinned external binary artifacts are not tracked by Git fingerprint alone. Source and catalog must be published together; the Worker/Local Run feature is deployed and enabled on Production, while Preview blocks dispatch server-side.
 
 Every `POST /api/local-run/build` must treat GitHub as the shared source of truth and apply this order before dispatching anything: (1) if the rolling Release already has a fresh module asset, return `AVAILABLE`/`SUCCESS` and do not create a workflow run; (2) otherwise find an active workflow-dispatch run whose `run-name` matches `Local Run <MODULE_ID> · fingerprint:<sourceFingerprint>` and return `REUSED` with that run id; (3) only when neither exists, dispatch a new run and return `DISPATCHED`. The workflow-level module concurrency remains a last-resort race safety net, not the primary deduplication mechanism.
 
-`GITHUB_ACTION_TOKEN` used by the local Spring adapter / production Pages Functions needs GitHub Actions read/write permission for workflow dispatch/status and Contents read permission for Release metadata. Uploading/replacing Release Assets is performed by the dispatched workflow's own `GITHUB_TOKEN` with `contents: write`.
+`GITHUB_ACTION_TOKEN` is stored only in the Production Cloudflare Worker secret and needs GitHub Actions read/write permission for dispatch/status and Contents read for Release metadata. Uploading/replacing Release Assets is performed by the dispatched workflow's own `GITHUB_TOKEN` with `contents: write`.
 
 `Home` is currently an intentional placeholder, not a blank page. It tells the user that the home page is being updated and links directly to `Learning`. Keep it lightweight until a real Home information architecture is defined.
 
@@ -838,7 +805,7 @@ generated README/menu fragments
 META-INF/execution-context/source-context.json
 ```
 
-Portal generated data is build-only and must never be written back into `project-portal/src/main/resources`. `module-catalog.json` stays at the root of `build/learning-data/java`; module-owned projections are namespaced under `build/learning-data/java/module/{ROUTE_ID}/`. Overview and Knowledge are transformed projections; Video is a transformed static projection from authored `video/{lang}/menu/**/*.md`; Quiz and Interview are exact localized `question.yml` copies after build-time schema validation; API metadata is an exact build-time copy of the four canonical localized Swagger YAML files when the complete set exists. Quiz/Interview/API YAML is parsed in-browser, and API rich execution HTML is sanitized before rendering. These projections must follow deterministic/idempotent/write-if-changed rules. The browser must not parse `module-structure.txt` as canonical data.
+Portal data projections are build-only and must never be copied into a retired Spring Boot portal or edited as authoritative source. `module-catalog.json` stays at the root of `build/learning-data/java`; module-owned projections are namespaced under `build/learning-data/java/module/{ROUTE_ID}/`. Overview and Knowledge are transformed projections; Video is a transformed static projection from authored `video/{lang}/menu/**/*.md`; Quiz and Interview are exact localized `question.yml` copies after build-time schema validation; API metadata is an exact build-time copy of the four canonical localized Swagger YAML files when the complete set exists. Quiz/Interview/API YAML is parsed in-browser, and API rich execution HTML is sanitized before rendering. These projections must follow deterministic/idempotent/write-if-changed rules. The browser must not parse `module-structure.txt` as canonical data.
 
 Generated output must prefer:
 
@@ -2250,13 +2217,13 @@ Preserve these unless the user explicitly changes the architecture:
 25. The application must not add MCP/tunnel/chat-vendor dependencies merely to support the current CoS workflow. A standalone application-owned MCP path may be added later only when explicitly required.
 26. Embedded Swagger AI chat and any browser/companion bridge are optional UX/product features, not requirements for Phase 5–7 through CoS.
 27. Swagger `execution` documentation is a guided learning explanation, not merely a code trace; it must explain concept, runtime flow, meaning, observable evidence, and conclusion without requiring the reader to open the source first.
-28. `project-portal` is a repository-level presentation application outside `module/`; it is not itself a learning topic even though Gradle can discover/configure it as a real project.
-29. Portal knowledge/navigation data should remain static/generated where possible; the existence of Spring Boot does not require every frontend read to become a REST call.
-30. React production assets are built by Vite and copied into Spring Boot `classpath:/static/` through Gradle `processResources`; Spring Boot serves them without a rendering controller.
-31. Current Portal client routing uses `BrowserRouter`; Spring MVC explicitly forwards only `/my-cv`, `/learning`, and `/learning/{moduleId}` to `/index.html` for SPA deep-link/refresh support, while static/generated assets and `/api/**` keep their own handlers.
-32. Module runtime capabilities remain optional from the Portal perspective: learning/documentation must not require a learning module to have its own Spring Boot Application.
-33. Portal hierarchy/routing must come from generated `module-catalog.json`, not from a hard-coded frontend tree or by parsing `module-structure.txt`.
-34. Portal sidebar `Real modules / Module thật` is a content-availability filter, not the repository's physical real-module identity rule: a MODULE qualifies when Knowledge OR Quiz OR Interview OR API Docs count is non-zero; only modules with all four counts equal to zero are removed, while required GROUP ancestors are preserved.
+28. The old `project-portal/` application is removed; only the separate `learning-platform` repository owns website presentation. Do not rediscover/register a portal Gradle module.
+29. Static learning content is generated through `generatePortalData` and published to Release `java-data`; the frontend is not built inside this Java repository.
+30. A distinct `local-run` GitHub Release contains verified executable JARs, never website assets.
+31. React routes are served by Cloudflare Workers Static Assets, and `/api/local-run/*` is handled by the Cloudflare Worker, not Spring MVC or Cloudflare Pages Functions.
+32. Documentation/learning data remain runtime-independent and must not require a running module Spring Boot application.
+33. UI navigation/order come from derived static catalog projections, not hard-coded module trees; the backend validates the full published catalog.
+34. The sidebar content filter is distinct from the physical Gradle module rule: qualify by nonempty Roadmap or Knowledge/Quiz/Interview/API availability and preserve ancestors.
 35. Sidebar module search distinguishes self-match from descendant-match: self-match keeps the full subtree; descendant-match keeps only the ancestor path. Non-terminal filtered branches remain collapsible; terminal module groups remain picker-based.
 36. Sidebar interaction depends on node capability: non-terminal child-only rows use the whole row for expand/collapse; a terminal GROUP whose direct children are all leaf MODULE nodes uses one hover/click Module Picker instead of inline module rows; mixed GROUP/MODULE parents wrap direct leaf MODULE siblings as presentation-only one-item pickers; MODULE nodes with children are rendered as structural parents with a virtual self-module picker child rather than split-action hybrid rows; dashboard-only modules that are not wrapped still navigate as a whole. Only one picker may be open at once, and its modules are numbered 1..N from their catalog order regardless of whether that order came from `module-order.yml` or alphabetical fallback. Virtual wrappers never change generated catalog identity/count. There is no per-module circular `>` navigation button. Tree state starts expanded and still supports global expand/collapse controls for normal branches.
 37. Portal Menu and API Docs start collapsed by default, but tab switching must preserve the most recent in-memory expand/collapse state for the current module/language instead of remounting/resetting those panels.
@@ -2374,26 +2341,13 @@ Execution Context
 → embedded Swagger AI chat/browser bridge remains optional; API-backed chat, if ever added, is a separate billed/provider-key mode
 → both modes consume the same ExperimentContext
 
-Project Portal
-→ root-level `project-portal/`, outside learning `module/`
-→ Spring Boot host on port 9098 + React/TypeScript/Vite frontend
-→ Gradle buildFrontend → Vite dist → processResources → classpath:/static
-→ browser executes React; Spring Boot serves the static bundle and owns the local-only `/api/local-run/*` adapter
-→ BrowserRouter owns clean `/my-cv` and `/learning/{routeId}` client navigation; explicit Spring MVC SPA forwards keep local deep-links/F5 on the same path
-→ ProjectStructureService generates build-only `build/learning-data/java/module-catalog.json` for real hierarchy/routing
-→ module-scoped generated data lives under `build/learning-data/java/module/{ROUTE_ID}/...`; current Overview, Knowledge, Video, Quiz, Interview, and API metadata projections follow this layout
-→ Vite `publicDir` points at `build/learning-data/java`; `npm run dev` prepares generated data before starting Vite
-→ Menu/Knowledge UI consumes the generated Knowledge index and lazy section Markdown; authored Video projection is mapped by Knowledge category and rendered as the presentation layer before the corresponding lessons; Knowledge supports multiple open sections and keeps panel state across tab switches
-→ API Docs consumes the generated localized four-file Swagger projection, follows README-derived controller/method order, renders sanitized `execution` HTML, and is reference-only rather than a live runner/debugger
-→ Quiz consumes localized generated `question.yml`, shows four shuffled answer positions, and reveals the selected answer's explanation while checking correctness by stable internal answer id
-→ Interview consumes localized generated `question.yml`, keeps reference answers collapsed until explicitly opened, and can resolve Related Knowledge/API panels
-→ tabs are Overview → Menu → Knowledge → API Docs → Quiz → Interview → Local Run; frontend always calls relative `/api/local-run/*`; local resolves to Spring Boot, production resolves to Pages Functions, and both adapters call GitHub Actions + the rolling `local-run` GitHub Release
-→ Local Run freshness uses module-scoped Git tree SHA projected as `sourceFingerprint`; release assets keep stable module filenames and store that fingerprint in the asset label
-→ sidebar supports module search plus Full tree/content-bearing `Real modules` pruning without flattening hierarchy; qualifying modules are identified by content-count badges rather than a permanent special background
-→ tree defaults expanded and has `+`/`−` branch controls plus global expand/collapse; terminal groups containing only leaf modules use a single Module Picker popup with 1..N sequencing; mixed parents wrap direct leaf modules as one-item pickers; module+children nodes become structural parents with a virtual self-module picker child; ordinary dashboard-only rows still navigate as a whole
-→ the whole sidebar can collapse/reopen from vertically centered edge controls; main content expands when the sidebar is hidden
-→ Light/Dark theme follows OS initially and persists explicit user choice
-→ generated learning data remains static/projection-first; the only current Portal server API dependency is the narrowly scoped Local Run `build/status/artifact` contract
+Learning Platform (separate repository)
+-> React/Vite frontend + Cloudflare Workers Static Assets and Local Run Worker/SQLite DO
+-> Java data producer stays here: `generatePortalData` -> Release `java-data` -> repository_dispatch -> frontend CI/CD
+-> On-demand JAR: browser -> Worker/DO -> guarded workflow_dispatch in this Java repository
+-> GitHub Actions JDK 21 + resolved module bootJar -> fingerprint V2 check -> Release `local-run` -> download
+-> No Spring Boot portal host, Cloudflare Pages Functions, or duplicate frontend in java-learning
+-> Frontend catalog navigation is progressive; original generated module content remains source-owned
 
 Do not infer module package architecture globally.
 Inspect only the module/source needed for the task.

@@ -2352,15 +2352,6 @@ enum ModuleListEnum {
             ['EUREKA_CLIENT', 'GLOBAL_EXCEPTION_HANDLER']
     ),
 
-    PROJECT_PORTAL(
-            'project-portal',
-            'project-portal',
-            'SERVLET',
-            'Repository-level Java Learning portal hosting the React learning experience',
-            false,
-            []
-    ),
-
     PROMETHEUS_GRAFANA(
             'module:microservice:module:deployments:prometheus-grafana',
             'module/microservice/module/deployments/prometheus-grafana',

@@ -15,7 +15,9 @@ module/                          # learning modules
     ↓
 project-build/springboot-runtime # shared runtime HOW
 
-project-portal/                  # root-level Learning Portal
+GitHub Release java-data        # published learning dataset
+    ↓
+learning-platform (repo riêng)  # React + Cloudflare Worker website
 ```
 
 Một **real module** được nhận diện bằng local `gradle.properties`. Metadata/capability chính nằm trong generated/synchronized `master.json`; `MODULE_LANGUAGE` là source of truth chung cho language của README, Swagger, Portal projection và runtime language metadata.
@@ -29,17 +31,21 @@ Service       → implementation
 Task          → explicit execution
 ```
 
-## Project Portal
+## Learning Platform — website độc lập
 
-Portal dùng React + TypeScript + Vite, theo hướng **static-first**. Module catalog, Overview, Roadmap, Knowledge, Quiz, Interview và API Docs đều được materialize ở build-time; `Local Run` là ngoại lệ dynamic, dùng backend server-side để build/download executable JAR qua GitHub Actions + rolling Release. Production deploy qua GitHub Actions lên Cloudflare Pages tại `https://java-learning-cly.pages.dev` (Wrangler project: `java-learning`).
+Repository `java-learning` **không còn chứa Spring Boot/React application `project-portal/`**. Website được duy trì riêng tại [phuongnguyenit93/learning-platform](https://github.com/phuongnguyenit93/learning-platform) và chạy trên [Cloudflare Workers](https://nguyendodinhphuong.name.vn).
 
-Chi tiết Portal: [`project-portal/PROJECT_PORTAL.md`](./project-portal/PROJECT_PORTAL.md).
+**Java data:** push `main` → [`publish-java-data.yml`](.github/workflows/publish-java-data.yml) chạy `./gradlew generatePortalData` (task này vẫn là generator dataset, không phải ứng dụng portal) → validate/package ZIP + SHA-256 → GitHub Release `java-data` → `repository_dispatch` sang `learning-platform` → CI/test/build/deploy website.
+
+**Local Run:** khi người dùng nhấn Build JAR trên website, Cloudflare Worker/SQLite Durable Object validate module/fingerprint, chống dispatch trùng và giới hạn request → dispatch [`local-run-build.yml`](.github/workflows/local-run-build.yml) tại repo Java → GitHub Actions setup JDK 21, chạy `<resolved-module>:bootJar`, xác minh fingerprint V2 và publish executable JAR lên rolling Release `local-run`. Frontend kiểm tra trạng thái và tải file từ GitHub Release. Không còn Java backend hoặc Cloudflare Pages Functions adapter cũ.
+
+**Ownership:** `java-learning` sở hữu module/Gradle, static content producer và workflow build JAR; `learning-platform` sở hữu UI, Cloudflare API/DO, chống Build trùng, pipeline deploy website. Đọc thêm [Learning Platform Architecture](https://github.com/phuongnguyenit93/learning-platform/blob/main/ARCHITECTURE.md).
 
 ## Cách học một module
 
 Với learning module, hãy **xem Roadmap trước** để hiểu thứ tự và quan hệ giữa các đầu mục lớn; sau đó mới dùng Menu/Knowledge để đi vào bài học chi tiết. Portal đặt `Roadmap` ngay kế bên `Menu`: milestone nằm trên timeline chính, `relatedKnowledge` luôn hiển thị ở phía đối diện để nhảy vào Knowledge category cùng module, còn `relatedModules` là cross-module navigation. Hai relation này không thay đổi learning order. Kiến trúc nội dung của project đi theo hướng **Roadmap first → Knowledge second → API/Quiz/Interview later**.
 
-Chi tiết workflow: [`GENARAL_AGENT_RULES.md`](module-generate-agent/GENERAL_AGENT_RULES.md) và các canonical step rules trong `module-generate-agent/STEP_1_...` đến `STEP_8_...`.
+Chi tiết workflow: [`GENERAL_AGENT_RULES.md`](module-generate-agent/GENERAL_AGENT_RULES.md) và canonical rules trong `module-generate-agent/`.
 
 ## Bắt đầu với module mới
 
@@ -64,5 +70,5 @@ Chi tiết workflow: [`GENARAL_AGENT_RULES.md`](module-generate-agent/GENERAL_AG
 - [`STEP_7_QUIZ.md`](./module-generate-agent/STEP_7_QUIZ.md) — Quiz.
 - [`STEP_8_INTERVIEW.md`](./module-generate-agent/STEP_8_INTERVIEW.md) — Interview.
 - [`STEP_9_VALIDATION.md`](./module-generate-agent/STEP_9_VALIDATION.md) — integrated validation + Coverage Review.
-- [`project-portal/PROJECT_PORTAL.md`](./project-portal/PROJECT_PORTAL.md) — Portal hiện tại, data contract và deployment.
+- [Learning Platform — Product & Frontend Architecture](https://github.com/phuongnguyenit93/learning-platform/blob/main/ARCHITECTURE.md) — Portal hiện tại, data contract và deployment ở repository frontend riêng.
 - [`STRUCTURE.md`](./STRUCTURE.md) — cây module generated.

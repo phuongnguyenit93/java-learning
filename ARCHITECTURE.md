@@ -29,7 +29,7 @@ Repository hiện được xây dựng quanh các baseline chính:
 - Groovy cho phần lớn custom Gradle plugin.
 - JUnit Platform cho project có Java plugin.
 - Docker Compose cho module cần runtime infrastructure.
-- React 19 + TypeScript + Vite + React Router cho `project-portal` frontend.
+- Website UI is owned by the separate `learning-platform` React/Vite repository.
 
 Root project quản lý các plugin và convention dùng chung như:
 
@@ -48,8 +48,6 @@ Root project quản lý các plugin và convention dùng chung như:
 java-learning/
 ├── module/                         # Learning modules
 ├── internal/                       # Internal supporting modules/resources
-├── project-portal/                 # Repository-level Java Learning portal
-│   └── PROJECT_PORTAL.md           # Portal-specific architecture/design
 ├── project-build/
 │   ├── gradle-runtime/             # Build-time implementation
 │   └── springboot-runtime/         # Shared Spring Boot runtime capability
@@ -141,223 +139,66 @@ Với legacy module, roadmap phải được thiết kế độc lập từ modu
 
 `module-generate-agent/GENERAL_AGENT_RULES.md` là canonical source of truth cho chuỗi module-generation: thứ tự, prerequisite, routing, gap handling và rule file nào được delegated cho từng phase. `ARCHITECTURE.md` chỉ mô tả dependency/boundary ở cấp kiến trúc và không duy trì một bản sao numbered workflow riêng.
 
-### 3.1 `project-portal` boundary
+### 3.1 Standalone Learning Platform boundary
 
-`project-portal/` là application ở cấp repository dùng để trình bày learning experience chung. Nó được đặt ngang hàng với `module/`, `project-build/`, `project-orchestration/` vì trách nhiệm của nó khác với một learning module:
+The legacy application at `project-portal/` has been retired and removed: there is no local Spring MVC portal, Vite frontend, Cloudflare Pages Functions adapter, or `:project-portal` Gradle build task. `java-learning` remains the source of truth for module code, educational assets, static data projection, and executable JAR creation.
 
-```text
-module/
-→ nội dung/chủ đề được học
+`./gradlew generatePortalData` is **retained**: this Gradle task exports learning data, not a standalone Spring Boot portal application. The independent `learning-platform` repository consumes its verified `java-data` Release, derives lightweight navigation/counts/module-details, hosts React on Cloudflare Workers Static Assets, and verifies Production on two domains.
 
-project-portal/
-→ nơi người dùng khám phá, đọc và tương tác với nội dung học
+Local Run (Production) uses browser -> `learning-platform` Cloudflare Worker -> SQLite Durable Object coordinator -> `java-learning` GitHub Actions `local-run-build.yml` -> guarded `<resolved-project>:bootJar` -> rolling GitHub Release `local-run` -> browser download. Module/fingerprint V2 are verified in Worker and workflow; duplicate requests reuse the current job, rate-limited dispatches return 429, and module-level GitHub concurrency uses `cancel-in-progress: false`. Cloudflare neither executes Gradle nor stores executable JARs. There is no Java/Cloudflare Pages adapter for Local Run.
+
+The canonical UI/Worker/DO architecture lives in [learning-platform/ARCHITECTURE.md](https://github.com/phuongnguyenit93/learning-platform/blob/main/ARCHITECTURE.md).
+
+### 3.2 Standalone Learning Platform CI/CD and planned notifications
+
+**Implemented:**
+
+- `java-learning/.github/workflows/publish-java-data.yml`: push `main` → generate/validate/package Java learning data → publish rolling GitHub Release `java-data` → re-download/verify ZIP + SHA-256 → gửi `repository_dispatch` (`java-data-published`) bằng credential chỉ được cấp cho repository đích.
+- `learning-platform/.github/workflows/verify-and-preview.yml`: push frontend `main` hoặc nhận `java-data-published` → `npm ci`, tests, build React + download/validate Java data → kiểm tra `dist/language/java/` và static assets → upload artifact. Event từ Java mang source commit và ZIP SHA-256 để frontend không âm thầm tiêu thụ bản Release khác.
+- Chỉ khi build PASS, job production deploy `dist/` đã xác thực bằng Wrangler tới Worker `learning-platform` (website `https://nguyendodinhphuong.name.vn`). Kiểm chứng HTTP thực tế trên cả Worker URL và custom domain, so sánh byte/hash của các resource đại diện bao gồm Knowledge VI/EN, catalog, search và JS/CSS. Pull request không deploy; manual Preview được cách ly khỏi production.
+
+**Đề xuất giai đoạn tiếp theo (chưa triển khai):** Post-Deployment Content Change Detection + Notification (Telegram Bot/Email). Một lần build hoặc deploy thành công **chưa chắc** có nội dung Knowledge mới, vì frontend UI, metadata hoặc output đóng gói có thể thay đổi mà lesson không đổi. Chỉ thông báo nội dung sau khi **production validation PASS** và phát hiện diff nội dung thực.
+
+```mermaid
+flowchart TD
+    JP["Push java-learning/main"] --> Pub["Generate + validate + publish java-data Release"]
+    Pub -->|Verified Release| Ev["Dispatch java-data-published"]
+    FP["Push learning-platform/main"] --> Build["Build React + download/verify Java Data"]
+    Ev --> Build
+    Build --> Gate{"Build + artifact validation PASS?"}
+    Gate -->|No| Halt["Stop, no deployment or success message"]
+    Gate -->|Yes| Deploy["Deploy Cloudflare Workers production"]
+    Deploy --> Live{"Production URLs / assets verified?"}
+    Live -->|No| Error["Report deployment verification failure"]
+    Live -->|Yes| Diff["PLANNED: compare content with last notified baseline"]
+    Diff --> Changes{"Real Knowledge changes?"}
+    Changes -->|No| Quiet["No content-update notification"]
+    Changes -->|Yes| Digest["Create module / lesson / locale change digest"]
+    Digest --> Telegram["PLANNED: Telegram Bot"]
+    Digest --> Email["PLANNED: Email"]
+    Telegram --> TState["Track Telegram send + checkpoint"]
+    Email --> EState["Track Email send + checkpoint"]
 ```
 
-Portal hiện có cả Spring Boot và React để phục vụ mục tiêu học full-stack, nhưng frontend được thiết kế **static-first** và chưa phụ thuộc backend API.
+**Trách nhiệm và dữ liệu của phase planned:**
 
-Current physical structure:
+| Boundary | Chủ sở hữu | Contract |
+| --- | --- | --- |
+| Content source | `java-learning` | Authored Knowledge/menu + generated static projection; GitHub Release là payload được kiểm tra, **không** là lịch sử notification. |
+| Build + production verification | `learning-platform` | Cung cấp artifact đã deploy và bằng chứng website phục vụ đúng resource; không gửi “có bài mới” ở thời điểm chỉ build PASS. |
+| Content Change Detection | Future post-deploy stage | So sánh **hash từng Knowledge section Markdown** theo module ID, VI/EN, stable section path với snapshot của lần đã thông báo thành công; phân loại added/updated/removed. Không dùng chỉ commit SHA, ZIP SHA hoặc release tag để xác định bài học thay đổi. |
+| Diff state / idempotency | Future durable store | Lưu last successfully delivered content version và trạng thái theo channel + recipient ở nơi bền vững (ví dụ storage riêng hoặc release/state record được thiết kế riêng); không trông cậy Actions artifact hết hạn hoặc rolling Release bị ghi đè. |
+| Notification fan-out | Future Telegram + Email adapters | Nhận **cùng change set**, gửi tiêu đề module, bài học/locale thay đổi, loại cập nhật và URL trỏ tới production. Channel lỗi được ghi nhận/retry riêng; không gửi lại các bản đã xác nhận thành công. |
 
-```text
-project-portal/
-├── build.gradle
-├── gradle.properties
-├── master.json
-├── src/main/java/com/example/projectportal/
-│   └── ProjectPortalApplication.java
-├── src/main/resources/
-│   └── application.yml             # port 9098
-└── frontend/
-    ├── package.json
-    ├── vite.config.ts
-    └── src/
-        ├── main.tsx
-        ├── App.tsx
-        ├── components/
-        ├── pages/
-        ├── data/
-        ├── state/
-        └── styles/
+Các nguyên tắc khi hiện thực hóa:
 
-build/learning-data/java/          # generated at repository root
-├── module-catalog.json
-├── module/{ROUTE_ID}/{feature}/...
-└── search/knowledge-search.{lang}.json
-```
+1. **Trigger đúng thời điểm:** job notification phụ thuộc kết quả production verification (`needs: production` / điều kiện success), không chạy từ push Java đơn lẻ, Preview, PR, build thất bại hoặc nội dung chưa xuất bản.
+2. **Đếm thay đổi ở cấp nội dung:** phân biệt thêm/sửa/xóa Knowledge theo VI/EN; bỏ qua UI-only deploy và trường hợp ZIP/manifest/metadata đổi nhưng nội dung học không đổi. Có thể mở rộng Roadmap/Quiz/Interview/Video bằng yêu cầu riêng, không tự đánh đồng là “Knowledge mới”.
+3. **Bảo toàn dữ liệu và chống gửi trùng:** có checkpoint bền vững của snapshot đã giao thành công, deduplication key theo content version + channel + recipient, retry có giới hạn/backoff và thống kê partial success. Nếu không có snapshot hợp lệ, phải có chính sách bootstrap rõ ràng (ví dụ thiết lập baseline, không spam toàn bộ khóa học).
+4. **Thông báo chính xác:** chỉ mô tả file/bài và phạm vi thực sự thay đổi. File hash không tự suy ra được điểm mới về mặt ngữ nghĩa; muốn tóm tắt điểm thay đổi phải có diff nội dung, kiểm duyệt/validation phù hợp và link thật đến bài đã deploy.
+5. **Quyền và vận hành:** Bot token/Chat ID và Email API/SMTP key/recipient config nằm ở GitHub Actions/Cloudflare secrets hoặc hệ thống quản lý bí mật tương ứng, không nằm trong source Java, frontend bundle, dữ liệu ZIP, log hoặc tài liệu. Với email gửi cho người đăng ký phải có cơ chế consent/unsubscribe. Thất bại gửi thông báo chỉ đánh dấu **notification failure**, không biến một deployment production đã PASS thành “deploy failed”.
 
-Current build/serve flow:
-
-```text
-module/ filesystem + module metadata
-        ↓
-Portal build-time generators
-        ↓
-build/learning-data/java
-├── module-catalog.json
-└── module/{ROUTE_ID}/{feature}/...
-        ↓ Vite static input
-React + TypeScript source
-project-portal/frontend/src
-        ↓
-npm run build
-        ↓
-Vite output: frontend/dist
-        ↓
-Gradle processResources
-        ↓
-build/resources/main/static
-        ↓
-Spring Boot classpath:/static
-        ↓
-Embedded Tomcat :9098
-        ↓
-Browser
-```
-
-Điểm quan trọng: Spring Boot **không render React** và `ProjectPortalApplication` không cần controller để trả trang chính. Spring Boot tự serve `classpath:/static/index.html`; browser tải JavaScript bundle và chính browser mới chạy React.
-
-Frontend entry point hiện là:
-
-```text
-index.html
-    ↓
-main.tsx
-    ↓
-App.tsx
-    ↓
-React Router
-    ↓
-pages/components
-```
-
-Routing hiện dùng `BrowserRouter`:
-
-```text
-http://localhost:9098/
-http://localhost:9098/my-cv
-http://localhost:9098/learning
-http://localhost:9098/learning/THREAD
-```
-
-Vì URL không còn dùng hash fragment, direct request/F5 trên client route sẽ đi tới server. Local Spring Boot vì vậy có SPA fallback **explicit** cho `/my-cv`, `/learning`, `/learning/{moduleId}` và các biến thể trailing slash tương ứng. Fallback dùng internal forward tới `/index.html`, không redirect về `/`, nên browser giữ nguyên URL và React Router render đúng page. Static assets, generated Portal data và `/api/**` không nằm trong wildcard fallback. Frontend còn normalize legacy `/#/...` link bằng `history.replaceState` để chuyển sang clean URL mà không reload về home.
-
-Current UI scope:
-
-```text
-Header
-├── Java Learning
-├── Trang chủ
-├── Learning
-├── global search UI
-├── VI ↔ EN switch
-└── Light ↔ Dark theme toggle
-
-Learning page
-├── generated module hierarchy sidebar
-│   ├── module search
-│   └── Full tree ↔ Real modules switch
-├── "Tìm kiến thức" search
-├── Overview
-├── Menu
-├── Roadmap
-├── Knowledge
-├── API Docs
-├── Quiz
-├── Interview
-├── Local Run
-└── Download action
-```
-
-Module hierarchy/routing hiện lấy từ generated `module-catalog.json`. `Overview` consume build-time projection từ language `BASE.md`. `Menu` và `Knowledge` consume Knowledge build-time projection theo module/language/category/section contract; section Markdown chỉ được fetch khi user mở section. `Video` consume build-time projection từ authored `video/{lang}/menu/**/*.md`, map theo Knowledge `categoryId` và được render như presentation layer bên trong Knowledge flow thay vì một curriculum source riêng. `Roadmap` consume localized `roadmap/<lang>/roadmap.yml` projection: catalog chỉ expose Roadmap language khi source có ít nhất một milestone; Level 1 render milestone timeline trên center spine; optional `relatedKnowledge` luôn hiển thị ở phía đối diện milestone, resolve category/count từ Knowledge index và click item chuyển sang Knowledge tab với category đó active; numbered marker giữ pulse animation khi milestone có supporting Knowledge. Optional `relatedModules` render clickable satellite cards để chuyển giữa module mà không biến relation thành nested curriculum. Sidebar dùng badge tròn `R` cùng semantic color của Roadmap để biểu diễn availability. `Quiz` và `Interview` consume localized `question.yml` projection generated từ module resource. Build-time API projection cũng đã có: module có đủ bốn Swagger YAML chuẩn cho một language sẽ được copy nguyên vẹn vào `module/{ROUTE_ID}/api/{lang}/` và catalog expose base path tương ứng. Knowledge/Quiz/Interview/API counts ở sidebar đều preload từ generated/static projection theo active language. `Local Run` có UI Build/Download JAR + Run Locally và một contract relative `/api/local-run/{build,status,artifact}` dùng chung. Khi chạy local, browser → Spring Boot `project-portal` → GitHub REST API; khi chạy production, browser → Cloudflare Pages Functions → GitHub theo cùng contract. Cả hai adapter dispatch/poll guarded `local-run-build.yml` và đọc rolling GitHub Release tag `local-run`. Workflow build `bootJar` rồi upload raw JAR trực tiếp thành Release Asset; browser download trực tiếp từ `browser_download_url`, nên Cloudflare không buffer/unzip Actions Artifact nữa. Browser gửi `moduleId + sourceFingerprint`; workflow vẫn tự resolve `SERVICE_NAME` sang đúng real `SERVLET`/`REACTIVE` module, tự recompute fingerprint và không nhận Gradle task/path tùy ý. Token local lấy từ process environment hoặc `.env`; token production nằm trong Cloudflare secret. Hai runtime adapter độc lập, không gọi lẫn nhau. CSS dùng stylesheet riêng; inline CSS không phải convention của Portal.
-
-Sibling ordering trong generated module tree có optional parent-local contract `module-order.yml`. File nằm ngay trong parent directory cần order và chỉ áp dụng cho direct child directories của parent đó. `order` nhỏ hơn đứng trước; cùng `order` thì sort ABC; child không có/không được gán `order` đứng sau các child có order và tiếp tục sort ABC. Không có `module-order.yml` thì behavior giữ nguyên ABC. Root task `generateModuleOrder --path=<relative-to-module>` tạo/sync shape file, preserve order human-owned, thêm child mới với `order` rỗng và bỏ stale child; normal Gradle sync chỉ đọc file, không mutate. `ProjectStructureService` áp dụng order trước khi generate `STRUCTURE.md`, `module-structure.txt` và `module-catalog.json`, vì vậy Portal chỉ consume projected order và không sort lại.
-
-Freshness của Local Run dùng Git tree SHA theo **module directory**. Generator thêm `sourceFingerprint = git rev-parse HEAD:<module-path>` vào `module-catalog.json`. Rolling release giữ stable asset name theo module (`thread.jar`, `aspect.jar`, ...), còn Release Asset label dùng dạng dễ đọc `<MODULE_ID> · fingerprint:<sourceFingerprint>`. UI chỉ coi JAR là `available` khi label khớp module + fingerprint hiện tại; mismatch là `stale` và chỉ module đó cần build lại. Vì fingerprint hiện scope theo directory của module, thay đổi THREAD không invalidate ASPECT. Current implementation chưa đưa transitive dependency/shared build-input closure vào fingerprint; nếu rule đó được mở rộng sau này thì phải giữ nguyên nguyên tắc chỉ invalidate module thực sự bị ảnh hưởng.
-
-Build deduplication là server-side và dùng GitHub làm shared coordination point cho cả local Spring adapter lẫn production Pages Functions adapter. Trước khi dispatch, backend luôn thực hiện theo thứ tự: `fresh Release Asset? → active same-fingerprint workflow run? → dispatch`. Workflow có deterministic `run-name = Local Run <MODULE_ID> · fingerprint:<sourceFingerprint>` để REST API nhận diện build đang `queued/in_progress/requested/waiting/pending`. Nếu asset đã fresh thì response là `AVAILABLE` và không build; nếu same fingerprint đang chạy thì response là `REUSED` và nhiều browser poll cùng `runId`; chỉ request thực sự mới trả `DISPATCHED`. GitHub `concurrency` theo module vẫn giữ `cancel-in-progress: true` làm safety net cho race rất ngắn giữa hai request chưa kịp nhìn thấy nhau và cho trường hợp fingerprint mới thay thế build stale cũ.
-
-Quiz setup giữ đúng boundary WHAT/WHEN/HOW của repository: canonical `BUILD_QUIZ` nằm trong `project-build/gradle-runtime` master schema; `project-orchestration` chỉ apply `QUIZ_SETUP_PLUGIN` khi flag bật; `QuizStructureService` trong `gradle-runtime` mới là nơi tạo/sync `src/main/resources/quiz/{lang}/question.yml`. Canonical structure nằm tại `gradle-runtime/src/main/resources/quiz/question-schema.yml`, vừa drive validation vừa drive localized generated comment block. Regeneration chỉ được thay block comment generated-owned, không overwrite `questions:` human-owned.
-
-Interview dùng cùng boundary: canonical `BUILD_INTERVIEW` nằm trong `project-build/gradle-runtime` master schema; orchestration chỉ apply `INTERVIEW_SETUP_PLUGIN`; `InterviewStructureService` tạo/sync `src/main/resources/interview/{lang}/question.yml` theo `MODULE_LANGUAGE`. Canonical schema `gradle-runtime/src/main/resources/interview/question-schema.yml` drive validation, localized generated comment và required-field defaults. Cả Quiz lẫn Interview đều preserve phần `questions:` human-owned; generator chỉ tạo file mới, refresh schema comment và bổ sung required fields còn thiếu bằng default canonical.
-
-Quiz question schema hiện có governance `aiGenerated/reviewed`, optional `readmeRelated {file, anchor}` và `apiRelated {controller, methodSignature}` bên cạnh four-answer single-choice contract. `PortalQuizProjectionService` validate schema và kiểm tra relation target; blank/blank relation là hợp lệ, còn partial/unresolved relation được cảnh báo thay vì tự đoán mapping. Interview dùng cùng relation shape ở schema/UI nhưng `PortalInterviewProjectionService` hiện chỉ schema-validate rồi copy projection; relation-target validation build-time chưa được mở rộng sang Interview. THREAD hiện bật cả hai capability và có source VI/EN dựa trên README.
-
-`Home` hiện là placeholder có chủ đích: hiển thị trạng thái “đang được cập nhật” và CTA sang `Learning`. Nó không còn là blank page, nhưng cũng chưa phải source của learning content.
-
-Current sidebar interaction contract:
-
-```text
-GROUP chỉ có children
-→ nếu direct children còn GROUP hoặc mixed GROUP/MODULE: click toàn row để expand/collapse như tree bình thường
-→ nếu đây là terminal GROUP và toàn bộ direct children đều là leaf MODULE: không render MODULE inline; hover/focus mở Module Picker, click pin/unpin picker
-→ nếu GROUP là mixed GROUP/MODULE: mỗi leaf MODULE trực tiếp được presentation layer wrap thành một virtual 1-item Module Picker để sibling rows cùng cấp có cùng interaction shape
-→ Module Picker chỉ cho phép một popup mở tại một thời điểm, click ngoài/Escape đóng popup
-→ các MODULE trong picker giữ nguyên catalog order và luôn hiển thị sequence 1, 2, 3...; sequence chỉ là vị trí hiện tại, kể cả parent không có `module-order.yml`
-→ branch bình thường hover chạy wave/cue dọc; đóng = wave xuống, mở = wave lên; `+` = đóng, `−` = mở
-→ default toàn tree là expanded
-
-MODULE chỉ có dashboard
-→ click toàn row để navigate `/learning/{routeId}`
-→ hover chạy sweep trái → phải + cue `›››`
-
-MODULE vừa có children vừa có dashboard
-→ không dùng split-click hybrid row nữa
-→ row gốc được presentation layer render như structural parent thuần để expand/collapse
-→ một virtual child cùng tên được chèn đầu branch và mở 1-item Module Picker đại diện dashboard của chính MODULE đó
-→ generated catalog không bị mutate và module count không tăng; virtual child chỉ tồn tại ở presentation layer
-
-visual state
-→ wave/màu directional chỉ xuất hiện khi hover/focus
-→ module đạt điều kiện `Real modules` không có permanent background riêng
-→ badge Roadmap `R` + các count badge Knowledge/Quiz/Interview/API là tín hiệu content availability
-→ active module vẫn có selected highlight riêng
-
-whole sidebar
-→ desktop width đủ để giữ tên menu đầy đủ, không ellipsis như affordance mặc định
-→ có control collapse nằm giữa chiều cao ở mép phải sidebar
-→ khi đóng sidebar, main content giãn ra và control `>` ở giữa mép trái màn hình mở lại sidebar
-
-module search: self-match
-→ giữ toàn bộ subtree của node match
-
-module search: descendant-match
-→ chỉ giữ ancestor path cần thiết tới kết quả
-
-`Real modules / Module thật` mode
-→ đây là content-availability filter của Portal, không thay đổi definition repository-level của “real module” theo `gradle.properties`
-→ giữ MODULE nếu `Roadmap available OR Knowledge > 0 OR Quiz > 0 OR Interview > 0 OR API Docs > 0`
-→ `Roadmap available` yêu cầu localized roadmap source có ít nhất một milestone; skeleton `roadmap: []` không qualify
-→ chỉ ẩn MODULE khi Roadmap không available và cả bốn count đều bằng 0
-→ giữ các GROUP ancestor cần thiết
-→ prune branch không còn descendant hợp lệ
-→ không flatten hierarchy
-
-global tree controls
-→ Expand all / Collapse all áp dụng trên projected tree hiện tại
-```
-
-Portal giữ state UI gần nhất theo module/language trong browser session khi user đổi tab rồi quay lại. Menu/Knowledge/API Docs/Quiz/Interview được lazy-mount rồi giữ mounted; chúng không bị remount chỉ vì tab khác đang active. Knowledge hỗ trợ nhiều section mở đồng thời; mở section mới không đóng section đang mở trước đó. Quiz giữ lựa chọn/explanation đã mở, còn Interview giữ các reference answer đã expand. Đổi module/language tạo state boundary mới.
-
-`API Docs` hiện là **reference-only static documentation**. Nó không chạy/debug API trực tiếp trong Portal. Dữ liệu hiển thị được parse từ bốn Swagger YAML generated; rich `execution` HTML được sanitize trước khi render. Controller order bám theo numeric chapter order từ `controller-description.yml -> readmeRelated.file`; method order bám theo resolved README anchor position. Điều này giữ API reference theo learning path thay vì sort theo controller name/path.
-
-Download action trong API Reference hiện là navigation affordance sang `Local Run`, nơi sở hữu luồng build/download executable JAR thật. API Docs vẫn là reference-only static documentation; click Download chỉ đổi top-level tab sang `Local Run`, không biến API Docs thành live execution surface và không mở placeholder popover riêng.
-
-Theme dùng `prefers-color-scheme` cho lần đầu và lưu lựa chọn user vào `localStorage`. Theme surface/text thay đổi theo Light/Dark, còn semantic capability colors giữ cố định giữa hai theme: Overview gray, Knowledge blue, Quiz amber, Interview teal, API Docs red, Local Run purple, Download green.
-
-Portal không được trở thành source of truth mới cho module metadata hoặc learning content. Target data flow vẫn là:
-
-```text
-canonical module structure/model
-        +
-module master.json / resources
-        +
-actual README/quiz/interview/API/artifact state
-        ↓
-build-time generated portal projection
-        ↓
-React Portal
-```
-
-Spring Boot backend trong `project-portal` chỉ nên nhận responsibility khi feature thực sự cần server-side behavior, ví dụ runtime aggregation, secured external integration, server-side persistence hoặc dynamic operations. Dữ liệu static/generated không nên bị ép thành REST API chỉ vì backend tồn tại.
+**Trạng thái hiện tại:** chỉ CI/CD đến Cloudflare Workers + production verification là **implemented**. Content diff, persistent notification state, Telegram/Email adapter, secrets và scheduled/automatic notification workflow ở mục này là **planned**; tài liệu này không đồng nghĩa đã triển khai hay cấp quyền thực hiện gửi thông báo.
 
 ---
 
@@ -2433,72 +2274,12 @@ projectsEvaluated
 Execute requested tasks
 ```
 
-Riêng `project-portal`, build lifecycle hiện có thêm frontend handoff:
+The retired `project-portal` Gradle Node/Vite/Spring Boot handoff and Cloudflare Pages deployment have been removed. Separate live workflows remain:
 
-```text
-:project-portal:processResources / bootJar / bootRun dependency chain
-        ↓
-buildFrontend
-        ↓
-npmInstall
-        ↓
-npm run build
-        ↓
-Vite frontend/dist
-        ↓
-copy vào Spring resources/static
-        ↓
-Spring Boot serve production bundle
-```
+- `java-learning/.github/workflows/publish-java-data.yml` publishes the static dataset to Release `java-data` then dispatches `java-data-published` to the independent website repository.
+- `java-learning/.github/workflows/local-run-build.yml` receives guarded `workflow_dispatch(moduleId,sourceFingerprint)` from the website's Worker and produces an executable `bootJar` asset in Release `local-run`. This does not deploy the website.
+- `learning-platform/.github/workflows/verify-and-preview.yml` builds/validates the frontend, syncs verified Java data and deploys Cloudflare Production.
 
-Gradle Node plugin download Node/npm cho Portal build, vì vậy production build không dựa vào việc developer đã cài Node global. Khi phát triển frontend riêng, Vite dev server có thể chạy độc lập; khi test application đóng gói hoàn chỉnh, Spring Boot serve bundle đã build.
-
-Portal hiện còn có production deployment path tách khỏi Spring Boot host local:
-
-```text
-push/merge vào main hoặc workflow_dispatch
-        ↓
-.github/workflows/deploy-portal.yml
-        ↓
-GitHub Actions
-        ├── setup JDK 21
-        └── Gradle :project-portal:buildFrontend
-                    ↓
-          project-portal/frontend/dist
-                    ↓
-          Cloudflare Wrangler
-                    ↓
-Cloudflare Pages Direct Upload
-https://java-learning-cly.pages.dev
-```
-
-Cloudflare Pages chỉ host static production output; nó không chạy Spring Boot backend. Điều này phù hợp với static-first boundary hiện tại vì module catalog, Overview, Knowledge và API Docs đều đã được materialize trước ở build-time. Khi một feature tương lai thực sự cần server-side behavior thì backend có thể được deploy riêng mà không thay đổi ownership của static Portal data.
-
-Cloudflare **Pages project name** dùng cho Wrangler là `java-learning`; `java-learning-cly.pages.dev` chỉ là public hostname. Workflow phải giữ đúng distinction này:
-
-```text
-pages deploy project-portal/frontend/dist
---project-name=java-learning
---branch=main
-```
-
-CI chạy trên Linux nên toàn bộ generator chạy trong `:project-portal:buildFrontend` phải tuân thủ case-sensitive filesystem semantics; đây là lý do plugin filename lookup ở `gradle-runtime` có rule case-insensitive reuse/fail-on-ambiguity nêu ở phần registry.
-
-CI secret boundary hiện tại:
-
-```text
-CLOUDFLARE_ACCOUNT_ID
-CLOUDFLARE_API_TOKEN
-```
-
-Hai giá trị chỉ thuộc GitHub Repository Secrets. Workflow được phép reference qua `secrets.*`, nhưng repository source không được chứa credential thực tế. Trigger `push` trên `main` áp dụng cả direct push lẫn merge Pull Request vì merge làm `main` nhận commit mới.
-
-Điểm quan trọng:
-
-- metadata phải sẵn sàng trước module configuration;
-- dependency resolution cần toàn project hierarchy đã evaluate;
-- explicit task action chạy sau configuration;
-- generated structure/catalog không nên làm side effect sớm hơn phase cần thiết.
 
 ---
 
@@ -2603,22 +2384,17 @@ Các invariant dưới đây phản ánh architecture hiện tại và nên đư
 25. Application không cần application-owned MCP/tunnel/chat backend cho current workflow; standalone MCP integration chỉ bổ sung khi có requirement độc lập khỏi CoS.
 26. Embedded Swagger AI chat/browser bridge là optional product UX và không phải requirement của Phase 5–7 hiện tại.
 27. Swagger `execution` documentation là guided learning explanation: phải giúp người đọc hiểu concept, flow, ý nghĩa, evidence và conclusion mà không bắt buộc phải mở source code trước.
-28. `project-portal` là repository-level presentation application nằm ngoài `module/`; nó không phải learning topic.
-29. Portal frontend ưu tiên static/generated data; có Spring Boot backend không đồng nghĩa mọi dữ liệu phải đi qua REST.
-30. Production React bundle được Vite build rồi Gradle copy vào `classpath:/static`; Spring Boot phục vụ bundle bằng static-resource mechanism mặc định.
-31. Current Portal routing dùng `BrowserRouter`; local Spring MVC chỉ forward các SPA route `/my-cv`, `/learning`, `/learning/{moduleId}` về `/index.html` để deep-link/F5 giữ nguyên route, không dùng broad wildcard nuốt static/API paths.
-32. Learning experience không phụ thuộc việc learning module có Spring Boot Application; API execution và Execution Context chỉ là optional runtime capabilities.
-33. Portal module hierarchy phải consume generated `module-catalog.json`; browser không parse `module-structure.txt` làm canonical input.
-34. Sidebar Portal `Real modules / Module thật` là content filter: giữ MODULE khi Roadmap available hoặc Knowledge/Quiz/Interview/API Docs có count > 0. Roadmap chỉ qualify khi localized `roadmap.yml` có ít nhất một milestone; skeleton rỗng không qualify. Đây không phải định nghĩa physical real module của repository, vốn vẫn dựa trên local `gradle.properties`.
-35. Module-search self-match giữ nguyên subtree; descendant-match chỉ giữ ancestor path. Search mode vẫn phải cho phép expand/collapse ở non-terminal branches; terminal module groups dùng Module Picker.
-36. Sidebar không còn circular `>` riêng trên từng module. Dashboard-only row navigate toàn row; non-terminal child-only row toggle toàn row; terminal GROUP có toàn bộ direct children là leaf MODULE dùng một Module Picker popup thay vì inline-expand. Mixed GROUP/MODULE parents wrap direct leaf MODULE siblings thành virtual 1-item pickers. MODULE nodes có children được presentation layer tách thành structural parent + virtual self-module picker child thay vì split-click hybrid row. Picker mở bằng hover/focus, click pin/unpin, click ngoài/Escape đóng, chỉ một picker được mở tại một thời điểm và module luôn được đánh số 1..N theo catalog order. Virtual wrappers không thay đổi catalog identity/count. Tree mặc định expanded và vẫn có global Expand all/Collapse all cho branch tree.
-37. Menu/API Docs mặc định collapsed nhưng phải preserve state gần nhất khi user đổi tab rồi quay lại trong cùng module/language; Knowledge cho phép nhiều section cùng mở và không auto-close sibling section.
-38. API Docs hiện consume static generated Swagger metadata, không live-execute/debug. Controller/method order phải follow valid README relationship order thay vì alphabetical/path order; rich execution HTML phải được sanitize trước khi render.
-39. Portal generated data là build artifact: không generate `module-catalog`, Overview, Knowledge hoặc future module projections vào `project-portal/src/main/resources`.
-40. Generated Portal layout là module-first: global `module-catalog.json` nằm ở `portal-data/`, còn module-owned feature data nằm dưới `portal-data/module/{ROUTE_ID}/{feature}/...`.
-41. Quiz và Interview là module-local static learning capabilities: canonical schema/comment generation thuộc `gradle-runtime`, enablement thuộc orchestration, còn nội dung `questions:` thuộc module source.
-42. Quiz dùng stable internal answer ids `A/B/C/D`; frontend chỉ shuffle display order một lần khi load document và không dùng display position làm correctness identity.
-43. Quiz/Interview có governance `aiGenerated/reviewed` và optional exact Knowledge/API relations. Không tạo relation giả khi README/API không có target trực tiếp phù hợp.
+28. The retired `project-portal/` application is not a Gradle module or content source; frontend and Local Run live exclusively in the separate `learning-platform` repository.
+29. `generatePortalData` remains the Java data producer, not an application deployment task.
+30. Release `java-data` distributes verified static learning content; Release `local-run` distributes executable JARs.
+31. Browser Local Run sends only module ID and fingerprint; guarded Java workflow resolves its own Gradle path and executes `bootJar`.
+32. Durable Object single-flight and rate limiting protect dispatch; GitHub Actions concurrency is separate and does not guarantee FIFO.
+33. Static-first documentation is independent of module execution and Spring Boot portal hosting.
+34. API Docs consume sanitized, static Swagger metadata; live API execution is a separate capability.
+35. Quiz/Interview module data, schema and metadata remain producer-owned, never hand-authored in frontend.
+36. Do not invent unresolved Knowledge/API relations in frontend projections.
+37. Quiz dùng stable internal answer ids `A/B/C/D`; frontend chỉ shuffle display order một lần khi load document và không dùng display position làm correctness identity.
+38. Quiz/Interview có governance `aiGenerated/reviewed` và optional exact Knowledge/API relations. Không tạo relation giả khi README/API không có target trực tiếp phù hợp.
 
 ---
 
@@ -2698,7 +2474,7 @@ Khi cần hiểu architecture của project, thứ tự đọc được khuyến
 5. project-orchestration
 6. project-build/gradle-runtime
 7. project-build/springboot-runtime
-8. project-portal/PROJECT_PORTAL.md + project-portal khi task liên quan Learning Portal
+8. learning-platform/ARCHITECTURE.md in the separate website repository for UI, Cloudflare API and Local Run
 9. STRUCTURE.md
 10. metadata/build.gradle của module cần khảo sát
 11. source package của module chỉ khi phạm vi công việc yêu cầu
@@ -2760,31 +2536,25 @@ project-build/gradle-runtime
 project-build/springboot-runtime
     = runtime implementation: ứng dụng dùng capability như thế nào khi chạy
 
-project-portal
-    = presentation application: Spring Boot host + React/TypeScript learning UI
+learning-platform (separate repository)
+    = React learning UI + Cloudflare Worker/SQLite Durable Object
 ```
 
 `module/` đứng phía consumer của kiến trúc này và vẫn giữ quyền sở hữu nội dung học tập/application cụ thể của từng module.
 
-`project-portal` đứng phía presentation/aggregation. Current flow của Portal là:
+
+Static learning content flows to the separate website without a Java portal runtime:
 
 ```text
-filesystem/module metadata
-        ↓ ProjectStructureService
-build/learning-data/java/module-catalog.json
-        ↓
-        + module-scoped generated Overview/Knowledge/Video/Quiz/Interview/API projections
-        ↓
-React + TypeScript
-        ↓ Vite build
-static bundle
-        ↓ Gradle processResources
-Spring Boot classpath:/static
-        ↓
-browser at :9098
-```
+Java modules + metadata -> generatePortalData
+  -> verified java-data ZIP + SHA-256 GitHub Release
+  -> repository_dispatch -> learning-platform frontend CI/CD
+  -> Cloudflare Workers Static Assets -> browser
 
-Trong phase hiện tại Java backend không sở hữu learning data API. Module catalog cùng README/Video/Quiz/Interview/OpenAPI projections đều đi theo static-first data flow; chỉ thêm server-side API khi feature có requirement runtime/persistence/security rõ ràng.
+Click Build JAR -> Cloudflare Worker -> SQLite DO coordination
+  -> java-learning GitHub Actions bootJar + fingerprint V2
+  -> GitHub Release local-run -> browser Download
+```
 
 Execution Context bổ sung một đường dữ liệu khác từ runtime thực tế sang công cụ phân tích:
 
@@ -2820,8 +2590,8 @@ Bản tài liệu này được xây dựng từ source thực tế của:
 - `project-build/springboot-runtime/swagger`;
 - `project-build/springboot-runtime/execution-context`;
 - `project-build/springboot-runtime/execution-context-servlet`;
-- `project-portal` Spring Boot + React/Vite build handoff;
-- `project-portal/PROJECT_PORTAL.md` cho product/portal-specific design;
+- `java-learning` Java data publisher, guarded Local Run workflow and the external website data/API contract;
+- `learning-platform/ARCHITECTURE.md` (repository frontend riêng) cho standalone product/portal-specific design;
 - canonical automation/task resources;
 - generated plugin/catalog flow đã được kiểm tra;
 - Gradle configuration flow đã được chạy bằng repository Gradle Wrapper 8.5.
