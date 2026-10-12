@@ -37,6 +37,7 @@ class ProjectStructureService {
     private final Logger logger
 
     private final ModuleOrderService moduleOrderService
+    private LocalRunFingerprintService localRunFingerprints
 
 
     ProjectStructureService(
@@ -205,6 +206,8 @@ ${moduleDirectory.absolutePath}
             File moduleDirectory
     ) {
 
+        localRunFingerprints = new LocalRunFingerprintService(rootProject.projectDir)
+
         return buildStructureNode(
                 rootProject,
                 moduleDirectory,
@@ -291,11 +294,14 @@ ${moduleDirectory.absolutePath}
                             'REACTIVE'.equalsIgnoreCase(node.moduleType)
             ) {
 
-                node.sourceFingerprint =
-                        resolveGitTreeFingerprint(
-                                rootProject,
-                                relativePath
-                        )
+                try {
+                    node.sourceFingerprint = localRunFingerprints.fingerprint(relativePath)
+                } catch (Exception exception) {
+                    // Keep the content catalog usable for an uncommitted module,
+                    // but never advertise an unverifiable executable JAR.
+                    logger.warn('[PORTAL-LOCAL-RUN] Skip fingerprint for {}: {}', relativePath, exception.message)
+                    node.sourceFingerprint = null
+                }
             }
 
             List<String> moduleLanguages =
@@ -878,62 +884,6 @@ ${moduleDirectory.absolutePath}
         return result
     }
 
-
-    private String resolveGitTreeFingerprint(
-            Project rootProject,
-            String relativePath
-    ) {
-
-        try {
-
-            Process process =
-                    new ProcessBuilder(
-                            'git',
-                            '-C',
-                            rootProject.projectDir.absolutePath,
-                            'rev-parse',
-                            "HEAD:${relativePath}"
-                    )
-                            .redirectErrorStream(true)
-                            .start()
-
-
-            String output =
-                    process.inputStream.getText('UTF-8').trim()
-
-
-            int exitCode =
-                    process.waitFor()
-
-
-            if (
-                    exitCode != 0 ||
-                            !(output ==~ /[0-9a-fA-F]{40,64}/)
-            ) {
-
-                logger.warn(
-                        '[PORTAL-LOCAL-RUN] Unable to resolve Git tree fingerprint for {}: {}',
-                        relativePath,
-                        output
-                )
-
-                return null
-            }
-
-
-            return output.toLowerCase(Locale.ROOT)
-        }
-        catch (Exception exception) {
-
-            logger.warn(
-                    '[PORTAL-LOCAL-RUN] Unable to resolve Git tree fingerprint for {}: {}',
-                    relativePath,
-                    exception.message
-            )
-
-            return null
-        }
-    }
 
 
     private static String resolveRouteId(

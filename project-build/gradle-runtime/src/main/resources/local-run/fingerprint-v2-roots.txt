@@ -1,0 +1,13 @@
+# V2 build-wide inputs. Any change here can affect any bootJar.
+# Paths are relative to the java-learning repository root.
+build.gradle
+settings.gradle
+gradle.properties
+gradle
+gradlew
+gradlew.bat
+project-build/gradle-runtime
+project-orchestration
+project-build/springboot-runtime
+internal
+scripts/local-run-fingerprint-v2.py

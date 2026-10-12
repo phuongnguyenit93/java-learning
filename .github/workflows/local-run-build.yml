@@ -9,13 +9,13 @@ on:
         required: true
         type: string
       sourceFingerprint:
-        description: Expected Git tree fingerprint for the module directory
+        description: Expected Local Run V2 build-input SHA-256 fingerprint
         required: true
         type: string
 
 concurrency:
   group: local-run-${{ inputs.moduleId }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   build:
@@ -27,6 +27,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
+
+      - name: Validate Local Run fingerprint algorithm
+        run: python3 -m unittest discover -s scripts/tests -p 'test_local_run_fingerprint_v2.py'
 
       - name: Resolve runnable module
         id: module
@@ -46,8 +49,8 @@ jobs:
           expected_fingerprint = os.environ['EXPECTED_FINGERPRINT'].strip().lower()
           if not re.fullmatch(r'[A-Z0-9][A-Z0-9_-]{0,63}', module_id):
               raise SystemExit(f'Invalid moduleId: {module_id!r}')
-          if not re.fullmatch(r'[0-9a-f]{40,64}', expected_fingerprint):
-              raise SystemExit('Invalid sourceFingerprint.')
+          if not re.fullmatch(r'[0-9a-f]{64}', expected_fingerprint):
+              raise SystemExit('Local Run requires a V2 SHA-256 sourceFingerprint (64 lowercase hex characters).')
 
           matches = []
           for master_file in Path('module').rglob('master.json'):
@@ -82,7 +85,7 @@ jobs:
           jar_base = re.sub(r'[^a-z0-9._-]+', '-', module_id.lower()).strip('-') or 'module'
           jar_name = f'{jar_base}.jar'
           source_fingerprint = subprocess.check_output(
-              ['git', 'rev-parse', f'HEAD:{relative_path}'],
+              ['python3', 'scripts/local-run-fingerprint-v2.py', '--module-dir', relative_path],
               text=True,
           ).strip().lower()
 
@@ -159,11 +162,21 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           RELEASE_TAG: local-run
           MODULE_ID: ${{ inputs.moduleId }}
+          MODULE_DIR: ${{ steps.module.outputs.module_dir }}
           JAR_NAME: ${{ steps.module.outputs.jar_name }}
           SOURCE_FINGERPRINT: ${{ steps.module.outputs.source_fingerprint }}
         shell: bash
         run: |
           set -euo pipefail
+
+          # The checkout can become outdated while Gradle builds the JAR.
+          # Never clobber a release asset if current main has changed build inputs.
+          git fetch --no-tags --depth=1 origin refs/heads/main
+          latest_fingerprint="$(python3 scripts/local-run-fingerprint-v2.py --module-dir "$MODULE_DIR" --revision FETCH_HEAD)"
+          if [ "$latest_fingerprint" != "$SOURCE_FINGERPRINT" ]; then
+            echo "::error::Module $MODULE_ID changed on main during the build; refusing to publish an outdated JAR."
+            exit 1
+          fi
 
           gh release upload "$RELEASE_TAG" \
             "local-run-artifact/$JAR_NAME#$MODULE_ID · fingerprint:$SOURCE_FINGERPRINT" \
