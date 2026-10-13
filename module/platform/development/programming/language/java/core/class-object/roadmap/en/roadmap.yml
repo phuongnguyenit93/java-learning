@@ -51,7 +51,7 @@ roadmap:
       - routeId: JAVA_LANGUAGE_BASICS
         label: Language Basics
         note: Reference types, variables, scope, and source structure provide the direct foundation for learning classes and objects.
-      - routeId: JAVA_OOP
+      - routeId: OBJECT_ORIENTED_PROGRAMMING
         label: Object-Oriented Programming
         note: OOP builds design principles on top of the class/object mechanisms introduced here.
     objectives:

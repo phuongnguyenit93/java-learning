@@ -51,7 +51,7 @@ roadmap:
       - routeId: JAVA_CLASS_OBJECT
         label: Lớp và đối tượng
         note: Cung cấp nền tảng về lớp (class), đối tượng (object), thành viên và hàm khởi tạo (constructor) trước khi học các kiểu không thể khởi tạo trực tiếp.
-      - routeId: JAVA_OOP
+      - routeId: OBJECT_ORIENTED_PROGRAMMING
         label: Lập trình hướng đối tượng (OOP)
         note: Cung cấp nền tảng về trừu tượng hóa, kế thừa, đa hình và khả năng thay thế giữa các kiểu.
     objectives:

@@ -1793,9 +1793,6 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <a href='./module/platform/development/programming/language/java/core/class-object'>🪄 class-object</a>
 </li>
 <li>
-  <a href='./module/platform/development/programming/language/java/core/oop'>🪄 oop</a>
-</li>
-<li>
   <a href='./module/platform/development/programming/language/java/core/abstract-interface'>🪄 abstract-interface</a>
 </li>
 <li>

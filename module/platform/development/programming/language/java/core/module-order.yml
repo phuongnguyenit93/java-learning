@@ -6,8 +6,6 @@ children:
     order: 20
   class-object:
     order: 30
-  oop:
-    order: 40
   abstract-interface:
     order: 50
   object-contract:

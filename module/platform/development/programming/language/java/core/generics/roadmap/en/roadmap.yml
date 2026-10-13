@@ -48,7 +48,7 @@ roadmap:
     relatedKnowledge:
       - GenericsPurpose
     relatedModules:
-      - routeId: JAVA_OOP
+      - routeId: OBJECT_ORIENTED_PROGRAMMING
         label: Object-Oriented Programming (OOP)
         note: Inheritance, subtyping, and substitutability provide the foundation for understanding bounds, invariance, and relationships between generic types.
       - routeId: JAVA_ABSTRACT_INTERFACE

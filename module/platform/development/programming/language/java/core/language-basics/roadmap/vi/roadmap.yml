@@ -113,7 +113,7 @@ roadmap:
     relatedKnowledge:
       - WrapperBoxing
     relatedModules:
-      - routeId: JAVA_OOP
+      - routeId: OBJECT_ORIENTED_PROGRAMMING
         label: Lập trình hướng đối tượng
         note: Mở rộng cách các đối tượng và kiểu tham chiếu tham gia vào mô hình hướng đối tượng.
       - routeId: JAVA_GENERICS
@@ -207,7 +207,7 @@ roadmap:
       - Arrays
       - WrapperBoxing
     relatedModules:
-      - routeId: JAVA_OOP
+      - routeId: OBJECT_ORIENTED_PROGRAMMING
         label: Lập trình hướng đối tượng
         note: Kế thừa, đa hình và cơ chế phân phối lời gọi (`dispatch`) mở rộng trực tiếp mô hình kiểu ở thời điểm chạy.
       - routeId: JAVA_GENERICS
@@ -228,7 +228,7 @@ roadmap:
       - PrimitiveReference
       - Methods
     relatedModules:
-      - routeId: JAVA_OOP
+      - routeId: OBJECT_ORIENTED_PROGRAMMING
         label: Lập trình hướng đối tượng
         note: Bước tiếp theo để tổ chức trạng thái và hành vi thành mô hình đối tượng.
       - routeId: JAVA_COLLECTION

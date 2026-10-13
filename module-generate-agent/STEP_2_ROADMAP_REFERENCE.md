@@ -544,7 +544,7 @@ roadmap:
     title: Type System Basics
     purpose: ...
     relatedModules:
-      - routeId: JAVA_OOP
+      - routeId: OBJECT_ORIENTED_PROGRAMMING
         label: Object-Oriented Programming
         note: Type hierarchy, inheritance and polymorphism extend this model.
 ```

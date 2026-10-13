@@ -48,7 +48,7 @@ roadmap:
     relatedKnowledge:
       - GenericsPurpose
     relatedModules:
-      - routeId: JAVA_OOP
+      - routeId: OBJECT_ORIENTED_PROGRAMMING
         label: Lập trình hướng đối tượng (OOP)
         note: Kế thừa, kiểu con và khả năng thay thế là nền tảng để hiểu giới hạn kiểu, tính bất biến và quan hệ giữa các kiểu generic.
       - routeId: JAVA_ABSTRACT_INTERFACE

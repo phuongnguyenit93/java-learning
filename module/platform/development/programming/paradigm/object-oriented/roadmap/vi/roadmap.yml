@@ -43,9 +43,6 @@
 
 roadmap:
   - id: oop-purpose-and-identity
-    relatedKnowledge:
-      - ObjectOrientedProgramming
-      - EncapsulationAbstraction
     title: "Lập trình hướng đối tượng (OOP): Mục đích và mô hình đối tượng"
     purpose: "Nhận ra vấn đề khi dữ liệu và quy tắc xử lý nằm rải rác; hình dung OOP như cách các đối tượng có danh tính nhận yêu cầu và cùng thực hiện công việc."
     objectives:
@@ -53,8 +50,6 @@ roadmap:
       - "Nhận biết object cụ thể qua danh tính (identity), trạng thái (state), hành vi (behavior) và vai trò; phân biệt 'cùng đối tượng' với 'cùng giá trị', đồng thời hiểu trạng thái đối tượng có thể không thay đổi."
       - "Phân biệt object đang tham gia thực thi với class là bản mô tả để tạo object trong ngôn ngữ dựa trên class; không coi class, file mã nguồn hay mô hình vật thể đời thực là định nghĩa đầy đủ của OOP."
   - id: state-behavior-and-invariants
-    relatedKnowledge:
-      - EncapsulationAbstraction
     title: "Đóng gói, che giấu thông tin và trừu tượng hóa"
     purpose: "Biết vì sao bên ngoài nên yêu cầu đối tượng thực hiện hành vi thay vì tự sửa dữ liệu nội bộ; phân biệt ranh giới đóng gói, quyết định cần che giấu và điều được công bố."
     objectives:
@@ -62,8 +57,6 @@ roadmap:
       - "Dùng tình huống tài khoản để giải thích invariant là điều kiện nhất quán phải được giữ sau thao tác; phân biệt invariant với immutability là dữ liệu không bị sửa đổi."
       - "Dự đoán lỗi khi bên ngoài sửa số dư trực tiếp; đề xuất hành vi rút tiền có kiểm tra đầu vào, bảo toàn trạng thái hợp lệ và che cách biểu diễn bên trong."
   - id: responsibilities-and-contracts
-    relatedKnowledge:
-      - Responsibility
     title: "Phân chia trách nhiệm và hợp đồng hành vi giữa các đối tượng"
     purpose: "Chọn nơi đặt một quy tắc và xác định điều mỗi đối tượng phải bảo đảm khi nhận yêu cầu từ đối tượng khác."
     objectives:
@@ -71,9 +64,6 @@ roadmap:
       - "Diễn đạt hợp đồng hành vi bằng yêu cầu đầu vào, kết quả hoặc lỗi được cam kết và quy tắc nhất quán; phân biệt hợp đồng với chữ ký phương thức hay chi tiết triển khai."
       - "Phân tích sơ bộ cohesion (các hành vi cùng phục vụ một nhiệm vụ) như dấu hiệu phân chia trách nhiệm hợp lý, không biến milestone thành giáo trình nguyên lý thiết kế SOLID."
   - id: collaboration-and-composition
-    relatedKnowledge:
-      - Responsibility
-      - RelationshipsPolymorphism
     title: "Cộng tác đối tượng: liên kết, phụ thuộc và hợp thành"
     purpose: "Hiểu cách nhiều đối tượng giải quyết một yêu cầu bằng việc gọi nhau theo hợp đồng, và chọn dạng quan hệ phù hợp thay vì gom mọi xử lý vào một đối tượng."
     objectives:
@@ -81,8 +71,6 @@ roadmap:
       - "Phân biệt association (có quan hệ/biết nhau), dependency (cần dùng khả năng của nhau) với hợp thành các thành phần để tạo hành vi lớn hơn; quan hệ uses-a hay has-a đơn giản không tự là UML composition có sở hữu/vòng đời mạnh."
       - "Thử thay cộng tác viên phía sau cùng một hợp đồng và giải thích vì sao giảm phụ thuộc vào chi tiết bên trong giúp dễ sửa đổi; coupling là tiêu chí áp dụng ngắn, phần nguyên lý tổng quát thuộc module thiết kế."
   - id: polymorphism-and-substitution
-    relatedKnowledge:
-      - RelationshipsPolymorphism
     title: "Đa hình và khả năng thay thế: phân biệt kiểu con và kế thừa"
     purpose: "Hiểu cách một lời gọi theo hợp đồng chung dẫn đến các hành vi cụ thể khác nhau mà bên gọi không cần kiểm tra loại đối tượng."
     objectives:
@@ -90,9 +78,6 @@ roadmap:
       - "Phân biệt subtype như cam kết có thể dùng thay theo hợp đồng với inheritance như cách tổ chức/tái sử dụng đặc điểm; có quan hệ kế thừa không tự chứng minh thay thế hợp lệ."
       - "Kiểm tra một biến thể bằng tình huống đầu vào hợp lệ, bị từ chối và lỗi; giải thích vì sao phá điều kiện/kết quả cam kết là vi phạm substitutability, còn lỗi được trả đúng hợp đồng thì không."
   - id: tradeoffs-and-failure-modes
-    relatedKnowledge:
-      - Tradeoffs
-      - RelationshipsPolymorphism
     title: "Khi OOP hữu ích và khi mô hình đối tượng quá phức tạp"
     purpose: "Đánh giá lợi ích kiểm soát thay đổi của OOP cùng chi phí phát sinh từ quá nhiều đối tượng, quan hệ khó theo dõi và trạng thái dùng chung."
     objectives:
@@ -100,10 +85,6 @@ roadmap:
       - "Dùng cohesion/coupling và composition so với inheritance như tiêu chí đánh giá tình huống cụ thể; lý thuyết đầy đủ về SOLID, Law of Demeter hay design patterns thuộc chủ đề thiết kế riêng."
       - "Giải thích khi nào xử lý bằng thủ tục hoặc biến đổi dữ liệu đơn giản là đủ, và khi nào cần đối tượng có hành vi, quy tắc và cộng tác rõ ràng."
   - id: oop-synthesis-and-boundaries
-    relatedKnowledge:
-      - Tradeoffs
-      - Responsibility
-      - ObjectOrientedProgramming
     title: "Tổng hợp: từ một yêu cầu đến hệ thống đối tượng cộng tác"
     purpose: "Áp dụng trọn vẹn mô hình tư duy OOP vào một tình huống nhỏ và giải thích từng quyết định trước khi chuyển sang cơ chế Java hoặc thiết kế chuyên sâu."
     objectives:

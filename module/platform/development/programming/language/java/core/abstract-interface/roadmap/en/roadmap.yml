@@ -51,7 +51,7 @@ roadmap:
       - routeId: JAVA_CLASS_OBJECT
         label: Class and Object
         note: Provides the class, object, member, and constructor foundations needed before studying types that cannot be instantiated directly.
-      - routeId: JAVA_OOP
+      - routeId: OBJECT_ORIENTED_PROGRAMMING
         label: OOP
         note: Provides the abstraction, inheritance, polymorphism, and substitutability context for these mechanisms.
     objectives:

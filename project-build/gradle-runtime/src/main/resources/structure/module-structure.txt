@@ -414,7 +414,6 @@ module
     │   │   │       │   ├── language-basics [JAVA_LANGUAGE_BASICS] : Java language basics
     │   │   │       │   ├── numbers [JAVA_NUMBERS] : Java numeric types and arithmetic
     │   │   │       │   ├── class-object [JAVA_CLASS_OBJECT] : Java class and object model
-    │   │   │       │   ├── oop [JAVA_OOP] : Java object-oriented programming
     │   │   │       │   ├── abstract-interface [JAVA_ABSTRACT_INTERFACE] : Java abstract class and interface
     │   │   │       │   ├── object-contract [JAVA_OBJECT_CONTRACT] : Java object contracts
     │   │   │       │   ├── string [JAVA_STRING] : Java String and text fundamentals

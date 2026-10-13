@@ -51,7 +51,7 @@ roadmap:
       - routeId: JAVA_LANGUAGE_BASICS
         label: Kiến thức nền tảng về ngôn ngữ
         note: Kiểu tham chiếu, biến, phạm vi và cấu trúc mã nguồn là nền tảng trực tiếp trước khi học sâu về lớp và đối tượng.
-      - routeId: JAVA_OOP
+      - routeId: OBJECT_ORIENTED_PROGRAMMING
         label: Lập trình hướng đối tượng (OOP)
         note: OOP xây dựng các nguyên lý thiết kế trên nền tảng lớp và đối tượng được học trong mô-đun này.
     objectives:

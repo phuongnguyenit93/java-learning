@@ -1,20 +1,22 @@
 # 📂 README MODULE STRUCTURE (EN)
 
 * **1.Introduction**
-    * [ObjectOrientedProgramming](readme/en/menu/1.Introduction/ObjectOrientedProgramming.md)
-* **2.EncapsulationAbstraction**
-    * [EncapsulationAbstraction](readme/en/menu/2.EncapsulationAbstraction/EncapsulationAbstraction.md)
-* **3.Responsibility**
-    * [Responsibility](readme/en/menu/3.Responsibility/Responsibility.md)
-* **4.RelationshipsPolymorphism**
-    * [RelationshipsPolymorphism](readme/en/menu/4.RelationshipsPolymorphism/RelationshipsPolymorphism.md)
-* **5.Tradeoffs**
-    * [Tradeoffs](readme/en/menu/5.Tradeoffs/Tradeoffs.md)
+    * [Introduction](readme/en/menu/1.Introduction/Introduction.md)
+* **2.ClassAndObject**
+    * [ClassAndObject](readme/en/menu/2.ClassAndObject/ClassAndObject.md)
+* **3.Encapsulation**
+    * [Encapsulation](readme/en/menu/3.Encapsulation/Encapsulation.md)
+* **4.Abstraction**
+    * [Abstraction](readme/en/menu/4.Abstraction/Abstraction.md)
+* **5.Inheritance**
+    * [Inheritance](readme/en/menu/5.Inheritance/Inheritance.md)
+* **6.PolymorphismAndRelationships**
+    * [PolymorphismAndRelationships](readme/en/menu/6.PolymorphismAndRelationships/PolymorphismAndRelationships.md)
+* **7.OOPDesign**
+    * [OOPDesign](readme/en/menu/7.OOPDesign/OOPDesign.md)
 
-# Learning Object-Oriented Programming
+# Object-Oriented Programming (OOP)
 
-Object-oriented programming (OOP) organizes software around objects with **identity, behavior, state where relevant, and responsibility**. Objects collaborate through behavioral contracts to reduce scattered rules and improve how change is managed. OOP does not mean merely placing code into many classes.
+**Object-oriented programming (OOP)** is a way of organizing a program around **objects** with their own state, behavior, and responsibilities. Rather than scattering data and processing rules throughout a program, objects collaborate through clearly defined behaviors and contracts. When designed appropriately, this makes software easier to understand, change, and extend.
 
-Only basic familiarity with variables, data, function/procedure calls, and execution flow is assumed; prior Java class knowledge is unnecessary. The opening chapter explains OOP's purpose, the major concept families, and the difference between an object and a class. Next come identity, state/behavior, encapsulation, information hiding, abstraction, and invariants. With those foundations, the learner assigns responsibilities, specifies behavioral contracts, traces object collaboration and association/dependency/composition, then studies polymorphism, subtyping, inheritance, and substitutability. The final chapter tests design choices and trade-offs with an end-to-end scenario.
-
-This module owns the **language-neutral OOP mental model** and applies cohesion/coupling briefly to object decisions. Java class/interface mechanics, overriding, and dispatch belong to Java Core; comprehensive SOLID and general design rules belong to Design Principles; DDD belongs to domain modeling, and AOP owns cross-cutting concerns.
+This module takes you from the concepts of **classes and objects** through **encapsulation, abstraction, inheritance, and polymorphism**, relationships between objects, and how to apply these ideas when designing a complete program. The examples use **Java** for illustration, but the emphasis is on understanding OOP thinking—not merely memorizing syntax or its four commonly taught pillars. Java-specific language mechanisms are explored in greater depth in the Java Core modules.

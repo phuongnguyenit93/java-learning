@@ -2118,15 +2118,6 @@ enum ModuleListEnum {
             []
     ),
 
-    JAVA_OOP(
-            'module:platform:development:programming:language:java:core:oop',
-            'module/platform/development/programming/language/java/core/oop',
-            'SERVLET',
-            'Java object-oriented programming',
-            false,
-            []
-    ),
-
     JAVA_RECORD(
             'module:platform:development:programming:language:java:version:java16:record',
             'module/platform/development/programming/language/java/version/java16/record',

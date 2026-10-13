@@ -113,7 +113,7 @@ roadmap:
     relatedKnowledge:
       - WrapperBoxing
     relatedModules:
-      - routeId: JAVA_OOP
+      - routeId: OBJECT_ORIENTED_PROGRAMMING
         label: Object-Oriented Programming
         note: Extends how objects and reference types participate in Java's object model.
       - routeId: JAVA_GENERICS
@@ -207,7 +207,7 @@ roadmap:
       - Arrays
       - WrapperBoxing
     relatedModules:
-      - routeId: JAVA_OOP
+      - routeId: OBJECT_ORIENTED_PROGRAMMING
         label: Object-Oriented Programming
         note: Inheritance, polymorphism, and runtime dispatch extend this type model.
       - routeId: JAVA_GENERICS
@@ -228,7 +228,7 @@ roadmap:
       - PrimitiveReference
       - Methods
     relatedModules:
-      - routeId: JAVA_OOP
+      - routeId: OBJECT_ORIENTED_PROGRAMMING
         label: OOP
         note: The next step for organizing state and behavior into an object model.
       - routeId: JAVA_COLLECTION
