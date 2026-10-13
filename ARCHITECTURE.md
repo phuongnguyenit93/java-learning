@@ -153,7 +153,7 @@ The canonical UI/Worker/DO architecture lives in [learning-platform/ARCHITECTURE
 
 **Implemented:**
 
-- `java-learning/.github/workflows/publish-java-data.yml`: push `main` → generate/validate/package Java learning data → publish rolling GitHub Release `java-data` → re-download/verify ZIP + SHA-256 → gửi `repository_dispatch` (`java-data-published`) bằng credential chỉ được cấp cho repository đích.
+- `java-learning/.github/workflows/publish-java-data.yml`: push `main` với thay đổi nội dung module hoặc fingerprint inputs → generate/validate Java learning data → so sánh bytes static output với Release `java-data` đã xác thực checksum (bỏ qua manifest commit metadata) → nếu không đổi thì dừng; nếu đổi thì package/publish/re-download/verify ZIP + SHA-256 và gửi `repository_dispatch` (`java-data-published`) bằng credential chỉ được cấp cho repository đích. Generated `module-structure.txt` không phải trigger hay fingerprint input.
 - `learning-platform/.github/workflows/verify-and-preview.yml`: push frontend `main` hoặc nhận `java-data-published` → `npm ci`, tests, build React + download/validate Java data → kiểm tra `dist/language/java/` và static assets → upload artifact. Event từ Java mang source commit và ZIP SHA-256 để frontend không âm thầm tiêu thụ bản Release khác.
 - Chỉ khi build PASS, job production deploy `dist/` đã xác thực bằng Wrangler tới Worker `learning-platform` (website `https://nguyendodinhphuong.name.vn`). Kiểm chứng HTTP thực tế trên cả Worker URL và custom domain, so sánh byte/hash của các resource đại diện bao gồm Knowledge VI/EN, catalog, search và JS/CSS. Pull request không deploy; manual Preview được cách ly khỏi production.
 

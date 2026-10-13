@@ -5,7 +5,33 @@ name: Publish Java Learning Data
 on:
   push:
     branches: [main]
+    # Keep content and Local Run metadata current, but ignore unrelated docs,
+    # agent prompts and the generated module-structure.txt resource.
+    paths:
+      - 'module/**'
+      - 'build.gradle'
+      - 'settings.gradle'
+      - 'gradle.properties'
+      - 'gradle/**'
+      - 'gradlew'
+      - 'gradlew.bat'
+      - 'project-build/gradle-runtime/**'
+      - '!project-build/gradle-runtime/src/main/resources/structure/module-structure.txt'
+      - 'project-build/springboot-runtime/**'
+      - 'project-orchestration/**'
+      - 'internal/**'
+      - 'scripts/local-run-fingerprint-v2.py'
+      - 'scripts/publish-java-data.py'
+      - 'scripts/tests/test_java_data_publisher.py'
+      - 'scripts/tests/test_local_run_fingerprint_v2.py'
+      - '.github/workflows/publish-java-data.yml'
   workflow_dispatch:
+    inputs:
+      force_publish:
+        description: 'Manually republish/dispatch even if data is unchanged (recover failed downstream delivery)'
+        type: boolean
+        default: false
+        required: true
 
 permissions:
   contents: read
@@ -25,6 +51,7 @@ jobs:
     outputs:
       source_commit: ${{ steps.publish_release.outputs.source_commit }}
       data_sha256: ${{ steps.publish_release.outputs.data_sha256 }}
+      published: ${{ steps.content_gate.outputs.changed }}
     steps:
       - name: Restrict publishing to main
         shell: bash
@@ -54,8 +81,8 @@ jobs:
       - name: Install YAML parser
         run: python -m pip install 'PyYAML==6.0.2'
 
-      - name: Test exporter validation and reproducible ZIP
-        run: python -m unittest discover -s scripts/tests -p 'test_java_data_publisher.py' -v
+      - name: Test data publisher and Local Run fingerprint
+        run: python -m unittest discover -s scripts/tests -p 'test_*.py' -v
 
       - name: Generate Java learning data
         shell: bash
@@ -66,7 +93,40 @@ jobs:
       - name: Validate Java data
         run: python scripts/publish-java-data.py validate
 
+      - name: Compare generated data against verified rolling Release
+        id: content_gate
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          FORCE_PUBLISH: ${{ github.event_name == 'workflow_dispatch' && inputs.force_publish == true }}
+        run: |
+          set -euo pipefail
+          if [[ "${FORCE_PUBLISH}" == 'true' ]]; then
+            echo 'changed=true' >> "${GITHUB_OUTPUT}"
+            echo 'Operator requested a verified release/dispatch retry.'
+            exit 0
+          fi
+          tag='java-data'
+          if gh release view "${tag}" --repo "${GITHUB_REPOSITORY}" >/dev/null 2>&1; then
+            mkdir -p build/java-data-existing
+            gh release download "${tag}" \
+              --repo "${GITHUB_REPOSITORY}" \
+              --pattern 'java-learning-data.zip' \
+              --pattern 'java-learning-data.zip.sha256' \
+              --dir build/java-data-existing
+            python scripts/publish-java-data.py compare \
+              --existing-zip build/java-data-existing/java-learning-data.zip \
+              --existing-checksum build/java-data-existing/java-learning-data.zip.sha256 \
+              --github-output "${GITHUB_OUTPUT}"
+          else
+            # First publication must create the Release. Any transient GitHub
+            # API error will fail at the guarded publishing step, not dispatch.
+            echo 'changed=true' >> "${GITHUB_OUTPUT}"
+            echo 'No rolling Release found; initial publication required.'
+          fi
+
       - name: Package Java data
+        if: steps.content_gate.outputs.changed == 'true'
         shell: bash
         run: |
           if [[ "$(git rev-parse HEAD)" != "${GITHUB_SHA}" ]]; then
@@ -79,6 +139,7 @@ jobs:
           (cd build/java-data-release && sha256sum --check java-learning-data.zip.sha256)
 
       - name: Publish rolling GitHub Release
+        if: steps.content_gate.outputs.changed == 'true'
         id: publish_release
         shell: bash
         env:
@@ -105,23 +166,11 @@ jobs:
           notes="$(printf 'Rolling Java Learning Data release.\n\nSource commit: `%s`\nZIP SHA-256: `%s`\n\nDownload both assets and verify the checksum before consuming this dataset. The release tag remains fixed; the tag commit is not the source-version authority. Read manifest.json from the ZIP for the authoritative sourceCommit.\n' "${commit_sha}" "${data_sha}")"
 
           if gh release view "${tag}" --repo "${GITHUB_REPOSITORY}" >/dev/null 2>&1; then
-            # Re-running the same commit is harmless. Do not delete/re-upload
-            # matching assets, but replace them when the generated data changes.
-            mkdir -p build/java-data-existing
-            if gh release download "${tag}" \
-              --repo "${GITHUB_REPOSITORY}" \
-              --pattern 'java-learning-data.zip' \
-              --pattern 'java-learning-data.zip.sha256' \
-              --dir build/java-data-existing \
-              && cmp -s "${zip}" build/java-data-existing/java-learning-data.zip \
-              && cmp -s "${checksum}" build/java-data-existing/java-learning-data.zip.sha256; then
-              echo "Rolling release already contains identical assets."
-            else
-              # ZIP first, checksum last. Consumer must download both and retry
-              # if checksum verification fails during a replacement window.
-              gh release upload "${tag}" "${zip}" --repo "${GITHUB_REPOSITORY}" --clobber
-              gh release upload "${tag}" "${checksum}" --repo "${GITHUB_REPOSITORY}" --clobber
-            fi
+            # content_gate already verified the previous Release and proved
+            # the generated data changed, so no duplicate ZIP comparison here.
+            # ZIP first, checksum last; consumers retry during replacement.
+            gh release upload "${tag}" "${zip}" --repo "${GITHUB_REPOSITORY}" --clobber
+            gh release upload "${tag}" "${checksum}" --repo "${GITHUB_REPOSITORY}" --clobber
             gh release edit "${tag}" \
               --repo "${GITHUB_REPOSITORY}" \
               --title "Java Learning Data" \
@@ -154,6 +203,7 @@ jobs:
   dispatch:
     name: Trigger learning-platform build after verified Release
     needs: publish
+    if: ${{ needs.publish.result == 'success' && needs.publish.outputs.published == 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:

@@ -34,7 +34,9 @@ class FingerprintV2Tests(unittest.TestCase):
         self.write("module/example/b/src/B.java", "class B {}")
         self.write("module/example/other/src/C.java", "class C {}")
         self.write("project-build/gradle-runtime/src/main/resources/local-run/fingerprint-v2-roots.txt",
-                   "build.gradle\nproject-build/springboot-runtime\n")
+                   "build.gradle\nproject-build/gradle-runtime\nproject-build/springboot-runtime\n")
+        self.write("project-build/gradle-runtime/src/main/resources/structure/module-structure.txt",
+                   "module\nold generated structure\n")
         self.write("project-build/springboot-runtime/common.txt", "common")
         self.git("init", "-q")
         self.git("config", "user.email", "test@example.com")
@@ -91,6 +93,19 @@ class FingerprintV2Tests(unittest.TestCase):
         self.assertEqual(committed, fingerprint_module.fingerprint(self.module_a, "HEAD"))
         self.commit()
         self.assertNotEqual(committed, fingerprint_module.fingerprint(self.module_a, "HEAD"))
+
+    def test_generated_structure_does_not_invalidate_local_run(self):
+        original = fingerprint_module.fingerprint(self.module_a, "HEAD")
+        self.write("project-build/gradle-runtime/src/main/resources/structure/module-structure.txt",
+                   "module\nnew generated structure\n")
+        self.commit()
+        self.assertEqual(original, fingerprint_module.fingerprint(self.module_a, "HEAD"))
+
+        # All other committed Gradle runtime inputs remain fingerprinted.
+        self.write("project-build/gradle-runtime/src/main/groovy/NewPlugin.groovy",
+                   "class NewPlugin {}\n")
+        self.commit()
+        self.assertNotEqual(original, fingerprint_module.fingerprint(self.module_a, "HEAD"))
 
     def test_direct_gradle_project_dependency_is_included(self):
         self.write("module/example/a/properties.json", "{}")

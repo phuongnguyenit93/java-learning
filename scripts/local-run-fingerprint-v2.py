@@ -15,6 +15,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 INPUTS = ROOT / "project-build/gradle-runtime/src/main/resources/local-run/fingerprint-v2-roots.txt"
 HEADER = "local-run-fingerprint-v2\n"
+GENERATED_STRUCTURE = "project-build/gradle-runtime/src/main/resources/structure/module-structure.txt"
+GRADLE_RUNTIME_TREE = "project-build/gradle-runtime"
 
 
 def git_object(rev: str, path: str) -> str:
@@ -26,6 +28,30 @@ def git_object(rev: str, path: str) -> str:
     )
     oid = process.stdout.strip().lower()
     return oid if process.returncode == 0 and re.fullmatch(r"[0-9a-f]{40,64}", oid) else "MISSING"
+
+
+def shared_object(rev: str, path: str) -> str:
+    """Exclude generated structure from shared build inputs, not authored code."""
+    if path != GRADLE_RUNTIME_TREE or git_object(rev, path) == "MISSING":
+        return git_object(rev, path)
+    result = subprocess.run(
+        ["git", "-C", str(ROOT), "ls-tree", "-r", "-z", "--full-tree", rev, "--", path],
+        capture_output=True, check=True,
+    )
+    entries = []
+    for raw in result.stdout.split(b"\0"):
+        if not raw:
+            continue
+        metadata, filename = raw.split(b"\t", 1)
+        mode, kind, oid = metadata.decode("ascii").split(" ")
+        name = filename.decode("utf-8")
+        if name == GENERATED_STRUCTURE:
+            continue
+        if kind != "blob" or not name.startswith(path + "/"):
+            raise ValueError(f"Unexpected shared fingerprint Git entry: {name}")
+        entries.append((name, oid))
+    payload = "".join(f"{name}\t{oid}\n" for name, oid in sorted(entries))
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
 
 def git_file(rev: str, path: str) -> str | None:
@@ -105,7 +131,7 @@ def fingerprint(module_dir: str, revision: str) -> str:
         if git_object(revision, dependency) == "MISSING":
             raise ValueError(f"Local Run V2 module is not committed at {revision}: {dependency}")
     shared.update(dependencies)
-    content = HEADER + "".join(f"{path}\t{git_object(revision, path)}\n" for path in sorted(shared))
+    content = HEADER + "".join(f"{path}\t{shared_object(revision, path)}\n" for path in sorted(shared))
     return hashlib.sha256(content.encode("utf-8")).hexdigest()
 
 

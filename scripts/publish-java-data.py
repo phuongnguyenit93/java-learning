@@ -23,6 +23,7 @@ EXPOSED_FIELDS = (
 )
 ALLOWED_EXTENSIONS = frozenset({".json", ".yml", ".yaml", ".md"})
 SHA_RE = re.compile(r"^[0-9a-f]{40}$")
+ARCHIVE_NAME = "java-learning-data.zip"
 
 
 def sha256(path):
@@ -31,6 +32,58 @@ def sha256(path):
         for chunk in iter(lambda: stream.read(1024 * 1024), b""):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def content_digest(entries):
+    """Hash sorted (relative path, bytes) pairs, ignoring package commit metadata."""
+    digest = hashlib.sha256()
+    for name, size, stream in entries:
+        digest.update(name.encode("utf-8") + b"\0")
+        digest.update(size.to_bytes(8, "big"))
+        with stream as source:
+            chunks = iter(lambda: source.read(1024 * 1024), b"")
+            for chunk in chunks:
+                digest.update(chunk)
+        digest.update(b"\0")
+    return digest.hexdigest()
+
+
+def same_published_content(directory, archive_path, checksum_path):
+    """Compare validated generated assets with a verified existing rolling Release.
+
+    Never trust a manifest's reported hash, and never compare ZIP hashes: the
+    embedded sourceCommit/sourceCommitTime changes independently of UI content.
+    """
+    files, _, _, _ = validate(directory)
+    expected_checksum = checksum_path.read_text(encoding="ascii").strip()
+    if not re.fullmatch(r"[0-9a-f]{64}  " + re.escape(ARCHIVE_NAME), expected_checksum):
+        fail("Invalid existing Java data release checksum format")
+    if sha256(archive_path) != expected_checksum[:64]:
+        fail("Existing Java data Release ZIP checksum mismatch")
+
+    files_by_name = {file.relative_to(directory).as_posix(): file for file in files}
+    relative_names = sorted(files_by_name)
+    with zipfile.ZipFile(archive_path) as archive:
+        names = archive.namelist()
+        if len(names) != len(set(names)) or "manifest.json" not in names:
+            fail("Invalid existing Java data Release entries")
+        manifest = json.loads(archive.read("manifest.json"))
+        if (manifest.get("schemaVersion") != 1 or
+                manifest.get("producer") != "java-learning" or
+                not SHA_RE.fullmatch(str(manifest.get("sourceCommit", ""))) or
+                manifest.get("fileCount") != len(names) - 1):
+            fail("Invalid existing Java data Release manifest")
+        existing_names = sorted(name for name in names if name != "manifest.json")
+        if existing_names != relative_names:
+            return False
+        generated_digest = content_digest(
+            (name, files_by_name[name].stat().st_size, files_by_name[name].open("rb"))
+            for name in relative_names
+        )
+        previous_digest = content_digest(
+            (name, archive.getinfo(name).file_size, archive.open(name)) for name in existing_names
+        )
+    return generated_digest == previous_digest
 
 
 def fail(message):
@@ -189,7 +242,7 @@ def package(directory, output, commit, commit_time):
         fail("source-commit must be a full 40-character lowercase git SHA")
     files, modules, checked_refs, total_bytes = validate(directory)
     output.mkdir(parents=True, exist_ok=True)
-    archive = output / "java-learning-data.zip"
+    archive = output / ARCHIVE_NAME
     checksum_file = output / "java-learning-data.zip.sha256"
     manifest = {
         "schemaVersion": 1,
@@ -238,15 +291,26 @@ def package(directory, output, commit, commit_time):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("action", choices=["validate", "package"])
+    parser.add_argument("action", choices=["validate", "package", "compare"])
     parser.add_argument("--data-dir", type=Path, default=Path("build/learning-data/java"))
     parser.add_argument("--output-dir", type=Path, default=Path("build/java-data-release"))
     parser.add_argument("--source-commit", default="")
     parser.add_argument("--source-commit-time", default="")
+    parser.add_argument("--existing-zip", type=Path)
+    parser.add_argument("--existing-checksum", type=Path)
+    parser.add_argument("--github-output", type=Path)
     args = parser.parse_args()
     try:
         if args.action == "validate":
             validate(args.data_dir)
+        elif args.action == "compare":
+            if not args.existing_zip or not args.existing_checksum or not args.github_output:
+                fail("compare requires --existing-zip, --existing-checksum and --github-output")
+            unchanged = same_published_content(args.data_dir, args.existing_zip, args.existing_checksum)
+            with args.github_output.open("a", encoding="utf-8") as stream:
+                stream.write(f"changed={'false' if unchanged else 'true'}\n")
+            print("UNCHANGED: skip Java Release and frontend deployment" if unchanged else
+                  "CHANGED: publish updated Java data and dispatch frontend")
         else:
             if not args.source_commit_time:
                 fail("Missing --source-commit-time")

@@ -12,6 +12,9 @@ class LocalRunFingerprintService {
     private static final String INPUTS = 'project-build/gradle-runtime/src/main/resources/local-run/fingerprint-v2-roots.txt'
     private static final String REV = 'HEAD'
     private static final String MISSING = 'MISSING'
+    private static final String GRADLE_RUNTIME_TREE = 'project-build/gradle-runtime'
+    private static final String GENERATED_STRUCTURE =
+            'project-build/gradle-runtime/src/main/resources/structure/module-structure.txt'
 
     private final File root
     private final List<String> sharedPaths
@@ -40,7 +43,7 @@ class LocalRunFingerprintService {
         paths.addAll(dependencies)
         StringBuilder payload = new StringBuilder(VERSION)
         paths.each { String path ->
-            payload.append(path).append('\t').append(objectAt(path)).append('\n')
+            payload.append(path).append('\t').append(sharedObjectAt(path)).append('\n')
         }
         byte[] digest = MessageDigest.getInstance('SHA-256')
                 .digest(payload.toString().getBytes(StandardCharsets.UTF_8))
@@ -137,5 +140,37 @@ class LocalRunFingerprintService {
             gitObjectCache[path] = code == 0 && result ==~ /[0-9a-fA-F]{40,64}/ ? result.toLowerCase(Locale.ROOT) : MISSING
         }
         return gitObjectCache[path]
+    }
+
+    private String sharedObjectAt(String path) {
+        if (path != GRADLE_RUNTIME_TREE || objectAt(path) == MISSING) {
+            return objectAt(path)
+        }
+        // Gradle's generated navigation resource is not an authored build
+        // input. Keep every other tracked file (including future additions).
+        Process process = new ProcessBuilder('git', '-C', root.absolutePath,
+                'ls-tree', '-r', '--full-tree', REV, '--', path).start()
+        String listing = process.inputStream.getText('UTF-8')
+        String errors = process.errorStream.getText('UTF-8')
+        if (process.waitFor() != 0) {
+            throw new GradleException("Unable to read committed shared inputs: ${errors}")
+        }
+        List<String> files = []
+        listing.readLines().each { String entry ->
+            String[] parts = entry.split('\\t', 2)
+            if (parts.length != 2) {
+                throw new GradleException("Malformed Git shared input entry: ${entry}")
+            }
+            String name = parts[1]
+            if (name == GENERATED_STRUCTURE) return
+            String[] metadata = parts[0].split(' ')
+            if (metadata.length != 3 || metadata[1] != 'blob' || !name.startsWith(path + '/')) {
+                throw new GradleException("Unexpected Git shared input entry: ${entry}")
+            }
+            files.add("${name}\t${metadata[2]}\n".toString())
+        }
+        byte[] digest = MessageDigest.getInstance('SHA-256')
+                .digest(files.sort().join('').getBytes(StandardCharsets.UTF_8))
+        return HexFormat.of().formatHex(digest)
     }
 }
