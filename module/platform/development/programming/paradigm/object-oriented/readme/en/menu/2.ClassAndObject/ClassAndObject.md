@@ -35,18 +35,18 @@ A class describes a type's structure and behavior. An object is a particular ent
 
 For example:
 
-\`\`\`java
+```java
 class BankAccount {
     String owner;
     long balance;
 }
-\`\`\`
+```
 
 This is only a **class definition**. Merely writing the class does not create any specific bank accounts.
 
 When we execute:
 
-\`\`\`java
+```java
 BankAccount accountA = new BankAccount();
 accountA.owner = "An";
 accountA.balance = 100_000;
@@ -54,24 +54,24 @@ accountA.balance = 100_000;
 BankAccount accountB = new BankAccount();
 accountB.owner = "Binh";
 accountB.balance = 100_000;
-\`\`\`
+```
 
-The program creates two separate objects. Both follow the same \`BankAccount\` definition, but each has its own data and separate existence.
+The program creates two separate objects. Both follow the same `BankAccount` definition, but each has its own data and separate existence.
 
 A simple illustration:
 
-\`\`\`mermaid
+```mermaid
 flowchart TD
     C["Class BankAccount: describes the account type"]
     C -.-> A["Object A: owner = An, balance = 100000"]
     C -.-> B["Object B: owner = Binh, balance = 100000"]
-\`\`\`
+```
 
-In Java, variables such as \`accountA\` usually hold a **reference** to an object, rather than a copy of the entire object. Two different variables may reference **the same object**.
+In Java, variables such as `accountA` usually hold a **reference** to an object, rather than a copy of the entire object. Two different variables may reference **the same object**.
 
 From here, we will see why identical data does not necessarily mean identical objects.
 
-> **Terminology note:** Java also has a root class named \`java.lang.Object\`. That is the name of a particular class in the Java library. In this lesson, “object” means an **object in general**. The two notions are related, but they are not entirely synonymous.
+> **Terminology note:** Java also has a root class named `java.lang.Object`. That is the name of a particular class in the Java library. In this lesson, “object” means an **object in general**. The two notions are related, but they are not entirely synonymous.
 
 ### 2. Identity: “Which Object Is This?”
 
@@ -81,7 +81,7 @@ Imagine two people both named “An” who are both 25 years old. They do not be
 
 In Java:
 
-\`\`\`java
+```java
 BankAccount accountA = new BankAccount();
 accountA.owner = "An";
 accountA.balance = 100_000;
@@ -94,13 +94,13 @@ BankAccount anotherReference = accountA;
 
 System.out.println(accountA == accountB);         // false
 System.out.println(accountA == anotherReference); // true
-\`\`\`
+```
 
 Line-by-line explanation:
 
-- \`accountA\` and \`accountB\` are created by two separate \`new\` expressions, so they are different objects even though their current states match.
-- \`anotherReference = accountA\` **does not create a new object**. Both variables refer to object A.
-- For **references**, the \`==\` operator tests whether two references point to **the exact same object**. It does not compare the \`owner\` and \`balance\` fields.
+- `accountA` and `accountB` are created by two separate `new` expressions, so they are different objects even though their current states match.
+- `anotherReference = accountA` **does not create a new object**. Both variables refer to object A.
+- For **references**, the `==` operator tests whether two references point to **the exact same object**. It does not compare the `owner` and `balance` fields.
 
 #### Is Identity the Same as a Database ID?
 
@@ -108,35 +108,35 @@ Not necessarily. We must distinguish two layers of meaning:
 
 | Concept | Example | Meaning |
 | --- | --- | --- |
-| Java object identity | \`a == b\` | Do two references point to the same object while the program runs? |
-| Business identity | Account number \`ACC-001\` | How the system recognizes a business account across saves and loads |
-| Data value | \`balance = 100_000\` | Current account information, which may change |
+| Java object identity | `a == b` | Do two references point to the same object while the program runs? |
+| Business identity | Account number `ACC-001` | How the system recognizes a business account across saves and loads |
+| Data value | `balance = 100_000` | Current account information, which may change |
 
-Suppose account \`ACC-001\` is loaded from the database on two occasions. The system might create two different Java objects representing the same business account \`ACC-001\`. In that case, \`==\` may be \`false\` even though both describe the same business entity.
+Suppose account `ACC-001` is loaded from the database on two occasions. The system might create two different Java objects representing the same business account `ACC-001`. In that case, `==` may be `false` even though both describe the same business entity.
 
-**Do not equate object identity with a displayed memory address, \`hashCode()\`, or a database ID.** JVM memory management is an implementation detail, and a hash value is not a universally unique identifier.
+**Do not equate object identity with a displayed memory address, `hashCode()`, or a database ID.** JVM memory management is an implementation detail, and a hash value is not a universally unique identifier.
 
-#### How Do \`==\` and \`equals()\` Differ?
+#### How Do `==` and `equals()` Differ?
 
 For ordinary objects:
 
-- \`==\` between two references always tests whether they refer to **the same object**.
-- \`equals()\` checks **equality according to rules defined by the class**. Unless overridden, the default \`Object.equals()\` behaves like reference comparison with \`==\`.
-- Classes such as \`String\` override \`equals()\` to compare their contents.
+- `==` between two references always tests whether they refer to **the same object**.
+- `equals()` checks **equality according to rules defined by the class**. Unless overridden, the default `Object.equals()` behaves like reference comparison with `==`.
+- Classes such as `String` override `equals()` to compare their contents.
 
 For example:
 
-\`\`\`java
+```java
 String first = new String("Java");
 String second = new String("Java");
 
 System.out.println(first == second);      // false
 System.out.println(first.equals(second)); // true
-\`\`\`
+```
 
-Having the same \`"Java"\` content does not mean two variables reference the same object.
+Having the same `"Java"` content does not mean two variables reference the same object.
 
-In a business model, \`equals()\` may need to compare IDs; in other cases, it may compare all relevant values. That is a **class design decision**, not a rule by which Java automatically treats every pair of objects with matching fields as one object.
+In a business model, `equals()` may need to compare IDs; in other cases, it may compare all relevant values. That is a **class design decision**, not a rule by which Java automatically treats every pair of objects with matching fields as one object.
 
 ### 3. State: “What Is This Object Like Right Now?”
 
@@ -144,9 +144,9 @@ In a business model, \`equals()\` may need to compare IDs; in other cases, it ma
 
 An account might need:
 
-- Account number: \`ACC-001\`.
-- Account owner: \`An\`.
-- Balance: \`100_000\`.
+- Account number: `ACC-001`.
+- Account owner: `An`.
+- Balance: `100_000`.
 - Operating status: active or locked.
 
 Some information may remain unchanged throughout the object's lifetime; other information changes over time.
@@ -155,9 +155,9 @@ For example, state before and after a withdrawal:
 
 | Moment | Account | Balance |
 | --- | --- | ---: |
-| Before withdrawal | \`ACC-001\` | 100,000 |
-| After withdrawing 30,000 | \`ACC-001\` | 70,000 |
-| After attempting to withdraw 120,000 and being rejected | \`ACC-001\` | 70,000 |
+| Before withdrawal | `ACC-001` | 100,000 |
+| After withdrawing 30,000 | `ACC-001` | 70,000 |
+| After attempting to withdraw 120,000 and being rejected | `ACC-001` | 70,000 |
 
 We are still observing **the same account object**, but its state changed after a valid transaction.
 
@@ -171,7 +171,7 @@ No. An object may be **mutable** (its state can change) or **immutable** (its ob
 
 For example, an immutable coordinate:
 
-\`\`\`java
+```java
 final class Point {
     private final int x;
     private final int y;
@@ -184,11 +184,11 @@ final class Point {
     int x() { return x; }
     int y() { return y; }
 }
-\`\`\`
+```
 
-Two \`Point\` objects may have identical \`x, y\` values but still be different Java objects. Having no setters does not make them any less “objects.”
+Two `Point` objects may have identical `x, y` values but still be different Java objects. Having no setters does not make them any less “objects.”
 
-Also, declaring a field \`final\` only prevents **reassigning that field's value or reference**. If the field holds a mutable list, the list's contents can still change. To make an object truly immutable, we must also consider mutable objects to which it refers.
+Also, declaring a field `final` only prevents **reassigning that field's value or reference**. If the field holds a mutable list, the list's contents can still change. To make an object truly immutable, we must also consider mutable objects to which it refers.
 
 ### 4. Behavior: “What Can This Object Do?”
 
@@ -196,24 +196,24 @@ Also, declaring a field \`final\` only prevents **reassigning that field's value
 
 For an account, behaviors might be:
 
-\`\`\`java
+```java
 account.deposit(50_000);
 account.withdraw(30_000);
 long currentBalance = account.getBalance();
-\`\`\`
+```
 
-\`withdraw(30_000)\` is more than a subtraction. That behavior may need to:
+`withdraw(30_000)` is more than a subtraction. That behavior may need to:
 
 1. Verify that the requested amount is greater than zero.
 2. Check whether the current balance is sufficient.
 3. Update the balance only after all conditions are satisfied.
 4. Report an error if the operation cannot be completed.
 
-A behavior does not have to change state. For example, \`getBalance()\` only observes it, \`isActive()\` reports the active status, and \`calculateFee()\` computes a result.
+A behavior does not have to change state. For example, `getBalance()` only observes it, `isActive()` reports the active status, and `calculateFee()` computes a result.
 
-Likewise, not every behavior has to be publicly exposed. An object may have \`private\` methods for internal implementation details, while its \`public\` methods represent the behaviors it promises external callers.
+Likewise, not every behavior has to be publicly exposed. An object may have `private` methods for internal implementation details, while its `public` methods represent the behaviors it promises external callers.
 
-**Behavior does not mean “any function declared inside a class.”** A \`static\` function belongs to the class and has no particular receiver object; an instance method such as \`account.withdraw(...)\` operates on a specific object with its own state.
+**Behavior does not mean “any function declared inside a class.”** A `static` function belongs to the class and has no particular receiver object; an instance method such as `account.withdraw(...)` operates on a specific object with its own state.
 
 ### 5. Responsibility: “What Is This Object Accountable For?”
 
@@ -221,9 +221,9 @@ This is the concept most easily confused with behavior.
 
 **Behavior** describes a specific action. **Responsibility** describes an object's role or obligation within a design: **what it needs to know, what it must guarantee, and which work it must perform so the system behaves correctly**.
 
-For \`BankAccount\`:
+For `BankAccount`:
 
-- Behavior: \`deposit(amount)\`, \`withdraw(amount)\`, \`getBalance()\`.
+- Behavior: `deposit(amount)`, `withdraw(amount)`, `getBalance()`.
 - Responsibility: **manage the account's balance and ensure operations that change it comply with account rules**.
 
 If an account cannot be overdrawn, an important *invariant* is that **the balance must not be negative**. The object is responsible for protecting that rule through the operations it allows.
@@ -234,14 +234,14 @@ Not necessarily. Those activities may belong to other objects or components.
 
 | Component | Possible appropriate responsibility | Example behavior |
 | --- | --- | --- |
-| \`BankAccount\` | Maintain one account's state and rules | \`withdraw()\`, \`deposit()\` |
-| \`TransferService\` | Coordinate transfers between accounts, handle requests and system-level conditions | \`transfer(from, to, amount)\` |
-| \`StatementGenerator\` | Generate statements from transaction records | \`generateStatement(...)\` |
-| \`NotificationSender\` | Send notifications through appropriate channels | \`send(...)\` |
+| `BankAccount` | Maintain one account's state and rules | `withdraw()`, `deposit()` |
+| `TransferService` | Coordinate transfers between accounts, handle requests and system-level conditions | `transfer(from, to, amount)` |
+| `StatementGenerator` | Generate statements from transaction records | `generateStatement(...)` |
+| `NotificationSender` | Send notifications through appropriate channels | `send(...)` |
 
 Thus, an object may have multiple behaviors serving **one cohesive group of responsibilities**. Conversely, a single behavior is not enough to accurately define an object's responsibility.
 
-For example, a class named \`AccountManager\` with 50 methods is not necessarily well designed; if it handles withdrawals, PDF export, email delivery, UI controls, and configuration reading, its responsibilities have become mixed. OOP does not require everything related to an “account” to be placed inside a single object.
+For example, a class named `AccountManager` with 50 methods is not necessarily well designed; if it handles withdrawals, PDF export, email delivery, UI controls, and configuration reading, its responsibilities have become mixed. OOP does not require everything related to an “account” to be placed inside a single object.
 
 #### Distinguish Them with Two Questions
 
@@ -250,13 +250,13 @@ When reading a method name, ask:
 - “**What does it do?**” → You are describing behavior.
 - “**Why** does this work and its rules belong to this object?” → You are describing responsibility.
 
-For example, \`withdraw()\` is a behavior. Being responsible for **preventing an account from entering an invalid state** is part of its design and behavioral contract.
+For example, `withdraw()` is a behavior. Being responsible for **preventing an account from entering an invalid state** is part of its design and behavioral contract.
 
 ### 6. A Complete Java Example Showing All Four Concepts
 
-Save the following as \`Main.java\` and run it:
+Save the following as `Main.java` and run it:
 
-\`\`\`java
+```java
 final class BankAccount {
     // State: data held by each object
     private final String accountNumber;
@@ -327,11 +327,11 @@ public class Main {
         System.out.println(accountA.getBalance()); // 70000
     }
 }
-\`\`\`
+```
 
 Output:
 
-\`\`\`text
+```text
 false
 true
 70000
@@ -339,33 +339,33 @@ true
 100000
 Insufficient balance
 70000
-\`\`\`
+```
 
-This example uses \`long\` with integral monetary units for simplicity rather than using \`double\` for money. \`Math.addExact\` also detects addition that exceeds the \`long\` range by throwing an exception instead of silently overflowing. It simulates in-memory state; real-world transaction, persistence, and concurrency requirements are beyond this code's scope.
+This example uses `long` with integral monetary units for simplicity rather than using `double` for money. `Math.addExact` also detects addition that exceeds the `long` range by throwing an exception instead of silently overflowing. It simulates in-memory state; real-world transaction, persistence, and concurrency requirements are beyond this code's scope.
 
 #### Read the Example Concept by Concept
 
 **Identity**
 
-\`accountA\` and \`accountB\` are **two different objects**, even though both initially have balances of 100,000. \`aliasOfA\` and \`accountA\` refer to **the same object**.
+`accountA` and `accountB` are **two different objects**, even though both initially have balances of 100,000. `aliasOfA` and `accountA` refer to **the same object**.
 
 **State**
 
-\`accountA\` has \`accountNumber = "ACC-A"\` and initially \`balance = 100_000\`. After withdrawal, its balance becomes \`70_000\`. \`accountB\` remains at \`100_000\`.
+`accountA` has `accountNumber = "ACC-A"` and initially `balance = 100_000`. After withdrawal, its balance becomes `70_000`. `accountB` remains at `100_000`.
 
 **Behavior**
 
-\`withdraw(30_000)\` performs a withdrawal. \`getBalance()\` reads information. \`deposit(...)\` deposits funds.
+`withdraw(30_000)` performs a withdrawal. `getBalance()` reads information. `deposit(...)` deposits funds.
 
 **Responsibility**
 
-\`BankAccount\` is responsible for maintaining the balance and checking withdrawal/deposit requests. There is no public \`setBalance(...)\` that allows callers to assign arbitrary balances.
+`BankAccount` is responsible for maintaining the balance and checking withdrawal/deposit requests. There is no public `setBalance(...)` that allows callers to assign arbitrary balances.
 
 #### What Happens When a Withdrawal Is Invalid?
 
-Before calling \`accountA.withdraw(120_000)\`, the balance is \`70_000\`.
+Before calling `accountA.withdraw(120_000)`, the balance is `70_000`.
 
-\`\`\`text
+```text
 Receive withdraw(120000) request
           |
           v
@@ -376,9 +376,9 @@ Receive withdraw(120000) request
 120000 <= 70000 ? --- no --------> IllegalStateException
           |
          (balance is not updated)
-\`\`\`
+```
 
-The subtraction does not happen, and \`accountA\` still holds \`70_000\`. This demonstrates the relationship between behavior and responsibility: the \`withdraw\` behavior checks conditions to fulfill the responsibility of keeping the state valid.
+The subtraction does not happen, and `accountA` still holds `70_000`. This demonstrates the relationship between behavior and responsibility: the `withdraw` behavior checks conditions to fulfill the responsibility of keeping the state valid.
 
 ### 7. Why Does the Distinction Between Identity and State Matter?
 
@@ -392,16 +392,16 @@ We generally still refer to **the same shopping cart**, even though its contents
 
 The reverse also holds: two shopping carts that are both “empty” do not become one cart.
 
-That is why identity matters when modeling entities such as \`Order\`, \`Account\`, and \`ShoppingCart\`. For values such as coordinates \`Point(2, 3)\` or money \`Money(50, "USD")\`, however, we often care more about **value equality** than whether the references are identical.
+That is why identity matters when modeling entities such as `Order`, `Account`, and `ShoppingCart`. For values such as coordinates `Point(2, 3)` or money `Money(50, "USD")`, however, we often care more about **value equality** than whether the references are identical.
 
-OOP supports both objects **with business identity** and objects **primarily representing values**. Not every object needs a separate \`id\` field or a customized \`equals()\` implementation.
+OOP supports both objects **with business identity** and objects **primarily representing values**. Not every object needs a separate `id` field or a customized `equals()` implementation.
 
 ### 8. Common Misconceptions
 
 | Statement | True or false? | Explanation |
 | --- | --- | --- |
 | “Two objects with identical state are the same object.” | False | Matching data does not guarantee identical identity. |
-| “Two different reference variables always point to two objects.” | False | \`aliasOfA = accountA\` creates another reference to an existing object. |
+| “Two different reference variables always point to two objects.” | False | `aliasOfA = accountA` creates another reference to an existing object. |
 | “State consists only of fields that can change.” | False | Immutable information is also part of state. |
 | “Every object must have setters.” | False | An object may be immutable or only allow changes through business behaviors. |
 | “Behavior only means methods that change state.” | False | Methods that read, validate, or calculate also represent behavior. |
@@ -411,12 +411,12 @@ OOP supports both objects **with business identity** and objects **primarily rep
 
 Another common design mistake is putting **all business logic outside the object**, leaving the object with fields and getters/setters:
 
-\`\`\`java
+```java
 // Caller directly decides how to change balance:
 account.setBalance(account.getBalance() - amount);
-\`\`\`
+```
 
-Without controlled rules, callers may subtract more than the account's balance. Calling \`account.withdraw(amount)\` makes it clear which object must validate and update the balance.
+Without controlled rules, callers may subtract more than the account's balance. Calling `account.withdraw(amount)` makes it clear which object must validate and update the balance.
 
 That said, data-only objects can still serve useful purposes, such as DTOs that transfer data between application layers. Not every class must contain business logic; its design should fit its real role.
 
@@ -424,7 +424,7 @@ That said, data-only objects can still serve useful purposes, such as DTOs that 
 
 Before running the code, predict the output:
 
-\`\`\`java
+```java
 BankAccount first = new BankAccount("ACC-1", 100);
 BankAccount second = new BankAccount("ACC-2", 100);
 BankAccount third = first;
@@ -435,32 +435,32 @@ System.out.println(first == second);      // ?
 System.out.println(first == third);       // ?
 System.out.println(second.getBalance());  // ?
 System.out.println(third.getBalance());   // ?
-\`\`\`
+```
 
 Answer:
 
-\`\`\`text
+```text
 false
 true
 100
 70
-\`\`\`
+```
 
 Why?
 
-- \`first\` and \`second\` are created independently → different identities.
-- \`third\` refers to the same object as \`first\` → same identity.
-- State changes made through \`first\` are also visible through \`third\` because both reference one object.
-- \`second\` has its own state and is unaffected.
+- `first` and `second` are created independently → different identities.
+- `third` refers to the same object as `first` → same identity.
+- State changes made through `first` are also visible through `third` because both reference one object.
+- `second` has its own state and is unaffected.
 
 Now describe an **order** in exactly four statements, one for each concept:
 
-1. **Identity:** Which order? For example, order \`ORD-101\`.
-2. **State:** What information does the order currently contain? For example, product list, total, and status \`CREATED\`.
-3. **Behavior:** What actions does the order permit? Examples include \`addItem()\`, \`cancel()\`, and \`markPaid()\` when appropriate for the business.
-4. **Responsibility:** What must the order guarantee? For example, not allowing product changes after completion or refusing to become \`PAID\` before payment is confirmed.
+1. **Identity:** Which order? For example, order `ORD-101`.
+2. **State:** What information does the order currently contain? For example, product list, total, and status `CREATED`.
+3. **Behavior:** What actions does the order permit? Examples include `addItem()`, `cancel()`, and `markPaid()` when appropriate for the business.
+4. **Responsibility:** What must the order guarantee? For example, not allowing product changes after completion or refusing to become `PAID` before payment is confirmed.
 
-If your only answer is “an order has fields \`id\`, \`status\`, and \`total\`,” you are primarily describing **state**. Meaningful object design also requires identifying its **behaviors** and **responsibilities**.
+If your only answer is “an order has fields `id`, `status`, and `total`,” you are primarily describing **state**. Meaningful object design also requires identifying its **behaviors** and **responsibilities**.
 
 The four aspects are closely connected: **identity** identifies the object being discussed; **state** describes its current condition; **behavior** describes what it can do or which requests it can respond to; **responsibility** explains why that particular object must carry out the work and uphold the associated rules.
 
@@ -1453,8 +1453,8 @@ Suppose you are writing a program that manages a desk lamp. Every lamp needs to 
 
 In Java, we can place these related pieces of information and operations inside one class:
 
-- **Attribute/field:** describes information the object holds, such as \`name\`, \`on\`, and \`brightness\`.
-- **Method:** defines actions or capabilities offered by the object, such as \`turnOn()\`, \`turnOff()\`, and \`setBrightness(...)\`.
+- **Attribute/field:** describes information the object holds, such as `name`, `on`, and `brightness`.
+- **Method:** defines actions or capabilities offered by the object, such as `turnOn()`, `turnOff()`, and `setBrightness(...)`.
 
 The important distinction is: **fields describe the data an object currently holds; methods describe what can be done with that object**. A method can read, modify, or compute from data, but it can also perform work without changing the state.
 
@@ -1462,7 +1462,7 @@ The important distinction is: **fields describe the data an object currently hol
 
 Here is a simple example:
 
-\`\`\`java
+```java
 class Lamp {
     String name;        // Field
     boolean on;         // Field
@@ -1481,37 +1481,37 @@ class Lamp {
                 + ", brightness=" + brightness);
     }
 }
-\`\`\`
+```
 
-\`Lamp\` is the **class**, the definition describing structure and behavior. Once we create an object:
+`Lamp` is the **class**, the definition describing structure and behavior. Once we create an object:
 
-\`\`\`java
+```java
 Lamp deskLamp = new Lamp();
 deskLamp.name = "Desk lamp";
 deskLamp.brightness = 60;
 deskLamp.turnOn();
 deskLamp.showStatus();
-\`\`\`
+```
 
 Result:
 
-\`\`\`text
+```text
 Desk lamp: on=true, brightness=60
-\`\`\`
+```
 
 Read the statements in ordinary language:
 
 | Java expression | Meaning |
 | --- | --- |
-| \`new Lamp()\` | Create an object of type \`Lamp\` |
-| \`deskLamp.name\` | Access the \`name\` field of the object referenced by \`deskLamp\` |
-| \`deskLamp.brightness = 60\` | Assign a new value to a field |
-| \`deskLamp.turnOn()\` | Request that the object perform \`turnOn\` |
-| \`deskLamp.showStatus()\` | Call the method that displays the current state |
+| `new Lamp()` | Create an object of type `Lamp` |
+| `deskLamp.name` | Access the `name` field of the object referenced by `deskLamp` |
+| `deskLamp.brightness = 60` | Assign a new value to a field |
+| `deskLamp.turnOn()` | Request that the object perform `turnOn` |
+| `deskLamp.showStatus()` | Call the method that displays the current state |
 
-The dot \`.\` is the member-access operator. For a **field**, we write \`object.field\`. For a **method**, we usually write \`object.method(arguments)\`, where the parentheses invoke the method.
+The dot `.` is the member-access operator. For a **field**, we write `object.field`. For a **method**, we usually write `object.method(arguments)`, where the parentheses invoke the method.
 
-Note that the initial class allows external code to assign \`brightness = -100\`. It helps us recognize fields and methods, but it does not yet protect state well. Later, we will improve the design using \`private\` and validating methods.
+Note that the initial class allows external code to assign `brightness = -100`. It helps us recognize fields and methods, but it does not yet protect state well. Later, we will improve the design using `private` and validating methods.
 
 ### 2. Fields: The State of Each Object
 
@@ -1519,7 +1519,7 @@ A **field** is a variable declared directly inside a class body, outside its met
 
 For example:
 
-\`\`\`java
+```java
 class Student {
     String name;
     int score;
@@ -1539,13 +1539,13 @@ public class Main {
         System.out.println(binh.score); // 75
     }
 }
-\`\`\`
+```
 
-Although \`an\` and \`binh\` both belong to class \`Student\`, they are different objects. Changing \`an.score\` does not automatically change Binh's score.
+Although `an` and `binh` both belong to class `Student`, they are different objects. Changing `an.score` does not automatically change Binh's score.
 
 One way to visualize it:
 
-\`\`\`text
+```text
 Class Student
   - name: String
   - score: int
@@ -1553,7 +1553,7 @@ Class Student
 Object an                 Object binh
   name  = "An"              name  = "Binh"
   score = 90                score = 75
-\`\`\`
+```
 
 #### Do Fields Have Default Values?
 
@@ -1561,15 +1561,15 @@ Yes. Java assigns default values to an object's **instance fields** before expli
 
 | Field type | Default value |
 | --- | --- |
-| \`byte\`, \`short\`, \`int\`, \`long\` | \`0\` |
-| \`float\`, \`double\` | \`0.0\` |
-| \`boolean\` | \`false\` |
-| \`char\` | Character \`'\u0000'\` (code point 0) |
-| Reference types, such as \`String\` and \`Student\` | \`null\` |
+| `byte`, `short`, `int`, `long` | `0` |
+| `float`, `double` | `0.0` |
+| `boolean` | `false` |
+| `char` | Character `'\u0000'` (code point 0) |
+| Reference types, such as `String` and `Student` | `null` |
 
 However, **local variables** inside methods do not automatically have default values available for use. Java requires local variables to be assigned before they are read.
 
-\`\`\`java
+```java
 class Example {
     int count; // Instance field: defaults to 0
 
@@ -1580,11 +1580,11 @@ class Example {
         System.out.println(number); // 10
     }
 }
-\`\`\`
+```
 
 #### Distinguishing Fields, Parameters, and Local Variables
 
-\`\`\`java
+```java
 class Rectangle {
     private int width; // Field
 
@@ -1593,13 +1593,13 @@ class Rectangle {
         width = adjusted;
     }
 }
-\`\`\`
+```
 
 | Kind | Where declared? | Purpose |
 | --- | --- | --- |
-| Instance field \`width\` | In the class, outside methods | Store the object's own state |
-| Parameter \`newWidth\` | In a method's parameter list | Receive a value supplied by a caller |
-| Local variable \`adjusted\` | Inside the method body | Hold an intermediate result during execution |
+| Instance field `width` | In the class, outside methods | Store the object's own state |
+| Parameter `newWidth` | In a method's parameter list | Receive a value supplied by a caller |
+| Local variable `adjusted` | Inside the method body | Hold an intermediate result during execution |
 
 **Remember:** A field can remain part of the object's state after a method finishes. A local variable from that invocation is not part of the object's persistent state.
 
@@ -1607,77 +1607,77 @@ class Rectangle {
 
 A common structure is:
 
-\`\`\`java
+```java
 accessModifier returnType methodName(parameterType parameterName) {
     // Processing statements
 }
-\`\`\`
+```
 
 For example:
 
-\`\`\`java
+```java
 public int add(int a, int b) {
     return a + b;
 }
-\`\`\`
+```
 
 Its components:
 
 | Component | In the example | Meaning |
 | --- | --- | --- |
-| \`public\` | Access modifier | Controls where the method may be called |
-| \`int\` | Return type | Type of the returned value |
-| \`add\` | Method name | Name of the operation |
-| \`int a, int b\` | Parameters | Values required by the method |
-| \`return a + b;\` | Return statement | Return the result and end the invocation |
+| `public` | Access modifier | Controls where the method may be called |
+| `int` | Return type | Type of the returned value |
+| `add` | Method name | Name of the operation |
+| `int a, int b` | Parameters | Values required by the method |
+| `return a + b;` | Return statement | Return the result and end the invocation |
 
 A method can take **no parameters**:
 
-\`\`\`java
+```java
 void ring() {
     System.out.println("Ting!");
 }
-\`\`\`
+```
 
 A method can also **return no value**:
 
-\`\`\`java
+```java
 void printGreeting(String name) {
     System.out.println("Hello " + name);
 }
-\`\`\`
+```
 
-The \`void\` return type means the caller does not receive a return value. A \`void\` method may still use \`return;\` to exit early.
+The `void` return type means the caller does not receive a return value. A `void` method may still use `return;` to exit early.
 
-Conversely, for a method declaring \`int\`, every path that can complete normally must provide an appropriate value:
+Conversely, for a method declaring `int`, every path that can complete normally must provide an appropriate value:
 
-\`\`\`java
+```java
 int square(int number) {
     return number * number;
 }
-\`\`\`
+```
 
-A \`return\` statement ends the current invocation. If code following an unconditional \`return\` in the same block cannot execute, Java reports an *unreachable statement* error.
+A `return` statement ends the current invocation. If code following an unconditional `return` in the same block cannot execute, Java reports an *unreachable statement* error.
 
 #### How Do Parameters Differ from Arguments?
 
 In this declaration:
 
-\`\`\`java
+```java
 int multiply(int x, int y) {
     return x * y;
 }
-\`\`\`
+```
 
-\`x\` and \`y\` are **parameters** (formal parameters).
+`x` and `y` are **parameters** (formal parameters).
 
 In the invocation:
 
-\`\`\`java
+```java
 int result = calculator.multiply(4, 5);
-\`\`\`
+```
 
-\`4\` and \`5\` are **arguments** (actual values) passed to the method.
+`4` and `5` are **arguments** (actual values) passed to the method.
 
 Not every method takes exactly one or two arguments. Their number, order, and types must match the declaration or an overload selected by Java.
 
@@ -1687,19 +1687,19 @@ Three situations are common.
 
 #### A. Calling a Method on a Specific Object
 
-\`\`\`java
+```java
 Lamp lamp = new Lamp();
 lamp.turnOn();
 lamp.showStatus();
-\`\`\`
+```
 
-This is an **instance-method call**: \`lamp\` is an expression referring to an object, and Java executes \`turnOn()\` on that object.
+This is an **instance-method call**: `lamp` is an expression referring to an object, and Java executes `turnOn()` on that object.
 
 If the object has state, the method may read or change the receiving object's own state.
 
 #### B. Calling Another Method from the Same Class
 
-\`\`\`java
+```java
 class Speaker {
     void sayHello() {
         System.out.println("Hello");
@@ -1710,15 +1710,15 @@ class Speaker {
         sayHello();
     }
 }
-\`\`\`
+```
 
-When \`speaker.greetTwice()\` executes, both \`sayHello()\` invocations run on that same \`speaker\` object.
+When `speaker.greetTwice()` executes, both `sayHello()` invocations run on that same `speaker` object.
 
-Within an instance method, \`sayHello()\` here is equivalent to \`this.sayHello()\` in terms of its receiving object. \`this\` is a reference to **the current object**. Whenever you see \`this\`, ask: “Which object is this invocation operating on?”
+Within an instance method, `sayHello()` here is equivalent to `this.sayHello()` in terms of its receiving object. `this` is a reference to **the current object**. Whenever you see `this`, ask: “Which object is this invocation operating on?”
 
-#### C. Calling a `\`static\` Method Through the Class Name
+#### C. Calling a `static` Method Through the Class Name
 
-\`\`\`java
+```java
 class NumberTools {
     static int doubleOf(int value) {
         return value * 2;
@@ -1730,24 +1730,24 @@ public class Main {
         System.out.println(NumberTools.doubleOf(6)); // 12
     }
 }
-\`\`\`
+```
 
-\`doubleOf\` belongs to the **class** in Java's terminology, so you do not need a \`NumberTools\` object to call it. \`NumberTools.doubleOf(6)\` differs from \`lamp.turnOn()\` because the latter executes on a particular instance.
+`doubleOf` belongs to the **class** in Java's terminology, so you do not need a `NumberTools` object to call it. `NumberTools.doubleOf(6)` differs from `lamp.turnOn()` because the latter executes on a particular instance.
 
-Java permits certain forms of static-method invocation through reference expressions, but **prefer the class name**, such as \`NumberTools.doubleOf(...)\`, to avoid suggesting that a static method depends on instance state.
+Java permits certain forms of static-method invocation through reference expressions, but **prefer the class name**, such as `NumberTools.doubleOf(...)`, to avoid suggesting that a static method depends on instance state.
 
 ### 5. Complete Java Example: An Object Manages Its Fields Through Methods
 
-Now improve the \`Lamp\` class to better reflect OOP. Our goals:
+Now improve the `Lamp` class to better reflect OOP. Our goals:
 
 - Each lamp has its own name.
 - Brightness is restricted to the range 0 through 100.
 - When the lamp is off, it emits no light even though it remembers its configured brightness.
 - External code controls it through methods rather than assigning arbitrary state.
 
-Save the following as **\`Main.java\`** and run it:
+Save the following as **`Main.java`** and run it:
 
-\`\`\`java
+```java
 class Lamp {
     private final String name;
     private boolean on;
@@ -1822,11 +1822,11 @@ public class Main {
         System.out.println(desk.getBrightness());
     }
 }
-\`\`\`
+```
 
 Result:
 
-\`\`\`text
+```text
 Desk lamp | on=false | brightness=50 | output=0
 80
 80
@@ -1835,71 +1835,71 @@ Bedside lamp | on=false | brightness=50 | output=0
 0
 Brightness must be 0..100
 80
-\`\`\`
+```
 
 #### Read Each Step Instead of Only Looking at the Result
 
 **Step 1 — Create Two Objects**
 
-\`\`\`java
+```java
 Lamp desk = new Lamp("Desk lamp");
 Lamp bedside = new Lamp("Bedside lamp");
-\`\`\`
+```
 
-Both have type \`Lamp\`, but they are separate objects. Each has its own \`name\`, \`on\`, and \`brightness\` fields.
+Both have type `Lamp`, but they are separate objects. Each has its own `name`, `on`, and `brightness` fields.
 
 **Step 2 — Call Methods That Change State**
 
-\`\`\`java
+```java
 desk.turnOn();
 desk.setBrightness(80);
-\`\`\`
+```
 
-The first call changes \`desk.on\` to \`true\`. The second requests a change in brightness; \`Lamp\` checks that 80 is within the valid range before assigning the field.
+The first call changes `desk.on` to `true`. The second requests a change in brightness; `Lamp` checks that 80 is within the valid range before assigning the field.
 
 **Step 3 — Call Methods That Read and Calculate**
 
-\`\`\`java
+```java
 desk.getBrightness();
 desk.currentLightOutput();
 desk.describe();
-\`\`\`
+```
 
-- \`getBrightness()\` reads the stored brightness and returns an \`int\`.
-- \`currentLightOutput()\` calculates actual light output; if the lamp is off, the result is 0.
-- \`describe()\` builds a description using both the object's fields and another method.
+- `getBrightness()` reads the stored brightness and returns an `int`.
+- `currentLightOutput()` calculates actual light output; if the lamp is off, the result is 0.
+- `describe()` builds a description using both the object's fields and another method.
 
 These methods do not modify state in the example.
 
 **Step 4 — The Two Objects Do Not Share Instance Fields**
 
-When \`desk\` is switched on and set to brightness 80, \`bedside\` remains off with its original brightness setting of 50. Each object has independent state.
+When `desk` is switched on and set to brightness 80, `bedside` remains off with its original brightness setting of 50. Each object has independent state.
 
 **Step 5 — An Invalid Operation Is Rejected**
 
-\`\`\`java
+```java
 desk.setBrightness(150);
-\`\`\`
+```
 
-The method detects that 150 is outside the 0–100 range and throws \`IllegalArgumentException\` **before assigning anything**. Thus, \`brightness\` remains 80. This shows how a method can protect an object's rules.
+The method detects that 150 is outside the 0–100 range and throws `IllegalArgumentException` **before assigning anything**. Thus, `brightness` remains 80. This shows how a method can protect an object's rules.
 
-### 6. `\`private\`, \`public\`, and \`this\`: How Do They Organize Access?
+### 6. `private`, `public`, and `this`: How Do They Organize Access?
 
 In the example:
 
-\`\`\`java
+```java
 private int brightness;
 public void setBrightness(int newBrightness) { ... }
 public int getBrightness() { ... }
-\`\`\`
+```
 
-- \`private\`: the field can be accessed directly only within the scope of class \`Lamp\` (subject to detailed Java rules for nested classes).
-- \`public\`: the method becomes part of the callable interface for outside code, as long as the relevant object and members are accessible in context.
-- \`this\`: explicitly refers to the current object, especially when a parameter has the same name as a field.
+- `private`: the field can be accessed directly only within the scope of class `Lamp` (subject to detailed Java rules for nested classes).
+- `public`: the method becomes part of the callable interface for outside code, as long as the relevant object and members are accessible in context.
+- `this`: explicitly refers to the current object, especially when a parameter has the same name as a field.
 
 For example:
 
-\`\`\`java
+```java
 class Person {
     private String name;
 
@@ -1911,19 +1911,19 @@ class Person {
         return name;
     }
 }
-\`\`\`
+```
 
-In the constructor \`Person(String name)\`, \`name\` on the right refers to the parameter, whereas \`this.name\` on the left is an object field. Writing \`name = name;\` would only assign the parameter to itself, leaving the field unchanged.
+In the constructor `Person(String name)`, `name` on the right refers to the parameter, whereas `this.name` on the left is an object field. Writing `name = name;` would only assign the parameter to itself, leaving the field unchanged.
 
-Not every field needs \`getX()\` or \`setX()\`. For state with business rules, behaviors such as \`withdraw(amount)\`, \`activate()\`, or \`cancel()\` may communicate responsibility more clearly than unconstrained setters. In the lamp example, \`setBrightness(...)\` is reasonable because changing brightness is an allowed action with simple validation.
+Not every field needs `getX()` or `setX()`. For state with business rules, behaviors such as `withdraw(amount)`, `activate()`, or `cancel()` may communicate responsibility more clearly than unconstrained setters. In the lamp example, `setBrightness(...)` is reasonable because changing brightness is an allowed action with simple validation.
 
-### 7. How Does a `\`static\` Field Differ from an Instance Field?
+### 7. How Does a `static` Field Differ from an Instance Field?
 
 An instance field belongs to each object. A **static field** belongs to the class and is shared among the instances of that class.
 
 For example:
 
-\`\`\`java
+```java
 class Ticket {
     private static int createdCount = 0;
     private final int serial;
@@ -1952,92 +1952,92 @@ public class Main {
         System.out.println(Ticket.getCreatedCount()); // 2
     }
 }
-\`\`\`
+```
 
-Here, \`serial\` is an instance field; each ticket has its own serial number. \`createdCount\` is a static field, so each new \`Ticket\` updates the shared class-level counter.
+Here, `serial` is an instance field; each ticket has its own serial number. `createdCount` is a static field, so each new `Ticket` updates the shared class-level counter.
 
 | Member | Associated with | Typical calling/access syntax |
 | --- | --- | --- |
-| Instance field | One object | \`object.field\`, if accessible |
-| Instance method | One object | \`object.method()\` |
-| Static field | Class | \`ClassName.field\` |
-| Static method | Class | \`ClassName.method()\` |
+| Instance field | One object | `object.field`, if accessible |
+| Instance method | One object | `object.method()` |
+| Static field | Class | `ClassName.field` |
+| Static method | Class | `ClassName.method()` |
 
-A **static method** has no \`this\` and cannot directly use an instance field like \`brightness\` without an appropriate object reference. Conversely, an instance method may access both its own instance members and static members according to Java's rules.
+A **static method** has no `this` and cannot directly use an instance field like `brightness` without an appropriate object reference. Conversely, an instance method may access both its own instance members and static members according to Java's rules.
 
-The \`createdCount\` counter merely illustrates this difference and is not safe when multiple threads construct objects concurrently. Issuing genuinely unique serial numbers requires suitable synchronization, persistence, and identifier-scope design.
+The `createdCount` counter merely illustrates this difference and is not safe when multiple threads construct objects concurrently. Issuing genuinely unique serial numbers requires suitable synchronization, persistence, and identifier-scope design.
 
 ### 8. Method Calls: Return Values, Multiple Arguments, and Chaining
 
 #### Receiving a Return Value
 
-\`\`\`java
+```java
 int brightness = desk.getBrightness();
 System.out.println(brightness);
-\`\`\`
+```
 
-\`getBrightness()\` declares \`int\` as its return type, so its result can be assigned to an \`int\` variable, passed as an argument, or used in an expression.
+`getBrightness()` declares `int` as its return type, so its result can be assigned to an `int` variable, passed as an argument, or used in an expression.
 
-\`\`\`java
+```java
 if (desk.getBrightness() > 70) {
     System.out.println("The lamp is set to high brightness");
 }
-\`\`\`
+```
 
-If a method returns \`void\`, you can call it for its action:
+If a method returns `void`, you can call it for its action:
 
-\`\`\`java
+```java
 desk.turnOn();
-\`\`\`
+```
 
-But you cannot write \`int x = desk.turnOn();\` because \`turnOn()\` does not return a value.
+But you cannot write `int x = desk.turnOn();` because `turnOn()` does not return a value.
 
 #### Methods with Multiple Parameters
 
-\`\`\`java
+```java
 class TextTools {
     static String repeat(String text, int times) {
         return text.repeat(times);
     }
 }
-\`\`\`
+```
 
 Call:
 
-\`\`\`java
+```java
 String result = TextTools.repeat("Hi", 3);
 System.out.println(result); // HiHiHi
-\`\`\`
+```
 
-The arguments \`"Hi"\` and \`3\` correspond in order to the parameters \`String text\` and \`int times\`. In Java, \`String.repeat(times)\` requires \`times >= 0\`; a negative value causes \`IllegalArgumentException\`.
+The arguments `"Hi"` and `3` correspond in order to the parameters `String text` and `int times`. In Java, `String.repeat(times)` requires `times >= 0`; a negative value causes `IllegalArgumentException`.
 
 #### Method Chaining
 
 If a method returns an object, we can call another method on its result:
 
-\`\`\`java
+```java
 String input = "  java  ";
 String result = input.trim().toUpperCase();
 System.out.println(result); // JAVA
-\`\`\`
+```
 
 The process:
 
-\`\`\`text
+```text
 input = "  java  "
     -> trim() = "java"
     -> toUpperCase() = "JAVA"
-\`\`\`
+```
 
-Both \`trim()\` and \`toUpperCase()\` return a \`String\`, so the next method call is valid.
+Both `trim()` and `toUpperCase()` return a `String`, so the next method call is valid.
 
-Not every method can be chained. \`desk.turnOn().setBrightness(70)\` does not compile because \`turnOn()\` returns \`void\`.
+Not every method can be chained. `desk.turnOn().setBrightness(70)` does not compile because `turnOn()` returns `void`.
 
 ### 9. Overloading: Same Method Name, Different Parameters
 
 Java allows a class to declare multiple methods with the same name when their parameter lists differ in valid ways. This is called **method overloading**.
 
-\`\`\`java
+```java
 class Greeting {
     void sayHello() {
         System.out.println("Hello!");
@@ -2063,26 +2063,26 @@ public class Main {
         greeting.sayHello("Binh", 2);
     }
 }
-\`\`\`
+```
 
 Result:
 
-\`\`\`text
+```text
 Hello!
 Hello, An
 Hello, Binh
 Hello, Binh
-\`\`\`
+```
 
 The compiler considers the method name, argument count and types, and Java's overload-resolution rules to choose a suitable method. **Changing only the return type is not sufficient for overloading.**
 
 The following is an invalid duplicate method declaration:
 
-\`\`\`java
+```java
 // Invalid within the same class:
 int calculate(int number) { return number; }
 long calculate(int number) { return number; }
-\`\`\`
+```
 
 Distinguish **overloading** from **overriding**: overriding means a subclass provides a different implementation of an appropriate inherited instance method. That belongs to the topic of inheritance, whereas overloading here means several ways to invoke methods with different parameter lists.
 
@@ -2090,9 +2090,9 @@ Distinguish **overloading** from **overriding**: overriding means a subclass pro
 
 Java **always passes parameters by value**. This is frequently misunderstood when an argument is an object.
 
-For a primitive type such as \`int\`, a method receives **a copy of the value**:
+For a primitive type such as `int`, a method receives **a copy of the value**:
 
-\`\`\`java
+```java
 static void changeNumber(int number) {
     number = 99;
 }
@@ -2102,13 +2102,13 @@ public static void main(String[] args) {
     changeNumber(value);
     System.out.println(value); // 10
 }
-\`\`\`
+```
 
 For an object reference, the method receives **a copy of the reference value**; that copy still points to the same object. The method can therefore change the object's state if its API permits, but it cannot reassign the caller's reference variable.
 
 An independent example:
 
-\`\`\`java
+```java
 class Counter {
     int value;
 }
@@ -2134,9 +2134,9 @@ public class Main {
         System.out.println(original.value); // 11
     }
 }
-\`\`\`
+```
 
-\`increment\` modifies the object referenced by \`original\`. \`replace\` only reassigns **its local parameter's copy of the reference**, so \`original\` does not start referring to the new object.
+`increment` modifies the object referenced by `original`. `replace` only reassigns **its local parameter's copy of the reference**, so `original` does not start referring to the new object.
 
 Understanding this mechanism prevents the misconception that “Java passes objects by reference.” More precisely, **Java passes a copy of the value of an object reference**.
 
@@ -2144,29 +2144,29 @@ Understanding this mechanism prevents the misconception that “Java passes obje
 
 | Example | Problem | Correct understanding or fix |
 | --- | --- | --- |
-| \`lamp.turnOn;\` | Not a method-call expression in Java | Use \`lamp.turnOn();\` |
-| \`lamp.brightness = -10;\` | If the field is \`private\`, external code cannot access it | Use the designed method, such as \`setBrightness(...)\` |
-| \`lamp.turnOn(10);\` | No overload taking an \`int\` exists in the example | Call \`turnOn()\` or add an overload if appropriate |
-| \`int x = lamp.turnOn();\` | The method returns \`void\`, so it produces no assignable value | Just call \`lamp.turnOn();\` |
-| \`Lamp.turnOn();\` | \`turnOn()\` is an instance method, not static | Refer to an object and call \`lamp.turnOn()\` |
-| \`lamp.describe().length()\` | Valid when \`describe()\` returns a non-`null` \`String\` | Chaining depends on the return type |
-| \`lamp = null; lamp.turnOn();\` | \`NullPointerException\` when invoking an instance method through a null reference | Ensure the reference is valid before calling |
-| \`person.getName()\` in a context without access | \`private\`/package/`protected`/class visibility rules may forbid the call | Design appropriate accessibility |
+| `lamp.turnOn;` | Not a method-call expression in Java | Use `lamp.turnOn();` |
+| `lamp.brightness = -10;` | If the field is `private`, external code cannot access it | Use the designed method, such as `setBrightness(...)` |
+| `lamp.turnOn(10);` | No overload taking an `int` exists in the example | Call `turnOn()` or add an overload if appropriate |
+| `int x = lamp.turnOn();` | The method returns `void`, so it produces no assignable value | Just call `lamp.turnOn();` |
+| `Lamp.turnOn();` | `turnOn()` is an instance method, not static | Refer to an object and call `lamp.turnOn()` |
+| `lamp.describe().length()` | Valid when `describe()` returns a non-`null` `String` | Chaining depends on the return type |
+| `lamp = null; lamp.turnOn();` | `NullPointerException` when invoking an instance method through a null reference | Ensure the reference is valid before calling |
+| `person.getName()` in a context without access | `private`/package/`protected`/class visibility rules may forbid the call | Design appropriate accessibility |
 
-Note that \`NullPointerException\` is not limited to method calls. Accessing an instance field through a null reference can also fail. It is better to ensure the object has been created and passed correctly than to wait for exceptions and indiscriminately catch every \`NullPointerException\`.
+Note that `NullPointerException` is not limited to method calls. Accessing an instance field through a null reference can also fail. It is better to ensure the object has been created and passed correctly than to wait for exceptions and indiscriminately catch every `NullPointerException`.
 
 Another misconception: **the variable's name does not determine which object receives a call**. For example:
 
-\`\`\`java
+```java
 Lamp first = new Lamp("One");
 Lamp second = first;
 
 second.turnOn();
 
 System.out.println(first.isOn()); // true
-\`\`\`
+```
 
-\`first\` and \`second\` are two reference variables referring to the same object; \`turnOn()\` changes that shared object's state. Only if they were created by two separate \`new Lamp(...)\` expressions would they be different objects.
+`first` and `second` are two reference variables referring to the same object; `turnOn()` changes that shared object's state. Only if they were created by two separate `new Lamp(...)` expressions would they be different objects.
 
 ### 12. When Should You Create a Field, and When a Method?
 
@@ -2174,21 +2174,21 @@ Do not mechanically apply “nouns become fields and verbs become methods.” Co
 
 | Need | Possible design | Why |
 | --- | --- | --- |
-| Remember the lamp's name after creating it | Instance field \`name\` | The value is part of the state |
-| Turn the lamp on | Instance method \`turnOn()\` | Expresses a state-changing behavior |
-| Restrict brightness to 0–100 | Validate in \`setBrightness(int)\` | Every call must follow the rule |
-| Read the current brightness | `\`getBrightness()\` | Provide data without allowing direct assignment |
-| Know emitted light while the lamp is off | `\`currentLightOutput()\` | Computed from \`on\` and \`brightness\`; does not necessarily need another field |
-| Convert text to uppercase | `\`String.toUpperCase()\` or a processing function | Does not necessarily require stored state |
+| Remember the lamp's name after creating it | Instance field `name` | The value is part of the state |
+| Turn the lamp on | Instance method `turnOn()` | Expresses a state-changing behavior |
+| Restrict brightness to 0–100 | Validate in `setBrightness(int)` | Every call must follow the rule |
+| Read the current brightness | `getBrightness()` | Provide data without allowing direct assignment |
+| Know emitted light while the lamp is off | `currentLightOutput()` | Computed from `on` and `brightness`; does not necessarily need another field |
+| Convert text to uppercase | `String.toUpperCase()` or a processing function | Does not necessarily require stored state |
 | Count objects created | Static field, if truly required | Class-level information rather than instance-level data |
 
-Avoid storing redundant fields that can easily be calculated from others. For example, if you store \`on\`, \`brightness\`, and \`currentOutput\`, you must keep \`currentOutput\` synchronized after every on/off or brightness change. In this example, computing the result from the two original fields in \`currentLightOutput()\` is simpler.
+Avoid storing redundant fields that can easily be calculated from others. For example, if you store `on`, `brightness`, and `currentOutput`, you must keep `currentOutput` synchronized after every on/off or brightness change. In this example, computing the result from the two original fields in `currentLightOutput()` is simpler.
 
 ### 13. Check Your Understanding
 
 Read this class:
 
-\`\`\`java
+```java
 class CartItem {
     private final int unitPrice;
     private int quantity;
@@ -2212,23 +2212,23 @@ class CartItem {
         quantity = Math.addExact(quantity, amount);
     }
 }
-\`\`\`
+```
 
 Try answering before looking at the solutions:
 
 1. Which members are **fields**, and which are **methods**?
-2. When \`item.total()\` is called, what type does it return?
-3. When calling \`item.addQuantity(2)\`, is \`2\` a parameter or an argument?
-4. After \`CartItem item = new CartItem(10, 2);\` and \`item.addQuantity(3);\`, what does \`item.total()\` return?
-5. Can we call \`CartItem.total()\` without an object?
+2. When `item.total()` is called, what type does it return?
+3. When calling `item.addQuantity(2)`, is `2` a parameter or an argument?
+4. After `CartItem item = new CartItem(10, 2);` and `item.addQuantity(3);`, what does `item.total()` return?
+5. Can we call `CartItem.total()` without an object?
 
 **Solutions:**
 
-1. `\`unitPrice\` and \`quantity\` are instance fields. \`total()\` and \`addQuantity(int)\` are methods. \`CartItem(...)\` is a **constructor**, not a method with a return type.
-2. `\`total()\` returns \`int\`, calculated from \`unitPrice * quantity\` using \`Math.multiplyExact\` to detect overflow.
-3. `\`amount\` in the declaration is a parameter; the supplied \`2\` is an argument.
-4. Initially \`quantity = 2\`. Calling \`addQuantity(3)\` changes it to \`5\`. The total is \`10 * 5 = 50\`.
-5. No. \`total()\` is an instance method requiring a suitable object to invoke it.
+1. `unitPrice` and `quantity` are instance fields. `total()` and `addQuantity(int)` are methods. `CartItem(...)` is a **constructor**, not a method with a return type.
+2. `total()` returns `int`, calculated from `unitPrice * quantity` using `Math.multiplyExact` to detect overflow.
+3. `amount` in the declaration is a parameter; the supplied `2` is an argument.
+4. Initially `quantity = 2`. Calling `addQuantity(3)` changes it to `5`. The total is `10 * 5 = 50`.
+5. No. `total()` is an instance method requiring a suitable object to invoke it.
 
 When reading any Java class, analyze it in this order: **which fields hold state**, **which methods are exposed**, **what each method accepts and returns**, **which object receives a call**, and **whether the method changes that object's state**. Mastering those questions will let you understand Java code actively rather than merely memorizing dot and parenthesis syntax.
 

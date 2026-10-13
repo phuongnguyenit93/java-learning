@@ -720,16 +720,16 @@ Here are representative calls in the two styles:
 
 | Organization | Typical calling code | Who decides the withdrawal rules? |
 | --- | --- | --- |
-| Procedural | \`AccountOperations.withdraw(account, 30_000)\` | The \`withdraw\` function that receives account data |
-| OOP | \`account.withdraw(30_000)\` | The \`account\` object itself, through its method |
+| Procedural | `AccountOperations.withdraw(account, 30_000)` | The `withdraw` function that receives account data |
+| OOP | `account.withdraw(30_000)` | The `account` object itself, through its method |
 
-The dot \`.\` alone does not distinguish these approaches. In Java, both \`static\` functions and instance methods can be called with dot notation. What matters is **where the rules live, how data is made available, and who controls the right to change it**.
+The dot `.` alone does not distinguish these approaches. In Java, both `static` functions and instance methods can be called with dot notation. What matters is **where the rules live, how data is made available, and who controls the right to change it**.
 
 ### 2. Procedural Organization: Functions Operate on Supplied Data
 
-The following is a complete Java program. Save it as \`ProceduralDemo.java\` and run it:
+The following is a complete Java program. Save it as `ProceduralDemo.java` and run it:
 
-\`\`\`java
+```java
 class AccountData {
     final String owner;
     long balance;
@@ -786,17 +786,17 @@ public class ProceduralDemo {
         System.out.println(account.balance); // Still 70000
     }
 }
-\`\`\`
+```
 
-The program still performs appropriate data validation and error handling for operations made through \`AccountOperations\`. Specifically:
+The program still performs appropriate data validation and error handling for operations made through `AccountOperations`. Specifically:
 
-1. \`main\` holds an \`AccountData\` instance whose \`balance = 100_000\`.
-2. \`main\` passes that data into \`AccountOperations.withdraw(account, 30_000)\`.
-3. The function checks the requested amount and changes \`account.balance\` to \`70_000\`.
-4. The request to withdraw \`120_000\` fails the balance check before subtraction takes place.
-5. The balance remains \`70_000\`.
+1. `main` holds an `AccountData` instance whose `balance = 100_000`.
+2. `main` passes that data into `AccountOperations.withdraw(account, 30_000)`.
+3. The function checks the requested amount and changes `account.balance` to `70_000`.
+4. The request to withdraw `120_000` fails the balance check before subtraction takes place.
+5. The balance remains `70_000`.
 
-Notice that **\`AccountData\` only holds information, while \`AccountOperations\` contains the main operations**. To withdraw money, the caller must choose the appropriate function and provide the right data.
+Notice that **`AccountData` only holds information, while `AccountOperations` contains the main operations**. To withdraw money, the caller must choose the appropriate function and provide the right data.
 
 This style has practical advantages:
 
@@ -804,21 +804,21 @@ This style has practical advantages:
 - For calculations or clearly defined data-processing flows, a sequence of small functions can be simple and easy to test.
 - There is no need to create numerous domain object types merely to carry out a few fixed operations.
 
-But note one issue in **this particular design**: \`balance\` has package-private access. Other code in the same package could do this:
+But note one issue in **this particular design**: `balance` has package-private access. Other code in the same package could do this:
 
-\`\`\`java
+```java
 account.balance = -500_000;
-\`\`\`
+```
 
-That entirely bypasses \`AccountOperations.withdraw(...)\`. This is an encapsulation weakness **in the example**, not a flaw inherent in all procedural programs. Procedural code can still protect data using modules, validated access functions, immutable data types, and appropriate access conventions.
+That entirely bypasses `AccountOperations.withdraw(...)`. This is an encapsulation weakness **in the example**, not a flaw inherent in all procedural programs. Procedural code can still protect data using modules, validated access functions, immutable data types, and appropriate access conventions.
 
 The important point is that when data and operations are organized separately, the designer must carefully control **which parts are allowed to modify the data**.
 
 ### 3. OOP Organization: The Object Manages Its State and Behavior
 
-For the same problem, we can design \`BankAccount\` as an object with \`balance\` state and \`deposit\` and \`withdraw\` behaviors. Save this as a separate \`OopDemo.java\` file:
+For the same problem, we can design `BankAccount` as an object with `balance` state and `deposit` and `withdraw` behaviors. Save this as a separate `OopDemo.java` file:
 
-\`\`\`java
+```java
 final class BankAccount {
     private final String owner;
     private long balance;
@@ -873,29 +873,29 @@ public class OopDemo {
         System.out.println(account.getBalance()); // Still 70000
     }
 }
-\`\`\`
+```
 
 The business outcome is **the same as in the previous example**. The difference is in the design:
 
-- \`BankAccount\` is responsible for keeping \`balance\` valid.
-- The \`balance\` field is \`private\`, so other code cannot directly assign a new balance.
-- To change the balance, outside code must request the \`deposit(...)\` or \`withdraw(...)\` behavior.
+- `BankAccount` is responsible for keeping `balance` valid.
+- The `balance` field is `private`, so other code cannot directly assign a new balance.
+- To change the balance, outside code must request the `deposit(...)` or `withdraw(...)` behavior.
 - The object checks its own rules before updating state and rejects invalid requests.
 
 For example:
 
-\`\`\`java
+```java
 account.withdraw(30_000); // Ask the account to withdraw money
 account.getBalance();      // Query the current balance
 
 // account.balance = -10;  // Compilation error: balance is private
-\`\`\`
+```
 
 This is one way to implement **encapsulation** in OOP: the object groups state with the behaviors responsible for that state, while exposing a controlled interface for callers.
 
-A rule such as “an account's balance must never be negative” is called an **object invariant**. Locating \`withdraw(...)\` inside the object centralizes responsibility for maintaining it.
+A rule such as “an account's balance must never be negative” is called an **object invariant**. Locating `withdraw(...)` inside the object centralizes responsibility for maintaining it.
 
-Note that \`private\` does not automatically produce a good OOP design. If we expose \`setBalance(long anyValue)\` and allow arbitrary assignments, the business rule can still be broken. The important thing is that **the object's API expresses the actions that are permitted**.
+Note that `private` does not automatically produce a good OOP design. If we expose `setBalance(long anyValue)` and allow arbitrary assignments, the business rule can still be broken. The important thing is that **the object's API expresses the actions that are permitted**.
 
 Both programs are simplified teaching models. Real banking software also needs transaction history, persistence-error handling, consistency guarantees, and concurrent transaction control. Those problems do not disappear merely because we use OOP.
 
@@ -903,7 +903,7 @@ Both programs are simplified teaching models. Real banking software also needs t
 
 For the same request, “Withdraw VND 30,000,” we can visualize:
 
-\`\`\`mermaid
+```mermaid
 flowchart TD
     subgraph Procedural["Procedural organization"]
         P1["Caller holds AccountData"] --> P2["Call withdraw(account, 30000)"]
@@ -913,7 +913,7 @@ flowchart TD
         O1["Caller holds BankAccount"] --> O2["Request account.withdraw(30000)"]
         O2 --> O3["Object validates and updates balance itself"]
     end
-\`\`\`
+```
 
 The following table compares more precisely what each organizational style encourages:
 
@@ -930,7 +930,7 @@ The following table compares more precisely what each organizational style encou
 
 These characteristics **are not absolute boundaries**. Procedural programs can still use modules, protect data, and provide excellent contracts. OOP programs still contain ordinary sequential functions; many OOP methods actually consist of step-by-step procedural logic.
 
-Therefore, looking only at the number of classes, the \`.\` operator, or the \`private\` keyword cannot tell you how a program is truly designed.
+Therefore, looking only at the number of classes, the `.` operator, or the `private` keyword cannot tell you how a program is truly designed.
 
 ### 5. The Difference Becomes Clearer When Requirements Change
 
@@ -938,7 +938,7 @@ Initially, the application supports only standard bank accounts. Now it must add
 
 With procedural organization, one choice is to pass account-type information and check it inside the function:
 
-\`\`\`java
+```java
 static void withdraw(AccountData account, long amount, boolean studentAccount) {
     if (amount <= 0) {
         throw new IllegalArgumentException("Amount must be positive");
@@ -951,26 +951,26 @@ static void withdraw(AccountData account, long amount, boolean studentAccount) {
     }
     account.balance -= amount;
 }
-\`\`\`
+```
 
-This is **one design choice**, not the only procedural solution. If numerous account types and rules accumulate in a single function as \`if/else\` branches, that function may become hard to maintain.
+This is **one design choice**, not the only procedural solution. If numerous account types and rules accumulate in a single function as `if/else` branches, that function may become hard to maintain.
 
 In OOP, if withdrawal rules belong to the account's responsibility, we can represent behavioral variations through objects sharing a contract:
 
-\`\`\`java
+```java
 interface WithdrawableAccount {
     void withdraw(long amount);
     long getBalance();
 }
-\`\`\`
+```
 
-One implementation might represent a standard account, while another applies student-account rules. Calling code only needs to know the \`WithdrawableAccount\` contract to request a withdrawal.
+One implementation might represent a standard account, while another applies student-account rules. Calling code only needs to know the `WithdrawableAccount` contract to request a withdrawal.
 
-Using an interface **does not require** inheriting from a concrete class. Some cases are better modeled by passing a policy object into the account. Likewise, a procedurally organized program could pass a validation function or strategy to \`withdraw\` rather than create a long \`if/else\` chain.
+Using an interface **does not require** inheriting from a concrete class. Some cases are better modeled by passing a policy object into the account. Likewise, a procedurally organized program could pass a validation function or strategy to `withdraw` rather than create a long `if/else` chain.
 
 The lesson is not “every account type must have its own subclass.” The lesson is that **OOP often organizes behavioral variations around objects and contracts**, allowing callers to work with common capabilities without personally coordinating every implementation detail.
 
-Consider another requirement: **printing account statements**. If this feature only produces a report from transaction history, we do not necessarily need to put the entire PDF-generation implementation inside \`BankAccount\`. A \`StatementService\` or a separate export component may be more appropriate. Good OOP assigns **the right responsibilities**; it does not demand that everything related to an entity live in one enormous class.
+Consider another requirement: **printing account statements**. If this feature only produces a report from transaction history, we do not necessarily need to put the entire PDF-generation implementation inside `BankAccount`. A `StatementService` or a separate export component may be more appropriate. Good OOP assigns **the right responsibilities**; it does not demand that everything related to an entity live in one enormous class.
 
 ### 6. Does “Procedural Program” Mean a Program Without Classes?
 
@@ -978,7 +978,7 @@ Consider another requirement: **printing account statements**. If this feature o
 
 For example:
 
-\`\`\`java
+```java
 class PriceCalculator {
     static long total(long unitPrice, int quantity) {
         if (unitPrice < 0 || quantity < 0) {
@@ -987,13 +987,13 @@ class PriceCalculator {
         return Math.multiplyExact(unitPrice, quantity);
     }
 }
-\`\`\`
+```
 
-It is a Java class, but it organizes a **calculation function**; we do not need a \`PriceCalculator\` object with its own state. Putting a method inside a class does not, by itself, transform the solution into an object-oriented design with collaborating objects and managed responsibilities.
+It is a Java class, but it organizes a **calculation function**; we do not need a `PriceCalculator` object with its own state. Putting a method inside a class does not, by itself, transform the solution into an object-oriented design with collaborating objects and managed responsibilities.
 
 Conversely, an OOP method still contains procedural statements:
 
-\`\`\`java
+```java
 public void withdraw(long amount) {
     if (amount <= 0) {
         throw new IllegalArgumentException();
@@ -1003,7 +1003,7 @@ public void withdraw(long amount) {
     }
     balance -= amount;
 }
-\`\`\`
+```
 
 The method has a clear sequence of validation and updating. **OOP does not eliminate programming through sequential steps.**
 
@@ -1020,38 +1020,38 @@ In a small system with only a few functions and pieces of data, it is easy to kn
 
 **First: who is responsible for keeping the data valid?**
 
-Suppose three places in the application directly modify \`balance\`:
+Suppose three places in the application directly modify `balance`:
 
-\`\`\`java
+```java
 account.balance -= amount;
 account.balance += refund;
 account.balance = importedValue;
-\`\`\`
+```
 
-Every location must remember every relevant rule. If one misses a check, the data may become invalid. Moving meaningful operations into \`BankAccount\` provides clearly designated entry points for state changes:
+Every location must remember every relevant rule. If one misses a check, the data may become invalid. Moving meaningful operations into `BankAccount` provides clearly designated entry points for state changes:
 
-\`\`\`java
+```java
 account.withdraw(amount);
 account.deposit(refund);
-\`\`\`
+```
 
 But **we cannot conclude that procedural code necessarily creates this problem**. A procedural module that keeps its data private and permits changes only through controlled functions can also maintain invariants consistently.
 
 **Second: who needs to know the internal details?**
 
-If outside code repeatedly depends on every field, changing how the balance is represented may force changes in many places. When callers know only operations such as \`withdraw\` and \`getBalance\`, the object can change its implementation while keeping its public contract.
+If outside code repeatedly depends on every field, changing how the balance is represented may force changes in many places. When callers know only operations such as `withdraw` and `getBalance`, the object can change its implementation while keeping its public contract.
 
 **Third: how do we coordinate the various parts of the system?**
 
 An order-processing flow may need a cart, payment, and notification. With OOP, each object or service has its own responsibility and communicates through methods and contracts. We can describe:
 
-\`\`\`text
+```text
 CheckoutService asks Order to validate its data
 CheckoutService asks PaymentGateway to process payment
 CheckoutService asks Notifier to send a notification
-\`\`\`
+```
 
-However, **dividing a program into objects does not guarantee good architecture**. If classes depend on one another cyclically, are split into too many tiny pieces, or put all logic into \`CheckoutService\`, an OOP system can still be difficult to understand.
+However, **dividing a program into objects does not guarantee good architecture**. If classes depend on one another cyclically, are split into too many tiny pieces, or put all logic into `CheckoutService`, an OOP system can still be difficult to understand.
 
 ### 8. Which Approach Should You Choose for Real Work?
 
@@ -1061,17 +1061,17 @@ Not every problem requires a rich object model. The decision should follow the k
 | --- | --- | --- |
 | Sum a list of numbers | A procedural or pure function | Simple inputs and outputs; no separate business state |
 | Read a CSV, filter data, and export a report | A sequence of functions or a pipeline | The work has clearly defined processing stages |
-| Manage orders with valid state transitions | An \`Order\` object with controlled behaviors | Rules are tied to an individual order's state |
-| Manage a shopping cart, quantities, and totals | A \`Cart\` object and related services | Several pieces of information must stay consistent within one responsibility |
+| Manage orders with valid state transitions | An `Order` object with controlled behaviors | Rules are tied to an individual order's state |
+| Manage a shopping cart, quantities, and totals | A `Cart` object and related services | Several pieces of information must stay consistent within one responsibility |
 | Make a simple external API call | A suitable service or function | An entire class hierarchy is not necessarily needed |
 | Support multiple payment methods with the same communication behavior | Implementations of a common interface | The caller uses a shared contract rather than every payment technology directly |
 
 In Java/Spring Boot applications, the two organizational styles often appear **together**:
 
-- An \`OrderService\` coordinates use-case steps: find an order, request payment, store the result, notify someone. That coordination resembles procedural thinking.
-- An \`Order\` is responsible for its own rules: \`cancel()\`, \`markPaid(...)\`, and rejecting cancellation of an already completed order.
-- A \`PaymentGateway\` defines a contract through which a service can invoke different implementations.
-- Pure calculations such as \`calculateTax(...)\` and data-conversion functions can remain simple functions.
+- An `OrderService` coordinates use-case steps: find an order, request payment, store the result, notify someone. That coordination resembles procedural thinking.
+- An `Order` is responsible for its own rules: `cancel()`, `markPaid(...)`, and rejecting cancellation of an already completed order.
+- A `PaymentGateway` defines a contract through which a service can invoke different implementations.
+- Pure calculations such as `calculateTax(...)` and data-conversion functions can remain simple functions.
 
 There is no need to take sides and ban the other style. The practical question is **where each responsibility should live so that the code is easiest to understand, safest to change, and least likely to introduce errors**.
 
@@ -1079,31 +1079,31 @@ There is no need to take sides and ban the other style. The practical question i
 
 Suppose the original procedural code is:
 
-\`\`\`java
+```java
 withdraw(account, amount);
-\`\`\`
+```
 
 Then someone changes it to:
 
-\`\`\`java
+```java
 account.setBalance(account.getBalance() - amount);
-\`\`\`
+```
 
-The new syntax includes an object and methods, but **the caller still computes the balance and chooses the subtraction**. It may still forget to check \`amount > 0\` or whether sufficient funds are available.
+The new syntax includes an object and methods, but **the caller still computes the balance and chooses the subtraction**. It may still forget to check `amount > 0` or whether sufficient funds are available.
 
 An API that better reflects responsibility is:
 
-\`\`\`java
+```java
 account.withdraw(amount);
-\`\`\`
+```
 
 Now the caller states **what it wants to accomplish**, and the object decides **whether the action is allowed and how its state should be updated**.
 
-This does not mean that all \`getX()/setX()\` methods are bad. Getters and setters are suitable for many DTOs, configuration objects, or properties that can legitimately change independently. The point is to avoid turning every domain object into a bag of data that any service can modify arbitrarily.
+This does not mean that all `getX()/setX()` methods are bad. Getters and setters are suitable for many DTOs, configuration objects, or properties that can legitimately change independently. The point is to avoid turning every domain object into a bag of data that any service can modify arbitrarily.
 
 ### 10. Check Your Understanding
 
-**Scenario A.** You have a \`static int sum(int a, int b)\` function inside a \`Calculator\` class. Does the mere fact that it resides in a class make it a “complete OOP design”?
+**Scenario A.** You have a `static int sum(int a, int b)` function inside a `Calculator` class. Does the mere fact that it resides in a class make it a “complete OOP design”?
 
 **Answer:** No. It is simply a calculation function placed in a class to follow Java syntax. What matters for identifying OOP design is how objects own responsibilities and collaborate, not how many classes exist.
 
@@ -1111,11 +1111,11 @@ This does not mean that all \`getX()/setX()\` methods are bad. Getters and sette
 
 **Answer:** There is no such general conclusion. Procedural programs can encapsulate data through modules and APIs. Quality depends on the design and whether its rules are followed.
 
-**Scenario C.** A \`BankAccount\` class has \`private balance\` but exposes \`setBalance(long balance)\` for arbitrary values. Does it properly protect the nonnegative-balance rule?
+**Scenario C.** A `BankAccount` class has `private balance` but exposes `setBalance(long balance)` for arbitrary values. Does it properly protect the nonnegative-balance rule?
 
-**Answer:** Not yet. The \`private\` field prevents direct access, but the public setter still allows arbitrary updates. Meaningful business operations and their checks should be placed with the appropriate owner.
+**Answer:** Not yet. The `private` field prevents direct access, but the public setter still allows arbitrary updates. Meaningful business operations and their checks should be placed with the appropriate owner.
 
-**Scenario D.** A \`CheckoutService\` consists of a sequence of calls to \`validate()\`, \`charge()\`, \`save()\`, and \`notify()\`. Does that mean the program is “no longer OOP” because it still processes steps sequentially?
+**Scenario D.** A `CheckoutService` consists of a sequence of calls to `validate()`, `charge()`, `save()`, and `notify()`. Does that mean the program is “no longer OOP” because it still processes steps sequentially?
 
 **Answer:** No. Objects can collaborate through a sequence of steps. Object-based responsibility boundaries and procedural coordination of a workflow can complement one another.
 

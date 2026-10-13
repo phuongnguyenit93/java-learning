@@ -720,16 +720,16 @@ Ví dụ về cách gọi ở hai kiểu tổ chức:
 
 | Cách tổ chức | Mã gọi dễ gặp | Ai quyết định quy tắc rút tiền? |
 | --- | --- | --- |
-| Theo thủ tục | \`AccountOperations.withdraw(account, 30_000)\` | Hàm \`withdraw\` nhận dữ liệu tài khoản |
-| Theo OOP | \`account.withdraw(30_000)\` | Chính đối tượng \`account\` thông qua phương thức của nó |
+| Theo thủ tục | `AccountOperations.withdraw(account, 30_000)` | Hàm `withdraw` nhận dữ liệu tài khoản |
+| Theo OOP | `account.withdraw(30_000)` | Chính đối tượng `account` thông qua phương thức của nó |
 
-Nhìn riêng vào dấu chấm \`.\` chưa đủ để phân biệt hai tư duy. Trong Java, cả hàm \`static\` lẫn phương thức của đối tượng đều có thể được gọi bằng dấu chấm. Phải xem **quy tắc nằm ở đâu, dữ liệu được cung cấp thế nào, và ai kiểm soát quyền thay đổi**.
+Nhìn riêng vào dấu chấm `.` chưa đủ để phân biệt hai tư duy. Trong Java, cả hàm `static` lẫn phương thức của đối tượng đều có thể được gọi bằng dấu chấm. Phải xem **quy tắc nằm ở đâu, dữ liệu được cung cấp thế nào, và ai kiểm soát quyền thay đổi**.
 
 ### 2. Cách tổ chức theo thủ tục: hàm xử lý, dữ liệu được đưa vào
 
-Đây là một chương trình Java hoàn chỉnh. Lưu thành \`ProceduralDemo.java\` và chạy để quan sát:
+Đây là một chương trình Java hoàn chỉnh. Lưu thành `ProceduralDemo.java` và chạy để quan sát:
 
-\`\`\`java
+```java
 class AccountData {
     final String owner;
     long balance;
@@ -786,17 +786,17 @@ public class ProceduralDemo {
         System.out.println(account.balance); // Vẫn là 70000
     }
 }
-\`\`\`
+```
 
-Chương trình này vẫn có kiểm tra dữ liệu và xử lý lỗi đúng cho những thao tác sử dụng \`AccountOperations\`. Cụ thể:
+Chương trình này vẫn có kiểm tra dữ liệu và xử lý lỗi đúng cho những thao tác sử dụng `AccountOperations`. Cụ thể:
 
-1. \`main\` giữ dữ liệu \`AccountData\` có \`balance = 100_000\`.
-2. \`main\` chuyển dữ liệu đó cho hàm \`AccountOperations.withdraw(account, 30_000)\`.
-3. Hàm kiểm tra số tiền cần rút rồi thay đổi \`account.balance\` thành \`70_000\`.
-4. Lần rút \`120_000\` thất bại ở bước kiểm tra số dư, trước khi phép trừ xảy ra.
-5. Số dư vẫn là \`70_000\`.
+1. `main` giữ dữ liệu `AccountData` có `balance = 100_000`.
+2. `main` chuyển dữ liệu đó cho hàm `AccountOperations.withdraw(account, 30_000)`.
+3. Hàm kiểm tra số tiền cần rút rồi thay đổi `account.balance` thành `70_000`.
+4. Lần rút `120_000` thất bại ở bước kiểm tra số dư, trước khi phép trừ xảy ra.
+5. Số dư vẫn là `70_000`.
 
-Điều đáng chú ý là **\`AccountData\` chỉ giữ thông tin, còn \`AccountOperations\` chứa các thao tác chính**. Khi muốn rút tiền, mã gọi phải chọn hàm thao tác và truyền đúng dữ liệu vào.
+Điều đáng chú ý là **`AccountData` chỉ giữ thông tin, còn `AccountOperations` chứa các thao tác chính**. Khi muốn rút tiền, mã gọi phải chọn hàm thao tác và truyền đúng dữ liệu vào.
 
 Kiểu tổ chức này có những ưu điểm thực tế:
 
@@ -804,21 +804,21 @@ Kiểu tổ chức này có những ưu điểm thực tế:
 - Với công việc tính toán hoặc xử lý dữ liệu theo luồng rõ ràng, một chuỗi hàm nhỏ có thể đơn giản và dễ kiểm tra.
 - Không cần tạo nhiều kiểu đối tượng nghiệp vụ chỉ để thực hiện vài bước cố định.
 
-Nhưng hãy chú ý một điểm trong **thiết kế cụ thể** này: \`balance\` có quyền truy cập mặc định trong package. Mã khác cùng package có thể làm:
+Nhưng hãy chú ý một điểm trong **thiết kế cụ thể** này: `balance` có quyền truy cập mặc định trong package. Mã khác cùng package có thể làm:
 
-\`\`\`java
+```java
 account.balance = -500_000;
-\`\`\`
+```
 
-Nó bỏ qua hoàn toàn \`AccountOperations.withdraw(...)\`. Đây là một lỗ hổng đóng gói **của ví dụ**, không phải lỗi bắt buộc của mọi chương trình thủ tục. Người viết mã thủ tục vẫn có thể bảo vệ dữ liệu bằng module, hàm truy cập có kiểm tra, kiểu dữ liệu bất biến và quy ước phân quyền phù hợp.
+Nó bỏ qua hoàn toàn `AccountOperations.withdraw(...)`. Đây là một lỗ hổng đóng gói **của ví dụ**, không phải lỗi bắt buộc của mọi chương trình thủ tục. Người viết mã thủ tục vẫn có thể bảo vệ dữ liệu bằng module, hàm truy cập có kiểm tra, kiểu dữ liệu bất biến và quy ước phân quyền phù hợp.
 
 Điểm cần nhìn là: nếu dữ liệu và mọi thao tác được tổ chức tách rời, người thiết kế phải quản lý rất cẩn thận **những nơi nào có quyền sửa dữ liệu**.
 
 ### 3. Tổ chức theo OOP: đối tượng quản lý trạng thái và hành vi
 
-Cũng bài toán trên, ta thiết kế \`BankAccount\` là một đối tượng có trạng thái \`balance\` và các hành vi \`deposit\`, \`withdraw\`. Lưu thành file độc lập \`OopDemo.java\`:
+Cũng bài toán trên, ta thiết kế `BankAccount` là một đối tượng có trạng thái `balance` và các hành vi `deposit`, `withdraw`. Lưu thành file độc lập `OopDemo.java`:
 
-\`\`\`java
+```java
 final class BankAccount {
     private final String owner;
     private long balance;
@@ -873,29 +873,29 @@ public class OopDemo {
         System.out.println(account.getBalance()); // Vẫn là 70000
     }
 }
-\`\`\`
+```
 
 Kết quả nghiệp vụ **giống ví dụ trước**. Khác biệt nằm trong thiết kế:
 
-- \`BankAccount\` có trách nhiệm giữ \`balance\` ở trạng thái hợp lệ.
-- Trường \`balance\` là \`private\`, nên mã khác không thể tự gán số dư trực tiếp.
-- Muốn thay đổi số dư, mã ngoài phải gửi yêu cầu qua hành vi \`deposit(...)\` hoặc \`withdraw(...)\`.
+- `BankAccount` có trách nhiệm giữ `balance` ở trạng thái hợp lệ.
+- Trường `balance` là `private`, nên mã khác không thể tự gán số dư trực tiếp.
+- Muốn thay đổi số dư, mã ngoài phải gửi yêu cầu qua hành vi `deposit(...)` hoặc `withdraw(...)`.
 - Đối tượng tự kiểm tra quy tắc trước khi cập nhật; nếu không hợp lệ, nó từ chối thao tác.
 
 Ví dụ:
 
-\`\`\`java
+```java
 account.withdraw(30_000); // Yêu cầu tài khoản rút tiền
 account.getBalance();      // Hỏi số dư hiện tại
 
 // account.balance = -10;  // Lỗi biên dịch: balance là private
-\`\`\`
+```
 
 Đây là một cách thực hiện **đóng gói (encapsulation)** trong OOP: đối tượng gom trạng thái cùng với các hành vi chịu trách nhiệm về trạng thái đó, đồng thời công khai một giao diện sử dụng có kiểm soát.
 
-Một quy tắc như “số dư của tài khoản không được âm” được gọi là **bất biến của đối tượng (invariant)**. Đặt thao tác \`withdraw(...)\` trong đối tượng giúp tập trung trách nhiệm duy trì quy tắc ấy.
+Một quy tắc như “số dư của tài khoản không được âm” được gọi là **bất biến của đối tượng (invariant)**. Đặt thao tác `withdraw(...)` trong đối tượng giúp tập trung trách nhiệm duy trì quy tắc ấy.
 
-Lưu ý: \`private\` không tự động tạo ra thiết kế OOP tốt. Nếu ta công khai \`setBalance(long anyValue)\` rồi cho phép gán tùy ý, quy tắc nghiệp vụ vẫn có thể bị phá vỡ. Điều quan trọng là **API của đối tượng thể hiện những hành động được phép**.
+Lưu ý: `private` không tự động tạo ra thiết kế OOP tốt. Nếu ta công khai `setBalance(long anyValue)` rồi cho phép gán tùy ý, quy tắc nghiệp vụ vẫn có thể bị phá vỡ. Điều quan trọng là **API của đối tượng thể hiện những hành động được phép**.
 
 Cả hai đoạn code là mô hình dạy học đơn giản. Phần mềm ngân hàng thật còn cần lưu lịch sử giao dịch, xử lý lỗi lưu trữ, bảo đảm nhất quán và kiểm soát giao dịch đồng thời. Các vấn đề đó không tự biến mất chỉ vì dùng OOP.
 
@@ -903,7 +903,7 @@ Cả hai đoạn code là mô hình dạy học đơn giản. Phần mềm ngân
 
 Cùng một yêu cầu “Rút 30.000 đồng”, ta có thể hình dung:
 
-\`\`\`mermaid
+```mermaid
 flowchart TD
     subgraph Procedural["Tổ chức theo thủ tục"]
         P1["Mã gọi giữ AccountData"] --> P2["Gọi withdraw(account, 30000)"]
@@ -913,7 +913,7 @@ flowchart TD
         O1["Mã gọi giữ BankAccount"] --> O2["Gửi yêu cầu account.withdraw(30000)"]
         O2 --> O3["Đối tượng tự kiểm tra và cập nhật balance"]
     end
-\`\`\`
+```
 
 Bảng này giúp so sánh chính xác hơn những gì mỗi cách tổ chức khuyến khích:
 
@@ -930,7 +930,7 @@ Bảng này giúp so sánh chính xác hơn những gì mỗi cách tổ chức 
 
 Các đặc điểm trong bảng **không phải giới hạn tuyệt đối**. Chương trình thủ tục vẫn có thể chia module, bảo vệ dữ liệu và sử dụng hợp đồng tốt. OOP vẫn viết những hàm tuần tự bình thường; nhiều phương thức OOP thực chất chứa mã xử lý theo từng bước.
 
-Vì vậy, chỉ nhìn số lượng class, dấu \`.\` hay từ khóa \`private\` sẽ không cho biết toàn bộ cách chương trình được thiết kế.
+Vì vậy, chỉ nhìn số lượng class, dấu `.` hay từ khóa `private` sẽ không cho biết toàn bộ cách chương trình được thiết kế.
 
 ### 5. Sự khác biệt bộc lộ rõ hơn khi yêu cầu thay đổi
 
@@ -938,7 +938,7 @@ Ví dụ ban đầu chỉ có tài khoản thường. Bây giờ hệ thống b�
 
 Ở cách tổ chức theo thủ tục, một lựa chọn là truyền thông tin về loại tài khoản rồi kiểm tra trong hàm:
 
-\`\`\`java
+```java
 static void withdraw(AccountData account, long amount, boolean studentAccount) {
     if (amount <= 0) {
         throw new IllegalArgumentException("Amount must be positive");
@@ -951,26 +951,26 @@ static void withdraw(AccountData account, long amount, boolean studentAccount) {
     }
     account.balance -= amount;
 }
-\`\`\`
+```
 
-Đây là **một lựa chọn thiết kế**, không phải cách duy nhất của thủ tục. Nếu nhiều loại tài khoản và nhiều quy tắc được nối bằng \`if/else\` trong cùng một hàm, hàm có thể trở nên khó bảo trì.
+Đây là **một lựa chọn thiết kế**, không phải cách duy nhất của thủ tục. Nếu nhiều loại tài khoản và nhiều quy tắc được nối bằng `if/else` trong cùng một hàm, hàm có thể trở nên khó bảo trì.
 
 Trong OOP, nếu quy tắc rút tiền thuộc trách nhiệm của tài khoản, ta có thể biểu diễn các biến thể bằng những đối tượng có cùng hợp đồng:
 
-\`\`\`java
+```java
 interface WithdrawableAccount {
     void withdraw(long amount);
     long getBalance();
 }
-\`\`\`
+```
 
-Một implementation có thể dành cho tài khoản thường, implementation khác có quy tắc của tài khoản học sinh. Mã sử dụng chỉ biết \`WithdrawableAccount\` để yêu cầu rút tiền.
+Một implementation có thể dành cho tài khoản thường, implementation khác có quy tắc của tài khoản học sinh. Mã sử dụng chỉ biết `WithdrawableAccount` để yêu cầu rút tiền.
 
-Dùng interface **không bắt buộc** phải dùng kế thừa class. Một số trường hợp phù hợp hơn với việc truyền một đối tượng quy tắc (*policy*) vào tài khoản. Cũng tương tự, một chương trình tổ chức theo thủ tục có thể truyền hàm hoặc chiến lược kiểm tra vào \`withdraw\` thay vì viết \`if/else\` dài.
+Dùng interface **không bắt buộc** phải dùng kế thừa class. Một số trường hợp phù hợp hơn với việc truyền một đối tượng quy tắc (*policy*) vào tài khoản. Cũng tương tự, một chương trình tổ chức theo thủ tục có thể truyền hàm hoặc chiến lược kiểm tra vào `withdraw` thay vì viết `if/else` dài.
 
 Bài học ở đây không phải “mỗi loại tài khoản phải có một lớp con”. Bài học là **OOP thường tổ chức biến thể hành vi quanh các đối tượng và hợp đồng**, giúp mã gọi nói chuyện với những khả năng chung mà không cần tự điều phối mọi chi tiết.
 
-Nhìn vào một yêu cầu khác: cần thêm chức năng **in sao kê**. Nếu nó chỉ tạo báo cáo từ lịch sử giao dịch, ta không nhất thiết nhét cả logic in PDF vào \`BankAccount\`. Có thể để \`StatementService\` hoặc một thành phần xuất báo cáo riêng làm việc đó. Tổ chức OOP tốt phân chia **đúng trách nhiệm**, không yêu cầu mọi hành động có liên quan đến một thực thể đều nằm trong một class khổng lồ.
+Nhìn vào một yêu cầu khác: cần thêm chức năng **in sao kê**. Nếu nó chỉ tạo báo cáo từ lịch sử giao dịch, ta không nhất thiết nhét cả logic in PDF vào `BankAccount`. Có thể để `StatementService` hoặc một thành phần xuất báo cáo riêng làm việc đó. Tổ chức OOP tốt phân chia **đúng trách nhiệm**, không yêu cầu mọi hành động có liên quan đến một thực thể đều nằm trong một class khổng lồ.
 
 ### 6. “Chương trình theo thủ tục” có nghĩa là chương trình không dùng class?
 
@@ -978,7 +978,7 @@ Nhìn vào một yêu cầu khác: cần thêm chức năng **in sao kê**. Nế
 
 Ví dụ:
 
-\`\`\`java
+```java
 class PriceCalculator {
     static long total(long unitPrice, int quantity) {
         if (unitPrice < 0 || quantity < 0) {
@@ -987,13 +987,13 @@ class PriceCalculator {
         return Math.multiplyExact(unitPrice, quantity);
     }
 }
-\`\`\`
+```
 
-Nó là một class Java, nhưng đang tổ chức một **hàm tính toán**; ta không cần tạo đối tượng \`PriceCalculator\` có trạng thái riêng. Việc chứa phương thức trong class không tự biến cách giải này thành thiết kế hướng đối tượng theo nghĩa có các đối tượng cộng tác để quản lý trách nhiệm.
+Nó là một class Java, nhưng đang tổ chức một **hàm tính toán**; ta không cần tạo đối tượng `PriceCalculator` có trạng thái riêng. Việc chứa phương thức trong class không tự biến cách giải này thành thiết kế hướng đối tượng theo nghĩa có các đối tượng cộng tác để quản lý trách nhiệm.
 
 Ngược lại, một phương thức trong OOP vẫn chứa các câu lệnh thủ tục:
 
-\`\`\`java
+```java
 public void withdraw(long amount) {
     if (amount <= 0) {
         throw new IllegalArgumentException();
@@ -1003,7 +1003,7 @@ public void withdraw(long amount) {
     }
     balance -= amount;
 }
-\`\`\`
+```
 
 Phương thức này có trình tự kiểm tra và cập nhật dữ liệu rất rõ. **OOP không loại bỏ cách viết chương trình bằng những bước tuần tự.**
 
@@ -1020,38 +1020,38 @@ Khi hệ thống nhỏ, chỉ có vài hàm và vài dữ liệu, ta có thể d
 
 **Một: ai chịu trách nhiệm giữ dữ liệu đúng?**
 
-Giả sử ba nơi trong ứng dụng cùng trực tiếp sửa \`balance\`:
+Giả sử ba nơi trong ứng dụng cùng trực tiếp sửa `balance`:
 
-\`\`\`java
+```java
 account.balance -= amount;
 account.balance += refund;
 account.balance = importedValue;
-\`\`\`
+```
 
-Mỗi nơi phải nhớ chính xác mọi quy tắc. Nếu bỏ sót kiểm tra ở một nơi, dữ liệu có thể sai. Đưa những thao tác có ý nghĩa vào \`BankAccount\` giúp quy định rõ điểm được phép sửa trạng thái:
+Mỗi nơi phải nhớ chính xác mọi quy tắc. Nếu bỏ sót kiểm tra ở một nơi, dữ liệu có thể sai. Đưa những thao tác có ý nghĩa vào `BankAccount` giúp quy định rõ điểm được phép sửa trạng thái:
 
-\`\`\`java
+```java
 account.withdraw(amount);
 account.deposit(refund);
-\`\`\`
+```
 
 Nhưng **không thể kết luận rằng mã thủ tục luôn gây ra vấn đề này**: một module thủ tục quản lý dữ liệu kín và chỉ cho phép sửa qua hàm được kiểm soát cũng có thể giữ quy tắc nhất quán.
 
 **Hai: ai cần biết chi tiết bên trong?**
 
-Nếu mã ngoài liên tục biết và phụ thuộc vào từng trường dữ liệu, thay đổi cách lưu số dư có thể kéo theo sửa nhiều nơi. Khi bên ngoài chỉ biết những thao tác như \`withdraw\` và \`getBalance\`, đối tượng có thể thay cách cài đặt mà giữ nguyên hợp đồng công khai.
+Nếu mã ngoài liên tục biết và phụ thuộc vào từng trường dữ liệu, thay đổi cách lưu số dư có thể kéo theo sửa nhiều nơi. Khi bên ngoài chỉ biết những thao tác như `withdraw` và `getBalance`, đối tượng có thể thay cách cài đặt mà giữ nguyên hợp đồng công khai.
 
 **Ba: làm sao phối hợp nhiều phần của hệ thống?**
 
 Một luồng đặt hàng có thể cần giỏ hàng, thanh toán và thông báo. Trong tổ chức OOP, mỗi đối tượng hoặc service có trách nhiệm riêng và giao tiếp qua các phương thức/hợp đồng. Ta dễ mô tả:
 
-\`\`\`text
+```text
 CheckoutService yêu cầu Order xác nhận dữ liệu
 CheckoutService yêu cầu PaymentGateway thanh toán
 CheckoutService yêu cầu Notifier gửi thông báo
-\`\`\`
+```
 
-Tuy nhiên, **phân chia thành các đối tượng không bảo đảm kiến trúc tốt**. Nếu các lớp phụ thuộc vòng quanh nhau, chia quá nhiều class nhỏ hoặc đưa mọi logic vào \`CheckoutService\`, chương trình OOP vẫn khó hiểu.
+Tuy nhiên, **phân chia thành các đối tượng không bảo đảm kiến trúc tốt**. Nếu các lớp phụ thuộc vòng quanh nhau, chia quá nhiều class nhỏ hoặc đưa mọi logic vào `CheckoutService`, chương trình OOP vẫn khó hiểu.
 
 ### 8. Chọn cách nào cho công việc thực tế?
 
@@ -1061,17 +1061,17 @@ Không phải bài toán nào cũng cần mô hình đối tượng phong phú. 
 | --- | --- | --- |
 | Tính tổng một danh sách số | Hàm thủ tục hoặc hàm thuần | Đầu vào/đầu ra đơn giản, không có trạng thái nghiệp vụ riêng |
 | Đọc CSV, lọc dữ liệu, xuất báo cáo | Chuỗi hàm hoặc pipeline | Công việc có các bước xử lý rõ |
-| Quản lý đơn hàng với chuyển trạng thái hợp lệ | Đối tượng \`Order\` có hành vi kiểm soát | Quy tắc gắn với trạng thái của một đơn hàng |
-| Quản lý giỏ hàng, số lượng và tổng tiền | Đối tượng \`Cart\` cùng các service liên quan | Cần đồng bộ nhiều thông tin trong một nhóm trách nhiệm |
+| Quản lý đơn hàng với chuyển trạng thái hợp lệ | Đối tượng `Order` có hành vi kiểm soát | Quy tắc gắn với trạng thái của một đơn hàng |
+| Quản lý giỏ hàng, số lượng và tổng tiền | Đối tượng `Cart` cùng các service liên quan | Cần đồng bộ nhiều thông tin trong một nhóm trách nhiệm |
 | Gọi API bên ngoài đơn giản | Service hoặc hàm phù hợp | Không nhất thiết cần cả hệ phân cấp class |
 | Nhiều cách thanh toán có cùng hành vi giao tiếp | Các implementation cùng interface | Caller sử dụng hợp đồng chung, không phụ thuộc trực tiếp vào mọi công nghệ thanh toán |
 
 Với ứng dụng Java/Spring Boot, hai cách tổ chức thường xuất hiện **cùng nhau**:
 
-- Một \`OrderService\` điều phối các bước của use case: tìm đơn, yêu cầu thanh toán, lưu kết quả, thông báo. Phần điều phối này khá giống tư duy thủ tục.
-- Một \`Order\` chịu trách nhiệm các quy tắc của chính nó: \`cancel()\`, \`markPaid(...)\`, không cho phép hủy khi đã hoàn tất.
-- Một \`PaymentGateway\` mô tả hợp đồng để service gọi các implementation khác nhau.
-- Những phép tính thuần như \`calculateTax(...)\` hoặc các hàm chuyển đổi dữ liệu vẫn có thể là hàm đơn giản.
+- Một `OrderService` điều phối các bước của use case: tìm đơn, yêu cầu thanh toán, lưu kết quả, thông báo. Phần điều phối này khá giống tư duy thủ tục.
+- Một `Order` chịu trách nhiệm các quy tắc của chính nó: `cancel()`, `markPaid(...)`, không cho phép hủy khi đã hoàn tất.
+- Một `PaymentGateway` mô tả hợp đồng để service gọi các implementation khác nhau.
+- Những phép tính thuần như `calculateTax(...)` hoặc các hàm chuyển đổi dữ liệu vẫn có thể là hàm đơn giản.
 
 Không cần chọn một phe rồi cấm sạch cách còn lại. Vấn đề thực tế là **mỗi phần trách nhiệm nên được đặt ở đâu để dễ hiểu, dễ sửa và ít gây lỗi nhất**.
 
@@ -1079,31 +1079,31 @@ Không cần chọn một phe rồi cấm sạch cách còn lại. Vấn đề t
 
 Giả sử ban đầu mã viết theo thủ tục:
 
-\`\`\`java
+```java
 withdraw(account, amount);
-\`\`\`
+```
 
 Sau đó đổi thành:
 
-\`\`\`java
+```java
 account.setBalance(account.getBalance() - amount);
-\`\`\`
+```
 
-Thoạt nhìn, cú pháp mới có đối tượng và phương thức, nhưng chính **caller vẫn tự tính số dư và tự quyết định phép trừ**. Nó còn có thể quên kiểm tra \`amount > 0\` hay số dư có đủ không.
+Thoạt nhìn, cú pháp mới có đối tượng và phương thức, nhưng chính **caller vẫn tự tính số dư và tự quyết định phép trừ**. Nó còn có thể quên kiểm tra `amount > 0` hay số dư có đủ không.
 
 Một API phản ánh trách nhiệm tốt hơn:
 
-\`\`\`java
+```java
 account.withdraw(amount);
-\`\`\`
+```
 
 Khi đó caller nêu **điều muốn thực hiện**, còn đối tượng chịu trách nhiệm **có cho phép thực hiện không và cập nhật trạng thái như thế nào**.
 
-Điều này không có nghĩa \`getX()/setX()\` đều sai. Getter/setter rất phù hợp cho nhiều DTO, thông tin cấu hình hoặc thuộc tính được phép sửa độc lập. Chỉ cần tránh biến toàn bộ đối tượng nghiệp vụ thành một túi dữ liệu mà mọi service có thể gán tùy ý.
+Điều này không có nghĩa `getX()/setX()` đều sai. Getter/setter rất phù hợp cho nhiều DTO, thông tin cấu hình hoặc thuộc tính được phép sửa độc lập. Chỉ cần tránh biến toàn bộ đối tượng nghiệp vụ thành một túi dữ liệu mà mọi service có thể gán tùy ý.
 
 ### 10. Tự kiểm tra mức độ hiểu
 
-**Tình huống A.** Bạn có một hàm \`static int sum(int a, int b)\` trong class \`Calculator\`. Nó có trở thành “thiết kế OOP đầy đủ” chỉ vì nằm trong class không?
+**Tình huống A.** Bạn có một hàm `static int sum(int a, int b)` trong class `Calculator`. Nó có trở thành “thiết kế OOP đầy đủ” chỉ vì nằm trong class không?
 
 **Trả lời:** Không. Đây đơn thuần là một hàm tính toán được đặt trong class theo cú pháp Java. Điều quan trọng để nhận diện thiết kế OOP là cách đối tượng mang trách nhiệm và cộng tác, chứ không phải đếm số class.
 
@@ -1111,11 +1111,11 @@ Khi đó caller nêu **điều muốn thực hiện**, còn đối tượng ch�
 
 **Trả lời:** Không có kết luận chung như vậy. Chương trình thủ tục vẫn có thể đóng gói dữ liệu qua module và API. Chất lượng phụ thuộc vào thiết kế và việc tuân thủ các quy tắc.
 
-**Tình huống C.** Class \`BankAccount\` có \`private balance\`, nhưng public \`setBalance(long balance)\` cho gán mọi giá trị. Class này có bảo vệ tốt quy tắc số dư không âm chưa?
+**Tình huống C.** Class `BankAccount` có `private balance`, nhưng public `setBalance(long balance)` cho gán mọi giá trị. Class này có bảo vệ tốt quy tắc số dư không âm chưa?
 
-**Trả lời:** Chưa. Trường \`private\` che quyền truy cập trực tiếp, nhưng setter công khai vẫn cho phép thay đổi tùy ý. Nên đưa thao tác nghiệp vụ và kiểm tra vào nơi chịu trách nhiệm phù hợp.
+**Trả lời:** Chưa. Trường `private` che quyền truy cập trực tiếp, nhưng setter công khai vẫn cho phép thay đổi tùy ý. Nên đưa thao tác nghiệp vụ và kiểm tra vào nơi chịu trách nhiệm phù hợp.
 
-**Tình huống D.** Bạn có \`CheckoutService\` chỉ gồm một loạt lời gọi \`validate()\`, \`charge()\`, \`save()\`, \`notify()\`. Có phải chương trình đã “không còn OOP” vì vẫn xử lý theo từng bước?
+**Tình huống D.** Bạn có `CheckoutService` chỉ gồm một loạt lời gọi `validate()`, `charge()`, `save()`, `notify()`. Có phải chương trình đã “không còn OOP” vì vẫn xử lý theo từng bước?
 
 **Trả lời:** Không. Các đối tượng có thể cộng tác thông qua một chuỗi bước. Tổ chức theo trách nhiệm đối tượng và tổ chức luồng điều phối theo thủ tục có thể bổ sung cho nhau.
 

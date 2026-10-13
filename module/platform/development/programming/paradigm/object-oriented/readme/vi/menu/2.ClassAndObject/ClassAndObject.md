@@ -35,18 +35,18 @@ Class mô tả kiểu cấu trúc và hành vi. Object là thực thể cụ th�
 
 Ví dụ:
 
-\`\`\`java
+```java
 class BankAccount {
     String owner;
     long balance;
 }
-\`\`\`
+```
 
 Đây mới là phần **định nghĩa class**. Chưa có tài khoản cụ thể nào được tạo chỉ vì bạn viết class này.
 
 Khi chạy:
 
-\`\`\`java
+```java
 BankAccount accountA = new BankAccount();
 accountA.owner = "An";
 accountA.balance = 100_000;
@@ -54,24 +54,24 @@ accountA.balance = 100_000;
 BankAccount accountB = new BankAccount();
 accountB.owner = "Bình";
 accountB.balance = 100_000;
-\`\`\`
+```
 
-Chương trình đã tạo hai object riêng biệt. Cả hai dùng cùng khuôn \`BankAccount\`, nhưng mang dữ liệu riêng và có sự tồn tại riêng.
+Chương trình đã tạo hai object riêng biệt. Cả hai dùng cùng khuôn `BankAccount`, nhưng mang dữ liệu riêng và có sự tồn tại riêng.
 
 Một hình dung đơn giản:
 
-\`\`\`mermaid
+```mermaid
 flowchart TD
     C["Class BankAccount: mô tả kiểu tài khoản"]
     C -.-> A["Object A: owner = An, balance = 100000"]
     C -.-> B["Object B: owner = Bình, balance = 100000"]
-\`\`\`
+```
 
-Trong Java, biến như \`accountA\` thường chứa **tham chiếu** đến object, chứ không phải bản sao toàn bộ object. Hai biến khác nhau có thể cùng tham chiếu đến **một object**.
+Trong Java, biến như `accountA` thường chứa **tham chiếu** đến object, chứ không phải bản sao toàn bộ object. Hai biến khác nhau có thể cùng tham chiếu đến **một object**.
 
 Từ đây, ta sẽ thấy vì sao dữ liệu giống nhau chưa chắc là cùng một object.
 
-> **Lưu ý thuật ngữ:** Java cũng có class gốc tên \`java.lang.Object\`. Đó là tên một class cụ thể trong thư viện Java. Còn từ “object” trong bài này chỉ **đối tượng** nói chung. Hai khái niệm liên quan, nhưng không đồng nghĩa hoàn toàn.
+> **Lưu ý thuật ngữ:** Java cũng có class gốc tên `java.lang.Object`. Đó là tên một class cụ thể trong thư viện Java. Còn từ “object” trong bài này chỉ **đối tượng** nói chung. Hai khái niệm liên quan, nhưng không đồng nghĩa hoàn toàn.
 
 ### 2. Identity: “Đây là đối tượng nào?”
 
@@ -81,7 +81,7 @@ Hãy tưởng tượng hai người đều tên “An”, cùng tuổi 25. Họ 
 
 Với Java:
 
-\`\`\`java
+```java
 BankAccount accountA = new BankAccount();
 accountA.owner = "An";
 accountA.balance = 100_000;
@@ -94,13 +94,13 @@ BankAccount anotherReference = accountA;
 
 System.out.println(accountA == accountB);         // false
 System.out.println(accountA == anotherReference); // true
-\`\`\`
+```
 
 Giải thích từng dòng:
 
-- \`accountA\` và \`accountB\` được tạo bởi hai lần \`new\`, nên là hai object khác nhau, dù trạng thái hiện tại giống nhau.
-- \`anotherReference = accountA\` **không tạo object mới**. Hai biến cùng trỏ đến object A.
-- Với **tham chiếu**, toán tử \`==\` kiểm tra hai tham chiếu có trỏ đến **cùng một object** hay không. Nó không so sánh các trường \`owner\` và \`balance\`.
+- `accountA` và `accountB` được tạo bởi hai lần `new`, nên là hai object khác nhau, dù trạng thái hiện tại giống nhau.
+- `anotherReference = accountA` **không tạo object mới**. Hai biến cùng trỏ đến object A.
+- Với **tham chiếu**, toán tử `==` kiểm tra hai tham chiếu có trỏ đến **cùng một object** hay không. Nó không so sánh các trường `owner` và `balance`.
 
 #### Identity có phải số ID trong database không?
 
@@ -108,35 +108,35 @@ Không nhất thiết. Có hai lớp ý nghĩa cần tách:
 
 | Khái niệm | Ví dụ | Ý nghĩa |
 | --- | --- | --- |
-| Identity của object Java | \`a == b\` | Hai tham chiếu có trỏ cùng một object trong lúc chương trình chạy không? |
-| Định danh trong nghiệp vụ | Mã tài khoản \`ACC-001\` | Hệ thống nhận biết một tài khoản nghiệp vụ qua các lần lưu và tải dữ liệu |
-| Giá trị dữ liệu | \`balance = 100_000\` | Thông tin hiện tại của tài khoản; có thể thay đổi |
+| Identity của object Java | `a == b` | Hai tham chiếu có trỏ cùng một object trong lúc chương trình chạy không? |
+| Định danh trong nghiệp vụ | Mã tài khoản `ACC-001` | Hệ thống nhận biết một tài khoản nghiệp vụ qua các lần lưu và tải dữ liệu |
+| Giá trị dữ liệu | `balance = 100_000` | Thông tin hiện tại của tài khoản; có thể thay đổi |
 
-Ví dụ một tài khoản có mã \`ACC-001\` được đọc từ database ở hai lần khác nhau. Hệ thống có thể tạo hai object Java khác nhau cùng đại diện cho tài khoản nghiệp vụ \`ACC-001\`. Khi đó \`==\` có thể là \`false\`, dù chúng mô tả cùng một thực thể nghiệp vụ.
+Ví dụ một tài khoản có mã `ACC-001` được đọc từ database ở hai lần khác nhau. Hệ thống có thể tạo hai object Java khác nhau cùng đại diện cho tài khoản nghiệp vụ `ACC-001`. Khi đó `==` có thể là `false`, dù chúng mô tả cùng một thực thể nghiệp vụ.
 
-**Đừng đồng nhất object identity với địa chỉ bộ nhớ hiển thị, \`hashCode()\` hay ID database.** Cách JVM quản lý bộ nhớ là chi tiết cài đặt; giá trị hash cũng không phải định danh duy nhất tuyệt đối.
+**Đừng đồng nhất object identity với địa chỉ bộ nhớ hiển thị, `hashCode()` hay ID database.** Cách JVM quản lý bộ nhớ là chi tiết cài đặt; giá trị hash cũng không phải định danh duy nhất tuyệt đối.
 
-#### \`==\` khác \`equals()\` ra sao?
+#### `==` khác `equals()` ra sao?
 
 Với các đối tượng thông thường:
 
-- \`==\` giữa hai tham chiếu luôn kiểm tra **cùng object hay khác object**.
-- \`equals()\` kiểm tra **sự bằng nhau theo quy tắc được class định nghĩa**. Nếu không override, \`Object.equals()\` mặc định tương đương so sánh tham chiếu bằng \`==\`.
-- Những class như \`String\` ghi đè \`equals()\` để so sánh nội dung.
+- `==` giữa hai tham chiếu luôn kiểm tra **cùng object hay khác object**.
+- `equals()` kiểm tra **sự bằng nhau theo quy tắc được class định nghĩa**. Nếu không override, `Object.equals()` mặc định tương đương so sánh tham chiếu bằng `==`.
+- Những class như `String` ghi đè `equals()` để so sánh nội dung.
 
 Ví dụ:
 
-\`\`\`java
+```java
 String first = new String("Java");
 String second = new String("Java");
 
 System.out.println(first == second);      // false
 System.out.println(first.equals(second)); // true
-\`\`\`
+```
 
-Cùng nội dung \`"Java"\` không có nghĩa là cùng object.
+Cùng nội dung `"Java"` không có nghĩa là cùng object.
 
-Trong mô hình nghiệp vụ, có lúc cần định nghĩa \`equals()\` dựa vào mã định danh; có lúc cần dựa vào toàn bộ giá trị. Đó là **quyết định thiết kế** của class, không phải việc Java tự động coi mọi object có trường giống nhau là một.
+Trong mô hình nghiệp vụ, có lúc cần định nghĩa `equals()` dựa vào mã định danh; có lúc cần dựa vào toàn bộ giá trị. Đó là **quyết định thiết kế** của class, không phải việc Java tự động coi mọi object có trường giống nhau là một.
 
 ### 3. State: “Đối tượng hiện đang như thế nào?”
 
@@ -144,9 +144,9 @@ Trong mô hình nghiệp vụ, có lúc cần định nghĩa \`equals()\` dựa 
 
 Với tài khoản, ta có thể cần:
 
-- Mã tài khoản: \`ACC-001\`.
-- Chủ tài khoản: \`An\`.
-- Số dư: \`100_000\`.
+- Mã tài khoản: `ACC-001`.
+- Chủ tài khoản: `An`.
+- Số dư: `100_000`.
 - Trạng thái hoạt động: đang mở hay bị khóa.
 
 Một số thông tin có thể giữ nguyên trong suốt vòng đời object; số khác thay đổi qua thời gian.
@@ -155,9 +155,9 @@ Ví dụ trạng thái trước và sau khi rút tiền:
 
 | Thời điểm | Tài khoản | Số dư |
 | --- | --- | ---: |
-| Trước khi rút | \`ACC-001\` | 100.000 |
-| Sau khi rút 30.000 | \`ACC-001\` | 70.000 |
-| Sau khi thử rút 120.000 và bị từ chối | \`ACC-001\` | 70.000 |
+| Trước khi rút | `ACC-001` | 100.000 |
+| Sau khi rút 30.000 | `ACC-001` | 70.000 |
+| Sau khi thử rút 120.000 và bị từ chối | `ACC-001` | 70.000 |
 
 Vẫn là **cùng một đối tượng tài khoản** đang được theo dõi, nhưng state đã thay đổi sau giao dịch hợp lệ.
 
@@ -171,7 +171,7 @@ Không. Một object có thể **mutable** (trạng thái thay đổi được) 
 
 Ví dụ một tọa độ bất biến:
 
-\`\`\`java
+```java
 final class Point {
     private final int x;
     private final int y;
@@ -184,11 +184,11 @@ final class Point {
     int x() { return x; }
     int y() { return y; }
 }
-\`\`\`
+```
 
-Hai object \`Point\` có thể cùng giá trị \`x, y\`, nhưng vẫn là hai object Java khác nhau. Không có setter không làm mất đi tính chất “object”.
+Hai object `Point` có thể cùng giá trị `x, y`, nhưng vẫn là hai object Java khác nhau. Không có setter không làm mất đi tính chất “object”.
 
-Ngoài ra, khai báo trường \`final\` chỉ ngăn gán lại **tham chiếu hoặc giá trị của trường đó**. Nếu trường giữ một danh sách có thể sửa, nội dung danh sách vẫn có thể thay đổi. Vì thế, muốn tạo đối tượng immutable thực sự, cần xem cả những object mutable mà nó tham chiếu đến.
+Ngoài ra, khai báo trường `final` chỉ ngăn gán lại **tham chiếu hoặc giá trị của trường đó**. Nếu trường giữ một danh sách có thể sửa, nội dung danh sách vẫn có thể thay đổi. Vì thế, muốn tạo đối tượng immutable thực sự, cần xem cả những object mutable mà nó tham chiếu đến.
 
 ### 4. Behavior: “Đối tượng có thể làm gì?”
 
@@ -196,24 +196,24 @@ Ngoài ra, khai báo trường \`final\` chỉ ngăn gán lại **tham chiếu h
 
 Với tài khoản, behavior có thể là:
 
-\`\`\`java
+```java
 account.deposit(50_000);
 account.withdraw(30_000);
 long currentBalance = account.getBalance();
-\`\`\`
+```
 
-Lệnh \`withdraw(30_000)\` không chỉ là một phép trừ. Hành vi có thể phải:
+Lệnh `withdraw(30_000)` không chỉ là một phép trừ. Hành vi có thể phải:
 
 1. Kiểm tra số tiền yêu cầu lớn hơn 0.
 2. Kiểm tra số dư hiện tại có đủ không.
 3. Chỉ khi tất cả điều kiện hợp lệ mới cập nhật số dư.
 4. Báo lỗi nếu không thể thực hiện.
 
-Một behavior không bắt buộc phải sửa state. Ví dụ \`getBalance()\` chỉ quan sát, \`isActive()\` trả về trạng thái hoạt động, hoặc \`calculateFee()\` tính toán kết quả.
+Một behavior không bắt buộc phải sửa state. Ví dụ `getBalance()` chỉ quan sát, `isActive()` trả về trạng thái hoạt động, hoặc `calculateFee()` tính toán kết quả.
 
-Tương tự, không phải behavior nào cũng được công khai ra ngoài. Object có thể có các phương thức \`private\` dùng để thực hiện chi tiết nội bộ, còn phương thức \`public\` là những hành vi nó cam kết cho bên ngoài sử dụng.
+Tương tự, không phải behavior nào cũng được công khai ra ngoài. Object có thể có các phương thức `private` dùng để thực hiện chi tiết nội bộ, còn phương thức `public` là những hành vi nó cam kết cho bên ngoài sử dụng.
 
-**Behavior không đồng nghĩa với “bất cứ hàm nào nằm trong class”.** Một hàm \`static\` thuộc về class và không có đối tượng nhận lời gọi cụ thể; còn instance method như \`account.withdraw(...)\` được gọi trên một đối tượng đang có trạng thái riêng.
+**Behavior không đồng nghĩa với “bất cứ hàm nào nằm trong class”.** Một hàm `static` thuộc về class và không có đối tượng nhận lời gọi cụ thể; còn instance method như `account.withdraw(...)` được gọi trên một đối tượng đang có trạng thái riêng.
 
 ### 5. Responsibility: “Đối tượng phải chịu trách nhiệm về điều gì?”
 
@@ -221,9 +221,9 @@ Tương tự, không phải behavior nào cũng được công khai ra ngoài. O
 
 **Behavior** mô tả một hành động cụ thể. **Responsibility (trách nhiệm)** mô tả nghĩa vụ hay vai trò của object trong thiết kế: **nó phải biết gì, phải bảo đảm điều gì, và phải thực hiện phần việc nào để hệ thống hoạt động đúng**.
 
-Với \`BankAccount\`:
+Với `BankAccount`:
 
-- Behavior: \`deposit(amount)\`, \`withdraw(amount)\`, \`getBalance()\`.
+- Behavior: `deposit(amount)`, `withdraw(amount)`, `getBalance()`.
 - Responsibility: **quản lý số dư của tài khoản và bảo đảm các thao tác làm thay đổi số dư phải tuân theo quy tắc của tài khoản**.
 
 Nếu một tài khoản không được thấu chi, bất biến (*invariant*) quan trọng là **số dư không được âm**. Object chịu trách nhiệm bảo vệ quy tắc ấy trong những thao tác nó cho phép.
@@ -234,14 +234,14 @@ Không nhất thiết. Các việc đó có thể thuộc về đối tượng h
 
 | Thành phần | Trách nhiệm có thể phù hợp | Ví dụ hành vi |
 | --- | --- | --- |
-| \`BankAccount\` | Giữ trạng thái và quy tắc của một tài khoản | \`withdraw()\`, \`deposit()\` |
-| \`TransferService\` | Điều phối chuyển tiền giữa nhiều tài khoản, xử lý yêu cầu và điều kiện hệ thống | \`transfer(from, to, amount)\` |
-| \`StatementGenerator\` | Tạo nội dung sao kê từ dữ liệu giao dịch | \`generateStatement(...)\` |
-| \`NotificationSender\` | Gửi thông báo qua kênh thích hợp | \`send(...)\` |
+| `BankAccount` | Giữ trạng thái và quy tắc của một tài khoản | `withdraw()`, `deposit()` |
+| `TransferService` | Điều phối chuyển tiền giữa nhiều tài khoản, xử lý yêu cầu và điều kiện hệ thống | `transfer(from, to, amount)` |
+| `StatementGenerator` | Tạo nội dung sao kê từ dữ liệu giao dịch | `generateStatement(...)` |
+| `NotificationSender` | Gửi thông báo qua kênh thích hợp | `send(...)` |
 
 Như vậy, một object có thể có nhiều behaviors để hoàn thành **một nhóm trách nhiệm gắn kết**. Ngược lại, một behavior đơn lẻ không đủ để xác định chính xác trách nhiệm của object.
 
-Ví dụ, một class \`AccountManager\` có tới 50 phương thức chưa chắc được thiết kế tốt; nếu nó vừa rút tiền, xuất PDF, gửi email, điều khiển giao diện và đọc cấu hình, trách nhiệm đã trở nên hỗn tạp. OOP không yêu cầu nhét mọi thứ liên quan đến “tài khoản” vào đúng một object.
+Ví dụ, một class `AccountManager` có tới 50 phương thức chưa chắc được thiết kế tốt; nếu nó vừa rút tiền, xuất PDF, gửi email, điều khiển giao diện và đọc cấu hình, trách nhiệm đã trở nên hỗn tạp. OOP không yêu cầu nhét mọi thứ liên quan đến “tài khoản” vào đúng một object.
 
 #### Phân biệt bằng hai câu hỏi
 
@@ -250,13 +250,13 @@ Khi đọc tên một phương thức, thử hỏi:
 - “Nó **làm gì**?” → đang nói về behavior.
 - “**Vì sao** phần việc và quy tắc này thuộc về object đó?” → đang nói về responsibility.
 
-Ví dụ \`withdraw()\` là hành vi. Còn chịu trách nhiệm **không cho tài khoản rơi vào trạng thái không hợp lệ** là một phần của thiết kế và hợp đồng hành vi ấy.
+Ví dụ `withdraw()` là hành vi. Còn chịu trách nhiệm **không cho tài khoản rơi vào trạng thái không hợp lệ** là một phần của thiết kế và hợp đồng hành vi ấy.
 
 ### 6. Một ví dụ Java hoàn chỉnh thể hiện cả bốn khái niệm
 
-Lưu đoạn sau thành file \`Main.java\` rồi chạy:
+Lưu đoạn sau thành file `Main.java` rồi chạy:
 
-\`\`\`java
+```java
 final class BankAccount {
     // State: dữ liệu của từng object
     private final String accountNumber;
@@ -327,11 +327,11 @@ public class Main {
         System.out.println(accountA.getBalance()); // 70000
     }
 }
-\`\`\`
+```
 
 Đầu ra:
 
-\`\`\`text
+```text
 false
 true
 70000
@@ -339,33 +339,33 @@ true
 100000
 Insufficient balance
 70000
-\`\`\`
+```
 
-Chú ý ví dụ dùng kiểu \`long\` với đơn vị tiền nguyên để dễ học, không dùng \`double\` cho tiền. \`Math.addExact\` còn phát hiện tình huống cộng vượt giới hạn \`long\` bằng một ngoại lệ thay vì làm tràn số âm thầm. Đây là ví dụ mô phỏng state ở bộ nhớ; các yêu cầu thực tế về giao dịch, lưu trữ và đồng thời nằm ngoài phạm vi đoạn code.
+Chú ý ví dụ dùng kiểu `long` với đơn vị tiền nguyên để dễ học, không dùng `double` cho tiền. `Math.addExact` còn phát hiện tình huống cộng vượt giới hạn `long` bằng một ngoại lệ thay vì làm tràn số âm thầm. Đây là ví dụ mô phỏng state ở bộ nhớ; các yêu cầu thực tế về giao dịch, lưu trữ và đồng thời nằm ngoài phạm vi đoạn code.
 
 #### Đọc ví dụ theo từng khái niệm
 
 **Identity**
 
-\`accountA\` và \`accountB\` là **hai object khác nhau**, dù ban đầu cùng có số dư 100.000. \`aliasOfA\` và \`accountA\` cùng trỏ đến **một object**.
+`accountA` và `accountB` là **hai object khác nhau**, dù ban đầu cùng có số dư 100.000. `aliasOfA` và `accountA` cùng trỏ đến **một object**.
 
 **State**
 
-\`accountA\` có \`accountNumber = "ACC-A"\` và ban đầu \`balance = 100_000\`. Sau khi rút, số dư thành \`70_000\`. Trạng thái của \`accountB\` vẫn là \`100_000\`.
+`accountA` có `accountNumber = "ACC-A"` và ban đầu `balance = 100_000`. Sau khi rút, số dư thành `70_000`. Trạng thái của `accountB` vẫn là `100_000`.
 
 **Behavior**
 
-\`withdraw(30_000)\` là hành vi thực hiện rút tiền. \`getBalance()\` là hành vi đọc thông tin. \`deposit(...)\` là hành vi nạp tiền.
+`withdraw(30_000)` là hành vi thực hiện rút tiền. `getBalance()` là hành vi đọc thông tin. `deposit(...)` là hành vi nạp tiền.
 
 **Responsibility**
 
-\`BankAccount\` có trách nhiệm giữ số dư và kiểm tra các yêu cầu rút/nạp tiền. Không có phương thức public \`setBalance(...)\` để caller gán số dư tùy ý.
+`BankAccount` có trách nhiệm giữ số dư và kiểm tra các yêu cầu rút/nạp tiền. Không có phương thức public `setBalance(...)` để caller gán số dư tùy ý.
 
 #### Điều gì xảy ra khi rút không hợp lệ?
 
-Trước khi gọi \`accountA.withdraw(120_000)\`, số dư đang là \`70_000\`.
+Trước khi gọi `accountA.withdraw(120_000)`, số dư đang là `70_000`.
 
-\`\`\`text
+```text
 Nhận yêu cầu withdraw(120000)
           |
           v
@@ -376,9 +376,9 @@ Nhận yêu cầu withdraw(120000)
 120000 <= 70000 ? --- không --------> IllegalStateException
           |
          (không cập nhật balance)
-\`\`\`
+```
 
-Phép trừ không được thực hiện; \`accountA\` vẫn có \`70_000\`. Đây là một tình huống giúp nhìn rõ mối quan hệ giữa behavior và responsibility: hành vi \`withdraw\` kiểm tra điều kiện để hoàn thành trách nhiệm giữ trạng thái hợp lệ.
+Phép trừ không được thực hiện; `accountA` vẫn có `70_000`. Đây là một tình huống giúp nhìn rõ mối quan hệ giữa behavior và responsibility: hành vi `withdraw` kiểm tra điều kiện để hoàn thành trách nhiệm giữ trạng thái hợp lệ.
 
 ### 7. Vì sao phân biệt identity với state quan trọng?
 
@@ -392,16 +392,16 @@ Ta thường vẫn nói về **cùng một giỏ hàng**, dù nội dung thay đ
 
 Điều ngược lại cũng đúng: hai giỏ hàng ở cùng trạng thái “trống” không trở thành cùng một giỏ.
 
-Đây là lý do trong mô hình có những thực thể như \`Order\`, \`Account\`, \`ShoppingCart\`, việc nhận biết thực thể nào đang được xử lý rất quan trọng. Nhưng với một giá trị như tọa độ \`Point(2, 3)\` hay số tiền \`Money(50, "USD")\`, ta thường quan tâm **giá trị bằng nhau** hơn là hai object có chung tham chiếu không.
+Đây là lý do trong mô hình có những thực thể như `Order`, `Account`, `ShoppingCart`, việc nhận biết thực thể nào đang được xử lý rất quan trọng. Nhưng với một giá trị như tọa độ `Point(2, 3)` hay số tiền `Money(50, "USD")`, ta thường quan tâm **giá trị bằng nhau** hơn là hai object có chung tham chiếu không.
 
-OOP có chỗ cho cả đối tượng **mang định danh nghiệp vụ** lẫn đối tượng **chủ yếu mang giá trị**. Không phải mọi object đều cần một trường \`id\` riêng hoặc cần ghi đè \`equals()\`.
+OOP có chỗ cho cả đối tượng **mang định danh nghiệp vụ** lẫn đối tượng **chủ yếu mang giá trị**. Không phải mọi object đều cần một trường `id` riêng hoặc cần ghi đè `equals()`.
 
 ### 8. Những hiểu nhầm thường gặp
 
 | Phát biểu | Đúng hay sai? | Giải thích |
 | --- | --- | --- |
 | “Hai object có state giống nhau thì là cùng một object.” | Sai | Cùng dữ liệu không bảo đảm cùng identity. |
-| “Hai biến tham chiếu khác nhau luôn trỏ đến hai object.” | Sai | \`aliasOfA = accountA\` tạo thêm tham chiếu đến object cũ. |
+| “Hai biến tham chiếu khác nhau luôn trỏ đến hai object.” | Sai | `aliasOfA = accountA` tạo thêm tham chiếu đến object cũ. |
 | “State chỉ gồm các trường có thể thay đổi.” | Sai | Thông tin bất biến cũng là một phần trạng thái. |
 | “Object nào cũng phải có setter.” | Sai | Một object có thể bất biến hoặc chỉ cho phép thao tác qua hành vi nghiệp vụ. |
 | “Behavior chỉ là phương thức làm thay đổi state.” | Sai | Phương thức đọc/kiểm tra/tính toán cũng biểu diễn hành vi. |
@@ -411,12 +411,12 @@ OOP có chỗ cho cả đối tượng **mang định danh nghiệp vụ** lẫn
 
 Một lỗi thiết kế khác thường gặp là để **toàn bộ nghiệp vụ nằm ngoài object**, còn object chỉ chứa các field có getter/setter:
 
-\`\`\`java
+```java
 // Caller quyết định trực tiếp cách sửa balance:
 account.setBalance(account.getBalance() - amount);
-\`\`\`
+```
 
-Nếu không có quy tắc kiểm soát, caller có thể trừ quá số dư. Cách gọi \`account.withdraw(amount)\` làm rõ object nào có trách nhiệm xác minh và cập nhật số dư.
+Nếu không có quy tắc kiểm soát, caller có thể trừ quá số dư. Cách gọi `account.withdraw(amount)` làm rõ object nào có trách nhiệm xác minh và cập nhật số dư.
 
 Dẫu vậy, các object chỉ chứa dữ liệu cũng có vai trò hữu ích, ví dụ DTO dùng để trao đổi dữ liệu giữa các tầng. Không phải tất cả class đều cần mang nghiệp vụ; cần thiết kế theo vai trò thực tế.
 
@@ -424,7 +424,7 @@ Dẫu vậy, các object chỉ chứa dữ liệu cũng có vai trò hữu ích,
 
 Không cần chạy code ngay. Hãy đoán đầu ra:
 
-\`\`\`java
+```java
 BankAccount first = new BankAccount("ACC-1", 100);
 BankAccount second = new BankAccount("ACC-2", 100);
 BankAccount third = first;
@@ -435,32 +435,32 @@ System.out.println(first == second);      // ?
 System.out.println(first == third);       // ?
 System.out.println(second.getBalance());  // ?
 System.out.println(third.getBalance());   // ?
-\`\`\`
+```
 
 Đáp án:
 
-\`\`\`text
+```text
 false
 true
 100
 70
-\`\`\`
+```
 
 Lý do:
 
-- \`first\` và \`second\` được tạo độc lập → khác identity.
-- \`third\` trỏ cùng object với \`first\` → cùng identity.
-- Việc thay đổi state qua \`first\` cũng được nhìn thấy qua \`third\`, vì chúng cùng tham chiếu một object.
-- \`second\` có state riêng nên không bị tác động.
+- `first` và `second` được tạo độc lập → khác identity.
+- `third` trỏ cùng object với `first` → cùng identity.
+- Việc thay đổi state qua `first` cũng được nhìn thấy qua `third`, vì chúng cùng tham chiếu một object.
+- `second` có state riêng nên không bị tác động.
 
 Bây giờ hãy tự mô tả một **đơn hàng** bằng đúng bốn câu, mỗi câu trả lời một ý:
 
-1. **Identity:** Đơn hàng nào? Ví dụ đơn \`ORD-101\`.
-2. **State:** Đơn đang có những thông tin hiện tại nào? Ví dụ danh sách sản phẩm, tổng tiền, trạng thái \`CREATED\`.
-3. **Behavior:** Đơn cho phép thao tác gì? Ví dụ \`addItem()\`, \`cancel()\`, \`markPaid()\` nếu phù hợp nghiệp vụ.
-4. **Responsibility:** Đơn phải bảo đảm điều gì? Ví dụ không cho sửa danh sách sản phẩm sau khi hoàn tất, hoặc không chuyển sang \`PAID\` nếu chưa được xác nhận thanh toán.
+1. **Identity:** Đơn hàng nào? Ví dụ đơn `ORD-101`.
+2. **State:** Đơn đang có những thông tin hiện tại nào? Ví dụ danh sách sản phẩm, tổng tiền, trạng thái `CREATED`.
+3. **Behavior:** Đơn cho phép thao tác gì? Ví dụ `addItem()`, `cancel()`, `markPaid()` nếu phù hợp nghiệp vụ.
+4. **Responsibility:** Đơn phải bảo đảm điều gì? Ví dụ không cho sửa danh sách sản phẩm sau khi hoàn tất, hoặc không chuyển sang `PAID` nếu chưa được xác nhận thanh toán.
 
-Nếu bạn mới chỉ trả lời “đơn hàng có các field \`id\`, \`status\`, \`total\`”, bạn chủ yếu đang mô tả **state**. Để thiết kế object có ý nghĩa, cần tiếp tục xác định **hành vi** và **trách nhiệm** của nó.
+Nếu bạn mới chỉ trả lời “đơn hàng có các field `id`, `status`, `total`”, bạn chủ yếu đang mô tả **state**. Để thiết kế object có ý nghĩa, cần tiếp tục xác định **hành vi** và **trách nhiệm** của nó.
 
 Bốn yếu tố luôn có mối liên hệ: **identity** cho phép nhận ra object đang xét; **state** cho biết nó đang ở tình trạng nào; **behavior** cho biết nó có thể thực hiện hoặc đáp ứng yêu cầu gì; **responsibility** giải thích vì sao chính object ấy phải thực hiện và bảo vệ những quy tắc liên quan.
 
@@ -1453,8 +1453,8 @@ Giả sử bạn viết chương trình quản lý một chiếc đèn bàn. M�
 
 Trong Java, ta có thể đặt những thông tin và thao tác liên quan ấy vào một class:
 
-- **Thuộc tính (attribute/field):** mô tả những thông tin đối tượng đang nắm giữ, chẳng hạn \`name\`, \`on\`, \`brightness\`.
-- **Phương thức (method):** định nghĩa hành động hoặc khả năng mà đối tượng cung cấp, chẳng hạn \`turnOn()\`, \`turnOff()\`, \`setBrightness(...)\`.
+- **Thuộc tính (attribute/field):** mô tả những thông tin đối tượng đang nắm giữ, chẳng hạn `name`, `on`, `brightness`.
+- **Phương thức (method):** định nghĩa hành động hoặc khả năng mà đối tượng cung cấp, chẳng hạn `turnOn()`, `turnOff()`, `setBrightness(...)`.
 
 Điểm quan trọng là: **field cho biết đối tượng đang có dữ liệu gì; method cho biết có thể làm gì với đối tượng ấy**. Một phương thức có thể đọc, thay đổi hoặc tính toán từ dữ liệu, nhưng cũng có thể thực hiện công việc không thay đổi trạng thái.
 
@@ -1462,7 +1462,7 @@ Trong Java, ta có thể đặt những thông tin và thao tác liên quan ấy
 
 Đây là ví dụ đơn giản:
 
-\`\`\`java
+```java
 class Lamp {
     String name;        // Thuộc tính
     boolean on;         // Thuộc tính
@@ -1481,37 +1481,37 @@ class Lamp {
                 + ", brightness=" + brightness);
     }
 }
-\`\`\`
+```
 
-\`Lamp\` là **class**, tức khuôn mô tả cấu trúc và hành vi. Khi tạo object:
+`Lamp` là **class**, tức khuôn mô tả cấu trúc và hành vi. Khi tạo object:
 
-\`\`\`java
+```java
 Lamp deskLamp = new Lamp();
 deskLamp.name = "Đèn bàn";
 deskLamp.brightness = 60;
 deskLamp.turnOn();
 deskLamp.showStatus();
-\`\`\`
+```
 
 Kết quả:
 
-\`\`\`text
+```text
 Đèn bàn: on=true, brightness=60
-\`\`\`
+```
 
 Hãy đọc các lệnh theo nghĩa thông thường:
 
 | Biểu thức Java | Ý nghĩa |
 | --- | --- |
-| \`new Lamp()\` | Tạo một object kiểu \`Lamp\` |
-| \`deskLamp.name\` | Truy cập thuộc tính \`name\` của object mà \`deskLamp\` trỏ tới |
-| \`deskLamp.brightness = 60\` | Gán giá trị mới cho một field |
-| \`deskLamp.turnOn()\` | Yêu cầu object thực hiện phương thức \`turnOn\` |
-| \`deskLamp.showStatus()\` | Gọi phương thức hiển thị trạng thái |
+| `new Lamp()` | Tạo một object kiểu `Lamp` |
+| `deskLamp.name` | Truy cập thuộc tính `name` của object mà `deskLamp` trỏ tới |
+| `deskLamp.brightness = 60` | Gán giá trị mới cho một field |
+| `deskLamp.turnOn()` | Yêu cầu object thực hiện phương thức `turnOn` |
+| `deskLamp.showStatus()` | Gọi phương thức hiển thị trạng thái |
 
-Dấu chấm \`.\` là toán tử truy cập thành viên. Với **field**, ta viết \`object.field\`. Với **method**, ta thường viết \`object.method(arguments)\`, trong đó cặp ngoặc tròn dùng để thực hiện lời gọi phương thức.
+Dấu chấm `.` là toán tử truy cập thành viên. Với **field**, ta viết `object.field`. Với **method**, ta thường viết `object.method(arguments)`, trong đó cặp ngoặc tròn dùng để thực hiện lời gọi phương thức.
 
-Lưu ý: đoạn class ban đầu cho phép mã bên ngoài tùy ý gán \`brightness = -100\`. Nó giúp chúng ta nhận ra field và method, nhưng chưa bảo vệ tốt trạng thái. Phần sau sẽ dùng \`private\` và phương thức có kiểm tra để cải thiện thiết kế.
+Lưu ý: đoạn class ban đầu cho phép mã bên ngoài tùy ý gán `brightness = -100`. Nó giúp chúng ta nhận ra field và method, nhưng chưa bảo vệ tốt trạng thái. Phần sau sẽ dùng `private` và phương thức có kiểm tra để cải thiện thiết kế.
 
 ### 2. Thuộc tính (field): trạng thái của từng đối tượng
 
@@ -1519,7 +1519,7 @@ Lưu ý: đoạn class ban đầu cho phép mã bên ngoài tùy ý gán \`brigh
 
 Ví dụ:
 
-\`\`\`java
+```java
 class Student {
     String name;
     int score;
@@ -1539,13 +1539,13 @@ public class Main {
         System.out.println(binh.score); // 75
     }
 }
-\`\`\`
+```
 
-Dù \`an\` và \`binh\` cùng thuộc class \`Student\`, chúng là hai object khác nhau. Khi sửa \`an.score\`, điểm của \`binh\` không tự thay đổi.
+Dù `an` và `binh` cùng thuộc class `Student`, chúng là hai object khác nhau. Khi sửa `an.score`, điểm của `binh` không tự thay đổi.
 
 Một cách hình dung:
 
-\`\`\`text
+```text
 Class Student
   - name: String
   - score: int
@@ -1553,7 +1553,7 @@ Class Student
 Object an                 Object binh
   name  = "An"              name  = "Bình"
   score = 90                score = 75
-\`\`\`
+```
 
 #### Field có giá trị mặc định không?
 
@@ -1561,15 +1561,15 @@ Có. **Instance field** của object được Java gán giá trị mặc định
 
 | Kiểu field | Giá trị mặc định |
 | --- | --- |
-| \`byte\`, \`short\`, \`int\`, \`long\` | \`0\` |
-| \`float\`, \`double\` | \`0.0\` |
-| \`boolean\` | \`false\` |
-| \`char\` | Ký tự \`'\u005cu0000'\` (mã 0) |
-| Kiểu tham chiếu, ví dụ \`String\`, \`Student\` | \`null\` |
+| `byte`, `short`, `int`, `long` | `0` |
+| `float`, `double` | `0.0` |
+| `boolean` | `false` |
+| `char` | Ký tự `'\u005cu0000'` (mã 0) |
+| Kiểu tham chiếu, ví dụ `String`, `Student` | `null` |
 
 Tuy nhiên, **biến cục bộ (local variable)** trong phương thức không tự có giá trị mặc định để bạn sử dụng. Java yêu cầu biến cục bộ được gán trước khi đọc.
 
-\`\`\`java
+```java
 class Example {
     int count; // Instance field: mặc định bằng 0
 
@@ -1580,11 +1580,11 @@ class Example {
         System.out.println(number); // 10
     }
 }
-\`\`\`
+```
 
 #### Phân biệt field, parameter và local variable
 
-\`\`\`java
+```java
 class Rectangle {
     private int width; // Field
 
@@ -1593,13 +1593,13 @@ class Rectangle {
         width = adjusted;
     }
 }
-\`\`\`
+```
 
 | Loại | Khai báo ở đâu? | Tồn tại để làm gì? |
 | --- | --- | --- |
-| Instance field \`width\` | Trong class, ngoài method | Lưu trạng thái riêng của object |
-| Parameter \`newWidth\` | Danh sách tham số của method | Nhận giá trị được truyền khi gọi method |
-| Local variable \`adjusted\` | Trong thân method | Giữ kết quả trung gian khi thực thi |
+| Instance field `width` | Trong class, ngoài method | Lưu trạng thái riêng của object |
+| Parameter `newWidth` | Danh sách tham số của method | Nhận giá trị được truyền khi gọi method |
+| Local variable `adjusted` | Trong thân method | Giữ kết quả trung gian khi thực thi |
 
 **Cần nhớ:** Field có thể vẫn tồn tại cùng object sau khi phương thức kết thúc. Local variable trong lần gọi method đó không phải một phần trạng thái lâu dài của object.
 
@@ -1607,77 +1607,77 @@ class Rectangle {
 
 Cấu trúc thông dụng:
 
-\`\`\`java
+```java
 accessModifier returnType methodName(parameterType parameterName) {
     // Các câu lệnh xử lý
 }
-\`\`\`
+```
 
 Ví dụ:
 
-\`\`\`java
+```java
 public int add(int a, int b) {
     return a + b;
 }
-\`\`\`
+```
 
 Các thành phần:
 
 | Thành phần | Trong ví dụ | Ý nghĩa |
 | --- | --- | --- |
-| \`public\` | Access modifier | Quy định phạm vi được phép gọi |
-| \`int\` | Return type | Kiểu giá trị phương thức trả về |
-| \`add\` | Method name | Tên phương thức |
-| \`int a, int b\` | Parameters | Những giá trị mà phương thức cần |
-| \`return a + b;\` | Return statement | Trả kết quả và kết thúc lời gọi |
+| `public` | Access modifier | Quy định phạm vi được phép gọi |
+| `int` | Return type | Kiểu giá trị phương thức trả về |
+| `add` | Method name | Tên phương thức |
+| `int a, int b` | Parameters | Những giá trị mà phương thức cần |
+| `return a + b;` | Return statement | Trả kết quả và kết thúc lời gọi |
 
 Phương thức có thể **không có tham số**:
 
-\`\`\`java
+```java
 void ring() {
     System.out.println("Ting!");
 }
-\`\`\`
+```
 
 Phương thức cũng có thể **không trả về giá trị**:
 
-\`\`\`java
+```java
 void printGreeting(String name) {
     System.out.println("Xin chào " + name);
 }
-\`\`\`
+```
 
-Kiểu \`void\` thể hiện rằng người gọi không nhận một giá trị trả về từ phương thức. Phương thức \`void\` vẫn có thể dùng \`return;\` để kết thúc sớm.
+Kiểu `void` thể hiện rằng người gọi không nhận một giá trị trả về từ phương thức. Phương thức `void` vẫn có thể dùng `return;` để kết thúc sớm.
 
-Ngược lại, với một phương thức khai báo \`int\`, mỗi đường đi hoàn tất bình thường phải cung cấp kết quả phù hợp:
+Ngược lại, với một phương thức khai báo `int`, mỗi đường đi hoàn tất bình thường phải cung cấp kết quả phù hợp:
 
-\`\`\`java
+```java
 int square(int number) {
     return number * number;
 }
-\`\`\`
+```
 
-Lệnh \`return\` kết thúc lời gọi hiện tại. Những dòng phía sau \`return\` vô điều kiện trong cùng khối không thể thực thi sẽ bị Java báo lỗi *unreachable statement*.
+Lệnh `return` kết thúc lời gọi hiện tại. Những dòng phía sau `return` vô điều kiện trong cùng khối không thể thực thi sẽ bị Java báo lỗi *unreachable statement*.
 
 #### Tham số khác đối số như thế nào?
 
 Trong khai báo:
 
-\`\`\`java
+```java
 int multiply(int x, int y) {
     return x * y;
 }
-\`\`\`
+```
 
-\`x\` và \`y\` là **parameters (tham số hình thức)**.
+`x` và `y` là **parameters (tham số hình thức)**.
 
 Trong lời gọi:
 
-\`\`\`java
+```java
 int result = calculator.multiply(4, 5);
-\`\`\`
+```
 
-\`4\` và \`5\` là **arguments (đối số thực tế)** được truyền vào phương thức.
+`4` và `5` là **arguments (đối số thực tế)** được truyền vào phương thức.
 
 Không phải phương thức nào cũng nhận đúng một hoặc hai đối số. Số lượng, thứ tự và kiểu đối số phải phù hợp với khai báo hoặc một overload được Java chọn.
 
@@ -1687,19 +1687,19 @@ Có ba tình huống thường gặp.
 
 #### A. Gọi phương thức trên một object cụ thể
 
-\`\`\`java
+```java
 Lamp lamp = new Lamp();
 lamp.turnOn();
 lamp.showStatus();
-\`\`\`
+```
 
-Đây là **instance method call**: \`lamp\` là biểu thức tham chiếu đến một object; Java thực thi \`turnOn()\` trên object đó.
+Đây là **instance method call**: `lamp` là biểu thức tham chiếu đến một object; Java thực thi `turnOn()` trên object đó.
 
 Nếu object có state, phương thức có thể dùng và thay đổi state riêng của chính object nhận lời gọi.
 
 #### B. Gọi một phương thức khác ngay trong cùng class
 
-\`\`\`java
+```java
 class Speaker {
     void sayHello() {
         System.out.println("Hello");
@@ -1710,15 +1710,15 @@ class Speaker {
         sayHello();
     }
 }
-\`\`\`
+```
 
-Khi \`speaker.greetTwice()\` chạy, hai lời gọi \`sayHello()\` được thực hiện trên cùng object \`speaker\`.
+Khi `speaker.greetTwice()` chạy, hai lời gọi `sayHello()` được thực hiện trên cùng object `speaker`.
 
-Trong instance method, \`sayHello()\` ở đây tương đương với \`this.sayHello()\` về đối tượng nhận lời gọi. \`this\` là tham chiếu đến **object hiện tại**. Khi nhìn thấy \`this\`, bạn có thể hỏi: “Lời gọi này đang làm việc trên object nào?”
+Trong instance method, `sayHello()` ở đây tương đương với `this.sayHello()` về đối tượng nhận lời gọi. `this` là tham chiếu đến **object hiện tại**. Khi nhìn thấy `this`, bạn có thể hỏi: “Lời gọi này đang làm việc trên object nào?”
 
-#### C. Gọi phương thức \`static\` qua tên class
+#### C. Gọi phương thức `static` qua tên class
 
-\`\`\`java
+```java
 class NumberTools {
     static int doubleOf(int value) {
         return value * 2;
@@ -1730,24 +1730,24 @@ public class Main {
         System.out.println(NumberTools.doubleOf(6)); // 12
     }
 }
-\`\`\`
+```
 
-\`doubleOf\` thuộc về **class** theo cú pháp Java, không cần tạo object \`NumberTools\` để gọi. Việc gọi \`NumberTools.doubleOf(6)\` khác với \`lamp.turnOn()\`, vì \`turnOn()\` thực hiện trên một instance cụ thể.
+`doubleOf` thuộc về **class** theo cú pháp Java, không cần tạo object `NumberTools` để gọi. Việc gọi `NumberTools.doubleOf(6)` khác với `lamp.turnOn()`, vì `turnOn()` thực hiện trên một instance cụ thể.
 
-Java cho phép một số cách gọi static method thông qua biểu thức tham chiếu, nhưng **nên dùng tên class** như \`NumberTools.doubleOf(...)\` để tránh hiểu nhầm rằng static method phụ thuộc vào trạng thái instance.
+Java cho phép một số cách gọi static method thông qua biểu thức tham chiếu, nhưng **nên dùng tên class** như `NumberTools.doubleOf(...)` để tránh hiểu nhầm rằng static method phụ thuộc vào trạng thái instance.
 
 ### 5. Ví dụ Java hoàn chỉnh: đối tượng tự quản lý thuộc tính qua phương thức
 
-Đến đây, hãy nâng cấp \`Lamp\` theo cách phù hợp hơn với OOP. Chúng ta muốn:
+Đến đây, hãy nâng cấp `Lamp` theo cách phù hợp hơn với OOP. Chúng ta muốn:
 
 - Mỗi đèn có tên riêng.
 - Độ sáng chỉ nằm trong khoảng từ 0 đến 100.
 - Khi tắt đèn, đèn không phát sáng dù còn nhớ mức độ sáng đã đặt.
 - Mã bên ngoài có thể điều khiển bằng phương thức, không gán trạng thái tùy ý.
 
-Lưu đoạn sau thành **\`Main.java\`** để chạy:
+Lưu đoạn sau thành **`Main.java`** để chạy:
 
-\`\`\`java
+```java
 class Lamp {
     private final String name;
     private boolean on;
@@ -1822,11 +1822,11 @@ public class Main {
         System.out.println(desk.getBrightness());
     }
 }
-\`\`\`
+```
 
 Kết quả:
 
-\`\`\`text
+```text
 Đèn bàn | on=false | brightness=50 | output=0
 80
 80
@@ -1835,71 +1835,71 @@ Kết quả:
 0
 Brightness must be 0..100
 80
-\`\`\`
+```
 
 #### Đọc từng bước thay vì chỉ nhìn kết quả
 
 **Bước 1 — Tạo hai object**
 
-\`\`\`java
+```java
 Lamp desk = new Lamp("Đèn bàn");
 Lamp bedside = new Lamp("Đèn ngủ");
-\`\`\`
+```
 
-Cả hai đều có kiểu \`Lamp\`, nhưng là hai object riêng. Mỗi object có trường \`name\`, \`on\`, \`brightness\` của riêng mình.
+Cả hai đều có kiểu `Lamp`, nhưng là hai object riêng. Mỗi object có trường `name`, `on`, `brightness` của riêng mình.
 
 **Bước 2 — Gọi phương thức đổi trạng thái**
 
-\`\`\`java
+```java
 desk.turnOn();
 desk.setBrightness(80);
-\`\`\`
+```
 
-Lời gọi thứ nhất làm \`desk.on\` thành \`true\`. Lời gọi thứ hai yêu cầu thay đổi độ sáng; class \`Lamp\` kiểm tra giá trị 80 nằm trong khoảng hợp lệ trước khi gán field.
+Lời gọi thứ nhất làm `desk.on` thành `true`. Lời gọi thứ hai yêu cầu thay đổi độ sáng; class `Lamp` kiểm tra giá trị 80 nằm trong khoảng hợp lệ trước khi gán field.
 
 **Bước 3 — Gọi phương thức đọc và tính toán**
 
-\`\`\`java
+```java
 desk.getBrightness();
 desk.currentLightOutput();
 desk.describe();
-\`\`\`
+```
 
-- \`getBrightness()\` đọc độ sáng đã lưu, trả \`int\`.
-- \`currentLightOutput()\` tính ánh sáng thực tế; nếu đèn đang tắt thì kết quả bằng 0.
-- \`describe()\` tạo chuỗi mô tả bằng cách sử dụng cả field và phương thức khác của chính object.
+- `getBrightness()` đọc độ sáng đã lưu, trả `int`.
+- `currentLightOutput()` tính ánh sáng thực tế; nếu đèn đang tắt thì kết quả bằng 0.
+- `describe()` tạo chuỗi mô tả bằng cách sử dụng cả field và phương thức khác của chính object.
 
 Những phương thức này không làm thay đổi trạng thái trong ví dụ.
 
 **Bước 4 — Hai object không dùng chung instance fields**
 
-Khi \`desk\` được bật và đặt độ sáng 80, \`bedside\` vẫn tắt với độ sáng thiết lập ban đầu 50. Điều này thể hiện mỗi object có state riêng.
+Khi `desk` được bật và đặt độ sáng 80, `bedside` vẫn tắt với độ sáng thiết lập ban đầu 50. Điều này thể hiện mỗi object có state riêng.
 
 **Bước 5 — Thao tác không hợp lệ bị từ chối**
 
-\`\`\`java
+```java
 desk.setBrightness(150);
-\`\`\`
+```
 
-Phương thức phát hiện 150 vượt phạm vi 0–100 rồi ném \`IllegalArgumentException\` **trước khi gán**. Vì vậy, \`brightness\` vẫn bằng 80. Điều này cho thấy phương thức có thể là nơi bảo vệ quy tắc của object.
+Phương thức phát hiện 150 vượt phạm vi 0–100 rồi ném `IllegalArgumentException` **trước khi gán**. Vì vậy, `brightness` vẫn bằng 80. Điều này cho thấy phương thức có thể là nơi bảo vệ quy tắc của object.
 
-### 6. \`private\`, \`public\` và \`this\`: chúng giúp tổ chức việc truy cập thế nào?
+### 6. `private`, `public` và `this`: chúng giúp tổ chức việc truy cập thế nào?
 
 Trong ví dụ trên:
 
-\`\`\`java
+```java
 private int brightness;
 public void setBrightness(int newBrightness) { ... }
 public int getBrightness() { ... }
-\`\`\`
+```
 
-- \`private\`: trường chỉ được truy cập trực tiếp trong phạm vi class \`Lamp\` (ngoài một số quy tắc chi tiết về class lồng nhau).
-- \`public\`: phương thức trở thành phần giao diện có thể gọi từ mã ở bên ngoài, với điều kiện object/members liên quan có thể truy cập được theo ngữ cảnh.
-- \`this\`: giúp tham chiếu rõ đến object hiện tại, đặc biệt khi tên tham số trùng tên field.
+- `private`: trường chỉ được truy cập trực tiếp trong phạm vi class `Lamp` (ngoài một số quy tắc chi tiết về class lồng nhau).
+- `public`: phương thức trở thành phần giao diện có thể gọi từ mã ở bên ngoài, với điều kiện object/members liên quan có thể truy cập được theo ngữ cảnh.
+- `this`: giúp tham chiếu rõ đến object hiện tại, đặc biệt khi tên tham số trùng tên field.
 
 Ví dụ:
 
-\`\`\`java
+```java
 class Person {
     private String name;
 
@@ -1911,19 +1911,19 @@ class Person {
         return name;
     }
 }
-\`\`\`
+```
 
-Trong constructor \`Person(String name)\`, tên \`name\` bên phải chỉ tham số; \`this.name\` bên trái là field của object. Nếu viết \`name = name;\`, lệnh chỉ gán tham số cho chính nó và field không được cập nhật.
+Trong constructor `Person(String name)`, tên `name` bên phải chỉ tham số; `this.name` bên trái là field của object. Nếu viết `name = name;`, lệnh chỉ gán tham số cho chính nó và field không được cập nhật.
 
-Không phải mọi field đều cần có \`getX()\` hay \`setX()\`. Với trạng thái chứa quy tắc nghiệp vụ, phương thức như \`withdraw(amount)\`, \`activate()\` hoặc \`cancel()\` có thể thể hiện trách nhiệm rõ hơn setter tự do. Trong bài về đèn, \`setBrightness(...)\` hợp lý vì việc thay đổi độ sáng là một thao tác được phép với kiểm tra đơn giản.
+Không phải mọi field đều cần có `getX()` hay `setX()`. Với trạng thái chứa quy tắc nghiệp vụ, phương thức như `withdraw(amount)`, `activate()` hoặc `cancel()` có thể thể hiện trách nhiệm rõ hơn setter tự do. Trong bài về đèn, `setBrightness(...)` hợp lý vì việc thay đổi độ sáng là một thao tác được phép với kiểm tra đơn giản.
 
-### 7. \`static\` field khác instance field thế nào?
+### 7. `static` field khác instance field thế nào?
 
 Instance field thuộc về từng object. **Static field** thuộc về class và được chia sẻ giữa các instance của class đó.
 
 Ví dụ:
 
-\`\`\`java
+```java
 class Ticket {
     private static int createdCount = 0;
     private final int serial;
@@ -1952,92 +1952,92 @@ public class Main {
         System.out.println(Ticket.getCreatedCount()); // 2
     }
 }
-\`\`\`
+```
 
-Ở đây \`serial\` là instance field; từng vé có số thứ tự riêng. \`createdCount\` là static field; các lần tạo \`Ticket\` cùng cập nhật một bộ đếm ở cấp class.
+Ở đây `serial` là instance field; từng vé có số thứ tự riêng. `createdCount` là static field; các lần tạo `Ticket` cùng cập nhật một bộ đếm ở cấp class.
 
 | Thành viên | Gắn với | Cách gọi/truy cập thường dùng |
 | --- | --- | --- |
-| Instance field | Một object | \`object.field\` nếu được phép truy cập |
-| Instance method | Một object | \`object.method()\` |
-| Static field | Class | \`ClassName.field\` |
-| Static method | Class | \`ClassName.method()\` |
+| Instance field | Một object | `object.field` nếu được phép truy cập |
+| Instance method | Một object | `object.method()` |
+| Static field | Class | `ClassName.field` |
+| Static method | Class | `ClassName.method()` |
 
-Một **static method** không có \`this\`; nó không được trực tiếp dùng instance field như \`brightness\` nếu không có tham chiếu object phù hợp. Ngược lại, instance method có thể truy cập cả instance members của mình lẫn static members theo các quy tắc Java.
+Một **static method** không có `this`; nó không được trực tiếp dùng instance field như `brightness` nếu không có tham chiếu object phù hợp. Ngược lại, instance method có thể truy cập cả instance members của mình lẫn static members theo các quy tắc Java.
 
-Bộ đếm \`createdCount\` ở trên chỉ minh họa sự khác biệt và không bảo đảm an toàn khi nhiều thread cùng tạo đối tượng đồng thời. Nếu ứng dụng cần phát số thứ tự duy nhất thực tế, còn phải thiết kế đồng bộ, lưu trữ và phạm vi định danh thích hợp.
+Bộ đếm `createdCount` ở trên chỉ minh họa sự khác biệt và không bảo đảm an toàn khi nhiều thread cùng tạo đối tượng đồng thời. Nếu ứng dụng cần phát số thứ tự duy nhất thực tế, còn phải thiết kế đồng bộ, lưu trữ và phạm vi định danh thích hợp.
 
 ### 8. Gọi phương thức: kết quả, nhiều đối số và gọi nối tiếp
 
 #### Nhận giá trị được trả về
 
-\`\`\`java
+```java
 int brightness = desk.getBrightness();
 System.out.println(brightness);
-\`\`\`
+```
 
-\`getBrightness()\` khai báo kiểu trả về là \`int\`, nên có thể gán kết quả vào biến \`int\`, truyền làm đối số hoặc dùng trong biểu thức.
+`getBrightness()` khai báo kiểu trả về là `int`, nên có thể gán kết quả vào biến `int`, truyền làm đối số hoặc dùng trong biểu thức.
 
-\`\`\`java
+```java
 if (desk.getBrightness() > 70) {
     System.out.println("Đèn đang đặt mức sáng cao");
 }
-\`\`\`
+```
 
-Nếu phương thức là \`void\`, bạn có thể gọi để thực hiện hành động:
+Nếu phương thức là `void`, bạn có thể gọi để thực hiện hành động:
 
-\`\`\`java
+```java
 desk.turnOn();
-\`\`\`
+```
 
-Nhưng không thể viết \`int x = desk.turnOn();\` vì \`turnOn()\` không trả về giá trị.
+Nhưng không thể viết `int x = desk.turnOn();` vì `turnOn()` không trả về giá trị.
 
 #### Phương thức có nhiều tham số
 
-\`\`\`java
+```java
 class TextTools {
     static String repeat(String text, int times) {
         return text.repeat(times);
     }
 }
-\`\`\`
+```
 
 Gọi:
 
-\`\`\`java
+```java
 String result = TextTools.repeat("Hi", 3);
 System.out.println(result); // HiHiHi
-\`\`\`
+```
 
-Hai đối số \`"Hi"\` và \`3\` được truyền theo đúng vị trí của hai tham số \`String text\`, \`int times\`. Trong Java, \`String.repeat(times)\` yêu cầu \`times >= 0\`; số âm sẽ gây \`IllegalArgumentException\`.
+Hai đối số `"Hi"` và `3` được truyền theo đúng vị trí của hai tham số `String text`, `int times`. Trong Java, `String.repeat(times)` yêu cầu `times >= 0`; số âm sẽ gây `IllegalArgumentException`.
 
 #### Gọi nối tiếp (method chaining)
 
 Nếu phương thức trả về một object, có thể gọi tiếp phương thức trên kết quả đó:
 
-\`\`\`java
+```java
 String input = "  java  ";
 String result = input.trim().toUpperCase();
 System.out.println(result); // JAVA
-\`\`\`
+```
 
 Quá trình:
 
-\`\`\`text
+```text
 input = "  java  "
     -> trim() = "java"
     -> toUpperCase() = "JAVA"
-\`\`\`
+```
 
-Ở đây cả \`trim()\` lẫn \`toUpperCase()\` trả về \`String\`, nên lời gọi tiếp theo là hợp lệ.
+Ở đây cả `trim()` lẫn `toUpperCase()` trả về `String`, nên lời gọi tiếp theo là hợp lệ.
 
-Không phải phương thức nào cũng có thể gọi nối tiếp. \`desk.turnOn().setBrightness(70)\` sẽ không biên dịch vì \`turnOn()\` trả \`void\`.
+Không phải phương thức nào cũng có thể gọi nối tiếp. `desk.turnOn().setBrightness(70)` sẽ không biên dịch vì `turnOn()` trả `void`.
 
 ### 9. Overloading: cùng tên phương thức nhưng khác tham số
 
 Java cho phép một class có nhiều phương thức cùng tên nếu danh sách tham số khác nhau một cách hợp lệ, gọi là **method overloading**.
 
-\`\`\`java
+```java
 class Greeting {
     void sayHello() {
         System.out.println("Xin chào!");
@@ -2063,26 +2063,26 @@ public class Main {
         greeting.sayHello("Bình", 2);
     }
 }
-\`\`\`
+```
 
 Kết quả:
 
-\`\`\`text
+```text
 Xin chào!
 Xin chào, An
 Xin chào, Bình
 Xin chào, Bình
-\`\`\`
+```
 
 Trình biên dịch dựa trên tên, số lượng và kiểu đối số, cùng quy tắc chọn overload của Java, để tìm phương thức phù hợp. **Chỉ thay đổi kiểu trả về không đủ để overload.**
 
 Ví dụ sau là lỗi khai báo trùng phương thức:
 
-\`\`\`java
+```java
 // Không hợp lệ trong cùng class:
 int calculate(int number) { return number; }
 long calculate(int number) { return number; }
-\`\`\`
+```
 
 Trong bài này, cần phân biệt **overloading** với **overriding**: overriding là lớp con cung cấp cách triển khai lại một instance method kế thừa thích hợp; đó là chủ đề của quan hệ kế thừa, còn overloading ở đây là nhiều cách gọi khác nhau nhờ bộ tham số.
 
@@ -2090,9 +2090,9 @@ Trong bài này, cần phân biệt **overloading** với **overriding**: overri
 
 Java **luôn truyền tham số theo giá trị (pass-by-value)**. Điều này thường gây nhầm khi đối số là object.
 
-Với kiểu nguyên thủy như \`int\`, phương thức nhận **bản sao giá trị**:
+Với kiểu nguyên thủy như `int`, phương thức nhận **bản sao giá trị**:
 
-\`\`\`java
+```java
 static void changeNumber(int number) {
     number = 99;
 }
@@ -2102,13 +2102,13 @@ public static void main(String[] args) {
     changeNumber(value);
     System.out.println(value); // 10
 }
-\`\`\`
+```
 
 Với tham chiếu object, phương thức nhận **bản sao của giá trị tham chiếu**; bản sao ấy vẫn trỏ đến cùng object. Vì vậy, phương thức có thể làm thay đổi trạng thái object nếu API cho phép, nhưng không thể gán lại biến tham chiếu ở phía người gọi.
 
 Ví dụ độc lập:
 
-\`\`\`java
+```java
 class Counter {
     int value;
 }
@@ -2134,9 +2134,9 @@ public class Main {
         System.out.println(original.value); // 11
     }
 }
-\`\`\`
+```
 
-\`increment\` sửa chính object mà \`original\` tham chiếu đến. \`replace\` chỉ gán lại **bản sao tham chiếu trong tham số cục bộ**, nên không làm \`original\` trỏ sang object mới.
+`increment` sửa chính object mà `original` tham chiếu đến. `replace` chỉ gán lại **bản sao tham chiếu trong tham số cục bộ**, nên không làm `original` trỏ sang object mới.
 
 Nhìn được cơ chế này sẽ giúp tránh nhầm rằng “Java truyền object theo tham chiếu”. Chính xác hơn là **Java truyền bản sao giá trị của tham chiếu đến object**.
 
@@ -2144,29 +2144,29 @@ Nhìn được cơ chế này sẽ giúp tránh nhầm rằng “Java truyền o
 
 | Ví dụ | Vấn đề | Cách hiểu/sửa |
 | --- | --- | --- |
-| \`lamp.turnOn;\` | Chưa phải cú pháp gọi phương thức trong Java | Dùng \`lamp.turnOn();\` |
-| \`lamp.brightness = -10;\` | Nếu field là \`private\`, mã ngoài không truy cập được | Dùng phương thức được thiết kế, ví dụ \`setBrightness(...)\` |
-| \`lamp.turnOn(10);\` | Không có overload nhận một \`int\` trong ví dụ | Gọi đúng \`turnOn()\` hoặc khai báo overload khi cần |
-| \`int x = lamp.turnOn();\` | Method trả \`void\`, không có giá trị gán cho biến | Chỉ gọi \`lamp.turnOn();\` |
-| \`Lamp.turnOn();\` | \`turnOn()\` là instance method, không phải static | Tạo/tham chiếu object, gọi \`lamp.turnOn()\` |
-| \`lamp.describe().length()\` | Hợp lệ khi \`describe()\` trả \`String\` khác \`null\` | Chaining dựa trên kiểu trả về |
-| \`lamp = null; lamp.turnOn();\` | \`NullPointerException\` khi truy cập instance method qua tham chiếu null | Đảm bảo tham chiếu hợp lệ trước lời gọi |
-| \`person.getName()\` ở nơi không có quyền truy cập | Quy tắc \`private\`/package/\`protected\`/class có thể cấm lời gọi | Thiết kế mức truy cập phù hợp |
+| `lamp.turnOn;` | Chưa phải cú pháp gọi phương thức trong Java | Dùng `lamp.turnOn();` |
+| `lamp.brightness = -10;` | Nếu field là `private`, mã ngoài không truy cập được | Dùng phương thức được thiết kế, ví dụ `setBrightness(...)` |
+| `lamp.turnOn(10);` | Không có overload nhận một `int` trong ví dụ | Gọi đúng `turnOn()` hoặc khai báo overload khi cần |
+| `int x = lamp.turnOn();` | Method trả `void`, không có giá trị gán cho biến | Chỉ gọi `lamp.turnOn();` |
+| `Lamp.turnOn();` | `turnOn()` là instance method, không phải static | Tạo/tham chiếu object, gọi `lamp.turnOn()` |
+| `lamp.describe().length()` | Hợp lệ khi `describe()` trả `String` khác `null` | Chaining dựa trên kiểu trả về |
+| `lamp = null; lamp.turnOn();` | `NullPointerException` khi truy cập instance method qua tham chiếu null | Đảm bảo tham chiếu hợp lệ trước lời gọi |
+| `person.getName()` ở nơi không có quyền truy cập | Quy tắc `private`/package/`protected`/class có thể cấm lời gọi | Thiết kế mức truy cập phù hợp |
 
-Cần lưu ý \`NullPointerException\` không chỉ liên quan đến gọi phương thức. Truy cập instance field qua tham chiếu null cũng có thể gây lỗi. Cách tốt là xác định object đã được tạo và được truyền hợp lệ, thay vì luôn chờ lỗi xuất hiện rồi bắt mọi \`NullPointerException\`.
+Cần lưu ý `NullPointerException` không chỉ liên quan đến gọi phương thức. Truy cập instance field qua tham chiếu null cũng có thể gây lỗi. Cách tốt là xác định object đã được tạo và được truyền hợp lệ, thay vì luôn chờ lỗi xuất hiện rồi bắt mọi `NullPointerException`.
 
 Một hiểu nhầm khác: **tên biến không quyết định object nào được gọi**. Ví dụ:
 
-\`\`\`java
+```java
 Lamp first = new Lamp("Một");
 Lamp second = first;
 
 second.turnOn();
 
 System.out.println(first.isOn()); // true
-\`\`\`
+```
 
-\`first\` và \`second\` là hai biến tham chiếu cùng một object; phương thức \`turnOn()\` thay đổi state của object chung ấy. Nếu tạo bằng hai lần \`new Lamp(...)\`, chúng mới là hai object khác nhau.
+`first` và `second` là hai biến tham chiếu cùng một object; phương thức `turnOn()` thay đổi state của object chung ấy. Nếu tạo bằng hai lần `new Lamp(...)`, chúng mới là hai object khác nhau.
 
 ### 12. Khi nào tạo field, khi nào tạo method?
 
@@ -2174,21 +2174,21 @@ System.out.println(first.isOn()); // true
 
 | Nhu cầu | Thiết kế có thể chọn | Lý do |
 | --- | --- | --- |
-| Nhớ tên đèn sau khi tạo object | Instance field \`name\` | Giá trị là một phần trạng thái |
-| Bật đèn | Instance method \`turnOn()\` | Diễn đạt hành vi đổi trạng thái |
-| Giới hạn độ sáng từ 0 đến 100 | Kiểm tra trong \`setBrightness(int)\` | Mọi lời gọi phải tuân theo quy tắc |
-| Đọc độ sáng hiện tại | \`getBrightness()\` | Trả dữ liệu mà không cho quyền gán trực tiếp |
-| Biết ánh sáng phát ra khi đèn tắt | \`currentLightOutput()\` | Là giá trị tính từ \`on\` và \`brightness\`, không nhất thiết cần thêm field |
-| Chuyển một chuỗi thành chữ hoa | \`String.toUpperCase()\` hoặc hàm xử lý | Không nhất thiết phải lưu trạng thái |
+| Nhớ tên đèn sau khi tạo object | Instance field `name` | Giá trị là một phần trạng thái |
+| Bật đèn | Instance method `turnOn()` | Diễn đạt hành vi đổi trạng thái |
+| Giới hạn độ sáng từ 0 đến 100 | Kiểm tra trong `setBrightness(int)` | Mọi lời gọi phải tuân theo quy tắc |
+| Đọc độ sáng hiện tại | `getBrightness()` | Trả dữ liệu mà không cho quyền gán trực tiếp |
+| Biết ánh sáng phát ra khi đèn tắt | `currentLightOutput()` | Là giá trị tính từ `on` và `brightness`, không nhất thiết cần thêm field |
+| Chuyển một chuỗi thành chữ hoa | `String.toUpperCase()` hoặc hàm xử lý | Không nhất thiết phải lưu trạng thái |
 | Đếm số đối tượng được tạo | Static field, nếu thực sự cần | Dữ liệu cấp class thay vì từng instance |
 
-Cần tránh lưu thừa những field có thể tính lại dễ dàng từ field khác. Ví dụ, nếu lưu cả \`on\`, \`brightness\` và \`currentOutput\`, bạn phải bảo đảm \`currentOutput\` luôn đồng bộ sau mọi lần bật/tắt hoặc đổi độ sáng. Phương thức \`currentLightOutput()\` tính từ hai thông tin gốc sẽ đơn giản hơn trong ví dụ này.
+Cần tránh lưu thừa những field có thể tính lại dễ dàng từ field khác. Ví dụ, nếu lưu cả `on`, `brightness` và `currentOutput`, bạn phải bảo đảm `currentOutput` luôn đồng bộ sau mọi lần bật/tắt hoặc đổi độ sáng. Phương thức `currentLightOutput()` tính từ hai thông tin gốc sẽ đơn giản hơn trong ví dụ này.
 
 ### 13. Tự kiểm tra sau bài học
 
 Đọc class sau:
 
-\`\`\`java
+```java
 class CartItem {
     private final int unitPrice;
     private int quantity;
@@ -2212,23 +2212,23 @@ class CartItem {
         quantity = Math.addExact(quantity, amount);
     }
 }
-\`\`\`
+```
 
 Hãy tự trả lời trước khi xem lời giải:
 
 1. Đâu là **field** và đâu là **method**?
-2. Khi gọi \`item.total()\`, phương thức trả về kiểu gì?
-3. Khi gọi \`item.addQuantity(2)\`, số \`2\` là tham số hay đối số?
-4. \`CartItem item = new CartItem(10, 2);\` rồi \`item.addQuantity(3);\` thì \`item.total()\` bằng bao nhiêu?
-5. Có thể gọi \`CartItem.total()\` mà không có object không?
+2. Khi gọi `item.total()`, phương thức trả về kiểu gì?
+3. Khi gọi `item.addQuantity(2)`, số `2` là tham số hay đối số?
+4. `CartItem item = new CartItem(10, 2);` rồi `item.addQuantity(3);` thì `item.total()` bằng bao nhiêu?
+5. Có thể gọi `CartItem.total()` mà không có object không?
 
 **Lời giải:**
 
-1. \`unitPrice\` và \`quantity\` là instance fields. \`total()\` và \`addQuantity(int)\` là methods. \`CartItem(...)\` là **constructor**, không phải method có kiểu trả về.
-2. \`total()\` trả \`int\`, tính bằng \`unitPrice * quantity\` và dùng \`Math.multiplyExact\` để phát hiện overflow.
-3. \`amount\` trong khai báo là parameter; \`2\` truyền lúc gọi là argument.
-4. Sau khi tạo, \`quantity = 2\`. Gọi \`addQuantity(3)\` làm \`quantity = 5\`. Tổng là \`10 * 5 = 50\`.
-5. Không. \`total()\` là instance method, cần một object phù hợp để gọi.
+1. `unitPrice` và `quantity` là instance fields. `total()` và `addQuantity(int)` là methods. `CartItem(...)` là **constructor**, không phải method có kiểu trả về.
+2. `total()` trả `int`, tính bằng `unitPrice * quantity` và dùng `Math.multiplyExact` để phát hiện overflow.
+3. `amount` trong khai báo là parameter; `2` truyền lúc gọi là argument.
+4. Sau khi tạo, `quantity = 2`. Gọi `addQuantity(3)` làm `quantity = 5`. Tổng là `10 * 5 = 50`.
+5. Không. `total()` là instance method, cần một object phù hợp để gọi.
 
 Khi đọc bất kỳ class Java nào, bạn có thể phân tích theo trình tự: **field nào giữ trạng thái**, **method nào được công khai**, **method nhận gì và trả gì**, **lời gọi diễn ra trên object nào**, và **thay đổi của phương thức có ảnh hưởng đến trạng thái object không**. Nắm chắc những câu hỏi đó sẽ giúp bạn đọc Java code chủ động hơn, thay vì chỉ nhớ cú pháp dấu chấm và ngoặc tròn.
 
