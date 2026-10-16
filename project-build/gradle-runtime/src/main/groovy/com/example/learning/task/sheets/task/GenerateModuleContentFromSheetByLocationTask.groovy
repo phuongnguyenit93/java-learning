@@ -61,5 +61,8 @@ abstract class GenerateModuleContentFromSheetByLocationTask
                 result.status, result.tab, result.gid,
                 result.location, result.milestones, result.file
         )
+        if (result.backup) {
+            logger.lifecycle('[SHEETS-ROADMAP] Original Roadmap backup: {}', result.backup)
+        }
     }
 }

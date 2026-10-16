@@ -58,7 +58,7 @@ class RoadmapSheetImportServiceTest {
     }
 
     @Test
-    void recognizesEmptySkeletonAndPreservesExistingRelations() {
+    void recognizesEmptySkeletonAndUpdatesOldIdsAndRelations() {
         List<Map<String, Object>> candidate = RoadmapSheetImportService.convertRoadmap([
                 ['Lambda', 'Purpose', 'One\nTwo']
         ])
@@ -71,7 +71,7 @@ class RoadmapSheetImportServiceTest {
                 candidate
         )
         assertTrue(imported.contains('# preserved'))
-        assertEquals('UNCHANGED',
+        assertEquals('UPDATE',
                 RoadmapSheetImportService.determineAction(
                         imported.replace('id: lambda', 'id: original-stable-id')
                                 .replace('title: Lambda', 'relatedKnowledge: [Category]\n    title: Lambda'),
@@ -80,7 +80,7 @@ class RoadmapSheetImportServiceTest {
     }
 
     @Test
-    void refusesConflictsAndIncompleteSheet() {
+    void acceptsUpdatedSheetContentButRejectsInvalidSource() {
         List<Map<String, Object>> source = RoadmapSheetImportService.convertRoadmap([
                 ['Lambda', 'Purpose', 'One\nTwo']
         ])
@@ -100,11 +100,89 @@ class RoadmapSheetImportServiceTest {
         expectFailure {
             RoadmapSheetImportService.convertRoadmap([['Lambda', '', 'One']])
         }
+        assertEquals('UPDATE', RoadmapSheetImportService.determineAction(
+                RoadmapSheetImportService.buildYaml(null, source)
+                        .replace('Purpose', 'Changed purpose'),
+                source
+        ))
+    }
+
+    @Test
+    void applyReplacesPopulatedRoadmapBacksUpOldValuesAndIsIdempotent() {
+        File root = temporary.newFolder('sheet-source-of-truth')
+        File destination = RoadmapSheetImportService.resolveDestination(
+                root, 'module/example'
+        )
+        assertTrue(destination.parentFile.mkdirs())
+        String oldFile = '''# <roadmap-schema>
+# old comments stay
+# </roadmap-schema>
+
+roadmap:
+  - id: original-stable-id
+    title: Lambda
+    purpose: old purpose
+    objectives: [Old objective]
+    relatedKnowledge: [Legacy]
+'''
+        destination.setText(oldFile, 'UTF-8')
+        List<Map<String, Object>> sheet = RoadmapSheetImportService.convertRoadmap([
+                ['Lambda', 'New purpose', 'Objective one\nObjective two'],
+                ['Stream', 'New milestone', 'Third objective']
+        ])
+
+        Map dryRun = RoadmapSheetImportService.syncRoadmap(
+                root, destination, oldFile, sheet, false
+        )
+        assertEquals('DRY_RUN', dryRun.status)
+        assertEquals(oldFile, destination.getText('UTF-8'))
+        assertFalse(new File(root, '.gradle/sheet-roadmap-backups').exists())
+
+        Map applied = RoadmapSheetImportService.syncRoadmap(
+                root, destination, oldFile, sheet, true
+        )
+        assertEquals('UPDATED', applied.status)
+        assertTrue((applied.backup as File).isFile())
+        assertEquals(oldFile, (applied.backup as File).getText('UTF-8'))
+        String updated = destination.getText('UTF-8')
+        assertTrue(updated.contains('# old comments stay'))
+        Map yaml = new Yaml(new SafeConstructor(new LoaderOptions())).load(updated)
+        assertEquals(sheet, yaml.roadmap)
+        assertFalse(updated.contains('original-stable-id'))
+        assertFalse(updated.contains('relatedKnowledge'))
+        assertEquals(['lambda', 'stream'], yaml.roadmap*.id)
+
+        Map again = RoadmapSheetImportService.syncRoadmap(
+                root, destination, updated, sheet, true
+        )
+        assertEquals('UNCHANGED', again.status)
+        assertNull(again.backup)
+        assertEquals(updated, destination.getText('UTF-8'))
+        assertEquals(1, (applied.backup as File).parentFile.listFiles().size())
+
+        List<Map<String, Object>> revised = RoadmapSheetImportService.convertRoadmap([
+                ['Lambda', 'Revised later', 'Objective one'],
+                ['Stream', 'New milestone', 'Third objective']
+        ])
+        Map secondUpdate = RoadmapSheetImportService.syncRoadmap(
+                root, destination, updated, revised, true
+        )
+        assertEquals('UPDATED', secondUpdate.status)
+        assertEquals(updated, (secondUpdate.backup as File).getText('UTF-8'))
+        Map current = new Yaml(new SafeConstructor(new LoaderOptions()))
+                .load(destination.getText('UTF-8'))
+        assertEquals(revised, current.roadmap)
+        assertEquals(2, (applied.backup as File).parentFile.listFiles().size())
+    }
+
+    @Test
+    void preservesNonRoadmapYamlByRefusingOverwrite() {
+        List<Map<String, Object>> milestones = RoadmapSheetImportService.convertRoadmap([
+                ['Lambda', 'Purpose', 'Objective']
+        ])
         expectFailure {
             RoadmapSheetImportService.determineAction(
-                    RoadmapSheetImportService.buildYaml(null, source)
-                            .replace('Purpose', 'Changed purpose'),
-                    source
+                    'metadata: protected\nroadmap: []\n', milestones
             )
         }
     }

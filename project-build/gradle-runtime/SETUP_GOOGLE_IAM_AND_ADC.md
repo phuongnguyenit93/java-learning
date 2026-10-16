@@ -306,9 +306,15 @@ Luồng xử lý chung:
 3. Chuyển Title → ID slug + title; Purpose → purpose; mỗi dòng Objectives
    → phần tử danh sách. Chưa tự sinh dependsOn/relatedKnowledge/relatedModules.
 4. Tạo `<I3>/roadmap/vi/roadmap.yml` theo schema, hoặc điền skeleton
-   `roadmap: []` hợp lệ. Nếu đã có milestones, chỉ báo `UNCHANGED` nếu nội
-   dung trùng; không ghi đè ID/relations cũ khi có xung đột.
-5. `APPLY` ghi qua temporary file, atomic move, parse/readback YAML; `DRY_RUN`
+   `roadmap: []` hợp lệ. **Sheet là nguồn chuẩn**: nếu file đã có milestone
+   khác dữ liệu Sheet, đồng bộ **toàn bộ** milestone trong file (trả
+   `UPDATED`), không giữ các ID/relations cũ không xuất hiện ở F/G/H;
+   các quan hệ sẽ được bổ sung sau. Nếu nội dung bằng đúng snapshot Sheet,
+   trả `UNCHANGED`, không sửa file.
+5. Trước mỗi `UPDATED`, backup chính xác bytes của file cũ và xác minh
+   backup tại `.gradle/sheet-roadmap-backups/<đường-dẫn-module>/roadmap/vi/`
+   (thư mục gitignored). `APPLY` ghi qua temporary file, atomic move,
+   parse/readback YAML; `DRY_RUN`
    không ghi gì. ByFiles tiếp tục các tab độc lập nếu có lỗi, báo từng tab
    và summary, sau đó kết thúc FAILED nếu có lỗi. Importer không chỉnh Sheet,
    J3, Gradle metadata hoặc chạy Prime/Worker. YAML trong folder chưa được

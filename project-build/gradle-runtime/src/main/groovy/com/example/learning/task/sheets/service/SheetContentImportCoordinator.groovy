@@ -108,6 +108,7 @@ class SheetContentImportCoordinator {
                 item.status = result.status
                 item.milestones = result.milestones
                 item.file = result.file
+                item.backup = result.backup
             }
             catch (Exception error) {
                 item.status = 'FAILED'

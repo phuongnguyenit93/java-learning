@@ -12,7 +12,11 @@ import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardCopyOption
+import java.nio.file.StandardOpenOption
 import java.text.Normalizer
+import java.time.Instant
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
@@ -22,15 +26,15 @@ import java.util.regex.Pattern
  * the verified Sheet I3 path determines the documentation destination.
  *
  * No AI generation, mutation of Google Sheets or module metadata is involved.
- * A populated Roadmap is never overwritten by this initial importer.
+ * Google Sheets is authoritative for the complete Roadmap milestone list.
  */
 class RoadmapSheetImportService {
 
     private static final String MENU_HEADING = 'Khu vực Menu'
     private static final List<String> EXPECTED_HEADERS =
             ['Tiêu đề', 'Mục đích', 'Mục tiêu học tập'].asImmutable()
-    private static final Pattern EMPTY_ROADMAP_LINE =
-            Pattern.compile('(?m)^roadmap:[ \\t]*\\[\\][ \\t]*(?:\\r?\\n|$)')
+    private static final Pattern ROADMAP_LINE =
+            Pattern.compile('(?m)^roadmap:[^\\r\\n]*(?:\\r?\\n|$)')
 
     Map<String, Object> execute(
             File repositoryRoot,
@@ -134,30 +138,8 @@ class RoadmapSheetImportService {
             throw new GradleException("Roadmap destination is not a file: ${destination}")
         }
 
-        String action = determineAction(before, milestones)
-        String resultYml = action == 'CREATE'
-                ? buildYaml(before, milestones)
-                : null
-
-        if (apply && action == 'CREATE') {
-            // Recheck the source file before any write: never replace a new
-            // or concurrently modified Roadmap after a successful preflight.
-            String latest = existingFile.isFile()
-                    ? existingFile.getText('UTF-8')
-                    : null
-            if (latest != before) {
-                throw new GradleException(
-                        "Roadmap changed during import preflight: ${destination}"
-                )
-            }
-            writeAtomically(destination, resultYml)
-            Map parsed = readYaml(destination.getText('UTF-8'))
-            if (!equivalentRoadmap(parsed.roadmap, milestones)) {
-                throw new GradleException(
-                        "Roadmap readback failed after write: ${destination}"
-                )
-            }
-        }
+        Map<String, Object> sync =
+                syncRoadmap(repositoryRoot, destination, before, milestones, apply)
 
         return [
                 tab       : session.tabTitle,
@@ -165,10 +147,59 @@ class RoadmapSheetImportService {
                 location  : session.moduleLocation,
                 file      : destination,
                 milestones: milestones.size(),
-                status    : action == 'UNCHANGED'
-                        ? 'UNCHANGED'
-                        : (apply ? 'IMPORTED' : 'DRY_RUN')
+                status    : sync.status,
+                backup    : sync.backup
         ]
+    }
+
+    /**
+     * Replace previously generated Roadmap values with the complete Sheet
+     * snapshot, including IDs derived from the current titles. Do not carry
+     * stale milestones or relationships not represented in the Sheet.
+     * UPDATE creates a verified, ignored on-disk backup BEFORE replacement.
+     */
+    static Map<String, Object> syncRoadmap(
+            File repositoryRoot,
+            File destination,
+            String before,
+            List<Map<String, Object>> milestones,
+            boolean apply
+    ) {
+        String action = determineAction(before, milestones)
+        if (action == 'UNCHANGED') {
+            return [status: 'UNCHANGED', backup: null]
+        }
+        String proposed = buildYaml(before, milestones)
+        if (!apply) {
+            return [status: 'DRY_RUN', backup: null]
+        }
+
+        // Abort if another process changed the destination after preflight.
+        String latest = destination.isFile()
+                ? destination.getText('UTF-8')
+                : null
+        if (latest != before) {
+            throw new GradleException("Roadmap changed during import preflight: ${destination}")
+        }
+
+        File backup = null
+        if (action == 'UPDATE') {
+            backup = backupExistingRoadmap(repositoryRoot, destination, before)
+        }
+        // Check once more following backup creation and before replacement.
+        latest = destination.isFile()
+                ? destination.getText('UTF-8')
+                : null
+        if (latest != before) {
+            throw new GradleException("Roadmap changed after backup was made: ${destination}")
+        }
+
+        writeAtomically(destination, proposed)
+        Map parsed = readYaml(destination.getText('UTF-8'))
+        if (parsed.roadmap != milestones) {
+            throw new GradleException("Roadmap exact YAML data readback failed: ${destination}")
+        }
+        return [status: action == 'UPDATE' ? 'UPDATED' : 'IMPORTED', backup: backup]
     }
 
     /**
@@ -293,9 +324,8 @@ class RoadmapSheetImportService {
     }
 
     /**
-     * Imported content is authoritative only for title, purpose, objectives.
-     * Existing IDs and future relations are preserved on equivalent re-runs.
-     * Any real content mismatch is a conflict, not an implicit replacement.
+     * The complete Sheet snapshot is authoritative (including generated IDs).
+     * An exact semantic match is idempotent. Any difference is an update.
      */
     static String determineAction(
             String existing,
@@ -308,41 +338,16 @@ class RoadmapSheetImportService {
         if (!(document.roadmap instanceof List)) {
             throw new GradleException('Existing roadmap.yml does not contain a Roadmap list.')
         }
-        if (!document.roadmap.isEmpty()) {
-            if (equivalentRoadmap(document.roadmap, milestones)) {
-                return 'UNCHANGED'
-            }
-            throw new GradleException(
-                    'Existing Roadmap contains different milestones. Refusing to overwrite IDs or relations.'
-            )
-        }
         if (document.keySet() != ['roadmap'].toSet() ||
-                !EMPTY_ROADMAP_LINE.matcher(existing).find()) {
+                !ROADMAP_LINE.matcher(existing).find()) {
             throw new GradleException(
-                    'Existing Roadmap skeleton has unexpected structure; refusing to replace it.'
+                    'Existing roadmap.yml has unexpected root structure; refusing to replace unrelated YAML.'
             )
         }
-        return 'CREATE'
-    }
-
-    private static boolean equivalentRoadmap(
-            Object existing,
-            List<Map<String, Object>> candidate
-    ) {
-        if (!(existing instanceof List) || existing.size() != candidate.size()) {
-            return false
+        if (document.roadmap == milestones) {
+            return 'UNCHANGED'
         }
-        for (int i = 0; i < candidate.size(); i++) {
-            if (!(existing[i] instanceof Map)) {
-                return false
-            }
-            for (String field : ['title', 'purpose', 'objectives']) {
-                if (existing[i][field] != candidate[i][field]) {
-                    return false
-                }
-            }
-        }
-        return true
+        return document.roadmap.isEmpty() ? 'CREATE' : 'UPDATE'
     }
 
     static String buildYaml(
@@ -354,10 +359,12 @@ class RoadmapSheetImportService {
             prefix = new RoadmapSchemaService().renderCommentBlock('vi') + '\n\n'
         }
         else {
-            Matcher match = EMPTY_ROADMAP_LINE.matcher(existing)
-            if (!match.find() || !existing.substring(match.end()).trim().isEmpty()) {
+            Matcher match = ROADMAP_LINE.matcher(existing)
+            if (!match.find() ||
+                    existing.substring(0, match.start()).readLines()
+                            .any { String line -> line.trim() && !line.trim().startsWith('#') }) {
                 throw new GradleException(
-                        'Unexpected trailing data in Roadmap skeleton; refusing to overwrite.'
+                        'Unexpected content before the Roadmap root; refusing to overwrite.'
                 )
             }
             prefix = existing.substring(0, match.start())
@@ -371,6 +378,46 @@ class RoadmapSheetImportService {
         options.setIndentWithIndicator(true)
         options.setWidth(120)
         return prefix + new Yaml(options).dump([roadmap: milestones])
+    }
+
+    private static File backupExistingRoadmap(
+            File repositoryRoot,
+            File destination,
+            String original
+    ) {
+        try {
+            Path root = repositoryRoot.canonicalFile.toPath()
+            Path relativePath = root.relativize(destination.canonicalFile.toPath())
+            File backupDirectory = new File(
+                    repositoryRoot.canonicalFile,
+                    ".gradle/sheet-roadmap-backups/${relativePath.parent.toString().replace(File.separatorChar, '/' as char)}"
+            )
+            Files.createDirectories(backupDirectory.toPath())
+            String timestamp = DateTimeFormatter.ofPattern('yyyyMMdd-HHmmss-SSS')
+                    .withZone(ZoneOffset.UTC).format(Instant.now())
+            File backup = new File(
+                    backupDirectory,
+                    "roadmap-${timestamp}-${UUID.randomUUID()}.yml"
+            )
+            byte[] originalBytes = Files.readAllBytes(destination.toPath())
+            if (new String(originalBytes, StandardCharsets.UTF_8) != original) {
+                throw new GradleException("Roadmap changed before backup: ${destination}")
+            }
+            Files.write(
+                    backup.toPath(), originalBytes,
+                    StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE
+            )
+            if (!Arrays.equals(Files.readAllBytes(backup.toPath()), originalBytes)) {
+                throw new GradleException("Roadmap backup readback failed: ${backup}")
+            }
+            return backup
+        }
+        catch (IOException exception) {
+            throw new GradleException(
+                    "Could not back up existing Roadmap before replacing ${destination}.",
+                    exception
+            )
+        }
     }
 
     private static Map readYaml(String content) {

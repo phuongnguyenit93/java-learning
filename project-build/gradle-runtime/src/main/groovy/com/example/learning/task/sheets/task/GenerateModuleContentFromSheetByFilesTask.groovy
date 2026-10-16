@@ -66,16 +66,20 @@ abstract class GenerateModuleContentFromSheetByFilesTask extends DefaultTask {
                         '[SHEETS-FILES] {} tab="{}" (gid={}), milestones={}, target={}',
                         item.status, item.tab, item.gid, item.milestones, item.file
                 )
+                if (item.backup) {
+                    logger.lifecycle('[SHEETS-FILES] Original Roadmap backup: {}', item.backup)
+                }
             }
         }
         logger.lifecycle(
-                '[SHEETS-FILES] SUMMARY total={}, failed={}, skipped-empty={}, unchanged={}, dry-run={}, imported={}',
+                '[SHEETS-FILES] SUMMARY total={}, failed={}, skipped-empty={}, unchanged={}, dry-run={}, imported={}, updated={}',
                 report.total,
                 report.failed,
                 report.results.count { it.status == 'SKIPPED_EMPTY' },
                 report.results.count { it.status == 'UNCHANGED' },
                 report.results.count { it.status == 'DRY_RUN' },
-                report.results.count { it.status == 'IMPORTED' }
+                report.results.count { it.status == 'IMPORTED' },
+                report.results.count { it.status == 'UPDATED' }
         )
         if (report.failed > 0) {
             throw new GradleException(
