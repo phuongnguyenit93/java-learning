@@ -1,1 +1,0 @@
-﻿# Compact Object Headers

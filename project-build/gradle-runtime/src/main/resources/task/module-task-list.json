@@ -1,6 +1,7 @@
 [
   {"type": "env", "propCheck": "BUILD_ENV"},
   {"type": "readme", "propCheck": "BUILD_README"},
+  {"type": "sheets", "propCheck": ""},
   {"type": "yml", "propCheck": "BUILD_YML"},
   {"type": "intellij", "propCheck": ""},
   {"type": "swagger", "propCheck": "BUILD_SWAGGER"},

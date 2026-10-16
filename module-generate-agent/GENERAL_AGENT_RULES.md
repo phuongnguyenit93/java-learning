@@ -42,6 +42,7 @@ STEP_10_COMMIT.md
 
 rules/**
 → mandatory cross-cutting execution rules; every current file in this folder must be read before execution begins
+→ PRIME_RULES.md is mandatory Prime orchestration and per-sheet Current STEP recording policy
 → MODULE_CONTENT_RULES.md is canonical for beginner-first pedagogy,
   prerequisite evidence, WHAT/WHY/RELATION→HOW/EVIDENCE and Knowledge title quality
 ```
@@ -63,6 +64,7 @@ Before beginning **any** module-generation execution, authoring, review, worker 
 Do not cherry-pick only the rule file that appears relevant. The entire current `rules/` folder is a mandatory cross-cutting rule set so newly added rules automatically become part of execution governance without requiring every caller to know their filenames in advance.
 
 If the contents of `rules/` change materially during a long-running workflow, re-enumerate and re-read the complete folder before the next STEP or parent phase begins.
+Before every STEP, Prime must verify that the complete current rules-folder context is understood; after compaction, uncertainty, or forgotten context, re-read the complete folder before assigning or executing work.
 
 Do not load unrelated canonical STEP files as competing authorities; only the CURRENT delegated STEP rule is required after the mandatory cross-cutting `rules/` set has been loaded.
 

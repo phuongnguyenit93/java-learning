@@ -140,6 +140,11 @@ enum ProjectPluginEnum {
             'com.example.learning.task.readme.plugin.ReadmeTaskPlugin'
     ),
 
+    SHEETS_TASK_PLUGIN(
+            'com.example.learning.task.sheets.plugin',
+            'com.example.learning.task.sheets.plugin.SheetsTaskPlugin'
+    ),
+
     SWAGGER_TASK_PLUGIN(
             'com.example.learning.task.swagger.plugin',
             'com.example.learning.task.swagger.plugin.SwaggerTaskPlugin'

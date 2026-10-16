@@ -1,1 +1,0 @@
-# Stream Side Effects and Pitfalls

@@ -1,1 +1,0 @@
-# Spliterator and Characteristics

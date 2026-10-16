@@ -330,6 +330,11 @@ class ModuleOrchestrationPlugin
 
         // ====================================================
         // Task setup
+        //
+        // The single module-level dispatch point for task plugins,
+        // including SHEETS -> importSheetsContent. Task types are
+        // discovered from gradle-runtime's module-task-list.json.
+        // No Google Sheets API wiring is done by orchestration.
         // ====================================================
 
         if (

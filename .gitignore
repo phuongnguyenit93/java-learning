@@ -49,5 +49,7 @@ LIST.md
 
 application-merged.*
 **/task.gradle
+module-generate-info.txt
+module-generate-info1.txt
 
 backup

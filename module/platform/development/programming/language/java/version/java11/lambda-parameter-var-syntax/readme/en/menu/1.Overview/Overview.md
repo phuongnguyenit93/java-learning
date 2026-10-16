@@ -1,1 +1,0 @@
-﻿# Lambda Parameter var Syntax

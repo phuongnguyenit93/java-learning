@@ -1,1 +1,0 @@
-# requires transitive và requires static

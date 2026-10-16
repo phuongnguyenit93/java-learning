@@ -189,12 +189,42 @@ module
 │       │       ├── jetty
 │       │       └── tomcat
 │       └── security
+│           ├── authentication
+│           │   ├── api-key-hmac-authentication
+│           │   ├── certificate-authentication
+│           │   ├── multi-factor-authentication
+│           │   ├── passkeys-webauthn
+│           │   ├── password-authentication
+│           │   ├── session-security
+│           │   └── token-based-authentication
+│           ├── authorization
+│           │   ├── abac
+│           │   ├── object-level-authorization
+│           │   ├── policy-based-access-control
+│           │   ├── privileged-access-management
+│           │   └── rbac
+│           ├── fundamentals
 │           ├── identity-access-management
+│           │   ├── application-default-credentials
+│           │   ├── iam
 │           │   ├── keycloak
-│           │   └── token-lifecycle
-│           └── secrets-management
-│               ├── hashicorp-vault
-│               └── secret-lifecycle
+│           │   ├── oauth2-oidc
+│           │   ├── scim-provisioning
+│           │   ├── service-account
+│           │   ├── spiffe-spire
+│           │   ├── sso-saml
+│           │   ├── token-lifecycle
+│           │   └── workload-identity-federation
+│           ├── key-management
+│           │   ├── kms-hsm
+│           │   └── pki-certificate-lifecycle
+│           ├── secrets-management
+│           │   ├── hashicorp-vault
+│           │   ├── secret-lifecycle
+│           │   └── windows-dpapi
+│           ├── token-security
+│           │   └── jwt
+│           └── zero-trust
 ├── integration
 │   ├── api
 │   │   ├── fundamentals
@@ -383,9 +413,7 @@ module
     │   │   │   ├── spring-ldap
     │   │   │   ├── spring-modulith [SPRING_MODULITH] : Spring Modulith application modules, structural verification, module events, testing, observability and documentation
     │   │   │   ├── spring-rest-docs
-    │   │   │   ├── spring-security
-    │   │   │   │   ├── fundamentals [SPRING_SECURITY_FUNDAMENTALS] : Spring Security fundamentals including filter chain, authentication, authorization, security context, method security and common web protections
-    │   │   │   │   └── oauth2 [SPRING_SECURITY_OAUTH2] : Spring Security OAuth2 and OpenID Connect including clients, resource servers, JWT, scopes and authorization-server concepts
+    │   │   │   ├── spring-security [SPRING_SECURITY] : Spring Security framework architecture and implementation: filters, authentication, authorization, method security, web protections, OAuth2 and OIDC integrations; framework-independent security concepts belong to infrastructure/system/security
     │   │   │   ├── spring-session [SPRING_SESSION] : Spring Session externalized HTTP session management, repositories, Redis/JDBC backing stores and Spring Security integration
     │   │   │   ├── spring-shell
     │   │   │   ├── spring-web-services
@@ -429,153 +457,24 @@ module
     │   │   │       │   └── functional-programming [JAVA_FUNCTIONAL_PROGRAMMING] : Java functional programming with functional interfaces, lambdas, method references, Optional and composition
     │   │   │       └── version
     │   │   │           ├── java10
-    │   │   │           │   ├── application-class-data-sharing [JAVA_10_APPLICATION_CLASS_DATA_SHARING] : Java 10 - Application Class-Data Sharing
-    │   │   │           │   ├── container-awareness [JAVA_10_CONTAINER_AWARENESS] : Java 10 - Container Awareness
-    │   │   │           │   ├── local-variable-type-inference [JAVA_10_LOCAL_VARIABLE_TYPE_INFERENCE] : Java 10 - Local Variable Type Inference
-    │   │   │           │   └── parallel-full-gc-for-g1 [JAVA_10_PARALLEL_FULL_GC_FOR_G1] : Java 10 - Parallel Full GC for G1
     │   │   │           ├── java11
-    │   │   │           │   ├── deployment-stack-removal [JAVA_11_DEPLOYMENT_STACK_REMOVAL] : Java 11 - Deployment Stack Removal
-    │   │   │           │   ├── epsilon-gc [JAVA_11_EPSILON_GC] : Java 11 - Epsilon GC
-    │   │   │           │   ├── flight-recorder [JAVA_11_FLIGHT_RECORDER] : Java 11 - Flight Recorder
-    │   │   │           │   ├── http-client [JAVA_11_HTTP_CLIENT] : Java 11 - HTTP Client
-    │   │   │           │   ├── java-ee-corba-removal [JAVA_11_JAVA_EE_CORBA_REMOVAL] : Java 11 - Java EE and CORBA Module Removal
-    │   │   │           │   ├── lambda-parameter-var-syntax [JAVA_11_LAMBDA_PARAMETER_VAR_SYNTAX] : Java 11 - Lambda Parameter var Syntax
-    │   │   │           │   ├── single-file-source-code-launch [JAVA_11_SINGLE_FILE_SOURCE_CODE_LAUNCH] : Java 11 - Single-File Source-Code Launch
-    │   │   │           │   ├── tls13 [JAVA_11_TLS13] : Java 11 - TLS 1.3
-    │   │   │           │   └── zgc-experimental [JAVA_11_ZGC_EXPERIMENTAL] : Java 11 - ZGC Experimental
     │   │   │           ├── java14
-    │   │   │           │   ├── cms-gc-removal [JAVA_14_CMS_GC_REMOVAL] : Java 14 - CMS Garbage Collector Removal
-    │   │   │           │   ├── helpful-null-pointer-exceptions [JAVA_14_HELPFUL_NULL_POINTER_EXCEPTIONS] : Java 14 - Helpful NullPointerExceptions
-    │   │   │           │   ├── jfr-event-streaming [JAVA_14_JFR_EVENT_STREAMING] : Java 14 - JFR Event Streaming
-    │   │   │           │   ├── numa-aware-g1 [JAVA_14_NUMA_AWARE_G1] : Java 14 - NUMA-Aware G1
-    │   │   │           │   ├── pack200-removal [JAVA_14_PACK200_REMOVAL] : Java 14 - Pack200 Removal
-    │   │   │           │   └── switch-expressions [JAVA_14_SWITCH_EXPRESSIONS] : Java 14 - Switch Expressions
     │   │   │           ├── java15
-    │   │   │           │   ├── biased-locking-disabled [JAVA_15_BIASED_LOCKING_DISABLED] : Java 15 - Biased Locking Disabled
-    │   │   │           │   ├── eddsa [JAVA_15_EDDSA] : Java 15 - EdDSA
-    │   │   │           │   ├── hidden-classes [JAVA_15_HIDDEN_CLASSES] : Java 15 - Hidden Classes
-    │   │   │           │   ├── nashorn-removal [JAVA_15_NASHORN_REMOVAL] : Java 15 - Nashorn Removal
-    │   │   │           │   ├── shenandoah-production [JAVA_15_SHENANDOAH_PRODUCTION] : Java 15 - Shenandoah Production
-    │   │   │           │   ├── solaris-sparc-port-removal [JAVA_15_SOLARIS_SPARC_PORT_REMOVAL] : Java 15 - Solaris and SPARC Port Removal
-    │   │   │           │   ├── text-blocks [JAVA_15_TEXT_BLOCKS] : Java 15 - Text Blocks
-    │   │   │           │   └── zgc-production [JAVA_15_ZGC_PRODUCTION] : Java 15 - ZGC Production
     │   │   │           ├── java16
-    │   │   │           │   ├── elastic-metaspace [JAVA_16_ELASTIC_METASPACE] : Java 16 - Elastic Metaspace
-    │   │   │           │   ├── jpackage [JAVA_16_JPACKAGE] : Java 16 - jpackage
-    │   │   │           │   ├── pattern-matching-instanceof [JAVA_16_PATTERN_MATCHING_INSTANCEOF] : Java 16 - Pattern Matching for instanceof
-    │   │   │           │   ├── record [JAVA_RECORD]
-    │   │   │           │   ├── strong-encapsulation-by-default [JAVA_16_STRONG_ENCAPSULATION_BY_DEFAULT] : Java 16 - Strong Encapsulation by Default
-    │   │   │           │   └── unix-domain-socket-channels [JAVA_16_UNIX_DOMAIN_SOCKET_CHANNELS] : Java 16 - Unix-Domain Socket Channels
     │   │   │           ├── java17
-    │   │   │           │   ├── context-specific-deserialization-filters [JAVA_17_CONTEXT_SPECIFIC_DESERIALIZATION_FILTERS] : Java 17 - Context-Specific Deserialization Filters
-    │   │   │           │   ├── enhanced-prng [JAVA_17_ENHANCED_PRNG] : Java 17 - Enhanced Pseudo-Random Number Generators
-    │   │   │           │   ├── macos-aarch64-port [JAVA_17_MACOS_AARCH64_PORT] : Java 17 - macOS AArch64 Port
-    │   │   │           │   ├── sealed-classes [JAVA_17_SEALED_CLASSES] : Java 17 - Sealed Classes
-    │   │   │           │   ├── security-manager-deprecated-for-removal [JAVA_17_SECURITY_MANAGER_DEPRECATED_FOR_REMOVAL] : Java 17 - Security Manager Deprecated for Removal
-    │   │   │           │   ├── strict-floating-point-semantics [JAVA_17_STRICT_FLOATING_POINT_SEMANTICS] : Java 17 - Always-Strict Floating-Point Semantics
-    │   │   │           │   └── strong-encapsulation [JAVA_17_STRONG_ENCAPSULATION] : Java 17 - Strong Encapsulation
     │   │   │           ├── java18
-    │   │   │           │   ├── core-reflection-method-handles [JAVA_18_CORE_REFLECTION_METHOD_HANDLES] : Java 18 - Core Reflection Reimplemented with Method Handles
-    │   │   │           │   ├── finalization-deprecated-for-removal [JAVA_18_FINALIZATION_DEPRECATED_FOR_REMOVAL] : Java 18 - Finalization Deprecated for Removal
-    │   │   │           │   ├── inet-address-resolver-spi [JAVA_18_INET_ADDRESS_RESOLVER_SPI] : Java 18 - InetAddress Resolver SPI
-    │   │   │           │   ├── javadoc-code-snippets [JAVA_18_JAVADOC_CODE_SNIPPETS] : Java 18 - Javadoc Code Snippets
-    │   │   │           │   ├── simple-web-server [JAVA_18_SIMPLE_WEB_SERVER] : Java 18 - Simple Web Server
-    │   │   │           │   └── utf8-by-default [JAVA_18_UTF8_BY_DEFAULT] : Java 18 - UTF-8 by Default
     │   │   │           ├── java21
-    │   │   │           │   ├── generational-zgc [JAVA_21_GENERATIONAL_ZGC] : Java 21 - Generational ZGC
-    │   │   │           │   ├── kem-api [JAVA_21_KEM_API] : Java 21 - Key Encapsulation Mechanism API
-    │   │   │           │   ├── pattern-matching-switch [JAVA_21_PATTERN_MATCHING_SWITCH] : Java 21 - Pattern Matching for switch
-    │   │   │           │   ├── record-patterns [JAVA_21_RECORD_PATTERNS] : Java 21 - Record Patterns
-    │   │   │           │   ├── sequenced-collections [JAVA_21_SEQUENCED_COLLECTIONS] : Java 21 - Sequenced Collections
-    │   │   │           │   └── virtual-threads [JAVA_21_VIRTUAL_THREADS] : Java 21 - Virtual Threads
     │   │   │           ├── java22
-    │   │   │           │   ├── foreign-function-memory-api [JAVA_22_FOREIGN_FUNCTION_MEMORY_API] : Java 22 - Foreign Function and Memory API
-    │   │   │           │   ├── g1-region-pinning [JAVA_22_G1_REGION_PINNING] : Java 22 - G1 Region Pinning
-    │   │   │           │   ├── multi-file-source-code-launch [JAVA_22_MULTI_FILE_SOURCE_CODE_LAUNCH] : Java 22 - Multi-File Source-Code Launch
-    │   │   │           │   └── unnamed-variables-and-patterns [JAVA_22_UNNAMED_VARIABLES_AND_PATTERNS] : Java 22 - Unnamed Variables and Patterns
     │   │   │           ├── java23
-    │   │   │           │   ├── generational-zgc-default [JAVA_23_GENERATIONAL_ZGC_DEFAULT] : Java 23 - Generational ZGC by Default
-    │   │   │           │   └── markdown-documentation-comments [JAVA_23_MARKDOWN_DOCUMENTATION_COMMENTS] : Java 23 - Markdown Documentation Comments
     │   │   │           ├── java24
-    │   │   │           │   ├── aot-class-loading-linking [JAVA_24_AOT_CLASS_LOADING_LINKING] : Java 24 - Ahead-of-Time Class Loading and Linking
-    │   │   │           │   ├── class-file-api [JAVA_CLASS_FILE_API] : Java 24 standard Class-File API
-    │   │   │           │   ├── generational-zgc-only [JAVA_24_GENERATIONAL_ZGC_ONLY] : Java 24 - Generational ZGC Only
-    │   │   │           │   ├── ml-dsa [JAVA_24_ML_DSA] : Java 24 - ML-DSA
-    │   │   │           │   ├── ml-kem [JAVA_24_ML_KEM] : Java 24 - ML-KEM
-    │   │   │           │   ├── security-manager-disabled [JAVA_24_SECURITY_MANAGER_DISABLED] : Java 24 - Security Manager Permanently Disabled
-    │   │   │           │   ├── stream-gatherers [JAVA_24_STREAM_GATHERERS] : Java 24 - Stream Gatherers
-    │   │   │           │   └── virtual-thread-synchronization [JAVA_24_VIRTUAL_THREAD_SYNCHRONIZATION] : Java 24 - Synchronize Virtual Threads without Pinning
     │   │   │           ├── java25
-    │   │   │           │   ├── compact-object-headers [JAVA_25_COMPACT_OBJECT_HEADERS] : Java 25 - Compact Object Headers
-    │   │   │           │   ├── compact-source-files-instance-main-methods [JAVA_25_COMPACT_SOURCE_FILES_INSTANCE_MAIN_METHODS] : Java 25 - Compact Source Files and Instance Main Methods
-    │   │   │           │   ├── flexible-constructor-bodies [JAVA_25_FLEXIBLE_CONSTRUCTOR_BODIES] : Java 25 - Flexible Constructor Bodies
-    │   │   │           │   ├── module-import-declarations [JAVA_25_MODULE_IMPORT_DECLARATIONS] : Java 25 - Module Import Declarations
-    │   │   │           │   └── scoped-values [JAVA_25_SCOPED_VALUES] : Java 25 - Scoped Values
     │   │   │           ├── java26
-    │   │   │           │   ├── aot-object-caching-any-gc [JAVA_26_AOT_OBJECT_CACHING_ANY_GC] : Java 26 - Ahead-of-Time Object Caching with Any GC
-    │   │   │           │   ├── applet-api-removal [JAVA_26_APPLET_API_REMOVAL] : Java 26 - Applet API Removal
-    │   │   │           │   ├── final-field-mutation-warnings [JAVA_26_FINAL_FIELD_MUTATION_WARNINGS] : Java 26 - Final Field Mutation Warnings
-    │   │   │           │   ├── g1-throughput [JAVA_26_G1_THROUGHPUT] : Java 26 - G1 Throughput Improvements
-    │   │   │           │   └── http3-client [JAVA_26_HTTP3_CLIENT] : Java 26 - HTTP 3 Client
     │   │   │           ├── java27
-    │   │   │           │   ├── compact-object-headers-default [JAVA_27_COMPACT_OBJECT_HEADERS_DEFAULT] : Java 27 - Compact Object Headers by Default
-    │   │   │           │   ├── g1-default-all-environments [JAVA_27_G1_DEFAULT_ALL_ENVIRONMENTS] : Java 27 - G1 Default in All Environments
-    │   │   │           │   ├── jfr-in-process-data-redaction [JAVA_27_JFR_IN_PROCESS_DATA_REDACTION] : Java 27 - JFR In-Process Data Redaction
-    │   │   │           │   └── post-quantum-hybrid-tls [JAVA_27_POST_QUANTUM_HYBRID_TLS] : Java 27 - Post-Quantum Hybrid Key Exchange for TLS 1.3
     │   │   │           ├── java5
-    │   │   │           │   ├── annotations [JAVA_5_ANNOTATIONS] : Java 5 - Annotations
-    │   │   │           │   ├── autoboxing-unboxing [JAVA_5_AUTOBOXING_UNBOXING] : Java 5 - Autoboxing and Unboxing
-    │   │   │           │   ├── class-data-sharing [JAVA_5_CLASS_DATA_SHARING] : Java 5 - Class Data Sharing
-    │   │   │           │   ├── concurrency-utilities [JAVA_5_CONCURRENCY_UTILITIES] : Java 5 - Concurrency Utilities
-    │   │   │           │   ├── enhanced-for-loop [JAVA_5_ENHANCED_FOR_LOOP] : Java 5 - Enhanced For Loop
-    │   │   │           │   ├── enums [JAVA_5_ENUMS] : Java 5 - Enums
-    │   │   │           │   ├── generics [JAVA_5_GENERICS] : Java 5 - Generics
-    │   │   │           │   ├── static-import [JAVA_5_STATIC_IMPORT] : Java 5 - Static Import
-    │   │   │           │   └── varargs [JAVA_5_VARARGS] : Java 5 - Varargs
     │   │   │           ├── java6
-    │   │   │           │   ├── annotation-processing-api [JAVA_6_ANNOTATION_PROCESSING_API] : Java 6 - Annotation Processing API
-    │   │   │           │   ├── compiler-api [JAVA_6_COMPILER_API] : Java 6 - Compiler API
-    │   │   │           │   ├── jdbc4 [JAVA_6_JDBC4] : Java 6 - JDBC 4
-    │   │   │           │   ├── scripting-api [JAVA_6_SCRIPTING_API] : Java 6 - Scripting API
-    │   │   │           │   └── service-loader [JAVA_6_SERVICE_LOADER] : Java 6 - ServiceLoader
     │   │   │           ├── java7
-    │   │   │           │   ├── binary-literals [JAVA_7_BINARY_LITERALS] : Java 7 - Binary Literals
-    │   │   │           │   ├── diamond-operator [JAVA_7_DIAMOND_OPERATOR] : Java 7 - Diamond Operator
-    │   │   │           │   ├── fork-join [JAVA_7_FORK_JOIN] : Java 7 - Fork Join Framework
-    │   │   │           │   ├── invokedynamic [JAVA_7_INVOKEDYNAMIC] : Java 7 - invokedynamic
-    │   │   │           │   ├── method-handles [JAVA_7_METHOD_HANDLES] : Java 7 - Method Handles
-    │   │   │           │   ├── multi-catch [JAVA_7_MULTI_CATCH] : Java 7 - Multi-Catch
-    │   │   │           │   ├── nio2 [JAVA_7_NIO2] : Java 7 - NIO.2
-    │   │   │           │   ├── precise-rethrow [JAVA_7_PRECISE_RETHROW] : Java 7 - Precise Rethrow
-    │   │   │           │   ├── strings-in-switch [JAVA_7_STRINGS_IN_SWITCH] : Java 7 - Strings in Switch
-    │   │   │           │   ├── try-with-resources [JAVA_7_TRY_WITH_RESOURCES] : Java 7 - Try-With-Resources
-    │   │   │           │   └── underscores-in-numeric-literals [JAVA_7_UNDERSCORES_IN_NUMERIC_LITERALS] : Java 7 - Underscores in Numeric Literals
     │   │   │           ├── java8
-    │   │   │           │   ├── base64-api [JAVA_8_BASE64_API] : Java 8 - Base64 API
-    │   │   │           │   ├── completable-future [JAVA_8_COMPLETABLE_FUTURE] : Java 8 - CompletableFuture
-    │   │   │           │   ├── date-time-api [JAVA_8_DATE_TIME_API] : Java 8 - Date-Time API
-    │   │   │           │   ├── default-interface-methods [JAVA_8_DEFAULT_INTERFACE_METHODS] : Java 8 - Default Interface Methods
-    │   │   │           │   ├── functional-interfaces [JAVA_8_FUNCTIONAL_INTERFACES] : Java 8 - Functional Interfaces
-    │   │   │           │   ├── lambda-expressions [JAVA_8_LAMBDA_EXPRESSIONS] : Java 8 - Lambda Expressions
-    │   │   │           │   ├── metaspace [JAVA_8_METASPACE] : Java 8 - Metaspace
-    │   │   │           │   ├── method-references [JAVA_8_METHOD_REFERENCES] : Java 8 - Method References
-    │   │   │           │   ├── nashorn-javascript-engine [JAVA_8_NASHORN_JAVASCRIPT_ENGINE] : Java 8 - Nashorn JavaScript Engine
-    │   │   │           │   ├── optional [JAVA_8_OPTIONAL] : Java 8 - Optional
-    │   │   │           │   ├── repeatable-annotations [JAVA_8_REPEATABLE_ANNOTATIONS] : Java 8 - Repeatable Annotations
-    │   │   │           │   ├── stream-api [JAVA_STREAM_API] : Java Stream API
-    │   │   │           │   └── type-annotations [JAVA_8_TYPE_ANNOTATIONS] : Java 8 - Type Annotations
     │   │   │           └── java9
-    │   │   │               ├── collection-factory-methods [JAVA_9_COLLECTION_FACTORY_METHODS] : Java 9 - Collection Factory Methods
-    │   │   │               ├── compact-strings [JAVA_9_COMPACT_STRINGS] : Java 9 - Compact Strings
-    │   │   │               ├── flow-api [JAVA_9_FLOW_API] : Java 9 - Flow API
-    │   │   │               ├── g1-default-gc [JAVA_9_G1_DEFAULT_GC] : Java 9 - G1 as Default Garbage Collector
-    │   │   │               ├── jlink [JAVA_9_JLINK] : Java 9 - jlink
-    │   │   │               ├── jshell [JAVA_9_JSHELL] : Java 9 - JShell
-    │   │   │               ├── module-system [JAVA_MODULE_SYSTEM] : Java Platform Module System
-    │   │   │               ├── multi-release-jar [JAVA_9_MULTI_RELEASE_JAR] : Java 9 - Multi-Release JAR
-    │   │   │               ├── private-interface-methods [JAVA_9_PRIVATE_INTERFACE_METHODS] : Java 9 - Private Interface Methods
-    │   │   │               ├── process-api-updates [JAVA_9_PROCESS_API_UPDATES] : Java 9 - Process API Updates
-    │   │   │               └── stack-walking-api [JAVA_9_STACK_WALKING_API] : Java 9 - Stack-Walking API
     │   │   └── paradigm
     │   │       ├── imperative [IMPERATIVE_PROGRAMMING] : Imperative Programming paradigm, state, commands and procedural organization
     │   │       ├── declarative [DECLARATIVE_PROGRAMMING] : Declarative Programming paradigm, intent-oriented specification and related styles

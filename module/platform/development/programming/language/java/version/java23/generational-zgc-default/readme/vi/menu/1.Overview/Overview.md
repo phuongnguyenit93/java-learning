@@ -1,1 +1,0 @@
-﻿# Generational ZGC by Default

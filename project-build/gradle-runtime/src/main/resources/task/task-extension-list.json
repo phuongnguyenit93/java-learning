@@ -19,5 +19,16 @@
                 "provider": "String"
             }
         }
+    ],
+    "SHEETS": [
+        {
+            "extension": "GenerateModuleContentFromSheetExtension",
+            "name": "generateModuleContentFromSheet",
+            "path": "gradle-runtime/src/main/groovy/com/example/learning/task/sheets/extension/GenerateModuleContentFromSheetExtension.groovy",
+            "fields": {
+                "sheetId": "String",
+                "fileUrl": "String"
+            }
+        }
     ]
 }

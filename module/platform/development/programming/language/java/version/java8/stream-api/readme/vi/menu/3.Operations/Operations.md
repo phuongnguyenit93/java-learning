@@ -1,1 +1,0 @@
-# Source, Intermediate và Terminal Operation

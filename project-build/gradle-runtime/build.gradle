@@ -17,6 +17,8 @@ dependencies {
     implementation 'com.vladsch.flexmark:flexmark:0.64.8'
     implementation 'org.apache.httpcomponents.client5:httpclient5:5.4.4'
     implementation 'com.github.javaparser:javaparser-symbol-solver-core:3.28.2'
+    implementation 'com.google.auth:google-auth-library-oauth2-http:1.54.0'
+    implementation 'com.google.apis:google-api-services-sheets:v4-rev20260930-2.0.0'
 }
 
 apply from: "${projectDir}/gradle/generate-project-plugin-template.gradle"

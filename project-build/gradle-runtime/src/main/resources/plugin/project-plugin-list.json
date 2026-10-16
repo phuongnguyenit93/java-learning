@@ -125,6 +125,11 @@
         "implementationClass": "com.example.learning.task.readme.plugin.ReadmeTaskPlugin"
     },
     {
+        "name": "sheetsTaskPlugin",
+        "id": "com.example.learning.task.sheets.plugin",
+        "implementationClass": "com.example.learning.task.sheets.plugin.SheetsTaskPlugin"
+    },
+    {
         "name": "swaggerTaskPlugin",
         "id": "com.example.learning.task.swagger.plugin",
         "implementationClass": "com.example.learning.task.swagger.plugin.SwaggerTaskPlugin"
