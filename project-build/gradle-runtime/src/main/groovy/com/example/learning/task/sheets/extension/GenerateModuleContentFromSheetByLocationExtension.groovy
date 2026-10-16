@@ -6,7 +6,7 @@ import org.gradle.api.provider.Property
  * Module-local configuration for the Google Sheets content generator.
  * sheetId is the tab gid; fileUrl identifies the spreadsheet document.
  */
-abstract class GenerateModuleContentFromSheetExtension {
+abstract class GenerateModuleContentFromSheetByLocationExtension {
 
     abstract Property<String> getSheetId()
 

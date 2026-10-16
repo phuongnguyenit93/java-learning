@@ -1,7 +1,7 @@
 package com.example.learning.task.sheets.plugin
 
-import com.example.learning.task.sheets.extension.GenerateModuleContentFromSheetExtension
-import com.example.learning.task.sheets.task.GenerateModuleContentFromSheetTask
+import com.example.learning.task.sheets.extension.GenerateModuleContentFromSheetByLocationExtension
+import com.example.learning.task.sheets.task.GenerateModuleContentFromSheetByLocationTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
@@ -9,7 +9,7 @@ import org.gradle.api.Project
  * Registered by TaskSetupPlugin only for modules whose USE_TASK flag
  * is enabled by ModuleOrchestrationPlugin.
  *
- * The task uses ADC at execution time and reads Sheets metadata only.
+ * Credentials are resolved at task execution; I3 must match the module.
  */
 class SheetsTaskPlugin
         implements Plugin<Project> {
@@ -19,22 +19,22 @@ class SheetsTaskPlugin
             Project project
     ) {
 
-        GenerateModuleContentFromSheetExtension extension =
+        GenerateModuleContentFromSheetByLocationExtension extension =
                 project.extensions.create(
-                        'generateModuleContentFromSheet',
-                        GenerateModuleContentFromSheetExtension
+                        'generateModuleContentFromSheetByLocation',
+                        GenerateModuleContentFromSheetByLocationExtension
                 )
 
         project.tasks.register(
-                'generateModuleContentFromSheet',
-                GenerateModuleContentFromSheetTask
+                'generateModuleContentFromSheetByLocation',
+                GenerateModuleContentFromSheetByLocationTask
         ) { task ->
 
             task.group =
                     'sheets'
 
             task.description =
-                    'Verify read-only Google Sheets access for a module (content generation pending).'
+                    'Import selected module Roadmap from Sheet (default DRY_RUN).'
 
             task.modulePath.set(
                     project.path
@@ -46,6 +46,9 @@ class SheetsTaskPlugin
 
             task.fileUrl.set(
                     extension.fileUrl
+            )
+            task.mode.convention(
+                    project.providers.gradleProperty('sheetMode').orElse('DRY_RUN')
             )
         }
     }

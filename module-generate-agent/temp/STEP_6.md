@@ -1,4 +1,4 @@
-# STEP 6 — Video Script Markdown trên Google Sheets (một lượt/worker)
+# STEP 6 — PRIME ONLY: Điều phối Video Script Markdown trên Google Sheets
 
 ## 0. Mục tiêu và phạm vi
 
@@ -9,11 +9,11 @@
 - Tối đa 3 worker ACTIVE + SLEEPING mặc định, ưu tiên tái sử dụng. Mỗi worker sở hữu một chương, một hàng video; các worker làm song song không tranh chấp hàng.
 - Không sửa Knowledge A:M, Template, các tab khác, Gradle/source/video Markdown file, cấu hình BUILD_VIDEO; không commit/push hoặc tự chạy STEP khác.
 
-### Cổng context và vùng worker-only
+### Cổng context và phân tách PRIME / WORKER
 
-Prime phải đọc đầy đủ `module-generate-agent/temp/GENERAL_AGENT_RULES.md`, liệt kê và đọc **mọi file hiện có** trong `module-generate-agent/rules/`, toàn văn STEP 6 này, `module-generate-agent/temp/module-generate-info.txt` và quy tắc Video liên quan trong `module-generate-agent/STEP_6_VIDEO.md`. Đọc lại nếu context bị rút gọn hoặc không chắc chắn.
+**File `STEP_6.md` này chỉ dành cho Prime.** Prime phải đọc đầy đủ `module-generate-agent/temp/GENERAL_AGENT_RULES.md`, liệt kê và đọc **mọi file hiện có** trong `module-generate-agent/rules/`, toàn văn STEP 6 này, **toàn văn `STEP_6_WORKER.md`**, `module-generate-agent/temp/module-generate-info.txt` và quy tắc Video liên quan trong `module-generate-agent/STEP_6_VIDEO.md`. Đọc lại nếu context bị rút gọn hoặc không chắc chắn.
 
-Worker **chỉ đọc các dòng nằm giữa** `BEGIN_WORKER_ONLY_STEP_6` và `END_WORKER_ONLY_STEP_6` bên dưới, **không đọc cả STEP_6.md**. Prime tính lại khoảng dòng mỗi lần giao (không hardcode số dòng); chỉ gửi **link tab + tọa độ nguồn + đúng ô chủ đề + vùng ghi riêng + đường dẫn/đoạn dòng worker-only**. Không gửi Knowledge, kịch bản mẫu từ Prime, lời giải hoặc nội dung chat cũ. Phần worker-only phải đủ để tự làm một lượt.
+**Toàn bộ quy định thực thi của worker nằm riêng trong `/java-learning/module-generate-agent/temp/STEP_6_WORKER.md`.** Worker **chỉ đọc toàn văn file worker-only đó**, không đọc `STEP_6.md`, STEP khác, GENERAL, rules, TXT hay tài liệu nguồn repo khác để nhận hướng dẫn. Prime **không phải tính dòng hay gửi marker** nữa; chỉ gửi **4 dòng**: link tab, tọa độ nguồn/ô Chủ đề, vùng Video Script được ghi và đường dẫn `STEP_6_WORKER.md`. **Không thêm lời dẫn, lệnh, rules, tóm tắt, Knowledge, script mẫu, đáp án hoặc nội dung chat cũ** vào tin nhắn giao việc. Một lần giao = một chương = một Video Markdown hoàn chỉnh.
 
 ---
 
@@ -36,14 +36,14 @@ Worker **chỉ đọc các dòng nằm giữa** `BEGIN_WORKER_ONLY_STEP_6` và `
 ### 2. Prime điền toàn bộ "Chủ đề" trước khi giao worker
 
 1. Lấy **TẤT CẢ Menu Cấp 1 của tab**, không chỉ ba chương đầu hoặc các chương đang giao worker, theo thứ tự xuất hiện ở cột A. Mỗi tên giữ **nguyên văn**, không tự sửa cách viết/đổi nội dung. Thực hiện bước này trước khi giao bất kỳ worker nào.
-2. Ánh xạ tuần tự: Menu Cấp 1 thứ `i` (đếm từ 0) → `N(3+i)`; Video Markdown của chương ấy → `O(3+i):S(3+i)`. Số Scene và độ dài không làm thay đổi hàng của chương kế tiếp.
+2. Ánh xạ tuần tự: Menu Cấp 1 thứ `i` (đếm từ 0) → `N(3+i)`; Video Markdown của chương ấy → `O(3+i):R(3+i)`. Số Scene và độ dài không làm thay đổi hàng của chương kế tiếp.
 3. Preflight **toàn bộ vùng N đích** và O:R trên cùng các hàng (entered value/formula/note), gồm kiểm tra quyền sở hữu. N đã bằng đúng tên chương thì **giữ nguyên**; N trống hoàn toàn mới được ghi tiêu đề; N khác tên, có formula/note hoặc xung đột thì báo blocker, không ghi đè. O:R có script phải bảo toàn và kiểm định, không gán worker ghi mới vào hàng đã chiếm.
 4. Điền **toàn bộ các N còn trống và an toàn** trong một batch hợp lý; đọc lại từng ô N, so khớp chính xác với danh sách A nguồn trước khi giao worker. Nếu có xung đột không thể bảo toàn mapping, ngừng giao các hàng bị ảnh hưởng, không lấp bằng cách chuyển chủ đề sang hàng khác.
 5. Ghi sổ điều phối: `PARENT_CELL, CHILD_ROWS, VIDEO_ROW, TOPIC_CELL, SCRIPT_RANGE, WORKER, STATUS, READBACK, QA, BLOCKER`. Không phải dự đoán `ROWS_NEEDED`.
 
 ### 3. Giao MỘT lần/worker và theo dõi đến hoàn tất
 
-- Mỗi worker được giao chính xác: URL tab; `A1,B1,A<PARENT>,B<children>,C<children>:M<children>`; `N<VIDEO_ROW>` chỉ đọc; `O<VIDEO_ROW>:R<VIDEO_ROW>` vùng ghi **duy nhất**; đường dẫn STEP 6 và khoảng dòng worker-only.
+- Mỗi worker được giao chính xác: URL tab; `A1,B1,A<PARENT>,B<children>,C<children>:M<children>`; `N<VIDEO_ROW>` chỉ đọc; `O<VIDEO_ROW>:R<VIDEO_ROW>` vùng ghi **duy nhất**; và đường dẫn **`STEP_6_WORKER.md`**. Không truyền nội dung ô hay các đoạn tóm tắt vào tin nhắn.
 - Prime **đã phân bổ hàng trước**: không cần PREPARE, chờ trả về số Scene, rồi gửi chat WRITE; worker tự làm đến COMPLETED trong **một phiên giao việc**.
 - Chỉ một worker chịu trách nhiệm viết trên từng hàng. Nhiều worker có thể ghi **các hàng khác nhau** đồng thời. Kiểm tra nguồn/sẵn sàng của từng chương độc lập.
 - Khi worker xong, Prime đọc lại Markdown **ghép O→R không separator**, kiểm tra H1/H2/Scene/Transition/Time/Visual/Script/Purpose, Java correctness, chính tả, coverage từng B và chất lượng sư phạm. Xác nhận không chạm Knowledge/J3/ô ngoài vùng. `COMPLETED` đòi hỏi worker readback PASS **và** Prime QA độc lập PASS.
@@ -61,115 +61,13 @@ Với mỗi chương, yêu cầu một Markdown hoàn chỉnh, tất cả H2 đ�
 
 **Chỉ khi toàn bộ chương thuộc phạm vi STEP của tab đã được xác minh hoàn thành** mới đọc `J2 = Current STEP`, rồi cập nhật `J3 = STEP 6` đúng tab và readback theo Prime Rules. Nếu chỉ **thử nghiệm một số chương**, giữ nguyên J3. Không tự xuất source Markdown, chạy Gradle, sửa cấu hình hoặc commit/push.
 
-### 6. Mẫu thông điệp DUY NHẤT cho worker
+### 6. Mẫu tin nhắn Prime gửi worker — CHỈ bốn dòng
 
-> STEP 6 — MỘT nhiệm vụ hoàn chỉnh, MỘT Video Markdown. Tab: `<LINK_TAB>`. Chỉ đọc nguồn `A1,B1,<PARENT_CELL>,<CHILD_B_RANGE>,<CHILD_C_TO_M_RANGE>`. Chủ đề đã được Prime điền: `<TOPIC_CELL>` (chỉ đọc). Chỉ được ghi `<SCRIPT_RANGE_O_TO_R_ON_ONE_ROW>`. **Bắt buộc đọc CHỈ dòng `<WORKER_START>–<WORKER_END>` của `/java-learning/module-generate-agent/temp/STEP_6.md`; không đọc cả file.** Tự đọc toàn văn các Knowledge, viết một Video Markdown theo skeleton, chia ≤30.000 ký tự/ô, preflight toàn bộ ô đích, ghi một lần, exact readback, Chapter QA, báo COMPLETED/BLOCKER/FAILED rồi SLEEPING. Không có lượt PREPARED/WRITE, không tự chọn hàng/cột, không ghi đè, không sửa file hay nguồn, không spawn/commit.
-
----
-
-<!-- BEGIN_WORKER_ONLY_STEP_6 -->
-## VÙNG RIÊNG CHO WORKER — CHỈ ĐỌC GIỮA HAI MARKER
-
-**Bạn được giao một chương, một hàng Video Script, MỘT lượt công việc trọn vẹn.** Không có PHA A/PHA B. Chỉ đọc vùng dòng worker-only này trong STEP_6.md; không đọc phần Prime, STEP khác, rules/MD/TXT khác hoặc dùng lịch sử chat làm nội dung. Đường dẫn Sheet và tọa độ ô đã được Prime cung cấp.
-
-### W1 — Nguồn và quyền sở hữu
-
-1. Xác minh URL tab/gid Prime đưa. Đọc trực tiếp **chỉ** `A1,B1,A<PARENT>`, các `B<child>` của chương, toàn bộ `C:M` của chính các hàng con. Mỗi bài có thể trải qua nhiều ô: ghép nguyên văn C→M **không tự thêm separator**; đọc **toàn bộ** nội dung, không chỉ đọc đầu/cuối hoặc tóm tắt.
-2. `A<PARENT>` là H1 và tên chủ đề; mỗi B con là một H2/Section nguyên văn, đúng thứ tự. Đọc `N<video_row>` để xác minh chủ đề đã được Prime điền, **không sửa N**. Không đọc nội dung các chương/bài khác.
-3. Bạn chỉ được ghi **các ô O:R của đúng một hàng Prime đã giao**. Không chọn hàng từ số Scene, không dùng hàng mới, không ghi cột N/S, không sửa A:M, header, J3, Template, tab khác hoặc repo.
-4. Nếu Knowledge thiếu/bị cắt, tên N không khớp A, header/schema khác, hoặc có script không rõ quyền sở hữu: báo `BLOCKER` trước khi ghi, không tự suy đoán.
-
-### W2 — Markdown Video phải tạo
-
-Tạo **một chuỗi Markdown hoàn chỉnh** (không phải một Scene mỗi ô, không phải text rời) theo skeleton video của repo:
-
-```markdown
----
-video:
-  url: ""
----
-
-# <Menu Cấp 1 nguyên văn>
-
-## <Menu Cấp 2 đầu tiên nguyên văn>
-
-<!-- VIDEO_SECTION -->
-
-### Scene 1 — <Tên Scene tùy chọn>
-
-**Time:** `00:00–00:45`
-
-**Visual:**
-
-Mô tả cụ thể slide, code/diagram, terminal, output hoặc thao tác cần quay.
-
-**Script:**
-
-Lời thoại có thể đọc thành tiếng, mạch lạc, tự nhiên, dùng ví dụ phù hợp.
-
-**Purpose:**
-
-Điểm học tập hoặc bằng chứng mà Scene cung cấp.
-
-## <Menu Cấp 2 kế tiếp nguyên văn>
-
-<!-- VIDEO_SECTION -->
-
-### Transition
-
-**Time:** `00:45–00:58`
-
-**Visual:**
-
-Hình chuyển, đối chiếu hoặc thao tác nối từ phần trước.
-
-**Script:**
-
-Câu cầu nối thể hiện quan hệ nhân quả giữa hai phần.
-
-**Purpose:**
-
-Vì sao cần chuyển ý tại đây.
-
-### Scene 1 — <Tên Scene tùy chọn>
-
-**Time:** `00:58–01:45`
-
-**Visual:**
-
-Hình cụ thể cần dựng.
-
-**Script:**
-
-Lời thoại tiếp diễn.
-
-**Purpose:**
-
-Mục tiêu học tập của Scene.
+```text
+<LINK_TAB_ĐÃ_XÁC_MINH>
+A1, B1, <PARENT_CELL>, <CHILD_B_RANGE>, <CHILD_C_TO_M_RANGE>, <TOPIC_CELL_N_ROW>
+<SCRIPT_RANGE_O_TO_R_CÙNG_MỘT_HÀNG>
+/java-learning/module-generate-agent/temp/STEP_6_WORKER.md
 ```
 
-- **H1 duy nhất** đúng tên Menu Cấp 1; **mỗi B con = đúng một H2** cùng tên và thứ tự. Mỗi H2 có thể đặt `<!-- VIDEO_SECTION -->` giống skeleton canonical.
-- H2 đầu có **ít nhất 1 Scene**; từ H2 thứ hai có **ít nhất 1 Transition rồi 1 Scene**. Thêm số Scene/Transition hợp lý theo độ phức tạp, không ép số lượng/thời lượng/số từ. Đánh số Scene rõ ràng trong từng section.
-- Mỗi `### Scene N — ...` hoặc `### Transition` có **đủ bốn trường** `**Time:**`, `**Visual:**`, `**Script:**`, `**Purpose:**`, theo đúng thứ tự. Thời gian dạng `MM:SS–MM:SS`, bắt đầu `00:00`, liền mạch, tăng liên tục qua mọi section và phù hợp lời thoại/thao tác.
-- Frontmatter `video.url` để rỗng khi chưa có URL thật; **không bịa URL**. Không sao chép nguyên văn comment hướng dẫn/skeleton với placeholder thành nội dung xuất bản; Markdown đầu ra phải là script thực tế hoàn chỉnh.
-- **Script** là lời người trình bày nói được, không đọc chép README. **Visual** mô tả thao tác/hình cụ thể, vùng code, output, sequence, console, diagram khi có ý nghĩa. **Purpose** là dụng ý sư phạm, không lặp lời thoại. Transition phải liên kết phần trước với sau; kết thúc video có takeaway hữu ích.
-- Dùng đúng kiến thức Java và bằng chứng thực trong Knowledge, không bịa output/runtime/API. Không tự thêm chương, H2 ngoài Menu hoặc sửa Knowledge để hợp script. Nếu có knowledge gap ảnh hưởng tính đúng, báo Prime.
-- Giữ fenced code block và Markdown hợp lệ, không để thiếu closing fence, trường rỗng, `TODO` hoặc đoạn placeholder. Không xuất Video Markdown vào repository; chỉ ghi nội dung vào ô Sheets.
-
-### W3 — Một lượt: soạn → kiểm tra → ghi → đọc lại
-
-1. Đọc đủ mọi bài, tự soạn **toàn bộ chuỗi Markdown** gồm frontmatter/H1 và tất cả H2/Scene/Transition trước khi ghi.
-2. Tự QA: đúng B coverage/thứ tự, đúng Time, câu nói tự nhiên, ví dụ Java chính xác, Visual khả thi, Purpose cụ thể, không lặp hoặc thiếu phần. Không báo `PREPARED` và không chờ Prime phê duyệt số cảnh.
-3. Đếm ký tự Unicode của toàn chuỗi; chia **các đoạn liên tiếp không thêm/xóa/thay ký tự**, mỗi đoạn **≤30.000 ký tự Unicode**. Ghi theo thứ tự **O → P → Q → R** của **cùng một hàng**; các ô còn thừa giữ trống. Có thể cắt gần ranh giới đoạn khi phù hợp nhưng **nối lại không thêm dấu phân cách** phải tái lập 100% bản gốc, kể cả newline/Unicode. Không tách đôi Unicode scalar/surrogate pair.
-4. Nếu cần **hơn 4 ô O:R**, báo `BLOCKER: VIDEO CAPACITY`, tổng ký tự/số ô cần; **không ghi một phần**, không tự sang S/hàng khác, không mở rộng grid. Trường hợp này chỉ Prime được xem xét thay đổi schema.
-5. Trước **mọi write**, đọc lại header `N2:R2`, `N<row>` và **toàn bộ ô O:R đích** ở cùng hàng; mọi ô đích phải không có entered value/formula/note. Nếu bị chiếm, báo `BLOCKER: TARGET OCCUPIED`, không ghi đè hoặc ghi một phần. Preflight cả những ô dự kiến để trống.
-6. Ghi **chỉ** các mảnh vào O:R cùng hàng; không thay đổi format/notes/validation hay vùng khác. Nếu thao tác write trả lỗi/unknown, **đọc trạng thái thực** trước khi quyết định; không tự retry ghi đè.
-7. Đọc lại **từng ô O:R**, nối đúng O→R **không separator** rồi so khớp **exact 100% Unicode, whitespace, newline** với chuỗi Markdown gốc; xác nhận không có mảnh thừa. Sau readback, QA lại toàn bộ chương. Chỉ `COMPLETED` nếu cả READBACK và CHAPTER_QA đều PASS.
-8. Nếu partial write, mismatch, blocker hay nguồn bị thay đổi, báo đúng ô, nguyên nhân và hiện trạng, không tự sửa bừa hoặc ghi đè dữ liệu lạ.
-
-### W4 — Báo cáo và SLEEPING
-
-Gửi Prime một báo cáo duy nhất: `STATUS=COMPLETED/BLOCKER/FAILED`, tab/gid, `PARENT_CELL`, `CHILD_ROWS`, `VIDEO_ROW`, `TOPIC_CELL`, `SCRIPT_RANGE`, `READ_COVERAGE`, `SECTIONS`, `SCENES`, `TRANSITIONS`, `TOTAL_UNICODE_CHARS`, `FILLED_CELLS`, `READBACK=PASS/FAIL`, `CHAPTER_QA=PASS/FAIL`, `PRESERVATION`, `BLOCKERS`.
-
-**Một nhiệm vụ, một lần giao, làm trọn tới cuối.** Không tự nhận chương khác, không spawn, không sửa file/source/commit, không cập nhật J3. Báo xong rồi chuyển SLEEPING; Prime tự QA độc lập.
-<!-- END_WORKER_ONLY_STEP_6 -->
+Prime phải thay mọi placeholder bằng tọa độ/range chính xác. Nếu các hàng con không liên tiếp, truyền danh sách đầy đủ các ô tương ứng trên cùng dòng nguồn. **Không đưa nội dung từng ô, tóm tắt Knowledge, chỉ dẫn QA hoặc đoạn quy định worker vào tin giao.** Worker tự đọc toàn văn file riêng.

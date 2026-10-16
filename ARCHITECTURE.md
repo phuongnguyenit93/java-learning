@@ -886,6 +886,99 @@ task capability luôn active khi dispatcher đã được bật
 
 Nó không phải source of truth và không nên chứa manual configuration cần được bảo tồn.
 
+### 13.1 Google Sheets integration — build-time authentication and module identity guard
+
+Phần **module-local** là Gradle manual task, không phải web runtime integration và **chưa phải pipeline import Knowledge/Video**. Orchestration vẫn quyết định `USE_TASK=TRUE` → `TaskSetupPlugin` → `SheetsTaskPlugin`; task/extension `generateModuleContentFromSheetByLocation` nhận `fileUrl` (URL spreadsheet) và `sheetId` (numeric **tab gid**). Task gọi `SheetContentImportCoordinator` để xác minh I3, import Roadmap (nếu có) **chỉ khi task thực thi**, không lấy credentials/đọc mạng ở Gradle configuration phase.
+
+```text
+Explicit Gradle task on real module
+  ├── fileUrl = Google spreadsheet document URL
+  ├── sheetId = tab gid (NOT spreadsheetId)
+  └── project.projectDir, rootProject.projectDir
+             │
+             ▼
+GoogleCredentials.getApplicationDefault()           [ADC, source principal A]
+             │
+             ├── GOOGLE_SHEETS_IMPERSONATE_SERVICE_ACCOUNT configured?
+             │       └── IAM Credentials API issues short-lived token for SA B
+             │           after checking A's Token Creator permission
+             └── otherwise use ADC identity directly
+             │
+             ▼
+Google Sheets API + HttpCredentialsAdapter(credentials)
+  ├── spreadsheets.get    → validate spreadsheet and actual tab gid
+  └── values.batchGet      → read tab I3 locations with one request
+             │
+             ▼
+Compare I3 with root-relative canonical projectDir (forward slashes)
+  ├── exact match  → Roadmap import permitted (DRY_RUN default)
+  └── empty/different → GradleException; STOP before processing content
+```
+
+**Google Cloud security boundaries are separate:**
+
+- Service Account is an IAM identity belonging to a Google Cloud project; enabling **Google Sheets API** and **IAM Service Account Credentials API** enables calls, but does not grant it permission to arbitrary files.
+- ADC authenticates the calling/source principal. With impersonation, that principal needs `roles/iam.serviceAccountTokenCreator` for the target Service Account. The **Google Sheet itself** must be shared with that Service Account (Viewer for read-only access).
+- Access token scoped to `spreadsheets.readonly` is short-lived and attached to Sheets API requests via `HttpCredentialsAdapter`; it is **not** a fixed API key or a downloaded Service Account JSON private key. A leaked valid access token remains sensitive until expiry. An ordinary Google API key does not provide the identity/file ACL necessary to read a private Sheet.
+- `fileUrl` and `sheetId` are resource locators, **not** credentials. Do not store tokens, keys or secrets in these values or in repository documentation.
+
+**Module identity guard:** STEP 1 stores the repository-root-relative module location in the selected tab's `I3` (e.g. `module/platform/development/programming/paradigm/object-oriented`). The module-local Gradle task derives the real canonical module directory from `project.projectDir` relative to `rootProject.projectDir`; requires exact `I3`, not merely a matching module name. Blank/wrong location throws `GradleException` before import/write. The reader fetches spreadsheet/tab metadata and batch-loads the tab `I3` values to avoid per-tab rate limits; after guard checks, Roadmap import reads only the authorized Roadmap area, never Knowledge/Video. `APPLY` is opt-in.
+
+Implementation: `project-build/gradle-runtime/src/main/groovy/com/example/learning/task/sheets/`. Operational IAM/ADC and local test guide: `project-build/gradle-runtime/SETUP_GOOGLE_IAM_AND_ADC.md`.
+
+**Root ByFiles và shared coordinator:** Root orchestration đăng ký `generateModuleContentFromSheetByFiles`, nhận URL bằng **`-PsheetFileUrl`**, không có extension và không cần gid. `SheetContentImportCoordinator` lấy metadata/client một lần, duyệt toàn bộ tab trừ tab tên chính xác `Template`; đọc I3 từng tab, xác thực đường dẫn trong `module/` và chặn tab trùng đích **trước khi import**. Mỗi tab độc lập được xử lý tuần tự, lỗi tab không ngăn tab khác; tổng hợp lỗi khiến task trả FAILED cuối cùng. ByFiles không yêu cầu `master.json`/`gradle.properties` hay Gradle module tại I3; ByLocation yêu cầu I3 trùng module hiện tại. Cả hai gọi **`RoadmapSheetImportService`** đọc F/G/H, tạo ID từ slug Title và objectives list; không tự sinh `dependsOn`, `relatedKnowledge`, `relatedModules`. Nếu Roadmap đã có nội dung khác thì không ghi đè; nếu trùng thì `UNCHANGED`. `DRY_RUN` mặc định, `-PsheetMode=APPLY` ghi atomically và YAML readback, chỉ ra `roadmap/vi/roadmap.yml`. Không sửa Sheet/J3, không tự chạy worker, Portal hoặc đăng ký module. Menu/Knowledge/Video sẽ có service riêng, tên theo chức năng thay vì số STEP.
+
+### 13.2 Separate sheet-based Prime/Worker authoring architecture
+
+The Google Sheets educational authoring workflow under **`module-generate-agent/temp/`** is **distinct from the Gradle import tasks above** and from the canonical numbered module-generation curriculum orchestrator in `module-generate-agent/GENERAL_AGENT_RULES.md`. Similar STEP numbers across these two workflows must not be assumed equivalent. The Sheets workflow currently relies on agents reading/writing explicitly authorized Sheet cells; there is **no implemented automatic handoff** from ByLocation/ByFiles into these workers.
+
+```text
+                     PRIME (orchestration / QA)
+    Read: temp/GENERAL_AGENT_RULES.md + every rules/* file
+          + current STEP_N.md + paired STEP_N_WORKER.md
+    Resolve: module-generate-info.txt → spreadsheet URL + tab gid
+    Verify: exact tab, module, source cells, layout, ownership
+    Allocate: one independent job + exclusive destination range
+                           │
+                           │ exactly FOUR lines
+                           │ 1. Verified tab URL
+                           │ 2. Source cell coordinates
+                           │ 3. Destination range coordinates
+                           │ 4. STEP_N_WORKER.md path
+                           ▼
+                  WORKER (independent)
+    Read only its complete STEP_N_WORKER.md instructions
+    + directly read exactly the assigned Sheet source/target cells
+    → author/review → QA → preflight → write in owned range
+    → read back exact Unicode/whitespace/newlines → report
+    → release ownership → SLEEPING
+                           │
+                           ▼
+    PRIME: independent verification, next job for reusable worker
+    → only after entire tab's required work PASS:
+       verify J2 / update J3 = STEP N / readback
+```
+
+Các file **`STEP_2.md` ... `STEP_6.md` dành riêng cho Prime**, ghép đôi với **`STEP_2_WORKER.md` ... `STEP_6_WORKER.md` dành riêng cho Worker**. STEP 6 đã chuyển hướng dẫn worker từ vùng marker/dòng trong STEP chính sang file riêng. Không gửi nội dung ô, tóm tắt của Prime, ví dụ gợi ý hay lịch sử hội thoại vào nhiệm vụ worker. Mỗi worker tự làm trọn **một lượt**, không cần PHA A/B hoặc yêu cầu Prime cấp hàng sau khi bắt đầu. Pool mặc định tối đa **3 worker ACTIVE + SLEEPING**, bắt buộc tái sử dụng SLEEPING trước khi spawn; các worker không bao giờ đồng sở hữu vùng ghi.
+
+| Sheet authoring contract | Đơn vị sở hữu | Nguồn chính | Vùng kết quả |
+| --- | --- | --- | --- |
+| STEP 2 — Roadmap | Một worker / một tab | `C2` + Special Note | `F:H` theo từng milestone |
+| STEP 3 — Menu hai cấp | Một worker / một tab | `C3` + Special Note | `A20:B...` (cha trên hàng A riêng, con B các hàng sau) |
+| STEP 4 — Knowledge | Một worker / một mục Menu Cấp 2 | Module, cha và mục con theo tọa độ Prime giao | `C:M` của hàng bài |
+| STEP 5 — Chapter review/refactor | Một worker / toàn bộ một Menu Cấp 1 | Tất cả Menu Cấp 2 và toàn văn các bài trong chương | **Hiện chỉ `C:G`** các hàng con, được phép refactor nội dung cũ |
+| STEP 6 — Video Script | Một worker / một Menu Cấp 1 | Menu Cấp 2 + Knowledge `C:M` + chủ đề `N` | **`O:R` trên một hàng Video do Prime gán trước** |
+
+**Schema and preservation contracts:**
+
+- Khu `Module Project` của tab hiện dùng `I2/I3 = Location`, `J2/J3 = Current STEP`, `K2/K3 = Special Note`. **Không hardcode tọa độ Special Note như một bất biến:** Prime STEP 2/3 phải xác định ô tiêu đề `Special Note` và ô giá trị bên dưới của **tab thực tế**, gửi **cả hai tọa độ**, tuyệt đối **không chép hoặc tự tóm tắt nội dung**. Worker tự đọc nguyên văn cả hai, áp dụng ranh giới module nếu có và chỉ đọc, không sửa. Nếu nhãn thiếu/mơ hồ hoặc ghi chú xung đột nguồn/quyền ghi → blocker; giá trị ghi chú trống là hợp lệ.
+- **Special Note hiện chỉ được tích hợp vào STEP 2 và STEP 3.** STEP 4/5/6 chưa được cấp các tọa độ này trong contract; không được mô tả rằng chúng tự áp dụng ghi chú. Ghi chú có thể giới hạn scope (Java Security so với security tổng quát, Java Aspect/AOP so với AOP trừu tượng) hoặc tránh kiến thức đã obsolete; các tính năng Java cũ vẫn có giá trị ở phiên bản hiện đại không mặc nhiên bị loại.
+- STEP 2 giữ mỗi milestone `Title (F) / Purpose (G) / Objectives (H)` trên một hàng; STEP 3 giữ đúng hai cấp Menu. STEP 4 cho tối đa 11 ô `C:M`, STEP 5 vẫn giới hạn 5 ô `C:G`: **đây là chênh lệch contract đang tồn tại**, phải block/reconcile nếu bài vượt G, không truncate/ghi đè `H:M`.
+- STEP 6 dùng `N2 = Chủ đề`, `O2:R2 = Video Script`; Prime map **tất cả** Menu Cấp 1 theo thứ tự tới `N3, N4, ...`, worker viết một Markdown video hoàn chỉnh trên đúng hàng vào `O:R` (không còn kiểu một Scene một hàng hay cột T). H2 giữ tên/thứ tự Menu Cấp 2, với Scene/Transition, đủ `Time`, `Visual`, `Script`, `Purpose`; các ô chứa những mảnh liền kề (tối đa 30.000 ký tự/ô), ghép không thêm separator phải trả lại nguyên văn.
+- Worker preflight giá trị/công thức/metadata của ô đích và ownership trước write; STEP 5 là trường hợp có quyền **thay thế** Knowledge đã tồn tại trong phạm vi của nó, với snapshot, dọn mảnh đuôi và readback. Prime nghiệm thu độc lập và chỉ cập nhật `J3` sau khi **toàn bộ phạm vi tab** đạt QA; thử nghiệm vài chương **không** tự nâng Current STEP. Template, vùng lân cận, notes/format và nội dung không thuộc quyền phải được giữ nguyên.
+
+**External Sheets state is not repository configuration.** For example, `Module Content 2` was updated on 19 Java-version tabs with a module-specific `Special Note` advising use of knowledge still applicable today; the `Template` value was kept blank, and earlier STEP 2/3 generated cell contents on those tabs were intentionally cleared. Those were **one-time Google Sheets edits**, not actions performed by the Gradle validation task or invariants to encode in build logic.
+
 ---
 
 ## 14. Dependency architecture

@@ -5,6 +5,7 @@ import com.example.learning.setup.root.cleanup.plugin.CleanupSetupPlugin
 import com.example.learning.setup.root.database.plugin.DatabaseSetupPlugin
 import com.example.learning.setup.root.readmeMetadata.plugin.ReadmeMetadataSetupPlugin
 import com.example.learning.setup.root.structure.plugin.StructureSetupPlugin
+import com.example.learning.task.sheets.task.GenerateModuleContentFromSheetByFilesTask
 import org.gradle.api.GradleException
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -56,5 +57,21 @@ ${project.path}
         project.pluginManager.apply(
                 CleanupSetupPlugin
         )
+
+        // Root-only: discovers all tabs except Template, no Gradle extension.
+        project.tasks.register(
+                'generateModuleContentFromSheetByFiles',
+                GenerateModuleContentFromSheetByFilesTask
+        ) { task ->
+            task.group = 'sheets'
+            task.description =
+                    'Import all spreadsheet tabs except Template (default DRY_RUN).'
+            task.fileUrl.convention(
+                    project.providers.gradleProperty('sheetFileUrl')
+            )
+            task.mode.convention(
+                    project.providers.gradleProperty('sheetMode').orElse('DRY_RUN')
+            )
+        }
     }
 }

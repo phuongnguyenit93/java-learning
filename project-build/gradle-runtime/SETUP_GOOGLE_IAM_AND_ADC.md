@@ -1,28 +1,40 @@
 # Google Sheets ADC Setup — gradle-runtime
 
 Tài liệu thiết lập **Application Default Credentials (ADC)** cho Gradle task
-`generateModuleContentFromSheet` trên Windows. Cách thiết lập này dùng
+`generateModuleContentFromSheetByLocation` và
+`generateModuleContentFromSheetByFiles` trên Windows. Cách thiết lập này dùng
 **Service Account Impersonation**, không cần tải xuống JSON private key.
 
-> **Trạng thái hiện tại:** task chỉ gọi Google Sheets API với quyền **read-only**
-> để kiểm tra metadata của spreadsheet/tab (`gid`) và đọc duy nhất ô **I3**
-> (`Module Location`). Nếu I3 khác thư mục module đang thực thi Gradle task,
-> task dừng ngay bằng lỗi. Chưa đọc nội dung bài học, chưa generate Knowledge/Video
-> và chưa ghi nội dung vào repository hoặc Sheet.
+> **Hai entrypoint chung một coordinator:** task module-local
+> `generateModuleContentFromSheetByLocation` nhận `fileUrl` + `sheetId`
+> qua **extension của module**, xác minh `I3` trùng module thực tế;
+> task root `generateModuleContentFromSheetByFiles` chỉ nhận
+> `-PsheetFileUrl` (**không có extension**), quét mọi tab trừ tab tên đúng
+> `Template`. Cả hai import Roadmap `F:H` → `roadmap/vi/roadmap.yml`
+> với `DRY_RUN` mặc định và `-PsheetMode=APPLY` tường minh. ByFiles
+> không yêu cầu module đích có `master.json`/`gradle.properties`.
+> Chưa có service nhập Menu/Knowledge/Video.
 
 ## 1. Cách hoạt động
 
 ```text
 Module Gradle (USE_TASK=TRUE)
     └── project-orchestration → TaskSetupPlugin → SheetsTaskPlugin
-            └── generateModuleContentFromSheet
+            └── generateModuleContentFromSheetByLocation
                     ├── extension: sheetId, fileUrl
-                    └── SheetsMetadataReaderService
+                    └── SheetContentImportCoordinator
+                            └── SheetsMetadataReaderService
                             ├── GoogleCredentials.getApplicationDefault()
                             ├── ImpersonatedCredentials (Service Account)
                             ├── scope: spreadsheets.readonly
                             ├── Sheets API: spreadsheets.get (metadata only)
                             └── Sheets API: values.get (đọc I3 và xác minh module)
+
+Root Gradle
+    └── generateModuleContentFromSheetByFiles
+            ├── -PsheetFileUrl=<URL> (không extension, không gid)
+            ├── lấy tab metadata một lần, bỏ qua Template
+            └── SheetContentImportCoordinator → RoadmapSheetImportService
 ```
 
 Hai thông số `sheetId`, `fileUrl` **không phải thông tin xác thực**:
@@ -174,7 +186,7 @@ Extension DSL được cấu hình ở **`build.gradle` của module** (nếu mo
 có script cấu hình), ví dụ:
 
 ```groovy
-generateModuleContentFromSheet {
+generateModuleContentFromSheetByLocation {
     sheetId = 'YOUR_TAB_GID'
     fileUrl = 'https://docs.google.com/spreadsheets/d/YOUR_SPREADSHEET_ID/edit'
 }
@@ -193,7 +205,7 @@ thử nghiệm này vào repository**:
 gradle.beforeProject { project ->
     if (project.path == ':module:platform:development:programming:paradigm:object-oriented') {
         project.pluginManager.withPlugin('com.example.learning.task.sheets.plugin') {
-            def sheets = project.extensions.getByName('generateModuleContentFromSheet')
+            def sheets = project.extensions.getByName('generateModuleContentFromSheetByLocation')
             sheets.sheetId.set('YOUR_TAB_GID')
             sheets.fileUrl.set('https://docs.google.com/spreadsheets/d/YOUR_SPREADSHEET_ID/edit')
         }
@@ -205,15 +217,13 @@ Từ **thư mục gốc `java-learning/`**, chạy bằng CMD sau khi đặt bi�
 ở mục 4:
 
 ```cmd
-gradlew.bat --init-script "%TEMP%\verify-sheets.init.gradle" :module:platform:development:programming:paradigm:object-oriented:generateModuleContentFromSheet
+gradlew.bat --init-script "%TEMP%\verify-sheets.init.gradle" :module:platform:development:programming:paradigm:object-oriented:generateModuleContentFromSheetByLocation
 ```
 
 Kết quả mong đợi:
 
 ```text
-[SHEETS] Module Location verified: module/... matches tab "..." (gid=...), cell I3.
-[SHEETS] Read-only access OK ... spreadsheet "...", tab "..." (gid=...)
-[SHEETS] Knowledge/Video generation is not implemented yet; no files were written.
+[SHEETS-ROADMAP] DRY_RUN: tab="..." (gid=...), location=module/..., milestones=..., file=...
 BUILD SUCCESSFUL
 ```
 
@@ -257,8 +267,52 @@ trong `gcloud` có thể khác nhau. Trong lần kiểm thử, project đúng l�
 - Trên GitHub Actions sau này có thể dùng **Workload Identity Federation**
   thay vì lưu Service Account key. Đó là bước cấu hình CI/CD riêng,
   **chưa được triển khai** trong task này.
-- Khi bắt đầu triển khai import Knowledge/Video, bổ sung kiểm tra mapping,
-  validate/stage trước khi ghi file; **hiện tại mới xác minh quyền đọc metadata**.
+- Khi bắt đầu triển khai Menu/Knowledge/Video, bổ sung service nhập tương ứng
+  vào coordinator. Hiện tại cả ByLocation và ByFiles cùng gọi importer Roadmap.
+
+## 8. Import từ root project (ByFiles) hoặc module (ByLocation)
+
+Chạy ở thư mục gốc `java-learning/`, với JDK 21 và cùng ADC/Service Account
+đã cấu hình bên trên. Task `generateModuleContentFromSheetByFiles` không yêu
+cầu thư mục đích phải có `master.json`, `gradle.properties` hoặc Gradle
+module. **Không khai báo extension ở root**: URL truyền thẳng bằng Gradle property.
+
+```powershell
+# ByFiles: mặc định DRY_RUN, tự duyệt toàn bộ tab, bỏ Template.
+.\gradlew.bat generateModuleContentFromSheetByFiles "-PsheetFileUrl=https://docs.google.com/spreadsheets/d/1ghIDu-knT1o5uE4LHpSf5_l3aZMJxQpyB2c7UT-BTnU/edit"
+
+# ByFiles: chỉ khi đã duyệt kết quả, cho phép ghi các file đủ điều kiện.
+.\gradlew.bat generateModuleContentFromSheetByFiles "-PsheetFileUrl=https://docs.google.com/spreadsheets/d/1ghIDu-knT1o5uE4LHpSf5_l3aZMJxQpyB2c7UT-BTnU/edit" "-PsheetMode=APPLY"
+
+# ByLocation: cấu hình fileUrl/sheetId qua extension của module như mục 5,
+# rồi chạy task tại đường dẫn Gradle module; vẫn DRY_RUN theo mặc định.
+.\gradlew.bat :module:platform:development:programming:paradigm:object-oriented:generateModuleContentFromSheetByLocation
+```
+
+Luồng xử lý chung:
+
+1. **ByLocation** xác minh tab gid và I3 khớp chính xác đường dẫn module thực
+   tế. **ByFiles** lấy metadata/client một lần, quét tab theo thứ tự spreadsheet
+   và bỏ qua tab tên đúng `Template`. Đọc I3 tất cả tab, ngăn hai tab cùng
+   đích (cả hai bị đánh dấu FAILED), chỉ chấp nhận đường dẫn tương đối an toàn
+   nằm trong `module/` của repository.
+2. Xác định ranh giới `Khu vực Menu`, kiểm tra header `F2:H2`, đọc các
+   milestone `F3:H...` và phát hiện hàng thiếu/gãy, ID trùng.
+   **Nếu `F3:H3` (hàng ngay dưới header) trống hoàn toàn**, task ghi
+   `WARN [SHEETS-ROADMAP] SKIPPED` và kết thúc bình thường, kể cả chế độ
+   `APPLY`; không đọc sâu hơn vào Roadmap, không tạo file.
+   Nếu chỉ thiếu một phần F3/G3/H3, đó vẫn là dữ liệu không hợp lệ,
+   **không** được bỏ qua im lặng.
+3. Chuyển Title → ID slug + title; Purpose → purpose; mỗi dòng Objectives
+   → phần tử danh sách. Chưa tự sinh dependsOn/relatedKnowledge/relatedModules.
+4. Tạo `<I3>/roadmap/vi/roadmap.yml` theo schema, hoặc điền skeleton
+   `roadmap: []` hợp lệ. Nếu đã có milestones, chỉ báo `UNCHANGED` nếu nội
+   dung trùng; không ghi đè ID/relations cũ khi có xung đột.
+5. `APPLY` ghi qua temporary file, atomic move, parse/readback YAML; `DRY_RUN`
+   không ghi gì. ByFiles tiếp tục các tab độc lập nếu có lỗi, báo từng tab
+   và summary, sau đó kết thúc FAILED nếu có lỗi. Importer không chỉnh Sheet,
+   J3, Gradle metadata hoặc chạy Prime/Worker. YAML trong folder chưa được
+   Gradle nhận vẫn chỉ là tài liệu, chưa tự động được Portal xuất bản.
 
 Tài liệu chính thức: [Application Default Credentials](https://cloud.google.com/docs/authentication/application-default-credentials),
 [Service Account Impersonation](https://cloud.google.com/docs/authentication/use-service-account-impersonation),

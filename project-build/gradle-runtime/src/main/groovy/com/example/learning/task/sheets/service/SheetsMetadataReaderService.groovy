@@ -34,15 +34,55 @@ class SheetsMetadataReaderService {
             String sheetId,
             String expectedModuleLocation
     ) {
+        Map<String, Object> session = openTab(fileUrl, sheetId)
+        String actualModuleLocation = session.moduleLocation as String
+        String tabTitle = session.tabTitle as String
+        String tabId = session.sheetId as String
 
-        String spreadsheetId = extractSpreadsheetId(fileUrl)
-        String tabId = sheetId?.trim()
-
-        if (!(tabId ==~ /[0-9]+/)) {
+        if (!actualModuleLocation?.trim()) {
             throw new GradleException(
-                    "sheetId must be a numeric Google Sheets tab gid; received '${tabId}'."
+                    "Module Location is empty or missing at tab '${tabTitle}' " +
+                            "(gid=${tabId}), cell ${MODULE_LOCATION_CELL}. " +
+                            "Expected module: '${expectedModuleLocation}'. Stop before content generation."
             )
         }
+
+        if (actualModuleLocation != expectedModuleLocation) {
+            throw new GradleException(
+                    "Module Location mismatch at tab '${tabTitle}' " +
+                            "(gid=${tabId}), cell ${MODULE_LOCATION_CELL}. " +
+                            "Task module: '${expectedModuleLocation}'; " +
+                            "Sheet module: '${actualModuleLocation}'. Stop before content generation."
+            )
+        }
+
+        return [
+                spreadsheetTitle: session.spreadsheetTitle as String,
+                tabTitle        : tabTitle,
+                spreadsheetId   : session.spreadsheetId as String,
+                sheetId         : tabId,
+                moduleLocation  : actualModuleLocation
+        ]
+    }
+
+    /**
+     * Opens an explicitly selected tab for root-level importers, even if
+     * I3 points to a documentation folder that is not a Gradle project.
+     * Callers MUST validate I3 as a safe destination before writing.
+     */
+    Map<String, Object> openTab(
+            String fileUrl,
+            String sheetId
+    ) {
+        return readTab(openSpreadsheet(fileUrl), sheetId)
+    }
+
+    /**
+     * One authenticated client and one metadata request per spreadsheet.
+     * The root batch importer reuses this context for every tab.
+     */
+    Map<String, Object> openSpreadsheet(String fileUrl) {
+        String spreadsheetId = extractSpreadsheetId(fileUrl)
 
         try {
             GoogleCredentials credentials = resolveReadOnlyCredentials()
@@ -63,56 +103,35 @@ class SheetsMetadataReaderService {
                             .setFields('spreadsheetId,properties(title),sheets(properties(sheetId,title))')
                             .execute()
 
-            def sheet =
-                    spreadsheet.sheets?.find { entry ->
-                        entry.properties?.sheetId?.toString() == tabId
-                    }
-
-            if (sheet == null) {
-                throw new GradleException(
-                        "Spreadsheet is accessible, but tab gid '${tabId}' was not found."
-                )
+            List<Map<String, Object>> tabs = (spreadsheet.sheets ?: []).collect { entry ->
+                [
+                        title: entry.properties?.title ?: '',
+                        gid  : entry.properties?.sheetId?.toString() ?: ''
+                ] as Map<String, Object>
             }
-
-            // STEP 1 writes the root-relative module path in the selected tab's I3.
-            // Read ONLY that location before any future content-import operation.
-            String escapedTabTitle = sheet.properties.title.replace("'", "''")
-            String moduleLocationRange = "'${escapedTabTitle}'!${MODULE_LOCATION_CELL}"
-            List<List<Object>> locationValues =
-                    client.spreadsheets()
-                            .values()
-                            .get(spreadsheetId, moduleLocationRange)
-                            .execute()
-                            .values
-
-            String actualModuleLocation = null
-            if (locationValues && locationValues[0]) {
-                actualModuleLocation = locationValues[0][0]?.toString()
+            // Google Sheets has a per-minute read-request limit. One batch
+            // request for all I3 cells prevents 19+ individual API calls.
+            List<String> locationRanges = tabs.collect { Map tab ->
+                "'${tab.title.replace("'", "''")}'!${MODULE_LOCATION_CELL}"
             }
-
-            if (!actualModuleLocation?.trim()) {
-                throw new GradleException(
-                        "Module Location is empty or missing at tab '${sheet.properties.title}' " +
-                                "(gid=${tabId}), cell ${MODULE_LOCATION_CELL}. " +
-                                "Expected module: '${expectedModuleLocation}'. Stop before content generation."
-                )
+            if (locationRanges) {
+                def data = client.spreadsheets().values()
+                        .batchGet(spreadsheetId)
+                        .setRanges(locationRanges)
+                        .execute()
+                tabs.eachWithIndex { Map tab, int index ->
+                    List<List<Object>> rows =
+                            data.valueRanges[index]?.values as List<List<Object>>
+                    tab.moduleLocation = (rows && rows[0])
+                            ? rows[0][0]?.toString()
+                            : null
+                }
             }
-
-            if (actualModuleLocation != expectedModuleLocation) {
-                throw new GradleException(
-                        "Module Location mismatch at tab '${sheet.properties.title}' " +
-                                "(gid=${tabId}), cell ${MODULE_LOCATION_CELL}. " +
-                                "Task module: '${expectedModuleLocation}'; " +
-                                "Sheet module: '${actualModuleLocation}'. Stop before content generation."
-                )
-            }
-
             return [
                     spreadsheetTitle: spreadsheet.properties?.title ?: '',
-                    tabTitle        : sheet.properties?.title ?: '',
                     spreadsheetId   : spreadsheetId,
-                    sheetId         : tabId,
-                    moduleLocation  : actualModuleLocation
+                    client          : client,
+                    tabs            : tabs
             ]
         }
         catch (GradleException exception) {
@@ -120,13 +139,41 @@ class SheetsMetadataReaderService {
         }
         catch (Exception exception) {
             throw new GradleException(
-                    "Unable to read Google Sheets metadata using ADC (spreadsheet '${spreadsheetId}', tab '${tabId}'). " +
+                    "Unable to read Google Sheets metadata using ADC (spreadsheet '${spreadsheetId}'). " +
                             'Verify that Sheets API and IAM Credentials API are enabled, ADC impersonation has ' +
                             'Service Account Token Creator permission, and the spreadsheet is shared with the ' +
                             'service account as Viewer. Cause: ' + exception.message,
                     exception
             )
         }
+    }
+
+    Map<String, Object> readTab(
+            Map<String, Object> spreadsheet,
+            String sheetId
+    ) {
+        String tabId = sheetId?.trim()
+        if (!(tabId ==~ /[0-9]+/)) {
+            throw new GradleException(
+                    "sheetId must be a numeric Google Sheets tab gid; received '${tabId}'."
+            )
+        }
+        Map tab = (spreadsheet.tabs as List<Map>).find {
+            Map entry -> entry.gid == tabId
+        }
+        if (!tab) {
+            throw new GradleException(
+                    "Spreadsheet is accessible, but tab gid '${tabId}' was not found."
+            )
+        }
+        return [
+                spreadsheetTitle: spreadsheet.spreadsheetTitle,
+                spreadsheetId   : spreadsheet.spreadsheetId,
+                client          : spreadsheet.client,
+                tabTitle        : tab.title,
+                sheetId         : tabId,
+                moduleLocation  : tab.moduleLocation
+        ]
     }
 
     /**

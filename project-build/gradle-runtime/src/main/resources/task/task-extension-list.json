@@ -22,9 +22,9 @@
     ],
     "SHEETS": [
         {
-            "extension": "GenerateModuleContentFromSheetExtension",
-            "name": "generateModuleContentFromSheet",
-            "path": "gradle-runtime/src/main/groovy/com/example/learning/task/sheets/extension/GenerateModuleContentFromSheetExtension.groovy",
+            "extension": "GenerateModuleContentFromSheetByLocationExtension",
+            "name": "generateModuleContentFromSheetByLocation",
+            "path": "gradle-runtime/src/main/groovy/com/example/learning/task/sheets/extension/GenerateModuleContentFromSheetByLocationExtension.groovy",
             "fields": {
                 "sheetId": "String",
                 "fileUrl": "String"
