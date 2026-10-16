@@ -11,9 +11,11 @@ Tài liệu thiết lập **Application Default Credentials (ADC)** cho Gradle t
 > task root `generateModuleContentFromSheetByFiles` chỉ nhận
 > `-PsheetFileUrl` (**không có extension**), quét mọi tab trừ tab tên đúng
 > `Template`. Cả hai import Roadmap `F:H` → `roadmap/vi/roadmap.yml`
-> với `DRY_RUN` mặc định và `-PsheetMode=APPLY` tường minh. ByFiles
+> **và** Menu/Knowledge `A:B` + `C:M` → `readme/vi/menu/`, với
+> `DRY_RUN` mặc định và `-PsheetMode=APPLY` tường minh. ByFiles
 > không yêu cầu module đích có `master.json`/`gradle.properties`.
-> Chưa có service nhập Menu/Knowledge/Video.
+> Menu/Knowledge được ghép bởi `ReadmeSheetImportService` và tái sử dụng
+> `GenerateInternalReadmeMenuService`; chưa có Video importer.
 
 ## 1. Cách hoạt động
 
@@ -34,7 +36,9 @@ Root Gradle
     └── generateModuleContentFromSheetByFiles
             ├── -PsheetFileUrl=<URL> (không extension, không gid)
             ├── lấy tab metadata một lần, bỏ qua Template
-            └── SheetContentImportCoordinator → RoadmapSheetImportService
+            └── SheetContentImportCoordinator
+                    ├── RoadmapSheetImportService
+                    └── ReadmeSheetImportService
 ```
 
 Hai thông số `sheetId`, `fileUrl` **không phải thông tin xác thực**:
@@ -267,8 +271,8 @@ trong `gcloud` có thể khác nhau. Trong lần kiểm thử, project đúng l�
 - Trên GitHub Actions sau này có thể dùng **Workload Identity Federation**
   thay vì lưu Service Account key. Đó là bước cấu hình CI/CD riêng,
   **chưa được triển khai** trong task này.
-- Khi bắt đầu triển khai Menu/Knowledge/Video, bổ sung service nhập tương ứng
-  vào coordinator. Hiện tại cả ByLocation và ByFiles cùng gọi importer Roadmap.
+- Menu/Knowledge dùng `ReadmeSheetImportService` với internal-menu renderer;
+  Video importer sẽ được bổ sung sau.
 
 ## 8. Import từ root project (ByFiles) hoặc module (ByLocation)
 
@@ -319,6 +323,45 @@ Luồng xử lý chung:
    và summary, sau đó kết thúc FAILED nếu có lỗi. Importer không chỉnh Sheet,
    J3, Gradle metadata hoặc chạy Prime/Worker. YAML trong folder chưa được
    Gradle nhận vẫn chỉ là tài liệu, chưa tự động được Portal xuất bản.
+
+### Import README từ Menu + Knowledge (hai phần ghép cùng một service)
+
+`ReadmeSheetImportService` chạy cùng task sau Roadmap, nhưng có điều kiện
+`SKIPPED` độc lập. **Google Sheets là nguồn chuẩn** cho
+`<I3>/readme/vi/menu/`. Cách đọc:
+
+1. Kiểm tra `A19=Menu Cấp 1`, `B19=Menu Cấp 2`; nếu `A20` trống,
+   `WARN SKIPPED_EMPTY_MENU` và **không ghi README**.
+2. Hàng có A (Menu Cấp 1) phải có **filename tiếng Anh** tại B cùng hàng,
+   ví dụ `OOPBasic.md`; hàng A trống và B có text là Menu Cấp 2. Nếu
+   **bất kỳ** tên file cấp 1 nào chưa có, `WARN SKIPPED_MISSING_FILENAME`
+   cho toàn bộ README của tab, không đọc Knowledge và không ghi một phần.
+   Tên filename phải hợp lệ theo `[A-Za-z][A-Za-z0-9]*.md`, duy nhất
+   không phân biệt hoa/thường. Công đoạn AI đặt tên file diễn ra trước
+   importer, **Gradle không gọi AI**.
+3. Chỉ khi đủ filename, đọc các câu trả lời `C:M` ở hàng Menu Cấp 2,
+   **ghép nội dung mỗi bài không có separator**. Không có câu trả lời vẫn
+   giữ một section rỗng. Các mảnh trả lời không được có lỗ hổng.
+4. Tạo một file cho mỗi Menu Cấp 1, ví dụ
+   `readme/vi/menu/1.OOPBasic/OOPBasic.md`. Section anchor được tạo từ
+   stem Camel/PascalCase chuyển `kebab-case` + số thứ tự bắt đầu
+   `001` trong mỗi file: `OOPBasic.md` → `oop-basic-001`;
+   `Class.md` → `class-001`. Dùng
+   `GenerateInternalReadmeMenuService` để tự tạo `## Menu`,
+   `<details>`, nút về đầu trang.
+5. Dựng toàn bộ file Markdown trước và readback bản stage. `DRY_RUN`
+   chỉ kiểm tra; `APPLY` so sánh nguyên bộ menu, `UNCHANGED` nếu
+   giống nhau. Nếu có thay đổi, **xóa vĩnh viễn toàn bộ cây thư mục
+   `readme/vi/menu` cũ** (bao gồm các file không phải Markdown và các
+   thư mục con lỗi thời), kiểm tra vị trí đã trống rồi đặt snapshot mới.
+   **Không tạo backup, không thể khôi phục menu cũ nếu đã xóa.**
+   Nếu bước cài mới thất bại sau khi xóa, bản stage đã kiểm tra được giữ
+   lại để có thể tiếp tục cài mới. Không xóa gì nếu Sheet chưa đủ filename, nếu
+   `DRY_RUN`, hoặc nếu nội dung đã `UNCHANGED`. **Không chỉnh**
+   `readme/en`, `BASE.md`, `LIST.md`,
+   `README.vi.md`, Video hoặc Google Sheets. Nếu chạy `APPLY`, nên
+   đồng bộ lại video/metadata/menu tổng hợp bằng các task chuyên trách
+   sau khi duyệt thay đổi.
 
 Tài liệu chính thức: [Application Default Credentials](https://cloud.google.com/docs/authentication/application-default-credentials),
 [Service Account Impersonation](https://cloud.google.com/docs/authentication/use-service-account-impersonation),

@@ -129,6 +129,12 @@ class SheetContentImportCoordinatorTest {
                 ]
             }
         }
-        return new SheetContentImportCoordinator(reader, roadmap)
+        ReadmeSheetImportService readme = new ReadmeSheetImportService() {
+            @Override
+            Map<String, Object> execute(File root, Map<String, Object> context, boolean apply) {
+                return [status: 'SKIPPED_EMPTY_MENU', groups: 0, lessons: 0]
+            }
+        }
+        return new SheetContentImportCoordinator(reader, roadmap, readme)
     }
 }

@@ -11,13 +11,16 @@ class SheetContentImportCoordinator {
 
     private final SheetsMetadataReaderService sheetsReader
     private final RoadmapSheetImportService roadmapImporter
+    private final ReadmeSheetImportService readmeImporter
 
     SheetContentImportCoordinator(
             SheetsMetadataReaderService sheetsReader = new SheetsMetadataReaderService(),
-            RoadmapSheetImportService roadmapImporter = new RoadmapSheetImportService()
+            RoadmapSheetImportService roadmapImporter = new RoadmapSheetImportService(),
+            ReadmeSheetImportService readmeImporter = new ReadmeSheetImportService()
     ) {
         this.sheetsReader = sheetsReader
         this.roadmapImporter = roadmapImporter
+        this.readmeImporter = readmeImporter
     }
 
     Map<String, Object> importByLocation(
@@ -44,7 +47,7 @@ class SheetContentImportCoordinator {
             )
         }
         RoadmapSheetImportService.resolveDestination(root, expected)
-        return roadmapImporter.execute(root, context, apply)
+        return importTab(root, context, apply)
     }
 
     /**
@@ -102,13 +105,14 @@ class SheetContentImportCoordinator {
 
         entries.findAll { Map item -> item.status == 'PENDING' }.each { Map item ->
             try {
-                Map<String, Object> result = roadmapImporter.execute(
+                Map<String, Object> result = importTab(
                         rootDirectory, item.context as Map<String, Object>, apply
                 )
                 item.status = result.status
                 item.milestones = result.milestones
                 item.file = result.file
                 item.backup = result.backup
+                item.readme = result.readme
             }
             catch (Exception error) {
                 item.status = 'FAILED'
@@ -129,5 +133,17 @@ class SheetContentImportCoordinator {
                 total  : entries.size(),
                 failed : entries.count { Map item -> item.status == 'FAILED' }
         ]
+    }
+
+    private Map<String, Object> importTab(
+            File rootDirectory, Map<String, Object> context, boolean apply
+    ) {
+        Map<String, Object> roadmap = roadmapImporter.execute(
+                rootDirectory, context, apply
+        )
+        Map<String, Object> readme = readmeImporter.execute(
+                rootDirectory, context, apply
+        )
+        return roadmap + [readme: readme]
     }
 }

@@ -51,18 +51,33 @@ abstract class GenerateModuleContentFromSheetByLocationTask
         )
         if (result.status == 'SKIPPED_EMPTY') {
             logger.warn(
-                    '[SHEETS-ROADMAP] SKIPPED: F3:H3 is empty on tab="{}" (gid={}); no files written.',
+                    '[SHEETS-ROADMAP] SKIPPED: F3:H3 is empty on tab="{}" (gid={}); no Roadmap write.',
                     result.tab, result.gid
             )
-            return
         }
-        logger.lifecycle(
-                '[SHEETS-ROADMAP] {}: tab="{}" (gid={}), location={}, milestones={}, file={}',
-                result.status, result.tab, result.gid,
-                result.location, result.milestones, result.file
-        )
+        else {
+            logger.lifecycle(
+                    '[SHEETS-ROADMAP] {}: tab="{}" (gid={}), location={}, milestones={}, file={}',
+                    result.status, result.tab, result.gid,
+                    result.location, result.milestones, result.file
+            )
+        }
         if (result.backup) {
             logger.lifecycle('[SHEETS-ROADMAP] Original Roadmap backup: {}', result.backup)
+        }
+        Map readme = result.readme as Map
+        if (readme.status.toString().startsWith('SKIPPED_')) {
+            logger.warn(
+                    '[SHEETS-README] {}: tab="{}" (gid={}), missing filename rows={}, no README write.',
+                    readme.status, readme.tab, readme.gid, readme.missingRows
+            )
+        }
+        else {
+            logger.lifecycle(
+                    '[SHEETS-README] {}: groups={}, lessons={}, cleared-old-files={}, directory={}',
+                    readme.status, readme.groups, readme.lessons,
+                    readme.clearedOldFiles ?: 0, readme.directory
+            )
         }
     }
 }

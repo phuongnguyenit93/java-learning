@@ -91,28 +91,10 @@ class GenerateInternalReadmeMenuService {
                 )
 
 
-        content =
-                normalizeLineEnding(
-                        content
-                )
-
-
-        ParsedDocument document =
-                parseDocument(
-                        content
-                )
-
-
-        UiText uiText =
-                resolveUiText(
-                        markdownFile
-                )
-
-
         String generatedContent =
-                renderDocument(
-                        document,
-                        uiText
+                render(
+                        content,
+                        resolveLanguage(markdownFile)
                 )
 
 
@@ -120,6 +102,19 @@ class GenerateInternalReadmeMenuService {
                 generatedContent,
                 'UTF-8'
         )
+    }
+
+    /**
+     * Render in memory so Sheet importers can preflight every README before
+     * replacing any existing files. The legacy file task uses the same path.
+     */
+    String render(String content, String language) {
+        String normalized = normalizeLineEnding(content)
+        ParsedDocument document = parseDocument(normalized)
+        UiText uiText = language?.toLowerCase(Locale.ROOT) == 'vi'
+                ? new UiText('Xem chi tiết', 'Quay lại đầu trang')
+                : new UiText('Click for details', 'Back to top')
+        return renderDocument(document, uiText)
     }
 
 
@@ -480,7 +475,7 @@ Expected format:
     }
 
 
-    private static UiText resolveUiText(
+    private static String resolveLanguage(
             File markdownFile
     ) {
 
@@ -521,19 +516,7 @@ Expected format:
                         : ''
 
 
-        if (language == 'vi') {
-
-            return new UiText(
-                    'Xem chi tiết',
-                    'Quay lại đầu trang'
-            )
-        }
-
-
-        return new UiText(
-                'Click for details',
-                'Back to top'
-        )
+        return language
     }
 
 

@@ -70,6 +70,22 @@ abstract class GenerateModuleContentFromSheetByFilesTask extends DefaultTask {
                     logger.lifecycle('[SHEETS-FILES] Original Roadmap backup: {}', item.backup)
                 }
             }
+            if (item.readme) {
+                Map readme = item.readme as Map
+                if (readme.status.toString().startsWith('SKIPPED_')) {
+                    logger.warn(
+                            '[SHEETS-FILES-README] {} tab="{}" (gid={}), missing filename rows={}',
+                            readme.status, item.tab, item.gid, readme.missingRows
+                    )
+                }
+                else {
+                    logger.lifecycle(
+                            '[SHEETS-FILES-README] {} tab="{}" groups={} lessons={} cleared-old-files={} directory={}',
+                            readme.status, item.tab, readme.groups, readme.lessons,
+                            readme.clearedOldFiles ?: 0, readme.directory
+                    )
+                }
+            }
         }
         logger.lifecycle(
                 '[SHEETS-FILES] SUMMARY total={}, failed={}, skipped-empty={}, unchanged={}, dry-run={}, imported={}, updated={}',
