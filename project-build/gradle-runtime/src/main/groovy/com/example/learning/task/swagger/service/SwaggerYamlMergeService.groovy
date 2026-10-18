@@ -234,7 +234,7 @@ ${swaggerDirectory.absolutePath}
         File menuDirectory =
                 new File(
                         projectDirectory,
-                        "readme/${language}/menu"
+                        "content/readme/docs/${language}/menu"
                 )
 
 

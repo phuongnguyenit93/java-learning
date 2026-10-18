@@ -9,7 +9,7 @@ import org.gradle.api.logging.Logger
 class ReferenceStructureService {
 
     private static final String REFERENCE_FILE =
-            'reference/references.yml'
+            'content/reference/references.yml'
 
 
     private static final String SKELETON =

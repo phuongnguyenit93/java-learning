@@ -1,29 +1,29 @@
 # 📂 README MODULE STRUCTURE (VI)
 
 * **1.RuntimeModel**
-    * [RuntimeModel](readme/vi/menu/1.RuntimeModel/RuntimeModel.md)
+    * [RuntimeModel](content/readme/docs/vi/menu/1.RuntimeModel/RuntimeModel.md)
 * **2.ApplicationLifecycleEvents**
-    * [ApplicationLifecycleEvents](readme/vi/menu/2.ApplicationLifecycleEvents/ApplicationLifecycleEvents.md)
+    * [ApplicationLifecycleEvents](content/readme/docs/vi/menu/2.ApplicationLifecycleEvents/ApplicationLifecycleEvents.md)
 * **3.ArgumentsAndRunners**
-    * [ArgumentsAndRunners](readme/vi/menu/3.ArgumentsAndRunners/ArgumentsAndRunners.md)
+    * [ArgumentsAndRunners](content/readme/docs/vi/menu/3.ArgumentsAndRunners/ArgumentsAndRunners.md)
 * **4.AvailabilityFailureExit**
-    * [AvailabilityFailureExit](readme/vi/menu/4.AvailabilityFailureExit/AvailabilityFailureExit.md)
+    * [AvailabilityFailureExit](content/readme/docs/vi/menu/4.AvailabilityFailureExit/AvailabilityFailureExit.md)
 * **5.TaskExecutionScheduling**
-    * [TaskExecutionScheduling](readme/vi/menu/5.TaskExecutionScheduling/TaskExecutionScheduling.md)
+    * [TaskExecutionScheduling](content/readme/docs/vi/menu/5.TaskExecutionScheduling/TaskExecutionScheduling.md)
 * **6.VirtualThreads**
-    * [VirtualThreads](readme/vi/menu/6.VirtualThreads/VirtualThreads.md)
+    * [VirtualThreads](content/readme/docs/vi/menu/6.VirtualThreads/VirtualThreads.md)
 * **7.StartupOptimization**
-    * [StartupOptimization](readme/vi/menu/7.StartupOptimization/StartupOptimization.md)
+    * [StartupOptimization](content/readme/docs/vi/menu/7.StartupOptimization/StartupOptimization.md)
 * **8.RuntimeCustomization**
-    * [RuntimeCustomization](readme/vi/menu/8.RuntimeCustomization/RuntimeCustomization.md)
+    * [RuntimeCustomization](content/readme/docs/vi/menu/8.RuntimeCustomization/RuntimeCustomization.md)
 * **9.Logging**
-    * [Logging](readme/vi/menu/9.Logging/Logging.md)
+    * [Logging](content/readme/docs/vi/menu/9.Logging/Logging.md)
 * **10.SslBundles**
-    * [SslBundles](readme/vi/menu/10.SslBundles/SslBundles.md)
+    * [SslBundles](content/readme/docs/vi/menu/10.SslBundles/SslBundles.md)
 * **11.DockerCompose**
-    * [DockerCompose](readme/vi/menu/11.DockerCompose/DockerCompose.md)
+    * [DockerCompose](content/readme/docs/vi/menu/11.DockerCompose/DockerCompose.md)
 * **12.RuntimeSynthesis**
-    * [RuntimeSynthesis](readme/vi/menu/12.RuntimeSynthesis/RuntimeSynthesis.md)
+    * [RuntimeSynthesis](content/readme/docs/vi/menu/12.RuntimeSynthesis/RuntimeSynthesis.md)
 
 # Spring Boot Application Runtime
 

@@ -19,7 +19,7 @@ public class MemorySegmentExperimentController {
         this.experimentService = experimentService;
     }
 
-    /** README: readme/vi/menu/6.MemorySegment/MemorySegment.md#segment-spatial-bounds */
+    /** README: content/readme/docs/vi/menu/6.MemorySegment/MemorySegment.md#segment-spatial-bounds */
     @GetMapping("/spatial-bounds")
     public Map<String, Object> spatialBounds() {
         return experimentService.spatialBoundsDemo();

@@ -26,6 +26,7 @@ class ModuleOrderService {
                     'node_modules',
                     '.git',
                     'src',
+                    'content',
                     'readme',
                     'roadmap',
                     'reference',

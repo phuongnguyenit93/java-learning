@@ -1,25 +1,25 @@
 # 📂 README MODULE STRUCTURE (EN)
 
 * **1.ConfigurationMentalModel**
-    * [ConfigurationMentalModel](readme/en/menu/1.ConfigurationMentalModel/ConfigurationMentalModel.md)
+    * [ConfigurationMentalModel](content/readme/docs/en/menu/1.ConfigurationMentalModel/ConfigurationMentalModel.md)
 * **2.PropertySourcesAndPrecedence**
-    * [PropertySourcesAndPrecedence](readme/en/menu/2.PropertySourcesAndPrecedence/PropertySourcesAndPrecedence.md)
+    * [PropertySourcesAndPrecedence](content/readme/docs/en/menu/2.PropertySourcesAndPrecedence/PropertySourcesAndPrecedence.md)
 * **3.ConfigDataFilesAndLocations**
-    * [ConfigDataFilesAndLocations](readme/en/menu/3.ConfigDataFilesAndLocations/ConfigDataFilesAndLocations.md)
+    * [ConfigDataFilesAndLocations](content/readme/docs/en/menu/3.ConfigDataFilesAndLocations/ConfigDataFilesAndLocations.md)
 * **4.ConfigDataImportsAndTrees**
-    * [ConfigDataImportsAndTrees](readme/en/menu/4.ConfigDataImportsAndTrees/ConfigDataImportsAndTrees.md)
+    * [ConfigDataImportsAndTrees](content/readme/docs/en/menu/4.ConfigDataImportsAndTrees/ConfigDataImportsAndTrees.md)
 * **5.ProfilesAndActivation**
-    * [ProfilesAndActivation](readme/en/menu/5.ProfilesAndActivation/ProfilesAndActivation.md)
+    * [ProfilesAndActivation](content/readme/docs/en/menu/5.ProfilesAndActivation/ProfilesAndActivation.md)
 * **6.EnvironmentValueAndPlaceholders**
-    * [EnvironmentValueAndPlaceholders](readme/en/menu/6.EnvironmentValueAndPlaceholders/EnvironmentValueAndPlaceholders.md)
+    * [EnvironmentValueAndPlaceholders](content/readme/docs/en/menu/6.EnvironmentValueAndPlaceholders/EnvironmentValueAndPlaceholders.md)
 * **7.ConfigurationProperties**
-    * [ConfigurationProperties](readme/en/menu/7.ConfigurationProperties/ConfigurationProperties.md)
+    * [ConfigurationProperties](content/readme/docs/en/menu/7.ConfigurationProperties/ConfigurationProperties.md)
 * **8.RelaxedAndComplexBinding**
-    * [RelaxedAndComplexBinding](readme/en/menu/8.RelaxedAndComplexBinding/RelaxedAndComplexBinding.md)
+    * [RelaxedAndComplexBinding](content/readme/docs/en/menu/8.RelaxedAndComplexBinding/RelaxedAndComplexBinding.md)
 * **9.ValidationAndMetadata**
-    * [ValidationAndMetadata](readme/en/menu/9.ValidationAndMetadata/ValidationAndMetadata.md)
+    * [ValidationAndMetadata](content/readme/docs/en/menu/9.ValidationAndMetadata/ValidationAndMetadata.md)
 * **10.DiagnosticsAndSynthesis**
-    * [DiagnosticsAndSynthesis](readme/en/menu/10.DiagnosticsAndSynthesis/DiagnosticsAndSynthesis.md)
+    * [DiagnosticsAndSynthesis](content/readme/docs/en/menu/10.DiagnosticsAndSynthesis/DiagnosticsAndSynthesis.md)
 
 # Spring Boot Externalized Configuration
 

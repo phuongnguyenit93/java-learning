@@ -1,31 +1,31 @@
 # 📂 README MODULE STRUCTURE (VI)
 
 * **1.Introduction**
-    * [SpringMessaging](readme/vi/menu/1.Introduction/SpringMessaging.md)
+    * [SpringMessaging](content/readme/docs/vi/menu/1.Introduction/SpringMessaging.md)
 * **2.MessageModel**
-    * [MessageModel](readme/vi/menu/2.MessageModel/MessageModel.md)
+    * [MessageModel](content/readme/docs/vi/menu/2.MessageModel/MessageModel.md)
 * **3.WebSocketFoundation**
-    * [WebSocketFoundation](readme/vi/menu/3.WebSocketFoundation/WebSocketFoundation.md)
+    * [WebSocketFoundation](content/readme/docs/vi/menu/3.WebSocketFoundation/WebSocketFoundation.md)
 * **4.StompModel**
-    * [StompModel](readme/vi/menu/4.StompModel/StompModel.md)
+    * [StompModel](content/readme/docs/vi/menu/4.StompModel/StompModel.md)
 * **5.StompMessageFlow**
-    * [StompMessageFlow](readme/vi/menu/5.StompMessageFlow/StompMessageFlow.md)
+    * [StompMessageFlow](content/readme/docs/vi/menu/5.StompMessageFlow/StompMessageFlow.md)
 * **6.StompApplicationHandling**
-    * [StompApplicationHandling](readme/vi/menu/6.StompApplicationHandling/StompApplicationHandling.md)
+    * [StompApplicationHandling](content/readme/docs/vi/menu/6.StompApplicationHandling/StompApplicationHandling.md)
 * **7.BrokerRouting**
-    * [BrokerRouting](readme/vi/menu/7.BrokerRouting/BrokerRouting.md)
+    * [BrokerRouting](content/readme/docs/vi/menu/7.BrokerRouting/BrokerRouting.md)
 * **8.StompClientLifecycle**
-    * [StompClientLifecycle](readme/vi/menu/8.StompClientLifecycle/StompClientLifecycle.md)
+    * [StompClientLifecycle](content/readme/docs/vi/menu/8.StompClientLifecycle/StompClientLifecycle.md)
 * **9.StompLifecycleInterception**
-    * [StompLifecycleInterception](readme/vi/menu/9.StompLifecycleInterception/StompLifecycleInterception.md)
+    * [StompLifecycleInterception](content/readme/docs/vi/menu/9.StompLifecycleInterception/StompLifecycleInterception.md)
 * **10.RSocketInteraction**
-    * [RSocketInteraction](readme/vi/menu/10.RSocketInteraction/RSocketInteraction.md)
+    * [RSocketInteraction](content/readme/docs/vi/menu/10.RSocketInteraction/RSocketInteraction.md)
 * **11.RSocketRequester**
-    * [RSocketRequester](readme/vi/menu/11.RSocketRequester/RSocketRequester.md)
+    * [RSocketRequester](content/readme/docs/vi/menu/11.RSocketRequester/RSocketRequester.md)
 * **12.RSocketResponders**
-    * [RSocketResponders](readme/vi/menu/12.RSocketResponders/RSocketResponders.md)
+    * [RSocketResponders](content/readme/docs/vi/menu/12.RSocketResponders/RSocketResponders.md)
 * **13.OperationsTestingDecisions**
-    * [OperationsTestingDecisions](readme/vi/menu/13.OperationsTestingDecisions/OperationsTestingDecisions.md)
+    * [OperationsTestingDecisions](content/readme/docs/vi/menu/13.OperationsTestingDecisions/OperationsTestingDecisions.md)
 
 # Spring Messaging
 

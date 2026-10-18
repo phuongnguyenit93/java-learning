@@ -20,7 +20,7 @@ import static org.springframework.http.HttpStatus.SERVICE_UNAVAILABLE;
 public class ReactiveContextController {
 
     /**
-     * README: readme/en/menu/6.CrossCuttingProcessing/CrossCuttingProcessing.md#webflux-reactor-context
+     * README: content/readme/docs/en/menu/6.CrossCuttingProcessing/CrossCuttingProcessing.md#webflux-reactor-context
      * Purpose: Prove that a WebFilter can attach contextual data to the reactive subscription.
      */
     @GetMapping("/reactor")
@@ -58,7 +58,7 @@ public class ReactiveContextController {
     }
 
     /**
-     * README: readme/en/menu/6.CrossCuttingProcessing/CrossCuttingProcessing.md#webflux-blocking-execution
+     * README: content/readme/docs/en/menu/6.CrossCuttingProcessing/CrossCuttingProcessing.md#webflux-blocking-execution
      * Purpose: Prove that Spring 6.1 can invoke selected annotated controller methods on a bounded executor.
      */
     @BlockingExperiment

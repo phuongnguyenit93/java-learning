@@ -1,13 +1,13 @@
 # 📂 README MODULE STRUCTURE (EN)
 
-* [01-git-foundations](readme/en/menu/01-git-foundations.md)
-* [02-recording-commits](readme/en/menu/02-recording-commits.md)
-* [03-branches-refs-tags](readme/en/menu/03-branches-refs-tags.md)
-* [04-merges-and-conflicts](readme/en/menu/04-merges-and-conflicts.md)
-* [05-remotes-and-sync](readme/en/menu/05-remotes-and-sync.md)
-* [06-rebase-and-rewrite](readme/en/menu/06-rebase-and-rewrite.md)
-* [07-stash-undo-recovery](readme/en/menu/07-stash-undo-recovery.md)
-* [08-end-to-end-git](readme/en/menu/08-end-to-end-git.md)
+* [01-git-foundations](content/readme/docs/en/menu/01-git-foundations.md)
+* [02-recording-commits](content/readme/docs/en/menu/02-recording-commits.md)
+* [03-branches-refs-tags](content/readme/docs/en/menu/03-branches-refs-tags.md)
+* [04-merges-and-conflicts](content/readme/docs/en/menu/04-merges-and-conflicts.md)
+* [05-remotes-and-sync](content/readme/docs/en/menu/05-remotes-and-sync.md)
+* [06-rebase-and-rewrite](content/readme/docs/en/menu/06-rebase-and-rewrite.md)
+* [07-stash-undo-recovery](content/readme/docs/en/menu/07-stash-undo-recovery.md)
+* [08-end-to-end-git](content/readme/docs/en/menu/08-end-to-end-git.md)
 
 # Git: Managing Source Change History
 

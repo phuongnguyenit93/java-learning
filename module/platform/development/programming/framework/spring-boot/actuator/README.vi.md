@@ -1,27 +1,27 @@
 # 📂 README MODULE STRUCTURE (VI)
 
 * **1.ActuatorPurpose**
-    * [ActuatorPurpose](readme/vi/menu/1.ActuatorPurpose/ActuatorPurpose.md)
+    * [ActuatorPurpose](content/readme/docs/vi/menu/1.ActuatorPurpose/ActuatorPurpose.md)
 * **2.EndpointModel**
-    * [EndpointModel](readme/vi/menu/2.EndpointModel/EndpointModel.md)
+    * [EndpointModel](content/readme/docs/vi/menu/2.EndpointModel/EndpointModel.md)
 * **3.EndpointAvailabilityExposure**
-    * [EndpointAvailabilityExposure](readme/vi/menu/3.EndpointAvailabilityExposure/EndpointAvailabilityExposure.md)
+    * [EndpointAvailabilityExposure](content/readme/docs/vi/menu/3.EndpointAvailabilityExposure/EndpointAvailabilityExposure.md)
 * **4.Health**
-    * [Health](readme/vi/menu/4.Health/Health.md)
+    * [Health](content/readme/docs/vi/menu/4.Health/Health.md)
 * **5.AvailabilityProbes**
-    * [AvailabilityProbes](readme/vi/menu/5.AvailabilityProbes/AvailabilityProbes.md)
+    * [AvailabilityProbes](content/readme/docs/vi/menu/5.AvailabilityProbes/AvailabilityProbes.md)
 * **6.InfoEnvironment**
-    * [InfoEnvironment](readme/vi/menu/6.InfoEnvironment/InfoEnvironment.md)
+    * [InfoEnvironment](content/readme/docs/vi/menu/6.InfoEnvironment/InfoEnvironment.md)
 * **7.MetricsMicrometer**
-    * [MetricsMicrometer](readme/vi/menu/7.MetricsMicrometer/MetricsMicrometer.md)
+    * [MetricsMicrometer](content/readme/docs/vi/menu/7.MetricsMicrometer/MetricsMicrometer.md)
 * **8.LoggersDiagnostics**
-    * [LoggersDiagnostics](readme/vi/menu/8.LoggersDiagnostics/LoggersDiagnostics.md)
+    * [LoggersDiagnostics](content/readme/docs/vi/menu/8.LoggersDiagnostics/LoggersDiagnostics.md)
 * **9.CustomEndpoints**
-    * [CustomEndpoints](readme/vi/menu/9.CustomEndpoints/CustomEndpoints.md)
+    * [CustomEndpoints](content/readme/docs/vi/menu/9.CustomEndpoints/CustomEndpoints.md)
 * **10.ManagementAccess**
-    * [ManagementAccess](readme/vi/menu/10.ManagementAccess/ManagementAccess.md)
+    * [ManagementAccess](content/readme/docs/vi/menu/10.ManagementAccess/ManagementAccess.md)
 * **11.ObservabilitySynthesis**
-    * [ObservabilitySynthesis](readme/vi/menu/11.ObservabilitySynthesis/ObservabilitySynthesis.md)
+    * [ObservabilitySynthesis](content/readme/docs/vi/menu/11.ObservabilitySynthesis/ObservabilitySynthesis.md)
 
 # Spring Boot Actuator
 

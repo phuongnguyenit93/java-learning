@@ -7,7 +7,7 @@ import org.gradle.api.GradleException
 /**
  * Deterministic Video Script migration. Does NOT invoke AI or infer content.
  * The Sheet supplies the whole Markdown, and the README relative path supplies
- * the exact video path. On APPLY, the entire old video/vi/menu tree is replaced.
+ * the exact video path. On APPLY, the entire content/video/vi/menu tree is replaced.
  */
 class VideoSheetImportService {
     private static final int CELL_LIMIT = 30000
@@ -24,7 +24,7 @@ class VideoSheetImportService {
         if (parsed.status != 'READY') {
             if (parsed.status == 'SKIPPED_EMPTY_MENU') {
                 File emptyDirectory = new File(
-                        readme.parentFile.parentFile.parentFile, 'video/vi/menu'
+                        readme.parentFile.parentFile.parentFile.parentFile, 'video/vi/menu'
                 )
                 return sync(emptyDirectory, [], [:], apply, root) + [
                         tab: context.tabTitle, gid: context.sheetId,
@@ -38,7 +38,7 @@ class VideoSheetImportService {
         List<List<Object>> video = (sheets.spreadsheets().values()
                 .get(id, tab + '!N1:R' + (groups.size() + 2))
                 .execute().values ?: []) as List<List<Object>>
-        File directory = new File(readme.parentFile.parentFile.parentFile, 'video/vi/menu')
+        File directory = new File(readme.parentFile.parentFile.parentFile.parentFile, 'video/vi/menu')
         Map<String, String> scripts = parseSheet(groups, video)
         return sync(directory, groups, scripts, apply, root) + [
                 tab: context.tabTitle, gid: context.sheetId,
@@ -197,7 +197,7 @@ class VideoSheetImportService {
 
     /**
      * The current Sheet is the complete Video source of truth. APPLY replaces
-     * the entire video/vi/menu tree, including obsolete authored files and
+     * the entire content/video/vi/menu tree, including obsolete authored files and
      * empty-chapter skeletons, without preserving old metadata or backups.
      */
     static Map sync(

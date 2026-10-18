@@ -19,7 +19,7 @@ public class MemoryLayoutExperimentController {
         this.experimentService = experimentService;
     }
 
-    /** README: readme/vi/menu/8.MemoryLayout/MemoryLayout.md#layout-path-access */
+    /** README: content/readme/docs/vi/menu/8.MemoryLayout/MemoryLayout.md#layout-path-access */
     @GetMapping("/struct-offset")
     public Map<String, Object> structOffset() {
         return experimentService.structOffsetDemo();

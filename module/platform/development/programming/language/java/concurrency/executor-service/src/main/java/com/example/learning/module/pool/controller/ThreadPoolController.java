@@ -17,14 +17,14 @@ public class ThreadPoolController {
         this.threadPoolService = threadPoolService;
     }
 
-    /** README: readme/vi/menu/1.Thread_Pool_Executor/ThreadPoolExecutor.md#thread-pool-flow */
+    /** README: content/readme/docs/vi/menu/1.Thread_Pool_Executor/ThreadPoolExecutor.md#thread-pool-flow */
     @GetMapping("/executor-flow")
     public Map<String, Object> executorFlow() throws InterruptedException {
         return threadPoolService.executorFlowDemo();
     }
 
     /**
-     * README: readme/vi/menu/1.Thread_Pool_Executor/ThreadPoolExecutor.md#execute-vs-submit
+     * README: content/readme/docs/vi/menu/1.Thread_Pool_Executor/ThreadPoolExecutor.md#execute-vs-submit
      * Purpose: Phân biệt result/exception channel của execute() và submit().
      */
     @GetMapping("/execute-vs-submit")
@@ -32,14 +32,14 @@ public class ThreadPoolController {
         return threadPoolService.executeVsSubmitDemo();
     }
 
-    /** README: readme/vi/menu/1.Thread_Pool_Executor/ThreadPoolExecutor.md#executors-factories */
+    /** README: content/readme/docs/vi/menu/1.Thread_Pool_Executor/ThreadPoolExecutor.md#executors-factories */
     @GetMapping("/fixed-pool-reuse")
     public Map<String, Object> fixedPoolReuse() throws InterruptedException {
         return threadPoolService.fixedPoolReuseDemo();
     }
 
     /**
-     * README: readme/vi/menu/1.Thread_Pool_Executor/ThreadPoolExecutor.md#executors-factories
+     * README: content/readme/docs/vi/menu/1.Thread_Pool_Executor/ThreadPoolExecutor.md#executors-factories
      * Purpose: Quan sát semantics đại diện của fixed, cached, single và scheduled executor factory bằng experiment bounded.
      */
     @GetMapping("/executor-factories")
@@ -48,7 +48,7 @@ public class ThreadPoolController {
     }
 
     /**
-     * README: readme/vi/menu/1.Thread_Pool_Executor/ThreadPoolExecutor.md#scheduled-execution
+     * README: content/readme/docs/vi/menu/1.Thread_Pool_Executor/ThreadPoolExecutor.md#scheduled-execution
      * Purpose: Đo start/end và khoảng nghỉ của fixed-rate/fixed-delay khi task lâu hơn period.
      */
     @GetMapping("/scheduled-execution")
@@ -57,7 +57,7 @@ public class ThreadPoolController {
     }
 
     /**
-     * README: readme/vi/menu/1.Thread_Pool_Executor/ThreadPoolExecutor.md#scheduled-failure
+     * README: content/readme/docs/vi/menu/1.Thread_Pool_Executor/ThreadPoolExecutor.md#scheduled-failure
      * Purpose: Chứng minh exception thoát khỏi periodic task suppress các execution tiếp theo của cùng task.
      */
     @GetMapping("/scheduled-failure")
@@ -65,14 +65,14 @@ public class ThreadPoolController {
         return threadPoolService.scheduledFailureDemo();
     }
 
-    /** README: readme/vi/menu/1.Thread_Pool_Executor/ThreadPoolExecutor.md#rejection-policy */
+    /** README: content/readme/docs/vi/menu/1.Thread_Pool_Executor/ThreadPoolExecutor.md#rejection-policy */
     @GetMapping("/caller-runs")
     public Map<String, Object> callerRuns() throws InterruptedException {
         return threadPoolService.callerRunsDemo();
     }
 
     /**
-     * README: readme/vi/menu/1.Thread_Pool_Executor/ThreadPoolExecutor.md#rejection-policy
+     * README: content/readme/docs/vi/menu/1.Thread_Pool_Executor/ThreadPoolExecutor.md#rejection-policy
      * Purpose: So sánh semantics mất task của DiscardPolicy và DiscardOldestPolicy theo cách bounded.
      */
     @GetMapping("/discard-policies")
@@ -81,7 +81,7 @@ public class ThreadPoolController {
     }
 
     /**
-     * README: readme/vi/menu/1.Thread_Pool_Executor/ThreadPoolExecutor.md#custom-rejection-handler
+     * README: content/readme/docs/vi/menu/1.Thread_Pool_Executor/ThreadPoolExecutor.md#custom-rejection-handler
      * Purpose: Minh họa custom RejectedExecutionHandler ghi nhận overload rồi reject rõ ràng.
      */
     @GetMapping("/custom-rejection-handler")
@@ -89,14 +89,14 @@ public class ThreadPoolController {
         return threadPoolService.customRejectionHandlerDemo();
     }
 
-    /** README: readme/vi/menu/1.Thread_Pool_Executor/ThreadPoolExecutor.md#graceful-shutdown */
+    /** README: content/readme/docs/vi/menu/1.Thread_Pool_Executor/ThreadPoolExecutor.md#graceful-shutdown */
     @GetMapping("/graceful-shutdown")
     public Map<String, Object> gracefulShutdown() throws InterruptedException {
         return threadPoolService.gracefulShutdownDemo();
     }
 
     /**
-     * README: readme/vi/menu/1.Thread_Pool_Executor/ThreadPoolExecutor.md#graceful-shutdown
+     * README: content/readme/docs/vi/menu/1.Thread_Pool_Executor/ThreadPoolExecutor.md#graceful-shutdown
      * Purpose: Quan sát shutdownNow interrupt running task và trả lại task chưa bắt đầu.
      */
     @GetMapping("/forced-shutdown")

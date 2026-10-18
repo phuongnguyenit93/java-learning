@@ -1,21 +1,21 @@
 # 📂 README MODULE STRUCTURE (EN)
 
 * **1.Foundations**
-    * [SpringJmsFoundations](readme/en/menu/1.Foundations/SpringJmsFoundations.md)
+    * [SpringJmsFoundations](content/readme/docs/en/menu/1.Foundations/SpringJmsFoundations.md)
 * **2.TemplateAccess**
-    * [JmsTemplateAccess](readme/en/menu/2.TemplateAccess/JmsTemplateAccess.md)
+    * [JmsTemplateAccess](content/readme/docs/en/menu/2.TemplateAccess/JmsTemplateAccess.md)
 * **3.DestinationsConversionMetadata**
-    * [DestinationsConversionMetadata](readme/en/menu/3.DestinationsConversionMetadata/DestinationsConversionMetadata.md)
+    * [DestinationsConversionMetadata](content/readme/docs/en/menu/3.DestinationsConversionMetadata/DestinationsConversionMetadata.md)
 * **4.ListenerContainer**
-    * [ListenerContainer](readme/en/menu/4.ListenerContainer/ListenerContainer.md)
+    * [ListenerContainer](content/readme/docs/en/menu/4.ListenerContainer/ListenerContainer.md)
 * **5.AnnotationEndpoints**
-    * [AnnotationEndpoints](readme/en/menu/5.AnnotationEndpoints/AnnotationEndpoints.md)
+    * [AnnotationEndpoints](content/readme/docs/en/menu/5.AnnotationEndpoints/AnnotationEndpoints.md)
 * **6.TransactionsDelivery**
-    * [TransactionsDelivery](readme/en/menu/6.TransactionsDelivery/TransactionsDelivery.md)
+    * [TransactionsDelivery](content/readme/docs/en/menu/6.TransactionsDelivery/TransactionsDelivery.md)
 * **7.ConcurrencyRecoveryLifecycle**
-    * [ConcurrencyRecoveryLifecycle](readme/en/menu/7.ConcurrencyRecoveryLifecycle/ConcurrencyRecoveryLifecycle.md)
+    * [ConcurrencyRecoveryLifecycle](content/readme/docs/en/menu/7.ConcurrencyRecoveryLifecycle/ConcurrencyRecoveryLifecycle.md)
 * **8.ProductionReadiness**
-    * [ProductionReadiness](readme/en/menu/8.ProductionReadiness/ProductionReadiness.md)
+    * [ProductionReadiness](content/readme/docs/en/menu/8.ProductionReadiness/ProductionReadiness.md)
 
 # Spring JMS
 

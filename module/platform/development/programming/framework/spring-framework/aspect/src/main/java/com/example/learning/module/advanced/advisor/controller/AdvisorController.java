@@ -19,7 +19,7 @@ public class AdvisorController {
     }
 
     /**
-     * README: readme/vi/menu/11.Advisor/Advisor.md#advisor-demo
+     * README: content/readme/docs/vi/menu/11.Advisor/Advisor.md#advisor-demo
      * Purpose: Chứng minh DefaultPointcutAdvisor (một PointcutAdvisor) ghép Pointcut + Advice, đồng thời so sánh static và runtime MethodMatcher.
      */
     @GetMapping("/observe")

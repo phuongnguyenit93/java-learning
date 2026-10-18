@@ -1,12 +1,12 @@
 # 📂 README MODULE STRUCTURE (VI)
 
-* [01_BitbucketCollaborationFoundations](readme/vi/menu/01_BitbucketCollaborationFoundations.md)
-* [02_AccessAndRepositoryGovernance](readme/vi/menu/02_AccessAndRepositoryGovernance.md)
-* [03_PullRequestChangeProposals](readme/vi/menu/03_PullRequestChangeProposals.md)
-* [04_PullRequestReviewsAndTasks](readme/vi/menu/04_PullRequestReviewsAndTasks.md)
-* [05_BranchRestrictionsAndMergeChecks](readme/vi/menu/05_BranchRestrictionsAndMergeChecks.md)
-* [06_JiraConfluenceAndCollaboration](readme/vi/menu/06_JiraConfluenceAndCollaboration.md)
-* [07_GovernedBitbucketTeamWorkflow](readme/vi/menu/07_GovernedBitbucketTeamWorkflow.md)
+* [01_BitbucketCollaborationFoundations](content/readme/docs/vi/menu/01_BitbucketCollaborationFoundations.md)
+* [02_AccessAndRepositoryGovernance](content/readme/docs/vi/menu/02_AccessAndRepositoryGovernance.md)
+* [03_PullRequestChangeProposals](content/readme/docs/vi/menu/03_PullRequestChangeProposals.md)
+* [04_PullRequestReviewsAndTasks](content/readme/docs/vi/menu/04_PullRequestReviewsAndTasks.md)
+* [05_BranchRestrictionsAndMergeChecks](content/readme/docs/vi/menu/05_BranchRestrictionsAndMergeChecks.md)
+* [06_JiraConfluenceAndCollaboration](content/readme/docs/vi/menu/06_JiraConfluenceAndCollaboration.md)
+* [07_GovernedBitbucketTeamWorkflow](content/readme/docs/vi/menu/07_GovernedBitbucketTeamWorkflow.md)
 
 # Tổng quan — Cộng tác mã nguồn với Bitbucket Cloud
 

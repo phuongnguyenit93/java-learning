@@ -1,14 +1,14 @@
 # 📂 README MODULE STRUCTURE (EN)
 
-* [01-strategy-foundations](readme/en/menu/01-strategy-foundations.md)
-* [02-branch-lifetime-and-cadence](readme/en/menu/02-branch-lifetime-and-cadence.md)
-* [03-trunk-based-development](readme/en/menu/03-trunk-based-development.md)
-* [04-github-flow](readme/en/menu/04-github-flow.md)
-* [05-git-flow](readme/en/menu/05-git-flow.md)
-* [06-integration-history-policy](readme/en/menu/06-integration-history-policy.md)
-* [07-release-hotfix-policy](readme/en/menu/07-release-hotfix-policy.md)
-* [08-team-governance](readme/en/menu/08-team-governance.md)
-* [09-selection-and-diagnostics](readme/en/menu/09-selection-and-diagnostics.md)
+* [01-strategy-foundations](content/readme/docs/en/menu/01-strategy-foundations.md)
+* [02-branch-lifetime-and-cadence](content/readme/docs/en/menu/02-branch-lifetime-and-cadence.md)
+* [03-trunk-based-development](content/readme/docs/en/menu/03-trunk-based-development.md)
+* [04-github-flow](content/readme/docs/en/menu/04-github-flow.md)
+* [05-git-flow](content/readme/docs/en/menu/05-git-flow.md)
+* [06-integration-history-policy](content/readme/docs/en/menu/06-integration-history-policy.md)
+* [07-release-hotfix-policy](content/readme/docs/en/menu/07-release-hotfix-policy.md)
+* [08-team-governance](content/readme/docs/en/menu/08-team-governance.md)
+* [09-selection-and-diagnostics](content/readme/docs/en/menu/09-selection-and-diagnostics.md)
 
 # Overview: Team Branching and Integration Strategy
 

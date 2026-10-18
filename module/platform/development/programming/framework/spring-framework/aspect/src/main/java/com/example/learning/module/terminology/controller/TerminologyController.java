@@ -27,7 +27,7 @@ public class TerminologyController {
     }
 
     /**
-     * README: readme/vi/menu/2.Terminology/Terminology.md#terminology-demo
+     * README: content/readme/docs/vi/menu/2.Terminology/Terminology.md#terminology-demo
      * Purpose: Gắn các thuật ngữ Aspect, Advice, Join Point, Target và Proxy vào một method call thật.
      */
     @GetMapping("/inspect")

@@ -1,26 +1,26 @@
 # 📂 README MODULE STRUCTURE (VI)
 
 * **1.Introduction**
-    * [SpringDataRedis](readme/vi/menu/1.Introduction/SpringDataRedis.md)
+    * [SpringDataRedis](content/readme/docs/vi/menu/1.Introduction/SpringDataRedis.md)
 * **2.ConnectionFactory**
-    * [ConnectionFactory](readme/vi/menu/2.ConnectionFactory/ConnectionFactory.md)
+    * [ConnectionFactory](content/readme/docs/vi/menu/2.ConnectionFactory/ConnectionFactory.md)
 * **3.RedisTemplate**
-    * [RedisTemplate](readme/vi/menu/3.RedisTemplate/RedisTemplate.md)
+    * [RedisTemplate](content/readme/docs/vi/menu/3.RedisTemplate/RedisTemplate.md)
 * **4.Serialization**
-    * [Serialization](readme/vi/menu/4.Serialization/Serialization.md)
+    * [Serialization](content/readme/docs/vi/menu/4.Serialization/Serialization.md)
 * **5.Repositories**
-    * [Repositories](readme/vi/menu/5.Repositories/Repositories.md)
+    * [Repositories](content/readme/docs/vi/menu/5.Repositories/Repositories.md)
 * **6.TTL**
-    * [TTL](readme/vi/menu/6.TTL/TTL.md)
+    * [TTL](content/readme/docs/vi/menu/6.TTL/TTL.md)
 * **7.CacheAbstraction**
-    * [CacheAbstraction](readme/vi/menu/7.CacheAbstraction/CacheAbstraction.md)
+    * [CacheAbstraction](content/readme/docs/vi/menu/7.CacheAbstraction/CacheAbstraction.md)
 * **8.PubSub**
-    * [PubSub](readme/vi/menu/8.PubSub/PubSub.md)
+    * [PubSub](content/readme/docs/vi/menu/8.PubSub/PubSub.md)
 * **9.Streams**
-    * [Streams](readme/vi/menu/9.Streams/Streams.md)
+    * [Streams](content/readme/docs/vi/menu/9.Streams/Streams.md)
 * **10.ReactiveRedis**
-    * [ReactiveRedis](readme/vi/menu/10.ReactiveRedis/ReactiveRedis.md)
+    * [ReactiveRedis](content/readme/docs/vi/menu/10.ReactiveRedis/ReactiveRedis.md)
 * **11.TestingOperations**
-    * [TestingOperations](readme/vi/menu/11.TestingOperations/TestingOperations.md)
+    * [TestingOperations](content/readme/docs/vi/menu/11.TestingOperations/TestingOperations.md)
 
 

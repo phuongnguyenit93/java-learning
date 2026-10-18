@@ -77,7 +77,7 @@ Configure MODULE_LANGUAGE in master.json, for example:
                 File menuDirectory =
                         new File(
                                 projectDirectory,
-                                "readme/${language}/menu"
+                                "content/readme/docs/${language}/menu"
                         )
                                 .canonicalFile
 

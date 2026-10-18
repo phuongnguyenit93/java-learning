@@ -1,18 +1,18 @@
 # 📂 README MODULE STRUCTURE (EN)
 
 * **1.AbstractionPurpose**
-    * [AbstractionPurpose](readme/en/menu/1.AbstractionPurpose/AbstractionPurpose.md)
+    * [AbstractionPurpose](content/readme/docs/en/menu/1.AbstractionPurpose/AbstractionPurpose.md)
 * **2.AbstractClass**
-    * [AbstractClass](readme/en/menu/2.AbstractClass/AbstractClass.md)
+    * [AbstractClass](content/readme/docs/en/menu/2.AbstractClass/AbstractClass.md)
 * **3.Interface**
-    * [Interface](readme/en/menu/3.Interface/Interface.md)
+    * [Interface](content/readme/docs/en/menu/3.Interface/Interface.md)
 * **4.AbstractVsInterface**
-    * [AbstractVsInterface](readme/en/menu/4.AbstractVsInterface/AbstractVsInterface.md)
+    * [AbstractVsInterface](content/readme/docs/en/menu/4.AbstractVsInterface/AbstractVsInterface.md)
 * **5.InterfaceInheritance**
-    * [InterfaceInheritance](readme/en/menu/5.InterfaceInheritance/InterfaceInheritance.md)
+    * [InterfaceInheritance](content/readme/docs/en/menu/5.InterfaceInheritance/InterfaceInheritance.md)
 * **6.DefaultStaticPrivate**
-    * [DefaultStaticPrivate](readme/en/menu/6.DefaultStaticPrivate/DefaultStaticPrivate.md)
+    * [DefaultStaticPrivate](content/readme/docs/en/menu/6.DefaultStaticPrivate/DefaultStaticPrivate.md)
 * **7.MultipleInheritance**
-    * [MultipleInheritance](readme/en/menu/7.MultipleInheritance/MultipleInheritance.md)
+    * [MultipleInheritance](content/readme/docs/en/menu/7.MultipleInheritance/MultipleInheritance.md)
 * **8.AbstractionSynthesis**
-    * [AbstractionSynthesis](readme/en/menu/8.AbstractionSynthesis/AbstractionSynthesis.md)
+    * [AbstractionSynthesis](content/readme/docs/en/menu/8.AbstractionSynthesis/AbstractionSynthesis.md)

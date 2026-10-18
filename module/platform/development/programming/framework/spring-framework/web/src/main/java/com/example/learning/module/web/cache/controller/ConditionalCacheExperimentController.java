@@ -22,7 +22,7 @@ public class ConditionalCacheExperimentController {
             Instant.parse("2026-01-01T00:00:00Z").toEpochMilli();
 
     /**
-     * README: readme/en/menu/11.WebSupportResourceDelivery/WebSupportResourceDelivery.md#conditional-requests-and-http-caching
+     * README: content/readme/docs/en/menu/11.WebSupportResourceDelivery/WebSupportResourceDelivery.md#conditional-requests-and-http-caching
      * Purpose: Observe a deterministic 200 response become 304 when the client sends the current validator.
      */
     @GetMapping("/conditional")

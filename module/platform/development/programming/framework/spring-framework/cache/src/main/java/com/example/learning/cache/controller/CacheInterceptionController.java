@@ -18,7 +18,7 @@ public class CacheInterceptionController {
     }
 
     /**
-     * README: readme/en/menu/6.InterceptionBoundary/InterceptionBoundary.md#self-invocation
+     * README: content/readme/docs/en/menu/6.InterceptionBoundary/InterceptionBoundary.md#self-invocation
      * Purpose: Compare calls through the Spring proxy with self-invocation inside the target bean.
      */
     @GetMapping("/self-invocation")

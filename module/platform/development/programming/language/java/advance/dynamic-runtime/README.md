@@ -1,21 +1,21 @@
 # 📂 README MODULE STRUCTURE (EN)
 
 * **1.MentalModel**
-    * [DynamicRuntime](readme/en/menu/1.MentalModel/DynamicRuntime.md)
+    * [DynamicRuntime](content/readme/docs/en/menu/1.MentalModel/DynamicRuntime.md)
 * **2.TypedInvocation**
-    * [TypedInvocation](readme/en/menu/2.TypedInvocation/TypedInvocation.md)
+    * [TypedInvocation](content/readme/docs/en/menu/2.TypedInvocation/TypedInvocation.md)
 * **3.LookupAccess**
-    * [LookupAccess](readme/en/menu/3.LookupAccess/LookupAccess.md)
+    * [LookupAccess](content/readme/docs/en/menu/3.LookupAccess/LookupAccess.md)
 * **4.MethodHandleAdaptation**
-    * [MethodHandleAdaptation](readme/en/menu/4.MethodHandleAdaptation/MethodHandleAdaptation.md)
+    * [MethodHandleAdaptation](content/readme/docs/en/menu/4.MethodHandleAdaptation/MethodHandleAdaptation.md)
 * **5.CallSite**
-    * [CallSite](readme/en/menu/5.CallSite/CallSite.md)
+    * [CallSite](content/readme/docs/en/menu/5.CallSite/CallSite.md)
 * **6.InvokeDynamic**
-    * [InvokeDynamic](readme/en/menu/6.InvokeDynamic/InvokeDynamic.md)
+    * [InvokeDynamic](content/readme/docs/en/menu/6.InvokeDynamic/InvokeDynamic.md)
 * **7.VarHandle**
-    * [VarHandle](readme/en/menu/7.VarHandle/VarHandle.md)
+    * [VarHandle](content/readme/docs/en/menu/7.VarHandle/VarHandle.md)
 * **8.Synthesis**
-    * [Synthesis](readme/en/menu/8.Synthesis/Synthesis.md)
+    * [Synthesis](content/readme/docs/en/menu/8.Synthesis/Synthesis.md)
 
 # Dynamic Runtime
 

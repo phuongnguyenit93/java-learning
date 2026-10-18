@@ -1,17 +1,17 @@
 # 📂 README MODULE STRUCTURE (EN)
 
 * **1.Introduction**
-    * [FunctionalProgramming](readme/en/menu/1.Introduction/FunctionalProgramming.md)
+    * [FunctionalProgramming](content/readme/docs/en/menu/1.Introduction/FunctionalProgramming.md)
 * **2.PureFunctions**
-    * [PureFunctions](readme/en/menu/2.PureFunctions/PureFunctions.md)
+    * [PureFunctions](content/readme/docs/en/menu/2.PureFunctions/PureFunctions.md)
 * **3.Immutability**
-    * [Immutability](readme/en/menu/3.Immutability/Immutability.md)
+    * [Immutability](content/readme/docs/en/menu/3.Immutability/Immutability.md)
 * **4.FunctionsComposition**
-    * [FunctionsComposition](readme/en/menu/4.FunctionsComposition/FunctionsComposition.md)
+    * [FunctionsComposition](content/readme/docs/en/menu/4.FunctionsComposition/FunctionsComposition.md)
 * **5.SideEffects**
-    * [SideEffects](readme/en/menu/5.SideEffects/SideEffects.md)
+    * [SideEffects](content/readme/docs/en/menu/5.SideEffects/SideEffects.md)
 * **6.Tradeoffs**
-    * [Tradeoffs](readme/en/menu/6.Tradeoffs/Tradeoffs.md)
+    * [Tradeoffs](content/readme/docs/en/menu/6.Tradeoffs/Tradeoffs.md)
 
 # Functional Programming
 

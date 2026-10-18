@@ -18,7 +18,7 @@ public class DaemonThreadController {
     }
 
     /**
-     * README: readme/vi/menu/1.Basic/Basic.md#daemon-thread
+     * README: content/readme/docs/vi/menu/1.Basic/Basic.md#daemon-thread
      * Purpose: Quan sát daemon flag và quy tắc child Thread kế thừa daemon status.
      */
     @GetMapping("/inspect")

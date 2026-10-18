@@ -19,7 +19,7 @@ public class LinkerExperimentController {
         this.experimentService = experimentService;
     }
 
-    /** README: readme/vi/menu/10.DowncallUpcall/DowncallUpcall.md#downcall-handle */
+    /** README: content/readme/docs/vi/menu/10.DowncallUpcall/DowncallUpcall.md#downcall-handle */
     @GetMapping("/strlen")
     public Map<String, Object> nativeStrlen() {
         return experimentService.nativeStrlenDemo();

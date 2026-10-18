@@ -19,13 +19,13 @@ public class ArenaExperimentController {
         this.experimentService = experimentService;
     }
 
-    /** README: readme/vi/menu/7.ArenaLifetime/ArenaLifetime.md#temporal-safety */
+    /** README: content/readme/docs/vi/menu/7.ArenaLifetime/ArenaLifetime.md#temporal-safety */
     @GetMapping("/temporal-safety")
     public Map<String, Object> temporalSafety() {
         return experimentService.temporalSafetyDemo();
     }
 
-    /** README: readme/vi/menu/7.ArenaLifetime/ArenaLifetime.md#arena-thread-access */
+    /** README: content/readme/docs/vi/menu/7.ArenaLifetime/ArenaLifetime.md#arena-thread-access */
     @GetMapping("/thread-access")
     public Map<String, Object> threadAccess() {
         return experimentService.threadAccessDemo();

@@ -16,7 +16,7 @@ class PortalRoadmapProjectionService {
             LearningDataPaths.MODULE_DIRECTORY
 
     private static final String ROADMAP_DIRECTORY =
-            'roadmap'
+            'content/roadmap'
 
     private static final String ROADMAP_FILE =
             'roadmap.yml'

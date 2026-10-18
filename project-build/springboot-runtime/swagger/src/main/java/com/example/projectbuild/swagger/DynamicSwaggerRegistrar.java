@@ -4,8 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import io.swagger.v3.oas.models.Operation;
-import io.swagger.v3.oas.models.PathItem;
-import io.swagger.v3.oas.models.Paths;
 import io.swagger.v3.oas.models.parameters.Parameter;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.tags.Tag;
@@ -30,7 +28,6 @@ import org.springframework.util.ClassUtils;
 import java.io.InputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -125,489 +122,72 @@ public class DynamicSwaggerRegistrar implements ImportBeanDefinitionRegistrar , 
         };
     }
 
-    private OpenApiCustomizer customerGlobalOpenApiCustomizer(String languages) {
+    private OpenApiCustomizer customerGlobalOpenApiCustomizer(String language) {
         return openApi -> {
-            String readme = loadReadme(languages);
-
             if (openApi.getInfo() == null) {
                 openApi.setInfo(new Info());
             }
+            openApi.getInfo().setDescription(loadServiceName());
 
-            openApi.getInfo().setDescription(readme);
+            // Preserve descriptions, execution metadata, parameter annotations
+            // and embedded YouTube videos.
+            JsonNode apiDescs = loadYamlResource("swagger/" + language + "/api-descriptions.yml");
+            JsonNode apiExecutions = loadYamlResource("swagger/" + language + "/api-execution.yml");
+            JsonNode apiParams = loadYamlResource("swagger/" + language + "/api-params.yml");
+            JsonNode controllerDescs = loadYamlResource("swagger/" + language + "/controller-description.yml");
+            Map<String, String> controllerByTag = new LinkedHashMap<>();
 
-            // Load Swagger metadata từ resources
-            JsonNode apiDescs = loadYamlResource("swagger/" + languages + "/api-descriptions.yml");
-            JsonNode apiExecutions = loadYamlResource("swagger/" + languages + "/api-execution.yml");
-            JsonNode apiParams = loadYamlResource("swagger/" + languages + "/api-params.yml");
-            JsonNode controllerDescs = loadYamlResource("swagger/" + languages + "/controller-description.yml");
-
-            SwaggerReadmeMetadataResolver readmeResolver =
-                    new SwaggerReadmeMetadataResolver(resourceLoader);
-
-            Map<String, String> controllerByTag =
-                    new LinkedHashMap<>();
-
-            Map<String, SwaggerReadmeMetadataResolver.ReadmeReference> controllerReadmeByName =
-                    new LinkedHashMap<>();
-
-            Map<String, OperationReadmeOrder> pathReadmeOrder =
-                    new LinkedHashMap<>();
-
-            if (openApi.getPaths() == null) return;
+            if (openApi.getPaths() == null) {
+                return;
+            }
 
             openApi.getPaths().forEach((path, pathItem) -> {
                 pathItem.readOperationsMap().forEach((httpMethod, operation) -> {
-                    String controllerName =
-                            operation.getExtensions() == null
-                                    ? null
-                                    : (String) operation.getExtensions().get("x-controller-name");
-
-                    String methodSignature =
-                            operation.getExtensions() == null
-                                    ? null
-                                    : (String) operation.getExtensions().get("x-method-signature");
-
-                    JsonNode controllerNode =
-                            controllerName == null || controllerName.isBlank()
-                                    ? null
-                                    : controllerDescs.get(controllerName);
-
-                    SwaggerReadmeMetadataResolver.ReadmeReference controllerReadme =
-                            controllerName == null || controllerName.isBlank()
-                                    ? null
-                                    : controllerReadmeByName.computeIfAbsent(
-                                            controllerName,
-                                            ignored -> readmeResolver.resolveController(
-                                                    controllerNode,
-                                                    languages
-                                            )
-                                    );
+                    String controllerName = operation.getExtensions() == null
+                            ? null
+                            : (String) operation.getExtensions().get("x-controller-name");
+                    String methodSignature = operation.getExtensions() == null
+                            ? null
+                            : (String) operation.getExtensions().get("x-method-signature");
 
                     if (operation.getTags() != null) {
                         operation.getTags().forEach(tagName -> {
-                            Tag tag = findOrCreateTag(
-                                    openApi,
-                                    tagName,
-                                    controllerName
-                            );
-
-                            if (controllerName != null &&
-                                    !controllerName.isBlank()) {
-
-                                controllerByTag.putIfAbsent(
-                                        tag.getName(),
-                                        controllerName
-                                );
+                            Tag tag = findOrCreateTag(openApi, tagName, controllerName);
+                            if (controllerName != null && !controllerName.isBlank()) {
+                                controllerByTag.putIfAbsent(tag.getName(), controllerName);
                             }
                         });
                     }
 
-                    // Map cho Method (Summary & Description)
                     mapMethodMetadata(operation, apiDescs, controllerName, methodSignature);
-
-                    JsonNode methodNode =
-                            findMethodNode(
-                                    apiDescs,
-                                    controllerName,
-                                    methodSignature
-                            );
-
-                    if (controllerReadme != null) {
-                        SwaggerReadmeMetadataResolver.ReadmeReference methodReadme =
-                                readmeResolver.resolveMethod(
-                                        methodNode,
-                                        controllerReadme,
-                                        languages
-                                );
-
-                        operation.addExtension(
-                                "x-readme-related",
-                                methodReadme.toExtension()
-                        );
-
-                        warnInvalidReadmeMapping(
-                                languages,
-                                controllerName + "#" + methodSignature,
-                                methodReadme
-                        );
-
-                        OperationReadmeOrder candidateOrder =
-                                new OperationReadmeOrder(
-                                        controllerName,
-                                        methodSignature,
-                                        controllerReadme,
-                                        methodReadme
-                                );
-
-                        pathReadmeOrder.merge(
-                                path,
-                                candidateOrder,
-                                DynamicSwaggerRegistrar::earlierOperationOrder
-                        );
-                    }
-
-                    mapExecutionMetadata(
-                            operation,
-                            apiExecutions,
-                            controllerName,
-                            methodSignature
-                    );
-
-                    // 2. Map cho Parameters (Summary & Description)
+                    mapExecutionMetadata(operation, apiExecutions, controllerName, methodSignature);
                     if (operation.getParameters() != null) {
-                        operation.getParameters().forEach(parameter -> {
-                            mapParameterMetadata(parameter, apiParams);
-                        });
+                        operation.getParameters().forEach(parameter ->
+                                mapParameterMetadata(parameter, apiParams));
                     }
                 });
             });
 
-            sortPathsByReadme(
-                    openApi,
-                    pathReadmeOrder
-            );
-
             if (openApi.getTags() == null) {
                 return;
             }
-
             openApi.getTags().forEach(tag -> {
-
-                String controllerName =
-                        controllerByTag.get(tag.getName());
-
-                if (controllerName == null ||
-                        controllerName.isBlank()) {
+                String controllerName = controllerByTag.get(tag.getName());
+                if (controllerName == null || controllerName.isBlank()) {
                     return;
                 }
 
-                JsonNode controllerNode =
-                        controllerDescs.get(controllerName);
-
+                tag.setDescription(controllerName);
+                JsonNode controllerNode = controllerDescs.get(controllerName);
                 if (controllerNode == null) {
                     return;
                 }
-
-                SwaggerReadmeMetadataResolver.ReadmeReference controllerReadme =
-                        controllerReadmeByName.computeIfAbsent(
-                                controllerName,
-                                ignored -> readmeResolver.resolveController(
-                                        controllerNode,
-                                        languages
-                                )
-                        );
-
-                Map<String, Object> tagReadmeExtension =
-                        new LinkedHashMap<>(
-                                controllerReadme.toExtension()
-                        );
-
-                tagReadmeExtension.put(
-                        "controllerName",
-                        controllerName
-                );
-
-                tag.addExtension(
-                        "x-readme-related",
-                        tagReadmeExtension
-                );
-
-                tag.setDescription(
-                        buildControllerReadmeDescription(
-                                controllerName,
-                                controllerReadme
-                        )
-                );
-
-                warnInvalidReadmeMapping(
-                        languages,
-                        controllerName,
-                        controllerReadme
-                );
-
-                JsonNode descriptionNode =
-                        controllerNode.get("description");
-
-                if (descriptionNode == null) {
-                    return;
+                JsonNode descriptionNode = controllerNode.get("description");
+                if (descriptionNode != null) {
+                    tag.addExtension("x-custom-html", descriptionNode.asText());
                 }
-
-                String html =
-                        descriptionNode.asText();
-
-                tag.addExtension(
-                        "x-custom-html",
-                        html
-                );
             });
-
-            sortTagsByReadme(
-                    openApi,
-                    controllerByTag,
-                    controllerReadmeByName
-            );
         };
-    }
-
-    private static void sortTagsByReadme(
-            io.swagger.v3.oas.models.OpenAPI openApi,
-            Map<String, String> controllerByTag,
-            Map<String, SwaggerReadmeMetadataResolver.ReadmeReference> controllerReadmeByName
-    ) {
-        if (openApi.getTags() == null || openApi.getTags().size() < 2) {
-            return;
-        }
-
-        List<Tag> sortedTags =
-                new ArrayList<>(openApi.getTags());
-
-        sortedTags.sort((first, second) -> {
-            String firstController =
-                    controllerByTag.get(first.getName());
-
-            String secondController =
-                    controllerByTag.get(second.getName());
-
-            int readmeComparison = compareControllerReadme(
-                    firstController,
-                    controllerReadmeByName.get(firstController),
-                    secondController,
-                    controllerReadmeByName.get(secondController)
-            );
-
-            if (readmeComparison != 0) {
-                return readmeComparison;
-            }
-
-            return compareText(
-                    first.getName(),
-                    second.getName()
-            );
-        });
-
-        openApi.setTags(sortedTags);
-    }
-
-    private static void sortPathsByReadme(
-            io.swagger.v3.oas.models.OpenAPI openApi,
-            Map<String, OperationReadmeOrder> pathReadmeOrder
-    ) {
-        Paths paths = openApi.getPaths();
-
-        if (paths == null || paths.size() < 2) {
-            return;
-        }
-
-        List<Map.Entry<String, PathItem>> entries =
-                new ArrayList<>(paths.entrySet());
-
-        entries.sort((first, second) -> {
-            OperationReadmeOrder firstOrder =
-                    pathReadmeOrder.get(first.getKey());
-
-            OperationReadmeOrder secondOrder =
-                    pathReadmeOrder.get(second.getKey());
-
-            int orderComparison = compareOperationOrder(
-                    firstOrder,
-                    secondOrder
-            );
-
-            if (orderComparison != 0) {
-                return orderComparison;
-            }
-
-            return compareText(
-                    first.getKey(),
-                    second.getKey()
-            );
-        });
-
-        Paths sortedPaths = new Paths();
-
-        entries.forEach(entry ->
-                sortedPaths.addPathItem(
-                        entry.getKey(),
-                        entry.getValue()
-                )
-        );
-
-        openApi.setPaths(sortedPaths);
-    }
-
-    private static OperationReadmeOrder earlierOperationOrder(
-            OperationReadmeOrder first,
-            OperationReadmeOrder second
-    ) {
-        return compareOperationOrder(first, second) <= 0
-                ? first
-                : second;
-    }
-
-    private static int compareOperationOrder(
-            OperationReadmeOrder first,
-            OperationReadmeOrder second
-    ) {
-        if (first == second) {
-            return 0;
-        }
-
-        if (first == null) {
-            return 1;
-        }
-
-        if (second == null) {
-            return -1;
-        }
-
-        int controllerComparison = compareControllerReadme(
-                first.controllerName(),
-                first.controllerReadme(),
-                second.controllerName(),
-                second.controllerReadme()
-        );
-
-        if (controllerComparison != 0) {
-            return controllerComparison;
-        }
-
-        SwaggerReadmeMetadataResolver.ReadmeReference firstMethod =
-                first.methodReadme();
-
-        SwaggerReadmeMetadataResolver.ReadmeReference secondMethod =
-                second.methodReadme();
-
-        boolean firstLinked =
-                firstMethod != null && firstMethod.isLinked();
-
-        boolean secondLinked =
-                secondMethod != null && secondMethod.isLinked();
-
-        if (firstLinked != secondLinked) {
-            return firstLinked ? -1 : 1;
-        }
-
-        if (firstLinked) {
-            int chapterComparison = compareNullableInteger(
-                    firstMethod.chapterOrder(),
-                    secondMethod.chapterOrder()
-            );
-
-            if (chapterComparison != 0) {
-                return chapterComparison;
-            }
-
-            int sectionComparison = compareNullableInteger(
-                    firstMethod.sectionOrder(),
-                    secondMethod.sectionOrder()
-            );
-
-            if (sectionComparison != 0) {
-                return sectionComparison;
-            }
-        }
-
-        return compareText(
-                first.methodSignature(),
-                second.methodSignature()
-        );
-    }
-
-    private static int compareControllerReadme(
-            String firstController,
-            SwaggerReadmeMetadataResolver.ReadmeReference firstReference,
-            String secondController,
-            SwaggerReadmeMetadataResolver.ReadmeReference secondReference
-    ) {
-        boolean firstLinked =
-                firstReference != null && firstReference.isLinked();
-
-        boolean secondLinked =
-                secondReference != null && secondReference.isLinked();
-
-        if (firstLinked != secondLinked) {
-            return firstLinked ? -1 : 1;
-        }
-
-        if (firstLinked) {
-            int chapterComparison = compareNullableInteger(
-                    firstReference.chapterOrder(),
-                    secondReference.chapterOrder()
-            );
-
-            if (chapterComparison != 0) {
-                return chapterComparison;
-            }
-        }
-
-        return compareText(
-                firstController,
-                secondController
-        );
-    }
-
-    private static int compareNullableInteger(
-            Integer first,
-            Integer second
-    ) {
-        return Comparator.nullsLast(Integer::compareTo)
-                .compare(first, second);
-    }
-
-    private static int compareText(
-            String first,
-            String second
-    ) {
-        return Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER)
-                .compare(first, second);
-    }
-
-    private static void warnInvalidReadmeMapping(
-            String language,
-            String owner,
-            SwaggerReadmeMetadataResolver.ReadmeReference reference
-    ) {
-        if (reference == null ||
-                SwaggerReadmeMetadataResolver.STATUS_LINKED.equals(reference.status()) ||
-                SwaggerReadmeMetadataResolver.STATUS_UNLINKED.equals(reference.status())) {
-            return;
-        }
-
-        LOGGER.warn(
-                "[SWAGGER-README] language={} owner={} status={} file={} anchor={}",
-                language,
-                owner,
-                reference.status(),
-                reference.file(),
-                reference.anchor()
-        );
-    }
-
-    private static String buildControllerReadmeDescription(
-            String controllerName,
-            SwaggerReadmeMetadataResolver.ReadmeReference reference
-    ) {
-        if (reference != null &&
-                reference.isLinked() &&
-                reference.href() != null &&
-                !reference.href().isBlank()) {
-
-            return "[" + controllerName + "](" + reference.href() + ")";
-        }
-
-        return "_" +
-                (reference == null
-                        ? "README relationship unavailable"
-                        : reference.displayText()) +
-                "_";
-    }
-
-    private record OperationReadmeOrder(
-            String controllerName,
-            String methodSignature,
-            SwaggerReadmeMetadataResolver.ReadmeReference controllerReadme,
-            SwaggerReadmeMetadataResolver.ReadmeReference methodReadme
-    ) {
     }
 
     private Tag findOrCreateTag(
@@ -644,31 +224,27 @@ public class DynamicSwaggerRegistrar implements ImportBeanDefinitionRegistrar , 
                 });
     }
 
-    private String loadReadme(String language) {
-        try {
-            String normalizedLanguage = language == null
-                    ? "en"
-                    : language.trim().toLowerCase();
-
-            String readmePath;
-
-            if ("en".equals(normalizedLanguage)) {
-                readmePath = "META-INF/swagger/README.md";
-            } else {
-                readmePath = String.format(
-                        "META-INF/swagger/README.%s.md",
-                        normalizedLanguage
-                );
+    private String loadServiceName() {
+        // SERVICE_NAME is a Gradle module property, not guaranteed to be in
+        // Spring's runtime Environment. The module build packages its value.
+        ClassPathResource resource =
+                new ClassPathResource("META-INF/swagger/service-name.txt");
+        if (resource.exists()) {
+            try {
+                String name = resource.getContentAsString(StandardCharsets.UTF_8).trim();
+                if (!name.isEmpty()) {
+                    return name;
+                }
+            } catch (IOException exception) {
+                LOGGER.warn("[SWAGGER] Cannot read packaged SERVICE_NAME", exception);
             }
-
-            ClassPathResource resource =
-                    new ClassPathResource(readmePath);
-
-            return resource.getContentAsString(StandardCharsets.UTF_8);
-
-        } catch (IOException e) {
-            return "Không thể tải README.";
         }
+
+        String fromEnvironment = environment.getProperty("SERVICE_NAME", "");
+        if (!fromEnvironment.isBlank()) {
+            return fromEnvironment.trim();
+        }
+        return environment.getProperty("spring.application.name", "Service");
     }
 
     private void mapMethodMetadata(

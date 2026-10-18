@@ -18,14 +18,14 @@ public class AsyncController {
         this.asyncService = asyncService;
     }
 
-    /** README: readme/vi/menu/1.Async/Async.md#future */
+    /** README: content/readme/docs/vi/menu/1.Async/Async.md#future */
     @GetMapping("/future")
     public Map<String, Object> future() throws Exception {
         return asyncService.futureDemo();
     }
 
     /**
-     * README: readme/vi/menu/1.Async/Async.md#future-cancellation
+     * README: content/readme/docs/vi/menu/1.Async/Async.md#future-cancellation
      * Purpose: So sánh cancel(false) và cancel(true) trên task đang chạy và liên hệ cancellation với interruption.
      */
     @GetMapping("/future-cancellation")
@@ -33,26 +33,26 @@ public class AsyncController {
         return asyncService.futureCancellationDemo();
     }
 
-    /** README: readme/vi/menu/1.Async/Async.md#completable-future-pipeline */
+    /** README: content/readme/docs/vi/menu/1.Async/Async.md#completable-future-pipeline */
     @GetMapping("/pipeline")
     public CompletableFuture<Map<String, Object>> pipeline() {
         return asyncService.pipelineDemo();
     }
 
-    /** README: readme/vi/menu/1.Async/Async.md#combine-race */
+    /** README: content/readme/docs/vi/menu/1.Async/Async.md#combine-race */
     @GetMapping("/fastest")
     public CompletableFuture<Map<String, Object>> fastest() {
         return asyncService.fastestCompletionDemo();
     }
 
-    /** README: readme/vi/menu/1.Async/Async.md#exception-handling */
+    /** README: content/readme/docs/vi/menu/1.Async/Async.md#exception-handling */
     @GetMapping("/exception")
     public CompletableFuture<Map<String, Object>> exceptionHandling() {
         return asyncService.exceptionHandlingDemo();
     }
 
     /**
-     * README: readme/vi/menu/1.Async/Async.md#async-variant
+     * README: content/readme/docs/vi/menu/1.Async/Async.md#async-variant
      * Purpose: Quan sát execution policy của thenApply và thenApplyAsync với executor chỉ định rõ.
      */
     @GetMapping("/execution-variant")
@@ -61,7 +61,7 @@ public class AsyncController {
     }
 
     /**
-     * README: readme/vi/menu/1.Async/Async.md#combine-race
+     * README: content/readme/docs/vi/menu/1.Async/Async.md#combine-race
      * Purpose: Chứng minh allOf đợi mọi input complete, có thể complete exceptionally và không tự cancel sibling.
      */
     @GetMapping("/all-of")
@@ -70,7 +70,7 @@ public class AsyncController {
     }
 
     /**
-     * README: readme/vi/menu/1.Async/Async.md#timeout-cancellation
+     * README: content/readme/docs/vi/menu/1.Async/Async.md#timeout-cancellation
      * Purpose: Chứng minh timeout của CompletableFuture không mặc định interrupt/kill underlying work.
      */
     @GetMapping("/timeout-cancellation")

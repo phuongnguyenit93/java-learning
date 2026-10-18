@@ -1,23 +1,23 @@
 # 📂 README MODULE STRUCTURE (VI)
 
 * **1.AutoConfigurationFoundation**
-    * [AutoConfigurationFoundation](readme/vi/menu/1.AutoConfigurationFoundation/AutoConfigurationFoundation.md)
+    * [AutoConfigurationFoundation](content/readme/docs/vi/menu/1.AutoConfigurationFoundation/AutoConfigurationFoundation.md)
 * **2.ActivationDiscovery**
-    * [ActivationDiscovery](readme/vi/menu/2.ActivationDiscovery/ActivationDiscovery.md)
+    * [ActivationDiscovery](content/readme/docs/vi/menu/2.ActivationDiscovery/ActivationDiscovery.md)
 * **3.ConditionModel**
-    * [ConditionModel](readme/vi/menu/3.ConditionModel/ConditionModel.md)
+    * [ConditionModel](content/readme/docs/vi/menu/3.ConditionModel/ConditionModel.md)
 * **4.BackOffUserControl**
-    * [BackOffUserControl](readme/vi/menu/4.BackOffUserControl/BackOffUserControl.md)
+    * [BackOffUserControl](content/readme/docs/vi/menu/4.BackOffUserControl/BackOffUserControl.md)
 * **5.OrderingComposition**
-    * [OrderingComposition](readme/vi/menu/5.OrderingComposition/OrderingComposition.md)
+    * [OrderingComposition](content/readme/docs/vi/menu/5.OrderingComposition/OrderingComposition.md)
 * **6.ExclusionsDiagnostics**
-    * [ExclusionsDiagnostics](readme/vi/menu/6.ExclusionsDiagnostics/ExclusionsDiagnostics.md)
+    * [ExclusionsDiagnostics](content/readme/docs/vi/menu/6.ExclusionsDiagnostics/ExclusionsDiagnostics.md)
 * **7.CustomAuthoring**
-    * [CustomAuthoring](readme/vi/menu/7.CustomAuthoring/CustomAuthoring.md)
+    * [CustomAuthoring](content/readme/docs/vi/menu/7.CustomAuthoring/CustomAuthoring.md)
 * **8.AutoConfigurationTesting**
-    * [AutoConfigurationTesting](readme/vi/menu/8.AutoConfigurationTesting/AutoConfigurationTesting.md)
+    * [AutoConfigurationTesting](content/readme/docs/vi/menu/8.AutoConfigurationTesting/AutoConfigurationTesting.md)
 * **9.StarterSynthesis**
-    * [StarterSynthesis](readme/vi/menu/9.StarterSynthesis/StarterSynthesis.md)
+    * [StarterSynthesis](content/readme/docs/vi/menu/9.StarterSynthesis/StarterSynthesis.md)
 
 # Spring Boot Auto-configuration
 

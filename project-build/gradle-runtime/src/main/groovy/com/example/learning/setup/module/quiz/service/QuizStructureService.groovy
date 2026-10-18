@@ -93,7 +93,7 @@ class QuizStructureService {
             File questionFile =
                     new File(
                             project.projectDir,
-                            "src/main/resources/quiz/${language}/question.yml"
+                            "content/quiz/${language}/question.yml"
                     )
 
 

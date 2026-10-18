@@ -1,35 +1,35 @@
 # 📂 README MODULE STRUCTURE (VI)
 
 * **1.SpringMvcFoundation**
-    * [SpringMvcFoundation](readme/vi/menu/1.SpringMvcFoundation/SpringMvcFoundation.md)
+    * [SpringMvcFoundation](content/readme/docs/vi/menu/1.SpringMvcFoundation/SpringMvcFoundation.md)
 * **2.DispatcherServletLifecycle**
-    * [DispatcherServletLifecycle](readme/vi/menu/2.DispatcherServletLifecycle/DispatcherServletLifecycle.md)
+    * [DispatcherServletLifecycle](content/readme/docs/vi/menu/2.DispatcherServletLifecycle/DispatcherServletLifecycle.md)
 * **3.AnnotatedControllers**
-    * [AnnotatedControllers](readme/vi/menu/3.AnnotatedControllers/AnnotatedControllers.md)
+    * [AnnotatedControllers](content/readme/docs/vi/menu/3.AnnotatedControllers/AnnotatedControllers.md)
 * **4.WebMvcFunctionalEndpoints**
-    * [WebMvcFunctionalEndpoints](readme/vi/menu/4.WebMvcFunctionalEndpoints/WebMvcFunctionalEndpoints.md)
+    * [WebMvcFunctionalEndpoints](content/readme/docs/vi/menu/4.WebMvcFunctionalEndpoints/WebMvcFunctionalEndpoints.md)
 * **5.MvcBindingValidation**
-    * [MvcBindingValidation](readme/vi/menu/5.MvcBindingValidation/MvcBindingValidation.md)
+    * [MvcBindingValidation](content/readme/docs/vi/menu/5.MvcBindingValidation/MvcBindingValidation.md)
 * **6.MessageConversionRepresentation**
-    * [MessageConversionRepresentation](readme/vi/menu/6.MessageConversionRepresentation/MessageConversionRepresentation.md)
+    * [MessageConversionRepresentation](content/readme/docs/vi/menu/6.MessageConversionRepresentation/MessageConversionRepresentation.md)
 * **7.ViewRenderingNavigation**
-    * [ViewRenderingNavigation](readme/vi/menu/7.ViewRenderingNavigation/ViewRenderingNavigation.md)
+    * [ViewRenderingNavigation](content/readme/docs/vi/menu/7.ViewRenderingNavigation/ViewRenderingNavigation.md)
 * **8.MvcErrorHandling**
-    * [MvcErrorHandling](readme/vi/menu/8.MvcErrorHandling/MvcErrorHandling.md)
+    * [MvcErrorHandling](content/readme/docs/vi/menu/8.MvcErrorHandling/MvcErrorHandling.md)
 * **9.AsyncMvcStreaming**
-    * [AsyncMvcStreaming](readme/vi/menu/9.AsyncMvcStreaming/AsyncMvcStreaming.md)
+    * [AsyncMvcStreaming](content/readme/docs/vi/menu/9.AsyncMvcStreaming/AsyncMvcStreaming.md)
 * **10.CrossCuttingRequestInfrastructure**
-    * [CrossCuttingRequestInfrastructure](readme/vi/menu/10.CrossCuttingRequestInfrastructure/CrossCuttingRequestInfrastructure.md)
+    * [CrossCuttingRequestInfrastructure](content/readme/docs/vi/menu/10.CrossCuttingRequestInfrastructure/CrossCuttingRequestInfrastructure.md)
 * **11.WebSupportResourceDelivery**
-    * [WebSupportResourceDelivery](readme/vi/menu/11.WebSupportResourceDelivery/WebSupportResourceDelivery.md)
+    * [WebSupportResourceDelivery](content/readme/docs/vi/menu/11.WebSupportResourceDelivery/WebSupportResourceDelivery.md)
 * **12.MvcConfigurationExtension**
-    * [MvcConfigurationExtension](readme/vi/menu/12.MvcConfigurationExtension/MvcConfigurationExtension.md)
+    * [MvcConfigurationExtension](content/readme/docs/vi/menu/12.MvcConfigurationExtension/MvcConfigurationExtension.md)
 * **13.SynchronousHttpClients**
-    * [SynchronousHttpClients](readme/vi/menu/13.SynchronousHttpClients/SynchronousHttpClients.md)
+    * [SynchronousHttpClients](content/readme/docs/vi/menu/13.SynchronousHttpClients/SynchronousHttpClients.md)
 * **14.HttpServiceInterfaces**
-    * [HttpServiceInterfaces](readme/vi/menu/14.HttpServiceInterfaces/HttpServiceInterfaces.md)
+    * [HttpServiceInterfaces](content/readme/docs/vi/menu/14.HttpServiceInterfaces/HttpServiceInterfaces.md)
 * **15.SpringWebSynthesis**
-    * [SpringWebSynthesis](readme/vi/menu/15.SpringWebSynthesis/SpringWebSynthesis.md)
+    * [SpringWebSynthesis](content/readme/docs/vi/menu/15.SpringWebSynthesis/SpringWebSynthesis.md)
 
 # Spring Framework Web
 

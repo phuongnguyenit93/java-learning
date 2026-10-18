@@ -18,7 +18,7 @@ public class SafeBindingExperimentController {
     }
 
     /**
-     * README: readme/en/menu/8.SafeBinding/SafeBinding.md#safe-binding-controls
+     * README: content/readme/docs/en/menu/8.SafeBinding/SafeBinding.md#safe-binding-controls
      * Purpose: Contrast ordinary property binding with declarative binding before and after an explicit allowed-field surface.
      */
     @GetMapping("/declarative")

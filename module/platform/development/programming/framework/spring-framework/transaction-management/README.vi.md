@@ -1,27 +1,27 @@
 # 📂 README MODULE STRUCTURE (VI)
 
 * **1.Purpose**
-    * [Purpose](readme/vi/menu/1.Purpose/Purpose.md)
+    * [Purpose](content/readme/docs/vi/menu/1.Purpose/Purpose.md)
 * **2.Abstraction**
-    * [Abstraction](readme/vi/menu/2.Abstraction/Abstraction.md)
+    * [Abstraction](content/readme/docs/vi/menu/2.Abstraction/Abstraction.md)
 * **3.ResourceSynchronization**
-    * [ResourceSynchronization](readme/vi/menu/3.ResourceSynchronization/ResourceSynchronization.md)
+    * [ResourceSynchronization](content/readme/docs/vi/menu/3.ResourceSynchronization/ResourceSynchronization.md)
 * **4.Declarative**
-    * [Declarative](readme/vi/menu/4.Declarative/Declarative.md)
+    * [Declarative](content/readme/docs/vi/menu/4.Declarative/Declarative.md)
 * **5.TransactionPolicy**
-    * [TransactionPolicy](readme/vi/menu/5.TransactionPolicy/TransactionPolicy.md)
+    * [TransactionPolicy](content/readme/docs/vi/menu/5.TransactionPolicy/TransactionPolicy.md)
 * **6.Rollback**
-    * [Rollback](readme/vi/menu/6.Rollback/Rollback.md)
+    * [Rollback](content/readme/docs/vi/menu/6.Rollback/Rollback.md)
 * **7.Propagation**
-    * [Propagation](readme/vi/menu/7.Propagation/Propagation.md)
+    * [Propagation](content/readme/docs/vi/menu/7.Propagation/Propagation.md)
 * **8.Programmatic**
-    * [Programmatic](readme/vi/menu/8.Programmatic/Programmatic.md)
+    * [Programmatic](content/readme/docs/vi/menu/8.Programmatic/Programmatic.md)
 * **9.Reactive**
-    * [Reactive](readme/vi/menu/9.Reactive/Reactive.md)
+    * [Reactive](content/readme/docs/vi/menu/9.Reactive/Reactive.md)
 * **10.EventsLifecycle**
-    * [EventsLifecycle](readme/vi/menu/10.EventsLifecycle/EventsLifecycle.md)
+    * [EventsLifecycle](content/readme/docs/vi/menu/10.EventsLifecycle/EventsLifecycle.md)
 * **11.BoundarySynthesis**
-    * [BoundarySynthesis](readme/vi/menu/11.BoundarySynthesis/BoundarySynthesis.md)
+    * [BoundarySynthesis](content/readme/docs/vi/menu/11.BoundarySynthesis/BoundarySynthesis.md)
 
 # Spring Transaction Management
 

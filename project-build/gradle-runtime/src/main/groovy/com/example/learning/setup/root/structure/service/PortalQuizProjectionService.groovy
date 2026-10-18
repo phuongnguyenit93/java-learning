@@ -20,7 +20,7 @@ class PortalQuizProjectionService {
 
 
     private static final String QUIZ_DIRECTORY =
-            'src/main/resources/quiz'
+            'content/quiz'
 
 
     private static final String QUESTION_FILE =
@@ -223,7 +223,7 @@ class PortalQuizProjectionService {
         Path readmeMenuPath =
                 new File(
                         moduleProject.projectDir,
-                        "readme/${source.language}/menu"
+                        "content/readme/docs/${source.language}/menu"
                 )
                         .toPath()
                         .toAbsolutePath()
@@ -375,7 +375,7 @@ class PortalQuizProjectionService {
                     questionId,
                     'readmeRelated',
                     "file='${file}', anchor='${anchor}'",
-                    'README file was not found inside readme/{language}/menu'
+                    'README file was not found inside content/readme/docs/{language}/menu'
             )
 
 

@@ -1,21 +1,21 @@
 # 📂 README MODULE STRUCTURE (VI)
 
 * **1.Purpose**
-    * [NativeImage](readme/vi/menu/1.Purpose/NativeImage.md)
+    * [NativeImage](content/readme/docs/vi/menu/1.Purpose/NativeImage.md)
 * **2.AOTPipeline**
-    * [AOTPipeline](readme/vi/menu/2.AOTPipeline/AOTPipeline.md)
+    * [AOTPipeline](content/readme/docs/vi/menu/2.AOTPipeline/AOTPipeline.md)
 * **3.ClosedWorld**
-    * [ClosedWorld](readme/vi/menu/3.ClosedWorld/ClosedWorld.md)
+    * [ClosedWorld](content/readme/docs/vi/menu/3.ClosedWorld/ClosedWorld.md)
 * **4.RuntimeHints**
-    * [RuntimeHints](readme/vi/menu/4.RuntimeHints/RuntimeHints.md)
+    * [RuntimeHints](content/readme/docs/vi/menu/4.RuntimeHints/RuntimeHints.md)
 * **5.BuildAndRun**
-    * [BuildAndRun](readme/vi/menu/5.BuildAndRun/BuildAndRun.md)
+    * [BuildAndRun](content/readme/docs/vi/menu/5.BuildAndRun/BuildAndRun.md)
 * **6.NativeTesting**
-    * [NativeTesting](readme/vi/menu/6.NativeTesting/NativeTesting.md)
+    * [NativeTesting](content/readme/docs/vi/menu/6.NativeTesting/NativeTesting.md)
 * **7.CompatibilityTradeoffs**
-    * [CompatibilityTradeoffs](readme/vi/menu/7.CompatibilityTradeoffs/CompatibilityTradeoffs.md)
+    * [CompatibilityTradeoffs](content/readme/docs/vi/menu/7.CompatibilityTradeoffs/CompatibilityTradeoffs.md)
 * **8.ReadinessSynthesis**
-    * [ReadinessSynthesis](readme/vi/menu/8.ReadinessSynthesis/ReadinessSynthesis.md)
+    * [ReadinessSynthesis](content/readme/docs/vi/menu/8.ReadinessSynthesis/ReadinessSynthesis.md)
 
 # Spring Boot Native Image
 

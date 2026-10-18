@@ -19,7 +19,7 @@ public class TcpExperimentController {
         this.networkingExperimentService = networkingExperimentService;
     }
 
-    /** README: readme/vi/menu/3.TcpSockets/TcpSockets.md#tcp-message-framing */
+    /** README: content/readme/docs/vi/menu/3.TcpSockets/TcpSockets.md#tcp-message-framing */
     @GetMapping("/stream-framing")
     public Map<String, Object> streamFraming() throws Exception {
         return networkingExperimentService.tcpFramingDemo();

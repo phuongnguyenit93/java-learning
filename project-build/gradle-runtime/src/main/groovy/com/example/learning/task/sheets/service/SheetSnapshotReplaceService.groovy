@@ -13,8 +13,8 @@ import java.nio.file.StandardCopyOption
  */
 class SheetSnapshotReplaceService {
     private static final List<List<String>> ALLOWED_SUFFIXES = [
-            ['roadmap', 'vi'], ['readme', 'vi', 'menu'],
-            ['video', 'vi', 'menu'], ['interview', 'vi']
+            ['content', 'roadmap', 'vi'], ['content', 'readme', 'docs', 'vi', 'menu'],
+            ['content', 'video', 'vi', 'menu'], ['content', 'interview', 'vi']
     ].asImmutable()
 
     static Map<String, Object> replace(

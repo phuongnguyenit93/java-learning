@@ -19,7 +19,7 @@ import java.util.Map;
 public class ReactiveHttpDataController {
 
     /**
-     * README: readme/en/menu/3.HttpDataFlow/ReactiveHttpDataFlow.md#webflux-streaming-vs-aggregation
+     * README: content/readme/docs/en/menu/3.HttpDataFlow/ReactiveHttpDataFlow.md#webflux-streaming-vs-aggregation
      * Purpose: Observe elements arriving over time instead of waiting for one aggregated response value.
      */
     @GetMapping(path = "/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)

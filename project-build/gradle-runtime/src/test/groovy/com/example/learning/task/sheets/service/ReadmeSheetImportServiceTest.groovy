@@ -251,7 +251,7 @@ class ReadmeSheetImportServiceTest {
     @Test
     void newInternalMenuRendererMatchesLegacyFileGenerator() {
         File root = temporary.newFolder('renderer')
-        File readme = new File(root, 'readme/vi/menu/1.Class/Class.md')
+        File readme = new File(root, 'content/readme/docs/vi/menu/1.Class/Class.md')
         assertTrue(readme.parentFile.mkdirs())
         String raw = '# Lớp\n\n## <a id="class-001">Lớp là gì?</a>\n\nNội dung\n'
         readme.setText(raw, 'UTF-8')

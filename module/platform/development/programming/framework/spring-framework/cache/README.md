@@ -1,25 +1,25 @@
 # 📂 README MODULE STRUCTURE (EN)
 
 * **1.CachePurpose**
-    * [CachePurpose](readme/en/menu/1.CachePurpose/CachePurpose.md)
+    * [CachePurpose](content/readme/docs/en/menu/1.CachePurpose/CachePurpose.md)
 * **2.CacheAbstraction**
-    * [CacheAbstraction](readme/en/menu/2.CacheAbstraction/CacheAbstraction.md)
+    * [CacheAbstraction](content/readme/docs/en/menu/2.CacheAbstraction/CacheAbstraction.md)
 * **3.DeclarativeCaching**
-    * [DeclarativeCaching](readme/en/menu/3.DeclarativeCaching/DeclarativeCaching.md)
+    * [DeclarativeCaching](content/readme/docs/en/menu/3.DeclarativeCaching/DeclarativeCaching.md)
 * **4.KeyAndResolution**
-    * [KeyAndResolution](readme/en/menu/4.KeyAndResolution/KeyAndResolution.md)
+    * [KeyAndResolution](content/readme/docs/en/menu/4.KeyAndResolution/KeyAndResolution.md)
 * **5.ConsistencyAndInvalidation**
-    * [ConsistencyAndInvalidation](readme/en/menu/5.ConsistencyAndInvalidation/ConsistencyAndInvalidation.md)
+    * [ConsistencyAndInvalidation](content/readme/docs/en/menu/5.ConsistencyAndInvalidation/ConsistencyAndInvalidation.md)
 * **6.InterceptionBoundary**
-    * [InterceptionBoundary](readme/en/menu/6.InterceptionBoundary/InterceptionBoundary.md)
+    * [InterceptionBoundary](content/readme/docs/en/menu/6.InterceptionBoundary/InterceptionBoundary.md)
 * **7.ConcurrencyAndAsync**
-    * [ConcurrencyAndAsync](readme/en/menu/7.ConcurrencyAndAsync/ConcurrencyAndAsync.md)
+    * [ConcurrencyAndAsync](content/readme/docs/en/menu/7.ConcurrencyAndAsync/ConcurrencyAndAsync.md)
 * **8.ProviderInteroperability**
-    * [ProviderInteroperability](readme/en/menu/8.ProviderInteroperability/ProviderInteroperability.md)
+    * [ProviderInteroperability](content/readme/docs/en/menu/8.ProviderInteroperability/ProviderInteroperability.md)
 * **9.FailureAndTransaction**
-    * [FailureAndTransaction](readme/en/menu/9.FailureAndTransaction/FailureAndTransaction.md)
+    * [FailureAndTransaction](content/readme/docs/en/menu/9.FailureAndTransaction/FailureAndTransaction.md)
 * **10.CacheStrategy**
-    * [CacheStrategy](readme/en/menu/10.CacheStrategy/CacheStrategy.md)
+    * [CacheStrategy](content/readme/docs/en/menu/10.CacheStrategy/CacheStrategy.md)
 
 # Spring Cache
 

@@ -10,8 +10,8 @@ Tài liệu thiết lập **Application Default Credentials (ADC)** cho Gradle t
 > qua **extension của module**, xác minh `I3` trùng module thực tế;
 > task root `generateModuleContentFromSheetByFiles` chỉ nhận
 > `-PsheetFileUrl` (**không có extension**), quét mọi tab trừ tab tên đúng
-> `Template`. Cả hai import Roadmap `F:H` → `roadmap/vi/roadmap.yml`
-> **và** Menu/Knowledge `A:B` + `C:N` (12 ô) → `readme/vi/menu/`, với
+> `Template`. Cả hai import Roadmap `F:H` → `content/roadmap/vi`
+> **và** Menu/Knowledge `A:B` + `C:N` (12 ô) → `content/readme/docs/vi/`, với
 > `DRY_RUN` mặc định và `-PsheetMode=APPLY` tường minh. ByFiles
 > không yêu cầu module đích có `master.json`/`gradle.properties`.
 > Menu/Knowledge được ghép bởi `ReadmeSheetImportService` và tái sử dụng
@@ -253,7 +253,7 @@ Thêm `-PsheetMode=APPLY` để thực sự cập nhật **chỉ cây đầu ra 
 
 Importer đọc `T18:W19` để kiểm tra header và đọc các mảnh **JSON `T:W` tại hàng Menu Cấp 1** (xác định theo `A:B`). Groovy nối các mảnh theo đúng Unicode, parse danh sách `questions`, điền/giữ đầy đủ `question`, `answer`, `aiGenerated`, `reviewed`, `readmeRelated.file/anchor` và `apiRelated` theo schema đã có, rồi serialize YAML **một file duy nhất**:
 
-`<module>/src/main/resources/interview/vi/question.yml`
+`<module>/content/interview/vi/question.yml`
 
 **Không dùng AI và không ghi ngược Google Sheets.** Với tab cũ chỉ có A:S hoặc tab chưa có JSON Interview, task báo `SKIPPED_NO_INTERVIEW_SCHEMA` hoặc `SKIPPED_EMPTY_INTERVIEW`, **giữ nguyên file Interview cũ**. Khi có Interview, mọi JSON đều phải hợp lệ trước khi stage/replace; lỗi cấu trúc hoặc đường dẫn README xung đột là blocker trước khi ghi. Có thể import các chương đã có nội dung; các chương chưa tạo Q&A được bỏ qua. `DRY_RUN` không ghi file; `APPLY` thay thế snapshot `interview/vi` sau khi schema validation PASS.
 
@@ -381,9 +381,9 @@ Luồng xử lý chung:
 
 `ReadmeSheetImportService` chạy cùng task sau Roadmap, nhưng có điều kiện
 `SKIPPED` độc lập. **Google Sheets là nguồn chuẩn** cho
-`<I3>/readme/vi/menu/`. Cách đọc:
+`<I3>/content/readme/docs/vi/`. Cách đọc:
 
-1. Kiểm tra header Menu. Nếu A20 trống: APPLY xóa sạch readme/vi/menu
+1. Kiểm tra header Menu. Nếu A20 trống: APPLY xóa sạch content/readme/docs/vi
    theo snapshot rỗng, DRY_RUN không thay đổi file.
 2. Hàng có A (Menu Cấp 1) phải có **filename tiếng Anh** tại B cùng hàng,
    ví dụ `OOPBasic.md`; hàng A trống và B có text là Menu Cấp 2. Nếu
@@ -396,14 +396,14 @@ Luồng xử lý chung:
    **ghép nội dung mỗi bài không có separator**. Không có câu trả lời vẫn
    giữ một section rỗng. Các mảnh trả lời không được có lỗ hổng.
 4. Tạo một file cho mỗi Menu Cấp 1, ví dụ
-   `readme/vi/menu/1.OOPBasic/OOPBasic.md`. Section anchor được tạo từ
+   `content/readme/docs/vi/1.OOPBasic/OOPBasic.md`. Section anchor được tạo từ
    stem Camel/PascalCase chuyển `kebab-case` + số thứ tự bắt đầu
    `001` trong mỗi file: `OOPBasic.md` → `oop-basic-001`;
    `Class.md` → `class-001`. Dùng
    `GenerateInternalReadmeMenuService` để tự tạo `## Menu`,
    `<details>`, nút về đầu trang.
 5. APPLY dựng và xác minh toàn bộ Markdown trước, sau đó xóa vĩnh viễn
-   readme/vi/menu (kể cả orphan và folder phụ) và cài snapshot mới từ Sheet.
+   content/readme/docs/vi (kể cả orphan và folder phụ) và cài snapshot mới từ Sheet.
    Ngay cả khi không đổi nội dung vẫn thay toàn bộ. KHÔNG backup.
    Menu trống hợp lệ thì CLEARED_EMPTY. Thiếu filename hoặc cấu trúc Menu
    lỗi khi đã có dữ liệu → SKIPPED/BLOCKER và không xóa. DRY_RUN không ghi.
@@ -417,7 +417,7 @@ Validate header, N, H1/H2, Scene/Transition, Time/Visual/Script/Purpose
 và fragment tối đa 30.000 Unicode code point/ô, không gọi AI.
 
 APPLY dựng/validate/stage/readback snapshot trước, rồi xóa vĩnh viễn
-toàn bộ video/vi/menu và cài chỉ các video có script trên Sheet.
+toàn bộ content/video/vi và cài chỉ các video có script trên Sheet.
 KHÔNG giữ video.url, skeleton, video đã biên soạn hay orphan cũ.
 Hàng script trống không có file tương ứng; toàn bộ trống → CLEARED_EMPTY.
 Không backup. DRY_RUN không ghi. Script lỗi → BLOCKER trước khi xóa.

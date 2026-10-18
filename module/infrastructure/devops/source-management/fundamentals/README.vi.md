@@ -1,11 +1,11 @@
 # 📂 README MODULE STRUCTURE (VI)
 
-* [01_SourceManagementFoundations](readme/vi/menu/01_SourceManagementFoundations.md)
-* [02_VersionControlAndHistory](readme/vi/menu/02_VersionControlAndHistory.md)
-* [03_CentralizedAndDistributedModels](readme/vi/menu/03_CentralizedAndDistributedModels.md)
-* [04_LocalAndSharedSource](readme/vi/menu/04_LocalAndSharedSource.md)
-* [05_CollaborationAndStrategyLayers](readme/vi/menu/05_CollaborationAndStrategyLayers.md)
-* [06_GovernedSourceLifecycle](readme/vi/menu/06_GovernedSourceLifecycle.md)
+* [01_SourceManagementFoundations](content/readme/docs/vi/menu/01_SourceManagementFoundations.md)
+* [02_VersionControlAndHistory](content/readme/docs/vi/menu/02_VersionControlAndHistory.md)
+* [03_CentralizedAndDistributedModels](content/readme/docs/vi/menu/03_CentralizedAndDistributedModels.md)
+* [04_LocalAndSharedSource](content/readme/docs/vi/menu/04_LocalAndSharedSource.md)
+* [05_CollaborationAndStrategyLayers](content/readme/docs/vi/menu/05_CollaborationAndStrategyLayers.md)
+* [06_GovernedSourceLifecycle](content/readme/docs/vi/menu/06_GovernedSourceLifecycle.md)
 
 # Tổng quan — Nền tảng quản lý mã nguồn
 

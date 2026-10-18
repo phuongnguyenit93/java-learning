@@ -29,7 +29,7 @@ public class ProxyMentalModelController {
     }
 
     /**
-     * README: readme/vi/menu/3.Proxy/Proxy.md#proxy-demo
+     * README: content/readme/docs/vi/menu/3.Proxy/Proxy.md#proxy-demo
      * Purpose: Quan sát object được inject là AOP proxy và call chain đi qua proxy trước target.
      */
     @GetMapping("/inspect")
@@ -53,7 +53,7 @@ public class ProxyMentalModelController {
     }
 
     /**
-     * README: readme/vi/menu/3.Proxy/Proxy.md#managed-vs-new-demo
+     * README: content/readme/docs/vi/menu/3.Proxy/Proxy.md#managed-vs-new-demo
      * Purpose: Chứng minh Spring-managed bean đi qua AOP proxy còn object tạo trực tiếp bằng new thì không.
      */
     @GetMapping("/managed-vs-new")

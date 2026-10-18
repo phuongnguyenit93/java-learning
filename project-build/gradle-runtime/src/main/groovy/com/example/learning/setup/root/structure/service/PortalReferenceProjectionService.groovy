@@ -17,7 +17,11 @@ class PortalReferenceProjectionService {
             LearningDataPaths.MODULE_DIRECTORY
 
 
-    private static final String REFERENCE_FILE =
+    private static final String SOURCE_REFERENCE_FILE =
+            'content/reference/references.yml'
+
+    // The public Portal path stays stable when authored sources move.
+    private static final String OUTPUT_REFERENCE_FILE =
             'reference/references.yml'
 
 
@@ -91,7 +95,7 @@ class PortalReferenceProjectionService {
             File referenceFile =
                     new File(
                             moduleProject.projectDir,
-                            REFERENCE_FILE
+                            SOURCE_REFERENCE_FILE
                     )
 
 
@@ -119,7 +123,7 @@ class PortalReferenceProjectionService {
 
 
             String relativeOutput =
-                    "${routeId}/${REFERENCE_FILE}"
+                    "${routeId}/${OUTPUT_REFERENCE_FILE}"
 
 
             outputs[relativeOutput] =

@@ -21,13 +21,13 @@ public class InstrumentationController {
                 instrumentationExperimentService;
     }
 
-    /** README: readme/vi/menu/5.InstrumentationApi/InstrumentationApi.md#capability-model */
+    /** README: content/readme/docs/vi/menu/5.InstrumentationApi/InstrumentationApi.md#capability-model */
     @GetMapping("/agent-status")
     public Map<String, Object> agentStatus() {
         return instrumentationExperimentService.agentStatus();
     }
 
-    /** README: readme/vi/menu/7.TransformationPipeline/TransformationPipeline.md#retransform-capability-groups */
+    /** README: content/readme/docs/vi/menu/7.TransformationPipeline/TransformationPipeline.md#retransform-capability-groups */
     @PostMapping("/retransform-groups")
     public Map<String, Object> retransformGroups() {
         return instrumentationExperimentService.retransformGroups();

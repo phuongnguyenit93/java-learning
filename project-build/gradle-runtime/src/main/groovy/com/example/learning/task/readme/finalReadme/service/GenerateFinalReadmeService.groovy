@@ -5,7 +5,7 @@ import org.gradle.api.logging.Logger
 class GenerateFinalReadmeService {
 
     private static final String README_DIRECTORY =
-            'readme'
+            'content/readme/docs'
 
     private static final String MENU_DIRECTORY =
             'menu'

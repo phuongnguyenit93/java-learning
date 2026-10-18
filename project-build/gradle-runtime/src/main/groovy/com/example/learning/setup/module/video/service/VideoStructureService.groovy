@@ -9,10 +9,10 @@ import org.gradle.api.logging.Logger
 class VideoStructureService {
 
     private static final String VIDEO_DIRECTORY =
-            'video'
+            'content/video'
 
     private static final String README_DIRECTORY =
-            'readme'
+            'content/readme/docs'
 
     private static final String MENU_DIRECTORY =
             'menu'

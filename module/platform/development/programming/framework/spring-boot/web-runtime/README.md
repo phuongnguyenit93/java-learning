@@ -1,29 +1,29 @@
 # 📂 README MODULE STRUCTURE (EN)
 
 * **1.Introduction**
-    * [Introduction](readme/en/menu/1.Introduction/Introduction.md)
+    * [Introduction](content/readme/docs/en/menu/1.Introduction/Introduction.md)
 * **2.WebApplicationType**
-    * [WebApplicationType](readme/en/menu/2.WebApplicationType/WebApplicationType.md)
+    * [WebApplicationType](content/readme/docs/en/menu/2.WebApplicationType/WebApplicationType.md)
 * **3.EmbeddedServerModel**
-    * [EmbeddedServerModel](readme/en/menu/3.EmbeddedServerModel/EmbeddedServerModel.md)
+    * [EmbeddedServerModel](content/readme/docs/en/menu/3.EmbeddedServerModel/EmbeddedServerModel.md)
 * **4.ServletServerAutoConfiguration**
-    * [ServletServerAutoConfiguration](readme/en/menu/4.ServletServerAutoConfiguration/ServletServerAutoConfiguration.md)
+    * [ServletServerAutoConfiguration](content/readme/docs/en/menu/4.ServletServerAutoConfiguration/ServletServerAutoConfiguration.md)
 * **5.ReactiveServerAutoConfiguration**
-    * [ReactiveServerAutoConfiguration](readme/en/menu/5.ReactiveServerAutoConfiguration/ReactiveServerAutoConfiguration.md)
+    * [ReactiveServerAutoConfiguration](content/readme/docs/en/menu/5.ReactiveServerAutoConfiguration/ReactiveServerAutoConfiguration.md)
 * **6.ServerProperties**
-    * [ServerProperties](readme/en/menu/6.ServerProperties/ServerProperties.md)
+    * [ServerProperties](content/readme/docs/en/menu/6.ServerProperties/ServerProperties.md)
 * **7.ServerCustomization**
-    * [ServerCustomization](readme/en/menu/7.ServerCustomization/ServerCustomization.md)
+    * [ServerCustomization](content/readme/docs/en/menu/7.ServerCustomization/ServerCustomization.md)
 * **8.HttpFeatures**
-    * [HttpFeatures](readme/en/menu/8.HttpFeatures/HttpFeatures.md)
+    * [HttpFeatures](content/readme/docs/en/menu/8.HttpFeatures/HttpFeatures.md)
 * **9.TlsSslBundles**
-    * [TlsSslBundles](readme/en/menu/9.TlsSslBundles/TlsSslBundles.md)
+    * [TlsSslBundles](content/readme/docs/en/menu/9.TlsSslBundles/TlsSslBundles.md)
 * **10.ForwardedHeadersProxy**
-    * [ForwardedHeadersProxy](readme/en/menu/10.ForwardedHeadersProxy/ForwardedHeadersProxy.md)
+    * [ForwardedHeadersProxy](content/readme/docs/en/menu/10.ForwardedHeadersProxy/ForwardedHeadersProxy.md)
 * **11.GracefulShutdown**
-    * [GracefulShutdown](readme/en/menu/11.GracefulShutdown/GracefulShutdown.md)
+    * [GracefulShutdown](content/readme/docs/en/menu/11.GracefulShutdown/GracefulShutdown.md)
 * **12.BootWebDefaults**
-    * [BootWebDefaults](readme/en/menu/12.BootWebDefaults/BootWebDefaults.md)
+    * [BootWebDefaults](content/readme/docs/en/menu/12.BootWebDefaults/BootWebDefaults.md)
 
 # Spring Boot Web Runtime
 

@@ -1,19 +1,19 @@
 # 📂 README MODULE STRUCTURE (VI)
 
 * **1.Introduction**
-    * [DataAccess](readme/vi/menu/1.Introduction/DataAccess.md)
+    * [DataAccess](content/readme/docs/vi/menu/1.Introduction/DataAccess.md)
 * **2.DaoExceptionModel**
-    * [DaoExceptionModel](readme/vi/menu/2.DaoExceptionModel/DaoExceptionModel.md)
+    * [DaoExceptionModel](content/readme/docs/vi/menu/2.DaoExceptionModel/DaoExceptionModel.md)
 * **3.SpringJdbcCore**
-    * [SpringJdbcCore](readme/vi/menu/3.SpringJdbcCore/SpringJdbcCore.md)
+    * [SpringJdbcCore](content/readme/docs/vi/menu/3.SpringJdbcCore/SpringJdbcCore.md)
 * **4.AdvancedJdbc**
-    * [AdvancedJdbc](readme/vi/menu/4.AdvancedJdbc/AdvancedJdbc.md)
+    * [AdvancedJdbc](content/readme/docs/vi/menu/4.AdvancedJdbc/AdvancedJdbc.md)
 * **5.SpringR2dbcCore**
-    * [SpringR2dbcCore](readme/vi/menu/5.SpringR2dbcCore/SpringR2dbcCore.md)
+    * [SpringR2dbcCore](content/readme/docs/vi/menu/5.SpringR2dbcCore/SpringR2dbcCore.md)
 * **6.ResourceTransactionParticipation**
-    * [ResourceTransactionParticipation](readme/vi/menu/6.ResourceTransactionParticipation/ResourceTransactionParticipation.md)
+    * [ResourceTransactionParticipation](content/readme/docs/vi/menu/6.ResourceTransactionParticipation/ResourceTransactionParticipation.md)
 * **7.AbstractionChoice**
-    * [AbstractionChoice](readme/vi/menu/7.AbstractionChoice/AbstractionChoice.md)
+    * [AbstractionChoice](content/readme/docs/vi/menu/7.AbstractionChoice/AbstractionChoice.md)
 
 # Spring Framework Data Access
 

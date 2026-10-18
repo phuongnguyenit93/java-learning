@@ -2,6 +2,7 @@ package com.example.learning.orchestration
 
 import com.example.learning.setup.root.catalog.plugin.CatalogSetupPlugin
 import com.example.learning.setup.root.cleanup.plugin.CleanupSetupPlugin
+import com.example.learning.setup.root.contractSkeleton.plugin.ContractSkeletonSetupPlugin
 import com.example.learning.setup.root.database.plugin.DatabaseSetupPlugin
 import com.example.learning.setup.root.readmeMetadata.plugin.ReadmeMetadataSetupPlugin
 import com.example.learning.setup.root.structure.plugin.StructureSetupPlugin
@@ -35,6 +36,12 @@ ${project.path}
             )
         }
 
+
+        // Root-level sync from the pinned contract: runs on every Gradle
+        // configuration/IDE sync, independent of every module BUILD_* flag.
+        project.pluginManager.apply(
+                ContractSkeletonSetupPlugin
+        )
 
         project.pluginManager.apply(
                 CatalogSetupPlugin

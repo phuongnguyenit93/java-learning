@@ -19,7 +19,7 @@ class PortalVideoProjectionService {
             LearningDataPaths.MODULE_DIRECTORY
 
     private static final String VIDEO_DIRECTORY =
-            'video'
+            'content/video'
 
     private static final String MENU_DIRECTORY =
             'menu'

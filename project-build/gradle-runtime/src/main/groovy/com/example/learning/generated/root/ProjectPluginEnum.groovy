@@ -95,6 +95,11 @@ enum ProjectPluginEnum {
             'com.example.learning.setup.root.cleanup.plugin.CleanupSetupPlugin'
     ),
 
+    CONTRACT_SKELETON_SETUP_PLUGIN(
+            'com.example.learning.setup.root.contractSkeleton.plugin',
+            'com.example.learning.setup.root.contractSkeleton.plugin.ContractSkeletonSetupPlugin'
+    ),
+
     DATABASE_SETUP_PLUGIN(
             'com.example.learning.setup.root.database.plugin',
             'com.example.learning.setup.root.database.plugin.DatabaseSetupPlugin'

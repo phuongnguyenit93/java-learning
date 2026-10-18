@@ -37,8 +37,8 @@ public class ActuatorLearningController {
 
     /**
      * Related Knowledge:
-     * readme/en/menu/4.Health/Health.md#custom-health-indicators
-     * readme/vi/menu/4.Health/Health.md#custom-health-indicators
+     * content/readme/docs/en/menu/4.Health/Health.md#custom-health-indicators
+     * content/readme/docs/vi/menu/4.Health/Health.md#custom-health-indicators
      */
     @PostMapping("/health/{available}")
     public Map<String, Object> setDependencyAvailable(@PathVariable boolean available) {
@@ -53,8 +53,8 @@ public class ActuatorLearningController {
 
     /**
      * Related Knowledge:
-     * readme/en/menu/7.MetricsMicrometer/MetricsMicrometer.md#tag-filtered-metrics
-     * readme/vi/menu/7.MetricsMicrometer/MetricsMicrometer.md#tag-filtered-metrics
+     * content/readme/docs/en/menu/7.MetricsMicrometer/MetricsMicrometer.md#tag-filtered-metrics
+     * content/readme/docs/vi/menu/7.MetricsMicrometer/MetricsMicrometer.md#tag-filtered-metrics
      */
     @PostMapping("/metrics/{outcome}")
     public Map<String, Object> recordMetric(@PathVariable String outcome) {
@@ -82,8 +82,8 @@ public class ActuatorLearningController {
 
     /**
      * Related Knowledge:
-     * readme/en/menu/9.CustomEndpoints/CustomEndpoints.md#endpoint-operation-annotations
-     * readme/vi/menu/9.CustomEndpoints/CustomEndpoints.md#endpoint-operation-annotations
+     * content/readme/docs/en/menu/9.CustomEndpoints/CustomEndpoints.md#endpoint-operation-annotations
+     * content/readme/docs/vi/menu/9.CustomEndpoints/CustomEndpoints.md#endpoint-operation-annotations
      */
     @GetMapping("/custom-endpoint")
     public Map<String, Object> customEndpointState() {
@@ -92,8 +92,8 @@ public class ActuatorLearningController {
 
     /**
      * Related Knowledge:
-     * readme/en/menu/9.CustomEndpoints/CustomEndpoints.md#technology-agnostic-custom-endpoints
-     * readme/vi/menu/9.CustomEndpoints/CustomEndpoints.md#technology-agnostic-custom-endpoints
+     * content/readme/docs/en/menu/9.CustomEndpoints/CustomEndpoints.md#technology-agnostic-custom-endpoints
+     * content/readme/docs/vi/menu/9.CustomEndpoints/CustomEndpoints.md#technology-agnostic-custom-endpoints
      */
     @PostMapping("/custom-endpoint/maintenance/{enabled}")
     public Map<String, Object> setMaintenanceMode(@PathVariable boolean enabled) {

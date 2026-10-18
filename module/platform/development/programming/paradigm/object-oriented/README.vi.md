@@ -1,19 +1,47 @@
-# 📂 README MODULE STRUCTURE (VI)
+# ?? README MODULE STRUCTURE (VI)
 
-* **1.Introduction**
-    * [Introduction](readme/vi/menu/1.Introduction/Introduction.md)
-* **2.ClassAndObject**
-    * [ClassAndObject](readme/vi/menu/2.ClassAndObject/ClassAndObject.md)
-* **3.Encapsulation**
-    * [Encapsulation](readme/vi/menu/3.Encapsulation/Encapsulation.md)
-* **4.Abstraction**
-    * [Abstraction](readme/vi/menu/4.Abstraction/Abstraction.md)
-* **5.Inheritance**
-    * [Inheritance](readme/vi/menu/5.Inheritance/Inheritance.md)
-* **6.PolymorphismAndRelationships**
-    * [PolymorphismAndRelationships](readme/vi/menu/6.PolymorphismAndRelationships/PolymorphismAndRelationships.md)
-* **7.OOPDesign**
-    * [OOPDesign](readme/vi/menu/7.OOPDesign/OOPDesign.md)
+* **1.OOPBasic**
+    * [OOPBasic](content/readme/docs/vi/menu/1.OOPBasic/OOPBasic.md)
+* **2.Class**
+    * [Class](content/readme/docs/vi/menu/2.Class/Class.md)
+* **3.Object**
+    * [Object](content/readme/docs/vi/menu/3.Object/Object.md)
+* **4.Lifecycle**
+    * [Lifecycle](content/readme/docs/vi/menu/4.Lifecycle/Lifecycle.md)
+* **5.Encapsulation**
+    * [Encapsulation](content/readme/docs/vi/menu/5.Encapsulation/Encapsulation.md)
+* **6.Abstraction**
+    * [Abstraction](content/readme/docs/vi/menu/6.Abstraction/Abstraction.md)
+* **7.Interface**
+    * [Interface](content/readme/docs/vi/menu/7.Interface/Interface.md)
+* **8.Inheritance**
+    * [Inheritance](content/readme/docs/vi/menu/8.Inheritance/Inheritance.md)
+* **9.Subtyping**
+    * [Subtyping](content/readme/docs/vi/menu/9.Subtyping/Subtyping.md)
+* **10.Polymorphism**
+    * [Polymorphism](content/readme/docs/vi/menu/10.Polymorphism/Polymorphism.md)
+* **11.Composition**
+    * [Composition](content/readme/docs/vi/menu/11.Composition/Composition.md)
+* **12.Relationships**
+    * [Relationships](content/readme/docs/vi/menu/12.Relationships/Relationships.md)
+* **13.ClassDesign**
+    * [ClassDesign](content/readme/docs/vi/menu/13.ClassDesign/ClassDesign.md)
+* **14.Modeling**
+    * [Modeling](content/readme/docs/vi/menu/14.Modeling/Modeling.md)
+* **15.SOLID**
+    * [SOLID](content/readme/docs/vi/menu/15.SOLID/SOLID.md)
+* **16.DesignPatterns**
+    * [DesignPatterns](content/readme/docs/vi/menu/16.DesignPatterns/DesignPatterns.md)
+* **17.LanguageMechanics**
+    * [LanguageMechanics](content/readme/docs/vi/menu/17.LanguageMechanics/LanguageMechanics.md)
+* **18.DesignPitfalls**
+    * [DesignPitfalls](content/readme/docs/vi/menu/18.DesignPitfalls/DesignPitfalls.md)
+* **19.Testing**
+    * [Testing](content/readme/docs/vi/menu/19.Testing/Testing.md)
+* **20.Refactoring**
+    * [Refactoring](content/readme/docs/vi/menu/20.Refactoring/Refactoring.md)
+* **21.Practice**
+    * [Practice](content/readme/docs/vi/menu/21.Practice/Practice.md)
 
 # Lập trình hướng đối tượng (Object-Oriented Programming — OOP)
 

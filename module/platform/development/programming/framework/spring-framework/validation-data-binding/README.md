@@ -1,21 +1,21 @@
 # 📂 README MODULE STRUCTURE (EN)
 
 * **1.Foundation**
-    * [Foundation](readme/en/menu/1.Foundation/Foundation.md)
+    * [Foundation](content/readme/docs/en/menu/1.Foundation/Foundation.md)
 * **2.PropertyAccess**
-    * [PropertyAccess](readme/en/menu/2.PropertyAccess/PropertyAccess.md)
+    * [PropertyAccess](content/readme/docs/en/menu/2.PropertyAccess/PropertyAccess.md)
 * **3.TypeConversion**
-    * [TypeConversion](readme/en/menu/3.TypeConversion/TypeConversion.md)
+    * [TypeConversion](content/readme/docs/en/menu/3.TypeConversion/TypeConversion.md)
 * **4.Formatting**
-    * [Formatting](readme/en/menu/4.Formatting/Formatting.md)
+    * [Formatting](content/readme/docs/en/menu/4.Formatting/Formatting.md)
 * **5.Validation**
-    * [Validation](readme/en/menu/5.Validation/Validation.md)
+    * [Validation](content/readme/docs/en/menu/5.Validation/Validation.md)
 * **6.DataBinder**
-    * [DataBinder](readme/en/menu/6.DataBinder/DataBinder.md)
+    * [DataBinder](content/readme/docs/en/menu/6.DataBinder/DataBinder.md)
 * **7.BeanValidation**
-    * [BeanValidation](readme/en/menu/7.BeanValidation/BeanValidation.md)
+    * [BeanValidation](content/readme/docs/en/menu/7.BeanValidation/BeanValidation.md)
 * **8.SafeBinding**
-    * [SafeBinding](readme/en/menu/8.SafeBinding/SafeBinding.md)
+    * [SafeBinding](content/readme/docs/en/menu/8.SafeBinding/SafeBinding.md)
 
 # Spring Validation and Data Binding
 

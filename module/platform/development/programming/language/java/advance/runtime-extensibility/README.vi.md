@@ -1,27 +1,27 @@
 # 📂 README MODULE STRUCTURE (VI)
 
 * **1.MentalModel**
-    * [RuntimeExtensibility](readme/vi/menu/1.MentalModel/RuntimeExtensibility.md)
+    * [RuntimeExtensibility](content/readme/docs/vi/menu/1.MentalModel/RuntimeExtensibility.md)
 * **2.SPIContract**
-    * [SPIContract](readme/vi/menu/2.SPIContract/SPIContract.md)
+    * [SPIContract](content/readme/docs/vi/menu/2.SPIContract/SPIContract.md)
 * **3.ServiceLoaderIntegration**
-    * [ServiceLoaderIntegration](readme/vi/menu/3.ServiceLoaderIntegration/ServiceLoaderIntegration.md)
+    * [ServiceLoaderIntegration](content/readme/docs/vi/menu/3.ServiceLoaderIntegration/ServiceLoaderIntegration.md)
 * **4.ProviderDiscoveryStrategy**
-    * [ProviderDiscoveryStrategy](readme/vi/menu/4.ProviderDiscoveryStrategy/ProviderDiscoveryStrategy.md)
+    * [ProviderDiscoveryStrategy](content/readme/docs/vi/menu/4.ProviderDiscoveryStrategy/ProviderDiscoveryStrategy.md)
 * **5.ClasspathModulePathIntegration**
-    * [ClasspathModulePathIntegration](readme/vi/menu/5.ClasspathModulePathIntegration/ClasspathModulePathIntegration.md)
+    * [ClasspathModulePathIntegration](content/readme/docs/vi/menu/5.ClasspathModulePathIntegration/ClasspathModulePathIntegration.md)
 * **6.PluginArchitecture**
-    * [PluginArchitecture](readme/vi/menu/6.PluginArchitecture/PluginArchitecture.md)
+    * [PluginArchitecture](content/readme/docs/vi/menu/6.PluginArchitecture/PluginArchitecture.md)
 * **7.PluginLifecycle**
-    * [PluginLifecycle](readme/vi/menu/7.PluginLifecycle/PluginLifecycle.md)
+    * [PluginLifecycle](content/readme/docs/vi/menu/7.PluginLifecycle/PluginLifecycle.md)
 * **8.PluginIsolationDesign**
-    * [PluginIsolationDesign](readme/vi/menu/8.PluginIsolationDesign/PluginIsolationDesign.md)
+    * [PluginIsolationDesign](content/readme/docs/vi/menu/8.PluginIsolationDesign/PluginIsolationDesign.md)
 * **9.VersionCompatibility**
-    * [VersionCompatibility](readme/vi/menu/9.VersionCompatibility/VersionCompatibility.md)
+    * [VersionCompatibility](content/readme/docs/vi/menu/9.VersionCompatibility/VersionCompatibility.md)
 * **10.ModuleLayerIntegration**
-    * [ModuleLayerIntegration](readme/vi/menu/10.ModuleLayerIntegration/ModuleLayerIntegration.md)
+    * [ModuleLayerIntegration](content/readme/docs/vi/menu/10.ModuleLayerIntegration/ModuleLayerIntegration.md)
 * **11.SynthesisAndPitfalls**
-    * [SynthesisAndPitfalls](readme/vi/menu/11.SynthesisAndPitfalls/SynthesisAndPitfalls.md)
+    * [SynthesisAndPitfalls](content/readme/docs/vi/menu/11.SynthesisAndPitfalls/SynthesisAndPitfalls.md)
 
 # Runtime Extensibility
 

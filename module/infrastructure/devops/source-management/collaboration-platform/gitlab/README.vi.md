@@ -1,13 +1,13 @@
 # 📂 README MODULE STRUCTURE (VI)
 
-* [01-gitlab-foundations](readme/vi/menu/01-gitlab-foundations.md)
-* [02-projects-and-groups](readme/vi/menu/02-projects-and-groups.md)
-* [03-members-and-access](readme/vi/menu/03-members-and-access.md)
-* [04-merge-request-proposals](readme/vi/menu/04-merge-request-proposals.md)
-* [05-reviews-and-approvals](readme/vi/menu/05-reviews-and-approvals.md)
-* [06-protected-branches](readme/vi/menu/06-protected-branches.md)
-* [07-issues-and-releases](readme/vi/menu/07-issues-and-releases.md)
-* [08-team-workflow](readme/vi/menu/08-team-workflow.md)
+* [01-gitlab-foundations](content/readme/docs/vi/menu/01-gitlab-foundations.md)
+* [02-projects-and-groups](content/readme/docs/vi/menu/02-projects-and-groups.md)
+* [03-members-and-access](content/readme/docs/vi/menu/03-members-and-access.md)
+* [04-merge-request-proposals](content/readme/docs/vi/menu/04-merge-request-proposals.md)
+* [05-reviews-and-approvals](content/readme/docs/vi/menu/05-reviews-and-approvals.md)
+* [06-protected-branches](content/readme/docs/vi/menu/06-protected-branches.md)
+* [07-issues-and-releases](content/readme/docs/vi/menu/07-issues-and-releases.md)
+* [08-team-workflow](content/readme/docs/vi/menu/08-team-workflow.md)
 
 # Tổng quan: Cộng tác mã nguồn với GitLab
 

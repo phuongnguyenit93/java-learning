@@ -507,8 +507,8 @@ Expected format:
 
         String language =
                 readmeIndex >= 0 &&
-                        readmeIndex + 1 < pathParts.size()
-                        ? pathParts[readmeIndex + 1]
+                        readmeIndex + 2 < pathParts.size()
+                        ? pathParts[readmeIndex + 2]
                                 .trim()
                                 .toLowerCase(
                                         Locale.ROOT

@@ -1,13 +1,13 @@
 # 📂 README MODULE STRUCTURE (VI)
 
-* [01-git-foundations](readme/vi/menu/01-git-foundations.md)
-* [02-recording-commits](readme/vi/menu/02-recording-commits.md)
-* [03-branches-refs-tags](readme/vi/menu/03-branches-refs-tags.md)
-* [04-merges-and-conflicts](readme/vi/menu/04-merges-and-conflicts.md)
-* [05-remotes-and-sync](readme/vi/menu/05-remotes-and-sync.md)
-* [06-rebase-and-rewrite](readme/vi/menu/06-rebase-and-rewrite.md)
-* [07-stash-undo-recovery](readme/vi/menu/07-stash-undo-recovery.md)
-* [08-end-to-end-git](readme/vi/menu/08-end-to-end-git.md)
+* [01-git-foundations](content/readme/docs/vi/menu/01-git-foundations.md)
+* [02-recording-commits](content/readme/docs/vi/menu/02-recording-commits.md)
+* [03-branches-refs-tags](content/readme/docs/vi/menu/03-branches-refs-tags.md)
+* [04-merges-and-conflicts](content/readme/docs/vi/menu/04-merges-and-conflicts.md)
+* [05-remotes-and-sync](content/readme/docs/vi/menu/05-remotes-and-sync.md)
+* [06-rebase-and-rewrite](content/readme/docs/vi/menu/06-rebase-and-rewrite.md)
+* [07-stash-undo-recovery](content/readme/docs/vi/menu/07-stash-undo-recovery.md)
+* [08-end-to-end-git](content/readme/docs/vi/menu/08-end-to-end-git.md)
 
 # Git: quản lý lịch sử thay đổi mã nguồn
 

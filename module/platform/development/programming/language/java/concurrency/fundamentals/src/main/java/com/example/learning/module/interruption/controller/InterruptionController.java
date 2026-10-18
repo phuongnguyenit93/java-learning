@@ -18,7 +18,7 @@ public class InterruptionController {
     }
 
     /**
-     * README: readme/vi/menu/2.Interruption/Interruption.md#interrupt-mental-model
+     * README: content/readme/docs/vi/menu/2.Interruption/Interruption.md#interrupt-mental-model
      * Purpose: Chứng minh interrupt() là cooperative cancellation signal cho CPU loop.
      */
     @GetMapping("/busy-loop")
@@ -27,7 +27,7 @@ public class InterruptionController {
     }
 
     /**
-     * README: readme/vi/menu/2.Interruption/Interruption.md#interrupt-flag
+     * README: content/readme/docs/vi/menu/2.Interruption/Interruption.md#interrupt-flag
      * Purpose: Phân biệt isInterrupted() với Thread.interrupted().
      */
     @GetMapping("/flag")
@@ -36,7 +36,7 @@ public class InterruptionController {
     }
 
     /**
-     * README: readme/vi/menu/2.Interruption/Interruption.md#interrupted-exception
+     * README: content/readme/docs/vi/menu/2.Interruption/Interruption.md#interrupted-exception
      * Purpose: Quan sát interrupt một Thread đang sleep và restore interrupt status.
      */
     @GetMapping("/sleep")
@@ -45,7 +45,7 @@ public class InterruptionController {
     }
 
     /**
-     * README: readme/vi/menu/2.Interruption/Interruption.md#interrupt-cleanup
+     * README: content/readme/docs/vi/menu/2.Interruption/Interruption.md#interrupt-cleanup
      * Purpose: Chứng minh cancellation path vẫn cleanup resource trong finally.
      */
     @GetMapping("/cleanup")
@@ -54,7 +54,7 @@ public class InterruptionController {
     }
 
     /**
-     * README: readme/vi/menu/2.Interruption/Interruption.md#interrupt-limitations
+     * README: content/readme/docs/vi/menu/2.Interruption/Interruption.md#interrupt-limitations
      * Purpose: Chứng minh Thread chờ synchronized monitor không thoát khỏi BLOCKED chỉ nhờ interrupt().
      */
     @GetMapping("/synchronized-blocked")
@@ -63,7 +63,7 @@ public class InterruptionController {
     }
 
     /**
-     * README: readme/vi/menu/2.Interruption/Interruption.md#interrupt-vs-stop-flag
+     * README: content/readme/docs/vi/menu/2.Interruption/Interruption.md#interrupt-vs-stop-flag
      * Purpose: So sánh cooperative stop flag với interrupt khi worker đang ở blocking operation.
      */
     @GetMapping("/stop-flag-vs-interrupt")

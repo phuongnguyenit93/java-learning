@@ -9,6 +9,6 @@ markdownTranslation {
 }
 
 generateInternalReadmeMenuForFile {
-    location = 'readme/vi/menu/1.Basic/Basic.md'
+    location = 'content/readme/docs/vi/menu/1.Basic/Basic.md'
 }
 

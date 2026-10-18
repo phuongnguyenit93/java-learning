@@ -35,7 +35,7 @@ public class TaskExecutorController {
     }
 
     /**
-     * README: readme/vi/menu/3.ContextPropagation/ContextPropagation.md#spring-async-demo
+     * README: content/readme/docs/vi/menu/3.ContextPropagation/ContextPropagation.md#spring-async-demo
      * Purpose: Chứng minh @Async dispatch sang custom ThreadPoolTaskExecutor và TaskDecorator propagate context.
     */
     @GetMapping("/async-context")
@@ -67,7 +67,7 @@ public class TaskExecutorController {
     }
 
     /**
-     * README: readme/vi/menu/2.Spring_Task_Executor/SpringExecutor.md#async-return-type
+     * README: content/readme/docs/vi/menu/2.Spring_Task_Executor/SpringExecutor.md#async-return-type
      * Purpose: Chứng minh failure trong @Async void đi qua AsyncUncaughtExceptionHandler.
      */
     @GetMapping("/void-exception")
@@ -88,7 +88,7 @@ public class TaskExecutorController {
         return awaitEvidence(observed, "Async void failure was not observed");
     }
 
-    /** README: readme/vi/menu/2.Spring_Task_Executor/SpringExecutor.md#spring-executor-config */
+    /** README: content/readme/docs/vi/menu/2.Spring_Task_Executor/SpringExecutor.md#spring-executor-config */
     @GetMapping("/saturation")
     public Map<String, Object> saturation() {
         return concurrencyExperimentService.executorSaturationDemo();

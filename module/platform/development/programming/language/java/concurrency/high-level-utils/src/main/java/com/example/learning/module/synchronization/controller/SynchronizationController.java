@@ -18,7 +18,7 @@ public class SynchronizationController {
     }
 
     /**
-     * README: readme/vi/menu/1.Synchronization/Synchronization.md#synchronized-monitor
+     * README: content/readme/docs/vi/menu/1.Synchronization/Synchronization.md#synchronized-monitor
      * Purpose: Chứng minh synchronized bảo vệ một compound update bằng intrinsic monitor.
      */
     @GetMapping("/synchronized-counter")
@@ -27,7 +27,7 @@ public class SynchronizationController {
     }
 
     /**
-     * README: readme/vi/menu/1.Synchronization/Synchronization.md#reentrant-lock
+     * README: content/readme/docs/vi/menu/1.Synchronization/Synchronization.md#reentrant-lock
      * Purpose: Chứng minh cùng một Thread có thể acquire lại ReentrantLock và hold count được quản lý đúng.
      */
     @GetMapping("/reentrant-lock")
@@ -36,7 +36,7 @@ public class SynchronizationController {
     }
 
     /**
-     * README: readme/vi/menu/1.Synchronization/Synchronization.md#reentrant-lock
+     * README: content/readme/docs/vi/menu/1.Synchronization/Synchronization.md#reentrant-lock
      * Purpose: Quan sát tryLock(timeout) khi lock đang được Thread khác giữ.
      */
     @GetMapping("/try-lock")
@@ -45,7 +45,7 @@ public class SynchronizationController {
     }
 
     /**
-     * README: readme/vi/menu/1.Synchronization/Synchronization.md#reentrant-lock
+     * README: content/readme/docs/vi/menu/1.Synchronization/Synchronization.md#reentrant-lock
      * Purpose: Chứng minh lockInterruptibly() cho phép hủy Thread đang đợi explicit lock.
      */
     @GetMapping("/interruptible-lock")
@@ -54,7 +54,7 @@ public class SynchronizationController {
     }
 
     /**
-     * README: readme/vi/menu/1.Synchronization/Synchronization.md#reentrant-lock
+     * README: content/readme/docs/vi/menu/1.Synchronization/Synchronization.md#reentrant-lock
      * Purpose: Quan sát fair policy của ReentrantLock, gồm exception rằng untimed tryLock() có thể barge.
      */
     @GetMapping("/reentrant-lock-policy")
@@ -63,7 +63,7 @@ public class SynchronizationController {
     }
 
     /**
-     * README: readme/vi/menu/1.Synchronization/Synchronization.md#read-write-lock
+     * README: content/readme/docs/vi/menu/1.Synchronization/Synchronization.md#read-write-lock
      * Purpose: Quan sát nhiều reader cùng chạy và writer phải đợi read lock được giải phóng.
      */
     @GetMapping("/read-write-lock")
@@ -72,7 +72,7 @@ public class SynchronizationController {
     }
 
     /**
-     * README: readme/vi/menu/1.Synchronization/Synchronization.md#read-write-lock
+     * README: content/readme/docs/vi/menu/1.Synchronization/Synchronization.md#read-write-lock
      * Purpose: Chứng minh lock downgrading theo thứ tự write -> read -> release write.
      */
     @GetMapping("/read-write-lock-downgrade")
@@ -81,7 +81,7 @@ public class SynchronizationController {
     }
 
     /**
-     * README: readme/vi/menu/1.Synchronization/Synchronization.md#read-write-lock-policy
+     * README: content/readme/docs/vi/menu/1.Synchronization/Synchronization.md#read-write-lock-policy
      * Purpose: Quan sát default/fair policy và đặc điểm của untimed tryLock() trong ReentrantReadWriteLock.
      */
     @GetMapping("/read-write-lock-policy")
@@ -90,7 +90,7 @@ public class SynchronizationController {
     }
 
     /**
-     * README: readme/vi/menu/1.Synchronization/Synchronization.md#stamped-lock
+     * README: content/readme/docs/vi/menu/1.Synchronization/Synchronization.md#stamped-lock
      * Purpose: Làm invalid optimistic stamp rồi fallback sang read lock.
      */
     @GetMapping("/stamped-lock")
@@ -99,7 +99,7 @@ public class SynchronizationController {
     }
 
     /**
-     * README: readme/vi/menu/1.Synchronization/Synchronization.md#stamped-lock-limitations
+     * README: content/readme/docs/vi/menu/1.Synchronization/Synchronization.md#stamped-lock-limitations
      * Purpose: Chứng minh StampedLock không reentrant và Lock view không cung cấp Condition.
      */
     @GetMapping("/stamped-lock-limitations")
@@ -108,7 +108,7 @@ public class SynchronizationController {
     }
 
     /**
-     * README: readme/vi/menu/1.Synchronization/Synchronization.md#adder-accumulator
+     * README: content/readme/docs/vi/menu/1.Synchronization/Synchronization.md#adder-accumulator
      * Purpose: So sánh vai trò AtomicInteger, LongAdder và LongAccumulator bằng kết quả xác định.
      */
     @GetMapping("/atomic-tools")
@@ -117,7 +117,7 @@ public class SynchronizationController {
     }
 
     /**
-     * README: readme/vi/menu/1.Synchronization/Synchronization.md#atomic-cas
+     * README: content/readme/docs/vi/menu/1.Synchronization/Synchronization.md#atomic-cas
      * Purpose: Chứng minh compareAndSet, ABA và cách stamp phát hiện state đã thay đổi rồi quay về giá trị cũ.
      */
     @GetMapping("/atomic-cas")
@@ -126,7 +126,7 @@ public class SynchronizationController {
     }
 
     /**
-     * README: readme/vi/menu/1.Synchronization/Synchronization.md#concurrent-collections
+     * README: content/readme/docs/vi/menu/1.Synchronization/Synchronization.md#concurrent-collections
      * Purpose: Minh họa atomic map update, snapshot iteration và queue non-blocking hữu hạn.
      */
     @GetMapping("/concurrent-collections")
@@ -135,7 +135,7 @@ public class SynchronizationController {
     }
 
     /**
-     * README: readme/vi/menu/1.Synchronization/Synchronization.md#concurrent-collections
+     * README: content/readme/docs/vi/menu/1.Synchronization/Synchronization.md#concurrent-collections
      * Purpose: Quan sát ConcurrentSkipListMap giữ key theo sorted order khi được update đồng thời.
      */
     @GetMapping("/concurrent-skip-list")

@@ -19,7 +19,7 @@ public class HttpClientExperimentController {
     }
 
     /**
-     * README: readme/en/menu/13.SynchronousHttpClients/SynchronousHttpClients.md#status-and-error-handling
+     * README: content/readme/docs/en/menu/13.SynchronousHttpClients/SynchronousHttpClients.md#status-and-error-handling
      * Purpose: Compare retrieve status handling with exchange, which owns the response decision.
      */
     @GetMapping("/rest-client-status")
@@ -28,7 +28,7 @@ public class HttpClientExperimentController {
     }
 
     /**
-     * README: readme/en/menu/14.HttpServiceInterfaces/HttpServiceInterfaces.md#synchronous-http-client-adapters
+     * README: content/readme/docs/en/menu/14.HttpServiceInterfaces/HttpServiceInterfaces.md#synchronous-http-client-adapters
      * Purpose: Execute the same @HttpExchange interface through RestClientAdapter and RestTemplateAdapter.
      */
     @GetMapping("/http-service-adapters")

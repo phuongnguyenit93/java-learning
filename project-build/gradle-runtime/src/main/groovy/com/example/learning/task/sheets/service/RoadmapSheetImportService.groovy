@@ -197,7 +197,7 @@ class RoadmapSheetImportService {
             File moduleRoot = new File(repositoryRoot.canonicalFile, 'module').canonicalFile
             File destination = new File(
                     repositoryRoot.canonicalFile,
-                    "${location}/roadmap/vi/roadmap.yml"
+                    "${location}/content/roadmap/vi/roadmap.yml"
             ).canonicalFile
             if (!destination.toPath().startsWith(moduleRoot.toPath()) ||
                     destination.toPath() == moduleRoot.toPath()) {

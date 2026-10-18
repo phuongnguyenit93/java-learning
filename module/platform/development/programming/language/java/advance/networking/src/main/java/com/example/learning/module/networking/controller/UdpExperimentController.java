@@ -20,7 +20,7 @@ public class UdpExperimentController {
         this.networkingExperimentService = networkingExperimentService;
     }
 
-    /** README: readme/vi/menu/4.UdpDatagrams/UdpDatagrams.md#datagram-packet-addressing */
+    /** README: content/readme/docs/vi/menu/4.UdpDatagrams/UdpDatagrams.md#datagram-packet-addressing */
     @GetMapping("/datagram-truncation")
     public Map<String, Object> datagramTruncation() throws IOException {
         return networkingExperimentService.udpTruncationDemo();

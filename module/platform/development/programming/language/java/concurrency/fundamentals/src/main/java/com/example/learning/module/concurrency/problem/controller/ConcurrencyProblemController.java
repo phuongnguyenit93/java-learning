@@ -18,7 +18,7 @@ public class ConcurrencyProblemController {
     }
 
     /**
-     * README: readme/vi/menu/3.Concurrency_Problems/ConcurrencyProblem.md#shared-state-race-condition
+     * README: content/readme/docs/vi/menu/3.Concurrency_Problems/ConcurrencyProblem.md#shared-state-race-condition
      * Purpose: Tạo lost update deterministic để quan sát race condition và atomicity problem.
      */
     @GetMapping("/race-condition")
@@ -27,7 +27,7 @@ public class ConcurrencyProblemController {
     }
 
     /**
-     * README: readme/vi/menu/3.Concurrency_Problems/ConcurrencyProblem.md#happens-before
+     * README: content/readme/docs/vi/menu/3.Concurrency_Problems/ConcurrencyProblem.md#happens-before
      * Purpose: Quan sát memory-consistency guarantee của Thread.start() và Thread.join().
      */
     @GetMapping("/happens-before-start-join")
@@ -36,7 +36,7 @@ public class ConcurrencyProblemController {
     }
 
     /**
-     * README: readme/vi/menu/3.Concurrency_Problems/ConcurrencyProblem.md#volatile-publication
+     * README: content/readme/docs/vi/menu/3.Concurrency_Problems/ConcurrencyProblem.md#volatile-publication
      * Purpose: Publish plain data từ writer sang reader thông qua volatile flag.
      */
     @GetMapping("/volatile-publication")
@@ -45,7 +45,7 @@ public class ConcurrencyProblemController {
     }
 
     /**
-     * README: readme/vi/menu/3.Concurrency_Problems/ConcurrencyProblem.md#volatile-publication
+     * README: content/readme/docs/vi/menu/3.Concurrency_Problems/ConcurrencyProblem.md#volatile-publication
      * Purpose: Chứng minh volatile không biến read-modify-write thành atomic operation.
      */
     @GetMapping("/volatile-not-atomic")
@@ -54,7 +54,7 @@ public class ConcurrencyProblemController {
     }
 
     /**
-     * README: readme/vi/menu/3.Concurrency_Problems/ConcurrencyProblem.md#progress-problems
+     * README: content/readme/docs/vi/menu/3.Concurrency_Problems/ConcurrencyProblem.md#progress-problems
      * Purpose: Tạo circular lock dependency nhưng dùng tryLock để tránh permanent deadlock.
      */
     @GetMapping("/deadlock-risk")
@@ -63,7 +63,7 @@ public class ConcurrencyProblemController {
     }
 
     /**
-     * README: readme/vi/menu/3.Concurrency_Problems/ConcurrencyProblem.md#deadlock-prevention
+     * README: content/readme/docs/vi/menu/3.Concurrency_Problems/ConcurrencyProblem.md#deadlock-prevention
      * Purpose: Chứng minh global lock ordering phá circular-wait condition và cho phép cả hai worker hoàn thành.
      */
     @GetMapping("/deadlock-prevention")
@@ -72,7 +72,7 @@ public class ConcurrencyProblemController {
     }
 
     /**
-     * README: readme/vi/menu/3.Concurrency_Problems/ConcurrencyProblem.md#progress-problems
+     * README: content/readme/docs/vi/menu/3.Concurrency_Problems/ConcurrencyProblem.md#progress-problems
      * Purpose: Minh họa livelock bounded: worker vẫn hoạt động nhưng không tạo progress.
      */
     @GetMapping("/livelock")

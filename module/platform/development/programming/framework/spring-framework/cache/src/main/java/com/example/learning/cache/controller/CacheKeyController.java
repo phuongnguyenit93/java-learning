@@ -18,7 +18,7 @@ public class CacheKeyController {
     }
 
     /**
-     * README: readme/en/menu/4.KeyAndResolution/KeyAndResolution.md#cache-key-design-pitfalls
+     * README: content/readme/docs/en/menu/4.KeyAndResolution/KeyAndResolution.md#cache-key-design-pitfalls
      * Purpose: Observe an incomplete key reusing the wrong cached variant, then compare it with a complete key.
      */
     @GetMapping("/hit-miss")

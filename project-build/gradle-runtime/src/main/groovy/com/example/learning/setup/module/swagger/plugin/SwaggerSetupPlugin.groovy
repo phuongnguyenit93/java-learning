@@ -39,9 +39,7 @@ class SwaggerSetupPlugin
         // ====================================================
 
         SwaggerResourceConfigurationService resourceService =
-                new SwaggerResourceConfigurationService(
-                        project.logger
-                )
+                new SwaggerResourceConfigurationService()
 
 
         resourceService.configure(

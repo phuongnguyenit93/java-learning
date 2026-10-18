@@ -17,7 +17,7 @@ public class StompExperimentController {
         this.messagingExperimentService = messagingExperimentService;
     }
 
-    /** README: readme/vi/menu/5.StompMessageFlow/StompMessageFlow.md#application-message-flow */
+    /** README: content/readme/docs/vi/menu/5.StompMessageFlow/StompMessageFlow.md#application-message-flow */
     @GetMapping("/round-trip")
     public Map<String, Object> roundTrip() throws Exception {
         return messagingExperimentService.stompRoundTrip();

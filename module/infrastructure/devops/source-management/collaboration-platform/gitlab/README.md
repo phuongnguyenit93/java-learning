@@ -1,13 +1,13 @@
 # 📂 README MODULE STRUCTURE (EN)
 
-* [01-gitlab-foundations](readme/en/menu/01-gitlab-foundations.md)
-* [02-projects-and-groups](readme/en/menu/02-projects-and-groups.md)
-* [03-members-and-access](readme/en/menu/03-members-and-access.md)
-* [04-merge-request-proposals](readme/en/menu/04-merge-request-proposals.md)
-* [05-reviews-and-approvals](readme/en/menu/05-reviews-and-approvals.md)
-* [06-protected-branches](readme/en/menu/06-protected-branches.md)
-* [07-issues-and-releases](readme/en/menu/07-issues-and-releases.md)
-* [08-team-workflow](readme/en/menu/08-team-workflow.md)
+* [01-gitlab-foundations](content/readme/docs/en/menu/01-gitlab-foundations.md)
+* [02-projects-and-groups](content/readme/docs/en/menu/02-projects-and-groups.md)
+* [03-members-and-access](content/readme/docs/en/menu/03-members-and-access.md)
+* [04-merge-request-proposals](content/readme/docs/en/menu/04-merge-request-proposals.md)
+* [05-reviews-and-approvals](content/readme/docs/en/menu/05-reviews-and-approvals.md)
+* [06-protected-branches](content/readme/docs/en/menu/06-protected-branches.md)
+* [07-issues-and-releases](content/readme/docs/en/menu/07-issues-and-releases.md)
+* [08-team-workflow](content/readme/docs/en/menu/08-team-workflow.md)
 
 # Overview: Source Collaboration with GitLab
 

@@ -169,7 +169,7 @@ ${readmeFile.absolutePath}
         File languageDirectory =
                 new File(
                         project.projectDir,
-                        "readme/${language}"
+                        "content/readme/docs/${language}"
                 )
 
 
@@ -291,7 +291,7 @@ ${file.absolutePath}
         File readmeDirectory =
                 new File(
                         project.projectDir,
-                        'readme'
+                        'content/readme/docs'
                 )
 
 

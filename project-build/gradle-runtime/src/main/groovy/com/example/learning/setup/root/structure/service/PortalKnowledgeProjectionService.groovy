@@ -765,7 +765,7 @@ Section ids must be unique within one module/language.
         File metadataFile =
                 new File(
                         moduleProject.projectDir,
-                        "src/main/resources/readme/${language}/${ReadmeMetadataSyncService.METADATA_FILE_NAME}"
+                        "content/readme/metadata/${language}/${ReadmeMetadataSyncService.METADATA_FILE_NAME}"
                 )
 
 
@@ -1700,7 +1700,7 @@ Expected YAML boolean true or false.
         File readmeDirectory =
                 new File(
                         moduleProject.projectDir,
-                        'readme'
+                        'content/readme/docs'
                 )
 
 

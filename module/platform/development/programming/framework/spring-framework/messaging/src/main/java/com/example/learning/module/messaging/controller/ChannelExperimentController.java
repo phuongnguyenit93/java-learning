@@ -17,7 +17,7 @@ public class ChannelExperimentController {
         this.messagingExperimentService = messagingExperimentService;
     }
 
-    /** README: readme/vi/menu/2.MessageModel/MessageModel.md#channel-delivery-semantics */
+    /** README: content/readme/docs/vi/menu/2.MessageModel/MessageModel.md#channel-delivery-semantics */
     @GetMapping("/delivery-semantics")
     public Map<String, Object> deliverySemantics() throws InterruptedException {
         return messagingExperimentService.channelDeliverySemantics();

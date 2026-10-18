@@ -1,23 +1,23 @@
 # 📂 README MODULE STRUCTURE (VI)
 
 * **1.NetworkingModel**
-    * [NetworkingModel](readme/vi/menu/1.NetworkingModel/NetworkingModel.md)
+    * [NetworkingModel](content/readme/docs/vi/menu/1.NetworkingModel/NetworkingModel.md)
 * **2.AddressingEndpoints**
-    * [AddressingEndpoints](readme/vi/menu/2.AddressingEndpoints/AddressingEndpoints.md)
+    * [AddressingEndpoints](content/readme/docs/vi/menu/2.AddressingEndpoints/AddressingEndpoints.md)
 * **3.TcpSockets**
-    * [TcpSockets](readme/vi/menu/3.TcpSockets/TcpSockets.md)
+    * [TcpSockets](content/readme/docs/vi/menu/3.TcpSockets/TcpSockets.md)
 * **4.UdpDatagrams**
-    * [UdpDatagrams](readme/vi/menu/4.UdpDatagrams/UdpDatagrams.md)
+    * [UdpDatagrams](content/readme/docs/vi/menu/4.UdpDatagrams/UdpDatagrams.md)
 * **5.FailureControl**
-    * [FailureControl](readme/vi/menu/5.FailureControl/FailureControl.md)
+    * [FailureControl](content/readme/docs/vi/menu/5.FailureControl/FailureControl.md)
 * **6.NioNetworking**
-    * [NioNetworking](readme/vi/menu/6.NioNetworking/NioNetworking.md)
+    * [NioNetworking](content/readme/docs/vi/menu/6.NioNetworking/NioNetworking.md)
 * **7.HttpClient**
-    * [HttpClient](readme/vi/menu/7.HttpClient/HttpClient.md)
+    * [HttpClient](content/readme/docs/vi/menu/7.HttpClient/HttpClient.md)
 * **8.WebSocketClient**
-    * [WebSocketClient](readme/vi/menu/8.WebSocketClient/WebSocketClient.md)
+    * [WebSocketClient](content/readme/docs/vi/menu/8.WebSocketClient/WebSocketClient.md)
 * **9.NetworkingChoices**
-    * [NetworkingChoices](readme/vi/menu/9.NetworkingChoices/NetworkingChoices.md)
+    * [NetworkingChoices](content/readme/docs/vi/menu/9.NetworkingChoices/NetworkingChoices.md)
 
 # Java Networking nâng cao
 

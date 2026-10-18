@@ -909,7 +909,7 @@ ${moduleDirectory.absolutePath}
         File readmeDirectory =
                 new File(
                         moduleDirectory,
-                        'readme'
+                        'content/readme/docs'
                 )
 
 
@@ -964,7 +964,7 @@ ${moduleDirectory.absolutePath}
         File readmeDirectory =
                 new File(
                         moduleDirectory,
-                        'readme'
+                        'content/readme/docs'
                 )
 
 
@@ -1026,7 +1026,7 @@ ${moduleDirectory.absolutePath}
         File roadmapDirectory =
                 new File(
                         moduleDirectory,
-                        'roadmap'
+                        'content/roadmap'
                 )
 
 
@@ -1080,7 +1080,7 @@ ${moduleDirectory.absolutePath}
         File videoDirectory =
                 new File(
                         moduleDirectory,
-                        'video'
+                        'content/video'
                 )
 
 
@@ -1131,7 +1131,7 @@ ${moduleDirectory.absolutePath}
         File referenceFile =
                 new File(
                         moduleDirectory,
-                        'reference/references.yml'
+                        'content/reference/references.yml'
                 )
 
 
@@ -1320,7 +1320,7 @@ ${moduleDirectory.absolutePath}
         File quizDirectory =
                 new File(
                         moduleDirectory,
-                        'src/main/resources/quiz'
+                        'content/quiz'
                 )
 
 
@@ -1369,7 +1369,7 @@ ${moduleDirectory.absolutePath}
         File interviewDirectory =
                 new File(
                         moduleDirectory,
-                        'src/main/resources/interview'
+                        'content/interview'
                 )
 
 

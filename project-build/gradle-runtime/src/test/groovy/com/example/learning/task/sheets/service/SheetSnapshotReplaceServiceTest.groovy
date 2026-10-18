@@ -15,14 +15,14 @@ class SheetSnapshotReplaceServiceTest {
     void cleansOnlyOwnedViTreesWithoutTouchingEnglishOrModuleFiles() {
         File root = temporary.newFolder('isolation')
         File module = new File(root, 'module/example')
-        File english = new File(module, 'video/en/menu/1.Class/Class.md')
-        File otherModule = new File(root, 'module/other/video/vi/menu/unrelated.md')
-        File readmeBase = new File(module, 'readme/vi/BASE.md')
+        File english = new File(module, 'content/video/en/menu/1.Class/Class.md')
+        File otherModule = new File(root, 'module/other/content/video/vi/menu/unrelated.md')
+        File readmeBase = new File(module, 'content/readme/docs/vi/BASE.md')
         for (File preserved : [english, otherModule, readmeBase]) {
             assertTrue(preserved.parentFile.mkdirs())
             preserved.setText('preserve', 'UTF-8')
         }
-        File menu = new File(module, 'video/vi/menu')
+        File menu = new File(module, 'content/video/vi/menu')
         File stale = new File(menu, 'old/nested/stale.md')
         assertTrue(stale.parentFile.mkdirs())
         stale.setText('obsolete', 'UTF-8')
@@ -61,7 +61,7 @@ class SheetSnapshotReplaceServiceTest {
         }
         assertEquals('do not delete', protectedFile.getText('UTF-8'))
 
-        File video = new File(root, 'module/example/video/vi/menu')
+        File video = new File(root, 'module/example/content/video/vi/menu')
         File authored = new File(video, 'keep.md')
         assertTrue(authored.parentFile.mkdirs())
         authored.setText('old script', 'UTF-8')

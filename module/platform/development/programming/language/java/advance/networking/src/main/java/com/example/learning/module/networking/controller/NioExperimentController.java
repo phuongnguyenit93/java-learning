@@ -20,7 +20,7 @@ public class NioExperimentController {
         this.networkingExperimentService = networkingExperimentService;
     }
 
-    /** README: readme/vi/menu/6.NioNetworking/NioNetworking.md#selector-readiness-model */
+    /** README: content/readme/docs/vi/menu/6.NioNetworking/NioNetworking.md#selector-readiness-model */
     @GetMapping("/selector-readiness")
     public Map<String, Object> selectorReadiness() throws IOException {
         return networkingExperimentService.selectorReadinessDemo();

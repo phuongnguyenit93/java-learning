@@ -10,7 +10,7 @@ import org.gradle.api.GradleException
  * source-of-truth snapshot. Parent A rows use B as the AI-authored filename;
  * child B rows use C:N as optional, contiguous Markdown fragments.
  *
- * No AI call is performed here. Only the module's readme/vi/menu is managed.
+ * No AI call is performed here. Only the module's content/readme/docs/vi/menu is managed.
  */
 class ReadmeSheetImportService {
 
@@ -253,7 +253,7 @@ class ReadmeSheetImportService {
     static File resolveMenuDirectory(File root, String moduleLocation) {
         File roadmap = RoadmapSheetImportService.resolveDestination(root, moduleLocation)
         File module = new File(root.canonicalFile, moduleLocation).canonicalFile
-        File menu = new File(module, 'readme/vi/menu').canonicalFile
+        File menu = new File(module, 'content/readme/docs/vi/menu').canonicalFile
         if (!menu.toPath().startsWith(module.toPath()) ||
                 !roadmap.toPath().startsWith(module.toPath())) {
             throw new GradleException("Unsafe README destination: ${menu}.")
@@ -262,7 +262,7 @@ class ReadmeSheetImportService {
     }
 
     /**
-     * Sheet-only full snapshot of readme/vi/menu. All previous files,
+     * Sheet-only full snapshot of content/readme/docs/vi/menu. All previous files,
      * subdirectories and stale artifacts are permanently deleted on APPLY,
      * even when the regenerated documents are byte-identical. No backup.
      */

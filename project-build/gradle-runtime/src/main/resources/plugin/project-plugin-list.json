@@ -80,6 +80,11 @@
         "implementationClass": "com.example.learning.setup.root.cleanup.plugin.CleanupSetupPlugin"
     },
     {
+        "name": "contractSkeletonSetupPlugin",
+        "id": "com.example.learning.setup.root.contractSkeleton.plugin",
+        "implementationClass": "com.example.learning.setup.root.contractSkeleton.plugin.ContractSkeletonSetupPlugin"
+    },
+    {
         "name": "databaseSetupPlugin",
         "id": "com.example.learning.setup.root.database.plugin",
         "implementationClass": "com.example.learning.setup.root.database.plugin.DatabaseSetupPlugin"

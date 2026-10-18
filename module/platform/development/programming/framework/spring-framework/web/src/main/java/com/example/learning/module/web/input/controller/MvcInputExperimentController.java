@@ -18,7 +18,7 @@ import java.util.Map;
 public class MvcInputExperimentController {
 
     /**
-     * README: readme/en/menu/5.MvcBindingValidation/MvcBindingValidation.md#validation-and-binding-result
+     * README: content/readme/docs/en/menu/5.MvcBindingValidation/MvcBindingValidation.md#validation-and-binding-result
      * Purpose: Observe request-body decoding followed by object validation.
      */
     @PostMapping("/validated-body")
@@ -32,7 +32,7 @@ public class MvcInputExperimentController {
     }
 
     /**
-     * README: readme/en/menu/5.MvcBindingValidation/MvcBindingValidation.md#mvc-method-validation-6-1
+     * README: content/readme/docs/en/menu/5.MvcBindingValidation/MvcBindingValidation.md#mvc-method-validation-6-1
      * Purpose: Observe Spring MVC 6.1 built-in method validation for a direct parameter constraint.
      */
     @GetMapping("/method-validation")

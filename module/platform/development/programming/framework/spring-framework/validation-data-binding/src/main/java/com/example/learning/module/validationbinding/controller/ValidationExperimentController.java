@@ -18,7 +18,7 @@ public class ValidationExperimentController {
     }
 
     /**
-     * README: readme/en/menu/1.Foundation/Foundation.md#validation-vs-binding
+     * README: content/readme/docs/en/menu/1.Foundation/Foundation.md#validation-vs-binding
      * Purpose: Contrast a binding/conversion failure with a successful bind followed by domain validation failure.
      */
     @GetMapping("/binding-vs-validation")

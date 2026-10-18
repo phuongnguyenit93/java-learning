@@ -1,25 +1,25 @@
 # 📂 README MODULE STRUCTURE (EN)
 
 * **1.Introduction**
-    * [CoreContainer](readme/en/menu/1.Introduction/CoreContainer.md)
+    * [CoreContainer](content/readme/docs/en/menu/1.Introduction/CoreContainer.md)
 * **2.ContainerModel**
-    * [ContainerModel](readme/en/menu/2.ContainerModel/ContainerModel.md)
+    * [ContainerModel](content/readme/docs/en/menu/2.ContainerModel/ContainerModel.md)
 * **3.BeanRegistration**
-    * [BeanRegistration](readme/en/menu/3.BeanRegistration/BeanRegistration.md)
+    * [BeanRegistration](content/readme/docs/en/menu/3.BeanRegistration/BeanRegistration.md)
 * **4.DependencyInjection**
-    * [DependencyInjection](readme/en/menu/4.DependencyInjection/DependencyInjection.md)
+    * [DependencyInjection](content/readme/docs/en/menu/4.DependencyInjection/DependencyInjection.md)
 * **5.BeanScope**
-    * [BeanScope](readme/en/menu/5.BeanScope/BeanScope.md)
+    * [BeanScope](content/readme/docs/en/menu/5.BeanScope/BeanScope.md)
 * **6.BeanLifecycle**
-    * [BeanLifecycle](readme/en/menu/6.BeanLifecycle/BeanLifecycle.md)
+    * [BeanLifecycle](content/readme/docs/en/menu/6.BeanLifecycle/BeanLifecycle.md)
 * **7.EnvironmentAndSpEL**
-    * [EnvironmentAndSpEL](readme/en/menu/7.EnvironmentAndSpEL/EnvironmentAndSpEL.md)
+    * [EnvironmentAndSpEL](content/readme/docs/en/menu/7.EnvironmentAndSpEL/EnvironmentAndSpEL.md)
 * **8.ApplicationContextServices**
-    * [ApplicationContextServices](readme/en/menu/8.ApplicationContextServices/ApplicationContextServices.md)
+    * [ApplicationContextServices](content/readme/docs/en/menu/8.ApplicationContextServices/ApplicationContextServices.md)
 * **9.ExtensionPoints**
-    * [ExtensionPoints](readme/en/menu/9.ExtensionPoints/ExtensionPoints.md)
+    * [ExtensionPoints](content/readme/docs/en/menu/9.ExtensionPoints/ExtensionPoints.md)
 * **10.ContainerDesignAndDiagnostics**
-    * [ContainerDesignAndDiagnostics](readme/en/menu/10.ContainerDesignAndDiagnostics/ContainerDesignAndDiagnostics.md)
+    * [ContainerDesignAndDiagnostics](content/readme/docs/en/menu/10.ContainerDesignAndDiagnostics/ContainerDesignAndDiagnostics.md)
 
 # Spring Core Container
 

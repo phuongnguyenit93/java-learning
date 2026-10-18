@@ -122,7 +122,7 @@ class InterviewSheetImportServiceTest {
         File directory = InterviewSheetImportService.resolveDirectory(root, location)
         assertTrue(directory.mkdirs())
         new File(directory, 'question.yml').text = 'old interview'
-        File roadmap = new File(root, location + '/roadmap/vi/roadmap.yml')
+        File roadmap = new File(root, location + '/content/roadmap/vi/roadmap.yml')
         assertTrue(roadmap.parentFile.mkdirs())
         roadmap.text = 'existing roadmap'
         String yaml = InterviewSheetImportService.renderYaml([[

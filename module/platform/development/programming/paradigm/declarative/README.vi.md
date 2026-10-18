@@ -1,15 +1,15 @@
 # 📂 README MODULE STRUCTURE (VI)
 
 * **1.Introduction**
-    * [DeclarativeProgramming](readme/vi/menu/1.Introduction/DeclarativeProgramming.md)
+    * [DeclarativeProgramming](content/readme/docs/vi/menu/1.Introduction/DeclarativeProgramming.md)
 * **2.IntentVsProcedure**
-    * [IntentVsProcedure](readme/vi/menu/2.IntentVsProcedure/IntentVsProcedure.md)
+    * [IntentVsProcedure](content/readme/docs/vi/menu/2.IntentVsProcedure/IntentVsProcedure.md)
 * **3.LogicProgramming**
-    * [LogicProgramming](readme/vi/menu/3.LogicProgramming/LogicProgramming.md)
+    * [LogicProgramming](content/readme/docs/vi/menu/3.LogicProgramming/LogicProgramming.md)
 * **4.QueryRuleStyles**
-    * [QueryRuleStyles](readme/vi/menu/4.QueryRuleStyles/QueryRuleStyles.md)
+    * [QueryRuleStyles](content/readme/docs/vi/menu/4.QueryRuleStyles/QueryRuleStyles.md)
 * **5.Tradeoffs**
-    * [Tradeoffs](readme/vi/menu/5.Tradeoffs/Tradeoffs.md)
+    * [Tradeoffs](content/readme/docs/vi/menu/5.Tradeoffs/Tradeoffs.md)
 
 # Học lập trình khai báo
 

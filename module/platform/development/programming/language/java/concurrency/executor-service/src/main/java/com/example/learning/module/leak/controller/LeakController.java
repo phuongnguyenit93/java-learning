@@ -17,19 +17,19 @@ public class LeakController {
         this.leakService = leakService;
     }
 
-    /** README: readme/vi/menu/2.Leak/Leak.md#thread-leak */
+    /** README: content/readme/docs/vi/menu/2.Leak/Leak.md#thread-leak */
     @GetMapping("/thread-pattern")
     public Map<String, Object> threadLeakPattern() throws InterruptedException {
         return leakService.threadLeakPatternDemo();
     }
 
-    /** README: readme/vi/menu/2.Leak/Leak.md#pool-leak */
+    /** README: content/readme/docs/vi/menu/2.Leak/Leak.md#pool-leak */
     @GetMapping("/pool-pattern")
     public Map<String, Object> poolLeakPattern() throws InterruptedException {
         return leakService.poolLeakPatternDemo();
     }
 
-    /** README: readme/vi/menu/2.Leak/Leak.md#queue-growth */
+    /** README: content/readme/docs/vi/menu/2.Leak/Leak.md#queue-growth */
     @GetMapping("/queue-pressure")
     public Map<String, Object> queuePressure() throws InterruptedException {
         return leakService.queuePressureDemo();

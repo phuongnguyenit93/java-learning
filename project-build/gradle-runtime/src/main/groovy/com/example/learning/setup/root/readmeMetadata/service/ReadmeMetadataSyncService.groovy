@@ -172,7 +172,7 @@ ${moduleRoot.absolutePath}
         File outputFile =
                 new File(
                         moduleProject.projectDir,
-                        "src/main/resources/readme/${languageSource.language}/${METADATA_FILE_NAME}"
+                        "content/readme/metadata/${languageSource.language}/${METADATA_FILE_NAME}"
                 )
 
 
@@ -675,7 +675,7 @@ The file will NOT be overwritten.
         File readmeDirectory =
                 new File(
                         moduleProject.projectDir,
-                        'readme'
+                        'content/readme/docs'
                 )
 
 

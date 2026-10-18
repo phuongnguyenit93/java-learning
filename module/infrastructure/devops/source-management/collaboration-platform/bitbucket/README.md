@@ -1,12 +1,12 @@
 # 📂 README MODULE STRUCTURE (EN)
 
-* [01_BitbucketCollaborationFoundations](readme/en/menu/01_BitbucketCollaborationFoundations.md)
-* [02_AccessAndRepositoryGovernance](readme/en/menu/02_AccessAndRepositoryGovernance.md)
-* [03_PullRequestChangeProposals](readme/en/menu/03_PullRequestChangeProposals.md)
-* [04_PullRequestReviewsAndTasks](readme/en/menu/04_PullRequestReviewsAndTasks.md)
-* [05_BranchRestrictionsAndMergeChecks](readme/en/menu/05_BranchRestrictionsAndMergeChecks.md)
-* [06_JiraConfluenceAndCollaboration](readme/en/menu/06_JiraConfluenceAndCollaboration.md)
-* [07_GovernedBitbucketTeamWorkflow](readme/en/menu/07_GovernedBitbucketTeamWorkflow.md)
+* [01_BitbucketCollaborationFoundations](content/readme/docs/en/menu/01_BitbucketCollaborationFoundations.md)
+* [02_AccessAndRepositoryGovernance](content/readme/docs/en/menu/02_AccessAndRepositoryGovernance.md)
+* [03_PullRequestChangeProposals](content/readme/docs/en/menu/03_PullRequestChangeProposals.md)
+* [04_PullRequestReviewsAndTasks](content/readme/docs/en/menu/04_PullRequestReviewsAndTasks.md)
+* [05_BranchRestrictionsAndMergeChecks](content/readme/docs/en/menu/05_BranchRestrictionsAndMergeChecks.md)
+* [06_JiraConfluenceAndCollaboration](content/readme/docs/en/menu/06_JiraConfluenceAndCollaboration.md)
+* [07_GovernedBitbucketTeamWorkflow](content/readme/docs/en/menu/07_GovernedBitbucketTeamWorkflow.md)
 
 # Overview — Source Collaboration with Bitbucket Cloud
 

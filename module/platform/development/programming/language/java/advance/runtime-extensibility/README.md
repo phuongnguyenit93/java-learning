@@ -1,27 +1,27 @@
 # 📂 README MODULE STRUCTURE (EN)
 
 * **1.MentalModel**
-    * [RuntimeExtensibility](readme/en/menu/1.MentalModel/RuntimeExtensibility.md)
+    * [RuntimeExtensibility](content/readme/docs/en/menu/1.MentalModel/RuntimeExtensibility.md)
 * **2.SPIContract**
-    * [SPIContract](readme/en/menu/2.SPIContract/SPIContract.md)
+    * [SPIContract](content/readme/docs/en/menu/2.SPIContract/SPIContract.md)
 * **3.ServiceLoaderIntegration**
-    * [ServiceLoaderIntegration](readme/en/menu/3.ServiceLoaderIntegration/ServiceLoaderIntegration.md)
+    * [ServiceLoaderIntegration](content/readme/docs/en/menu/3.ServiceLoaderIntegration/ServiceLoaderIntegration.md)
 * **4.ProviderDiscoveryStrategy**
-    * [ProviderDiscoveryStrategy](readme/en/menu/4.ProviderDiscoveryStrategy/ProviderDiscoveryStrategy.md)
+    * [ProviderDiscoveryStrategy](content/readme/docs/en/menu/4.ProviderDiscoveryStrategy/ProviderDiscoveryStrategy.md)
 * **5.ClasspathModulePathIntegration**
-    * [ClasspathModulePathIntegration](readme/en/menu/5.ClasspathModulePathIntegration/ClasspathModulePathIntegration.md)
+    * [ClasspathModulePathIntegration](content/readme/docs/en/menu/5.ClasspathModulePathIntegration/ClasspathModulePathIntegration.md)
 * **6.PluginArchitecture**
-    * [PluginArchitecture](readme/en/menu/6.PluginArchitecture/PluginArchitecture.md)
+    * [PluginArchitecture](content/readme/docs/en/menu/6.PluginArchitecture/PluginArchitecture.md)
 * **7.PluginLifecycle**
-    * [PluginLifecycle](readme/en/menu/7.PluginLifecycle/PluginLifecycle.md)
+    * [PluginLifecycle](content/readme/docs/en/menu/7.PluginLifecycle/PluginLifecycle.md)
 * **8.PluginIsolationDesign**
-    * [PluginIsolationDesign](readme/en/menu/8.PluginIsolationDesign/PluginIsolationDesign.md)
+    * [PluginIsolationDesign](content/readme/docs/en/menu/8.PluginIsolationDesign/PluginIsolationDesign.md)
 * **9.VersionCompatibility**
-    * [VersionCompatibility](readme/en/menu/9.VersionCompatibility/VersionCompatibility.md)
+    * [VersionCompatibility](content/readme/docs/en/menu/9.VersionCompatibility/VersionCompatibility.md)
 * **10.ModuleLayerIntegration**
-    * [ModuleLayerIntegration](readme/en/menu/10.ModuleLayerIntegration/ModuleLayerIntegration.md)
+    * [ModuleLayerIntegration](content/readme/docs/en/menu/10.ModuleLayerIntegration/ModuleLayerIntegration.md)
 * **11.SynthesisAndPitfalls**
-    * [SynthesisAndPitfalls](readme/en/menu/11.SynthesisAndPitfalls/SynthesisAndPitfalls.md)
+    * [SynthesisAndPitfalls](content/readme/docs/en/menu/11.SynthesisAndPitfalls/SynthesisAndPitfalls.md)
 
 # Runtime Extensibility
 

@@ -18,7 +18,7 @@ public class CacheConcurrencyController {
     }
 
     /**
-     * README: readme/en/menu/7.ConcurrencyAndAsync/ConcurrencyAndAsync.md#cacheable-sync
+     * README: content/readme/docs/en/menu/7.ConcurrencyAndAsync/ConcurrencyAndAsync.md#cacheable-sync
      * Purpose: Trigger concurrent misses and observe synchronized loading with the configured cache provider.
      */
     @GetMapping("/sync-loading")

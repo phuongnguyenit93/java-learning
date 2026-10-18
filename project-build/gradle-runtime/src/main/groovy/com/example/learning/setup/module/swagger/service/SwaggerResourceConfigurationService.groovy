@@ -1,23 +1,10 @@
 package com.example.learning.setup.module.swagger.service
 
 import org.gradle.api.Project
-import org.gradle.api.logging.Logger
 import org.gradle.language.jvm.tasks.ProcessResources
 
 
 class SwaggerResourceConfigurationService {
-
-    private final Logger logger
-
-
-    SwaggerResourceConfigurationService(
-            Logger logger
-    ) {
-
-        this.logger =
-                logger
-    }
-
 
     void configure(
             Project project
@@ -27,6 +14,29 @@ class SwaggerResourceConfigurationService {
                 'java'
         ) {
 
+            String serviceName =
+                    project.findProperty('SERVICE_NAME')?.toString()?.trim()
+            if (!serviceName) {
+                serviceName = project.name
+            }
+            final String finalServiceName = serviceName
+
+            // Provide the module's SERVICE_NAME to the Swagger Info component.
+            File generatedName = new File(
+                    project.buildDir,
+                    'generated/swagger-service-name/META-INF/swagger/service-name.txt'
+            )
+            def generateName = project.tasks.register(
+                    'generateSwaggerServiceName'
+            ) { task ->
+                task.inputs.property('serviceName', finalServiceName)
+                task.outputs.file(generatedName)
+                task.doLast {
+                    generatedName.parentFile.mkdirs()
+                    generatedName.setText(finalServiceName + '\n', 'UTF-8')
+                }
+            }
+
             project.tasks
                     .named(
                             'processResources',
@@ -35,119 +45,14 @@ class SwaggerResourceConfigurationService {
                     .configure {
                         ProcessResources task ->
 
-                            configureRootReadme(
-                                    project,
-                                    task
-                            )
-
-
-                            configureReadmeDirectory(
-                                    project,
-                                    task
+                            task.dependsOn(generateName)
+                            task.from(
+                                    new File(
+                                            project.buildDir,
+                                            'generated/swagger-service-name'
+                                    )
                             )
                     }
         }
-    }
-
-
-    // ========================================================
-    // Root README
-    // ========================================================
-
-    private void configureRootReadme(
-            Project project,
-            ProcessResources task
-    ) {
-
-        File[] projectFiles =
-                project.projectDir.listFiles()
-
-
-        if (projectFiles == null) {
-            return
-        }
-
-
-        List<File> readmeFiles =
-                projectFiles
-                        .findAll {
-                            File file ->
-
-                                file.isFile() &&
-                                        (
-                                                file.name == 'README.md' ||
-                                                        file.name ==~ /README\.[^.]+\.md/
-                                        )
-                        }
-                        .sort {
-                            File first,
-                            File second ->
-
-                                first.name <=> second.name
-                        }
-
-
-        if (readmeFiles.isEmpty()) {
-            return
-        }
-
-
-        task.from(
-                readmeFiles
-        ) {
-            into(
-                    'META-INF/swagger'
-            )
-        }
-
-
-        logger.info(
-                '[SWAGGER-SETUP] Added {} root README file(s) to {}',
-                readmeFiles.size(),
-                project.path
-        )
-    }
-
-
-    // ========================================================
-    // README structure
-    // ========================================================
-
-    private void configureReadmeDirectory(
-            Project project,
-            ProcessResources task
-    ) {
-
-        File readmeDirectory =
-                new File(
-                        project.projectDir,
-                        'readme'
-                )
-
-
-        if (!readmeDirectory.isDirectory()) {
-            return
-        }
-
-
-        task.from(
-                readmeDirectory
-        ) {
-
-            include(
-                    '**'
-            )
-
-
-            into(
-                    'META-INF/swagger/readme'
-            )
-        }
-
-
-        logger.info(
-                '[SWAGGER-SETUP] Added README structure to {}',
-                project.path
-        )
     }
 }

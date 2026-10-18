@@ -217,7 +217,7 @@ class SheetContentImportCoordinatorTest {
                 return [
                         status: apply ? 'IMPORTED' : 'DRY_RUN',
                         milestones: 3,
-                        file: new File(root, context.moduleLocation + '/roadmap/vi/roadmap.yml')
+                        file: new File(root, context.moduleLocation + '/content/roadmap/vi/roadmap.yml')
                 ]
             }
         }

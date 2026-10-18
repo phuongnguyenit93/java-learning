@@ -1,35 +1,35 @@
 # 📂 README MODULE STRUCTURE (EN)
 
 * **1.CrossCutting**
-    * [CrossCutting](readme/en/menu/1.CrossCutting/CrossCutting.md)
+    * [CrossCutting](content/readme/docs/en/menu/1.CrossCutting/CrossCutting.md)
 * **2.Terminology**
-    * [Terminology](readme/en/menu/2.Terminology/Terminology.md)
+    * [Terminology](content/readme/docs/en/menu/2.Terminology/Terminology.md)
 * **3.Proxy**
-    * [Proxy](readme/en/menu/3.Proxy/Proxy.md)
+    * [Proxy](content/readme/docs/en/menu/3.Proxy/Proxy.md)
 * **4.Pointcut**
-    * [Pointcut](readme/en/menu/4.Pointcut/Pointcut.md)
+    * [Pointcut](content/readme/docs/en/menu/4.Pointcut/Pointcut.md)
 * **5.Annotation**
-    * [Annotation](readme/en/menu/5.Annotation/Annotation.md)
+    * [Annotation](content/readme/docs/en/menu/5.Annotation/Annotation.md)
 * **6.Advice**
-    * [Advice](readme/en/menu/6.Advice/Advice.md)
+    * [Advice](content/readme/docs/en/menu/6.Advice/Advice.md)
 * **7.Around**
-    * [Around](readme/en/menu/7.Around/Around.md)
+    * [Around](content/readme/docs/en/menu/7.Around/Around.md)
 * **8.Ordering**
-    * [Ordering](readme/en/menu/8.Ordering/Ordering.md)
+    * [Ordering](content/readme/docs/en/menu/8.Ordering/Ordering.md)
 * **9.Introduction**
-    * [Introduction](readme/en/menu/9.Introduction/Introduction.md)
+    * [Introduction](content/readme/docs/en/menu/9.Introduction/Introduction.md)
 * **10.ProxyFactory**
-    * [ProxyFactory](readme/en/menu/10.ProxyFactory/ProxyFactory.md)
+    * [ProxyFactory](content/readme/docs/en/menu/10.ProxyFactory/ProxyFactory.md)
 * **11.Advisor**
-    * [Advisor](readme/en/menu/11.Advisor/Advisor.md)
+    * [Advisor](content/readme/docs/en/menu/11.Advisor/Advisor.md)
 * **12.Infrastructure**
-    * [Infrastructure](readme/en/menu/12.Infrastructure/Infrastructure.md)
+    * [Infrastructure](content/readme/docs/en/menu/12.Infrastructure/Infrastructure.md)
 * **13.SelfInvocation**
-    * [SelfInvocation](readme/en/menu/13.SelfInvocation/SelfInvocation.md)
+    * [SelfInvocation](content/readme/docs/en/menu/13.SelfInvocation/SelfInvocation.md)
 * **14.Patterns**
-    * [Patterns](readme/en/menu/14.Patterns/Patterns.md)
+    * [Patterns](content/readme/docs/en/menu/14.Patterns/Patterns.md)
 * **15.RuntimeBoundary**
-    * [RuntimeBoundary](readme/en/menu/15.RuntimeBoundary/RuntimeBoundary.md)
+    * [RuntimeBoundary](content/readme/docs/en/menu/15.RuntimeBoundary/RuntimeBoundary.md)
 
 # Spring AOP
 

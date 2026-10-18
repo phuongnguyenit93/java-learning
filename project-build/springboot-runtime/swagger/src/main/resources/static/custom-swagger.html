@@ -24,10 +24,6 @@
             href="swagger-api-execution.css"
     />
 
-    <link
-            rel="stylesheet"
-            href="swagger-readme-related.css"
-    />
 
     <link
             rel="stylesheet"
@@ -84,9 +80,7 @@
 
     loadScript(`${basePath}/swagger-ui/swagger-ui-bundle.js`);
     loadScript(`${basePath}/swagger-ui/swagger-ui-standalone-preset.js`);
-    loadScript(`${basePath}/swagger-readme-config.js`);
     loadScript(`${basePath}/swagger-youtube.js`);
-    loadScript(`${basePath}/swagger-readme-related.js`);
     loadScript(`${basePath}/swagger-api-execution.js`);
     loadScript(`${basePath}/swagger-execution-context.js`);
     loadScript(`${basePath}/swagger-ai-chat.js`);
@@ -99,7 +93,6 @@
 
             deepLinking: true,
 
-            operationsSorter: compareSwaggerReadmeOperations,
 
             presets: [
                 SwaggerUIBundle.presets.apis,
@@ -109,7 +102,6 @@
             plugins: [
                 SwaggerUIBundle.plugins.DownloadUrl,
                 YoutubePlugin,
-                SwaggerReadmeRelatedPlugin,
                 ApiExecutionPlugin,
                 ExecutionContextPlugin
             ],
@@ -118,7 +110,6 @@
 
             layout: "StandaloneLayout"
         });
-        installReadmeNavigation();
     };
 
 </script>

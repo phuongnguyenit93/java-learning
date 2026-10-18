@@ -164,7 +164,7 @@ class InterviewSheetImportService {
         File base = new File(root.canonicalFile, 'module').canonicalFile
         File directory = new File(
                 root.canonicalFile,
-                "${location}/src/main/resources/interview/vi"
+                "${location}/content/interview/vi"
         ).canonicalFile
         if (!directory.toPath().startsWith(base.toPath()) ||
                 directory.toPath() == base.toPath()) {

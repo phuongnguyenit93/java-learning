@@ -1,19 +1,19 @@
 # 📂 README MODULE STRUCTURE (VI)
 
 * **1.MentalModel**
-    * [SpringConcurrency](readme/vi/menu/1.MentalModel/SpringConcurrency.md)
+    * [SpringConcurrency](content/readme/docs/vi/menu/1.MentalModel/SpringConcurrency.md)
 * **2.Spring_Task_Executor**
-    * [SpringExecutor](readme/vi/menu/2.Spring_Task_Executor/SpringExecutor.md)
+    * [SpringExecutor](content/readme/docs/vi/menu/2.Spring_Task_Executor/SpringExecutor.md)
 * **3.ContextPropagation**
-    * [ContextPropagation](readme/vi/menu/3.ContextPropagation/ContextPropagation.md)
+    * [ContextPropagation](content/readme/docs/vi/menu/3.ContextPropagation/ContextPropagation.md)
 * **4.TaskScheduler**
-    * [TaskScheduler](readme/vi/menu/4.TaskScheduler/TaskScheduler.md)
+    * [TaskScheduler](content/readme/docs/vi/menu/4.TaskScheduler/TaskScheduler.md)
 * **5.Scheduling**
-    * [Scheduling](readme/vi/menu/5.Scheduling/Scheduling.md)
+    * [Scheduling](content/readme/docs/vi/menu/5.Scheduling/Scheduling.md)
 * **6.VirtualThreadIntegration**
-    * [VirtualThreadIntegration](readme/vi/menu/6.VirtualThreadIntegration/VirtualThreadIntegration.md)
+    * [VirtualThreadIntegration](content/readme/docs/vi/menu/6.VirtualThreadIntegration/VirtualThreadIntegration.md)
 * **7.LifecycleFailureProduction**
-    * [LifecycleFailureProduction](readme/vi/menu/7.LifecycleFailureProduction/LifecycleFailureProduction.md)
+    * [LifecycleFailureProduction](content/readme/docs/vi/menu/7.LifecycleFailureProduction/LifecycleFailureProduction.md)
 
 # Spring Framework Concurrency
 

@@ -1,15 +1,15 @@
 # 📂 README MODULE STRUCTURE (EN)
 
 * **1.Introduction**
-    * [ImperativeProgramming](readme/en/menu/1.Introduction/ImperativeProgramming.md)
+    * [ImperativeProgramming](content/readme/docs/en/menu/1.Introduction/ImperativeProgramming.md)
 * **2.StateAndCommands**
-    * [StateAndCommands](readme/en/menu/2.StateAndCommands/StateAndCommands.md)
+    * [StateAndCommands](content/readme/docs/en/menu/2.StateAndCommands/StateAndCommands.md)
 * **3.ControlFlow**
-    * [ControlFlow](readme/en/menu/3.ControlFlow/ControlFlow.md)
+    * [ControlFlow](content/readme/docs/en/menu/3.ControlFlow/ControlFlow.md)
 * **4.ProceduralProgramming**
-    * [ProceduralProgramming](readme/en/menu/4.ProceduralProgramming/ProceduralProgramming.md)
+    * [ProceduralProgramming](content/readme/docs/en/menu/4.ProceduralProgramming/ProceduralProgramming.md)
 * **5.Tradeoffs**
-    * [Tradeoffs](readme/en/menu/5.Tradeoffs/Tradeoffs.md)
+    * [Tradeoffs](content/readme/docs/en/menu/5.Tradeoffs/Tradeoffs.md)
 
 # Learning Imperative Programming
 

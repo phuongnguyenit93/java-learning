@@ -1,23 +1,23 @@
 # 📂 README MODULE STRUCTURE (EN)
 
 * **1.SpringBootPurpose**
-    * [SpringBootPurpose](readme/en/menu/1.SpringBootPurpose/SpringBootPurpose.md)
+    * [SpringBootPurpose](content/readme/docs/en/menu/1.SpringBootPurpose/SpringBootPurpose.md)
 * **2.ApplicationBootstrap**
-    * [ApplicationBootstrap](readme/en/menu/2.ApplicationBootstrap/ApplicationBootstrap.md)
+    * [ApplicationBootstrap](content/readme/docs/en/menu/2.ApplicationBootstrap/ApplicationBootstrap.md)
 * **3.PrimaryConfiguration**
-    * [PrimaryConfiguration](readme/en/menu/3.PrimaryConfiguration/PrimaryConfiguration.md)
+    * [PrimaryConfiguration](content/readme/docs/en/menu/3.PrimaryConfiguration/PrimaryConfiguration.md)
 * **4.StartersAndClasspath**
-    * [StartersAndClasspath](readme/en/menu/4.StartersAndClasspath/StartersAndClasspath.md)
+    * [StartersAndClasspath](content/readme/docs/en/menu/4.StartersAndClasspath/StartersAndClasspath.md)
 * **5.StartupObservation**
-    * [StartupObservation](readme/en/menu/5.StartupObservation/StartupObservation.md)
+    * [StartupObservation](content/readme/docs/en/menu/5.StartupObservation/StartupObservation.md)
 * **6.ApplicationShapes**
-    * [ApplicationShapes](readme/en/menu/6.ApplicationShapes/ApplicationShapes.md)
+    * [ApplicationShapes](content/readme/docs/en/menu/6.ApplicationShapes/ApplicationShapes.md)
 * **7.DevTools**
-    * [DevTools](readme/en/menu/7.DevTools/DevTools.md)
+    * [DevTools](content/readme/docs/en/menu/7.DevTools/DevTools.md)
 * **8.PackagingMentalModel**
-    * [PackagingMentalModel](readme/en/menu/8.PackagingMentalModel/PackagingMentalModel.md)
+    * [PackagingMentalModel](content/readme/docs/en/menu/8.PackagingMentalModel/PackagingMentalModel.md)
 * **9.FundamentalsSynthesis**
-    * [FundamentalsSynthesis](readme/en/menu/9.FundamentalsSynthesis/FundamentalsSynthesis.md)
+    * [FundamentalsSynthesis](content/readme/docs/en/menu/9.FundamentalsSynthesis/FundamentalsSynthesis.md)
 
 # Spring Boot Fundamentals
 

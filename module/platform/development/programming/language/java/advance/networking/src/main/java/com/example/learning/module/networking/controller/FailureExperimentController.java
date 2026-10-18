@@ -20,7 +20,7 @@ public class FailureExperimentController {
         this.networkingExperimentService = networkingExperimentService;
     }
 
-    /** README: readme/vi/menu/5.FailureControl/FailureControl.md#socket-timeouts */
+    /** README: content/readme/docs/vi/menu/5.FailureControl/FailureControl.md#socket-timeouts */
     @GetMapping("/read-timeout")
     public Map<String, Object> readTimeout() throws IOException {
         return networkingExperimentService.readTimeoutDemo();

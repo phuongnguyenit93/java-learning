@@ -65,7 +65,7 @@ class InterviewStructureService {
             synchronizeQuestionFile(
                     new File(
                             project.projectDir,
-                            "src/main/resources/interview/${language}/question.yml"
+                            "content/interview/${language}/question.yml"
                     ),
                     language
             )

@@ -1,13 +1,13 @@
 # 📂 README MODULE STRUCTURE (EN)
 
-* [01-github-foundations](readme/en/menu/01-github-foundations.md)
-* [02-repository-hosting](readme/en/menu/02-repository-hosting.md)
-* [03-contribution-paths](readme/en/menu/03-contribution-paths.md)
-* [04-pull-request-reviews](readme/en/menu/04-pull-request-reviews.md)
-* [05-repository-access](readme/en/menu/05-repository-access.md)
-* [06-branch-protection](readme/en/menu/06-branch-protection.md)
-* [07-issues-and-releases](readme/en/menu/07-issues-and-releases.md)
-* [08-team-workflow](readme/en/menu/08-team-workflow.md)
+* [01-github-foundations](content/readme/docs/en/menu/01-github-foundations.md)
+* [02-repository-hosting](content/readme/docs/en/menu/02-repository-hosting.md)
+* [03-contribution-paths](content/readme/docs/en/menu/03-contribution-paths.md)
+* [04-pull-request-reviews](content/readme/docs/en/menu/04-pull-request-reviews.md)
+* [05-repository-access](content/readme/docs/en/menu/05-repository-access.md)
+* [06-branch-protection](content/readme/docs/en/menu/06-branch-protection.md)
+* [07-issues-and-releases](content/readme/docs/en/menu/07-issues-and-releases.md)
+* [08-team-workflow](content/readme/docs/en/menu/08-team-workflow.md)
 
 # Overview: Source Collaboration with GitHub
 

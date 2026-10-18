@@ -1,23 +1,23 @@
 # 📂 README MODULE STRUCTURE (VI)
 
 * **1.SpringBootPurpose**
-    * [SpringBootPurpose](readme/vi/menu/1.SpringBootPurpose/SpringBootPurpose.md)
+    * [SpringBootPurpose](content/readme/docs/vi/menu/1.SpringBootPurpose/SpringBootPurpose.md)
 * **2.ApplicationBootstrap**
-    * [ApplicationBootstrap](readme/vi/menu/2.ApplicationBootstrap/ApplicationBootstrap.md)
+    * [ApplicationBootstrap](content/readme/docs/vi/menu/2.ApplicationBootstrap/ApplicationBootstrap.md)
 * **3.PrimaryConfiguration**
-    * [PrimaryConfiguration](readme/vi/menu/3.PrimaryConfiguration/PrimaryConfiguration.md)
+    * [PrimaryConfiguration](content/readme/docs/vi/menu/3.PrimaryConfiguration/PrimaryConfiguration.md)
 * **4.StartersAndClasspath**
-    * [StartersAndClasspath](readme/vi/menu/4.StartersAndClasspath/StartersAndClasspath.md)
+    * [StartersAndClasspath](content/readme/docs/vi/menu/4.StartersAndClasspath/StartersAndClasspath.md)
 * **5.StartupObservation**
-    * [StartupObservation](readme/vi/menu/5.StartupObservation/StartupObservation.md)
+    * [StartupObservation](content/readme/docs/vi/menu/5.StartupObservation/StartupObservation.md)
 * **6.ApplicationShapes**
-    * [ApplicationShapes](readme/vi/menu/6.ApplicationShapes/ApplicationShapes.md)
+    * [ApplicationShapes](content/readme/docs/vi/menu/6.ApplicationShapes/ApplicationShapes.md)
 * **7.DevTools**
-    * [DevTools](readme/vi/menu/7.DevTools/DevTools.md)
+    * [DevTools](content/readme/docs/vi/menu/7.DevTools/DevTools.md)
 * **8.PackagingMentalModel**
-    * [PackagingMentalModel](readme/vi/menu/8.PackagingMentalModel/PackagingMentalModel.md)
+    * [PackagingMentalModel](content/readme/docs/vi/menu/8.PackagingMentalModel/PackagingMentalModel.md)
 * **9.FundamentalsSynthesis**
-    * [FundamentalsSynthesis](readme/vi/menu/9.FundamentalsSynthesis/FundamentalsSynthesis.md)
+    * [FundamentalsSynthesis](content/readme/docs/vi/menu/9.FundamentalsSynthesis/FundamentalsSynthesis.md)
 
 # Spring Boot Fundamentals
 

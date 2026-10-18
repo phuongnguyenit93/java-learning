@@ -1,21 +1,21 @@
 # 📂 README MODULE STRUCTURE (EN)
 
 * **1.JvmPurposeContract**
-    * [JvmPurposeContract](readme/en/menu/1.JvmPurposeContract/JvmPurposeContract.md)
+    * [JvmPurposeContract](content/readme/docs/en/menu/1.JvmPurposeContract/JvmPurposeContract.md)
 * **2.ClassFileBytecode**
-    * [ClassFileBytecode](readme/en/menu/2.ClassFileBytecode/ClassFileBytecode.md)
+    * [ClassFileBytecode](content/readme/docs/en/menu/2.ClassFileBytecode/ClassFileBytecode.md)
 * **3.RuntimeDataAreasFrames**
-    * [RuntimeDataAreasFrames](readme/en/menu/3.RuntimeDataAreasFrames/RuntimeDataAreasFrames.md)
+    * [RuntimeDataAreasFrames](content/readme/docs/en/menu/3.RuntimeDataAreasFrames/RuntimeDataAreasFrames.md)
 * **4.ManagedHeapGC**
-    * [ManagedHeapGC](readme/en/menu/4.ManagedHeapGC/ManagedHeapGC.md)
+    * [ManagedHeapGC](content/readme/docs/en/menu/4.ManagedHeapGC/ManagedHeapGC.md)
 * **5.AdaptiveExecutionJIT**
-    * [AdaptiveExecutionJIT](readme/en/menu/5.AdaptiveExecutionJIT/AdaptiveExecutionJIT.md)
+    * [AdaptiveExecutionJIT](content/readme/docs/en/menu/5.AdaptiveExecutionJIT/AdaptiveExecutionJIT.md)
 * **6.ProcessMemory**
-    * [ProcessMemory](readme/en/menu/6.ProcessMemory/ProcessMemory.md)
+    * [ProcessMemory](content/readme/docs/en/menu/6.ProcessMemory/ProcessMemory.md)
 * **7.HotSpotErgonomics**
-    * [HotSpotErgonomics](readme/en/menu/7.HotSpotErgonomics/HotSpotErgonomics.md)
+    * [HotSpotErgonomics](content/readme/docs/en/menu/7.HotSpotErgonomics/HotSpotErgonomics.md)
 * **8.EndToEndModel**
-    * [EndToEndModel](readme/en/menu/8.EndToEndModel/EndToEndModel.md)
+    * [EndToEndModel](content/readme/docs/en/menu/8.EndToEndModel/EndToEndModel.md)
 
 # Java Virtual Machine (JVM)
 

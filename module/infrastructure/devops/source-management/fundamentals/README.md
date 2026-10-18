@@ -1,11 +1,11 @@
 # 📂 README MODULE STRUCTURE (EN)
 
-* [01_SourceManagementFoundations](readme/en/menu/01_SourceManagementFoundations.md)
-* [02_VersionControlAndHistory](readme/en/menu/02_VersionControlAndHistory.md)
-* [03_CentralizedAndDistributedModels](readme/en/menu/03_CentralizedAndDistributedModels.md)
-* [04_LocalAndSharedSource](readme/en/menu/04_LocalAndSharedSource.md)
-* [05_CollaborationAndStrategyLayers](readme/en/menu/05_CollaborationAndStrategyLayers.md)
-* [06_GovernedSourceLifecycle](readme/en/menu/06_GovernedSourceLifecycle.md)
+* [01_SourceManagementFoundations](content/readme/docs/en/menu/01_SourceManagementFoundations.md)
+* [02_VersionControlAndHistory](content/readme/docs/en/menu/02_VersionControlAndHistory.md)
+* [03_CentralizedAndDistributedModels](content/readme/docs/en/menu/03_CentralizedAndDistributedModels.md)
+* [04_LocalAndSharedSource](content/readme/docs/en/menu/04_LocalAndSharedSource.md)
+* [05_CollaborationAndStrategyLayers](content/readme/docs/en/menu/05_CollaborationAndStrategyLayers.md)
+* [06_GovernedSourceLifecycle](content/readme/docs/en/menu/06_GovernedSourceLifecycle.md)
 
 # Overview — Source Management Fundamentals
 

@@ -1,13 +1,13 @@
 # 📂 README MODULE STRUCTURE (VI)
 
-* [01-github-foundations](readme/vi/menu/01-github-foundations.md)
-* [02-repository-hosting](readme/vi/menu/02-repository-hosting.md)
-* [03-contribution-paths](readme/vi/menu/03-contribution-paths.md)
-* [04-pull-request-reviews](readme/vi/menu/04-pull-request-reviews.md)
-* [05-repository-access](readme/vi/menu/05-repository-access.md)
-* [06-branch-protection](readme/vi/menu/06-branch-protection.md)
-* [07-issues-and-releases](readme/vi/menu/07-issues-and-releases.md)
-* [08-team-workflow](readme/vi/menu/08-team-workflow.md)
+* [01-github-foundations](content/readme/docs/vi/menu/01-github-foundations.md)
+* [02-repository-hosting](content/readme/docs/vi/menu/02-repository-hosting.md)
+* [03-contribution-paths](content/readme/docs/vi/menu/03-contribution-paths.md)
+* [04-pull-request-reviews](content/readme/docs/vi/menu/04-pull-request-reviews.md)
+* [05-repository-access](content/readme/docs/vi/menu/05-repository-access.md)
+* [06-branch-protection](content/readme/docs/vi/menu/06-branch-protection.md)
+* [07-issues-and-releases](content/readme/docs/vi/menu/07-issues-and-releases.md)
+* [08-team-workflow](content/readme/docs/vi/menu/08-team-workflow.md)
 
 # Tổng quan: Cộng tác mã nguồn với GitHub
 

@@ -17,7 +17,7 @@ public class RSocketExperimentController {
         this.messagingExperimentService = messagingExperimentService;
     }
 
-    /** README: readme/vi/menu/12.RSocketResponders/RSocketResponders.md#rsocket-interaction-cardinality */
+    /** README: content/readme/docs/vi/menu/12.RSocketResponders/RSocketResponders.md#rsocket-interaction-cardinality */
     @GetMapping("/interaction-cardinality")
     public Map<String, Object> interactionCardinality() {
         return messagingExperimentService.rsocketInteractionCardinality();

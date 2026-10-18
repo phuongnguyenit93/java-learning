@@ -1,21 +1,21 @@
 # 📂 README MODULE STRUCTURE (VI)
 
 * **1.DataOrientedProgramming**
-    * [DataOrientedProgramming](readme/vi/menu/1.DataOrientedProgramming/DataOrientedProgramming.md)
+    * [DataOrientedProgramming](content/readme/docs/vi/menu/1.DataOrientedProgramming/DataOrientedProgramming.md)
 * **2.CodeDataSeparation**
-    * [CodeDataSeparation](readme/vi/menu/2.CodeDataSeparation/CodeDataSeparation.md)
+    * [CodeDataSeparation](content/readme/docs/vi/menu/2.CodeDataSeparation/CodeDataSeparation.md)
 * **3.GenericData**
-    * [GenericData](readme/vi/menu/3.GenericData/GenericData.md)
+    * [GenericData](content/readme/docs/vi/menu/3.GenericData/GenericData.md)
 * **4.ImmutableData**
-    * [ImmutableData](readme/vi/menu/4.ImmutableData/ImmutableData.md)
+    * [ImmutableData](content/readme/docs/vi/menu/4.ImmutableData/ImmutableData.md)
 * **5.DataSchema**
-    * [DataSchema](readme/vi/menu/5.DataSchema/DataSchema.md)
+    * [DataSchema](content/readme/docs/vi/menu/5.DataSchema/DataSchema.md)
 * **6.DataFlow**
-    * [DataFlow](readme/vi/menu/6.DataFlow/DataFlow.md)
+    * [DataFlow](content/readme/docs/vi/menu/6.DataFlow/DataFlow.md)
 * **7.JavaPerspective**
-    * [JavaPerspective](readme/vi/menu/7.JavaPerspective/JavaPerspective.md)
+    * [JavaPerspective](content/readme/docs/vi/menu/7.JavaPerspective/JavaPerspective.md)
 * **8.Tradeoffs**
-    * [Tradeoffs](readme/vi/menu/8.Tradeoffs/Tradeoffs.md)
+    * [Tradeoffs](content/readme/docs/vi/menu/8.Tradeoffs/Tradeoffs.md)
 
 # Lập trình hướng dữ liệu (DOP)
 

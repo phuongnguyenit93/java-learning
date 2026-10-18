@@ -1,29 +1,29 @@
 # 📂 README MODULE STRUCTURE (VI)
 
 * **1.Introduction**
-    * [Introduction](readme/vi/menu/1.Introduction/Introduction.md)
+    * [Introduction](content/readme/docs/vi/menu/1.Introduction/Introduction.md)
 * **2.WebApplicationType**
-    * [WebApplicationType](readme/vi/menu/2.WebApplicationType/WebApplicationType.md)
+    * [WebApplicationType](content/readme/docs/vi/menu/2.WebApplicationType/WebApplicationType.md)
 * **3.EmbeddedServerModel**
-    * [EmbeddedServerModel](readme/vi/menu/3.EmbeddedServerModel/EmbeddedServerModel.md)
+    * [EmbeddedServerModel](content/readme/docs/vi/menu/3.EmbeddedServerModel/EmbeddedServerModel.md)
 * **4.ServletServerAutoConfiguration**
-    * [ServletServerAutoConfiguration](readme/vi/menu/4.ServletServerAutoConfiguration/ServletServerAutoConfiguration.md)
+    * [ServletServerAutoConfiguration](content/readme/docs/vi/menu/4.ServletServerAutoConfiguration/ServletServerAutoConfiguration.md)
 * **5.ReactiveServerAutoConfiguration**
-    * [ReactiveServerAutoConfiguration](readme/vi/menu/5.ReactiveServerAutoConfiguration/ReactiveServerAutoConfiguration.md)
+    * [ReactiveServerAutoConfiguration](content/readme/docs/vi/menu/5.ReactiveServerAutoConfiguration/ReactiveServerAutoConfiguration.md)
 * **6.ServerProperties**
-    * [ServerProperties](readme/vi/menu/6.ServerProperties/ServerProperties.md)
+    * [ServerProperties](content/readme/docs/vi/menu/6.ServerProperties/ServerProperties.md)
 * **7.ServerCustomization**
-    * [ServerCustomization](readme/vi/menu/7.ServerCustomization/ServerCustomization.md)
+    * [ServerCustomization](content/readme/docs/vi/menu/7.ServerCustomization/ServerCustomization.md)
 * **8.HttpFeatures**
-    * [HttpFeatures](readme/vi/menu/8.HttpFeatures/HttpFeatures.md)
+    * [HttpFeatures](content/readme/docs/vi/menu/8.HttpFeatures/HttpFeatures.md)
 * **9.TlsSslBundles**
-    * [TlsSslBundles](readme/vi/menu/9.TlsSslBundles/TlsSslBundles.md)
+    * [TlsSslBundles](content/readme/docs/vi/menu/9.TlsSslBundles/TlsSslBundles.md)
 * **10.ForwardedHeadersProxy**
-    * [ForwardedHeadersProxy](readme/vi/menu/10.ForwardedHeadersProxy/ForwardedHeadersProxy.md)
+    * [ForwardedHeadersProxy](content/readme/docs/vi/menu/10.ForwardedHeadersProxy/ForwardedHeadersProxy.md)
 * **11.GracefulShutdown**
-    * [GracefulShutdown](readme/vi/menu/11.GracefulShutdown/GracefulShutdown.md)
+    * [GracefulShutdown](content/readme/docs/vi/menu/11.GracefulShutdown/GracefulShutdown.md)
 * **12.BootWebDefaults**
-    * [BootWebDefaults](readme/vi/menu/12.BootWebDefaults/BootWebDefaults.md)
+    * [BootWebDefaults](content/readme/docs/vi/menu/12.BootWebDefaults/BootWebDefaults.md)
 
 # Web Runtime trong Spring Boot
 

@@ -23,7 +23,7 @@ public class OrderingController {
     }
 
     /**
-     * README: readme/vi/menu/8.Ordering/Ordering.md#ordering-demo
+     * README: content/readme/docs/vi/menu/8.Ordering/Ordering.md#ordering-demo
      * Purpose: Quan sát hai @Around Aspect tạo call stack nested theo @Order.
      */
     @GetMapping("/observe")

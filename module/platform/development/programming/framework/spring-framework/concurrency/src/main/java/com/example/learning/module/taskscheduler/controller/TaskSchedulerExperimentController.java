@@ -19,7 +19,7 @@ public class TaskSchedulerExperimentController {
         this.concurrencyExperimentService = concurrencyExperimentService;
     }
 
-    /** README: readme/vi/menu/4.TaskScheduler/TaskScheduler.md#scheduler-execution-models */
+    /** README: content/readme/docs/vi/menu/4.TaskScheduler/TaskScheduler.md#scheduler-execution-models */
     @GetMapping("/execution-models")
     public Map<String, Object> executionModels() {
         return concurrencyExperimentService.schedulerExecutionModelsDemo();

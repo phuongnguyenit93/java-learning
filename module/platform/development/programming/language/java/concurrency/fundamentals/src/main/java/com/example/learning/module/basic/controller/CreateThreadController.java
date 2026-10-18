@@ -19,7 +19,7 @@ public class CreateThreadController {
     }
 
     /**
-     * README: readme/vi/menu/1.Basic/Basic.md#create-thread
+     * README: content/readme/docs/vi/menu/1.Basic/Basic.md#create-thread
      * Purpose: Minh họa cách gắn task trực tiếp vào subclass của Thread.
      */
     @GetMapping("/extends")
@@ -28,7 +28,7 @@ public class CreateThreadController {
     }
 
     /**
-     * README: readme/vi/menu/1.Basic/Basic.md#create-thread
+     * README: content/readme/docs/vi/menu/1.Basic/Basic.md#create-thread
      * Purpose: Minh họa việc tách Runnable task khỏi Thread thực thi task đó.
      */
     @GetMapping("/runnable")
@@ -37,7 +37,7 @@ public class CreateThreadController {
     }
 
     /**
-     * README: readme/vi/menu/1.Basic/Basic.md#create-thread
+     * README: content/readme/docs/vi/menu/1.Basic/Basic.md#create-thread
      * Purpose: Minh họa Callable được FutureTask bọc rồi chạy bởi Thread.
      */
     @GetMapping("/callable")

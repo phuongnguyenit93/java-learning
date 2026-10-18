@@ -92,7 +92,7 @@ class RoadmapStructureService {
             synchronizeRoadmapFile(
                     new File(
                             project.projectDir,
-                            "roadmap/${language}/roadmap.yml"
+                            "content/roadmap/${language}/roadmap.yml"
                     ),
                     language
             )

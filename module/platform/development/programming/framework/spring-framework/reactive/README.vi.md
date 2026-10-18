@@ -1,21 +1,21 @@
 # 📂 README MODULE STRUCTURE (VI)
 
 * **1.Purpose**
-    * [WebFluxPurpose](readme/vi/menu/1.Purpose/WebFluxPurpose.md)
+    * [WebFluxPurpose](content/readme/docs/vi/menu/1.Purpose/WebFluxPurpose.md)
 * **2.RuntimeArchitecture**
-    * [WebFluxRuntime](readme/vi/menu/2.RuntimeArchitecture/WebFluxRuntime.md)
+    * [WebFluxRuntime](content/readme/docs/vi/menu/2.RuntimeArchitecture/WebFluxRuntime.md)
 * **3.HttpDataFlow**
-    * [ReactiveHttpDataFlow](readme/vi/menu/3.HttpDataFlow/ReactiveHttpDataFlow.md)
+    * [ReactiveHttpDataFlow](content/readme/docs/vi/menu/3.HttpDataFlow/ReactiveHttpDataFlow.md)
 * **4.AnnotatedControllers**
-    * [AnnotatedControllers](readme/vi/menu/4.AnnotatedControllers/AnnotatedControllers.md)
+    * [AnnotatedControllers](content/readme/docs/vi/menu/4.AnnotatedControllers/AnnotatedControllers.md)
 * **5.FunctionalEndpoints**
-    * [FunctionalEndpoints](readme/vi/menu/5.FunctionalEndpoints/FunctionalEndpoints.md)
+    * [FunctionalEndpoints](content/readme/docs/vi/menu/5.FunctionalEndpoints/FunctionalEndpoints.md)
 * **6.CrossCuttingProcessing**
-    * [CrossCuttingProcessing](readme/vi/menu/6.CrossCuttingProcessing/CrossCuttingProcessing.md)
+    * [CrossCuttingProcessing](content/readme/docs/vi/menu/6.CrossCuttingProcessing/CrossCuttingProcessing.md)
 * **7.WebClient**
-    * [WebClient](readme/vi/menu/7.WebClient/WebClient.md)
+    * [WebClient](content/readme/docs/vi/menu/7.WebClient/WebClient.md)
 * **8.ProductionBoundaries**
-    * [ProductionBoundaries](readme/vi/menu/8.ProductionBoundaries/ProductionBoundaries.md)
+    * [ProductionBoundaries](content/readme/docs/vi/menu/8.ProductionBoundaries/ProductionBoundaries.md)
 
 # Spring WebFlux
 

@@ -142,7 +142,7 @@ Hoàn thành bài.
     @Test
     void dryRunApplyAndRerunCleanEntireVideoMenu() {
         File root = temp.newFolder('new-video')
-        File videos = new File(root, 'module/example/video/vi/menu')
+        File videos = new File(root, 'module/example/content/video/vi/menu')
         Map<String, String> source = ['1.OOPBasic/OOPBasic.md': SCRIPT]
         Map dry = VideoSheetImportService.sync(videos, groups(), source, false, root)
         assertEquals('DRY_RUN', dry.status)
@@ -165,7 +165,7 @@ Hoàn thành bài.
     @Test
     void fullSnapshotDiscardsSkeletonAndPreviouslyPublishedUrl() {
         File root = temp.newFolder('skeleton')
-        File menu = new File(root, 'module/example/video/vi/menu')
+        File menu = new File(root, 'module/example/content/video/vi/menu')
         File file = new File(menu, '1.OOPBasic/OOPBasic.md')
         assertTrue(file.parentFile.mkdirs())
         String skeleton = '''---
@@ -208,7 +208,7 @@ Scene, Time, Visual, Script, Purpose.
     @Test
     void authoredConflictsAndOrphansAreDeletedWithoutBackup() {
         File root = temp.newFolder('conflict')
-        File menu = new File(root, 'module/example/video/vi/menu')
+        File menu = new File(root, 'module/example/content/video/vi/menu')
         File file = new File(menu, '1.OOPBasic/OOPBasic.md')
         assertTrue(file.parentFile.mkdirs())
         String authored = SCRIPT.replace('Lời thoại đầy đủ.', 'Lời thoại đã sửa.')

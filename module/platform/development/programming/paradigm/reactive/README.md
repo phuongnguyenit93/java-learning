@@ -1,17 +1,17 @@
 # 📂 README MODULE STRUCTURE (EN)
 
 * **1.Introduction**
-    * [ReactiveProgramming](readme/en/menu/1.Introduction/ReactiveProgramming.md)
+    * [ReactiveProgramming](content/readme/docs/en/menu/1.Introduction/ReactiveProgramming.md)
 * **2.DataFlow**
-    * [DataFlow](readme/en/menu/2.DataFlow/DataFlow.md)
+    * [DataFlow](content/readme/docs/en/menu/2.DataFlow/DataFlow.md)
 * **3.Backpressure**
-    * [Backpressure](readme/en/menu/3.Backpressure/Backpressure.md)
+    * [Backpressure](content/readme/docs/en/menu/3.Backpressure/Backpressure.md)
 * **4.ReactiveStreams**
-    * [ReactiveStreams](readme/en/menu/4.ReactiveStreams/ReactiveStreams.md)
+    * [ReactiveStreams](content/readme/docs/en/menu/4.ReactiveStreams/ReactiveStreams.md)
 * **5.ErrorCancellation**
-    * [ErrorCancellation](readme/en/menu/5.ErrorCancellation/ErrorCancellation.md)
+    * [ErrorCancellation](content/readme/docs/en/menu/5.ErrorCancellation/ErrorCancellation.md)
 * **6.Tradeoffs**
-    * [Tradeoffs](readme/en/menu/6.Tradeoffs/Tradeoffs.md)
+    * [Tradeoffs](content/readme/docs/en/menu/6.Tradeoffs/Tradeoffs.md)
 
 # Reactive Programming
 

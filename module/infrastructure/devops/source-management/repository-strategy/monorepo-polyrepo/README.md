@@ -1,13 +1,13 @@
 # 📂 README MODULE STRUCTURE (EN)
 
-* [01-repository-topology-foundations](readme/en/menu/01-repository-topology-foundations.md)
-* [02-boundaries-and-ownership](readme/en/menu/02-boundaries-and-ownership.md)
-* [03-cross-component-coordination](readme/en/menu/03-cross-component-coordination.md)
-* [04-shared-code-and-dependency-compatibility](readme/en/menu/04-shared-code-and-dependency-compatibility.md)
-* [05-release-coupling-and-independence](readme/en/menu/05-release-coupling-and-independence.md)
-* [06-access-and-repository-governance](readme/en/menu/06-access-and-repository-governance.md)
-* [07-scale-tooling-and-ci-strategy](readme/en/menu/07-scale-tooling-and-ci-strategy.md)
-* [08-choose-split-consolidate](readme/en/menu/08-choose-split-consolidate.md)
+* [01-repository-topology-foundations](content/readme/docs/en/menu/01-repository-topology-foundations.md)
+* [02-boundaries-and-ownership](content/readme/docs/en/menu/02-boundaries-and-ownership.md)
+* [03-cross-component-coordination](content/readme/docs/en/menu/03-cross-component-coordination.md)
+* [04-shared-code-and-dependency-compatibility](content/readme/docs/en/menu/04-shared-code-and-dependency-compatibility.md)
+* [05-release-coupling-and-independence](content/readme/docs/en/menu/05-release-coupling-and-independence.md)
+* [06-access-and-repository-governance](content/readme/docs/en/menu/06-access-and-repository-governance.md)
+* [07-scale-tooling-and-ci-strategy](content/readme/docs/en/menu/07-scale-tooling-and-ci-strategy.md)
+* [08-choose-split-consolidate](content/readme/docs/en/menu/08-choose-split-consolidate.md)
 
 # Monorepo and Polyrepo: Choosing Repository Boundaries
 

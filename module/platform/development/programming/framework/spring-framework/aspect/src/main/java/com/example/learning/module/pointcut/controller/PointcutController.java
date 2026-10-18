@@ -28,7 +28,7 @@ public class PointcutController {
     }
 
     /**
-     * README: readme/vi/menu/4.Pointcut/Pointcut.md#pointcut-demo
+     * README: content/readme/docs/vi/menu/4.Pointcut/Pointcut.md#pointcut-demo
      * Purpose: So sánh execution, annotation, args runtime type, within, named composition, this/target, bean() và một method không match.
      */
     @GetMapping("/compare")

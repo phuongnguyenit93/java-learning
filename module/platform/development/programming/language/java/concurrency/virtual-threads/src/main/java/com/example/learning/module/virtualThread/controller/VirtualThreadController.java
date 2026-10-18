@@ -17,14 +17,14 @@ public class VirtualThreadController {
         this.virtualThreadService = virtualThreadService;
     }
 
-    /** README: readme/vi/menu/1.Virtual_Thread/VirtualThread.md#virtual-thread-basic */
+    /** README: content/readme/docs/vi/menu/1.Virtual_Thread/VirtualThread.md#virtual-thread-basic */
     @GetMapping("/basic")
     public Map<String, Object> basic() throws InterruptedException {
         return virtualThreadService.basicDemo();
     }
 
     /**
-     * README: readme/vi/menu/1.Virtual_Thread/VirtualThread.md#virtual-thread-creation
+     * README: content/readme/docs/vi/menu/1.Virtual_Thread/VirtualThread.md#virtual-thread-creation
      * Purpose: So sánh Thread.startVirtualThread() và Thread.ofVirtual().start() bằng hai Virtual Thread thật.
      */
     @GetMapping("/creation-api")
@@ -32,20 +32,20 @@ public class VirtualThreadController {
         return virtualThreadService.creationApisDemo();
     }
 
-    /** README: readme/vi/menu/1.Virtual_Thread/VirtualThread.md#virtual-executor */
+    /** README: content/readme/docs/vi/menu/1.Virtual_Thread/VirtualThread.md#virtual-executor */
     @GetMapping("/blocking-scale")
     public Map<String, Object> blockingScale() throws Exception {
         return virtualThreadService.blockingScaleDemo();
     }
 
-    /** README: readme/vi/menu/1.Virtual_Thread/VirtualThread.md#resource-limits */
+    /** README: content/readme/docs/vi/menu/1.Virtual_Thread/VirtualThread.md#resource-limits */
     @GetMapping("/limited-resource")
     public Map<String, Object> limitedResource() throws Exception {
         return virtualThreadService.limitedResourceDemo();
     }
 
     /**
-     * README: readme/vi/menu/1.Virtual_Thread/VirtualThread.md#virtual-thread-thread-local
+     * README: content/readme/docs/vi/menu/1.Virtual_Thread/VirtualThread.md#virtual-thread-thread-local
      * Purpose: Minh họa ThreadLocal vẫn là per-thread state và cần cleanup dù Thread là virtual.
      */
     @GetMapping("/thread-local")

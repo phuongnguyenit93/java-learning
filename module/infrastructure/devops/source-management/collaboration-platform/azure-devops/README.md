@@ -1,13 +1,13 @@
 # 📂 README MODULE STRUCTURE (EN)
 
-* [01-azure-repos-collaboration](readme/en/menu/01-azure-repos-collaboration.md)
-* [02-organizations-projects-repositories](readme/en/menu/02-organizations-projects-repositories.md)
-* [03-membership-and-access](readme/en/menu/03-membership-and-access.md)
-* [04-branches-forks-contributions](readme/en/menu/04-branches-forks-contributions.md)
-* [05-pull-request-review](readme/en/menu/05-pull-request-review.md)
-* [06-branch-policies-and-bypass](readme/en/menu/06-branch-policies-and-bypass.md)
-* [07-complete-pull-requests](readme/en/menu/07-complete-pull-requests.md)
-* [08-end-to-end-azure-repos](readme/en/menu/08-end-to-end-azure-repos.md)
+* [01-azure-repos-collaboration](content/readme/docs/en/menu/01-azure-repos-collaboration.md)
+* [02-organizations-projects-repositories](content/readme/docs/en/menu/02-organizations-projects-repositories.md)
+* [03-membership-and-access](content/readme/docs/en/menu/03-membership-and-access.md)
+* [04-branches-forks-contributions](content/readme/docs/en/menu/04-branches-forks-contributions.md)
+* [05-pull-request-review](content/readme/docs/en/menu/05-pull-request-review.md)
+* [06-branch-policies-and-bypass](content/readme/docs/en/menu/06-branch-policies-and-bypass.md)
+* [07-complete-pull-requests](content/readme/docs/en/menu/07-complete-pull-requests.md)
+* [08-end-to-end-azure-repos](content/readme/docs/en/menu/08-end-to-end-azure-repos.md)
 
 # Azure Repos: Collaborate on and Govern Source Changes
 

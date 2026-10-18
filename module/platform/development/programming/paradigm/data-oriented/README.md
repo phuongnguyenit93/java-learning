@@ -1,21 +1,21 @@
 # 📂 README MODULE STRUCTURE (EN)
 
 * **1.DataOrientedProgramming**
-    * [DataOrientedProgramming](readme/en/menu/1.DataOrientedProgramming/DataOrientedProgramming.md)
+    * [DataOrientedProgramming](content/readme/docs/en/menu/1.DataOrientedProgramming/DataOrientedProgramming.md)
 * **2.CodeDataSeparation**
-    * [CodeDataSeparation](readme/en/menu/2.CodeDataSeparation/CodeDataSeparation.md)
+    * [CodeDataSeparation](content/readme/docs/en/menu/2.CodeDataSeparation/CodeDataSeparation.md)
 * **3.GenericData**
-    * [GenericData](readme/en/menu/3.GenericData/GenericData.md)
+    * [GenericData](content/readme/docs/en/menu/3.GenericData/GenericData.md)
 * **4.ImmutableData**
-    * [ImmutableData](readme/en/menu/4.ImmutableData/ImmutableData.md)
+    * [ImmutableData](content/readme/docs/en/menu/4.ImmutableData/ImmutableData.md)
 * **5.DataSchema**
-    * [DataSchema](readme/en/menu/5.DataSchema/DataSchema.md)
+    * [DataSchema](content/readme/docs/en/menu/5.DataSchema/DataSchema.md)
 * **6.DataFlow**
-    * [DataFlow](readme/en/menu/6.DataFlow/DataFlow.md)
+    * [DataFlow](content/readme/docs/en/menu/6.DataFlow/DataFlow.md)
 * **7.JavaPerspective**
-    * [JavaPerspective](readme/en/menu/7.JavaPerspective/JavaPerspective.md)
+    * [JavaPerspective](content/readme/docs/en/menu/7.JavaPerspective/JavaPerspective.md)
 * **8.Tradeoffs**
-    * [Tradeoffs](readme/en/menu/8.Tradeoffs/Tradeoffs.md)
+    * [Tradeoffs](content/readme/docs/en/menu/8.Tradeoffs/Tradeoffs.md)
 
 # Data-Oriented Programming (DOP)
 

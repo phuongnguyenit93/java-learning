@@ -1,25 +1,25 @@
 # 📂 README MODULE STRUCTURE (VI)
 
 * **1.Introduction**
-    * [SpringTesting](readme/vi/menu/1.Introduction/SpringTesting.md)
+    * [SpringTesting](content/readme/docs/vi/menu/1.Introduction/SpringTesting.md)
 * **2.TestContextFramework**
-    * [TestContextFramework](readme/vi/menu/2.TestContextFramework/TestContextFramework.md)
+    * [TestContextFramework](content/readme/docs/vi/menu/2.TestContextFramework/TestContextFramework.md)
 * **3.ContextConfiguration**
-    * [ContextConfiguration](readme/vi/menu/3.ContextConfiguration/ContextConfiguration.md)
+    * [ContextConfiguration](content/readme/docs/vi/menu/3.ContextConfiguration/ContextConfiguration.md)
 * **4.TestFixtures**
-    * [TestFixtures](readme/vi/menu/4.TestFixtures/TestFixtures.md)
+    * [TestFixtures](content/readme/docs/vi/menu/4.TestFixtures/TestFixtures.md)
 * **5.TestEnvironment**
-    * [TestEnvironment](readme/vi/menu/5.TestEnvironment/TestEnvironment.md)
+    * [TestEnvironment](content/readme/docs/vi/menu/5.TestEnvironment/TestEnvironment.md)
 * **6.ContextCaching**
-    * [ContextCaching](readme/vi/menu/6.ContextCaching/ContextCaching.md)
+    * [ContextCaching](content/readme/docs/vi/menu/6.ContextCaching/ContextCaching.md)
 * **7.TransactionalDatabaseTesting**
-    * [TransactionalDatabaseTesting](readme/vi/menu/7.TransactionalDatabaseTesting/TransactionalDatabaseTesting.md)
+    * [TransactionalDatabaseTesting](content/readme/docs/vi/menu/7.TransactionalDatabaseTesting/TransactionalDatabaseTesting.md)
 * **8.MockMvcTesting**
-    * [MockMvcTesting](readme/vi/menu/8.MockMvcTesting/MockMvcTesting.md)
+    * [MockMvcTesting](content/readme/docs/vi/menu/8.MockMvcTesting/MockMvcTesting.md)
 * **9.WebTestClientAndClientTesting**
-    * [WebTestClientAndClientTesting](readme/vi/menu/9.WebTestClientAndClientTesting/WebTestClientAndClientTesting.md)
+    * [WebTestClientAndClientTesting](content/readme/docs/vi/menu/9.WebTestClientAndClientTesting/WebTestClientAndClientTesting.md)
 * **10.TestLifecycle**
-    * [TestLifecycle](readme/vi/menu/10.TestLifecycle/TestLifecycle.md)
+    * [TestLifecycle](content/readme/docs/vi/menu/10.TestLifecycle/TestLifecycle.md)
 
 # Spring Framework Testing
 

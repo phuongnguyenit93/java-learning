@@ -30,7 +30,7 @@ public class IntroductionController {
     }
 
     /**
-     * README: readme/vi/menu/9.Introduction/Introduction.md#introduction-demo
+     * README: content/readme/docs/vi/menu/9.Introduction/Introduction.md#introduction-demo
      * Purpose: Chứng minh AOP proxy có thể expose thêm interface mà target class ban đầu không implement.
      */
     @GetMapping("/observe")

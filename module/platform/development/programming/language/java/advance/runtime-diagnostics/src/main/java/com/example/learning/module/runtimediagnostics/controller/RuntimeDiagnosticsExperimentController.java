@@ -23,7 +23,7 @@ public class RuntimeDiagnosticsExperimentController {
 
     /**
      * README:
-     * readme/vi/menu/3.ThreadDiagnostics/ThreadDiagnostics.md#locks-deadlocks-and-contention
+     * content/readme/docs/vi/menu/3.ThreadDiagnostics/ThreadDiagnostics.md#locks-deadlocks-and-contention
      */
     @PostMapping("/thread-contention")
     public Map<String, Object> threadContention(
@@ -35,7 +35,7 @@ public class RuntimeDiagnosticsExperimentController {
 
     /**
      * README:
-     * readme/vi/menu/4.HeapGcDiagnostics/HeapGcDiagnostics.md#class-histogram
+     * content/readme/docs/vi/menu/4.HeapGcDiagnostics/HeapGcDiagnostics.md#class-histogram
      */
     @PostMapping("/heap-retention")
     public Map<String, Object> heapRetention(
@@ -52,7 +52,7 @@ public class RuntimeDiagnosticsExperimentController {
 
     /**
      * README:
-     * readme/vi/menu/6.JFR/JFR.md#cpu-thread-lock-analysis
+     * content/readme/docs/vi/menu/6.JFR/JFR.md#cpu-thread-lock-analysis
      */
     @PostMapping("/jfr-cpu-window")
     public Map<String, Object> jfrCpuWindow(
@@ -64,7 +64,7 @@ public class RuntimeDiagnosticsExperimentController {
 
     /**
      * README:
-     * readme/vi/menu/7.ManagementJMX/ManagementJMX.md#platform-management-surfaces
+     * content/readme/docs/vi/menu/7.ManagementJMX/ManagementJMX.md#platform-management-surfaces
      */
     @GetMapping("/mxbeans/snapshot")
     public Map<String, Object> mxBeanSnapshot() {

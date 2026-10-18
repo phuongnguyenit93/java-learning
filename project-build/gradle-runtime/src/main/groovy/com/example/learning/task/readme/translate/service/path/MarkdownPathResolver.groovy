@@ -5,7 +5,7 @@ import java.nio.file.Path
 class MarkdownPathResolver {
 
     private static final String README_DIRECTORY =
-            'readme'
+            'content/readme/docs'
 
 
     File resolve(
@@ -80,7 +80,7 @@ ${value}
 
 fileLocation must be relative to:
 
-readme/{language}/
+content/readme/docs/{language}/
 """
             )
         }

@@ -18,7 +18,7 @@ import java.util.concurrent.Callable;
 public class AsyncMvcExperimentController {
 
     /**
-     * README: readme/en/menu/9.AsyncMvcStreaming/AsyncMvcStreaming.md#deferred-single-result
+     * README: content/readme/docs/en/menu/9.AsyncMvcStreaming/AsyncMvcStreaming.md#deferred-single-result
      * Purpose: Observe that Callable work runs on the configured MVC async executor.
      */
     @GetMapping("/callable")

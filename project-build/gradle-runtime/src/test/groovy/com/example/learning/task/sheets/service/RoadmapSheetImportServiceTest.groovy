@@ -138,7 +138,7 @@ class RoadmapSheetImportServiceTest {
                 root, 'module/platform/development/programming/language/java/version/java8'
         )
         assertTrue(result.path.replace('\\', '/').endsWith(
-                'java8/roadmap/vi/roadmap.yml'
+                'java8/content/roadmap/vi/roadmap.yml'
         ))
         assertFalse(result.exists())
         for (String invalid : [

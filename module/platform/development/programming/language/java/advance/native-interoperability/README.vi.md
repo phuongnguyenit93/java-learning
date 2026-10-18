@@ -1,29 +1,29 @@
 # 📂 README MODULE STRUCTURE (VI)
 
 * **1.MentalModel**
-    * [NativeInteroperability](readme/vi/menu/1.MentalModel/NativeInteroperability.md)
+    * [NativeInteroperability](content/readme/docs/vi/menu/1.MentalModel/NativeInteroperability.md)
 * **2.NativeLibraryAbi**
-    * [NativeLibraryAbi](readme/vi/menu/2.NativeLibraryAbi/NativeLibraryAbi.md)
+    * [NativeLibraryAbi](content/readme/docs/vi/menu/2.NativeLibraryAbi/NativeLibraryAbi.md)
 * **3.JNI**
-    * [JNI](readme/vi/menu/3.JNI/JNI.md)
+    * [JNI](content/readme/docs/vi/menu/3.JNI/JNI.md)
 * **4.JNIInvocation**
-    * [JNIInvocation](readme/vi/menu/4.JNIInvocation/JNIInvocation.md)
+    * [JNIInvocation](content/readme/docs/vi/menu/4.JNIInvocation/JNIInvocation.md)
 * **5.FFM**
-    * [FFM](readme/vi/menu/5.FFM/FFM.md)
+    * [FFM](content/readme/docs/vi/menu/5.FFM/FFM.md)
 * **6.MemorySegment**
-    * [MemorySegment](readme/vi/menu/6.MemorySegment/MemorySegment.md)
+    * [MemorySegment](content/readme/docs/vi/menu/6.MemorySegment/MemorySegment.md)
 * **7.ArenaLifetime**
-    * [ArenaLifetime](readme/vi/menu/7.ArenaLifetime/ArenaLifetime.md)
+    * [ArenaLifetime](content/readme/docs/vi/menu/7.ArenaLifetime/ArenaLifetime.md)
 * **8.MemoryLayout**
-    * [MemoryLayout](readme/vi/menu/8.MemoryLayout/MemoryLayout.md)
+    * [MemoryLayout](content/readme/docs/vi/menu/8.MemoryLayout/MemoryLayout.md)
 * **9.LinkerSymbolLookup**
-    * [LinkerSymbolLookup](readme/vi/menu/9.LinkerSymbolLookup/LinkerSymbolLookup.md)
+    * [LinkerSymbolLookup](content/readme/docs/vi/menu/9.LinkerSymbolLookup/LinkerSymbolLookup.md)
 * **10.DowncallUpcall**
-    * [DowncallUpcall](readme/vi/menu/10.DowncallUpcall/DowncallUpcall.md)
+    * [DowncallUpcall](content/readme/docs/vi/menu/10.DowncallUpcall/DowncallUpcall.md)
 * **11.SafetyPitfalls**
-    * [SafetyPitfalls](readme/vi/menu/11.SafetyPitfalls/SafetyPitfalls.md)
+    * [SafetyPitfalls](content/readme/docs/vi/menu/11.SafetyPitfalls/SafetyPitfalls.md)
 * **12.DecisionsSynthesis**
-    * [DecisionsSynthesis](readme/vi/menu/12.DecisionsSynthesis/DecisionsSynthesis.md)
+    * [DecisionsSynthesis](content/readme/docs/vi/menu/12.DecisionsSynthesis/DecisionsSynthesis.md)
 
 # Native Interoperability
 

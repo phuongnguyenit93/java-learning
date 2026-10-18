@@ -80,8 +80,8 @@ document:
               required: true
               default: ""
               description:
-                vi: Đường dẫn README tương đối bên dưới readme/{language}/menu, ví dụ 1.Basic/Basic.md.
-                en: README path relative to readme/{language}/menu, for example 1.Basic/Basic.md.
+                vi: Đường dẫn README tương đối bên dưới content/readme/docs/{language}/menu, ví dụ 1.Basic/Basic.md.
+                en: README path relative to content/readme/docs/{language}/menu, for example 1.Basic/Basic.md.
             anchor:
               type: string
               required: true

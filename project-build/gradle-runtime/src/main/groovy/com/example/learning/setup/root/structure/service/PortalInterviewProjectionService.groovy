@@ -17,7 +17,7 @@ class PortalInterviewProjectionService {
             LearningDataPaths.MODULE_DIRECTORY
 
     private static final String INTERVIEW_DIRECTORY =
-            'src/main/resources/interview'
+            'content/interview'
 
     private static final String QUESTION_FILE =
             'question.yml'

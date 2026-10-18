@@ -25,7 +25,7 @@ public class CrossCuttingController {
     }
 
     /**
-     * README: readme/vi/menu/1.CrossCutting/CrossCutting.md#cross-cutting-demo
+     * README: content/readme/docs/vi/menu/1.CrossCutting/CrossCutting.md#cross-cutting-demo
      * Purpose: Chứng minh một logging concern có thể được áp dụng cho nhiều business method mà không lặp logging trong service.
      */
     @GetMapping("/observe")

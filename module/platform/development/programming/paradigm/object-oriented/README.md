@@ -1,19 +1,19 @@
 # 📂 README MODULE STRUCTURE (EN)
 
 * **1.Introduction**
-    * [Introduction](readme/en/menu/1.Introduction/Introduction.md)
+    * [Introduction](content/readme/docs/en/menu/1.Introduction/Introduction.md)
 * **2.ClassAndObject**
-    * [ClassAndObject](readme/en/menu/2.ClassAndObject/ClassAndObject.md)
+    * [ClassAndObject](content/readme/docs/en/menu/2.ClassAndObject/ClassAndObject.md)
 * **3.Encapsulation**
-    * [Encapsulation](readme/en/menu/3.Encapsulation/Encapsulation.md)
+    * [Encapsulation](content/readme/docs/en/menu/3.Encapsulation/Encapsulation.md)
 * **4.Abstraction**
-    * [Abstraction](readme/en/menu/4.Abstraction/Abstraction.md)
+    * [Abstraction](content/readme/docs/en/menu/4.Abstraction/Abstraction.md)
 * **5.Inheritance**
-    * [Inheritance](readme/en/menu/5.Inheritance/Inheritance.md)
+    * [Inheritance](content/readme/docs/en/menu/5.Inheritance/Inheritance.md)
 * **6.PolymorphismAndRelationships**
-    * [PolymorphismAndRelationships](readme/en/menu/6.PolymorphismAndRelationships/PolymorphismAndRelationships.md)
+    * [PolymorphismAndRelationships](content/readme/docs/en/menu/6.PolymorphismAndRelationships/PolymorphismAndRelationships.md)
 * **7.OOPDesign**
-    * [OOPDesign](readme/en/menu/7.OOPDesign/OOPDesign.md)
+    * [OOPDesign](content/readme/docs/en/menu/7.OOPDesign/OOPDesign.md)
 
 # Object-Oriented Programming (OOP)
 

@@ -19,7 +19,7 @@ public class BasicThreadController {
     }
 
     /**
-     * README: readme/vi/menu/1.Basic/Basic.md#process-and-thread
+     * README: content/readme/docs/vi/menu/1.Basic/Basic.md#process-and-thread
      * Purpose: Quan sát JVM process và thread đang xử lý HTTP request.
      */
     @GetMapping("/process-thread")
@@ -28,7 +28,7 @@ public class BasicThreadController {
     }
 
     /**
-     * README: readme/vi/menu/1.Basic/Basic.md#start-vs-run
+     * README: content/readme/docs/vi/menu/1.Basic/Basic.md#start-vs-run
      * Purpose: So sánh gọi run() trực tiếp với start() một Thread mới.
      */
     @GetMapping("/start-vs-run")
@@ -37,7 +37,7 @@ public class BasicThreadController {
     }
 
     /**
-     * README: readme/vi/menu/1.Basic/Basic.md#thread-state
+     * README: content/readme/docs/vi/menu/1.Basic/Basic.md#thread-state
      * Purpose: Quan sát lần lượt các giá trị trong Thread.State.
      */
     @GetMapping("/thread-life-cycle")
