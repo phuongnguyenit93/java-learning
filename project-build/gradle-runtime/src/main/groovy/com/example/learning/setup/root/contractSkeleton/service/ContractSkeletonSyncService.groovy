@@ -23,8 +23,8 @@ class ContractSkeletonSyncService {
     // Knowledge/Video/API/Manifest are JSON projections, not equivalent
     // Markdown/YAML authoring contracts.
     private static final Map<String, String> AUTHORING_SCHEMAS = [
-            quiz     : 'question.yml',
-            interview: 'question.yml',
+            quiz     : 'quiz.yml',
+            interview: 'interview.yml',
             roadmap  : 'roadmap.yml',
             reference: 'references.yml'
     ].asImmutable()
@@ -53,6 +53,8 @@ class ContractSkeletonSyncService {
         }
         Map common = readJson(commonFile)
         Map<File, String> pending = new LinkedHashMap<>()
+        List<File> obsoleteLanguageDirectories = []
+        List<File> obsoleteQuestionFiles = []
 
         AUTHORING_SCHEMAS.each { String name, String outputFile ->
             String relative = contract.documents[name]?.toString()
@@ -63,12 +65,17 @@ class ContractSkeletonSyncService {
             }
             File schemaFile = new File(contractRoot, relative)
             Map schema = readJson(schemaFile)
-            for (String language in (name == 'reference' ? ['en'] : ['vi', 'en'])) {
-                File target = new File(outputRoot,
-                        name == 'reference'
-                                ? "reference/${outputFile}"
-                                : "${name}/${language}/${outputFile}")
-                pending[target] = render(name, language, schema, common)
+            File target = new File(outputRoot, "${name}/${outputFile}")
+            pending[target] = render(name, schema, common)
+            if (name in ['quiz', 'interview']) {
+                obsoleteQuestionFiles.add(new File(outputRoot, "${name}/question.yml"))
+            }
+            if (name != 'reference') {
+                for (String language in ['vi', 'en']) {
+                    obsoleteLanguageDirectories.add(
+                            new File(outputRoot, "${name}/${language}")
+                    )
+                }
             }
         }
 
@@ -86,6 +93,34 @@ class ContractSkeletonSyncService {
                 }
             }
         }
+        obsoleteQuestionFiles.each { File file ->
+            if (!file.exists()) return
+            if (!file.isFile() ||
+                    !file.getText('UTF-8').startsWith(GENERATED_HEADER + '\n')) {
+                throw new GradleException(
+                        "[CONTRACT-SKELETON] Refusing to remove non-generated legacy content: ${file}"
+                )
+            }
+        }
+        // Migrate the old bilingual layout without deleting author-maintained
+        // files or any unexpected data inside the old language directories.
+        obsoleteLanguageDirectories.each { File directory ->
+            if (!directory.exists()) return
+            if (!directory.isDirectory()) {
+                throw new GradleException("[CONTRACT-SKELETON] Not a directory: ${directory}")
+            }
+            String filename = directory.parentFile.name == 'roadmap'
+                    ? 'roadmap.yml' : 'question.yml'
+            directory.listFiles().each { File candidate ->
+                if (!candidate.isFile() ||
+                        candidate.name != filename ||
+                        !candidate.getText('UTF-8').startsWith(GENERATED_HEADER + '\n')) {
+                    throw new GradleException(
+                            "[CONTRACT-SKELETON] Refusing to remove non-generated legacy content: ${candidate}"
+                    )
+                }
+            }
+        }
 
         int updated = 0
         pending.each { File file, String expected ->
@@ -95,6 +130,23 @@ class ContractSkeletonSyncService {
             writeAtomically(file, expected)
             updated++
         }
+        obsoleteQuestionFiles.each { File file ->
+            if (file.isFile() && !file.delete()) {
+                throw new GradleException("[CONTRACT-SKELETON] Cannot delete ${file}")
+            }
+        }
+        obsoleteLanguageDirectories.each { File directory ->
+            if (directory.isDirectory()) {
+                directory.listFiles().each { File legacy ->
+                    if (!legacy.delete()) {
+                        throw new GradleException("[CONTRACT-SKELETON] Cannot delete ${legacy}")
+                    }
+                }
+                if (!directory.delete()) {
+                    throw new GradleException("[CONTRACT-SKELETON] Cannot remove ${directory}")
+                }
+            }
+        }
         logger.lifecycle(
                 '[CONTRACT-SKELETON] Synced {} YAML samples from pinned JSON schemas ({} updated).',
                 pending.size(), updated
@@ -102,10 +154,11 @@ class ContractSkeletonSyncService {
         return [total: pending.size(), updated: updated]
     }
 
-    String render(String name, String language, Map schema, Map common) {
-        if (!AUTHORING_SCHEMAS.containsKey(name) || !(language in ['vi', 'en'])) {
-            throw new GradleException("[CONTRACT-SKELETON] Unsupported source: ${name}/${language}")
+    String render(String name, Map schema, Map common) {
+        if (!AUTHORING_SCHEMAS.containsKey(name)) {
+            throw new GradleException("[CONTRACT-SKELETON] Unsupported source: ${name}")
         }
+        final String language = 'en'
         if (schema.type != 'object' || !(schema.properties instanceof Map)) {
             throw new GradleException("[CONTRACT-SKELETON] ${name} must be an object schema.")
         }
@@ -146,8 +199,7 @@ class ContractSkeletonSyncService {
         options.splitLines = false
         String exampleYaml = new Yaml(options).dump([ (rootKey): [itemExample] ])
         lines.add('#')
-        lines.add(language == 'vi' ? '# VÍ DỤ MẪU (bỏ dấu # để điền nội dung):' :
-                '# EXAMPLE (remove # comments to author an item):')
+        lines.add('# EXAMPLE (remove # comments to author an item):')
         exampleYaml.stripTrailing().split('\n').each { String line ->
             lines.add('# ' + line)
         }

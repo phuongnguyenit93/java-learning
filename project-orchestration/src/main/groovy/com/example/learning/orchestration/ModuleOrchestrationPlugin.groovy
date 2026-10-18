@@ -212,30 +212,15 @@ class ModuleOrchestrationPlugin
         }
 
         // ====================================================
-        // Video setup
-        //
-        // README/Knowledge is the source of truth for the
-        // localized Video skeleton structure.
+        // Video: no module skeleton setup plugin. BUILD_VIDEO remains a
+        // publishing/projection flag; Video Script YAML is imported
+        // explicitly from Google Sheets, never generated on Gradle Sync.
         // ====================================================
 
-        if (
-                ProjectPropertyUtils.isEnabled(
-                        project,
-                        'BUILD_VIDEO'
-                )
-        ) {
-
-            project.pluginManager.apply(
-                    ProjectPluginEnum.VIDEO_SETUP_PLUGIN.id
-            )
-        }
-        else {
-
-            project.logger.info(
-                    '[PROJECT-ORCHESTRATION] Skip VIDEO setup for {} because BUILD_VIDEO != TRUE.',
-                    project.path
-            )
-        }
+        project.logger.info(
+                '[PROJECT-ORCHESTRATION] Video skeleton setup not required for {}.',
+                project.path
+        )
 
         // ====================================================
         // Swagger setup

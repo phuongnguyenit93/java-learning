@@ -5,7 +5,6 @@ import com.example.learning.setup.module.quiz.service.QuizStructureService
 import com.example.learning.setup.module.readme.service.ReadmeStructureService
 import com.example.learning.setup.module.reference.service.ReferenceStructureService
 import com.example.learning.setup.module.roadmap.service.RoadmapStructureService
-import com.example.learning.setup.module.video.service.VideoStructureService
 import com.example.learning.setup.root.readmeMetadata.service.ReadmeMetadataSyncService
 import org.gradle.testfixtures.ProjectBuilder
 import org.junit.Rule
@@ -44,7 +43,6 @@ class ContentSkeletonPathsTest {
         new InterviewStructureService(project.logger).setup(project)
         new RoadmapStructureService(project.logger).setup(project)
         new ReferenceStructureService(project.logger).setup(project)
-        new VideoStructureService(project.logger).setup(project)
 
         assertTrue(new File(moduleDir, 'README.md').isFile())
         assertTrue(new File(moduleDir, 'content/reference/references.yml').isFile())
@@ -54,7 +52,7 @@ class ContentSkeletonPathsTest {
             assertTrue(new File(moduleDir, "content/quiz/${language}/question.yml").isFile())
             assertTrue(new File(moduleDir, "content/interview/${language}/question.yml").isFile())
             assertTrue(new File(moduleDir, "content/roadmap/${language}/roadmap.yml").isFile())
-            assertTrue(new File(moduleDir, "content/video/${language}/menu/1.Basic/Basic.md").isFile())
+            assertFalse(new File(moduleDir, "content/video/${language}").exists())
         }
         for (String obsolete in [
                 'readme', 'roadmap', 'reference', 'video',

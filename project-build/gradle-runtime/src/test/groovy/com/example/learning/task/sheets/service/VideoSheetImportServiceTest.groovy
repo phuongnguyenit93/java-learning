@@ -1,5 +1,6 @@
 package com.example.learning.task.sheets.service
 
+import com.example.learning.utils.VideoYamlContentService
 import org.gradle.api.GradleException
 import org.junit.Rule
 import org.junit.Test
@@ -11,228 +12,160 @@ class VideoSheetImportServiceTest {
     @Rule
     public TemporaryFolder temp = new TemporaryFolder()
 
-    private static final String SCRIPT = '''---
+    static final String SCRIPT = '''title: "Tư duy OOP"
 video:
   url: ""
----
-
-# Tư duy OOP
-
-## Khái niệm OOP
-
-<!-- VIDEO_SECTION -->
-
-### Scene 1 — Bắt đầu
-
-**Time:** 00:00–00:30
-
-**Visual:**
-
-Sơ đồ trạng thái.
-
-**Script:**
-
-Lời thoại đầy đủ.
-
-**Purpose:**
-
-Giới thiệu chương.
-
-## Lợi ích
-
-<!-- VIDEO_SECTION -->
-
-### Transition
-
-**Time:** 00:30–00:40
-
-**Visual:**
-
-Sơ đồ chuyển tiếp.
-
-**Script:**
-
-Câu kết nối.
-
-**Purpose:**
-
-Nối hai mục.
-
-### Scene 1 — Tiếp tục
-
-**Time:** 00:40–01:00
-
-**Visual:**
-
-Ví dụ Java.
-
-**Script:**
-
-Giải thích tiếp.
-
-**Purpose:**
-
-Hoàn thành bài.
+sections:
+  - title: "Khái niệm OOP"
+    items:
+      - type: SCENE
+        title: "Bắt đầu"
+        time: "00:00–00:30"
+        visual: |-
+          Sơ đồ trạng thái.
+        script: |-
+          Lời thoại đầy đủ.
+        purpose: |-
+          Giới thiệu chương.
+  - title: "Lợi ích"
+    items:
+      - type: TRANSITION
+        time: "00:30–00:40"
+        visual: |-
+          Sơ đồ chuyển tiếp.
+        script: |-
+          Câu kết nối.
+        purpose: |-
+          Nối hai mục.
+      - type: SCENE
+        title: "Tiếp tục"
+        time: "00:40–01:00"
+        visual: |-
+          Ví dụ Java.
+        script: |-
+          Giải thích tiếp.
+        purpose: |-
+          Hoàn thành bài.
 '''
 
     private static List<Map> groups() {
         return [
-                [title: 'Tư duy OOP', filename: 'OOPBasic.md',
+                [title: 'Tư duy OOP', filename: 'OOPBasic.md', parentRow: 20,
                  children: [[title: 'Khái niệm OOP'], [title: 'Lợi ích']]],
-                [title: 'Lớp', filename: 'Class.md',
+                [title: 'Lớp', filename: 'Class.md', parentRow: 26,
                  children: [[title: 'Cấu trúc lớp']]]
         ]
     }
 
-    private static List<List<Object>> rows(
-            String firstScript, List<Object> firstParts = null
-    ) {
-        List<Object> fragments = firstParts ?: (firstScript ? [firstScript] : [])
-        return [
-                ['Video'], ['Chủ đề', 'Video Script', 'Video Script', 'Video Script', 'Video Script'],
-                ['Tư duy OOP'] + fragments,
-                ['Lớp']
-        ]
+    private static List<List<Object>> rows(List<Object> first = []) {
+        List<List<Object>> result = [['Video Script', 'Video Script', 'Video Script', 'Video Script']]
+        result.add(first)
+        (0..<5).each { result.add([]) }
+        return result
     }
 
     @Test
-    void mapsExactlyOneParentToOneVideoAndPreservesChunks() {
-        assertEquals([:], VideoSheetImportService.parseSheet(groups(), rows('')))
-        List<List<Object>> sheet = rows('ignored', [
-                SCRIPT.substring(0, 99), SCRIPT.substring(99)
-        ])
-        Map<String, String> scripts = VideoSheetImportService.parseSheet(groups(), sheet)
-        assertEquals(['1.OOPBasic/OOPBasic.md'], scripts.keySet().toList())
+    void mapsActualParentRowNotGroupOrdinalAndPreservesExactYamlFragments() {
+        assertEquals([:], VideoSheetImportService.parseSheet(groups(), rows()))
+        Map<String, String> scripts = VideoSheetImportService.parseSheet(groups(), rows([
+                SCRIPT.substring(0, 91), SCRIPT.substring(91)
+        ]))
+        assertEquals(['1.OOPBasic/video-script.yml'], scripts.keySet().toList())
         assertEquals(SCRIPT, scripts.values().first())
         assertEquals([sections: 2, scenes: 2, transitions: 1],
                 VideoSheetImportService.validateVideo(
                         SCRIPT, 'Tư duy OOP', ['Khái niệm OOP', 'Lợi ích']))
+        assertEquals('OOPBasic', VideoYamlContentService.categoryId(
+                new File('1.OOPBasic/video-script.yml')))
     }
 
     @Test
-    void rejectsMalformedSheetAndVideoBeforeAnyWrite() {
-        expectFailure {
-            VideoSheetImportService.parseSheet(groups(), rows('ignored', [
-                    SCRIPT.substring(0, 10), '', SCRIPT.substring(10)
-            ]))
-        }
-        expectFailure {
-            VideoSheetImportService.parseSheet(groups(), [
-                    ['Video'], ['Chủ đề', 'Video Script', 'Video Script', 'Video Script', 'Video Script'],
-                    ['Sai chủ đề', SCRIPT], ['Lớp']
-            ])
-        }
-        expectFailure {
-            VideoSheetImportService.validateVideo(
-                    SCRIPT.replace('## Lợi ích', '## Chủ đề khác'),
-                    'Tư duy OOP', ['Khái niệm OOP', 'Lợi ích'])
-        }
-        expectFailure {
-            VideoSheetImportService.validateVideo(
-                    SCRIPT.replace('00:40–01:00', '00:42–01:00'),
-                    'Tư duy OOP', ['Khái niệm OOP', 'Lợi ích'])
-        }
-        expectFailure {
-            VideoSheetImportService.validateVideo(
-                    SCRIPT.replace('**Purpose:**', '**Missing:**'),
-                    'Tư duy OOP', ['Khái niệm OOP', 'Lợi ích'])
-        }
+    void rejectsMalformedYamlWrongParentTitleOrSectionTimeBeforeWrites() {
+        shouldFail { VideoSheetImportService.parseSheet(groups(),
+                [['old header'], [SCRIPT]]) }
+        shouldFail { VideoSheetImportService.parseSheet(groups(), rows([
+                SCRIPT.substring(0, 15), '', SCRIPT.substring(15)
+        ])) }
+        shouldFail { VideoSheetImportService.parseSheet(groups(), rows([
+                SCRIPT.replace('Tư duy OOP', 'Sai chủ đề')
+        ])) }
+        shouldFail { VideoSheetImportService.validateVideo(
+                SCRIPT.replace('title: "Lợi ích"', 'title: "Sai"'),
+                'Tư duy OOP', ['Khái niệm OOP', 'Lợi ích']) }
+        shouldFail { VideoSheetImportService.validateVideo(
+                SCRIPT.replace('00:40–01:00', '00:42–01:00'),
+                'Tư duy OOP', ['Khái niệm OOP', 'Lợi ích']) }
+        shouldFail { VideoSheetImportService.validateVideo(
+                SCRIPT.replace('type: TRANSITION', 'type: SCENE'),
+                'Tư duy OOP', ['Khái niệm OOP', 'Lợi ích']) }
+        shouldFail { VideoSheetImportService.validateVideo(
+                SCRIPT.replace('purpose: |-\n          Giới thiệu chương.',
+                        'purpose: ""'),
+                'Tư duy OOP', ['Khái niệm OOP', 'Lợi ích']) }
+        shouldFail { VideoSheetImportService.validateVideo(
+                'title: [invalid\n', 'Tư duy OOP', ['Khái niệm OOP', 'Lợi ích']) }
     }
 
     @Test
-    void dryRunApplyAndRerunCleanEntireVideoMenu() {
+    void dryRunApplyRerunAndClearReplaceEntireVideoSnapshot() {
         File root = temp.newFolder('new-video')
-        File videos = new File(root, 'module/example/content/video/vi/menu')
-        Map<String, String> source = ['1.OOPBasic/OOPBasic.md': SCRIPT]
-        Map dry = VideoSheetImportService.sync(videos, groups(), source, false, root)
-        assertEquals('DRY_RUN', dry.status)
-        assertEquals(1, dry.pendingVideos)
-        assertEquals(1, dry.skippedEmptyVideos)
-        assertFalse(videos.exists())
-        Map apply = VideoSheetImportService.sync(videos, groups(), source, true, root)
-        assertEquals('IMPORTED', apply.status)
-        File file = new File(videos, '1.OOPBasic/OOPBasic.md')
-        assertEquals(SCRIPT, file.getText('UTF-8'))
-        assertFalse(new File(videos, '2.Class/Class.md').exists())
-        assertEquals('UNCHANGED',
-                VideoSheetImportService.sync(videos, groups(), source, true, root).status)
-        assertEquals('CLEARED_EMPTY',
-                VideoSheetImportService.sync(videos, groups(), [:], true, root).status)
-        assertFalse(file.exists())
-        assertEquals([:], SheetSnapshotReplaceService.readTree(videos))
-    }
-
-    @Test
-    void fullSnapshotDiscardsSkeletonAndPreviouslyPublishedUrl() {
-        File root = temp.newFolder('skeleton')
         File menu = new File(root, 'module/example/content/video/vi/menu')
-        File file = new File(menu, '1.OOPBasic/OOPBasic.md')
-        assertTrue(file.parentFile.mkdirs())
-        String skeleton = '''---
-video:
-  url: "https://example.org/recording"
----
-
-# Tư duy OOP
-
-<!--
-VIDEO SCRIPT FORMAT
-Scene, Time, Visual, Script, Purpose.
--->
-
-## Khái niệm OOP
-
-<!-- VIDEO_SECTION -->
-
-## Lợi ích
-
-<!-- VIDEO_SECTION -->
-'''
-        file.setText(skeleton, 'UTF-8')
-        Map source = ['1.OOPBasic/OOPBasic.md': SCRIPT]
-        assertEquals('DRY_RUN',
-                VideoSheetImportService.sync(menu, groups(), source, false, root).status)
-        assertEquals(skeleton, file.getText('UTF-8'))
-        assertEquals('UPDATED',
-                VideoSheetImportService.sync(menu, groups(), source, true, root).status)
-        String imported = file.getText('UTF-8')
-        assertEquals(SCRIPT, imported)
-        assertFalse(imported.contains('https://example.org/recording'))
-        assertFalse(imported.contains('VIDEO SCRIPT FORMAT'))
-        assertTrue(imported.contains('### Transition'))
-        assertEquals('UNCHANGED',
-                VideoSheetImportService.sync(menu, groups(), source, true, root).status)
-        assertEquals(imported, file.getText('UTF-8'))
-    }
-
-    @Test
-    void authoredConflictsAndOrphansAreDeletedWithoutBackup() {
-        File root = temp.newFolder('conflict')
-        File menu = new File(root, 'module/example/content/video/vi/menu')
-        File file = new File(menu, '1.OOPBasic/OOPBasic.md')
-        assertTrue(file.parentFile.mkdirs())
-        String authored = SCRIPT.replace('Lời thoại đầy đủ.', 'Lời thoại đã sửa.')
-        file.setText(authored, 'UTF-8')
-        File orphan = new File(menu, 'legacy/obsolete.md')
-        assertTrue(orphan.parentFile.mkdirs())
-        orphan.setText('stale', 'UTF-8')
+        Map<String, String> source = ['1.OOPBasic/video-script.yml': SCRIPT]
         assertEquals('DRY_RUN', VideoSheetImportService.sync(
-                menu, groups(), ['1.OOPBasic/OOPBasic.md': SCRIPT], false, root).status)
-        assertEquals(authored, file.getText('UTF-8'))
-        assertEquals('UPDATED', VideoSheetImportService.sync(
-                menu, groups(), ['1.OOPBasic/OOPBasic.md': SCRIPT], true, root).status)
+                menu, groups(), source, false, root).status)
+        assertFalse(menu.exists())
+        assertEquals('IMPORTED', VideoSheetImportService.sync(
+                menu, groups(), source, true, root).status)
+        File file = new File(menu, '1.OOPBasic/video-script.yml')
         assertEquals(SCRIPT, file.getText('UTF-8'))
-        assertFalse(orphan.exists())
+        assertEquals('UNCHANGED', VideoSheetImportService.sync(
+                menu, groups(), source, true, root).status)
+        assertEquals('CLEARED_EMPTY', VideoSheetImportService.sync(
+                menu, groups(), [:], true, root).status)
+        assertFalse(file.exists())
+        assertEquals([:], SheetSnapshotReplaceService.readTree(menu))
+    }
+
+    @Test
+    void legacyFilesOldUrlsAndOrphansAreRemovedWithoutBackup() {
+        File root = temp.newFolder('legacy-video')
+        File menu = new File(root, 'module/example/content/video/vi/menu')
+        File published = new File(menu, '1.OOPBasic/video-script.yml')
+        assertTrue(published.parentFile.mkdirs())
+        published.setText(SCRIPT.replace('url: ""', 'url: "https://old.example/video"'), 'UTF-8')
+        File legacy = new File(menu, 'legacy/old-video.md')
+        assertTrue(legacy.parentFile.mkdirs())
+        legacy.setText('legacy', 'UTF-8')
+        File otherLanguage = new File(root, 'module/example/content/video/en/menu/1.OOPBasic/video-script.yml')
+        assertTrue(otherLanguage.parentFile.mkdirs())
+        otherLanguage.setText('preserve', 'UTF-8')
+        Map<String, String> source = ['1.OOPBasic/video-script.yml': SCRIPT]
+        assertEquals('UPDATED', VideoSheetImportService.sync(
+                menu, groups(), source, true, root).status)
+        assertEquals(SCRIPT, published.getText('UTF-8'))
+        assertFalse(legacy.exists())
+        assertEquals('preserve', otherLanguage.getText('UTF-8'))
         assertFalse(new File(root, '.gradle/sheet-video-backups').exists())
     }
 
-    private static void expectFailure(Closure action) {
+    @Test
+    void refusesInvalidYAMLDocumentShapeAndUnsafeCategory() {
+        shouldFail { VideoYamlContentService.parse('sections: []') }
+        shouldFail { VideoYamlContentService.parse(
+                SCRIPT.replace('00:00–00:30', '00:60–00:99')) }
+        shouldFail { VideoYamlContentService.parse(
+                SCRIPT.replace('video:\n', 'metadata: true\nvideo:\n')) }
+        shouldFail { VideoYamlContentService.categoryId(
+                new File('nonordinal/video-script.yml')) }
+    }
+
+    private static void shouldFail(Closure closure) {
         try {
-            action.call()
-            fail('Expected deterministic GradleException')
+            closure.call()
+            fail('Expected invalid Video YAML rejection')
         }
-        catch (GradleException ignored) {
-            // Reject invalid schema, content or destination with no write.
+        catch (GradleException expected) {
+            assertNotNull(expected.message)
         }
     }
 }

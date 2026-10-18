@@ -1156,85 +1156,22 @@ ${moduleDirectory.absolutePath}
     }
 
 
-    private static boolean containsAuthoredVideo(
-            File directory
-    ) {
-
-        File[] children =
-                directory.listFiles()
-
-
-        if (children == null) {
-            return false
-        }
-
-
+    private static boolean containsAuthoredVideo(File directory) {
+        File[] children = directory.listFiles()
+        if (children == null) return false
         for (File child : children) {
-
             if (child.isDirectory()) {
-
-                if (containsAuthoredVideo(child)) {
-                    return true
-                }
-
-
+                if (containsAuthoredVideo(child)) return true
                 continue
             }
-
-
-            if (
-                    !child.isFile() ||
-                            !child.name.toLowerCase(Locale.ROOT).endsWith('.md')
-            ) {
-                continue
-            }
-
-
-            String content =
-                    child
-                            .getText('UTF-8')
-                            .replaceAll(
-                                    '(?s)<!--.*?-->',
-                                    ''
-                            )
-
-
-            boolean fenced =
-                    false
-
-
-            for (String line : content.readLines()) {
-
-                String trimmed =
-                        line.trim()
-
-
-                if (
-                        trimmed.startsWith('```') ||
-                                trimmed.startsWith('~~~')
-                ) {
-
-                    fenced =
-                            !fenced
-
-
-                    continue
-                }
-
-
-                if (
-                        !fenced &&
-                                line ==~ /^###\s+Scene(?:\s+\d+)?(?:\s+[—-].*)?\s*$/
-                ) {
-                    return true
-                }
+            if (child.isFile() && child.name == 'video-script.yml') {
+                com.example.learning.utils.VideoYamlContentService.parse(
+                        child.getText('UTF-8'))
+                return true
             }
         }
-
-
         return false
     }
-
 
     private static boolean containsRoadmapMilestone(
             File roadmapFile

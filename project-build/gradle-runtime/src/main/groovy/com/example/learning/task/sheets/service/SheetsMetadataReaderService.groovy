@@ -75,7 +75,7 @@ class SheetsMetadataReaderService {
             String fileUrl,
             String sheetId
     ) {
-        return readTab(openSpreadsheet(fileUrl), sheetId)
+        return readTab(openSpreadsheetInternal(fileUrl, false, sheetId), sheetId)
     }
 
     /** Write scope is available only to explicit Sheet normalization tasks. */
@@ -83,7 +83,7 @@ class SheetsMetadataReaderService {
             String fileUrl,
             String sheetId
     ) {
-        return readTab(openSpreadsheetInternal(fileUrl, true), sheetId)
+        return readTab(openSpreadsheetInternal(fileUrl, true, sheetId), sheetId)
     }
 
     /**
@@ -96,7 +96,8 @@ class SheetsMetadataReaderService {
 
     private Map<String, Object> openSpreadsheetInternal(
             String fileUrl,
-            boolean writeAccess
+            boolean writeAccess,
+            String selectedGid = null
     ) {
         String spreadsheetId = extractSpreadsheetId(fileUrl)
 
@@ -116,18 +117,25 @@ class SheetsMetadataReaderService {
             Spreadsheet spreadsheet =
                     client.spreadsheets()
                             .get(spreadsheetId)
-                            .setFields('spreadsheetId,properties(title),sheets(properties(sheetId,title))')
+                            .setFields('spreadsheetId,properties(title),sheets(properties(sheetId,title,gridProperties(rowCount,columnCount)))')
                             .execute()
 
             List<Map<String, Object>> tabs = (spreadsheet.sheets ?: []).collect { entry ->
                 [
                         title: entry.properties?.title ?: '',
-                        gid  : entry.properties?.sheetId?.toString() ?: ''
+                        gid  : entry.properties?.sheetId?.toString() ?: '',
+                        rows : entry.properties?.gridProperties?.rowCount ?: 0,
+                        columns: entry.properties?.gridProperties?.columnCount ?: 0
                 ] as Map<String, Object>
             }
-            // Google Sheets has a per-minute read-request limit. One batch
-            // request for all I3 cells prevents 19+ individual API calls.
-            List<String> locationRanges = tabs.collect { Map tab ->
+            // A ByLocation task reads only its requested tab. A whole-file
+            // import batches I3 for tabs whose grid actually contains I3;
+            // archival/narrow tabs can have fewer than nine columns.
+            List<Map<String, Object>> locationTabs = tabs.findAll { Map tab ->
+                (selectedGid == null || tab.gid == selectedGid) &&
+                        (tab.rows as int) >= 3 && (tab.columns as int) >= 9
+            }
+            List<String> locationRanges = locationTabs.collect { Map tab ->
                 "'${tab.title.replace("'", "''")}'!${MODULE_LOCATION_CELL}"
             }
             if (locationRanges) {
@@ -135,7 +143,7 @@ class SheetsMetadataReaderService {
                         .batchGet(spreadsheetId)
                         .setRanges(locationRanges)
                         .execute()
-                tabs.eachWithIndex { Map tab, int index ->
+                locationTabs.eachWithIndex { Map tab, int index ->
                     List<List<Object>> rows =
                             data.valueRanges[index]?.values as List<List<Object>>
                     tab.moduleLocation = (rows && rows[0])

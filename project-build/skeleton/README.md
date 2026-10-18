@@ -11,25 +11,39 @@ samples. There is **no Gradle task to invoke**, no module discovery, and no
 
 | Input JSON Schema | Generated outputs |
 | --- | --- |
-| `learning-contract/schemas/quiz.schema.json` | `quiz/{vi,en}/question.yml` |
-| `learning-contract/schemas/interview.schema.json` | `interview/{vi,en}/question.yml` |
-| `learning-contract/schemas/roadmap.schema.json` | `roadmap/{vi,en}/roadmap.yml` |
+| `learning-contract/schemas/quiz.schema.json` | `quiz/quiz.yml` |
+| `learning-contract/schemas/interview.schema.json` | `interview/interview.yml` |
+| `learning-contract/schemas/roadmap.schema.json` | `roadmap/roadmap.yml` |
 | `learning-contract/schemas/reference.schema.json` | `reference/references.yml` (shared) |
 
-The generator derives field descriptions, required flags, defaults, examples,
-and Roadmap guidance from the schema itself. Every file contains a parseable
+**Video authoring example (not contract-generated):**
+
+- `video/video-script.yml` — English authoring skeleton for Video scripts.
+
+This example is deliberately outside the plugin allowlist: its authored
+YAML format is validated by the Video importer/projector, while the existing
+`video-script.schema.json` describes *published JSON*, not the YAML source.
+
+Every sample uses **English** descriptions and guidance from the JSON Schema;
+there are no `vi/` or `en/` output directories. The generator derives
+field descriptions, required flags, defaults, examples, and Roadmap guidance
+from the schema itself. Every file contains a parseable
 empty list as its active YAML payload; commented examples may contain draft
 placeholders that must be completed before publication.
 
 Files are updated **only when the contract-derived output differs**. Manually
 created files without the generated header are not overwritten. An uninitialized
 contract submodule or an incompatible schema causes an explicit failure.
+The plugin also removes the old generated `quiz/{vi,en}/`,
+`interview/{vi,en}/`, and `roadmap/{vi,en}/` output directories on sync,
+as well as legacy `quiz/question.yml` and `interview/question.yml`,
+but refuses to delete non-generated files.
 
 Reference uses its English JSON Schema descriptions because localized authoring
 annotations have not yet been defined.
 
 **Not generated here:** Knowledge, Knowledge Search,
-Video Index/Script (JSON projections, not the source Markdown),
+Video Index/Script (published JSON projections, not the source YAML),
 API Docs, Module Catalog, Manifest, or `common.schema.json`.
 
 **Scope:** This plugin creates centralized samples only. The existing module

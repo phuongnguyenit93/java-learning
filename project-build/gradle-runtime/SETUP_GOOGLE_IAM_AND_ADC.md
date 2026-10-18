@@ -412,12 +412,16 @@ Luồng xử lý chung:
 ### Import Video Script từ STEP 7 — 100% Groovy/Java (không AI)
 
 VideoSheetImportService chạy sau Roadmap và README trong cả hai task.
-Menu cấp 1 thứ i tương ứng N(3+i), script O:R cùng hàng được ghép nguyên văn.
-Validate header, N, H1/H2, Scene/Transition, Time/Visual/Script/Purpose
-và fragment tối đa 30.000 Unicode code point/ô, không gọi AI.
+Mỗi Menu Cấp 1 ở `A<R>` có Video Script YAML tại đúng `P<R>:S<R>`
+(header `P19:S19 = Video Script`); ghép P→S không thêm separator.
+Importer dùng filename Knowledge `.md` ở `B<R>` làm định danh thư mục
+`<ordinal>.<stem>/video-script.yml`; không suy ra row từ số thứ tự chương.
+Validate cú pháp YAML, `title` với A, `sections[].title` với B con,
+Scene/Transition, Time/Visual/Script/Purpose và mỗi fragment tối đa
+30.000 Unicode code points, không gọi AI.
 
 APPLY dựng/validate/stage/readback snapshot trước, rồi xóa vĩnh viễn
-toàn bộ content/video/vi và cài chỉ các video có script trên Sheet.
+toàn bộ `content/video/vi/menu` và cài chỉ các Video Script có nội dung trên Sheet.
 KHÔNG giữ video.url, skeleton, video đã biên soạn hay orphan cũ.
 Hàng script trống không có file tương ứng; toàn bộ trống → CLEARED_EMPTY.
 Không backup. DRY_RUN không ghi. Script lỗi → BLOCKER trước khi xóa.

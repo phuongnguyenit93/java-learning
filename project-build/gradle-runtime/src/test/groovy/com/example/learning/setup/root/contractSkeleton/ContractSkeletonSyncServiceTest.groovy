@@ -20,19 +20,21 @@ class ContractSkeletonSyncServiceTest {
         File root = temp.newFolder('repository')
         prepareContract(root)
         def service = new ContractSkeletonSyncService(Logging.getLogger(getClass()))
-        assertEquals([total: 7, updated: 7], service.sync(root))
+        assertEquals([total: 4, updated: 4], service.sync(root))
 
-        for (String language in ['vi', 'en']) {
-            for (String kind in ['quiz', 'interview', 'roadmap']) {
-                String filename = kind == 'roadmap' ? 'roadmap.yml' : 'question.yml'
-                File output = new File(root, "project-build/skeleton/${kind}/${language}/${filename}")
-                assertTrue(output.isFile())
-                assertTrue(output.getText('UTF-8').startsWith(
-                        ContractSkeletonSyncService.GENERATED_HEADER))
-                Map parsed = new Yaml().load(output.getText('UTF-8')) as Map
-                assertEquals([(kind == 'roadmap' ? 'roadmap' : 'questions'): []], parsed)
-                assertTrue(output.getText('UTF-8').contains('authoring'))
-            }
+        for (String kind in ['quiz', 'interview', 'roadmap']) {
+            String filename = kind == 'roadmap' ? 'roadmap.yml' : "${kind}.yml"
+            File output = new File(root, "project-build/skeleton/${kind}/${filename}")
+            assertTrue(output.isFile())
+            assertTrue(output.getText('UTF-8').startsWith(
+                    ContractSkeletonSyncService.GENERATED_HEADER))
+            assertTrue(output.getText('UTF-8').contains('# language: en'))
+            Map parsed = new Yaml().load(output.getText('UTF-8')) as Map
+            assertEquals([(kind == 'roadmap' ? 'roadmap' : 'questions'): []], parsed)
+            assertTrue(output.getText('UTF-8').contains('authoring'))
+            assertFalse(new File(root, "project-build/skeleton/${kind}/en").exists())
+            assertFalse(new File(root, "project-build/skeleton/${kind}/vi").exists())
+            assertFalse(new File(root, "project-build/skeleton/${kind}/question.yml").exists())
         }
         File reference = new File(root, 'project-build/skeleton/reference/references.yml')
         assertTrue(reference.isFile())
@@ -40,11 +42,11 @@ class ContractSkeletonSyncServiceTest {
         assertFalse(new File(root, 'project-build/skeleton/video-script').exists())
         assertFalse(new File(root, 'module').exists())
         long previous = new File(
-                root, 'project-build/skeleton/roadmap/en/roadmap.yml'
+                root, 'project-build/skeleton/roadmap/roadmap.yml'
         ).lastModified()
-        assertEquals([total: 7, updated: 0], service.sync(root))
+        assertEquals([total: 4, updated: 0], service.sync(root))
         assertEquals(previous, new File(
-                root, 'project-build/skeleton/roadmap/en/roadmap.yml'
+                root, 'project-build/skeleton/roadmap/roadmap.yml'
         ).lastModified())
     }
 
@@ -56,15 +58,14 @@ class ContractSkeletonSyncServiceTest {
         service.sync(root)
         File contractQuiz = new File(root, 'learning-contract/schemas/quiz.schema.json')
         Map schema = new groovy.json.JsonSlurper().parse(contractQuiz) as Map
-        schema['x-description']['vi'] = 'Mô tả thay đổi'
+        schema['x-description']['en'] = 'Updated authoring description'
         contractQuiz.setText(JsonOutput.prettyPrint(JsonOutput.toJson(schema)), 'UTF-8')
-        // A VI-only description change must not rewrite the EN sample.
-        assertEquals([total: 7, updated: 1], service.sync(root))
+        assertEquals([total: 4, updated: 1], service.sync(root))
         assertTrue(new File(
-                root, 'project-build/skeleton/quiz/vi/question.yml'
-        ).getText('UTF-8').contains('Mô tả thay đổi'))
+                root, 'project-build/skeleton/quiz/quiz.yml'
+        ).getText('UTF-8').contains('Updated authoring description'))
 
-        File human = new File(root, 'project-build/skeleton/quiz/en/question.yml')
+        File human = new File(root, 'project-build/skeleton/quiz/quiz.yml')
         human.setText('questions: []\n# authored manually\n', 'UTF-8')
         try {
             service.sync(root)
@@ -73,6 +74,70 @@ class ContractSkeletonSyncServiceTest {
             assertTrue(expected.message.contains('Refusing to overwrite'))
         }
         assertTrue(human.getText('UTF-8').contains('authored manually'))
+    }
+
+    @Test
+    void migratesPreviousBilingualGeneratedFilesAndProtectsManualLegacyFiles() {
+        File root = temp.newFolder('legacy')
+        prepareContract(root)
+        def service = new ContractSkeletonSyncService(Logging.getLogger(getClass()))
+        File oldEnglish = new File(root, 'project-build/skeleton/quiz/en/question.yml')
+        File oldVietnamese = new File(root, 'project-build/skeleton/quiz/vi/question.yml')
+        assertTrue(oldEnglish.parentFile.mkdirs())
+        assertTrue(oldVietnamese.parentFile.mkdirs())
+        oldEnglish.setText(ContractSkeletonSyncService.GENERATED_HEADER +
+                '\n# language: en\nquestions: []\n', 'UTF-8')
+        oldVietnamese.setText('questions: []\n# manually maintained\n', 'UTF-8')
+        try {
+            service.sync(root)
+            fail('Expected protection of old manually maintained content')
+        } catch (GradleException expected) {
+            assertTrue(expected.message.contains('Refusing to remove non-generated'))
+        }
+        assertFalse(new File(root, 'project-build/skeleton/quiz/quiz.yml').exists())
+        assertTrue(oldVietnamese.exists())
+
+        oldVietnamese.setText(ContractSkeletonSyncService.GENERATED_HEADER +
+                '\n# language: vi\nquestions: []\n', 'UTF-8')
+        assertEquals([total: 4, updated: 4], service.sync(root))
+        assertFalse(oldEnglish.exists())
+        assertFalse(oldVietnamese.exists())
+        assertFalse(oldEnglish.parentFile.exists())
+        assertFalse(oldVietnamese.parentFile.exists())
+        assertTrue(new File(root, 'project-build/skeleton/quiz/quiz.yml').isFile())
+        assertEquals([total: 4, updated: 0], service.sync(root))
+    }
+
+    @Test
+    void renamesGeneratedQuestionSkeletonsWithoutRemovingHumanOwnedFiles() {
+        File root = temp.newFolder('old-question-names')
+        prepareContract(root)
+        def service = new ContractSkeletonSyncService(Logging.getLogger(getClass()))
+        File oldQuiz = new File(root, 'project-build/skeleton/quiz/question.yml')
+        File oldInterview = new File(root, 'project-build/skeleton/interview/question.yml')
+        assertTrue(oldQuiz.parentFile.mkdirs())
+        assertTrue(oldInterview.parentFile.mkdirs())
+        oldQuiz.setText(ContractSkeletonSyncService.GENERATED_HEADER +
+                '\nquestions: []\n', 'UTF-8')
+        oldInterview.setText('questions: []\n# human owned\n', 'UTF-8')
+        try {
+            service.sync(root)
+            fail('Expected legacy manual-file protection')
+        } catch (GradleException expected) {
+            assertTrue(expected.message.contains('Refusing to remove non-generated'))
+        }
+        assertFalse(new File(root, 'project-build/skeleton/quiz/quiz.yml').exists())
+        assertTrue(oldQuiz.isFile())
+        assertTrue(oldInterview.isFile())
+
+        oldInterview.setText(ContractSkeletonSyncService.GENERATED_HEADER +
+                '\nquestions: []\n', 'UTF-8')
+        assertEquals([total: 4, updated: 4], service.sync(root))
+        assertFalse(oldQuiz.exists())
+        assertFalse(oldInterview.exists())
+        assertTrue(new File(root, 'project-build/skeleton/quiz/quiz.yml').isFile())
+        assertTrue(new File(root, 'project-build/skeleton/interview/interview.yml').isFile())
+        assertEquals([total: 4, updated: 0], service.sync(root))
     }
 
     private static void prepareContract(File root) {

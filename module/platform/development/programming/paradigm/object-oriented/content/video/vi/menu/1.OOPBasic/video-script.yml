@@ -1,0 +1,385 @@
+title: "Tư duy OOP"
+video:
+  url: ""
+sections:
+  - title: "OOP là gì và bài toán tổ chức chương trình"
+    items:
+      - type: SCENE
+        title: "Tại sao chương trình lớn cần cách tổ chức?"
+        time: "00:00–01:25"
+        visual: |-
+          Mở bằng hoạt họa từ một tệp Main.java nhỏ sang sơ đồ ứng dụng có Account, Order, Inventory, Payment. Các đường kết nối rối dần khi thêm yêu cầu. Hiện dòng chữ trên slide: “Viết đúng một hàm chưa đủ; phải biết quy tắc thuộc về ai”.
+        script: |-
+          Một chương trình vài chục dòng thường dễ theo dõi. Nhưng khi có tài khoản, đơn hàng, kho hàng, thanh toán và nhiều nhóm cùng phát triển, câu hỏi khó hơn là: sửa quy tắc ở đâu để không làm hỏng chức năng khác? Thử tưởng tượng việc rút tiền. Ta phải kiểm tra số tiền dương, kiểm tra số dư đủ rồi mới trừ. Nếu nhiều giao diện cùng tự sửa số dư, một nơi quên kiểm tra là dữ liệu có thể sai. OOP là cách tổ chức chương trình quanh những đối tượng có trạng thái, hành vi và trách nhiệm rõ ràng. Nó giúp ta chọn chỗ đặt quy tắc và cách các thành phần trao đổi với nhau, chứ không đơn giản là tạo thật nhiều class.
+        purpose: |-
+          Đặt động cơ học OOP từ vấn đề thay đổi và trách nhiệm, tránh định nghĩa thuộc lòng.
+      - type: SCENE
+        title: "Đối chiếu dữ liệu mở và ranh giới BankAccount"
+        time: "01:25–03:05"
+        visual: |-
+          Chia đôi màn hình. Bên trái minh họa AccountData có trường balance dễ bị gán trực tiếp. Bên phải phóng to đoạn Java:
+          ~~~java
+          private long balance;
+          boolean withdraw(long amount) {
+              if (amount <= 0) throw new IllegalArgumentException();
+              if (amount > balance) return false;
+              balance -= amount;
+              return true;
+          }
+          ~~~
+          Đặt biểu tượng khóa ở field balance, tô sáng if trước phép trừ.
+        script: |-
+          Ở phía trái, một hàm withdraw có thể được viết rất cẩn thận, nhưng nếu các nơi khác vẫn trực tiếp gán balance bằng số âm thì luật rút tiền bị bỏ qua. Phía phải, BankAccount giữ số dư ở trường private và cung cấp hành vi withdraw. Khi yêu cầu hợp lệ và đủ tiền, đối tượng mới thay đổi trạng thái. Nếu thiếu tiền, nó trả false và giữ nguyên. Ví dụ này không chứng minh lập trình thủ tục luôn kém; module thủ tục cũng có thể bảo vệ dữ liệu. Nó cho ta thấy điều quan trọng: phải có một ranh giới đáng tin cậy để quy tắc không bị vòng qua.
+        purpose: |-
+          Cho thấy nguyên nhân và hiệu quả của việc tập trung bất biến; so sánh công bằng các phong cách.
+      - type: SCENE
+        title: "Chạy một câu chuyện có hai tài khoản"
+        time: "03:05–04:15"
+        visual: |-
+          Trên terminal hiển thị các dòng gọi:
+          ~~~java
+          BankAccount a = new BankAccount("ACC-01", 100_000);
+          a.withdraw(30_000);  // true, còn 70000
+          BankAccount b = new BankAccount("ACC-02", 100_000);
+          b.withdraw(120_000); // false, vẫn 100000
+          ~~~
+          Hiện hai thẻ ACC-01: 70.000 và ACC-02: 100.000, không trộn dữ liệu. Ghi chú “mô hình bộ nhớ, không phải ngân hàng production”.
+        script: |-
+          Giờ là một kiểm tra đơn giản. Tài khoản A có một trăm nghìn, rút ba mươi nghìn thì còn bảy mươi nghìn. Tài khoản B cũng bắt đầu từ một trăm nghìn, yêu cầu rút một trăm hai mươi nghìn và bị từ chối; số dư B vẫn là một trăm nghìn. Hai đối tượng cùng dùng bản thiết kế BankAccount nhưng có trạng thái riêng. Mỗi đối tượng tự giữ các điều kiện được phép thay đổi số dư. Và đừng quên giới hạn: private không tự bảo đảm an toàn khi nhiều luồng hay nhiều máy cùng cập nhật. Một hệ thống ngân hàng thật vẫn cần transaction, đồng thời, bảo mật và kiểm toán.
+        purpose: |-
+          Khóa đúng ý nghĩa bản sao đối tượng và cảnh báo ranh giới giữa demo với hệ thống thật.
+  - title: "Đối tượng, trạng thái, hành vi và trách nhiệm"
+    items:
+      - type: TRANSITION
+        time: "04:15–04:30"
+        visual: |-
+          Thu sơ đồ hai tài khoản về một đối tượng Order với các nhãn ID, lines, status. Đổi tiêu đề thành “Một đối tượng biết gì và phải bảo đảm gì?”.
+        script: |-
+          Vừa rồi ta thấy một đối tượng có thể bảo vệ số dư. Nhưng để thiết kế được, ta phải phân biệt bốn khái niệm đứng sau ví dụ ấy.
+        purpose: |-
+          Chuyển từ động cơ OOP sang mô hình trách nhiệm bên trong từng object.
+      - type: SCENE
+        title: "Bốn góc nhìn của một Order"
+        time: "04:30–06:00"
+        visual: |-
+          Trình chiếu thẻ đơn hàng: ID=O-101; lines=[BOOK × 2 × 125000]; status=DRAFT; total=250000. Bốn callout hiện lần lượt: Object, State, Behavior, Responsibility. Tô màu total() là giá trị tính từ lines, không bắt buộc là field lưu.
+        script: |-
+          Hãy lấy một đơn hàng có mã O một không một. Bản thân đơn hàng cụ thể là đối tượng. Trạng thái của nó gồm mã, các dòng sản phẩm và tình trạng nháp hay đã xác nhận. Hành vi là những điều ta có thể yêu cầu: thêm dòng, tính tổng, xác nhận hoặc hủy. Còn trách nhiệm quan trọng hơn tên phương thức: đơn hàng phải giữ danh sách hợp lệ và không cho thêm hàng sau khi xác nhận. Tổng tiền có thể được tính từ các dòng hàng, không nhất thiết lưu trùng thêm một biến rồi lo đồng bộ. Đối tượng có thể bất biến hoặc có trạng thái thay đổi; điều cốt lõi là quy tắc được đặt ở ranh giới thích hợp.
+        purpose: |-
+          Liên kết bốn khái niệm bằng một ví dụ nhất quán, phân biệt giá trị lưu và giá trị suy ra.
+      - type: SCENE
+        title: "Vòng đời và lời gọi có ý nghĩa"
+        time: "06:00–07:30"
+        visual: |-
+          Dựng state diagram:
+          ~~~text
+          DRAFT -- addLine() --> DRAFT
+          DRAFT -- confirm() khi có hàng --> CONFIRMED
+          DRAFT -- cancel() --> CANCELLED
+          CONFIRMED -- addLine() --> từ chối
+          ~~~
+          Chiếu code Order.addLine() với requireDraft(), Order.confirm() kiểm tra lines.isEmpty(). Terminal demo: tổng 250000, trạng thái CONFIRMED, thêm tiếp bị IllegalStateException.
+        script: |-
+          Thử theo dõi cùng một đơn hàng từ lúc tạo. Nó là DRAFT và chưa có dòng nào. Thêm hai quyển sách đơn giá một trăm hai mươi lăm nghìn, tổng thành hai trăm năm mươi nghìn. Khi gọi confirm, đối tượng kiểm tra có hàng rồi mới chuyển sang CONFIRMED. Nếu một controller gọi addLine thêm lần nữa, đối tượng từ chối và tổng tiền không đổi. Hành vi confirm diễn đạt ý định tốt hơn một setter status tự do, vì nó có chỗ để kiểm tra điều kiện. Phương thức total cũng là hành vi, dù chỉ trả lời dữ liệu mà không đổi trạng thái.
+        purpose: |-
+          Trình bày invariant và hậu điều kiện bằng trạng thái trước/sau cùng ngoại lệ.
+      - type: SCENE
+        title: "Ai sở hữu quy tắc, ai điều phối?"
+        time: "07:30–08:40"
+        visual: |-
+          Bảng ba cột xuất hiện: Order → duy trì lines/status; OrderService → điều phối xác nhận; OrderRepository → lưu/tải; NotificationService → gửi thông báo. Vẽ mũi tên OrderService gọi order.confirm() rồi repository.save(order).
+        script: |-
+          Bây giờ đừng cho Order làm luôn việc gửi email, truy vấn SQL và kết nối ngân hàng. Những việc ấy có trách nhiệm khác. Order bảo vệ trạng thái đơn; service tìm đơn và phối hợp quy trình; repository lưu và tải; thành phần thông báo lo gửi tin. Một trách nhiệm có thể cần nhiều phương thức, và một phương thức cũng có thể nhờ đối tượng khác làm việc. Đây không phải công thức bắt buộc mọi dự án phải có đủ bốn lớp, mà là cách đặt câu hỏi: nếu quy tắc xác nhận thay đổi, ta mong sửa ở đâu?
+        purpose: |-
+          Dạy cách quyết định ownership, tránh hiểu trách nhiệm là mỗi method một class.
+  - title: "Lớp, kiểu và thể hiện: các khái niệm nền tảng"
+    items:
+      - type: TRANSITION
+        time: "08:40–08:53"
+        visual: |-
+          Thu nhỏ Order thành chữ “một instance” rồi hiện biểu thức CounterView view = new ClickCounter("Nút A", 10). Gắn nhãn ba vùng chữ.
+        script: |-
+          Ta đã nói nhiều về đối tượng cụ thể. Giờ cần phân biệt bản định nghĩa, kiểu của biến và đối tượng thật sự tồn tại ở lúc chạy.
+        purpose: |-
+          Dẫn sang phân biệt class, type, instance và reference.
+      - type: SCENE
+        title: "Giải phẫu một dòng Java"
+        time: "08:53–10:18"
+        visual: |-
+          Zoom từng mảnh: CounterView = kiểu khai báo; view = biến tham chiếu; new ClickCounter(...) = tạo đối tượng runtime. Bên cạnh hiển thị interface CounterView { int value(); } và ClickCounter implements CounterView với click().
+        script: |-
+          Đọc thật chậm câu lệnh này. CounterView bên trái là kiểu khai báo của biến view. view là tên biến tham chiếu. Còn new ClickCounter tạo một thể hiện của lớp ClickCounter. Một đối tượng, không phải hai đối tượng vì nhìn thấy hai tên kiểu. Trong Java, class cũng tạo ra một type, nhưng type còn bao gồm interface, mảng và kiểu nguyên thủy. Interface CounterView chỉ công bố value; còn lớp ClickCounter có thể công bố thêm click. Khi gọi qua view, trình biên dịch chỉ cho ta dùng những phương thức khả dụng theo kiểu CounterView.
+        purpose: |-
+          Ngăn nhầm lẫn giữa định nghĩa lớp, hợp đồng kiểu và thể hiện runtime.
+      - type: SCENE
+        title: "Một thể hiện, nhiều tham chiếu"
+        time: "10:18–11:46"
+        visual: |-
+          Bảng theo dõi biến:
+          ~~~java
+          ClickCounter first = new ClickCounter("Nút A", 10);
+          CounterView view = first;
+          Object general = first;
+          ClickCounter second = new ClickCounter("Nút A", 10);
+          first.click();
+          ~~~
+          Mũi tên first/view/general đều tới ClickCounter#1 (clicks=11); second tới ClickCounter#2 (clicks=10). Console: 11, 11, 10, true, false.
+        script: |-
+          Có một bẫy quen thuộc: view bằng first không hề tạo bản sao ClickCounter. Nó sao chép giá trị tham chiếu. general cũng trỏ về thể hiện thứ nhất. Chỉ câu lệnh new thứ hai tạo thêm đối tượng second. Khi first.click tăng số đếm lên mười một, đọc qua view cũng thấy mười một, còn second vẫn mười. Phép so sánh first bằng view bằng hai dấu bằng cho true; first bằng second cho false, dù nhãn và trạng thái ban đầu giống nhau. Danh tính của đối tượng khác với việc các field có giá trị giống nhau.
+        purpose: |-
+          Dùng sơ đồ bộ nhớ và số đếm để phân biệt alias với instance độc lập.
+      - type: SCENE
+        title: "Kiểu khai báo kiểm soát lời gọi, không đổi runtime class"
+        time: "11:46–12:51"
+        visual: |-
+          Màn hình biên dịch tô đỏ dòng view.click(); vì CounterView không khai báo click(). Bên cạnh chạy view.value() hợp lệ, general.getClass().getSimpleName() hiển thị ClickCounter. Thêm minh họa x = new ClickCounter("Z",7) chỉ đổi tham chiếu x.
+        script: |-
+          Dù đối tượng runtime có phương thức click, câu view.click vẫn không biên dịch vì kiểu CounterView không công bố nó. Ngược lại, view.value thì hoàn toàn hợp lệ. Gán đối tượng vào một biến kiểu Object cũng không biến đối tượng ấy thành một lớp runtime khác. Và nếu gán lại một biến tham chiếu, ta chỉ đổi nơi biến trỏ tới; những biến alias khác vẫn giữ tham chiếu cũ. Cuối cùng, nhớ phân biệt instance field với static field: số đếm của từng ClickCounter là riêng, còn một static counter thuộc về lớp.
+        purpose: |-
+          Khóa vững phân biệt compile-time type, runtime object, reassignment và static state.
+  - title: "Tương tác giữa đối tượng và lời gọi phương thức"
+    items:
+      - type: TRANSITION
+        time: "12:51–13:05"
+        visual: |-
+          Mũi tên từ ba tham chiếu biến thành luồng main → LendingService → Member/Book → Loan. Màu sắc chia vai trò caller và receiver.
+        script: |-
+          Một đối tượng hiếm khi hoàn thành cả nghiệp vụ một mình. Hiểu tham chiếu rồi, ta có thể lần theo lúc các đối tượng gọi phương thức của nhau.
+        purpose: |-
+          Chuyển từ mô hình bộ nhớ sang luồng điều khiển và cộng tác.
+      - type: SCENE
+        title: "Một yêu cầu mượn sách đi qua những ai?"
+        time: "13:05–14:39"
+        visual: |-
+          Sơ đồ tuần tự với Main, LendingService, Member, Book và Loan:
+          ~~~text
+          main -> service.borrow(an, javaBook)
+          service -> an.ensureActive()
+          service -> javaBook.lendTo(an)
+          Book -> new Loan(title, memberId)
+          Loan -> main qua return
+          ~~~
+          Tô sáng Book.borrower = member và Loan bất biến.
+        script: |-
+          Người đọc tới thư viện muốn mượn một cuốn Java. Main gọi LendingService.borrow, truyền hai tham chiếu an và javaBook. Service nhờ Member kiểm tra đang hoạt động, rồi nhờ Book quyết định cuốn sách còn cho mượn được không. Nếu borrower hiện đang null, Book gán người mượn và trả về một Loan ghi thông tin của lượt mượn. Service chuyển kết quả ấy về main. Mỗi bước đều có người gọi, đối tượng nhận, đối số và kết quả. Đây là lời gọi phương thức đồng bộ trong cùng tiến trình, không tự động là gửi mạng hay message queue.
+        purpose: |-
+          Trình bày tương tác caller/receiver và vị trí side effect bằng use case cụ thể.
+      - type: SCENE
+        title: "Khi thất bại, kết quả và trạng thái ra sao?"
+        time: "14:39–16:03"
+        visual: |-
+          Terminal demo:
+          ~~~text
+          Java căn bản -> M01
+          false
+          Book is already borrowed
+          false
+          Member is inactive
+          true
+          ~~~
+          Khoanh cặp sách javaBook đã mượn và otherBook còn sẵn. Vẽ nhánh exception Book.lendTo → LendingService → main.catch.
+        script: |-
+          Trong lần mượn đầu, isAvailable trở thành false. Khi người khác mượn đúng đối tượng javaBook, Book thấy borrower đã có và ném IllegalStateException. Câu tạo Loan mới không chạy và người mượn ban đầu không bị thay. Ta thử một thành viên không hoạt động với đối tượng sách khác: service dừng ngay ở ensureActive, cuốn sách khác vẫn sẵn. Ngoại lệ có thể truyền ngược qua nhiều khung lời gọi đến nơi catch. Nhưng đừng hiểu throw là nút hoàn tác toàn bộ. Nếu trước đó đã thay đổi một đối tượng khác, trạng thái ấy không tự rollback nếu thiếu cơ chế bảo đảm phù hợp.
+        purpose: |-
+          Làm rõ exception propagation, trạng thái giữ nguyên trong trường hợp demo và giới hạn rollback.
+      - type: SCENE
+        title: "Hợp đồng phương thức và quy tắc truyền tham số"
+        time: "16:03–17:25"
+        visual: |-
+          Đóng khung chữ ký Loan lendTo(Member member), gắn chú thích precondition: member != null, borrower == null; postcondition: borrower == member; result: Loan. Thêm hai mũi tên tới cùng Book cho original và localBook. Màn hình code nhỏ: localBook = new Book(...) không đổi original.
+        script: |-
+          Hãy xem lendTo như một hợp đồng: nhận Member không null, yêu cầu sách đang rảnh, và khi thành công trả Loan đồng thời ghi nhận người mượn. Một phương thức có kiểu void vẫn có thể làm thay đổi trạng thái hoặc ném lỗi. Và Java luôn truyền tham số theo giá trị, kể cả đối với tham chiếu đối tượng. Bên trong hàm, gán lại tham số localBook chỉ đổi biến cục bộ; nhưng gọi localBook.lendTo lại có thể thay đổi chính đối tượng mà caller cũng đang trỏ tới. Khi đọc code OOP, hãy lần theo receiver, đối số, tiền điều kiện, kết quả, tác dụng phụ và nhánh lỗi.
+        purpose: |-
+          Củng cố hợp đồng hành vi, pass-by-value và ranh giới bảo vệ của receiver.
+  - title: "Đóng gói, trừu tượng, kế thừa và đa hình"
+    items:
+      - type: TRANSITION
+        time: "17:25–17:39"
+        visual: |-
+          Lật bảng hợp đồng lendTo sang bốn thẻ “Đóng gói / Trừu tượng / Kế thừa / Đa hình”. Mỗi thẻ có một câu hỏi riêng.
+        script: |-
+          Những lời gọi vừa rồi chỉ đáng tin khi ta biết điều gì được bảo vệ và phần nào có thể thay thế. Đó là lúc bốn công cụ OOP phát huy tác dụng.
+        purpose: |-
+          Liên hệ trực tiếp bốn tính chất với chất lượng hợp đồng và cộng tác.
+      - type: SCENE
+        title: "Đóng gói không chỉ là thêm private"
+        time: "17:39–19:03"
+        visual: |-
+          Hiện Cart trước/sau. Trước: public List items. Sau:
+          ~~~java
+          private final List<CartLine> lines = new ArrayList<>();
+          void addItem(...) { lines.add(new CartLine(...)); }
+          List<CartLine> viewItems() { return List.copyOf(lines); }
+          ~~~
+          Mô phỏng người gọi cố clear danh sách trả về và bị UnsupportedOperationException.
+        script: |-
+          Đóng gói trả lời câu hỏi: ai có quyền thay đổi trạng thái, bằng con đường nào? Nếu giỏ hàng công khai một ArrayList, mã bên ngoài có thể thêm số lượng âm hoặc xóa sạch danh sách mà bỏ qua kiểm tra. Giữ lines là private, buộc thêm hàng qua addItem và trả List.copyOf khi cần xem giúp bảo vệ ranh giới ấy. Nhưng private không phải phép màu: nếu ta cung cấp setter không kiểm tra thì quy tắc vẫn có thể bị phá. Chú ý final trên một tham chiếu List không làm bản thân ArrayList bất biến; nó chỉ không cho gán lại field.
+        purpose: |-
+          Phân biệt access control, invariant và immutable view trên ví dụ có thể quan sát.
+      - type: SCENE
+        title: "Trừu tượng và kế thừa đúng hợp đồng"
+        time: "19:03–20:43"
+        visual: |-
+          Phóng sơ đồ DiscountPolicy. Dưới lớp cha có final discountFor(subtotal) kiểm tra 0 <= discount <= subtotal, gọi protected calculateDiscount(subtotal); hai lớp PercentageDiscount và FixedDiscount override hook. Hiện chú thích: interface cũng là một hợp đồng, abstract class khi cần logic chung.
+        script: |-
+          Trừu tượng hỏi người gọi cần biết điều gì. Checkout chỉ cần một DiscountPolicy có khả năng tính số tiền giảm; nó không cần đọc công thức bên trong. Trong minh họa này, abstract class DiscountPolicy gom phần kiểm tra chung: subtotal không âm, kết quả giảm không âm và không vượt tổng. Hai lớp con chỉ cài calculateDiscount theo cách riêng. Đây là kế thừa có mục đích vì cả hai thực sự là những chính sách giảm giá và phải giữ cùng hợp đồng. Nhưng nếu chỉ muốn dùng lại vài dòng log giữa hai dịch vụ không có quan hệ là một loại của nhau, kết hợp đối tượng Logger thường hợp lý hơn extends.
+        purpose: |-
+          Tách abstraction với inheritance, nhấn mạnh quan hệ is-a và khả năng thay thế.
+      - type: SCENE
+        title: "Đa hình: một lời gọi, hai kết quả"
+        time: "20:43–22:16"
+        visual: |-
+          Góc trái code:
+          ~~~java
+          DiscountPolicy p = new PercentageDiscount(10);
+          checkout.amountToPay(cart, p); // 450000
+          p = new FixedDiscount(new BigDecimal("80000"));
+          checkout.amountToPay(cart, p); // 420000
+          ~~~
+          Góc phải thể hiện Cart subtotal=500000, mũi tên dispatch tới hai công thức; màn hình console 500000, 450000, 420000.
+        script: |-
+          Giả sử giỏ hàng có tổng năm trăm nghìn. Khi chính sách là giảm mười phần trăm, số giảm bằng năm mươi nghìn và khách trả bốn trăm năm mươi nghìn. Chuyển sang giảm cố định tám mươi nghìn, khách trả bốn trăm hai mươi nghìn. Câu gọi từ CheckoutService vẫn giữ nguyên; đối tượng chính sách thực tế quyết định cách tính qua phần override. Đó là đa hình lúc chạy. Đừng nhầm với nạp chồng phương thức: overloading chọn chữ ký phù hợp dựa vào kiểu tại lúc biên dịch, còn overriding instance method được chọn theo đối tượng runtime. Bốn tính chất không phải bốn bước bắt buộc áp vào mọi class, mà là bốn công cụ giải quyết các vấn đề khác nhau.
+        purpose: |-
+          Chứng minh dynamic dispatch bằng kết quả cụ thể và phân biệt overriding/overloading.
+  - title: "OOP và lập trình thủ tục: cách phân chia bài toán"
+    items:
+      - type: TRANSITION
+        time: "22:16–22:31"
+        visual: |-
+          Đổi chính sách giảm giá thành hình một giỏ hàng; xuất hiện nhãn “450.000 trước giảm → 405.000 sau giảm”. Chia màn hình hai luồng gọi.
+        script: |-
+          Dùng những công cụ ấy có nghĩa là chúng ta phải chuyển mọi bài toán thành object không? Hãy thử cùng một bài toán dưới hai cách tổ chức.
+        purpose: |-
+          Đặt vấn đề so sánh phân rã công việc bằng tiêu chí trách nhiệm, không khẳng định hơn thua.
+      - type: SCENE
+        title: "Cùng phép tính, hai nơi đặt hành vi"
+        time: "22:31–24:17"
+        visual: |-
+          Bên trái:
+          ~~~java
+          CartProcedures.addItem(data, 200_000, 2);
+          CartProcedures.addItem(data, 50_000, 1);
+          calculateTotal(data); // 405000
+          ~~~
+          Bên phải:
+          ~~~java
+          cart.addItem(200_000, 2);
+          cart.addItem(50_000, 1);
+          cart.total(); // 405000
+          ~~~
+          Hiện phép tính 2×200000 + 50000 = 450000; VIP giảm 10%=45000; còn 405000.
+        script: |-
+          Một giỏ hàng có hai món, giá hai trăm nghìn mỗi món, và thêm một món năm mươi nghìn. Tổng là bốn trăm năm mươi nghìn; giảm thành viên mười phần trăm thì phải trả bốn trăm linh năm nghìn. Bên trái là các hàm nhận CartData và thực hiện từng bước. Bên phải là ShoppingCart tự quản lý trạng thái rồi trả tổng qua total. Thuật toán và đáp số không hề thay đổi; OOP không tự làm phép cộng nhanh hơn. Khác biệt ở câu hỏi tổ chức: ta muốn data đi qua những hàm nào, hay muốn giao cho một đối tượng chịu trách nhiệm và bảo vệ cách thay đổi dữ liệu? Một module thủ tục được thiết kế cẩn thận vẫn có thể đóng gói dữ liệu hiệu quả.
+        purpose: |-
+          So sánh công bằng cùng chức năng và kết quả 405000 từ hai hướng tổ chức.
+      - type: SCENE
+        title: "Khi thay đổi xuất hiện, nhìn vào trách nhiệm"
+        time: "24:17–25:47"
+        visual: |-
+          Hiện bảng tình huống: thêm khuyến mãi; thay cấu trúc lưu items; xuất CSV; thêm phương thức thanh toán. Mũi tên từ Cart tới DiscountPolicy, CheckoutService, PaymentGateway; bên dưới một pipeline parse → validate → transform → export.
+        script: |-
+          Khi xuất hiện khuyến mãi mới, ta có thể tách DiscountPolicy để quy tắc thay đổi mà checkout không phải đọc từng loại. Nếu cần xuất CSV, một hàm chuyển đổi dữ liệu rõ ràng lại có thể là cách ngắn gọn nhất. Thiết kế tốt không được tính bằng số lớp. Hãy nhìn tính gắn kết của một thành phần, số chỗ bị ảnh hưởng khi ta sửa, những bất biến cần bảo vệ và chi phí kiểm thử. OOP vẫn dùng vòng lặp và các bước tuần tự; một service có thể điều phối nhiều phương thức theo đúng thứ tự. Lập trình thủ tục cũng có module và hàm dễ tái sử dụng. Hai hướng thường bổ sung cho nhau trong cùng một chương trình Java.
+        purpose: |-
+          Luyện đánh giá cohesion, coupling và tính phù hợp với thay đổi thật.
+  - title: "OOP dựa trên lớp và OOP dựa trên nguyên mẫu"
+    items:
+      - type: TRANSITION
+        time: "25:47–26:02"
+        visual: |-
+          Hiện hai cột: Java có class DeliveryMethod và hai subclass; JavaScript có object express → standard → deliveryBehavior. Tựa phụ “Tìm hành vi ở đâu?”.
+        script: |-
+          Ta vừa so sánh cách phân chia trách nhiệm. Một câu hỏi khác là: đối tượng có hành vi ấy bằng cơ chế nào? Java cho chúng ta mô hình dựa trên lớp; JavaScript cho thấy mô hình nguyên mẫu.
+        purpose: |-
+          Mở rộng khái niệm OOP vượt ngoài cú pháp Java extends.
+      - type: SCENE
+        title: "Java: class và cơ chế chọn phương thức"
+        time: "26:02–27:37"
+        visual: |-
+          Trên editor Java hiện DeliveryMethod.quote(kilograms) final gọi variableFee(kilograms), StandardDelivery và ExpressDelivery override variableFee. Terminal:
+          ~~~text
+          Standard: 30000
+          Express: 64000
+          Rejected invalid weight
+          ~~~
+          Sơ đồ lớp StandardDelivery/ExpressDelivery → DeliveryMethod.
+        script: |-
+          Trong Java, ta định nghĩa DeliveryMethod, rồi có StandardDelivery và ExpressDelivery. Phí tiêu chuẩn là hai mươi nghìn cộng năm nghìn mỗi ký, vậy hai ký hết ba mươi nghìn. Hỏa tốc là bốn mươi nghìn cộng mười hai nghìn mỗi ký, vậy hai ký hết sáu mươi bốn nghìn. Method quote ở lớp cha kiểm tra cân nặng, rồi gọi variableFee được override ở lớp con tương ứng. Khi biến được khai báo là DeliveryMethod nhưng chứa một ExpressDelivery, runtime vẫn chọn đúng phần triển khai Express. Ta đã thấy class quyết định cấu trúc kiểu và quan hệ kế thừa, còn instance có trạng thái riêng.
+        purpose: |-
+          Minh họa class-based dispatch với các phép tính và kết quả đúng nguồn.
+      - type: SCENE
+        title: "JavaScript: prototype chain và this"
+        time: "27:37–29:22"
+        visual: |-
+          Editor JavaScript:
+          ~~~javascript
+          const deliveryBehavior = {
+            quote(kg) { return this.baseFee + this.feePerKg * kg; }
+          };
+          const standard = Object.create(deliveryBehavior);
+          standard.baseFee = 20000; standard.feePerKg = 5000;
+          const express = Object.create(standard);
+          express.baseFee = 40000; express.feePerKg = 12000;
+          console.log(express.quote(2)); // 64000
+          ~~~
+          Mũi tên express.[[Prototype]] → standard → deliveryBehavior; phóng vào bước tìm quote và receiver this=express.
+        script: |-
+          JavaScript có một cơ chế khác: một object có thể liên kết trực tiếp đến object khác làm prototype. Khi gọi express.quote mà express không tự có method quote, JavaScript tìm lên standard, rồi deliveryBehavior. Nó tìm thấy method ở đó; nhưng với lời gọi express.quote bình thường, this trong method vẫn là express, vì express là receiver. Do vậy chương trình lấy baseFee bốn mươi nghìn và feePerKg mười hai nghìn từ chính express, ra sáu mươi bốn nghìn. Object.create không tạo bản sao tất cả thuộc tính của nguyên mẫu; nó thiết lập đường tra cứu. Đây là khác biệt then chốt giữa quan hệ lớp trong Java và ủy quyền qua chuỗi nguyên mẫu.
+        purpose: |-
+          Giải thích cơ chế lookup và receiver this chính xác, tránh nhầm prototype là bản sao.
+      - type: SCENE
+        title: "Shadowing, trạng thái dùng chung và cú pháp class JavaScript"
+        time: "29:22–30:52"
+        visual: |-
+          Minh họa economy = Object.create(standard), economy.baseFee=15000. Trước thay đổi: economy.quote(2)=25000. Sau standard.feePerKg=6000: economy=27000, express=64000. Sau đó hiện hai tag: Object.hasOwn(express,"feePerKg") = true; Object.hasOwn(economy,"feePerKg") = false. Thẻ nhỏ: JS class methods thường nằm trên Constructor.prototype.
+        script: |-
+          Quan sát economy không tự khai báo feePerKg, nên nó mượn giá trị năm nghìn từ standard: phí hai ký là hai mươi lăm nghìn. Nếu đổi standard lên sáu nghìn mỗi ký, economy trở thành hai mươi bảy nghìn. Express vẫn sáu mươi bốn nghìn vì có field riêng che giá trị kế thừa. Cần đặc biệt cẩn thận với mảng hoặc object mutable đặt trên prototype: nhiều instance có thể cùng sửa một mảng dùng chung. JavaScript hiện đại vẫn có cú pháp class, nhưng việc tìm instance method vẫn dựa vào prototype chain. Đừng nhầm mô hình OOP dựa trên nguyên mẫu với Prototype Design Pattern trong Java, vốn thường nói về sao chép đối tượng.
+        purpose: |-
+          Phân biệt lookup, shadowing, shared mutable state và Prototype pattern với kết quả kiểm chứng.
+  - title: "Khi nên và không nên sử dụng OOP"
+    items:
+      - type: TRANSITION
+        time: "30:52–31:07"
+        visual: |-
+          Hai bài toán xuất hiện: “đọc CSV → lọc → cộng → xuất” và “Order: DRAFT → SUBMITTED → PAID”. Giữ tiêu chí thay đổi/trạng thái trên màn hình.
+        script: |-
+          Sau tất cả những mô hình đó, câu hỏi thực tế nhất vẫn là: trường hợp nào đáng dùng OOP, và khi nào một vài hàm đã đủ?
+        purpose: |-
+          Đưa lý thuyết về quyết định thiết kế và chi phí phát sinh.
+      - type: SCENE
+        title: "Dấu hiệu nên dùng đối tượng có trách nhiệm"
+        time: "31:07–32:42"
+        visual: |-
+          Vẽ Order state machine DRAFT → SUBMITTED → PAID; các lời gọi addLine(), submit(), confirmPaid(). Gắn nhãn “chặn sửa dòng sau SUBMITTED”, “không PAID trực tiếp từ DRAFT”. Mở rộng bằng sơ đồ ShippingPolicy có FlatShipping 30000, FreeAboveThreshold 200000.
+        script: |-
+          OOP rất có ích khi một thực thể sống qua nhiều thao tác và phải bảo vệ trạng thái. Một đơn hàng có thể thêm mặt hàng lúc DRAFT; sau submit thì không được sửa; và chỉ có thể xác nhận đã thanh toán nếu trước đó SUBMITTED. Đặt quy tắc ở Order làm cho nhiều giao diện cùng phải đi qua một điểm kiểm soát. OOP còn phù hợp khi thực sự có nhiều biến thể hành vi, chẳng hạn các chính sách giao hàng. Với đơn hai trăm năm mươi nghìn, phí cố định ba mươi nghìn cho tổng hai trăm tám mươi nghìn; chính sách miễn phí từ hai trăm nghìn sẽ cho tổng hai trăm năm mươi nghìn. Cùng một hợp đồng, khác hành vi.
+        purpose: |-
+          Nêu hai tín hiệu mạnh cho OOP: vòng đời có bất biến và biến thể thực sự cần thay thế.
+      - type: SCENE
+        title: "Dấu hiệu nên bắt đầu bằng hàm đơn giản"
+        time: "32:42–34:17"
+        visual: |-
+          Bên trái đoạn hàm:
+          ~~~java
+          static long totalRevenue(List<Sale> sales) {
+              long total = 0;
+              for (Sale s : sales) {
+                  total = Math.addExact(total,
+                      Math.multiplyExact(s.unitPrice(), (long)s.quantity()));
+              }
+              return total;
+          }
+          ~~~
+          Bên phải là pipeline parse → validate → transform → export. Biểu tượng thùng rác trên chuỗi Controller → Manager → Facade → Coordinator → Service → Calculator nếu chỉ forward.
+        script: |-
+          Ngược lại, đọc danh sách giao dịch, lọc theo ngày và tính tổng doanh thu thường là một phép biến đổi dữ liệu. Một hàm nhận đầu vào rõ ràng, trả kết quả, không giữ trạng thái dài hạn sẽ dễ đọc và dễ kiểm thử. Không nhất thiết tạo CalculatorFactory, AbstractStrategy và vài tầng manager cho một phép cộng. Trong Java, các hàm ấy vẫn nằm trong class, nhưng không vì thế cần tổ chức thành một đồ thị object phức tạp. Khi interface chỉ có một implementation và chẳng cô lập điều gì hay tạo ra khả năng thay thế có thật, nó có thể là gánh nặng. Ngược lại, một interface đơn lẻ vẫn hợp lý nếu đánh dấu ranh giới kỹ thuật quan trọng.
+        purpose: |-
+          Cho phép lựa chọn procedural/functional trong Java với tiêu chí thực tế, tránh overengineering.
+      - type: SCENE
+        title: "Checklist và câu hỏi chốt"
+        time: "34:17–35:57"
+        visual: |-
+          Slide tổng kết dạng decision checklist: (1) trạng thái nào phải đúng? (2) ai sở hữu luật? (3) cần thay implementation nào? (4) sửa yêu cầu ảnh hưởng bao nhiêu nơi? (5) một hàm thuần có đủ không? (6) test nào chứng minh? Kết thúc bằng thẻ: “Trạng thái — Hành vi — Trách nhiệm — Cộng tác”. Nhắc note nhỏ: private không thay transaction/concurrency.
+        script: |-
+          Trước khi tạo một class mới, hãy thử nói trách nhiệm của nó trong một câu. Nếu không làm được, có thể ranh giới đang chưa rõ. Hỏi dữ liệu nào nó phải bảo vệ, người sử dụng cần những phương thức gì, tại sao cần interface và thử tưởng tượng yêu cầu tuần sau thay đổi ở đâu. Sau cùng hãy hỏi: một hàm thuần có diễn đạt việc này trực tiếp hơn không? Đừng dùng số class để đo chất lượng, và đừng dùng nhãn OOP để suy ra hiệu năng hay an toàn đồng thời. Bài tập kết thúc dành cho bạn: hãy chọn một đơn hàng hoặc tài khoản, viết ba cột trạng thái, hành vi, quy tắc bắt buộc, rồi vẽ lời gọi giữa hai đối tượng. Nếu giải thích được ai bảo vệ điều gì và test kết quả ra sao, bạn đã bắt đầu tư duy OOP thực sự.
+        purpose: |-
+          Tổng hợp tám mục thành checklist áp dụng và một bài tập chuyển hóa kiến thức.
