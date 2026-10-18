@@ -1,5 +1,6 @@
 package com.example.learning.setup.root.structure.service
 
+import com.example.learning.utils.schema.validate.ContractSchemaValidateUtils
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 import org.gradle.api.GradleException
@@ -117,6 +118,8 @@ Run generatePortalKnowledge before generating the Knowledge search projection.
                                 documentCount: documents.size(),
                                 documents    : documents
                         ]
+
+                ContractSchemaValidateUtils.validateData('knowledgeSearch', payload)
 
                 writeIfChanged(
                         new File(outputDirectory, fileName),

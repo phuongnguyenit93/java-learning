@@ -2,7 +2,6 @@ package com.example.learning.task.sheets.service
 
 import com.example.learning.setup.module.interview.service.InterviewQuestionSchemaService
 import com.google.api.services.sheets.v4.Sheets
-import groovy.json.JsonOutput
 import org.gradle.api.GradleException
 import org.yaml.snakeyaml.DumperOptions
 import org.yaml.snakeyaml.Yaml
@@ -10,7 +9,7 @@ import org.yaml.snakeyaml.Yaml
 import java.nio.file.Files
 
 /**
- * Sheet Interview JSON -> the module's Vietnamese question.yml.
+ * Sheet Interview YAML (and legacy JSON) -> the module's Vietnamese question.yml.
  * Only Groovy/Sheets API/SnakeYAML are used; no AI, Sheet writes or metadata inference.
  */
 class InterviewSheetImportService {
@@ -85,10 +84,9 @@ class InterviewSheetImportService {
             return [status: 'SKIPPED_EMPTY_INTERVIEW', questions: [],
                     chapterCount: 0]
         }
+        List<String> labels = (0..3).collect { int col -> raw(row(rows, 1), col).trim() }
         if (raw(row(rows, 0), 0).trim() != 'Interview' ||
-                !(0..3).every { int col ->
-                    raw(row(rows, 1), col).trim() == 'Interview JSON'
-                }) {
+                !(labels.unique().size() == 1 && labels[0] in ['Interview YAML', 'Interview JSON'])) {
             throw new GradleException('Invalid Interview headers at T18:W19.')
         }
 
@@ -106,7 +104,7 @@ class InterviewSheetImportService {
         int chapters = 0
         groups.eachWithIndex { Map group, int i ->
             int sheetRow = (group.parentRow as Number).intValue()
-            StringBuilder json = new StringBuilder()
+            StringBuilder authoredYaml = new StringBuilder()
             boolean gap = false
             (0..3).each { int col ->
                 String text = raw(row(rows, sheetRow - 18), col)
@@ -117,14 +115,14 @@ class InterviewSheetImportService {
                                 "Invalid Interview fragments at T${sheetRow}:W${sheetRow}."
                         )
                     }
-                    json.append(text)
+                    authoredYaml.append(text)
                 }
             }
-            if (json.length() == 0) return
+            if (authoredYaml.length() == 0) return
             String filename = group.filename as String
             String file = "${i + 1}.${filename.substring(0, filename.length() - 3)}/${filename}"
-            Map normalized = InterviewSheetNormalizeService.normalizeJson(
-                    json.toString(), file, sheetRow
+            Map normalized = InterviewSheetNormalizeService.normalizeYaml(
+                    authoredYaml.toString(), file, sheetRow
             )
             questions.addAll(normalized.questions as List<Map>)
             chapters++

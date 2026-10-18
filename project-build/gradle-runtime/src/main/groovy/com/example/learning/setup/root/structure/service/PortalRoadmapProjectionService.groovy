@@ -1,10 +1,12 @@
 package com.example.learning.setup.root.structure.service
 
+import com.example.learning.utils.schema.validate.ContractSchemaValidateUtils
 import com.example.learning.utils.GradleBuildUtils
 import com.example.learning.utils.ProjectPropertyUtils
 import org.gradle.api.GradleException
 import org.gradle.api.Project
 import org.gradle.api.logging.Logger
+import org.yaml.snakeyaml.Yaml
 
 import java.nio.file.Files
 import java.nio.file.Path
@@ -117,6 +119,9 @@ class PortalRoadmapProjectionService {
                     )
                 }
 
+
+                Object authored = new Yaml().load(source.roadmapFile.getText('UTF-8'))
+                ContractSchemaValidateUtils.validateData('roadmap', authored)
 
                 outputs[relativeOutput] =
                         Files.readAllBytes(

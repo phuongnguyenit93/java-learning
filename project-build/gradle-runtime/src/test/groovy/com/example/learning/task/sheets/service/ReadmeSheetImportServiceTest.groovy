@@ -1,6 +1,9 @@
 package com.example.learning.task.sheets.service
 
 import com.example.learning.task.readme.internalMenu.service.GenerateInternalReadmeMenuService
+import com.example.learning.setup.root.readmeMetadata.service.ReadmeMetadataSyncService
+import org.gradle.api.logging.Logging
+import org.yaml.snakeyaml.Yaml
 import org.gradle.api.GradleException
 import org.junit.Rule
 import org.junit.Test
@@ -12,6 +15,55 @@ class ReadmeSheetImportServiceTest {
 
     @Rule
     public TemporaryFolder temporary = new TemporaryFolder()
+
+    @Test
+    void metadataFromKnowledgeIdsAndDifficultyPreservesExistingReviewFlags() {
+        File root = temporary.newFolder('metadata-import')
+        File module = new File(root, 'module/test-module')
+        assertTrue(module.mkdirs())
+        List<Map> groups = [[title:'Chương OOP', filename:'OOPBasic.md', parentRow:20,
+                             children:[[title:'Bài một',row:21],[title:'Bài hai',row:22]]]]
+        Map<String, String> docs = ReadmeSheetImportService.buildDocuments(groups,
+                [[], ['Nội dung một\n```md\n## <a id="fake">Example only</a>\n```'],
+                 ['Nội dung hai']])
+        Map levels = ReadmeSheetImportService.buildSectionDifficulties(groups,
+                [[], ['ADVANCED'], []])
+        assertEquals(['ADVANCED', ''], levels['1.OOPBasic/OOPBasic.md'])
+        def service = new ReadmeMetadataSyncService(Logging.getLogger(ReadmeSheetImportServiceTest))
+        String prepared = service.prepareImportedMetadata(module, docs, levels)
+        Map metadata = new Yaml().load(prepared) as Map
+        Map file = metadata['1.OOPBasic/OOPBasic.md'] as Map
+        assertEquals(['oop-basic-001','oop-basic-002'], file.keySet().toList())
+        assertEquals('ADVANCED', file['oop-basic-001'].difficulty)
+        assertEquals('BASIC', file['oop-basic-002'].difficulty)
+        assertEquals(true, file['oop-basic-001'].aiGenerated)
+        assertEquals(false, file['oop-basic-001'].reviewed)
+        assertEquals('DRY_RUN', service.syncImportedMetadata(module, prepared, false).status)
+        assertEquals('UPDATED', service.syncImportedMetadata(module, prepared, true).status)
+
+        File metadataFile = new File(module,'content/readme/metadata/vi/knowledge-metadata.yml')
+        Map existing = new Yaml().load(metadataFile.getText('UTF-8')) as Map
+        existing['1.OOPBasic/OOPBasic.md']['oop-basic-001'].reviewed = true
+        existing['1.OOPBasic/OOPBasic.md']['oop-basic-001'].aiGenerated = false
+        metadataFile.setText(new Yaml().dump(existing),'UTF-8')
+        String refreshed = service.prepareImportedMetadata(module,docs,levels)
+        Map updated = new Yaml().load(refreshed) as Map
+        assertEquals(true,updated['1.OOPBasic/OOPBasic.md']['oop-basic-001'].reviewed)
+        assertEquals(false,updated['1.OOPBasic/OOPBasic.md']['oop-basic-001'].aiGenerated)
+        assertEquals('ADVANCED',updated['1.OOPBasic/OOPBasic.md']['oop-basic-001'].difficulty)
+        assertEquals('BASIC',updated['1.OOPBasic/OOPBasic.md']['oop-basic-002'].difficulty)
+    }
+
+    @Test
+    void invalidSheetDifficultyFailsBeforeAnyMetadataWrite() {
+        List<Map> groups = [[filename:'Basics.md',children:[[row:21]]]]
+        try {
+            ReadmeSheetImportService.buildSectionDifficulties(groups,[[],['EXPERT']])
+            fail('Unexpected Difficulty accepted')
+        } catch (GradleException expected) {
+            assertTrue(expected.message.contains('O21'))
+        }
+    }
 
     @Test
     void requiresA20AndEveryParentFilenameBeforeReadingKnowledge() {

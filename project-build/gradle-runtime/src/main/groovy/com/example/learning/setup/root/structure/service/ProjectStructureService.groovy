@@ -1,5 +1,6 @@
 package com.example.learning.setup.root.structure.service
 
+import com.example.learning.utils.schema.validate.ContractSchemaValidateUtils
 import com.example.learning.utils.GradleBuildUtils
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
@@ -695,6 +696,8 @@ ${moduleDirectory.absolutePath}
                         version: 1,
                         root   : toPortalCatalogNode(rootNode)
                 ]
+
+        ContractSchemaValidateUtils.validateData('moduleCatalog', catalog)
 
 
         return JsonOutput.prettyPrint(

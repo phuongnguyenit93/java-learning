@@ -1,6 +1,7 @@
 package com.example.learning.setup.module.interview.service
 
 import com.example.learning.utils.schema.validate.QuestionContractSchemaUtils
+import com.example.learning.utils.schema.validate.ContractSchemaValidateUtils
 
 import org.gradle.api.GradleException
 import org.yaml.snakeyaml.Yaml
@@ -172,39 +173,19 @@ class InterviewQuestionSchemaService {
     }
 
 
-    void validateQuestionFile(
-            File file
-    ) {
-
+    void validateQuestionFile(File file) {
         Object parsed
-
         try {
             parsed = new Yaml().load(file.getText('UTF-8'))
+        } catch (Exception error) {
+            throw new GradleException("Unable to parse Interview YAML: ${file.absolutePath}", error)
         }
-        catch (Exception exception) {
-            throw new GradleException(
-                    "Unable to parse Interview YAML: ${file.absolutePath}",
-                    exception
-            )
-        }
-
         if (!(parsed instanceof Map)) {
-            throw new GradleException(
-                    "Interview YAML root must be an object: ${file.absolutePath}"
-            )
+            throw new GradleException("Interview YAML root must be an object: ${file.absolutePath}")
         }
-
-        Map<String, Object> root = rootSchema()
-        String rootName = root.name?.toString()?.trim()
-
-        validateNamedNode(
-                (parsed as Map)[rootName],
-                root,
-                rootName,
-                (parsed as Map).containsKey(rootName)
-        )
+        ContractSchemaValidateUtils.validateData('interview', parsed,
+                ContractSchemaValidateUtils.LEGACY_QUESTION_LINKS)
     }
-
 
     private Map<String, Object> rootSchema() {
         return requireMap(
@@ -213,120 +194,6 @@ class InterviewQuestionSchemaService {
                         'Interview schema document must be an object.'
                 ).root,
                 'Interview schema document.root must be an object.'
-        )
-    }
-
-
-    private void validateNamedNode(
-            Object value,
-            Map<String, Object> nodeSchema,
-            String path,
-            boolean present
-    ) {
-
-        if (asBoolean(nodeSchema.required) && !present) {
-            throw new GradleException(
-                    "Interview schema validation failed: missing required field '${path}'."
-            )
-        }
-
-        if (!present) {
-            return
-        }
-
-        validateNode(value, nodeSchema, path)
-    }
-
-
-    private void validateNode(
-            Object value,
-            Map<String, Object> nodeSchema,
-            String path
-    ) {
-
-        String type = nodeSchema.type?.toString()?.trim()
-
-        switch (type) {
-            case 'string':
-                if (!(value instanceof String)) {
-                    failType(path, type, value)
-                }
-                if (asBoolean(nodeSchema.nonBlank) && value.toString().trim().isBlank()) {
-                    throw new GradleException(
-                            "Interview schema validation failed: '${path}' must not be blank."
-                    )
-                }
-                return
-
-            case 'boolean':
-                if (!(value instanceof Boolean)) {
-                    failType(path, type, value)
-                }
-                return
-
-            case 'object':
-                if (!(value instanceof Map)) {
-                    failType(path, type, value)
-                }
-
-                Map<String, Object> fields =
-                        requireMap(
-                                nodeSchema.fields,
-                                "Interview object schema '${path}' must define fields."
-                        )
-
-                fields.each {
-                    String fieldName,
-                    Object rawFieldSchema ->
-
-                    Map<String, Object> fieldSchema =
-                            requireMap(
-                                    rawFieldSchema,
-                                    "Interview schema field '${path}.${fieldName}' must be an object."
-                            )
-
-                    Map objectValue = value as Map
-                    validateNamedNode(
-                            objectValue[fieldName],
-                            fieldSchema,
-                            "${path}.${fieldName}",
-                            objectValue.containsKey(fieldName)
-                    )
-                }
-                return
-
-            case 'list':
-                if (!(value instanceof Collection)) {
-                    failType(path, type, value)
-                }
-
-                if (nodeSchema.item instanceof Map) {
-                    Map<String, Object> itemSchema = nodeSchema.item as Map<String, Object>
-                    (value as Collection).eachWithIndex {
-                        Object item,
-                        int index ->
-
-                        validateNode(item, itemSchema, "${path}[${index}]")
-                    }
-                }
-                return
-
-            default:
-                throw new GradleException(
-                        "Unsupported Interview schema type '${type}' at '${path}'."
-                )
-        }
-    }
-
-
-    private static void failType(
-            String path,
-            String expectedType,
-            Object value
-    ) {
-        String actualType = value == null ? 'null' : value.getClass().simpleName
-        throw new GradleException(
-                "Interview schema validation failed: '${path}' expected ${expectedType}, found ${actualType}."
         )
     }
 

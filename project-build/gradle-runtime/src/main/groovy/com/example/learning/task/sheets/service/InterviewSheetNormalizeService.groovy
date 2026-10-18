@@ -5,11 +5,16 @@ import com.google.api.services.sheets.v4.model.*
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 import org.gradle.api.GradleException
+import org.yaml.snakeyaml.DumperOptions
+import org.yaml.snakeyaml.LoaderOptions
+import org.yaml.snakeyaml.Yaml
+import org.yaml.snakeyaml.constructor.SafeConstructor
 
 /**
  * Deterministic Interview normalization on the SAME Google Sheet:
- * JSON question/answer -> JSON with default schema fields.
- * No AI, no YAML generation, no module filesystem writes.
+ * YAML question/answer -> YAML with canonical contract fields.
+ * Accepts old JSON Sheet cells for compatibility, but always emits YAML.
+ * No AI and no module filesystem writes.
  */
 class InterviewSheetNormalizeService {
     static final int CELL_LIMIT = 30000
@@ -61,10 +66,10 @@ class InterviewSheetNormalizeService {
             String filename = parent.filename as String
             String expectedFile = (index + 1) + '.' +
                     filename.substring(0, filename.length() - 3) + '/' + filename
-            Map normalized = normalizeJson(joinFragments(oldPieces, row), expectedFile, row)
+            Map normalized = normalizeYaml(joinFragments(oldPieces, row), expectedFile, row)
             questionCount += (normalized.questions as List).size()
             List<String> newPieces = splitFragments(
-                    JsonOutput.prettyPrint(JsonOutput.toJson(normalized)) + '\n', row
+                    renderYaml(normalized), row
             )
             if (oldPieces != newPieces) {
                 (19..22).each { int col ->
@@ -113,20 +118,24 @@ class InterviewSheetNormalizeService {
                                 '; write may have occurred.'
                 )
             }
-            normalizeJson(joinFragments(actual, row), update.file as String, row)
+            normalizeYaml(joinFragments(actual, row), update.file as String, row)
         }
         return report('NORMALIZED', context, groups.size(), populated,
                 updates.size(), populated - updates.size(), questionCount,
                 updates.size(), 'PASS')
     }
 
-    static Map normalizeJson(String raw, String file, int row = 0) {
+    static Map normalizeYaml(String raw, String file, int row = 0) {
         Object parsed
         try {
-            parsed = new JsonSlurper().parseText(raw)
+            // JSON authored by previous STEPs is compatible input; prefer
+            // its original parser to preserve JSON string escape semantics.
+            parsed = raw.trim().startsWith('{')
+                    ? new JsonSlurper().parseText(raw)
+                    : new Yaml(new SafeConstructor(new LoaderOptions())).load(raw)
         }
         catch (Exception e) {
-            throw new GradleException('Invalid Interview JSON row ' + row + ': ' + e.message, e)
+            throw new GradleException('Invalid Interview YAML/legacy JSON row ' + row + ': ' + e.message, e)
         }
         if (!(parsed instanceof Map) || (parsed as Map).keySet() != (['questions'] as Set) ||
                 !(parsed.questions instanceof List) || (parsed.questions as List).isEmpty()) {
@@ -162,6 +171,21 @@ class InterviewSheetNormalizeService {
             ])
         }
         return [questions: items]
+    }
+
+    /** Retain the old entry point for existing Gradle callers/tests. */
+    @Deprecated
+    static Map normalizeJson(String raw, String file, int row = 0) {
+        return normalizeYaml(raw, file, row)
+    }
+
+    static String renderYaml(Map normalized) {
+        DumperOptions options = new DumperOptions()
+        options.defaultFlowStyle = DumperOptions.FlowStyle.BLOCK
+        options.allowUnicode = true
+        options.indent = 2
+        options.width = 120
+        return new Yaml(options).dump(normalized)
     }
 
     private static boolean flag(Map item, String key, boolean fallback, String at) {
@@ -246,8 +270,9 @@ class InterviewSheetNormalizeService {
     }
 
     private static void checkHeader(Map<Integer, Map<Integer, CellData>> data) {
+        List<String> labels = (19..22).collect { string(data[18]?.get(it)) }
         if (string(data[17]?.get(19)) != 'Interview' ||
-                !(19..22).every { string(data[18]?.get(it)) == 'Interview JSON' } ||
+                !(labels.unique().size() == 1 && labels[0] in ['Interview YAML', 'Interview JSON']) ||
                 string(data[18]?.get(0)) != 'Menu Cấp 1' ||
                 string(data[18]?.get(1)) != 'Menu Cấp 2') {
             throw new GradleException('INTERVIEW SCHEMA: incorrect A/B/T:W headers.')

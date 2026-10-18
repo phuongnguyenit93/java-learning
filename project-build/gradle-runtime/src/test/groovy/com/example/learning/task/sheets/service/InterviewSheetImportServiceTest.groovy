@@ -26,7 +26,7 @@ class InterviewSheetImportServiceTest {
     ) {
         List<List<Object>> rows = [
                 ['Interview'],
-                ['Interview JSON', 'Interview JSON', 'Interview JSON', 'Interview JSON']
+                ['Interview YAML', 'Interview YAML', 'Interview YAML', 'Interview YAML']
         ]
         (20..24).each { int sheetRow ->
             rows.add(chapterFragments[sheetRow] ?: [])
@@ -70,6 +70,43 @@ class InterviewSheetImportServiceTest {
         Map decoded = new Yaml().load(yaml) as Map
         assertEquals(imported.questions, decoded.questions)
         assertTrue(yaml.contains('Tại sao OOP?'))
+    }
+
+    @Test
+    void importsAuthoredYamlAndPreservesMultilineMarkdownAnswers() {
+        String yaml = '''questions:
+  - question: Vì sao dùng encapsulation?
+    answer: |-
+      Bảo vệ **invariant** của đối tượng.
+
+      ```java
+      private int balance;
+      ```
+'''
+        Map imported = InterviewSheetImportService.collectQuestions(CHAPTERS,
+                rowsWith([20: [yaml]]))
+        assertEquals('READY', imported.status)
+        assertEquals(1, imported.chapterCount)
+        assertTrue(imported.questions[0].answer.contains('```java'))
+        assertEquals('1.OOPBasic/OOPBasic.md', imported.questions[0].readmeRelated.file)
+        assertEquals(imported.questions, new Yaml().load(
+                InterviewSheetImportService.renderYaml(imported.questions as List<Map>)).questions)
+    }
+
+    @Test
+    void acceptsLegacyJsonHeaderAndRejectsMixedHeaderLabels() {
+        List<List<Object>> legacy = rowsWith([
+                20: [JsonOutput.toJson([questions: [[question: 'Q', answer: 'A']]])]
+        ])
+        legacy[1] = ['Interview JSON', 'Interview JSON', 'Interview JSON', 'Interview JSON']
+        Map imported = InterviewSheetImportService.collectQuestions(CHAPTERS, legacy)
+        assertEquals('READY', imported.status)
+        assertEquals('Q', imported.questions[0].question)
+
+        legacy[1][3] = 'Interview YAML'
+        expectFailure('Interview headers') {
+            InterviewSheetImportService.collectQuestions(CHAPTERS, legacy)
+        }
     }
 
     @Test

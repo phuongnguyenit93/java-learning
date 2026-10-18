@@ -2,6 +2,7 @@ package com.example.learning.task.sheets.plugin
 
 import com.example.learning.task.sheets.extension.GenerateModuleContentFromSheetByLocationExtension
 import com.example.learning.task.sheets.task.GenerateModuleContentFromSheetByLocationTask
+import com.example.learning.task.sheets.task.FillIntroductionTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
@@ -55,6 +56,18 @@ class SheetsTaskPlugin
                     project.providers.gradleProperty('sheetMode').orElse('DRY_RUN')
             )
             task.importPart.convention('ALL')
+        }
+
+        project.tasks.register('fillIntroduction', FillIntroductionTask) { task ->
+            task.group = 'sheets'
+            task.description = 'Fill only content/readme/docs/vi/BASE.md from Sheet B17 (default DRY_RUN).'
+            task.sheetId.set(project.providers.gradleProperty('sheetID')
+                    .orElse(project.providers.gradleProperty('sheetId'))
+                    .orElse(extension.sheetId))
+            task.fileUrl.set(project.providers.gradleProperty('fileUrl')
+                    .orElse(project.providers.gradleProperty('sheetFileUrl'))
+                    .orElse(extension.fileUrl))
+            task.mode.convention(project.providers.gradleProperty('sheetMode').orElse('DRY_RUN'))
         }
 
         [

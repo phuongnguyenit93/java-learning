@@ -46,19 +46,35 @@ annotations have not yet been defined.
 Video Index/Script (published JSON projections, not the source YAML),
 API Docs, Module Catalog, Manifest, or `common.schema.json`.
 
-**Scope:** This plugin creates centralized samples only, and never edits module
-contents. Module Quiz and Interview generators and validators use the **same
-pinned Quiz/Interview/common JSON Schemas**, bundled into `gradle-runtime` at
-build time. Their legacy `question-schema.yml` resources were removed. The
-module-local `content/{quiz,interview}/{language}/question.yml` filenames and
-BUILD feature flags remain unchanged. On Gradle Sync, existing generated
-question comments are kept when their field descriptors and version are
-equivalent; cosmetic description/order changes alone do not rewrite authored
-module files. Required-field synchronization and structural schema changes
-still apply. Roadmap still uses its legacy authoring
-schema resource; converting that generator is a separate migration.
+**Scope:** This plugin creates centralized samples only and never edits module
+contents. Quiz and Interview validators use the **same pinned
+Quiz/Interview/common JSON Schemas**, bundled into `gradle-runtime` at build
+time. Their legacy `question-schema.yml` resources were removed.
+
+When `BUILD_QUIZ`, `BUILD_INTERVIEW`, or `BUILD_ROADMAP` is enabled, Gradle
+setup only ensures `content/quiz/`, `content/interview/`, or `content/roadmap/`
+exists. It does **not** create language folders, generate module `question.yml`
+or `roadmap.yml` skeletons, synchronize comments, or insert default fields in
+existing authored files. Sheet import/content authoring owns
+`content/{quiz,interview}/{language}/question.yml` and
+`content/roadmap/{language}/roadmap.yml`; Portal projection validates existing
+files and skips languages without one. BUILD flags and output filenames are
+unchanged. Roadmap importer comments (including localized thinking guidance)
+now come from `learning-contract/schemas/roadmap.schema.json` (`x-guidance` and
+`x-description`). The old `roadmap/roadmap-schema.yml` resource was removed.
 
 For backwards compatibility, module question validators still accept a
 file-only Knowledge relation (`readmeRelated.file` set and `anchor` empty), as
 emitted by the current Interview Sheet importer. The contract's stricter
 relation `anyOf` will require a separate content migration before enforcement.
+
+**Shared validation:** `utils/schema/ContractSchemaLoaderUtils` reads bundled
+JSON Schemas; `utils/schema/validate/ContractSchemaValidateUtils` checks both
+Draft 2020-12 schema definitions and authored/published data, and
+`SchemaExtensionValidateUtils` enforces the nonstandard `x-uniqueBy` keyword.
+Quiz/Interview use the explicit `LEGACY_QUESTION_LINKS` validation mode while
+the existing Sheet importer permits file-only Knowledge references; other
+documents use `STRICT`. Video uses separate `videoAuthoring` (YAML source)
+and `videoScript`/`videoIndex` (Portal JSON) contracts. Source-specific video
+timeline and chapter-order checks remain in `VideoYamlContentUtils`; they
+cannot be expressed solely through JSON Schema.

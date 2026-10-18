@@ -163,6 +163,73 @@ ${moduleRoot.absolutePath}
         )
     }
 
+    /**
+     * Prepare metadata for a Sheet README snapshot before replacing its files.
+     * Reuses the existing Knowledge anchor parser/defaults, preserving review
+     * and AI flags already present in the human-editable metadata file.
+     */
+    String prepareImportedMetadata(File moduleDirectory,
+                                   Map<String, String> documents,
+                                   Map<String, List<String>> difficulties) {
+        File destination = new File(moduleDirectory,
+                "content/readme/metadata/vi/${METADATA_FILE_NAME}")
+        Map existing = loadMap(destination)
+        Map next = new LinkedHashMap()
+        Set<String> allIds = new LinkedHashSet<>()
+        File menuDirectory = new File(moduleDirectory, 'content/readme/docs/vi/menu')
+        documents.each { String sourcePath, String markdown ->
+            Map oldFile = resolveOptionalMap(existing[sourcePath],
+                    "Invalid existing Knowledge metadata file: ${sourcePath}") ?: [:]
+            Map nextFile = new LinkedHashMap()
+            File virtualFile = new File(menuDirectory, sourcePath)
+            if (sourcePath.startsWith('/') || sourcePath.contains('\\') ||
+                    sourcePath.split('/').any { it in ['', '.', '..'] } ||
+                    !virtualFile.canonicalFile.toPath().startsWith(menuDirectory.canonicalFile.toPath())) {
+                throw new GradleException('Unsafe Knowledge source path: ' + sourcePath)
+            }
+            List<ReadmeKnowledgeParser.SectionCandidate> sections = parser.parse(virtualFile, markdown)
+                    .findAll { it.valid }
+            List<String> levels = difficulties[sourcePath] ?: []
+            if (levels.size() != sections.size()) {
+                throw new GradleException("Knowledge Difficulty/ID count mismatch: ${sourcePath}")
+            }
+            sections.eachWithIndex { ReadmeKnowledgeParser.SectionCandidate section, int i ->
+                if (!allIds.add(section.id)) {
+                    throw new GradleException('Duplicate Knowledge ID: ' + section.id)
+                }
+                Map old = resolveOptionalMap(oldFile[section.id],
+                        "Invalid Knowledge metadata entry: ${sourcePath}/${section.id}") ?: [:]
+                Map item = new LinkedHashMap(old)
+                String fromSheet = levels[i]?.trim()?.toUpperCase(Locale.ROOT)
+                if (fromSheet) {
+                    if (!ALLOWED_DIFFICULTIES.contains(fromSheet)) {
+                        throw new GradleException("Invalid Sheet Knowledge Difficulty at ${sourcePath}: ${fromSheet}")
+                    }
+                    item.difficulty = fromSheet
+                }
+                // Blank O keeps an existing human-edited difficulty or applies
+                // the existing BASIC default for new sections.
+                ensureRequiredFields(item, moduleDirectory.absolutePath, 'vi',
+                        sourcePath, section.id)
+                nextFile[section.id] = item
+            }
+            if (nextFile) next[sourcePath] = nextFile
+        }
+        return next.isEmpty() ? '{}\n' : writer.dump(next)
+    }
+
+    /** Call only after the corresponding README snapshot was applied. */
+    Map syncImportedMetadata(File moduleDirectory, String prepared, boolean apply) {
+        File output = new File(moduleDirectory,
+                "content/readme/metadata/vi/${METADATA_FILE_NAME}")
+        if (output.isFile() && output.getText('UTF-8') == prepared) {
+            return [status: 'UNCHANGED', file: output]
+        }
+        if (!apply) return [status: 'DRY_RUN', file: output]
+        boolean changed = writeSafelyIfChanged(output, prepared)
+        return [status: changed ? 'UPDATED' : 'UNCHANGED', file: output]
+    }
+
 
     private WritePlan buildWritePlan(
             Project moduleProject,
@@ -358,6 +425,16 @@ ${candidate.id}
             String sourcePath,
             String sectionId
     ) {
+        ensureRequiredFields(section, moduleProject.path, language, sourcePath, sectionId)
+    }
+
+    private static void ensureRequiredFields(
+            Map<String, Object> section,
+            String modulePath,
+            String language,
+            String sourcePath,
+            String sectionId
+    ) {
 
         Object difficultyValue =
                 section[
@@ -393,7 +470,7 @@ ${candidate.id}
 Invalid README knowledge difficulty.
 
 Module:
-${moduleProject.path}
+${modulePath}
 
 Language:
 ${language}
@@ -452,7 +529,7 @@ Existing human-owned values are not overwritten automatically.
         validateBooleanField(
                 section,
                 'aiGenerated',
-                moduleProject,
+                modulePath,
                 language,
                 sourcePath,
                 sectionId
@@ -462,7 +539,7 @@ Existing human-owned values are not overwritten automatically.
         validateBooleanField(
                 section,
                 'reviewed',
-                moduleProject,
+                modulePath,
                 language,
                 sourcePath,
                 sectionId
@@ -473,7 +550,7 @@ Existing human-owned values are not overwritten automatically.
     private static void validateBooleanField(
             Map<String, Object> section,
             String field,
-            Project moduleProject,
+            String modulePath,
             String language,
             String sourcePath,
             String sectionId
@@ -495,7 +572,7 @@ Existing human-owned values are not overwritten automatically.
 Invalid README knowledge boolean metadata.
 
 Module:
-${moduleProject.path}
+${modulePath}
 
 Language:
 ${language}

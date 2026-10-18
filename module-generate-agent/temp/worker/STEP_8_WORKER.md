@@ -1,6 +1,6 @@
-# STEP 7 — WORKER ONLY: Một chương, một Video Script YAML
+# STEP 8 — WORKER ONLY: Một chương, một Video Script YAML
 
-> Chỉ dành cho worker. Prime điều phối trong STEP_7.md; bạn chỉ đọc TOÀN VĂN file này. Prime gửi link tab, tọa độ nguồn và **vùng P:S tại đúng hàng Menu Cấp 1** cùng đường dẫn file worker. Không chia hai pha.
+> Chỉ dành cho worker. Prime điều phối trong STEP_8.md; bạn chỉ đọc TOÀN VĂN file này. Prime gửi link tab, tọa độ nguồn và **vùng P:S tại đúng hàng Menu Cấp 1** cùng đường dẫn file worker. Không chia hai pha.
 
 ## PHẦN RIÊNG DÀNH CHO WORKER
 
@@ -64,6 +64,8 @@ Ví dụ chỉ minh họa cấu trúc: thay toàn bộ tên, lời thoại, ví 
 - `video.url: ""` khi chưa xuất bản, không bịa URL. Không thêm metadata Knowledge/API trong file này.
 - **Script** là lời thoại nói tự nhiên, không đọc nguyên Knowledge; **Visual** mô tả hình/thao tác/dữ liệu có thể quay; **Purpose** nêu mục tiêu sư phạm. Không bịa hành vi Java/runtime/API; không để TODO, placeholder, field rỗng. Không xuất YAML sang module; chỉ ghi Sheet.
 
+**QA chất lượng tương đương README nhưng giữ đúng bản chất Video:** với mọi Java code, lệnh, API, thuật ngữ, dữ liệu mẫu hoặc stdout được nhắc trong `script`/`visual`, tự kiểm tra tính đúng theo phiên bản/ngữ cảnh, tên class/method, cơ chế và kết quả thực tế; phân biệt code giả lập với chương trình runnable. Giải thích có nguyên nhân, điều kiện, giới hạn và tình huống áp dụng khi hữu ích. Với Markdown/code fence được nhúng trong YAML block `|-`, giữ cú pháp và thụt lề hợp lệ, code fence cân bằng. **Không** biến lời thoại thành README chép lại, không ép heading/bảng/code cho mọi Scene; `visual` là những thứ có thể hiện lên màn hình, `script` là lời người xem nghe được.
+
 ### W3 — Soạn → kiểm tra → ghi → đọc lại
 
 1. Đọc toàn bộ Knowledge, soạn đầy đủ một YAML cho cả chương rồi kiểm tra syntax, `title`, các section, Scene/Transition, field và timeline. Không chia pha hoặc chờ duyệt số Scene.
@@ -71,7 +73,7 @@ Ví dụ chỉ minh họa cấu trúc: thay toàn bộ tên, lời thoại, ví 
 3. Nếu hơn bốn ô: `BLOCKER: VIDEO CAPACITY`, nêu tổng số Unicode và số ô cần; không ghi một phần hoặc tự mở cột T trở đi.
 4. Trước bất kỳ write, đọc lại `A<PARENT>`, `B<PARENT>` và toàn bộ P:S để kiểm tra `userEnteredValue/formula`, `effectiveValue`, `formattedValue`, `note`, `dataValidation`, `chipRuns`. Nếu có dữ liệu hoặc nguồn đổi, báo `BLOCKER: TARGET OCCUPIED / SOURCE CHANGED`. Header P19:S19 do Prime kiểm tra; worker không tự đọc ô ngoài phạm vi.
 5. Ghi chỉ fragment vào P:S hàng cha; không đổi định dạng/notes/validation. Nếu write lỗi hoặc không rõ kết quả, kiểm tra thực tế, không retry ghi đè.
-6. Readback **từng ô** P:S, nối không separator và so khớp chính xác với YAML gốc. QA độc lập thêm một lần sau readback, gồm độ đúng sư phạm, code Java, tính liên tục và tính hợp lệ của YAML. Chỉ `COMPLETED` nếu cả READBACK và QA PASS.
+6. Readback **từng ô** P:S, nối không separator và so khớp chính xác với YAML gốc. QA độc lập thêm một lần sau readback, gồm độ đúng sư phạm, **code Java/API/đầu ra và Markdown nhúng như README**, tính liên tục thời gian, YAML và tính tự nhiên của lời thoại. Chỉ `COMPLETED` nếu cả READBACK và QA PASS.
 7. Nếu lỗi/partial write/mismatch, báo đúng tình trạng/ô và BLOCKER, không sửa dữ liệu lạ.
 
 ### W4 — Báo cáo và SLEEPING

@@ -107,22 +107,6 @@ class QuestionContractSchemaUtilsTest {
         expectInvalid { QuestionContractSchemaUtils.load('unknown') }
     }
 
-    @Test
-    void keepsExistingCommentsForCosmeticChangesButDetectsStructuralChanges() {
-        String initial = new QuizQuestionSchemaService().renderCommentBlock('vi')
-        String cosmetic = initial.replace('Cấu trúc câu hỏi Quiz', 'Mô tả cũ trong module')
-        cosmetic = cosmetic.replace('ID ổn định và duy nhất của câu hỏi.',
-                'ID câu hỏi được mô tả theo cách cũ.')
-        assertTrue(QuestionContractSchemaUtils.hasEquivalentCommentStructure(
-                cosmetic, initial, '# <quiz-schema>', '# </quiz-schema>'))
-        String structural = initial.replace('questions [kiểu: list; bắt buộc;',
-                'questions [kiểu: list; tùy chọn;')
-        assertFalse(QuestionContractSchemaUtils.hasEquivalentCommentStructure(
-                structural, initial, '# <quiz-schema>', '# </quiz-schema>'))
-        assertFalse(QuestionContractSchemaUtils.hasEquivalentCommentStructure(
-                'questions: []', initial, '# <quiz-schema>', '# </quiz-schema>'))
-    }
-
     private static void expectInvalid(Closure work) {
         try {
             work.call()

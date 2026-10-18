@@ -30,7 +30,9 @@ class VideoYamlContentUtils {
             throw new GradleException('Video Script YAML must be a mapping.')
         }
         Map doc = parsed as Map
-        requireKeys(doc, ['title', 'video', 'sections'], 'Video document')
+        // Structural rules are owned by the source-authoring contract. This
+        // is deliberately NOT the published Portal video-script schema.
+        ContractSchemaValidateUtils.validateData('videoAuthoring', doc)
         String title = requiredText(doc.title, 'Video title')
         if (expectedTitle != null && title != expectedTitle) {
             throw new GradleException("Video title '${title}' does not match Menu Cấp 1 '${expectedTitle}'.")
@@ -38,7 +40,6 @@ class VideoYamlContentUtils {
         if (!(doc.video instanceof Map)) {
             throw new GradleException('Video publication metadata must be a mapping.')
         }
-        requireKeys(doc.video as Map, ['url'], 'Video publication metadata')
         if (!(doc.video.url instanceof String)) {
             throw new GradleException('Video video.url must be a string (empty until published).')
         }
@@ -55,7 +56,6 @@ class VideoYamlContentUtils {
                 throw new GradleException("Video section ${sectionIndex + 1} must be a mapping.")
             }
             Map section = rawSection as Map
-            requireKeys(section, ['title', 'items'], "Video section ${sectionIndex + 1}")
             String heading = requiredText(section.title, "Section ${sectionIndex + 1} title")
             sectionNames.add(heading)
             if (!(section.items instanceof List) || (section.items as List).isEmpty()) {
@@ -67,8 +67,6 @@ class VideoYamlContentUtils {
                     throw new GradleException("Video item ${itemIndex + 1} in '${heading}' must be a mapping.")
                 }
                 Map item = rawItem as Map
-                requireKeys(item, ['type', 'title', 'time', 'visual', 'script', 'purpose'],
-                        "Video item ${itemIndex + 1}")
                 String type = requiredText(item.type, 'Video item type')
                 if (!(type in ['SCENE', 'TRANSITION'])) {
                     throw new GradleException("Invalid Video item type: ${type}")
@@ -142,9 +140,4 @@ class VideoYamlContentUtils {
         return value as String
     }
 
-    private static void requireKeys(Map map, List<String> allowed, String label) {
-        if (map.keySet().any { Object key -> !(key in allowed) }) {
-            throw new GradleException("${label} contains unsupported fields: ${map.keySet() - allowed}.")
-        }
-    }
 }

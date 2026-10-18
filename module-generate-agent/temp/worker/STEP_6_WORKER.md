@@ -1,48 +1,53 @@
-# STEP 6 — WORKER ONLY: Viết Interview JSON cho MỘT chương
+# STEP 6 — WORKER ONLY: Interview YAML cho MỘT chương
 
-> **BẮT BUỘC tự đọc TOÀN VĂN đúng file `/java-learning/module-generate-agent/temp/worker/STEP_6_WORKER.md` này trước khi thực hiện**; đọc lại nếu context bị rút gọn. Đây là tài liệu nhiệm vụ duy nhất cho worker. Không đọc STEP_6.md (Prime-only), STEP khác, GENERAL/rules/TXT, source repo hoặc lịch sử chat để lấy nội dung thay cho Google Sheets. Prime chỉ gửi link tab, tọa độ nguồn và đúng bốn ô đích.
+> **BẮT BUỘC tự đọc TOÀN VĂN file worker-only này.** Không đọc file Prime, STEP khác, GENERAL/rules/TXT, source repo hoặc lịch sử chat để thay nguồn Google Sheets. Prime chỉ gửi link tab, tọa độ nguồn, vùng T:W được ghi và đường dẫn file này.
 
 ## W1 — Nguồn và quyền ghi
 
-1. **Một nhiệm vụ = một Menu Cấp 1 và tất cả Menu Cấp 2 thuộc chương đó.** Trên đúng tab/gid, chỉ đọc các tọa độ Prime giao: `A1`, `B1`, **A/B hàng cha**, tiêu đề `B` các hàng con, **toàn bộ Knowledge `C:N` trên từng hàng con**, Difficulty `O` hàng con nếu được giao. **Ghép C→N không separator theo từng hàng**, đọc hết mọi bài, không suy từ tiêu đề hoặc tóm tắt.
-2. **Chỉ được ghi vào `T<PARENT_ROW>:W<PARENT_ROW>` của hàng Menu Cấp 1** đã giao. Tối đa 4 ô, mỗi ô tối đa 30.000 ký tự Unicode. Không ghi Interview trên các hàng con, không sửa A:S, X trở đi, header, Template, J3, tab/module/source khác. Không spawn worker, không commit/push.
-3. `A<PARENT_ROW>` là chủ đề chương; `B<PARENT_ROW>` là filename có sẵn, **chỉ đọc**. Header và quyền sở hữu đã được Prime kiểm tra; worker phải báo `BLOCKER` nếu thiếu nguồn, dữ liệu sai, quyền ghi không rõ hoặc mục không thuộc chương.
+1. Một nhiệm vụ = một Menu Cấp 1 và mọi Menu Cấp 2 của chương đó. Chỉ đọc `A1`, `B1`, A/B hàng cha, tên B và **toàn bộ Knowledge C:N** trên từng hàng con được Prime giao; Difficulty O chỉ đọc nếu được giao. Ghép Knowledge **C→N không thêm separator**, đọc toàn văn từng bài chứ không chỉ tiêu đề.
+2. **Chỉ ghi `T<PARENT_ROW>:W<PARENT_ROW>` ở hàng cha**; tối đa bốn ô × 30.000 Unicode code points/ô. Không ghi hàng con, không sửa A:S/X+, J3, Template, tab khác hay source/module. Không spawn worker hoặc commit/push.
+3. A cha là chủ đề phỏng vấn, B cha là filename Knowledge `.md` (chỉ đọc). Nếu nguồn thiếu, hàng con lạc chương, filename/headers sai hoặc vùng ghi không an toàn, báo BLOCKER, không suy đoán.
 
-## W2 — Viết câu hỏi có giá trị sử dụng thực tế
+## W2 — Nội dung và chất lượng câu trả lời
 
-**Nhiệm vụ nội dung rất đơn giản:** thiết kế các **câu hỏi và câu trả lời có thể dùng trong phỏng vấn**, hoặc **câu hỏi giúp người học hệ thống lại kiến thức** của chương.
+- Tạo các câu hỏi **có giá trị phỏng vấn hoặc ôn tập thực tế**: giải thích cơ chế, vận dụng, so sánh, đánh giá trade-off, debug tình huống, hiểu giới hạn và lựa chọn giải pháp. Không trivia, đánh đố hoặc ép số lượng cố định để đủ quota.
+- Trả lời **đúng kỹ thuật, đủ để người học tự hiểu**, gắn với Knowledge C:N đã đọc; nêu *vì sao/khi nào*, điều kiện và ngoại lệ quan trọng; không bịa hành vi Java/framework/API. Các câu hỏi bao phủ các ý quan trọng của chương mà không lặp nhau hoặc sao chép nguyên văn bài README.
+- **Format nội dung `answer` theo chuẩn trình bày README Markdown khi hữu ích**: chia đoạn rõ ràng, dùng danh sách/bảng/code fence có nhãn `java`, `bash`, `text`, ...; code phải hợp lệ với ngữ cảnh, nêu đầu vào và output chính xác nếu minh họa runnable. Mermaid chỉ khi cần, cân bằng code fence và heading; không ép mọi đáp án cùng khuôn/hệ thống heading. Câu ngắn vẫn có thể là một đoạn. Không chèn lời nhắn cho Prime, TODO hoặc placeholder.
+- Markdown nằm **bên trong chuỗi YAML `answer`**, không phải một bài README khác và không phải JSON. Dùng YAML literal block `|-` cho câu trả lời nhiều dòng; thụt lề và newline phải đúng. Ví dụ ngắn dạng quoted scalar cũng hợp lệ.
 
-- **Ưu tiên tính thực tế:** người học hiểu, giải thích, áp dụng, so sánh, chọn giải pháp, nhận biết lỗi phổ biến hoặc đánh giá tình huống thật. Câu trả lời phải đúng kỹ thuật, rõ ràng, tự đứng được và phù hợp với Knowledge đã đọc.
-- **Không tạo câu hỏi quá vụn vặt hoặc hỏi những chi tiết hiếm gặp, không có giá trị áp dụng/phỏng vấn/ôn tập** chỉ để đủ số lượng. Không ra câu hỏi đánh đố, bắt nhớ tên nội bộ, số liệu/phiên bản kỳ lạ hay chi tiết triển khai không liên quan.
-- Chọn số lượng câu hỏi **theo lượng kiến thức có ích**, không có quota tối thiểu/cố định cho mỗi bài. Bao quát các ý quan trọng của chương, tránh lặp câu hỏi và tránh lặp nguyên văn câu trả lời từ bài học. Không tự thêm nội dung ngoài phạm vi đã đọc, không bịa API hay giả định kỹ thuật.
+## W3 — Định dạng YAML duy nhất
 
-## W3 — Định dạng JSON duy nhất
+Soạn **MỘT tài liệu YAML hợp lệ** (không bọc Markdown fence toàn tài liệu, không thêm lời dẫn), đúng cấu trúc:
 
-Soạn **MỘT chuỗi JSON hợp lệ** (không Markdown fence, không lời dẫn, không YAML), chính xác dạng:
+```yaml
+questions:
+  - question: "Khi nào nên ưu tiên composition thay cho inheritance?"
+    answer: |-
+      Ưu tiên **composition** khi cần thay đổi hành vi linh hoạt mà không tạo
+      cây kế thừa cứng. Đánh giá theo quan hệ giữa các đối tượng và khả năng
+      mở rộng/thay đổi độc lập.
 
-```json
-{
-  "questions": [
-    {
-      "question": "Khi nào nên ưu tiên composition thay cho inheritance?",
-      "answer": "Ưu tiên composition khi cần thay đổi hoặc kết hợp hành vi linh hoạt mà không tạo cây kế thừa cứng; đánh giá dựa trên quan hệ thực tế giữa các đối tượng."
-    }
-  ]
-}
+      Ví dụ: đối tượng nhận dependency qua constructor thay vì kế thừa lớp
+      chỉ để tái sử dụng một hành vi.
+  - question: "Encapsulation bảo vệ điều gì?"
+    answer: |-
+      Bảo vệ **invariant** bằng cách kiểm soát nơi trạng thái được thay đổi.
 ```
 
-**Đây là ví dụ định dạng, không phải câu hỏi bắt buộc hay câu trả lời phải sao chép.**
+Ví dụ trên **chỉ minh họa định dạng**, không phải nội dung cần sao chép.
 
-- Root chỉ có **`questions` là một JSON array không rỗng**. Mỗi phần tử chỉ có **hai trường `question` và `answer`**, đều là chuỗi không blank. Không sinh `aiGenerated`, `reviewed`, `readmeRelated`, `apiRelated`, `difficulty` hay metadata khác ở STEP 6. Không dùng JSONL, không tách một câu hỏi thành nhiều item không đồng bộ.
-- JSON phải **parse được**: escape dấu nháy kép, backslash, newline trong string đúng JSON; không có comment, trailing comma hoặc placeholder. Phần tự động parse, bổ sung default/related rồi ghi lại Sheet được thực hiện trong **bước code riêng sau này**, không thuộc quyền worker.
+- Root chỉ có `questions` là **danh sách không rỗng**. Mỗi phần tử **chỉ có `question` và `answer`**, đều là YAML string không blank. Không sinh `aiGenerated`, `reviewed`, `readmeRelated`, `apiRelated`, `difficulty` hay metadata khác. Các field này do code Normalize thêm sau khi Prime QA toàn tab.
+- Không dùng JSON, JSONL, YAML nhiều document (`---` lặp lại), alias/anchor YAML, custom tag hoặc comments xen vào dữ liệu. Quote giá trị chứa dấu `:`/ký tự đặc biệt hoặc dùng `|-` cho multiline; không để parser tự chuyển câu trả lời thành map/list/boolean.
+- Mỗi câu trả lời có thể chứa Markdown, Java code fence, bảng hoặc xuống dòng, **nhưng toàn bộ nội dung phải nằm trong scalar `answer`**. Sau khi YAML parse, phải còn đúng chuỗi Markdown/whitespace đã soạn.
 
-## W4 — Preflight, ghi và đọc lại
+## W4 — Soạn, preflight, ghi và exact readback
 
-1. **Soạn và tự QA toàn bộ JSON trước bất kỳ write nào.** Kiểm tra cú pháp, mọi cặp question/answer đầy đủ và có ý nghĩa, không trùng, không lan sang ngoài chương. Đếm Unicode code points, chia thành **tối đa 4 đoạn liên tiếp** (mỗi đoạn ≤30.000 ký tự), ghi theo thứ tự **T→U→V→W trên CÙNG một hàng cha**. **Nối không separator phải trả về nguyên 100% chuỗi JSON gốc**, kể cả Unicode/newline; không cắt surrogate pair. Nếu >4 ô: `BLOCKER: INTERVIEW CAPACITY`, không rút nội dung để vượt blocker, không ghi một phần, không sang X/hàng khác.
-2. **Ngay trước khi ghi**, đọc lại **toàn bộ bốn ô T:W đích kể cả ô chưa dùng**: `userEnteredValue`/formula, `effectiveValue`, `formattedValue`, `note`, `dataValidation`, `chipRuns`; ô đích phải trống hoàn toàn và không có worker khác sở hữu. Đọc lại A/B cha và các nguồn giao để xác minh không thay đổi. Có ô bị chiếm/nguồn đổi → `BLOCKER: TARGET OCCUPIED / SOURCE CHANGED`, không overwrite hoặc ghi một phần.
-3. Ghi **chỉ các mảnh JSON vào T:W của hàng cha**, bằng value text thông thường, không biến JSON thành công thức và không thay đổi format/notes/validation. Nếu write trả lỗi/không rõ kết quả, **đọc lại trạng thái thực trước khi quyết định**, không retry mù.
-4. **Exact readback từng ô trong cả T:W**: các ô đã ghi khớp từng đoạn, ô đuôi vẫn rỗng; ghép T→W không separator so khớp **100% Unicode/whitespace/newline** với JSON gốc. Parse lại JSON đã đọc về, kiểm tra root `questions`, từng `question`/`answer` không blank và không có field khác. Chỉ `COMPLETED` khi readback và QA đều PASS.
+1. Soạn và QA **toàn bộ** YAML trước khi ghi. Kiểm tra YAML parser, root `questions`, từng string question/answer, Markdown và code fence trong answer, tính chính xác và không trùng câu hỏi. Không tự thêm mặc định/related.
+2. Nếu YAML dài hơn **120.000 Unicode code points**, báo `BLOCKER: INTERVIEW CAPACITY`, không cắt bớt nội dung, không mượn cột X/hàng khác. Ngược lại chia thành tối đa bốn đoạn liên tục ≤30.000 code points, ghi T→U→V→W trên **cùng hàng cha**, không cắt giữa surrogate pair. Nối không separator phải tái lập chính xác 100% YAML gốc.
+3. Trước bất kỳ write, đọc lại cả T:W: `userEnteredValue/formula`, `effectiveValue`, `formattedValue`, `note`, `dataValidation`, `chipRuns`. Ô đích phải trống/an toàn, không ai khác sở hữu; A/B cha và mọi nguồn giao vẫn nguyên. Nếu bị chiếm/thay đổi: `BLOCKER: TARGET OCCUPIED / SOURCE CHANGED`, không overwrite hoặc ghi một phần.
+4. Chỉ ghi mảnh YAML vào T:W bằng text value, không đổi format/notes/validation. Lỗi hoặc kết quả write không rõ → đọc trạng thái thật trước, không retry mù.
+5. Exact readback tất cả bốn ô, kiểm tra ô đuôi rỗng, ghép T→W không separator và so khớp **100% Unicode/whitespace/newline**; parse YAML đã đọc lại, QA cặp question/answer và Markdown code fence. Chỉ `COMPLETED` nếu mọi phép kiểm tra PASS.
 
 ## W5 — Báo Prime và SLEEPING
 
-Báo một lần: `STATUS=COMPLETED/BLOCKER/FAILED`, tab/gid, `PARENT_CELL`, `CHILD_ROWS`, `READ_COVERAGE`, `OUTPUT_RANGE_T_TO_W`, `QUESTION_COUNT`, `TOTAL_UNICODE_CHARS`, `FILLED_CELLS`, `PREFLIGHT`, `JSON_PARSE`, `READBACK=PASS/FAIL`, `CONTENT_QA=PASS/FAIL`, `PRESERVATION`, `BLOCKERS`. Chỉ báo COMPLETED nếu mọi điều kiện đều PASS. Xong chuyển **SLEEPING**, không tự nhận chương khác, không chạy STEP 7 và không cập nhật J3.
+Báo một lần: `STATUS=COMPLETED/BLOCKER/FAILED`, tab/gid, `PARENT_CELL`, `CHILD_ROWS`, `READ_COVERAGE`, `OUTPUT_RANGE_T_TO_W`, `QUESTION_COUNT`, `TOTAL_UNICODE_CHARS`, `FILLED_CELLS`, `PREFLIGHT`, `YAML_PARSE=PASS/FAIL`, `ANSWER_MARKDOWN_QA=PASS/FAIL`, `READBACK=PASS/FAIL`, `CONTENT_QA=PASS/FAIL`, `PRESERVATION`, `BLOCKERS`. Sau đó chuyển **SLEEPING**; không tự chạy Normalize, import, STEP 8 hay cập nhật J3.

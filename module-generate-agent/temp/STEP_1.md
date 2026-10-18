@@ -84,7 +84,7 @@ Quy tắc tích hợp vào quy trình STEP 1 ở trên:
 
 ## Nguyên tắc an toàn
 
-**Vùng Interview của Template mới:** Template chuẩn cho bước Generate Interview có thêm **4 cột T:W** (tổng ít nhất 23 cột), `T18 = Interview` và `T19:W19 = Interview JSON`. STEP 1 khi clone **phải giữ nguyên** bốn cột và header này nếu Template nguồn có sẵn, và phạm vi CLIP 700 hàng phải bao gồm đến cột W. **Không tự sửa Template/tab cũ trong STEP 1**; nếu Template của spreadsheet khác chưa có T:W, STEP 1 vẫn có thể clone như hiện trạng nhưng phải báo `INTERVIEW_SCHEMA=NOT_CONFIGURED` để STEP 6 không nhầm rằng tab mới đã có vùng Interview. Không gán nội dung/JSON vào bốn cột tại STEP 1.
+**Vùng Interview của Template mới:** Template chuẩn cho bước Generate Interview có thêm **4 cột T:W** (tổng ít nhất 23 cột), `T18 = Interview` và `T19:W19 = Interview YAML`. STEP 1 khi clone **phải giữ nguyên** bốn cột và header này nếu Template nguồn có sẵn, và phạm vi CLIP 700 hàng phải bao gồm đến cột W. **Không tự sửa Template/tab cũ trong STEP 1**; nếu Template của spreadsheet khác chưa có T:W, STEP 1 vẫn có thể clone như hiện trạng nhưng phải báo `INTERVIEW_SCHEMA=NOT_CONFIGURED` để STEP 6 không nhầm rằng tab mới đã có vùng Interview. Không gán nội dung/YAML vào bốn cột tại STEP 1.
 
 - **Duplicate tab, không duplicate toàn bộ spreadsheet** và không tạo file Google Sheets mới.
 - Không đổi tên, di chuyển, xóa hoặc chỉnh sửa tab nguồn `Template`.

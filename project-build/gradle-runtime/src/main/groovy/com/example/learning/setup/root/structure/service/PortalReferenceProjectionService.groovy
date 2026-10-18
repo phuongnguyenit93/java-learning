@@ -1,5 +1,6 @@
 package com.example.learning.setup.root.structure.service
 
+import com.example.learning.utils.schema.validate.ContractSchemaValidateUtils
 import com.example.learning.utils.GradleBuildUtils
 import com.example.learning.utils.ProjectPropertyUtils
 import org.gradle.api.GradleException
@@ -204,6 +205,8 @@ class PortalReferenceProjectionService {
 
         List references =
                 referencesValue as List
+
+        ContractSchemaValidateUtils.validateData('reference', document)
 
 
         references.eachWithIndex {

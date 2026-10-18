@@ -87,9 +87,10 @@ abstract class GenerateModuleContentFromSheetByLocationTask
         }
         else {
             logger.lifecycle(
-                    '[SHEETS-README] {}: groups={}, lessons={}, cleared-old-files={}, directory={}',
+                    '[SHEETS-README] {}: groups={}, lessons={}, cleared-old-files={}, directory={}, metadata-status={}, metadata-file={}',
                     readme.status, readme.groups, readme.lessons,
-                    readme.clearedOldFiles ?: 0, readme.directory
+                    readme.clearedOldFiles ?: 0, readme.directory,
+                    readme.metadataStatus ?: 'N/A', readme.metadataFile ?: 'N/A'
             )
         }
         Map video = result.video as Map

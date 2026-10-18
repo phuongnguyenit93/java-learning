@@ -3,11 +3,44 @@ package com.example.learning.task.sheets.service
 import groovy.json.JsonOutput
 import org.gradle.api.GradleException
 import org.junit.Test
+import org.yaml.snakeyaml.Yaml
 
 import static org.junit.Assert.*
 
 class InterviewSheetNormalizeServiceTest {
     private static final String FILE = '1.OOPBasic/OOPBasic.md'
+
+    @Test
+    void authoredYamlPreservesMarkdownAnswersAndNormalizesDeterministically() {
+        String source = '''questions:
+  - question: "Composition khác inheritance thế nào?"
+    answer: |-
+      **Composition** tổ hợp hành vi qua các object.
+
+      ```java
+      class Engine {}
+      ```
+  - question: "Khi nào dùng interface?"
+    answer: "Khi cần hợp đồng hành vi rõ ràng."
+'''
+        Map normalized = InterviewSheetNormalizeService.normalizeYaml(source, FILE, 20)
+        assertEquals(2, normalized.questions.size())
+        assertTrue(normalized.questions[0].answer.contains('```java'))
+        assertEquals([file: FILE, anchor: ''], normalized.questions[0].readmeRelated)
+        String yaml = InterviewSheetNormalizeService.renderYaml(normalized)
+        assertEquals(normalized, new Yaml().load(yaml))
+        assertEquals(yaml, InterviewSheetNormalizeService.renderYaml(
+                InterviewSheetNormalizeService.normalizeYaml(yaml, FILE, 20)))
+        assertFalse(yaml.trim().startsWith('{'))
+    }
+
+    @Test
+    void legacyJsonIsReadButNormalizedOutputIsYaml() {
+        String json = JsonOutput.toJson([questions: [[question: 'Q', answer: 'A']]])
+        Map normalized = InterviewSheetNormalizeService.normalizeYaml(json, FILE, 20)
+        assertEquals('Q', normalized.questions[0].question)
+        assertTrue(InterviewSheetNormalizeService.renderYaml(normalized).startsWith('questions:'))
+    }
 
     @Test
     void rawQuestionAnswerGetsCanonicalDefaults() {

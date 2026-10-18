@@ -1,6 +1,7 @@
 package com.example.learning.setup.root.structure.service
 
 import com.example.learning.utils.schema.validate.VideoYamlContentUtils
+import com.example.learning.utils.schema.validate.ContractSchemaValidateUtils
 import com.example.learning.utils.ProjectPropertyUtils
 import com.example.learning.utils.GradleBuildUtils
 import groovy.json.JsonOutput
@@ -103,6 +104,7 @@ class PortalVideoProjectionService {
                             video     : document.video,
                             sections  : document.sections
                     ]
+                    ContractSchemaValidateUtils.validateData('videoScript', scriptProjection)
                     putJsonOutput(outputs, contentOutputPath, scriptProjection)
                     indexItems.add([
                             categoryId     : categoryId,
@@ -115,10 +117,12 @@ class PortalVideoProjectionService {
                             transitionCount: document.transitions
                     ])
                 }
-                putJsonOutput(outputs, "${routeId}/video/${language}/index.json", [
+                Map indexProjection = [
                         version: 1, moduleId: routeId, language: language,
                         videoCount: indexItems.size(), items: indexItems
-                ])
+                ]
+                ContractSchemaValidateUtils.validateData('videoIndex', indexProjection)
+                putJsonOutput(outputs, "${routeId}/video/${language}/index.json", indexProjection)
             }
             if (anyVideo && !routes.add(routeId)) {
                 throw new GradleException("Duplicate Portal Video route identifier: ${routeId}")

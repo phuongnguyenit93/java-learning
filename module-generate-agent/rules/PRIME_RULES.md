@@ -2,6 +2,22 @@
 
 Áp dụng cho Prime khi điều phối bất kỳ STEP nào của `module-generate-agent/temp/`. Đây là một phần của bộ quy định chung trong `module-generate-agent/rules/`, không phải file STEP. Prime phải đọc toàn bộ các file hiện có trong thư mục `rules/` cùng `module-generate-agent/temp/GENERAL_AGENT_RULES.md` và file STEP hiện hành **trước mỗi STEP**; nếu context không còn đầy đủ hoặc không chắc chắn, phải đọc lại theo General Rules.
 
+## 0. Worker modes — chỉ áp dụng trong session được đính kèm mode
+
+Khi người dùng đính kèm **Mode A**, **Mode B** hoặc **Mode C** trong prompt của một session, Prime áp dụng giới hạn tổng worker `ACTIVE` + `SLEEPING` tương ứng:
+
+| Mode | Giới hạn pool |
+| --- | --- |
+| **Mode A** | **Max 3 worker** |
+| **Mode B** | **Max 6 worker** |
+| **Mode C** | **Max 8 worker** |
+
+- Không chỉ định mode → **mặc định Mode A = 3**. Đây là giới hạn tối đa, không phải yêu cầu spawn đủ số; một STEP có thể giới hạn số worker thực thi cho một tab/chương thấp hơn.
+- Mode chỉ hiệu lực **trong session hiện tại đã nhận prompt đó**; không ghi mode thành cấu hình mặc định, không tự mang sang session/chat/STEP độc lập khác. Nếu context bị compact, chỉ tiếp tục mode có bằng chứng trong chính session hiện tại.
+- Nếu một prompt chứa các mode mâu thuẫn, báo `BLOCKER: WORKER MODE CONFLICT`, không tự chọn mode cao nhất. Prime theo dõi và báo `SESSION_WORKER_MODE`, `MAX_WORKERS`.
+- Vẫn **ưu tiên tái sử dụng worker SLEEPING**, không spawn khi còn worker SLEEPING, không vượt quyền sở hữu vùng ghi. Worker `FAILED`/`FINISHED` không thể tái sử dụng không tính vào pool.
+- Mọi giới hạn “mặc định 3” ở `GENERAL_AGENT_RULES.md` hoặc các file STEP phải được hiểu theo mode của **session hiện hành**; Mode B/C được chỉ định có ưu tiên hơn hạn mức mặc định, không được áp dụng Mode B/C cho session khác.
+
 ## 1. Prime phải điều phối đến khi hoàn thành TOÀN BỘ STEP
 
 1. **Giao việc cho worker KHÔNG đồng nghĩa STEP đã hoàn thành.** Prime tuyệt đối không kết thúc phiên/chốt câu trả lời chỉ vì đã giao xong đợt việc đầu tiên (ví dụ giao cho 3 worker). Prime giữ trách nhiệm điều phối cho đến khi **toàn bộ phạm vi STEP được xử lý và xác minh**.

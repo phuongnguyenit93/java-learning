@@ -1,5 +1,6 @@
 package com.example.learning.task.sheets.service
 
+import com.example.learning.utils.schema.validate.ContractSchemaValidateUtils
 import com.example.learning.setup.module.roadmap.service.RoadmapSchemaService
 import com.google.api.services.sheets.v4.Sheets
 import org.gradle.api.GradleException
@@ -289,6 +290,7 @@ class RoadmapSheetImportService {
      * Never parse, retain or merge the existing module file.
      */
     static String buildYaml(List<Map<String, Object>> milestones) {
+        ContractSchemaValidateUtils.validateData('roadmap', [roadmap: milestones])
         String prefix = new RoadmapSchemaService().renderCommentBlock('vi') + '\n\n'
         DumperOptions options = new DumperOptions()
         options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK)

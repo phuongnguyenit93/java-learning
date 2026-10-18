@@ -1,6 +1,7 @@
 package com.example.learning.task.sheets.plugin
 
 import com.example.learning.task.sheets.task.GenerateModuleContentFromSheetByLocationTask
+import com.example.learning.task.sheets.task.FillIntroductionTask
 import org.gradle.testfixtures.ProjectBuilder
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.Rule
@@ -35,11 +36,16 @@ class SheetsTaskPluginTest {
             assertEquals('sheets', task.group)
         }
         assertEquals(5, expected.size())
+        def fillIntro = project.tasks.named('fillIntroduction', FillIntroductionTask).get()
+        assertEquals('DRY_RUN', fillIntro.mode.get())
+        assertEquals('sheets', fillIntro.group)
         def extension = project.extensions.getByName(
                 'generateModuleContentFromSheetByLocation'
         )
         extension.fileUrl.set('https://docs.google.com/spreadsheets/d/example/edit')
         extension.sheetId.set('42')
+        assertEquals(extension.fileUrl.get(), fillIntro.fileUrl.get())
+        assertEquals(extension.sheetId.get(), fillIntro.sheetId.get())
         expected.keySet().each { String taskName ->
             def task = project.tasks.named(taskName,
                     GenerateModuleContentFromSheetByLocationTask).get()
@@ -65,7 +71,8 @@ tasks.register('verifySheetSelection') {
          'generateModuleReadmeFromSheetByLocation',
          'generateModuleVideoFromSheetByLocation',
          'generateModuleInterviewFromSheetByLocation',
-         'generateModuleContentFromSheetByLocation'].each { name ->
+         'generateModuleContentFromSheetByLocation',
+         'fillIntroduction'].each { name ->
             def selected = tasks.named(name).get()
             assert selected.sheetId.get() == '123456789'
             assert selected.fileUrl.get() == 'https://docs.google.com/spreadsheets/d/cli-value/edit'

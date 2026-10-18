@@ -1,6 +1,6 @@
 package com.example.learning.utils.schema.validate
 
-import groovy.json.JsonSlurper
+import com.example.learning.utils.schema.ContractSchemaLoaderUtils
 import org.gradle.api.GradleException
 
 /**
@@ -12,42 +12,15 @@ import org.gradle.api.GradleException
  * must not silently relax validation in the module generators/projectors.
  */
 final class QuestionContractSchemaUtils {
-    private static final String RESOURCE_ROOT = 'learning-contract/schemas/'
 
     private QuestionContractSchemaUtils() {}
-
-    /**
-     * Preserve existing authored question files when only documentation text
-     * or schema field order changed. A new/removed/modified field descriptor
-     * still triggers the normal StructureService comment synchronization.
-     */
-    static boolean hasEquivalentCommentStructure(String source, String generated,
-                                                  String startMarker, String endMarker) {
-        int first = source.indexOf(startMarker)
-        if (first < 0) return false
-        int last = source.indexOf(endMarker, first + startMarker.length())
-        if (last < 0) return false
-        String existing = source.substring(first, last + endMarker.length())
-        return commentSignature(existing) == commentSignature(generated)
-    }
-
-    private static List commentSignature(String comment) {
-        List<String> lines = comment.readLines()
-        String version = lines.find { String line -> line.startsWith('# schema-version: ') }
-        List<String> descriptors = lines.findAll { String line ->
-            line ==~ /^# +[A-Za-z][A-Za-z0-9_]* \[.+\]$/
-        }.sort()
-        // An unrecognized comment must be rewritten, never silently preserved.
-        return version && !descriptors.isEmpty()
-                ? [version, descriptors] : [comment]
-    }
 
     static Map<String, Object> load(String kind) {
         if (!(kind in ['quiz', 'interview'])) {
             throw new GradleException("Unsupported question contract: ${kind}")
         }
-        Map schema = readResource("${RESOURCE_ROOT}${kind}.schema.json")
-        Map common = readResource("${RESOURCE_ROOT}common.schema.json")
+        Map schema = ContractSchemaLoaderUtils.read(kind)
+        Map common = ContractSchemaLoaderUtils.read('common')
         if (schema['$schema'] != 'https://json-schema.org/draft/2020-12/schema' ||
                 schema.type != 'object' || !(schema.properties instanceof Map) ||
                 !((schema.required ?: []) as List).contains('questions')) {
@@ -212,21 +185,4 @@ final class QuestionContractSchemaUtils {
         return blank.keySet().toList()
     }
 
-    private static Map readResource(String path) {
-        InputStream stream = QuestionContractSchemaUtils.class.classLoader.getResourceAsStream(path)
-        if (stream == null) {
-            throw new GradleException("Bundled learning-contract schema not found: ${path}")
-        }
-        try {
-            Object parsed = new JsonSlurper().parse(new InputStreamReader(stream, 'UTF-8'))
-            if (!(parsed instanceof Map)) {
-                throw new GradleException("JSON Schema root is not an object: ${path}")
-            }
-            return parsed as Map
-        } catch (Exception error) {
-            throw new GradleException("Cannot load question contract: ${path}: ${error.message}", error)
-        } finally {
-            stream.close()
-        }
-    }
 }

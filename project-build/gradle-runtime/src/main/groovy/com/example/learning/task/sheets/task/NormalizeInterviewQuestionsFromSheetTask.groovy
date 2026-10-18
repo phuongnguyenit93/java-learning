@@ -9,7 +9,8 @@ import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.TaskAction
 
 /**
- * Root-only deterministic Google Sheets Interview JSON normalizer.
+ * Root-only deterministic Google Sheets Interview YAML normalizer
+ * (accepts legacy JSON source cells).
  * Never writes module files and never calls an AI model.
  */
 abstract class NormalizeInterviewQuestionsFromSheetTask extends DefaultTask {

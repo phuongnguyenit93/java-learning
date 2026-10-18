@@ -1,5 +1,6 @@
 package com.example.learning.setup.root.structure.service
 
+import com.example.learning.utils.schema.validate.ContractSchemaValidateUtils
 import com.example.learning.setup.module.readme.service.ReadmeKnowledgeParser
 import com.example.learning.setup.root.readmeMetadata.service.ReadmeMetadataSyncService
 import com.example.learning.utils.GradleBuildUtils
@@ -302,6 +303,8 @@ Route identifiers must be unique for modules that expose README knowledge.
                         sectionCount : counter.sectionCount,
                         tree         : tree
                 ]
+
+        ContractSchemaValidateUtils.validateData('knowledge', index)
 
 
         String indexPath =

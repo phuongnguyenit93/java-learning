@@ -88,7 +88,7 @@ ${project.path}
         ) { task ->
             task.group = 'sheets'
             task.description =
-                    'Normalize Interview JSON T:W into full schema on one tab (default DRY_RUN).'
+                    'Normalize Interview YAML T:W into full schema on one tab (legacy JSON accepted; default DRY_RUN).'
             task.fileUrl.convention(
                     project.providers.gradleProperty('fileUrl')
                             .orElse(project.providers.gradleProperty('sheetFileUrl'))

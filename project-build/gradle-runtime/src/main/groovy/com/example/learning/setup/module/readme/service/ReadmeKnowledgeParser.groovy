@@ -57,7 +57,7 @@ class ReadmeKnowledgeParser {
 
         Matcher matcher =
                 SECTION_CANDIDATE_PATTERN.matcher(
-                        content
+                        maskFencedCode(content)
                 )
 
 
@@ -145,6 +145,47 @@ class ReadmeKnowledgeParser {
 
 
         return result
+    }
+
+    /**
+     * Section anchors shown as examples in fenced Markdown code are not real
+     * Knowledge headings. Replace each code-unit inside fenced blocks with a
+     * space so Matcher offsets continue to refer to the original document.
+     */
+    private static String maskFencedCode(String content) {
+        char[] chars = content.toCharArray()
+        int cursor = 0
+        boolean inside = false
+        char marker = (char) 0
+        int minimum = 0
+        while (cursor < content.length()) {
+            int lineEnd = content.indexOf('\n', cursor)
+            if (lineEnd < 0) lineEnd = content.length()
+            String line = content.substring(cursor, lineEnd).trim()
+            boolean mask = inside
+            if (!inside && line.length() >= 3 && (line.charAt(0) == '`' || line.charAt(0) == '~')) {
+                char kind = line.charAt(0)
+                int count = 0
+                while (count < line.length() && line.charAt(count) == kind) count++
+                if (count >= 3) {
+                    inside = true
+                    marker = kind
+                    minimum = count
+                    mask = true
+                }
+            } else if (inside) {
+                int count = 0
+                while (count < line.length() && line.charAt(count) == marker) count++
+                if (count >= minimum && line.substring(count).trim().isEmpty()) inside = false
+            }
+            if (mask) {
+                for (int i = cursor; i < lineEnd; i++) {
+                    if (chars[i] != '\r') chars[i] = ' ' as char
+                }
+            }
+            cursor = lineEnd + 1
+        }
+        return new String(chars)
     }
 
 

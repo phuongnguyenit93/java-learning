@@ -2,7 +2,7 @@
 
 ## Mục tiêu
 
-Tạo câu trả lời **Markdown README hoàn chỉnh** cho từng mục **Menu Cấp 2** trong Google Sheets. **Một nhiệm vụ của một sub-worker chỉ xử lý đúng một mục cấp 2 (một hàng)**. Prime điều phối **mặc định tối đa 3 sub-worker trong pool, tính cả ACTIVE và SLEEPING**, theo quy tắc chung. Giới hạn khác do người dùng nêu chỉ áp dụng trong **session được chỉ định**, không thay đổi giới hạn mặc định của file. Các nhiệm vụ khác nhau có thể chạy song song khi không đụng cùng hàng.
+Tạo câu trả lời **Markdown README hoàn chỉnh** cho từng mục **Menu Cấp 2** trong Google Sheets. **Một nhiệm vụ của một sub-worker chỉ xử lý đúng một mục cấp 2 (một hàng)**. Prime điều phối theo **Mode A/B/C gắn vào prompt của session: tối đa 3/6/8 worker ACTIVE + SLEEPING** (mặc định Mode A=3), theo `PRIME_RULES.md §0`. Các nhiệm vụ khác nhau có thể chạy song song khi không đụng cùng hàng.
 
 STEP 4 **dùng trực tiếp nội dung Menu Cấp 2 làm đề bài**. Không tạo bước trung gian “Câu hỏi cho AI” và không ép đổi tiêu đề chủ đề thành một câu hỏi mới. Nếu mục cấp 2 đã là câu hỏi thì trả lời chính câu đó; nếu là tên chủ đề/yêu cầu thì trình bày bài học đúng nội dung đó.
 
@@ -36,7 +36,7 @@ STEP 4 **dùng trực tiếp nội dung Menu Cấp 2 làm đề bài**. Không t
 
 ## 2. Quy định dành cho Prime — xác định sheet và phân công
 
-1. **Đọc đủ bộ tài liệu ở cổng context bên trên** trước khi điều phối và tuân thủ quy tắc worker pool. STEP 4 cho phép **mặc định tối đa 3 worker trong pool (ACTIVE + SLEEPING)**. Nếu người dùng cho phép số worker khác trong **một session cụ thể**, chỉ dùng ngoại lệ cho session đó; không sửa quy định mặc định. **Nếu người dùng đã loại trừ worker cụ thể hoặc yêu cầu dừng, không sử dụng worker đó và không giao tiếp việc cho đến khi có yêu cầu tiếp tục.** Một worker chỉ nhận **một câu hỏi/mục cấp 2 tại một thời điểm**.
+1. **Đọc đủ bộ tài liệu ở cổng context bên trên** trước khi điều phối và tuân thủ quy tắc worker pool. STEP 4 dùng **Mode A/B/C của session (3/6/8 worker ACTIVE + SLEEPING, mặc định A)**. Không mang mode sang session khác. **Nếu người dùng đã loại trừ worker cụ thể hoặc yêu cầu dừng, không sử dụng worker đó và không giao tiếp việc cho đến khi có yêu cầu tiếp tục.** Một worker chỉ nhận **một câu hỏi/mục cấp 2 tại một thời điểm**.
 2. **Prime đọc `module-generate-agent/temp/module-generate-info.txt`** để lấy URL gốc ở nhãn `Excel Page URL`, cùng mapping `<TÊN MODULE> sheet id : <SHEET_ID>`. Lập link trực tiếp đến tab bằng `<URL_GỐC>/edit?gid=<SHEET_ID>#gid=<SHEET_ID>` (chuẩn hóa URL trước khi ghép). `SHEET_ID` chính là **gid của tab**, không phải spreadsheet/file ID.
 3. **Xác minh đúng module trước khi giao:** Đối chiếu tab/gid, ô `A1` và `B1`. Nếu thiếu mapping, tên tab hoặc `B1` không khớp, báo `BLOCKER`, không đoán tab.
 4. **Prime tự duyệt các ô A/B của vùng Menu từ hàng 20** để lập danh sách nhiệm vụ:
@@ -46,7 +46,7 @@ STEP 4 **dùng trực tiếp nội dung Menu Cấp 2 làm đề bài**. Không t
    - Chỉ đưa hàng mục cấp 2 vào hàng đợi; **mỗi hàng được giao một lần**, không giao trùng cho nhiều worker.
 5. **Kiểm tra trạng thái toàn bộ worker pool trước khi phân công/spawn** và tuân thủ `GENERAL_AGENT_RULES.md`:
    - Ưu tiên **tái sử dụng worker SLEEPING**; không spawn mới khi còn worker SLEEPING.
-   - Không vượt quá **giới hạn pool được phép (mặc định 3)** gồm ACTIVE và SLEEPING. Nếu pool có sẵn vượt giới hạn áp dụng cho session, dừng việc tăng số worker và báo vấn đề cần điều phối lại; không tự kết thúc hoặc can thiệp vào worker của tác vụ khác.
+   - Không vượt quá **giới hạn pool Mode A/B/C của session (mặc định A=3)** gồm ACTIVE và SLEEPING. Nếu pool có sẵn vượt giới hạn áp dụng cho session, dừng việc tăng số worker và báo vấn đề cần điều phối lại; không tự kết thúc hoặc can thiệp vào worker của tác vụ khác.
    - Worker đang ACTIVE không được nhận thêm câu hỏi thứ hai. Có thể giao đồng thời tối đa **số hàng khác nhau bằng giới hạn worker cho session**; khi một worker hoàn thành và trở lại SLEEPING, mới giao một hàng kế tiếp.
 6. **Prime gửi DUY NHẤT dữ liệu định vị cho từng worker:** link tab, tọa độ `A1`, `B1`, `A<PARENT_ROW>`, `B<ITEM_ROW>`, vùng đích `C<ITEM_ROW>:N<ITEM_ROW>` trên cùng hàng và đường dẫn file `/java-learning/module-generate-agent/temp/worker/STEP_4_WORKER.md`. **Không kèm một chữ hướng dẫn hoặc ghi chú nào khác.** Worker tự đọc file này để lấy toàn bộ quy tắc; không đọc `STEP_4.md`, MD/TXT/rules khác hoặc chọn bài khác.
 7. **Giữ worker độc lập về nội dung:** Prime **không gửi nguyên văn nội dung các ô**, tài liệu STEP trước, đáp án gợi ý, lịch sử hội thoại, cấu trúc bài học, tóm tắt quy định hay câu lệnh thực thi. **Không giải thích thêm kể cả khi định nhắc preflight, giới hạn 30.000, chia ô hoặc readback**; mọi yêu cầu đã nằm trong `worker/STEP_4_WORKER.md`.
@@ -97,7 +97,7 @@ Prime quản lý hàng đợi theo từng `ITEM_CELL`, nhận báo cáo, đối 
 
 ## 5. Phạm vi và điều kiện hoàn thành
 
-- Chỉ generate **Knowledge dạng README Markdown** cho các mục cấp 2 trong Menu, một worker/một mục mỗi lượt, với pool **mặc định tối đa 3 worker** bao gồm cả `ACTIVE` và `SLEEPING`. Giới hạn lớn hơn do người dùng cho phép **riêng một session** không làm thay đổi mặc định của file.
+- Chỉ generate **Knowledge dạng README Markdown** cho các mục cấp 2 trong Menu, một worker/một mục mỗi lượt, với pool **theo Mode A/B/C của session** bao gồm cả `ACTIVE` và `SLEEPING`; mặc định A=3, không áp dụng mode của phiên khác.
 - Prime xác định **đúng link, A1, B1, tọa độ Menu Cấp 1, tọa độ Menu Cấp 2 và ô bắt đầu C**, rồi giao đúng **file `worker/STEP_4_WORKER.md`**. Worker **không tự dò nhiệm vụ**, không đọc `STEP_4.md` và không dùng context cũ. Chỉ chia qua D:N khi bài thực sự vượt 30.000 ký tự.
 - Không sửa Menu A/B, Roadmap, header, tab Template, tài liệu source hoặc STEP khác; không tự commit/push.
 - Một mục **hoàn thành** khi README đúng đề, được ghi nguyên văn **chỉ ô C nếu ≤30.000 ký tự**, hoặc C→N liên tiếp nếu dài hơn; **readback 100% và Prime QA đều PASS**. Nếu vượt 360.000 ký tự hoặc vùng C:N không đủ chỗ thì báo blocker, không ghi thiếu và không lấn sang Difficulty O/Video P:S.

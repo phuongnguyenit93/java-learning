@@ -18,7 +18,7 @@ class ContentSkeletonPathsTest {
     public TemporaryFolder temporary = new TemporaryFolder()
 
     @Test
-    void createsEveryLearningSkeletonUnderContentNotRuntimeResources() {
+    void createsLearningContentFoldersWithoutQuizInterviewOrRoadmapSkeletons() {
         File moduleDir = temporary.newFolder('module')
         def project = ProjectBuilder.builder().withProjectDir(moduleDir).build()
         project.ext.MODULE_LANGUAGE = 'vi,en'
@@ -46,12 +46,15 @@ class ContentSkeletonPathsTest {
 
         assertTrue(new File(moduleDir, 'README.md').isFile())
         assertTrue(new File(moduleDir, 'content/reference/references.yml').isFile())
+        assertTrue(new File(moduleDir, 'content/quiz').isDirectory())
+        assertTrue(new File(moduleDir, 'content/interview').isDirectory())
+        assertTrue(new File(moduleDir, 'content/roadmap').isDirectory())
         for (String language in ['vi', 'en']) {
             assertTrue(new File(moduleDir, "content/readme/docs/${language}/BASE.md").isFile())
             assertTrue(new File(moduleDir, "content/readme/docs/${language}/LIST.md").isFile())
-            assertTrue(new File(moduleDir, "content/quiz/${language}/question.yml").isFile())
-            assertTrue(new File(moduleDir, "content/interview/${language}/question.yml").isFile())
-            assertTrue(new File(moduleDir, "content/roadmap/${language}/roadmap.yml").isFile())
+            assertFalse(new File(moduleDir, "content/quiz/${language}").exists())
+            assertFalse(new File(moduleDir, "content/interview/${language}").exists())
+            assertFalse(new File(moduleDir, "content/roadmap/${language}").exists())
             assertFalse(new File(moduleDir, "content/video/${language}").exists())
         }
         for (String obsolete in [
@@ -62,6 +65,122 @@ class ContentSkeletonPathsTest {
             assertFalse("Unexpected legacy skeleton: ${obsolete}",
                     new File(moduleDir, obsolete).exists())
         }
+    }
+
+    @Test
+    void roadmapSetupOnlyCreatesDirectoryAndNeverTouchesExistingAuthoredRoadmaps() {
+        File moduleDir = temporary.newFolder('authored-roadmap-module')
+        def project = ProjectBuilder.builder().withProjectDir(moduleDir).build()
+        project.ext.MODULE_LANGUAGE = 'vi,en'
+        project.ext.BUILD_ROADMAP = 'TRUE'
+        File authored = new File(moduleDir, 'content/roadmap/vi/roadmap.yml')
+        assertTrue(authored.parentFile.mkdirs())
+        String original = '# authored manually without generated markers\nroadmap: []\n'
+        authored.setText(original, 'UTF-8')
+
+        def setup = new RoadmapStructureService(project.logger)
+        setup.setup(project)
+        setup.setup(project)
+        assertEquals(original, authored.getText('UTF-8'))
+        assertFalse(new File(moduleDir, 'content/roadmap/en').exists())
+
+        File emptyModule = temporary.newFolder('new-roadmap-module')
+        def newProject = ProjectBuilder.builder().withProjectDir(emptyModule).build()
+        newProject.ext.BUILD_ROADMAP = 'TRUE'
+        new RoadmapStructureService(newProject.logger).setup(newProject)
+        assertTrue(new File(emptyModule, 'content/roadmap').isDirectory())
+        assertEquals(0, new File(emptyModule, 'content/roadmap').listFiles().length)
+
+        File disabledModule = temporary.newFolder('disabled-roadmap-module')
+        def disabledProject = ProjectBuilder.builder().withProjectDir(disabledModule).build()
+        disabledProject.ext.BUILD_ROADMAP = 'FALSE'
+        new RoadmapStructureService(disabledProject.logger).setup(disabledProject)
+        assertFalse(new File(disabledModule, 'content').exists())
+    }
+
+    @Test
+    void roadmapSetupDoesNotOverwriteConflictingContentFile() {
+        File moduleDir = temporary.newFolder('conflicting-roadmap-module')
+        def project = ProjectBuilder.builder().withProjectDir(moduleDir).build()
+        project.ext.BUILD_ROADMAP = 'TRUE'
+        File content = new File(moduleDir, 'content')
+        assertTrue(content.mkdirs())
+        File conflicting = new File(content, 'roadmap')
+        conflicting.setText('existing important file', 'UTF-8')
+        try {
+            new RoadmapStructureService(project.logger).setup(project)
+            fail('Expected file/directory conflict')
+        } catch (org.gradle.api.GradleException expected) {
+            assertTrue(expected.message.contains('not a directory'))
+        }
+        assertEquals('existing important file', conflicting.getText('UTF-8'))
+    }
+
+    @Test
+    void quizAndInterviewSetupOnlyEnsureDirectoriesAndPreserveAuthoredFiles() {
+        File moduleDir = temporary.newFolder('authored-module')
+        def project = ProjectBuilder.builder().withProjectDir(moduleDir).build()
+        project.ext.MODULE_LANGUAGE = 'vi,en'
+        project.ext.BUILD_QUIZ = 'TRUE'
+        project.ext.BUILD_INTERVIEW = 'TRUE'
+
+        File quizFile = new File(moduleDir, 'content/quiz/vi/question.yml')
+        File interviewFile = new File(moduleDir, 'content/interview/vi/question.yml')
+        assertTrue(quizFile.parentFile.mkdirs())
+        assertTrue(interviewFile.parentFile.mkdirs())
+        String quizContent = '# existing hand-authored quiz without schema markers\nquestions: []\n'
+        String interviewContent = '# existing hand-authored interview\nquestions: []\n'
+        quizFile.setText(quizContent, 'UTF-8')
+        interviewFile.setText(interviewContent, 'UTF-8')
+
+        def quizSetup = new QuizStructureService(project.logger)
+        def interviewSetup = new InterviewStructureService(project.logger)
+        quizSetup.setup(project)
+        interviewSetup.setup(project)
+        quizSetup.setup(project)
+        interviewSetup.setup(project)
+
+        assertEquals(quizContent, quizFile.getText('UTF-8'))
+        assertEquals(interviewContent, interviewFile.getText('UTF-8'))
+        assertFalse(new File(moduleDir, 'content/quiz/en').exists())
+        assertFalse(new File(moduleDir, 'content/interview/en').exists())
+
+        // BUILD is a feature switch: FALSE does not create even the folder.
+        File disabledModule = temporary.newFolder('disabled-module')
+        def disabledProject = ProjectBuilder.builder().withProjectDir(disabledModule).build()
+        disabledProject.ext.BUILD_QUIZ = 'FALSE'
+        disabledProject.ext.BUILD_INTERVIEW = 'FALSE'
+        new QuizStructureService(disabledProject.logger).setup(disabledProject)
+        new InterviewStructureService(disabledProject.logger).setup(disabledProject)
+        assertFalse(new File(disabledModule, 'content').exists())
+    }
+
+    @Test
+    void refusesReplacingExistingFilesWithFeatureFolders() {
+        File moduleDir = temporary.newFolder('conflicting-module')
+        def project = ProjectBuilder.builder().withProjectDir(moduleDir).build()
+        project.ext.BUILD_QUIZ = 'TRUE'
+        project.ext.BUILD_INTERVIEW = 'TRUE'
+        File content = new File(moduleDir, 'content')
+        assertTrue(content.mkdirs())
+        File quizPath = new File(content, 'quiz')
+        File interviewPath = new File(content, 'interview')
+        quizPath.setText('preserve quiz', 'UTF-8')
+        interviewPath.setText('preserve interview', 'UTF-8')
+        try {
+            new QuizStructureService(project.logger).setup(project)
+            fail('Expected a file/directory conflict')
+        } catch (org.gradle.api.GradleException expected) {
+            assertTrue(expected.message.contains('not a directory'))
+        }
+        try {
+            new InterviewStructureService(project.logger).setup(project)
+            fail('Expected a file/directory conflict')
+        } catch (org.gradle.api.GradleException expected) {
+            assertTrue(expected.message.contains('not a directory'))
+        }
+        assertEquals('preserve quiz', quizPath.getText('UTF-8'))
+        assertEquals('preserve interview', interviewPath.getText('UTF-8'))
     }
 
     @Test

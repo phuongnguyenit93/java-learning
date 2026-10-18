@@ -1,6 +1,7 @@
 package com.example.learning.task.sheets.service
 
 import com.example.learning.task.readme.internalMenu.service.GenerateInternalReadmeMenuService
+import com.example.learning.setup.root.readmeMetadata.service.ReadmeMetadataSyncService
 import com.google.api.services.sheets.v4.Sheets
 import org.gradle.api.GradleException
 
@@ -10,7 +11,9 @@ import org.gradle.api.GradleException
  * source-of-truth snapshot. Parent A rows use B as the AI-authored filename;
  * child B rows use C:N as optional, contiguous Markdown fragments.
  *
- * No AI call is performed here. Only the module's content/readme/docs/vi/menu is managed.
+ * No AI call is performed here. Module content/readme/docs/vi/menu is the
+ * Sheet-owned snapshot; the existing README metadata service synchronizes
+ * the matching vi/knowledge-metadata.yml using generated section IDs and O.
  */
 class ReadmeSheetImportService {
 
@@ -56,14 +59,32 @@ class ReadmeSheetImportService {
         Map<String, String> documents = buildDocuments(
                 parsed.groups as List<Map<String, Object>>, knowledge
         )
+        // O is reserved for per-lesson Difficulty from STEP 5. Prepare
+        // metadata before replacing any README file, so invalid values or
+        // conflicting metadata cannot destroy a previous content snapshot.
+        List<List<Object>> difficultyRows = (client.spreadsheets().values()
+                .get(spreadsheetId, "${tab}!O20:O${lastRow}")
+                .setValueRenderOption('FORMULA')
+                .execute().values ?: []) as List<List<Object>>
+        Map<String, List<String>> difficulties = buildSectionDifficulties(
+                parsed.groups as List<Map<String, Object>>, difficultyRows)
+        File moduleDir = destination.parentFile.parentFile.parentFile.parentFile.parentFile
+        ReadmeMetadataSyncService metadataService =
+                new ReadmeMetadataSyncService(org.gradle.api.logging.Logging.getLogger(ReadmeSheetImportService))
+        String preparedMetadata = metadataService.prepareImportedMetadata(
+                moduleDir, documents, difficulties)
         Map<String, Object> sync =
                 syncDocuments(repositoryRoot, destination, documents, apply)
+        Map metadataSync = metadataService.syncImportedMetadata(
+                moduleDir, preparedMetadata, apply)
         return [
                 status: sync.status, tab: session.tabTitle,
                 gid: session.sheetId, location: session.moduleLocation,
                 groups: parsed.groups.size(), lessons: parsed.lessons,
                 directory: destination,
-                clearedOldFiles: sync.clearedOldFiles
+                clearedOldFiles: sync.clearedOldFiles,
+                metadataStatus: metadataSync.status,
+                metadataFile: metadataSync.file
         ]
     }
 
@@ -226,6 +247,28 @@ class ReadmeSheetImportService {
                 rendered = rendered.replace(marker, body)
             }
             result[relative] = rendered
+        }
+        return result
+    }
+
+    /** Align O<child> values with the same deterministic H2/ID order. */
+    static Map<String, List<String>> buildSectionDifficulties(
+            List<Map<String, Object>> groups, List<List<Object>> difficultyRows) {
+        Map<String, List<String>> result = new LinkedHashMap<>()
+        groups.eachWithIndex { Map group, int index ->
+            String filename = group.filename as String
+            String stem = filename.substring(0, filename.length() - 3)
+            String source = "${index + 1}.${stem}/${filename}"
+            result[source] = (group.children as List<Map>).collect { Map child ->
+                int offset = (child.row as int) - 20
+                List<Object> entry = offset >= 0 && offset < difficultyRows.size()
+                        ? (difficultyRows[offset] ?: []) : []
+                String value = entry ? (entry[0]?.toString()?.trim()?.toUpperCase(Locale.ROOT) ?: '') : ''
+                if (value && !ReadmeMetadataSyncService.ALLOWED_DIFFICULTIES.contains(value)) {
+                    throw new GradleException("Invalid Difficulty at O${child.row}: '${value}'.")
+                }
+                return value
+            }
         }
         return result
     }
