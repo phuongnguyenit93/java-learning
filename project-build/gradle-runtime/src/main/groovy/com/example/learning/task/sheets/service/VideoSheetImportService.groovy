@@ -1,6 +1,6 @@
 package com.example.learning.task.sheets.service
 
-import com.example.learning.utils.VideoYamlContentService
+import com.example.learning.utils.schema.validate.VideoYamlContentUtils
 import com.google.api.services.sheets.v4.Sheets
 import org.gradle.api.GradleException
 
@@ -80,7 +80,7 @@ class VideoSheetImportService {
                 throw new GradleException("Invalid Knowledge filename for Video at B${sheetRow}: ${filename}")
             }
             String stem = filename.substring(0, filename.length() - 3)
-            String relative = "${index + 1}.${stem}/${VideoYamlContentService.FILENAME}"
+            String relative = "${index + 1}.${stem}/${VideoYamlContentUtils.FILENAME}"
             validateVideo(content.toString(), group.title as String,
                     (group.children as List<Map>).collect { it.title as String })
             scripts[relative] = content.toString()
@@ -89,7 +89,7 @@ class VideoSheetImportService {
     }
 
     static Map validateVideo(String content, String title, List<String> expectedSections) {
-        Map validated = VideoYamlContentService.parse(content, title, expectedSections)
+        Map validated = VideoYamlContentUtils.parse(content, title, expectedSections)
         return [sections: validated.sections.size(), scenes: validated.scenes,
                 transitions: validated.transitions]
     }

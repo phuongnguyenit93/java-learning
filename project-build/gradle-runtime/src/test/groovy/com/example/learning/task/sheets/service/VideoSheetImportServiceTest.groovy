@@ -1,6 +1,6 @@
 package com.example.learning.task.sheets.service
 
-import com.example.learning.utils.VideoYamlContentService
+import com.example.learning.utils.schema.validate.VideoYamlContentUtils
 import org.gradle.api.GradleException
 import org.junit.Rule
 import org.junit.Test
@@ -75,7 +75,7 @@ sections:
         assertEquals([sections: 2, scenes: 2, transitions: 1],
                 VideoSheetImportService.validateVideo(
                         SCRIPT, 'Tư duy OOP', ['Khái niệm OOP', 'Lợi ích']))
-        assertEquals('OOPBasic', VideoYamlContentService.categoryId(
+        assertEquals('OOPBasic', VideoYamlContentUtils.categoryId(
                 new File('1.OOPBasic/video-script.yml')))
     }
 
@@ -150,12 +150,12 @@ sections:
 
     @Test
     void refusesInvalidYAMLDocumentShapeAndUnsafeCategory() {
-        shouldFail { VideoYamlContentService.parse('sections: []') }
-        shouldFail { VideoYamlContentService.parse(
+        shouldFail { VideoYamlContentUtils.parse('sections: []') }
+        shouldFail { VideoYamlContentUtils.parse(
                 SCRIPT.replace('00:00–00:30', '00:60–00:99')) }
-        shouldFail { VideoYamlContentService.parse(
+        shouldFail { VideoYamlContentUtils.parse(
                 SCRIPT.replace('video:\n', 'metadata: true\nvideo:\n')) }
-        shouldFail { VideoYamlContentService.categoryId(
+        shouldFail { VideoYamlContentUtils.categoryId(
                 new File('nonordinal/video-script.yml')) }
     }
 

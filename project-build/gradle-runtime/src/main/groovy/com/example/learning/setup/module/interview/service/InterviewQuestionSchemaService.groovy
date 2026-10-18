@@ -1,5 +1,7 @@
 package com.example.learning.setup.module.interview.service
 
+import com.example.learning.utils.schema.validate.QuestionContractSchemaUtils
+
 import org.gradle.api.GradleException
 import org.yaml.snakeyaml.Yaml
 
@@ -7,7 +9,7 @@ import org.yaml.snakeyaml.Yaml
 class InterviewQuestionSchemaService {
 
     private static final String SCHEMA_RESOURCE =
-            'interview/question-schema.yml'
+            'learning-contract/schemas/interview.schema.json'
 
     private final Map<String, Object> schema
 
@@ -496,28 +498,8 @@ class InterviewQuestionSchemaService {
 
 
     private static Map<String, Object> loadSchema() {
-        InputStream inputStream =
-                InterviewQuestionSchemaService.class.classLoader.getResourceAsStream(
-                        SCHEMA_RESOURCE
-                )
-
-        if (inputStream == null) {
-            throw new GradleException(
-                    "Interview schema resource was not found: ${SCHEMA_RESOURCE}"
-            )
-        }
-
-        try {
-            return requireMap(
-                    new Yaml().load(inputStream),
-                    'Interview schema root must be an object.'
-            )
-        }
-        finally {
-            inputStream.close()
-        }
+        return QuestionContractSchemaUtils.load('interview')
     }
-
 
     private static Map<String, Object> requireMap(
             Object value,

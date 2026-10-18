@@ -1,6 +1,6 @@
 package com.example.learning.setup.root.structure.service
 
-import com.example.learning.utils.VideoYamlContentService
+import com.example.learning.utils.schema.validate.VideoYamlContentUtils
 import com.example.learning.utils.ProjectPropertyUtils
 import com.example.learning.utils.GradleBuildUtils
 import groovy.json.JsonOutput
@@ -54,12 +54,12 @@ class PortalVideoProjectionService {
                 if (!menu.isDirectory()) return
                 List<File> scriptFiles = []
                 menu.eachFileRecurse { File file ->
-                    if (file.isFile() && file.name == VideoYamlContentService.FILENAME) {
+                    if (file.isFile() && file.name == VideoYamlContentUtils.FILENAME) {
                         scriptFiles.add(file)
                     }
                 }
                 scriptFiles.each { File file ->
-                    VideoYamlContentService.categoryId(file)
+                    VideoYamlContentUtils.categoryId(file)
                 }
                 scriptFiles.sort { File a, File b ->
                     int leftOrder = Integer.parseInt(a.parentFile.name.split('\\.')[0])
@@ -76,14 +76,14 @@ class PortalVideoProjectionService {
                     if (relative.count('/') != 1) {
                         throw new GradleException("Video Script must be inside a single chapter folder: ${scriptFile}")
                     }
-                    String categoryId = VideoYamlContentService.categoryId(scriptFile)
+                    String categoryId = VideoYamlContentUtils.categoryId(scriptFile)
                     if (!categoryIds.add(categoryId.toLowerCase(Locale.ROOT))) {
                         throw new GradleException(
                                 "Duplicate Portal Video category id '${categoryId}' in ${module.path}/${language}.")
                     }
                     Map document
                     try {
-                        document = VideoYamlContentService.parse(scriptFile.getText('UTF-8'))
+                        document = VideoYamlContentUtils.parse(scriptFile.getText('UTF-8'))
                     }
                     catch (Exception error) {
                         throw new GradleException(

@@ -1,4 +1,4 @@
-package com.example.learning.utils
+package com.example.learning.utils.schema.validate
 
 import org.gradle.api.GradleException
 import org.yaml.snakeyaml.LoaderOptions
@@ -11,7 +11,7 @@ import org.yaml.snakeyaml.constructor.SafeConstructor
  * Publication-only fields (moduleId, language, categoryId, sourcePath,
  * section order) are derived by the projector rather than authored.
  */
-class VideoYamlContentService {
+class VideoYamlContentUtils {
     static final String FILENAME = 'video-script.yml'
     private static final String CLOCK = /([0-9]{2,}):([0-9]{2})[–-]([0-9]{2,}):([0-9]{2})/
 

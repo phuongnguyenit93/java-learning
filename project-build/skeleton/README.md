@@ -46,7 +46,19 @@ annotations have not yet been defined.
 Video Index/Script (published JSON projections, not the source YAML),
 API Docs, Module Catalog, Manifest, or `common.schema.json`.
 
-**Scope:** This plugin creates centralized samples only. The existing module
-Quiz/Interview/Roadmap skeleton generators still consume their legacy YAML
-schema resources. Switching those module generators to these samples is a
-separate, later migration; the plugin does not touch any module contents.
+**Scope:** This plugin creates centralized samples only, and never edits module
+contents. Module Quiz and Interview generators and validators use the **same
+pinned Quiz/Interview/common JSON Schemas**, bundled into `gradle-runtime` at
+build time. Their legacy `question-schema.yml` resources were removed. The
+module-local `content/{quiz,interview}/{language}/question.yml` filenames and
+BUILD feature flags remain unchanged. On Gradle Sync, existing generated
+question comments are kept when their field descriptors and version are
+equivalent; cosmetic description/order changes alone do not rewrite authored
+module files. Required-field synchronization and structural schema changes
+still apply. Roadmap still uses its legacy authoring
+schema resource; converting that generator is a separate migration.
+
+For backwards compatibility, module question validators still accept a
+file-only Knowledge relation (`readmeRelated.file` set and `anchor` empty), as
+emitted by the current Interview Sheet importer. The contract's stricter
+relation `anyOf` will require a separate content migration before enforcement.

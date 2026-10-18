@@ -22,6 +22,16 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
 }
 
+// Package the pinned authoring JSON Schemas with this plugin. Included builds
+// and installed Gradle plugins must not depend on a checkout-relative path at
+// runtime. learning-contract is the only source of the schema definitions.
+tasks.named('processResources') {
+    from(file('../../learning-contract/schemas')) {
+        include 'quiz.schema.json', 'interview.schema.json', 'common.schema.json'
+        into 'learning-contract/schemas'
+    }
+}
+
 apply from: "${projectDir}/gradle/generate-project-plugin-template.gradle"
 apply from: "${projectDir}/gradle/generate-project-plugin-list.gradle"
 apply from: "${projectDir}/gradle/generate-extension-task.gradle"

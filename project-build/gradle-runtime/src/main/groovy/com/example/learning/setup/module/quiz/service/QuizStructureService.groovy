@@ -1,5 +1,6 @@
 package com.example.learning.setup.module.quiz.service
 
+import com.example.learning.utils.schema.validate.QuestionContractSchemaUtils
 import com.example.learning.utils.ProjectPropertyUtils
 import org.gradle.api.GradleException
 import org.gradle.api.Project
@@ -159,10 +160,10 @@ class QuizStructureService {
 
 
         String updated =
-                replaceGeneratedComment(
-                        current,
-                        generatedComment,
-                        questionFile
+                QuestionContractSchemaUtils.hasEquivalentCommentStructure(
+                        current, generatedComment, COMMENT_START, COMMENT_END
+                ) ? current : replaceGeneratedComment(
+                        current, generatedComment, questionFile
                 )
 
 

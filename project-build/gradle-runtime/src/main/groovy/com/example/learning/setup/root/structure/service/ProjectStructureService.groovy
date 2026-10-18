@@ -1165,7 +1165,7 @@ ${moduleDirectory.absolutePath}
                 continue
             }
             if (child.isFile() && child.name == 'video-script.yml') {
-                com.example.learning.utils.VideoYamlContentService.parse(
+                com.example.learning.utils.schema.validate.VideoYamlContentUtils.parse(
                         child.getText('UTF-8'))
                 return true
             }

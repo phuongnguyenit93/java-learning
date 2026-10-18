@@ -1,5 +1,6 @@
 package com.example.learning.setup.module.interview.service
 
+import com.example.learning.utils.schema.validate.QuestionContractSchemaUtils
 import com.example.learning.utils.ProjectPropertyUtils
 import org.gradle.api.GradleException
 import org.gradle.api.Project
@@ -98,11 +99,10 @@ class InterviewStructureService {
         }
 
         String current = questionFile.getText('UTF-8')
-        String updated = replaceGeneratedComment(
-                current,
-                schemaService.renderCommentBlock(language),
-                questionFile
-        )
+        String generatedComment = schemaService.renderCommentBlock(language)
+        String updated = QuestionContractSchemaUtils.hasEquivalentCommentStructure(
+                current, generatedComment, COMMENT_START, COMMENT_END
+        ) ? current : replaceGeneratedComment(current, generatedComment, questionFile)
 
         updated = synchronizeRequiredQuestionFields(
                 updated,

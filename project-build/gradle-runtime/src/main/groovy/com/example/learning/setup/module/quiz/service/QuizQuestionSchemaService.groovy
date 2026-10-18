@@ -1,5 +1,7 @@
 package com.example.learning.setup.module.quiz.service
 
+import com.example.learning.utils.schema.validate.QuestionContractSchemaUtils
+
 import org.gradle.api.GradleException
 import org.yaml.snakeyaml.Yaml
 
@@ -7,7 +9,7 @@ import org.yaml.snakeyaml.Yaml
 class QuizQuestionSchemaService {
 
     private static final String SCHEMA_RESOURCE =
-            'quiz/question-schema.yml'
+            'learning-contract/schemas/quiz.schema.json'
 
 
     private final Map<String, Object> schema
@@ -907,43 +909,8 @@ ${exception.message}
 
 
     private static Map<String, Object> loadSchema() {
-
-        InputStream inputStream =
-                QuizQuestionSchemaService
-                        .class
-                        .classLoader
-                        .getResourceAsStream(
-                                SCHEMA_RESOURCE
-                        )
-
-
-        if (inputStream == null) {
-
-            throw new GradleException(
-                    "Quiz schema resource was not found: ${SCHEMA_RESOURCE}"
-            )
-        }
-
-
-        try {
-
-            Object parsed =
-                    new Yaml()
-                            .load(
-                                    inputStream
-                            )
-
-
-            return requireMap(
-                    parsed,
-                    'Quiz schema root must be an object.'
-            )
-        }
-        finally {
-            inputStream.close()
-        }
+        return QuestionContractSchemaUtils.load('quiz')
     }
-
 
     private static Map<String, Object> requireMap(
             Object value,
