@@ -5,10 +5,10 @@
 Giao cho **đúng một sub-worker** thực hiện **toàn bộ Roadmap của một tab module** từ **nguyên văn câu hỏi `C2`**. Kết quả là các milestone gắn liền theo hàng: `F = Title`, `G = Purpose`, `H = Objectives`. Không chia roadmap giữa nhiều worker, không tạo đề bài mới thay cho `C2`, không ép WHAT/WHY/HOW hoặc số milestone trái với câu hỏi.
 
 - **File `STEP_2.md` này chỉ dành cho Prime. Worker KHÔNG đọc.**
-- **Toàn bộ chỉ dẫn thực thi dành cho worker nằm trong `/java-learning/module-generate-agent/temp/STEP_2_WORKER.md`.** Mỗi worker chỉ đọc **toàn văn đúng file worker-only đó**; không đọc file Prime, STEP khác, General Rules, rules folder, TXT hoặc câu trả lời từ task khác.
-- Prime phải tự đọc `module-generate-agent/temp/GENERAL_AGENT_RULES.md`, **liệt kê và đọc đầy đủ mọi file hiện có trong `module-generate-agent/rules/`**, `module-generate-info.txt`, toàn văn **cả `STEP_2.md` và `STEP_2_WORKER.md`** trước khi giao việc. Nếu mất context hoặc không chắc chắn, đọc lại.
+- **Toàn bộ chỉ dẫn thực thi dành cho worker nằm trong `/java-learning/module-generate-agent/temp/worker/STEP_2_WORKER.md`.** Mỗi worker chỉ đọc **toàn văn đúng file worker-only đó**; không đọc file Prime, STEP khác, General Rules, rules folder, TXT hoặc câu trả lời từ task khác.
+- Prime phải tự đọc `module-generate-agent/temp/GENERAL_AGENT_RULES.md`, **liệt kê và đọc đầy đủ mọi file hiện có trong `module-generate-agent/rules/`**, `module-generate-info.txt`, toàn văn **cả `STEP_2.md` và `worker/STEP_2_WORKER.md`** trước khi giao việc. Nếu mất context hoặc không chắc chắn, đọc lại.
 - **Một lần giao = toàn bộ Roadmap một tab = một lượt làm trọn** (đọc → tạo/hoàn thiện → kiểm tra → ghi → readback → báo cáo → SLEEPING). Không cần PREPARED, pha chờ thứ hai, hoặc Prime bổ sung giải thích giữa chừng.
-- **Tin nhắn Prime gửi worker CHỈ có bốn dòng:** link tab, **tọa độ `C2` cùng tọa độ ô tiêu đề `Special Note` và ô giá trị của nó**, vùng Roadmap giới hạn chính xác và đường dẫn `STEP_2_WORKER.md`. **Tuyệt đối không chép, diễn giải, tóm tắt hoặc chuyển tiếp nội dung Special Note trong tin giao việc**; không kèm lời chào, nội dung đề bài, rule, hint, ghi chú hay ví dụ. Worker tự đọc nguyên văn Special Note trực tiếp từ Sheet theo tọa độ Prime gửi.
+- **Tin nhắn Prime gửi worker CHỈ có bốn dòng:** link tab, **tọa độ `C2` cùng tọa độ ô tiêu đề `Special Note` và ô giá trị của nó**, vùng Roadmap giới hạn chính xác và đường dẫn `worker/STEP_2_WORKER.md`. **Tuyệt đối không chép, diễn giải, tóm tắt hoặc chuyển tiếp nội dung Special Note trong tin giao việc**; không kèm lời chào, nội dung đề bài, rule, hint, ghi chú hay ví dụ. Worker tự đọc nguyên văn Special Note trực tiếp từ Sheet theo tọa độ Prime gửi.
 
 ## 1. Bố cục và giới hạn của STEP 2
 
@@ -22,7 +22,7 @@ Giao cho **đúng một sub-worker** thực hiện **toàn bộ Roadmap của m�
 | `G3:G<END>` | **Purpose**, thông thường 1–2 câu | Chỉ điền ô trống |
 | `H3:H<END>` | **Objectives**, thông thường 2–4 mục tiêu, mỗi mục một dòng **trong cùng ô** | Chỉ điền ô trống |
 
-`<END>` là **hàng cuối Prime đã xác minh còn thuộc Roadmap**, không vượt sang Menu/Knowledge. Prime phải xác định từ **bố cục thật** của tab (vị trí nhãn Menu, header và số hàng có thể dùng), **không mặc định mọi tab đều có Menu ở hàng 18**. Cột `I` trở đi, vùng Video `N:S`, Menu/Knowledge, `J3` và vùng `Special Note` không thuộc vùng worker được ghi.
+`<END>` là **hàng cuối Prime đã xác minh còn thuộc Roadmap**, không vượt sang Menu/Knowledge. Prime phải xác định từ **bố cục thật** của tab (vị trí nhãn Menu, header và số hàng có thể dùng), **không mặc định mọi tab đều có Menu ở hàng 18**. Cột `I` trở đi, Knowledge `C:N` dưới vùng Menu, Difficulty `O` và Video `P:S`, `J3` và vùng `Special Note` không thuộc vùng worker được ghi.
 
 Mỗi milestone = **một bộ ba F/G/H trên cùng hàng**. Nếu đã có `Title` từ Roadmap trước đó, **giữ nguyên toàn bộ F hiện có**, chỉ điền các `G/H` còn trống tương ứng. Không dời/thêm hàng, không thay đổi thứ tự Title cũ, không ghi đè Purpose/Objectives cũ.
 
@@ -34,9 +34,9 @@ Mỗi milestone = **một bộ ba F/G/H trên cùng hàng**. Nếu đã có `Tit
 4. **Xác định từ Sheet thực tế hai tọa độ Special Note:** tìm **ô tiêu đề có đúng nhãn `Special Note`** trong vùng `Module Project` của tab đích; xác định **ô giá trị ngay bên dưới, cùng cột** (ví dụ hiện tại `K2` và `K3`). Xác minh duy nhất, đúng cấu trúc, cả hai ô tồn tại và đọc được. Nếu thiếu nhãn, vị trí mơ hồ hoặc ô giá trị không truy cập được: **`BLOCKER: SPECIAL NOTE LOCATION`**, không tự giả định `K2/K3` hay giao thiếu tọa độ. **Prime chỉ gửi địa chỉ hai ô, TUYỆT ĐỐI không tóm tắt, sao chép, viết lại hay chuyển nội dung Special Note cho worker, kể cả khi nội dung dài.** Ô giá trị trống vẫn là vị trí hợp lệ và phải gửi để worker tự kiểm tra.
 5. Đọc **metadata/bố cục tab** để xác định giới hạn `F2:H<END>` nằm hoàn toàn phía trên Menu; kiểm tra header `F2:H2` và hiện trạng `F3:H<END>`, kể cả Title/Purpose/Objectives cũ, giá trị/công thức/ghi chú có khả năng xung đột. Không lấy mốc Menu từ tab khác để đoán.
 6. Phân biệt roadmap trống, roadmap chỉ có Title, roadmap có dữ liệu từng phần và roadmap đã đủ. Nếu có giá trị cần bảo toàn, **không xóa/ghi đè để làm lại**. Nếu vùng bị chiếm bất thường, header xung đột, milestone vượt `<END>` hoặc không thể hoàn thiện không ghi đè: báo `BLOCKER` rõ phạm vi.
-7. Chỉ giao **bốn dòng định vị** theo mẫu dưới. Không gửi nội dung `C2`, **nội dung/diễn giải/tóm tắt Special Note**, roadmap cũ, câu trả lời gợi ý, cách viết hay bất kỳ văn bản khác. Worker tự đọc `C2`, **cả nhãn và giá trị Special Note** và `F2:H<END>` trực tiếp, dùng `STEP_2_WORKER.md` làm chỉ dẫn duy nhất.
+7. Chỉ giao **bốn dòng định vị** theo mẫu dưới. Không gửi nội dung `C2`, **nội dung/diễn giải/tóm tắt Special Note**, roadmap cũ, câu trả lời gợi ý, cách viết hay bất kỳ văn bản khác. Worker tự đọc `C2`, **cả nhãn và giá trị Special Note** và `F2:H<END>` trực tiếp, dùng `worker/STEP_2_WORKER.md` làm chỉ dẫn duy nhất.
 8. Nhận báo cáo; **Prime tự đọc lại vùng F2:H<END>** để kiểm tra từng bộ ba F/G/H, tính phù hợp với đề bài và Special Note (nếu có), số lượng/thứ tự milestone, ô nào đã ghi và ô nào phải giữ nguyên. Chỉ chấp nhận `COMPLETED` khi worker `READBACK PASS` và **Prime QA PASS**; nếu có blocker/failed, xử lý theo trạng thái thực, không giao trùng hoặc retry ghi mù.
-9. Sau khi **toàn bộ Roadmap của tab** thực sự hoàn chỉnh và Prime QA PASS, Prime kiểm tra `J2 = Current STEP` và trạng thái `J3` theo `PRIME_RULES.md`. Nếu an toàn, cập nhật **`J3 = STEP 2`** và đọc lại nguyên văn. **Không cập nhật J3 khi còn thiếu, blocker hoặc worker đang thực thi; worker không được cập nhật J3.** Không chạm vùng `Special Note`.
+9. Sau khi **toàn bộ Roadmap của tab** thực sự hoàn chỉnh, không còn worker ACTIVE/ownership và Prime QA PASS, **Prime BẮT BUỘC đồng bộ về ĐÚNG MỘT module bằng `generateModuleRoadmapFromSheetByLocation` (DRY_RUN → APPLY)** theo `GENERAL_AGENT_RULES.md §6`, truyền `-PfileUrl=<URL>` và `-PsheetID=<GID>` đã xác minh từ mapping nếu extension chưa được cấu hình. Không dùng ByFiles hoặc task tổng hợp. Kiểm tra `I3`, module Gradle path/config và kết quả trên đúng file `roadmap/vi/roadmap.yml`; `SKIPPED_*`, DRY_RUN đơn thuần hoặc lỗi task **không phải đã đồng bộ**. Chỉ sau khi import PASS hoặc `UNCHANGED` được xác minh, Prime mới kiểm tra `J2 = Current STEP` và trạng thái `J3` theo `PRIME_RULES.md`, cập nhật **`J3 = STEP 2`** và exact readback. Nếu thiếu/sai cấu hình hay import thất bại: `BLOCKER: MODULE SYNC`, giữ nguyên J3. Worker không chạy task, không chạm `Special Note`.
 
 ### Tin nhắn Prime gửi một worker — CHỈ bốn dòng
 
@@ -44,7 +44,7 @@ Mỗi milestone = **một bộ ba F/G/H trên cùng hàng**. Nếu đã có `Tit
 <LINK_TAB_ĐÃ_XÁC_MINH>
 C2, <SPECIAL_NOTE_TITLE_CELL>, <SPECIAL_NOTE_VALUE_CELL>
 F2:H<END_ROW_ĐÃ_XÁC_MINH>
-/java-learning/module-generate-agent/temp/STEP_2_WORKER.md
+/java-learning/module-generate-agent/temp/worker/STEP_2_WORKER.md
 ```
 
 `<END_ROW_ĐÃ_XÁC_MINH>` là **số hàng cụ thể**, ví dụ `17` nếu Menu bắt đầu ở hàng 18. Hai tọa độ Special Note phải được thay bằng **địa chỉ ô thực**, ví dụ `K2, K3` nếu đã xác minh đúng; không gửi ký hiệu `...`, placeholder hay nội dung ô khi giao thật. Mọi yêu cầu thực thi nằm trong file worker-only.
@@ -60,9 +60,10 @@ Prime yêu cầu/đối chiếu các trường báo cáo của worker:
 - `CONSISTENCY`: số bộ ba F/G/H hoàn chỉnh, thứ tự và chất lượng mục tiêu.
 - `READBACK=PASS/FAIL`, `CONTENT_QA`, `PRESERVED`, `BLOCKERS`; Prime tự QA nội dung và các ô không thuộc phạm vi.
 - `CURRENT_STEP`: chỉ Prime báo kết quả ghi/readback `J3 = STEP 2` sau khi toàn STEP đạt yêu cầu.
+- `MODULE_SYNC`: module Gradle path/I3, task `generateModuleRoadmapFromSheetByLocation`, kết quả `DRY_RUN` → `APPLY`, `SYNC_STATUS`, file đích thực và blocker nếu có. **Không dùng `generateModuleContentFromSheetByFiles`.**
 
 ## 4. Phạm vi và điều kiện hoàn thành
 
 - STEP 2 **chỉ** tạo/hoàn thiện Roadmap trong `F:H`, header `F2:H2` khi cả ba ô trống, milestone từ hàng 3 tới trước Menu. Không sinh Menu, Knowledge hoặc Video; không sửa `C2`, `B1`, `K3`, vùng khác/tab khác.
 - Worker độc lập từ `C2` **và Special Note tự đọc nguyên văn trong Sheet**, không dùng lịch sử/context cũ, không tự tìm tab, không spawn, không commit/push, không chạy STEP tiếp theo.
-- **Toàn STEP 2 chỉ COMPLETED** khi mọi milestone đúng yêu cầu `C2`, đồng bộ F/G/H, dữ liệu cũ bảo toàn, worker readback PASS, Prime QA PASS và `J3` được cập nhật/readback an toàn. Nếu chưa đủ phải báo `BLOCKER/FAILED` thực tế.
+- **Toàn STEP 2 chỉ COMPLETED** khi mọi milestone đúng yêu cầu `C2`, đồng bộ F/G/H, dữ liệu cũ bảo toàn, worker readback PASS, Prime QA PASS, **module-local Roadmap sync PASS** và `J3` được cập nhật/readback an toàn. Nếu chưa đủ phải báo `BLOCKER/FAILED` thực tế.

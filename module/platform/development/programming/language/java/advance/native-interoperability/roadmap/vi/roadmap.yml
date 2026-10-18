@@ -76,7 +76,7 @@ roadmap:
       - Mô tả flow Java gọi native method và native code tương tác ngược với JVM qua JNI environment.
       - Phân biệt Java object với JNI local/global reference và hiểu ảnh hưởng của lifetime/GC.
       - Nhận diện trách nhiệm khi dữ liệu, exception và thread đi qua JNI boundary.
-      - Nhận biết Invocation API như chiều native application nhúng JVM: application có thể tạo JVM, còn native thread có thể attach/detach với JVM đã tồn tại, mà không biến module này thành curriculum về process administration.
+      - "Nhận biết Invocation API như chiều native application nhúng JVM: application có thể tạo JVM, còn native thread có thể attach/detach với JVM đã tồn tại, mà không biến module này thành curriculum về process administration."
 
   - id: ffm-memory-lifetime
     title: FFM và mô hình native memory có lifetime

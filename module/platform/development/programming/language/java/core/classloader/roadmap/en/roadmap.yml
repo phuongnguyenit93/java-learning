@@ -71,7 +71,7 @@ roadmap:
       - ParentDelegation
     objectives:
       - Trace the delegation path before local class definition.
-      - Distinguish initiating-loader and defining-loader roles: a class has one defining ClassLoader, while multiple ClassLoaders may be recorded as initiating loaders through delegation.
+      - "Distinguish initiating-loader and defining-loader roles: a class has one defining ClassLoader, while multiple ClassLoaders may be recorded as initiating loaders through delegation."
       - Recognize child-first strategies as deliberate exceptions with isolation risks.
   - id: custom-loaders-and-isolation
     title: Custom ClassLoaders and Isolation

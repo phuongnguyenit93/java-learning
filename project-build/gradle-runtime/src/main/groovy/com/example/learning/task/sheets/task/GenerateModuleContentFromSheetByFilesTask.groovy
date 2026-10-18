@@ -63,12 +63,10 @@ abstract class GenerateModuleContentFromSheetByFilesTask extends DefaultTask {
             }
             else {
                 logger.lifecycle(
-                        '[SHEETS-FILES] {} tab="{}" (gid={}), milestones={}, target={}',
-                        item.status, item.tab, item.gid, item.milestones, item.file
+                        '[SHEETS-FILES] {} tab="{}" (gid={}), milestones={}, cleared-old-files={}, target={}',
+                        item.status, item.tab, item.gid, item.milestones,
+                        item.clearedOldFiles ?: 0, item.file
                 )
-                if (item.backup) {
-                    logger.lifecycle('[SHEETS-FILES] Original Roadmap backup: {}', item.backup)
-                }
             }
             if (item.readme) {
                 Map readme = item.readme as Map
@@ -85,6 +83,23 @@ abstract class GenerateModuleContentFromSheetByFilesTask extends DefaultTask {
                             readme.clearedOldFiles ?: 0, readme.directory
                     )
                 }
+            }
+            if (item.video) {
+                Map video = item.video as Map
+                logger.lifecycle(
+                        '[SHEETS-FILES-VIDEO] {} tab="{}" scripts={} skipped-empty={} cleared-old-files={} written={} pending={}',
+                        video.status, item.tab, video.videoCount ?: 0,
+                        video.skippedEmptyVideos ?: 0, video.clearedOldFiles ?: 0,
+                        video.writtenVideos ?: 0, video.pendingVideos ?: 0
+                )
+            }
+            if (item.interview) {
+                Map interview = item.interview as Map
+                logger.lifecycle(
+                        '[SHEETS-FILES-INTERVIEW] {} tab="{}" questions={} chapters={} cleared-old-files={}',
+                        interview.status, item.tab, interview.questionCount ?: 0,
+                        interview.chapterCount ?: 0, interview.clearedOldFiles ?: 0
+                )
             }
         }
         logger.lifecycle(

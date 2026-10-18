@@ -1,6 +1,6 @@
 # STEP 2 — WORKER ONLY: Roadmap Title / Purpose / Objectives
 
-> **Chỉ dành cho worker.** Prime sử dụng `STEP_2.md` để điều phối; bạn **chỉ đọc toàn văn file `STEP_2_WORKER.md` này**, không đọc STEP Prime, STEP khác, General Rules, rules folder, TXT hay lịch sử câu trả lời. Tin Prime giao gồm **bốn dòng: link tab; tọa độ `C2`, ô tiêu đề và ô giá trị `Special Note`; vùng `F2:H<END>`; đường dẫn file này**. **Prime không gửi nội dung/tóm tắt Special Note: bạn BẮT BUỘC tự đọc nguyên văn trực tiếp trên đúng tab Google Sheets.** Tự làm đầy đủ W1–W5, không cần Prime bổ sung hướng dẫn.
+> **Chỉ dành cho worker.** Prime sử dụng `STEP_2.md` để điều phối; bạn **chỉ đọc toàn văn file `worker/STEP_2_WORKER.md` này**, không đọc STEP Prime, STEP khác, General Rules, rules folder, TXT hay lịch sử câu trả lời. Tin Prime giao gồm **bốn dòng: link tab; tọa độ `C2`, ô tiêu đề và ô giá trị `Special Note`; vùng `F2:H<END>`; đường dẫn file này**. **Prime không gửi nội dung/tóm tắt Special Note: bạn BẮT BUỘC tự đọc nguyên văn trực tiếp trên đúng tab Google Sheets.** Tự làm đầy đủ W1–W5, không cần Prime bổ sung hướng dẫn.
 
 ## W1. Nguồn và phạm vi một nhiệm vụ
 

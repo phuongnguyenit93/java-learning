@@ -90,7 +90,7 @@ roadmap:
     purpose: Understand why declarative caching runs through Spring interception infrastructure and which calls actually pass through cache advice.
     objectives:
       - Understand that @EnableCaching registers cache interception infrastructure rather than making annotations executable by themselves.
-      - Recognize that proxy mode intercepts only calls that pass through the proxy: self-invocation and calls made before the proxy is fully initialized do not apply cache advice as expected, and cache annotations in proxy mode should be placed on public methods.
+      - "Recognize that proxy mode intercepts only calls that pass through the proxy: self-invocation and calls made before the proxy is fully initialized do not apply cache advice as expected, and cache annotations in proxy mode should be placed on public methods."
       - Understand advice ordering and AspectJ mode at the boundary, then hand deep proxy mechanics to the Spring AOP module.
     relatedModules:
       - routeId: ASPECT
@@ -102,7 +102,7 @@ roadmap:
     purpose: Understand how caching behavior changes when callers compete for the same key or when a method returns a future or reactive type.
     objectives:
       - Understand duplicate computation on concurrent misses and @Cacheable(sync=true) as a provider-supported synchronization hint.
-      - Remember the Spring Cache restrictions of sync=true: no unless expression, exactly one cache, and no other cache operation on the same method.
+      - "Remember the Spring Cache restrictions of sync=true: no unless expression, exactly one cache, and no other cache operation on the same method."
       - Understand Spring Framework 6.1 adaptation for CompletableFuture, Mono, and Flux at the cache-abstraction level.
       - Recognize the need for suitable provider-side async retrieval and the coarse-grained nature of Spring Cache reactive adaptation.
       - Recognize that with multiple caches in async or reactive mode, a late-determined miss can prevent later caches from being consulted, so the cache list is not a provider-independent fallback chain.

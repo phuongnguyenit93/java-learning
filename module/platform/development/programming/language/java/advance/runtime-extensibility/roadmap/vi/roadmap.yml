@@ -84,7 +84,7 @@ roadmap:
       - Hiểu provider-configuration file trong META-INF/services biểu diễn registration trên classpath như thế nào.
       - Hiểu named-module consumer phải khai báo uses cho service; khi service type nằm ở module khác thì consumer cũng phải đọc module export service type đó.
       - Hiểu provider module khai báo provides, trong khi host nên phụ thuộc vào service contract thay vì require trực tiếp các provider modules để giữ extension boundary.
-      - Phân biệt quy tắc khởi tạo provider: classpath/automatic-module provider cần provider constructor, còn explicit module có thể dùng provider constructor hoặc public static provider() method theo ServiceLoader contract.
+      - "Phân biệt quy tắc khởi tạo provider: classpath/automatic-module provider cần provider constructor, còn explicit module có thể dùng provider constructor hoặc public static provider() method theo ServiceLoader contract."
       - Phân biệt provider discovery với toàn bộ cơ chế class loading và JPMS resolution để giữ đúng boundary của module.
     relatedModules:
       - routeId: JAVA_CLASSLOADER

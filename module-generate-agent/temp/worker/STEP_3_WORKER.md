@@ -1,6 +1,6 @@
 # STEP 3 — WORKER ONLY: Tạo Menu hai cấp
 
-> **Chỉ dành cho worker.** Prime điều phối theo `STEP_3.md`; bạn **chỉ đọc toàn văn file `STEP_3_WORKER.md` này**, không đọc STEP Prime, STEP khác, General Rules, rules folder, TXT hoặc lịch sử bài cũ. Prime chỉ gửi **bốn dòng**: link tab; tọa độ `C3`, `A18:B19` và **hai ô tiêu đề/giá trị Special Note**; vùng ghi `A20:B<END>`; đường dẫn file này. **Prime không cung cấp nội dung hay tóm tắt Special Note; bạn BẮT BUỘC tự đọc nguyên văn hai ô đó trong Google Sheets.** Tự thực hiện trọn W1–W5.
+> **Chỉ dành cho worker.** Prime điều phối theo `STEP_3.md`; bạn **chỉ đọc toàn văn file `worker/STEP_3_WORKER.md` này**, không đọc STEP Prime, STEP khác, General Rules, rules folder, TXT hoặc lịch sử bài cũ. Prime chỉ gửi **bốn dòng**: link tab; tọa độ `C3`, `A18:B19` và **hai ô tiêu đề/giá trị Special Note**; vùng ghi `A20:B<END>`; đường dẫn file này. **Prime không cung cấp nội dung hay tóm tắt Special Note; bạn BẮT BUỘC tự đọc nguyên văn hai ô đó trong Google Sheets.** Tự thực hiện trọn W1–W5.
 
 ## W1. Một lượt, một nguồn và một vùng đích
 

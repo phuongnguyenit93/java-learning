@@ -12,15 +12,21 @@ class SheetContentImportCoordinator {
     private final SheetsMetadataReaderService sheetsReader
     private final RoadmapSheetImportService roadmapImporter
     private final ReadmeSheetImportService readmeImporter
+    private final VideoSheetImportService videoImporter
+    private final InterviewSheetImportService interviewImporter
 
     SheetContentImportCoordinator(
             SheetsMetadataReaderService sheetsReader = new SheetsMetadataReaderService(),
             RoadmapSheetImportService roadmapImporter = new RoadmapSheetImportService(),
-            ReadmeSheetImportService readmeImporter = new ReadmeSheetImportService()
+            ReadmeSheetImportService readmeImporter = new ReadmeSheetImportService(),
+            VideoSheetImportService videoImporter = new VideoSheetImportService(),
+            InterviewSheetImportService interviewImporter = new InterviewSheetImportService()
     ) {
         this.sheetsReader = sheetsReader
         this.roadmapImporter = roadmapImporter
         this.readmeImporter = readmeImporter
+        this.videoImporter = videoImporter
+        this.interviewImporter = interviewImporter
     }
 
     Map<String, Object> importByLocation(
@@ -30,6 +36,28 @@ class SheetContentImportCoordinator {
             String gid,
             boolean apply
     ) {
+        return importPartByLocation(
+                rootDirectory, moduleDirectory, fileUrl, gid, apply, 'ALL'
+        )
+    }
+
+    /**
+     * Module-local import, limited to one output type when requested.
+     * The complete ALL pipeline and root importByFiles remain unchanged.
+     */
+    Map<String, Object> importPartByLocation(
+            File rootDirectory,
+            File moduleDirectory,
+            String fileUrl,
+            String gid,
+            boolean apply,
+            String part
+    ) {
+        if (!(part in ['ALL', 'ROADMAP', 'README', 'VIDEO', 'INTERVIEW'])) {
+            throw new GradleException(
+                    "Invalid Sheet import part '${part}'. Use ALL, ROADMAP, README, VIDEO or INTERVIEW."
+            )
+        }
         File root = rootDirectory.canonicalFile
         File module = moduleDirectory.canonicalFile
         if (module == root || !module.toPath().startsWith(root.toPath())) {
@@ -47,7 +75,18 @@ class SheetContentImportCoordinator {
             )
         }
         RoadmapSheetImportService.resolveDestination(root, expected)
-        return importTab(root, context, apply)
+        switch (part) {
+            case 'ROADMAP':
+                return roadmapImporter.execute(root, context, apply)
+            case 'README':
+                return readmeImporter.execute(root, context, apply)
+            case 'VIDEO':
+                return videoImporter.execute(root, context, apply)
+            case 'INTERVIEW':
+                return interviewImporter.execute(root, context, apply)
+            default:
+                return importTab(root, context, apply)
+        }
     }
 
     /**
@@ -111,8 +150,10 @@ class SheetContentImportCoordinator {
                 item.status = result.status
                 item.milestones = result.milestones
                 item.file = result.file
-                item.backup = result.backup
+                item.clearedOldFiles = result.clearedOldFiles
                 item.readme = result.readme
+                item.video = result.video
+                item.interview = result.interview
             }
             catch (Exception error) {
                 item.status = 'FAILED'
@@ -144,6 +185,12 @@ class SheetContentImportCoordinator {
         Map<String, Object> readme = readmeImporter.execute(
                 rootDirectory, context, apply
         )
-        return roadmap + [readme: readme]
+        Map<String, Object> video = videoImporter.execute(
+                rootDirectory, context, apply
+        )
+        Map<String, Object> interview = interviewImporter.execute(
+                rootDirectory, context, apply
+        )
+        return roadmap + [readme: readme, video: video, interview: interview]
     }
 }

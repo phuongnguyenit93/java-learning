@@ -1,73 +1,97 @@
-# STEP 6 — PRIME ONLY: Điều phối Video Script Markdown trên Google Sheets
+# STEP 6 — PRIME ONLY: Generate Interview Q&A JSON theo từng Menu Cấp 1
 
-## 0. Mục tiêu và phạm vi
+## 0. Mục tiêu
 
-- **Một Menu Cấp 1 = một Video Markdown hoàn chỉnh = một hàng trong bảng Video**.
-- Các Menu Cấp 2 của chương trở thành các H2/Section đúng thứ tự; mỗi Section chứa các Scene/Transition có Time, Visual, Script, Purpose.
-- **Prime điền trước TOÀN BỘ tiêu đề Menu Cấp 1 vào cột "Chủ đề" (N)** theo thứ tự menu; sau đó các worker viết video độc lập vào các ô "Video Script" trên **chính hàng đã được Prime gán**.
-- **Mỗi worker chỉ có MỘT lượt công việc trọn vẹn**: đọc Knowledge → soạn toàn văn Markdown → chia ô → preflight → ghi → đọc lại → QA → báo cáo. **Không có PHA A/PHA B, PREPARED, đợi cấp slot, hoặc lượt chat thứ hai để xin số hàng**.
-- Tối đa 3 worker ACTIVE + SLEEPING mặc định, ưu tiên tái sử dụng. Mỗi worker sở hữu một chương, một hàng video; các worker làm song song không tranh chấp hàng.
-- Không sửa Knowledge A:M, Template, các tab khác, Gradle/source/video Markdown file, cấu hình BUILD_VIDEO; không commit/push hoặc tự chạy STEP khác.
+STEP 6 hiện là bước **sinh nội dung phỏng vấn / hệ thống hóa kiến thức** trên Google Sheets, **KHÔNG phải** bước đặt filename (đã gộp vào STEP 5). **STEP 7 vẫn là Video Script, không đổi số.**
 
-### Cổng context và phân tách PRIME / WORKER
+- **Một worker = một Menu Cấp 1** (một chương); worker đọc toàn văn Knowledge của các Menu Cấp 2 trong chương, tự thiết kế **câu hỏi thực tế cùng câu trả lời tham khảo** rồi ghi **MỘT JSON hoàn chỉnh** vào tối đa **4 ô T:W trên CHÍNH hàng Menu Cấp 1**.
+- JSON chỉ chứa `{"questions":[{"question":"...","answer":"..."}]}`; **không có** `aiGenerated`, `reviewed`, `readmeRelated`, `apiRelated` hoặc các field khác ở STEP 6.
+- **Worker STEP 6 KHÔNG chuyển YAML, điền defaults/related, chỉnh module hoặc gọi importer.** Sau khi **TOÀN BỘ worker STEP 6 của tab hoàn tất và Prime QA PASS**, Prime **phải chạy Gradle root task** `normalizeInterviewQuestionsFromSheet` để code thuần parse JSON T:W, bổ sung default fields/`readmeRelated.file` và **ghi lại cùng T:W**. **Sau Normalize, chính Prime chạy tiếp task module-local `generateModuleInterviewFromSheetByLocation`** để Groovy thuần xuất `question.yml` cho đúng module. **Cả hai thao tác là nhiệm vụ Prime, không giao cho worker.** AI enrichment cho anchor/API có thể thực hiện sau này.
+- Mỗi worker làm đủ **một lượt**: đọc → soạn JSON → QA → chia 4 ô → preflight → ghi → exact readback → báo Prime → SLEEPING. Không có PHA A/B hoặc hàng Interview riêng.
+- Pool tối đa **3 worker ACTIVE + SLEEPING**; phải tái sử dụng worker SLEEPING trước khi spawn.
 
-**File `STEP_6.md` này chỉ dành cho Prime.** Prime phải đọc đầy đủ `module-generate-agent/temp/GENERAL_AGENT_RULES.md`, liệt kê và đọc **mọi file hiện có** trong `module-generate-agent/rules/`, toàn văn STEP 6 này, **toàn văn `STEP_6_WORKER.md`**, `module-generate-agent/temp/module-generate-info.txt` và quy tắc Video liên quan trong `module-generate-agent/STEP_6_VIDEO.md`. Đọc lại nếu context bị rút gọn hoặc không chắc chắn.
+### Prime/Worker và nguồn quy định
 
-**Toàn bộ quy định thực thi của worker nằm riêng trong `/java-learning/module-generate-agent/temp/STEP_6_WORKER.md`.** Worker **chỉ đọc toàn văn file worker-only đó**, không đọc `STEP_6.md`, STEP khác, GENERAL, rules, TXT hay tài liệu nguồn repo khác để nhận hướng dẫn. Prime **không phải tính dòng hay gửi marker** nữa; chỉ gửi **4 dòng**: link tab, tọa độ nguồn/ô Chủ đề, vùng Video Script được ghi và đường dẫn `STEP_6_WORKER.md`. **Không thêm lời dẫn, lệnh, rules, tóm tắt, Knowledge, script mẫu, đáp án hoặc nội dung chat cũ** vào tin nhắn giao việc. Một lần giao = một chương = một Video Markdown hoàn chỉnh.
+- **`STEP_6.md` này chỉ dành cho Prime**. Prime đọc `/java-learning/module-generate-agent/temp/GENERAL_AGENT_RULES.md`, **liệt kê và đọc tất cả file `module-generate-agent/rules/`**, `module-generate-info.txt`, toàn bộ `STEP_6.md` và `worker/STEP_6_WORKER.md` trước khi giao; đọc lại sau mất context.
+- **Worker bắt buộc TỰ đọc TOÀN VĂN duy nhất `/java-learning/module-generate-agent/temp/worker/STEP_6_WORKER.md`** (kể cả sau compaction). Worker không đọc tài liệu Prime, STEP khác, rule/TXT, repo hay lịch sử chat để thay cho nhiệm vụ.
+- Prime **chỉ gửi đúng 4 dòng**: URL tab, tọa độ nguồn, tọa độ 4 ô đích, đường dẫn file worker-only. **Không gửi nội dung Knowledge, mẫu câu hỏi, tiêu chí chất lượng, tóm tắt worker file hoặc filename đề xuất**.
 
----
+## 1. Mapping Sheet
 
-## PHẦN PRIME — WORKER KHÔNG ĐỌC PHẦN NÀY
+| Thành phần | Vùng | Quyền |
+| --- | --- | --- |
+| Định danh module | `A1`, `B1` | Chỉ đọc |
+| Tiêu đề Menu Cấp 1 | `A<PARENT_ROW>` | Chỉ đọc; chính là chủ đề Interview |
+| Filename của chương | `B<PARENT_ROW>` | Chỉ đọc; đã được STEP 5 điền |
+| Danh sách Menu Cấp 2 | `B<CHILD_ROWS>` | Chỉ đọc; Prime xác định đúng các hàng con |
+| Nội dung từng bài Knowledge | `C<CHILD_ROWS>:N<CHILD_ROWS>` | Chỉ đọc; ghép C→N trên **từng hàng con**, không có ký tự nối |
+| Difficulty từng bài (nếu cần ngữ cảnh) | `O<CHILD_ROWS>` | Chỉ đọc, không ảnh hưởng ràng buộc phân bố câu hỏi |
+| **Interview JSON** | **`T<PARENT_ROW>:W<PARENT_ROW>`** | **Chỉ worker sở hữu chương được ghi; tối đa 4 ô, 30.000 Unicode/ô** |
 
-### 1. Xác nhận module, schema và nguồn
+Schema Template bắt buộc: `A19 = Menu Cấp 1`, `B19 = Menu Cấp 2`, `C19:N19 = Câu trả lời`, `O19 = Difficulty`, `P19:S19 = Video Script`, **`T18 = Interview`, `T19:W19 = Interview JSON`**. Tab phải có ít nhất cột W. **Template có schema mới không đồng nghĩa các tab cũ đã được migrate**: nếu tab đích chưa có đủ 4 cột/headers, `BLOCKER: INTERVIEW SCHEMA`; không tự insert/mở rộng cột của tab đang chứa dữ liệu trong STEP 6.
 
-1. Lấy URL gốc và ánh xạ tên module → gid từ `module-generate-info.txt`, đối chiếu metadata tên tab/gid. Không nhầm spreadsheet ID với gid.
-2. Đọc `A1,B1`, header menu và **toàn bộ vùng A/B của tab**, kể cả khi đợt thử nghiệm chỉ chọn một số chương. Mỗi hàng có A là chương; các hàng B tiếp theo thuộc chương đó đến trước chương kế. Lập thứ tự chính xác `(parent cell, title, child rows, output row)`. **Danh sách chủ đề N luôn chứa toàn bộ Menu Cấp 1; phạm vi giao worker có thể chỉ là một tập con được yêu cầu.**
-3. Đối chiếu Template và tab module **theo trạng thái hiện hành**, không suy ra từ phiên bản cũ. Schema Video mới xác nhận khi soạn file:
-   - `N1 = Video`.
-   - `N2 = Chủ đề`.
-   - `O2:R2 = Video Script` (bốn cột hiện có để chia **một** Markdown).
-   - Dữ liệu bắt đầu hàng 3: `N3` là chương thứ nhất, `N4` chương thứ hai, v.v.; nội dung tương ứng `O3:R3`, `O4:R4`...
-   - **Không còn bảng mỗi Scene một hàng, không còn cột T = Section, không cấp N:T theo số Scene.**
-   - Nếu schema/tab bị sửa và khác những điều trên, dừng với `BLOCKER: VIDEO SCHEMA`; không tự thay Template.
-4. Kiểm tra Knowledge từng bài của các chương dự kiến thực thi trong C:M đã có đủ, điều kiện STEP 5 liên quan đã đạt. Không lấy title thay nội dung.
-5. Kiểm tra trạng thái Video hiện có trước khi điền chủ đề hoặc giao worker. Không ghi đè, dịch chuyển, xóa hay tái bố trí các video cũ; chương có script sẵn phải được đọc/đánh giá hiện trạng, chỉ đánh dấu hoàn thành nếu đủ QA, nếu chưa rõ thì `BLOCKER: EXISTING VIDEO`.
+**Ví dụ mapping:** A20 (chương thứ nhất) → T20:W20, các bài B21:B28 + C21:N28; A29 (chương tiếp theo) → T29:W29. **Không dùng số thứ tự chương để suy ra hàng khác, không dùng hàng con để ghi Interview**, không đụng Video P:S.
 
-### 2. Prime điền toàn bộ "Chủ đề" trước khi giao worker
+## 2. Prime điều phối
 
-1. Lấy **TẤT CẢ Menu Cấp 1 của tab**, không chỉ ba chương đầu hoặc các chương đang giao worker, theo thứ tự xuất hiện ở cột A. Mỗi tên giữ **nguyên văn**, không tự sửa cách viết/đổi nội dung. Thực hiện bước này trước khi giao bất kỳ worker nào.
-2. Ánh xạ tuần tự: Menu Cấp 1 thứ `i` (đếm từ 0) → `N(3+i)`; Video Markdown của chương ấy → `O(3+i):R(3+i)`. Số Scene và độ dài không làm thay đổi hàng của chương kế tiếp.
-3. Preflight **toàn bộ vùng N đích** và O:R trên cùng các hàng (entered value/formula/note), gồm kiểm tra quyền sở hữu. N đã bằng đúng tên chương thì **giữ nguyên**; N trống hoàn toàn mới được ghi tiêu đề; N khác tên, có formula/note hoặc xung đột thì báo blocker, không ghi đè. O:R có script phải bảo toàn và kiểm định, không gán worker ghi mới vào hàng đã chiếm.
-4. Điền **toàn bộ các N còn trống và an toàn** trong một batch hợp lý; đọc lại từng ô N, so khớp chính xác với danh sách A nguồn trước khi giao worker. Nếu có xung đột không thể bảo toàn mapping, ngừng giao các hàng bị ảnh hưởng, không lấp bằng cách chuyển chủ đề sang hàng khác.
-5. Ghi sổ điều phối: `PARENT_CELL, CHILD_ROWS, VIDEO_ROW, TOPIC_CELL, SCRIPT_RANGE, WORKER, STATUS, READBACK, QA, BLOCKER`. Không phải dự đoán `ROWS_NEEDED`.
+1. Đọc mapping tên module → gid từ `module-generate-info.txt`, xác nhận URL tab và `A1/B1`; không nhầm spreadsheet ID với gid. Đọc Menu A/B để nhận diện **mọi hàng cha** (A có tiêu đề, B cùng hàng là filename .md hoặc trống bất thường) cùng tất cả hàng con B; bảo toàn đúng ownership và thứ tự. Filename B cha phải hợp lệ theo STEP 5. Nếu tên/menu cấu trúc sai → `BLOCKER`.
+2. Preflight Template/tab schema và **C:N trên toàn bộ hàng con** của chương sắp giao: dữ liệu không thiếu hoặc không liên tục, các bài có nội dung thực, không tạo câu hỏi chỉ từ tiêu đề. Nếu thiếu nguồn → `BLOCKER: INCOMPLETE KNOWLEDGE`.
+3. Preflight **cả 4 ô T:W trên hàng cha** gồm `userEnteredValue`/formula, `effectiveValue`, `formattedValue`, `note`, `dataValidation`, `chipRuns` và quyền sở hữu. Nếu ô đã có JSON, **bảo toàn**, đánh giá riêng để quyết định `UNCHANGED/EXISTING INTERVIEW`; **không giao worker ghi đè**. Có thể là **JSON gốc (2 fields) hoặc JSON đã normalize (6 fields) từ lần chạy STEP 6 trước**; xác minh theo đúng trạng thái, không ép worker ghi lại JSON đã normalize. Không coi 4 ô Interview trên hàng con là hợp lệ.
+4. Quản lý pool **tối đa 3 worker ACTIVE + SLEEPING**; **reuse sleeping** trước, giao mỗi worker đúng một chương, không giao trùng `T:W` cùng hàng; giữ ownership đến khi worker báo cáo/readback xong. Cho phép các chương độc lập chạy song song.
+5. Prime **chỉ định tọa độ thực, không soạn nội dung**. Sau worker, đọc lại đủ 4 ô T:W, ghép **T→W không separator**, JSON parse được, root đúng `questions`, danh sách không trống, mọi item **do worker mới ghi** có đúng 2 trường string `question` và `answer` đều không blank, chưa có metadata/related; số ký tự và nội dung khớp readback worker. **Với JSON đã normalize ở lượt trước**, cho phép các trường mặc định và related đúng schema; không coi metadata có sẵn là lỗi. QA tính phù hợp với Knowledge/chương và tình huống phỏng vấn/ôn tập.
+6. Theo dõi `PARENT_CELL → CHILD_ROWS → OUTPUT_RANGE_T_W → OWNER_WORKER → STATUS → READBACK → QA`. Tiếp tục tất cả chương trong scope đã giao, xử lý blocker theo rule ownership, không dừng sau batch đầu. **Khi toàn tab đạt PASS ở phase worker, chạy NGAY task code Normalize bên dưới; sau Normalize APPLY/readback PASS, BẮT BUỘC tiếp tục task Interview ByLocation của đúng module (DRY_RUN → APPLY)** theo `GENERAL_AGENT_RULES.md §6`. **Chỉ sau khi CẢ HAI task PASS** và Prime kiểm tra `J2 = Current STEP`, preflight/readback theo PRIME_RULES mới cập nhật `J3 = STEP 6`. Nếu chỉ thử nghiệm vài chương, không chạy APPLY normalize/import toàn tab và **không đổi J3**. Không tự chạy STEP 7 hoặc task ByFiles.
 
-### 3. Giao MỘT lần/worker và theo dõi đến hoàn tất
+### 3. Prime chạy root Gradle Normalize — BẮT BUỘC khi kết thúc toàn STEP 6
 
-- Mỗi worker được giao chính xác: URL tab; `A1,B1,A<PARENT>,B<children>,C<children>:M<children>`; `N<VIDEO_ROW>` chỉ đọc; `O<VIDEO_ROW>:R<VIDEO_ROW>` vùng ghi **duy nhất**; và đường dẫn **`STEP_6_WORKER.md`**. Không truyền nội dung ô hay các đoạn tóm tắt vào tin nhắn.
-- Prime **đã phân bổ hàng trước**: không cần PREPARE, chờ trả về số Scene, rồi gửi chat WRITE; worker tự làm đến COMPLETED trong **một phiên giao việc**.
-- Chỉ một worker chịu trách nhiệm viết trên từng hàng. Nhiều worker có thể ghi **các hàng khác nhau** đồng thời. Kiểm tra nguồn/sẵn sàng của từng chương độc lập.
-- Khi worker xong, Prime đọc lại Markdown **ghép O→R không separator**, kiểm tra H1/H2/Scene/Transition/Time/Visual/Script/Purpose, Java correctness, chính tả, coverage từng B và chất lượng sư phạm. Xác nhận không chạm Knowledge/J3/ô ngoài vùng. `COMPLETED` đòi hỏi worker readback PASS **và** Prime QA độc lập PASS.
-- Dùng worker SLEEPING cho chương kế tiếp chỉ sau khi giải phóng ownership; không spawn khi còn sleeping. Không dừng điều phối sau lượt giao đầu; theo `rules/PRIME_RULES.md` và `rules/HEARTBEAT.md`. Không ping worker đang chạy chỉ để tạo hoạt động.
+Task đã đăng ký tại root repository `java-learning`: **`normalizeInterviewQuestionsFromSheet`**.
 
-### 4. Sức chứa và trường hợp ngoại lệ
+- **Hai input**: `-PfileUrl=<URL spreadsheet>`, `-PsheetID=<gid tab>` (khác spreadsheet ID). Task cũng hỗ trợ alias `-PsheetFileUrl` và `-PsheetId`. Prime lấy hai giá trị từ mapping đã xác minh, không hardcode ví dụ.
+- **Credentials**: `DRY_RUN` chỉ cần Google Sheets **scope `spreadsheets.readonly`**; `APPLY` dùng ADC/Service Account Impersonation với **scope `spreadsheets`** để ghi dữ liệu và file Sheet phải share Service Account **quyền Editor**. Những task import cũ tiếp tục chỉ đọc. Nếu chưa có quyền hoặc credentials không đạt, `BLOCKER: INTERVIEW NORMALIZE AUTH`, không báo hoàn thành.
+- Lần 1 (chỉ kiểm tra và báo số chương/câu hỏi sẽ đổi, không ghi):
 
-Schema hiện hành có **4 ô O:R/hàng**, mỗi ô tối đa **30.000 ký tự Unicode**. Một video có thể dài tùy Knowledge; Prime **không cần và không được đoán** số Scene, độ dài hoặc số ô trước khi giao. Worker tính sau khi hoàn tất Markdown và tự chia theo giới hạn.
-
-Nếu toàn văn cần **hơn 4 ô** (>120.000 ký tự khi mỗi ô dùng đủ hạn mức), đó là ngoại lệ `BLOCKER: VIDEO CAPACITY`: worker báo độ dài và số ô thật sự cần, **không ghi một phần/truncate**, không tự chạm cột S trở đi hay đổi schema chung khi các worker khác đang làm. Prime chỉ thiết kế/mở rộng các cột "Video Script" bổ sung sau khi xác nhận phạm vi an toàn và quyền sửa schema; không coi đây là PHA A/B mặc định và không giả báo chương hoàn tất. Nếu được mở rộng, phải xác minh header/range mới và giao một nhiệm vụ độc lập an toàn để hoàn tất **một lần** theo contract hiện hành.
-
-### 5. Hoàn tất STEP
-
-Với mỗi chương, yêu cầu một Markdown hoàn chỉnh, tất cả H2 đúng thứ tự B; H2 đầu ≥1 Scene; mỗi H2 sau ≥1 Transition + ≥1 Scene; các block đủ bốn trường; thời gian liên tục; nội dung không placeholder; readback Unicode/newline 100% và QA chương PASS.
-
-**Chỉ khi toàn bộ chương thuộc phạm vi STEP của tab đã được xác minh hoàn thành** mới đọc `J2 = Current STEP`, rồi cập nhật `J3 = STEP 6` đúng tab và readback theo Prime Rules. Nếu chỉ **thử nghiệm một số chương**, giữ nguyên J3. Không tự xuất source Markdown, chạy Gradle, sửa cấu hình hoặc commit/push.
-
-### 6. Mẫu tin nhắn Prime gửi worker — CHỈ bốn dòng
-
-```text
-<LINK_TAB_ĐÃ_XÁC_MINH>
-A1, B1, <PARENT_CELL>, <CHILD_B_RANGE>, <CHILD_C_TO_M_RANGE>, <TOPIC_CELL_N_ROW>
-<SCRIPT_RANGE_O_TO_R_CÙNG_MỘT_HÀNG>
-/java-learning/module-generate-agent/temp/STEP_6_WORKER.md
+```powershell
+.\gradlew.bat normalizeInterviewQuestionsFromSheet -PfileUrl="<URL_GOOGLE_SHEETS>" -PsheetID=<GID_TAB> -PinterviewMode=DRY_RUN
 ```
 
-Prime phải thay mọi placeholder bằng tọa độ/range chính xác. Nếu các hàng con không liên tiếp, truyền danh sách đầy đủ các ô tương ứng trên cùng dòng nguồn. **Không đưa nội dung từng ô, tóm tắt Knowledge, chỉ dẫn QA hoặc đoạn quy định worker vào tin giao.** Worker tự đọc toàn văn file riêng.
+- **Sau khi DRY_RUN PASS**, lần 2 thực sự ghi **ngược về chính Sheet/tab đó**:
+
+```powershell
+.\gradlew.bat normalizeInterviewQuestionsFromSheet -PfileUrl="<URL_GOOGLE_SHEETS>" -PsheetID=<GID_TAB> -PinterviewMode=APPLY
+```
+
+- Task Normalize tìm **các hàng Menu Cấp 1 có JSON ở T:W**, nối T→W không separator, parse `questions`; với từng question/answer thêm `aiGenerated:true`, `reviewed:false`, `readmeRelated:{file:"<index>.<stem>/<filename>",anchor:""}`, `apiRelated:{controller:"",methodSignature:""}`. **Nếu metadata hợp lệ đã tồn tại, giữ nguyên** (`reviewed`, anchor, API); nếu `readmeRelated.file` xung đột với đường dẫn chapter từ A/B, **BLOCKER chứ không ghi đè**.
+- **Riêng task Normalize** không gọi AI, không sinh YAML và không ghi file module; nó ghi JSON chuẩn hóa về đúng **4 ô T:W hàng cha**, tự chia 30.000 Unicode/ô. **Task ByLocation ngay sau đó** mới sinh YAML/module, chỉ từ JSON Sheet đã normalize.
+- Toàn tab được preflight đầy đủ trước **một batch ghi duy nhất**, đọc lại sau ghi và so khớp từng mảnh JSON; nếu có lỗi parse, vượt 4 ô, menu không hợp lệ hoặc nguồn bị chỉnh cùng lúc, **không dispatch batch**. Chạy lại với cùng trạng thái là **idempotent** (`UNCHANGED`), không nhân đôi câu hỏi.
+- Prime ghi nhận **`NORMALIZE_STATUS`, `NORMALIZED_ROWS`, `QUESTION_COUNT`, `READBACK`**; **Normalize không tự tạo file module và chưa đủ điều kiện hoàn tất STEP 6**. Nếu chưa có JSON hoặc bất kỳ chương nào chưa được worker QA, chặn `BLOCKER: INCOMPLETE STEP 6`; không chạy APPLY để tránh chuẩn hóa một phần rồi báo hoàn tất.
+
+### 4. Prime đồng bộ Interview JSON đã Normalize về ĐÚNG một module
+
+**Ngay sau khi Normalize APPLY/readback PASS**, Prime **BẮT BUỘC** chạy task **module-local** `generateModuleInterviewFromSheetByLocation` (đã đăng ký cho module có Sheets plugin), **không dùng `generateModuleContentFromSheetByFiles` hoặc task tổng hợp**. Prime xác minh `I3` bằng module path Gradle đã đăng ký và extension `fileUrl/sheetId` đúng tab. Từ root `java-learning`:
+
+```powershell
+.\gradlew.bat :<EXACT_MODULE_GRADLE_PATH>:generateModuleInterviewFromSheetByLocation -PfileUrl=<URL> -PsheetID=<GID> -PsheetMode=DRY_RUN
+.\gradlew.bat :<EXACT_MODULE_GRADLE_PATH>:generateModuleInterviewFromSheetByLocation -PfileUrl=<URL> -PsheetID=<GID> -PsheetMode=APPLY
+```
+
+- Chỉ chạy lệnh thứ hai khi DRY_RUN có dữ liệu hợp lệ, exit code PASS, không có blocker; `SKIPPED_NO_INTERVIEW_SCHEMA`, `SKIPPED_EMPTY_INTERVIEW` hoặc status `SKIPPED_*` **không phải sync thành công**.
+- Kiểm tra sau APPLY: status thực, số câu hỏi/chương, chính xác file `<MODULE_ROOT>/src/main/resources/interview/vi/question.yml` đã sinh/giữ nguyên hợp lệ, đúng module/tab, có schema hợp lệ và related file đúng filename của từng chương. Worker không chạy Gradle, không chỉnh module.
+- Nếu thiếu Gradle module/task/config/ADC, `I3` mismatch, lỗi schema hoặc file chưa cập nhật: **`BLOCKER: MODULE INTERVIEW SYNC`**, báo trạng thái Normalize đã làm (không thử lại ghi Sheet mù) và **không cập nhật J3**. Chỉ sau **Normalize + module-local Interview import PASS/UNCHANGED được xác minh**, Prime cập nhật/readback `J3 = STEP 6`. Báo cả `NORMALIZE_STATUS` và `MODULE_SYNC_STATUS` riêng.
+
+### Mẫu tin nhắn Prime giao worker — CHỈ bốn dòng
+
+```text
+<URL_TAB_ĐÚNG_GID>
+A1, B1, <PARENT_CELL_A>, <PARENT_FILENAME_CELL_B>, <CHILD_B_RANGE>, <CHILD_KNOWLEDGE_C_TO_N_RANGE>, <CHILD_DIFFICULTY_O_RANGE>
+<OUTPUT_INTERVIEW_T_TO_W_CÙNG_HÀNG_PARENT>
+/java-learning/module-generate-agent/temp/worker/STEP_6_WORKER.md
+```
+
+Thay placeholder bằng địa chỉ thực, không gửi dấu `...` hay ranges có thể bao gồm chương ngoài nhiệm vụ. Nếu các hàng con không liền nhau, liệt kê chính xác các ô trong dòng nguồn. **Prime không chép nội dung từ worker-only vào tin giao; worker phải tự đọc file này**.
+
+## 3. Điều kiện hoàn thành
+
+- Mỗi chương đã được worker độc lập đọc **đủ Knowledge**, tạo một **JSON list câu hỏi–trả lời có giá trị thực tế**, không cố nhồi câu hỏi vô dụng hoặc ép số lượng theo bài.
+- **Chỉ đúng `T:W` của hàng cha**, mỗi ô `<= 30.000` Unicode code points; cả JSON tối đa 120.000; không truncate, không ghi một phần nếu vượt 4 ô (`BLOCKER: INTERVIEW CAPACITY`).
+- **Worker** viết JSON gốc chỉ có `question` và `answer`; sau QA toàn tab, **Prime chạy task code** bổ sung defaults/related file **và exact readback chính JSON đầy đủ trên Sheet**, không phải worker làm.
+- A/B, Knowledge C:N, Difficulty O, Video P:S, Template, tab khác, source/repo và J3 của worker đều giữ nguyên.
+- **STEP 6 hoàn thành = mọi worker JSON PASS + root Normalize DRY_RUN/APPLY/readback PASS + `generateModuleInterviewFromSheetByLocation` DRY_RUN/APPLY/QA trên ĐÚNG module PASS + J3 exact readback PASS**. Filename vẫn thuộc STEP 5, STEP 7 vẫn là Video. Không chạy ByFiles, task tổng hợp, STEP 7 hoặc commit/push.

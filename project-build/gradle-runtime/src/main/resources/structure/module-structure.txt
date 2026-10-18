@@ -430,7 +430,8 @@ module
     │   │   │       │   ├── security-cryptography [JAVA_SECURITY_CRYPTOGRAPHY] : Java security and cryptography APIs
     │   │   │       │   ├── native-interoperability [JAVA_NATIVE_INTEROPERABILITY] : Java native interoperability, foreign memory and operating-system boundaries
     │   │   │       │   ├── instrumentation [JAVA_INSTRUMENTATION] : Java instrumentation, agents and class transformation
-    │   │   │       │   └── runtime-diagnostics [JAVA_RUNTIME_DIAGNOSTICS] : Java runtime diagnostics, management and troubleshooting
+    │   │   │       │   ├── runtime-diagnostics [JAVA_RUNTIME_DIAGNOSTICS] : Java runtime diagnostics, management and troubleshooting
+    │   │   │       │   └── compilation
     │   │   │       ├── concurrency
     │   │   │       │   ├── fundamentals [JAVA_CONCURRENCY_FUNDAMENTALS] : Java concurrency fundamentals, Thread lifecycle and Java Memory Model
     │   │   │       │   ├── high-level-utils [JAVA_HIGH_LEVEL_CONCURRENCY_UTILS] : Java synchronization, coordination and concurrent utilities

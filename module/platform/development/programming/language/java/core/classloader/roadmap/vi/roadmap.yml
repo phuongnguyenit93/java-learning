@@ -71,7 +71,7 @@ roadmap:
       - ParentDelegation
     objectives:
       - Theo dõi thứ tự tìm kiếm theo cơ chế ưu tiên cha (parent-first) trước khi ClassLoader hiện tại tự định nghĩa class.
-      - Phân biệt vai trò initiating ClassLoader và defining ClassLoader: một class có một defining ClassLoader, còn nhiều ClassLoader có thể được ghi nhận là initiating ClassLoader qua quá trình ủy quyền.
+      - "Phân biệt vai trò initiating ClassLoader và defining ClassLoader: một class có một defining ClassLoader, còn nhiều ClassLoader có thể được ghi nhận là initiating ClassLoader qua quá trình ủy quyền."
       - Nhận biết ưu tiên con (child-first) là một chiến lược ngoại lệ có chủ đích và có thể gây xung đột về định danh kiểu.
   - id: custom-loaders-and-isolation
     title: ClassLoader tùy chỉnh và cô lập

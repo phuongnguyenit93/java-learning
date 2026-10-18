@@ -76,7 +76,7 @@ roadmap:
       - Describe the flow from a Java native-method call to native code interacting with the JVM through the JNI environment.
       - Distinguish Java objects from JNI local and global references and understand their lifetime and GC implications.
       - Recognize responsibilities when data, exceptions, and threads cross the JNI boundary.
-      - Recognize the Invocation API as native-application JVM embedding: an application can create a JVM, while native threads can attach to and detach from an existing JVM, without turning this module into process-administration curriculum.
+      - "Recognize the Invocation API as native-application JVM embedding: an application can create a JVM, while native threads can attach to and detach from an existing JVM, without turning this module into process-administration curriculum."
 
   - id: ffm-memory-lifetime
     title: FFM and Lifetime-Aware Native Memory

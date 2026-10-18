@@ -1,0 +1,4 @@
+[submodule "learning-contract"]
+	path = learning-contract
+	url = https://github.com/phuongnguyenit93/learning-contract.git
+	branch = main

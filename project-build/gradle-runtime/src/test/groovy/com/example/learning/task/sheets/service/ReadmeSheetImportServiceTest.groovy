@@ -101,6 +101,29 @@ class ReadmeSheetImportServiceTest {
     }
 
     @Test
+    void acceptsJavaGenericSyntaxInTitlesAndEscapesInjectedHtml() {
+        Map menu = ReadmeSheetImportService.parseMenu([
+                ['Menu Cấp 1', 'Menu Cấp 2'],
+                ['API <T> & Java', 'GenericAPI.md'],
+                ['', 'Diamond <> và Map<K,List<V>>'],
+                ['', 'List<String>[] và <script>alert(1)</script>']
+        ])
+        assertEquals('READY', menu.status)
+        Map<String, String> docs = ReadmeSheetImportService.buildDocuments(
+                menu.groups as List<Map<String, Object>>,
+                [[], ['Nội dung một'], ['Nội dung hai']]
+        )
+        String result = docs['1.GenericAPI/GenericAPI.md']
+        assertTrue(result.contains('# API &lt;T&gt; &amp; Java'))
+        assertTrue(result.contains('Diamond &lt;&gt; và Map&lt;K,List&lt;V&gt;&gt;'))
+        assertTrue(result.contains('List&lt;String&gt;&#91;&#93;'))
+        assertTrue(result.contains('&lt;script&gt;alert(1)&lt;/script&gt;'))
+        assertFalse(result.contains('<script>'))
+        assertTrue(result.contains('id="generic-api-001"'))
+        assertTrue(result.contains('id="generic-api-002"'))
+    }
+
+    @Test
     void rejectsNonContiguousKnowledgeFragments() {
         Map menu = ReadmeSheetImportService.parseMenu([
                 ['Menu Cấp 1', 'Menu Cấp 2'],
@@ -110,6 +133,43 @@ class ReadmeSheetImportServiceTest {
             ReadmeSheetImportService.buildDocuments(
                     menu.groups as List<Map<String, Object>>,
                     [[], ['C', '', 'E']]
+            )
+        }
+    }
+
+    @Test
+    void preservesTwelfthKnowledgeCellNWithoutTruncation() {
+        Map menu = ReadmeSheetImportService.parseMenu([
+                ['Menu Cấp 1', 'Menu Cấp 2'],
+                ['Đóng gói', 'Encapsulation.md'],
+                ['', 'Đóng gói có tác dụng gì?']
+        ])
+        List<String> chunks = (0..<12).collect { int col ->
+            "[SECTION-${col}]-" + ('đ' * (col == 11 ? 19 : 2))
+        }
+        Map<String, String> result = ReadmeSheetImportService.buildDocuments(
+                menu.groups as List<Map<String, Object>>,
+                [[], chunks]
+        )
+        String readme = result['1.Encapsulation/Encapsulation.md']
+        assertNotNull(readme)
+        assertTrue(readme.contains(chunks.join('')))
+        assertTrue(readme.contains(chunks.last()))
+
+        // Missing M but present N must fail rather than silently skipping N.
+        List<String> broken = new ArrayList<>(chunks)
+        broken[10] = ''
+        expectFailure {
+            ReadmeSheetImportService.buildDocuments(
+                    menu.groups as List<Map<String, Object>>, [[], broken]
+            )
+        }
+
+        // C:N is exactly twelve columns; a 13th fragment must not spill into O.
+        expectFailure {
+            ReadmeSheetImportService.buildDocuments(
+                    menu.groups as List<Map<String, Object>>,
+                    [[], chunks + ['must-not-overlap-difficulty-O']]
             )
         }
     }
@@ -156,16 +216,21 @@ class ReadmeSheetImportServiceTest {
     }
 
     @Test
-    void refusesToClearMenuWithoutReplacementSnapshot() {
+    void emptySheetSnapshotClearsOldMenuWithoutBackup() {
         File root = temporary.newFolder('empty-snapshot')
         File menu = ReadmeSheetImportService.resolveMenuDirectory(root, 'module/example')
         File old = new File(menu, '1.Old/Old.md')
         assertTrue(old.parentFile.mkdirs())
         old.setText('Original remains intact', 'UTF-8')
-        expectFailure {
-            ReadmeSheetImportService.syncDocuments(root, menu, [:], true)
-        }
-        assertEquals('Original remains intact', old.getText('UTF-8'))
+        assertEquals('DRY_RUN',
+                ReadmeSheetImportService.syncDocuments(root, menu, [:], false).status)
+        assertTrue(old.isFile())
+        Map cleared = ReadmeSheetImportService.syncDocuments(root, menu, [:], true)
+        assertEquals('CLEARED_EMPTY', cleared.status)
+        assertEquals(1, cleared.clearedOldFiles)
+        assertFalse(old.exists())
+        assertTrue(ReadmeSheetImportService.readTree(menu).isEmpty())
+        assertFalse(new File(root, '.gradle/sheet-readme-backups').exists())
     }
 
     @Test

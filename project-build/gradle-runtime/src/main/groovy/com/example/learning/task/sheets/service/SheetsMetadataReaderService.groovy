@@ -14,7 +14,8 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 /**
- * Read-only verification of a configured spreadsheet, tab and module location.
+ * Read-only verification for standard importers. Interview normalization
+ * APPLY opts into a separate write-scoped context.
  *
  * Credentials are resolved by Google ADC at execution time; never load
  * credentials or create tokens during Gradle configuration.
@@ -77,15 +78,30 @@ class SheetsMetadataReaderService {
         return readTab(openSpreadsheet(fileUrl), sheetId)
     }
 
+    /** Write scope is available only to explicit Sheet normalization tasks. */
+    Map<String, Object> openTabForWrite(
+            String fileUrl,
+            String sheetId
+    ) {
+        return readTab(openSpreadsheetInternal(fileUrl, true), sheetId)
+    }
+
     /**
      * One authenticated client and one metadata request per spreadsheet.
      * The root batch importer reuses this context for every tab.
      */
     Map<String, Object> openSpreadsheet(String fileUrl) {
+        return openSpreadsheetInternal(fileUrl, false)
+    }
+
+    private Map<String, Object> openSpreadsheetInternal(
+            String fileUrl,
+            boolean writeAccess
+    ) {
         String spreadsheetId = extractSpreadsheetId(fileUrl)
 
         try {
-            GoogleCredentials credentials = resolveReadOnlyCredentials()
+            GoogleCredentials credentials = resolveCredentials(writeAccess)
 
             Sheets client =
                     new Sheets.Builder(
@@ -142,7 +158,8 @@ class SheetsMetadataReaderService {
                     "Unable to read Google Sheets metadata using ADC (spreadsheet '${spreadsheetId}'). " +
                             'Verify that Sheets API and IAM Credentials API are enabled, ADC impersonation has ' +
                             'Service Account Token Creator permission, and the spreadsheet is shared with the ' +
-                            'service account as Viewer. Cause: ' + exception.message,
+                            (writeAccess ? 'service account as Editor.' : 'service account as Viewer.') +
+                            ' Cause: ' + exception.message,
                     exception
             )
         }
@@ -183,13 +200,16 @@ class SheetsMetadataReaderService {
      * expanded to the Sheets scope by createScoped().
      *
      * When a target service account is supplied via the environment,
-     * request a short-lived impersonated token with the Sheets read-only
-     * scope. No service-account keys are needed.
+     * request a short-lived impersonated token with the scope selected by the
+     * caller (read-only normally; writable for Interview APPLY).
+     * No service-account keys are needed.
      */
-    private static GoogleCredentials resolveReadOnlyCredentials() {
+    private static GoogleCredentials resolveCredentials(boolean writeAccess) {
         GoogleCredentials adc = GoogleCredentials.getApplicationDefault()
         List<String> scopes =
-                Collections.singletonList(SheetsScopes.SPREADSHEETS_READONLY)
+                Collections.singletonList(writeAccess
+                        ? SheetsScopes.SPREADSHEETS
+                        : SheetsScopes.SPREADSHEETS_READONLY)
 
         String serviceAccount =
                 System.getenv(IMPERSONATE_ENV)?.trim()

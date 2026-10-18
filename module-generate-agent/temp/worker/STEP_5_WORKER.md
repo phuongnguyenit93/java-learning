@@ -1,0 +1,83 @@
+# STEP 5 — WORKER ONLY: Review, Difficulty và tự đặt filename cho một chương
+
+> Chỉ dành cho worker. Prime dùng STEP_5.md để điều phối; bạn bắt buộc tự đọc TOÀN VĂN đúng file worker/STEP_5_WORKER.md này trước khi làm, đọc lại nếu mất context. Không đọc STEP_5.md, STEP khác, file rules/TXT hoặc dùng lịch sử hội thoại làm tiêu chuẩn. Prime chỉ gửi link tab, tọa độ **A/B của hàng cha**, các bài C:N và Difficulty O của hàng con, **vùng ghi gồm B cha + C:N/O con**, cùng đường dẫn file này; không gửi tóm tắt tiêu chí refactor hay filename gợi ý.
+
+## W1. Một chương, một lượt, một owner
+
+1. **Lượt STEP 5 thông thường** chỉ có MỘT Menu Cấp 1 và TOÀN BỘ Menu Cấp 2 thuộc chương đó; tự thực hiện đọc đủ bài → lập bản đồ → review/refactor → **phân loại Difficulty từng bài** → **đặt/ghi tên file tiếng Anh vào B hàng cha** → snapshot/preflight → ghi → readback → chapter QA → báo cáo → SLEEPING. Không chia một chương cho worker khác và không đòi Prime diễn giải thêm. **Ngoại lệ duy nhất là lượt sửa trùng filename sau kiểm tra toàn tab của Prime, giới hạn B cha như W2.5.4; không chạy lại review.**
+2. Trên đúng tab/gid Prime giao, chỉ đọc nguồn A1, B1, **A<PARENT_ROW>, B<PARENT_ROW>**, dải B<CHILD_ROWS>, **toàn bộ C:N và O trên chính các hàng con**. Các hàng B được Prime chỉ định cụ thể, không tự dò chương/bài khác hoặc đọc câu trả lời ngoài phạm vi; không bắt buộc đọc tên filename của các chương khác.
+3. Chỉ có quyền thay thế câu trả lời C:N, ghi Difficulty O **trên hàng con được giao và filename `.md` vào B của đúng hàng cha**; một ô Knowledge tối đa 30.000 ký tự, một hàng tối đa 360.000 ký tự Knowledge. Không ghi P:S, O hàng cha, A hàng cha, B các hàng con, header, J3, Template, các tab, module hoặc file khác. Nếu có Knowledge nằm ngoài C:N thì báo BLOCKER, không âm thầm sửa phần ngoài quyền.
+4. Kiểm tra ownership của Prime; nếu chapter thiếu Knowledge, nguồn sai, không đủ quyền hoặc đang do worker khác sửa: báo BLOCKER, không sửa một phần và không nhận chương thay thế. Không spawn worker, không chạy STEP tiếp theo, không commit/push.
+
+## W2. Đọc trọn chương, đánh giá và refactor
+
+### W2.1. Preflight: đọc đầy đủ, không vội viết
+
+1. **Đọc hết file worker/STEP_5_WORKER.md**, xác nhận đúng link tab/gid và **chỉ** những ô `A1`, `B1`, `A<PARENT>`, `B<PARENT>`, `CHILD_CELLS`, `C:N` và `O` hàng con mà Prime đã định vị. Kiểm tra header `O19=Difficulty` nếu Prime đã xác nhận schema; worker không tự đọc vùng header ngoài phạm vi được giao.
+2. **Đọc TOÀN BỘ bài học của TẤT CẢ mục cấp 2** trong chương được giao, không review chỉ từ tiêu đề, độ dài, vài đoạn đầu/cuối. Nếu nhiều nội dung, đọc theo các lượt/chunk liên tiếp; nối chính xác C:N của từng bài. Có thể đọc lại để giữ context khi chương dài. Không tuyên bố review đầy đủ nếu chưa đọc đủ từng bài.
+3. **Lập bản đồ nội dung nội bộ trước khi sửa:** mục cấp 2 nào là nơi dạy chính của từng khái niệm, ví dụ, thao tác, giới hạn và bài tập; mục nào chỉ cần nhắc lại vắn tắt để dẫn sang kiến thức khác; đâu là nội dung được yêu cầu riêng bởi từng tiêu đề. Không đảo thứ tự Menu, không chuyển toàn bộ trách nhiệm một bài sang bài khác.
+4. Nếu thiếu câu trả lời `C<R>`, có dữ liệu bị đứt đoạn/đè lên ngoài C:N, sai chương, nội dung có dấu hiệu chưa tải hết, hoặc không đọc đủ, **báo blocker** và không tự tạo bài mới để lấp chỗ trống. Không sửa chương một phần rồi báo `COMPLETED` toàn chương.
+
+### W2.2. Đánh giá chất lượng và trùng lặp theo nội dung
+
+**Mục tiêu trung tâm: giảm trùng lặp không cần thiết, giữ chiều sâu và tính tự học của từng bài**. Trùng vài thuật ngữ, định nghĩa ngắn hoặc ví dụ xuyên suốt **không tự động là lỗi**. Xác định bằng chứng theo từng cặp mục, mức độ lặp, và ảnh hưởng đến người đọc:
+
+- **Trùng lặp cần refactor:** nhiều bài đều mở đầu bằng **cùng một tình huống giải thích dài**; lặp nguyên một chuỗi khái niệm, bảng, code, sơ đồ, ví dụ thành công/thất bại, hoặc cùng một kết luận mà không có góc nhìn/năng lực mới; lặp lời giới thiệu AOP/Aspect/cross-cutting quá dài ở các bài sau; đoạn chuyển ý/boilerplate “Hãy tưởng tượng...” lặp liên tục.
+- **Lặp có ích nên giữ:** định nghĩa/cảnh báo ngắn để bài đọc độc lập không khó hiểu; cùng một case study được **tiếp nối** nhưng mỗi bài khai thác câu hỏi, tình huống, góc nhìn, kết quả, phép thử khác nhau; mã nguồn nhỏ bắt buộc để ví dụ của bài chạy được và tự kiểm chứng.
+- **Chất lượng bắt buộc song song:** mỗi bài trả lời đúng và đủ tiêu đề Menu Cấp 2; dễ tiếp cận từ người mới, giải thích *vì sao/khi nào*, ranh giới với khái niệm kế bên, ví dụ có diễn biến rõ từ đầu vào → xử lý → kết quả; không mâu thuẫn kỹ thuật giữa các bài, không quá nhiều thuật ngữ chưa định nghĩa; không bỏ các điều kiện, ngoại lệ, hạn chế đáng học chỉ để rút ngắn.
+- **Độ chính xác:** soát đặc biệt hành vi Java/Spring/Spring AOP/AspectJ, phạm vi proxy và invocation, thứ tự advice, exception, transaction, bảo mật, output code/ví dụ. Không phát minh hành vi API, không đưa khẳng định tuyệt đối khi thực tế có điều kiện.
+- **Hình thức README:** Markdown/heading/code fence cân đối, code block đúng ngôn ngữ, bảng không gãy, Mermaid hợp lệ, ví dụ Java hợp lý, kết quả khớp code; **trình bày đa dạng khi hữu ích**, không biến cả chương thành text thuần hoặc rập khuôn mọi mục đều có cùng số heading/bảng/sơ đồ.
+- **Tính nhất quán cả chương:** thuật ngữ, ví dụ, ký hiệu, dữ liệu số và cách gọi tên không xung đột; câu chuyển mạch từ bài trước sang bài sau tự nhiên, tránh mỗi bài phải “dạy lại từ đầu”; phần tổng kết phải đóng góp điều mới hoặc củng cố trọng tâm riêng.
+
+**Không đặt mục tiêu phần trăm/tổng số ký tự bắt buộc phải giảm**. Không rút gọn hàng loạt theo số từ, không xóa bảng/code/sơ đồ chỉ vì bài dài. Đánh giá **giá trị học tập**, không chỉ tỷ lệ trùng văn bản. Ghi nhận rõ nơi lặp được giữ vì có chức năng và nơi lặp được sửa vì gây nhiễu hoặc mất nhịp học.
+
+### W2.3. Refactor có chủ đích
+
+1. Sau khi đã đọc **toàn bộ chương**, tự đề xuất những sửa đổi có căn cứ, giữ một **nơi giải thích chính (primary teaching home)** cho mỗi ý quan trọng nhưng các bài khác được phép nhắc lại ngắn hoặc áp dụng ở ngữ cảnh mới. Không chỉ xóa câu chữ: nếu chuyển/bỏ nội dung phải bảo toàn khái niệm và khả năng hiểu bài.
+2. **Mỗi bài sau refactor phải đứng được một mình ở phạm vi hợp lý** và đồng thời đóng góp cho chương; không yêu cầu người đọc phải mò sang bài khác mới hiểu câu hỏi chính. Với phần lặp, có thể rút về 1–2 câu định vị rồi đi sâu vào nội dung riêng, dùng ví dụ mới, bảng phân biệt, thao tác, code trace hoặc tình huống kiểm tra phù hợp.
+3. Tránh refactor biến mọi bài thành cùng một template WHAT/WHY/HOW; độ dài tùy trọng tâm. Giữ hoặc cải thiện ví dụ chạy được, giải thích causal flow, tính chính xác và Markdown nguyên vẹn. Nếu bài hiện tốt, **giữ nguyên**, không đổi chỉ để có thay đổi.
+4. **Giữ nguyên vị trí hàng, A cha và B của tất cả hàng con.** Worker chỉ sửa câu trả lời trong `C:N` và Difficulty `O` của các hàng con, **điền B hàng cha nếu chưa có filename**; không đụng chương khác, không đụng config, không ghi file tạm trong repository, không commit/push.
+
+### W2.4. Phân loại Difficulty cho TỪNG bài sau review
+
+1. **Bắt buộc chọn đúng một trong ba chuỗi nguyên văn**: `BASIC`, `INTERMEDIATE`, `ADVANCED`. `BASIC`: kiến thức nền để bắt đầu, thuật ngữ/cơ chế cơ bản. `INTERMEDIATE`: ứng dụng, kết hợp nhiều khái niệm, so sánh và đánh đổi thực tế. `ADVANCED`: cơ chế sâu, ngoại lệ/edge cases, kiến trúc hay phân tích nâng cao. **Đánh giá toàn bộ nội dung bài và năng lực cần đạt**, không suy đoán bằng số ký tự, thứ tự chương hoặc tiêu đề đơn lẻ.
+2. Mỗi hàng Menu Cấp 2 nhận một giá trị `O<R>`; **không có Difficulty ở hàng Menu Cấp 1**. Nếu giá trị O hiện tại trống thì thêm; nếu đã là một trong ba nhãn thì giữ khi đánh giá vẫn đúng hoặc cập nhật nếu có căn cứ rõ ràng. Giá trị khác danh sách hoặc formula/note lạ: `BLOCKER: INVALID DIFFICULTY CELL`, không tự chữa.
+3. **Giữ nguyên Data Validation dropdown và Conditional Formatting** của Google Sheets; chỉ cập nhật `userEnteredValue`, tuyệt đối không thay màu/validation/notes bằng API. Nếu dropdown không được thiết lập trên tab cũ, vẫn chỉ dùng ba nhãn hợp lệ; nêu cảnh báo cấu hình trong báo cáo để Prime xử lý, **không tự chỉnh Template hoặc validation**.
+
+### W2.5. Chính worker tự chọn và GHI filename vào B hàng cha
+
+1. Sau khi đọc đầy đủ chương và biết trọng tâm Knowledge, tự chọn một tên `.md` tiếng Anh ngắn, **có nghĩa với toàn chương** (không chỉ dịch một bài con). Tên phải theo regex chính xác `^[A-Za-z][A-Za-z0-9]*\.md$`, ưu tiên **PascalCase** hoặc acronym chuẩn. Ví dụ `OOPBasic.md`, `Class.md`, `Encapsulation.md`. Không dùng tên chung chung như `Chapter1.md`/`Topic.md`, tên chứa dấu/space/gạch/underscore/slash/chấm thừa hoặc basename Windows dành riêng `CON/PRN/AUX/NUL/COM1–COM9/LPT1–LPT9`.
+2. **B hàng cha trống → chính worker của chương phải tự ghi filename vào B này trong phiên STEP 5.** Nếu B đã chứa một filename hợp lệ, giữ nguyên; nếu B có tên sai định dạng, formula, note hoặc metadata ngoài quyền thì `BLOCKER: INVALID PARENT FILENAME`, không tự ghi đè. **Không bao giờ chạm B của Menu Cấp 2**.
+3. Worker kiểm tra độ hợp lý với A cha và tất cả B con **trong chương được giao**. Không được gọi Prime đặt tên hộ hoặc gửi `SUGGESTED_FILENAME` rồi kết thúc mà **không ghi B cha**. Mỗi worker chịu trách nhiệm filename của chính chương. **Prime thực hiện kiểm tra trùng tên case-insensitive và trùng kebab-case prefix trên toàn tab SAU KHI tất cả worker hoàn thành**; vì vậy việc một worker chưa biết tên của chương khác không phải lý do trì hoãn ghi B cha.
+4. **Ngoại lệ duy nhất: sửa filename bị trùng theo vòng đối chiếu cuối do Prime điều phối.** Chỉ nhận **lượt sửa tên** khi Prime giao đúng bốn dòng với **read scope A1/B1, A/B cha và B con; write scope CHỈ B cha đã có filename** (không có C:N/O trong phạm vi ghi). Khi đó **bỏ qua các bước review/đọc Knowledge và phân loại Difficulty của lượt STEP 5 thông thường**, không coi thiếu phạm vi C:N/O là lỗi. **Cùng worker sở hữu chương trước đó** đọc lại A/B cha và B con được định vị, tự chọn tên khác có nghĩa, snapshot+preflight B hiện đang chứa đúng filename cũ và không có formula/note xung đột, rồi cập nhật **chỉ B cha**, readback exact. Không đọc/ghi C:N/O, không sửa B các hàng con hoặc filename khác; nếu khác owner, B đã bị đổi hoặc scope chưa rõ → BLOCKER. Báo `STATUS=COLLISION_FIXED` (không tự báo toàn STEP 5 hoàn tất), filename cũ/mới, tọa độ B cha, preflight/readback, chuyển SLEEPING. **Prime không bao giờ trực tiếp ghi B thay worker** và phải tự QA uniqueness toàn tab lại.
+
+## W3. Ghi an toàn Knowledge C:N, Difficulty O và filename B cha
+
+**Phạm vi W3/W4 dưới đây áp dụng cho lượt review chương thông thường.** Nếu nhận **lượt khắc phục trùng filename chỉ ghi B cha** theo W2.5.4, chỉ thực hiện snapshot/preflight B cha → tự sửa B cha → exact readback B → báo `COLLISION_FIXED` → SLEEPING. **Không đọc/ghi C:N/O, không chạy Chapter QA lại**, không nhận yêu cầu đọc thêm vùng không được giao.
+
+1. Trước mỗi chỉnh sửa, lưu bản **snapshot đầy đủ của B cha, 12 ô C:N và O mỗi hàng con**, cùng bản Markdown ghép và Difficulty cũ (kể cả rỗng). Xác nhận không có worker khác đang viết chương này. **Chuẩn bị toàn bộ kế hoạch review + Difficulty + filename trước khi ghi**, preflight lại các ô cần đổi khớp snapshot; B cha trống phải không có value/formula/effective/notes/metadata xung đột, nếu đã có tên hợp lệ phải giữ nguyên. Thay đổi bên ngoài hoặc O/B không hợp lệ → `BLOCKER`, **không ghi một phần chương**.
+2. **STEP 5 được quyền thay thế câu trả lời STEP 4 đã tồn tại trong C:N, gán/cập nhật Difficulty O trên hàng con và GHI B cha khi trống** (khác STEP 4 chỉ ghi ô trống), nhưng **không sửa ngoài phạm vi**. Không xóa nội dung không liên quan, không gộp ô, không thêm hàng/cột, không chuyển câu trả lời sang row khác. Chỉ trong lượt sửa trùng tên được Prime giao rõ, worker mới được thay filename B cha đã ghi.
+3. Soạn bản README refactor hoàn chỉnh trước khi ghi. Nếu quá **360.000 ký tự**, báo `BLOCKER: CONTENT EXCEEDS C:N CAPACITY`, không cắt bỏ nội dung. Nếu vừa giới hạn, chia tuần tự **C, D, E, ... , N**, mỗi ô tối đa **30.000 ký tự**; bảo toàn chính xác mọi ký tự Unicode/newline/fence khi nối.
+4. **Khi bản mới ngắn hơn bản cũ**, bắt buộc **xóa chỉ những ô đuôi cũ trong C:N của hàng đó** không còn dùng đến; nếu giữ đoạn D/E cũ thì người đọc sẽ ghép nhầm bài mới + bài cũ. Phần ô thay đổi và ô đuôi cần dọn **phải được cập nhật cùng một giao dịch/batch khi công cụ hỗ trợ**. Không ghi nguyên văn một phần khi còn lỗi dữ liệu/công cụ.
+5. **Ghi Difficulty của mọi hàng con và B cha trống bằng `userEnteredValue`**, cùng batch với Knowledge nếu công cụ hỗ trợ. Không dùng một dải B liên tiếp để ghi filename vì sẽ đè các ô Menu Cấp 2. Đọc lại **B cha, C:N và O của TẤT CẢ hàng con (kể cả hàng không đổi README)**. Ghép C→N không separator, đối chiếu exact 100% bản Markdown; các ô đuôi rỗng. `O<R>` phải khớp nhãn đã chọn, **B cha phải khớp chính xác filename do worker chọn hoặc filename cũ hợp lệ được giữ**, A1/B1/A cha/B con và dữ liệu ngoài phạm vi vẫn nguyên. Chỉ báo PASS khi mọi hàng có README + Difficulty hợp lệ và B cha có filename hợp lệ.
+6. Nếu phát sinh lỗi khi ghi/read-back hoặc đã lỡ ghi một phần, **không báo PASS**. Nêu hàng bị ảnh hưởng, snapshot gốc và trạng thái cuối cùng; chỉ phục hồi từ snapshot nếu quyền sở hữu còn hợp lệ và chắc chắn không chạm thay đổi của người khác.
+
+## W4. Kiểm tra sau refactor theo cả chương
+
+Sau khi sửa từng bài, **đọc lại TOÀN BỘ các bài và Difficulty O của chương theo thứ tự Menu Cấp 2** để xác minh: không mất ý gốc quan trọng, không phát sinh trùng lặp mới, không mâu thuẫn giữa bài, không lỗi Markdown/code/diagram, mọi bài trả lời đúng chủ đề và **mỗi O khớp mức độ thực của bài sau review**. Nếu còn lỗi, tự chỉnh trong phạm vi được giao và lặp lại QA.
+
+**Không đánh dấu chương CLEAN nếu mới chỉ đọc từng bài độc lập nhưng chưa kiểm tra lại toàn chương.**
+
+## W5. Báo cáo bắt buộc và SLEEPING
+
+Worker trả kết quả đủ để Prime kiểm chứng, không thay thế bằng câu “đã refactor xong”:
+
+- `STATUS`: `COMPLETED` / `BLOCKER` / `FAILED`; `SHEET`: tên tab, gid; `CHAPTER`: tọa độ Menu Cấp 1; `CHILD_ROWS`: các hàng Menu Cấp 2 thực sự review.
+- `READ_COVERAGE`: tổng số bài phải đọc, số bài đã đọc **đầy đủ từ C:N**, và tổng số bài đã review lại sau refactor. Không báo 100% khi chỉ sample.
+- `FINDINGS`: chỗ trùng lặp có ý nghĩa (mục/hàng nào với mục/hàng nào), điểm lặp cố ý giữ, vấn đề về độ chính xác/thiếu ý/Markdown và lý do.
+- `CHANGES`: mỗi hàng sửa ghi tóm tắt **đã đổi gì, vì sao**, số ký tự trước/sau, các ô C:N bị thay đổi/xóa đuôi; danh sách hàng giữ nguyên và lý do ngắn.
+- `DIFFICULTY`: bảng từng `B<R> → O<R> → BASIC/INTERMEDIATE/ADVANCED` kèm lý do dựa trên nội dung đã đọc, các ô O đã điền/cập nhật/giữ nguyên; cảnh báo dropdown nếu có.
+- `FILENAME`: `A<PARENT> → B<PARENT>` với tên `.md` cuối cùng, `NEW/UNCHANGED/COLLISION_FIX`, lý do đặt tên, regex/Windows-name PASS và xác nhận **chính worker đã ghi B cha** nếu trước đó trống.
+- `READBACK`: PASS/FAIL **B cha và TẤT CẢ hàng con, bao gồm O**, sau khi ghép Markdown; xác nhận nội dung không vượt 30.000/ô và 360.000/hàng, cùng kiểm tra A cha, B con và ngoài phạm vi được giữ nguyên.
+- `CHAPTER_QA`: PASS/FAIL kiểm tra lại toàn chương sau refactor, số lỗi trùng lặp/độ chính xác/format còn lại và `BLOCKERS` theo tọa độ (nếu có).
+**Một chương, một lần giao.** Chỉ `COMPLETED` khi đọc đủ mọi bài, mọi hàng con đã có Difficulty hợp lệ, **B cha đã được worker tự điền/giữ filename hợp lệ**, readback README + Difficulty + filename PASS và Chapter QA PASS. **Kiểm tra không trùng filename trên toàn tab thuộc Prime ở vòng cuối**, nên `COMPLETED` của một worker vẫn có thể cần một lượt sửa trùng tên. Sau báo cáo hãy giải phóng ownership và chuyển `SLEEPING`; không tự nhận thêm chương hoặc cập nhật J3.

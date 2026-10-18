@@ -149,4 +149,4 @@ roadmap:
       - Understand the typical autoconfigure-artifact plus starter split, when a straightforward integration can combine them, and the starter's conceptual role as a convenient dependency opinion around the auto-configuration.
       - Keep configuration-key namespaces, optional dependencies, metadata, and extension points suitable for external consumers.
       - Trace the complete flow from adding a starter through candidate discovery, condition evaluation, default bean contribution, user override, diagnostics, and verification.
-      - Preserve ownership boundaries: Spring container mechanics remain Spring Framework, property-source/binding semantics remain externalized configuration, and dependency-management mechanics remain build tooling.
+      - "Preserve ownership boundaries: Spring container mechanics remain Spring Framework, property-source/binding semantics remain externalized configuration, and dependency-management mechanics remain build tooling."

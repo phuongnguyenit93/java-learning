@@ -1847,6 +1847,9 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
   <a href='./module/platform/development/programming/language/java/advance/runtime-diagnostics'>🪄 runtime-diagnostics</a>
 </li>
+<li>
+  <a href='./module/platform/development/programming/language/java/advance/compilation'>🪄 compilation</a>
+</li>
 </ul>
 </details>
 </li>

@@ -6,6 +6,7 @@ import com.example.learning.setup.root.database.plugin.DatabaseSetupPlugin
 import com.example.learning.setup.root.readmeMetadata.plugin.ReadmeMetadataSetupPlugin
 import com.example.learning.setup.root.structure.plugin.StructureSetupPlugin
 import com.example.learning.task.sheets.task.GenerateModuleContentFromSheetByFilesTask
+import com.example.learning.task.sheets.task.NormalizeInterviewQuestionsFromSheetTask
 import org.gradle.api.GradleException
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -71,6 +72,26 @@ ${project.path}
             )
             task.mode.convention(
                     project.providers.gradleProperty('sheetMode').orElse('DRY_RUN')
+            )
+        }
+
+        project.tasks.register(
+                'normalizeInterviewQuestionsFromSheet',
+                NormalizeInterviewQuestionsFromSheetTask
+        ) { task ->
+            task.group = 'sheets'
+            task.description =
+                    'Normalize Interview JSON T:W into full schema on one tab (default DRY_RUN).'
+            task.fileUrl.convention(
+                    project.providers.gradleProperty('fileUrl')
+                            .orElse(project.providers.gradleProperty('sheetFileUrl'))
+            )
+            task.sheetId.convention(
+                    project.providers.gradleProperty('sheetID')
+                            .orElse(project.providers.gradleProperty('sheetId'))
+            )
+            task.mode.convention(
+                    project.providers.gradleProperty('interviewMode').orElse('DRY_RUN')
             )
         }
     }

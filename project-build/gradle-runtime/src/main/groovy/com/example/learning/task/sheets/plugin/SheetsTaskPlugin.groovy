@@ -34,22 +34,57 @@ class SheetsTaskPlugin
                     'sheets'
 
             task.description =
-                    'Import selected module Roadmap from Sheet (default DRY_RUN).'
+                    'Import selected module Roadmap, README, Video and Interview from Sheet (default DRY_RUN).'
 
             task.modulePath.set(
                     project.path
             )
 
             task.sheetId.set(
-                    extension.sheetId
+                    project.providers.gradleProperty('sheetID')
+                            .orElse(project.providers.gradleProperty('sheetId'))
+                            .orElse(extension.sheetId)
             )
 
             task.fileUrl.set(
-                    extension.fileUrl
+                    project.providers.gradleProperty('fileUrl')
+                            .orElse(project.providers.gradleProperty('sheetFileUrl'))
+                            .orElse(extension.fileUrl)
             )
             task.mode.convention(
                     project.providers.gradleProperty('sheetMode').orElse('DRY_RUN')
             )
+            task.importPart.convention('ALL')
+        }
+
+        [
+                generateModuleRoadmapFromSheetByLocation: 'ROADMAP',
+                generateModuleReadmeFromSheetByLocation : 'README',
+                generateModuleVideoFromSheetByLocation  : 'VIDEO',
+                generateModuleInterviewFromSheetByLocation: 'INTERVIEW'
+        ].each { String taskName, String part ->
+            project.tasks.register(
+                    taskName, GenerateModuleContentFromSheetByLocationTask
+            ) { task ->
+                task.group = 'sheets'
+                task.description =
+                        "Import ONLY the selected module ${part} from Sheet (default DRY_RUN)."
+                task.modulePath.set(project.path)
+                task.sheetId.set(
+                        project.providers.gradleProperty('sheetID')
+                                .orElse(project.providers.gradleProperty('sheetId'))
+                                .orElse(extension.sheetId)
+                )
+                task.fileUrl.set(
+                        project.providers.gradleProperty('fileUrl')
+                                .orElse(project.providers.gradleProperty('sheetFileUrl'))
+                                .orElse(extension.fileUrl)
+                )
+                task.mode.convention(
+                        project.providers.gradleProperty('sheetMode').orElse('DRY_RUN')
+                )
+                task.importPart.convention(part)
+            }
         }
     }
 }

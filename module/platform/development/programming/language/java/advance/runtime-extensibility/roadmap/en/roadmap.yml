@@ -84,7 +84,7 @@ roadmap:
       - Understand how a provider-configuration file under META-INF/services registers providers on the class path.
       - Understand that a named-module consumer must declare uses for the service and, when the service type is in another module, must also read the module that exports that service type.
       - Understand that provider modules declare provides, while the host should depend on the service contract rather than require provider modules directly in order to preserve the extension boundary.
-      - Distinguish provider-instantiation rules: class-path and automatic-module providers require a provider constructor, while an explicit module may use either a provider constructor or a public static provider() method as defined by ServiceLoader.
+      - "Distinguish provider-instantiation rules: class-path and automatic-module providers require a provider constructor, while an explicit module may use either a provider constructor or a public static provider() method as defined by ServiceLoader."
       - Separate provider discovery from the full ClassLoader and JPMS resolution curricula so the module boundary remains clear.
     relatedModules:
       - routeId: JAVA_CLASSLOADER

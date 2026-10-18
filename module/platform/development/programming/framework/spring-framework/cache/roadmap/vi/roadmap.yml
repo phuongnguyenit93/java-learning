@@ -90,7 +90,7 @@ roadmap:
     purpose: Hiểu tại sao cache khai báo hoạt động qua Spring interception infrastructure và những lời gọi nào thực sự đi qua cache advice.
     objectives:
       - Hiểu @EnableCaching đăng ký cache interception infrastructure thay vì tự biến annotation thành hành vi runtime.
-      - Nhận biết proxy mode chỉ intercept lời gọi đi qua proxy: self-invocation và code chạy khi bean chưa khởi tạo proxy hoàn chỉnh không kích hoạt cache advice như mong đợi; cache annotations trong proxy mode nên đặt trên public methods.
+      - "Nhận biết proxy mode chỉ intercept lời gọi đi qua proxy: self-invocation và code chạy khi bean chưa khởi tạo proxy hoàn chỉnh không kích hoạt cache advice như mong đợi; cache annotations trong proxy mode nên đặt trên public methods."
       - Hiểu advice ordering và AspectJ mode ở mức ranh giới, rồi chuyển phần proxy mechanics chuyên sâu sang module Spring AOP.
     relatedModules:
       - routeId: ASPECT
@@ -102,7 +102,7 @@ roadmap:
     purpose: Hiểu cách hành vi cache thay đổi khi nhiều caller cạnh tranh cùng một key hoặc khi method trả về future hay reactive type.
     objectives:
       - Hiểu việc một giá trị có thể bị tính lặp lại khi nhiều caller cùng cache miss và ý nghĩa của @Cacheable(sync=true) như một synchronization hint cần provider hỗ trợ.
-      - Ghi nhớ các ràng buộc của sync=true trong Spring Cache: không dùng unless, chỉ được chỉ định một cache và không kết hợp cache operation khác trên cùng method.
+      - "Ghi nhớ các ràng buộc của sync=true trong Spring Cache: không dùng unless, chỉ được chỉ định một cache và không kết hợp cache operation khác trên cùng method."
       - Hiểu cách Spring Framework 6.1 thích nghi với CompletableFuture, Mono và Flux ở mức cache abstraction.
       - Nhận biết provider phải hỗ trợ async retrieval phù hợp và reactive caching của Spring Cache chỉ hoạt động ở mức khá thô.
       - Nhận biết với nhiều cache trong async/reactive mode, cache miss được xác định muộn có thể khiến các cache phía sau không còn được kiểm tra, nên không được coi danh sách cache là một fallback chain độc lập với provider.

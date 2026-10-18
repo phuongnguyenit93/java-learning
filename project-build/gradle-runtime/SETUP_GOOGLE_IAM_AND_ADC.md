@@ -11,11 +11,11 @@ Tài liệu thiết lập **Application Default Credentials (ADC)** cho Gradle t
 > task root `generateModuleContentFromSheetByFiles` chỉ nhận
 > `-PsheetFileUrl` (**không có extension**), quét mọi tab trừ tab tên đúng
 > `Template`. Cả hai import Roadmap `F:H` → `roadmap/vi/roadmap.yml`
-> **và** Menu/Knowledge `A:B` + `C:M` → `readme/vi/menu/`, với
+> **và** Menu/Knowledge `A:B` + `C:N` (12 ô) → `readme/vi/menu/`, với
 > `DRY_RUN` mặc định và `-PsheetMode=APPLY` tường minh. ByFiles
 > không yêu cầu module đích có `master.json`/`gradle.properties`.
 > Menu/Knowledge được ghép bởi `ReadmeSheetImportService` và tái sử dụng
-> `GenerateInternalReadmeMenuService`; chưa có Video importer.
+> `GenerateInternalReadmeMenuService`; đã có VideoSheetImportService.
 
 ## 1. Cách hoạt động
 
@@ -185,6 +185,24 @@ credential phù hợp. Không cần hardcode access token hoặc đường dẫn
 
 ## 5. Cấu hình và kiểm tra Gradle Task
 
+### Root Interview JSON Normalize — tác vụ ghi Google Sheets, khác với importer đọc
+
+`normalizeInterviewQuestionsFromSheet` là task root nhận **`fileUrl`** (URL spreadsheet) và **`sheetID`** (gid tab), chạy hoàn toàn bằng Groovy/Google Sheets API. Nó đọc các JSON `questions` ở `T:W` trên các hàng Menu Cấp 1, điền mặc định `aiGenerated:true`, `reviewed:false`, `readmeRelated.file` theo thứ tự/tên file chương, và để `anchor`/hai trường API rỗng khi chưa có. Các metadata đã điền chính xác từ lần trước được giữ nguyên; kết quả JSON đầy đủ ghi lại **chính T:W**, không tạo YAML hay sửa module.
+
+Phân quyền có chủ đích:
+
+- Các task import và `normalizeInterviewQuestionsFromSheet` **DRY_RUN** vẫn yêu cầu scope `spreadsheets.readonly`; Viewer là đủ.
+- `normalizeInterviewQuestionsFromSheet` **APPLY** yêu cầu scope `https://www.googleapis.com/auth/spreadsheets` và **Service Account phải được share file Sheet với quyền Editor**. IAM Token Creator vẫn cần cho người dùng chạy impersonation. Không cần Service Account key hoặc Google Drive API.
+
+Từ root `java-learning/`:
+
+```powershell
+.\gradlew.bat normalizeInterviewQuestionsFromSheet -PfileUrl="https://docs.google.com/spreadsheets/d/<SPREADSHEET_ID>/edit" -PsheetID=<GID> -PinterviewMode=DRY_RUN
+.\gradlew.bat normalizeInterviewQuestionsFromSheet -PfileUrl="https://docs.google.com/spreadsheets/d/<SPREADSHEET_ID>/edit" -PsheetID=<GID> -PinterviewMode=APPLY
+```
+
+Task có mặc định `DRY_RUN`, nhận alias `sheetFileUrl`/`sheetId`. APPLY chỉ ghi nếu mọi JSON hợp lệ, preflight toàn bộ tab PASS và nội dung nguồn không thay đổi; một batch update, sau đó đọc lại. **Không chạy APPLY trên tab chưa hoàn tất STEP 6** nếu muốn bảo đảm tất cả chương có Interview.
+
 Task được `project-orchestration` đăng ký cho module có `USE_TASK=TRUE`.
 Extension DSL được cấu hình ở **`build.gradle` của module** (nếu module
 có script cấu hình), ví dụ:
@@ -195,6 +213,51 @@ generateModuleContentFromSheetByLocation {
     fileUrl = 'https://docs.google.com/spreadsheets/d/YOUR_SPREADSHEET_ID/edit'
 }
 ```
+
+**Không bắt buộc phải tạo/sửa `build.gradle` của từng module.** Các task
+`ByLocation` nhận thêm `-PfileUrl=<URL>` và `-PsheetID=<numeric gid>`
+(alias `sheetFileUrl`/`sheetId`), ưu tiên cao hơn extension. Prime chỉ dùng
+URL/gid đã xác minh từ mapping `module-generate-info.txt` và I3 của tab;
+`task.gradle` do generator tạo chỉ là tài liệu tham khảo, không phải config.
+
+### Ba task import độc lập cho một module
+
+Tất cả dùng **chung extension `generateModuleContentFromSheetByLocation`** với `fileUrl` và `sheetId`, xác minh `I3` khớp module, mặc định `DRY_RUN`. Có thể chọn từng task:
+
+```powershell
+.\gradlew.bat :<MODULE_PATH>:generateModuleRoadmapFromSheetByLocation
+.\gradlew.bat :<MODULE_PATH>:generateModuleReadmeFromSheetByLocation
+.\gradlew.bat :<MODULE_PATH>:generateModuleVideoFromSheetByLocation
+```
+
+Ví dụ gọi đúng một module mà không sửa build script:
+
+```powershell
+.\gradlew.bat :<EXACT_MODULE_PATH>:generateModuleRoadmapFromSheetByLocation -PfileUrl=<VERIFIED_URL> -PsheetID=<VERIFIED_GID> -PsheetMode=DRY_RUN
+.\gradlew.bat :<EXACT_MODULE_PATH>:generateModuleRoadmapFromSheetByLocation -PfileUrl=<VERIFIED_URL> -PsheetID=<VERIFIED_GID> -PsheetMode=APPLY
+```
+
+Chỉ APPLY khi nguồn đầy đủ và DRY_RUN hợp lệ. `SKIPPED_*` và DRY_RUN
+không phải bằng chứng đã cập nhật module.
+
+Thêm `-PsheetMode=APPLY` để thực sự cập nhật **chỉ cây đầu ra tương ứng** (Roadmap, README hoặc Video), không chạy ngầm các importer khác. **Task tổng hợp** `generateModuleContentFromSheetByLocation` nay chạy Roadmap → README → Video → Interview. **Task root toàn file** `generateModuleContentFromSheetByFiles` vẫn giữ tên/tham số/cách quét mọi tab trừ Template, và nay import cả bốn.
+
+### Task Interview thứ tư — từ JSON trong Sheet ra question.yml
+
+Đã thêm `generateModuleInterviewFromSheetByLocation`, sử dụng chung extension `fileUrl/sheetId` và cùng guard `I3`. Task **chỉ** nhập Interview:
+
+```powershell
+.\gradlew.bat :<MODULE_PATH>:generateModuleInterviewFromSheetByLocation
+.\gradlew.bat :<MODULE_PATH>:generateModuleInterviewFromSheetByLocation -PsheetMode=APPLY
+```
+
+Importer đọc `T18:W19` để kiểm tra header và đọc các mảnh **JSON `T:W` tại hàng Menu Cấp 1** (xác định theo `A:B`). Groovy nối các mảnh theo đúng Unicode, parse danh sách `questions`, điền/giữ đầy đủ `question`, `answer`, `aiGenerated`, `reviewed`, `readmeRelated.file/anchor` và `apiRelated` theo schema đã có, rồi serialize YAML **một file duy nhất**:
+
+`<module>/src/main/resources/interview/vi/question.yml`
+
+**Không dùng AI và không ghi ngược Google Sheets.** Với tab cũ chỉ có A:S hoặc tab chưa có JSON Interview, task báo `SKIPPED_NO_INTERVIEW_SCHEMA` hoặc `SKIPPED_EMPTY_INTERVIEW`, **giữ nguyên file Interview cũ**. Khi có Interview, mọi JSON đều phải hợp lệ trước khi stage/replace; lỗi cấu trúc hoặc đường dẫn README xung đột là blocker trước khi ghi. Có thể import các chương đã có nội dung; các chương chưa tạo Q&A được bỏ qua. `DRY_RUN` không ghi file; `APPLY` thay thế snapshot `interview/vi` sau khi schema validation PASS.
+
+Task tổng hợp `generateModuleContentFromSheetByLocation` **nay gồm bốn phần** theo thứ tự Roadmap → README → Video → Interview; task root toàn spreadsheet `generateModuleContentFromSheetByFiles` **giữ nguyên tên/tham số và cơ chế quét tab**, đồng thời sử dụng cùng pipeline bốn phần. **Lưu ý:** README/Video importer cũ vẫn cần migration sang `C:N` và `P:S` của Template mới trước khi chạy APPLY tổng hợp trên tab theo schema mới; task Interview chạy độc lập không phụ thuộc hai importer đó.
 
 **Không cấu hình trực tiếp vào `task.gradle`:** đây là file DSL tham chiếu
 do generator tự sinh và có thể bị ghi lại khi Gradle cấu hình.
@@ -272,7 +335,7 @@ trong `gcloud` có thể khác nhau. Trong lần kiểm thử, project đúng l�
   thay vì lưu Service Account key. Đó là bước cấu hình CI/CD riêng,
   **chưa được triển khai** trong task này.
 - Menu/Knowledge dùng `ReadmeSheetImportService` với internal-menu renderer;
-  Video importer sẽ được bổ sung sau.
+  Video importer hiện sử dụng VideoSheetImportService.
 
 ## 8. Import từ root project (ByFiles) hoặc module (ByLocation)
 
@@ -300,29 +363,19 @@ Luồng xử lý chung:
    và bỏ qua tab tên đúng `Template`. Đọc I3 tất cả tab, ngăn hai tab cùng
    đích (cả hai bị đánh dấu FAILED), chỉ chấp nhận đường dẫn tương đối an toàn
    nằm trong `module/` của repository.
-2. Xác định ranh giới `Khu vực Menu`, kiểm tra header `F2:H2`, đọc các
-   milestone `F3:H...` và phát hiện hàng thiếu/gãy, ID trùng.
-   **Nếu `F3:H3` (hàng ngay dưới header) trống hoàn toàn**, task ghi
-   `WARN [SHEETS-ROADMAP] SKIPPED` và kết thúc bình thường, kể cả chế độ
-   `APPLY`; không đọc sâu hơn vào Roadmap, không tạo file.
-   Nếu chỉ thiếu một phần F3/G3/H3, đó vẫn là dữ liệu không hợp lệ,
-   **không** được bỏ qua im lặng.
+2. Kiểm tra header F2:H2, giới hạn Menu và các mốc F3:H...; dữ liệu
+   phải đầy đủ, đúng thứ tự và không có khoảng trống xen giữa.
+   Nếu F3:H3 trống hoàn toàn, APPLY xóa Roadmap VI cũ và trả CLEARED_EMPTY;
+   DRY_RUN không xóa. Dữ liệu chỉ trống một phần là lỗi BLOCKER.
 3. Chuyển Title → ID slug + title; Purpose → purpose; mỗi dòng Objectives
    → phần tử danh sách. Chưa tự sinh dependsOn/relatedKnowledge/relatedModules.
-4. Tạo `<I3>/roadmap/vi/roadmap.yml` theo schema, hoặc điền skeleton
-   `roadmap: []` hợp lệ. **Sheet là nguồn chuẩn**: nếu file đã có milestone
-   khác dữ liệu Sheet, đồng bộ **toàn bộ** milestone trong file (trả
-   `UPDATED`), không giữ các ID/relations cũ không xuất hiện ở F/G/H;
-   các quan hệ sẽ được bổ sung sau. Nếu nội dung bằng đúng snapshot Sheet,
-   trả `UNCHANGED`, không sửa file.
-5. Trước mỗi `UPDATED`, backup chính xác bytes của file cũ và xác minh
-   backup tại `.gradle/sheet-roadmap-backups/<đường-dẫn-module>/roadmap/vi/`
-   (thư mục gitignored). `APPLY` ghi qua temporary file, atomic move,
-   parse/readback YAML; `DRY_RUN`
-   không ghi gì. ByFiles tiếp tục các tab độc lập nếu có lỗi, báo từng tab
-   và summary, sau đó kết thúc FAILED nếu có lỗi. Importer không chỉnh Sheet,
-   J3, Gradle metadata hoặc chạy Prime/Worker. YAML trong folder chưa được
-   Gradle nhận vẫn chỉ là tài liệu, chưa tự động được Portal xuất bản.
+4. Sinh một file roadmap.yml mới chỉ từ F:G:H, bằng Groovy và SnakeYAML.
+   Không lấy lại comment, id, quan hệ hoặc metadata cũ từ file đích.
+5. APPLY: dựng snapshot mới trong stage, exact readback và preflight,
+   rồi xóa vĩnh viễn toàn bộ roadmap/vi (bao gồm file cũ/stale)
+   trước khi cài snapshot từ Sheet. KHÔNG backup. Nếu Sheet trống hợp lệ,
+   roadmap/vi được làm sạch và không sinh roadmap.yml. DRY_RUN không ghi.
+   Lỗi nguồn phải dừng trước khi xóa. Không sửa roadmap/en hay Sheet.
 
 ### Import README từ Menu + Knowledge (hai phần ghép cùng một service)
 
@@ -330,8 +383,8 @@ Luồng xử lý chung:
 `SKIPPED` độc lập. **Google Sheets là nguồn chuẩn** cho
 `<I3>/readme/vi/menu/`. Cách đọc:
 
-1. Kiểm tra `A19=Menu Cấp 1`, `B19=Menu Cấp 2`; nếu `A20` trống,
-   `WARN SKIPPED_EMPTY_MENU` và **không ghi README**.
+1. Kiểm tra header Menu. Nếu A20 trống: APPLY xóa sạch readme/vi/menu
+   theo snapshot rỗng, DRY_RUN không thay đổi file.
 2. Hàng có A (Menu Cấp 1) phải có **filename tiếng Anh** tại B cùng hàng,
    ví dụ `OOPBasic.md`; hàng A trống và B có text là Menu Cấp 2. Nếu
    **bất kỳ** tên file cấp 1 nào chưa có, `WARN SKIPPED_MISSING_FILENAME`
@@ -339,7 +392,7 @@ Luồng xử lý chung:
    Tên filename phải hợp lệ theo `[A-Za-z][A-Za-z0-9]*.md`, duy nhất
    không phân biệt hoa/thường. Công đoạn AI đặt tên file diễn ra trước
    importer, **Gradle không gọi AI**.
-3. Chỉ khi đủ filename, đọc các câu trả lời `C:M` ở hàng Menu Cấp 2,
+3. Chỉ khi đủ filename, đọc các câu trả lời `C:N` (12 ô) ở hàng Menu Cấp 2,
    **ghép nội dung mỗi bài không có separator**. Không có câu trả lời vẫn
    giữ một section rỗng. Các mảnh trả lời không được có lỗ hổng.
 4. Tạo một file cho mỗi Menu Cấp 1, ví dụ
@@ -349,19 +402,26 @@ Luồng xử lý chung:
    `Class.md` → `class-001`. Dùng
    `GenerateInternalReadmeMenuService` để tự tạo `## Menu`,
    `<details>`, nút về đầu trang.
-5. Dựng toàn bộ file Markdown trước và readback bản stage. `DRY_RUN`
-   chỉ kiểm tra; `APPLY` so sánh nguyên bộ menu, `UNCHANGED` nếu
-   giống nhau. Nếu có thay đổi, **xóa vĩnh viễn toàn bộ cây thư mục
-   `readme/vi/menu` cũ** (bao gồm các file không phải Markdown và các
-   thư mục con lỗi thời), kiểm tra vị trí đã trống rồi đặt snapshot mới.
-   **Không tạo backup, không thể khôi phục menu cũ nếu đã xóa.**
-   Nếu bước cài mới thất bại sau khi xóa, bản stage đã kiểm tra được giữ
-   lại để có thể tiếp tục cài mới. Không xóa gì nếu Sheet chưa đủ filename, nếu
-   `DRY_RUN`, hoặc nếu nội dung đã `UNCHANGED`. **Không chỉnh**
-   `readme/en`, `BASE.md`, `LIST.md`,
-   `README.vi.md`, Video hoặc Google Sheets. Nếu chạy `APPLY`, nên
-   đồng bộ lại video/metadata/menu tổng hợp bằng các task chuyên trách
-   sau khi duyệt thay đổi.
+5. APPLY dựng và xác minh toàn bộ Markdown trước, sau đó xóa vĩnh viễn
+   readme/vi/menu (kể cả orphan và folder phụ) và cài snapshot mới từ Sheet.
+   Ngay cả khi không đổi nội dung vẫn thay toàn bộ. KHÔNG backup.
+   Menu trống hợp lệ thì CLEARED_EMPTY. Thiếu filename hoặc cấu trúc Menu
+   lỗi khi đã có dữ liệu → SKIPPED/BLOCKER và không xóa. DRY_RUN không ghi.
+   Không tác động readme/en, BASE, LIST hay Google Sheets.
+
+### Import Video Script từ STEP 7 — 100% Groovy/Java (không AI)
+
+VideoSheetImportService chạy sau Roadmap và README trong cả hai task.
+Menu cấp 1 thứ i tương ứng N(3+i), script O:R cùng hàng được ghép nguyên văn.
+Validate header, N, H1/H2, Scene/Transition, Time/Visual/Script/Purpose
+và fragment tối đa 30.000 Unicode code point/ô, không gọi AI.
+
+APPLY dựng/validate/stage/readback snapshot trước, rồi xóa vĩnh viễn
+toàn bộ video/vi/menu và cài chỉ các video có script trên Sheet.
+KHÔNG giữ video.url, skeleton, video đã biên soạn hay orphan cũ.
+Hàng script trống không có file tương ứng; toàn bộ trống → CLEARED_EMPTY.
+Không backup. DRY_RUN không ghi. Script lỗi → BLOCKER trước khi xóa.
+Không chỉnh BUILD_VIDEO, video/en hay Google Sheets.
 
 Tài liệu chính thức: [Application Default Credentials](https://cloud.google.com/docs/authentication/application-default-credentials),
 [Service Account Impersonation](https://cloud.google.com/docs/authentication/use-service-account-impersonation),

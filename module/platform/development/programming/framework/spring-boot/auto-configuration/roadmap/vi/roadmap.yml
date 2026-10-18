@@ -149,4 +149,4 @@ roadmap:
       - Hiểu mô hình phổ biến tách artifact autoconfigure và starter, trường hợp tích hợp đơn giản có thể gộp hai vai trò, cùng vai trò khái niệm của starter là gói dependency thuận tiện mang một tập lựa chọn mặc định quanh auto-configuration.
       - Giữ namespace của configuration key, dependency tùy chọn, metadata và điểm mở rộng phù hợp cho ứng dụng sử dụng thư viện.
       - Lần theo toàn bộ luồng từ lúc thêm starter qua khám phá candidate, đánh giá condition, đóng góp bean mặc định, người dùng ghi đè, chẩn đoán và kiểm chứng.
-      - Giữ ranh giới trách nhiệm: cơ chế Spring container thuộc Spring Framework, semantics của property source/binding thuộc externalized configuration và cơ chế dependency management thuộc build tooling.
+      - "Giữ ranh giới trách nhiệm: cơ chế Spring container thuộc Spring Framework, semantics của property source/binding thuộc externalized configuration và cơ chế dependency management thuộc build tooling."
