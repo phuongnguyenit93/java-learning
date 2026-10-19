@@ -1,48 +1,7 @@
-# Runtime Extensibility
+# Java Advance – Runtime Extensibility
 
-Runtime Extensibility là phần Java Advanced tập trung vào cách một host Java mở rộng hành vi lúc chạy thông qua **service contract**, **provider discovery** và **plugin boundary** thay vì hard-code mọi implementation. Module đi từ SPI và `ServiceLoader` tới plugin architecture, lifecycle, isolation, compatibility và `ModuleLayer`.
+Khả năng mở rộng khi chạy cho phép ứng dụng Java bổ sung hoặc thay thế hành vi thông qua những thành phần độc lập mà không phải gắn chặt mọi triển khai vào mã nguồn của ứng dụng chủ. Để làm được điều đó một cách đáng tin cậy, hệ thống cần có hợp đồng API rõ ràng, cơ chế tìm và nạp phần mở rộng, cùng quy tắc xử lý tương thích, lỗi và tài nguyên. Module **Runtime Extensibility** giúp bạn hiểu cách thiết kế ranh giới giữa ứng dụng chủ và plugin, đồng thời nhận biết những giới hạn của việc nạp mã trong cùng một tiến trình JVM.
 
-## Vì sao nên học module này?
+Nội dung dành cho người đã biết Java Core, interface, class loader và những khái niệm cơ bản về module. Bạn sẽ bắt đầu bằng việc định nghĩa hợp đồng mở rộng, sau đó đăng ký và khám phá các provider qua Java SPI và `ServiceLoader`. Tiếp theo, bạn tìm hiểu cách dùng class loader để tổ chức phụ thuộc và cô lập lớp, cách tạo `ModuleLayer` bằng `ModuleFinder` và `Configuration`, cũng như quan hệ đọc module, `exports` và `opens`. Lộ trình còn giới thiệu biên dịch mã Java khi chạy bằng `JavaCompiler` nếu môi trường hỗ trợ, và nhúng kịch bản qua `ScriptEngine` khi có engine phù hợp.
 
-Một application nhỏ có thể khởi tạo implementation trực tiếp. Khi hệ thống cần cho phép implementation được triển khai, lựa chọn hoặc thay thế độc lập, coupling đó trở thành giới hạn. Java cung cấp service-provider model và `ServiceLoader` để host phụ thuộc vào contract thay vì provider cụ thể; JPMS và `ModuleLayer` mở rộng mô hình này cho các plugin modular ở runtime.
-
-Module này giúp phân biệt **discovery** với **selection**, **provider loading** với **plugin lifecycle**, và **runtime extensibility** với các cơ chế khác như class loading chuyên sâu hoặc instrumentation.
-
-## Prerequisite
-
-Nên nắm trước:
-
-- Java Core: interface/abstract class, exception, resource lifecycle và collection/generics;
-- ClassLoader ở mức class identity, visibility và delegation mental model;
-- Reflection ở mức metadata cơ bản;
-- JPMS cơ bản ở mức named module, `module-info.java`, `requires` và readability; module này sẽ đi sâu phần service directives (`uses` / `provides`), service binding và `ModuleLayer` cần cho runtime extensibility.
-
-## Learning flow
-
-Học theo thứ tự:
-
-1. mental model của Runtime Extensibility và ranh giới module;
-2. SPI/service-provider contract;
-3. `ServiceLoader` discovery, lazy loading, cache, error và class-loader context;
-4. provider discovery/selection strategy;
-5. provider deployment trên class path và module path;
-6. plugin architecture và extension points;
-7. plugin lifecycle;
-8. isolation và shared/private dependency boundary;
-9. host-plugin version compatibility;
-10. `Configuration` + `ModuleLayer` cho modular runtime plugins;
-11. tổng hợp mechanism-selection và các design pitfall quan trọng.
-
-## Ranh giới module
-
-Runtime Extensibility sở hữu service-provider contract, `ServiceLoader`, provider discovery/selection, plugin architecture/lifecycle/isolation/compatibility và integration với class path, module path và `ModuleLayer`.
-
-Các phần sau được handoff:
-
-- class-loading lifecycle, delegation và custom loader mechanics chuyên sâu → Java Core ClassLoader;
-- JPMS descriptor/readability/resolution curriculum đầy đủ → Java Version Module System;
-- lịch sử ServiceLoader từ Java 6 → Java Version;
-- framework-specific plugin systems → framework/module owner tương ứng;
-- bytecode transformation và Java Agent → Instrumentation.
-
-Mục tiêu cuối cùng là có thể thiết kế một extension flow end-to-end từ contract → deployment → discovery → selection → activation → isolation/failure handling, đồng thời chọn mức cơ chế đơn giản nhất đáp ứng đúng nhu cầu.
+Ở phần cuối, bạn sẽ thiết kế vòng đời khởi tạo, dừng và thay thế plugin; thu hồi luồng, tham chiếu và tài nguyên; đồng thời kiểm thử trường hợp thiếu provider, xung đột phụ thuộc hoặc khác phiên bản API. Bạn cũng sẽ xem xét ranh giới tin cậy của mã mở rộng và khi nào cần tách plugin sang tiến trình riêng. Sau module, bạn có thể xây dựng một cơ chế mở rộng nhỏ, giải thích cách JVM phát hiện và nạp phần triển khai, và kiểm chứng rằng lỗi plugin không làm hỏng luồng hoạt động của ứng dụng chủ.

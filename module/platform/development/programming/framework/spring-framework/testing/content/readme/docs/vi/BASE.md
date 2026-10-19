@@ -1,31 +1,7 @@
-# Spring Framework Testing
+# Spring Framework – Testing
 
-Module này giải thích cách Spring Framework hỗ trợ kiểm thử khi test ở mức object thuần không còn đủ để chứng minh hành vi của ứng dụng.
+Kiểm thử ứng dụng Spring không chỉ là xác nhận một phương thức trả về đúng kết quả, mà còn cần kiểm chứng cách các bean phối hợp, dữ liệu và giao dịch vận hành, cũng như hợp đồng HTTP và các xử lý bất đồng bộ. Một chiến lược kiểm thử hợp lý giúp phát hiện lỗi sớm mà không phải khởi tạo toàn bộ ứng dụng cho mọi trường hợp. Module **Spring Framework – Testing** tập trung vào việc lựa chọn đúng cấp kiểm thử, cô lập phụ thuộc và xây dựng các phép kiểm chứng ổn định, có thể tái lập.
 
-Luồng học bắt đầu từ ranh giới giữa unit test thông thường và integration test do Spring quản lý, sau đó đi qua TestContext Framework, cấu hình ApplicationContext và dependency injection cho test fixture, profile/property dành riêng cho test, context caching và isolation, transactional/database testing, Servlet/reactive web testing, rồi kết thúc ở lifecycle và khả năng mở rộng của hạ tầng kiểm thử.
+Module phù hợp với người đã có nền tảng Java, JUnit, Spring IoC và hiểu các thành phần web hoặc truy cập dữ liệu cơ bản. Bạn sẽ bắt đầu bằng phân biệt kiểm thử đơn vị, tích hợp và đầu-cuối; viết unit test cho lớp Java thông thường với fake/mock; sau đó sử dụng Spring TestContext, `@SpringJUnitConfig`, `SpringExtension` và các cơ chế thay thế bean có chủ đích. Lộ trình tiếp tục với cách tái sử dụng `ApplicationContext` mà vẫn cô lập trạng thái, chuẩn bị dữ liệu bằng `@Sql`, kiểm chứng giao dịch và phân biệt rollback của bài kiểm thử với hành vi commit thực tế.
 
-Kiến thức nên có trước:
-
-- kiến thức kiểm thử Java cơ bản và một test framework tổng quát như JUnit;
-- nền tảng Spring IoC / ApplicationContext từ `spring-framework/core-container`;
-- kiến thức Spring MVC trước khi đi sâu vào MockMvc;
-- kiến thức Spring WebFlux trước khi đi sâu vào WebTestClient;
-- nền tảng Spring transaction trước khi phân tích sâu hành vi của transactional test.
-
-Luồng học chính:
-
-```text
-testability và lựa chọn test scope
-→ TestContext runtime model
-→ cấu hình context và test fixture
-→ profile và property cho test
-→ context caching / isolation / parallelism
-→ transactional và database testing
-→ MockMvc
-→ WebTestClient và client-side HTTP testing
-→ lifecycle, AOT support và tổng hợp testing strategy
-```
-
-Module này sở hữu hạ tầng kiểm thử của Spring Framework như TestContext, MockMvc, WebTestClient, MockRestServiceServer, context caching, transactional test support và các lifecycle hook liên quan. Module không sở hữu kiến thức nền JUnit, Spring Boot test slice hay `@SpringBootTest`, cơ chế production bên trong Spring MVC/WebFlux hoặc semantics tổng quát của Spring transaction management.
-
-Mục tiêu cuối cùng là biết chọn test scope nhỏ nhất đủ chứng minh hành vi cần kiểm tra và hiểu chính xác Spring infrastructure nào đang tham gia vào bằng chứng đó.
+Tiếp theo, bạn sẽ kiểm thử hợp đồng HTTP bằng `MockMvc`, `WebTestClient` hoặc công cụ phù hợp, mô phỏng HTTP client bên ngoài với `MockRestServiceServer` hay máy chủ giả lập, rồi xác nhận sự kiện ứng dụng và tác vụ bất đồng bộ mà không phụ thuộc vào `sleep` cố định. Phần cuối hướng dẫn tổ chức bộ kiểm thử độc lập thứ tự, phân loại test trong quy trình build và chẩn đoán các lỗi liên quan đến cấu hình, cache, giao dịch hoặc test chập chờn. Sau module, bạn có thể thiết kế bộ kiểm thử đáng tin cậy, giải thích phạm vi bảo đảm của từng loại test và kiểm chứng những tình huống thành công, biên cũng như thất bại.

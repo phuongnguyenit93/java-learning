@@ -1,0 +1,7 @@
+# Vòng đời quản lý bí mật trong bảo mật hệ thống (Secret Lifecycle)
+
+Bí mật (secret) như mật khẩu dịch vụ, khóa hoặc thông tin xác thực cho phép một chủ thể truy cập tài nguyên nhạy cảm. Nếu bị tạo, lưu giữ, truyền đi hoặc ngừng sử dụng không đúng cách, bí mật có thể trở thành điểm yếu ngay cả khi những cơ chế bảo vệ khác đã được triển khai. Quản lý vòng đời bí mật vì thế là quá trình kiểm soát từ lúc nhận diện nhu cầu, cấp phát, sử dụng cho đến thay thế, thu hồi và xử lý sự cố, gắn với chủ sở hữu và giới hạn quyền rõ ràng.
+
+Tài liệu này dành cho người học an toàn thông tin, vận hành hệ thống hoặc thiết kế hạ tầng, đã quen với khái niệm danh tính và kiểm soát truy cập cơ bản. Phạm vi là bảo mật tổng quát, không phụ thuộc ngôn ngữ lập trình hay framework cụ thể. Lộ trình gồm tám mốc: nhận diện và kiểm kê bí mật; tạo hoặc cấp phát với quyền và thời hạn phù hợp; lưu trữ an toàn; phân phối đến đúng bên sử dụng; hạn chế lộ lọt trong quá trình dùng; xoay vòng có kiểm soát; thu hồi, hủy bỏ; cuối cùng là kiểm toán và ứng phó khi xảy ra sự cố.
+
+Sau khi hoàn thành, bạn có thể phân biệt bí mật với cấu hình công khai, lập danh mục nơi sử dụng và phụ thuộc, lựa chọn cách lưu trữ và phân phối hạn chế truy cập trái phép. Bạn cũng sẽ biết giảm nguy cơ lộ bí mật qua mã nguồn, nhật ký hay quy trình CI/CD, thiết kế kế hoạch thay phiên bản không làm gián đoạn dịch vụ, xác minh việc vô hiệu hóa tại nơi chấp nhận bí mật và kiểm tra dấu vết truy cập để hỗ trợ phát hiện, thu hồi và khôi phục sau sự cố.

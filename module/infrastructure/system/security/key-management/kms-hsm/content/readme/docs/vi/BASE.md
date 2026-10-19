@@ -1,0 +1,7 @@
+# Quản lý khóa bằng KMS và HSM trong bảo mật hệ thống
+
+Khóa mật mã cần được bảo vệ không chỉ khi lưu trữ mà còn trong lúc tạo, sử dụng, thay đổi và thu hồi. Key Management Service (KMS) cung cấp dịch vụ quản lý và thực hiện các thao tác liên quan đến khóa, trong khi Hardware Security Module (HSM) là thành phần phần cứng chuyên dụng để bảo vệ vật liệu khóa và thao tác mật mã trong một ranh giới bảo mật xác định. Hiểu đúng vai trò và giới hạn của mỗi giải pháp giúp giảm nguy cơ lộ khóa, kiểm soát quyền sử dụng và thiết kế hệ thống có thể vận hành an toàn.
+
+Tài liệu này dành cho người học an toàn thông tin, kiến trúc hệ thống và vận hành hạ tầng đã biết những khái niệm cơ bản về mã hóa và kiểm soát truy cập. Nội dung tiếp cận KMS/HSM ở mức bảo mật tổng quát, không phụ thuộc ngôn ngữ hay framework cụ thể. Lộ trình gồm tám mốc: vai trò KMS và HSM; lựa chọn loại khóa và mô hình bảo vệ; mã hóa phong bì với khóa dữ liệu (DEK) và khóa bọc khóa (KEK); phân quyền quản trị và sử dụng; tích hợp qua giao diện dịch vụ; quản lý vòng đời khóa; bảo đảm tính sẵn sàng, phục hồi; và kiểm toán, ứng phó sự cố.
+
+Sau khi hoàn thành, bạn có thể phân tích nơi khóa được tạo và sử dụng, khả năng xuất khóa, cách bọc và mở khóa dữ liệu; thiết kế quyền tối thiểu và tách biệt thao tác quản trị với thao tác mật mã. Bạn cũng có thể giải thích sự khác nhau giữa xoay khóa, bọc lại khóa và mã hóa lại dữ liệu; kiểm thử lỗi quyền, giới hạn dịch vụ, khả năng đọc dữ liệu cũ và phương án phục hồi, đồng thời theo dõi thao tác nhạy cảm mà không để lộ khóa trong nhật ký.

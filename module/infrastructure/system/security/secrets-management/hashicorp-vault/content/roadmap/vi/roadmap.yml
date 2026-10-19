@@ -1,0 +1,94 @@
+# <roadmap-schema>
+# Cấu trúc Roadmap Module
+# schema-version: 1
+#
+# YAML CONTRACT
+# roadmap: Danh sách milestone cấp cao của roadmap cho language hiện tại. ID milestone phải duy nhất.
+#
+# - id [string, required]: ID ổn định và duy nhất của milestone trong roadmap language hiện tại.
+# - title [string, required]: Tên milestone hiển thị cho learner.
+# - purpose [string, required]: Milestone này tồn tại để learner hiểu hoặc đạt được điều gì.
+# - dependsOn [list, optional]: Danh sách id milestone prerequisite khi dependency không thể hiện đủ chỉ bằng thứ tự item.
+# - objectives [list, optional]: Các learning objective cấp milestone; không dùng để liệt kê mọi fact/API/syntax nhỏ.
+# - relatedKnowledge [list, optional]: Danh sách Knowledge category id trong chính module hiện tại hỗ trợ milestone. Portal hiển thị danh sách này ở phía đối diện milestone và click item sẽ điều hướng sang Knowledge category tương ứng.
+# - relatedModules [list, optional]: Các module liên quan hiển thị ở Level 2 của Portal. Mỗi item dùng routeId bắt buộc và có thể có label/note localized; relation này chỉ để điều hướng, không tạo child milestone hoặc thay đổi learning order.
+#
+# ROADMAP THINKING FRAMEWORK
+# PURPOSE
+#   - Topic/module này là gì?
+#   - Vì sao nó tồn tại?
+#   - Không có nó thì learner gặp vấn đề gì?
+# FOUNDATION
+#   - Learner cần prerequisite hoặc mental model nào trước?
+# CORE MODEL
+#   - Những abstraction hoặc building block lớn nào tạo nên chủ đề này?
+# MECHANICS
+#   - Nó hoạt động như thế nào ở mức language/runtime/API phù hợp với module?
+# USAGE
+#   - Nó được dùng như thế nào trong code thực tế?
+# DECISION / TRADE-OFF
+#   - Khi nào nên chọn cơ chế này thay vì cơ chế khác?
+#   - Khi nào không nên dùng?
+# FAILURE / PITFALL
+#   - Những sai lầm, compile-time failure hoặc runtime failure nào đáng biết?
+# INTEGRATION
+#   - Chủ đề này kết nối với những concept/module lân cận nào?
+# SYNTHESIS
+#   - Sau cùng learner phải giữ mental model end-to-end nào?
+#
+# Mỗi language tự chịu trách nhiệm cho roadmap của chính nó. Không suy luận hoặc đồng bộ cấu trúc từ roadmap của language khác.
+# Thứ tự item trong roadmap chính là thứ tự học mặc định. Chỉ dùng dependsOn khi cần biểu diễn dependency rõ hơn thứ tự tuyến tính.
+# Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
+# </roadmap-schema>
+
+roadmap:
+  - id: vai-tro-vault-va-bi-mat
+    title: Vai trò Vault và bí mật
+    purpose: Hiểu những vấn đề Vault giải quyết trong việc bảo vệ và cấp phát bí mật.
+    objectives:
+      - Phân biệt lưu trữ bí mật, cấp bí mật động và dịch vụ mã hóa.
+      - Liên hệ xác thực, chính sách và truy cập bí mật.
+  - id: kien-truc-va-khoi-tao
+    title: Kiến trúc và khởi tạo
+    purpose: Nắm ranh giới bảo vệ trước khi cấu hình máy chủ Vault.
+    objectives:
+      - Phân biệt chế độ phát triển với máy chủ được bảo vệ bằng TLS.
+      - Mô tả kho lưu trữ, hàng rào mã hóa và trạng thái seal/unseal.
+  - id: xac-thuc-va-quyen-truy-cap
+    title: Xác thực và quyền truy cập
+    purpose: Cho đúng danh tính thực hiện đúng thao tác trên bí mật.
+    objectives:
+      - Chọn phương thức xác thực cho người dùng và ứng dụng.
+      - Thiết kế chính sách theo đường dẫn với quyền tối thiểu.
+      - Phân biệt token quản trị gốc với token ứng dụng.
+  - id: bi-mat-tinh-voi-kv
+    title: Bí mật tĩnh với KV
+    purpose: Quản lý giá trị bí mật và lịch sử thay đổi của chúng.
+    objectives:
+      - Phân biệt KV v1 với KV v2.
+      - Mô tả phiên bản, khôi phục và xóa vĩnh viễn trong KV v2.
+  - id: bi-mat-dong-va-thoi-han-cap
+    title: Bí mật động và thời hạn cấp
+    purpose: Cấp thông tin xác thực theo nhu cầu và giới hạn thời gian sử dụng.
+    objectives:
+      - Phân biệt bí mật động với bí mật lưu sẵn.
+      - Liên hệ lease, TTL, gia hạn và thu hồi với hệ thống đích.
+  - id: ma-hoa-va-cap-chung-chi
+    title: Mã hóa và cấp chứng chỉ
+    purpose: Nhận biết năng lực Vault vượt ngoài lưu trữ giá trị bí mật.
+    objectives:
+      - Giải thích Transit mã hóa mà không lưu dữ liệu ứng dụng.
+      - Mô tả PKI cấp và quản lý chứng chỉ ngắn hạn.
+  - id: tich-hop-va-vong-doi-ung-dung
+    title: Tích hợp và vòng đời ứng dụng
+    purpose: Đưa bí mật đến ứng dụng và cập nhật đúng khi có thay đổi.
+    objectives:
+      - So sánh gọi API với dùng Vault Agent.
+      - Thiết kế xác thực tự động, gia hạn và nạp lại thông tin xác thực.
+  - id: van-hanh-va-kiem-chung
+    title: Vận hành và kiểm chứng
+    purpose: Giữ Vault sẵn sàng, có thể khôi phục và kiểm tra được truy cập.
+    objectives:
+      - Theo dõi nhật ký kiểm toán (audit log) và bảo vệ dữ liệu nhạy cảm.
+      - Mô tả tính sẵn sàng cao, sao lưu và phục hồi theo cơ chế lưu trữ.
+      - Kiểm thử thiếu quyền, hết hạn, thu hồi và sự cố kết nối.

@@ -1,23 +1,7 @@
-# Java I/O
+# Nhập xuất dữ liệu trong Java (Java I/O)
 
-Module này xây mental model cho **dòng dữ liệu và resource I/O** trong Java: phân biệt byte với character, stream với buffer/channel, filesystem path với open resource và ownership/lifecycle của resource.
+Nhập xuất dữ liệu (Input/Output, I/O) là cách chương trình Java trao đổi dữ liệu với tệp, bộ nhớ và các nguồn hoặc đích bên ngoài. Học I/O cần bắt đầu từ luồng dữ liệu và sự khác biệt giữa byte với ký tự, sau đó hiểu cách đọc, ghi, đệm, xử lý lỗi và đóng tài nguyên để tránh mất dữ liệu, sai bảng mã hoặc rò rỉ tài nguyên.
 
-## Learning flow
+Tài liệu này dành cho người đã có nền tảng Java Core và muốn làm việc với tệp hoặc luồng dữ liệu một cách chắc chắn. Lộ trình gồm chín mốc: tư duy nhập xuất; luồng byte; văn bản và bảng mã; bộ đệm và tài nguyên; đường dẫn và tệp; dữ liệu có cấu trúc; NIO và truy cập theo vị trí; lựa chọn cách xử lý; thực hành tích hợp. Bạn sẽ lần lượt tiếp cận `InputStream`/`OutputStream`, `Reader`/`Writer`, `Charset`, `Path`/`Files`, `Buffer` và `Channel`, đồng thời hiểu khi nào nên đọc toàn bộ dữ liệu hoặc xử lý từng phần.
 
-1. I/O mental model;
-2. byte streams;
-3. character streams;
-4. buffered I/O;
-5. legacy `File`;
-6. `Path` và `Files`;
-7. buffers và channels;
-8. `FileChannel`;
-9. resource management;
-10. serialization;
-11. chọn I/O abstraction phù hợp.
-
-## Vì sao nên học?
-
-I/O bug thường đến từ sai encoding, quên close resource, chọn abstraction không phù hợp hoặc nhầm file path với dữ liệu đã mở. Module ưu tiên hiểu boundary và lifecycle trước khi tối ưu.
-
-Networking và advanced asynchronous/non-blocking runtime patterns thuộc module khác; phần này tập trung vào Java Core I/O foundation.
+Sau khi hoàn thành, bạn có thể xây dựng luồng đọc ghi văn bản và nhị phân, kiểm soát bảng mã, dùng `try-with-resources` để quản lý tài nguyên và thao tác tệp an toàn hơn. Bạn cũng có thể nhận diện giới hạn của I/O chặn, không chặn và bất đồng bộ; lựa chọn API phù hợp với yêu cầu; kiểm thử các tình huống tệp rỗng, thiếu quyền, lỗi dữ liệu và xác minh kết quả sau khi ghi.

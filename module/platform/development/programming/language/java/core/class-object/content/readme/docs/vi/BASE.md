@@ -1,25 +1,7 @@
-# Class và Object
+# Lớp và đối tượng trong Java (Class & Object)
 
-Module này xây nền tảng cho cách Java mô hình hóa **type, instance, state và object lifecycle**. Trọng tâm là hiểu class định nghĩa cấu trúc/hành vi, object là instance runtime và các rule khởi tạo quyết định state ban đầu như thế nào.
+Trong Java, lớp (`class`) mô tả cấu trúc và hành vi của một kiểu đối tượng, còn đối tượng là một thể hiện cụ thể của lớp. Nắm vững mối quan hệ giữa lớp, trường, phương thức và biến tham chiếu giúp bạn hiểu chương trình lưu giữ, thay đổi và sử dụng trạng thái như thế nào, thay vì chỉ ghi nhớ cú pháp.
 
-## Learning flow
+Tài liệu này dành cho người bắt đầu học Java Core hoặc muốn củng cố kiến thức về class và object. Lộ trình gồm tám mốc: lớp và đối tượng; trường và phương thức; khởi tạo bằng `new`, constructor và `this`; tham chiếu và `null`; đóng gói và quyền truy cập; thành viên `static` và `final`; khởi tạo và vòng đời; cuối cùng là thiết kế lớp đơn giản. Các mốc nối tiếp nhau từ khai báo cấu trúc đến lý giải hành vi thực tế của đối tượng.
 
-1. class và object;
-2. constructor;
-3. `this` và `super`;
-4. access modifier;
-5. `static` và `final`;
-6. initialization blocks;
-7. initialization order;
-8. object creation lifecycle;
-9. nested/inner classes;
-10. `Object` class;
-11. enum;
-12. copy semantics;
-13. aliasing và mutability;
-14. immutability và defensive copy;
-15. tổng hợp class/object design.
-
-## Mental model cần giữ
-
-Một object không chỉ là “biến chứa dữ liệu”. Cần theo được type declaration → initialization → reference/aliasing → mutation/copy → object-level contracts. Equality/hash/order được tách sang Object Contract; inheritance/polymorphism ở mức design được học sâu trong OOP.
+Sau khi học, bạn có thể xây dựng một lớp với trạng thái hợp lệ và phương thức phù hợp, phân biệt dữ liệu riêng của từng đối tượng với dữ liệu chung của lớp, giải thích truyền tham trị trong Java và hệ quả khi nhiều biến cùng tham chiếu một đối tượng. Bạn cũng sẽ biết theo dõi thứ tự khởi tạo, nhận diện khi đối tượng có thể được thu gom rác và kiểm tra một lớp đơn giản trước khi tiến tới những chủ đề thiết kế OOP rộng hơn.

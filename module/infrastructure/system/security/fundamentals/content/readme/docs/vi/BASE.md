@@ -1,0 +1,7 @@
+# Nền tảng bảo mật hệ thống (Security Fundamentals)
+
+Bảo mật thông tin bắt đầu từ câu hỏi cần bảo vệ tài sản nào, trước những rủi ro gì và với mức độ ưu tiên ra sao. Ba mục tiêu cơ bản gồm tính bí mật, toàn vẹn và sẵn sàng (CIA) giúp đánh giá hậu quả khi dữ liệu hoặc dịch vụ bị xâm phạm. Để đưa ra biện pháp phù hợp, cần phân biệt mối đe dọa với lỗ hổng, xem xét khả năng xảy ra và tác động, đồng thời nhận diện luồng dữ liệu cùng các ranh giới tin cậy trong hệ thống.
+
+Tài liệu này dành cho người bắt đầu học an toàn thông tin hoặc muốn xây dựng nền tảng trước khi tìm hiểu các chủ đề bảo mật chuyên sâu. Nội dung tiếp cận bảo mật một cách tổng quát, không phụ thuộc ngôn ngữ hay framework cụ thể. Lộ trình đi từ mục tiêu bảo mật và đánh giá rủi ro đến nguyên tắc thiết kế an toàn như quyền tối thiểu, mặc định từ chối và phòng vệ nhiều lớp; sau đó là danh tính, xác thực, phân quyền, các cơ chế mật mã bảo vệ dữ liệu, rủi ro ở lớp mạng, hệ thống và ứng dụng, rồi kiểm thử lỗ hổng và giám sát ứng phó.
+
+Sau khi hoàn thành, bạn có thể xác định tài sản quan trọng, phác thảo luồng dữ liệu và ranh giới tin cậy, lựa chọn biện pháp bảo vệ dựa trên rủi ro thay vì áp dụng máy móc. Bạn cũng có thể phân biệt mã hóa, băm, MAC và chữ ký số, nhận diện điểm yếu từ cấu hình, đầu vào hoặc thành phần phụ thuộc; lập kế hoạch rà soát, ưu tiên khắc phục, kiểm chứng sau sửa lỗi và mô tả quy trình phát hiện, cô lập, xử lý, khôi phục và rút kinh nghiệm khi có sự cố.

@@ -1,0 +1,86 @@
+# <roadmap-schema>
+# Cấu trúc Roadmap Module
+# schema-version: 1
+#
+# YAML CONTRACT
+# roadmap: Danh sách milestone cấp cao của roadmap cho language hiện tại. ID milestone phải duy nhất.
+#
+# - id [string, required]: ID ổn định và duy nhất của milestone trong roadmap language hiện tại.
+# - title [string, required]: Tên milestone hiển thị cho learner.
+# - purpose [string, required]: Milestone này tồn tại để learner hiểu hoặc đạt được điều gì.
+# - dependsOn [list, optional]: Danh sách id milestone prerequisite khi dependency không thể hiện đủ chỉ bằng thứ tự item.
+# - objectives [list, optional]: Các learning objective cấp milestone; không dùng để liệt kê mọi fact/API/syntax nhỏ.
+# - relatedKnowledge [list, optional]: Danh sách Knowledge category id trong chính module hiện tại hỗ trợ milestone. Portal hiển thị danh sách này ở phía đối diện milestone và click item sẽ điều hướng sang Knowledge category tương ứng.
+# - relatedModules [list, optional]: Các module liên quan hiển thị ở Level 2 của Portal. Mỗi item dùng routeId bắt buộc và có thể có label/note localized; relation này chỉ để điều hướng, không tạo child milestone hoặc thay đổi learning order.
+#
+# ROADMAP THINKING FRAMEWORK
+# PURPOSE
+#   - Topic/module này là gì?
+#   - Vì sao nó tồn tại?
+#   - Không có nó thì learner gặp vấn đề gì?
+# FOUNDATION
+#   - Learner cần prerequisite hoặc mental model nào trước?
+# CORE MODEL
+#   - Những abstraction hoặc building block lớn nào tạo nên chủ đề này?
+# MECHANICS
+#   - Nó hoạt động như thế nào ở mức language/runtime/API phù hợp với module?
+# USAGE
+#   - Nó được dùng như thế nào trong code thực tế?
+# DECISION / TRADE-OFF
+#   - Khi nào nên chọn cơ chế này thay vì cơ chế khác?
+#   - Khi nào không nên dùng?
+# FAILURE / PITFALL
+#   - Những sai lầm, compile-time failure hoặc runtime failure nào đáng biết?
+# INTEGRATION
+#   - Chủ đề này kết nối với những concept/module lân cận nào?
+# SYNTHESIS
+#   - Sau cùng learner phải giữ mental model end-to-end nào?
+#
+# Mỗi language tự chịu trách nhiệm cho roadmap của chính nó. Không suy luận hoặc đồng bộ cấu trúc từ roadmap của language khác.
+# Thứ tự item trong roadmap chính là thứ tự học mặc định. Chỉ dùng dependsOn khi cần biểu diễn dependency rõ hơn thứ tự tuyến tính.
+# Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
+# </roadmap-schema>
+
+roadmap:
+  - id: hieu-dung-mfa
+    title: Hiểu đúng MFA
+    purpose: Hiểu vì sao cần nhiều yếu tố độc lập để bảo vệ tài khoản.
+    objectives:
+      - Phân biệt yếu tố kiến thức, sở hữu và sinh trắc học.
+      - Phân biệt MFA, xác thực hai bước và đăng nhập không mật khẩu.
+  - id: phuong-thuc-xac-thuc
+    title: Phương thức xác thực
+    purpose: Nhận diện cách hoạt động và giới hạn của các phương thức MFA phổ biến.
+    objectives:
+      - So sánh TOTP, mã qua SMS và thông báo xác nhận trên thiết bị.
+      - Giải thích vì sao mã dùng một lần vẫn có thể bị lừa lấy và chuyển tiếp.
+  - id: mfa-chong-lua-dao
+    title: MFA chống lừa đảo
+    purpose: Hiểu cách xác thực mật mã giảm nguy cơ đăng nhập vào trang giả.
+    objectives:
+      - Mô tả vai trò của FIDO2/WebAuthn và khóa bảo mật trong chống lừa đảo.
+      - Xác định khi nào khóa kết hợp PIN hoặc sinh trắc học đáp ứng nhiều yếu tố.
+  - id: dang-ky-phuong-tien
+    title: Đăng ký phương tiện
+    purpose: Gắn phương tiện xác thực với đúng tài khoản ngay từ đầu.
+    objectives:
+      - Mô tả bước xác minh trước khi thêm hoặc thay phương tiện xác thực.
+      - Lập phương án đăng ký dự phòng và thông báo khi có thay đổi.
+  - id: luong-va-chinh-sach
+    title: Luồng và chính sách
+    purpose: Thiết kế yêu cầu MFA phù hợp với thao tác và mức rủi ro.
+    objectives:
+      - Vẽ luồng đăng nhập, xác thực tăng cường và từ chối khi thiếu yếu tố.
+      - Xác định giới hạn thử sai, thời hạn và cơ chế chống dùng lại mã xác thực.
+  - id: khoi-phuc-va-thu-hoi
+    title: Khôi phục và thu hồi
+    purpose: Duy trì khả năng truy cập mà không tạo đường bỏ qua MFA.
+    objectives:
+      - Thiết kế xử lý mất thiết bị, mã khôi phục và thay phương tiện an toàn.
+      - Xác định khi cần thu hồi phương tiện, kết thúc phiên và thông báo người dùng.
+  - id: kiem-thu-va-van-hanh
+    title: Kiểm thử và vận hành
+    purpose: Kiểm chứng luồng MFA và theo dõi các dấu hiệu bị tấn công.
+    objectives:
+      - Kiểm thử mã hết hạn, phát lại, bỏ qua MFA và lạm dụng quy trình khôi phục.
+      - Đề xuất cảnh báo cho xác nhận dồn dập, đăng nhập bất thường và thay đổi phương tiện.

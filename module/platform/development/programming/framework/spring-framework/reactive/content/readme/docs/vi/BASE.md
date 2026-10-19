@@ -1,20 +1,7 @@
-# Spring WebFlux
+# Spring Framework — Reactive
 
-Module này giải thích Spring WebFlux như web stack reactive, non-blocking của Spring Framework. Mục tiêu không phải học lại Reactive Streams hay Project Reactor từ đầu, mà là hiểu cách Spring áp dụng reactive model vào HTTP server processing, endpoint programming, cross-cutting web infrastructure và outbound HTTP.
+Lập trình reactive tổ chức việc xử lý thành **luồng tín hiệu dữ liệu** có thể được tiêu thụ theo nhu cầu, thay vì giả định mỗi yêu cầu đều cần giữ một luồng thực thi trong suốt thời gian chờ. Trong Spring, cách tiếp cận này hữu ích cho những hệ thống có nhiều thao tác I/O đồng thời, nhưng không đồng nghĩa mọi xử lý bất đồng bộ đều không chặn hay mọi ứng dụng đều nên chuyển sang reactive. Module giúp bạn hiểu **Reactive Streams**, cơ chế `Publisher`/`Subscriber`, backpressure và cách đánh giá sự phù hợp của mô hình theo tải thực tế.
 
-Trước khi học, learner nên nắm Java, HTTP request/response cơ bản và các khái niệm reactive nền tảng như publisher, subscriber, asynchronous composition và backpressure. Reactive programming tổng quát thuộc module Reactive Programming; module này chỉ sở hữu các mechanics đặc thù của WebFlux.
+Nội dung dành cho người đã biết Java, Spring và HTTP, có nền tảng về bất đồng bộ và xử lý lỗi. Bạn sẽ bắt đầu với **Project Reactor**, sử dụng `Mono` cho 0–1 kết quả và `Flux` cho chuỗi nhiều phần tử; hiểu thời điểm luồng được đăng ký, khác biệt giữa nguồn cold và hot. Sau đó, bạn sẽ tạo pipeline bằng `map`, `filter`, `flatMap`, `concat`, `merge`, `zip`, cân nhắc thứ tự và mức đồng thời, rồi kiểm soát lỗi, timeout, retry, hủy đăng ký và vòng đời tài nguyên. Phần Scheduler giải thích `publishOn`, `subscribeOn`, cách cô lập API chặn và truyền thông tin qua `Reactor Context` thay vì phụ thuộc không đúng vào `ThreadLocal`.
 
-Flow học của module:
-
-1. hiểu vì sao WebFlux tồn tại và khi nào non-blocking model mang lại giá trị;
-2. học reactive HTTP runtime, WebHandler chain, DispatcherHandler và result-processing architecture;
-3. hiểu request/response body, codec, streaming, multipart, validation integration và HTTP caching behavior;
-4. học annotated reactive controller;
-5. học functional endpoint với WebFlux.fn;
-6. hiểu filter, Reactor Context, session, error layer, configuration và controlled blocking execution;
-7. học WebClient cùng lifecycle của resource thuộc HTTP connector bên dưới;
-8. tổng hợp production trade-off, failure mode, handoff sang module lân cận và end-to-end request flow.
-
-Module dừng rõ ở ownership boundary. Validation, binding, conversion và formatting dùng chung thuộc Spring Framework Validation and Data Binding. Reactive persistence thuộc Spring Framework Data Access và Spring Data. Reactive transaction semantics thuộc Transaction Management. Framework-level testing thuộc Spring Testing. Spring WebSocket client/server abstractions, WebSocket handler/session lifecycle, STOMP và application messaging cấp cao hơn thuộc Spring Messaging. Reactor và Reactive Streams theory tổng quát vẫn thuộc Reactive Programming.
-
-Sau khi hoàn thành, learner nên có thể theo dõi một WebFlux request từ HTTP adapter qua dispatch và endpoint handling tới response completion, giải thích hệ quả của blocking work và resource usage, chọn Spring MVC hay WebFlux dựa trên constraint thực tế, và xác định đúng owner khi một concern đi ra ngoài WebFlux request-response boundary.
+Từ nền tảng đó, lộ trình đi vào **Spring WebFlux** để xây dựng endpoint bằng controller hoặc `RouterFunction`, trả về `Mono`, `Flux` hay luồng SSE; đồng thời dùng **WebClient** khi gọi dịch vụ HTTP bên ngoài và nhận diện những điểm tích hợp còn chặn. Cuối cùng, bạn sẽ kiểm thử luồng tín hiệu với `StepVerifier`, thời gian ảo và `WebTestClient`, theo dõi độ trễ, bộ nhớ và nghẽn luồng dưới tải. Hoàn thành module, bạn có thể thiết kế pipeline reactive có kiểm soát nhu cầu, lỗi và tài nguyên, biết cách tích hợp với ứng dụng Spring và đánh giá hiệu quả bằng đo đạc.

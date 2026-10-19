@@ -1,0 +1,86 @@
+# <roadmap-schema>
+# Cấu trúc Roadmap Module
+# schema-version: 1
+#
+# YAML CONTRACT
+# roadmap: Danh sách milestone cấp cao của roadmap cho language hiện tại. ID milestone phải duy nhất.
+#
+# - id [string, required]: ID ổn định và duy nhất của milestone trong roadmap language hiện tại.
+# - title [string, required]: Tên milestone hiển thị cho learner.
+# - purpose [string, required]: Milestone này tồn tại để learner hiểu hoặc đạt được điều gì.
+# - dependsOn [list, optional]: Danh sách id milestone prerequisite khi dependency không thể hiện đủ chỉ bằng thứ tự item.
+# - objectives [list, optional]: Các learning objective cấp milestone; không dùng để liệt kê mọi fact/API/syntax nhỏ.
+# - relatedKnowledge [list, optional]: Danh sách Knowledge category id trong chính module hiện tại hỗ trợ milestone. Portal hiển thị danh sách này ở phía đối diện milestone và click item sẽ điều hướng sang Knowledge category tương ứng.
+# - relatedModules [list, optional]: Các module liên quan hiển thị ở Level 2 của Portal. Mỗi item dùng routeId bắt buộc và có thể có label/note localized; relation này chỉ để điều hướng, không tạo child milestone hoặc thay đổi learning order.
+#
+# ROADMAP THINKING FRAMEWORK
+# PURPOSE
+#   - Topic/module này là gì?
+#   - Vì sao nó tồn tại?
+#   - Không có nó thì learner gặp vấn đề gì?
+# FOUNDATION
+#   - Learner cần prerequisite hoặc mental model nào trước?
+# CORE MODEL
+#   - Những abstraction hoặc building block lớn nào tạo nên chủ đề này?
+# MECHANICS
+#   - Nó hoạt động như thế nào ở mức language/runtime/API phù hợp với module?
+# USAGE
+#   - Nó được dùng như thế nào trong code thực tế?
+# DECISION / TRADE-OFF
+#   - Khi nào nên chọn cơ chế này thay vì cơ chế khác?
+#   - Khi nào không nên dùng?
+# FAILURE / PITFALL
+#   - Những sai lầm, compile-time failure hoặc runtime failure nào đáng biết?
+# INTEGRATION
+#   - Chủ đề này kết nối với những concept/module lân cận nào?
+# SYNTHESIS
+#   - Sau cùng learner phải giữ mental model end-to-end nào?
+#
+# Mỗi language tự chịu trách nhiệm cho roadmap của chính nó. Không suy luận hoặc đồng bộ cấu trúc từ roadmap của language khác.
+# Thứ tự item trong roadmap chính là thứ tự học mặc định. Chỉ dùng dependsOn khi cần biểu diễn dependency rõ hơn thứ tự tuyến tính.
+# Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
+# </roadmap-schema>
+
+roadmap:
+  - id: scim-trong-iam
+    title: SCIM trong IAM
+    purpose: Hiểu vai trò của SCIM trong tự động hóa cấp phát và vòng đời danh tính.
+    objectives:
+      - Vẽ quan hệ giữa nguồn danh tính, SCIM client và hệ thống nhận cấp phát.
+      - Phân biệt cấp phát tài khoản với đăng nhập SSO và phân quyền tại ứng dụng.
+  - id: tai-nguyen-va-anh-xa
+    title: Tài nguyên và ánh xạ
+    purpose: Thống nhất cách biểu diễn và nhận diện người dùng, nhóm giữa các hệ thống.
+    objectives:
+      - Đọc cấu trúc User, Group, thuộc tính và phần mở rộng schema.
+      - Phân biệt id, externalId và userName; thiết kế đối sánh tránh trùng tài khoản khi đổi tên.
+  - id: giao-thuc-cap-phat
+    title: Giao thức cấp phát
+    purpose: Hiểu cách yêu cầu SCIM tạo, đọc và thay đổi tài nguyên.
+    objectives:
+      - Mô tả vai trò của GET, POST, PUT, PATCH, DELETE và phản hồi lỗi SCIM.
+      - Xác nhận tính năng được hỗ trợ qua ServiceProviderConfig trước khi tích hợp.
+  - id: vong-doi-tai-khoan
+    title: Vòng đời tài khoản
+    purpose: Chuyển sự kiện nhân sự thành thay đổi tài khoản và quyền có kiểm soát.
+    objectives:
+      - Thiết kế luồng gia nhập, chuyển vị trí và rời tổ chức, gồm cập nhật thành viên nhóm.
+      - Phân biệt active=false với xóa tài khoản; xác minh thu hồi quyền và phiên tại ứng dụng đích.
+  - id: dong-bo-tin-cay
+    title: Đồng bộ tin cậy
+    purpose: Giữ dữ liệu nguồn và đích nhất quán khi có lỗi hoặc cập nhật đồng thời.
+    objectives:
+      - Dùng truy vấn lọc và phân trang để đối soát dữ liệu khi hệ thống hỗ trợ.
+      - Thiết kế thử lại tránh tạo trùng, xử lý xung đột và dùng ETag/If-Match khi được hỗ trợ.
+  - id: bao-mat-tich-hop
+    title: Bảo mật tích hợp
+    purpose: Ngăn kết nối cấp phát bị lạm dụng để sửa danh tính hoặc quyền truy cập.
+    objectives:
+      - Xác định yêu cầu TLS, xác thực kết nối, phạm vi quyền và tách biệt tổ chức.
+      - Thiết kế bảo vệ, luân chuyển thông tin xác thực và giới hạn dữ liệu cá nhân được đồng bộ.
+  - id: kiem-thu-va-giam-sat
+    title: Kiểm thử và giám sát
+    purpose: Chứng minh thay đổi vòng đời được áp dụng đúng và phát hiện đồng bộ thất bại.
+    objectives:
+      - Lập kiểm thử tạo mới, đổi tên, thay nhóm, vô hiệu hóa và yêu cầu lặp lại.
+      - Đề xuất ghi vết, cảnh báo lỗi, đối soát định kỳ và xử lý tài khoản mồ côi.

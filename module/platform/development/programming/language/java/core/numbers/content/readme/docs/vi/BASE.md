@@ -1,24 +1,7 @@
-# Numbers
+# Java Core – Numbers
 
-Module này xây mental model cho **numeric representation và arithmetic semantics** trong Java: integer overflow, floating-point approximation, arbitrary precision, decimal scale/rounding và random-number choices.
+Làm việc với số trong Java không chỉ là chọn `int` hay `double` rồi thực hiện phép tính. Mỗi kiểu số có giới hạn biểu diễn, quy tắc chuyển đổi và mức độ chính xác riêng; hiểu những đặc điểm này giúp bạn tránh tràn số, mất dữ liệu và các kết quả làm tròn ngoài dự kiến. Module **Numbers** xây dựng nền tảng để đọc, viết và kiểm chứng các phép tính số một cách có chủ đích trong Java Core.
 
-## Learning flow
+Nội dung phù hợp với người đã biết biến, kiểu dữ liệu, biểu thức và điều kiện trong Java. Lộ trình bắt đầu từ **tư duy về số**, **các kiểu số nguyên** và **chuyển đổi kiểu số**, rồi phân tích **số dấu phẩy động** với sai số nhị phân, `NaN` và vô cực. Tiếp theo, bạn tìm hiểu `Number` và **các lớp bao**, boxing/unboxing, so sánh giá trị và chuyển đổi giữa chuỗi với số. Khi các kiểu nguyên thủy không đủ miền giá trị hoặc độ chính xác, bạn sẽ sử dụng `BigInteger`, `BigDecimal`, `MathContext` và `RoundingMode` phù hợp với yêu cầu bài toán.
 
-1. numeric model của Java;
-2. integer overflow;
-3. floating-point;
-4. `BigInteger`;
-5. `BigDecimal`;
-6. precision và scale;
-7. rounding;
-8. `BigDecimal` comparison;
-9. `Math`;
-10. `Random`;
-11. `SecureRandom`;
-12. tổng hợp decision model.
-
-## Mental model cần giữ
-
-Không có một numeric type phù hợp cho mọi bài toán. Primitive integer có fixed range; floating point ưu tiên binary approximation; `BigDecimal` phù hợp decimal arithmetic khi scale/rounding là contract; security-sensitive randomness cần `SecureRandom`.
-
-Module tập trung vào semantics và lựa chọn representation, không biến mọi phép tính thành bài toán arbitrary precision.
+Phần cuối giới thiệu những hàm toán học thông dụng trong `Math` cùng các nguồn số ngẫu nhiên như `Random`, `ThreadLocalRandom` và `SecureRandom`, với cách lựa chọn theo mục đích sử dụng. Qua các bài tập tính tiền, kiểm tra ranh giới và xử lý đầu vào sai, bạn sẽ luyện cách chọn kiểu số, đặt quy tắc làm tròn và thử nghiệm những trường hợp dễ gây lỗi như tràn số, chia cho không hoặc sai số so sánh. Kết thúc module, bạn có thể giải thích kết quả tính toán và bảo vệ quyết định lựa chọn kiểu số của mình bằng các kiểm thử cụ thể.

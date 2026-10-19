@@ -1,0 +1,7 @@
+# Tài khoản dịch vụ trong bảo mật hệ thống (Service Account)
+
+Tài khoản dịch vụ là danh tính dành cho ứng dụng, tiến trình hoặc tác vụ tự động khi chúng cần truy cập tài nguyên. Khác với tài khoản người dùng, danh tính này thường hoạt động không có sự tương tác trực tiếp của con người và có thể được sử dụng liên tục trong môi trường vận hành. Quản lý không chặt chẽ có thể dẫn đến cấp quyền quá mức, lộ thông tin xác thực hoặc bị lợi dụng để mạo danh và mở rộng quyền truy cập.
+
+Tài liệu này dành cho người học an toàn thông tin, quản trị hệ thống và thiết kế hạ tầng đã biết những nguyên tắc cơ bản về danh tính, xác thực và phân quyền. Nội dung tiếp cận tài khoản dịch vụ dưới góc nhìn bảo mật tổng quát, không phụ thuộc nền tảng hay framework cụ thể. Lộ trình bắt đầu từ mô hình tài khoản dịch vụ, thiết kế danh tính theo dịch vụ và môi trường, cấp quyền tối thiểu, lựa chọn phương thức xác thực; tiếp đó là gắn danh tính đúng khi chạy, kiểm soát ủy quyền và mạo danh, quản lý vòng đời, cuối cùng là kiểm chứng và kiểm toán.
+
+Sau khi hoàn thành, bạn có thể phân biệt danh tính với thông tin xác thực, xác định chủ sở hữu và phạm vi sử dụng, xây dựng quyền theo tài nguyên và tác vụ thực tế. Bạn cũng có thể so sánh mật khẩu, khóa, chứng chỉ, token với danh tính được quản lý hoặc thông tin xác thực ngắn hạn; đánh giá quyền mạo danh, kiểm tra danh tính hiệu lực trong dịch vụ và pipeline, lập kế hoạch xoay vòng hoặc thu hồi mà vẫn duy trì hoạt động, đồng thời truy vết truy cập để xử lý trường hợp tài khoản hay khóa bị lộ.

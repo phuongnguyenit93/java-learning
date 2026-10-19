@@ -1,0 +1,100 @@
+# <roadmap-schema>
+# Cấu trúc Roadmap Module
+# schema-version: 1
+#
+# YAML CONTRACT
+# roadmap: Danh sách milestone cấp cao của roadmap cho language hiện tại. ID milestone phải duy nhất.
+#
+# - id [string, required]: ID ổn định và duy nhất của milestone trong roadmap language hiện tại.
+# - title [string, required]: Tên milestone hiển thị cho learner.
+# - purpose [string, required]: Milestone này tồn tại để learner hiểu hoặc đạt được điều gì.
+# - dependsOn [list, optional]: Danh sách id milestone prerequisite khi dependency không thể hiện đủ chỉ bằng thứ tự item.
+# - objectives [list, optional]: Các learning objective cấp milestone; không dùng để liệt kê mọi fact/API/syntax nhỏ.
+# - relatedKnowledge [list, optional]: Danh sách Knowledge category id trong chính module hiện tại hỗ trợ milestone. Portal hiển thị danh sách này ở phía đối diện milestone và click item sẽ điều hướng sang Knowledge category tương ứng.
+# - relatedModules [list, optional]: Các module liên quan hiển thị ở Level 2 của Portal. Mỗi item dùng routeId bắt buộc và có thể có label/note localized; relation này chỉ để điều hướng, không tạo child milestone hoặc thay đổi learning order.
+#
+# ROADMAP THINKING FRAMEWORK
+# PURPOSE
+#   - Topic/module này là gì?
+#   - Vì sao nó tồn tại?
+#   - Không có nó thì learner gặp vấn đề gì?
+# FOUNDATION
+#   - Learner cần prerequisite hoặc mental model nào trước?
+# CORE MODEL
+#   - Những abstraction hoặc building block lớn nào tạo nên chủ đề này?
+# MECHANICS
+#   - Nó hoạt động như thế nào ở mức language/runtime/API phù hợp với module?
+# USAGE
+#   - Nó được dùng như thế nào trong code thực tế?
+# DECISION / TRADE-OFF
+#   - Khi nào nên chọn cơ chế này thay vì cơ chế khác?
+#   - Khi nào không nên dùng?
+# FAILURE / PITFALL
+#   - Những sai lầm, compile-time failure hoặc runtime failure nào đáng biết?
+# INTEGRATION
+#   - Chủ đề này kết nối với những concept/module lân cận nào?
+# SYNTHESIS
+#   - Sau cùng learner phải giữ mental model end-to-end nào?
+#
+# Mỗi language tự chịu trách nhiệm cho roadmap của chính nó. Không suy luận hoặc đồng bộ cấu trúc từ roadmap của language khác.
+# Thứ tự item trong roadmap chính là thứ tự học mặc định. Chỉ dùng dependsOn khi cần biểu diễn dependency rõ hơn thứ tự tuyến tính.
+# Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
+# </roadmap-schema>
+
+roadmap:
+  - id: java-27-va-jvm
+    title: Java 27 và JVM
+    purpose: Nắm bối cảnh bản phát hành và các thay đổi mặc định của JVM.
+    objectives:
+      - Thiết lập JDK 27 và phân biệt tính năng ổn định, Preview, Incubator
+      - Kiểm tra G1 là bộ gom rác mặc định trong mọi môi trường
+      - Đánh giá compact object headers qua mức sử dụng heap
+  - id: mau-kieu-nguyen-thuy-preview
+    title: Mẫu kiểu nguyên thủy (Preview)
+    purpose: Mở rộng so khớp mẫu với kiểu nguyên thủy ở Preview lần 5.
+    objectives:
+      - Thử mẫu kiểu nguyên thủy trong instanceof và switch
+      - Kiểm tra phép chuyển kiểu có bảo toàn giá trị
+      - Biên dịch và chạy ví dụ với --enable-preview
+  - id: hang-khoi-tao-tre-preview
+    title: Hằng khởi tạo trễ (Preview)
+    purpose: Trì hoãn tạo giá trị bất biến bằng Lazy Constants ở Preview lần 3.
+    objectives:
+      - Tạo và đọc giá trị bằng LazyConstant.of và get
+      - Phân biệt khởi tạo trễ với trường final khởi tạo ngay
+      - Kiểm tra truy cập đồng thời và phụ thuộc vòng
+  - id: dong-thoi-co-cau-truc-preview
+    title: Đồng thời có cấu trúc (Preview)
+    purpose: Quản lý nhóm tác vụ cùng vòng đời bằng Structured Concurrency ở Preview lần 7.
+    objectives:
+      - Mở StructuredTaskScope, fork tác vụ và join kết quả
+      - Chọn Joiner phù hợp với điều kiện thành công
+      - Thử lỗi, hủy tác vụ và đóng phạm vi
+  - id: vector-api-incubator
+    title: Vector API (Incubator)
+    purpose: Thử tính toán SIMD bằng Vector API đang ở Incubator lần 12.
+    objectives:
+      - Kích hoạt mô-đun jdk.incubator.vector
+      - Viết phép toán vector và xử lý phần tử còn dư
+      - Đo với phiên bản vô hướng trên CPU mục tiêu
+  - id: tls-1-3-lai-hau-luong-tu
+    title: TLS 1.3 lai hậu lượng tử
+    purpose: Hiểu trao đổi khóa lai kết hợp thuật toán truyền thống và kháng lượng tử.
+    objectives:
+      - Nhận diện vai trò của trao đổi khóa lai trong TLS 1.3
+      - Thử kết nối qua javax.net.ssl với máy chủ tương thích
+      - Kiểm tra thuật toán được thương lượng và khả năng tương tác
+  - id: pem-preview
+    title: PEM (Preview)
+    purpose: Mã hóa và giải mã đối tượng mật mã bằng PEM API ở Preview lần 3.
+    objectives:
+      - Chuyển khóa và chứng chỉ giữa đối tượng Java với PEM
+      - Nhận diện vai trò của BinaryEncodable
+      - Kiểm tra dữ liệu sai định dạng và bảo vệ khóa riêng
+  - id: jfr-va-che-du-lieu
+    title: JFR và che dữ liệu
+    purpose: Giảm lộ thông tin nhạy cảm ngay khi tạo bản ghi JFR.
+    objectives:
+      - Xác định tham số lệnh, biến môi trường và thuộc tính hệ thống cần che
+      - Tạo bản ghi với cơ chế che dữ liệu trong tiến trình
+      - Kiểm tra thông tin nhạy cảm trước khi chia sẻ bản ghi

@@ -1,0 +1,86 @@
+# <roadmap-schema>
+# Cấu trúc Roadmap Module
+# schema-version: 1
+#
+# YAML CONTRACT
+# roadmap: Danh sách milestone cấp cao của roadmap cho language hiện tại. ID milestone phải duy nhất.
+#
+# - id [string, required]: ID ổn định và duy nhất của milestone trong roadmap language hiện tại.
+# - title [string, required]: Tên milestone hiển thị cho learner.
+# - purpose [string, required]: Milestone này tồn tại để learner hiểu hoặc đạt được điều gì.
+# - dependsOn [list, optional]: Danh sách id milestone prerequisite khi dependency không thể hiện đủ chỉ bằng thứ tự item.
+# - objectives [list, optional]: Các learning objective cấp milestone; không dùng để liệt kê mọi fact/API/syntax nhỏ.
+# - relatedKnowledge [list, optional]: Danh sách Knowledge category id trong chính module hiện tại hỗ trợ milestone. Portal hiển thị danh sách này ở phía đối diện milestone và click item sẽ điều hướng sang Knowledge category tương ứng.
+# - relatedModules [list, optional]: Các module liên quan hiển thị ở Level 2 của Portal. Mỗi item dùng routeId bắt buộc và có thể có label/note localized; relation này chỉ để điều hướng, không tạo child milestone hoặc thay đổi learning order.
+#
+# ROADMAP THINKING FRAMEWORK
+# PURPOSE
+#   - Topic/module này là gì?
+#   - Vì sao nó tồn tại?
+#   - Không có nó thì learner gặp vấn đề gì?
+# FOUNDATION
+#   - Learner cần prerequisite hoặc mental model nào trước?
+# CORE MODEL
+#   - Những abstraction hoặc building block lớn nào tạo nên chủ đề này?
+# MECHANICS
+#   - Nó hoạt động như thế nào ở mức language/runtime/API phù hợp với module?
+# USAGE
+#   - Nó được dùng như thế nào trong code thực tế?
+# DECISION / TRADE-OFF
+#   - Khi nào nên chọn cơ chế này thay vì cơ chế khác?
+#   - Khi nào không nên dùng?
+# FAILURE / PITFALL
+#   - Những sai lầm, compile-time failure hoặc runtime failure nào đáng biết?
+# INTEGRATION
+#   - Chủ đề này kết nối với những concept/module lân cận nào?
+# SYNTHESIS
+#   - Sau cùng learner phải giữ mental model end-to-end nào?
+#
+# Mỗi language tự chịu trách nhiệm cho roadmap của chính nó. Không suy luận hoặc đồng bộ cấu trúc từ roadmap của language khác.
+# Thứ tự item trong roadmap chính là thứ tự học mặc định. Chỉ dùng dependsOn khi cần biểu diễn dependency rõ hơn thứ tự tuyến tính.
+# Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
+# </roadmap-schema>
+
+roadmap:
+  - id: nen-tang-dpapi
+    title: Nền tảng DPAPI
+    purpose: Hiểu cách Windows bảo vệ dữ liệu bí mật mà ứng dụng không tự quản lý toàn bộ khóa mã hóa.
+    objectives:
+      - Mô tả bài toán bảo vệ dữ liệu lưu trữ và vai trò của DPAPI.
+      - Phân biệt DPAPI với băm mật khẩu, mã hóa ổ đĩa và kho bí mật tập trung.
+  - id: ngu-canh-va-pham-vi
+    title: Ngữ cảnh và phạm vi
+    purpose: Chọn phạm vi giải mã đúng với tài khoản và môi trường chạy.
+    objectives:
+      - Mô tả quan hệ giữa dữ liệu, khóa chủ (master key), tài khoản và hồ sơ Windows.
+      - Phân biệt phạm vi người dùng với CRYPTPROTECT_LOCAL_MACHINE và hệ quả cho người dùng cùng máy.
+  - id: luong-bao-ve-du-lieu
+    title: Luồng bảo vệ dữ liệu
+    purpose: Nắm hợp đồng đầu vào, đầu ra của thao tác bảo vệ và giải mã.
+    objectives:
+      - Vẽ luồng dữ liệu qua CryptProtectData, blob được bảo vệ và CryptUnprotectData.
+      - Xác định cách xử lý lỗi và kiểm tra đầu ra trước khi sử dụng.
+  - id: blob-va-entropy-bo-sung
+    title: Blob và entropy bổ sung
+    purpose: Lưu dữ liệu đã bảo vệ mà không vô tình mở rộng quyền đọc bí mật.
+    objectives:
+      - Thiết kế lưu blob với quyền truy cập tệp hoặc Registry phù hợp.
+      - Giải thích vai trò, giới hạn của entropy bổ sung và yêu cầu dùng cùng giá trị khi giải mã.
+  - id: tich-hop-ung-dung
+    title: Tích hợp ứng dụng
+    purpose: Giải mã dưới đúng tài khoản thực thi và giảm thời gian lưu bản rõ.
+    objectives:
+      - Xác định yêu cầu hồ sơ người dùng khi chạy tương tác, dịch vụ hoặc tác vụ nền.
+      - Thiết kế vòng đời bản rõ trong bộ nhớ, giải phóng tài nguyên và ghi lỗi không lộ bí mật.
+  - id: vong-doi-va-khoi-phuc
+    title: Vòng đời và khôi phục
+    purpose: Duy trì khả năng truy cập dữ liệu khi tài khoản hoặc thiết bị thay đổi.
+    objectives:
+      - Phân biệt ảnh hưởng của đổi mật khẩu, đặt lại mật khẩu, mất hồ sơ và chuyển máy.
+      - Lập kế hoạch sao lưu, kiểm thử khôi phục theo loại tài khoản và cơ chế hỗ trợ của môi trường.
+  - id: kiem-thu-va-gia-co
+    title: Kiểm thử và gia cố
+    purpose: Kiểm chứng ranh giới bảo vệ và nhận diện tình huống DPAPI không đủ.
+    objectives:
+      - Lập thử nghiệm đúng/sai tài khoản, phạm vi máy, entropy và blob bị sửa.
+      - Đánh giá rủi ro từ tiến trình cùng tài khoản, máy bị xâm nhập và nhu cầu kiểm soát bổ sung.

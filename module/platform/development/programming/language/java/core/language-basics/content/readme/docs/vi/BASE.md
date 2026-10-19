@@ -1,28 +1,7 @@
-# Java Language Basics
+# Java Core — Language Basics
 
-Đây là module nền tảng cho **cú pháp, type model và execution semantics cơ bản của Java source code**. Mục tiêu là tạo vocabulary chung trước khi đi vào object model, Generics, Collections, OOP và các API cao hơn.
+Để viết một chương trình Java, bạn cần hiểu mã nguồn được tổ chức và thực thi như thế nào, dữ liệu được biểu diễn ra sao và chương trình quyết định công việc cần làm bằng những câu lệnh nào. Module **Language Basics** xây dựng nền tảng đó qua những ví dụ nhỏ có thể tự biên dịch, chạy và kiểm tra. Người mới bắt đầu sẽ làm quen với vai trò của JDK, JVM, bytecode và phương thức `main`, trước khi học cách sử dụng cú pháp Java trong một chương trình hoàn chỉnh.
 
-## Learning flow
+Lộ trình gồm tám mốc. Sau chương trình đầu tiên, bạn sẽ khai báo biến, phân biệt kiểu nguyên thủy với kiểu tham chiếu, hiểu phép chuyển đổi kiểu và tránh mất dữ liệu không mong muốn. Tiếp theo là toán tử, biểu thức, câu lệnh rẽ nhánh `if`/`switch` và các vòng lặp `for`, `while`, `do-while`. Khi đã kiểm soát được luồng thực thi, bạn sẽ dùng mảng để lưu nhóm giá trị và phương thức để chia bài toán thành những phần nhỏ có thể gọi lại.
 
-1. Java language tồn tại để giải quyết gì;
-2. source-code structure;
-3. primitive và reference types;
-4. variables và scope;
-5. `null`;
-6. wrapper types và boxing/unboxing;
-7. operators;
-8. casting;
-9. control flow;
-10. arrays;
-11. methods;
-12. varargs;
-13. pass-by-value;
-14. packages và imports;
-15. type-system mental model;
-16. tổng hợp nền tảng ngôn ngữ.
-
-## Mental model cần giữ
-
-Java luôn pass argument **by value**; reference value không phải object itself. Primitive/reference, scope, conversion và method-call rules là nền để hiểu các module Core phía sau.
-
-Module này cố ý không đào sâu object design, inheritance, collection hay concurrency; nó chuẩn hóa language foundation trước.
+Phần thực hành cuối kết hợp nhập và xuất dữ liệu, biểu thức, điều kiện, vòng lặp, mảng và phương thức để giải một bài toán đơn giản. Bạn cũng sẽ tập phân biệt lỗi biên dịch, lỗi khi chạy và lỗi logic, đồng thời kiểm tra các trường hợp biên thay vì chỉ thử với một đầu vào. Hoàn thành module, bạn có thể đọc, viết và giải thích chương trình Java cơ bản, tự tìm nguyên nhân khi chương trình cho kết quả sai và sẵn sàng học các chủ đề nâng cao hơn.

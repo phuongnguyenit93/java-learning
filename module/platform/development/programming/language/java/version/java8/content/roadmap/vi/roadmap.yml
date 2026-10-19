@@ -1,0 +1,105 @@
+# <roadmap-schema>
+# Cấu trúc Roadmap Module
+# schema-version: 1
+#
+# YAML CONTRACT
+# roadmap: Danh sách milestone cấp cao của roadmap cho language hiện tại. ID milestone phải duy nhất.
+#
+# - id [string, required]: ID ổn định và duy nhất của milestone trong roadmap language hiện tại.
+# - title [string, required]: Tên milestone hiển thị cho learner.
+# - purpose [string, required]: Milestone này tồn tại để learner hiểu hoặc đạt được điều gì.
+# - dependsOn [list, optional]: Danh sách id milestone prerequisite khi dependency không thể hiện đủ chỉ bằng thứ tự item.
+# - objectives [list, optional]: Các learning objective cấp milestone; không dùng để liệt kê mọi fact/API/syntax nhỏ.
+# - relatedKnowledge [list, optional]: Danh sách Knowledge category id trong chính module hiện tại hỗ trợ milestone. Portal hiển thị danh sách này ở phía đối diện milestone và click item sẽ điều hướng sang Knowledge category tương ứng.
+# - relatedModules [list, optional]: Các module liên quan hiển thị ở Level 2 của Portal. Mỗi item dùng routeId bắt buộc và có thể có label/note localized; relation này chỉ để điều hướng, không tạo child milestone hoặc thay đổi learning order.
+#
+# ROADMAP THINKING FRAMEWORK
+# PURPOSE
+#   - Topic/module này là gì?
+#   - Vì sao nó tồn tại?
+#   - Không có nó thì learner gặp vấn đề gì?
+# FOUNDATION
+#   - Learner cần prerequisite hoặc mental model nào trước?
+# CORE MODEL
+#   - Những abstraction hoặc building block lớn nào tạo nên chủ đề này?
+# MECHANICS
+#   - Nó hoạt động như thế nào ở mức language/runtime/API phù hợp với module?
+# USAGE
+#   - Nó được dùng như thế nào trong code thực tế?
+# DECISION / TRADE-OFF
+#   - Khi nào nên chọn cơ chế này thay vì cơ chế khác?
+#   - Khi nào không nên dùng?
+# FAILURE / PITFALL
+#   - Những sai lầm, compile-time failure hoặc runtime failure nào đáng biết?
+# INTEGRATION
+#   - Chủ đề này kết nối với những concept/module lân cận nào?
+# SYNTHESIS
+#   - Sau cùng learner phải giữ mental model end-to-end nào?
+#
+# Mỗi language tự chịu trách nhiệm cho roadmap của chính nó. Không suy luận hoặc đồng bộ cấu trúc từ roadmap của language khác.
+# Thứ tự item trong roadmap chính là thứ tự học mặc định. Chỉ dùng dependsOn khi cần biểu diễn dependency rõ hơn thứ tự tuyến tính.
+# Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
+# </roadmap-schema>
+
+roadmap:
+  - id: toan-canh-java-8
+    title: Toàn cảnh Java 8
+    purpose: Nắm các thay đổi lâu dài của Java 8 và cách chúng kết nối trong mã Java hiện đại.
+    objectives:
+      - Xác định vai trò của lambda, Stream và java.time
+      - Phân biệt API có từ Java 8 với API được thêm ở các bản sau
+      - Chạy và kiểm chứng ví dụ trên JDK hiện hành
+  - id: lambda-va-interface
+    title: Lambda và interface
+    purpose: Biểu diễn thao tác dưới dạng giá trị để truyền, kết hợp và tái sử dụng.
+    objectives:
+      - Nhận diện functional interface và dùng các kiểu trong java.util.function
+      - Viết lambda, method reference và kiểm tra biến được capture
+      - Kết hợp Predicate, Function và Consumer
+      - Dùng phương thức default, static trong interface và xử lý xung đột kế thừa
+  - id: stream-va-optional
+    title: Stream và Optional
+    purpose: Xử lý tập dữ liệu bằng pipeline và biểu diễn kết quả có thể không tồn tại.
+    objectives:
+      - Tạo pipeline filter, map, flatMap và nhận diện cách đánh giá lười
+      - Tổng hợp bằng reduce, collect và groupingBy
+      - Dùng Optional.map, flatMap và orElseGet phù hợp với hợp đồng trả về
+      - Phân biệt xử lý tuần tự, song song và tránh tác dụng phụ trên trạng thái chung
+  - id: api-du-lieu-bo-sung
+    title: API dữ liệu bổ sung
+    purpose: Dùng các API chuẩn để giảm mã thao tác collection, chuỗi và dữ liệu byte.
+    objectives:
+      - Cập nhật Map bằng compute, merge và duyệt bằng forEach
+      - Lọc bằng removeIf và xây Comparator theo nhiều tiêu chí
+      - Ghép chuỗi bằng StringJoiner và mã hóa, giải mã bằng Base64
+      - Đọc dòng bằng Files.lines, duyệt cây thư mục bằng Files.walk và đóng Stream tài nguyên
+  - id: ngay-gio-hien-dai
+    title: Ngày giờ hiện đại
+    purpose: Mô hình hóa thời gian rõ kiểu, múi giờ và khả năng kiểm thử.
+    objectives:
+      - Chọn LocalDate, LocalDateTime, Instant hoặc ZonedDateTime đúng ý nghĩa
+      - Tính khoảng thời gian bằng Duration và Period
+      - Phân tích, định dạng bằng DateTimeFormatter và xử lý ZoneId
+      - Dùng Clock cố định để kiểm thử các mốc thời gian
+  - id: dong-thoi-va-bat-dong-bo
+    title: Đồng thời và bất đồng bộ
+    purpose: Phối hợp tác vụ và trạng thái dùng chung bằng các API được bổ sung từ Java 8.
+    objectives:
+      - Ghép tác vụ CompletableFuture bằng thenApply, thenCompose và thenCombine
+      - Xử lý kết quả lỗi và lựa chọn Executor cho tác vụ async
+      - Dùng ConcurrentHashMap và LongAdder theo nhu cầu cập nhật đồng thời
+      - Nhận diện trường hợp dùng StampedLock và kiểm chứng thay vì giả định hiệu năng
+  - id: chu-thich-va-reflection
+    title: Chú thích và reflection
+    purpose: Hiểu metadata mà thư viện và công cụ dùng để phân tích chương trình.
+    objectives:
+      - Khai báo và đọc chú thích lặp với @Repeatable
+      - Phân biệt type annotation với chú thích trên khai báo
+      - Đọc tên tham số qua reflection và kiểm chứng tác dụng của -parameters
+  - id: thuc-hanh-tich-hop
+    title: Thực hành tích hợp
+    purpose: Áp dụng các thành phần đã học trong ví dụ nhỏ có đầu ra và trường hợp lỗi rõ ràng.
+    objectives:
+      - Viết báo cáo dữ liệu bằng Stream, collector và Comparator
+      - Xử lý thời hạn bằng java.time và kiểm thử với Clock cố định
+      - Ghép tác vụ CompletableFuture, kiểm tra lỗi và trạng thái dùng chung

@@ -1,0 +1,90 @@
+# <roadmap-schema>
+# Cấu trúc Roadmap Module
+# schema-version: 1
+#
+# YAML CONTRACT
+# roadmap: Danh sách milestone cấp cao của roadmap cho language hiện tại. ID milestone phải duy nhất.
+#
+# - id [string, required]: ID ổn định và duy nhất của milestone trong roadmap language hiện tại.
+# - title [string, required]: Tên milestone hiển thị cho learner.
+# - purpose [string, required]: Milestone này tồn tại để learner hiểu hoặc đạt được điều gì.
+# - dependsOn [list, optional]: Danh sách id milestone prerequisite khi dependency không thể hiện đủ chỉ bằng thứ tự item.
+# - objectives [list, optional]: Các learning objective cấp milestone; không dùng để liệt kê mọi fact/API/syntax nhỏ.
+# - relatedKnowledge [list, optional]: Danh sách Knowledge category id trong chính module hiện tại hỗ trợ milestone. Portal hiển thị danh sách này ở phía đối diện milestone và click item sẽ điều hướng sang Knowledge category tương ứng.
+# - relatedModules [list, optional]: Các module liên quan hiển thị ở Level 2 của Portal. Mỗi item dùng routeId bắt buộc và có thể có label/note localized; relation này chỉ để điều hướng, không tạo child milestone hoặc thay đổi learning order.
+#
+# ROADMAP THINKING FRAMEWORK
+# PURPOSE
+#   - Topic/module này là gì?
+#   - Vì sao nó tồn tại?
+#   - Không có nó thì learner gặp vấn đề gì?
+# FOUNDATION
+#   - Learner cần prerequisite hoặc mental model nào trước?
+# CORE MODEL
+#   - Những abstraction hoặc building block lớn nào tạo nên chủ đề này?
+# MECHANICS
+#   - Nó hoạt động như thế nào ở mức language/runtime/API phù hợp với module?
+# USAGE
+#   - Nó được dùng như thế nào trong code thực tế?
+# DECISION / TRADE-OFF
+#   - Khi nào nên chọn cơ chế này thay vì cơ chế khác?
+#   - Khi nào không nên dùng?
+# FAILURE / PITFALL
+#   - Những sai lầm, compile-time failure hoặc runtime failure nào đáng biết?
+# INTEGRATION
+#   - Chủ đề này kết nối với những concept/module lân cận nào?
+# SYNTHESIS
+#   - Sau cùng learner phải giữ mental model end-to-end nào?
+#
+# Mỗi language tự chịu trách nhiệm cho roadmap của chính nó. Không suy luận hoặc đồng bộ cấu trúc từ roadmap của language khác.
+# Thứ tự item trong roadmap chính là thứ tự học mặc định. Chỉ dùng dependsOn khi cần biểu diễn dependency rõ hơn thứ tự tuyến tính.
+# Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
+# </roadmap-schema>
+
+roadmap:
+  - id: cu-phap-project-coin
+    title: Cú pháp Project Coin
+    purpose: Viết mã ngắn và rõ hơn bằng các cải tiến cú pháp của Java 7.
+    objectives:
+      - Dùng số nhị phân và dấu _ trong số.
+      - Dùng switch với String và khởi tạo generic bằng <>.
+      - Nhận biết khi nào có thể dùng @SafeVarargs an toàn.
+  - id: multi-catch-va-nem-lai
+    title: Multi-catch và ném lại
+    purpose: Giảm lặp khi xử lý lỗi mà vẫn giữ thông tin kiểu ngoại lệ.
+    objectives:
+      - Gộp các ngoại lệ không có quan hệ kế thừa vào một catch.
+      - Khai báo throws chính xác khi ném lại ngoại lệ.
+  - id: tu-dong-dong-tai-nguyen
+    title: Tự động đóng tài nguyên
+    purpose: Tránh rò rỉ tài nguyên bằng try-with-resources.
+    objectives:
+      - Dùng AutoCloseable trong try-with-resources.
+      - Giải thích thứ tự đóng nhiều tài nguyên.
+      - Phân biệt ngoại lệ chính và ngoại lệ bị giữ lại (suppressed).
+  - id: path-va-thao-tac-tep
+    title: Path và thao tác tệp
+    purpose: Làm việc với đường dẫn, tệp và thư mục bằng NIO.2.
+    objectives:
+      - Ghép và chuẩn hóa đường dẫn bằng Path.
+      - Đọc, ghi, sao chép và di chuyển tệp bằng Files.
+      - Xử lý IOException và đóng luồng sau khi dùng.
+  - id: duyet-cay-va-thuoc-tinh-tep
+    title: Duyệt cây và thuộc tính tệp
+    purpose: Xử lý cả cây thư mục và đọc thông tin tệp có kiểm soát.
+    objectives:
+      - Duyệt cây bằng Files.walkFileTree và FileVisitor.
+      - Đọc BasicFileAttributes và xử lý lỗi truy cập.
+  - id: theo-doi-thu-muc
+    title: Theo dõi thư mục
+    purpose: Phản ứng khi nội dung thư mục thay đổi bằng WatchService.
+    objectives:
+      - Đăng ký sự kiện tạo, sửa, xóa và reset WatchKey.
+      - Xử lý OVERFLOW bằng cách kiểm tra lại trạng thái thư mục.
+  - id: chia-viec-voi-fork-join
+    title: Chia việc với Fork/Join
+    purpose: Chạy song song bài toán tính toán bằng cách chia nhỏ và gộp kết quả.
+    objectives:
+      - Dùng RecursiveTask hoặc RecursiveAction với ForkJoinPool.
+      - Chọn ngưỡng chia việc và ghép kết quả bằng join.
+      - Đo với cách tuần tự và tránh I/O chặn trong tác vụ.

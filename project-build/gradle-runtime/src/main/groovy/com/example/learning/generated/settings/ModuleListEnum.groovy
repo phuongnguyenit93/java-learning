@@ -1020,6 +1020,177 @@ enum ModuleListEnum {
             []
     ),
 
+    JAVA_VERSION_JAVA10(
+            'module:platform:development:programming:language:java:version:java10',
+            'module/platform/development/programming/language/java/version/java10',
+            'LIBRARY',
+            'Java 10',
+            false,
+            []
+    ),
+
+    JAVA_VERSION_JAVA11(
+            'module:platform:development:programming:language:java:version:java11',
+            'module/platform/development/programming/language/java/version/java11',
+            'LIBRARY',
+            'Java 11',
+            false,
+            []
+    ),
+
+    JAVA_VERSION_JAVA14(
+            'module:platform:development:programming:language:java:version:java14',
+            'module/platform/development/programming/language/java/version/java14',
+            'LIBRARY',
+            'Java 14',
+            false,
+            []
+    ),
+
+    JAVA_VERSION_JAVA15(
+            'module:platform:development:programming:language:java:version:java15',
+            'module/platform/development/programming/language/java/version/java15',
+            'LIBRARY',
+            'Java 15',
+            false,
+            []
+    ),
+
+    JAVA_VERSION_JAVA16(
+            'module:platform:development:programming:language:java:version:java16',
+            'module/platform/development/programming/language/java/version/java16',
+            'LIBRARY',
+            'Java 16',
+            false,
+            []
+    ),
+
+    JAVA_VERSION_JAVA17(
+            'module:platform:development:programming:language:java:version:java17',
+            'module/platform/development/programming/language/java/version/java17',
+            'LIBRARY',
+            'Java 17',
+            false,
+            []
+    ),
+
+    JAVA_VERSION_JAVA18(
+            'module:platform:development:programming:language:java:version:java18',
+            'module/platform/development/programming/language/java/version/java18',
+            'LIBRARY',
+            'Java 18',
+            false,
+            []
+    ),
+
+    JAVA_VERSION_JAVA21(
+            'module:platform:development:programming:language:java:version:java21',
+            'module/platform/development/programming/language/java/version/java21',
+            'LIBRARY',
+            'Java 21',
+            false,
+            []
+    ),
+
+    JAVA_VERSION_JAVA22(
+            'module:platform:development:programming:language:java:version:java22',
+            'module/platform/development/programming/language/java/version/java22',
+            'LIBRARY',
+            'Java 22',
+            false,
+            []
+    ),
+
+    JAVA_VERSION_JAVA23(
+            'module:platform:development:programming:language:java:version:java23',
+            'module/platform/development/programming/language/java/version/java23',
+            'LIBRARY',
+            'Java 23',
+            false,
+            []
+    ),
+
+    JAVA_VERSION_JAVA24(
+            'module:platform:development:programming:language:java:version:java24',
+            'module/platform/development/programming/language/java/version/java24',
+            'LIBRARY',
+            'Java 24',
+            false,
+            []
+    ),
+
+    JAVA_VERSION_JAVA25(
+            'module:platform:development:programming:language:java:version:java25',
+            'module/platform/development/programming/language/java/version/java25',
+            'LIBRARY',
+            'Java 25',
+            false,
+            []
+    ),
+
+    JAVA_VERSION_JAVA26(
+            'module:platform:development:programming:language:java:version:java26',
+            'module/platform/development/programming/language/java/version/java26',
+            'LIBRARY',
+            'Java 26',
+            false,
+            []
+    ),
+
+    JAVA_VERSION_JAVA27(
+            'module:platform:development:programming:language:java:version:java27',
+            'module/platform/development/programming/language/java/version/java27',
+            'LIBRARY',
+            'Java 27',
+            false,
+            []
+    ),
+
+    JAVA_VERSION_JAVA5(
+            'module:platform:development:programming:language:java:version:java5',
+            'module/platform/development/programming/language/java/version/java5',
+            'LIBRARY',
+            'Java 5',
+            false,
+            []
+    ),
+
+    JAVA_VERSION_JAVA6(
+            'module:platform:development:programming:language:java:version:java6',
+            'module/platform/development/programming/language/java/version/java6',
+            'LIBRARY',
+            'Java 6',
+            false,
+            []
+    ),
+
+    JAVA_VERSION_JAVA7(
+            'module:platform:development:programming:language:java:version:java7',
+            'module/platform/development/programming/language/java/version/java7',
+            'LIBRARY',
+            'Java 7',
+            false,
+            []
+    ),
+
+    JAVA_VERSION_JAVA8(
+            'module:platform:development:programming:language:java:version:java8',
+            'module/platform/development/programming/language/java/version/java8',
+            'LIBRARY',
+            'Java 8',
+            false,
+            []
+    ),
+
+    JAVA_VERSION_JAVA9(
+            'module:platform:development:programming:language:java:version:java9',
+            'module/platform/development/programming/language/java/version/java9',
+            'LIBRARY',
+            'Java 9',
+            false,
+            []
+    ),
+
     JAVA_VIRTUAL_THREADS(
             'module:platform:development:programming:language:java:concurrency:virtual-threads',
             'module/platform/development/programming/language/java/concurrency/virtual-threads',
@@ -1205,6 +1376,276 @@ enum ModuleListEnum {
             'module/microservice/module/platform/resilience4j',
             'LIBRARY',
             '',
+            false,
+            []
+    ),
+
+    SECURITY_AUTHENTICATION_API_KEY_HMAC_AUTHENTICATION(
+            'module:infrastructure:system:security:authentication:api-key-hmac-authentication',
+            'module/infrastructure/system/security/authentication/api-key-hmac-authentication',
+            'LIBRARY',
+            'Security - API Key and HMAC Authentication',
+            false,
+            []
+    ),
+
+    SECURITY_AUTHENTICATION_CERTIFICATE_AUTHENTICATION(
+            'module:infrastructure:system:security:authentication:certificate-authentication',
+            'module/infrastructure/system/security/authentication/certificate-authentication',
+            'LIBRARY',
+            'Security - Certificate Authentication',
+            false,
+            []
+    ),
+
+    SECURITY_AUTHENTICATION_MULTI_FACTOR_AUTHENTICATION(
+            'module:infrastructure:system:security:authentication:multi-factor-authentication',
+            'module/infrastructure/system/security/authentication/multi-factor-authentication',
+            'LIBRARY',
+            'Security - Multi-Factor Authentication',
+            false,
+            []
+    ),
+
+    SECURITY_AUTHENTICATION_PASSKEYS_WEBAUTHN(
+            'module:infrastructure:system:security:authentication:passkeys-webauthn',
+            'module/infrastructure/system/security/authentication/passkeys-webauthn',
+            'LIBRARY',
+            'Security - Passkeys, WebAuthn and FIDO2',
+            false,
+            []
+    ),
+
+    SECURITY_AUTHENTICATION_PASSWORD_AUTHENTICATION(
+            'module:infrastructure:system:security:authentication:password-authentication',
+            'module/infrastructure/system/security/authentication/password-authentication',
+            'LIBRARY',
+            'Security - Password Authentication',
+            false,
+            []
+    ),
+
+    SECURITY_AUTHENTICATION_SESSION_SECURITY(
+            'module:infrastructure:system:security:authentication:session-security',
+            'module/infrastructure/system/security/authentication/session-security',
+            'LIBRARY',
+            'Security - Session Security',
+            false,
+            []
+    ),
+
+    SECURITY_AUTHENTICATION_TOKEN_BASED_AUTHENTICATION(
+            'module:infrastructure:system:security:authentication:token-based-authentication',
+            'module/infrastructure/system/security/authentication/token-based-authentication',
+            'LIBRARY',
+            'Security - Token-Based Authentication',
+            false,
+            []
+    ),
+
+    SECURITY_AUTHORIZATION_ABAC(
+            'module:infrastructure:system:security:authorization:abac',
+            'module/infrastructure/system/security/authorization/abac',
+            'LIBRARY',
+            'Security - Attribute-Based Access Control (ABAC)',
+            false,
+            []
+    ),
+
+    SECURITY_AUTHORIZATION_OBJECT_LEVEL_AUTHORIZATION(
+            'module:infrastructure:system:security:authorization:object-level-authorization',
+            'module/infrastructure/system/security/authorization/object-level-authorization',
+            'LIBRARY',
+            'Security - Object-Level Authorization',
+            false,
+            []
+    ),
+
+    SECURITY_AUTHORIZATION_POLICY_BASED_ACCESS_CONTROL(
+            'module:infrastructure:system:security:authorization:policy-based-access-control',
+            'module/infrastructure/system/security/authorization/policy-based-access-control',
+            'LIBRARY',
+            'Security - Policy-Based Access Control',
+            false,
+            []
+    ),
+
+    SECURITY_AUTHORIZATION_PRIVILEGED_ACCESS_MANAGEMENT(
+            'module:infrastructure:system:security:authorization:privileged-access-management',
+            'module/infrastructure/system/security/authorization/privileged-access-management',
+            'LIBRARY',
+            'Security - Privileged Access Management (PAM)',
+            false,
+            []
+    ),
+
+    SECURITY_AUTHORIZATION_RBAC(
+            'module:infrastructure:system:security:authorization:rbac',
+            'module/infrastructure/system/security/authorization/rbac',
+            'LIBRARY',
+            'Security - Role-Based Access Control (RBAC)',
+            false,
+            []
+    ),
+
+    SECURITY_FUNDAMENTALS(
+            'module:infrastructure:system:security:fundamentals',
+            'module/infrastructure/system/security/fundamentals',
+            'LIBRARY',
+            'Security - Security Fundamentals',
+            false,
+            []
+    ),
+
+    SECURITY_IDENTITY_ACCESS_MANAGEMENT_APPLICATION_DEFAULT_CREDENTIALS(
+            'module:infrastructure:system:security:identity-access-management:application-default-credentials',
+            'module/infrastructure/system/security/identity-access-management/application-default-credentials',
+            'LIBRARY',
+            'Security - Application Default Credentials (ADC)',
+            false,
+            []
+    ),
+
+    SECURITY_IDENTITY_ACCESS_MANAGEMENT_IAM(
+            'module:infrastructure:system:security:identity-access-management:iam',
+            'module/infrastructure/system/security/identity-access-management/iam',
+            'LIBRARY',
+            'Security - Identity and Access Management (IAM)',
+            false,
+            []
+    ),
+
+    SECURITY_IDENTITY_ACCESS_MANAGEMENT_KEYCLOAK(
+            'module:infrastructure:system:security:identity-access-management:keycloak',
+            'module/infrastructure/system/security/identity-access-management/keycloak',
+            'LIBRARY',
+            'Security - Keycloak',
+            false,
+            []
+    ),
+
+    SECURITY_IDENTITY_ACCESS_MANAGEMENT_OAUTH2_OIDC(
+            'module:infrastructure:system:security:identity-access-management:oauth2-oidc',
+            'module/infrastructure/system/security/identity-access-management/oauth2-oidc',
+            'LIBRARY',
+            'Security - OAuth 2.0 and OpenID Connect (OIDC)',
+            false,
+            []
+    ),
+
+    SECURITY_IDENTITY_ACCESS_MANAGEMENT_SCIM_PROVISIONING(
+            'module:infrastructure:system:security:identity-access-management:scim-provisioning',
+            'module/infrastructure/system/security/identity-access-management/scim-provisioning',
+            'LIBRARY',
+            'Security - SCIM Provisioning and Identity Lifecycle',
+            false,
+            []
+    ),
+
+    SECURITY_IDENTITY_ACCESS_MANAGEMENT_SERVICE_ACCOUNT(
+            'module:infrastructure:system:security:identity-access-management:service-account',
+            'module/infrastructure/system/security/identity-access-management/service-account',
+            'LIBRARY',
+            'Security - Service Account',
+            false,
+            []
+    ),
+
+    SECURITY_IDENTITY_ACCESS_MANAGEMENT_SPIFFE_SPIRE(
+            'module:infrastructure:system:security:identity-access-management:spiffe-spire',
+            'module/infrastructure/system/security/identity-access-management/spiffe-spire',
+            'LIBRARY',
+            'Security - SPIFFE and SPIRE Workload Identity',
+            false,
+            []
+    ),
+
+    SECURITY_IDENTITY_ACCESS_MANAGEMENT_SSO_SAML(
+            'module:infrastructure:system:security:identity-access-management:sso-saml',
+            'module/infrastructure/system/security/identity-access-management/sso-saml',
+            'LIBRARY',
+            'Security - Single Sign-On (SSO) and SAML 2.0',
+            false,
+            []
+    ),
+
+    SECURITY_IDENTITY_ACCESS_MANAGEMENT_TOKEN_LIFECYCLE(
+            'module:infrastructure:system:security:identity-access-management:token-lifecycle',
+            'module/infrastructure/system/security/identity-access-management/token-lifecycle',
+            'LIBRARY',
+            'Security - Token Lifecycle',
+            false,
+            []
+    ),
+
+    SECURITY_IDENTITY_ACCESS_MANAGEMENT_WORKLOAD_IDENTITY_FEDERATION(
+            'module:infrastructure:system:security:identity-access-management:workload-identity-federation',
+            'module/infrastructure/system/security/identity-access-management/workload-identity-federation',
+            'LIBRARY',
+            'Security - Workload Identity Federation',
+            false,
+            []
+    ),
+
+    SECURITY_KEY_MANAGEMENT_KMS_HSM(
+            'module:infrastructure:system:security:key-management:kms-hsm',
+            'module/infrastructure/system/security/key-management/kms-hsm',
+            'LIBRARY',
+            'Security - Key Management Service (KMS) and Hardware Security Module (HSM)',
+            false,
+            []
+    ),
+
+    SECURITY_KEY_MANAGEMENT_PKI_CERTIFICATE_LIFECYCLE(
+            'module:infrastructure:system:security:key-management:pki-certificate-lifecycle',
+            'module/infrastructure/system/security/key-management/pki-certificate-lifecycle',
+            'LIBRARY',
+            'Security - Public Key Infrastructure (PKI) and Certificate Lifecycle',
+            false,
+            []
+    ),
+
+    SECURITY_SECRETS_MANAGEMENT_HASHICORP_VAULT(
+            'module:infrastructure:system:security:secrets-management:hashicorp-vault',
+            'module/infrastructure/system/security/secrets-management/hashicorp-vault',
+            'LIBRARY',
+            'Security - HashiCorp Vault',
+            false,
+            []
+    ),
+
+    SECURITY_SECRETS_MANAGEMENT_SECRET_LIFECYCLE(
+            'module:infrastructure:system:security:secrets-management:secret-lifecycle',
+            'module/infrastructure/system/security/secrets-management/secret-lifecycle',
+            'LIBRARY',
+            'Security - Secret Lifecycle',
+            false,
+            []
+    ),
+
+    SECURITY_SECRETS_MANAGEMENT_WINDOWS_DPAPI(
+            'module:infrastructure:system:security:secrets-management:windows-dpapi',
+            'module/infrastructure/system/security/secrets-management/windows-dpapi',
+            'LIBRARY',
+            'Security - Windows Data Protection API (DPAPI)',
+            false,
+            []
+    ),
+
+    SECURITY_TOKEN_SECURITY_JWT(
+            'module:infrastructure:system:security:token-security:jwt',
+            'module/infrastructure/system/security/token-security/jwt',
+            'LIBRARY',
+            'Security - JSON Web Token (JWT)',
+            false,
+            []
+    ),
+
+    SECURITY_ZERO_TRUST(
+            'module:infrastructure:system:security:zero-trust',
+            'module/infrastructure/system/security/zero-trust',
+            'LIBRARY',
+            'Security - Zero Trust Security Architecture',
             false,
             []
     ),

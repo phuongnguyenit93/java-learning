@@ -1,0 +1,7 @@
+# Đăng nhập một lần (SSO) và SAML 2.0
+
+Single Sign-On (SSO) cho phép người dùng truy cập nhiều ứng dụng thông qua quan hệ tin cậy về xác thực, thay vì phải đăng nhập lại riêng lẻ ở từng nơi. Với SAML 2.0, nhà cung cấp danh tính (Identity Provider – IdP) phát hành thông tin xác thực để nhà cung cấp dịch vụ (Service Provider – SP) tiếp nhận và đánh giá. Tuy nhiên, xác thực liên kết không đồng nghĩa với quyền truy cập vào mọi tài nguyên: ứng dụng vẫn phải ánh xạ danh tính, quản lý phiên và thực thi phân quyền phù hợp.
+
+Tài liệu này dành cho người đã biết các nguyên tắc xác thực, danh tính, HTTP và bảo mật ứng dụng ở mức cơ bản. Nội dung tập trung vào SSO và SAML 2.0 theo góc nhìn bảo mật tổng quát, không phụ thuộc ngôn ngữ hay framework. Lộ trình gồm bảy mốc: bản chất SSO và vai trò IdP/SP; cấu trúc assertion, protocol, binding và profile; thiết lập tin cậy qua metadata, entityID, ACS và khóa; luồng đăng nhập do SP hoặc IdP khởi tạo; xác minh phản hồi an toàn; ánh xạ danh tính và quản lý phiên; cuối cùng là gia cố, kiểm thử và chẩn đoán.
+
+Sau khi hoàn thành, bạn có thể mô tả đường đi của `AuthnRequest` và phản hồi SAML, nhận diện `NameID`, thuộc tính và `AuthnStatement`, đồng thời giải thích vì sao phải xác minh chữ ký, bên phát, đích nhận, thời hạn, quan hệ với yêu cầu và khả năng phát lại trước khi tạo phiên. Bạn cũng sẽ phân biệt phiên IdP với phiên SP và Single Logout, lập kế hoạch luân chuyển chứng thư và kiểm thử các trường hợp phản hồi bị sửa, hết hạn, sai đích hoặc cấu hình tin cậy không đúng.

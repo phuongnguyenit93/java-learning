@@ -1,15 +1,7 @@
-# Spring Framework Data Access
+# Spring Framework — Data Access
 
-Spring Framework Data Access là lớp hạ tầng cấp framework cho truy cập dữ liệu quan hệ trên JDBC và R2DBC. Nó giảm mã lặp về quản lý tài nguyên và xử lý exception nhưng vẫn giữ SQL, ánh xạ kết quả và lựa chọn công nghệ ở trạng thái rõ ràng.
+Tầng truy cập dữ liệu giúp ứng dụng làm việc với cơ sở dữ liệu mà vẫn tách biệt trách nhiệm lưu trữ khỏi logic nghiệp vụ. Trong **Spring Framework**, bạn có thể viết truy vấn SQL trực tiếp với JDBC, tích hợp ORM thông qua JPA/Hibernate hoặc xử lý dữ liệu theo mô hình không chặn với R2DBC. Dù chọn cách nào, việc quản lý kết nối, vòng đời tài nguyên, ngoại lệ và **ranh giới giao dịch** vẫn quyết định tính đúng đắn của dữ liệu. Module này giúp bạn hiểu cách Spring hỗ trợ những trách nhiệm đó, thay vì chỉ học các lệnh CRUD riêng lẻ.
 
-## Kiến thức cần có
+Nội dung phù hợp với người đã biết Java, SQL và JDBC cơ bản, đồng thời hiểu Spring IoC và bean. Bạn sẽ bắt đầu bằng cách phân chia tầng nghiệp vụ với DAO/repository, cấu hình `DataSource` và pool kết nối, sau đó truy vấn hoặc cập nhật bằng `JdbcTemplate`/`JdbcClient`, ánh xạ kết quả với `RowMapper` và tìm hiểu cơ chế chuyển ngoại lệ sang `DataAccessException`. Tiếp theo là giao dịch qua `@Transactional` hoặc `TransactionTemplate`: từ commit, rollback và ACID đến propagation, isolation, timeout và những tình huống dễ nhầm như self-invocation hoặc trạng thái rollback-only.
 
-Người học nên nắm Java nền tảng và các khái niệm JDBC cơ bản. Reactive Streams và mô hình non-blocking là kiến thức nền cho chương R2DBC, không phải nội dung do module này sở hữu.
-
-## Luồng học
-
-Module bắt đầu từ mục đích và ranh giới của Spring Data Access, sau đó xây dựng mô hình DAO và exception chung của Spring. Tiếp theo là Spring JDBC, `JdbcClient`, ánh xạ kết quả và các quy trình JDBC nâng cao trước khi chuyển sang Spring R2DBC và `DatabaseClient`. Phần vòng đời tài nguyên và tham gia transaction nối hai hướng truy cập lại với nhau; chương cuối cùng tổng hợp cách lựa chọn giữa JDBC thuần, Spring JDBC/R2DBC, Spring Data và ORM.
-
-## Ranh giới
-
-Module này sở hữu Spring Framework DAO support, `DataAccessException`, Spring JDBC, Spring R2DBC core và các tiện ích quản lý tài nguyên data access. Ngữ nghĩa JDBC thuần thuộc module JDBC. Repository và aggregate mapping thuộc Spring Data JDBC/R2DBC. Transaction propagation, isolation, chính sách rollback và transaction demarcation thuộc Spring Transaction Management. ORM entity mapping và vòng đời thuộc các module persistence tương ứng.
+Các mốc tiếp theo mở rộng sang tích hợp **JPA/Hibernate** với `EntityManager`, persistence context và lazy loading; truy cập reactive bằng **R2DBC** với `ConnectionFactory`, `DatabaseClient` và `TransactionalOperator`; rồi ánh xạ đối tượng–XML qua `Marshaller`/`Unmarshaller` khi ứng dụng cần trao đổi dữ liệu XML. Cuối lộ trình, bạn sẽ kiểm thử CRUD, commit/rollback, xử lý ngoại lệ, quan sát truy vấn và pool kết nối để lựa chọn **JDBC, ORM hoặc R2DBC** dựa trên đặc điểm ứng dụng. Kết quả mong đợi là thiết kế tầng lưu trữ rõ trách nhiệm, quản lý giao dịch có chủ đích và kiểm chứng dữ liệu bằng những tình huống thực tế.

@@ -1,45 +1,7 @@
-# Dynamic Runtime
+# Java Advance — Dynamic Runtime
 
-Dynamic Runtime là phần Java Advanced tập trung vào các primitive mức thấp của `java.lang.invoke` dùng cho lời gọi có kiểu, truy cập biến có ngữ nghĩa và runtime linkage. Module này giúp nối khoảng cách giữa Java code thông thường với các cơ chế mà JVM, language runtime, framework và infrastructure code dùng khi cần biểu diễn hoặc liên kết hành vi linh hoạt hơn lời gọi trực tiếp.
+Trong Java, nhiều lời gọi được xác định từ lúc biên dịch, nhưng có những tình huống chương trình phải **khám phá cấu trúc hoặc lựa chọn hành vi ngay khi chạy**: tìm phương thức theo thông tin có sẵn, chèn logic quanh một lời gọi hoặc liên kết mã được sinh động. Module **Dynamic Runtime** giúp bạn hiểu các cơ chế này và đánh giá khi nào nên dùng chúng thay cho lời gọi trực tiếp. Tính linh hoạt luôn đi cùng những đánh đổi về an toàn kiểu, quyền truy cập, khả năng bảo trì và chi phí thực thi.
 
-## Vì sao nên học module này?
+Module phù hợp với người đã vững Java Core, lớp, interface, ngoại lệ và kiến thức cơ bản về module. Bạn sẽ bắt đầu bằng **reflection** để khảo sát `Class`, constructor, method, field và gọi thành phần lúc chạy; đồng thời phân biệt metadata generic với kiểu tồn tại thực tế sau type erasure. Tiếp đó, bạn tìm hiểu ranh giới đóng gói qua `exports`, `opens`, `trySetAccessible`, rồi sử dụng `MethodHandle`, `MethodType` và `Lookup` cho lời gọi động có kiểu. Với **dynamic proxy**, bạn sẽ thử `Proxy` và `InvocationHandler` để xử lý lời gọi qua interface, bao gồm giá trị trả về, ngoại lệ và các phương thức đặc biệt.
 
-Reflection có thể khám phá metadata và gọi member động, nhưng không phải là mô hình duy nhất cho runtime behavior. Java còn cung cấp `MethodType` + `MethodHandle` cho lời gọi có kiểu, `MethodHandles.Lookup` cho capability-based lookup/access, `CallSite` + `invokedynamic` cho runtime linkage và `VarHandle` cho truy cập biến strongly typed.
-
-Module này xây mental model để hiểu các primitive đó phối hợp với nhau như thế nào, khi nào chúng phù hợp và khi nào Java code trực tiếp hoặc Reflection đơn giản hơn.
-
-## Prerequisite
-
-Nên nắm trước:
-
-- Java Core: class, method, field, exception và type system cơ bản;
-- Reflection ở mức metadata/member access;
-- JVM ở mức bytecode execution và linkage mental model;
-- Concurrency fundamentals khi đi sâu vào visibility và memory-ordering semantics của `VarHandle` hoặc mutable call site.
-
-## Learning flow
-
-Học theo thứ tự:
-
-1. mental model và ranh giới của Dynamic Runtime;
-2. `MethodType` + `MethodHandle` và signature polymorphism;
-3. `MethodHandles.Lookup` và access capability;
-4. adaptation/composition của MethodHandle;
-5. `CallSite` và target có thể thay đổi;
-6. `invokedynamic` + bootstrap linkage;
-7. `VarHandle` như nhánh variable-access song song;
-8. tổng hợp decision model, failure model và module handoff.
-
-## Ranh giới module
-
-Dynamic Runtime sở hữu typed invocation, typed variable handles, lookup/access model, MethodHandle adaptation/composition, CallSite và invokedynamic mental model.
-
-Các phần sau được handoff:
-
-- Reflection metadata/member inspection → Java Core Reflection;
-- constant pool, bytecode execution và JVM linkage foundation → JVM;
-- Java Memory Model/happens-before chuyên sâu → Java Concurrency;
-- lịch sử Java 7 của Method Handles/invokedynamic → Java Version;
-- native memory và foreign-function boundary → Native Interoperability.
-
-Mục tiêu cuối cùng là có thể lần theo một runtime invocation/linkage flow end-to-end và chọn đúng primitive mà không biến `java.lang.invoke` thành lựa chọn mặc định cho code ứng dụng thông thường.
+Ở các mốc cuối, bạn sẽ tìm hiểu `invokedynamic`, bootstrap method và `CallSite`, dùng `javap` để nhận diện điểm liên kết động trong bytecode. Bạn cũng sẽ phân biệt `defineClass` và `defineHiddenClass`, xem xét vai trò của class loader và module, cũng như các giới hạn về quyền truy cập, tính tương thích và vòng đời lớp được tạo. Kết thúc module, bạn có thể lựa chọn cơ chế động phù hợp với yêu cầu mở rộng, giải thích luồng liên kết lời gọi và nhận diện rủi ro thay vì mặc định bỏ qua nguyên tắc đóng gói.

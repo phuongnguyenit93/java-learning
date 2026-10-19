@@ -1,0 +1,92 @@
+# <roadmap-schema>
+# Cấu trúc Roadmap Module
+# schema-version: 1
+#
+# YAML CONTRACT
+# roadmap: Danh sách milestone cấp cao của roadmap cho language hiện tại. ID milestone phải duy nhất.
+#
+# - id [string, required]: ID ổn định và duy nhất của milestone trong roadmap language hiện tại.
+# - title [string, required]: Tên milestone hiển thị cho learner.
+# - purpose [string, required]: Milestone này tồn tại để learner hiểu hoặc đạt được điều gì.
+# - dependsOn [list, optional]: Danh sách id milestone prerequisite khi dependency không thể hiện đủ chỉ bằng thứ tự item.
+# - objectives [list, optional]: Các learning objective cấp milestone; không dùng để liệt kê mọi fact/API/syntax nhỏ.
+# - relatedKnowledge [list, optional]: Danh sách Knowledge category id trong chính module hiện tại hỗ trợ milestone. Portal hiển thị danh sách này ở phía đối diện milestone và click item sẽ điều hướng sang Knowledge category tương ứng.
+# - relatedModules [list, optional]: Các module liên quan hiển thị ở Level 2 của Portal. Mỗi item dùng routeId bắt buộc và có thể có label/note localized; relation này chỉ để điều hướng, không tạo child milestone hoặc thay đổi learning order.
+#
+# ROADMAP THINKING FRAMEWORK
+# PURPOSE
+#   - Topic/module này là gì?
+#   - Vì sao nó tồn tại?
+#   - Không có nó thì learner gặp vấn đề gì?
+# FOUNDATION
+#   - Learner cần prerequisite hoặc mental model nào trước?
+# CORE MODEL
+#   - Những abstraction hoặc building block lớn nào tạo nên chủ đề này?
+# MECHANICS
+#   - Nó hoạt động như thế nào ở mức language/runtime/API phù hợp với module?
+# USAGE
+#   - Nó được dùng như thế nào trong code thực tế?
+# DECISION / TRADE-OFF
+#   - Khi nào nên chọn cơ chế này thay vì cơ chế khác?
+#   - Khi nào không nên dùng?
+# FAILURE / PITFALL
+#   - Những sai lầm, compile-time failure hoặc runtime failure nào đáng biết?
+# INTEGRATION
+#   - Chủ đề này kết nối với những concept/module lân cận nào?
+# SYNTHESIS
+#   - Sau cùng learner phải giữ mental model end-to-end nào?
+#
+# Mỗi language tự chịu trách nhiệm cho roadmap của chính nó. Không suy luận hoặc đồng bộ cấu trúc từ roadmap của language khác.
+# Thứ tự item trong roadmap chính là thứ tự học mặc định. Chỉ dùng dependsOn khi cần biểu diễn dependency rõ hơn thứ tự tuyến tính.
+# Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
+# </roadmap-schema>
+
+roadmap:
+  - id: mo-hinh-vong-doi
+    title: Mô hình vòng đời
+    purpose: Hiểu các trạng thái và mục đích của token.
+    objectives:
+      - Phân biệt token truy cập, token làm mới và token dùng một lần.
+      - Vẽ trạng thái từ cấp phát đến hết hạn hoặc thu hồi.
+  - id: cap-phat-va-thoi-han
+    title: Cấp phát và thời hạn
+    purpose: Giới hạn hiệu lực của token ngay khi tạo.
+    objectives:
+      - Gắn token với chủ thể, mục đích và đối tượng nhận.
+      - Chọn thời hạn, phạm vi quyền và điều kiện cấp lại.
+  - id: luu-giu-va-su-dung
+    title: Lưu giữ và sử dụng
+    purpose: Hạn chế rò rỉ token trong thời gian còn hiệu lực.
+    objectives:
+      - Chọn nơi lưu phù hợp và truyền token qua TLS.
+      - Ngăn lộ token qua URL, nhật ký và bản sao không cần thiết.
+  - id: xac-minh-va-het-han
+    title: Xác minh và hết hạn
+    purpose: Chỉ chấp nhận token còn hợp lệ tại thời điểm sử dụng.
+    objectives:
+      - Kiểm tra chữ ký hoặc trạng thái máy chủ cùng giới hạn thời gian.
+      - Tiêu thụ token dùng một lần một cách nguyên tử.
+  - id: lam-moi-va-xoay-vong
+    title: Làm mới và xoay vòng
+    purpose: Duy trì truy cập mà vẫn giới hạn khả năng lạm dụng.
+    objectives:
+      - Xoay refresh token và phát hiện việc dùng lại.
+      - Giới hạn thời gian phiên và xử lý làm mới đồng thời.
+  - id: thu-hoi-va-dang-xuat
+    title: Thu hồi và đăng xuất
+    purpose: Chấm dứt quyền truy cập theo yêu cầu hoặc khi có rủi ro.
+    objectives:
+      - Phân biệt xóa token phía máy khách, kết thúc phiên và thu hồi.
+      - Chọn cơ chế thu hồi cho token tham chiếu và token tự chứa.
+  - id: dong-bo-he-phan-tan
+    title: Đồng bộ hệ phân tán
+    purpose: Giữ quyết định hiệu lực nhất quán giữa các thành phần.
+    objectives:
+      - Kiểm soát lệch đồng hồ và độ trễ bộ nhớ đệm.
+      - Phối hợp xoay khóa ký và khóa xác minh theo thời hạn token.
+  - id: kiem-thu-va-ung-pho
+    title: Kiểm thử và ứng phó
+    purpose: Kiểm chứng chuyển trạng thái và xử lý sự cố token.
+    objectives:
+      - Thử hết hạn, dùng lại, thu hồi và lỗi làm mới.
+      - Giám sát bất thường và diễn tập xử lý rò rỉ mà không ghi token.

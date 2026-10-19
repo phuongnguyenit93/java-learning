@@ -1,0 +1,92 @@
+# <roadmap-schema>
+# Cấu trúc Roadmap Module
+# schema-version: 1
+#
+# YAML CONTRACT
+# roadmap: Danh sách milestone cấp cao của roadmap cho language hiện tại. ID milestone phải duy nhất.
+#
+# - id [string, required]: ID ổn định và duy nhất của milestone trong roadmap language hiện tại.
+# - title [string, required]: Tên milestone hiển thị cho learner.
+# - purpose [string, required]: Milestone này tồn tại để learner hiểu hoặc đạt được điều gì.
+# - dependsOn [list, optional]: Danh sách id milestone prerequisite khi dependency không thể hiện đủ chỉ bằng thứ tự item.
+# - objectives [list, optional]: Các learning objective cấp milestone; không dùng để liệt kê mọi fact/API/syntax nhỏ.
+# - relatedKnowledge [list, optional]: Danh sách Knowledge category id trong chính module hiện tại hỗ trợ milestone. Portal hiển thị danh sách này ở phía đối diện milestone và click item sẽ điều hướng sang Knowledge category tương ứng.
+# - relatedModules [list, optional]: Các module liên quan hiển thị ở Level 2 của Portal. Mỗi item dùng routeId bắt buộc và có thể có label/note localized; relation này chỉ để điều hướng, không tạo child milestone hoặc thay đổi learning order.
+#
+# ROADMAP THINKING FRAMEWORK
+# PURPOSE
+#   - Topic/module này là gì?
+#   - Vì sao nó tồn tại?
+#   - Không có nó thì learner gặp vấn đề gì?
+# FOUNDATION
+#   - Learner cần prerequisite hoặc mental model nào trước?
+# CORE MODEL
+#   - Những abstraction hoặc building block lớn nào tạo nên chủ đề này?
+# MECHANICS
+#   - Nó hoạt động như thế nào ở mức language/runtime/API phù hợp với module?
+# USAGE
+#   - Nó được dùng như thế nào trong code thực tế?
+# DECISION / TRADE-OFF
+#   - Khi nào nên chọn cơ chế này thay vì cơ chế khác?
+#   - Khi nào không nên dùng?
+# FAILURE / PITFALL
+#   - Những sai lầm, compile-time failure hoặc runtime failure nào đáng biết?
+# INTEGRATION
+#   - Chủ đề này kết nối với những concept/module lân cận nào?
+# SYNTHESIS
+#   - Sau cùng learner phải giữ mental model end-to-end nào?
+#
+# Mỗi language tự chịu trách nhiệm cho roadmap của chính nó. Không suy luận hoặc đồng bộ cấu trúc từ roadmap của language khác.
+# Thứ tự item trong roadmap chính là thứ tự học mặc định. Chỉ dùng dependsOn khi cần biểu diễn dependency rõ hơn thứ tự tuyến tính.
+# Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
+# </roadmap-schema>
+
+roadmap:
+  - id: passkeys-va-fido2
+    title: Passkeys và FIDO2
+    purpose: Nắm mô hình đăng nhập bằng khóa công khai.
+    objectives:
+      - Phân biệt passkey với mật khẩu và mã OTP.
+      - Liên hệ passkeys, WebAuthn, CTAP2 và FIDO2.
+  - id: khoa-va-bo-xac-thuc
+    title: Khóa và bộ xác thực
+    purpose: Hiểu các thành phần tham gia xác thực.
+    objectives:
+      - Xác định vai trò dịch vụ, trình duyệt và bộ xác thực.
+      - Phân biệt sự hiện diện và xác minh người dùng.
+  - id: dang-ky-passkey
+    title: Đăng ký passkey
+    purpose: Gắn khóa công khai với đúng tài khoản.
+    objectives:
+      - Mô tả luồng tạo thử thách và đăng ký thông tin xác thực.
+      - Xác định vai trò của chứng thực bộ xác thực (attestation).
+  - id: dang-nhap-bang-webauthn
+    title: Đăng nhập bằng WebAuthn
+    purpose: Kiểm chứng quyền sử dụng khóa riêng khi đăng nhập.
+    objectives:
+      - Mô tả luồng yêu cầu và phản hồi xác thực.
+      - Giải thích việc kiểm tra chữ ký và thử thách.
+  - id: kiem-tra-bao-mat
+    title: Kiểm tra bảo mật
+    purpose: Áp dụng ràng buộc để chống giả mạo và phát lại.
+    objectives:
+      - Kiểm tra origin, RP ID và cờ xác minh người dùng.
+      - Quản lý thử thách dùng một lần, có thời hạn và gắn đúng phiên.
+  - id: su-dung-da-thiet-bi
+    title: Sử dụng đa thiết bị
+    purpose: Chọn cách sử dụng passkey phù hợp với thiết bị và rủi ro.
+    objectives:
+      - So sánh passkey gắn thiết bị và passkey đồng bộ.
+      - Phân biệt bộ xác thực tích hợp, khóa bảo mật và đăng nhập chéo thiết bị.
+  - id: quan-ly-va-khoi-phuc
+    title: Quản lý và khôi phục
+    purpose: Duy trì quyền truy cập khi đổi hoặc mất thiết bị.
+    objectives:
+      - Thiết kế thêm, xem và gỡ passkey của tài khoản.
+      - Đánh giá khôi phục tài khoản và phương án đăng nhập dự phòng.
+  - id: trien-khai-va-kiem-thu
+    title: Triển khai và kiểm thử
+    purpose: Kiểm chứng tích hợp trước khi mở rộng sử dụng.
+    objectives:
+      - Thử luồng hợp lệ, sai origin, phát lại và hủy xác thực.
+      - Kiểm tra tương thích, theo dõi lỗi và lập kế hoạch chuyển đổi.

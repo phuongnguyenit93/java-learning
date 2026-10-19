@@ -1,0 +1,92 @@
+# <roadmap-schema>
+# Cấu trúc Roadmap Module
+# schema-version: 1
+#
+# YAML CONTRACT
+# roadmap: Danh sách milestone cấp cao của roadmap cho language hiện tại. ID milestone phải duy nhất.
+#
+# - id [string, required]: ID ổn định và duy nhất của milestone trong roadmap language hiện tại.
+# - title [string, required]: Tên milestone hiển thị cho learner.
+# - purpose [string, required]: Milestone này tồn tại để learner hiểu hoặc đạt được điều gì.
+# - dependsOn [list, optional]: Danh sách id milestone prerequisite khi dependency không thể hiện đủ chỉ bằng thứ tự item.
+# - objectives [list, optional]: Các learning objective cấp milestone; không dùng để liệt kê mọi fact/API/syntax nhỏ.
+# - relatedKnowledge [list, optional]: Danh sách Knowledge category id trong chính module hiện tại hỗ trợ milestone. Portal hiển thị danh sách này ở phía đối diện milestone và click item sẽ điều hướng sang Knowledge category tương ứng.
+# - relatedModules [list, optional]: Các module liên quan hiển thị ở Level 2 của Portal. Mỗi item dùng routeId bắt buộc và có thể có label/note localized; relation này chỉ để điều hướng, không tạo child milestone hoặc thay đổi learning order.
+#
+# ROADMAP THINKING FRAMEWORK
+# PURPOSE
+#   - Topic/module này là gì?
+#   - Vì sao nó tồn tại?
+#   - Không có nó thì learner gặp vấn đề gì?
+# FOUNDATION
+#   - Learner cần prerequisite hoặc mental model nào trước?
+# CORE MODEL
+#   - Những abstraction hoặc building block lớn nào tạo nên chủ đề này?
+# MECHANICS
+#   - Nó hoạt động như thế nào ở mức language/runtime/API phù hợp với module?
+# USAGE
+#   - Nó được dùng như thế nào trong code thực tế?
+# DECISION / TRADE-OFF
+#   - Khi nào nên chọn cơ chế này thay vì cơ chế khác?
+#   - Khi nào không nên dùng?
+# FAILURE / PITFALL
+#   - Những sai lầm, compile-time failure hoặc runtime failure nào đáng biết?
+# INTEGRATION
+#   - Chủ đề này kết nối với những concept/module lân cận nào?
+# SYNTHESIS
+#   - Sau cùng learner phải giữ mental model end-to-end nào?
+#
+# Mỗi language tự chịu trách nhiệm cho roadmap của chính nó. Không suy luận hoặc đồng bộ cấu trúc từ roadmap của language khác.
+# Thứ tự item trong roadmap chính là thứ tự học mặc định. Chỉ dùng dependsOn khi cần biểu diễn dependency rõ hơn thứ tự tuyến tính.
+# Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
+# </roadmap-schema>
+
+roadmap:
+  - id: ban-do-xac-thuc-api
+    title: Bản đồ xác thực API
+    purpose: Hiểu vai trò và giới hạn của API Key và HMAC trước khi chọn cơ chế.
+    objectives:
+      - Phân biệt xác thực với phân quyền.
+      - So sánh khóa gửi trực tiếp với bằng chứng HMAC.
+  - id: xac-thuc-bang-api-key
+    title: Xác thực bằng API Key
+    purpose: Nắm luồng xác thực khi bên gọi gửi API Key.
+    objectives:
+      - Mô tả cách máy chủ nhận và kiểm tra API Key.
+      - Chọn cách truyền qua HTTPS, tránh để khóa trong URL.
+  - id: hmac-va-bi-mat-dung-chung
+    title: HMAC và bí mật dùng chung
+    purpose: Hiểu cách HMAC bảo vệ tính toàn vẹn và xác thực dữ liệu bằng bí mật dùng chung.
+    objectives:
+      - Phân biệt HMAC với hàm băm và chữ ký bất đối xứng.
+      - Giải thích vì sao HMAC không mã hóa nội dung.
+  - id: chuan-hoa-va-ky-yeu-cau
+    title: Chuẩn hóa và ký yêu cầu
+    purpose: Tạo dữ liệu ký nhất quán giữa bên gọi và máy chủ.
+    objectives:
+      - Xác định cách đưa phương thức, đường dẫn, truy vấn và nội dung vào dữ liệu ký.
+      - Giải thích lỗi khi hai bên chuẩn hóa khác nhau.
+  - id: xac-minh-va-chong-phat-lai
+    title: Xác minh và chống phát lại
+    purpose: Kiểm tra bằng chứng HMAC và từ chối yêu cầu bị sửa hoặc tái sử dụng.
+    objectives:
+      - Tính lại HMAC và so sánh bằng cách hạn chế rò rỉ thời gian.
+      - Kết hợp dấu thời gian, nonce và kiểm tra trùng theo chính sách.
+  - id: quyen-han-va-gioi-han
+    title: Quyền hạn và giới hạn
+    purpose: Giới hạn tác động khi thông tin xác thực bị lạm dụng.
+    objectives:
+      - Gắn khóa với bên gọi và quyền tối thiểu.
+      - Áp dụng hạn mức và giới hạn tần suất theo khóa.
+  - id: vong-doi-va-bao-ve-khoa
+    title: Vòng đời và bảo vệ khóa
+    purpose: Duy trì bí mật an toàn từ cấp phát đến thu hồi.
+    objectives:
+      - Thiết kế lưu trữ, luân chuyển và thu hồi khóa.
+      - Tách khóa theo môi trường, tránh ghi bí mật vào nhật ký.
+  - id: kiem-thu-va-xu-ly-su-co
+    title: Kiểm thử và xử lý sự cố
+    purpose: Kiểm chứng cơ chế và phản ứng khi khóa hoặc yêu cầu bị lạm dụng.
+    objectives:
+      - Thử khóa sai, dữ liệu bị sửa, yêu cầu hết hạn và phát lại.
+      - Mô tả cách thu hồi khóa lộ và kiểm tra nhật ký an toàn.

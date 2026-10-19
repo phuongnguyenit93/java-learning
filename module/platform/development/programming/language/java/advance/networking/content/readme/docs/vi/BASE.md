@@ -1,27 +1,7 @@
-# Java Networking nâng cao
+# Java Advance – Networking
 
-Module này xây dựng mental model thực tế cho các API mạng của JDK: từ địa chỉ và phân giải tên, TCP/UDP socket, các mô hình I/O của NIO, đến java.net.http.HttpClient và WebSocket client.
+Giao tiếp mạng cho phép các chương trình Java trao đổi dữ liệu với dịch vụ và thiết bị khác, nhưng một kết nối thành công chưa đủ để bảo đảm thông điệp được xử lý đúng, tài nguyên được giải phóng hay lỗi mạng được kiểm soát. Module **Networking** giúp bạn hiểu từ địa chỉ IP, cổng, DNS, URI/URL đến cách lựa chọn TCP, UDP và HTTP theo yêu cầu truyền dữ liệu. Trọng tâm là hợp đồng của từng giao thức, ranh giới thông điệp và hành vi thực tế khi kết nối chậm, gián đoạn hoặc không đáng tin cậy.
 
-Mục tiêu không phải học thuộc danh sách class trong java.net, mà là hiểu **một chương trình Java giao tiếp qua mạng như thế nào, đang chờ ở đâu, dữ liệu được biểu diễn theo mô hình nào, tài nguyên thuộc về ai và nên chọn abstraction nào cho từng nhu cầu**.
+Nội dung dành cho người đã nắm Java Core, xử lý ngoại lệ, luồng dữ liệu và kiến thức mạng căn bản. Bạn sẽ xây dựng client/server TCP với `Socket` và `ServerSocket`, thực hành gửi nhận datagram UDP rồi so sánh I/O chặn, không chặn và bất đồng bộ với channel, buffer, `Selector` và virtual thread. Tiếp theo, bạn sử dụng `HttpClient` để gửi yêu cầu đồng bộ hoặc bất đồng bộ, tìm hiểu vòng đời WebSocket và thiết lập kết nối TLS với `SSLContext`, chứng chỉ cùng cơ chế xác thực máy chủ.
 
-## Prerequisite
-
-Learner nên nắm Java Core I/O, đặc biệt byte stream, Buffer, Channel và resource lifecycle; đồng thời có nền tảng concurrency đủ để phân biệt thread, executor, blocking và asynchronous completion. Phần virtual threads chỉ được dùng để đánh giá trade-off của network I/O trên Java 21, còn concurrency model đầy đủ thuộc module Concurrency.
-
-## Learning flow
-
-Flow của module đi từ nền tảng tới quyết định thực tế:
-
-1. xây dựng mô hình endpoint, transport và kiểu hoàn tất I/O;
-2. hiểu địa chỉ IP, name resolution, network interface, URI/URL và socket address;
-3. học TCP dưới dạng byte stream và UDP dưới dạng datagram;
-4. xử lý timeout, socket option, failure, cancellation và vòng đời tài nguyên;
-5. chuyển sang NIO với channel, selector và asynchronous channel, đồng thời đặt virtual threads vào đúng trade-off;
-6. sử dụng HTTP Client và WebSocket client mức cao của JDK;
-7. tổng hợp cách chọn abstraction và handoff đúng sang Security, Concurrency và Integration.
-
-## Boundary
-
-Networking sở hữu **JDK networking APIs và runtime mechanics**. Module không dạy lại Java I/O nền tảng, Java Memory Model, TLS/JSSE và cryptography chuyên sâu, retry/resilience architecture, API gateway/service mesh, hay thiết kế giao thức HTTP/WebSocket ở tầng hệ thống.
-
-Khi learner hoàn thành module, họ nên có thể giải thích end-to-end từ hostname → resolved endpoint → transport/API model → data transfer/completion → failure/cancellation → resource release, và lựa chọn được API phù hợp mà không mặc định “non-blocking luôn tốt hơn”.
+Ở phần cuối, bạn sẽ thiết kế timeout, retry có giới hạn, hủy tác vụ và kiểm soát lượng kết nối, tốc độ gửi cũng như kích thước dữ liệu. Các thí nghiệm trên loopback với máy chủ chậm, dữ liệu thiếu hoặc kết nối bị đóng đột ngột giúp bạn kiểm chứng cách xử lý EOF, lỗi và giải phóng tài nguyên; đồng thời đo độ trễ và thông lượng trước khi tối ưu. Sau module, bạn có thể lựa chọn API mạng phù hợp, xây dựng giao tiếp an toàn hơn và giải thích hành vi của ứng dụng bằng kiểm thử cụ thể.

@@ -1,41 +1,7 @@
-# Spring Validation và Data Binding
+# Spring Framework — Validation & Data Binding
 
-Module này giải thích hạ tầng dùng chung của Spring Framework để biến dữ liệu bên ngoài hoặc dữ liệu dạng text thành trạng thái object có kiểu, kiểm tra tính hợp lệ của trạng thái đó và biểu diễn lỗi theo cấu trúc thống nhất.
+Khi ứng dụng Spring nhận dữ liệu từ biểu mẫu, request hoặc một nguồn bên ngoài, giá trị đầu vào thường chưa có đúng kiểu và chưa chắc đáp ứng quy tắc nghiệp vụ. **Data binding** đảm nhiệm việc gán dữ liệu vào mô hình, **conversion** và **formatting** chuyển đổi hoặc trình bày giá trị theo kiểu và quy ước thích hợp, còn **validation** phát hiện dữ liệu không hợp lệ. Phân biệt những bước này giúp bạn thiết kế luồng tiếp nhận đầu vào rõ ràng, hạn chế việc gán nhầm trường và trả về thông báo lỗi có ích thay vì trộn lẫn mọi vấn đề vào một thao tác.
 
-Phạm vi chính gồm property access, type conversion, field formatting, Spring validation, DataBinder orchestration, tích hợp Jakarta Bean Validation và các quyết định binding an toàn.
+Module dành cho người đã biết Java, Spring Framework, khái niệm bean và cách controller tiếp nhận dữ liệu cơ bản. Bạn sẽ bắt đầu với `DataBinder` và `BeanWrapper`, cách gán thuộc tính hoặc qua constructor, xử lý cấu trúc lồng nhau và giới hạn những trường được phép gán. Sau đó, lộ trình đi qua `ConversionService`, `Converter`, `Formatter`, `@DateTimeFormat` và `@NumberFormat` để chuyển kiểu, định dạng số và ngày giờ. Ở phần kiểm tra dữ liệu, bạn sẽ tự viết Spring `Validator` cùng `Errors`, rồi sử dụng ràng buộc **Jakarta Validation** với `@Valid`, nhóm kiểm tra, đối tượng lồng nhau và `LocalValidatorFactoryBean`.
 
-## Vì sao module này tồn tại?
-
-Nếu không có một mô hình binding và validation dùng chung, mỗi layer sẽ phải tự định nghĩa cách chuyển đổi text, áp giá trị lên object, biểu diễn lỗi và quyết định object sau cùng có hợp lệ hay không.
-
-Spring tách các concern này thành những contract có thể tái sử dụng ngoài một transport hoặc UI framework cụ thể.
-
-## Luồng học
-
-1. Hiểu vì sao validation, binding, conversion và formatting là các concern khác nhau.
-2. Học mô hình property access và binding result.
-3. Học hệ thống type conversion tổng quát của Spring.
-4. Bổ sung field formatting và parse/print phụ thuộc locale.
-5. Học Spring Validator, structured errors, validation hints và message-code resolution.
-6. Kết nối các phần qua DataBinder, gồm constructor binding, property binding và declarative binding của Spring Framework 6.1.
-7. Tích hợp Jakarta Bean Validation và executable method validation.
-8. Tổng hợp thành mô hình quyết định binding an toàn end-to-end.
-
-## Kiến thức cần có trước
-
-Learner nên nắm object Java thông thường, property, constructor, annotation, exception và các khái niệm cơ bản của Spring container.
-
-## Ranh giới module
-
-Module này sở hữu các contract Spring Framework dùng chung như Validator, Errors, BindingResult, DataBinder, ConversionService, họ Converter, Formatter infrastructure và lớp tích hợp Bean Validation của Spring.
-
-Module chủ động dừng trước binding phụ thuộc transport:
-
-- Spring MVC sở hữu WebDataBinder, controller argument binding, @InitBinder và vòng đời validation phụ thuộc HTTP.
-- Spring WebFlux sở hữu vòng đời binding/validation của reactive controller.
-- Spring Core Container sở hữu MessageSource và i18n sau khi module này đã tạo structured errors cùng message codes có thể resolve.
-- Spring AOP sở hữu cơ chế proxy/interceptor được dùng bởi cách wiring method validation dựa trên proxy.
-
-## Kết quả mong đợi
-
-Sau khi hoàn thành module, learner nên chọn được đúng cơ chế conversion, formatting, binding và validation; giải thích được cách DataBinder điều phối chúng; hiểu declarative binding của Spring Framework 6.1; và thiết kế được luồng an toàn từ raw input tới application object có kiểu và đã được validate.
+Cuối cùng, bạn sẽ kết nối các cơ chế trên vào ứng dụng bằng `@Validated`, `WebDataBinder`, `@InitBinder`, phân biệt xử lý `@ModelAttribute` và `@RequestBody`, cũng như kiểm tra ở controller so với phương thức dịch vụ. Bạn sẽ đọc `BindingResult`, tổ chức mã lỗi và thông điệp qua `MessageSource`, đồng thời kiểm thử các trường hợp chuyển kiểu thất bại, trường bị chặn, dữ liệu lồng nhau và ràng buộc không đạt. Kết thúc module, bạn có thể xây dựng đường đi dữ liệu đầu vào dễ kiểm soát, giải thích nguồn gốc lỗi và kiểm chứng hành vi của từng lớp xử lý.

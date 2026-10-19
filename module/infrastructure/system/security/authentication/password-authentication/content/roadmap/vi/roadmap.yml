@@ -1,0 +1,88 @@
+# <roadmap-schema>
+# Cấu trúc Roadmap Module
+# schema-version: 1
+#
+# YAML CONTRACT
+# roadmap: Danh sách milestone cấp cao của roadmap cho language hiện tại. ID milestone phải duy nhất.
+#
+# - id [string, required]: ID ổn định và duy nhất của milestone trong roadmap language hiện tại.
+# - title [string, required]: Tên milestone hiển thị cho learner.
+# - purpose [string, required]: Milestone này tồn tại để learner hiểu hoặc đạt được điều gì.
+# - dependsOn [list, optional]: Danh sách id milestone prerequisite khi dependency không thể hiện đủ chỉ bằng thứ tự item.
+# - objectives [list, optional]: Các learning objective cấp milestone; không dùng để liệt kê mọi fact/API/syntax nhỏ.
+# - relatedKnowledge [list, optional]: Danh sách Knowledge category id trong chính module hiện tại hỗ trợ milestone. Portal hiển thị danh sách này ở phía đối diện milestone và click item sẽ điều hướng sang Knowledge category tương ứng.
+# - relatedModules [list, optional]: Các module liên quan hiển thị ở Level 2 của Portal. Mỗi item dùng routeId bắt buộc và có thể có label/note localized; relation này chỉ để điều hướng, không tạo child milestone hoặc thay đổi learning order.
+#
+# ROADMAP THINKING FRAMEWORK
+# PURPOSE
+#   - Topic/module này là gì?
+#   - Vì sao nó tồn tại?
+#   - Không có nó thì learner gặp vấn đề gì?
+# FOUNDATION
+#   - Learner cần prerequisite hoặc mental model nào trước?
+# CORE MODEL
+#   - Những abstraction hoặc building block lớn nào tạo nên chủ đề này?
+# MECHANICS
+#   - Nó hoạt động như thế nào ở mức language/runtime/API phù hợp với module?
+# USAGE
+#   - Nó được dùng như thế nào trong code thực tế?
+# DECISION / TRADE-OFF
+#   - Khi nào nên chọn cơ chế này thay vì cơ chế khác?
+#   - Khi nào không nên dùng?
+# FAILURE / PITFALL
+#   - Những sai lầm, compile-time failure hoặc runtime failure nào đáng biết?
+# INTEGRATION
+#   - Chủ đề này kết nối với những concept/module lân cận nào?
+# SYNTHESIS
+#   - Sau cùng learner phải giữ mental model end-to-end nào?
+#
+# Mỗi language tự chịu trách nhiệm cho roadmap của chính nó. Không suy luận hoặc đồng bộ cấu trúc từ roadmap của language khác.
+# Thứ tự item trong roadmap chính là thứ tự học mặc định. Chỉ dùng dependsOn khi cần biểu diễn dependency rõ hơn thứ tự tuyến tính.
+# Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
+# </roadmap-schema>
+
+roadmap:
+  - id: vai-tro-va-rui-ro-mat-khau
+    title: Vai trò và rủi ro mật khẩu
+    purpose: Hiểu mật khẩu chứng minh điều gì và có thể bị đánh cắp ra sao.
+    objectives:
+      - Phân biệt xác thực bằng mật khẩu với phân quyền.
+      - Nhận diện dò đoán, tái sử dụng mật khẩu và lừa đảo.
+  - id: chinh-sach-va-tao-mat-khau
+    title: Chính sách và tạo mật khẩu
+    purpose: Giúp người dùng tạo mật khẩu khó đoán mà vẫn sử dụng thuận tiện.
+    objectives:
+      - Thiết kế chính sách độ dài và kiểm tra mật khẩu đã lộ.
+      - Hỗ trợ cụm mật khẩu và trình quản lý mật khẩu.
+  - id: bam-va-luu-tru-an-toan
+    title: Băm và lưu trữ an toàn
+    purpose: Giảm thiệt hại khi dữ liệu xác thực bị lộ.
+    objectives:
+      - Phân biệt băm mật khẩu với mã hóa và Base64.
+      - Giải thích salt, chi phí tính toán và hàm băm chuyên dụng.
+      - Mô tả cách nâng cấp tham số băm sau xác thực thành công.
+  - id: luong-dang-nhap-an-toan
+    title: Luồng đăng nhập an toàn
+    purpose: Nối việc nhận mật khẩu, kiểm tra và thiết lập trạng thái đăng nhập.
+    objectives:
+      - Mô tả luồng kiểm tra mật khẩu qua HTTPS.
+      - Thiết kế thông báo lỗi hạn chế tiết lộ sự tồn tại của tài khoản.
+  - id: chong-tan-cong-tai-khoan
+    title: Chống tấn công tài khoản
+    purpose: Hạn chế thử mật khẩu hàng loạt và chiếm dụng tài khoản.
+    objectives:
+      - Phân biệt vét cạn với thử lại thông tin đăng nhập bị lộ.
+      - Kết hợp giới hạn tần suất, phát hiện bất thường và xác thực đa yếu tố.
+  - id: doi-va-khoi-phuc-mat-khau
+    title: Đổi và khôi phục mật khẩu
+    purpose: Cho phép lấy lại quyền truy cập mà không làm yếu cơ chế xác thực.
+    objectives:
+      - Thiết kế xác minh khi đổi mật khẩu và quy trình khôi phục.
+      - Dùng mã đặt lại mật khẩu có thời hạn, chỉ dùng một lần.
+      - Xác định khi nào cần thu hồi phiên đăng nhập sau sự cố.
+  - id: kiem-thu-va-van-hanh
+    title: Kiểm thử và vận hành
+    purpose: Kiểm chứng các luồng và theo dõi sự cố trong quá trình sử dụng.
+    objectives:
+      - Kiểm thử mật khẩu sai, giới hạn thử và mã đặt lại mật khẩu hết hạn hoặc tái sử dụng.
+      - Theo dõi đăng nhập và thay đổi mật khẩu mà không ghi bí mật vào nhật ký.

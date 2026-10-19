@@ -1,0 +1,86 @@
+# <roadmap-schema>
+# Cấu trúc Roadmap Module
+# schema-version: 1
+#
+# YAML CONTRACT
+# roadmap: Danh sách milestone cấp cao của roadmap cho language hiện tại. ID milestone phải duy nhất.
+#
+# - id [string, required]: ID ổn định và duy nhất của milestone trong roadmap language hiện tại.
+# - title [string, required]: Tên milestone hiển thị cho learner.
+# - purpose [string, required]: Milestone này tồn tại để learner hiểu hoặc đạt được điều gì.
+# - dependsOn [list, optional]: Danh sách id milestone prerequisite khi dependency không thể hiện đủ chỉ bằng thứ tự item.
+# - objectives [list, optional]: Các learning objective cấp milestone; không dùng để liệt kê mọi fact/API/syntax nhỏ.
+# - relatedKnowledge [list, optional]: Danh sách Knowledge category id trong chính module hiện tại hỗ trợ milestone. Portal hiển thị danh sách này ở phía đối diện milestone và click item sẽ điều hướng sang Knowledge category tương ứng.
+# - relatedModules [list, optional]: Các module liên quan hiển thị ở Level 2 của Portal. Mỗi item dùng routeId bắt buộc và có thể có label/note localized; relation này chỉ để điều hướng, không tạo child milestone hoặc thay đổi learning order.
+#
+# ROADMAP THINKING FRAMEWORK
+# PURPOSE
+#   - Topic/module này là gì?
+#   - Vì sao nó tồn tại?
+#   - Không có nó thì learner gặp vấn đề gì?
+# FOUNDATION
+#   - Learner cần prerequisite hoặc mental model nào trước?
+# CORE MODEL
+#   - Những abstraction hoặc building block lớn nào tạo nên chủ đề này?
+# MECHANICS
+#   - Nó hoạt động như thế nào ở mức language/runtime/API phù hợp với module?
+# USAGE
+#   - Nó được dùng như thế nào trong code thực tế?
+# DECISION / TRADE-OFF
+#   - Khi nào nên chọn cơ chế này thay vì cơ chế khác?
+#   - Khi nào không nên dùng?
+# FAILURE / PITFALL
+#   - Những sai lầm, compile-time failure hoặc runtime failure nào đáng biết?
+# INTEGRATION
+#   - Chủ đề này kết nối với những concept/module lân cận nào?
+# SYNTHESIS
+#   - Sau cùng learner phải giữ mental model end-to-end nào?
+#
+# Mỗi language tự chịu trách nhiệm cho roadmap của chính nó. Không suy luận hoặc đồng bộ cấu trúc từ roadmap của language khác.
+# Thứ tự item trong roadmap chính là thứ tự học mặc định. Chỉ dùng dependsOn khi cần biểu diễn dependency rõ hơn thứ tự tuyến tính.
+# Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
+# </roadmap-schema>
+
+roadmap:
+  - id: tu-duy-abac
+    title: Tư duy ABAC
+    purpose: Hiểu cách ABAC dùng thuộc tính để quyết định quyền theo ngữ cảnh.
+    objectives:
+      - Phân biệt xác thực với phân quyền và nêu phạm vi của ABAC.
+      - So sánh ABAC với RBAC qua một tình huống truy cập.
+  - id: mo-hinh-thuoc-tinh
+    title: Mô hình thuộc tính
+    purpose: Biểu diễn đủ thông tin cần thiết cho một yêu cầu truy cập.
+    objectives:
+      - Lập bộ thuộc tính cho chủ thể, tài nguyên, hành động và môi trường.
+      - Xác định kiểu dữ liệu và ý nghĩa thống nhất cho từng thuộc tính.
+  - id: quy-tac-va-chinh-sach
+    title: Quy tắc và chính sách
+    purpose: Chuyển yêu cầu nghiệp vụ thành điều kiện cấp quyền rõ ràng.
+    objectives:
+      - Viết quy tắc cho phép hoặc từ chối bằng các điều kiện thuộc tính.
+      - Áp dụng mặc định từ chối và xác định cách xử lý các quy tắc xung đột.
+  - id: luong-quyet-dinh
+    title: Luồng quyết định
+    purpose: Tách trách nhiệm quản lý, đánh giá và thực thi chính sách.
+    objectives:
+      - Mô tả vai trò của điểm quyết định (PDP), thực thi (PEP), cung cấp thuộc tính (PIP) và quản trị chính sách (PAP).
+      - Vẽ luồng yêu cầu, thu thập thuộc tính, đánh giá và áp dụng quyết định.
+  - id: thuoc-tinh-dang-tin-cay
+    title: Thuộc tính đáng tin cậy
+    purpose: Ngăn dữ liệu giả mạo hoặc lỗi thời dẫn đến cấp quyền sai.
+    objectives:
+      - Xác định nguồn đáng tin, bên quản lý và thời hạn hợp lệ của thuộc tính.
+      - Thiết kế xử lý an toàn khi thuộc tính thiếu, sai hoặc do bên yêu cầu tự khai.
+  - id: thuc-thi-va-bo-nho-dem
+    title: Thực thi và bộ nhớ đệm
+    purpose: Duy trì quyết định đúng khi hệ thống và thuộc tính thay đổi.
+    objectives:
+      - Đặt kiểm tra quyền trên mọi đường truy cập, gắn đúng tài nguyên và hành động.
+      - Xác định hiệu lực bộ nhớ đệm, lúc đánh giá lại và hành vi an toàn khi bộ phận quyết định lỗi.
+  - id: kiem-thu-va-van-hanh
+    title: Kiểm thử và vận hành
+    purpose: Kiểm chứng chính sách và kiểm soát thay đổi trong quá trình sử dụng.
+    objectives:
+      - Lập bảng kiểm thử cho phép, từ chối, thuộc tính thiếu, xung đột và thay đổi ngữ cảnh.
+      - Thiết kế ghi vết quyết định, quản lý phiên bản và khôi phục chính sách khi triển khai sai.

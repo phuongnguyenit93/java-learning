@@ -1,20 +1,7 @@
-# Generics
+# Java Core — Generics
 
-Module này xây mental model cho **parametric polymorphism và type safety ở compile time** trong Java. Generics cho phép một abstraction làm việc với nhiều type mà vẫn giữ contract kiểu rõ ràng thay vì đẩy kiểm tra type sang runtime.
+Generics (kiểu tổng quát) cho phép lớp, giao diện và phương thức làm việc với nhiều kiểu dữ liệu mà vẫn kiểm tra tính tương thích **ngay khi biên dịch**. Thay vì trao đổi mọi giá trị dưới dạng `Object` rồi tự ép kiểu, bạn có thể mô tả rõ kiểu dữ liệu mà một cấu trúc nhận và trả về. Nhờ đó, mã dễ tái sử dụng, hợp đồng API rõ ràng và nhiều lỗi sai kiểu được phát hiện sớm. Generics không tự biến các kiểu tham số hóa thành quan hệ kế thừa: ví dụ `List<Integer>` không phải kiểu con của `List<Number>`.
 
-## Learning flow
+Module này dành cho người đã nắm cú pháp Java, lớp, giao diện, phương thức và kế thừa cơ bản. Bạn sẽ lần lượt khai báo tham số kiểu cho lớp, giao diện và phương thức; hiểu suy luận kiểu, cú pháp diamond, các ràng buộc `extends` và quan hệ giữa những kiểu tham số hóa. Sau đó, bạn sẽ dùng wildcard `?`, `? extends T`, `? super T` và nguyên tắc **PECS** để thiết kế cách đọc, ghi dữ liệu phù hợp với mục đích của API.
 
-1. vì sao Generics tồn tại;
-2. generic types và generic methods;
-3. bounded type parameters;
-4. invariance và subtyping;
-5. wildcards và PECS;
-6. raw types và legacy boundaries;
-7. type erasure và runtime model;
-8. limitations và generic API design.
-
-## Mental model cần giữ
-
-Generic type argument chủ yếu là compile-time contract. Vì type erasure và invariance, trực giác “`List<Dog>` là `List<Animal>`” không đúng. Wildcard mô tả capability của reference, còn type parameter mô tả quan hệ kiểu mà declaration cần duy trì.
-
-Collection là nơi Generics được dùng rộng rãi, nhưng module này tập trung vào type-system semantics và API design.
+Phần tiếp theo giải thích cơ chế **xóa kiểu (type erasure)**, phương thức cầu nối và những giới hạn của generics khi chạy, từ đó lý giải các cảnh báo về kiểu thô (raw type), ép kiểu không kiểm tra và kết hợp generics với `varargs`. Ở bài thực hành cuối, bạn sẽ viết và kiểm thử một phương thức sao chép dữ liệu theo PECS, đánh giá các trường hợp biên dịch được hoặc bị từ chối và biết khi nào việc xử lý cảnh báo là thực sự an toàn.

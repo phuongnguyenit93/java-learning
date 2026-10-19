@@ -1,0 +1,86 @@
+# <roadmap-schema>
+# Cấu trúc Roadmap Module
+# schema-version: 1
+#
+# YAML CONTRACT
+# roadmap: Danh sách milestone cấp cao của roadmap cho language hiện tại. ID milestone phải duy nhất.
+#
+# - id [string, required]: ID ổn định và duy nhất của milestone trong roadmap language hiện tại.
+# - title [string, required]: Tên milestone hiển thị cho learner.
+# - purpose [string, required]: Milestone này tồn tại để learner hiểu hoặc đạt được điều gì.
+# - dependsOn [list, optional]: Danh sách id milestone prerequisite khi dependency không thể hiện đủ chỉ bằng thứ tự item.
+# - objectives [list, optional]: Các learning objective cấp milestone; không dùng để liệt kê mọi fact/API/syntax nhỏ.
+# - relatedKnowledge [list, optional]: Danh sách Knowledge category id trong chính module hiện tại hỗ trợ milestone. Portal hiển thị danh sách này ở phía đối diện milestone và click item sẽ điều hướng sang Knowledge category tương ứng.
+# - relatedModules [list, optional]: Các module liên quan hiển thị ở Level 2 của Portal. Mỗi item dùng routeId bắt buộc và có thể có label/note localized; relation này chỉ để điều hướng, không tạo child milestone hoặc thay đổi learning order.
+#
+# ROADMAP THINKING FRAMEWORK
+# PURPOSE
+#   - Topic/module này là gì?
+#   - Vì sao nó tồn tại?
+#   - Không có nó thì learner gặp vấn đề gì?
+# FOUNDATION
+#   - Learner cần prerequisite hoặc mental model nào trước?
+# CORE MODEL
+#   - Những abstraction hoặc building block lớn nào tạo nên chủ đề này?
+# MECHANICS
+#   - Nó hoạt động như thế nào ở mức language/runtime/API phù hợp với module?
+# USAGE
+#   - Nó được dùng như thế nào trong code thực tế?
+# DECISION / TRADE-OFF
+#   - Khi nào nên chọn cơ chế này thay vì cơ chế khác?
+#   - Khi nào không nên dùng?
+# FAILURE / PITFALL
+#   - Những sai lầm, compile-time failure hoặc runtime failure nào đáng biết?
+# INTEGRATION
+#   - Chủ đề này kết nối với những concept/module lân cận nào?
+# SYNTHESIS
+#   - Sau cùng learner phải giữ mental model end-to-end nào?
+#
+# Mỗi language tự chịu trách nhiệm cho roadmap của chính nó. Không suy luận hoặc đồng bộ cấu trúc từ roadmap của language khác.
+# Thứ tự item trong roadmap chính là thứ tự học mặc định. Chỉ dùng dependsOn khi cần biểu diễn dependency rõ hơn thứ tự tuyến tính.
+# Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
+# </roadmap-schema>
+
+roadmap:
+  - id: mo-hinh-rbac
+    title: Mô hình RBAC
+    purpose: Hiểu cách vai trò nối người dùng với quyền truy cập.
+    objectives:
+      - Vẽ quan hệ giữa người dùng, vai trò và quyền; phân biệt xác thực với phân quyền.
+      - Biểu diễn một quyền bằng hành động được phép trên tài nguyên.
+  - id: thiet-ke-vai-tro
+    title: Thiết kế vai trò
+    purpose: Chuyển trách nhiệm công việc thành các vai trò có quyền vừa đủ.
+    objectives:
+      - Lập ma trận vai trò–quyền theo nguyên tắc quyền tối thiểu.
+      - Nhận diện vai trò quá rộng, trùng lặp và tình trạng bùng nổ vai trò.
+  - id: ke-thua-va-phien
+    title: Kế thừa và phiên
+    purpose: Hiểu cách quyền hiệu lực thay đổi theo kế thừa và vai trò đang sử dụng.
+    objectives:
+      - Tính quyền qua quan hệ kế thừa vai trò và phát hiện chu trình.
+      - Phân biệt vai trò được gán với vai trò được kích hoạt trong một phiên.
+  - id: phan-tach-nhiem-vu
+    title: Phân tách nhiệm vụ
+    purpose: Ngăn một người nắm các quyền kết hợp gây xung đột lợi ích.
+    objectives:
+      - Phân biệt ràng buộc tĩnh khi gán vai trò và ràng buộc động khi kích hoạt vai trò.
+      - Thiết kế ví dụ tách người tạo yêu cầu với người phê duyệt.
+  - id: thuc-thi-phan-quyen
+    title: Thực thi phân quyền
+    purpose: Áp dụng quyết định quyền nhất quán trên mọi đường truy cập.
+    objectives:
+      - Mô tả kiểm tra quyền từ vai trò được xác nhận đến hành động trên tài nguyên.
+      - Đặt kiểm tra phía máy chủ, mặc định từ chối và nhận diện giới hạn của kiểm tra vai trò đơn thuần.
+  - id: cap-va-thu-hoi-quyen
+    title: Cấp và thu hồi quyền
+    purpose: Giữ quyền truy cập phù hợp khi trách nhiệm người dùng thay đổi.
+    objectives:
+      - Vẽ luồng yêu cầu, phê duyệt, gán và thu hồi vai trò.
+      - Xác định cách xử lý quyền còn lưu trong phiên hoặc bộ nhớ đệm sau khi thu hồi.
+  - id: kiem-thu-va-ra-soat
+    title: Kiểm thử và rà soát
+    purpose: Phát hiện cấp quyền sai và kiểm soát việc tích lũy đặc quyền.
+    objectives:
+      - Lập kiểm thử cho phép, từ chối, kế thừa, xung đột nhiệm vụ và thu hồi quyền.
+      - Đề xuất ghi vết thay đổi, người chịu trách nhiệm và rà soát quyền định kỳ.

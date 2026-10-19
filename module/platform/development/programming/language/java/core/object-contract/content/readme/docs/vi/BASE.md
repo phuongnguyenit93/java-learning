@@ -1,21 +1,7 @@
-# Object Contract
+# Java Core — Object Contract
 
-Module này tập trung vào các contract quyết định object **được nhận diện, so sánh, hash, biểu diễn và sắp thứ tự** như thế nào trong Java.
+Trong Java, hầu hết đối tượng đều kế thừa những hành vi cơ bản từ lớp `Object`, nhưng ý nghĩa của **bằng nhau**, **mã băm** và **biểu diễn thành chuỗi** không phải lúc nào cũng giống nhau giữa các kiểu dữ liệu. Hai biến có thể cùng tham chiếu một đối tượng hoặc trỏ đến hai đối tượng khác nhau nhưng có giá trị tương đương. Nếu định nghĩa sai `equals()` hay `hashCode()`, việc tìm kiếm và loại bỏ phần tử trùng trong `HashSet`, `HashMap` có thể cho kết quả khó hiểu. Module này giúp bạn nắm các hợp đồng hành vi của `Object` và thiết kế lớp có kết quả nhất quán khi được so sánh, lưu trữ hay quan sát.
 
-## Learning flow
+Module phù hợp với người đã biết lớp, đối tượng, phương thức, ghi đè và kế thừa trong Java. Bạn sẽ bắt đầu bằng cách phân biệt toán tử `==` với `equals()`, sau đó tìm hiểu các tính chất phản xạ, đối xứng, bắc cầu, nhất quán và quy tắc với `null`. Tiếp theo là mối quan hệ bắt buộc giữa `equals()` và `hashCode()`, sự khác biệt giữa va chạm băm và bằng nhau, cùng những vấn đề khi lớp con bổ sung trạng thái. Bạn sẽ kiểm tra cách chọn trường để so sánh, cân nhắc `instanceof` với `getClass()` và lý do các trường tham gia tạo khóa nên được giữ bất biến.
 
-1. vì sao object contract tồn tại;
-2. identity và equality;
-3. `equals`;
-4. `hashCode`;
-5. contract giữa `equals` và `hashCode`;
-6. `toString`;
-7. `Comparable`;
-8. `Comparator`;
-9. tổng hợp contract design.
-
-## Vì sao nên học?
-
-Một implementation `equals` hoặc `hashCode` sai có thể làm Collection behavior sai dù code vẫn compile. Ordering cũng cần contract nhất quán với domain requirement, không chỉ “sort được”.
-
-Class/Object module cung cấp object foundation; Collection là nơi các contract này trở nên đặc biệt quan trọng. Mục tiêu cuối cùng là thiết kế equality/hash/order có chủ đích và kiểm chứng được.
+Những mốc sau hướng dẫn ghi đè `toString()` để hỗ trợ quan sát mà không làm lộ dữ liệu nhạy cảm; phân biệt sao chép nông, sao chép sâu, `Cloneable`/`clone()` và phương án dùng constructor sao chép. Ở phần thực hành cuối, bạn sẽ xây dựng và kiểm tra các hợp đồng trên một lớp giá trị, đối chiếu hành vi `equals`, `hashCode`, `toString` do `record` tạo ra, rồi thử các trường hợp `null`, lớp con, trạng thái bị thay đổi và tra cứu trong tập hợp. Kết thúc module, bạn có thể giải thích vì sao một hợp đồng đối tượng quan trọng không kém dữ liệu mà nó chứa và kiểm chứng được tính đúng đắn của thiết kế.

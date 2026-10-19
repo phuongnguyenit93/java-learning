@@ -1,0 +1,86 @@
+# <roadmap-schema>
+# Cấu trúc Roadmap Module
+# schema-version: 1
+#
+# YAML CONTRACT
+# roadmap: Danh sách milestone cấp cao của roadmap cho language hiện tại. ID milestone phải duy nhất.
+#
+# - id [string, required]: ID ổn định và duy nhất của milestone trong roadmap language hiện tại.
+# - title [string, required]: Tên milestone hiển thị cho learner.
+# - purpose [string, required]: Milestone này tồn tại để learner hiểu hoặc đạt được điều gì.
+# - dependsOn [list, optional]: Danh sách id milestone prerequisite khi dependency không thể hiện đủ chỉ bằng thứ tự item.
+# - objectives [list, optional]: Các learning objective cấp milestone; không dùng để liệt kê mọi fact/API/syntax nhỏ.
+# - relatedKnowledge [list, optional]: Danh sách Knowledge category id trong chính module hiện tại hỗ trợ milestone. Portal hiển thị danh sách này ở phía đối diện milestone và click item sẽ điều hướng sang Knowledge category tương ứng.
+# - relatedModules [list, optional]: Các module liên quan hiển thị ở Level 2 của Portal. Mỗi item dùng routeId bắt buộc và có thể có label/note localized; relation này chỉ để điều hướng, không tạo child milestone hoặc thay đổi learning order.
+#
+# ROADMAP THINKING FRAMEWORK
+# PURPOSE
+#   - Topic/module này là gì?
+#   - Vì sao nó tồn tại?
+#   - Không có nó thì learner gặp vấn đề gì?
+# FOUNDATION
+#   - Learner cần prerequisite hoặc mental model nào trước?
+# CORE MODEL
+#   - Những abstraction hoặc building block lớn nào tạo nên chủ đề này?
+# MECHANICS
+#   - Nó hoạt động như thế nào ở mức language/runtime/API phù hợp với module?
+# USAGE
+#   - Nó được dùng như thế nào trong code thực tế?
+# DECISION / TRADE-OFF
+#   - Khi nào nên chọn cơ chế này thay vì cơ chế khác?
+#   - Khi nào không nên dùng?
+# FAILURE / PITFALL
+#   - Những sai lầm, compile-time failure hoặc runtime failure nào đáng biết?
+# INTEGRATION
+#   - Chủ đề này kết nối với những concept/module lân cận nào?
+# SYNTHESIS
+#   - Sau cùng learner phải giữ mental model end-to-end nào?
+#
+# Mỗi language tự chịu trách nhiệm cho roadmap của chính nó. Không suy luận hoặc đồng bộ cấu trúc từ roadmap của language khác.
+# Thứ tự item trong roadmap chính là thứ tự học mặc định. Chỉ dùng dependsOn khi cần biểu diễn dependency rõ hơn thứ tự tuyến tính.
+# Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
+# </roadmap-schema>
+
+roadmap:
+  - id: ban-chat-sso
+    title: Bản chất SSO
+    purpose: Hiểu cách một lần xác thực giúp truy cập nhiều ứng dụng qua quan hệ tin cậy.
+    objectives:
+      - Phân biệt SSO, liên kết danh tính và phân quyền tại ứng dụng.
+      - Vẽ vai trò của nhà cung cấp danh tính (IdP), nhà cung cấp dịch vụ (SP) và trình duyệt.
+  - id: thanh-phan-saml
+    title: Thành phần SAML
+    purpose: Đọc được cấu trúc và cách trao đổi thông tin xác thực SAML.
+    objectives:
+      - Phân biệt assertion, giao thức, binding và profile trong SAML 2.0.
+      - Nhận diện NameID, thuộc tính và mô tả lần xác thực (AuthnStatement) trong assertion.
+  - id: thiet-lap-tin-cay
+    title: Thiết lập tin cậy
+    purpose: Cấu hình đúng bên đối tác, địa chỉ nhận và khóa được phép xác minh.
+    objectives:
+      - Đọc metadata để xác định entityID, địa chỉ nhận phản hồi (ACS) và khóa xác minh.
+      - Thiết kế cập nhật metadata và luân chuyển khóa, chứng thư an toàn.
+  - id: luong-dang-nhap
+    title: Luồng đăng nhập
+    purpose: Theo dõi yêu cầu và phản hồi qua các bên trong SSO.
+    objectives:
+      - Vẽ luồng SP khởi tạo với AuthnRequest, Response, ACS và binding phù hợp.
+      - So sánh luồng IdP khởi tạo và SP khởi tạo; nêu giới hạn của phản hồi không gắn yêu cầu.
+  - id: xac-minh-an-toan
+    title: Xác minh an toàn
+    purpose: Chỉ tạo phiên từ phản hồi hợp lệ và đúng ngữ cảnh tin cậy.
+    objectives:
+      - Xác minh chữ ký bằng khóa tin cậy và chỉ sử dụng nội dung đã được xác minh.
+      - Kiểm tra bên phát, đích nhận, thời hạn, liên kết yêu cầu và chống phát lại.
+  - id: danh-tinh-va-phien
+    title: Danh tính và phiên
+    purpose: Gắn kết quả SAML với đúng tài khoản và quản lý phiên ở từng hệ thống.
+    objectives:
+      - Thiết kế ánh xạ NameID, thuộc tính sang tài khoản, tránh gộp nhầm danh tính.
+      - Phân biệt thời hạn assertion với phiên IdP/SP, đăng xuất cục bộ và Single Logout.
+  - id: gia-co-va-kiem-thu
+    title: Gia cố và kiểm thử
+    purpose: Phát hiện cấu hình sai và các cách lợi dụng thông điệp SAML.
+    objectives:
+      - Nhận diện tấn công phát lại, bọc chữ ký XML (XSW) và chuyển hướng không an toàn qua RelayState.
+      - Lập kiểm thử phản hồi bị sửa, hết hạn, sai đích, đổi khóa và đăng xuất; ghi vết không lộ assertion.

@@ -1,24 +1,7 @@
-# Abstraction, Abstract Class và Interface
+# Java Core — Abstract Class và Interface
 
-Module này xây mental model về **abstraction trong Java**: cách tách phần “đối tượng phải làm gì” khỏi phần “đối tượng làm như thế nào”, rồi dùng abstract class và interface để biểu diễn contract đó trong type system.
+Trừu tượng hóa trong Java giúp mô tả **một đối tượng cần đáp ứng điều gì** trước khi quyết định **nó thực hiện bằng cách nào**. Hai công cụ quan trọng là `abstract class`, có thể cung cấp trạng thái và hành vi chung trong một nhánh kế thừa, và `interface`, biểu diễn hợp đồng mà nhiều lớp khác nhau có thể triển khai. Khi mã sử dụng các kiểu trừu tượng làm điểm giao tiếp, cơ chế đa hình cho phép thay đổi phần triển khai mà vẫn giữ cách sử dụng nhất quán.
 
-## Vì sao nên học?
+Module dành cho người đã biết lớp, đối tượng, phương thức, kế thừa và ghi đè trong Java. Bạn sẽ bắt đầu từ tư duy tách hợp đồng khỏi chi tiết triển khai; tiếp đó tìm hiểu lớp trừu tượng, phương thức `abstract`, constructor và thành viên dùng chung; cách khai báo, mở rộng, triển khai `interface` bằng `extends` và `implements`; rồi vận dụng tham chiếu kiểu trừu tượng để quan sát phương thức được chọn khi chương trình chạy.
 
-Nếu chỉ ghi nhớ cú pháp `abstract` và `interface`, rất dễ chọn sai công cụ hoặc tạo hierarchy khó mở rộng. Mục tiêu của module là hiểu trade-off giữa shared state/implementation, contract, multiple type inheritance và khả năng tiến hóa API.
-
-## Learning flow
-
-Học theo thứ tự:
-
-1. vì sao abstraction tồn tại;
-2. abstract class và vai trò của shared implementation/state;
-3. interface như một contract;
-4. so sánh abstract class với interface;
-5. interface inheritance;
-6. default, static và private interface methods;
-7. multiple inheritance qua interface và conflict resolution;
-8. tổng hợp decision model để chọn abstraction phù hợp.
-
-## Phạm vi module
-
-Module tập trung vào abstraction mechanism của Java Core. OOP tổng quát, class/object lifecycle và polymorphism được đào sâu ở các module tương ứng. Sau module này, learner nên có thể chọn abstract class hoặc interface dựa trên contract và design requirement thay vì dựa trên thói quen.
+Các mốc tiếp theo giải thích phương thức `default`, `static`, `private` trong interface, quy tắc kế thừa nhiều interface và cách xử lý xung đột. Bạn sẽ cân nhắc khi nào nên dùng `abstract class`, `interface` hoặc kết hợp cả hai, đồng thời làm quen với interface hàm và giới hạn kế thừa bằng `sealed`. Phần thực hành cuối yêu cầu thiết kế một hợp đồng với nhiều cách triển khai, thay thế chúng qua cùng một điểm sử dụng và giải thích lựa chọn thiết kế của mình.

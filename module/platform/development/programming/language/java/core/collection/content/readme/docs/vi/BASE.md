@@ -1,22 +1,7 @@
-# Java Collections
+# Java Core – Collections Framework
 
-Module này xây decision model cho **Collection Framework**: chọn abstraction và implementation dựa trên ordering, uniqueness, key/value lookup, queue semantics, mutation, equality/hash behavior và performance characteristic.
+Trong Java, xử lý nhiều phần tử không chỉ là lưu dữ liệu vào một danh sách. **Collections Framework** cung cấp hệ thống giao diện, lớp triển khai và thuật toán để tổ chức dữ liệu theo thứ tự, tính duy nhất, khóa–giá trị hoặc quy tắc hàng đợi. Hiểu rõ cấu trúc và hợp đồng của từng loại collection giúp bạn chọn cách lưu trữ phù hợp, thao tác chính xác và tránh những lỗi khó nhận ra khi chương trình mở rộng.
 
-## Learning flow
+Module dành cho người đã biết cú pháp Java, lớp và đối tượng, vòng lặp và generics cơ bản. Bạn sẽ bắt đầu với bức tranh chung về `Collection`, `Collections` và `Map`, rồi thực hành thêm, tìm, xóa, duyệt phần tử trước khi đi sâu vào `List`, `Set`, `Map`, `Queue` và `Deque`. Trên mỗi cấu trúc, trọng tâm là đặc tính dữ liệu, hành vi của các lớp triển khai phổ biến và những quy tắc như `equals`/`hashCode`, so sánh thứ tự hay cách thay đổi phần tử an toàn.
 
-1. collection hierarchy;
-2. `List`;
-3. `Set`;
-4. `Map`;
-5. `Queue` và `Deque`;
-6. iteration;
-7. ordering và sorting;
-8. equality/hashing trong collection;
-9. mutable và immutable collections;
-10. fail-fast behavior;
-11. chọn implementation phù hợp;
-12. enum-based collections.
-
-## Mental model cần giữ
-
-Không học Collections như catalog class. Bắt đầu từ requirement của dữ liệu, chọn contract trước rồi mới chọn implementation. Generics cung cấp type-safety; Object Contract giải thích equality/hash/order; concurrency collections nằm ngoài phạm vi Java Core collection cơ bản.
+Tiếp theo, lộ trình mở rộng sang sắp xếp, tìm kiếm, các giao diện sequenced trong Java 21 và sự khác biệt giữa bản sao, khung nhìn, collection không cho sửa và tính bất biến của phần tử. Phần thực hành cuối giúp bạn so sánh chi phí truy cập, thêm, xóa, nhận diện yêu cầu đồng thời và xử lý những trường hợp biên như `null`, khóa thay đổi hoặc thứ tự kết quả. Sau module, bạn có thể giải thích và kiểm thử lựa chọn cấu trúc dữ liệu của mình dựa trên yêu cầu thực tế thay vì chỉ dựa vào thói quen sử dụng một lớp cụ thể.

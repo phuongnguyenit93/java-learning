@@ -1,0 +1,108 @@
+# <roadmap-schema>
+# Cấu trúc Roadmap Module
+# schema-version: 1
+#
+# YAML CONTRACT
+# roadmap: Danh sách milestone cấp cao của roadmap cho language hiện tại. ID milestone phải duy nhất.
+#
+# - id [string, required]: ID ổn định và duy nhất của milestone trong roadmap language hiện tại.
+# - title [string, required]: Tên milestone hiển thị cho learner.
+# - purpose [string, required]: Milestone này tồn tại để learner hiểu hoặc đạt được điều gì.
+# - dependsOn [list, optional]: Danh sách id milestone prerequisite khi dependency không thể hiện đủ chỉ bằng thứ tự item.
+# - objectives [list, optional]: Các learning objective cấp milestone; không dùng để liệt kê mọi fact/API/syntax nhỏ.
+# - relatedKnowledge [list, optional]: Danh sách Knowledge category id trong chính module hiện tại hỗ trợ milestone. Portal hiển thị danh sách này ở phía đối diện milestone và click item sẽ điều hướng sang Knowledge category tương ứng.
+# - relatedModules [list, optional]: Các module liên quan hiển thị ở Level 2 của Portal. Mỗi item dùng routeId bắt buộc và có thể có label/note localized; relation này chỉ để điều hướng, không tạo child milestone hoặc thay đổi learning order.
+#
+# ROADMAP THINKING FRAMEWORK
+# PURPOSE
+#   - Topic/module này là gì?
+#   - Vì sao nó tồn tại?
+#   - Không có nó thì learner gặp vấn đề gì?
+# FOUNDATION
+#   - Learner cần prerequisite hoặc mental model nào trước?
+# CORE MODEL
+#   - Những abstraction hoặc building block lớn nào tạo nên chủ đề này?
+# MECHANICS
+#   - Nó hoạt động như thế nào ở mức language/runtime/API phù hợp với module?
+# USAGE
+#   - Nó được dùng như thế nào trong code thực tế?
+# DECISION / TRADE-OFF
+#   - Khi nào nên chọn cơ chế này thay vì cơ chế khác?
+#   - Khi nào không nên dùng?
+# FAILURE / PITFALL
+#   - Những sai lầm, compile-time failure hoặc runtime failure nào đáng biết?
+# INTEGRATION
+#   - Chủ đề này kết nối với những concept/module lân cận nào?
+# SYNTHESIS
+#   - Sau cùng learner phải giữ mental model end-to-end nào?
+#
+# Mỗi language tự chịu trách nhiệm cho roadmap của chính nó. Không suy luận hoặc đồng bộ cấu trúc từ roadmap của language khác.
+# Thứ tự item trong roadmap chính là thứ tự học mặc định. Chỉ dùng dependsOn khi cần biểu diễn dependency rõ hơn thứ tự tuyến tính.
+# Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
+# </roadmap-schema>
+
+roadmap:
+  - id: dinh-huong-java-26
+    title: Định hướng Java 26
+    purpose: Xác định các thay đổi Java 26 còn hữu ích và điều kiện sử dụng chúng.
+    objectives:
+      - Phân biệt tính năng chính thức, preview và incubator
+      - Thiết lập JDK 26, bật preview hoặc module incubator khi cần
+      - Đối chiếu API preview với JDK hiện hành trước khi chuyển phiên bản
+  - id: pattern-kieu-nguyen-thuy
+    title: Pattern kiểu nguyên thủy
+    purpose: Mở rộng cách kiểm tra và phân nhánh theo kiểu số với preview lần 4 của Java 26.
+    objectives:
+      - Dùng kiểu nguyên thủy trong pattern, instanceof và switch
+      - Nhận biết chuyển đổi biểu diễn chính xác và trường hợp không khớp
+      - Kiểm tra biên giá trị khi chuyển giữa các kiểu số
+  - id: http-3-voi-httpclient
+    title: HTTP/3 với HttpClient
+    purpose: Kết nối dịch vụ hỗ trợ HTTP/3 bằng API chính thức của Java 26.
+    objectives:
+      - Chọn HttpClient.Version.HTTP_3 cho yêu cầu phù hợp
+      - Kiểm tra phiên bản giao thức thực tế từ phản hồi
+      - Thử nghiệm với máy chủ hỗ trợ HTTP/3 và xử lý lỗi, thời gian chờ
+  - id: hang-khoi-tao-tre
+    title: Hằng khởi tạo trễ
+    purpose: Trì hoãn khởi tạo bằng LazyConstant, API preview lần 2 trong Java 26.
+    objectives:
+      - Tạo hằng bằng LazyConstant.of và truy cập bằng get
+      - Giải thích khởi tạo an toàn khi nhiều luồng cùng truy cập
+      - Phân biệt tham chiếu không đổi với đối tượng bất biến sâu
+  - id: dong-thoi-co-cau-truc
+    title: Đồng thời có cấu trúc
+    purpose: Quản lý nhóm tác vụ cùng vòng đời bằng Structured Concurrency, preview lần 6 trong Java 26.
+    objectives:
+      - Mở StructuredTaskScope trong try-with-resources, fork rồi join
+      - Chọn chính sách gom kết quả và xử lý lỗi của các tác vụ
+      - Áp dụng thời gian chờ và hủy hợp tác, bảo đảm tác vụ kết thúc khi đóng scope
+  - id: ma-hoa-pem
+    title: Mã hóa PEM
+    purpose: Trao đổi khóa và chứng thư bằng API PEM preview lần 2 của Java 26.
+    objectives:
+      - Mã hóa, giải mã đối tượng mật mã bằng PEMEncoder và PEMDecoder
+      - Phân biệt định dạng PEM với kiểm tra độ tin cậy của chứng thư
+      - Bảo vệ khóa riêng và xử lý dữ liệu PEM không hợp lệ
+  - id: tinh-toan-vector
+    title: Tính toán Vector
+    purpose: Thực hiện phép tính SIMD bằng Vector API, incubator lần 11 trong Java 26.
+    objectives:
+      - Bật module jdk.incubator.vector khi biên dịch và chạy
+      - Dùng vector, mặt nạ và xử lý phần dữ liệu cuối mảng
+      - So sánh với vòng lặp vô hướng trên phần cứng và dữ liệu thực tế
+  - id: toi-uu-gc-va-aot
+    title: Tối ưu GC và AOT
+    purpose: Đánh giá cải tiến G1 và bộ đệm đối tượng AOT của Java 26 trên tải thực tế.
+    objectives:
+      - Giải thích giảm đồng bộ hóa trong G1 để cải thiện thông lượng
+      - Nhận biết bộ đệm đối tượng AOT dùng được với mọi bộ thu gom rác
+      - Đo thời gian khởi động, làm nóng và thông lượng trước khi chọn cấu hình
+  - id: nang-cap-an-toan
+    title: Nâng cấp an toàn
+    purpose: Giữ tính toàn vẹn của final và kiểm chứng ứng dụng khi chuyển lên Java 26.
+    objectives:
+      - Nhận biết cảnh báo sửa trường final bằng reflection trong Java 26
+      - Phân biệt chế độ cảnh báo mặc định với chế độ cấm sửa final
+      - Rà soát thư viện, chạy kiểm thử và xử lý phụ thuộc vào sửa final
+      - Ghi rõ phiên bản JDK và tùy chọn cần thiết cho từng ví dụ

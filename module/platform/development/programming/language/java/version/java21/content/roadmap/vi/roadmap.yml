@@ -1,0 +1,81 @@
+# <roadmap-schema>
+# Cấu trúc Roadmap Module
+# schema-version: 1
+#
+# YAML CONTRACT
+# roadmap: Danh sách milestone cấp cao của roadmap cho language hiện tại. ID milestone phải duy nhất.
+#
+# - id [string, required]: ID ổn định và duy nhất của milestone trong roadmap language hiện tại.
+# - title [string, required]: Tên milestone hiển thị cho learner.
+# - purpose [string, required]: Milestone này tồn tại để learner hiểu hoặc đạt được điều gì.
+# - dependsOn [list, optional]: Danh sách id milestone prerequisite khi dependency không thể hiện đủ chỉ bằng thứ tự item.
+# - objectives [list, optional]: Các learning objective cấp milestone; không dùng để liệt kê mọi fact/API/syntax nhỏ.
+# - relatedKnowledge [list, optional]: Danh sách Knowledge category id trong chính module hiện tại hỗ trợ milestone. Portal hiển thị danh sách này ở phía đối diện milestone và click item sẽ điều hướng sang Knowledge category tương ứng.
+# - relatedModules [list, optional]: Các module liên quan hiển thị ở Level 2 của Portal. Mỗi item dùng routeId bắt buộc và có thể có label/note localized; relation này chỉ để điều hướng, không tạo child milestone hoặc thay đổi learning order.
+#
+# ROADMAP THINKING FRAMEWORK
+# PURPOSE
+#   - Topic/module này là gì?
+#   - Vì sao nó tồn tại?
+#   - Không có nó thì learner gặp vấn đề gì?
+# FOUNDATION
+#   - Learner cần prerequisite hoặc mental model nào trước?
+# CORE MODEL
+#   - Những abstraction hoặc building block lớn nào tạo nên chủ đề này?
+# MECHANICS
+#   - Nó hoạt động như thế nào ở mức language/runtime/API phù hợp với module?
+# USAGE
+#   - Nó được dùng như thế nào trong code thực tế?
+# DECISION / TRADE-OFF
+#   - Khi nào nên chọn cơ chế này thay vì cơ chế khác?
+#   - Khi nào không nên dùng?
+# FAILURE / PITFALL
+#   - Những sai lầm, compile-time failure hoặc runtime failure nào đáng biết?
+# INTEGRATION
+#   - Chủ đề này kết nối với những concept/module lân cận nào?
+# SYNTHESIS
+#   - Sau cùng learner phải giữ mental model end-to-end nào?
+#
+# Mỗi language tự chịu trách nhiệm cho roadmap của chính nó. Không suy luận hoặc đồng bộ cấu trúc từ roadmap của language khác.
+# Thứ tự item trong roadmap chính là thứ tự học mặc định. Chỉ dùng dependsOn khi cần biểu diễn dependency rõ hơn thứ tự tuyến tính.
+# Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
+# </roadmap-schema>
+
+roadmap:
+  - id: giai-cau-truc-record
+    title: Giải cấu trúc record
+    purpose: Truy cập dữ liệu có cấu trúc bằng mẫu rõ ràng.
+    objectives:
+      - Khớp và tách các thành phần của record
+      - Kết hợp mẫu lồng nhau và xử lý trường hợp null
+  - id: switch-theo-mau
+    title: Switch theo mẫu
+    purpose: Phân nhánh theo kiểu và cấu trúc dữ liệu an toàn hơn.
+    objectives:
+      - Dùng type pattern, record pattern và điều kiện when
+      - Kiểm tra tính đầy đủ, thứ tự nhánh và case null
+  - id: tap-hop-co-thu-tu
+    title: Tập hợp có thứ tự
+    purpose: Thao tác thống nhất với thứ tự duyệt và hai đầu tập hợp.
+    objectives:
+      - Chọn SequencedCollection, SequencedSet hoặc SequencedMap
+      - Truy cập hai đầu và dùng góc nhìn reversed
+  - id: luong-ao
+    title: Luồng ảo
+    purpose: Mở rộng số tác vụ đồng thời cho công việc chờ I/O.
+    objectives:
+      - Tạo luồng ảo và dùng executor cho từng tác vụ
+      - Quản lý vòng đời, hủy tác vụ và giới hạn tài nguyên
+      - Phân biệt tăng khả năng đồng thời với tăng tốc tính toán
+  - id: dong-goi-khoa-kem
+    title: Đóng gói khóa KEM
+    purpose: Chia sẻ khóa bí mật bằng cơ chế mật mã chuẩn.
+    objectives:
+      - Phân biệt khóa bí mật với thông điệp đóng gói
+      - Dùng KEM để encapsulate và decapsulate khóa
+  - id: zgc-phan-the-he
+    title: ZGC phân thế hệ
+    purpose: Hiểu cơ chế thu gom hướng tới độ trễ thấp.
+    objectives:
+      - Giải thích vai trò thế hệ trẻ và già trong ZGC
+      - Đọc GC log và đánh giá CPU, heap cùng độ trễ

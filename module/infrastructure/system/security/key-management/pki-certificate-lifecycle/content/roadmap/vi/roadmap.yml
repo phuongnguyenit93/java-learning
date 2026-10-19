@@ -1,0 +1,92 @@
+# <roadmap-schema>
+# Cấu trúc Roadmap Module
+# schema-version: 1
+#
+# YAML CONTRACT
+# roadmap: Danh sách milestone cấp cao của roadmap cho language hiện tại. ID milestone phải duy nhất.
+#
+# - id [string, required]: ID ổn định và duy nhất của milestone trong roadmap language hiện tại.
+# - title [string, required]: Tên milestone hiển thị cho learner.
+# - purpose [string, required]: Milestone này tồn tại để learner hiểu hoặc đạt được điều gì.
+# - dependsOn [list, optional]: Danh sách id milestone prerequisite khi dependency không thể hiện đủ chỉ bằng thứ tự item.
+# - objectives [list, optional]: Các learning objective cấp milestone; không dùng để liệt kê mọi fact/API/syntax nhỏ.
+# - relatedKnowledge [list, optional]: Danh sách Knowledge category id trong chính module hiện tại hỗ trợ milestone. Portal hiển thị danh sách này ở phía đối diện milestone và click item sẽ điều hướng sang Knowledge category tương ứng.
+# - relatedModules [list, optional]: Các module liên quan hiển thị ở Level 2 của Portal. Mỗi item dùng routeId bắt buộc và có thể có label/note localized; relation này chỉ để điều hướng, không tạo child milestone hoặc thay đổi learning order.
+#
+# ROADMAP THINKING FRAMEWORK
+# PURPOSE
+#   - Topic/module này là gì?
+#   - Vì sao nó tồn tại?
+#   - Không có nó thì learner gặp vấn đề gì?
+# FOUNDATION
+#   - Learner cần prerequisite hoặc mental model nào trước?
+# CORE MODEL
+#   - Những abstraction hoặc building block lớn nào tạo nên chủ đề này?
+# MECHANICS
+#   - Nó hoạt động như thế nào ở mức language/runtime/API phù hợp với module?
+# USAGE
+#   - Nó được dùng như thế nào trong code thực tế?
+# DECISION / TRADE-OFF
+#   - Khi nào nên chọn cơ chế này thay vì cơ chế khác?
+#   - Khi nào không nên dùng?
+# FAILURE / PITFALL
+#   - Những sai lầm, compile-time failure hoặc runtime failure nào đáng biết?
+# INTEGRATION
+#   - Chủ đề này kết nối với những concept/module lân cận nào?
+# SYNTHESIS
+#   - Sau cùng learner phải giữ mental model end-to-end nào?
+#
+# Mỗi language tự chịu trách nhiệm cho roadmap của chính nó. Không suy luận hoặc đồng bộ cấu trúc từ roadmap của language khác.
+# Thứ tự item trong roadmap chính là thứ tự học mặc định. Chỉ dùng dependsOn khi cần biểu diễn dependency rõ hơn thứ tự tuyến tính.
+# Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
+# </roadmap-schema>
+
+roadmap:
+  - id: ban-chat-pki
+    title: Bản chất PKI
+    purpose: Hiểu cách chứng thư gắn danh tính với khóa công khai dựa trên quan hệ tin cậy.
+    objectives:
+      - Phân biệt khóa công khai, khóa riêng, chữ ký số và chứng thư.
+      - Mô tả vai trò của CA, bên giữ chứng thư và bên kiểm tra chứng thư.
+  - id: x-509-va-chuoi-tin-cay
+    title: X.509 và chuỗi tin cậy
+    purpose: Đọc được nội dung chứng thư và lý do một chuỗi được chấp nhận.
+    objectives:
+      - Nhận diện subject, issuer, SAN, thời hạn, Key Usage/EKU và chữ ký.
+      - Vẽ chuỗi chứng thư đến điểm tin cậy và giải thích vì sao tự ký chưa đủ để được tin cậy.
+  - id: kien-truc-ca
+    title: Kiến trúc CA
+    purpose: Chọn phạm vi tin cậy và giới hạn rủi ro của hạ tầng cấp chứng thư.
+    objectives:
+      - Phân biệt CA công cộng với CA nội bộ theo đối tượng sử dụng.
+      - Thiết kế phân cấp CA gốc, CA trung gian và biện pháp bảo vệ khóa ký của CA.
+  - id: tao-khoa-va-cap-phat
+    title: Tạo khóa và cấp phát
+    purpose: Cấp chứng thư cho đúng chủ thể mà vẫn giữ bí mật khóa riêng.
+    objectives:
+      - Mô tả tạo khóa, yêu cầu ký chứng thư (CSR), chứng minh sở hữu khóa và xác minh định danh.
+      - Xác định nơi lưu khóa, quyền truy cập và yêu cầu sử dụng KMS/HSM khi phù hợp.
+  - id: trien-khai-va-xac-minh
+    title: Triển khai và xác minh
+    purpose: Sử dụng đúng chứng thư và kiểm tra danh tính đối tác trong TLS/mTLS.
+    objectives:
+      - Triển khai đúng chứng thư, khóa riêng, chuỗi trung gian và kho tin cậy.
+      - Kiểm tra chữ ký, chuỗi, thời hạn, định danh và mục đích sử dụng chứng thư.
+  - id: gia-han-va-luan-chuyen
+    title: Gia hạn và luân chuyển
+    purpose: Thay thế chứng thư và khóa trước khi hết hạn mà hạn chế gián đoạn.
+    objectives:
+      - Phân biệt gia hạn chứng thư, tạo khóa mới và thay chuỗi CA.
+      - Thiết kế tự động hóa bằng ACME hoặc cơ chế phù hợp, kèm kiểm tra sau triển khai.
+  - id: thu-hoi-va-ung-pho
+    title: Thu hồi và ứng phó
+    purpose: Chấm dứt tin cậy khi chứng thư hoặc khóa không còn an toàn.
+    objectives:
+      - So sánh CRL, OCSP và giới hạn của việc chỉ dựa vào chứng thư ngắn hạn.
+      - Lập quy trình xử lý lộ khóa, thu hồi, thay thế và loại bỏ CA không còn tin cậy.
+  - id: quan-tri-va-kiem-chung
+    title: Quản trị và kiểm chứng
+    purpose: Kiểm soát toàn bộ chứng thư và phát hiện lỗi trước khi gây sự cố.
+    objectives:
+      - Lập danh mục chủ sở hữu, mục đích, nơi triển khai và cảnh báo hết hạn.
+      - Kiểm thử sai định danh, thiếu chuỗi, hết hạn, thu hồi và luân chuyển CA.

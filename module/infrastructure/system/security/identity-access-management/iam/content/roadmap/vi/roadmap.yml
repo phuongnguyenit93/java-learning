@@ -1,0 +1,92 @@
+# <roadmap-schema>
+# Cấu trúc Roadmap Module
+# schema-version: 1
+#
+# YAML CONTRACT
+# roadmap: Danh sách milestone cấp cao của roadmap cho language hiện tại. ID milestone phải duy nhất.
+#
+# - id [string, required]: ID ổn định và duy nhất của milestone trong roadmap language hiện tại.
+# - title [string, required]: Tên milestone hiển thị cho learner.
+# - purpose [string, required]: Milestone này tồn tại để learner hiểu hoặc đạt được điều gì.
+# - dependsOn [list, optional]: Danh sách id milestone prerequisite khi dependency không thể hiện đủ chỉ bằng thứ tự item.
+# - objectives [list, optional]: Các learning objective cấp milestone; không dùng để liệt kê mọi fact/API/syntax nhỏ.
+# - relatedKnowledge [list, optional]: Danh sách Knowledge category id trong chính module hiện tại hỗ trợ milestone. Portal hiển thị danh sách này ở phía đối diện milestone và click item sẽ điều hướng sang Knowledge category tương ứng.
+# - relatedModules [list, optional]: Các module liên quan hiển thị ở Level 2 của Portal. Mỗi item dùng routeId bắt buộc và có thể có label/note localized; relation này chỉ để điều hướng, không tạo child milestone hoặc thay đổi learning order.
+#
+# ROADMAP THINKING FRAMEWORK
+# PURPOSE
+#   - Topic/module này là gì?
+#   - Vì sao nó tồn tại?
+#   - Không có nó thì learner gặp vấn đề gì?
+# FOUNDATION
+#   - Learner cần prerequisite hoặc mental model nào trước?
+# CORE MODEL
+#   - Những abstraction hoặc building block lớn nào tạo nên chủ đề này?
+# MECHANICS
+#   - Nó hoạt động như thế nào ở mức language/runtime/API phù hợp với module?
+# USAGE
+#   - Nó được dùng như thế nào trong code thực tế?
+# DECISION / TRADE-OFF
+#   - Khi nào nên chọn cơ chế này thay vì cơ chế khác?
+#   - Khi nào không nên dùng?
+# FAILURE / PITFALL
+#   - Những sai lầm, compile-time failure hoặc runtime failure nào đáng biết?
+# INTEGRATION
+#   - Chủ đề này kết nối với những concept/module lân cận nào?
+# SYNTHESIS
+#   - Sau cùng learner phải giữ mental model end-to-end nào?
+#
+# Mỗi language tự chịu trách nhiệm cho roadmap của chính nó. Không suy luận hoặc đồng bộ cấu trúc từ roadmap của language khác.
+# Thứ tự item trong roadmap chính là thứ tự học mặc định. Chỉ dùng dependsOn khi cần biểu diễn dependency rõ hơn thứ tự tuyến tính.
+# Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
+# </roadmap-schema>
+
+roadmap:
+  - id: buc-tranh-iam
+    title: Bức tranh IAM
+    purpose: Hiểu cách quản lý danh tính và quyền truy cập phối hợp để bảo vệ tài nguyên.
+    objectives:
+      - Phân biệt danh tính, tài khoản, xác thực, phân quyền và kiểm toán.
+      - Vẽ luồng một chủ thể được nhận diện, chứng minh danh tính và truy cập tài nguyên.
+  - id: vong-doi-danh-tinh
+    title: Vòng đời danh tính
+    purpose: Duy trì tài khoản và quyền phù hợp từ lúc tham gia đến khi rời hệ thống.
+    objectives:
+      - Xác định nguồn danh tính gốc, bước xác minh và bên chịu trách nhiệm tài khoản.
+      - Mô tả cấp mới, cập nhật, vô hiệu hóa và thu hồi quyền khi chuyển việc hoặc nghỉ việc.
+  - id: xac-thuc-va-phien
+    title: Xác thực và phiên
+    purpose: Chọn cách chứng minh danh tính và duy trì truy cập phù hợp với rủi ro.
+    objectives:
+      - So sánh mật khẩu, MFA và xác thực không mật khẩu ở mức lựa chọn.
+      - Xác định yêu cầu khôi phục tài khoản, hết hạn phiên và thu hồi thông tin xác thực.
+  - id: phan-quyen-va-chinh-sach
+    title: Phân quyền và chính sách
+    purpose: Chuyển nhu cầu công việc thành quyền có phạm vi rõ ràng.
+    objectives:
+      - Mô hình hóa chủ thể, hành động, tài nguyên và điều kiện bằng RBAC hoặc ABAC.
+      - Áp dụng quyền tối thiểu, mặc định từ chối và kiểm tra quyền tại nơi thực thi.
+  - id: lien-ket-va-sso
+    title: Liên kết và SSO
+    purpose: Hiểu quan hệ tin cậy khi nhiều hệ thống cùng sử dụng danh tính.
+    objectives:
+      - Vẽ vai trò của nhà cung cấp danh tính và ứng dụng tiếp nhận trong SSO.
+      - Phân biệt SAML/OIDC phục vụ đăng nhập, OAuth ủy quyền và SCIM cấp phát tài khoản.
+  - id: danh-tinh-may
+    title: Danh tính máy
+    purpose: Quản lý quyền truy cập của ứng dụng, dịch vụ và tác vụ tự động.
+    objectives:
+      - Phân biệt tài khoản người dùng với tài khoản dịch vụ và danh tính dành cho tác vụ tự động.
+      - Chọn cách cấp thông tin xác thực ngắn hạn, giới hạn phạm vi và thu hồi quyền của dịch vụ.
+  - id: kiem-soat-dac-quyen
+    title: Kiểm soát đặc quyền
+    purpose: Giảm rủi ro từ quyền quản trị và các thao tác nhạy cảm.
+    objectives:
+      - Thiết kế phê duyệt, cấp quyền có thời hạn và phân tách nhiệm vụ.
+      - Xác định cách bảo vệ, ghi vết và rà soát truy cập khẩn cấp.
+  - id: quan-tri-va-kiem-chung
+    title: Quản trị và kiểm chứng
+    purpose: Chứng minh quyền đang có là phù hợp và các kiểm soát hoạt động đúng.
+    objectives:
+      - Lập kiểm thử cho phép, từ chối, thu hồi quyền và vô hiệu hóa tài khoản.
+      - Thiết kế rà soát quyền định kỳ, phát hiện tài khoản mồ côi và ghi vết thay đổi.

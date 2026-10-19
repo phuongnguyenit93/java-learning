@@ -1,0 +1,92 @@
+# <roadmap-schema>
+# Cấu trúc Roadmap Module
+# schema-version: 1
+#
+# YAML CONTRACT
+# roadmap: Danh sách milestone cấp cao của roadmap cho language hiện tại. ID milestone phải duy nhất.
+#
+# - id [string, required]: ID ổn định và duy nhất của milestone trong roadmap language hiện tại.
+# - title [string, required]: Tên milestone hiển thị cho learner.
+# - purpose [string, required]: Milestone này tồn tại để learner hiểu hoặc đạt được điều gì.
+# - dependsOn [list, optional]: Danh sách id milestone prerequisite khi dependency không thể hiện đủ chỉ bằng thứ tự item.
+# - objectives [list, optional]: Các learning objective cấp milestone; không dùng để liệt kê mọi fact/API/syntax nhỏ.
+# - relatedKnowledge [list, optional]: Danh sách Knowledge category id trong chính module hiện tại hỗ trợ milestone. Portal hiển thị danh sách này ở phía đối diện milestone và click item sẽ điều hướng sang Knowledge category tương ứng.
+# - relatedModules [list, optional]: Các module liên quan hiển thị ở Level 2 của Portal. Mỗi item dùng routeId bắt buộc và có thể có label/note localized; relation này chỉ để điều hướng, không tạo child milestone hoặc thay đổi learning order.
+#
+# ROADMAP THINKING FRAMEWORK
+# PURPOSE
+#   - Topic/module này là gì?
+#   - Vì sao nó tồn tại?
+#   - Không có nó thì learner gặp vấn đề gì?
+# FOUNDATION
+#   - Learner cần prerequisite hoặc mental model nào trước?
+# CORE MODEL
+#   - Những abstraction hoặc building block lớn nào tạo nên chủ đề này?
+# MECHANICS
+#   - Nó hoạt động như thế nào ở mức language/runtime/API phù hợp với module?
+# USAGE
+#   - Nó được dùng như thế nào trong code thực tế?
+# DECISION / TRADE-OFF
+#   - Khi nào nên chọn cơ chế này thay vì cơ chế khác?
+#   - Khi nào không nên dùng?
+# FAILURE / PITFALL
+#   - Những sai lầm, compile-time failure hoặc runtime failure nào đáng biết?
+# INTEGRATION
+#   - Chủ đề này kết nối với những concept/module lân cận nào?
+# SYNTHESIS
+#   - Sau cùng learner phải giữ mental model end-to-end nào?
+#
+# Mỗi language tự chịu trách nhiệm cho roadmap của chính nó. Không suy luận hoặc đồng bộ cấu trúc từ roadmap của language khác.
+# Thứ tự item trong roadmap chính là thứ tự học mặc định. Chỉ dùng dependsOn khi cần biểu diễn dependency rõ hơn thứ tự tuyến tính.
+# Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
+# </roadmap-schema>
+
+roadmap:
+  - id: vai-tro-va-gioi-han-jwt
+    title: Vai trò và giới hạn JWT
+    purpose: Hiểu JWT là định dạng token và khi nào nên sử dụng.
+    objectives:
+      - Phân biệt JWT với OAuth/OIDC và cơ chế phiên.
+      - Đánh giá token tự chứa và giới hạn thu hồi.
+  - id: cau-truc-va-claims
+    title: Cấu trúc và claims
+    purpose: Đọc dữ liệu token trước khi thiết kế cách sử dụng.
+    objectives:
+      - Nhận diện header, claims và dạng compact.
+      - Phân biệt claims chuẩn và claims riêng.
+  - id: co-che-bao-ve
+    title: Cơ chế bảo vệ
+    purpose: Chọn cách bảo vệ phù hợp với mô hình tin cậy.
+    objectives:
+      - Phân biệt JWS, JWE và biểu diễn Base64url.
+      - So sánh HMAC với chữ ký bất đối xứng.
+  - id: xac-minh-token
+    title: Xác minh token
+    purpose: Chỉ chấp nhận JWT hợp lệ cho đúng mục đích.
+    objectives:
+      - Cố định thuật toán cho phép và xác minh bằng khóa tin cậy.
+      - Kiểm tra nguồn cấp, đối tượng nhận, thời hạn và mục đích token.
+  - id: khoa-va-jwks
+    title: Khóa và JWKS
+    purpose: Duy trì nguồn khóa xác minh đáng tin cậy.
+    objectives:
+      - Chọn khóa từ nguồn JWKS được cấu hình tin cậy.
+      - Quản lý kid, bộ nhớ đệm và chuyển phiên bản khóa.
+  - id: tich-hop-va-vong-doi
+    title: Tích hợp và vòng đời
+    purpose: Sử dụng JWT trong luồng truy cập có giới hạn rõ ràng.
+    objectives:
+      - Phân biệt vai trò access token, ID token và refresh token.
+      - Thiết kế lưu trữ, truyền qua TLS, hết hạn và thu hồi.
+  - id: rui-ro-thuong-gap
+    title: Rủi ro thường gặp
+    purpose: Nhận diện cách JWT bị dùng sai hoặc bị lạm dụng.
+    objectives:
+      - Phân tích nhầm thuật toán, nhầm loại token và phát lại.
+      - Giảm dữ liệu nhạy cảm trong claims và ngăn lộ token.
+  - id: kiem-thu-va-van-hanh
+    title: Kiểm thử và vận hành
+    purpose: Kiểm chứng xác minh token và xử lý lỗi thực tế.
+    objectives:
+      - Thử sửa payload, sai khóa, sai đối tượng nhận và hết hạn.
+      - Kiểm chứng xoay khóa, lỗi JWKS và nhật ký không chứa token.

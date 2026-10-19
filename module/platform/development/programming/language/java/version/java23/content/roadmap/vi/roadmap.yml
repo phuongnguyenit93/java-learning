@@ -1,0 +1,108 @@
+# <roadmap-schema>
+# Cấu trúc Roadmap Module
+# schema-version: 1
+#
+# YAML CONTRACT
+# roadmap: Danh sách milestone cấp cao của roadmap cho language hiện tại. ID milestone phải duy nhất.
+#
+# - id [string, required]: ID ổn định và duy nhất của milestone trong roadmap language hiện tại.
+# - title [string, required]: Tên milestone hiển thị cho learner.
+# - purpose [string, required]: Milestone này tồn tại để learner hiểu hoặc đạt được điều gì.
+# - dependsOn [list, optional]: Danh sách id milestone prerequisite khi dependency không thể hiện đủ chỉ bằng thứ tự item.
+# - objectives [list, optional]: Các learning objective cấp milestone; không dùng để liệt kê mọi fact/API/syntax nhỏ.
+# - relatedKnowledge [list, optional]: Danh sách Knowledge category id trong chính module hiện tại hỗ trợ milestone. Portal hiển thị danh sách này ở phía đối diện milestone và click item sẽ điều hướng sang Knowledge category tương ứng.
+# - relatedModules [list, optional]: Các module liên quan hiển thị ở Level 2 của Portal. Mỗi item dùng routeId bắt buộc và có thể có label/note localized; relation này chỉ để điều hướng, không tạo child milestone hoặc thay đổi learning order.
+#
+# ROADMAP THINKING FRAMEWORK
+# PURPOSE
+#   - Topic/module này là gì?
+#   - Vì sao nó tồn tại?
+#   - Không có nó thì learner gặp vấn đề gì?
+# FOUNDATION
+#   - Learner cần prerequisite hoặc mental model nào trước?
+# CORE MODEL
+#   - Những abstraction hoặc building block lớn nào tạo nên chủ đề này?
+# MECHANICS
+#   - Nó hoạt động như thế nào ở mức language/runtime/API phù hợp với module?
+# USAGE
+#   - Nó được dùng như thế nào trong code thực tế?
+# DECISION / TRADE-OFF
+#   - Khi nào nên chọn cơ chế này thay vì cơ chế khác?
+#   - Khi nào không nên dùng?
+# FAILURE / PITFALL
+#   - Những sai lầm, compile-time failure hoặc runtime failure nào đáng biết?
+# INTEGRATION
+#   - Chủ đề này kết nối với những concept/module lân cận nào?
+# SYNTHESIS
+#   - Sau cùng learner phải giữ mental model end-to-end nào?
+#
+# Mỗi language tự chịu trách nhiệm cho roadmap của chính nó. Không suy luận hoặc đồng bộ cấu trúc từ roadmap của language khác.
+# Thứ tự item trong roadmap chính là thứ tự học mặc định. Chỉ dùng dependsOn khi cần biểu diễn dependency rõ hơn thứ tự tuyến tính.
+# Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
+# </roadmap-schema>
+
+roadmap:
+  - id: toan-canh-java-23
+    title: Toàn cảnh Java 23
+    purpose: Chọn các hướng cải tiến của Java 23 còn có giá trị trong Java hiện đại.
+    objectives:
+      - Phân biệt trạng thái chính thức, preview và incubator ở đúng Java 23
+      - Nhận diện các tính năng được chính thức hóa ở Java 24 hoặc Java 25
+      - Chọn JDK hiện hành phù hợp cho các dạng API đã ổn định
+  - id: javadoc-markdown
+    title: Javadoc Markdown
+    purpose: Viết tài liệu API bằng cú pháp Markdown được hỗ trợ từ Java 23.
+    objectives:
+      - Viết chú thích tài liệu bằng các dòng ///
+      - Dùng danh sách, đoạn mã và liên kết tới phần tử Java
+      - Tạo tài liệu và kiểm tra hiển thị, liên kết, cảnh báo
+  - id: cu-phap-gon
+    title: Cú pháp gọn
+    purpose: Hiểu các hướng cú pháp preview ở Java 23 qua dạng đã chính thức từ Java 25.
+    objectives:
+      - Dùng import module và xử lý tên kiểu bị mơ hồ
+      - Viết tệp nguồn gọn và main dạng instance theo quy tắc hiện hành
+      - Kiểm tra đối số, khởi tạo trường trước super(...) theo giới hạn cho phép
+  - id: stream-gatherers
+    title: Stream Gatherers
+    purpose: Xử lý thao tác trung gian tùy chỉnh; API ở preview lần hai trong Java 23 và chính thức từ Java 24.
+    objectives:
+      - Dùng cửa sổ cố định, cửa sổ trượt và tích lũy với Gatherers
+      - Phân biệt gatherer với collector
+      - Viết gatherer đơn giản và kiểm thử dữ liệu rỗng, dừng sớm
+  - id: gia-tri-theo-pham-vi
+    title: Giá trị theo phạm vi
+    purpose: Truyền ngữ cảnh theo chuỗi lời gọi; ScopedValue ở preview lần ba trong Java 23 và chính thức từ Java 25.
+    objectives:
+      - Tạo ràng buộc bằng ScopedValue.where và thực thi bằng run hoặc call
+      - Kiểm tra ràng buộc lồng nhau và việc khôi phục khi kết thúc
+      - Phân biệt với ThreadLocal và tránh chia sẻ dữ liệu có thể sửa mà thiếu đồng bộ
+  - id: class-file-api
+    title: Class-File API
+    purpose: Đọc và biến đổi class file bằng API ở preview lần hai trong Java 23 và chính thức từ Java 24.
+    objectives:
+      - Đọc trường, phương thức và bytecode qua ClassModel
+      - Tạo hoặc biến đổi lớp bằng builder và transform
+      - Đối chiếu đầu ra bằng javap và kiểm thử việc nạp lớp
+  - id: bo-nho-theo-api-chuan
+    title: Bộ nhớ theo API chuẩn
+    purpose: Áp dụng VarHandle và FFM thay cho phụ thuộc vào API truy cập bộ nhớ nội bộ.
+    objectives:
+      - Chọn VarHandle cho truy cập biến và thao tác nguyên tử phù hợp
+      - Quản lý MemorySegment bằng Arena khi dùng bộ nhớ ngoài heap
+      - Kiểm thử giới hạn truy cập, vòng đời và quyền native access khi cần
+  - id: zgc-theo-the-he
+    title: ZGC theo thế hệ
+    purpose: Hiểu chế độ theo thế hệ được chọn mặc định khi dùng ZGC từ JDK 23 và cách đánh giá hiện nay.
+    objectives:
+      - Giải thích vai trò các thế hệ trong thu gom rác
+      - Phân biệt bật ZGC với lựa chọn bộ thu gom mặc định của JVM
+      - Đo thời gian tạm dừng, thông lượng và bộ nhớ bằng GC log trên JDK hiện hành
+  - id: thuc-hanh-va-kiem-chung
+    title: Thực hành và kiểm chứng
+    purpose: Kết hợp kiến thức đã ổn định trong ví dụ nhỏ với cấu hình dựng và bằng chứng rõ ràng.
+    objectives:
+      - Viết công cụ xử lý dữ liệu bằng Gatherers và ngữ cảnh ScopedValue
+      - Tạo tài liệu Markdown và kiểm thử ví dụ đi kèm
+      - Cấu hình annotation processor tường minh trong bước biên dịch
+      - Kiểm tra class file, lỗi tài nguyên và ghi lại cấu hình JDK, GC

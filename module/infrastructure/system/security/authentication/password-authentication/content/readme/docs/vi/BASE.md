@@ -1,0 +1,7 @@
+# Xác thực bằng mật khẩu (Password Authentication)
+
+Mật khẩu là một yếu tố dùng để chứng minh danh tính khi đăng nhập, nhưng xác thực thành công không đồng nghĩa với việc được phép truy cập mọi tài nguyên. Cơ chế này có thể bị đe dọa bởi mật khẩu dễ đoán, tái sử dụng thông tin đăng nhập, lừa đảo hoặc dữ liệu xác thực bị rò rỉ. Vì vậy, bảo mật mật khẩu cần được thiết kế xuyên suốt từ chính sách tạo mật khẩu, cách lưu trữ đến luồng đăng nhập, chống lạm dụng và khôi phục tài khoản, thay vì chỉ kiểm tra chuỗi người dùng nhập.
+
+Tài liệu dành cho người đã biết các khái niệm cơ bản về tài khoản, xác thực và giao tiếp web. Phạm vi là bảo mật tổng quát, không phụ thuộc ngôn ngữ hay framework cụ thể. Lộ trình có bảy mốc: vai trò và rủi ro của mật khẩu; chính sách độ dài, kiểm tra mật khẩu đã lộ và hỗ trợ trình quản lý mật khẩu; băm lưu trữ an toàn với salt, chi phí tính toán và hàm chuyên dụng; luồng đăng nhập qua HTTPS; hạn chế dò đoán và thử thông tin đăng nhập bị lộ; đổi, đặt lại hoặc khôi phục mật khẩu; cuối cùng là kiểm thử và vận hành.
+
+Sau khi hoàn thành, bạn có thể giải thích vì sao băm mật khẩu khác mã hóa hoặc Base64, lựa chọn nguyên tắc lưu trữ và nâng cấp tham số băm hợp lý, thiết kế thông báo lỗi tránh tiết lộ sự tồn tại của tài khoản. Bạn cũng có thể kết hợp giới hạn tần suất, phát hiện bất thường và xác thực đa yếu tố; xây dựng mã đặt lại có thời hạn, dùng một lần và cân nhắc thu hồi phiên sau sự cố. Các bước kiểm thử sẽ giúp bạn xác minh hành vi với mật khẩu sai, giới hạn thử và mã hết hạn, đồng thời theo dõi sự kiện mà không ghi lộ bí mật.

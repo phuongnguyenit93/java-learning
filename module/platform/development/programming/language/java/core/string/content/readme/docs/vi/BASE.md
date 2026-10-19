@@ -1,24 +1,7 @@
-# String và Text
+# Java Core – String
 
-Module này xây mental model cho **text trong Java**, từ immutability và String Pool đến Unicode/code point, encoding, regex và text blocks.
+Chuỗi là kiểu dữ liệu nền tảng để biểu diễn và xử lý văn bản trong Java, từ tên người dùng đến nội dung tệp và dữ liệu trao đổi giữa các hệ thống. Tuy nhiên, thao tác với chuỗi đúng không chỉ là nối hoặc cắt ký tự: bạn cần hiểu **tính bất biến** của `String`, cách so sánh theo nội dung, giới hạn chỉ số và sự khác nhau giữa đơn vị UTF-16 với điểm mã Unicode. Module **Java Core – String** giúp bạn xây dựng tư duy chính xác khi làm việc với văn bản, nhất là dữ liệu tiếng Việt và ký tự nằm ngoài phạm vi một `char`.
 
-## Learning flow
+Module phù hợp với người đã nắm biến, kiểu dữ liệu, đối tượng và phương thức Java cơ bản. Bạn sẽ bắt đầu từ sự khác biệt giữa `String`, `char` và mảng ký tự, rồi tìm hiểu cách khởi tạo chuỗi, string pool, `equals`, `compareTo` và toán tử `==`. Tiếp theo là các thao tác truy cập, tìm kiếm, cắt, chuẩn hóa khoảng trắng, thay thế, tách và ghép chuỗi; bạn cũng sẽ cân nhắc `Locale` khi chuyển đổi chữ hoa, chữ thường. Phần Unicode và bảng mã hướng dẫn xử lý `codePoints` và chuyển đổi chuỗi với byte thông qua `Charset` rõ ràng.
 
-1. `String` immutability;
-2. String Pool;
-3. equality;
-4. core String operations;
-5. concatenation;
-6. `StringBuilder`;
-7. `StringBuffer`;
-8. `intern`;
-9. Unicode và code point;
-10. encoding;
-11. regex;
-12. text blocks.
-
-## Mental model cần giữ
-
-`String` là immutable sequence abstraction, nhưng “character” trong business text không phải lúc nào cũng tương đương một Java `char`. Unicode representation và byte encoding là hai layer khác nhau; lỗi text thường xuất hiện khi hai layer này bị trộn lẫn.
-
-Localization xử lý locale-sensitive presentation; I/O xử lý boundary byte/character khi đọc ghi dữ liệu. Module này cung cấp text foundation cho cả hai.
+Ở phần tiếp theo, bạn sử dụng `Pattern`, `Matcher`, `String.format` và `formatted` để kiểm tra mẫu và định dạng nội dung; phân biệt nhu cầu dùng `StringBuilder` với `StringBuffer` khi ghép dữ liệu nhiều lần. Qua bài thực hành xử lý đầu vào, bạn sẽ kiểm tra `null`, chuỗi rỗng, khoảng trắng, tiếng Việt và emoji, đồng thời chọn API phù hợp với cả tính đúng đắn lẫn chi phí xử lý. Kết thúc module, bạn có thể xây dựng và kiểm thử những thao tác văn bản phổ biến, giải thích kết quả trên dữ liệu Unicode và tránh các lỗi so sánh, chỉ số hoặc mã hóa thường gặp.

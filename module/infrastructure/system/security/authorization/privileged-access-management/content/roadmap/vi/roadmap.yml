@@ -1,0 +1,93 @@
+# <roadmap-schema>
+# Cấu trúc Roadmap Module
+# schema-version: 1
+#
+# YAML CONTRACT
+# roadmap: Danh sách milestone cấp cao của roadmap cho language hiện tại. ID milestone phải duy nhất.
+#
+# - id [string, required]: ID ổn định và duy nhất của milestone trong roadmap language hiện tại.
+# - title [string, required]: Tên milestone hiển thị cho learner.
+# - purpose [string, required]: Milestone này tồn tại để learner hiểu hoặc đạt được điều gì.
+# - dependsOn [list, optional]: Danh sách id milestone prerequisite khi dependency không thể hiện đủ chỉ bằng thứ tự item.
+# - objectives [list, optional]: Các learning objective cấp milestone; không dùng để liệt kê mọi fact/API/syntax nhỏ.
+# - relatedKnowledge [list, optional]: Danh sách Knowledge category id trong chính module hiện tại hỗ trợ milestone. Portal hiển thị danh sách này ở phía đối diện milestone và click item sẽ điều hướng sang Knowledge category tương ứng.
+# - relatedModules [list, optional]: Các module liên quan hiển thị ở Level 2 của Portal. Mỗi item dùng routeId bắt buộc và có thể có label/note localized; relation này chỉ để điều hướng, không tạo child milestone hoặc thay đổi learning order.
+#
+# ROADMAP THINKING FRAMEWORK
+# PURPOSE
+#   - Topic/module này là gì?
+#   - Vì sao nó tồn tại?
+#   - Không có nó thì learner gặp vấn đề gì?
+# FOUNDATION
+#   - Learner cần prerequisite hoặc mental model nào trước?
+# CORE MODEL
+#   - Những abstraction hoặc building block lớn nào tạo nên chủ đề này?
+# MECHANICS
+#   - Nó hoạt động như thế nào ở mức language/runtime/API phù hợp với module?
+# USAGE
+#   - Nó được dùng như thế nào trong code thực tế?
+# DECISION / TRADE-OFF
+#   - Khi nào nên chọn cơ chế này thay vì cơ chế khác?
+#   - Khi nào không nên dùng?
+# FAILURE / PITFALL
+#   - Những sai lầm, compile-time failure hoặc runtime failure nào đáng biết?
+# INTEGRATION
+#   - Chủ đề này kết nối với những concept/module lân cận nào?
+# SYNTHESIS
+#   - Sau cùng learner phải giữ mental model end-to-end nào?
+#
+# Mỗi language tự chịu trách nhiệm cho roadmap của chính nó. Không suy luận hoặc đồng bộ cấu trúc từ roadmap của language khác.
+# Thứ tự item trong roadmap chính là thứ tự học mặc định. Chỉ dùng dependsOn khi cần biểu diễn dependency rõ hơn thứ tự tuyến tính.
+# Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
+# </roadmap-schema>
+
+roadmap:
+  - id: ban-do-dac-quyen-va-rui-ro
+    title: Bản đồ đặc quyền và rủi ro
+    purpose: Hiểu PAM bảo vệ hoạt động quản trị có mức ảnh hưởng cao như thế nào.
+    objectives:
+      - Phân biệt quản lý đặc quyền với quản lý danh tính và truy cập nói chung.
+      - Nhận diện rủi ro lạm quyền, chiếm tài khoản và di chuyển ngang.
+  - id: kiem-ke-tai-khoan-dac-quyen
+    title: Kiểm kê tài khoản đặc quyền
+    purpose: Biết đặc quyền nằm ở đâu và ai chịu trách nhiệm quản lý.
+    objectives:
+      - Nhận diện tài khoản quản trị, tài khoản dịch vụ và quyền trên hạ tầng.
+      - Gắn chủ sở hữu, hệ thống đích và mức rủi ro cho từng tài khoản.
+  - id: chinh-sach-va-phe-duyet-truy-cap
+    title: Chính sách và phê duyệt truy cập
+    purpose: Biến nhu cầu quản trị thành quyền truy cập có điều kiện rõ ràng.
+    objectives:
+      - Áp dụng quyền tối thiểu, tách nhiệm vụ và phê duyệt phù hợp.
+      - Xác định yêu cầu xác thực đa yếu tố và điều kiện cấp quyền.
+  - id: bao-ve-thong-tin-xac-thuc
+    title: Bảo vệ thông tin xác thực
+    purpose: Giảm việc lộ hoặc chia sẻ bí mật của tài khoản đặc quyền.
+    objectives:
+      - Mô tả lưu giữ và cấp phát bí mật qua kho bảo mật.
+      - Thiết kế luân chuyển, thu hồi và cập nhật nơi sử dụng bí mật.
+  - id: cap-quyen-tam-thoi-vua-du
+    title: Cấp quyền tạm thời, vừa đủ
+    purpose: Giảm đặc quyền thường trực và giới hạn phạm vi sử dụng.
+    objectives:
+      - Thiết kế cấp quyền theo yêu cầu, có thời hạn.
+      - Giới hạn thao tác được phép và tự thu hồi quyền khi hết hạn.
+  - id: kiem-soat-phien-dac-quyen
+    title: Kiểm soát phiên đặc quyền
+    purpose: Theo dõi và can thiệp vào hoạt động quản trị trong từng phiên.
+    objectives:
+      - Gắn phiên truy cập với cá nhân hoặc danh tính thực hiện.
+      - Mô tả giám sát, ghi nhận hoạt động và chấm dứt phiên rủi ro.
+  - id: truy-cap-khan-cap-va-su-co
+    title: Truy cập khẩn cấp và sự cố
+    purpose: Duy trì khả năng quản trị trong sự cố với cơ chế kiểm soát và truy vết.
+    objectives:
+      - Thiết kế truy cập khẩn cấp có kiểm soát và hậu kiểm.
+      - Mô tả cô lập tài khoản, thu hồi phiên và luân chuyển bí mật khi bị lộ.
+  - id: ra-soat-va-kiem-chung-pam
+    title: Rà soát và kiểm chứng PAM
+    purpose: Kiểm chứng hiệu quả của kiểm soát đặc quyền trong vận hành.
+    objectives:
+      - Rà soát quyền định kỳ và xử lý tài khoản không còn chủ sở hữu.
+      - Kiểm thử hết hạn quyền, luân chuyển bí mật và khôi phục truy cập.
+      - Đối chiếu nhật ký với phê duyệt và phát hiện hoạt động bất thường.

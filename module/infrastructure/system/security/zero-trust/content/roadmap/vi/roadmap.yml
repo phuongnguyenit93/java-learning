@@ -1,0 +1,93 @@
+# <roadmap-schema>
+# Cấu trúc Roadmap Module
+# schema-version: 1
+#
+# YAML CONTRACT
+# roadmap: Danh sách milestone cấp cao của roadmap cho language hiện tại. ID milestone phải duy nhất.
+#
+# - id [string, required]: ID ổn định và duy nhất của milestone trong roadmap language hiện tại.
+# - title [string, required]: Tên milestone hiển thị cho learner.
+# - purpose [string, required]: Milestone này tồn tại để learner hiểu hoặc đạt được điều gì.
+# - dependsOn [list, optional]: Danh sách id milestone prerequisite khi dependency không thể hiện đủ chỉ bằng thứ tự item.
+# - objectives [list, optional]: Các learning objective cấp milestone; không dùng để liệt kê mọi fact/API/syntax nhỏ.
+# - relatedKnowledge [list, optional]: Danh sách Knowledge category id trong chính module hiện tại hỗ trợ milestone. Portal hiển thị danh sách này ở phía đối diện milestone và click item sẽ điều hướng sang Knowledge category tương ứng.
+# - relatedModules [list, optional]: Các module liên quan hiển thị ở Level 2 của Portal. Mỗi item dùng routeId bắt buộc và có thể có label/note localized; relation này chỉ để điều hướng, không tạo child milestone hoặc thay đổi learning order.
+#
+# ROADMAP THINKING FRAMEWORK
+# PURPOSE
+#   - Topic/module này là gì?
+#   - Vì sao nó tồn tại?
+#   - Không có nó thì learner gặp vấn đề gì?
+# FOUNDATION
+#   - Learner cần prerequisite hoặc mental model nào trước?
+# CORE MODEL
+#   - Những abstraction hoặc building block lớn nào tạo nên chủ đề này?
+# MECHANICS
+#   - Nó hoạt động như thế nào ở mức language/runtime/API phù hợp với module?
+# USAGE
+#   - Nó được dùng như thế nào trong code thực tế?
+# DECISION / TRADE-OFF
+#   - Khi nào nên chọn cơ chế này thay vì cơ chế khác?
+#   - Khi nào không nên dùng?
+# FAILURE / PITFALL
+#   - Những sai lầm, compile-time failure hoặc runtime failure nào đáng biết?
+# INTEGRATION
+#   - Chủ đề này kết nối với những concept/module lân cận nào?
+# SYNTHESIS
+#   - Sau cùng learner phải giữ mental model end-to-end nào?
+#
+# Mỗi language tự chịu trách nhiệm cho roadmap của chính nó. Không suy luận hoặc đồng bộ cấu trúc từ roadmap của language khác.
+# Thứ tự item trong roadmap chính là thứ tự học mặc định. Chỉ dùng dependsOn khi cần biểu diễn dependency rõ hơn thứ tự tuyến tính.
+# Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
+# </roadmap-schema>
+
+roadmap:
+  - id: tu-duy-zero-trust
+    title: Tư duy Zero Trust
+    purpose: Hiểu cách đánh giá truy cập mà không mặc định tin cậy theo vị trí mạng.
+    objectives:
+      - Giải thích vì sao ở trong mạng nội bộ chưa đủ tạo sự tin cậy.
+      - Liên hệ xác minh, quyền tối thiểu và giả định đã bị xâm nhập.
+  - id: tai-san-va-luong-can-bao-ve
+    title: Tài sản và luồng cần bảo vệ
+    purpose: Xác định đối tượng và rủi ro trước khi chọn biện pháp kiến trúc.
+    objectives:
+      - Kiểm kê danh tính, thiết bị, workload, ứng dụng và dữ liệu.
+      - Vẽ luồng truy cập và ưu tiên tài nguyên theo rủi ro.
+  - id: kien-truc-quyet-dinh-truy-cap
+    title: Kiến trúc quyết định truy cập
+    purpose: Nắm cách hình thành, điều phối và thực thi quyết định quyền.
+    objectives:
+      - Phân biệt bộ quyết định (Policy Engine), bộ điều phối (Policy Administrator) và điểm thực thi chính sách (PEP).
+      - Tách luồng điều khiển chính sách khỏi luồng dữ liệu.
+  - id: danh-tinh-va-trang-thai-thiet-bi
+    title: Danh tính và trạng thái thiết bị
+    purpose: Đánh giá người hoặc phần mềm truy cập cùng độ an toàn của môi trường.
+    objectives:
+      - Liên hệ xác thực đa yếu tố, danh tính workload và tình trạng thiết bị.
+      - Chọn tín hiệu rủi ro để đánh giá lại quyền truy cập.
+  - id: chinh-sach-theo-tung-tai-nguyen
+    title: Chính sách theo từng tài nguyên
+    purpose: Cấp đúng quyền theo nhu cầu và điều kiện của từng lần truy cập.
+    objectives:
+      - Xây dựng điều kiện theo chủ thể, tài nguyên, hành động và ngữ cảnh.
+      - Giới hạn quyền, thời gian và phạm vi phiên truy cập.
+  - id: bao-ve-luong-va-du-lieu
+    title: Bảo vệ luồng và dữ liệu
+    purpose: Giảm phạm vi ảnh hưởng khi kẻ tấn công chiếm được một thành phần.
+    objectives:
+      - Thiết kế phân đoạn nhỏ (microsegmentation) để hạn chế di chuyển ngang.
+      - Bảo vệ kênh truyền và dữ liệu theo mức nhạy cảm.
+  - id: giam-sat-va-phan-ung-lien-tuc
+    title: Giám sát và phản ứng liên tục
+    purpose: Dùng bằng chứng vận hành để điều chỉnh truy cập và xử lý sự cố.
+    objectives:
+      - Thu thập nhật ký, hành vi và tín hiệu bảo mật phục vụ quyết định quyền.
+      - Mô tả phát hiện bất thường, thu hồi truy cập và cô lập sự cố.
+  - id: trien-khai-va-kiem-chung
+    title: Triển khai và kiểm chứng
+    purpose: Chuyển dần sang Zero Trust với bằng chứng về an toàn và khả dụng.
+    objectives:
+      - Chọn thí điểm, đo hiệu quả và mở rộng sang hệ thống cũ.
+      - Kiểm thử danh tính bị chiếm, thiết bị không đạt và lỗi thành phần quyết định quyền.
+      - Đánh giá quyền tối thiểu, trải nghiệm sử dụng và khả năng duy trì dịch vụ.

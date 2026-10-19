@@ -1,24 +1,7 @@
-# Functional Programming trong Java
+# Java Core – Functional Programming
 
-Module này giới thiệu cách Java biểu diễn **behavior như value** thông qua functional interface, lambda và method reference, rồi dùng composition để xây pipeline xử lý dữ liệu có kiểm soát.
+Lập trình hàm là cách tổ chức chương trình bằng những phép biến đổi dữ liệu có thể kết hợp và tái sử dụng, đồng thời hạn chế trạng thái thay đổi và tác dụng phụ khi phù hợp. Trong Java, phong cách này bổ sung cho lập trình hướng đối tượng: thay vì mô tả từng bước xử lý trong một vòng lặp, bạn có thể diễn đạt ý định thông qua hàm, điều kiện lọc và các chuỗi biến đổi. Hiểu tư duy hàm giúp mã dễ đọc, dễ kiểm thử và giúp bạn nhận biết lúc nào cách tiếp cận này mang lại lợi ích.
 
-## Learning flow
+Module dành cho người đã biết cú pháp Java, lớp và đối tượng, generics cơ bản cùng cách thao tác dữ liệu. Bạn sẽ đi từ **tư duy hàm** đến **giao diện hàm** như `Predicate`, `Function`, `Consumer` và `Supplier`; sau đó thực hành **lambda**, kiểu đích, biến được bắt giữ và **tham chiếu phương thức**. Khi đã nắm các đơn vị xử lý cơ bản, bạn sẽ học cách **kết hợp hàm** để tạo các thao tác nhỏ, rõ trách nhiệm và có thể dùng lại.
 
-1. vì sao functional style hữu ích và mental model cốt lõi;
-2. functional-interface contract và target typing;
-3. lambda;
-4. variable capture, scope và state;
-5. method reference;
-6. standard functional interfaces;
-7. behavior composition và higher-order usage;
-8. side effect, immutability và `Optional`;
-9. boundary với Stream API;
-10. trade-off, pitfalls và synthesis.
-
-## Vì sao nên học?
-
-Mục tiêu không phải biến Java thành ngôn ngữ thuần functional. Learner cần biết khi nào higher-order behavior làm code rõ hơn, khi nào mutable state/capture gây khó reasoning và cách các abstraction này trở thành nền tảng cho Stream và nhiều framework API.
-
-## Phạm vi module
-
-Module tập trung vào functional model của Java. Stream được dùng như integration boundary; concurrency/parallel execution và reactive programming là các chủ đề riêng.
+Phần tiếp theo tập trung vào **Stream API** với `filter`, `map`, `flatMap` và cơ chế thực thi lười, rồi đến `reduce`, `collect`, `Collectors` và các điều kiện cần cân nhắc khi xử lý song song. Cuối cùng, bạn sử dụng **Optional** để biểu diễn kết quả có thể vắng mặt và luyện tập chuyển một bài toán dữ liệu thành chuỗi xử lý có tác dụng phụ được kiểm soát. Kết thúc lộ trình, bạn có thể lựa chọn giữa cách viết mệnh lệnh và phong cách hàm, giải thích hành vi của từng phép biến đổi và kiểm thử kết quả một cách có cơ sở.

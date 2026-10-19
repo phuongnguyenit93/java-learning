@@ -1,71 +1,7 @@
-# Spring Cache
+# Spring Framework — Cache
 
-Module này trình bày **Spring Framework Cache Abstraction** ở mức cơ chế của framework: cách Spring mô tả chính sách cache quanh lời gọi phương thức mà không buộc mã ứng dụng phụ thuộc trực tiếp vào một nhà cung cấp cache cụ thể.
+Bộ nhớ đệm (**cache**) giúp ứng dụng tránh thực hiện lặp lại những phép tính hoặc truy vấn tốn kém bằng cách tái sử dụng kết quả đã lưu. Đổi lại, hệ thống phải đối mặt với các câu hỏi quan trọng: khi nào một kết quả còn hợp lệ, kết quả nào thuộc về khóa nào và chuyện gì xảy ra khi dữ liệu nguồn thay đổi? Module này giới thiệu **Spring Cache** như một lớp trừu tượng để quản lý việc lưu, đọc, cập nhật và loại bỏ kết quả phương thức; đồng thời phân biệt cơ chế Spring với kho cache cụ thể do nhà cung cấp triển khai. Mục tiêu không chỉ là cải thiện hiệu năng mà còn **giữ tính đúng đắn của dữ liệu**.
 
-Mục tiêu không phải là học Redis, Caffeine hay một sản phẩm cache phân tán cụ thể. Trọng tâm là hiểu:
+Nội dung dành cho người đã biết Java, Spring IoC, bean và cách gọi phương thức trong tầng dịch vụ. Bạn sẽ bắt đầu từ khái niệm cache hit, cache miss và dữ liệu cũ; sau đó bật cache với `@EnableCaching`, cấu hình `CacheManager` và tên các vùng lưu trữ. Tiếp theo, bạn áp dụng `@Cacheable` để tái sử dụng kết quả, thiết kế khóa bằng SpEL hoặc `KeyGenerator` và phân biệt `condition` với `unless`. Khi dữ liệu thay đổi, bạn sẽ sử dụng `@CachePut`, `@CacheEvict` và `@Caching` để cập nhật hoặc xóa các mục liên quan, thay vì mặc định rằng cache tự đồng bộ với nguồn dữ liệu.
 
-- vì sao một kết quả nên hoặc không nên được cache;
-- `Cache` và `CacheManager` đóng vai trò gì;
-- `@Cacheable`, `@CachePut`, `@CacheEvict`, `@Caching`, `@CacheConfig` phối hợp ra sao;
-- cache key, condition, `unless`, `CacheResolver`, mặc định toàn cục qua `CachingConfigurer` và ngữ nghĩa multi-cache;
-- invalidation, dữ liệu cũ và khoảng trống nhất quán;
-- ranh giới proxy/self-invocation của caching khai báo;
-- xử lý đồng thời, `sync=true`, `CompletableFuture`, `Mono`, `Flux` trong Spring Framework 6.1;
-- ranh giới provider, khả năng tương thích JCache và cập nhật cache theo transaction.
-
-## Điều kiện tiên quyết
-
-Người học nên hiểu trước:
-
-- Spring IoC/container và vòng đời bean;
-- mô hình tư duy cơ bản về lời gọi phương thức/proxy của Spring AOP;
-- ngữ nghĩa equality/hash của Java cho object dùng làm cache key;
-- khái niệm transaction cơ bản trước khi học cache theo transaction.
-
-Không cần học Redis hoặc một nhà cung cấp cache cụ thể trước module này.
-
-## Luồng học
-
-```text
-Mục đích và ranh giới của cache
-        ↓
-Trừu tượng Cache / CacheManager
-        ↓
-Caching khai báo bằng annotation
-        ↓
-Key / condition / lựa chọn vùng cache
-        ↓
-Cập nhật / invalidation / tính nhất quán
-        ↓
-Ranh giới chặn lời gọi qua proxy
-        ↓
-Xử lý đồng thời / sync / bất đồng bộ / reactive
-        ↓
-Nhà cung cấp và khả năng tương thích JCache
-        ↓
-Lỗi / cập nhật cache theo transaction
-        ↓
-Chiến lược cache toàn diện
-```
-
-## Nhóm chương
-
-1. **Nền tảng** — mục đích của cache, ranh giới nguồn dữ liệu chuẩn, `Cache`, `CacheManager`.
-2. **Khai báo chính sách** — annotation, tạo key, điều kiện và lựa chọn vùng cache.
-3. **Tính đúng đắn** — cập nhật, eviction, invalidation, dữ liệu cũ và tính nhất quán.
-4. **Cơ chế runtime** — proxy interception, self-invocation, xử lý đồng thời và kiểu trả về bất đồng bộ/reactive.
-5. **Ranh giới tích hợp** — khả năng của nhà cung cấp, JCache, chính sách lỗi và thay đổi cache theo transaction.
-6. **Tổng hợp** — xây dựng chiến lược cache hướng production mà không nhầm trừu tượng của Spring với ngữ nghĩa riêng của nhà cung cấp.
-
-## Ranh giới module
-
-Module này **sở hữu** trừu tượng Spring Cache và ngữ nghĩa caching khai báo.
-
-Các phần sau được chuyển sang module hoặc tài liệu chuyên trách:
-
-- cơ chế proxy/advice chuyên sâu → **Spring AOP**;
-- transaction propagation/rollback/resource synchronization → **Transaction Management**;
-- Redis TTL, serialization, topology, data structures → **Spring Data Redis**;
-- thuật toán eviction, topology lưu trữ và tính nhất quán phân tán riêng của nhà cung cấp → tài liệu của nhà cung cấp cache tương ứng.
-
-Spring Cache giúp ứng dụng diễn đạt chính sách nhất quán. Nó không biến các nhà cung cấp khác nhau thành cùng một mô hình runtime và cũng không tự cung cấp kho cache.
+Các mốc cuối giúp bạn hiểu **cơ chế proxy** của Spring Cache, giới hạn khi tự gọi phương thức trong cùng bean và sự khác biệt giữa thời điểm thao tác cache với thời điểm giao dịch thực sự commit. Bạn cũng sẽ xem xét TTL, giới hạn dung lượng, xử lý nhiều lời gọi đồng thời với `sync=true` theo khả năng nhà cung cấp và phạm vi đồng bộ của kho cache. Phần kiểm thử và vận hành tập trung vào các tình huống hit, miss, cập nhật, xóa, lỗi khi kho cache không sẵn sàng, cùng các chỉ số tỷ lệ hit, độ trễ và dung lượng. Sau module, bạn có thể chọn đúng vị trí cần cache, giải thích vòng đời dữ liệu đã lưu và đánh giá hiệu quả mà không bỏ qua rủi ro dữ liệu lỗi thời.

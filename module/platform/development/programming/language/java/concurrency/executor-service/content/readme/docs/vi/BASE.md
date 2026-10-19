@@ -1,0 +1,7 @@
+# ExecutorService trong Java Concurrency
+
+Khi chương trình cần chạy nhiều công việc đồng thời, tự tạo và quản lý từng luồng thường khiến việc phân phối tác vụ, nhận kết quả và dừng hệ thống trở nên phức tạp. `Executor` và `ExecutorService` giúp tách công việc cần thực hiện khỏi cơ chế quản lý luồng, để bạn có thể gửi tác vụ, theo dõi `Future`, xử lý lỗi và kiểm soát vòng đời của bộ thực thi.
+
+Tài liệu này dành cho người đã biết Java Core, `Runnable`, `Callable` và các khái niệm luồng cơ bản. Lộ trình gồm tám mốc: mô hình Executor; lựa chọn bộ thực thi và `ThreadFactory`; kết quả và lỗi qua `Future`; hủy tác vụ; phối hợp nhiều tác vụ; lập lịch; kiểm soát hàng đợi và quá tải; cuối cùng là đóng và kiểm chứng. Bạn sẽ tìm hiểu cách chọn nhóm luồng phù hợp, chờ cả nhóm hay lấy kết quả sớm, lên lịch chạy một lần hoặc định kỳ và nhận diện giới hạn tài nguyên khi lượng công việc tăng.
+
+Sau khi hoàn thành, bạn có thể sử dụng `execute`, `submit`, `invokeAll`, `invokeAny` và `CompletionService` đúng mục đích; phân biệt timeout với hủy, viết tác vụ phản hồi tín hiệu ngắt và đánh giá chính sách từ chối khi hàng đợi quá tải. Bạn cũng có thể so sánh lịch chạy fixed rate và fixed delay, dừng executor bằng `shutdown` hoặc `shutdownNow`, chờ hoàn tất và kiểm chứng rằng tài nguyên được giải phóng đúng cách.

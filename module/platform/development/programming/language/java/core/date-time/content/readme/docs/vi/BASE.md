@@ -1,26 +1,7 @@
-# Date và Time
+# Java Core — Date & Time
 
-Module này xây mental model cho Java Date-Time API bằng cách tách rõ **local date/time**, **instant trên timeline**, **offset/time zone**, **amount/duration** và **format/parse**.
+Ngày giờ trong phần mềm có nhiều ý nghĩa khác nhau: một **ngày theo lịch**, một **giờ địa phương**, hay một **thời điểm xác định trên dòng thời gian**. Chọn sai cách biểu diễn dễ gây lỗi khi so sánh, tính toán, lưu trữ hoặc chuyển đổi giữa các múi giờ. Module này giới thiệu API `java.time` của Java, với các kiểu dữ liệu bất biến và cách phân biệt rõ ngày giờ địa phương, thời điểm (`Instant`) và quy tắc múi giờ (`ZoneId`).
 
-## Learning flow
+Nội dung dành cho người đã nắm cú pháp Java, lớp, đối tượng và phương thức cơ bản. Lộ trình bắt đầu từ mô hình thời gian và các kiểu `LocalDate`, `LocalTime`, `LocalDateTime`; sau đó đi vào `Instant`, `OffsetDateTime`, `ZonedDateTime` và những trường hợp giờ mùa hè khiến giờ địa phương bị thiếu hoặc trùng. Bạn sẽ thực hành cộng trừ, so sánh ngày giờ, phân biệt khoảng thời gian `Duration` với khoảng theo lịch `Period`, cũng như định dạng và phân tích chuỗi bằng `DateTimeFormatter`.
 
-1. mental model date-time;
-2. `LocalDate`;
-3. `LocalTime`;
-4. `LocalDateTime`;
-5. `Instant`;
-6. `ZoneOffset` và `ZoneId`;
-7. `ZonedDateTime` / `OffsetDateTime`;
-8. `Duration` và `Period`;
-9. formatting/parsing;
-10. arithmetic/comparison;
-11. `Clock`;
-12. legacy interop và pitfalls.
-
-## Vì sao nên học?
-
-Phần lớn bug thời gian đến từ việc dùng sai loại temporal object hoặc đánh đồng local wall-clock time với một thời điểm tuyệt đối. Mục tiêu là chọn đúng representation trước khi nghĩ đến format hiển thị.
-
-## Kết quả mong đợi
-
-Learner nên mô hình hóa được requirement theo timeline/local/zone, thực hiện arithmetic đúng ngữ nghĩa và biết khi nào cần boundary với localization hoặc legacy `Date/Calendar`.
+Các mốc cuối giúp xử lý năm nhuận, cuối tháng và điều chỉnh lịch; kiểm soát nguồn thời gian bằng `Clock` để kiểm thử ổn định; rồi tích hợp với `Date`, `Calendar`, dấu thời gian epoch và dữ liệu truyền nhận, lưu trữ. Sau khi học, bạn có thể giải thích vì sao hai giá trị ngày giờ trông giống nhau chưa chắc chỉ cùng một thời điểm, chọn kiểu `java.time` phù hợp với nghiệp vụ và kiểm tra các phép chuyển đổi mà không đánh mất ý nghĩa thời gian.

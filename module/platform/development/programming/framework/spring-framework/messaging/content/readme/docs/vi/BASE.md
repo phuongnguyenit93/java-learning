@@ -1,64 +1,7 @@
-# Spring Messaging
+# Spring Messaging trong Spring Framework
 
-Spring Messaging là nền tảng của Spring Framework cho giao tiếp ứng dụng theo mô hình message. Module này tập trung vào ba programming model có liên hệ với nhau và cùng sử dụng Spring messaging infrastructure:
+Spring Messaging cung cấp các hợp đồng để ứng dụng trao đổi dữ liệu dưới dạng thông điệp, tách bên tạo nội dung khỏi thành phần tiếp nhận và xử lý. Một `Message` gồm payload và header; `MessageChannel` cùng `MessageHandler` giúp tổ chức đường đi của dữ liệu. Khi xây dựng giao tiếp thời gian thực hoặc theo luồng, cần phân biệt cách định tuyến thông điệp với những bảo đảm về lưu bền, giao nhận và xử lý lỗi của hạ tầng bên dưới.
 
-```text
-Spring Messaging core abstractions
-→ WebSocket + STOMP application messaging
-→ Spring RSocket requester/responder programming model
-```
+Tài liệu này dành cho người đã nắm Java và Spring cơ bản, muốn xây dựng các luồng trao đổi thông điệp giữa thành phần ứng dụng hoặc với máy khách. Lộ trình bắt đầu từ mô hình thông điệp, kênh và template, chuyển đổi dữ liệu và phương thức xử lý; tiếp đó là STOMP qua WebSocket, broker và định tuyến người nhận, rồi đến RSocket với các kiểu tương tác và điều tiết nhu cầu nhận. Bạn sẽ tìm hiểu cách sử dụng `MessageBuilder`, `MessagingTemplate`, `MessageConverter`, `@MessageMapping`, `SimpMessagingTemplate` và `RSocketRequester` đúng theo ngữ cảnh.
 
-Mục tiêu không phải là ghi nhớ annotation hay protocol command. Mục tiêu là hiểu message đi qua Spring như thế nào, application handler được chọn ra sao, broker hoặc transport infrastructure tham gia ở đâu, và khi nào ownership phải được handoff sang Spring project khác.
-
-## Prerequisites
-
-Trước khi học module này, learner nên nắm:
-
-- Spring container và dependency-injection fundamentals;
-- Java concurrency cơ bản như executor và asynchronous execution;
-- HTTP request/response và ý tưởng HTTP Upgrade;
-- reactive-programming và backpressure fundamentals trước phần RSocket.
-
-Module này không dạy lại sâu Reactor, Spring Security policy, Spring Session internals, broker-native administration hay Enterprise Integration Patterns.
-
-## Learning flow
-
-Menu được sắp xếp thành một learning journey liên tục:
-
-1. xác định vì sao messaging tồn tại và boundary của module;
-2. học mô hình transport-neutral gồm `Message`, channel, handler, conversion và error;
-3. kết nối mô hình đó với Spring WebSocket trên Servlet stack;
-4. học STOMP semantics và cách STOMP frame trở thành Spring message;
-5. theo dõi end-to-end Spring STOMP message flow;
-6. học annotated application handling và programmatic sending;
-7. hiểu broker routing và user destination;
-8. học Spring STOMP client và connection lifecycle;
-9. học STOMP/WebSocket lifecycle event, interception, ordering cùng ranh giới security/session;
-10. xây dựng RSocket interaction model tối thiểu cần cho Spring;
-11. học `RSocketRequester` và `RSocketStrategies`;
-12. học annotated RSocket responder và declarative RSocket service interface;
-13. kết thúc bằng operations, testing, scaling và architecture decision.
-
-Thứ tự chapter là thứ tự sư phạm. WebSocket/STOMP không technically phụ thuộc RSocket và RSocket cũng không phụ thuộc STOMP. Chúng là các application-messaging model riêng nhưng cùng tái sử dụng một phần Spring messaging foundation.
-
-## Module boundaries
-
-Module này sở hữu Spring Framework messaging mechanics:
-
-- `Message`, headers, channels, handlers, conversion và interception;
-- Spring WebSocket abstraction dùng trên Servlet stack;
-- STOMP-over-WebSocket application messaging;
-- simple broker và STOMP broker-relay integration ở boundary của Spring Framework;
-- user destination, STOMP client support, ordering và messaging lifecycle;
-- Spring RSocket requester/responder APIs, routing/metadata, annotated handling và RSocket service interface.
-
-Module này không sở hữu:
-
-- Enterprise Integration Patterns, gateway, router, transformer, splitter, aggregator hoặc integration adapter — thuộc Spring Integration;
-- Kafka hoặc AMQP-specific producer/consumer semantics — thuộc Spring Kafka và Spring AMQP;
-- authentication và authorization policy — thuộc Spring Security;
-- distributed HTTP-session management — thuộc Spring Session;
-- Reactor và Reactive Streams fundamentals — thuộc reactive-learning owner;
-- raw WebSocket hoặc deep RSocket protocol internals ngoài phần tối thiểu cần để hiểu Spring behavior.
-
-Kết thúc module, learner phải có khả năng trace một message end to end, chủ động chọn raw WebSocket, STOMP hay RSocket, hiểu khi nào simple broker hoặc broker relay phù hợp, và nhận biết lúc nào bài toán phải handoff sang Spring Integration hoặc neighboring module khác.
+Sau khi hoàn thành, bạn có thể phân biệt WebSocket với STOMP, theo dõi thông điệp gửi và đăng ký nhận, tổ chức định tuyến tới nhóm hoặc từng người dùng và lựa chọn cách trao đổi phù hợp với RSocket. Bạn cũng sẽ biết kiểm tra payload và header, xử lý lỗi theo phạm vi, đánh giá quyền gửi hoặc nhận, giới hạn tài nguyên với máy khách chậm, và thiết kế kiểm thử từ phương thức xử lý đến tích hợp giao thức để quan sát hoạt động của hệ thống.

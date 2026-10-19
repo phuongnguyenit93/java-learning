@@ -1,0 +1,87 @@
+# <roadmap-schema>
+# Cấu trúc Roadmap Module
+# schema-version: 1
+#
+# YAML CONTRACT
+# roadmap: Danh sách milestone cấp cao của roadmap cho language hiện tại. ID milestone phải duy nhất.
+#
+# - id [string, required]: ID ổn định và duy nhất của milestone trong roadmap language hiện tại.
+# - title [string, required]: Tên milestone hiển thị cho learner.
+# - purpose [string, required]: Milestone này tồn tại để learner hiểu hoặc đạt được điều gì.
+# - dependsOn [list, optional]: Danh sách id milestone prerequisite khi dependency không thể hiện đủ chỉ bằng thứ tự item.
+# - objectives [list, optional]: Các learning objective cấp milestone; không dùng để liệt kê mọi fact/API/syntax nhỏ.
+# - relatedKnowledge [list, optional]: Danh sách Knowledge category id trong chính module hiện tại hỗ trợ milestone. Portal hiển thị danh sách này ở phía đối diện milestone và click item sẽ điều hướng sang Knowledge category tương ứng.
+# - relatedModules [list, optional]: Các module liên quan hiển thị ở Level 2 của Portal. Mỗi item dùng routeId bắt buộc và có thể có label/note localized; relation này chỉ để điều hướng, không tạo child milestone hoặc thay đổi learning order.
+#
+# ROADMAP THINKING FRAMEWORK
+# PURPOSE
+#   - Topic/module này là gì?
+#   - Vì sao nó tồn tại?
+#   - Không có nó thì learner gặp vấn đề gì?
+# FOUNDATION
+#   - Learner cần prerequisite hoặc mental model nào trước?
+# CORE MODEL
+#   - Những abstraction hoặc building block lớn nào tạo nên chủ đề này?
+# MECHANICS
+#   - Nó hoạt động như thế nào ở mức language/runtime/API phù hợp với module?
+# USAGE
+#   - Nó được dùng như thế nào trong code thực tế?
+# DECISION / TRADE-OFF
+#   - Khi nào nên chọn cơ chế này thay vì cơ chế khác?
+#   - Khi nào không nên dùng?
+# FAILURE / PITFALL
+#   - Những sai lầm, compile-time failure hoặc runtime failure nào đáng biết?
+# INTEGRATION
+#   - Chủ đề này kết nối với những concept/module lân cận nào?
+# SYNTHESIS
+#   - Sau cùng learner phải giữ mental model end-to-end nào?
+#
+# Mỗi language tự chịu trách nhiệm cho roadmap của chính nó. Không suy luận hoặc đồng bộ cấu trúc từ roadmap của language khác.
+# Thứ tự item trong roadmap chính là thứ tự học mặc định. Chỉ dùng dependsOn khi cần biểu diễn dependency rõ hơn thứ tự tuyến tính.
+# Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
+# </roadmap-schema>
+
+roadmap:
+  - id: hieu-phien-xac-thuc
+    title: Hiểu phiên xác thực
+    purpose: Hiểu cách hệ thống duy trì danh tính qua nhiều yêu cầu.
+    objectives:
+      - Phân biệt phiên, thao tác đăng nhập và kiểm tra quyền truy cập.
+      - Vẽ quan hệ giữa người dùng, mã phiên và trạng thái xác thực.
+  - id: ma-phien-va-noi-luu
+    title: Mã phiên và nơi lưu
+    purpose: Chọn cách tạo và lưu phiên để khó đoán, giả mạo hoặc làm lộ thông tin.
+    objectives:
+      - Nêu yêu cầu về tính ngẫu nhiên, bí mật và kiểm tra mã phiên.
+      - So sánh lưu trạng thái phía máy chủ với mang trạng thái trong token.
+  - id: cookie-va-kenh-truyen
+    title: Cookie và kênh truyền
+    purpose: Bảo vệ mã phiên khi được lưu trên trình duyệt và truyền qua mạng.
+    objectives:
+      - Giải thích vai trò của HTTPS, Secure, HttpOnly và SameSite.
+      - Xác định phạm vi cookie và rủi ro khi mã phiên xuất hiện trong URL hoặc bộ nhớ phía trình duyệt.
+  - id: chong-chiem-doat-phien
+    title: Chống chiếm đoạt phiên
+    purpose: Ngăn kẻ tấn công cố định mã phiên hoặc lợi dụng phiên của người dùng.
+    objectives:
+      - Mô tả đổi mã phiên sau đăng nhập, thay đổi quyền và vô hiệu hóa mã cũ.
+      - Phân biệt cố định phiên, đánh cắp phiên và phát lại mã phiên.
+      - Chọn biện pháp chống XSS, CSRF; giải thích giới hạn của HttpOnly và SameSite.
+  - id: het-han-va-xac-thuc-lai
+    title: Hết hạn và xác thực lại
+    purpose: Giới hạn thời gian và hoàn cảnh một phiên được phép tiếp tục sử dụng.
+    objectives:
+      - Phân biệt hết hạn do không hoạt động và thời hạn tuyệt đối, do máy chủ thực thi.
+      - Xác định khi cần xác thực lại trước thao tác nhạy cảm hoặc khi rủi ro thay đổi.
+  - id: dang-xuat-va-thu-hoi
+    title: Đăng xuất và thu hồi
+    purpose: Chấm dứt hiệu lực phiên trên toàn hệ thống khi người dùng hoặc sự cố yêu cầu.
+    objectives:
+      - Phân biệt xóa cookie với vô hiệu hóa phiên thực sự.
+      - Thiết kế thu hồi một phiên, mọi thiết bị và đồng bộ trạng thái giữa các máy chủ.
+  - id: kiem-thu-va-giam-sat
+    title: Kiểm thử và giám sát
+    purpose: Chứng minh các kiểm soát phiên hoạt động và phát hiện dấu hiệu lạm dụng.
+    objectives:
+      - Kiểm thử cố định phiên, dùng lại mã cũ, hết hạn và truy cập sau đăng xuất.
+      - Đề xuất sự kiện cần ghi nhận, cảnh báo bất thường và tránh ghi mã phiên nguyên văn.

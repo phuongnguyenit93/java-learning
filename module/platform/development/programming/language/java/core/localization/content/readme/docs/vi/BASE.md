@@ -1,25 +1,7 @@
-# Localization
+# Bản địa hóa ứng dụng trong Java (Localization)
 
-Module này giải thích cách Java biểu diễn **locale-sensitive behavior**: language/region identity, resource lookup, message formatting, number/currency/date-time presentation, collation và text boundary.
+Một ứng dụng phục vụ người dùng ở nhiều quốc gia cần thể hiện đúng ngôn ngữ, số, tiền tệ, ngày giờ và cách xử lý văn bản theo từng ngữ cảnh. Quốc tế hóa (internationalization) chuẩn bị ứng dụng để thích ứng với các thị trường, còn bản địa hóa (localization) đưa ra nội dung và quy ước phù hợp với người dùng. Trong Java, `Locale` là nền tảng để chọn ngôn ngữ và quy tắc định dạng; múi giờ là một thông tin riêng cần xác định khi xử lý thời gian.
 
-## Learning flow
+Tài liệu này dành cho người đã nắm những kiến thức Java Core cơ bản và muốn xây dựng tính năng đa ngôn ngữ. Lộ trình gồm tám mốc: tổng quan bản địa hóa, xác định `Locale`, tài nguyên ngôn ngữ với `ResourceBundle`, thông điệp có tham số bằng `MessageFormat`, định dạng số và tiền tệ, ngày giờ theo vùng, xử lý văn bản đa ngôn ngữ, cuối cùng là tích hợp và kiểm thử. Bạn sẽ học cách giữ thông điệp hiển thị tách khỏi logic nghiệp vụ và truyền thông tin vùng miền một cách rõ ràng qua các thao tác.
 
-1. localization mental model;
-2. `Locale`;
-3. language tags;
-4. `ResourceBundle`;
-5. `MessageFormat`;
-6. number formatting;
-7. currency;
-8. collation;
-9. date-time localization;
-10. text segmentation;
-11. bidirectional text;
-12. fallback;
-13. localization pitfalls.
-
-## Vì sao nên học?
-
-Localization không chỉ là “dịch chuỗi”. Cùng một dữ liệu có thể cần format, sort, plural/message choice và fallback khác nhau theo locale. Business value và presentation locale phải được tách rõ.
-
-Date-Time module sở hữu temporal semantics; String module sở hữu Unicode/text foundation. Module này tập trung vào cách trình bày và lựa chọn tài nguyên theo locale.
+Sau khi học, bạn có thể chọn `Locale` phù hợp, tổ chức các bản dịch có cơ chế dự phòng, định dạng dữ liệu bằng `NumberFormat` và `DateTimeFormatter`, đồng thời sử dụng `Collator` hoặc `BreakIterator` khi cần xử lý văn bản theo ngôn ngữ. Bạn cũng sẽ biết kiểm thử nhiều ngôn ngữ, vùng và múi giờ, phát hiện tài nguyên thiếu, và giữ định dạng lưu trữ độc lập với cách hiển thị cho người dùng.

@@ -1,0 +1,77 @@
+# <roadmap-schema>
+# Cấu trúc Roadmap Module
+# schema-version: 1
+#
+# YAML CONTRACT
+# roadmap: Danh sách milestone cấp cao của roadmap cho language hiện tại. ID milestone phải duy nhất.
+#
+# - id [string, required]: ID ổn định và duy nhất của milestone trong roadmap language hiện tại.
+# - title [string, required]: Tên milestone hiển thị cho learner.
+# - purpose [string, required]: Milestone này tồn tại để learner hiểu hoặc đạt được điều gì.
+# - dependsOn [list, optional]: Danh sách id milestone prerequisite khi dependency không thể hiện đủ chỉ bằng thứ tự item.
+# - objectives [list, optional]: Các learning objective cấp milestone; không dùng để liệt kê mọi fact/API/syntax nhỏ.
+# - relatedKnowledge [list, optional]: Danh sách Knowledge category id trong chính module hiện tại hỗ trợ milestone. Portal hiển thị danh sách này ở phía đối diện milestone và click item sẽ điều hướng sang Knowledge category tương ứng.
+# - relatedModules [list, optional]: Các module liên quan hiển thị ở Level 2 của Portal. Mỗi item dùng routeId bắt buộc và có thể có label/note localized; relation này chỉ để điều hướng, không tạo child milestone hoặc thay đổi learning order.
+#
+# ROADMAP THINKING FRAMEWORK
+# PURPOSE
+#   - Topic/module này là gì?
+#   - Vì sao nó tồn tại?
+#   - Không có nó thì learner gặp vấn đề gì?
+# FOUNDATION
+#   - Learner cần prerequisite hoặc mental model nào trước?
+# CORE MODEL
+#   - Những abstraction hoặc building block lớn nào tạo nên chủ đề này?
+# MECHANICS
+#   - Nó hoạt động như thế nào ở mức language/runtime/API phù hợp với module?
+# USAGE
+#   - Nó được dùng như thế nào trong code thực tế?
+# DECISION / TRADE-OFF
+#   - Khi nào nên chọn cơ chế này thay vì cơ chế khác?
+#   - Khi nào không nên dùng?
+# FAILURE / PITFALL
+#   - Những sai lầm, compile-time failure hoặc runtime failure nào đáng biết?
+# INTEGRATION
+#   - Chủ đề này kết nối với những concept/module lân cận nào?
+# SYNTHESIS
+#   - Sau cùng learner phải giữ mental model end-to-end nào?
+#
+# Mỗi language tự chịu trách nhiệm cho roadmap của chính nó. Không suy luận hoặc đồng bộ cấu trúc từ roadmap của language khác.
+# Thứ tự item trong roadmap chính là thứ tự học mặc định. Chỉ dùng dependsOn khi cần biểu diễn dependency rõ hơn thứ tự tuyến tính.
+# Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
+# </roadmap-schema>
+
+roadmap:
+  - id: suy-luan-kieu-voi-var
+    title: Suy luận kiểu với var
+    purpose: Giảm lặp tên kiểu mà vẫn giữ kiểu tĩnh và mã dễ đọc.
+    objectives:
+      - Giải thích kiểu được suy luận lúc biên dịch từ biểu thức khởi tạo.
+      - Dùng var cho biến cục bộ, vòng lặp và tài nguyên trong try.
+      - Nhận diện nơi không dùng được var và khi nên ghi rõ kiểu.
+  - id: tap-hop-voi-copyof
+    title: Tập hợp với copyOf
+    purpose: Tạo kết quả không cho sửa cấu trúc và tách khỏi thay đổi cấu trúc của nguồn.
+    objectives:
+      - Dùng List.copyOf, Set.copyOf và Map.copyOf.
+      - Phân biệt bản sao với khung nhìn và phần tử có thể thay đổi.
+      - Kiểm tra dữ liệu null trước khi sao chép.
+  - id: ket-qua-stream-khong-sua-doi
+    title: Kết quả Stream không sửa đổi
+    purpose: Chốt kết quả xử lý Stream thành tập hợp không cho thêm, xóa hoặc thay thế phần tử.
+    objectives:
+      - Chọn toUnmodifiableList, toUnmodifiableSet hoặc toUnmodifiableMap.
+      - Xử lý null và khóa trùng trước hoặc khi thu thập.
+  - id: lay-gia-tri-hoac-bao-loi
+    title: Lấy giá trị hoặc báo lỗi
+    purpose: Diễn đạt rõ trường hợp bắt buộc phải có giá trị trong Optional.
+    objectives:
+      - Dùng orElseThrow() không tham số để lấy giá trị.
+      - Kiểm chứng NoSuchElementException khi Optional rỗng.
+  - id: jvm-trong-container
+    title: JVM trong container
+    purpose: Hiểu cách JVM nhận giới hạn tài nguyên của container Linux để cấu hình phù hợp.
+    objectives:
+      - Kiểm tra CPU và bộ nhớ JVM thực sự nhận được.
+      - Điều chỉnh heap bằng -Xmx hoặc -XX:MaxRAMPercentage.
+      - Chừa bộ nhớ cho các phần ngoài heap.

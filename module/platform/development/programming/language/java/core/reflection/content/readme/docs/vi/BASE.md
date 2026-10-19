@@ -1,22 +1,7 @@
-# Reflection
+# Java Core – Reflection
 
-Module này giải thích cách Java **inspect metadata và thao tác member ở runtime** thông qua Reflection API. Trọng tâm là hiểu capability, access boundary, type information còn giữ lại và chi phí/rủi ro của dynamic access.
+Reflection (phản chiếu) cho phép chương trình Java khám phá thông tin về kiểu dữ liệu và thao tác với thành viên của lớp trong lúc chạy, ngay cả khi không gọi trực tiếp chúng trong mã nguồn. Cơ chế này được dùng trong nhiều công cụ và framework để đọc siêu dữ liệu, tạo đối tượng hoặc điều phối lời gọi động. Tuy nhiên, tính linh hoạt đó đi kèm những giới hạn về quyền truy cập, kiểm tra kiểu và khả năng bảo trì. Module **Java Core – Reflection** giúp bạn hiểu khi nào phản chiếu hữu ích và cách sử dụng nó có kiểm soát.
 
-## Learning flow
+Nội dung phù hợp với người đã biết lớp, đối tượng, interface, phương thức, ngoại lệ và những khái niệm Java Core cơ bản. Bạn sẽ bắt đầu từ đối tượng `Class` và cách lấy thông tin kiểu, sau đó khám phá `Field`, `Method` và `Constructor` cùng phạm vi thành viên được kế thừa hoặc khai báo trực tiếp. Tiếp theo, bạn thực hành tạo đối tượng bằng `Constructor.newInstance`, truy cập trường và gọi phương thức qua `Method.invoke`, đồng thời phân biệt lỗi tra cứu, lỗi quyền truy cập và ngoại lệ phát sinh từ mã được gọi. Bạn cũng sẽ tìm hiểu `canAccess`, `trySetAccessible` và ảnh hưởng của `exports` hay `opens` trong hệ thống module.
 
-1. Reflection mental model;
-2. class metadata;
-3. fields;
-4. methods;
-5. constructors;
-6. dynamic invocation;
-7. access control;
-8. generic type inspection;
-9. dynamic proxy;
-10. limitations và risks.
-
-## Vì sao nên học?
-
-Reflection là nền tảng của nhiều framework, serializer, mapper và test/tooling infrastructure, nhưng dùng quá mức làm code khó kiểm tra tĩnh và khó refactor. Module hướng tới việc biết khi nào metadata-driven behavior là hợp lý và khi nào direct code/API rõ hơn.
-
-ClassLoader chịu trách nhiệm đưa class vào runtime; Annotation cung cấp metadata; Dynamic Runtime/`java.lang.invoke` là một runtime mechanism khác với mục tiêu và contract khác Reflection.
+Phần nâng cao tập trung vào annotation có hiệu lực ở runtime, siêu dữ liệu kiểu tổng quát như `ParameterizedType` và `TypeVariable`, thao tác mảng qua `java.lang.reflect.Array` và proxy giao diện bằng `Proxy` với `InvocationHandler`. Cuối lộ trình, bạn xây dựng một công cụ nhỏ để liệt kê hoặc ánh xạ thuộc tính, kiểm thử các trường hợp thiếu thành viên, sai kiểu và bị chặn truy cập, rồi cân nhắc chi phí hiệu năng và tính đóng gói so với các phương án khác như `MethodHandle`. Kết thúc module, bạn có thể đọc cấu trúc một kiểu lúc chạy, vận dụng Reflection đúng mục đích và xử lý những giới hạn thường gặp.

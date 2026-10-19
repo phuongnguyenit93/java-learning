@@ -190,41 +190,41 @@ module
 │       │       └── tomcat
 │       └── security
 │           ├── authentication
-│           │   ├── api-key-hmac-authentication
-│           │   ├── certificate-authentication
-│           │   ├── multi-factor-authentication
-│           │   ├── passkeys-webauthn
-│           │   ├── password-authentication
-│           │   ├── session-security
-│           │   └── token-based-authentication
+│           │   ├── api-key-hmac-authentication [SECURITY_AUTHENTICATION_API_KEY_HMAC_AUTHENTICATION] : Security - API Key and HMAC Authentication
+│           │   ├── certificate-authentication [SECURITY_AUTHENTICATION_CERTIFICATE_AUTHENTICATION] : Security - Certificate Authentication
+│           │   ├── multi-factor-authentication [SECURITY_AUTHENTICATION_MULTI_FACTOR_AUTHENTICATION] : Security - Multi-Factor Authentication
+│           │   ├── passkeys-webauthn [SECURITY_AUTHENTICATION_PASSKEYS_WEBAUTHN] : Security - Passkeys, WebAuthn and FIDO2
+│           │   ├── password-authentication [SECURITY_AUTHENTICATION_PASSWORD_AUTHENTICATION] : Security - Password Authentication
+│           │   ├── session-security [SECURITY_AUTHENTICATION_SESSION_SECURITY] : Security - Session Security
+│           │   └── token-based-authentication [SECURITY_AUTHENTICATION_TOKEN_BASED_AUTHENTICATION] : Security - Token-Based Authentication
 │           ├── authorization
-│           │   ├── abac
-│           │   ├── object-level-authorization
-│           │   ├── policy-based-access-control
-│           │   ├── privileged-access-management
-│           │   └── rbac
-│           ├── fundamentals
+│           │   ├── abac [SECURITY_AUTHORIZATION_ABAC] : Security - Attribute-Based Access Control (ABAC)
+│           │   ├── object-level-authorization [SECURITY_AUTHORIZATION_OBJECT_LEVEL_AUTHORIZATION] : Security - Object-Level Authorization
+│           │   ├── policy-based-access-control [SECURITY_AUTHORIZATION_POLICY_BASED_ACCESS_CONTROL] : Security - Policy-Based Access Control
+│           │   ├── privileged-access-management [SECURITY_AUTHORIZATION_PRIVILEGED_ACCESS_MANAGEMENT] : Security - Privileged Access Management (PAM)
+│           │   └── rbac [SECURITY_AUTHORIZATION_RBAC] : Security - Role-Based Access Control (RBAC)
+│           ├── fundamentals [SECURITY_FUNDAMENTALS] : Security - Security Fundamentals
 │           ├── identity-access-management
-│           │   ├── application-default-credentials
-│           │   ├── iam
-│           │   ├── keycloak
-│           │   ├── oauth2-oidc
-│           │   ├── scim-provisioning
-│           │   ├── service-account
-│           │   ├── spiffe-spire
-│           │   ├── sso-saml
-│           │   ├── token-lifecycle
-│           │   └── workload-identity-federation
+│           │   ├── application-default-credentials [SECURITY_IDENTITY_ACCESS_MANAGEMENT_APPLICATION_DEFAULT_CREDENTIALS] : Security - Application Default Credentials (ADC)
+│           │   ├── iam [SECURITY_IDENTITY_ACCESS_MANAGEMENT_IAM] : Security - Identity and Access Management (IAM)
+│           │   ├── keycloak [SECURITY_IDENTITY_ACCESS_MANAGEMENT_KEYCLOAK] : Security - Keycloak
+│           │   ├── oauth2-oidc [SECURITY_IDENTITY_ACCESS_MANAGEMENT_OAUTH2_OIDC] : Security - OAuth 2.0 and OpenID Connect (OIDC)
+│           │   ├── scim-provisioning [SECURITY_IDENTITY_ACCESS_MANAGEMENT_SCIM_PROVISIONING] : Security - SCIM Provisioning and Identity Lifecycle
+│           │   ├── service-account [SECURITY_IDENTITY_ACCESS_MANAGEMENT_SERVICE_ACCOUNT] : Security - Service Account
+│           │   ├── spiffe-spire [SECURITY_IDENTITY_ACCESS_MANAGEMENT_SPIFFE_SPIRE] : Security - SPIFFE and SPIRE Workload Identity
+│           │   ├── sso-saml [SECURITY_IDENTITY_ACCESS_MANAGEMENT_SSO_SAML] : Security - Single Sign-On (SSO) and SAML 2.0
+│           │   ├── token-lifecycle [SECURITY_IDENTITY_ACCESS_MANAGEMENT_TOKEN_LIFECYCLE] : Security - Token Lifecycle
+│           │   └── workload-identity-federation [SECURITY_IDENTITY_ACCESS_MANAGEMENT_WORKLOAD_IDENTITY_FEDERATION] : Security - Workload Identity Federation
 │           ├── key-management
-│           │   ├── kms-hsm
-│           │   └── pki-certificate-lifecycle
+│           │   ├── kms-hsm [SECURITY_KEY_MANAGEMENT_KMS_HSM] : Security - Key Management Service (KMS) and Hardware Security Module (HSM)
+│           │   └── pki-certificate-lifecycle [SECURITY_KEY_MANAGEMENT_PKI_CERTIFICATE_LIFECYCLE] : Security - Public Key Infrastructure (PKI) and Certificate Lifecycle
 │           ├── secrets-management
-│           │   ├── hashicorp-vault
-│           │   ├── secret-lifecycle
-│           │   └── windows-dpapi
+│           │   ├── hashicorp-vault [SECURITY_SECRETS_MANAGEMENT_HASHICORP_VAULT] : Security - HashiCorp Vault
+│           │   ├── secret-lifecycle [SECURITY_SECRETS_MANAGEMENT_SECRET_LIFECYCLE] : Security - Secret Lifecycle
+│           │   └── windows-dpapi [SECURITY_SECRETS_MANAGEMENT_WINDOWS_DPAPI] : Security - Windows Data Protection API (DPAPI)
 │           ├── token-security
-│           │   └── jwt
-│           └── zero-trust
+│           │   └── jwt [SECURITY_TOKEN_SECURITY_JWT] : Security - JSON Web Token (JWT)
+│           └── zero-trust [SECURITY_ZERO_TRUST] : Security - Zero Trust Security Architecture
 ├── integration
 │   ├── api
 │   │   ├── fundamentals
@@ -457,25 +457,25 @@ module
     │   │   │       │   ├── localization [JAVA_LOCALIZATION] : Java localization and internationalization
     │   │   │       │   └── functional-programming [JAVA_FUNCTIONAL_PROGRAMMING] : Java functional programming with functional interfaces, lambdas, method references, Optional and composition
     │   │   │       └── version
-    │   │   │           ├── java10
-    │   │   │           ├── java11
-    │   │   │           ├── java14
-    │   │   │           ├── java15
-    │   │   │           ├── java16
-    │   │   │           ├── java17
-    │   │   │           ├── java18
-    │   │   │           ├── java21
-    │   │   │           ├── java22
-    │   │   │           ├── java23
-    │   │   │           ├── java24
-    │   │   │           ├── java25
-    │   │   │           ├── java26
-    │   │   │           ├── java27
-    │   │   │           ├── java5
-    │   │   │           ├── java6
-    │   │   │           ├── java7
-    │   │   │           ├── java8
-    │   │   │           └── java9
+    │   │   │           ├── java10 [JAVA_VERSION_JAVA10] : Java 10
+    │   │   │           ├── java11 [JAVA_VERSION_JAVA11] : Java 11
+    │   │   │           ├── java14 [JAVA_VERSION_JAVA14] : Java 14
+    │   │   │           ├── java15 [JAVA_VERSION_JAVA15] : Java 15
+    │   │   │           ├── java16 [JAVA_VERSION_JAVA16] : Java 16
+    │   │   │           ├── java17 [JAVA_VERSION_JAVA17] : Java 17
+    │   │   │           ├── java18 [JAVA_VERSION_JAVA18] : Java 18
+    │   │   │           ├── java21 [JAVA_VERSION_JAVA21] : Java 21
+    │   │   │           ├── java22 [JAVA_VERSION_JAVA22] : Java 22
+    │   │   │           ├── java23 [JAVA_VERSION_JAVA23] : Java 23
+    │   │   │           ├── java24 [JAVA_VERSION_JAVA24] : Java 24
+    │   │   │           ├── java25 [JAVA_VERSION_JAVA25] : Java 25
+    │   │   │           ├── java26 [JAVA_VERSION_JAVA26] : Java 26
+    │   │   │           ├── java27 [JAVA_VERSION_JAVA27] : Java 27
+    │   │   │           ├── java5 [JAVA_VERSION_JAVA5] : Java 5
+    │   │   │           ├── java6 [JAVA_VERSION_JAVA6] : Java 6
+    │   │   │           ├── java7 [JAVA_VERSION_JAVA7] : Java 7
+    │   │   │           ├── java8 [JAVA_VERSION_JAVA8] : Java 8
+    │   │   │           └── java9 [JAVA_VERSION_JAVA9] : Java 9
     │   │   └── paradigm
     │   │       ├── imperative [IMPERATIVE_PROGRAMMING] : Imperative Programming paradigm, state, commands and procedural organization
     │   │       ├── declarative [DECLARATIVE_PROGRAMMING] : Declarative Programming paradigm, intent-oriented specification and related styles

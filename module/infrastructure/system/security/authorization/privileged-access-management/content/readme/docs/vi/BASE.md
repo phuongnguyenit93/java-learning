@@ -1,0 +1,7 @@
+# Quản lý truy cập đặc quyền (Privileged Access Management – PAM)
+
+Privileged Access Management (PAM) tập trung bảo vệ những tài khoản, quyền và phiên truy cập có khả năng thay đổi cấu hình quan trọng hoặc ảnh hưởng lớn đến hệ thống. So với quản lý danh tính và truy cập nói chung, PAM chú trọng rủi ro từ đặc quyền cao: lạm dụng quyền, chiếm đoạt tài khoản và di chuyển ngang khi xảy ra xâm nhập. Mục tiêu không chỉ là xác thực người quản trị mà còn giới hạn quyền cần dùng, bảo vệ thông tin xác thực và truy vết hoạt động quản trị.
+
+Tài liệu này dành cho người đã biết các nguyên tắc về danh tính, xác thực, phân quyền và quản trị hạ tầng. Nội dung thuộc bảo mật tổng quát, không gắn với ngôn ngữ hay framework cụ thể. Lộ trình gồm tám mốc: nhận diện đặc quyền và rủi ro; kiểm kê tài khoản quản trị, tài khoản dịch vụ và chủ sở hữu; thiết kế chính sách truy cập, phê duyệt và xác thực đa yếu tố; bảo vệ, luân chuyển bí mật; cấp quyền tạm thời và vừa đủ; kiểm soát phiên đặc quyền; xử lý truy cập khẩn cấp và sự cố; cuối cùng là rà soát, kiểm chứng các biện pháp PAM.
+
+Sau khi hoàn thành, bạn có thể xác định quyền nhạy cảm cần bảo vệ, áp dụng quyền tối thiểu và tách nhiệm vụ, thiết kế quyền theo yêu cầu có thời hạn thay vì cấp thường trực. Bạn cũng có thể liên kết phiên với danh tính thực thi, xây dựng cơ chế giám sát hoặc chấm dứt phiên rủi ro, kiểm soát truy cập khẩn cấp bằng hậu kiểm, và thử nghiệm quy trình thu hồi quyền, xoay vòng bí mật, phục hồi truy cập cũng như đối chiếu nhật ký với phê duyệt để phát hiện bất thường.

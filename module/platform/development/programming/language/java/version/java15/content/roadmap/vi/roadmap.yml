@@ -1,0 +1,107 @@
+# <roadmap-schema>
+# Cấu trúc Roadmap Module
+# schema-version: 1
+#
+# YAML CONTRACT
+# roadmap: Danh sách milestone cấp cao của roadmap cho language hiện tại. ID milestone phải duy nhất.
+#
+# - id [string, required]: ID ổn định và duy nhất của milestone trong roadmap language hiện tại.
+# - title [string, required]: Tên milestone hiển thị cho learner.
+# - purpose [string, required]: Milestone này tồn tại để learner hiểu hoặc đạt được điều gì.
+# - dependsOn [list, optional]: Danh sách id milestone prerequisite khi dependency không thể hiện đủ chỉ bằng thứ tự item.
+# - objectives [list, optional]: Các learning objective cấp milestone; không dùng để liệt kê mọi fact/API/syntax nhỏ.
+# - relatedKnowledge [list, optional]: Danh sách Knowledge category id trong chính module hiện tại hỗ trợ milestone. Portal hiển thị danh sách này ở phía đối diện milestone và click item sẽ điều hướng sang Knowledge category tương ứng.
+# - relatedModules [list, optional]: Các module liên quan hiển thị ở Level 2 của Portal. Mỗi item dùng routeId bắt buộc và có thể có label/note localized; relation này chỉ để điều hướng, không tạo child milestone hoặc thay đổi learning order.
+#
+# ROADMAP THINKING FRAMEWORK
+# PURPOSE
+#   - Topic/module này là gì?
+#   - Vì sao nó tồn tại?
+#   - Không có nó thì learner gặp vấn đề gì?
+# FOUNDATION
+#   - Learner cần prerequisite hoặc mental model nào trước?
+# CORE MODEL
+#   - Những abstraction hoặc building block lớn nào tạo nên chủ đề này?
+# MECHANICS
+#   - Nó hoạt động như thế nào ở mức language/runtime/API phù hợp với module?
+# USAGE
+#   - Nó được dùng như thế nào trong code thực tế?
+# DECISION / TRADE-OFF
+#   - Khi nào nên chọn cơ chế này thay vì cơ chế khác?
+#   - Khi nào không nên dùng?
+# FAILURE / PITFALL
+#   - Những sai lầm, compile-time failure hoặc runtime failure nào đáng biết?
+# INTEGRATION
+#   - Chủ đề này kết nối với những concept/module lân cận nào?
+# SYNTHESIS
+#   - Sau cùng learner phải giữ mental model end-to-end nào?
+#
+# Mỗi language tự chịu trách nhiệm cho roadmap của chính nó. Không suy luận hoặc đồng bộ cấu trúc từ roadmap của language khác.
+# Thứ tự item trong roadmap chính là thứ tự học mặc định. Chỉ dùng dependsOn khi cần biểu diễn dependency rõ hơn thứ tự tuyến tính.
+# Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
+# </roadmap-schema>
+
+roadmap:
+  - id: toan-canh-java-15
+    title: Toàn cảnh Java 15
+    purpose: Xác định những thay đổi của Java 15 còn có giá trị khi phát triển bằng Java hiện đại.
+    objectives:
+      - Nhận diện các nhóm cải tiến ngôn ngữ, API và JVM được học
+      - Phân biệt record, mẫu instanceof và sealed ở preview Java 15 với các bản chính thức sau đó
+      - Thực hành các dạng đã ổn định trên JDK hiện hành
+  - id: text-block
+    title: Text block
+    purpose: Biểu diễn văn bản nhiều dòng rõ ràng và kiểm soát chính xác nội dung chuỗi.
+    objectives:
+      - Viết text block và kiểm tra ký tự xuống dòng, thụt lề
+      - Dùng escape phù hợp để điều khiển khoảng trắng và nối dòng
+      - Áp dụng formatted, stripIndent và translateEscapes đúng mục đích
+  - id: record
+    title: Record
+    purpose: Mô hình hóa dữ liệu bằng kiểu có cấu trúc và hợp đồng minh bạch.
+    objectives:
+      - Khai báo thành phần record và sử dụng accessor được sinh
+      - Kiểm tra dữ liệu bằng hàm tạo chuẩn hoặc hàm tạo rút gọn
+      - Giải thích equals, hashCode, toString và giới hạn bất biến nông
+  - id: mau-instanceof
+    title: Mẫu instanceof
+    purpose: Kết hợp kiểm tra kiểu và lấy giá trị đúng kiểu để giảm ép kiểu thủ công.
+    objectives:
+      - Viết instanceof có biến mẫu
+      - Xác định phạm vi biến mẫu theo luồng điều khiển
+      - Tái cấu trúc mã ép kiểu và kiểm thử trường hợp null hoặc sai kiểu
+  - id: sealed-class
+    title: Sealed class
+    purpose: Kiểm soát các kiểu con được phép trong một miền dữ liệu hữu hạn.
+    objectives:
+      - Khai báo sealed class hoặc interface cùng permits
+      - Chọn final, sealed hoặc non-sealed cho kiểu con
+      - Kiểm tra giới hạn cùng module hoặc package và lỗi kế thừa không hợp lệ
+  - id: hidden-class
+    title: Hidden class
+    purpose: Hiểu cơ chế hỗ trợ framework tạo lớp trong lúc chạy mà hạn chế khả năng tìm thấy lớp.
+    objectives:
+      - Nhận diện trường hợp cần hidden class
+      - Định nghĩa lớp bằng MethodHandles.Lookup.defineHiddenClass
+      - Phân biệt khả năng tra cứu, truy cập và vòng đời với lớp thông thường
+  - id: chu-ky-eddsa
+    title: Chữ ký EdDSA
+    purpose: Sử dụng API chuẩn để ký và xác minh dữ liệu bằng EdDSA.
+    objectives:
+      - Tạo cặp khóa Ed25519 hoặc Ed448 qua JCA
+      - Ký dữ liệu và xác minh bằng Signature
+      - Kiểm thử dữ liệu bị sửa và phân biệt chữ ký với mã hóa
+  - id: gc-do-tre-thap
+    title: GC độ trễ thấp
+    purpose: Đánh giá ZGC và Shenandoah theo mục tiêu độ trễ, bộ nhớ và khả năng hỗ trợ của JDK.
+    objectives:
+      - Kiểm tra bộ thu gom và chế độ được bản JDK hiện hành hỗ trợ
+      - Thu thập GC log với tải thực hành có thể tái hiện
+      - So sánh thời gian tạm dừng, thông lượng và mức dùng bộ nhớ
+  - id: thuc-hanh-tong-hop
+    title: Thực hành tổng hợp
+    purpose: Kết hợp các kiến thức đã học qua ví dụ nhỏ và kết quả kiểm chứng rõ ràng.
+    objectives:
+      - Mô hình hóa dữ liệu bằng record, sealed và xử lý bằng mẫu instanceof
+      - Tạo văn bản nhiều dòng rồi ký, xác minh bằng EdDSA
+      - Kiểm tra trường hợp lỗi và ghi lại cấu hình JDK, GC khi đo

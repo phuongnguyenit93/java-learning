@@ -1,23 +1,7 @@
-# ClassLoader
+# Java Core – ClassLoader
 
-Module này giải thích cách JVM tìm, định nghĩa và liên kết class thông qua **class loading subsystem**, đồng thời làm rõ vì sao cùng một class name nhưng khác defining loader có thể tạo ra type identity khác nhau.
+Trong Java, mã nguồn được biên dịch thành bytecode, nhưng một lớp chỉ có thể được sử dụng khi JVM tìm và xử lý định nghĩa của lớp đó. **ClassLoader** đảm nhiệm việc nạp định nghĩa lớp, góp phần quyết định lớp được tìm ở đâu và lớp nào thực sự được sử dụng lúc chạy. Hiểu ClassLoader giúp bạn phân biệt việc nạp lớp với việc tạo đối tượng, giải thích thời điểm khởi tạo lớp và nhận diện nguyên nhân của các lỗi phụ thuộc khó phát hiện.
 
-## Learning flow
+Module này dành cho người đã nắm cú pháp Java, lớp, đối tượng và cách chạy chương trình, muốn hiểu sâu cơ chế nạp lớp của Java Core. Lộ trình đi từ **vai trò ClassLoader** và **vòng đời của lớp** (loading, linking, initialization) đến **phân cấp và ủy quyền**, **tìm lớp và tài nguyên** qua classpath, module path và các API liên quan. Tiếp đó, bạn học cách **định danh và cô lập lớp**, nhận biết vì sao hai lớp cùng tên có thể là hai kiểu khác nhau, rồi tìm hiểu cách xây dựng **bộ nạp tùy chỉnh** khi cần sử dụng bytecode từ nguồn riêng.
 
-1. class loading lifecycle;
-2. built-in class loaders;
-3. parent delegation;
-4. custom class loader;
-5. class identity;
-6. context class loader;
-7. resource loading;
-8. initialization;
-9. unloading và class-loader leak.
-
-## Vì sao nên học?
-
-ClassLoader là nền tảng phía sau plugin architecture, application server isolation, SPI/resource discovery và nhiều lỗi runtime khó hiểu. Module ưu tiên mental model về delegation, identity và lifetime thay vì chỉ học cách gọi `loadClass`.
-
-## Phạm vi module
-
-Reflection làm việc với class đã được load; JVM module khác chịu trách nhiệm execution/memory rộng hơn. Sau module này, learner nên giải thích được “class nào được loader nào định nghĩa, vì sao class cast có thể fail, và điều gì giữ một loader không được unload”.
+Ở phần cuối, bạn sẽ **chẩn đoán lỗi nạp lớp và điều kiện giải phóng bộ nạp**, sau đó **thực hành tích hợp** bằng một thí nghiệm với nhiều ClassLoader. Qua việc quan sát quan hệ ủy quyền, thời điểm khởi tạo, định danh kiểu và các lỗi như `ClassNotFoundException` hay `NoClassDefFoundError`, bạn sẽ biết cách phân tích hành vi nạp lớp, xử lý xung đột phiên bản và đánh giá tác động của bộ nạp lên tính cô lập cũng như bộ nhớ của ứng dụng.

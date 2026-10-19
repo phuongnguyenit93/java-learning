@@ -1,0 +1,88 @@
+# <roadmap-schema>
+# Cấu trúc Roadmap Module
+# schema-version: 1
+#
+# YAML CONTRACT
+# roadmap: Danh sách milestone cấp cao của roadmap cho language hiện tại. ID milestone phải duy nhất.
+#
+# - id [string, required]: ID ổn định và duy nhất của milestone trong roadmap language hiện tại.
+# - title [string, required]: Tên milestone hiển thị cho learner.
+# - purpose [string, required]: Milestone này tồn tại để learner hiểu hoặc đạt được điều gì.
+# - dependsOn [list, optional]: Danh sách id milestone prerequisite khi dependency không thể hiện đủ chỉ bằng thứ tự item.
+# - objectives [list, optional]: Các learning objective cấp milestone; không dùng để liệt kê mọi fact/API/syntax nhỏ.
+# - relatedKnowledge [list, optional]: Danh sách Knowledge category id trong chính module hiện tại hỗ trợ milestone. Portal hiển thị danh sách này ở phía đối diện milestone và click item sẽ điều hướng sang Knowledge category tương ứng.
+# - relatedModules [list, optional]: Các module liên quan hiển thị ở Level 2 của Portal. Mỗi item dùng routeId bắt buộc và có thể có label/note localized; relation này chỉ để điều hướng, không tạo child milestone hoặc thay đổi learning order.
+#
+# ROADMAP THINKING FRAMEWORK
+# PURPOSE
+#   - Topic/module này là gì?
+#   - Vì sao nó tồn tại?
+#   - Không có nó thì learner gặp vấn đề gì?
+# FOUNDATION
+#   - Learner cần prerequisite hoặc mental model nào trước?
+# CORE MODEL
+#   - Những abstraction hoặc building block lớn nào tạo nên chủ đề này?
+# MECHANICS
+#   - Nó hoạt động như thế nào ở mức language/runtime/API phù hợp với module?
+# USAGE
+#   - Nó được dùng như thế nào trong code thực tế?
+# DECISION / TRADE-OFF
+#   - Khi nào nên chọn cơ chế này thay vì cơ chế khác?
+#   - Khi nào không nên dùng?
+# FAILURE / PITFALL
+#   - Những sai lầm, compile-time failure hoặc runtime failure nào đáng biết?
+# INTEGRATION
+#   - Chủ đề này kết nối với những concept/module lân cận nào?
+# SYNTHESIS
+#   - Sau cùng learner phải giữ mental model end-to-end nào?
+#
+# Mỗi language tự chịu trách nhiệm cho roadmap của chính nó. Không suy luận hoặc đồng bộ cấu trúc từ roadmap của language khác.
+# Thứ tự item trong roadmap chính là thứ tự học mặc định. Chỉ dùng dependsOn khi cần biểu diễn dependency rõ hơn thứ tự tuyến tính.
+# Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
+# </roadmap-schema>
+
+roadmap:
+  - id: record
+    title: Record
+    purpose: Biểu diễn dữ liệu bằng lớp ngắn gọn, có hợp đồng rõ ràng.
+    objectives:
+      - Khai báo record và kiểm tra dữ liệu trong compact constructor
+      - Dùng accessor, equals và hashCode được sinh
+      - Nhận biết giới hạn bất biến nông
+  - id: mau-instanceof
+    title: Mẫu instanceof
+    purpose: Gộp kiểm tra kiểu và gán biến để giảm ép kiểu thủ công.
+    objectives:
+      - Dùng type pattern trong instanceof
+      - Xác định phạm vi biến mẫu theo luồng điều khiển
+  - id: stream-mo-rong
+    title: Stream mở rộng
+    purpose: Viết các phép biến đổi dữ liệu gọn hơn.
+    objectives:
+      - Thu kết quả bằng Stream.toList
+      - Nhận biết danh sách trả về không sửa được cấu trúc
+      - Dùng mapMulti để phát không, một hoặc nhiều phần tử
+  - id: dong-goi-jdk
+    title: Đóng gói JDK
+    purpose: Giữ ứng dụng phụ thuộc vào API được hỗ trợ.
+    objectives:
+      - Phân biệt API công khai với thành phần nội bộ JDK
+      - Rà soát reflection và chọn exports hoặc opens đúng nhu cầu
+  - id: socket-noi-bo
+    title: Socket nội bộ
+    purpose: Trao đổi dữ liệu giữa các tiến trình trên cùng máy.
+    objectives:
+      - Dùng UnixDomainSocketAddress với SocketChannel và ServerSocketChannel
+      - Kiểm tra hỗ trợ nền tảng, quyền và vòng đời đường dẫn socket
+  - id: dong-goi-ung-dung
+    title: Đóng gói ứng dụng
+    purpose: Phân phối ứng dụng kèm môi trường chạy bằng jpackage.
+    objectives:
+      - Tạo application image và gói cài đặt phù hợp hệ điều hành
+      - Chọn runtime image và kiểm tra gói sau cài đặt
+  - id: zgc-va-metaspace
+    title: ZGC và Metaspace
+    purpose: Hiểu các cải tiến giảm tạm dừng và sử dụng bộ nhớ.
+    objectives:
+      - Giải thích xử lý thread stack đồng thời của ZGC
+      - Quan sát việc trả Metaspace không còn dùng về hệ điều hành

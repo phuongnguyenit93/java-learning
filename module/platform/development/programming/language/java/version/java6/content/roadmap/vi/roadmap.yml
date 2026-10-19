@@ -1,0 +1,99 @@
+# <roadmap-schema>
+# Cấu trúc Roadmap Module
+# schema-version: 1
+#
+# YAML CONTRACT
+# roadmap: Danh sách milestone cấp cao của roadmap cho language hiện tại. ID milestone phải duy nhất.
+#
+# - id [string, required]: ID ổn định và duy nhất của milestone trong roadmap language hiện tại.
+# - title [string, required]: Tên milestone hiển thị cho learner.
+# - purpose [string, required]: Milestone này tồn tại để learner hiểu hoặc đạt được điều gì.
+# - dependsOn [list, optional]: Danh sách id milestone prerequisite khi dependency không thể hiện đủ chỉ bằng thứ tự item.
+# - objectives [list, optional]: Các learning objective cấp milestone; không dùng để liệt kê mọi fact/API/syntax nhỏ.
+# - relatedKnowledge [list, optional]: Danh sách Knowledge category id trong chính module hiện tại hỗ trợ milestone. Portal hiển thị danh sách này ở phía đối diện milestone và click item sẽ điều hướng sang Knowledge category tương ứng.
+# - relatedModules [list, optional]: Các module liên quan hiển thị ở Level 2 của Portal. Mỗi item dùng routeId bắt buộc và có thể có label/note localized; relation này chỉ để điều hướng, không tạo child milestone hoặc thay đổi learning order.
+#
+# ROADMAP THINKING FRAMEWORK
+# PURPOSE
+#   - Topic/module này là gì?
+#   - Vì sao nó tồn tại?
+#   - Không có nó thì learner gặp vấn đề gì?
+# FOUNDATION
+#   - Learner cần prerequisite hoặc mental model nào trước?
+# CORE MODEL
+#   - Những abstraction hoặc building block lớn nào tạo nên chủ đề này?
+# MECHANICS
+#   - Nó hoạt động như thế nào ở mức language/runtime/API phù hợp với module?
+# USAGE
+#   - Nó được dùng như thế nào trong code thực tế?
+# DECISION / TRADE-OFF
+#   - Khi nào nên chọn cơ chế này thay vì cơ chế khác?
+#   - Khi nào không nên dùng?
+# FAILURE / PITFALL
+#   - Những sai lầm, compile-time failure hoặc runtime failure nào đáng biết?
+# INTEGRATION
+#   - Chủ đề này kết nối với những concept/module lân cận nào?
+# SYNTHESIS
+#   - Sau cùng learner phải giữ mental model end-to-end nào?
+#
+# Mỗi language tự chịu trách nhiệm cho roadmap của chính nó. Không suy luận hoặc đồng bộ cấu trúc từ roadmap của language khác.
+# Thứ tự item trong roadmap chính là thứ tự học mặc định. Chỉ dùng dependsOn khi cần biểu diễn dependency rõ hơn thứ tự tuyến tính.
+# Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
+# </roadmap-schema>
+
+roadmap:
+  - id: pham-vi-java-6
+    title: Phạm vi Java 6
+    purpose: Nhận diện các bổ sung lâu dài của Java 6 để áp dụng trong Java hiện đại.
+    objectives:
+      - Phân biệt tính năng được bổ sung ở Java 6 với phần nền tảng đã có
+      - Tra cứu API còn được hỗ trợ và chạy ví dụ trên JDK hiện hành
+  - id: bo-suu-tap
+    title: Bộ sưu tập
+    purpose: Chọn cấu trúc dữ liệu phù hợp cho truy cập hai đầu, tìm kiếm theo thứ tự và xử lý đồng thời.
+    objectives:
+      - Dùng Deque và ArrayDeque cho hàng đợi hai đầu
+      - Tìm phần tử lân cận bằng NavigableMap và NavigableSet
+      - Chọn BlockingDeque hoặc ConcurrentSkipListMap khi cần phối hợp nhiều luồng
+  - id: jdbc-4
+    title: JDBC 4
+    purpose: Sử dụng các cải tiến JDBC 4 trong ứng dụng truy cập cơ sở dữ liệu hiện nay.
+    objectives:
+      - Kết nối bằng cơ chế tự đăng ký của JDBC driver
+      - Kiểm tra kết nối bằng isValid và truy cập giao diện qua unwrap
+      - Phân loại ngoại lệ JDBC để xử lý lỗi phù hợp
+  - id: spi-va-serviceloader
+    title: SPI và ServiceLoader
+    purpose: Tách hợp đồng dịch vụ khỏi lớp cung cấp để mở rộng ứng dụng qua cấu hình.
+    objectives:
+      - Đóng gói lớp cung cấp bằng META-INF/services trên classpath
+      - Nạp các lớp cung cấp bằng ServiceLoader
+      - Kiểm tra tình huống thiếu lớp cung cấp hoặc cấu hình sai
+  - id: bien-dich-va-chu-thich
+    title: Biên dịch và chú thích
+    purpose: Hiểu cách công cụ Java biên dịch mã và xử lý chú thích trong quá trình biên dịch.
+    objectives:
+      - Gọi JavaCompiler và thu thập thông báo chẩn đoán
+      - Viết annotation processor bằng javax.annotation.processing
+      - Tạo tệp qua Filer và phân biệt xử lý khi biên dịch với reflection lúc chạy
+  - id: xml-voi-stax
+    title: XML với StAX
+    purpose: Đọc và ghi XML theo luồng khi cần kiểm soát việc duyệt dữ liệu và lượng bộ nhớ dùng.
+    objectives:
+      - Đọc sự kiện bằng XMLStreamReader và ghi bằng XMLStreamWriter
+      - Cấu hình xử lý DTD và thực thể ngoài theo yêu cầu đầu vào
+      - Đóng bộ đọc, bộ ghi và luồng dữ liệu đúng cách
+  - id: van-ban-va-console
+    title: Văn bản và console
+    purpose: Xử lý văn bản Unicode và nhập liệu dòng lệnh bằng các API còn được sử dụng.
+    objectives:
+      - Chuẩn hóa Unicode bằng Normalizer và chọn dạng phù hợp
+      - Đọc dữ liệu hoặc mật khẩu bằng Console
+      - Xử lý khi không có console và xóa dữ liệu mật khẩu trong char[] sau sử dụng
+  - id: thuc-hanh-tich-hop
+    title: Thực hành tích hợp
+    purpose: Kiểm chứng khả năng áp dụng các API đã học qua ví dụ nhỏ trên JDK hiện hành.
+    objectives:
+      - Tạo bộ xử lý dữ liệu có lớp cung cấp được nạp bằng ServiceLoader
+      - Đọc XML, tổ chức dữ liệu bằng collection và lưu qua JDBC
+      - Kiểm tra đầu ra, trường hợp lỗi và việc giải phóng tài nguyên

@@ -1,0 +1,86 @@
+# <roadmap-schema>
+# Cấu trúc Roadmap Module
+# schema-version: 1
+#
+# YAML CONTRACT
+# roadmap: Danh sách milestone cấp cao của roadmap cho language hiện tại. ID milestone phải duy nhất.
+#
+# - id [string, required]: ID ổn định và duy nhất của milestone trong roadmap language hiện tại.
+# - title [string, required]: Tên milestone hiển thị cho learner.
+# - purpose [string, required]: Milestone này tồn tại để learner hiểu hoặc đạt được điều gì.
+# - dependsOn [list, optional]: Danh sách id milestone prerequisite khi dependency không thể hiện đủ chỉ bằng thứ tự item.
+# - objectives [list, optional]: Các learning objective cấp milestone; không dùng để liệt kê mọi fact/API/syntax nhỏ.
+# - relatedKnowledge [list, optional]: Danh sách Knowledge category id trong chính module hiện tại hỗ trợ milestone. Portal hiển thị danh sách này ở phía đối diện milestone và click item sẽ điều hướng sang Knowledge category tương ứng.
+# - relatedModules [list, optional]: Các module liên quan hiển thị ở Level 2 của Portal. Mỗi item dùng routeId bắt buộc và có thể có label/note localized; relation này chỉ để điều hướng, không tạo child milestone hoặc thay đổi learning order.
+#
+# ROADMAP THINKING FRAMEWORK
+# PURPOSE
+#   - Topic/module này là gì?
+#   - Vì sao nó tồn tại?
+#   - Không có nó thì learner gặp vấn đề gì?
+# FOUNDATION
+#   - Learner cần prerequisite hoặc mental model nào trước?
+# CORE MODEL
+#   - Những abstraction hoặc building block lớn nào tạo nên chủ đề này?
+# MECHANICS
+#   - Nó hoạt động như thế nào ở mức language/runtime/API phù hợp với module?
+# USAGE
+#   - Nó được dùng như thế nào trong code thực tế?
+# DECISION / TRADE-OFF
+#   - Khi nào nên chọn cơ chế này thay vì cơ chế khác?
+#   - Khi nào không nên dùng?
+# FAILURE / PITFALL
+#   - Những sai lầm, compile-time failure hoặc runtime failure nào đáng biết?
+# INTEGRATION
+#   - Chủ đề này kết nối với những concept/module lân cận nào?
+# SYNTHESIS
+#   - Sau cùng learner phải giữ mental model end-to-end nào?
+#
+# Mỗi language tự chịu trách nhiệm cho roadmap của chính nó. Không suy luận hoặc đồng bộ cấu trúc từ roadmap của language khác.
+# Thứ tự item trong roadmap chính là thứ tự học mặc định. Chỉ dùng dependsOn khi cần biểu diễn dependency rõ hơn thứ tự tuyến tính.
+# Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
+# </roadmap-schema>
+
+roadmap:
+  - id: chuong-trinh-nguon-gon
+    title: Chương trình nguồn gọn
+    purpose: Viết và chạy chương trình nhỏ với ít mã khung hơn bằng cú pháp chính thức của Java 25.
+    objectives:
+      - Viết void main() trong tệp nguồn gọn.
+      - Đọc, in dữ liệu bằng java.lang.IO.
+      - Chuyển sang lớp có tên khi chương trình cần cấu trúc lớn hơn.
+  - id: import-theo-module
+    title: Import theo module
+    purpose: Rút gọn phần nhập kiểu khi dùng nhiều package được một module xuất ra.
+    objectives:
+      - Dùng import module để nhập các kiểu được xuất.
+      - Phân biệt nhập kiểu với requires trong module-info.java.
+      - Giải quyết trùng tên bằng import tường minh hoặc tên đầy đủ.
+  - id: ham-khoi-tao-linh-hoat
+    title: Hàm khởi tạo linh hoạt
+    purpose: Đặt bước kiểm tra và chuẩn bị dữ liệu trước lời gọi hàm khởi tạo khác.
+    objectives:
+      - Kiểm tra, biến đổi tham số trước super(...) hoặc this(...).
+      - Nhận diện giới hạn truy cập đối tượng trước lời gọi hàm khởi tạo khác.
+      - Kiểm chứng thứ tự khởi tạo giữa lớp cha và lớp con.
+  - id: ngu-canh-voi-scopedvalue
+    title: Ngữ cảnh với ScopedValue
+    purpose: Truyền dữ liệu ngữ cảnh theo phạm vi thực thi mà không phải thêm tham số qua mọi tầng.
+    objectives:
+      - Gắn giá trị bằng ScopedValue.where và giới hạn trong run hoặc call.
+      - Đọc giá trị trong chuỗi lời gọi và kiểm tra phạm vi hiệu lực.
+      - Phân biệt ràng buộc theo phạm vi với đối tượng có thể thay đổi.
+  - id: dan-xuat-khoa-bang-kdf
+    title: Dẫn xuất khóa bằng KDF
+    purpose: Tạo khóa mới từ dữ liệu khóa đầu vào bằng API mật mã chuẩn.
+    objectives:
+      - Dùng KDF với HKDFParameterSpec và thuật toán HKDF phù hợp.
+      - Phân biệt dữ liệu khóa đầu vào, salt và ngữ cảnh info.
+      - Kiểm chứng khóa dẫn xuất bằng bộ mẫu kiểm thử chuẩn.
+  - id: toi-uu-khoi-dong-voi-aot
+    title: Tối ưu khởi động với AOT
+    purpose: Giảm thời gian khởi động và làm nóng ứng dụng bằng bộ nhớ đệm AOT của JVM.
+    objectives:
+      - Tạo bộ nhớ đệm bằng -XX:AOTCacheOutput qua một lượt chạy huấn luyện.
+      - Dùng lại bằng -XX:AOTCache với cấu hình ứng dụng tương ứng.
+      - Đo hiệu quả và nhận diện trường hợp bộ nhớ đệm không dùng được.

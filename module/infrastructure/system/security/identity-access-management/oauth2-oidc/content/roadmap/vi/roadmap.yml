@@ -1,0 +1,96 @@
+# <roadmap-schema>
+# Cấu trúc Roadmap Module
+# schema-version: 1
+#
+# YAML CONTRACT
+# roadmap: Danh sách milestone cấp cao của roadmap cho language hiện tại. ID milestone phải duy nhất.
+#
+# - id [string, required]: ID ổn định và duy nhất của milestone trong roadmap language hiện tại.
+# - title [string, required]: Tên milestone hiển thị cho learner.
+# - purpose [string, required]: Milestone này tồn tại để learner hiểu hoặc đạt được điều gì.
+# - dependsOn [list, optional]: Danh sách id milestone prerequisite khi dependency không thể hiện đủ chỉ bằng thứ tự item.
+# - objectives [list, optional]: Các learning objective cấp milestone; không dùng để liệt kê mọi fact/API/syntax nhỏ.
+# - relatedKnowledge [list, optional]: Danh sách Knowledge category id trong chính module hiện tại hỗ trợ milestone. Portal hiển thị danh sách này ở phía đối diện milestone và click item sẽ điều hướng sang Knowledge category tương ứng.
+# - relatedModules [list, optional]: Các module liên quan hiển thị ở Level 2 của Portal. Mỗi item dùng routeId bắt buộc và có thể có label/note localized; relation này chỉ để điều hướng, không tạo child milestone hoặc thay đổi learning order.
+#
+# ROADMAP THINKING FRAMEWORK
+# PURPOSE
+#   - Topic/module này là gì?
+#   - Vì sao nó tồn tại?
+#   - Không có nó thì learner gặp vấn đề gì?
+# FOUNDATION
+#   - Learner cần prerequisite hoặc mental model nào trước?
+# CORE MODEL
+#   - Những abstraction hoặc building block lớn nào tạo nên chủ đề này?
+# MECHANICS
+#   - Nó hoạt động như thế nào ở mức language/runtime/API phù hợp với module?
+# USAGE
+#   - Nó được dùng như thế nào trong code thực tế?
+# DECISION / TRADE-OFF
+#   - Khi nào nên chọn cơ chế này thay vì cơ chế khác?
+#   - Khi nào không nên dùng?
+# FAILURE / PITFALL
+#   - Những sai lầm, compile-time failure hoặc runtime failure nào đáng biết?
+# INTEGRATION
+#   - Chủ đề này kết nối với những concept/module lân cận nào?
+# SYNTHESIS
+#   - Sau cùng learner phải giữ mental model end-to-end nào?
+#
+# Mỗi language tự chịu trách nhiệm cho roadmap của chính nó. Không suy luận hoặc đồng bộ cấu trúc từ roadmap của language khác.
+# Thứ tự item trong roadmap chính là thứ tự học mặc định. Chỉ dùng dependsOn khi cần biểu diễn dependency rõ hơn thứ tự tuyến tính.
+# Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
+# </roadmap-schema>
+
+roadmap:
+  - id: ban-do-oauth-2-0-va-oidc
+    title: Bản đồ OAuth 2.0 và OIDC
+    purpose: Hiểu mối liên hệ giữa ủy quyền truy cập và xác thực danh tính.
+    objectives:
+      - Phân biệt vai trò của OAuth 2.0 với OIDC.
+      - Giải thích vì sao OAuth đơn thuần chưa phải giao thức đăng nhập.
+  - id: cac-ben-va-ung-dung-khach
+    title: Các bên và ứng dụng khách
+    purpose: Xác định ai cấp quyền, ai nhận token và ai bảo vệ tài nguyên.
+    objectives:
+      - Nhận diện người dùng, ứng dụng khách, máy chủ ủy quyền và máy chủ tài nguyên.
+      - Phân biệt ứng dụng công khai với ứng dụng giữ được bí mật.
+      - Liên hệ client_id, redirect URI, scope và sự chấp thuận.
+  - id: chon-luong-theo-tinh-huong
+    title: Chọn luồng theo tình huống
+    purpose: Chọn cách cấp quyền phù hợp với người dùng và môi trường chạy.
+    objectives:
+      - Chọn Authorization Code + PKCE cho luồng người dùng.
+      - Phân biệt Client Credentials với Device Authorization.
+      - Nhận diện rủi ro của Implicit và luồng dùng mật khẩu người dùng.
+  - id: trao-doi-ma-voi-pkce
+    title: Trao đổi mã với PKCE
+    purpose: Theo dõi việc đổi mã ủy quyền thành token và bảo vệ giao dịch.
+    objectives:
+      - Vẽ luồng chuyển hướng, nhận mã và đổi token.
+      - Giải thích code_verifier, code_challenge, state và kiểm tra redirect URI.
+  - id: dang-nhap-voi-oidc
+    title: Đăng nhập với OIDC
+    purpose: Thiết lập danh tính người dùng từ phản hồi xác thực đáng tin cậy.
+    objectives:
+      - Giải thích scope openid, ID token và UserInfo.
+      - Kiểm tra chữ ký, issuer, audience, thời hạn và nonce theo luồng.
+      - Mô tả vai trò Discovery và JWKS.
+  - id: truy-cap-va-bao-ve-api
+    title: Truy cập và bảo vệ API
+    purpose: Dùng access token đúng mục đích tại máy chủ tài nguyên.
+    objectives:
+      - Phân biệt access token với ID token và JWT với token không tự mô tả (opaque).
+      - Chọn xác minh cục bộ hoặc introspection và kiểm tra audience, quyền truy cập.
+  - id: vong-doi-token-va-phien
+    title: Vòng đời token và phiên
+    purpose: Duy trì truy cập và kết thúc quyền theo đúng ranh giới.
+    objectives:
+      - Mô tả hết hạn, thu hồi token, làm mới truy cập và luân chuyển refresh token.
+      - Phân biệt đăng xuất phiên ứng dụng, phiên nhà cung cấp danh tính và thu hồi token.
+  - id: kiem-thu-va-chong-tan-cong
+    title: Kiểm thử và chống tấn công
+    purpose: Kiểm chứng luồng cấp quyền và đăng nhập trước các tình huống sai lệch.
+    objectives:
+      - Kiểm thử redirect URI bị sửa, state/nonce sai và mã bị tái sử dụng.
+      - Phân tích đánh cắp token, nhầm issuer và quyền vượt scope.
+      - Đánh giá lưu trữ token, HTTPS và quyền tối thiểu.

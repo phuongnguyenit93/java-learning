@@ -1,0 +1,94 @@
+# <roadmap-schema>
+# Cấu trúc Roadmap Module
+# schema-version: 1
+#
+# YAML CONTRACT
+# roadmap: Danh sách milestone cấp cao của roadmap cho language hiện tại. ID milestone phải duy nhất.
+#
+# - id [string, required]: ID ổn định và duy nhất của milestone trong roadmap language hiện tại.
+# - title [string, required]: Tên milestone hiển thị cho learner.
+# - purpose [string, required]: Milestone này tồn tại để learner hiểu hoặc đạt được điều gì.
+# - dependsOn [list, optional]: Danh sách id milestone prerequisite khi dependency không thể hiện đủ chỉ bằng thứ tự item.
+# - objectives [list, optional]: Các learning objective cấp milestone; không dùng để liệt kê mọi fact/API/syntax nhỏ.
+# - relatedKnowledge [list, optional]: Danh sách Knowledge category id trong chính module hiện tại hỗ trợ milestone. Portal hiển thị danh sách này ở phía đối diện milestone và click item sẽ điều hướng sang Knowledge category tương ứng.
+# - relatedModules [list, optional]: Các module liên quan hiển thị ở Level 2 của Portal. Mỗi item dùng routeId bắt buộc và có thể có label/note localized; relation này chỉ để điều hướng, không tạo child milestone hoặc thay đổi learning order.
+#
+# ROADMAP THINKING FRAMEWORK
+# PURPOSE
+#   - Topic/module này là gì?
+#   - Vì sao nó tồn tại?
+#   - Không có nó thì learner gặp vấn đề gì?
+# FOUNDATION
+#   - Learner cần prerequisite hoặc mental model nào trước?
+# CORE MODEL
+#   - Những abstraction hoặc building block lớn nào tạo nên chủ đề này?
+# MECHANICS
+#   - Nó hoạt động như thế nào ở mức language/runtime/API phù hợp với module?
+# USAGE
+#   - Nó được dùng như thế nào trong code thực tế?
+# DECISION / TRADE-OFF
+#   - Khi nào nên chọn cơ chế này thay vì cơ chế khác?
+#   - Khi nào không nên dùng?
+# FAILURE / PITFALL
+#   - Những sai lầm, compile-time failure hoặc runtime failure nào đáng biết?
+# INTEGRATION
+#   - Chủ đề này kết nối với những concept/module lân cận nào?
+# SYNTHESIS
+#   - Sau cùng learner phải giữ mental model end-to-end nào?
+#
+# Mỗi language tự chịu trách nhiệm cho roadmap của chính nó. Không suy luận hoặc đồng bộ cấu trúc từ roadmap của language khác.
+# Thứ tự item trong roadmap chính là thứ tự học mặc định. Chỉ dùng dependsOn khi cần biểu diễn dependency rõ hơn thứ tự tuyến tính.
+# Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
+# </roadmap-schema>
+
+roadmap:
+  - id: stream-gatherers
+    title: Stream Gatherers
+    purpose: Mở rộng pipeline bằng thao tác trung gian theo nhu cầu.
+    objectives:
+      - Dùng windowFixed, windowSliding, scan, fold và mapConcurrent
+      - Kết hợp gatherer bằng andThen
+      - Viết gatherer với trạng thái và điều kiện dừng rõ ràng
+  - id: class-file-api
+    title: Class-File API
+    purpose: Phân tích và biến đổi bytecode bằng API chuẩn.
+    objectives:
+      - Đọc class file qua ClassFile và ClassModel
+      - Tạo hoặc biến đổi class file rồi kiểm tra tính hợp lệ
+  - id: luong-ao-va-khoa
+    title: Luồng ảo và khóa
+    purpose: Dùng synchronized với khả năng mở rộng tốt hơn.
+    objectives:
+      - Giải thích cơ chế nhả carrier khi luồng ảo chờ trong synchronized
+      - Đo tác vụ I/O và phân biệt pinning với tranh chấp khóa
+  - id: aot-cache
+    title: AOT cache
+    purpose: Giảm công việc nạp và liên kết lớp khi khởi động.
+    objectives:
+      - Thực hiện chạy huấn luyện và tạo cache phù hợp
+      - So sánh thời gian khởi động khi có và không có cache
+  - id: bo-nho-va-gc
+    title: Bộ nhớ và GC
+    purpose: Đánh giá cải tiến runtime bằng số liệu thực tế.
+    objectives:
+      - Nhận biết ZGC chỉ còn chế độ phân thế hệ
+      - Đo CPU, độ trễ và throughput khi dùng G1 hoặc ZGC
+  - id: mat-ma-hau-luong-tu
+    title: Mật mã hậu lượng tử
+    purpose: Sử dụng thuật toán chuẩn cho đóng gói khóa và chữ ký.
+    objectives:
+      - Phân biệt nhiệm vụ của ML-KEM và ML-DSA
+      - Thử đóng gói khóa bằng KEM với ML-KEM
+      - Tạo và kiểm tra chữ ký bằng Signature với ML-DSA
+  - id: truy-cap-native
+    title: Truy cập native
+    purpose: Quản lý tương tác với mã và bộ nhớ ngoài JVM rõ ràng.
+    objectives:
+      - Phân tích cảnh báo JNI/FFM và cấp quyền theo mô-đun
+      - Dùng VarHandle hoặc FFM thay truy cập bộ nhớ qua API nội bộ
+  - id: lien-ket-runtime
+    title: Liên kết runtime
+    purpose: Tạo môi trường chạy gọn theo các mô-đun cần dùng.
+    objectives:
+      - Tạo runtime image bằng jlink và kiểm tra mô-đun phụ thuộc
+      - Kiểm tra khả năng liên kết không cần JMOD của bản JDK đang dùng

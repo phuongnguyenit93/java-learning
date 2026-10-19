@@ -1,0 +1,93 @@
+# <roadmap-schema>
+# Cấu trúc Roadmap Module
+# schema-version: 1
+#
+# YAML CONTRACT
+# roadmap: Danh sách milestone cấp cao của roadmap cho language hiện tại. ID milestone phải duy nhất.
+#
+# - id [string, required]: ID ổn định và duy nhất của milestone trong roadmap language hiện tại.
+# - title [string, required]: Tên milestone hiển thị cho learner.
+# - purpose [string, required]: Milestone này tồn tại để learner hiểu hoặc đạt được điều gì.
+# - dependsOn [list, optional]: Danh sách id milestone prerequisite khi dependency không thể hiện đủ chỉ bằng thứ tự item.
+# - objectives [list, optional]: Các learning objective cấp milestone; không dùng để liệt kê mọi fact/API/syntax nhỏ.
+# - relatedKnowledge [list, optional]: Danh sách Knowledge category id trong chính module hiện tại hỗ trợ milestone. Portal hiển thị danh sách này ở phía đối diện milestone và click item sẽ điều hướng sang Knowledge category tương ứng.
+# - relatedModules [list, optional]: Các module liên quan hiển thị ở Level 2 của Portal. Mỗi item dùng routeId bắt buộc và có thể có label/note localized; relation này chỉ để điều hướng, không tạo child milestone hoặc thay đổi learning order.
+#
+# ROADMAP THINKING FRAMEWORK
+# PURPOSE
+#   - Topic/module này là gì?
+#   - Vì sao nó tồn tại?
+#   - Không có nó thì learner gặp vấn đề gì?
+# FOUNDATION
+#   - Learner cần prerequisite hoặc mental model nào trước?
+# CORE MODEL
+#   - Những abstraction hoặc building block lớn nào tạo nên chủ đề này?
+# MECHANICS
+#   - Nó hoạt động như thế nào ở mức language/runtime/API phù hợp với module?
+# USAGE
+#   - Nó được dùng như thế nào trong code thực tế?
+# DECISION / TRADE-OFF
+#   - Khi nào nên chọn cơ chế này thay vì cơ chế khác?
+#   - Khi nào không nên dùng?
+# FAILURE / PITFALL
+#   - Những sai lầm, compile-time failure hoặc runtime failure nào đáng biết?
+# INTEGRATION
+#   - Chủ đề này kết nối với những concept/module lân cận nào?
+# SYNTHESIS
+#   - Sau cùng learner phải giữ mental model end-to-end nào?
+#
+# Mỗi language tự chịu trách nhiệm cho roadmap của chính nó. Không suy luận hoặc đồng bộ cấu trúc từ roadmap của language khác.
+# Thứ tự item trong roadmap chính là thứ tự học mặc định. Chỉ dùng dependsOn khi cần biểu diễn dependency rõ hơn thứ tự tuyến tính.
+# Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
+# </roadmap-schema>
+
+roadmap:
+  - id: lien-ket-danh-tinh-cho-workload
+    title: Liên kết danh tính cho workload
+    purpose: Hiểu cách workload dùng danh tính sẵn có để giảm phụ thuộc khóa dài hạn.
+    objectives:
+      - Phân biệt danh tính workload với danh tính người dùng.
+      - Phân biệt liên kết danh tính với phân quyền truy cập.
+  - id: cac-ben-va-bang-chung-danh-tinh
+    title: Các bên và bằng chứng danh tính
+    purpose: Xác định nguồn bằng chứng, bên xác minh và nơi sử dụng danh tính.
+    objectives:
+      - Nhận diện workload, nhà phát hành, dịch vụ trao đổi và tài nguyên đích.
+      - Phân tích issuer, subject, audience và thời hạn trong bằng chứng OIDC.
+  - id: thiet-lap-quan-he-tin-cay
+    title: Thiết lập quan hệ tin cậy
+    purpose: Chỉ chấp nhận bằng chứng từ đúng nguồn và đúng tập workload.
+    objectives:
+      - Ràng buộc nhà phát hành, bên nhận và các workload được phép.
+      - Kiểm tra chữ ký và điều kiện thuộc tính từ nguồn đáng tin cậy.
+  - id: anh-xa-va-cap-quyen-toi-thieu
+    title: Ánh xạ và cấp quyền tối thiểu
+    purpose: Biến danh tính bên ngoài đã được xác minh thành quyền truy cập giới hạn.
+    objectives:
+      - Ánh xạ thuộc tính bên ngoài sang danh tính hoặc vai trò nội bộ.
+      - Phân biệt cấp quyền trực tiếp với ủy quyền qua tài khoản dịch vụ.
+  - id: trao-doi-thong-tin-xac-thuc
+    title: Trao đổi thông tin xác thực
+    purpose: Nối bằng chứng bên ngoài với thông tin xác thực dùng tại hệ thống đích.
+    objectives:
+      - Mô tả đổi bằng chứng ngoài lấy token hoặc thông tin xác thực ngắn hạn.
+      - Theo dõi danh tính và quyền thực tế khi gọi tài nguyên.
+  - id: tich-hop-theo-moi-truong-chay
+    title: Tích hợp theo môi trường chạy
+    purpose: Áp dụng liên kết danh tính vào những nơi workload thực sự hoạt động.
+    objectives:
+      - Chọn nguồn danh tính cho CI/CD, Kubernetes và môi trường đa đám mây.
+      - Loại bỏ khóa tĩnh sau khi kiểm chứng luồng liên kết hoạt động.
+  - id: vong-doi-va-bao-ve-lien-ket
+    title: Vòng đời và bảo vệ liên kết
+    purpose: Giữ quan hệ tin cậy an toàn khi bằng chứng, khóa và chính sách thay đổi.
+    objectives:
+      - Bảo vệ bằng chứng đầu vào và thông tin xác thực sau trao đổi.
+      - Thiết kế làm mới, thay khóa tin cậy và ngừng chấp nhận một nguồn danh tính.
+      - Phân biệt ngừng cấp mới với hiệu lực của token đã cấp.
+  - id: kiem-thu-va-truy-vet
+    title: Kiểm thử và truy vết
+    purpose: Chứng minh workload chỉ nhận đúng quyền và có thể truy tìm nguồn truy cập.
+    objectives:
+      - Thử sai issuer/audience, thuộc tính ngoài phạm vi và bằng chứng hết hạn.
+      - Kiểm thử chuyển môi trường, từ chối quyền và truy vết danh tính gốc.
