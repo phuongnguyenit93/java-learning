@@ -74,7 +74,8 @@ class SheetsTaskPlugin
                 generateModuleRoadmapFromSheetByLocation: 'ROADMAP',
                 generateModuleReadmeFromSheetByLocation : 'README',
                 generateModuleVideoFromSheetByLocation  : 'VIDEO',
-                generateModuleInterviewFromSheetByLocation: 'INTERVIEW'
+                generateModuleInterviewFromSheetByLocation: 'INTERVIEW',
+                generateModuleQuizFromSheetByLocation: 'QUIZ'
         ].each { String taskName, String part ->
             project.tasks.register(
                     taskName, GenerateModuleContentFromSheetByLocationTask

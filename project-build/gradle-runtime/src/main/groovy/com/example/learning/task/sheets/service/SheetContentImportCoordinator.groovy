@@ -14,19 +14,22 @@ class SheetContentImportCoordinator {
     private final ReadmeSheetImportService readmeImporter
     private final VideoSheetImportService videoImporter
     private final InterviewSheetImportService interviewImporter
+    private final QuizSheetImportService quizImporter
 
     SheetContentImportCoordinator(
             SheetsMetadataReaderService sheetsReader = new SheetsMetadataReaderService(),
             RoadmapSheetImportService roadmapImporter = new RoadmapSheetImportService(),
             ReadmeSheetImportService readmeImporter = new ReadmeSheetImportService(),
             VideoSheetImportService videoImporter = new VideoSheetImportService(),
-            InterviewSheetImportService interviewImporter = new InterviewSheetImportService()
+            InterviewSheetImportService interviewImporter = new InterviewSheetImportService(),
+            QuizSheetImportService quizImporter = new QuizSheetImportService()
     ) {
         this.sheetsReader = sheetsReader
         this.roadmapImporter = roadmapImporter
         this.readmeImporter = readmeImporter
         this.videoImporter = videoImporter
         this.interviewImporter = interviewImporter
+        this.quizImporter = quizImporter
     }
 
     Map<String, Object> importByLocation(
@@ -53,9 +56,9 @@ class SheetContentImportCoordinator {
             boolean apply,
             String part
     ) {
-        if (!(part in ['ALL', 'ROADMAP', 'README', 'VIDEO', 'INTERVIEW'])) {
+        if (!(part in ['ALL', 'ROADMAP', 'README', 'VIDEO', 'INTERVIEW', 'QUIZ'])) {
             throw new GradleException(
-                    "Invalid Sheet import part '${part}'. Use ALL, ROADMAP, README, VIDEO or INTERVIEW."
+                    "Invalid Sheet import part '${part}'. Use ALL, ROADMAP, README, VIDEO, INTERVIEW or QUIZ."
             )
         }
         File root = rootDirectory.canonicalFile
@@ -84,6 +87,8 @@ class SheetContentImportCoordinator {
                 return videoImporter.execute(root, context, apply)
             case 'INTERVIEW':
                 return interviewImporter.execute(root, context, apply)
+            case 'QUIZ':
+                return quizImporter.execute(root, context, apply)
             default:
                 return importTab(root, context, apply)
         }

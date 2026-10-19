@@ -84,7 +84,9 @@ Quy tắc tích hợp vào quy trình STEP 1 ở trên:
 
 ## Nguyên tắc an toàn
 
-**Vùng Interview của Template mới:** Template chuẩn cho bước Generate Interview có thêm **4 cột T:W** (tổng ít nhất 23 cột), `T18 = Interview` và `T19:W19 = Interview YAML`. STEP 1 khi clone **phải giữ nguyên** bốn cột và header này nếu Template nguồn có sẵn, và phạm vi CLIP 700 hàng phải bao gồm đến cột W. **Không tự sửa Template/tab cũ trong STEP 1**; nếu Template của spreadsheet khác chưa có T:W, STEP 1 vẫn có thể clone như hiện trạng nhưng phải báo `INTERVIEW_SCHEMA=NOT_CONFIGURED` để STEP 6 không nhầm rằng tab mới đã có vùng Interview. Không gán nội dung/YAML vào bốn cột tại STEP 1.
+**Bố cục Template mới (27 cột):** sau Knowledge `C:N` và Difficulty `O`, giữ thứ tự **Interview P:S → Quiz T:W → Video X:AA**. Interview có `P18 = Interview`, `P19:S19 = Interview YAML` (parser còn chấp nhận `Interview JSON` legacy). STEP 1 khi clone giữ nguyên ba nhóm cột cùng header/dữ liệu/format và CLIP 700 hàng đến cột AA; không tự migration khi Template khác chưa khớp và phải báo `INTERVIEW_SCHEMA/QUIZ_SCHEMA/VIDEO_SCHEMA=NOT_CONFIGURED` nếu thiếu.
+
+**Quiz và Video:** `T18 = Quiz`, `T19:W19 = Quiz YAML`; `X18 = Video`, `X19:AA19 = Video Script`. **Không điền Quiz vào T20:W700 hoặc Video vào X20:AA700 khi clone**; STEP 7/8 workers sinh YAML vào hàng cha khi được giao. Ba spreadsheet `Module Content`, `Module Content 2`, `Module Content 3` đều đã được sắp xếp theo thứ tự này, không thay các vùng A:O.
 
 - **Duplicate tab, không duplicate toàn bộ spreadsheet** và không tạo file Google Sheets mới.
 - Không đổi tên, di chuyển, xóa hoặc chỉnh sửa tab nguồn `Template`.

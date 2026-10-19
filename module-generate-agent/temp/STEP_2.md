@@ -23,7 +23,7 @@ Giao cho **đúng một sub-worker** thực hiện **toàn bộ Roadmap của m�
 | `H3:H<END>` | **Objectives**, thông thường 2–4 mục tiêu, mỗi mục một dòng **trong cùng ô** | Chỉ điền ô trống |
 | **`B17`** | **Introduction** — một bài giới thiệu Markdown cơ bản, độc lập, phù hợp roadmap và Special Note, dành cho `BASE.md` | Chỉ điền nếu trống; không ghi đè |
 
-`<END>` là **hàng cuối Prime đã xác minh còn thuộc Roadmap**, không vượt sang Menu/Knowledge. Prime phải xác định từ **bố cục thật** của tab (vị trí nhãn Menu, header và số hàng có thể dùng). **`B17` phải được Prime xác minh không thuộc Menu, không có header/giá trị khác cần bảo toàn; nếu trùng vùng cấu trúc hiện hữu thì `BLOCKER: INTRODUCTION TARGET`, không tự dịch ô.** Cột `I` trở đi, Knowledge `C:N` dưới vùng Menu, Difficulty `O` và Video `P:S`, `J3` và vùng `Special Note` không thuộc vùng worker được ghi.
+`<END>` là **hàng cuối Prime đã xác minh còn thuộc Roadmap**, không vượt sang Menu/Knowledge. Prime phải xác định từ **bố cục thật** của tab (vị trí nhãn Menu, header và số hàng có thể dùng). **`B17` phải được Prime xác minh không thuộc Menu, không có header/giá trị khác cần bảo toàn; nếu trùng vùng cấu trúc hiện hữu thì `BLOCKER: INTRODUCTION TARGET`, không tự dịch ô.** Cột `I` trở đi, Knowledge `C:N` dưới vùng Menu, Difficulty `O` và Video `X:AA`, `J3` và vùng `Special Note` không thuộc vùng worker được ghi.
 
 Mỗi milestone = **một bộ ba F/G/H trên cùng hàng**. Nếu đã có `Title` từ Roadmap trước đó, **giữ nguyên toàn bộ F hiện có**, chỉ điền các `G/H` còn trống tương ứng. Không dời/thêm hàng, không thay đổi thứ tự Title cũ, không ghi đè Purpose/Objectives cũ.
 

@@ -5,7 +5,7 @@ import com.google.api.services.sheets.v4.Sheets
 import org.gradle.api.GradleException
 
 /**
- * Imports authored Video Script YAML from P:S on the actual Menu Level 1 row.
+ * Imports authored Video Script YAML from X:AA on the actual Menu Level 1 row.
  * The Sheet owns the complete content/video/vi/menu snapshot. Empty scripts
  * remove their obsolete files and APPLY replaces all prior Video files.
  * No AI inference, no module skeleton generation and no metadata merger.
@@ -34,7 +34,7 @@ class VideoSheetImportService {
         }
         List<Map> groups = parsed.groups as List<Map>
         List<List<Object>> video = (sheets.spreadsheets().values()
-                .get(id, tab + '!P19:S' + (parsed.lastRow as int))
+                .get(id, tab + '!X19:AA' + (parsed.lastRow as int))
                 .execute().values ?: []) as List<List<Object>>
         Map<String, String> scripts = parseSheet(groups, video)
         return sync(directory, groups, scripts, apply, root) + [
@@ -43,12 +43,12 @@ class VideoSheetImportService {
     }
 
     /**
-     * P19:S19 are the four Video Script headers; P20:S20 is parent row 20.
+     * X19:AA19 are the four Video Script headers; X20:AA20 is parent row 20.
      * For every Menu Level 1 use group.parentRow, never the group ordinal.
      */
     static Map<String, String> parseSheet(List<Map> groups, List<List<Object>> video) {
         if (!(0..<4).every { int c -> raw(row(video, 0), c).trim() == 'Video Script' }) {
-            throw new GradleException('Invalid Video headers at P19:S19.')
+            throw new GradleException('Invalid Video headers at X19:AA19.')
         }
         Map<String, String> scripts = new LinkedHashMap<>()
         groups.eachWithIndex { Map group, int index ->
@@ -66,7 +66,7 @@ class VideoSheetImportService {
                 }
                 else {
                     if (gap) {
-                        throw new GradleException("Noncontiguous Video fragments at P${sheetRow}:S${sheetRow}.")
+                        throw new GradleException("Noncontiguous Video fragments at X${sheetRow}:AA${sheetRow}.")
                     }
                     if (part.codePointCount(0, part.length()) > CELL_LIMIT) {
                         throw new GradleException("Video chunk exceeds 30000 Unicode characters at row ${sheetRow}.")

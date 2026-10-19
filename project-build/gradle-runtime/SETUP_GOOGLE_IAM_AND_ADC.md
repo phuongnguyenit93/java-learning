@@ -185,9 +185,9 @@ credential phù hợp. Không cần hardcode access token hoặc đường dẫn
 
 ## 5. Cấu hình và kiểm tra Gradle Task
 
-### Root Interview JSON Normalize — tác vụ ghi Google Sheets, khác với importer đọc
+### Root Interview YAML Normalize — tác vụ ghi Google Sheets, khác với importer đọc
 
-`normalizeInterviewQuestionsFromSheet` là task root nhận **`fileUrl`** (URL spreadsheet) và **`sheetID`** (gid tab), chạy hoàn toàn bằng Groovy/Google Sheets API. Nó đọc các JSON `questions` ở `T:W` trên các hàng Menu Cấp 1, điền mặc định `aiGenerated:true`, `reviewed:false`, `readmeRelated.file` theo thứ tự/tên file chương, và để `anchor`/hai trường API rỗng khi chưa có. Các metadata đã điền chính xác từ lần trước được giữ nguyên; kết quả JSON đầy đủ ghi lại **chính T:W**, không tạo YAML hay sửa module.
+`normalizeInterviewQuestionsFromSheet` là task root nhận **`fileUrl`** (URL spreadsheet) và **`sheetID`** (gid tab), chạy bằng Groovy/Google Sheets API. Nó đọc YAML `questions` ở `P:S` trên các hàng Menu Cấp 1 (chấp nhận legacy JSON), thêm mặc định `aiGenerated:true`, `reviewed:false`, `readmeRelated.file` theo tên file chương; `anchor`/API được để trống nếu chưa có. Metadata đã có giữ nguyên; kết quả **YAML** chuẩn hóa ghi lại **chính P:S**, không sửa module.
 
 Phân quyền có chủ đích:
 
@@ -251,13 +251,13 @@ Thêm `-PsheetMode=APPLY` để thực sự cập nhật **chỉ cây đầu ra 
 .\gradlew.bat :<MODULE_PATH>:generateModuleInterviewFromSheetByLocation -PsheetMode=APPLY
 ```
 
-Importer đọc `T18:W19` để kiểm tra header và đọc các mảnh **JSON `T:W` tại hàng Menu Cấp 1** (xác định theo `A:B`). Groovy nối các mảnh theo đúng Unicode, parse danh sách `questions`, điền/giữ đầy đủ `question`, `answer`, `aiGenerated`, `reviewed`, `readmeRelated.file/anchor` và `apiRelated` theo schema đã có, rồi serialize YAML **một file duy nhất**:
+Importer đọc `P18:S19` để kiểm tra header và đọc các mảnh **YAML `P:S` tại hàng Menu Cấp 1** (cũng nhận JSON cũ). Groovy nối các mảnh theo đúng Unicode, parse danh sách `questions`, điền/giữ đầy đủ `question`, `answer`, `aiGenerated`, `reviewed`, `readmeRelated.file/anchor` và `apiRelated` theo schema rồi serialize YAML **một file duy nhất**:
 
 `<module>/content/interview/vi/question.yml`
 
-**Không dùng AI và không ghi ngược Google Sheets.** Với tab cũ chỉ có A:S hoặc tab chưa có JSON Interview, task báo `SKIPPED_NO_INTERVIEW_SCHEMA` hoặc `SKIPPED_EMPTY_INTERVIEW`, **giữ nguyên file Interview cũ**. Khi có Interview, mọi JSON đều phải hợp lệ trước khi stage/replace; lỗi cấu trúc hoặc đường dẫn README xung đột là blocker trước khi ghi. Có thể import các chương đã có nội dung; các chương chưa tạo Q&A được bỏ qua. `DRY_RUN` không ghi file; `APPLY` thay thế snapshot `interview/vi` sau khi schema validation PASS.
+**Không dùng AI và không ghi ngược Google Sheets.** Với tab thiếu P:S/header Interview hoặc chưa có dữ liệu, task báo `SKIPPED_NO_INTERVIEW_SCHEMA` hoặc `SKIPPED_EMPTY_INTERVIEW`, **giữ nguyên file Interview cũ**. Khi có Interview, mọi YAML/JSON nguồn phải hợp lệ trước khi stage/replace; lỗi cấu trúc hoặc đường dẫn README xung đột là blocker. `DRY_RUN` không ghi file; `APPLY` thay thế snapshot `interview/vi` sau schema validation.
 
-Task tổng hợp `generateModuleContentFromSheetByLocation` **nay gồm bốn phần** theo thứ tự Roadmap → README → Video → Interview; task root toàn spreadsheet `generateModuleContentFromSheetByFiles` **giữ nguyên tên/tham số và cơ chế quét tab**, đồng thời sử dụng cùng pipeline bốn phần. **Lưu ý:** README/Video importer cũ vẫn cần migration sang `C:N` và `P:S` của Template mới trước khi chạy APPLY tổng hợp trên tab theo schema mới; task Interview chạy độc lập không phụ thuộc hai importer đó.
+Task tổng hợp `generateModuleContentFromSheetByLocation` giữ thứ tự legacy Roadmap → README → Video → Interview; root `generateModuleContentFromSheetByFiles` vẫn có cơ chế quét tab như trước. **Thứ tự cột Sheet mới** là Interview `P:S`, Quiz `T:W`, Video `X:AA`; mỗi STEP Prime chạy riêng task import, không gọi combined/ByFiles. Quiz có module-local `generateModuleQuizFromSheetByLocation` và root `normalizeQuizQuestionsFromSheet` độc lập.
 
 **Không cấu hình trực tiếp vào `task.gradle`:** đây là file DSL tham chiếu
 do generator tự sinh và có thể bị ghi lại khi Gradle cấu hình.
@@ -413,7 +413,7 @@ Luồng xử lý chung:
 
 VideoSheetImportService chạy sau Roadmap và README trong cả hai task.
 Mỗi Menu Cấp 1 ở `A<R>` có Video Script YAML tại đúng `P<R>:S<R>`
-(header `P19:S19 = Video Script`); ghép P→S không thêm separator.
+(header `X19:AA19 = Video Script`); ghép X→AA không thêm separator.
 Importer dùng filename Knowledge `.md` ở `B<R>` làm định danh thư mục
 `<ordinal>.<stem>/video-script.yml`; không suy ra row từ số thứ tự chương.
 Validate cú pháp YAML, `title` với A, `sections[].title` với B con,

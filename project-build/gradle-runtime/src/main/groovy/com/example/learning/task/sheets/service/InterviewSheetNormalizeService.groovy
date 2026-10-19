@@ -50,7 +50,7 @@ class InterviewSheetNormalizeService {
         snapshot.each { Integer zeroRow, Map<Integer, CellData> cells ->
             int row = zeroRow + 1
             if (row >= 20 && !parents.contains(row) &&
-                    (19..22).any { int col -> occupied(cells[col]) }) {
+                    (15..18).any { int col -> occupied(cells[col]) }) {
                 throw new GradleException('Orphan Interview data at non-parent row ' + row)
             }
         }
@@ -72,7 +72,7 @@ class InterviewSheetNormalizeService {
                     renderYaml(normalized), row
             )
             if (oldPieces != newPieces) {
-                (19..22).each { int col ->
+                (15..18).each { int col ->
                     if (protectedMetadata(snapshot[row - 1]?.get(col))) {
                         throw new GradleException('Interview target has formula/note/validation/chip at row ' + row)
                     }
@@ -101,7 +101,7 @@ class InterviewSheetNormalizeService {
             new Request().setUpdateCells(new UpdateCellsRequest()
                     .setRange(new GridRange().setSheetId(gid)
                             .setStartRowIndex(row - 1).setEndRowIndex(row)
-                            .setStartColumnIndex(19).setEndColumnIndex(23))
+                            .setStartColumnIndex(15).setEndColumnIndex(19))
                     .setRows([new RowData().setValues(newCells)])
                     .setFields('userEnteredValue'))
         }
@@ -114,7 +114,7 @@ class InterviewSheetNormalizeService {
             List<String> actual = fragments(after, row)
             if (actual != update.values) {
                 throw new GradleException(
-                        'Exact Interview readback FAILED at T' + row + ':W' + row +
+                        'Exact Interview readback FAILED at P' + row + ':S' + row +
                                 '; write may have occurred.'
                 )
             }
@@ -248,11 +248,11 @@ class InterviewSheetNormalizeService {
         Spreadsheet meta = client.spreadsheets().get(id)
                 .setFields('sheets(properties(sheetId,gridProperties(columnCount)))').execute()
         def info = (meta.sheets ?: []).find { it.properties?.sheetId == gid }
-        if (!info || (info.properties.gridProperties.columnCount ?: 0) < 23) {
-            throw new GradleException('INTERVIEW SCHEMA: tab does not have columns T:W.')
+        if (!info || (info.properties.gridProperties.columnCount ?: 0) < 19) {
+            throw new GradleException('INTERVIEW SCHEMA: tab does not have columns P:S.')
         }
         Spreadsheet grid = client.spreadsheets().get(id)
-                .setRanges([tab + '!A19:B', tab + '!T18:W'])
+                .setRanges([tab + '!A19:B', tab + '!P18:S'])
                 .setIncludeGridData(true)
                 .setFields('sheets(properties(sheetId),data(startRow,startColumn,' +
                         'rowData(values(userEnteredValue,effectiveValue,formattedValue,note,dataValidation,chipRuns))))')
@@ -270,12 +270,12 @@ class InterviewSheetNormalizeService {
     }
 
     private static void checkHeader(Map<Integer, Map<Integer, CellData>> data) {
-        List<String> labels = (19..22).collect { string(data[18]?.get(it)) }
-        if (string(data[17]?.get(19)) != 'Interview' ||
+        List<String> labels = (15..18).collect { string(data[18]?.get(it)) }
+        if (string(data[17]?.get(15)) != 'Interview' ||
                 !(labels.unique().size() == 1 && labels[0] in ['Interview YAML', 'Interview JSON']) ||
                 string(data[18]?.get(0)) != 'Menu Cấp 1' ||
                 string(data[18]?.get(1)) != 'Menu Cấp 2') {
-            throw new GradleException('INTERVIEW SCHEMA: incorrect A/B/T:W headers.')
+            throw new GradleException('INTERVIEW SCHEMA: incorrect A/B/P:S headers.')
         }
     }
 
@@ -287,7 +287,7 @@ class InterviewSheetNormalizeService {
     }
 
     private static List<String> fragments(Map<Integer, Map<Integer, CellData>> data, int row) {
-        return (19..22).collect { int col ->
+        return (15..18).collect { int col ->
             CellData cell = data[row - 1]?.get(col)
             if (cell?.userEnteredValue && cell.userEnteredValue.stringValue == null) {
                 throw new GradleException('Interview row ' + row + ' contains non-text/formula.')

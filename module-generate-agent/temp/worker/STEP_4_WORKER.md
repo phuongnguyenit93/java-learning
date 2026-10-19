@@ -7,7 +7,7 @@
 1. Một lượt giao việc = **duy nhất một Menu Cấp 2 tại `B<R>`**, một README Markdown hoàn chỉnh, một hàng câu trả lời `C<R>:N<R>`. Tự làm trọn: đọc → soạn → QA → preflight → ghi → readback → báo cáo → SLEEPING. Không có PHA A/B, PREPARED hay chờ Prime cấp ô giữa chừng.
 2. Dùng đúng **link tab/gid Prime giao**; đọc trực tiếp từ Google Sheets **chỉ bốn ô nguồn**: `A1`, `B1`, `A<PARENT_ROW>`, `B<ITEM_ROW>`. Không đọc menu cấp 1/2 khác, câu trả lời hàng khác hay sheet khác. Có thể đọc **duy nhất vùng đích của mình** `C<R>:N<R>` để preflight và readback.
 3. `A<PARENT_ROW>` phải xác định đúng ngữ cảnh cha của `B<R>`. `B<R>` là **đề bài trực tiếp**, không tự biến thành câu hỏi mới. Nếu tên/ô nguồn trống, sai tab/gid hoặc không khớp: `BLOCKER: INVALID SOURCE CELLS`; không tự dò hay chọn bài thay thế.
-4. Chỉ có quyền thay đổi **giá trị văn bản** các ô cần dùng trong `C<R>:N<R>` trên đúng hàng; không sửa `A:B`, Roadmap, header, `J3`, Difficulty `O`, Video `P:S`, định dạng, notes, validations, các hàng/tab/file khác. Không spawn worker, commit/push hoặc tự chạy STEP khác.
+4. Chỉ có quyền thay đổi **giá trị văn bản** các ô cần dùng trong `C<R>:N<R>` trên đúng hàng; không sửa `A:B`, Roadmap, header, `J3`, Difficulty `O`, Video `X:AA`, định dạng, notes, validations, các hàng/tab/file khác. Không spawn worker, commit/push hoặc tự chạy STEP khác.
 
 ## W2. Tạo **một chuỗi** README Markdown độc lập
 
@@ -21,7 +21,7 @@
 1. **Không hạn chế độ dài khi soạn bài.** Mốc 30.000 ký tự là **giới hạn lưu trữ trên một ô**, KHÔNG phải giới hạn độ dài của README. Vùng cho phép ghi trên một hàng là 12 ô C:N, sức chứa tối đa 360.000 ký tự. Đếm cẩn thận Unicode/UTF-16 và không cắt giữa surrogate pair; nếu cách đếm khác nhau, dùng ngưỡng an toàn hơn.
 2. Chỉ **SAU KHI đã viết đầy đủ toàn bộ README** mới chia bản gốc theo đúng thứ tự thành các phần: **mỗi phần trước phần cuối đúng 30.000 ký tự**, lưu lần lượt vào **C, D, E, …, N** trên **cùng một hàng**. Không phân chia theo số heading, không san đều giữa các ô, không chủ động chia thành 12 phần và không bỏ/chèn bất kỳ ký tự nào (ngoại lệ duy nhất: tránh cắt giữa một ký tự Unicode).
 3. **Phần cuối nếu ít hơn 30.000 ký tự thì GIỮ NGUYÊN toàn bộ phần dư và ghi vào DUY NHẤT một ô cuối; KHÔNG chia nhỏ phần dư để phân phối sang các ô còn lại.** Nếu cả bài ≤30.000 ký tự, chỉ ghi `C<R>`; D:N vẫn trống. Ví dụ: 29.000 → C=29.000; 60.000 → C=30.000, D=30.000; 62.000 → C=30.000, D=30.000, E=2.000. Ghép các ô có nội dung từ C sang phải **không thêm separator** phải tái lập 100% README ban đầu, kể cả xuống dòng, khoảng trắng, code fence.
-4. Nếu bài đầy đủ cần >12 ô, báo `BLOCKER: CONTENT EXCEEDS C:N CAPACITY` và tổng số ký tự/số ô thực sự cần; **KHÔNG rút ngắn nội dung để vừa giới hạn, không ghi một phần**, không truncate, không thêm hàng/cột hoặc lấn sang Difficulty O/Video P:S.
+4. Nếu bài đầy đủ cần >12 ô, báo `BLOCKER: CONTENT EXCEEDS C:N CAPACITY` và tổng số ký tự/số ô thực sự cần; **KHÔNG rút ngắn nội dung để vừa giới hạn, không ghi một phần**, không truncate, không thêm hàng/cột hoặc lấn sang Difficulty O/Video X:AA.
 
 ## W4. Preflight, ghi một lần và readback
 

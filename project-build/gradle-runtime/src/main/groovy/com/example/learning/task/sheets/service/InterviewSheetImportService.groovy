@@ -23,8 +23,8 @@ class InterviewSheetImportService {
         Map base = [tab: context.tabTitle, gid: context.sheetId,
                     location: context.moduleLocation, directory: directory]
 
-        // Legacy tabs stop at column S. Root ByFiles must not delete their old
-        // Interview output merely because they predate the new Template.
+        // Tabs without the Interview P:S columns must not delete existing
+        // module Interview output. Populated wrong headers are rejected below.
         def metadata = sheets.spreadsheets().get(id)
                 .setFields('sheets(properties(sheetId,gridProperties(columnCount)))')
                 .execute()
@@ -34,7 +34,7 @@ class InterviewSheetImportService {
         if (!selected) {
             throw new GradleException("Interview tab gid=${context.sheetId} no longer exists.")
         }
-        if ((selected.properties?.gridProperties?.columnCount ?: 0) < 23) {
+        if ((selected.properties?.gridProperties?.columnCount ?: 0) < 19) {
             return base + [status: 'SKIPPED_NO_INTERVIEW_SCHEMA',
                            questionCount: 0, chapterCount: 0, clearedOldFiles: 0]
         }
@@ -50,7 +50,7 @@ class InterviewSheetImportService {
         }
         List<Map> groups = parsed.groups as List<Map>
         List<List<Object>> rows = (sheets.spreadsheets().values()
-                .get(id, tab + '!T18:W').setValueRenderOption('FORMULA')
+                .get(id, tab + '!P18:S').setValueRenderOption('FORMULA')
                 .execute().values ?: []) as List<List<Object>>
         Map assembled = collectQuestions(groups, rows)
         if (assembled.status == 'SKIPPED_EMPTY_INTERVIEW') {
@@ -68,8 +68,8 @@ class InterviewSheetImportService {
     }
 
     /**
-     * Interview range begins at T18, unlike the Menu range beginning at A19.
-     * Validating EVERY T:W data row prevents unnoticed orphan Interview cells.
+     * Interview range begins at P18, unlike the Menu range beginning at A19.
+     * Validating EVERY P:S data row prevents unnoticed orphan Interview cells.
      * Blank chapters are permitted (e.g. during incremental authoring), but
      * an entirely blank source never clears the existing module Interview.
      */
@@ -87,7 +87,7 @@ class InterviewSheetImportService {
         List<String> labels = (0..3).collect { int col -> raw(row(rows, 1), col).trim() }
         if (raw(row(rows, 0), 0).trim() != 'Interview' ||
                 !(labels.unique().size() == 1 && labels[0] in ['Interview YAML', 'Interview JSON'])) {
-            throw new GradleException('Invalid Interview headers at T18:W19.')
+            throw new GradleException('Invalid Interview headers at P18:S19.')
         }
 
         rows.drop(2).eachWithIndex { List<Object> cells, int i ->
@@ -95,7 +95,7 @@ class InterviewSheetImportService {
             if (!parentRows.contains(sheetRow) &&
                     (0..3).any { int col -> raw(cells, col) }) {
                 throw new GradleException(
-                        "Interview data on non-parent row T${sheetRow}:W${sheetRow}."
+                        "Interview data on non-parent row P${sheetRow}:S${sheetRow}."
                 )
             }
         }
@@ -112,7 +112,7 @@ class InterviewSheetImportService {
                 else {
                     if (gap || text.codePointCount(0, text.length()) > CELL_LIMIT) {
                         throw new GradleException(
-                                "Invalid Interview fragments at T${sheetRow}:W${sheetRow}."
+                                "Invalid Interview fragments at P${sheetRow}:S${sheetRow}."
                         )
                     }
                     authoredYaml.append(text)

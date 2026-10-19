@@ -1,6 +1,6 @@
 # STEP 8 — WORKER ONLY: Một chương, một Video Script YAML
 
-> Chỉ dành cho worker. Prime điều phối trong STEP_8.md; bạn chỉ đọc TOÀN VĂN file này. Prime gửi link tab, tọa độ nguồn và **vùng P:S tại đúng hàng Menu Cấp 1** cùng đường dẫn file worker. Không chia hai pha.
+> Chỉ dành cho worker. Prime điều phối trong STEP_8.md; bạn chỉ đọc TOÀN VĂN file này. Prime gửi link tab, tọa độ nguồn và **vùng X:AA tại đúng hàng Menu Cấp 1** cùng đường dẫn file worker. Không chia hai pha.
 
 ## PHẦN RIÊNG DÀNH CHO WORKER
 
@@ -10,8 +10,8 @@
 
 1. Xác minh URL tab/gid do Prime giao. Đọc trực tiếp **chỉ** `A1,B1,A<PARENT>,B<PARENT>`, các `B<child>` và toàn bộ `C:N` trên đúng hàng con được giao. Ghép nguyên văn các ô Knowledge C→N **không separator**; đọc đủ mọi bài.
 2. `A<PARENT>` là tên Menu Cấp 1 / `title` YAML. `B<PARENT>` phải là **filename Knowledge `.md` hợp lệ** đã hoàn tất STEP 5; không tự đổi thành `.yml`. Mỗi `B<child>` là một `sections[].title` đúng nguyên văn và đúng thứ tự. Tên file thực tế khi nhập module được code suy ra từ B cha: `<ordinal>.<stem>/video-script.yml`. Worker **không đặt path** và không ghi tên file trong YAML.
-3. Chỉ ghi `P<PARENT_ROW>:S<PARENT_ROW>` của hàng cha. Không chọn số hàng từ chỉ số chương, không viết các hàng con, không sửa A:O, T:W, J3, Template, tab khác hoặc repo.
-4. Nếu Knowledge thiếu/truncated, Menu cha sai, filename B cha chưa QA, header `P19:S19 = Video Script` không đúng theo Prime hoặc vùng ghi không trống: báo BLOCKER, không đoán.
+3. Chỉ ghi `X<PARENT_ROW>:AA<PARENT_ROW>` của hàng cha. Không chọn số hàng từ chỉ số chương, không viết các hàng con, không sửa A:W, J3, Template, tab khác hoặc repo.
+4. Nếu Knowledge thiếu/truncated, Menu cha sai, filename B cha chưa QA, header `X19:AA19 = Video Script` không đúng theo Prime hoặc vùng ghi không trống: báo BLOCKER, không đoán.
 
 ### W2 — Chuẩn Video YAML phải tạo
 
@@ -69,15 +69,15 @@ Ví dụ chỉ minh họa cấu trúc: thay toàn bộ tên, lời thoại, ví 
 ### W3 — Soạn → kiểm tra → ghi → đọc lại
 
 1. Đọc toàn bộ Knowledge, soạn đầy đủ một YAML cho cả chương rồi kiểm tra syntax, `title`, các section, Scene/Transition, field và timeline. Không chia pha hoặc chờ duyệt số Scene.
-2. Đếm ký tự Unicode toàn chuỗi; chia **các đoạn liên tục không đổi ký tự**, mỗi đoạn **≤30.000 Unicode code points**, vào P→Q→R→S trên **cùng hàng cha**. Nối lại **không separator** phải y nguyên 100% Unicode, whitespace và newline; không cắt đôi surrogate pair.
-3. Nếu hơn bốn ô: `BLOCKER: VIDEO CAPACITY`, nêu tổng số Unicode và số ô cần; không ghi một phần hoặc tự mở cột T trở đi.
-4. Trước bất kỳ write, đọc lại `A<PARENT>`, `B<PARENT>` và toàn bộ P:S để kiểm tra `userEnteredValue/formula`, `effectiveValue`, `formattedValue`, `note`, `dataValidation`, `chipRuns`. Nếu có dữ liệu hoặc nguồn đổi, báo `BLOCKER: TARGET OCCUPIED / SOURCE CHANGED`. Header P19:S19 do Prime kiểm tra; worker không tự đọc ô ngoài phạm vi.
-5. Ghi chỉ fragment vào P:S hàng cha; không đổi định dạng/notes/validation. Nếu write lỗi hoặc không rõ kết quả, kiểm tra thực tế, không retry ghi đè.
-6. Readback **từng ô** P:S, nối không separator và so khớp chính xác với YAML gốc. QA độc lập thêm một lần sau readback, gồm độ đúng sư phạm, **code Java/API/đầu ra và Markdown nhúng như README**, tính liên tục thời gian, YAML và tính tự nhiên của lời thoại. Chỉ `COMPLETED` nếu cả READBACK và QA PASS.
+2. Đếm ký tự Unicode toàn chuỗi; chia **các đoạn liên tục không đổi ký tự**, mỗi đoạn **≤30.000 Unicode code points**, vào X→Y→Z→AA trên **cùng hàng cha**. Nối lại **không separator** phải y nguyên 100% Unicode, whitespace và newline; không cắt đôi surrogate pair.
+3. Nếu hơn bốn ô: `BLOCKER: VIDEO CAPACITY`, nêu tổng số Unicode và số ô cần; không ghi một phần hoặc tự mở rộng ra ngoài X:AA.
+4. Trước bất kỳ write, đọc lại `A<PARENT>`, `B<PARENT>` và toàn bộ X:AA để kiểm tra `userEnteredValue/formula`, `effectiveValue`, `formattedValue`, `note`, `dataValidation`, `chipRuns`. Nếu có dữ liệu hoặc nguồn đổi, báo `BLOCKER: TARGET OCCUPIED / SOURCE CHANGED`. Header X19:AA19 do Prime kiểm tra; worker không tự đọc ô ngoài phạm vi.
+5. Ghi chỉ fragment vào X:AA hàng cha; không đổi định dạng/notes/validation. Nếu write lỗi hoặc không rõ kết quả, kiểm tra thực tế, không retry ghi đè.
+6. Readback **từng ô** X:AA, nối không separator và so khớp chính xác với YAML gốc. QA độc lập thêm một lần sau readback, gồm độ đúng sư phạm, **code Java/API/đầu ra và Markdown nhúng như README**, tính liên tục thời gian, YAML và tính tự nhiên của lời thoại. Chỉ `COMPLETED` nếu cả READBACK và QA PASS.
 7. Nếu lỗi/partial write/mismatch, báo đúng tình trạng/ô và BLOCKER, không sửa dữ liệu lạ.
 
 ### W4 — Báo cáo và SLEEPING
 
-Gửi Prime đúng một báo cáo: `STATUS=COMPLETED/BLOCKER/FAILED`, tab/gid, `PARENT_CELL_A`, `PARENT_FILENAME_CELL_B`, `CHILD_ROWS`, `SCRIPT_RANGE_P_TO_S_PARENT`, `READ_COVERAGE`, `SECTIONS`, `SCENES`, `TRANSITIONS`, `TOTAL_UNICODE_CHARS`, `FILLED_CELLS`, `YAML_PARSE=PASS/FAIL`, `READBACK=PASS/FAIL`, `CHAPTER_QA=PASS/FAIL`, `PRESERVATION`, `BLOCKERS`.
+Gửi Prime đúng một báo cáo: `STATUS=COMPLETED/BLOCKER/FAILED`, tab/gid, `PARENT_CELL_A`, `PARENT_FILENAME_CELL_B`, `CHILD_ROWS`, `SCRIPT_RANGE_X_TO_AA_PARENT`, `READ_COVERAGE`, `SECTIONS`, `SCENES`, `TRANSITIONS`, `TOTAL_UNICODE_CHARS`, `FILLED_CELLS`, `YAML_PARSE=PASS/FAIL`, `READBACK=PASS/FAIL`, `CHAPTER_QA=PASS/FAIL`, `PRESERVATION`, `BLOCKERS`.
 
 **Một lần giao, một chương, làm trọn rồi SLEEPING.** Không nhận chương khác, không spawn, không sửa source/commit hoặc J3. Prime tự QA độc lập.

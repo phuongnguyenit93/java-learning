@@ -102,7 +102,7 @@ class SheetContentImportCoordinatorTest {
         SheetContentImportCoordinator coordinator = selectiveCoordinator(
                 ROOT + 'java8', called
         )
-        ['ROADMAP', 'README', 'VIDEO', 'INTERVIEW'].each { String part ->
+        ['ROADMAP', 'README', 'VIDEO', 'INTERVIEW', 'QUIZ'].each { String part ->
             called.clear()
             Map result = coordinator.importPartByLocation(
                     root, module, 'https://example', '8', false, part
@@ -131,7 +131,7 @@ class SheetContentImportCoordinatorTest {
         SheetContentImportCoordinator coordinator = selectiveCoordinator(
                 ROOT + 'java11', called
         )
-        ['ROADMAP', 'README', 'VIDEO', 'INTERVIEW'].each { String part ->
+        ['ROADMAP', 'README', 'VIDEO', 'INTERVIEW', 'QUIZ'].each { String part ->
             try {
                 coordinator.importPartByLocation(
                         root, module, 'https://example', '8', true, part
@@ -182,7 +182,14 @@ class SheetContentImportCoordinatorTest {
                 return [part: 'INTERVIEW', status: 'DRY_RUN']
             }
         }
-        return new SheetContentImportCoordinator(reader, roadmap, readme, video, interview)
+        QuizSheetImportService quiz = new QuizSheetImportService() {
+            @Override
+            Map<String, Object> execute(File root, Map<String, Object> ctx, boolean apply) {
+                called.add('QUIZ')
+                return [part: 'QUIZ', status: 'DRY_RUN']
+            }
+        }
+        return new SheetContentImportCoordinator(reader, roadmap, readme, video, interview, quiz)
     }
 
     private static SheetContentImportCoordinator fakeCoordinator(

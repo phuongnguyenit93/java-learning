@@ -23,7 +23,7 @@ Giao cho **đúng một sub-worker** tự đọc **nguyên văn câu hỏi tại
 
 Menu do STEP 3 tạo **bắt đầu đúng hàng 20** (không ghi `A19:B19`). Mỗi nhóm lớn ở cột A; mục con đầu tiên ở cột B **ngay hàng kế tiếp**, các mục con tiếp theo liên tiếp; nhóm lớn sau bắt đầu ngay sau mục con cuối, không xen hàng trắng và không viết cả A/B trên một hàng. Không tạo cấp 3.
 
-`<END>` là **hàng cuối thực tế của lưới tab**, do Prime xác minh từ metadata, không tự suy đoán hoặc gửi ký hiệu `...`. Khu vực Menu chỉ `A:B`; **cột C:N là Knowledge trên hàng Menu Cấp 2**, `O` là Difficulty trên hàng Menu Cấp 2, `P:S` là Video Script trên hàng Menu Cấp 1, Roadmap `F:H` phía trên, `J3` là Current STEP và các ô `Special Note` (chỉ đọc); **worker không được sửa những vùng này**.
+`<END>` là **hàng cuối thực tế của lưới tab**, do Prime xác minh từ metadata, không tự suy đoán hoặc gửi ký hiệu `...`. Khu vực Menu chỉ `A:B`; **cột C:N là Knowledge trên hàng Menu Cấp 2**, `O` là Difficulty trên hàng Menu Cấp 2, `X:AA` là Video Script trên hàng Menu Cấp 1, Roadmap `F:H` phía trên, `J3` là Current STEP và các ô `Special Note` (chỉ đọc); **worker không được sửa những vùng này**.
 
 ## 2. Prime — xác minh nguồn và điều phối
 

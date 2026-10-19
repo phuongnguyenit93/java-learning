@@ -1,11 +1,11 @@
 # STEP 6 — WORKER ONLY: Interview YAML cho MỘT chương
 
-> **BẮT BUỘC tự đọc TOÀN VĂN file worker-only này.** Không đọc file Prime, STEP khác, GENERAL/rules/TXT, source repo hoặc lịch sử chat để thay nguồn Google Sheets. Prime chỉ gửi link tab, tọa độ nguồn, vùng T:W được ghi và đường dẫn file này.
+> **BẮT BUỘC tự đọc TOÀN VĂN file worker-only này.** Không đọc file Prime, STEP khác, GENERAL/rules/TXT, source repo hoặc lịch sử chat để thay nguồn Google Sheets. Prime chỉ gửi link tab, tọa độ nguồn, vùng P:S được ghi và đường dẫn file này.
 
 ## W1 — Nguồn và quyền ghi
 
 1. Một nhiệm vụ = một Menu Cấp 1 và mọi Menu Cấp 2 của chương đó. Chỉ đọc `A1`, `B1`, A/B hàng cha, tên B và **toàn bộ Knowledge C:N** trên từng hàng con được Prime giao; Difficulty O chỉ đọc nếu được giao. Ghép Knowledge **C→N không thêm separator**, đọc toàn văn từng bài chứ không chỉ tiêu đề.
-2. **Chỉ ghi `T<PARENT_ROW>:W<PARENT_ROW>` ở hàng cha**; tối đa bốn ô × 30.000 Unicode code points/ô. Không ghi hàng con, không sửa A:S/X+, J3, Template, tab khác hay source/module. Không spawn worker hoặc commit/push.
+2. **Chỉ ghi `P<PARENT_ROW>:S<PARENT_ROW>` ở hàng cha**; tối đa bốn ô × 30.000 Unicode code points/ô. Không ghi hàng con, không sửa A:O/T:AA, J3, Template, tab khác hay source/module. Không spawn worker hoặc commit/push.
 3. A cha là chủ đề phỏng vấn, B cha là filename Knowledge `.md` (chỉ đọc). Nếu nguồn thiếu, hàng con lạc chương, filename/headers sai hoặc vùng ghi không an toàn, báo BLOCKER, không suy đoán.
 
 ## W2 — Nội dung và chất lượng câu trả lời
@@ -43,11 +43,11 @@ Ví dụ trên **chỉ minh họa định dạng**, không phải nội dung c�
 ## W4 — Soạn, preflight, ghi và exact readback
 
 1. Soạn và QA **toàn bộ** YAML trước khi ghi. Kiểm tra YAML parser, root `questions`, từng string question/answer, Markdown và code fence trong answer, tính chính xác và không trùng câu hỏi. Không tự thêm mặc định/related.
-2. Nếu YAML dài hơn **120.000 Unicode code points**, báo `BLOCKER: INTERVIEW CAPACITY`, không cắt bớt nội dung, không mượn cột X/hàng khác. Ngược lại chia thành tối đa bốn đoạn liên tục ≤30.000 code points, ghi T→U→V→W trên **cùng hàng cha**, không cắt giữa surrogate pair. Nối không separator phải tái lập chính xác 100% YAML gốc.
-3. Trước bất kỳ write, đọc lại cả T:W: `userEnteredValue/formula`, `effectiveValue`, `formattedValue`, `note`, `dataValidation`, `chipRuns`. Ô đích phải trống/an toàn, không ai khác sở hữu; A/B cha và mọi nguồn giao vẫn nguyên. Nếu bị chiếm/thay đổi: `BLOCKER: TARGET OCCUPIED / SOURCE CHANGED`, không overwrite hoặc ghi một phần.
-4. Chỉ ghi mảnh YAML vào T:W bằng text value, không đổi format/notes/validation. Lỗi hoặc kết quả write không rõ → đọc trạng thái thật trước, không retry mù.
-5. Exact readback tất cả bốn ô, kiểm tra ô đuôi rỗng, ghép T→W không separator và so khớp **100% Unicode/whitespace/newline**; parse YAML đã đọc lại, QA cặp question/answer và Markdown code fence. Chỉ `COMPLETED` nếu mọi phép kiểm tra PASS.
+2. Nếu YAML dài hơn **120.000 Unicode code points**, báo `BLOCKER: INTERVIEW CAPACITY`, không cắt bớt nội dung, không mượn cột X/hàng khác. Ngược lại chia thành tối đa bốn đoạn liên tục ≤30.000 code points, ghi P→Q→R→S trên **cùng hàng cha**, không cắt giữa surrogate pair. Nối không separator phải tái lập chính xác 100% YAML gốc.
+3. Trước bất kỳ write, đọc lại cả P:S: `userEnteredValue/formula`, `effectiveValue`, `formattedValue`, `note`, `dataValidation`, `chipRuns`. Ô đích phải trống/an toàn, không ai khác sở hữu; A/B cha và mọi nguồn giao vẫn nguyên. Nếu bị chiếm/thay đổi: `BLOCKER: TARGET OCCUPIED / SOURCE CHANGED`, không overwrite hoặc ghi một phần.
+4. Chỉ ghi mảnh YAML vào P:S bằng text value, không đổi format/notes/validation. Lỗi hoặc kết quả write không rõ → đọc trạng thái thật trước, không retry mù.
+5. Exact readback tất cả bốn ô, kiểm tra ô đuôi rỗng, ghép P→S không separator và so khớp **100% Unicode/whitespace/newline**; parse YAML đã đọc lại, QA cặp question/answer và Markdown code fence. Chỉ `COMPLETED` nếu mọi phép kiểm tra PASS.
 
 ## W5 — Báo Prime và SLEEPING
 
-Báo một lần: `STATUS=COMPLETED/BLOCKER/FAILED`, tab/gid, `PARENT_CELL`, `CHILD_ROWS`, `READ_COVERAGE`, `OUTPUT_RANGE_T_TO_W`, `QUESTION_COUNT`, `TOTAL_UNICODE_CHARS`, `FILLED_CELLS`, `PREFLIGHT`, `YAML_PARSE=PASS/FAIL`, `ANSWER_MARKDOWN_QA=PASS/FAIL`, `READBACK=PASS/FAIL`, `CONTENT_QA=PASS/FAIL`, `PRESERVATION`, `BLOCKERS`. Sau đó chuyển **SLEEPING**; không tự chạy Normalize, import, STEP 8 hay cập nhật J3.
+Báo một lần: `STATUS=COMPLETED/BLOCKER/FAILED`, tab/gid, `PARENT_CELL`, `CHILD_ROWS`, `READ_COVERAGE`, `OUTPUT_RANGE_P_TO_S`, `QUESTION_COUNT`, `TOTAL_UNICODE_CHARS`, `FILLED_CELLS`, `PREFLIGHT`, `YAML_PARSE=PASS/FAIL`, `ANSWER_MARKDOWN_QA=PASS/FAIL`, `READBACK=PASS/FAIL`, `CONTENT_QA=PASS/FAIL`, `PRESERVATION`, `BLOCKERS`. Sau đó chuyển **SLEEPING**; không tự chạy Normalize, import, STEP 8 hay cập nhật J3.

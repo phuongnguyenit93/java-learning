@@ -88,7 +88,7 @@ ${project.path}
         ) { task ->
             task.group = 'sheets'
             task.description =
-                    'Normalize Interview YAML T:W into full schema on one tab (legacy JSON accepted; default DRY_RUN).'
+                    'Normalize Interview YAML P:S into full schema on one tab (legacy JSON accepted; default DRY_RUN).'
             task.fileUrl.convention(
                     project.providers.gradleProperty('fileUrl')
                             .orElse(project.providers.gradleProperty('sheetFileUrl'))
@@ -99,6 +99,25 @@ ${project.path}
             )
             task.mode.convention(
                     project.providers.gradleProperty('interviewMode').orElse('DRY_RUN')
+            )
+        }
+        project.tasks.register(
+                'normalizeQuizQuestionsFromSheet',
+                com.example.learning.task.sheets.task.NormalizeQuizQuestionsFromSheetTask
+        ) { task ->
+            task.group = 'sheets'
+            task.description =
+                    'Normalize Quiz YAML T:W (IDs, metadata and README filename) on one tab; default DRY_RUN.'
+            task.fileUrl.convention(
+                    project.providers.gradleProperty('fileUrl')
+                            .orElse(project.providers.gradleProperty('sheetFileUrl'))
+            )
+            task.sheetId.convention(
+                    project.providers.gradleProperty('sheetID')
+                            .orElse(project.providers.gradleProperty('sheetId'))
+            )
+            task.mode.convention(
+                    project.providers.gradleProperty('quizMode').orElse('DRY_RUN')
             )
         }
     }
