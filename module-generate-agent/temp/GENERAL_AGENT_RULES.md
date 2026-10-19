@@ -22,6 +22,12 @@ Các quy định chung áp dụng cho các tác vụ generate module trong thư 
 5. Prime có trách nhiệm đọc file worker-only để kiểm soát giao việc và nghiệm thu **nhưng không chuyển nội dung đó cho worker**. Worker tự đọc lại file khi bắt đầu nhiệm vụ mới hay mất context; không sử dụng nội dung phiên chat cũ để thay thế.
 6. Áp dụng cho **mọi STEP hiện hành hoặc bổ sung sau này** nếu có worker. STEP không dùng worker không bắt buộc có file worker-only. STEP riêng có thể giới hạn phạm vi chặt hơn, **không được cho phép bỏ qua file worker-only hoặc thêm lời hướng dẫn vào tin giao**.
 
+### Quy tắc FILL-ONLY mặc định (ngoại lệ: STEP 5)
+
+- **Worker của STEP 2, 3, 4, 6, 7, 8 và các STEP tạo nội dung mới về sau CHỈ được FILL MỚI vào vùng nội dung đích hoàn toàn trống; TUYỆT ĐỐI KHÔNG replace/overwrite, sửa, xóa, dọn đuôi hoặc ghi thêm vào nội dung đã tồn tại.** Quyền sở hữu vùng ghi không phải quyền ghi đè. **STEP 5 được miễn quy tắc FILL-ONLY này**: nhiệm vụ review/refactor bắt buộc sửa nội dung cũ, nên STEP 5 tiếp tục tuân theo phạm vi ghi và preflight riêng trong `STEP_5_WORKER.md`.
+- Worker phải đọc/preflight **toàn bộ vùng nội dung đích của nhiệm vụ trước khi tạo/ghi**, kể cả ô không định ghi; kiểm tra lại ngay trước WRITE. **Chỉ cần một ô đích đã có nội dung** (giá trị, công thức, văn bản hiển thị, chip hoặc note gắn với nội dung) hay metadata cản trở ghi an toàn thì **báo `BLOCKER: EXISTING TARGET CONTENT` và DỪNG toàn nhiệm vụ ngay**. Không viết những ô còn trống, không lấp phần còn thiếu, không retry hoặc tự công nhận `COMPLETED/UNCHANGED`. Báo tọa độ/vùng bị chiếm, `WRITE=NOT_RUN`; giải phóng ownership và chuyển `SLEEPING`. Ô nguồn, nhãn/header đúng schema được yêu cầu giữ nguyên **không bị coi là nội dung đích cần sinh**.
+- **Ngoại lệ replace ngoài STEP 5 chỉ khi có chỉ thị đặc biệt, tường minh từ người dùng** cho chính nhiệm vụ và phạm vi cần thay thế. Prime phải xác minh chỉ thị đó trước khi điều phối; worker không tự suy đoán ngoại lệ từ tên STEP, yêu cầu QA hay tình trạng hiện có. Chỉ thị thiếu/mơ hồ → `BLOCKER: REPLACE NOT AUTHORIZED`, dừng. Hợp đồng giao việc Prime → Worker vẫn giữ đúng bốn dòng định vị, không chèn nội dung rules/chỉ thị vào tin giao.
+
 ## 3. Giới hạn và tái sử dụng sub-worker
 
 - **Hạn mức pool theo mode trong prompt của session hiện tại:** Mode A = 3 worker (mặc định), Mode B = 6, Mode C = 8. Tính cả `ACTIVE` và `SLEEPING`, xem `rules/PRIME_RULES.md §0`.
