@@ -1,153 +1,1088 @@
-1.ExceptionPurpose/ExceptionPurpose.md:
-  exception-purpose:
+1.ExceptionOverview/ExceptionOverview.md:
+  exception-overview-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-2.ThrowableModel/ThrowableModel.md:
-  throwable-hierarchy:
+  exception-overview-002:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  error-vs-exception:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
-  stack-trace-cause:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
-3.CheckedUncheckedContracts/CheckedUncheckedContracts.md:
-  checked-exception:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
-  unchecked-exception:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
-  checked-vs-unchecked-design:
+  exception-overview-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-4.ThrowingPropagation/ThrowingPropagation.md:
-  throw-statement:
+  exception-overview-004:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  throws-clause:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
-  exception-propagation:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
-  catch-selection:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
-  exception-chaining:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  lost-cause-pitfall:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  precise-rethrow:
+  exception-overview-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  override-throws-rules:
+  exception-overview-006:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  checked-exception-narrowing:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-5.HandlingCleanup/HandlingCleanup.md:
-  try-catch-flow:
+  exception-overview-007:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  multi-catch:
+  exception-overview-008:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+2.ExceptionHierarchy/ExceptionHierarchy.md:
+  exception-hierarchy-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  finally-semantics:
+  exception-hierarchy-002:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  return-finally:
+  exception-hierarchy-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-6.ResourceSafeFailure/ResourceSafeFailure.md:
-  autocloseable:
+  exception-hierarchy-004:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  resource-close-order:
+  exception-hierarchy-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  exception-hierarchy-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  exception-hierarchy-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  exception-hierarchy-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+3.ExceptionControlFlow/ExceptionControlFlow.md:
+  exception-control-flow-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  twr-vs-finally:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  primary-vs-suppressed:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  get-suppressed:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  close-failure:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  effective-final-resource:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-7.CustomExceptionsContext/CustomExceptionsContext.md:
-  custom-exception-purpose:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  exception-context:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  exception-hierarchy-design:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-8.ExceptionBoundaryDesign/ExceptionBoundaryDesign.md:
-  exception-boundaries:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  do-not-swallow:
+  exception-control-flow-002:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  logging-boundary:
+  exception-control-flow-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  exception-as-control-flow:
+  exception-control-flow-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  exception-control-flow-005:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  cleanup-and-recovery:
+  exception-control-flow-006:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-9.ExceptionSynthesis/ExceptionSynthesis.md:
-  exception-synthesis:
+  exception-control-flow-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  exception-control-flow-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  exception-control-flow-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+4.ThrowStatement/ThrowStatement.md:
+  throw-statement-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  throw-statement-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  throw-statement-003:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  throw-statement-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  throw-statement-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  throw-statement-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  throw-statement-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  throw-statement-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+5.ThrowsClause/ThrowsClause.md:
+  throws-clause-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  throws-clause-002:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  throws-clause-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  throws-clause-004:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  throws-clause-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  throws-clause-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  throws-clause-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  throws-clause-008:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  throws-clause-009:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+6.TryCatch/TryCatch.md:
+  try-catch-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  try-catch-002:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  try-catch-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  try-catch-004:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  try-catch-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  try-catch-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  try-catch-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  try-catch-008:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  try-catch-009:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  try-catch-010:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+7.MultiCatchRethrow/MultiCatchRethrow.md:
+  multi-catch-rethrow-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  multi-catch-rethrow-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  multi-catch-rethrow-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  multi-catch-rethrow-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  multi-catch-rethrow-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  multi-catch-rethrow-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  multi-catch-rethrow-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  multi-catch-rethrow-008:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+8.Finally/Finally.md:
+  finally-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  finally-002:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  finally-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  finally-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  finally-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  finally-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  finally-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  finally-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  finally-009:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+9.TryWithResources/TryWithResources.md:
+  try-with-resources-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  try-with-resources-002:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  try-with-resources-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  try-with-resources-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  try-with-resources-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  try-with-resources-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  try-with-resources-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  try-with-resources-008:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  try-with-resources-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  try-with-resources-010:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  try-with-resources-011:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  try-with-resources-012:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+10.ThrowableInternals/ThrowableInternals.md:
+  throwable-internals-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  throwable-internals-002:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  throwable-internals-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  throwable-internals-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  throwable-internals-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  throwable-internals-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  throwable-internals-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  throwable-internals-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  throwable-internals-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  throwable-internals-010:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+11.CauseAndSuppressed/CauseAndSuppressed.md:
+  cause-and-suppressed-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  cause-and-suppressed-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  cause-and-suppressed-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  cause-and-suppressed-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  cause-and-suppressed-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  cause-and-suppressed-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  cause-and-suppressed-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  cause-and-suppressed-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  cause-and-suppressed-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+12.CustomExceptions/CustomExceptions.md:
+  custom-exceptions-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  custom-exceptions-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  custom-exceptions-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  custom-exceptions-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  custom-exceptions-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  custom-exceptions-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  custom-exceptions-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  custom-exceptions-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  custom-exceptions-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  custom-exceptions-010:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+13.ExceptionInheritance/ExceptionInheritance.md:
+  exception-inheritance-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  exception-inheritance-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  exception-inheritance-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  exception-inheritance-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  exception-inheritance-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  exception-inheritance-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  exception-inheritance-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  exception-inheritance-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  exception-inheritance-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+14.LambdaGenericExceptions/LambdaGenericExceptions.md:
+  lambda-generic-exceptions-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  lambda-generic-exceptions-002:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  lambda-generic-exceptions-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  lambda-generic-exceptions-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  lambda-generic-exceptions-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  lambda-generic-exceptions-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  lambda-generic-exceptions-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  lambda-generic-exceptions-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  lambda-generic-exceptions-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+15.CommonRuntimeExceptions/CommonRuntimeExceptions.md:
+  common-runtime-exceptions-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  common-runtime-exceptions-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  common-runtime-exceptions-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  common-runtime-exceptions-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  common-runtime-exceptions-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  common-runtime-exceptions-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  common-runtime-exceptions-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  common-runtime-exceptions-008:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  common-runtime-exceptions-009:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  common-runtime-exceptions-010:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  common-runtime-exceptions-011:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  common-runtime-exceptions-012:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+16.APIExceptions/APIExceptions.md:
+  api-exceptions-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  api-exceptions-002:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  api-exceptions-003:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  api-exceptions-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  api-exceptions-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  api-exceptions-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  api-exceptions-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  api-exceptions-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  api-exceptions-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  api-exceptions-010:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  api-exceptions-011:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+17.ErrorAndInitialization/ErrorAndInitialization.md:
+  error-and-initialization-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  error-and-initialization-002:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  error-and-initialization-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  error-and-initialization-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  error-and-initialization-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  error-and-initialization-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  error-and-initialization-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  error-and-initialization-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  error-and-initialization-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+18.ExceptionApiDesign/ExceptionApiDesign.md:
+  exception-api-design-001:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  exception-api-design-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  exception-api-design-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  exception-api-design-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  exception-api-design-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  exception-api-design-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  exception-api-design-007:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  exception-api-design-008:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  exception-api-design-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  exception-api-design-010:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+19.ExceptionSafety/ExceptionSafety.md:
+  exception-safety-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  exception-safety-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  exception-safety-003:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  exception-safety-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  exception-safety-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  exception-safety-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  exception-safety-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  exception-safety-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  exception-safety-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+20.ThreadExceptionHandling/ThreadExceptionHandling.md:
+  thread-exception-handling-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  thread-exception-handling-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  thread-exception-handling-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  thread-exception-handling-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  thread-exception-handling-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  thread-exception-handling-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  thread-exception-handling-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  thread-exception-handling-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  thread-exception-handling-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  thread-exception-handling-010:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+21.InterruptionAndCancellation/InterruptionAndCancellation.md:
+  interruption-and-cancellation-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  interruption-and-cancellation-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  interruption-and-cancellation-003:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  interruption-and-cancellation-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  interruption-and-cancellation-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  interruption-and-cancellation-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  interruption-and-cancellation-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  interruption-and-cancellation-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  interruption-and-cancellation-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+22.CompletableFutureExceptions/CompletableFutureExceptions.md:
+  completable-future-exceptions-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  completable-future-exceptions-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  completable-future-exceptions-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  completable-future-exceptions-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  completable-future-exceptions-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  completable-future-exceptions-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  completable-future-exceptions-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  completable-future-exceptions-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  completable-future-exceptions-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  completable-future-exceptions-010:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  completable-future-exceptions-011:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+23.ExceptionDiagnosticsAndLogging/ExceptionDiagnosticsAndLogging.md:
+  exception-diagnostics-and-logging-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  exception-diagnostics-and-logging-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  exception-diagnostics-and-logging-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  exception-diagnostics-and-logging-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  exception-diagnostics-and-logging-005:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  exception-diagnostics-and-logging-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  exception-diagnostics-and-logging-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  exception-diagnostics-and-logging-008:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  exception-diagnostics-and-logging-009:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  exception-diagnostics-and-logging-010:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  exception-diagnostics-and-logging-011:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+24.ExceptionPerformance/ExceptionPerformance.md:
+  exception-performance-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  exception-performance-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  exception-performance-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  exception-performance-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  exception-performance-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  exception-performance-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  exception-performance-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  exception-performance-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+25.ExceptionHandlingPitfalls/ExceptionHandlingPitfalls.md:
+  exception-handling-pitfalls-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  exception-handling-pitfalls-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  exception-handling-pitfalls-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  exception-handling-pitfalls-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  exception-handling-pitfalls-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  exception-handling-pitfalls-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  exception-handling-pitfalls-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  exception-handling-pitfalls-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  exception-handling-pitfalls-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  exception-handling-pitfalls-010:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  exception-handling-pitfalls-011:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+26.ExceptionTesting/ExceptionTesting.md:
+  exception-testing-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  exception-testing-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  exception-testing-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  exception-testing-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  exception-testing-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  exception-testing-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  exception-testing-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  exception-testing-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  exception-testing-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  exception-testing-010:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+27.ExceptionHandlingPractice/ExceptionHandlingPractice.md:
+  exception-handling-practice-001:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  exception-handling-practice-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  exception-handling-practice-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  exception-handling-practice-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  exception-handling-practice-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  exception-handling-practice-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  exception-handling-practice-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  exception-handling-practice-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  exception-handling-practice-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  exception-handling-practice-010:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+28.ExceptionReference/ExceptionReference.md:
+  exception-reference-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  exception-reference-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  exception-reference-003:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  exception-reference-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  exception-reference-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  exception-reference-006:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
