@@ -571,7 +571,7 @@ ${resourcePath}
                         .replaceAll(
                                 /(?m)[ \t]+$/,
                                 ''
-                        )
+                        ) + '\n'
 
 
         if (
@@ -589,12 +589,21 @@ ${targetFile.absolutePath}
         }
 
 
+        String existingContent =
+                targetFile.isFile()
+                        ? targetFile.getText('UTF-8')
+                        : null
+
+        /*
+         * Giữ cách so sánh nội dung hiện có để không ghi lại
+         * hàng trăm JSON legacy chỉ vì thiếu final newline.
+         * Mọi lần TẠO/GHI THỰC SỰ đều dùng newContent có LF cuối.
+         */
         if (
-                targetFile.isFile() &&
-                        targetFile.getText(
-                                'UTF-8'
-                        ).trim() ==
-                        newContent.trim()
+                existingContent != null &&
+                        existingContent
+                                .replace('\r\n', '\n')
+                                .trim() == newContent.trim()
         ) {
 
             logger.info(

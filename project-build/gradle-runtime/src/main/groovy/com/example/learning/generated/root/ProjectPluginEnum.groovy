@@ -140,6 +140,16 @@ enum ProjectPluginEnum {
             'com.example.learning.task.readme.plugin.ReadmeTaskPlugin'
     ),
 
+    MODULE_SHEET_EXCEL_EXPORT_PLUGIN(
+            'com.example.learning.task.sheets.export.plugin',
+            'com.example.learning.task.sheets.export.plugin.ModuleSheetExcelExportPlugin'
+    ),
+
+    MODULE_SHEET_EXCEL_IMPORT_PLUGIN(
+            'com.example.learning.task.sheets.importexcel.plugin',
+            'com.example.learning.task.sheets.importexcel.plugin.ModuleSheetExcelImportPlugin'
+    ),
+
     SHEETS_TASK_PLUGIN(
             'com.example.learning.task.sheets.plugin',
             'com.example.learning.task.sheets.plugin.SheetsTaskPlugin'

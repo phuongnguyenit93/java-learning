@@ -1,6 +1,8 @@
 package com.example.learning.task.sheets.plugin
 
 import com.example.learning.task.sheets.extension.GenerateModuleContentFromSheetByLocationExtension
+import com.example.learning.task.sheets.export.plugin.ModuleSheetExcelExportPlugin
+import com.example.learning.task.sheets.importexcel.plugin.ModuleSheetExcelImportPlugin
 import com.example.learning.task.sheets.task.GenerateModuleContentFromSheetByLocationTask
 import com.example.learning.task.sheets.task.FillIntroductionTask
 import org.gradle.api.Plugin
@@ -19,6 +21,9 @@ class SheetsTaskPlugin
     void apply(
             Project project
     ) {
+
+        project.pluginManager.apply(ModuleSheetExcelExportPlugin)
+        project.pluginManager.apply(ModuleSheetExcelImportPlugin)
 
         GenerateModuleContentFromSheetByLocationExtension extension =
                 project.extensions.create(

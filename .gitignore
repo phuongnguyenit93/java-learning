@@ -57,3 +57,6 @@ module-generate-info.txt
 module-generate-info1.txt
 
 backup
+
+# Offline per-module Google Sheet snapshots; keep latest locally, not in Git history.
+**/content/sheet/*/module.xlsx

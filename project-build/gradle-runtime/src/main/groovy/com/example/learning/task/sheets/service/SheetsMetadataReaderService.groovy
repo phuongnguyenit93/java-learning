@@ -94,6 +94,11 @@ class SheetsMetadataReaderService {
         return openSpreadsheetInternal(fileUrl, false)
     }
 
+    /** Explicit write-scoped context for creating a NEW tab from offline Excel. */
+    Map<String, Object> openSpreadsheetForWrite(String fileUrl) {
+        return openSpreadsheetInternal(fileUrl, true)
+    }
+
     private Map<String, Object> openSpreadsheetInternal(
             String fileUrl,
             boolean writeAccess,

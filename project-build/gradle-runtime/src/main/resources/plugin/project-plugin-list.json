@@ -125,6 +125,16 @@
         "implementationClass": "com.example.learning.task.readme.plugin.ReadmeTaskPlugin"
     },
     {
+        "name": "moduleSheetExcelExportPlugin",
+        "id": "com.example.learning.task.sheets.export.plugin",
+        "implementationClass": "com.example.learning.task.sheets.export.plugin.ModuleSheetExcelExportPlugin"
+    },
+    {
+        "name": "moduleSheetExcelImportPlugin",
+        "id": "com.example.learning.task.sheets.importexcel.plugin",
+        "implementationClass": "com.example.learning.task.sheets.importexcel.plugin.ModuleSheetExcelImportPlugin"
+    },
+    {
         "name": "sheetsTaskPlugin",
         "id": "com.example.learning.task.sheets.plugin",
         "implementationClass": "com.example.learning.task.sheets.plugin.SheetsTaskPlugin"
