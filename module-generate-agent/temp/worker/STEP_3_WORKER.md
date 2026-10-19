@@ -2,6 +2,8 @@
 
 > **Chỉ dành cho worker.** Prime điều phối theo `STEP_3.md`; bạn **chỉ đọc toàn văn file `worker/STEP_3_WORKER.md` này**, không đọc STEP Prime, STEP khác, General Rules, rules folder, TXT hoặc lịch sử bài cũ. Prime chỉ gửi **bốn dòng**: link tab; tọa độ `C3`, `A18:B19` và **hai ô tiêu đề/giá trị Special Note**; vùng ghi `A20:B<END>`; đường dẫn file này. **Prime không cung cấp nội dung hay tóm tắt Special Note; bạn BẮT BUỘC tự đọc nguyên văn hai ô đó trong Google Sheets.** Tự thực hiện trọn W1–W5.
 
+**FILL-ONLY — KHÔNG REPLACE:** Trước khi soạn Menu, kiểm tra **toàn vùng nội dung đích `A20:B<END>`** (header `A18:B19` chỉ đọc, không phải nội dung đích). **Nếu bất kỳ ô nào đã có nội dung**, báo `BLOCKER: EXISTING TARGET CONTENT`, ghi tọa độ, `WRITE=NOT_RUN` rồi **DỪNG ngay toàn nhiệm vụ**. Không làm lại Menu, không fill phần còn trống, không ghi một phần hay tự nhận `COMPLETED/UNCHANGED`. Chỉ được replace khi có **chỉ thị đặc biệt tường minh của người dùng** cho đúng phạm vi.
+
 ## W1. Một lượt, một nguồn và một vùng đích
 
 1. Một nhiệm vụ = **toàn bộ Menu hai cấp của đúng một tab**, do **một mình bạn** tạo/kiểm tra/ghi trong một lượt: đọc → soạn → QA → preflight → ghi → readback → báo cáo → SLEEPING. Không chia giữa hai worker, không PREPARED/PHA A-B.
@@ -27,7 +29,7 @@
    | A24 trống | B24: Mục 2.1 |
 
 4. Phải tính số hàng của **toàn bộ Menu trước khi ghi**. Nếu nhiều hơn vùng `A20:B<END>`: `BLOCKER: MENU EXCEEDS ASSIGNED RANGE`, **không cắt ngắn, không ghi một phần, không lấn sang ngoài vùng**, không tự thêm hàng.
-5. Nếu Menu cũ đã tồn tại dù ở hàng sâu trong vùng được giao: **không tạo Menu thứ hai chồng lên, không xóa/sửa Menu cũ**; báo `BLOCKER: EXISTING MENU` và các hàng/ô chiếm chỗ. Không lấy lịch sử câu trả lời thay cho C3.
+5. Nếu Menu cũ đã tồn tại dù ở hàng sâu trong vùng được giao: **dừng ngay trước khi soạn/ghi**, không tạo Menu thứ hai chồng lên, không xóa/sửa hoặc điền nốt Menu cũ; báo `BLOCKER: EXISTING TARGET CONTENT` (Menu đã tồn tại) và các hàng/ô chiếm chỗ. Không lấy lịch sử câu trả lời thay cho C3.
 
 ## W3. Preflight và ghi an toàn
 

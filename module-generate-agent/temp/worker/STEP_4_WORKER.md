@@ -2,6 +2,8 @@
 
 > **Chỉ dành cho worker.** Prime điều phối bằng `STEP_4.md`; worker **chỉ đọc file `worker/STEP_4_WORKER.md` này** để lấy quy trình, không đọc `STEP_4.md`, STEP khác, `GENERAL_AGENT_RULES.md`, file rules, TXT, README cũ hoặc lịch sử hội thoại để làm nội dung. Prime **chỉ gửi bốn dòng gồm link tab, tọa độ sáu ô nguồn (bốn ô bài học và hai ô Special Note), vùng đích và đường dẫn file này; không gửi thêm hướng dẫn/nội dung ghi chú**. Worker **bắt buộc tự đọc nguyên văn Special Note trên Google Sheets** và thực hiện trọn vẹn W1–W5 theo file này.
 
+**FILL-ONLY — KHÔNG REPLACE:** Ngay khi nhận phạm vi, đọc/preflight **toàn bộ 12 ô đích `C<R>:N<R>`** trước khi soạn nội dung. **Chỉ một ô đã có nội dung** → `BLOCKER: EXISTING TARGET CONTENT`, `WRITE=NOT_RUN`, **DỪNG toàn nhiệm vụ**, không sửa/replace README cũ, không ghi phần còn trống, không chia lại nội dung đã có hay công nhận `COMPLETED/UNCHANGED`. Chỉ có **chỉ thị đặc biệt tường minh từ người dùng** mới cho phép replace đúng phạm vi đó.
+
 ## W1. Phạm vi một lượt và nguồn dữ liệu
 
 1. Một lượt giao việc = **duy nhất một Menu Cấp 2 tại `B<R>`**, một README Markdown hoàn chỉnh, một hàng câu trả lời `C<R>:N<R>`. Tự làm trọn: đọc → soạn → QA → preflight → ghi → readback → báo cáo → SLEEPING. Không có PHA A/B, PREPARED hay chờ Prime cấp ô giữa chừng.
@@ -26,7 +28,7 @@
 
 ## W4. Preflight, ghi một lần và readback
 
-1. **Ngay trước WRITE**, đọc lại **cả sáu ô nguồn (bao gồm hai ô Special Note)** và **cả 12 ô** `C<R>:N<R>` (kể cả các ô không định ghi). Các ô đích phải hoàn toàn trống đối với `userEnteredValue` (gồm formula), `effectiveValue`, `formattedValue`, `note`, `dataValidation`, `chipRuns`. Sáu nguồn phải **unchanged** so với lúc bắt đầu; nếu Special Note vừa thay đổi, phải báo `BLOCKER: SOURCE CHANGED`, không tự dùng bản cũ. Nếu bất cứ ô đích nào có dữ liệu/metadata hoặc nguồn thay đổi, báo `BLOCKER: TARGET CELLS NOT EMPTY` / `BLOCKER: SOURCE CHANGED` và **không ghi**.
+1. **Preflight đủ C:N trước khi soạn; ngay trước WRITE, đọc lại** cả sáu ô nguồn (bao gồm hai ô Special Note) và **cả 12 ô** `C<R>:N<R>` (kể cả các ô không định ghi). Các ô đích phải hoàn toàn trống đối với `userEnteredValue` (gồm formula), `effectiveValue`, `formattedValue`, `note`, `dataValidation`, `chipRuns`. Sáu nguồn phải **unchanged** so với lúc bắt đầu; nếu Special Note vừa thay đổi, phải báo `BLOCKER: SOURCE CHANGED`, không tự dùng bản cũ. Nếu bất cứ ô đích nào có dữ liệu/metadata, báo `BLOCKER: EXISTING TARGET CONTENT`, `WRITE=NOT_RUN`, **dừng ngay, không tạo/ghi phần còn thiếu**; nguồn thay đổi → `BLOCKER: SOURCE CHANGED`, không ghi.
 2. Xác định số ô **thực sự cần** theo W3; ghi **một lần** bằng `updateCells` với `fields=userEnteredValue`, chỉ những ô cần ghi, bắt đầu từ C trên đúng hàng. **Không ghi các đoạn rỗng** vào ô còn lại; không cập nhật `userEnteredFormat`, `note`, `dataValidation`, `chipRuns`, hàng khác hoặc bất kỳ field nào khác.
 3. Nếu công cụ báo lỗi hoặc kết quả write không rõ, **đọc lại trạng thái thực** trước; không tự retry ghi đè. Không sửa một câu trả lời đã tồn tại hoặc thuộc worker khác.
 4. READBACK **từng ô trong cả 12 ô C:N**: các mảnh đã ghi phải khớp riêng từng ô; các ô còn lại phải vẫn trống. Nối theo thứ tự C→N **không separator**, so khớp **exact 100% Unicode, whitespace, newline** với chuỗi Markdown gốc. Đọc lại **cả sáu ô nguồn, gồm nhãn và giá trị Special Note**, xác nhận unchanged.

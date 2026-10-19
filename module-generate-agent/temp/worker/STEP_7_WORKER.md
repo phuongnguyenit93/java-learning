@@ -2,6 +2,8 @@
 
 > **BẮT BUỘC tự đọc TOÀN VĂN file worker-only này.** Prime chỉ cung cấp đúng URL tab, tọa độ nguồn, vùng T:W hàng cha và đường dẫn file này. Không tự đọc file Prime/rules/STEP khác, source repository hay lịch sử chat để thay Knowledge trên Sheet.
 
+**FILL-ONLY — KHÔNG REPLACE:** Kiểm tra **cả `T<PARENT_ROW>:W<PARENT_ROW>`** ngay khi nhận nhiệm vụ, trước khi soạn Quiz YAML. Nếu bất kỳ ô đích nào đã có nội dung, `BLOCKER: EXISTING TARGET CONTENT`, `WRITE=NOT_RUN`, **DỪNG ngay toàn nhiệm vụ**. Không thay thế Quiz cũ, không fill fragment còn thiếu, không ghi một phần hoặc tự coi `COMPLETED/UNCHANGED`. Chỉ **chỉ thị đặc biệt tường minh từ người dùng** cho đúng vùng này mới cho phép replace.
+
 ## W1 — Phạm vi nguồn và ghi
 
 1. Một worker = **một Menu Cấp 1**. Chỉ đọc `A1`, `B1`, A cha, B filename cha, tất cả tiêu đề B con và **toàn văn Knowledge C:N của mỗi hàng con** Prime giao (ghép C→N không separator), Difficulty O nếu được giao.
@@ -44,6 +46,6 @@ questions:
 
 1. Soạn toàn bộ YAML, QA kỹ thuật, parse chính xác root/keys/types/correctAnswerId và tính đa dạng. Không cố sinh số lượng cố định.
 2. Nếu YAML dài >120.000 Unicode code points: `BLOCKER: QUIZ CAPACITY`, không truncate hoặc mượn cột khác. Chia tối đa 4 fragments ≤30.000 Unicode/ô không cắt giữa surrogate pair, ghép T→W không thêm separator phải đúng 100%.
-3. Preflight cả bốn ô T:W: `userEnteredValue`/formula, `effectiveValue`, `formattedValue`, `note`, `dataValidation`, `chipRuns`; ownership và nguồn Knowledge phải không đổi. Có bất kỳ dữ liệu/note/formula hoặc nguồn đổi → `BLOCKER: TARGET OCCUPIED / SOURCE CHANGED`, tuyệt đối không overwrite/partial write.
+3. Preflight **cả bốn ô T:W trước khi soạn và ngay trước WRITE**: `userEnteredValue`/formula, `effectiveValue`, `formattedValue`, `note`, `dataValidation`, `chipRuns`; ownership và nguồn Knowledge phải không đổi. Có bất kỳ dữ liệu/note/formula → `BLOCKER: EXISTING TARGET CONTENT`, `WRITE=NOT_RUN`, dừng toàn nhiệm vụ, không fill phần còn trống; nguồn đổi → `BLOCKER: SOURCE CHANGED`, không ghi.
 4. Ghi text-only vào T:W cùng hàng cha, không đổi format. Đọc lại chính xác cả bốn ô, nối không separator, kiểm tra Unicode/whitespace/newline, parse và đối chiếu toàn văn; ô đuôi phải trống. Write lỗi không rõ → đọc trạng thái thật trước, không retry mù.
 5. Báo Prime: `STATUS`, `PARENT_CELL`, `CHILD_ROWS`, `SOURCE_COVERAGE`, `OUTPUT_RANGE`, `QUESTION_COUNT`, `TOTAL_UNICODE_CHARS`, `FILLED_CELLS`, `PREFLIGHT`, `YAML_PARSE`, `TECHNICAL_QA`, `DISTRACTOR_QA`, `READBACK`, `BLOCKER`. Sau đó **SLEEPING**, không chạy Normalize/import/J3.

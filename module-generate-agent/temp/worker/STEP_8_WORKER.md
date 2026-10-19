@@ -2,6 +2,8 @@
 
 > Chỉ dành cho worker. Prime điều phối trong STEP_8.md; bạn chỉ đọc TOÀN VĂN file này. Prime gửi link tab, tọa độ nguồn và **vùng X:AA tại đúng hàng Menu Cấp 1** cùng đường dẫn file worker. Không chia hai pha.
 
+**FILL-ONLY — KHÔNG REPLACE:** Trước khi viết Video Script, đọc/preflight **toàn vùng `X<PARENT_ROW>:AA<PARENT_ROW>`**. Nếu bất kỳ ô đích nào đã có nội dung, báo `BLOCKER: EXISTING TARGET CONTENT`, `WRITE=NOT_RUN` và **DỪNG ngay toàn nhiệm vụ**. Không sửa script cũ, không fill đoạn thiếu, không ghi một phần hay tự công nhận `COMPLETED/UNCHANGED`; chỉ được replace khi có **chỉ thị đặc biệt tường minh của người dùng** cho đúng phạm vi.
+
 ## PHẦN RIÊNG DÀNH CHO WORKER
 
 **Một lượt công việc trọn vẹn, một chương, một Video YAML trên cùng hàng Menu Cấp 1.** Không đọc STEP khác, GENERAL, rules/MD/TXT hoặc chat cũ làm nội dung. Không tạo file hoặc sửa repository.
@@ -71,7 +73,7 @@ Ví dụ chỉ minh họa cấu trúc: thay toàn bộ tên, lời thoại, ví 
 1. Đọc toàn bộ Knowledge, soạn đầy đủ một YAML cho cả chương rồi kiểm tra syntax, `title`, các section, Scene/Transition, field và timeline. Không chia pha hoặc chờ duyệt số Scene.
 2. Đếm ký tự Unicode toàn chuỗi; chia **các đoạn liên tục không đổi ký tự**, mỗi đoạn **≤30.000 Unicode code points**, vào X→Y→Z→AA trên **cùng hàng cha**. Nối lại **không separator** phải y nguyên 100% Unicode, whitespace và newline; không cắt đôi surrogate pair.
 3. Nếu hơn bốn ô: `BLOCKER: VIDEO CAPACITY`, nêu tổng số Unicode và số ô cần; không ghi một phần hoặc tự mở rộng ra ngoài X:AA.
-4. Trước bất kỳ write, đọc lại `A<PARENT>`, `B<PARENT>` và toàn bộ X:AA để kiểm tra `userEnteredValue/formula`, `effectiveValue`, `formattedValue`, `note`, `dataValidation`, `chipRuns`. Nếu có dữ liệu hoặc nguồn đổi, báo `BLOCKER: TARGET OCCUPIED / SOURCE CHANGED`. Header X19:AA19 do Prime kiểm tra; worker không tự đọc ô ngoài phạm vi.
+4. Preflight **toàn vùng X:AA trước khi soạn** và đọc lại ngay trước bất kỳ write cùng với `A<PARENT>`, `B<PARENT>`; kiểm tra `userEnteredValue/formula`, `effectiveValue`, `formattedValue`, `note`, `dataValidation`, `chipRuns`. Có nội dung ở bất kỳ ô đích nào → `BLOCKER: EXISTING TARGET CONTENT`, `WRITE=NOT_RUN`, dừng, không fill phần trống; nguồn đổi → `BLOCKER: SOURCE CHANGED`. Header X19:AA19 do Prime kiểm tra; worker không tự đọc ô ngoài phạm vi.
 5. Ghi chỉ fragment vào X:AA hàng cha; không đổi định dạng/notes/validation. Nếu write lỗi hoặc không rõ kết quả, kiểm tra thực tế, không retry ghi đè.
 6. Readback **từng ô** X:AA, nối không separator và so khớp chính xác với YAML gốc. QA độc lập thêm một lần sau readback, gồm độ đúng sư phạm, **code Java/API/đầu ra và Markdown nhúng như README**, tính liên tục thời gian, YAML và tính tự nhiên của lời thoại. Chỉ `COMPLETED` nếu cả READBACK và QA PASS.
 7. Nếu lỗi/partial write/mismatch, báo đúng tình trạng/ô và BLOCKER, không sửa dữ liệu lạ.
