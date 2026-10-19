@@ -65,6 +65,16 @@ jobs:
         uses: actions/checkout@v5
         with:
           persist-credentials: false
+          # Gradle's ContractSkeletonSetupPlugin requires the pinned
+          # learning-contract submodule during configuration.
+          submodules: recursive
+
+      - name: Verify pinned learning contracts checkout
+        shell: bash
+        run: |
+          set -euo pipefail
+          git submodule status --recursive
+          test -f learning-contract/contract.json
 
       - name: Setup JDK 21
         uses: actions/setup-java@v5
