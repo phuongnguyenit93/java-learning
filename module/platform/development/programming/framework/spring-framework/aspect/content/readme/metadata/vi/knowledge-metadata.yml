@@ -1,323 +1,1230 @@
-1.CrossCutting/CrossCutting.md:
-  cross-cutting-concern:
+1.SpringAOPScope/SpringAOPScope.md:
+  spring-aop-scope-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  cross-cutting-demo:
-    difficulty: BASIC
+  spring-aop-scope-002:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  cross-cutting-conclusion:
-    difficulty: BASIC
+  spring-aop-scope-003:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-2.Terminology/Terminology.md:
-  terminology-map:
+  spring-aop-scope-004:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  terminology-demo:
-    difficulty: BASIC
+  spring-aop-scope-005:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  spring-aop-vs-aspectj-style:
-    difficulty: BASIC
+  spring-aop-scope-006:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  terminology-conclusion:
-    difficulty: BASIC
+  spring-aop-scope-007:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-3.Proxy/Proxy.md:
-  proxy-mental-model:
-    difficulty: BASIC
+  spring-aop-scope-008:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  proxy-demo:
+2.SpringAOPSetup/SpringAOPSetup.md:
+  spring-aop-setup-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  managed-vs-new-demo:
-    difficulty: BASIC
+  spring-aop-setup-002:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  proxy-strategies:
-    difficulty: BASIC
+  spring-aop-setup-003:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  proxy-conclusion:
+  spring-aop-setup-004:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-4.Pointcut/Pointcut.md:
-  aop-declaration-styles:
-    difficulty: BASIC
+  spring-aop-setup-005:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  spring-aop-enablement:
-    difficulty: BASIC
+  spring-aop-setup-006:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  pointcut-mental-model:
-    difficulty: BASIC
+  spring-aop-setup-007:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  pointcut-designators-and-composition:
+  spring-aop-setup-008:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  pointcut-demo:
-    difficulty: BASIC
+  spring-aop-setup-009:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  spring-aop-pointcut-boundary:
+3.AspectBeans/AspectBeans.md:
+  aspect-beans-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  pointcut-conclusion:
-    difficulty: BASIC
+  aspect-beans-002:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-5.Annotation/Annotation.md:
-  annotation-contract:
-    difficulty: BASIC
+  aspect-beans-003:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  annotation-demo:
+  aspect-beans-004:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  annotation-vs-expression:
+  aspect-beans-005:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  annotation-conclusion:
-    difficulty: BASIC
+  aspect-beans-006:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-6.Advice/Advice.md:
-  advice-semantics:
-    difficulty: BASIC
+  aspect-beans-007:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  advice-success-demo:
-    difficulty: BASIC
+  aspect-beans-008:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  advice-failure-demo:
-    difficulty: BASIC
+  aspect-beans-009:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  advice-parameter-binding:
-    difficulty: BASIC
+  aspect-beans-010:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  advice-conclusion:
-    difficulty: BASIC
+4.AutoProxyMechanics/AutoProxyMechanics.md:
+  auto-proxy-mechanics-001:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-7.Around/Around.md:
-  around-mental-model:
-    difficulty: BASIC
+  auto-proxy-mechanics-002:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  around-timing-demo:
-    difficulty: BASIC
+  auto-proxy-mechanics-003:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  around-transform-demo:
-    difficulty: BASIC
+  auto-proxy-mechanics-004:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  around-skip-demo:
-    difficulty: BASIC
+  auto-proxy-mechanics-005:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  around-arguments-demo:
-    difficulty: BASIC
+  auto-proxy-mechanics-006:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  around-exception-demo:
-    difficulty: BASIC
+  auto-proxy-mechanics-007:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  around-conclusion:
-    difficulty: BASIC
+  auto-proxy-mechanics-008:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-8.Ordering/Ordering.md:
-  ordering-mental-model:
-    difficulty: BASIC
+  auto-proxy-mechanics-009:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  aspect-instantiation-models:
-    difficulty: BASIC
+  auto-proxy-mechanics-010:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  ordering-demo:
+5.JdkCglibProxies/JdkCglibProxies.md:
+  jdk-cglib-proxies-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  ordering-pitfall:
-    difficulty: BASIC
+  jdk-cglib-proxies-002:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  ordering-conclusion:
-    difficulty: BASIC
+  jdk-cglib-proxies-003:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-9.Introduction/Introduction.md:
-  introduction-mental-model:
-    difficulty: BASIC
+  jdk-cglib-proxies-004:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  declare-parents:
-    difficulty: BASIC
+  jdk-cglib-proxies-005:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  introduction-demo:
-    difficulty: BASIC
+  jdk-cglib-proxies-006:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  introduction-conclusion:
-    difficulty: BASIC
+  jdk-cglib-proxies-007:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-10.ProxyFactory/ProxyFactory.md:
-  proxy-factory-mental-model:
-    difficulty: BASIC
+  jdk-cglib-proxies-008:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  jdk-vs-cglib:
-    difficulty: BASIC
+  jdk-cglib-proxies-009:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  proxy-factory-demo:
-    difficulty: BASIC
+  jdk-cglib-proxies-010:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  proxy-factory-conclusion:
-    difficulty: BASIC
+  jdk-cglib-proxies-011:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-11.Advisor/Advisor.md:
-  advisor-mental-model:
-    difficulty: BASIC
+  jdk-cglib-proxies-012:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  pointcut-internals:
+6.InvocationBoundaries/InvocationBoundaries.md:
+  invocation-boundaries-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  static-dynamic-pointcut:
-    difficulty: BASIC
+  invocation-boundaries-002:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  advisor-demo:
-    difficulty: BASIC
+  invocation-boundaries-003:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  advisor-conclusion:
-    difficulty: BASIC
+  invocation-boundaries-004:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-12.Infrastructure/Infrastructure.md:
-  auto-proxy-mental-model:
-    difficulty: BASIC
+  invocation-boundaries-005:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  framework-boot-aop-enablement-boundary:
-    difficulty: BASIC
+  invocation-boundaries-006:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  advised-interface:
-    difficulty: BASIC
+  invocation-boundaries-007:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  target-source-strategy:
-    difficulty: BASIC
+  invocation-boundaries-008:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  infrastructure-demo:
-    difficulty: BASIC
+  invocation-boundaries-009:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  infrastructure-conclusion:
-    difficulty: BASIC
+  invocation-boundaries-010:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-13.SelfInvocation/SelfInvocation.md:
-  self-invocation-mental-model:
+7.SpringPointcutExpressions/SpringPointcutExpressions.md:
+  spring-pointcut-expressions-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  self-invocation-demo:
-    difficulty: BASIC
+  spring-pointcut-expressions-002:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  proxy-limitations:
-    difficulty: BASIC
+  spring-pointcut-expressions-003:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  self-invocation-remediation:
-    difficulty: BASIC
+  spring-pointcut-expressions-004:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  final-method-demo:
-    difficulty: BASIC
+  spring-pointcut-expressions-005:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  aop-debugging-checklist:
-    difficulty: BASIC
+  spring-pointcut-expressions-006:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  self-invocation-conclusion:
-    difficulty: BASIC
+  spring-pointcut-expressions-007:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-14.Patterns/Patterns.md:
-  practical-patterns:
-    difficulty: BASIC
+  spring-pointcut-expressions-008:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  spring-pointcut-expressions-009:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  spring-pointcut-expressions-010:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  spring-pointcut-expressions-011:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  aop-design-tradeoffs:
+  spring-pointcut-expressions-012:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+8.ReusablePointcuts/ReusablePointcuts.md:
+  reusable-pointcuts-001:
     difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  reusable-pointcuts-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  reusable-pointcuts-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  reusable-pointcuts-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  reusable-pointcuts-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  reusable-pointcuts-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  reusable-pointcuts-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  reusable-pointcuts-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  reusable-pointcuts-009:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  practical-demo:
+9.AdviceLifecycle/AdviceLifecycle.md:
+  advice-lifecycle-001:
     difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  advice-lifecycle-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  advice-lifecycle-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  advice-lifecycle-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  advice-lifecycle-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  advice-lifecycle-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  advice-lifecycle-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  advice-lifecycle-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  advice-lifecycle-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  advice-lifecycle-010:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+10.AroundAdvice/AroundAdvice.md:
+  around-advice-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  around-advice-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  around-advice-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  around-advice-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  around-advice-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  around-advice-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  around-advice-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  around-advice-008:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  around-advice-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  around-advice-010:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  aop-pitfalls:
+11.AdviceContextArguments/AdviceContextArguments.md:
+  advice-context-arguments-001:
     difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  advice-context-arguments-002:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  advice-context-arguments-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  advice-context-arguments-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  advice-context-arguments-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  advice-context-arguments-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  advice-context-arguments-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  advice-context-arguments-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  advice-context-arguments-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  advice-context-arguments-010:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  advice-context-arguments-011:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+12.AdviceOrdering/AdviceOrdering.md:
+  advice-ordering-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  advice-ordering-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  advice-ordering-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  advice-ordering-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  advice-ordering-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  advice-ordering-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  advice-ordering-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  advice-ordering-008:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  advice-ordering-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  advice-ordering-010:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+13.ReturnExceptionHandling/ReturnExceptionHandling.md:
+  return-exception-handling-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  return-exception-handling-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  return-exception-handling-003:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  return-exception-handling-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  return-exception-handling-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  return-exception-handling-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  return-exception-handling-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  return-exception-handling-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  return-exception-handling-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+14.AspectStateConcurrency/AspectStateConcurrency.md:
+  aspect-state-concurrency-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  aspect-state-concurrency-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  aspect-state-concurrency-003:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  aspect-state-concurrency-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  aspect-state-concurrency-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  aspect-state-concurrency-006:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  practical-conclusion:
+  aspect-state-concurrency-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  aspect-state-concurrency-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  aspect-state-concurrency-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  aspect-state-concurrency-010:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+15.CustomAspectAnnotations/CustomAspectAnnotations.md:
+  custom-aspect-annotations-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-15.RuntimeBoundary/RuntimeBoundary.md:
-  spring-aop-runtime:
+  custom-aspect-annotations-002:
     difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  custom-aspect-annotations-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  custom-aspect-annotations-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  custom-aspect-annotations-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  custom-aspect-annotations-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  custom-aspect-annotations-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  custom-aspect-annotations-008:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  custom-aspect-annotations-009:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  spring-aop-vs-aspectj:
+16.XMLAopConfiguration/XMLAopConfiguration.md:
+  xml-aop-configuration-001:
     difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  xml-aop-configuration-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  xml-aop-configuration-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  xml-aop-configuration-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  xml-aop-configuration-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  xml-aop-configuration-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  xml-aop-configuration-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  xml-aop-configuration-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  xml-aop-configuration-009:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  xml-aop-configuration-010:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  xml-aop-configuration-011:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  runtime-boundary-demo:
+17.PointcutAPI/PointcutAPI.md:
+  pointcut-api-001:
     difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  pointcut-api-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  pointcut-api-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  pointcut-api-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  pointcut-api-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  pointcut-api-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  pointcut-api-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  pointcut-api-008:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  pointcut-api-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  pointcut-api-010:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+18.AdviceAdvisorAPI/AdviceAdvisorAPI.md:
+  advice-advisor-api-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  advice-advisor-api-002:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  advice-advisor-api-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  advice-advisor-api-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  advice-advisor-api-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  advice-advisor-api-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  advice-advisor-api-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  advice-advisor-api-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  advice-advisor-api-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+19.ProgrammaticProxyCreation/ProgrammaticProxyCreation.md:
+  programmatic-proxy-creation-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  programmatic-proxy-creation-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  programmatic-proxy-creation-003:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  programmatic-proxy-creation-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  programmatic-proxy-creation-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  programmatic-proxy-creation-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  programmatic-proxy-creation-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  programmatic-proxy-creation-008:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  framework-connections:
+  programmatic-proxy-creation-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  programmatic-proxy-creation-010:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+20.ProxyInspection/ProxyInspection.md:
+  proxy-inspection-001:
     difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  proxy-inspection-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  proxy-inspection-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  proxy-inspection-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  proxy-inspection-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  proxy-inspection-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  proxy-inspection-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  proxy-inspection-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+21.AdvancedAutoProxy/AdvancedAutoProxy.md:
+  advanced-auto-proxy-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  advanced-auto-proxy-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  advanced-auto-proxy-003:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  advanced-auto-proxy-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  advanced-auto-proxy-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  advanced-auto-proxy-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  advanced-auto-proxy-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  advanced-auto-proxy-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  advanced-auto-proxy-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+22.TargetSource/TargetSource.md:
+  target-source-001:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  aop-end-to-end-synthesis:
+  target-source-002:
     difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  target-source-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  target-source-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  target-source-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  target-source-006:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  runtime-boundary-conclusion:
+  target-source-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  target-source-008:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  target-source-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+23.IntroductionInterceptors/IntroductionInterceptors.md:
+  introduction-interceptors-001:
     difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  introduction-interceptors-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  introduction-interceptors-003:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  introduction-interceptors-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  introduction-interceptors-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  introduction-interceptors-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  introduction-interceptors-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  introduction-interceptors-008:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  introduction-interceptors-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+24.SpringFeatureIntegration/SpringFeatureIntegration.md:
+  spring-feature-integration-001:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  spring-feature-integration-002:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  spring-feature-integration-003:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  spring-feature-integration-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  spring-feature-integration-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  spring-feature-integration-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  spring-feature-integration-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  spring-feature-integration-008:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  spring-feature-integration-009:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  spring-feature-integration-010:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+25.AspectjIntegration/AspectjIntegration.md:
+  aspectj-integration-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  aspectj-integration-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  aspectj-integration-003:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  aspectj-integration-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  aspectj-integration-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  aspectj-integration-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  aspectj-integration-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  aspectj-integration-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  aspectj-integration-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  aspectj-integration-010:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  aspectj-integration-011:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+26.SpringAOPTesting/SpringAOPTesting.md:
+  spring-aop-testing-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  spring-aop-testing-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  spring-aop-testing-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  spring-aop-testing-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  spring-aop-testing-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  spring-aop-testing-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  spring-aop-testing-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  spring-aop-testing-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  spring-aop-testing-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  spring-aop-testing-010:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  spring-aop-testing-011:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  spring-aop-testing-012:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+27.AOPTroubleshooting/AOPTroubleshooting.md:
+  aop-troubleshooting-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  aop-troubleshooting-002:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  aop-troubleshooting-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  aop-troubleshooting-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  aop-troubleshooting-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  aop-troubleshooting-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  aop-troubleshooting-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  aop-troubleshooting-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  aop-troubleshooting-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  aop-troubleshooting-010:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  aop-troubleshooting-011:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  aop-troubleshooting-012:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+28.AOPPerformanceMaintenance/AOPPerformanceMaintenance.md:
+  aop-performance-maintenance-001:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  aop-performance-maintenance-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  aop-performance-maintenance-003:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  aop-performance-maintenance-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  aop-performance-maintenance-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  aop-performance-maintenance-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  aop-performance-maintenance-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  aop-performance-maintenance-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  aop-performance-maintenance-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  aop-performance-maintenance-010:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  aop-performance-maintenance-011:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+29.AOPPracticalWorkshop/AOPPracticalWorkshop.md:
+  aop-practical-workshop-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  aop-practical-workshop-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  aop-practical-workshop-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  aop-practical-workshop-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  aop-practical-workshop-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  aop-practical-workshop-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  aop-practical-workshop-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  aop-practical-workshop-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  aop-practical-workshop-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  aop-practical-workshop-010:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  aop-practical-workshop-011:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  aop-practical-workshop-012:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+30.SpringAopReview/SpringAopReview.md:
+  spring-aop-review-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  spring-aop-review-002:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  spring-aop-review-003:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  spring-aop-review-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  spring-aop-review-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  spring-aop-review-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  spring-aop-review-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  spring-aop-review-008:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
