@@ -51,7 +51,7 @@ enum ModuleListEnum {
     ASPECT_ORIENTED_PROGRAMMING(
             'module:platform:development:programming:paradigm:aop',
             'module/platform/development/programming/paradigm/aop',
-            'LIBRARY',
+            'SERVLET',
             'Aspect-Oriented Programming concepts, cross-cutting concerns, terminology and implementation models',
             false,
             []
@@ -1320,7 +1320,7 @@ enum ModuleListEnum {
     OBJECT_ORIENTED_PROGRAMMING(
             'module:platform:development:programming:paradigm:object-oriented',
             'module/platform/development/programming/paradigm/object-oriented',
-            'LIBRARY',
+            'SERVLET',
             'Object-Oriented Programming paradigm concepts and object collaboration',
             false,
             []

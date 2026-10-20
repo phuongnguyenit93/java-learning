@@ -1,0 +1,295 @@
+BasicsExperimentController:
+  simulateAccount(AccountSimulationRequest):
+    summary: Theo dõi trạng thái tài khoản qua các lời gọi phương thức
+    description: Tạo một BankAccount trong phạm vi request, thực hiện tối đa 20 thao
+      tác nạp/rút và trả timeline số dư trước/sau, trạng thái chấp nhận cùng lý do
+      từ chối. Không lưu tài khoản và không giao dịch tiền thật.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: simulateAccount
+    params:
+    - request
+    path: com/example/learning/oop/basics/controller/BasicsExperimentController.java
+    mapping: '@PostMapping("/accounts/simulate")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/basics/accounts/simulate
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  simulateOrder(OrderSimulationRequest):
+    summary: Quan sát cộng tác đối tượng và vòng đời đơn hàng
+    description: Mô phỏng tối đa 20 thao tác thêm dòng hàng, xác nhận hoặc hủy một
+      OrderAggregate. Phản hồi hiển thị trạng thái, tổng tiền và số dòng hàng sau
+      từng bước, kể cả bước bị từ chối.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: simulateOrder
+    params:
+    - request
+    path: com/example/learning/oop/basics/controller/BasicsExperimentController.java
+    mapping: '@PostMapping("/orders/simulate")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/basics/orders/simulate
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  compareShipping(ShippingQuoteRequest):
+    summary: So sánh hai cách thực thi cùng hợp đồng vận chuyển
+    description: Dùng hai implementation Pickup và Courier của ShippingPolicy để tính
+      báo giá trên cùng đơn hàng và quãng đường; trả danh sách chính sách, phí và
+      tổng phải trả. Đây chỉ là mức phí minh họa.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: compareShipping
+    params:
+    - request
+    path: com/example/learning/oop/basics/controller/BasicsExperimentController.java
+    mapping: '@PostMapping("/shipping/quotes")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/basics/shipping/quotes
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+ClassesExperimentController:
+  inventory(InventoryRequest):
+    summary: Quan sát trường dữ liệu và phương thức bảo toàn trạng thái InventoryItem
+    description: Mô phỏng tối đa 20 lệnh restock, sell, rename trên một InventoryItem;
+      trả snapshot trước/sau và lý do các lần cập nhật bị từ chối.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: inventory
+    params:
+    - request
+    path: com/example/learning/oop/classes/ClassesExperimentController.java
+    mapping: '@PostMapping("/inventory/experiment")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/classes/inventory/experiment
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  workshops(WorkshopRequest):
+    summary: Phân biệt trạng thái instance, hằng lớp và tham chiếu alias
+    description: Tạo hai Workshop độc lập và một alias trỏ tới workshop thứ hai; thử
+      đăng ký nhiều lượt để so sánh giới hạn theo đối tượng và trạng thái chia sẻ
+      qua alias.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: workshops
+    params:
+    - request
+    path: com/example/learning/oop/classes/ClassesExperimentController.java
+    mapping: '@PostMapping("/workshops/experiment")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/classes/workshops/experiment
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  bank(BankRequest):
+    summary: Kiểm chứng đóng gói số dư và chuyển tiền nguyên tử trong bộ nhớ
+    description: Tạo hai BankAccount trong một request; chạy tối đa 20 thao tác deposit/withdraw/transfer
+      và ghi snapshot cả hai tài khoản trước/sau từng bước.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: bank
+    params:
+    - request
+    path: com/example/learning/oop/classes/ClassesExperimentController.java
+    mapping: '@PostMapping("/bank/experiment")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/classes/bank/experiment
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+ObjectExperimentsController:
+  references(ObjectExperimentDto.ReferenceRequest):
+    summary: Quan sát alias, identity và truyền tham chiếu theo giá trị
+    description: Tạo object gốc, alias và một object mới cùng trạng thái ban đầu;
+      thay đổi qua alias và thử gán lại tham số để quan sát sự khác biệt.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: references
+    params:
+    - request
+    path: com/example/learning/oop/objects/ObjectExperimentsController.java
+    mapping: '@PostMapping("/references")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/objects/references
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  equality(ObjectExperimentDto.EqualityRequest):
+    summary: So sánh identity, equals/hashCode và tập hợp Set
+    description: Tạo hai ProductCode record theo input để so sánh ==, equals, hashCode
+      và số phần tử HashSet; đối chiếu một class mặc định chỉ có Object.equals.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: equality
+    params:
+    - request
+    path: com/example/learning/oop/objects/ObjectExperimentsController.java
+    mapping: '@PostMapping("/equality")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/objects/equality
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  copies(ObjectExperimentDto.CopyRequest):
+    summary: Phân biệt shallow copy, deep copy và collection bất biến bề ngoài
+    description: Tạo danh sách chứa mutable item, sao chép nông và sâu, chụp List.copyOf
+      và immutable record; mutate phần tử và thêm item rồi trả các danh sách sau thay
+      đổi.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: copies
+    params:
+    - request
+    path: com/example/learning/oop/objects/ObjectExperimentsController.java
+    mapping: '@PostMapping("/copies")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/objects/copies
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  absence(ObjectExperimentDto.AbsenceRequest):
+    summary: Biểu diễn object vắng mặt bằng Optional và collection rỗng
+    description: Tra cứu khách hàng giả lập theo lookupId và địa chỉ tùy chọn; trả
+      cờ found, optionalAddressPresent, tên hoặc danh sách địa chỉ rỗng.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: absence
+    params:
+    - request
+    path: com/example/learning/oop/objects/ObjectExperimentsController.java
+    mapping: '@PostMapping("/absence")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/objects/absence
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  checkout(ObjectExperimentDto.CheckoutRequest):
+    summary: Theo dõi cộng tác Cart–Inventory–Payment–Order–Notifier
+    description: Chạy một checkout mô phỏng trong bộ nhớ; trả events có thứ tự, số
+      lượng tồn kho trước/sau, kết quả payment và cờ notification mà không thực hiện
+      giao dịch thật.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: checkout
+    params:
+    - request
+    path: com/example/learning/oop/objects/ObjectExperimentsController.java
+    mapping: '@PostMapping("/checkout")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/objects/checkout
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true

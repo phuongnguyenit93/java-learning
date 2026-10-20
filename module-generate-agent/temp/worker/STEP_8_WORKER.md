@@ -1,85 +1,51 @@
-# STEP 8 — WORKER ONLY: Một chương, một Video Script YAML
+# STEP 8 — WORKER ONLY: Quiz YAML cho MỘT chương
 
-> Chỉ dành cho worker. Prime điều phối trong STEP_8.md; bạn chỉ đọc TOÀN VĂN file này. Prime gửi link tab, tọa độ nguồn và **vùng X:AA tại đúng hàng Menu Cấp 1** cùng đường dẫn file worker. Không chia hai pha.
+> **BẮT BUỘC tự đọc TOÀN VĂN file worker-only này.** Prime chỉ cung cấp đúng URL tab, tọa độ nguồn, vùng T:W hàng cha và đường dẫn file này. Không tự đọc file Prime/rules/STEP khác, source repository hay lịch sử chat để thay Knowledge trên Sheet.
 
-**FILL-ONLY — KHÔNG REPLACE:** Trước khi viết Video Script, đọc/preflight **toàn vùng `X<PARENT_ROW>:AA<PARENT_ROW>`**. Nếu bất kỳ ô đích nào đã có nội dung, báo `BLOCKER: EXISTING TARGET CONTENT`, `WRITE=NOT_RUN` và **DỪNG ngay toàn nhiệm vụ**. Không sửa script cũ, không fill đoạn thiếu, không ghi một phần hay tự công nhận `COMPLETED/UNCHANGED`; chỉ được replace khi có **chỉ thị đặc biệt tường minh của người dùng** cho đúng phạm vi.
+**FILL-ONLY VỀ NỘI DUNG — CHO PHÉP FORMAT_FIX:** Preflight cả `T<PARENT_ROW>:W<PARENT_ROW>`. Trống hết → tạo Quiz YAML mới. Đã có nội dung → **không thay câu hỏi, bốn đáp án/giải thích, `correctAnswerId`, thứ tự hoặc metadata**, trừ chỉ thị đặc biệt tường minh của người dùng; chỉ được sửa lỗi YAML/Markdown nhúng về mặt cú pháp (indent, quote, dấu phân cách, code fence...) và chứng minh toàn bộ giá trị nội dung giữ nguyên. YAML hợp lệ → `UNCHANGED` không ghi; không chứng minh được sửa format thuần túy → BLOCKER.
 
-## PHẦN RIÊNG DÀNH CHO WORKER
+## W1 — Phạm vi nguồn và ghi
 
-**Một lượt công việc trọn vẹn, một chương, một Video YAML trên cùng hàng Menu Cấp 1.** Không đọc STEP khác, GENERAL, rules/MD/TXT hoặc chat cũ làm nội dung. Không tạo file hoặc sửa repository.
+1. Một worker = **một Menu Cấp 1**. Chỉ đọc `A1`, `B1`, A cha, B filename cha, tất cả tiêu đề B con và **toàn văn Knowledge C:N của mỗi hàng con** Prime giao (ghép C→N không separator), Difficulty O nếu được giao.
+2. **Chỉ được ghi T:W trên đúng hàng cha** của chương. Không sửa A:S hay X:AA, Difficulty O, Video X:AA, Interview P:S, các hàng con/Template/tab khác, J3 hoặc source module. Không spawn worker, chạy Gradle/import hay commit/push.
+3. Header `T18=Quiz`, `T19:W19=Quiz YAML`, và filename `.md` từ B cha phải đúng; nguồn không đủ hoặc ô đích không an toàn → BLOCKER, không đoán.
 
-### W1 — Nguồn và quyền sở hữu
+## W2 — Chất lượng trắc nghiệm
 
-1. Xác minh URL tab/gid do Prime giao. Đọc trực tiếp **chỉ** `A1,B1,A<PARENT>,B<PARENT>`, các `B<child>` và toàn bộ `C:N` trên đúng hàng con được giao. Ghép nguyên văn các ô Knowledge C→N **không separator**; đọc đủ mọi bài.
-2. `A<PARENT>` là tên Menu Cấp 1 / `title` YAML. `B<PARENT>` phải là **filename Knowledge `.md` hợp lệ** đã hoàn tất STEP 5; không tự đổi thành `.yml`. Mỗi `B<child>` là một `sections[].title` đúng nguyên văn và đúng thứ tự. Tên file thực tế khi nhập module được code suy ra từ B cha: `<ordinal>.<stem>/video-script.yml`. Worker **không đặt path** và không ghi tên file trong YAML.
-3. Chỉ ghi `X<PARENT_ROW>:AA<PARENT_ROW>` của hàng cha. Không chọn số hàng từ chỉ số chương, không viết các hàng con, không sửa A:W, J3, Template, tab khác hoặc repo.
-4. Nếu Knowledge thiếu/truncated, Menu cha sai, filename B cha chưa QA, header `X19:AA19 = Video Script` không đúng theo Prime hoặc vùng ghi không trống: báo BLOCKER, không đoán.
+- Sinh những câu hỏi đánh giá kiến thức cốt lõi và khả năng suy luận/vận dụng, runtime behavior, debugging, trade-off, misconception, pitfall, không chép câu README và không nhồi câu vô nghĩa.
+- **Mỗi question đúng một đáp án** trong A/B/C/D, ba distractors phải sai nhưng plausible, phản ánh nhầm lẫn thực sự. Không cố tạo filler; nếu không tìm được bốn lựa chọn có giá trị thì đổi cách hỏi hoặc bỏ câu.
+- Tránh lộ đáp án đúng qua độ dài, grammar, thuật ngữ, chi tiết, giọng điệu, hoặc đáp án vô lý. Tự QA che `correctAnswerId` (blind-answer). Đáp án tương đồng hợp lý về độ dài, cấu trúc và scope, nhưng không ép bằng nhau máy móc.
+- **`explanation` bắt buộc cho từng A/B/C/D**: nêu vì sao lựa chọn ấy đúng hoặc sai. Ví dụ Java phải biên dịch đúng trong context; output, loại ngoại lệ, compile/runtime, API phải chính xác. Markdown/code fence `java`, `text` khi hữu ích, không đặt Markdown fence bao cả YAML.
 
-### W2 — Chuẩn Video YAML phải tạo
-
-Tạo **một chuỗi YAML hoàn chỉnh, parse được bằng YAML parser**. Nó sẽ tương ứng với `project-build/skeleton/video/video-script.yml` khi nhập module, gồm các field duy nhất `title`, `video`, `sections` ở gốc:
+## W3 — YAML nguồn duy nhất
 
 ```yaml
-title: "Tư duy OOP"
-video:
-  url: ""
-sections:
-  - title: "OOP là gì?"
-    items:
-      - type: SCENE
-        title: "Mở đầu"
-        time: "00:00–00:35"
-        visual: |-
-          Hiển thị sơ đồ đối tượng và liên kết giữa chúng.
-        script: |-
-          Bắt đầu từ một tình huống thực tế để giải thích mô hình OOP.
-        purpose: |-
-          Xây dựng trực giác cho người học.
-  - title: "Các nguyên lý OOP"
-    items:
-      - type: TRANSITION
-        time: "00:35–00:45"
-        visual: |-
-          Chuyển từ sơ đồ tổng quát sang bốn khái niệm chính.
-        script: |-
-          Sau khi hiểu đối tượng, ta cùng xem các nguyên lý tổ chức chúng.
-        purpose: |-
-          Nối nội dung giữa hai phần.
-      - type: SCENE
-        title: "Ví dụ"
-        time: "00:45–01:20"
-        visual: |-
-          Cho thấy ví dụ code, đầu vào và kết quả khi phù hợp.
-        script: |-
-          Giải thích từng nguyên lý qua hành vi quan sát được.
-        purpose: |-
-          Giúp người xem vận dụng khái niệm.
+questions:
+  - question: "Điều gì xảy ra khi subclass override một instance method hợp lệ?"
+    answers:
+      - id: A
+        answer: "Lời gọi luôn chạy method của superclass."
+        explanation: "Sai; method động được chọn theo runtime class của receiver."
+      - id: B
+        answer: "Runtime dispatch chọn implementation theo đối tượng thực tế."
+        explanation: "Đúng với instance method được override và lời gọi động."
+      - id: C
+        answer: "Mọi static method đều được override theo cách tương tự."
+        explanation: "Sai; static method có thể bị hide, không override."
+      - id: D
+        answer: "Private method luôn bị override trong subclass."
+        explanation: "Sai; private method không được kế thừa để override."
+    correctAnswerId: B
 ```
 
-Ví dụ chỉ minh họa cấu trúc: thay toàn bộ tên, lời thoại, ví dụ và thời gian bằng nội dung thật của chương. Không dùng bản minh họa này như script thực tế.
+- Root **chỉ** `questions` là list không rỗng. Mỗi item **chỉ** `question` (nonblank string), `answers` (chính xác bốn object có đúng `id`, `answer`, `explanation`) và `correctAnswerId` thuộc A/B/C/D. Mỗi ID A/B/C/D xuất hiện **một lần**; không gán nhiều đáp án đúng.
+- **Không ghi** question `id`, `aiGenerated`, `reviewed`, `readmeRelated`, `apiRelated` hoặc metadata; code Normalize sẽ bổ sung. Không dùng JSON/JSONL, YAML multiple documents, custom tag, alias/anchor, placeholder hoặc TODO.
+- `answer` và `explanation` có thể dùng YAML literal block `|-` để giữ Markdown nhiều dòng; YAML sau parse phải bảo toàn nội dung dự kiến.
 
-- `title` đúng tuyệt đối `A<PARENT>`; **mỗi B con đúng một section** theo đúng thứ tự, không thêm/bớt.
-- Mỗi section có `items` gồm ≥1 `SCENE`; từ section thứ hai **item đầu tiên phải là `TRANSITION`**, tiếp theo có ≥1 SCENE. Không áp đặt số Scene nếu Knowledge cần nhiều hơn.
-- Mỗi item có `type` (SCENE hoặc TRANSITION), `time`, `visual`, `script`, `purpose`; `title` tùy chọn cho Scene. Không sử dụng field `order`, `categoryId`, `moduleId`, `sourcePath` hoặc `language` trong YAML nguồn; code sẽ tính.
-- Thời gian `MM:SS–MM:SS`: bắt đầu `00:00`, nối liên tục giữa mọi item/section, mỗi đoạn có độ dài dương; không trùng hoặc nhảy thời gian. Đặt trong **dấu ngoặc kép** để giữ nguyên kiểu String.
-- Dùng `|-` cho narration nhiều dòng; giữ thụt lề YAML đúng để chứa Markdown, code fence, tiếng Việt và dòng trống. Nếu chuỗi có dấu `:` hoặc ký tự YAML đặc biệt, dùng ngoặc kép hoặc block `|-` để tránh parser diễn giải sai.
-- `video.url: ""` khi chưa xuất bản, không bịa URL. Không thêm metadata Knowledge/API trong file này.
-- **Script** là lời thoại nói tự nhiên, không đọc nguyên Knowledge; **Visual** mô tả hình/thao tác/dữ liệu có thể quay; **Purpose** nêu mục tiêu sư phạm. Không bịa hành vi Java/runtime/API; không để TODO, placeholder, field rỗng. Không xuất YAML sang module; chỉ ghi Sheet.
+## W4 — Preflight, write, readback
 
-**QA chất lượng tương đương README nhưng giữ đúng bản chất Video:** với mọi Java code, lệnh, API, thuật ngữ, dữ liệu mẫu hoặc stdout được nhắc trong `script`/`visual`, tự kiểm tra tính đúng theo phiên bản/ngữ cảnh, tên class/method, cơ chế và kết quả thực tế; phân biệt code giả lập với chương trình runnable. Giải thích có nguyên nhân, điều kiện, giới hạn và tình huống áp dụng khi hữu ích. Với Markdown/code fence được nhúng trong YAML block `|-`, giữ cú pháp và thụt lề hợp lệ, code fence cân bằng. **Không** biến lời thoại thành README chép lại, không ép heading/bảng/code cho mọi Scene; `visual` là những thứ có thể hiện lên màn hình, `script` là lời người xem nghe được.
-
-### W3 — Soạn → kiểm tra → ghi → đọc lại
-
-1. Đọc toàn bộ Knowledge, soạn đầy đủ một YAML cho cả chương rồi kiểm tra syntax, `title`, các section, Scene/Transition, field và timeline. Không chia pha hoặc chờ duyệt số Scene.
-2. Đếm ký tự Unicode toàn chuỗi; chia **các đoạn liên tục không đổi ký tự**, mỗi đoạn **≤30.000 Unicode code points**, vào X→Y→Z→AA trên **cùng hàng cha**. Nối lại **không separator** phải y nguyên 100% Unicode, whitespace và newline; không cắt đôi surrogate pair.
-3. Nếu hơn bốn ô: `BLOCKER: VIDEO CAPACITY`, nêu tổng số Unicode và số ô cần; không ghi một phần hoặc tự mở rộng ra ngoài X:AA.
-4. Preflight **toàn vùng X:AA trước khi soạn** và đọc lại ngay trước bất kỳ write cùng với `A<PARENT>`, `B<PARENT>`; kiểm tra `userEnteredValue/formula`, `effectiveValue`, `formattedValue`, `note`, `dataValidation`, `chipRuns`. Có nội dung ở bất kỳ ô đích nào → `BLOCKER: EXISTING TARGET CONTENT`, `WRITE=NOT_RUN`, dừng, không fill phần trống; nguồn đổi → `BLOCKER: SOURCE CHANGED`. Header X19:AA19 do Prime kiểm tra; worker không tự đọc ô ngoài phạm vi.
-5. Ghi chỉ fragment vào X:AA hàng cha; không đổi định dạng/notes/validation. Nếu write lỗi hoặc không rõ kết quả, kiểm tra thực tế, không retry ghi đè.
-6. Readback **từng ô** X:AA, nối không separator và so khớp chính xác với YAML gốc. QA độc lập thêm một lần sau readback, gồm độ đúng sư phạm, **code Java/API/đầu ra và Markdown nhúng như README**, tính liên tục thời gian, YAML và tính tự nhiên của lời thoại. Chỉ `COMPLETED` nếu cả READBACK và QA PASS.
-7. Nếu lỗi/partial write/mismatch, báo đúng tình trạng/ô và BLOCKER, không sửa dữ liệu lạ.
-
-### W4 — Báo cáo và SLEEPING
-
-Gửi Prime đúng một báo cáo: `STATUS=COMPLETED/BLOCKER/FAILED`, tab/gid, `PARENT_CELL_A`, `PARENT_FILENAME_CELL_B`, `CHILD_ROWS`, `SCRIPT_RANGE_X_TO_AA_PARENT`, `READ_COVERAGE`, `SECTIONS`, `SCENES`, `TRANSITIONS`, `TOTAL_UNICODE_CHARS`, `FILLED_CELLS`, `YAML_PARSE=PASS/FAIL`, `READBACK=PASS/FAIL`, `CHAPTER_QA=PASS/FAIL`, `PRESERVATION`, `BLOCKERS`.
-
-**Một lần giao, một chương, làm trọn rồi SLEEPING.** Không nhận chương khác, không spawn, không sửa source/commit hoặc J3. Prime tự QA độc lập.
+1. **Chỉ `NEW_FILL` mới soạn toàn bộ Quiz YAML**; YAML có sẵn thì QA `UNCHANGED/FORMAT_FIX`, không tạo lại question/answers. QA kỹ thuật, parse root/keys/types/correctAnswerId và tính đa dạng; không cố sinh số lượng cố định.
+2. Nếu YAML dài >120.000 Unicode code points: `BLOCKER: QUIZ CAPACITY`, không truncate hoặc mượn cột khác. Chia tối đa 4 fragments ≤30.000 Unicode/ô không cắt giữa surrogate pair, ghép T→W không thêm separator phải đúng 100%.
+3. Preflight **cả T:W trước khi soạn và ngay trước WRITE**: `userEnteredValue`/formula, `effectiveValue`, `formattedValue`, `note`, `dataValidation`, `chipRuns`; ownership và Knowledge phải unchanged. Trống hoàn toàn → `NEW_FILL`. Có YAML cũ → nối T→W, giữ snapshot, phân biệt `UNCHANGED` (đã hợp lệ) với `FORMAT_FIX` (lỗi cú pháp/định dạng thật). Không tạo lại Quiz hoặc thêm đáp án vào tài liệu cũ; nguồn đổi, formula/chip hoặc ownership xung đột → BLOCKER.
+4. `FORMAT_FIX` chỉ sửa ký tự cấu trúc và Markdown nhúng, giữ **mọi question/answer/explanation, `correctAnswerId`, số lượng, thứ tự, ID, metadata và nội dung code**. YAML hợp lệ trước sửa → so parsed values; YAML hỏng cú pháp → đối chiếu từng scalar gốc. Không chứng minh bảo toàn → `BLOCKER: FORMAT_FIX_NOT_PROVABLY_CONTENT_PRESERVING`, không ghi. Chỉ ghi text-only trong T:W, không đổi format/notes/validation. Readback bốn ô, nối không separator và so đúng bản cuối đã QA, parse và so diff trước–sau; lỗi write không rõ thì không retry mù.
+5. Báo Prime: `STATUS=COMPLETED/UNCHANGED/BLOCKER/FAILED`, `MODE=NEW_FILL/FORMAT_FIX/UNCHANGED`, `PARENT_CELL`, `CHILD_ROWS`, `SOURCE_COVERAGE`, `OUTPUT_RANGE`, `QUESTION_COUNT`, `TOTAL_UNICODE_CHARS`, `FILLED_CELLS`, `PREFLIGHT`, `YAML_PARSE`, `TECHNICAL_QA`, `DISTRACTOR_QA`, `FORMAT_DIFF`, `CONTENT_PRESERVED=PASS/FAIL`, `READBACK`, `BLOCKER`. `COMPLETED` chỉ khi QA + READBACK PASS; `UNCHANGED` chỉ khi dữ liệu hợp lệ và không write. Sau đó **SLEEPING**, không chạy Normalize/import/J3.

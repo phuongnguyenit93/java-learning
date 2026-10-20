@@ -1,0 +1,18 @@
+BasicsExperimentController:
+  description: |-
+    <h2>Thí nghiệm tư duy hướng đối tượng</h2>
+    <p>Kích hoạt ba tình huống runtime có giới hạn: trạng thái BankAccount, vòng đời OrderAggregate và đa hình ShippingPolicy. Controller chỉ nhận/trả JSON; nghiệp vụ thuộc Service và domain objects. Mỗi request độc lập, không ghi dữ liệu hay giao dịch thật.</p>
+  readmeRelated:
+    file: ''
+ClassesExperimentController:
+  description: |-
+    <h2>Thí nghiệm lớp, thành viên và hành vi</h2>
+    <p>Quan sát field/method qua InventoryItem, quan hệ instance/alias qua Workshop và đóng gói số dư/chuyển tiền qua BankAccount. Các mô hình chỉ tồn tại trong request, có giới hạn thao tác và kiểm tra bất biến.</p>
+  readmeRelated:
+    file: ''
+ObjectExperimentsController:
+  description: |-
+    <h2>Thí nghiệm identity, sao chép và cộng tác đối tượng</h2>
+    <p>Kiểm chứng alias, Java pass-by-value, equals/hashCode, shallow/deep copy, Optional và checkout qua các response có bằng chứng thực thi. Tất cả dữ liệu và side effect đều mô phỏng nội bộ.</p>
+  readmeRelated:
+    file: ''

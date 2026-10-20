@@ -1,55 +1,50 @@
-# STEP 6 — WORKER ONLY: Interview YAML cho MỘT chương
+# STEP 6 — WORKER ONLY: Xây dựng API
 
-> **BẮT BUỘC tự đọc TOÀN VĂN file worker-only này.** Không đọc file Prime, STEP khác, GENERAL/rules/TXT, source repo hoặc lịch sử chat để thay nguồn Google Sheets. Prime chỉ gửi link tab, tọa độ nguồn, vùng P:S được ghi và đường dẫn file này.
+**Worker phải tự đọc TOÀN BỘ file này trước khi thực hiện nhiệm vụ**, không đọc file Prime, rules/MD/TXT ngoài nguồn được phép đọc. Tin giao việc Prime → Worker luôn gồm **đúng 4 dòng định vị**: URL Sheet/tab, các ô nguồn của **một chương**, **cả hai đường dẫn tuyệt đối tới package Java main và test mà Prime cấp quyền ghi**, và đường dẫn tuyệt đối tới file worker-only này. Worker không tự mở rộng vùng đọc/ghi hay chọn package khác.
 
-**FILL-ONLY — KHÔNG REPLACE:** Trước khi sinh Interview YAML, kiểm tra **toàn vùng đích `P<PARENT_ROW>:S<PARENT_ROW>`**. Nếu bất kỳ ô nào đã có nội dung, báo `BLOCKER: EXISTING TARGET CONTENT`, `WRITE=NOT_RUN` rồi **DỪNG ngay toàn nhiệm vụ**; không sửa YAML, không fill mảnh còn trống, không nối bổ sung hay coi dữ liệu có sẵn là hoàn thành. Chỉ được replace theo **chỉ thị đặc biệt tường minh của người dùng** cho đúng phạm vi.
+## Chỉ HAI trách nhiệm của Worker
 
-## W1 — Nguồn và quyền ghi
+1. **Đọc TOÀN BỘ một Menu Cấp 1**: xác minh Sheet/tab, A1/B1 và A/B hàng cha đã giao; đọc **tất cả** Menu Cấp 2 và toàn bộ Knowledge C:N trên từng hàng, nối C→N **không chèn separator**. Không chỉ đọc đề mục hay vài bài mẫu, không dùng README source thay cho Sheet khi hợp đồng yêu cầu đọc Sheet. Chọn API/thí nghiệm có giá trị thật sau khi hiểu toàn chương; chương không cần API → báo `API_NOT_REQUIRED` với lý do rõ ràng.
+2. **Tự thiết kế, hiện thực và kiểm chứng API Java có hành vi thực**: input → logic/đối tượng hợp tác → output có thể quan sát; kiểm soát input, lỗi, side effect, số thao tác, tính lặp lại; test đúng/sai/edge cases. Không tạo quota endpoint, không chỉ bàn giao design/YAML, không nhồi lý thuyết vào JSON giả kết quả chạy.
 
-1. Một nhiệm vụ = một Menu Cấp 1 và mọi Menu Cấp 2 của chương đó. Chỉ đọc `A1`, `B1`, A/B hàng cha, tên B và **toàn bộ Knowledge C:N** trên từng hàng con được Prime giao; Difficulty O chỉ đọc nếu được giao. Ghép Knowledge **C→N không thêm separator**, đọc toàn văn từng bài chứ không chỉ tiêu đề.
-2. **Chỉ ghi `P<PARENT_ROW>:S<PARENT_ROW>` ở hàng cha**; tối đa bốn ô × 30.000 Unicode code points/ô. Không ghi hàng con, không sửa A:O/T:AA, J3, Template, tab khác hay source/module. Không spawn worker hoặc commit/push.
-3. A cha là chủ đề phỏng vấn, B cha là filename Knowledge `.md` (chỉ đọc). Nếu nguồn thiếu, hàng con lạc chương, filename/headers sai hoặc vùng ghi không an toàn, báo BLOCKER, không suy đoán.
+## Package skeleton do STEP_5_WORKER tạo — bắt buộc dùng
 
-## W2 — Nội dung và chất lượng câu trả lời
+**Prime đầu STEP 5** đã chuẩn bị module `SERVLET`, bật `BUILD_SWAGGER` và sync cấu hình; **worker STEP 5** sau đó vừa review chương vừa tạo skeleton main/test **với tên package tiếng Anh theo filename Markdown B cha**, không phải tiếng Việt bỏ dấu. **Prime STEP 6** xác minh và giao đúng cặp package đã có, đã đối chiếu B cha, cho worker STEP 6; không tự chọn tên khác. Cấu trúc:
 
-- Tạo các câu hỏi **có giá trị phỏng vấn hoặc ôn tập thực tế**: giải thích cơ chế, vận dụng, so sánh, đánh giá trade-off, debug tình huống, hiểu giới hạn và lựa chọn giải pháp. Không trivia, đánh đố hoặc ép số lượng cố định để đủ quota.
-- Trả lời **đúng kỹ thuật, đủ để người học tự hiểu**, gắn với Knowledge C:N đã đọc; nêu *vì sao/khi nào*, điều kiện và ngoại lệ quan trọng; không bịa hành vi Java/framework/API. Các câu hỏi bao phủ các ý quan trọng của chương mà không lặp nhau hoặc sao chép nguyên văn bài README.
-- **Format nội dung `answer` theo chuẩn trình bày README Markdown khi hữu ích**: chia đoạn rõ ràng, dùng danh sách/bảng/code fence có nhãn `java`, `bash`, `text`, ...; code phải hợp lệ với ngữ cảnh, nêu đầu vào và output chính xác nếu minh họa runnable. Mermaid chỉ khi cần, cân bằng code fence và heading; không ép mọi đáp án cùng khuôn/hệ thống heading. Câu ngắn vẫn có thể là một đoạn. Không chèn lời nhắn cho Prime, TODO hoặc placeholder.
-- Markdown nằm **bên trong chuỗi YAML `answer`**, không phải một bài README khác và không phải JSON. Dùng YAML literal block `|-` cho câu trả lời nhiều dòng; thụt lề và newline phải đúng. Ví dụ ngắn dạng quoted scalar cũng hợp lệ.
-
-## W3 — Định dạng YAML duy nhất
-
-Soạn **MỘT tài liệu YAML hợp lệ** (không bọc Markdown fence toàn tài liệu, không thêm lời dẫn), đúng cấu trúc:
-
-```yaml
-questions:
-  - question: "Khi nào nên ưu tiên composition thay cho inheritance?"
-    answer: |-
-      Ưu tiên **composition** khi cần thay đổi hành vi linh hoạt mà không tạo
-      cây kế thừa cứng. Đánh giá theo quan hệ giữa các đối tượng và khả năng
-      mở rộng/thay đổi độc lập.
-
-      Ví dụ: đối tượng nhận dependency qua constructor thay vì kế thừa lớp
-      chỉ để tái sử dụng một hành vi.
-  - question: "Encapsulation bảo vệ điều gì?"
-    answer: |-
-      Bảo vệ **invariant** bằng cách kiểm soát nơi trạng thái được thay đổi.
+```text
+<module>/src/main/java/<base-package>/<chapter-package>/
+  controller/
+  dto/
+  service/
+  model/
+  exception/
+  repository/
+<module>/src/test/java/<base-package>/<chapter-package>/...
 ```
 
-Ví dụ trên **chỉ minh họa định dạng**, không phải nội dung cần sao chép.
+- Worker **chỉ tạo/chỉnh Java code và tests trong HAI đường dẫn package đã được Prime ghi chính xác ở dòng thứ ba**. Kiểm tra chúng đều thuộc cùng module, cùng một chương, tương ứng `src/main/java` và `src/test/java`; không ghi package cha hoặc module chung. `@RestController` ở `controller/`, DTO/request/response ở `dto/`, nghiệp vụ ở `service/`, domain ở `model/`, handler/exception ở `exception/`, persistence ở `repository/` nếu thực cần. **Không để Controller/DTO/Service/Model trực tiếp ở gốc `<chapter-package>/`**.
+- Không tạo class rỗng cho các thư mục chưa dùng. Skeleton do STEP 5 worker tạo có thể mang marker rỗng `.gitkeep` để Git giữ thư mục; **không xóa marker trong package chưa có code khi vẫn đang giữ ownership**. Sau khi worker API bàn giao, Prime STEP 6 dọn marker dư trong package đã có source và xóa package chưa dùng chỉ có `.gitkeep`; worker không tự xóa skeleton/module hay code của người khác. Nếu dòng phân quyền thiếu một trong hai package, chỉ ghi root chung, package không khớp Menu Cấp 1, skeleton **do STEP 5 worker chịu trách nhiệm** còn thiếu, source tồn tại chưa có quyền chỉnh, route/class conflict hoặc ownership mơ hồ → `BLOCKER: CHAPTER PACKAGE SKELETON MISSING / INVALID OWNERSHIP`, `WRITE=NOT_RUN`; báo Prime trả về STEP 5 để xử lý, không tự chọn đường dẫn khác/tạo skeleton.
+- Test đặt đúng namespace tương ứng trong `src/test/java`; không ghi shared helpers ngoài ownership. Worker có thể đọc source module khác để hiểu API khi được cho phép, nhưng không sửa.
 
-- Root chỉ có `questions` là **danh sách không rỗng**. Mỗi phần tử **chỉ có `question` và `answer`**, đều là YAML string không blank. Không sinh `aiGenerated`, `reviewed`, `readmeRelated`, `apiRelated`, `difficulty` hay metadata khác. Các field này do code Normalize thêm sau khi Prime QA toàn tab.
-- Không dùng JSON, JSONL, YAML nhiều document (`---` lặp lại), alias/anchor YAML, custom tag hoặc comments xen vào dữ liệu. Quote giá trị chứa dấu `:`/ký tự đặc biệt hoặc dùng `|-` cho multiline; không để parser tự chuyển câu trả lời thành map/list/boolean.
-- Mỗi câu trả lời có thể chứa Markdown, Java code fence, bảng hoặc xuống dòng, **nhưng toàn bộ nội dung phải nằm trong scalar `answer`**. Sau khi YAML parse, phải còn đúng chuỗi Markdown/whitespace đã soạn.
+## MVC, ExceptionHandler và Application
 
-## W4 — Soạn, preflight, ghi và exact readback
+- **Controller mỏng**: nhận/validate HTTP request, gọi Service và trả response; không chứa business logic. **Service/domain** chứa logic/chứng cứ thí nghiệm; **DTO** biểu diễn input/output; **Repository** chỉ khi cần dữ liệu lưu trữ. REST JSON/HTTP là biểu diễn View, không phải tạo HTML View. Với Reactive/WebFlux giữ đúng stack và separation of concerns, không tự chuyển sang Servlet.
+- **Không đặt `@ExceptionHandler` trong Controller.** Khi cần custom HTTP error mapping, đặt class xử lý tại `exception/`, dùng `@RestControllerAdvice` **scope cho đúng Controller/chương** hoặc sử dụng handler shared đã tồn tại nếu Prime xác nhận tương thích. Không viết global handler trùng và làm ảnh hưởng chương khác; logic ném lỗi hợp lệ trong Service/domain nhưng không trả HTTP từ Service.
+- **Tuyệt đối không tạo/sửa `*Application.java`, `@SpringBootApplication` hoặc class khởi động.** Prime STEP 5 đã setup `SERVLET` + `BUILD_SWAGGER` và sync Gradle để generator tạo Application; worker STEP 6 chỉ xác minh code dùng được, không tạo lần hai. Nếu thiếu Application/dependency hoặc còn `LIBRARY`, báo Prime blocker để xử lý setup STEP 5; không tự sửa `master.json`, `properties.json`, `build.gradle`, task/Gradle hay config chung.
 
-1. Soạn và QA **toàn bộ** YAML trước khi ghi. Kiểm tra YAML parser, root `questions`, từng string question/answer, Markdown và code fence trong answer, tính chính xác và không trùng câu hỏi. Không tự thêm mặc định/related.
-2. Nếu YAML dài hơn **120.000 Unicode code points**, báo `BLOCKER: INTERVIEW CAPACITY`, không cắt bớt nội dung, không mượn cột X/hàng khác. Ngược lại chia thành tối đa bốn đoạn liên tục ≤30.000 code points, ghi P→Q→R→S trên **cùng hàng cha**, không cắt giữa surrogate pair. Nối không separator phải tái lập chính xác 100% YAML gốc.
-3. Preflight **cả P:S trước khi soạn** và đọc lại ngay trước bất kỳ write: `userEnteredValue/formula`, `effectiveValue`, `formattedValue`, `note`, `dataValidation`, `chipRuns`. Cả bốn ô phải trống/an toàn, không ai khác sở hữu; A/B cha và mọi nguồn giao vẫn nguyên. Nếu có nội dung tại bất kỳ ô nào: `BLOCKER: EXISTING TARGET CONTENT`, `WRITE=NOT_RUN`, dừng ngay, không fill các ô thiếu; nguồn thay đổi → `BLOCKER: SOURCE CHANGED`, không ghi.
-4. Chỉ ghi mảnh YAML vào P:S bằng text value, không đổi format/notes/validation. Lỗi hoặc kết quả write không rõ → đọc trạng thái thật trước, không retry mù.
-5. Exact readback tất cả bốn ô, kiểm tra ô đuôi rỗng, ghép P→S không separator và so khớp **100% Unicode/whitespace/newline**; parse YAML đã đọc lại, QA cặp question/answer và Markdown code fence. Chỉ `COMPLETED` nếu mọi phép kiểm tra PASS.
+## KHÔNG thuộc STEP 6 — để STEP khác theo yêu cầu riêng của người dùng
 
-## W5 — Báo Prime và SLEEPING
+- **Swagger info / API documentation:** không soạn, cập nhật hay sinh `controller-description.yml`, `api-descriptions.yml`, `api-execution.yml`, `api-params.yml`; không viết summary/description, execution guide, params description, request/response examples, expected results hoặc use-case mẫu. Không chạy scanner/generator/merge/import để điền Swagger. Prime STEP 6 **cũng không làm phần này**; một STEP mới chưa đánh số sẽ được người dùng yêu cầu sau.
+- **Mapping:** không tạo hoặc sửa API ↔ Knowledge/Quiz/Interview, `readmeRelated`, `apiRelated`, file/anchor/controller/methodSignature hay các liên kết chéo; STEP mapping **riêng biệt** chưa được yêu cầu thực thi.
+- **Dữ liệu và dự án khác:** không ghi Google Sheets/J3, không sửa README/Quiz/Interview/Video/Template, Swagger resources, dependencies/setup/Application hoặc source thuộc worker khác; không chạy Sheet sync/ByFiles/ByLocation, không commit/push.
 
-Báo một lần: `STATUS=COMPLETED/BLOCKER/FAILED`, tab/gid, `PARENT_CELL`, `CHILD_ROWS`, `READ_COVERAGE`, `OUTPUT_RANGE_P_TO_S`, `QUESTION_COUNT`, `TOTAL_UNICODE_CHARS`, `FILLED_CELLS`, `PREFLIGHT`, `YAML_PARSE=PASS/FAIL`, `ANSWER_MARKDOWN_QA=PASS/FAIL`, `READBACK=PASS/FAIL`, `CONTENT_QA=PASS/FAIL`, `PRESERVATION`, `BLOCKERS`. Sau đó chuyển **SLEEPING**; không tự chạy Normalize, import, STEP 8 hay cập nhật J3.
+Việc Spring tự tạo OpenAPI **cấu trúc kỹ thuật ở runtime** khi kiểm thử không có nghĩa worker được phép viết/tạo các YAML hoặc các ví dụ Swagger.
+
+## Trình tự và báo cáo khi hợp đồng thực thi được duyệt
+
+1. Xác minh Sheet, đúng chương, tất cả hàng Knowledge C:N; **đối chiếu hai package main/test được Prime giao trong dòng thứ ba với skeleton thực tế và chapter**, preflight ownership, route và Application đã được setup. Nguồn thiếu/truncated, đường dẫn sai/trùng vùng ownership thì blocker; không tự quyết định lại phạm vi.
+2. Phân tích toàn chương, chỉ chọn thí nghiệm cần API, triển khai Java/test theo package con và MVC; không tạo endpoint chỉ cho đủ bài.
+3. Tự QA compile/test/hành vi, xử lý lỗi đúng; chỉ báo runtime/HTTP PASS nếu thực tế đã test. Nếu chưa đủ cấu hình/kiểm thử, báo rõ BLOCKER hoặc điều kiện chưa xác minh, không tự thay đổi cấu hình.
+4. Báo Prime: `STATUS=COMPLETED/API_NOT_REQUIRED/BLOCKER/FAILED`, `CHAPTER`, `CHILD_ROWS`, `KNOWLEDGE_COVERAGE`, `MAIN_PACKAGE_PATH`, `TEST_PACKAGE_PATH`, `SOURCE_OWNERSHIP`, `PACKAGES_USED`, `CONTROLLERS/SERVICES/DTO/MODELS/HANDLERS`, `ROUTES`, `TESTS`, `COMPILE`, `RUNTIME`, `BLOCKERS`. Giải phóng ownership, chuyển `SLEEPING`; Prime là người nghiệm thu.
+
+Nếu không thể xác minh phạm vi hoặc quyền sở hữu, **không ghi code, không sửa Sheet**; báo `STATUS=BLOCKER`, `WRITE=NOT_RUN`, nêu chính xác đường dẫn/vùng đang xung đột, giải phóng ownership và chuyển `SLEEPING`.

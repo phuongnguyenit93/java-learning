@@ -1,0 +1,291 @@
+BasicsExperimentController:
+  simulateAccount(AccountSimulationRequest):
+    summary: Observe account state through method calls
+    description: Create a request-local BankAccount, execute up to 20 deposits or
+      withdrawals, and return balances before/after each step, acceptance flags and
+      rejection reasons. No real account or payment is involved.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: simulateAccount
+    params:
+    - request
+    path: com/example/learning/oop/basics/controller/BasicsExperimentController.java
+    mapping: '@PostMapping("/accounts/simulate")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/basics/accounts/simulate
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  simulateOrder(OrderSimulationRequest):
+    summary: Observe an order aggregate and its state transitions
+    description: Run up to 20 add-line, confirm or cancel operations against one request-local
+      OrderAggregate, including rejected transitions.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: simulateOrder
+    params:
+    - request
+    path: com/example/learning/oop/basics/controller/BasicsExperimentController.java
+    mapping: '@PostMapping("/orders/simulate")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/basics/orders/simulate
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  compareShipping(ShippingQuoteRequest):
+    summary: Compare two implementations of a shipping policy interface
+    description: Run Pickup and Courier shipping strategies for one subtotal and bounded
+      travel distance; fees are illustrative, not real carrier prices.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: compareShipping
+    params:
+    - request
+    path: com/example/learning/oop/basics/controller/BasicsExperimentController.java
+    mapping: '@PostMapping("/shipping/quotes")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/basics/shipping/quotes
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+ClassesExperimentController:
+  inventory(InventoryRequest):
+    summary: Observe fields, methods and InventoryItem invariants
+    description: Simulate at most 20 stock restock/sell/rename operations, exposing
+      item snapshots before and after each action.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: inventory
+    params:
+    - request
+    path: com/example/learning/oop/classes/ClassesExperimentController.java
+    mapping: '@PostMapping("/inventory/experiment")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/classes/inventory/experiment
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  workshops(WorkshopRequest):
+    summary: Distinguish per-instance state, class constants and aliases
+    description: Create independent workshops and a reference alias; attempt bounded
+      registration counts to observe which instances change.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: workshops
+    params:
+    - request
+    path: com/example/learning/oop/classes/ClassesExperimentController.java
+    mapping: '@PostMapping("/workshops/experiment")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/classes/workshops/experiment
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  bank(BankRequest):
+    summary: Test encapsulated balances and in-memory atomic transfer
+    description: Create two request-local BankAccount objects and simulate bounded
+      deposit/withdraw/transfer actions with before/after snapshots.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: bank
+    params:
+    - request
+    path: com/example/learning/oop/classes/ClassesExperimentController.java
+    mapping: '@PostMapping("/bank/experiment")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/classes/bank/experiment
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+ObjectExperimentsController:
+  references(ObjectExperimentDto.ReferenceRequest):
+    summary: Observe aliases, identity and Java pass-by-value
+    description: Compare an alias of one mutable object with an independent object
+      of equal initial state; mutate through a parameter and try reassigning it.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: references
+    params:
+    - request
+    path: com/example/learning/oop/objects/ObjectExperimentsController.java
+    mapping: '@PostMapping("/references")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/objects/references
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  equality(ObjectExperimentDto.EqualityRequest):
+    summary: Contrast identity, equals/hashCode and Set behavior
+    description: Compare two record values with ==, equals, hashCode and HashSet cardinality,
+      against an ordinary class using Object.equals.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: equality
+    params:
+    - request
+    path: com/example/learning/oop/objects/ObjectExperimentsController.java
+    mapping: '@PostMapping("/equality")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/objects/equality
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  copies(ObjectExperimentDto.CopyRequest):
+    summary: Contrast shallow/deep copies and shallow immutable collections
+    description: Copy a list of mutable objects shallowly and deeply, capture List.copyOf
+      plus an immutable value record, then mutate the original.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: copies
+    params:
+    - request
+    path: com/example/learning/oop/objects/ObjectExperimentsController.java
+    mapping: '@PostMapping("/copies")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/objects/copies
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  absence(ObjectExperimentDto.AbsenceRequest):
+    summary: Represent absent objects with Optional and empty collections
+    description: Run a request-local sample customer lookup and return whether a customer/address
+      is present without null dereferencing.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: absence
+    params:
+    - request
+    path: com/example/learning/oop/objects/ObjectExperimentsController.java
+    mapping: '@PostMapping("/absence")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/objects/absence
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  checkout(ObjectExperimentDto.CheckoutRequest):
+    summary: Trace Cart–Inventory–Payment–Order–Notifier collaboration
+    description: Simulate checkout in memory and return ordered actor/operation events,
+      inventory changes and payment outcomes. No actual inventory, payment or notification
+      is changed.
+    enableVideoYoutube: false
+    videoYoutubeId: ''
+    videoYoutubeTitle: ''
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: checkout
+    params:
+    - request
+    path: com/example/learning/oop/objects/ObjectExperimentsController.java
+    mapping: '@PostMapping("/checkout")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/objects/checkout
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true

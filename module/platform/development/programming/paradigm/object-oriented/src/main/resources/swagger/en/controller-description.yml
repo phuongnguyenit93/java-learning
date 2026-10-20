@@ -1,0 +1,18 @@
+BasicsExperimentController:
+  description: |-
+    <h2>Object-oriented thinking experiments</h2>
+    <p>Three bounded runtime scenarios: BankAccount state, OrderAggregate lifecycle and ShippingPolicy polymorphism. HTTP controllers adapt JSON only; domain behavior lives in services and models. Every request is isolated, without real money or persistence.</p>
+  readmeRelated:
+    file: ''
+ClassesExperimentController:
+  description: |-
+    <h2>Class members and behavior experiments</h2>
+    <p>Observe InventoryItem fields/methods, Workshop instances and reference aliases, and BankAccount invariants and transfer behavior. Each in-memory scenario has bounded operations and rejects invalid mutations.</p>
+  readmeRelated:
+    file: ''
+ObjectExperimentsController:
+  description: |-
+    <h2>Object identity, copying and collaboration experiments</h2>
+    <p>Explore aliases, Java pass-by-value, value equality, shallow/deep copies, Optional absence and a traced checkout workflow. Side effects are simulated and scoped to one request.</p>
+  readmeRelated:
+    file: ''

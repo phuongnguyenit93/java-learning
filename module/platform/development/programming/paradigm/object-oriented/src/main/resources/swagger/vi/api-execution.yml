@@ -1,0 +1,80 @@
+BasicsExperimentController:
+  simulateAccount(AccountSimulationRequest):
+    execution: |-
+      <p><b>Khái niệm:</b> Đối tượng gắn trạng thái với hành vi, bảo vệ điều kiện bất biến thay vì để caller chỉnh trực tiếp số dư.</p>
+      <ol><li>Service kiểm tra request/actions rồi khởi tạo một BankAccount với số dư đầu vào.</li><li>Từng action gọi deposit/withdraw trên cùng instance; BankAccount từ chối số tiền không dương và rút vượt số dư.</li><li>Sau mỗi lời gọi, timeline ghi balanceBeforeCents, balanceAfterCents, accepted và reason; tràn số học được xử lý trước khi thay đổi trạng thái.</li></ol>
+      <p><b>Quan sát:</b> Action hợp lệ thay đổi đúng trạng thái; action không hợp lệ hoặc không đủ tiền giữ nguyên số dư. Dữ liệu được làm mới cho mỗi request.</p>
+      <p><b>Kết luận:</b> OOP đưa quy tắc trạng thái vào phương thức của đối tượng; HTTP chỉ kích hoạt và quan sát quy tắc đó.</p>
+    usage: true
+  simulateOrder(OrderSimulationRequest):
+    execution: |-
+      <p><b>Khái niệm:</b> Một đối tượng tập hợp dữ liệu và điều kiện chuyển trạng thái; service chỉ điều phối chuỗi thông điệp.</p>
+      <ol><li>OrderAggregate bắt đầu ở DRAFT và có danh sách dòng hàng riêng cho request.</li><li>ADD_LINE kiểm tra SKU, số lượng, đơn giá và overflow trước khi thêm; CONFIRM đòi ít nhất một dòng hàng; CANCEL chỉ được ở DRAFT.</li><li>Thử thao tác sau CONFIRMED/CANCELLED để thấy bước bị từ chối nhưng status/total không đổi.</li></ol>
+      <p><b>Quan sát:</b> Timeline có statusBefore/statusAfter, totalBeforeCents/totalAfterCents, lineCountAfter và accepted/reason.</p>
+      <p><b>Kết luận:</b> Giữ ranh giới trách nhiệm và bất biến ngay trong đối tượng giúp mô tả vòng đời nhất quán, không cần đặt luật vào Controller.</p>
+    usage: true
+  compareShipping(ShippingQuoteRequest):
+    execution: |-
+      <p><b>Khái niệm:</b> Đa hình theo interface: caller gọi cùng một phương thức nhưng mỗi đối tượng hiện thực hành vi khác nhau.</p>
+      <ol><li>Service kiểm tra subtotalCents không âm và distanceKm từ 0 đến 100.</li><li>Danh sách ShippingPolicy chứa Pickup (phí bằng 0) và Courier (phí theo quãng đường).</li><li>Service gọi feeCents trên từng policy mà không switch theo lớp cụ thể, rồi trả hai quote cùng dữ liệu đầu vào.</li></ol>
+      <p><b>Quan sát:</b> Cùng một khoảng cách cho các giá trị feeCents khác nhau tùy concrete implementation; mỗi quote nêu payableCents.</p>
+      <p><b>Kết luận:</b> Hợp đồng chung giảm điều kiện phân nhánh ở caller, còn từng đối tượng chịu trách nhiệm tính phí của mình.</p>
+    usage: true
+ClassesExperimentController:
+  inventory(InventoryRequest):
+    execution: |-
+      <p><b>Khái niệm:</b> Class định nghĩa cả dữ liệu nhận diện/giá và các phương thức được phép thay đổi trạng thái.</p>
+      <ol><li>Từ SKU, tên, đơn giá và số lượng khởi tạo một InventoryItem với các điều kiện hợp lệ.</li><li>Service gửi từng action cho restock/sell/rename; mỗi method kiểm soát giới hạn kho và dữ liệu đổi tên.</li><li>Ghi before/after theo từng bước và totalValueVnd thay vì trả một câu lý thuyết.</li></ol>
+      <p><b>Quan sát:</b> SKU và đơn giá giữ ổn định; các thao tác hợp lệ cập nhật lượng/tên; thao tác bị từ chối không tạo partial mutation.</p>
+      <p><b>Kết luận:</b> Phương thức là ranh giới đổi trạng thái; tính nhất quán không phụ thuộc vào validation tại lớp HTTP.</p>
+    usage: true
+  workshops(WorkshopRequest):
+    execution: |-
+      <p><b>Khái niệm:</b> Các instance cùng class dùng chung quy tắc nhưng giữ trạng thái riêng; phép gán tham chiếu không tạo instance mới.</p>
+      <ol><li>Tạo first/second với title và capacity riêng; tạo independent thứ ba có cùng thông số với second.</li><li>Alias là một tham chiếu khác tới second; gọi register qua first và alias với số lần hữu hạn.</li><li>Trả registered/remainingSeats, số lượt thành công/từ chối, cờ alias==second và independent==second.</li></ol>
+      <p><b>Quan sát:</b> Alias ảnh hưởng chính second, trong khi independent không bị thay đổi; mỗi workshop phải tuân MAX_CAPACITY.</p>
+      <p><b>Kết luận:</b> Phân biệt field dùng cho instance và quy tắc class giúp dự đoán kết quả khi tạo mới hay gán tham chiếu.</p>
+    usage: true
+  bank(BankRequest):
+    execution: |-
+      <p><b>Khái niệm:</b> Một class có thể giữ số dư private và cung cấp các method thỏa điều kiện bất biến, kể cả khi phối hợp hai object.</p>
+      <ol><li>Service tạo hai BankAccount có accountNumber khác nhau với số dư đầu vào.</li><li>Các method kiểm soát số tiền, số dư khả dụng và overflow; transfer thực hiện kiểm tra trước khi cập nhật hai số dư.</li><li>Mỗi action trả accepted/detail và before/after của cả source và destination; các yêu cầu không hợp lệ bị cô lập.</li></ol>
+      <p><b>Quan sát:</b> Tổng tiền chuyển giữa hai tài khoản được giữ khi thành công; lỗi không để một bên bị cập nhật dở dang.</p>
+      <p><b>Kết luận:</b> Đóng gói nghiệp vụ trong đối tượng không đồng nghĩa có transaction ngân hàng thật; đây là mô phỏng single-thread, single-request.</p>
+    usage: true
+ObjectExperimentsController:
+  references(ObjectExperimentDto.ReferenceRequest):
+    execution: |-
+      <p><b>Khái niệm:</b> Java truyền bản sao giá trị tham chiếu; nhiều biến có thể trỏ tới cùng instance nhưng reassign tham số không đổi biến của caller.</p>
+      <ol><li>Tạo original và separatelyCreated có cùng dữ liệu; alias = original.</li><li>Một method nhận alias và tăng state của object; method khác gán tham số tới object mới.</li><li>Trả các so sánh identity cùng before/after của original, alias và independent instance.</li></ol>
+      <p><b>Quan sát:</b> Original và alias thấy cùng thay đổi; đối tượng tạo riêng giữ nguyên; gán lại biến tham số không thay đổi alias của caller.</p>
+      <p><b>Kết luận:</b> Tham chiếu được truyền theo giá trị, trong khi bản thân instance có thể bị mutate bởi lời gọi phương thức.</p>
+    usage: true
+  equality(ObjectExperimentDto.EqualityRequest):
+    execution: |-
+      <p><b>Khái niệm:</b> Cùng giá trị không đồng nghĩa cùng instance; record cung cấp phép so sánh theo giá trị, class mặc định so sánh identity.</p>
+      <ol><li>Tạo hai ProductCode từ firstCode/secondCode cùng một alias trỏ về object đầu.</li><li>So ==, equals, hashCode, đưa hai record vào HashSet.</li><li>So hai LegacyIdentityCode chứa cùng mã nhưng không override equals để thấy sự khác biệt.</li></ol>
+      <p><b>Quan sát:</b> Response phân biệt sameInstance, valueEquals, hashCodesEqual, hashSetSize, defaultObjectEquals và aliasIsSameInstance.</p>
+      <p><b>Kết luận:</b> Chọn equality theo hợp đồng dữ liệu; không dùng == thay cho equals khi mục tiêu là bằng nhau về giá trị.</p>
+    usage: true
+  copies(ObjectExperimentDto.CopyRequest):
+    execution: |-
+      <p><b>Khái niệm:</b> Sao chép container không đồng nghĩa sao chép object bên trong; unmodifiable list không làm phần tử thành immutable.</p>
+      <ol><li>Tạo original với một MutableItem; tạo shallow bằng ArrayList copy và deep bằng clone từng phần tử.</li><li>Tạo List.copyOf(original) trước mutation và một immutable record giữ giá trị ban đầu.</li><li>Đổi label của phần tử original rồi thêm phần tử mới; trả identity flags và labels của từng danh sách.</li></ol>
+      <p><b>Quan sát:</b> Shallow/list snapshot cùng thấy label đã đổi nhưng không tự nhận phần tử mới; deep và immutable value giữ dữ liệu cũ.</p>
+      <p><b>Kết luận:</b> Khi thiết kế API tránh để lộ mutable internal state; cần quyết định sao chép sâu hay biểu diễn immutable.</p>
+    usage: true
+  absence(ObjectExperimentDto.AbsenceRequest):
+    execution: |-
+      <p><b>Khái niệm:</b> null/không tồn tại là một trạng thái dữ liệu cần xử lý rõ ở ranh giới object.</p>
+      <ol><li>Tạo repository trong bộ nhớ chỉ có một Customer mẫu; lookup theo id do caller cung cấp.</li><li>Optional.ofNullable thể hiện kết quả tìm kiếm và flatMap địa chỉ tùy chọn.</li><li>Chuyển địa chỉ thành list 0 hoặc 1 phần tử; không dereference null.</li></ol>
+      <p><b>Quan sát:</b> Khi id không tồn tại, found=false và addresses rỗng; khi khách hàng có địa chỉ, list mang một giá trị.</p>
+      <p><b>Kết luận:</b> Đừng nhầm object vắng mặt với object hợp lệ có field null; Optional và empty collection diễn đạt hai ngữ nghĩa khác nhau.</p>
+    usage: true
+  checkout(ObjectExperimentDto.CheckoutRequest):
+    execution: |-
+      <p><b>Khái niệm:</b> Hành vi OOP hình thành qua thông điệp giữa nhiều object có trách nhiệm riêng và cách xử lý khi một bước thất bại.</p>
+      <ol><li>Cart tính total, Inventory kiểm tra và reserve số lượng yêu cầu.</li><li>Thiếu stock → STOCK_REJECTED; payment từ chối → hoàn lại reservation và trả PAYMENT_DECLINED.</li><li>Thanh toán giả lập thành công → tạo Order, gọi Notifier giả lập; Trace ghi từng actor, operation, observation và stockAfter.</li></ol>
+      <p><b>Quan sát:</b> Workflow events làm rõ thứ tự tương tác; stockAfter được khôi phục ở nhánh từ chối payment.</p>
+      <p><b>Kết luận:</b> Đây là mô phỏng synchronous local, không thay cho distributed transaction hoặc tích hợp thanh toán/kho thật.</p>
+    usage: true

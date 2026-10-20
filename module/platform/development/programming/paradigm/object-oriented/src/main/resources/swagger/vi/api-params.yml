@@ -1,0 +1,6 @@
+request:
+  summary: JSON đầu vào của thí nghiệm
+  description: Dữ liệu request theo DTO của từng endpoint. Các tham số được kiểm tra
+    tại ranh giới Service và domain; xem mô tả từng API để biết giới hạn và chứng
+    cứ trả về.
+  usage: true

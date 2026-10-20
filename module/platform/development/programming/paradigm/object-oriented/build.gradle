@@ -1,0 +1,5 @@
+// Module-local test dependency for the STEP 6 OOP API experiments.
+// Core Spring MVC/Swagger dependencies remain derived from master.json.
+dependencies {
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
