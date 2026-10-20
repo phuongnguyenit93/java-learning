@@ -1,0 +1,789 @@
+1.OOPBasic/OOPBasic.md:
+  oop-basic-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  oop-basic-002:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  oop-basic-003:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  oop-basic-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  oop-basic-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  oop-basic-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  oop-basic-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  oop-basic-008:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+2.Class/Class.md:
+  class-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  class-002:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  class-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  class-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  class-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  class-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  class-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  class-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+3.Object/Object.md:
+  object-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  object-002:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  object-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  object-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  object-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  object-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  object-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  object-008:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  object-009:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+4.Lifecycle/Lifecycle.md:
+  lifecycle-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  lifecycle-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  lifecycle-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  lifecycle-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  lifecycle-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  lifecycle-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  lifecycle-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  lifecycle-008:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  lifecycle-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+5.Encapsulation/Encapsulation.md:
+  encapsulation-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  encapsulation-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  encapsulation-003:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  encapsulation-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  encapsulation-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  encapsulation-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  encapsulation-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  encapsulation-008:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  encapsulation-009:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+6.Abstraction/Abstraction.md:
+  abstraction-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  abstraction-002:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  abstraction-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  abstraction-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  abstraction-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  abstraction-006:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  abstraction-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  abstraction-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+7.Interface/Interface.md:
+  interface-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  interface-002:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  interface-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  interface-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  interface-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  interface-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  interface-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  interface-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  interface-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+8.Inheritance/Inheritance.md:
+  inheritance-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  inheritance-002:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  inheritance-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  inheritance-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  inheritance-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  inheritance-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  inheritance-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  inheritance-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  inheritance-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  inheritance-010:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+9.Subtyping/Subtyping.md:
+  subtyping-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  subtyping-002:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  subtyping-003:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  subtyping-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  subtyping-005:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  subtyping-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  subtyping-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  subtyping-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+10.Polymorphism/Polymorphism.md:
+  polymorphism-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  polymorphism-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  polymorphism-003:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  polymorphism-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  polymorphism-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  polymorphism-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  polymorphism-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  polymorphism-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  polymorphism-009:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  polymorphism-010:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+11.Composition/Composition.md:
+  composition-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  composition-002:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  composition-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  composition-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  composition-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  composition-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  composition-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  composition-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+12.Relationships/Relationships.md:
+  relationships-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  relationships-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  relationships-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  relationships-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  relationships-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  relationships-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  relationships-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  relationships-008:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+13.ClassDesign/ClassDesign.md:
+  class-design-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  class-design-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  class-design-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  class-design-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  class-design-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  class-design-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  class-design-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  class-design-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  class-design-009:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+14.Modeling/Modeling.md:
+  modeling-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  modeling-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  modeling-003:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  modeling-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  modeling-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  modeling-006:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  modeling-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  modeling-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  modeling-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+15.SOLID/SOLID.md:
+  solid-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  solid-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  solid-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  solid-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  solid-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  solid-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  solid-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  solid-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+16.DesignPatterns/DesignPatterns.md:
+  design-patterns-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  design-patterns-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  design-patterns-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  design-patterns-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  design-patterns-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  design-patterns-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  design-patterns-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  design-patterns-008:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  design-patterns-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  design-patterns-010:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  design-patterns-011:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  design-patterns-012:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  design-patterns-013:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+17.LanguageMechanics/LanguageMechanics.md:
+  language-mechanics-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  language-mechanics-002:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  language-mechanics-003:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  language-mechanics-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  language-mechanics-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  language-mechanics-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  language-mechanics-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  language-mechanics-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  language-mechanics-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+18.DesignPitfalls/DesignPitfalls.md:
+  design-pitfalls-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  design-pitfalls-002:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  design-pitfalls-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  design-pitfalls-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  design-pitfalls-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  design-pitfalls-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  design-pitfalls-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  design-pitfalls-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  design-pitfalls-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  design-pitfalls-010:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+19.Testing/Testing.md:
+  testing-001:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  testing-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  testing-003:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  testing-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  testing-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  testing-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  testing-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  testing-008:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  testing-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  testing-010:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+20.Refactoring/Refactoring.md:
+  refactoring-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  refactoring-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  refactoring-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  refactoring-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  refactoring-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  refactoring-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  refactoring-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  refactoring-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  refactoring-009:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+21.Practice/Practice.md:
+  practice-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  practice-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  practice-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  practice-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  practice-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  practice-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  practice-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  practice-008:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  practice-009:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  practice-010:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  practice-011:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
