@@ -1,294 +1,1197 @@
-1.Introduction/CoreContainer.md:
-  container-purpose:
+1.Overview/Overview.md:
+  overview-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  managed-beans-vs-plain-objects:
+  overview-002:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  inversion-of-control:
+  overview-003:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  dependency-injection-role:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
-  container-module-boundary:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
-2.ContainerModel/ContainerModel.md:
-  bean-definition-metadata:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
-  bean-factory-role:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
-  application-context-role:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
-  object-graph-assembly:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
-  container-bootstrap-refresh:
+  overview-004:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-3.BeanRegistration/BeanRegistration.md:
-  explicit-vs-scanning:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
-  stereotype-components:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
-  component-scan-boundaries:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
-  configuration-and-bean:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
-  bean-names-and-aliases:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
-  full-vs-lite-configuration:
+  overview-005:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  import-composition:
+  overview-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  overview-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  overview-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  overview-009:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+2.FirstApplication/FirstApplication.md:
+  first-application-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  conditional-registration:
+  first-application-002:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  xml-and-programmatic-registration:
+  first-application-003:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  first-application-004:
     difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  first-application-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  first-application-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  first-application-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  first-application-008:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+3.BeanDefinition/BeanDefinition.md:
+  bean-definition-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  bean-definition-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  bean-definition-003:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  bean-definition-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  bean-definition-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  bean-definition-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  bean-definition-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  bean-definition-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  bean-definition-009:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
 4.DependencyInjection/DependencyInjection.md:
-  injection-styles:
+  dependency-injection-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  dependency-injection-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  dependency-injection-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  dependency-injection-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  dependency-injection-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  dependency-injection-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  dependency-injection-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  dependency-injection-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+5.Autowired/Autowired.md:
+  autowired-001:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  autowired-002:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  type-based-autowiring:
+  autowired-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  autowired-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  autowired-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  autowired-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  autowired-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  autowired-008:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  autowired-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+6.CandidateSelection/CandidateSelection.md:
+  candidate-selection-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  candidate-selection-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  candidate-selection-003:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  candidate-selection:
+  candidate-selection-004:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  primary-and-qualifier:
+  candidate-selection-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  candidate-selection-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  candidate-selection-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  candidate-selection-008:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  collection-and-optional-dependencies:
+  candidate-selection-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  candidate-selection-010:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  service-locator-vs-di:
+7.FlexibleDependencies/FlexibleDependencies.md:
+  flexible-dependencies-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  dependency-resolution-failures:
+  flexible-dependencies-002:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-5.BeanScope/BeanScope.md:
-  spring-singleton-scope:
+  flexible-dependencies-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  prototype-scope:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  web-aware-scopes:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  eager-vs-lazy-initialization:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  scoped-dependency-mismatch:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  dynamic-dependency-lookup:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  custom-scopes:
-    difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
-6.BeanLifecycle/BeanLifecycle.md:
-  bean-lifecycle-overview:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  instantiation-and-population:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  aware-callbacks:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  initialization-callbacks:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  destruction-callbacks:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  lifecycle-smartlifecycle:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  startup-order-depends-on:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  lifecycle-failure-boundaries:
-    difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
-7.EnvironmentAndSpEL/EnvironmentAndSpEL.md:
-  environment-abstraction:
+  flexible-dependencies-004:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  property-sources-and-precedence:
+  flexible-dependencies-005:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  property-placeholders:
+  flexible-dependencies-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  flexible-dependencies-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  flexible-dependencies-008:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  profiles:
-    difficulty: INTERMEDIATE
+  flexible-dependencies-009:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  spel-purpose:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  spel-evaluation-model:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  spel-in-bean-definitions:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  boot-config-boundary:
+8.ComponentScanning/ComponentScanning.md:
+  component-scanning-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-8.ApplicationContextServices/ApplicationContextServices.md:
-  resource-abstraction:
+  component-scanning-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  component-scanning-003:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  resource-loading-and-patterns:
+  component-scanning-004:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  application-events:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  event-listeners:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  message-source-i18n:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  context-hierarchy:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  context-service-boundaries:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-9.ExtensionPoints/ExtensionPoints.md:
-  extension-point-purpose:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  bean-factory-post-processor:
+  component-scanning-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  bean-post-processor:
+  component-scanning-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  post-processor-ordering:
+  component-scanning-007:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  early-bean-instantiation:
+  component-scanning-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  factory-bean:
+  component-scanning-009:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  annotation-infrastructure:
+9.JavaConfiguration/JavaConfiguration.md:
+  java-configuration-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  java-configuration-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  java-configuration-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  java-configuration-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  java-configuration-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  container-agnostic-design:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-10.ContainerDesignAndDiagnostics/ContainerDesignAndDiagnostics.md:
-  end-to-end-container-flow:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  registration-strategy:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  injection-strategy:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  scope-lifecycle-design:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  environment-context-design:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  startup-failure-diagnosis:
+  java-configuration-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  neighboring-module-handoffs:
+  java-configuration-007:
     difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  java-configuration-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  java-configuration-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  java-configuration-010:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+10.ConfigurationComposition/ConfigurationComposition.md:
+  configuration-composition-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  configuration-composition-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  configuration-composition-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  configuration-composition-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  configuration-composition-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  configuration-composition-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  configuration-composition-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  configuration-composition-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  configuration-composition-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+11.XmlConfiguration/XmlConfiguration.md:
+  xml-configuration-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  xml-configuration-002:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  xml-configuration-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  xml-configuration-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  xml-configuration-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  xml-configuration-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  xml-configuration-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  xml-configuration-008:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  xml-configuration-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+12.BeanCreationTiming/BeanCreationTiming.md:
+  bean-creation-timing-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  bean-creation-timing-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  bean-creation-timing-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  bean-creation-timing-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  bean-creation-timing-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  bean-creation-timing-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  bean-creation-timing-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  bean-creation-timing-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+13.BeanScopes/BeanScopes.md:
+  bean-scopes-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  bean-scopes-002:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  bean-scopes-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  bean-scopes-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  bean-scopes-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  bean-scopes-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  bean-scopes-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  bean-scopes-008:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  bean-scopes-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  bean-scopes-010:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+14.CrossScopeDependencies/CrossScopeDependencies.md:
+  cross-scope-dependencies-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  cross-scope-dependencies-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  cross-scope-dependencies-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  cross-scope-dependencies-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  cross-scope-dependencies-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  cross-scope-dependencies-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  cross-scope-dependencies-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  cross-scope-dependencies-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  cross-scope-dependencies-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+15.BeanLifecycle/BeanLifecycle.md:
+  bean-lifecycle-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  bean-lifecycle-002:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  bean-lifecycle-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  bean-lifecycle-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  bean-lifecycle-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  bean-lifecycle-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  bean-lifecycle-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  bean-lifecycle-008:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  bean-lifecycle-009:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  bean-lifecycle-010:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+16.ContextLifecycle/ContextLifecycle.md:
+  context-lifecycle-001:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  context-lifecycle-002:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  context-lifecycle-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  context-lifecycle-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  context-lifecycle-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  context-lifecycle-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  context-lifecycle-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  context-lifecycle-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+17.AwareCallbacks/AwareCallbacks.md:
+  aware-callbacks-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  aware-callbacks-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  aware-callbacks-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  aware-callbacks-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  aware-callbacks-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  aware-callbacks-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+18.FactoryBean/FactoryBean.md:
+  factory-bean-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  factory-bean-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  factory-bean-003:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  factory-bean-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  factory-bean-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  factory-bean-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  factory-bean-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  factory-bean-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+19.DefinitionExtension/DefinitionExtension.md:
+  definition-extension-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  definition-extension-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  definition-extension-003:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  definition-extension-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  definition-extension-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  definition-extension-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  definition-extension-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  definition-extension-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  definition-extension-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+20.InstanceExtension/InstanceExtension.md:
+  instance-extension-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  instance-extension-002:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  instance-extension-003:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  instance-extension-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  instance-extension-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  instance-extension-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  instance-extension-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  instance-extension-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  instance-extension-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+21.ConfigurationEnvironment/ConfigurationEnvironment.md:
+  configuration-environment-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  configuration-environment-002:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  configuration-environment-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  configuration-environment-004:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  configuration-environment-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  configuration-environment-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  configuration-environment-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  configuration-environment-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  configuration-environment-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+22.ProfilesAndConditions/ProfilesAndConditions.md:
+  profiles-and-conditions-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  profiles-and-conditions-002:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  profiles-and-conditions-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  profiles-and-conditions-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  profiles-and-conditions-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  profiles-and-conditions-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  profiles-and-conditions-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  profiles-and-conditions-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  profiles-and-conditions-009:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+23.ValuesAndExpressions/ValuesAndExpressions.md:
+  values-and-expressions-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  values-and-expressions-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  values-and-expressions-003:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  values-and-expressions-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  values-and-expressions-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  values-and-expressions-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  values-and-expressions-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  values-and-expressions-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  values-and-expressions-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+24.Resources/Resources.md:
+  resources-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  resources-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  resources-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  resources-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  resources-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  resources-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  resources-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  resources-008:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  resources-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+25.Internationalization/Internationalization.md:
+  internationalization-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  internationalization-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  internationalization-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  internationalization-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  internationalization-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  internationalization-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  internationalization-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+26.ApplicationEvents/ApplicationEvents.md:
+  application-events-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  application-events-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  application-events-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  application-events-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  application-events-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  application-events-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  application-events-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  application-events-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  application-events-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  application-events-010:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  application-events-011:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+27.ContextHierarchy/ContextHierarchy.md:
+  context-hierarchy-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  context-hierarchy-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  context-hierarchy-003:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  context-hierarchy-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  context-hierarchy-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  context-hierarchy-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  context-hierarchy-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  context-hierarchy-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+28.ProgrammaticRegistration/ProgrammaticRegistration.md:
+  programmatic-registration-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  programmatic-registration-002:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  programmatic-registration-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  programmatic-registration-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  programmatic-registration-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  programmatic-registration-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  programmatic-registration-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  programmatic-registration-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  programmatic-registration-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+29.CircularDependenciesAndProxies/CircularDependenciesAndProxies.md:
+  circular-dependencies-and-proxies-001:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  circular-dependencies-and-proxies-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  circular-dependencies-and-proxies-003:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  circular-dependencies-and-proxies-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  circular-dependencies-and-proxies-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  circular-dependencies-and-proxies-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  circular-dependencies-and-proxies-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  circular-dependencies-and-proxies-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  circular-dependencies-and-proxies-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+30.AdvancedIntegration/AdvancedIntegration.md:
+  advanced-integration-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  advanced-integration-002:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  advanced-integration-003:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  advanced-integration-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  advanced-integration-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  advanced-integration-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  advanced-integration-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+31.ContainerTesting/ContainerTesting.md:
+  container-testing-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  container-testing-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  container-testing-003:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  container-testing-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  container-testing-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  container-testing-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  container-testing-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  container-testing-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  container-testing-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+32.Troubleshooting/Troubleshooting.md:
+  troubleshooting-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  troubleshooting-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  troubleshooting-003:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  troubleshooting-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  troubleshooting-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  troubleshooting-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  troubleshooting-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  troubleshooting-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  troubleshooting-009:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  troubleshooting-010:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+33.ComprehensivePractice/ComprehensivePractice.md:
+  comprehensive-practice-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  comprehensive-practice-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  comprehensive-practice-003:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  comprehensive-practice-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  comprehensive-practice-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  comprehensive-practice-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  comprehensive-practice-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  comprehensive-practice-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  comprehensive-practice-009:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
