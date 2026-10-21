@@ -1,383 +1,1010 @@
-1.SpringMvcFoundation/SpringMvcFoundation.md:
-  spring-mvc-purpose:
+1.WebOverview/WebOverview.md:
+  web-overview-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  servlet-request-response-model:
+  web-overview-002:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  spring-web-and-spring-webmvc:
-    difficulty: BASIC
+  web-overview-003:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  framework-vs-boot-web:
+  web-overview-004:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  spring-web-module-boundaries:
-    difficulty: BASIC
+  web-overview-005:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-2.DispatcherServletLifecycle/DispatcherServletLifecycle.md:
-  dispatcher-servlet-front-controller:
-    difficulty: BASIC
+  web-overview-006:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  dispatcher-bootstrap-and-context-hierarchy:
+2.HttpFundamentals/HttpFundamentals.md:
+  http-fundamentals-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  handler-mapping-and-execution-chain:
-    difficulty: BASIC
+  http-fundamentals-002:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  handler-invocation-and-return-value-processing:
-    difficulty: BASIC
+  http-fundamentals-003:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  exception-resolution-position:
-    difficulty: BASIC
+  http-fundamentals-004:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  dispatcher-strategies-overview:
-    difficulty: BASIC
+  http-fundamentals-005:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-3.AnnotatedControllers/AnnotatedControllers.md:
-  annotated-controller-model:
-    difficulty: BASIC
+  http-fundamentals-006:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  request-mapping-and-conditions:
-    difficulty: BASIC
+  http-fundamentals-007:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  handler-method-inputs:
-    difficulty: BASIC
+  http-fundamentals-008:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  model-and-session-state:
+3.ApplicationBootstrap/ApplicationBootstrap.md:
+  application-bootstrap-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  handler-return-values-and-response-handling:
-    difficulty: BASIC
+  application-bootstrap-002:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-4.WebMvcFunctionalEndpoints/WebMvcFunctionalEndpoints.md:
-  webmvc-fn-mental-model:
-    difficulty: BASIC
+  application-bootstrap-003:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  router-functions-and-request-predicates:
-    difficulty: BASIC
+  application-bootstrap-004:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  handler-functions-request-response:
-    difficulty: BASIC
+  application-bootstrap-005:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  handler-filter-functions:
-    difficulty: BASIC
+  application-bootstrap-006:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  annotated-and-functional-coexistence:
-    difficulty: BASIC
+  application-bootstrap-007:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-5.MvcBindingValidation/MvcBindingValidation.md:
-  mvc-binding-lifecycle:
+4.MvcRequestLifecycle/MvcRequestLifecycle.md:
+  mvc-request-lifecycle-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  web-data-binder-and-init-binder:
-    difficulty: BASIC
+  mvc-request-lifecycle-002:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  validation-and-binding-result:
-    difficulty: BASIC
+  mvc-request-lifecycle-003:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  mvc-method-validation-6-1:
-    difficulty: BASIC
+  mvc-request-lifecycle-004:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  validation-exception-paths:
-    difficulty: BASIC
+  mvc-request-lifecycle-005:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  validated-aop-boundary:
-    difficulty: BASIC
+  mvc-request-lifecycle-006:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  safe-binding:
-    difficulty: BASIC
+  mvc-request-lifecycle-007:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-6.MessageConversionRepresentation/MessageConversionRepresentation.md:
-  http-message-converters:
-    difficulty: BASIC
+  mvc-request-lifecycle-008:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  request-response-body-conversion:
+5.RequestRouting/RequestRouting.md:
+  request-routing-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  content-negotiation-and-media-types:
+  request-routing-002:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  response-entity-status-and-headers:
-    difficulty: BASIC
+  request-routing-003:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  request-response-body-advice:
-    difficulty: BASIC
+  request-routing-004:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-7.ViewRenderingNavigation/ViewRenderingNavigation.md:
-  model-and-view:
-    difficulty: BASIC
+  request-routing-005:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  view-resolution-and-logical-names:
-    difficulty: BASIC
+  request-routing-006:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  redirects-and-flash-attributes:
-    difficulty: BASIC
+  request-routing-007:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  uri-building:
-    difficulty: BASIC
+  request-routing-008:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  view-technology-boundary:
-    difficulty: BASIC
+6.ControllerInputs/ControllerInputs.md:
+  controller-inputs-001:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-8.MvcErrorHandling/MvcErrorHandling.md:
-  handler-exception-resolver-chain:
+  controller-inputs-002:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  exception-handler-and-controller-advice:
+  controller-inputs-003:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  response-status-errors:
-    difficulty: BASIC
+  controller-inputs-004:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  error-response-and-problem-detail:
-    difficulty: BASIC
+  controller-inputs-005:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  response-entity-exception-handler:
-    difficulty: BASIC
+  controller-inputs-006:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  validation-error-responses:
-    difficulty: BASIC
+  controller-inputs-007:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  mvc-error-boundaries:
-    difficulty: BASIC
+  controller-inputs-008:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-9.AsyncMvcStreaming/AsyncMvcStreaming.md:
-  servlet-async-lifecycle:
-    difficulty: BASIC
+  controller-inputs-009:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  deferred-single-result:
-    difficulty: BASIC
+  controller-inputs-010:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  servlet-streaming:
+7.BindingValidation/BindingValidation.md:
+  binding-validation-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  reactive-return-values-in-mvc:
-    difficulty: BASIC
+  binding-validation-002:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  async-timeouts-executor-and-dispatch:
-    difficulty: BASIC
+  binding-validation-003:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  async-mvc-vs-webflux:
-    difficulty: BASIC
+  binding-validation-004:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-10.CrossCuttingRequestInfrastructure/CrossCuttingRequestInfrastructure.md:
-  filters-interceptors-and-placement:
-    difficulty: BASIC
+  binding-validation-005:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  cors-processing:
-    difficulty: BASIC
+  binding-validation-006:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  forwarded-headers:
-    difficulty: BASIC
+  binding-validation-007:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  async-dispatch-cross-cutting:
-    difficulty: BASIC
+  binding-validation-008:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  security-boundary:
-    difficulty: BASIC
+  binding-validation-009:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-11.WebSupportResourceDelivery/WebSupportResourceDelivery.md:
-  multipart-request-resolution:
+8.HttpMessageBodies/HttpMessageBodies.md:
+  http-message-bodies-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  locale-resolution:
-    difficulty: BASIC
+  http-message-bodies-002:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  static-resources-and-resource-chain:
-    difficulty: BASIC
+  http-message-bodies-003:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  conditional-requests-and-http-caching:
-    difficulty: BASIC
+  http-message-bodies-004:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  default-servlet-boundary:
-    difficulty: BASIC
+  http-message-bodies-005:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-12.MvcConfigurationExtension/MvcConfigurationExtension.md:
-  enable-web-mvc:
-    difficulty: BASIC
+  http-message-bodies-006:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  web-mvc-configurer:
-    difficulty: BASIC
+  http-message-bodies-007:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  path-matching-configuration:
-    difficulty: BASIC
+  http-message-bodies-008:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  conversion-validation-configuration:
+9.RestResponses/RestResponses.md:
+  rest-responses-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  message-converter-content-negotiation-configuration:
-    difficulty: BASIC
+  rest-responses-002:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  interceptor-cors-resource-view-configuration:
-    difficulty: BASIC
+  rest-responses-003:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  async-support-configuration:
-    difficulty: BASIC
+  rest-responses-004:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  custom-mvc-spis:
-    difficulty: BASIC
+  rest-responses-005:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  framework-defaults-vs-customization:
-    difficulty: BASIC
+  rest-responses-006:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-13.SynchronousHttpClients/SynchronousHttpClients.md:
-  synchronous-client-model:
-    difficulty: BASIC
+  rest-responses-007:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  rest-client-6-1:
-    difficulty: BASIC
+  rest-responses-008:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  rest-template:
+10.ErrorHandling/ErrorHandling.md:
+  error-handling-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  client-http-request-factory:
-    difficulty: BASIC
+  error-handling-002:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  client-request-customization:
-    difficulty: BASIC
+  error-handling-003:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  client-message-conversion-and-bodies:
-    difficulty: BASIC
+  error-handling-004:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  status-and-error-handling:
-    difficulty: BASIC
+  error-handling-005:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  integration-http-selection-boundary:
-    difficulty: BASIC
+  error-handling-006:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-14.HttpServiceInterfaces/HttpServiceInterfaces.md:
-  http-exchange-contract:
-    difficulty: BASIC
+  error-handling-007:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  http-service-proxy-factory:
-    difficulty: BASIC
+  error-handling-008:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  http-exchange-adapter-model:
+11.ViewsForms/ViewsForms.md:
+  views-forms-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  synchronous-http-client-adapters:
-    difficulty: BASIC
+  views-forms-002:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  service-method-arguments-and-return-values:
-    difficulty: BASIC
+  views-forms-003:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  reactive-adapter-boundary:
-    difficulty: BASIC
+  views-forms-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  views-forms-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  views-forms-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  views-forms-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  views-forms-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+12.SessionLocalization/SessionLocalization.md:
+  session-localization-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  session-localization-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  session-localization-003:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  session-localization-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  session-localization-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  session-localization-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  session-localization-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  session-localization-008:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-15.SpringWebSynthesis/SpringWebSynthesis.md:
-  mvc-request-end-to-end:
+13.FiltersInterceptors/FiltersInterceptors.md:
+  filters-interceptors-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  filters-interceptors-002:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  filters-interceptors-003:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  filters-interceptors-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  filters-interceptors-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  filters-interceptors-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  filters-interceptors-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  filters-interceptors-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+14.FileResources/FileResources.md:
+  file-resources-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  file-resources-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  file-resources-003:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  file-resources-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  file-resources-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  file-resources-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  file-resources-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  file-resources-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+15.CorsWebSecurity/CorsWebSecurity.md:
+  cors-web-security-001:
     difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  cors-web-security-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  cors-web-security-003:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  cors-web-security-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  cors-web-security-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  cors-web-security-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  cors-web-security-007:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  annotated-vs-functional-endpoints:
+  cors-web-security-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+16.HttpCaching/HttpCaching.md:
+  http-caching-001:
     difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  http-caching-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  http-caching-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  http-caching-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  http-caching-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  http-caching-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  http-caching-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+17.UriApiVersioning/UriApiVersioning.md:
+  uri-api-versioning-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  uri-api-versioning-002:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  uri-api-versioning-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  uri-api-versioning-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  uri-api-versioning-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  uri-api-versioning-006:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  synchronous-vs-async-servlet-processing:
+  uri-api-versioning-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+18.MvcAsyncProcessing/MvcAsyncProcessing.md:
+  mvc-async-processing-001:
     difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  mvc-async-processing-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  mvc-async-processing-003:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  mvc-async-processing-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  mvc-async-processing-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  mvc-async-processing-006:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  filter-interceptor-and-advice-placement:
+  mvc-async-processing-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  mvc-async-processing-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+19.MvcFunctionalEndpoints/MvcFunctionalEndpoints.md:
+  mvc-functional-endpoints-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  mvc-functional-endpoints-002:
     difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  mvc-functional-endpoints-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  mvc-functional-endpoints-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  mvc-functional-endpoints-005:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  mvc-vs-webflux-boundary:
+  mvc-functional-endpoints-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+20.WebfluxFoundations/WebfluxFoundations.md:
+  webflux-foundations-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  webflux-foundations-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  webflux-foundations-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  webflux-foundations-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  webflux-foundations-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  webflux-foundations-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  webflux-foundations-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  webflux-foundations-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+21.WebfluxInfrastructure/WebfluxInfrastructure.md:
+  webflux-infrastructure-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  webflux-infrastructure-002:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  webflux-infrastructure-003:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  webflux-infrastructure-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  webflux-infrastructure-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  webflux-infrastructure-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  webflux-infrastructure-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  webflux-infrastructure-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+22.WebfluxControllers/WebfluxControllers.md:
+  webflux-controllers-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  webflux-controllers-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  webflux-controllers-003:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  webflux-controllers-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  webflux-controllers-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  webflux-controllers-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  webflux-controllers-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  webflux-controllers-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+23.WebfluxFunctionalEndpoints/WebfluxFunctionalEndpoints.md:
+  webflux-functional-endpoints-001:
     difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  webflux-functional-endpoints-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  webflux-functional-endpoints-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  webflux-functional-endpoints-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  webflux-functional-endpoints-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  webflux-functional-endpoints-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  webflux-functional-endpoints-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+24.WebfluxStreaming/WebfluxStreaming.md:
+  webflux-streaming-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  webflux-streaming-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  webflux-streaming-003:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  webflux-streaming-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  webflux-streaming-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  webflux-streaming-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  webflux-streaming-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  webflux-streaming-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+25.SynchronousHttpClients/SynchronousHttpClients.md:
+  synchronous-http-clients-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  synchronous-http-clients-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  synchronous-http-clients-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  synchronous-http-clients-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  synchronous-http-clients-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  synchronous-http-clients-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  synchronous-http-clients-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  synchronous-http-clients-008:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  inbound-vs-outbound-http-mechanics:
+  synchronous-http-clients-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+26.WebClient/WebClient.md:
+  web-client-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  web-client-002:
     difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  web-client-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  web-client-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  web-client-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  web-client-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  web-client-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  web-client-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  web-client-009:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  web-client-010:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  neighboring-module-handoffs:
+27.HttpServiceClients/HttpServiceClients.md:
+  http-service-clients-001:
     difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  http-service-clients-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  http-service-clients-003:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  http-service-clients-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  http-service-clients-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  http-service-clients-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+28.WebsocketStomp/WebsocketStomp.md:
+  websocket-stomp-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  websocket-stomp-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  websocket-stomp-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  websocket-stomp-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  websocket-stomp-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  websocket-stomp-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  websocket-stomp-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  websocket-stomp-008:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  websocket-stomp-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  websocket-stomp-010:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  websocket-stomp-011:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  spring-web-final-mental-model:
+29.WebTesting/WebTesting.md:
+  web-testing-001:
     difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  web-testing-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  web-testing-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  web-testing-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  web-testing-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  web-testing-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  web-testing-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  web-testing-008:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  web-testing-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  web-testing-010:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  web-testing-011:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+30.OperationsPractice/OperationsPractice.md:
+  operations-practice-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  operations-practice-002:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  operations-practice-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  operations-practice-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  operations-practice-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  operations-practice-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  operations-practice-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  operations-practice-008:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  operations-practice-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  operations-practice-010:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  operations-practice-011:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
