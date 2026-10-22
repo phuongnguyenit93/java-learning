@@ -915,7 +915,7 @@ enum ModuleListEnum {
     JAVA_JVM(
             'module:platform:development:programming:language:java:advance:jvm',
             'module/platform/development/programming/language/java/advance/jvm',
-            'LIBRARY',
+            'SERVLET',
             'Java Virtual Machine internals',
             false,
             []

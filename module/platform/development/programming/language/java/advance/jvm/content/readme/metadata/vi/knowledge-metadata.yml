@@ -1,292 +1,788 @@
-1.JvmPurposeContract/JvmPurposeContract.md:
-  jvm-purpose:
+1.JVMOverview/JVMOverview.md:
+  jvm-overview-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  classfile-execution-contract:
+  jvm-overview-002:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  jvm-language-independence:
+  jvm-overview-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jvm-overview-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jvm-overview-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jvm-overview-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jvm-overview-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  jvm-overview-008:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+2.JvmLifecycle/JvmLifecycle.md:
+  jvm-lifecycle-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  jvm-portability-model:
+  jvm-lifecycle-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jvm-lifecycle-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jvm-lifecycle-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  jvm-lifecycle-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  jvm-lifecycle-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jvm-lifecycle-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  jvm-lifecycle-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+3.JvmDataTypes/JvmDataTypes.md:
+  jvm-data-types-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  jvm-specification-vs-implementation:
+  jvm-data-types-002:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  jvm-runtime-boundary:
+  jvm-data-types-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-2.ClassFileBytecode/ClassFileBytecode.md:
-  classfile-format-overview:
+  jvm-data-types-004:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  classfile-structure:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  bytecode-instruction-model:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  constant-pool-symbolic-references:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  runtime-constant-pool:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  loading-linking-initialization-overview:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  verification-preparation-resolution:
+  jvm-data-types-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  pre-execution-failures:
+  jvm-data-types-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  jvm-data-types-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  jvm-data-types-008:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-3.RuntimeDataAreasFrames/RuntimeDataAreasFrames.md:
-  runtime-data-areas-purpose:
+4.ClassFileFormat/ClassFileFormat.md:
+  class-file-format-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  vm-wide-vs-thread-private-areas:
+  class-file-format-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  class-file-format-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  class-file-format-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  class-file-format-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  class-file-format-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  class-file-format-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  class-file-format-008:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  class-file-format-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  class-file-format-010:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  class-file-format-011:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  class-file-format-012:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+5.BytecodeInstructions/BytecodeInstructions.md:
+  bytecode-instructions-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  pc-register:
+  bytecode-instructions-002:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  jvm-stacks:
+  bytecode-instructions-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  bytecode-instructions-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  bytecode-instructions-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  bytecode-instructions-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  bytecode-instructions-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  bytecode-instructions-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  bytecode-instructions-009:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  bytecode-instructions-010:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+6.StackFramesAndCalls/StackFramesAndCalls.md:
+  stack-frames-and-calls-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  heap:
+  stack-frames-and-calls-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  stack-frames-and-calls-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  stack-frames-and-calls-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  stack-frames-and-calls-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  stack-frames-and-calls-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  stack-frames-and-calls-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  stack-frames-and-calls-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  stack-frames-and-calls-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+7.ClassLoadingAndIdentity/ClassLoadingAndIdentity.md:
+  class-loading-and-identity-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  method-area:
+  class-loading-and-identity-002:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  runtime-constant-pool-area:
+  class-loading-and-identity-003:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  class-loading-and-identity-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  class-loading-and-identity-005:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  native-method-stacks:
+  class-loading-and-identity-006:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  stack-frame-model:
+  class-loading-and-identity-007:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  local-variables-and-operand-stack:
-    difficulty: INTERMEDIATE
+  class-loading-and-identity-008:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  frame-lifecycle-and-completion:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  runtime-area-failure-boundaries:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-4.ManagedHeapGC/ManagedHeapGC.md:
-  managed-heap-purpose:
+8.LinkingAndInitialization/LinkingAndInitialization.md:
+  linking-and-initialization-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  object-allocation-model:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  object-layout-boundary:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  reachability-and-liveness:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  automatic-memory-reclamation:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  garbage-collection-model:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  collector-strategies:
+  linking-and-initialization-002:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  gc-goals-and-tradeoffs:
+  linking-and-initialization-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  reference-strengths:
+  linking-and-initialization-004:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  linking-and-initialization-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  gc-mechanism-vs-diagnostics:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-5.AdaptiveExecutionJIT/AdaptiveExecutionJIT.md:
-  execution-engine-model:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  interpreter-role:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  profiling-and-hot-code:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  jit-compilation-model:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  tiered-and-adaptive-compilation:
+  linking-and-initialization-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  compiled-code-and-code-cache:
+  linking-and-initialization-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  linking-and-initialization-008:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  linking-and-initialization-009:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  inlining-and-runtime-optimization:
+  linking-and-initialization-010:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  escape-analysis-and-scalar-replacement:
+  linking-and-initialization-011:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  speculation-and-deoptimization:
+  linking-and-initialization-012:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+9.JVMRuntimeMemoryAreas/JVMRuntimeMemoryAreas.md:
+  jvm-runtime-memory-areas-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  jvm-runtime-memory-areas-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jvm-runtime-memory-areas-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jvm-runtime-memory-areas-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jvm-runtime-memory-areas-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  optimization-semantics-boundary:
+  jvm-runtime-memory-areas-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-6.ProcessMemory/ProcessMemory.md:
-  process-memory-purpose:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  runtime-areas-vs-process-memory:
+  jvm-runtime-memory-areas-007:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  thread-and-native-stack-memory:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  class-metadata-memory:
+  jvm-runtime-memory-areas-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  compiled-code-memory:
+  jvm-runtime-memory-areas-009:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+10.HotspotObjects/HotspotObjects.md:
+  hotspot-objects-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  hotspot-objects-002:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  direct-and-offheap-memory-awareness:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  process-memory-growth:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  nonheap-resource-exhaustion:
+  hotspot-objects-003:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  native-memory-vs-native-interoperability:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-7.HotSpotErgonomics/HotSpotErgonomics.md:
-  ergonomics-purpose:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  hotspot-default-selection:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  heap-sizing-concepts:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  collector-selection-and-goals:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  runtime-compiler-policy:
+  hotspot-objects-004:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  vm-options-model:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  portable-vs-implementation-specific-controls:
+  hotspot-objects-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  configuration-vs-diagnostics:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-8.EndToEndModel/EndToEndModel.md:
-  startup-to-execution-flow:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  classfile-to-runtime-state-flow:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  method-execution-flow:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  allocation-to-reclamation-flow:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  interpreted-to-optimized-flow:
+  hotspot-objects-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  whole-process-memory-view:
+  hotspot-objects-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  hotspot-objects-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  jvm-problem-boundary-map:
+  hotspot-objects-009:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+11.ObjectReachability/ObjectReachability.md:
+  object-reachability-001:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  jvm-mental-model-checkpoint:
+  object-reachability-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  object-reachability-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  object-reachability-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  object-reachability-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  object-reachability-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  object-reachability-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  object-reachability-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  object-reachability-009:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+12.GarbageCollectionMechanics/GarbageCollectionMechanics.md:
+  garbage-collection-mechanics-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  garbage-collection-mechanics-002:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  garbage-collection-mechanics-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  garbage-collection-mechanics-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  garbage-collection-mechanics-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  garbage-collection-mechanics-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  garbage-collection-mechanics-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  garbage-collection-mechanics-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  garbage-collection-mechanics-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+13.GarbageCollectors/GarbageCollectors.md:
+  garbage-collectors-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  garbage-collectors-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  garbage-collectors-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  garbage-collectors-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  garbage-collectors-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  garbage-collectors-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  garbage-collectors-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  garbage-collectors-008:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  garbage-collectors-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  garbage-collectors-010:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+14.InterpretationAndJIT/InterpretationAndJIT.md:
+  interpretation-and-jit-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  interpretation-and-jit-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  interpretation-and-jit-003:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  interpretation-and-jit-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  interpretation-and-jit-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  interpretation-and-jit-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  interpretation-and-jit-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  interpretation-and-jit-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  interpretation-and-jit-009:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+15.HotSpotOptimizations/HotSpotOptimizations.md:
+  hot-spot-optimizations-001:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  hot-spot-optimizations-002:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  hot-spot-optimizations-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  hot-spot-optimizations-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  hot-spot-optimizations-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  hot-spot-optimizations-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  hot-spot-optimizations-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  hot-spot-optimizations-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  hot-spot-optimizations-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+16.JVMThreadsAndSynchronization/JVMThreadsAndSynchronization.md:
+  jvm-threads-and-synchronization-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jvm-threads-and-synchronization-002:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  jvm-threads-and-synchronization-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jvm-threads-and-synchronization-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  jvm-threads-and-synchronization-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jvm-threads-and-synchronization-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jvm-threads-and-synchronization-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  jvm-threads-and-synchronization-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  jvm-threads-and-synchronization-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  jvm-threads-and-synchronization-010:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  jvm-threads-and-synchronization-011:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+17.FastStartup/FastStartup.md:
+  fast-startup-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  fast-startup-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  fast-startup-003:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  fast-startup-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  fast-startup-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  fast-startup-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  fast-startup-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  fast-startup-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+18.ResourceConfiguration/ResourceConfiguration.md:
+  resource-configuration-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  resource-configuration-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  resource-configuration-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  resource-configuration-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  resource-configuration-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  resource-configuration-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  resource-configuration-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  resource-configuration-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  resource-configuration-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  resource-configuration-010:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+19.JvmObservabilityAndErrors/JvmObservabilityAndErrors.md:
+  jvm-observability-and-errors-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jvm-observability-and-errors-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jvm-observability-and-errors-003:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  jvm-observability-and-errors-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jvm-observability-and-errors-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jvm-observability-and-errors-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  jvm-observability-and-errors-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jvm-observability-and-errors-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  jvm-observability-and-errors-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  jvm-observability-and-errors-010:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  jvm-observability-and-errors-011:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  jvm-observability-and-errors-012:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+20.JVMExperiments/JVMExperiments.md:
+  jvm-experiments-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jvm-experiments-002:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  jvm-experiments-003:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  jvm-experiments-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  jvm-experiments-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  jvm-experiments-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jvm-experiments-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  jvm-experiments-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  jvm-experiments-009:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  jvm-experiments-010:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  jvm-experiments-011:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  jvm-experiments-012:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
