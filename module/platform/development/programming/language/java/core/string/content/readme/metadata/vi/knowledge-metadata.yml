@@ -1,220 +1,1026 @@
-1.Immutability/Immutability.md:
-  string-purpose:
+1.StringOverview/StringOverview.md:
+  string-overview-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  string-immutability:
+  string-overview-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-overview-003:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  immutability-consequences:
+  string-overview-004:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  string-operation-new-value:
+  string-overview-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-overview-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-overview-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-overview-008:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-2.StringPool/StringPool.md:
-  string-pool-model:
+2.StringCreation/StringCreation.md:
+  string-creation-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  literal-vs-new:
+  string-creation-002:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  pool-identity:
+  string-creation-003:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  string-creation-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-creation-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  string-creation-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-creation-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-creation-008:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+3.UnicodeUtf16/UnicodeUtf16.md:
+  unicode-utf16-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-3.Equality/Equality.md:
-  string-equals:
+  unicode-utf16-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  unicode-utf16-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  unicode-utf16-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  unicode-utf16-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  unicode-utf16-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  unicode-utf16-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  unicode-utf16-008:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+4.StringImmutability/StringImmutability.md:
+  string-immutability-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  string-reference-equality:
+  string-immutability-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-immutability-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-immutability-004:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  case-insensitive-boundary:
+  string-immutability-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-immutability-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-immutability-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-immutability-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+5.StringPoolIntern/StringPoolIntern.md:
+  string-pool-intern-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-4.CoreStringOperations/CoreStringOperations.md:
-  string-char-sequence:
+  string-pool-intern-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-pool-intern-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-pool-intern-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-pool-intern-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  string-pool-intern-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  string-pool-intern-007:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  string-inspection:
+  string-pool-intern-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+6.StringAccess/StringAccess.md:
+  string-access-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  string-search:
+  string-access-002:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  string-extraction:
+  string-access-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-access-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  string-access-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-access-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-access-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-access-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+7.StringExtraction/StringExtraction.md:
+  string-extraction-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  string-transformation:
+  string-extraction-002:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  string-split-join:
+  string-extraction-003:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  string-conversion-formatting:
+  string-extraction-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-extraction-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-extraction-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-extraction-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  string-extraction-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+8.StringComparison/StringComparison.md:
+  string-comparison-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-5.Concatenation/Concatenation.md:
-  concat-semantics:
+  string-comparison-002:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  compile-time-concat:
+  string-comparison-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-comparison-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  string-comparison-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-comparison-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-comparison-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-comparison-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  string-comparison-009:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+9.StringSearch/StringSearch.md:
+  string-search-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  runtime-concat:
+  string-search-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-search-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-search-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-search-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-search-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-search-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-search-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  string-search-009:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+10.StringWhitespace/StringWhitespace.md:
+  string-whitespace-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  loop-concat-cost:
+  string-whitespace-002:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-6.StringBuilder/StringBuilder.md:
-  builder-mutable-buffer:
+  string-whitespace-003:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  builder-usage:
+  string-whitespace-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-whitespace-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-whitespace-006:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  builder-capacity:
+  string-whitespace-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  string-whitespace-008:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+11.StringTransformation/StringTransformation.md:
+  string-transformation-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-7.StringBuffer/StringBuffer.md:
-  buffer-synchronization:
+  string-transformation-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-transformation-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-transformation-004:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  builder-vs-buffer:
+  string-transformation-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-transformation-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  string-transformation-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  string-transformation-008:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+12.CaseNormalization/CaseNormalization.md:
+  case-normalization-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  thread-safety-boundary:
+  case-normalization-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  case-normalization-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  case-normalization-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  case-normalization-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  case-normalization-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  case-normalization-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  case-normalization-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+13.StringConcatenation/StringConcatenation.md:
+  string-concatenation-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-8.Intern/Intern.md:
-  intern-semantics:
+  string-concatenation-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-concatenation-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-concatenation-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-concatenation-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-concatenation-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-concatenation-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-concatenation-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+14.StringBuilder/StringBuilder.md:
+  string-builder-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  intern-identity:
+  string-builder-002:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  intern-tradeoffs:
+  string-builder-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-builder-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  string-builder-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-builder-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-builder-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-builder-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  string-builder-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  string-builder-010:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-builder-011:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-9.UnicodeCodePoint/UnicodeCodePoint.md:
-  utf16-char-model:
+  string-builder-012:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+15.StringBuffer/StringBuffer.md:
+  string-buffer-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  code-point:
+  string-buffer-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-buffer-003:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  string-buffer-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  string-buffer-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  string-buffer-006:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  surrogate-pairs:
+  string-buffer-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+16.StringJoining/StringJoining.md:
+  string-joining-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  unicode-iteration:
+  string-joining-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-joining-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-joining-004:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  code-unit-code-point-grapheme:
+  string-joining-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-joining-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-joining-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+17.StringSplitting/StringSplitting.md:
+  string-splitting-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  unicode-normalization:
+  string-splitting-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-splitting-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-splitting-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-splitting-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  string-splitting-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-splitting-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-splitting-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  string-splitting-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+18.RegularExpressions/RegularExpressions.md:
+  regular-expressions-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  canonical-equivalence:
+  regular-expressions-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  regular-expressions-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  regular-expressions-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  regular-expressions-005:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-10.Encoding/Encoding.md:
-  text-vs-bytes:
+  regular-expressions-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  regular-expressions-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  regular-expressions-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  regular-expressions-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+19.RegexReplacement/RegexReplacement.md:
+  regex-replacement-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  charset-encode-decode:
+  regex-replacement-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  regex-replacement-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  regex-replacement-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  regex-replacement-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  regex-replacement-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  regex-replacement-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  regex-replacement-008:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+20.StringFormatting/StringFormatting.md:
+  string-formatting-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  default-charset-risk:
+  string-formatting-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-formatting-003:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  malformed-input:
+  string-formatting-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-formatting-005:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-11.Regex/Regex.md:
-  regex-purpose:
+  string-formatting-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-formatting-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  string-formatting-008:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-formatting-009:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+21.TextBlocks/TextBlocks.md:
+  text-blocks-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  pattern-matcher:
+  text-blocks-002:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  regex-syntax-boundary:
+  text-blocks-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  text-blocks-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  text-blocks-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  text-blocks-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  text-blocks-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  text-blocks-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  text-blocks-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+22.StringLinesStreams/StringLinesStreams.md:
+  string-lines-streams-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-lines-streams-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-lines-streams-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-lines-streams-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-lines-streams-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-lines-streams-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  string-lines-streams-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-lines-streams-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+23.StringEncoding/StringEncoding.md:
+  string-encoding-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  regex-groups:
+  string-encoding-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-encoding-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-encoding-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  string-encoding-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-encoding-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  string-encoding-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  string-encoding-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  string-encoding-009:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+24.ValueConversion/ValueConversion.md:
+  value-conversion-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  value-conversion-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  value-conversion-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  value-conversion-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  value-conversion-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  value-conversion-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  value-conversion-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  value-conversion-008:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+25.StringCollections/StringCollections.md:
+  string-collections-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-collections-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-collections-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-collections-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-collections-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  string-collections-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  string-collections-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+26.StringInternals/StringInternals.md:
+  string-internals-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-internals-002:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  string-internals-003:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  string-internals-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  string-internals-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  string-internals-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  string-internals-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+27.StringPerformance/StringPerformance.md:
+  string-performance-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-performance-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-performance-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-performance-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-performance-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-performance-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  string-performance-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  string-performance-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+28.StringApiDesign/StringApiDesign.md:
+  string-api-design-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-api-design-002:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  string-api-design-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-api-design-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  string-api-design-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  string-api-design-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-api-design-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  string-api-design-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+29.StringTesting/StringTesting.md:
+  string-testing-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  regex-quantifiers:
-    difficulty: BASIC
+  string-testing-002:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  regex-performance:
-    difficulty: BASIC
+  string-testing-003:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-12.TextBlocks/TextBlocks.md:
-  text-block-syntax:
-    difficulty: BASIC
+  string-testing-004:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  incidental-whitespace:
-    difficulty: BASIC
+  string-testing-005:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  escape-processing:
-    difficulty: BASIC
+  string-testing-006:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
-  text-block-not-template:
-    difficulty: BASIC
+  string-testing-007:
+    difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
-  string-synthesis:
-    difficulty: BASIC
+  string-testing-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  string-testing-009:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+30.StringPractice/StringPractice.md:
+  string-practice-001:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  string-practice-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-practice-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  string-practice-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  string-practice-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  string-practice-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  string-practice-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  string-practice-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  string-practice-009:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
