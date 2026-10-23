@@ -1,192 +1,1107 @@
-1.GenericsPurpose/GenericsPurpose.md:
-  generic-type-purpose:
+1.GenericsOverview/GenericsOverview.md:
+  generics-overview-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  type-parameter:
+    isImportant: false
+  generics-overview-002:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-2.GenericTypesAndMethods/GenericTypesAndMethods.md:
-  generic-type-declaration:
+    isImportant: false
+  generics-overview-003:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  diamond-operator:
+    isImportant: false
+  generics-overview-004:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  generic-method-syntax:
+    isImportant: false
+  generics-overview-005:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  generic-constructor:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  type-inference:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  static-generic-method:
+    isImportant: false
+  generics-overview-006:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  generic-method-vs-type:
+    isImportant: false
+  generics-overview-007:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-3.BoundedTypeParameters/BoundedTypeParameters.md:
-  upper-bounded-type:
+    isImportant: false
+  generics-overview-008:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  multiple-bounds:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  recursive-bound:
-    difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
-  bound-api-capability:
+    isImportant: false
+2.GenericsSyntax/GenericsSyntax.md:
+  generics-syntax-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-4.InvarianceAndSubtyping/InvarianceAndSubtyping.md:
-  generic-invariance-intro:
+    isImportant: false
+  generics-syntax-002:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  generic-declaration-subtyping:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  generic-invariance:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  variance-vs-arrays:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  variance-safety:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-5.WildcardsAndPECS/WildcardsAndPECS.md:
-  unbounded-wildcard:
+    isImportant: false
+  generics-syntax-003:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  wildcard-vs-object:
+    isImportant: false
+  generics-syntax-004:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  wildcard-placement:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  wildcard-vs-type-parameter:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  extends-wildcard:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  super-wildcard:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  pecs-rule:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  read-from-producer:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  write-to-consumer:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  pecs-api-design:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  wildcard-capture:
-    difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
-6.RawTypesAndLegacyBoundaries/RawTypesAndLegacyBoundaries.md:
-  raw-type-compatibility:
+    isImportant: false
+  generics-syntax-005:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  unchecked-warning:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  heap-pollution:
-    difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
-  raw-type-boundary:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-7.TypeErasureAndRuntimeModel/TypeErasureAndRuntimeModel.md:
-  erasure-model:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  erased-runtime-type:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  generic-signature-metadata:
-    difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
-  bridge-method:
-    difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
-  non-reifiable-types:
-    difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
-8.GenericLimitationsAndApiDesign/GenericLimitationsAndApiDesign.md:
-  no-generic-primitives:
+    isImportant: false
+  generics-syntax-006:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  no-new-type-parameter:
-    difficulty: INTERMEDIATE
+    isImportant: false
+  generics-syntax-007:
+    difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  generic-array-limit:
-    difficulty: ADVANCED
+    isImportant: false
+  generics-syntax-008:
+    difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  runtime-type-information-limit:
-    difficulty: INTERMEDIATE
+    isImportant: false
+3.GenericClassesInterfaces/GenericClassesInterfaces.md:
+  generic-classes-interfaces-001:
+    difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  static-type-parameter-limit:
-    difficulty: INTERMEDIATE
+    isImportant: false
+  generic-classes-interfaces-002:
+    difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  erasure-signature-clash:
-    difficulty: INTERMEDIATE
+    isImportant: false
+  generic-classes-interfaces-003:
+    difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  generic-exception-limit:
-    difficulty: ADVANCED
+    isImportant: false
+  generic-classes-interfaces-004:
+    difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  generic-api-design:
-    difficulty: INTERMEDIATE
+    isImportant: false
+  generic-classes-interfaces-005:
+    difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
+  generic-classes-interfaces-006:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-classes-interfaces-007:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-classes-interfaces-008:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+4.GenericMethods/GenericMethods.md:
+  generic-methods-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-methods-002:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-methods-003:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-methods-004:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-methods-005:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-methods-006:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-methods-007:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-methods-008:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+5.TypeParameterScope/TypeParameterScope.md:
+  type-parameter-scope-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  type-parameter-scope-002:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  type-parameter-scope-003:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  type-parameter-scope-004:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  type-parameter-scope-005:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  type-parameter-scope-006:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  type-parameter-scope-007:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+6.GenericInheritance/GenericInheritance.md:
+  generic-inheritance-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-inheritance-002:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-inheritance-003:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-inheritance-004:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-inheritance-005:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-inheritance-006:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-inheritance-007:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-inheritance-008:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+7.GenericTypeBounds/GenericTypeBounds.md:
+  generic-type-bounds-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-type-bounds-002:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-type-bounds-003:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-type-bounds-004:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-type-bounds-005:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-type-bounds-006:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-type-bounds-007:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-type-bounds-008:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+8.GenericTypeRelations/GenericTypeRelations.md:
+  generic-type-relations-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-type-relations-002:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-type-relations-003:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-type-relations-004:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-type-relations-005:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-type-relations-006:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-type-relations-007:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-type-relations-008:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+9.UnboundedWildcard/UnboundedWildcard.md:
+  unbounded-wildcard-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  unbounded-wildcard-002:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  unbounded-wildcard-003:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  unbounded-wildcard-004:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  unbounded-wildcard-005:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  unbounded-wildcard-006:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  unbounded-wildcard-007:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+10.UpperBoundedWildcards/UpperBoundedWildcards.md:
+  upper-bounded-wildcards-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  upper-bounded-wildcards-002:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  upper-bounded-wildcards-003:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  upper-bounded-wildcards-004:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  upper-bounded-wildcards-005:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  upper-bounded-wildcards-006:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  upper-bounded-wildcards-007:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+11.LowerBoundedWildcards/LowerBoundedWildcards.md:
+  lower-bounded-wildcards-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  lower-bounded-wildcards-002:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  lower-bounded-wildcards-003:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  lower-bounded-wildcards-004:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  lower-bounded-wildcards-005:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  lower-bounded-wildcards-006:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  lower-bounded-wildcards-007:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+12.PECS/PECS.md:
+  pecs-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  pecs-002:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  pecs-003:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  pecs-004:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  pecs-005:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  pecs-006:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  pecs-007:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  pecs-008:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+13.WildcardCapture/WildcardCapture.md:
+  wildcard-capture-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  wildcard-capture-002:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  wildcard-capture-003:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  wildcard-capture-004:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  wildcard-capture-005:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  wildcard-capture-006:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  wildcard-capture-007:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  wildcard-capture-008:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+14.TypeInference/TypeInference.md:
+  type-inference-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  type-inference-002:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  type-inference-003:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  type-inference-004:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  type-inference-005:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  type-inference-006:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  type-inference-007:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  type-inference-008:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  type-inference-009:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+15.RecursiveTypeBounds/RecursiveTypeBounds.md:
+  recursive-type-bounds-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  recursive-type-bounds-002:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  recursive-type-bounds-003:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  recursive-type-bounds-004:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  recursive-type-bounds-005:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  recursive-type-bounds-006:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  recursive-type-bounds-007:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+16.TypeErasure/TypeErasure.md:
+  type-erasure-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  type-erasure-002:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  type-erasure-003:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  type-erasure-004:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  type-erasure-005:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  type-erasure-006:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  type-erasure-007:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  type-erasure-008:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+17.GenericOverridesAndBridges/GenericOverridesAndBridges.md:
+  generic-overrides-and-bridges-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-overrides-and-bridges-002:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-overrides-and-bridges-003:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-overrides-and-bridges-004:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-overrides-and-bridges-005:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-overrides-and-bridges-006:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-overrides-and-bridges-007:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-overrides-and-bridges-008:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+18.RawTypesAndLegacyInterop/RawTypesAndLegacyInterop.md:
+  raw-types-and-legacy-interop-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  raw-types-and-legacy-interop-002:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  raw-types-and-legacy-interop-003:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  raw-types-and-legacy-interop-004:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  raw-types-and-legacy-interop-005:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  raw-types-and-legacy-interop-006:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  raw-types-and-legacy-interop-007:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  raw-types-and-legacy-interop-008:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+19.RuntimeTypes/RuntimeTypes.md:
+  runtime-types-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  runtime-types-002:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  runtime-types-003:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  runtime-types-004:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  runtime-types-005:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  runtime-types-006:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  runtime-types-007:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  runtime-types-008:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+20.GenericArrays/GenericArrays.md:
+  generic-arrays-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-arrays-002:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-arrays-003:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-arrays-004:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-arrays-005:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-arrays-006:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-arrays-007:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-arrays-008:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+21.GenericVarargs/GenericVarargs.md:
+  generic-varargs-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-varargs-002:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-varargs-003:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-varargs-004:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-varargs-005:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-varargs-006:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-varargs-007:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-varargs-008:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+22.GenericsLanguageLimits/GenericsLanguageLimits.md:
+  generics-language-limits-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generics-language-limits-002:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generics-language-limits-003:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generics-language-limits-004:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generics-language-limits-005:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generics-language-limits-006:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generics-language-limits-007:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generics-language-limits-008:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generics-language-limits-009:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+23.LambdaStandardAPIs/LambdaStandardAPIs.md:
+  lambda-standard-ap-is-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  lambda-standard-ap-is-002:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  lambda-standard-ap-is-003:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  lambda-standard-ap-is-004:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  lambda-standard-ap-is-005:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  lambda-standard-ap-is-006:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  lambda-standard-ap-is-007:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  lambda-standard-ap-is-008:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+24.GenericTypeReflection/GenericTypeReflection.md:
+  generic-type-reflection-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-type-reflection-002:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-type-reflection-003:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-type-reflection-004:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-type-reflection-005:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-type-reflection-006:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-type-reflection-007:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-type-reflection-008:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-type-reflection-009:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+25.GenericAPIDesign/GenericAPIDesign.md:
+  generic-api-design-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-api-design-002:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-api-design-003:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-api-design-004:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-api-design-005:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-api-design-006:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-api-design-007:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-api-design-008:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-api-design-009:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+26.GenericsTestingAndDiagnostics/GenericsTestingAndDiagnostics.md:
+  generics-testing-and-diagnostics-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generics-testing-and-diagnostics-002:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generics-testing-and-diagnostics-003:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generics-testing-and-diagnostics-004:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generics-testing-and-diagnostics-005:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generics-testing-and-diagnostics-006:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generics-testing-and-diagnostics-007:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generics-testing-and-diagnostics-008:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+27.GenericsIntegratedPractice/GenericsIntegratedPractice.md:
+  generics-integrated-practice-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generics-integrated-practice-002:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generics-integrated-practice-003:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generics-integrated-practice-004:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generics-integrated-practice-005:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generics-integrated-practice-006:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generics-integrated-practice-007:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generics-integrated-practice-008:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generics-integrated-practice-009:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

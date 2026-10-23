@@ -3,190 +3,236 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   type-parameter:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 2.GenericTypesAndMethods/GenericTypesAndMethods.md:
   generic-type-declaration:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   diamond-operator:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   generic-method-syntax:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   generic-constructor:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   type-inference:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   static-generic-method:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   generic-method-vs-type:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 3.BoundedTypeParameters/BoundedTypeParameters.md:
   upper-bounded-type:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   multiple-bounds:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   recursive-bound:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   bound-api-capability:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 4.InvarianceAndSubtyping/InvarianceAndSubtyping.md:
   generic-invariance-intro:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   generic-declaration-subtyping:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   generic-invariance:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   variance-vs-arrays:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   variance-safety:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 5.WildcardsAndPECS/WildcardsAndPECS.md:
   unbounded-wildcard:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   wildcard-vs-object:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   wildcard-placement:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   wildcard-vs-type-parameter:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   extends-wildcard:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   super-wildcard:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   pecs-rule:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   read-from-producer:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   write-to-consumer:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   pecs-api-design:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   wildcard-capture:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 6.RawTypesAndLegacyBoundaries/RawTypesAndLegacyBoundaries.md:
   raw-type-compatibility:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   unchecked-warning:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   heap-pollution:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   raw-type-boundary:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 7.TypeErasureAndRuntimeModel/TypeErasureAndRuntimeModel.md:
   erasure-model:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   erased-runtime-type:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   generic-signature-metadata:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   bridge-method:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   non-reifiable-types:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 8.GenericLimitationsAndApiDesign/GenericLimitationsAndApiDesign.md:
   no-generic-primitives:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   no-new-type-parameter:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   generic-array-limit:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   runtime-type-information-limit:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   static-type-parameter-limit:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   erasure-signature-clash:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   generic-exception-limit:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   generic-api-design:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
