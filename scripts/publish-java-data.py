@@ -22,6 +22,8 @@ EXPOSED_FIELDS = (
     "interview", "api", "reference",
 )
 ALLOWED_EXTENSIONS = frozenset({".json", ".yml", ".yaml", ".md"})
+# Temporarily exclude cross-module Knowledge search from Java data releases.
+DISABLED_SEARCH_PREFIX = "search/knowledge-search."
 SHA_RE = re.compile(r"^[0-9a-f]{40}$")
 ARCHIVE_NAME = "java-learning-data.zip"
 
@@ -111,8 +113,8 @@ def validate(directory):
     catalog_file = directory / "module-catalog.json"
     if not catalog_file.is_file():
         fail("Missing module-catalog.json; run ./gradlew generatePortalData first")
-    if not (directory / "module").is_dir() or not (directory / "search").is_dir():
-        fail("Expected module/ and search/ directories in generated data")
+    if not (directory / "module").is_dir():
+        fail("Expected module/ directory in generated data")
 
     files = sorted(directory.rglob("*"))
     regular = []
@@ -126,6 +128,9 @@ def validate(directory):
         if not file.is_file():
             fail(f"Non-file generated artifact: {file}")
         relative = file.relative_to(directory).as_posix()
+        if relative.startswith(DISABLED_SEARCH_PREFIX):
+            # Ignore even stale outputs left by previous Gradle runs.
+            continue
         folded = relative.casefold()
         if folded in casefolded:
             fail(f"Case-insensitive duplicate generated path: {relative}")
@@ -222,12 +227,10 @@ def validate(directory):
 
         check_refs(document)
 
-    if counts[".json"] < 3 or not (counts[".yml"] or counts[".yaml"]):
+    # module-catalog.json plus at least one module JSON; Knowledge search
+    # indexes are temporarily excluded from this minimum.
+    if counts[".json"] < 2 or not (counts[".yml"] or counts[".yaml"]):
         fail(f"Generated data looks incomplete: {counts}")
-    for language in ("vi", "en"):
-        search = directory / "search" / f"knowledge-search.{language}.json"
-        if not search.is_file():
-            fail(f"Missing localized search index: {search.relative_to(directory)}")
     total_bytes = sum(file.stat().st_size for file in regular)
     print(
         f"VALIDATED: {len(regular)} files, {total_bytes} bytes, "

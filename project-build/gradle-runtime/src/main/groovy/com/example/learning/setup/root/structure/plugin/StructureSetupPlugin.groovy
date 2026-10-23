@@ -557,7 +557,8 @@ ${project.path}
                 task.dependsOn(
                         generatePortalModuleData,
                         generatePortalKnowledge,
-                        generatePortalKnowledgeSearch,
+                        // Temporarily exclude the oversized cross-module search index.
+                        // Keep the standalone task available for future restoration.
                         generatePortalApi,
                         generatePortalQuiz,
                         generatePortalInterview,

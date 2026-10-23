@@ -78,7 +78,17 @@ class JavaDataPublisherTests(unittest.TestCase):
         self.assertEqual(manifest["sourceCommit"], commit)
         self.assertEqual(manifest["fileCount"], len(files))
         self.assertIn("module-catalog.json", names)
+        self.assertFalse(any(name.startswith("search/knowledge-search.") for name in names))
         self.assertEqual(len(names), len(files) + 1)
+
+    def test_legacy_search_files_are_excluded_and_not_required(self):
+        files, _, _, _ = publisher.validate(self.data)
+        self.assertFalse(any("knowledge-search." in str(file) for file in files))
+        for legacy in self.search.iterdir():
+            legacy.unlink()
+        self.search.rmdir()
+        files, _, _, _ = publisher.validate(self.data)
+        self.assertFalse(any("knowledge-search." in str(file) for file in files))
 
     def test_same_output_skips_even_when_source_commit_changes(self):
         output = self.root / "release"
