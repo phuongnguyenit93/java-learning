@@ -1,81 +1,67 @@
-# STEP 9 — PRIME ONLY: Điều phối Video Script YAML trên Google Sheets
+# STEP 9 — PRIME ONLY: Generate Quiz YAML theo Menu Cấp 1
 
-## 0. Mục tiêu và phạm vi
+## 0. Mục tiêu và quyền hạn
 
-- **Một Menu Cấp 1 = một Video YAML hoàn chỉnh ghi tại `X:AA` trên CHÍNH hàng chứa Menu Cấp 1 ở cột A** (không dùng bảng Video riêng).
-- Các Menu Cấp 2 trở thành `sections[].title` đúng thứ tự; mỗi section chứa `items[]` gồm SCENE/TRANSITION với time, visual, script, purpose.
-- **Không còn bảng "Chủ đề" ở cột N**. Menu Cấp 1 `A<PARENT_ROW>` là `title`; worker viết YAML vào `X<PARENT_ROW>:AA<PARENT_ROW>`. Difficulty `O` dành riêng cho các hàng Menu Cấp 2.
-- **Mỗi worker chỉ có MỘT lượt công việc trọn vẹn**: đọc Knowledge → phân loại `NEW_FILL/FORMAT_FIX/UNCHANGED` → chỉ soạn toàn văn YAML khi tạo mới, hoặc sửa đúng format khi đã có script → preflight → ghi nếu cần → đọc lại → QA → báo cáo. **Không có PHA A/PHA B hoặc PREPARED**.
-- Pool theo **Mode A/B của session (A=3 mặc định; B=N do user chỉ định, thiếu N → BLOCKER; tính cả ACTIVE + SLEEPING)**, ưu tiên tái sử dụng và spawn tuần tự mỗi lệnh một worker. Mỗi worker sở hữu một chương, một hàng video; các worker làm song song không tranh chấp hàng.
-- Không sửa Knowledge A:N, Difficulty O, Template, các tab khác, Gradle/source/video YAML file, cấu hình BUILD_VIDEO; không commit/push hoặc tự chạy STEP khác.
+- **STEP 9 = Quiz**; STEP 8 vẫn là Interview YAML; STEP 10 vẫn là Video YAML. Không sử dụng `module-generate-agent/STEP_7_QUIZ.md` (workflow legacy) làm chỉ dẫn thực thi cho `temp/`.
+- Một worker phụ trách **một Menu Cấp 1**. Đọc toàn bộ Knowledge của chương, tạo một tài liệu Quiz YAML trong **T:W cùng hàng cha**, tối đa 4 ô × 30.000 Unicode code points/ô. Không viết Quiz ở hàng con.
+- Worker chỉ viết `questions[]` với **`question`, `answers`** (chính xác A/B/C/D, mỗi đáp án có `answer` và `explanation`) và **`correctAnswerId`**. Worker **không viết** question `id`, `aiGenerated`, `reviewed`, `readmeRelated`, `apiRelated` hoặc tự chỉnh module.
+- Prime phải đọc `temp/GENERAL_AGENT_RULES.md`, tất cả `module-generate-agent/rules/`, `module-generate-info.txt`, toàn bộ file này và `worker/STEP_9_WORKER.md`. **Worker chỉ tự đọc toàn bộ `worker/STEP_9_WORKER.md`**, không đọc Prime/rules/source repo. Prime chỉ gửi 4 dòng: URL tab, vùng nguồn chính xác, vùng đích T:W, đường dẫn worker-only.
+- Pool theo Mode A/B **chỉ trong session** (A=3 mặc định; B=N do user chỉ định, thiếu N → BLOCKER; ACTIVE+SLEEPING); **reuse SLEEPING** trước, spawn tuần tự mỗi lệnh một worker, không tạo dư và không trùng ownership.
 
-### Cổng context và phân tách PRIME / WORKER
+## 1. Mapping và preflight
 
-**File `STEP_9.md` này chỉ dành cho Prime.** Prime phải đọc đầy đủ `module-generate-agent/temp/GENERAL_AGENT_RULES.md`, liệt kê và đọc **mọi file hiện có** trong `module-generate-agent/rules/`, toàn văn STEP 9 này, **toàn văn `worker/STEP_9_WORKER.md`**, `module-generate-agent/temp/module-generate-info.txt`. `module-generate-agent/STEP_6_VIDEO.md` là tài liệu **legacy Markdown** thuộc workflow khác, không phải schema của STEP 9 này; không áp dụng định dạng Markdown của tài liệu đó. Đọc lại nếu context bị rút gọn.
+| Thành phần | Vùng | Quyền |
+| --- | --- | --- |
+| Module/chủ đề | `A1`, `B1`; I3 Module Location | Chỉ đọc |
+| Chương | `A<PARENT_ROW>` và filename `B<PARENT_ROW>` | Chỉ đọc |
+| Menu Cấp 2/Knowledge | `B<CHILD_ROWS>` và `C<CHILD_ROWS>:N<CHILD_ROWS>` | Chỉ đọc, ghép C→N không separator |
+| Difficulty | `O<CHILD_ROWS>` | Chỉ đọc nếu cần |
+| Quiz YAML | **`T<PARENT_ROW>:W<PARENT_ROW>`** | Chỉ worker sở hữu chương được ghi |
 
-**Toàn bộ quy định thực thi của worker nằm riêng trong `/java-learning/module-generate-agent/temp/worker/STEP_9_WORKER.md`.** Worker **chỉ đọc toàn văn file worker-only đó**. Prime gửi **4 dòng**: link tab, tọa độ nguồn `A<PARENT_ROW>` và bài con, vùng Video Script `X:AA` **trên cùng hàng cha**, đường dẫn worker-only. **Không đưa nội dung, script mẫu hoặc quy tắc vào tin giao.** Một lần giao = một chương = một Video YAML hoàn chỉnh.
+- Template: **`T18 = Quiz`, `T19:W19 = Quiz YAML`** (bốn header thống nhất); tối thiểu **27 cột**. Thiếu/sai: `BLOCKER: QUIZ SCHEMA`; không tự dời Video X:AA hoặc Interview P:S.
+- Prime xác định hàng cha/con bằng A:B thật, không suy từ số thứ tự. Filename B cha phải là `.md` hợp lệ sau STEP 5. Mỗi chương có Knowledge C:N đầy đủ; thiếu là `BLOCKER: INCOMPLETE KNOWLEDGE`.
+- Preflight tất cả T:W trên hàng cha: `userEnteredValue`, formula, `effectiveValue`, `formattedValue`, `note`, `dataValidation`, `chipRuns`, owner. Trống hết → `NEW_FILL`. YAML nguồn/đã Normalize hợp lệ → `UNCHANGED` không ghi. **Chỉ khi có lỗi cú pháp/định dạng YAML hoặc Markdown nhúng**, Prime mới được giao worker `FORMAT_FIX` tối thiểu trong T:W với diff chứng minh **câu hỏi, bốn đáp án/giải thích, correctAnswerId, metadata và thứ tự giữ nguyên**. Không sửa nội dung hoặc ép YAML Normalize về bản YAML nguồn; không chứng minh được → BLOCKER. Không coi dữ liệu ở hàng con là Quiz hợp lệ.
+- `question`/`answers` phải đúng Java, có một đáp án đúng, ba distractors hợp lý, giải thích cho **từng** lựa chọn; kiểm tra đánh đố/answer-leakage, kiến thức hiện tại, code và stdout. Không ép quota câu hỏi. A/B/C/D là ID nội bộ, không phải thứ tự frontend shuffle.
 
----
+## 2. Worker → Prime QA
 
-## PHẦN PRIME — WORKER KHÔNG ĐỌC PHẦN NÀY
+1. Giao một worker mỗi chương với phạm vi đọc/ghi chính xác; worker tự đọc worker-only file, chỉ soạn YAML mới ở `NEW_FILL`; `FORMAT_FIX` thì sửa cú pháp tối thiểu trên bản cũ, `UNCHANGED` thì không ghi. Khi có write, chia ≤4 ô T→U→V→W, preflight, exact readback Unicode/whitespace 100% và so diff bảo toàn nội dung. Worker không chạy Gradle, không cập nhật J3, không commit/push.
+2. Prime đọc lại **toàn bộ** T:W trên các hàng cha và kiểm tra mọi hàng con không có Quiz orphan. YAML nguồn `NEW_FILL` có root chỉ `questions`; mỗi question **chỉ có** `question`, `answers`, `correctAnswerId`, mỗi answer chỉ `id`, `answer`, `explanation` và đúng A/B/C/D. YAML `FORMAT_FIX`/đã Normalize trước đó có thêm canonical fields thì phải giữ nguyên các field/giá trị; Prime đối chiếu snapshot trước–sau, `FORMAT_DIFF`, `CONTENT_PRESERVED` và exact readback.
+3. Đánh giá toàn tab Knowledge→Quiz, không trùng lặp vô ích, kiểm tra blind-answer, distractors, explanation và đúng-sai. Theo dõi `PARENT_ROW → CHILD_ROWS → T:W → OWNER → YAML_QA → READBACK`.
+4. **Nếu chỉ thử vài chương, không chạy Normalize APPLY/module import toàn tab hoặc đổi J3.** Khi toàn bộ chương trong tab đã đầy đủ và QA PASS mới đi tiếp.
 
-### 1. Xác nhận module, schema và nguồn
+## 3. Normalize Quiz trên chính Google Sheets — Prime, root task
 
-1. Lấy URL gốc và ánh xạ tên module → gid từ `module-generate-info.txt`, đối chiếu metadata tên tab/gid. Không nhầm spreadsheet ID với gid.
-2. Đọc `A1,B1`, header menu và **toàn bộ vùng A/B của tab**, kể cả khi đợt thử nghiệm chỉ chọn một số chương. Mỗi hàng có A là chương; các hàng B tiếp theo thuộc chương đó đến trước chương kế. Lập thứ tự chính xác `(parent cell, title, child rows, X:AA cùng hàng cha)`. **Không cấp phát hàng Video mới, không tính lại hàng bằng thứ tự chương; phạm vi giao worker có thể chỉ là một tập con được yêu cầu.**
-3. Đối chiếu Template và tab module **theo trạng thái hiện hành**, không suy ra từ phiên bản cũ. Schema mới:
-   - `A19 = Menu Cấp 1`, `B19 = Menu Cấp 2`; `C19:N19 = Câu trả lời`, `O19 = Difficulty`.
-   - `X18 = Video`, **`X19:AA19 = Video Script`** (bốn cột ghép thành một YAML).
-   - **Ví dụ:** chương ở `A20` → script `X20:AA20`; chương kế tiếp ở `A29` → script `X29:AA29`. `B20` chứa filename do worker **STEP 5** tự điền. Mỗi hàng con `B21:B28` giữ Knowledge `C:N` và Difficulty `O`, không chứa Video.
-   - **Không còn bảng Video riêng N3:R... hoặc cơ chế Prime điền cột N.** Các script cũ ở vùng khác không được tự di chuyển, xóa hoặc gán lại; nếu tab chưa chuyển schema, dừng `BLOCKER: VIDEO SCHEMA`, không tự sửa Template/tab.
-4. Kiểm tra Knowledge từng bài của các chương dự kiến thực thi trong **C:N** đã có đủ và Difficulty **O trên các hàng con** đã hợp lệ theo STEP 5. Không lấy title thay nội dung.
-   **Việc đặt filename Knowledge đã gộp vào STEP 5**: worker STEP 5 tự điền B cùng hàng Menu Cấp 1 và Prime đã QA tên/prefix toàn tab. **STEP 7 là Interview YAML ở P:S hàng cha**. Trong STEP 9, **B hàng cha vẫn là filename Knowledge `.md` hợp lệ và duy nhất** dùng để suy ra thư mục Video `<chapter-index>.<stem>/video-script.yml` khi importer chạy; worker không đổi B thành `.yml` và không tự đặt path. Nếu thiếu filename QA thì `BLOCKER: INCOMPLETE STEP 5 FILENAME QA`. Không đọc/ghi P:S.
-5. Kiểm tra **toàn bộ X:AA trên hàng cha** trước khi giao worker, kể cả các ô trống. Không ghi đè nội dung, xóa hoặc đổi cấu trúc video cũ. Chương đã có script: hợp lệ → `UNCHANGED`, không ghi; nếu **chỉ có lỗi cú pháp/định dạng YAML/Markdown nhúng** → cho phép worker `FORMAT_FIX` tối thiểu trong X:AA với diff chứng minh không đổi title, sections, scenes, time, visual, script, purpose, URL hoặc thứ tự; không chứng minh được → `BLOCKER: EXISTING VIDEO`.
-
-### 2. Prime ánh xạ hàng Menu Cấp 1 trực tiếp tới X:AA
-
-1. Lấy **TẤT CẢ Menu Cấp 1 từ A20 trở đi**, không chỉ ba chương đầu, giữ **nguyên văn** mỗi tên/ô A cha; **không ghi thêm danh sách chủ đề ở cột nào**.
-2. Ánh xạ theo **hàng thực tế**: nếu ô nguồn là `A<R>`, Video của chương đó nằm **chính xác tại `X<R>:AA<R>`**; ví dụ A20 → X20:AA20, A29 → X29:AA29. **Không dùng công thức `3+i`** và không dùng hàng con.
-3. Preflight **đúng X:AA hàng cha** (entered value/formula, effective/formatted value, note, dataValidation/chipRuns), kiểm tra ownership. Phân biệt `NEW_FILL` (trống), `UNCHANGED` (YAML hợp lệ) và `FORMAT_FIX` (lỗi định dạng thuần túy). Dữ liệu thuộc ownership khác hoặc lỗi nội dung → BLOCKER, không dùng `O` vì dành cho Difficulty.
-4. Chỉ giao worker khi nguồn đủ và vùng X:AA thuộc ownership an toàn. **Không có bước ghi tiêu đề N, không ghi vào X:AA của các hàng con**. Video đã có chỉ được sửa đúng lỗi format đã xác minh, không được sinh mới hay viết lại script. Với `FORMAT_FIX`, Prime kiểm tra snapshot/diff và bảo toàn toàn bộ YAML payload; nếu không chứng minh được, không cho write.
-5. Ghi sổ điều phối: `PARENT_CELL, CHILD_ROWS, SCRIPT_RANGE_X_TO_AA_PARENT, WORKER, STATUS, READBACK, QA, BLOCKER`. Không dự đoán `ROWS_NEEDED` hay dùng `TOPIC_CELL_N_ROW`.
-
-### 3. Giao MỘT lần/worker và theo dõi đến hoàn tất
-
-- Mỗi worker được giao chính xác: URL tab; `A1,B1,A<PARENT>,B<PARENT>,B<children>,C<children>:N<children>`; `X<PARENT>:AA<PARENT>` là vùng ghi **duy nhất**; và đường dẫn **`worker/STEP_9_WORKER.md`**. Không truyền nội dung ô hay các đoạn tóm tắt vào tin nhắn.
-- **Hàng Video là hàng cha có sẵn**, không cấp row/slot độc lập; worker tự làm đến COMPLETED trong **một phiên giao việc**.
-- Chỉ một worker chịu trách nhiệm viết trên từng hàng. Nhiều worker có thể ghi **các hàng khác nhau** đồng thời. Kiểm tra nguồn/sẵn sàng của từng chương độc lập.
-- Khi worker xong, Prime đọc lại YAML **ghép X→AA trên hàng cha không separator**, kiểm tra parse YAML và `title/sections/items/type/time/visual/script/purpose`, tính liên tục thời gian, Java correctness, coverage từng B và chất lượng sư phạm. Với `FORMAT_FIX`, so snapshot/diff bảo đảm **chỉ sửa cú pháp** và mọi nội dung, thời gian, lời thoại, dữ liệu cũ bất biến; không tranh thủ sửa chính tả/văn phong/nội dung. Xác nhận không chạm Knowledge/Difficulty/J3/ô ngoài vùng. `COMPLETED` đòi hỏi worker readback PASS **và** Prime QA độc lập PASS; `UNCHANGED` chỉ khi không write và QA PASS.
-- Dùng worker SLEEPING cho chương kế tiếp chỉ sau khi giải phóng ownership; không spawn khi còn sleeping. Không dừng điều phối sau lượt giao đầu; theo `rules/PRIME_RULES.md` và `rules/HEARTBEAT.md`. Không ping worker đang chạy chỉ để tạo hoạt động.
-
-### 4. Sức chứa và trường hợp ngoại lệ
-
-Schema hiện hành có **4 ô X:AA trên mỗi hàng Menu Cấp 1**, mỗi ô tối đa **30.000 ký tự Unicode**. Một video có thể dài tùy Knowledge; Prime **không cần và không được đoán** số Scene, độ dài hoặc số ô trước khi giao. Worker tính sau khi hoàn tất YAML và tự chia theo giới hạn.
-
-Nếu toàn văn cần **hơn 4 ô** (>120.000 ký tự khi mỗi ô dùng đủ hạn mức), đó là ngoại lệ `BLOCKER: VIDEO CAPACITY`: worker báo độ dài và số ô thật sự cần, **không ghi một phần/truncate**, không tự chạm các cột ngoài vùng Video X:AA hay đổi schema chung khi các worker khác đang làm. Prime chỉ thiết kế/mở rộng các cột "Video Script" bổ sung sau khi xác nhận phạm vi an toàn và quyền sửa schema; không coi đây là PHA A/B mặc định và không giả báo chương hoàn tất.
-
-### 5. Hoàn tất STEP
-
-Với mỗi chương, yêu cầu một YAML parseable hoàn chỉnh theo `project-build/skeleton/video/video-script.yml`: `title` đúng A cha; `sections[].title` đúng B con theo thứ tự; section đầu ≥1 SCENE, các section sau bắt đầu bằng TRANSITION và có ≥1 SCENE; các item đủ bốn trường; thời gian liên tục; nội dung không placeholder; readback Unicode/newline 100% và QA chương PASS.
-
-**Sau khi TẤT CẢ chương của tab được worker hoàn tất, giải phóng ownership và Prime QA/readback PASS**, Prime **bắt buộc đồng bộ Video về đúng module**: xác minh URL/gid/tên tab/B1 và `I3` khớp module Gradle đã đăng ký; chạy task module-local `generateModuleVideoFromSheetByLocation` với `-PsheetMode=DRY_RUN` rồi `APPLY` như `GENERAL_AGENT_RULES.md §6`. Không gọi `ByFiles` hoặc task tổng hợp, không chạy sau từng worker hoặc với trial một vài chương. Kiểm tra status thực và kết quả trong `<MODULE_ROOT>/content/video/vi/menu/` (mỗi chương `<ordinal>.<stem>/video-script.yml`); `DRY_RUN` đơn thuần, `SKIPPED_*`, output thiếu hoặc lỗi cấu hình là `BLOCKER: MODULE VIDEO SYNC`. **Chỉ sau module sync PASS/UNCHANGED được xác minh** mới đọc `J2 = Current STEP`, rồi cập nhật `J3 = STEP 9` đúng tab và exact readback theo Prime Rules. Nếu thử nghiệm một số chương hoặc import lỗi, giữ nguyên J3. Worker không xuất file, chạy Gradle, sửa cấu hình hoặc commit/push.
-
-### 5.1 — Lệnh Prime bắt buộc tại root `java-learning`
+Task **`normalizeQuizQuestionsFromSheet`**; mặc định DRY_RUN; yêu cầu URL spreadsheet và **gid tab** (khác spreadsheet ID). `DRY_RUN` chỉ đọc, `APPLY` cần Sheets editor/ADC như STEP 8.
 
 ```powershell
-.\gradlew.bat :<EXACT_MODULE_GRADLE_PATH>:generateModuleVideoFromSheetByLocation -PfileUrl=<URL> -PsheetID=<GID> -PsheetMode=DRY_RUN
-.\gradlew.bat :<EXACT_MODULE_GRADLE_PATH>:generateModuleVideoFromSheetByLocation -PfileUrl=<URL> -PsheetID=<GID> -PsheetMode=APPLY
+.\gradlew.bat normalizeQuizQuestionsFromSheet -PfileUrl="<URL>" -PsheetID=<GID> -PquizMode=DRY_RUN
+.\gradlew.bat normalizeQuizQuestionsFromSheet -PfileUrl="<URL>" -PsheetID=<GID> -PquizMode=APPLY
 ```
 
-Sau APPLY kiểm tra đúng `I3` và báo `MODULE_SYNC_TASK`, `MODULE_PATH`, `TAB_GID`, `DRY_RUN`, `APPLY`, `SYNC_STATUS`, `DESTINATION`, `BLOCKER`. Với Video, importer APPLY thay thế **snapshot đầy đủ** của `content/video/vi/menu`; nếu dữ liệu chương chưa đầy đủ thì không APPLY (tránh xóa nhầm video cũ). Tiêu chí nội dung: `script` là **lời thoại tự nhiên** không chép README; `visual` mô tả hình/chuyển động/code có thể dựng; `purpose` là mục tiêu sư phạm. Khi đưa Java/code/đầu ra vào script/visual, QA kỹ thuật như README: cú pháp, phiên bản, giải thích và stdout phải đúng; cú pháp Markdown/code fence nếu xuất hiện phải cân đối nhưng không biến YAML Video thành README.
+- Code parse YAML, không gọi AI. Với câu hỏi **chưa có** `id`, tạo ID **`<lowercase filename stem>-001`, `-002`, ...**, tránh mọi ID đang có; ID cũ phải giữ nguyên, trùng ID → BLOCKER, không bao giờ tự đánh lại ID khi đổi thứ tự. Filename đã đổi nhưng ID tồn tại vẫn giữ; nếu cần migrate ID, xử lý chủ động sau.
+- Điền `aiGenerated: true`, `reviewed: false` mặc định; **không reset human-edited**. Điền `readmeRelated.file` từ B cha thành `<chapter-index>.<stem>/<filename>` như STEP 8, `readmeRelated.anchor: ''`; `apiRelated.controller: ''`, `apiRelated.methodSignature: ''`. Metadata và related hợp lệ đã có được giữ. `file` xung đột → BLOCKER.
+- Partial `readmeRelated.file` + anchor trống được phép **tạm thời** nhờ `LEGACY_QUESTION_LINKS`; strict contract và Portal cần cặp file/anchor đầy đủ sau enrichment (Portal có thể cảnh báo). Không tự đoán anchor/API.
+- Preflight mọi row, ngăn orphan/missing Quiz và fragment gap/oversize, snapshot fingerprint trước batch, một batch ghi T:W, exact readback và idempotent. Không ghi module.
 
-### 6. Mẫu tin nhắn Prime gửi worker — CHỈ bốn dòng
+## 4. Quiz ByLocation — Prime, một module
+
+Sau Normalize APPLY và readback PASS, chạy đúng module có `I3` khớp (không dùng `generateModuleContentFromSheetByFiles` hoặc task tổng hợp):
+
+```powershell
+.\gradlew.bat :<EXACT_MODULE_GRADLE_PATH>:generateModuleQuizFromSheetByLocation -PfileUrl=<URL> -PsheetID=<GID> -PsheetMode=DRY_RUN
+.\gradlew.bat :<EXACT_MODULE_GRADLE_PATH>:generateModuleQuizFromSheetByLocation -PfileUrl=<URL> -PsheetID=<GID> -PsheetMode=APPLY
+```
+
+- Task chỉ ghi snapshot **`content/quiz/vi/question.yml`** của đúng module. Trước APPLY phải kiểm tra diff với file cũ, đặc biệt Quiz cũ có human edits; snapshot thay thế file cũ. **Không APPLY nếu còn chương trống**, schema không hợp lệ, hoặc `SKIPPED_*`.
+- Validate `quiz.schema.json` qua `QuizQuestionSchemaService` (legacy file-only compatibility), kiểm tra question IDs unique toàn module, đúng 4 đáp án và correctAnswerId. Readback file, counts, các path/flags/câu hỏi; không thay đổi en Quiz.
+- Chỉ sau **toàn tab Worker+QA PASS, Normalize DRY_RUN/APPLY/readback PASS, ByLocation DRY_RUN/APPLY/output QA PASS** Prime mới update/readback `J3 = STEP 9` với preflight `J2` theo PRIME_RULES. Báo `NORMALIZE_STATUS`, `MODULE_SYNC_STATUS`, `DESTINATION`, `QUESTION_COUNT`, `READBACK`, blockers; không commit/push.
+
+### Prime giao worker — đúng bốn dòng
 
 ```text
-<LINK_TAB_ĐÃ_XÁC_MINH>
-A1, B1, <PARENT_CELL_A>, <PARENT_FILENAME_CELL_B>, <CHILD_B_RANGE>, <CHILD_C_TO_N_RANGE>
-<SCRIPT_RANGE_X_TO_AA_TRÊN_CHÍNH_HÀNG_PARENT>
+<URL_TAB_ĐÚNG_GID>
+A1, B1, <PARENT_A>, <FILENAME_B_PARENT>, <CHILD_B_ROWS>, <KNOWLEDGE_C_TO_N_CHILD_ROWS>, <DIFFICULTY_O_CHILD_ROWS>
+<T_TO_W_TRÊN_HÀNG_PARENT>
 /java-learning/module-generate-agent/temp/worker/STEP_9_WORKER.md
 ```
-
-Prime phải thay mọi placeholder bằng tọa độ/range chính xác. Nếu các hàng con không liên tiếp, truyền danh sách đầy đủ các ô tương ứng trên cùng dòng nguồn. **Không đưa nội dung từng ô, tóm tắt Knowledge, chỉ dẫn QA hoặc đoạn quy định worker vào tin giao.** Worker tự đọc toàn văn file riêng.

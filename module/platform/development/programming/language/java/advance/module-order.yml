@@ -16,3 +16,7 @@ children:
     order: 70
   runtime-diagnostics:
     order: 80
+  compilation:
+    order: 90
+  concurrency:
+    order: 100

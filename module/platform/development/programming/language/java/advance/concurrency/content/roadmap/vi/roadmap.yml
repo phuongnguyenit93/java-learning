@@ -1,0 +1,100 @@
+# <roadmap-schema>
+# Cấu trúc Roadmap Module
+# schema-version: 1
+#
+# YAML CONTRACT
+# roadmap: Danh sách milestone cấp cao của roadmap cho language hiện tại. ID milestone phải duy nhất.
+#
+# - id [string, required]: ID ổn định và duy nhất của milestone trong roadmap language hiện tại.
+# - title [string, required]: Tên milestone hiển thị cho learner.
+# - purpose [string, required]: Milestone này tồn tại để learner hiểu hoặc đạt được điều gì.
+# - dependsOn [list, optional]: Danh sách id milestone prerequisite khi dependency không thể hiện đủ chỉ bằng thứ tự item.
+# - objectives [list, optional]: Các learning objective cấp milestone; không dùng để liệt kê mọi fact/API/syntax nhỏ.
+# - relatedKnowledge [list, optional]: Danh sách Knowledge category id trong chính module hiện tại hỗ trợ milestone. Portal hiển thị danh sách này ở phía đối diện milestone và click item sẽ điều hướng sang Knowledge category tương ứng.
+# - relatedModules [list, optional]: Các module liên quan hiển thị ở Level 2 của Portal. Mỗi item dùng routeId bắt buộc và có thể có label/note localized; relation này chỉ để điều hướng, không tạo child milestone hoặc thay đổi learning order.
+#
+# ROADMAP THINKING FRAMEWORK
+# PURPOSE
+#   - Topic/module này là gì?
+#   - Vì sao nó tồn tại?
+#   - Không có nó thì learner gặp vấn đề gì?
+# FOUNDATION
+#   - Learner cần prerequisite hoặc mental model nào trước?
+# CORE MODEL
+#   - Những abstraction hoặc building block lớn nào tạo nên chủ đề này?
+# MECHANICS
+#   - Nó hoạt động như thế nào ở mức language/runtime/API phù hợp với module?
+# USAGE
+#   - Nó được dùng như thế nào trong code thực tế?
+# DECISION / TRADE-OFF
+#   - Khi nào nên chọn cơ chế này thay vì cơ chế khác?
+#   - Khi nào không nên dùng?
+# FAILURE / PITFALL
+#   - Những sai lầm, compile-time failure hoặc runtime failure nào đáng biết?
+# INTEGRATION
+#   - Chủ đề này kết nối với những concept/module lân cận nào?
+# SYNTHESIS
+#   - Sau cùng learner phải giữ mental model end-to-end nào?
+#
+# Mỗi language tự chịu trách nhiệm cho roadmap của chính nó. Không suy luận hoặc đồng bộ cấu trúc từ roadmap của language khác.
+# Thứ tự item trong roadmap chính là thứ tự học mặc định. Chỉ dùng dependsOn khi cần biểu diễn dependency rõ hơn thứ tự tuyến tính.
+# Skeleton không nên ép mọi module có đúng bấy nhiêu node. Nó là framework suy nghĩ chứ không phải template cứng.
+# </roadmap-schema>
+
+roadmap:
+  - id: nen-tang-thread
+    title: Nền tảng & Thread
+    purpose: Nắm cách Java tổ chức công việc đồng thời và quản lý vòng đời luồng.
+    objectives:
+      - Phân biệt concurrency, parallelism và tác vụ CPU-bound/I/O-bound.
+      - Tạo tác vụ bằng Thread, Runnable và Callable.
+      - Giải thích trạng thái thread, join, sleep và interrupt.
+  - id: jmm-shared-state
+    title: JMM & Shared State
+    purpose: Hiểu vì sao dữ liệu chia sẻ có thể sai lệch khi nhiều luồng cùng truy cập.
+    objectives:
+      - Giải thích atomicity, visibility, ordering và happens-before.
+      - Nhận diện race condition và thao tác read-modify-write.
+      - Sử dụng volatile đúng phạm vi.
+  - id: dong-bo-locks
+    title: Đồng bộ & Locks
+    purpose: Bảo vệ vùng dữ liệu quan trọng và kiểm soát tranh chấp giữa các luồng.
+    objectives:
+      - Sử dụng synchronized, monitor và ReentrantLock.
+      - So sánh lock, volatile và biến atomic.
+      - Nhận diện deadlock và giảm lock contention.
+  - id: phoi-hop-huy
+    title: Phối hợp & Hủy
+    purpose: Điều phối các luồng chờ điều kiện và kết thúc tác vụ có kiểm soát.
+    objectives:
+      - Phối hợp bằng wait/notify và Condition.
+      - Áp dụng interrupt, timeout và cancellation.
+      - Thiết kế shutdown an toàn cho tác vụ đang chạy.
+  - id: executor-fork-join
+    title: Executor & Fork/Join
+    purpose: Quản lý tác vụ qua bộ thực thi và xử lý công việc theo chiến lược chia để trị.
+    objectives:
+      - Dùng ExecutorService, Future và thread pool.
+      - Quản lý hàng đợi, lỗi, timeout và shutdown.
+      - Sử dụng ForkJoinPool cho tác vụ phân rã.
+  - id: utilities-collections
+    title: Utilities & Collections
+    purpose: Dùng công cụ đồng thời cấp cao để giảm mã khóa thủ công.
+    objectives:
+      - Chọn ConcurrentHashMap, BlockingQueue, CopyOnWriteArrayList.
+      - Sử dụng Semaphore, CountDownLatch và Phaser.
+      - Đánh giá tính an toàn luồng và chi phí hiệu năng.
+  - id: async-virtual-threads
+    title: Async & Virtual Threads
+    purpose: Xây dựng luồng xử lý bất đồng bộ và xử lý nhiều tác vụ blocking hiệu quả.
+    objectives:
+      - Kết hợp CompletableFuture và xử lý lỗi bất đồng bộ.
+      - Tạo virtual threads và phân biệt platform threads.
+      - Chọn mô hình thực thi phù hợp với workload.
+  - id: kiem-thu-chan-doan
+    title: Kiểm thử & Chẩn đoán
+    purpose: Phát hiện lỗi concurrency khó tái hiện và đánh giá hiệu năng hệ thống.
+    objectives:
+      - Viết kiểm thử concurrency với phối hợp luồng xác định.
+      - Đọc thread dump để nhận diện deadlock và contention.
+      - Đo throughput, latency và tìm điểm nghẽn.

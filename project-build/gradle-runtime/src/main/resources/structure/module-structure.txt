@@ -431,14 +431,8 @@ module
     │   │   │       │   ├── native-interoperability [JAVA_NATIVE_INTEROPERABILITY] : Java native interoperability, foreign memory and operating-system boundaries
     │   │   │       │   ├── instrumentation [JAVA_INSTRUMENTATION] : Java instrumentation, agents and class transformation
     │   │   │       │   ├── runtime-diagnostics [JAVA_RUNTIME_DIAGNOSTICS] : Java runtime diagnostics, management and troubleshooting
-    │   │   │       │   └── compilation
-    │   │   │       ├── concurrency
-    │   │   │       │   ├── fundamentals [JAVA_CONCURRENCY_FUNDAMENTALS] : Java concurrency fundamentals, Thread lifecycle and Java Memory Model
-    │   │   │       │   ├── high-level-utils [JAVA_HIGH_LEVEL_CONCURRENCY_UTILS] : Java synchronization, coordination and concurrent utilities
-    │   │   │       │   ├── executor-service [JAVA_EXECUTOR_SERVICE] : Java executors, thread pools, scheduling and lifecycle
-    │   │   │       │   ├── fork-join [JAVA_FORK_JOIN] : Java Fork/Join Framework and work-stealing execution
-    │   │   │       │   ├── async-programming [JAVA_ASYNC_PROGRAMMING] : Java asynchronous programming with Future and CompletableFuture
-    │   │   │       │   └── virtual-threads [JAVA_VIRTUAL_THREADS] : Java virtual threads and modern thread-per-task execution
+    │   │   │       │   ├── compilation [JAVA_ADVANCE_COMPILATION] : Advanced Java compilation, compiler pipeline and bytecode generation
+    │   │   │       │   └── concurrency [JAVA_ADVANCE_CONCURRENCY] : Advanced Java concurrency, coordination and execution models
     │   │   │       ├── core
     │   │   │       │   ├── language-basics [JAVA_LANGUAGE_BASICS] : Java language basics
     │   │   │       │   ├── numbers [JAVA_NUMBERS] : Java numeric types and arithmetic
@@ -457,6 +451,11 @@ module
     │   │   │       │   ├── localization [JAVA_LOCALIZATION] : Java localization and internationalization
     │   │   │       │   └── functional-programming [JAVA_FUNCTIONAL_PROGRAMMING] : Java functional programming with functional interfaces, lambdas, method references, Optional and composition
     │   │   │       └── version
+    │   │   │           ├── java5 [JAVA_VERSION_JAVA5] : Java 5
+    │   │   │           ├── java6 [JAVA_VERSION_JAVA6] : Java 6
+    │   │   │           ├── java7 [JAVA_VERSION_JAVA7] : Java 7
+    │   │   │           ├── java8 [JAVA_VERSION_JAVA8] : Java 8
+    │   │   │           ├── java9 [JAVA_VERSION_JAVA9] : Java 9
     │   │   │           ├── java10 [JAVA_VERSION_JAVA10] : Java 10
     │   │   │           ├── java11 [JAVA_VERSION_JAVA11] : Java 11
     │   │   │           ├── java14 [JAVA_VERSION_JAVA14] : Java 14
@@ -470,12 +469,7 @@ module
     │   │   │           ├── java24 [JAVA_VERSION_JAVA24] : Java 24
     │   │   │           ├── java25 [JAVA_VERSION_JAVA25] : Java 25
     │   │   │           ├── java26 [JAVA_VERSION_JAVA26] : Java 26
-    │   │   │           ├── java27 [JAVA_VERSION_JAVA27] : Java 27
-    │   │   │           ├── java5 [JAVA_VERSION_JAVA5] : Java 5
-    │   │   │           ├── java6 [JAVA_VERSION_JAVA6] : Java 6
-    │   │   │           ├── java7 [JAVA_VERSION_JAVA7] : Java 7
-    │   │   │           ├── java8 [JAVA_VERSION_JAVA8] : Java 8
-    │   │   │           └── java9 [JAVA_VERSION_JAVA9] : Java 9
+    │   │   │           └── java27 [JAVA_VERSION_JAVA27] : Java 27
     │   │   └── paradigm
     │   │       ├── imperative [IMPERATIVE_PROGRAMMING] : Imperative Programming paradigm, state, commands and procedural organization
     │   │       ├── declarative [DECLARATIVE_PROGRAMMING] : Declarative Programming paradigm, intent-oriented specification and related styles

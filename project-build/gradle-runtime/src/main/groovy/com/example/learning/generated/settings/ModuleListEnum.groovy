@@ -768,20 +768,29 @@ enum ModuleListEnum {
             []
     ),
 
+    JAVA_ADVANCE_COMPILATION(
+            'module:platform:development:programming:language:java:advance:compilation',
+            'module/platform/development/programming/language/java/advance/compilation',
+            'SERVLET',
+            'Advanced Java compilation, compiler pipeline and bytecode generation',
+            false,
+            []
+    ),
+
+    JAVA_ADVANCE_CONCURRENCY(
+            'module:platform:development:programming:language:java:advance:concurrency',
+            'module/platform/development/programming/language/java/advance/concurrency',
+            'SERVLET',
+            'Advanced Java concurrency, coordination and execution models',
+            false,
+            []
+    ),
+
     JAVA_ANNOTATION(
             'module:platform:development:programming:language:java:core:annotation',
             'module/platform/development/programming/language/java/core/annotation',
             'SERVLET',
             'Java annotations',
-            false,
-            []
-    ),
-
-    JAVA_ASYNC_PROGRAMMING(
-            'module:platform:development:programming:language:java:concurrency:async-programming',
-            'module/platform/development/programming/language/java/concurrency/async-programming',
-            'SERVLET',
-            'Java asynchronous programming with Future and CompletableFuture',
             false,
             []
     ),
@@ -813,15 +822,6 @@ enum ModuleListEnum {
             []
     ),
 
-    JAVA_CONCURRENCY_FUNDAMENTALS(
-            'module:platform:development:programming:language:java:concurrency:fundamentals',
-            'module/platform/development/programming/language/java/concurrency/fundamentals',
-            'SERVLET',
-            'Java concurrency fundamentals, Thread lifecycle and Java Memory Model',
-            false,
-            []
-    ),
-
     JAVA_DATE_TIME(
             'module:platform:development:programming:language:java:core:date-time',
             'module/platform/development/programming/language/java/core/date-time',
@@ -849,24 +849,6 @@ enum ModuleListEnum {
             []
     ),
 
-    JAVA_EXECUTOR_SERVICE(
-            'module:platform:development:programming:language:java:concurrency:executor-service',
-            'module/platform/development/programming/language/java/concurrency/executor-service',
-            'SERVLET',
-            'Java executors, thread pools, scheduling and lifecycle',
-            false,
-            []
-    ),
-
-    JAVA_FORK_JOIN(
-            'module:platform:development:programming:language:java:concurrency:fork-join',
-            'module/platform/development/programming/language/java/concurrency/fork-join',
-            'SERVLET',
-            'Java Fork/Join Framework and work-stealing execution',
-            false,
-            []
-    ),
-
     JAVA_FUNCTIONAL_PROGRAMMING(
             'module:platform:development:programming:language:java:core:functional-programming',
             'module/platform/development/programming/language/java/core/functional-programming',
@@ -881,15 +863,6 @@ enum ModuleListEnum {
             'module/platform/development/programming/language/java/core/generics',
             'SERVLET',
             'Java generics',
-            false,
-            []
-    ),
-
-    JAVA_HIGH_LEVEL_CONCURRENCY_UTILS(
-            'module:platform:development:programming:language:java:concurrency:high-level-utils',
-            'module/platform/development/programming/language/java/concurrency/high-level-utils',
-            'SERVLET',
-            'Java synchronization, coordination and concurrent utilities',
             false,
             []
     ),
@@ -1187,15 +1160,6 @@ enum ModuleListEnum {
             'module/platform/development/programming/language/java/version/java9',
             'LIBRARY',
             'Java 9',
-            false,
-            []
-    ),
-
-    JAVA_VIRTUAL_THREADS(
-            'module:platform:development:programming:language:java:concurrency:virtual-threads',
-            'module/platform/development/programming/language/java/concurrency/virtual-threads',
-            'SERVLET',
-            'Java virtual threads and modern thread-per-task execution',
             false,
             []
     ),

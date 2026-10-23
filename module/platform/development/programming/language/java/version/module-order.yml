@@ -1,0 +1,40 @@
+version: 1
+children:
+  java5:
+    order: 10
+  java6:
+    order: 20
+  java7:
+    order: 30
+  java8:
+    order: 40
+  java9:
+    order: 50
+  java10:
+    order: 60
+  java11:
+    order: 70
+  java14:
+    order: 80
+  java15:
+    order: 90
+  java16:
+    order: 100
+  java17:
+    order: 110
+  java18:
+    order: 120
+  java21:
+    order: 130
+  java22:
+    order: 140
+  java23:
+    order: 150
+  java24:
+    order: 160
+  java25:
+    order: 170
+  java26:
+    order: 180
+  java27:
+    order: 190

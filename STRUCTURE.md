@@ -1850,30 +1850,8 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 <li>
   <a href='./module/platform/development/programming/language/java/advance/compilation'>🪄 compilation</a>
 </li>
-</ul>
-</details>
-</li>
 <li>
-<details>
-  <summary><b><a href='./module/platform/development/programming/language/java/concurrency'>📁 concurrency</a></b></summary>
-<ul>
-<li>
-  <a href='./module/platform/development/programming/language/java/concurrency/fundamentals'>🪄 fundamentals</a>
-</li>
-<li>
-  <a href='./module/platform/development/programming/language/java/concurrency/high-level-utils'>🪄 high-level-utils</a>
-</li>
-<li>
-  <a href='./module/platform/development/programming/language/java/concurrency/executor-service'>🪄 executor-service</a>
-</li>
-<li>
-  <a href='./module/platform/development/programming/language/java/concurrency/fork-join'>🪄 fork-join</a>
-</li>
-<li>
-  <a href='./module/platform/development/programming/language/java/concurrency/async-programming'>🪄 async-programming</a>
-</li>
-<li>
-  <a href='./module/platform/development/programming/language/java/concurrency/virtual-threads'>🪄 virtual-threads</a>
+  <a href='./module/platform/development/programming/language/java/advance/concurrency'>🪄 concurrency</a>
 </li>
 </ul>
 </details>
@@ -1938,6 +1916,21 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <summary><b><a href='./module/platform/development/programming/language/java/version'>📁 version</a></b></summary>
 <ul>
 <li>
+  <a href='./module/platform/development/programming/language/java/version/java5'>🪄 java5</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java6'>🪄 java6</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java7'>🪄 java7</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java8'>🪄 java8</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/language/java/version/java9'>🪄 java9</a>
+</li>
+<li>
   <a href='./module/platform/development/programming/language/java/version/java10'>🪄 java10</a>
 </li>
 <li>
@@ -1978,21 +1971,6 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
 </li>
 <li>
   <a href='./module/platform/development/programming/language/java/version/java27'>🪄 java27</a>
-</li>
-<li>
-  <a href='./module/platform/development/programming/language/java/version/java5'>🪄 java5</a>
-</li>
-<li>
-  <a href='./module/platform/development/programming/language/java/version/java6'>🪄 java6</a>
-</li>
-<li>
-  <a href='./module/platform/development/programming/language/java/version/java7'>🪄 java7</a>
-</li>
-<li>
-  <a href='./module/platform/development/programming/language/java/version/java8'>🪄 java8</a>
-</li>
-<li>
-  <a href='./module/platform/development/programming/language/java/version/java9'>🪄 java9</a>
 </li>
 </ul>
 </details>

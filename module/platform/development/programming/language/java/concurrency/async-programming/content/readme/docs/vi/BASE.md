@@ -1,7 +1,0 @@
-# Lập trình bất đồng bộ trong Java (Async Programming)
-
-Lập trình bất đồng bộ cho phép tổ chức công việc khi kết quả chưa sẵn sàng: thay vì chặn tại mỗi bước để đợi, chương trình mô tả những xử lý sẽ tiếp diễn khi một tác vụ hoàn tất. Trong Java, `Future`, `CompletionStage` và đặc biệt `CompletableFuture` giúp biểu diễn kết quả đến sau, các quan hệ phụ thuộc và cách phối hợp nhiều tác vụ. Bất đồng bộ cũng cần được phân biệt với thực thi song song, vì cách tổ chức luồng xử lý không tự quyết định các tác vụ có chạy đồng thời hay không.
-
-Tài liệu này dành cho người đã nắm kiến thức Java Core cơ bản và muốn xây dựng các quy trình có nhiều bước chờ kết quả hoặc xử lý lỗi. Lộ trình bắt đầu từ mô hình bất đồng bộ và cách khởi tạo tác vụ với `CompletableFuture`, sau đó đi qua nối chuỗi xử lý, ghép các nhánh độc lập, xử lý ngoại lệ, quản lý thời hạn và hủy tác vụ, rồi kiểm chứng một chuỗi hoàn chỉnh. Bạn sẽ học khi nào dùng biến thể `Async`, cách chọn `Executor` và cách đặt điểm chờ kết quả phù hợp.
-
-Sau khi hoàn thành, bạn có thể dùng `thenApply`, `thenCompose` hoặc `thenCombine` để mô tả các quan hệ giữa tác vụ; kết hợp `allOf` và `anyOf` theo điều kiện hoàn tất; xử lý lỗi bằng `exceptionally`, `handle` hoặc `whenComplete`. Bạn cũng sẽ biết kiểm tra timeout, trạng thái hủy và giới hạn của việc hủy đối với công việc đang chạy, đồng thời kiểm thử các nhánh thành công, thất bại và phụ thuộc mà không dựa vào thứ tự chạy tình cờ.
