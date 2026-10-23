@@ -8,7 +8,7 @@ STEP này chỉ chuẩn bị sheet. **Không generate Roadmap, Menu hoặc nội
 
 ## Nguồn Google Sheets
 
-Đọc file `module-generate-agent/temp/module-generate-info.txt` trong repository hiện tại và lấy URL ở dòng dưới nhãn `Excel Page URL`.
+Đọc file `module-generate-agent/module-generate-info.txt` trong repository hiện tại và lấy URL ở dòng dưới nhãn `Excel Page URL`.
 
 Giá trị hiện tại trong file:
 
@@ -58,7 +58,7 @@ Ví dụ đã đối chiếu với cây module thực tế:
    - Lấy `rowCount`/`columnCount` và `sheetId` của **tab vừa clone** từ metadata. Nếu `rowCount < 700`, bổ sung đủ hàng bằng `updateSheetProperties` trên **tab mới** trước khi format; không ghi request vượt lưới. Không sửa giá trị, công thức, ghi chú, border, font, màu sắc, kích thước cột, validation hoặc định dạng khác.
    - **Chỉ định dạng tab vừa clone** khi chạy STEP 1 thông thường. Không format lại `Template` hoặc các tab cũ như một hiệu ứng phụ. Áp dụng hàng loạt cho các tab đã tồn tại chỉ khi người dùng yêu cầu riêng.
 9. **Lấy ID của tab mới:** Từ kết quả duplicate hoặc metadata của spreadsheet, lấy **`sheetId` của tab vừa tạo** (số `gid` trên link mở tab). **Không dùng spreadsheet ID/file ID** trong phần `/spreadsheets/d/...`.
-10. **Lưu mapping vào TXT:** Ngay sau khi clone, định dạng và xác định sheet ID, bổ sung một dòng ở **cuối** `module-generate-agent/temp/module-generate-info.txt` theo đúng mẫu:
+10. **Lưu mapping vào TXT:** Ngay sau khi clone, định dạng và xác định sheet ID, bổ sung một dòng ở **cuối** `module-generate-agent/module-generate-info.txt` theo đúng mẫu:
 
    ```text
    <TÊN MODULE> sheet id : <SHEET_ID>

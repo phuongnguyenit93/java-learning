@@ -61,14 +61,16 @@ Chi tiết workflow: [`GENERAL_AGENT_RULES.md`](module-generate-agent/GENERAL_AG
 - [`ARCHITECTURE.md`](./ARCHITECTURE.md) — kiến trúc chi tiết và ownership/lifecycle.
 - [`AGENTS.md`](./AGENTS.md) — working rules/context cho AI và contributor.
 - [`GENERAL_AGENT_RULES.md`](module-generate-agent/GENERAL_AGENT_RULES.md) — orchestrator/routing cho toàn bộ module-generation workflow.
-- [`STEP_1_CURRICULUM_RULES.md`](./module-generate-agent/STEP_1_CURRICULUM_RULES.md) — Curriculum, scope, ownership và boundary.
-- [`STEP_2_ROADMAP_REFERENCE.md`](./module-generate-agent/STEP_2_ROADMAP_REFERENCE.md) — canonical ROADMAP + module Reference architecture, contract và authoring/review rules.
-- [`STEP_3_MENU.md`](./module-generate-agent/STEP_3_MENU.md) — Menu + title skeleton cho new module; refactor module skip step này.
-- [`STEP_4_KNOWLEDGE.md`](./module-generate-agent/STEP_4_KNOWLEDGE.md) — Knowledge; với refactor module thì Menu + Knowledge được xử lý cùng nhau.
-- [`STEP_5_API.md`](./module-generate-agent/STEP_5_API.md) — API learning documentation / experiments.
-- [`STEP_6_VIDEO.md`](./module-generate-agent/STEP_6_VIDEO.md) — Video Script / Presentation Plan, one Knowledge Menu → one Video.
-- [`STEP_7_QUIZ.md`](./module-generate-agent/STEP_7_QUIZ.md) — Quiz.
-- [`STEP_8_INTERVIEW.md`](./module-generate-agent/STEP_8_INTERVIEW.md) — Interview.
-- [`STEP_9_VALIDATION.md`](./module-generate-agent/STEP_9_VALIDATION.md) — integrated validation + Coverage Review.
+- [`STEP_1.md`](./module-generate-agent/STEP_1.md) — chuẩn bị Google Sheets cho module.
+- [`STEP_2.md`](./module-generate-agent/STEP_2.md) — Roadmap và Introduction.
+- [`STEP_3.md`](./module-generate-agent/STEP_3.md) — Menu.
+- [`STEP_4.md`](./module-generate-agent/STEP_4.md) — Knowledge.
+- [`STEP_5.md`](./module-generate-agent/STEP_5.md) — review Knowledge, metadata và Java chapter skeleton.
+- [`STEP_6.md`](./module-generate-agent/STEP_6.md) — Java API và tests.
+- [`STEP_7.md`](./module-generate-agent/STEP_7.md) — Swagger VI/EN theo chương.
+- [`STEP_8.md`](./module-generate-agent/STEP_8.md) — Interview YAML.
+- [`STEP_9.md`](./module-generate-agent/STEP_9.md) — Quiz YAML.
+- [`STEP_10.md`](./module-generate-agent/STEP_10.md) — Video YAML.
+- [`worker/`](./module-generate-agent/worker/) — hướng dẫn dành riêng cho worker của từng STEP.
 - [Learning Platform — Product & Frontend Architecture](https://github.com/phuongnguyenit93/learning-platform/blob/main/ARCHITECTURE.md) — Portal hiện tại, data contract và deployment ở repository frontend riêng.
 - [`STRUCTURE.md`](./STRUCTURE.md) — cây module generated.

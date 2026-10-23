@@ -11,7 +11,7 @@ Sau STEP 4, **mỗi Menu Cấp 2 đã có một bài học README Markdown độ
 ### Phân tách PRIME / WORKER (giống STEP 4)
 
 - **File `STEP_5.md` này chỉ dành cho Prime; worker không đọc.**
-- **Toàn bộ hướng dẫn thực thi dành cho worker nằm trong `/java-learning/module-generate-agent/temp/worker/STEP_5_WORKER.md`.** Worker phải **tự đọc toàn văn file worker-only**, kể cả sau context compaction; Prime tuyệt đối không rút gọn quy trình review/refactor thành tin nhắn ngắn thay cho tài liệu. Worker không đọc STEP Prime, STEP khác, GENERAL, rules hoặc TXT.
+- **Toàn bộ hướng dẫn thực thi dành cho worker nằm trong `/java-learning/module-generate-agent/worker/STEP_5_WORKER.md`.** Worker phải **tự đọc toàn văn file worker-only**, kể cả sau context compaction; Prime tuyệt đối không rút gọn quy trình review/refactor thành tin nhắn ngắn thay cho tài liệu. Worker không đọc STEP Prime, STEP khác, GENERAL, rules hoặc TXT.
 - Prime phải đọc `GENERAL_AGENT_RULES.md`, **liệt kê và đọc tất cả file hiện có trong `module-generate-agent/rules/`**, `module-generate-info.txt`, toàn bộ cả `STEP_5.md` và `worker/STEP_5_WORKER.md` trước khi giao; đọc lại khi mất context.
 - **Tin nhắn Prime giao worker chỉ gồm 4 dòng định vị:** link tab, tọa độ ô nguồn, **vùng ghi Sheet của đúng chương + hai đường dẫn package main/test được cấp quyền**, đường dẫn file worker-only. Không thêm lời dẫn, rules, giải thích, nội dung README, bản refactor mẫu hoặc tóm tắt. **Một lần giao = một chương = một lượt thực hiện trọn vẹn**.
 
@@ -49,7 +49,7 @@ Sau STEP 4, **mỗi Menu Cấp 2 đã có một bài học README Markdown độ
 - Xác định root Java từ đúng module, `JAVA_BASE_PACKAGE` và cấu trúc feature package đã tồn tại; preflight đường dẫn chuẩn hóa **nằm dưới đúng module**, không bị path traversal/symlink, không nằm trong package của chương khác. Prime chỉ **xác định và giao** paths; **chính STEP_5_WORKER tạo skeleton**, không để Prime tạo hộ. Nếu module đã có source trong vùng package dự kiến, Prime xác minh owner, **không tự cho worker ghi đè**.
 - Cấu trúc phải giao cho worker (main + test) theo mỗi chương: `<main-package>/{controller,dto,service,model,exception,repository}/` và `<test-package>/`. **Worker tạo các thư mục và marker rỗng `.gitkeep` khi cần để Git/worktree giữ lại skeleton**, không tạo class Java, source hoặc file logic giả. STEP 6 tiếp nhận hai package path do STEP 5 tạo và Prime xác thực.
 
-1. **Bước xác minh đầu tiên, trước mục 2.0 module setup:** Prime tự đọc `/java-learning/module-generate-agent/temp/GENERAL_AGENT_RULES.md` và `/java-learning/module-generate-agent/temp/module-generate-info.txt`. Lấy URL từ `Excel Page URL`, mapping `<TÊN MODULE> sheet id : <SHEET_ID>`; xây dựng URL trực tiếp `<URL_GỐC>/edit?gid=<SHEET_ID>#gid=<SHEET_ID>`. Không hardcode, không nhầm gid với spreadsheet ID. Xác minh tab, `A1`, `B1`, **`I3` module path**; sau đó **hoàn tất mục 2.0 cấu hình và Gradle sync** rồi mới preflight/giao worker các bước 2–7.
+1. **Bước xác minh đầu tiên, trước mục 2.0 module setup:** Prime tự đọc `/java-learning/module-generate-agent/GENERAL_AGENT_RULES.md` và `/java-learning/module-generate-agent/module-generate-info.txt`. Lấy URL từ `Excel Page URL`, mapping `<TÊN MODULE> sheet id : <SHEET_ID>`; xây dựng URL trực tiếp `<URL_GỐC>/edit?gid=<SHEET_ID>#gid=<SHEET_ID>`. Không hardcode, không nhầm gid với spreadsheet ID. Xác minh tab, `A1`, `B1`, **`I3` module path**; sau đó **hoàn tất mục 2.0 cấu hình và Gradle sync** rồi mới preflight/giao worker các bước 2–7.
 2. **Prime tự đọc vùng A/B của Menu** để xác định từng chương, chính xác `PARENT_CELL`, `PARENT_FILENAME_CELL` và danh sách/vùng `CHILD_CELLS` (chỉ những hàng A trống và B là mục cấp 2). **B trên hàng A được phép còn trống**; nếu đã có filename sai định dạng hoặc có formula/note xung đột thì báo `BLOCKER: INVALID PARENT FILENAME` trước khi giao. Prime không đặt tên thay worker. Không xác định được chương thì blocker, không đoán.
 3. Trước khi giao, Prime kiểm tra các bài đã sinh trong `C:N` của chương. Nếu hàng mục cấp 2 không có bài từ STEP 4 hoặc bài nằm ngoài C:N, ghi nhận `BLOCKER: INCOMPLETE STEP 4 CHAPTER`; **không coi chương đã sẵn sàng refactor đầy đủ**. Kiểm tra header `C19:N19 = Câu trả lời`, `O19 = Difficulty`, `X19:AA19 = Video Script`. Đọc O hàng con (chỉ BASIC/INTERMEDIATE/ADVANCED) và AB hàng con (trống hoặc TRUE/FALSE); formula, note xung đột hoặc giá trị sai định dạng ở từng cột đều là blocker. Không tự tạo bài mới thay STEP 4.
 4. **Kiểm tra trạng thái pool** và chỉ điều phối trong hạn mức **Mode A/B của session (A=3 mặc định; B=N do user chỉ định, thiếu N → BLOCKER; tính cả ACTIVE + SLEEPING)**. Tái sử dụng worker SLEEPING; **không spawn khi còn worker SLEEPING**. Nếu cần spawn thì tạo một worker mỗi lệnh và kiểm tra kết quả trước khi tạo tiếp. Nếu pool hiện có bất thường vượt hạn mức đang áp dụng, không tạo thêm worker hoặc đánh thức vượt giới hạn; báo/điều phối lại theo GENERAL.
@@ -63,7 +63,7 @@ Sau STEP 4, **mỗi Menu Cấp 2 đã có một bài học README Markdown độ
 <LINK_TAB_ĐÃ_XÁC_MINH>
 A1, B1, <PARENT_CELL_A>, <PARENT_FILENAME_CELL_B>, <CHILD_B_RANGE>, <SOURCE_ANSWER_RANGE_C_TO_N>, <SOURCE_DIFFICULTY_RANGE_O>, <SOURCE_IMPORTANCE_RANGE_AB>
 <WRITE_PARENT_FILENAME_CELL_B_NẾU_TRỐNG>, <WRITE_RANGE_C_TO_N_CỦA_CÁC_HÀNG_CON>, <WRITE_DIFFICULTY_RANGE_O_CỦA_CÁC_HÀNG_CON>, <WRITE_IMPORTANCE_RANGE_AB_CỦA_CÁC_HÀNG_CON> ; <ABSOLUTE_MAIN_CHAPTER_PACKAGE_PATH> ; <ABSOLUTE_TEST_CHAPTER_PACKAGE_PATH>
-/java-learning/module-generate-agent/temp/worker/STEP_5_WORKER.md
+/java-learning/module-generate-agent/worker/STEP_5_WORKER.md
 ```
 
 Prime thay placeholder bằng tọa độ/range và **hai đường dẫn package tuyệt đối đã preflight**. Nếu hàng con không liên tiếp, liệt kê đủ các ô nguồn và đích tương ứng trong hai dòng tọa độ. **Chỉ worker đọc toàn văn `worker/STEP_5_WORKER.md` để biết cách tạo skeleton và review, Prime không gửi nội dung/tóm tắt bài học hoặc code.** Giao lượt sửa trùng filename cuối STEP vẫn giữ bốn dòng scope **chỉ B cha**, không có quyền tạo/chỉnh skeleton.
@@ -91,7 +91,7 @@ Prime thay placeholder bằng tọa độ/range và **hai đường dẫn packag
 <LINK_TAB_ĐÃ_XÁC_MINH>
 A1, B1, <PARENT_CELL_A>, <PARENT_FILENAME_CELL_B>, <CHILD_B_RANGE>
 <WRITE_ONLY_PARENT_FILENAME_CELL_B_ĐÃ_CÓ_TÊN_TRÙNG>
-/java-learning/module-generate-agent/temp/worker/STEP_5_WORKER.md
+/java-learning/module-generate-agent/worker/STEP_5_WORKER.md
 ```
 
 Đây là phạm vi ghi B cha đã được Prime xác minh xung đột, **không phải yêu cầu worker chạy lại toàn bộ STEP 5**, và không ủy quyền đọc/ghi C:N/O/AB của bài con.

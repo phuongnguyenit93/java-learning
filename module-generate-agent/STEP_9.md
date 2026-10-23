@@ -2,10 +2,10 @@
 
 ## 0. Mục tiêu và quyền hạn
 
-- **STEP 9 = Quiz**; STEP 8 vẫn là Interview YAML; STEP 10 vẫn là Video YAML. Không sử dụng `module-generate-agent/STEP_7_QUIZ.md` (workflow legacy) làm chỉ dẫn thực thi cho `temp/`.
+- **STEP 9 = Quiz**; STEP 8 là Interview YAML; STEP 10 là Video YAML.
 - Một worker phụ trách **một Menu Cấp 1**. Đọc toàn bộ Knowledge của chương, tạo một tài liệu Quiz YAML trong **T:W cùng hàng cha**, tối đa 4 ô × 30.000 Unicode code points/ô. Không viết Quiz ở hàng con.
 - Worker chỉ viết `questions[]` với **`question`, `answers`** (chính xác A/B/C/D, mỗi đáp án có `answer` và `explanation`) và **`correctAnswerId`**. Worker **không viết** question `id`, `aiGenerated`, `reviewed`, `readmeRelated`, `apiRelated` hoặc tự chỉnh module.
-- Prime phải đọc `temp/GENERAL_AGENT_RULES.md`, tất cả `module-generate-agent/rules/`, `module-generate-info.txt`, toàn bộ file này và `worker/STEP_9_WORKER.md`. **Worker chỉ tự đọc toàn bộ `worker/STEP_9_WORKER.md`**, không đọc Prime/rules/source repo. Prime chỉ gửi 4 dòng: URL tab, vùng nguồn chính xác, vùng đích T:W, đường dẫn worker-only.
+- Prime phải đọc `GENERAL_AGENT_RULES.md`, tất cả `module-generate-agent/rules/`, `module-generate-info.txt`, toàn bộ file này và `worker/STEP_9_WORKER.md`. **Worker chỉ tự đọc toàn bộ `worker/STEP_9_WORKER.md`**, không đọc Prime/rules/source repo. Prime chỉ gửi 4 dòng: URL tab, vùng nguồn chính xác, vùng đích T:W, đường dẫn worker-only.
 - Pool theo Mode A/B **chỉ trong session** (A=3 mặc định; B=N do user chỉ định, thiếu N → BLOCKER; ACTIVE+SLEEPING); **reuse SLEEPING** trước, spawn tuần tự mỗi lệnh một worker, không tạo dư và không trùng ownership.
 
 ## 1. Mapping và preflight
@@ -63,5 +63,5 @@ Sau Normalize APPLY và readback PASS, chạy đúng module có `I3` khớp (kh�
 <URL_TAB_ĐÚNG_GID>
 A1, B1, <PARENT_A>, <FILENAME_B_PARENT>, <CHILD_B_ROWS>, <KNOWLEDGE_C_TO_N_CHILD_ROWS>, <DIFFICULTY_O_CHILD_ROWS>
 <T_TO_W_TRÊN_HÀNG_PARENT>
-/java-learning/module-generate-agent/temp/worker/STEP_9_WORKER.md
+/java-learning/module-generate-agent/worker/STEP_9_WORKER.md
 ```

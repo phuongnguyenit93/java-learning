@@ -12,8 +12,8 @@ STEP 8 hiện là bước **sinh nội dung phỏng vấn / hệ thống hóa ki
 
 ### Prime/Worker và nguồn quy định
 
-- **`STEP_8.md` này chỉ dành cho Prime**. Prime đọc `/java-learning/module-generate-agent/temp/GENERAL_AGENT_RULES.md`, **liệt kê và đọc tất cả file `module-generate-agent/rules/`**, `module-generate-info.txt`, toàn bộ `STEP_8.md` và `worker/STEP_8_WORKER.md` trước khi giao; đọc lại sau mất context.
-- **Worker bắt buộc TỰ đọc TOÀN VĂN duy nhất `/java-learning/module-generate-agent/temp/worker/STEP_8_WORKER.md`** (kể cả sau compaction). Worker không đọc tài liệu Prime, STEP khác, rule/TXT, repo hay lịch sử chat để thay cho nhiệm vụ.
+- **`STEP_8.md` này chỉ dành cho Prime**. Prime đọc `/java-learning/module-generate-agent/GENERAL_AGENT_RULES.md`, **liệt kê và đọc tất cả file `module-generate-agent/rules/`**, `module-generate-info.txt`, toàn bộ `STEP_8.md` và `worker/STEP_8_WORKER.md` trước khi giao; đọc lại sau mất context.
+- **Worker bắt buộc TỰ đọc TOÀN VĂN duy nhất `/java-learning/module-generate-agent/worker/STEP_8_WORKER.md`** (kể cả sau compaction). Worker không đọc tài liệu Prime, STEP khác, rule/TXT, repo hay lịch sử chat để thay cho nhiệm vụ.
 - Prime **chỉ gửi đúng 4 dòng**: URL tab, tọa độ nguồn, tọa độ 4 ô đích, đường dẫn file worker-only. **Không gửi nội dung Knowledge, mẫu câu hỏi, tiêu chí chất lượng, tóm tắt worker file hoặc filename đề xuất**.
 
 ## 1. Mapping Sheet
@@ -83,7 +83,7 @@ Task đã đăng ký tại root repository `java-learning`: **`normalizeIntervie
 <URL_TAB_ĐÚNG_GID>
 A1, B1, <PARENT_CELL_A>, <PARENT_FILENAME_CELL_B>, <CHILD_B_RANGE>, <CHILD_KNOWLEDGE_C_TO_N_RANGE>, <CHILD_DIFFICULTY_O_RANGE>
 <OUTPUT_INTERVIEW_P_TO_S_CÙNG_HÀNG_PARENT>
-/java-learning/module-generate-agent/temp/worker/STEP_8_WORKER.md
+/java-learning/module-generate-agent/worker/STEP_8_WORKER.md
 ```
 
 Thay placeholder bằng địa chỉ thực, không gửi dấu `...` hay ranges có thể bao gồm chương ngoài nhiệm vụ. Nếu các hàng con không liền nhau, liệt kê chính xác các ô trong dòng nguồn. **Prime không chép nội dung từ worker-only vào tin giao; worker phải tự đọc file này**.

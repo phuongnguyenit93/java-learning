@@ -1,6 +1,6 @@
 # PRIME_RULES.md — Quy định bắt buộc dành cho Prime
 
-Áp dụng cho Prime khi điều phối bất kỳ STEP nào của `module-generate-agent/temp/`. Đây là một phần của bộ quy định chung trong `module-generate-agent/rules/`, không phải file STEP. Prime phải đọc toàn bộ các file hiện có trong thư mục `rules/` cùng `module-generate-agent/temp/GENERAL_AGENT_RULES.md` và file STEP hiện hành **trước mỗi STEP**; nếu context không còn đầy đủ hoặc không chắc chắn, phải đọc lại theo General Rules.
+Áp dụng cho Prime khi điều phối bất kỳ STEP nào của `module-generate-agent/`. Đây là một phần của bộ quy định chung trong `module-generate-agent/rules/`, không phải file STEP. Prime phải đọc toàn bộ các file hiện có trong thư mục `rules/` cùng `module-generate-agent/GENERAL_AGENT_RULES.md` và file STEP hiện hành **trước mỗi STEP**; nếu context không còn đầy đủ hoặc không chắc chắn, phải đọc lại theo General Rules.
 
 ## 0. Worker modes — chỉ áp dụng trong session được đính kèm mode
 
@@ -42,6 +42,8 @@ Chỉ có **hai mode**. Prime áp dụng giới hạn tổng worker `ACTIVE` + `
 3. **Chỉ cập nhật J3 sau khi STEP đạt toàn bộ điều kiện hoàn thành đối với tab đó**. Nếu STEP chạy nhiều tab, xác minh và cập nhật từng tab đủ điều kiện; không cập nhật đồng loạt những tab còn thiếu, có blocker hoặc chưa được kiểm tra. Nếu có bất kỳ công việc nào của tab đang chạy/đợi review thì giữ nguyên J3.
 4. Trước khi ghi, đọc giá trị/công thức hiện có của `J3` và kiểm tra nhãn `J2`. `J3` là ô trạng thái được phép thay thế **giá trị STEP cũ** bằng STEP vừa hoàn tất; không xóa công thức, dữ liệu không phải trạng thái STEP, hoặc ghi lùi về STEP thấp hơn một cách âm thầm. Nếu nhãn sai, ô có công thức, mapping xung đột hoặc không thể xác minh trạng thái an toàn, báo `BLOCKER: CURRENT STEP UPDATE` và không ghi đoán.
 5. **Đọc lại `J3` sau khi ghi** và xác minh nguyên văn khớp `STEP N`; ghi nhận tab/gid, STEP, readback `PASS`/`FAIL` trong báo cáo. Không báo hoàn tất toàn bộ phần bàn giao nếu cập nhật J3 bắt buộc còn lỗi mà không nêu rõ.
+6. **Riêng STEP 6**, mặc dù không có Sheets importer và worker không được chỉnh Sheet, Prime **phải cập nhật `J3 = STEP 6`** sau khi đạt đầy đủ completion gate trong `STEP_6.md`: toàn bộ chương nghiệm thu, tích hợp build/test đạt và module-local `generateApiSwaggerDescription` sinh/kiểm tra skeleton thành công. Ghi và exact readback theo các mục 1–5; không ghi J3 chỉ vì API của một vài chương đã xong hoặc worker báo `COMPLETED`.
+7. **Riêng STEP 7**, Prime chỉ cập nhật `J3 = STEP 7` sau khi tất cả chương đã QA đầy đủ, staging VI/EN đã merge an toàn vào Swagger chính, readback PASS, kiểm tra build/test và **xóa sạch `step7-temp` đúng module**; không nâng J3 chỉ vì worker hoàn thành staging hoặc mới merge một phần. Áp dụng preflight J2/J3, cảnh báo trạng thái STEP 7 legacy và exact readback theo các mục 1–5 và `STEP_7.md`.
 
 ## 3. Checklist đóng STEP cho Prime
 

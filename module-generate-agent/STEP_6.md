@@ -8,7 +8,7 @@
 - STEP 9: Quiz YAML (T:W), từ STEP 7 cũ.
 - STEP 10: Video Script YAML (X:AA), từ STEP 8 cũ.
 
-Đây là workflow **Google Sheets/Worker trong `module-generate-agent/temp/`**. Không thay đổi bộ STEP canonical độc lập ở `module-generate-agent/STEP_*.md`. Việc đánh số không làm thay đổi nội dung, quyền sở hữu, task hay dữ liệu đã có của Interview/Quiz/Video.
+Đây là workflow **Google Sheets/Worker trong `module-generate-agent/`**. Không thay đổi bộ STEP canonical độc lập ở `module-generate-agent/STEP_*.md`. Việc đánh số không làm thay đổi nội dung, quyền sở hữu, task hay dữ liệu đã có của Interview/Quiz/Video.
 
 ## Quyết định đã chốt — phân quyền STEP 6
 
@@ -62,7 +62,7 @@
 - Worker `ACTIVE` chỉ được theo dõi bằng trạng thái/heartbeat **thụ động**. Không nhắn `continue/status?` để đánh thức worker vẫn đang chạy, không giao việc thứ hai vào cùng ownership. Nếu bị ngắt session hoặc worker lỗi, **khôi phục từ source/test đã có và báo cáo cuối cùng**, chỉ giao lại phần còn thiếu cho một owner độc quyền; không replay mù hoặc xóa code chưa nghiệm thu.
 - Với từng chương, Prime nghiệm thu **sau khi worker ngừng ghi**: toàn bộ Knowledge đã đọc, class ở đúng tầng/package, tính hữu ích của API, route không trùng, input/errors/boundaries, domain/service separation, test và bằng chứng chạy. Kiểm tra độc lập báo cáo với file thực tế; kết quả worker `COMPLETED` chưa tương đương `QA_PASS`. Nếu FAIL thì giao lại **đúng vùng chương** cho worker đang được cấp ownership sửa, không để Prime viết Java nghiệp vụ hộ.
 - Khi hàng đợi rỗng và **không còn writer**, Prime chạy QA tích hợp trên đúng module (`compileJava`, `test`, kiểm tra OpenAPI/HTTP runtime khi có thể), xử lý lỗi qua ownership worker của chương liên quan, rồi dọn **chỉ** marker `.gitkeep` dư/thư mục chỉ còn marker trong chapter package đã hoàn thành. Không dọn chapter chưa xử lý, không xóa file thật hoặc marker khác lạ. Đối chiếu đủ mọi Menu Cấp 1 trong scope mới báo STEP 6 `COMPLETED`.
-- Bàn giao cuối bắt buộc nêu `SESSION_WORKER_MODE`, `MAX_WORKERS`, `SKIPPED_EXISTING`, `COMPLETED_QA`, `API_NOT_REQUIRED`, `BLOCKER`, `PENDING`, kết quả build/test/runtime, trạng thái Git và danh sách chương chưa xong. **Không commit/push hoặc chỉnh Google Sheets/J3** chỉ vì code API xong; STEP Swagger info/examples và STEP mapping vẫn tách riêng.
+- Bàn giao cuối bắt buộc nêu `SESSION_WORKER_MODE`, `MAX_WORKERS`, `SKIPPED_EXISTING`, `COMPLETED_QA`, `API_NOT_REQUIRED`, `BLOCKER`, `PENDING`, kết quả build/test/runtime, trạng thái Git và danh sách chương chưa xong. **Không commit/push hoặc cập nhật J3 chỉ vì worker báo code API xong**; chỉ cập nhật trạng thái sau khi toàn bộ completion gate STEP 6 đạt PASS theo mục dưới đây. STEP Swagger info/examples và STEP mapping vẫn tách riêng.
 
 1. Đọc quy tắc chung và ngữ cảnh Sheet/module; xác minh đúng tab qua `gid`, `A1/B1`, từng Menu Cấp 1, `A/B` hàng cha và toàn bộ dải `B, C:N` của các Menu Cấp 2 thuộc chương; không đoán ranh giới chương.
 2. **Readback package skeleton do STEP_5_WORKER tạo**, trạng thái Application/runtime đã được Prime STEP 5 sync, source hiện hữu và xung đột route. **Chốt `CHAPTER → WORKER → MAIN_PACKAGE_PATH → TEST_PACKAGE_PATH`** trước khi giao. Khóa ownership từng cặp package, không có hai writer cùng vùng.
@@ -70,6 +70,7 @@
 4. Khi worker bàn giao, Prime nghiệm thu coverage toàn chương, MVC, đúng package, tính học tập và quan sát được, validation/error handling, giới hạn input/side effects, route/class không trùng, build/tests và HTTP runtime nếu khả dụng. Nếu không đạt, trả **đúng worker của chương** sửa trong ownership độc quyền; Prime không thiết kế/viết/refactor Java nghiệp vụ thay worker.
 5. Sau khi tất cả worker hoàn thành và giải phóng ownership, chỉ dọn thư mục thực sự rỗng, kiểm tra bảo toàn ngoài phạm vi, tổng hợp `COMPLETED/API_NOT_REQUIRED/BLOCKER` và các kết quả QA.
 6. **Prime bắt buộc chạy đúng task module-local `:<EXACT_MODULE_GRADLE_PATH>:generateApiSwaggerDescription` sau khi API code/QA của TOÀN tab đã xong**, để quét Controller và sinh/cập nhật `src/main/resources/swagger/<language>/api-cases.yml` cho các language đã khai báo. Task hiện cũng đồng bộ **khung metadata kỹ thuật** ở bốn Swagger YAML hiện hữu; phải bảo toàn trường do người viết đã điền. Prime nghiệm thu số controller/method, các key, `usage`, skeleton `case_001` (title/description để trống, input.body/status/response null), cả `vi` và `en`, đồng thời xác minh chạy lại không làm mất case đã điền. **Không tự viết thêm use case, ví dụ request/response, expected status hay description**. Nếu task không sinh được skeleton, báo blocker, không tuyên bố STEP 6 hoàn tất.
+7. **BẮT BUỘC cập nhật Current STEP sau khi STEP 6 thực sự hoàn tất cho TOÀN tab.** Completion gate: mọi Menu Cấp 1 thuộc phạm vi tab đều đã được Prime xác minh `COMPLETED_QA` hoặc `API_NOT_REQUIRED` hợp lệ; không còn `PENDING`/`PENDING_QA`/`BLOCKER` hay writer đang giữ ownership; QA tích hợp module (build/test/runtime khi khả dụng) đạt; task `generateApiSwaggerDescription` chạy thành công và Swagger skeleton cả `vi`/`en` được kiểm tra đúng, không làm mất dữ liệu đã có. Khi tất cả đều PASS, **chính Prime** lấy URL/gid từ `module-generate-info.txt`, xác minh tab và `J2 = Current STEP`, đọc giá trị/công thức hiện có của `J3` rồi ghi chính xác **`J3 = STEP 6`** theo `rules/PRIME_RULES.md §2`. **Đọc lại `J3` và xác nhận nguyên văn `STEP 6`** trước khi báo `COMPLETED`; ghi `TAB_GID`, `STEP_STATUS_UPDATE=PASS/FAIL`, `J3_READBACK` trong báo cáo. Nếu J3 chứa công thức, nhãn/mapping sai, trạng thái lịch sử từ cách đánh số STEP cũ chưa được đối chiếu hoặc có nguy cơ ghi lùi trạng thái, báo `BLOCKER: CURRENT STEP UPDATE` và không tự ghi đoán. Nếu bất kỳ completion gate nào chưa đạt, **giữ nguyên J3** và không tuyên bố STEP 6 hoàn tất.
 
 **Mẫu giao việc Prime → một worker — CHỈ bốn dòng:**
 
@@ -77,7 +78,7 @@
 <SHEET_URL_CUA_DUNG_TAB>
 A1, B1, <PARENT_CELL_A>, <PARENT_CELL_B>, <CHILD_B_RANGE>, <KNOWLEDGE_C_TO_N_RANGE>
 <ABSOLUTE_MAIN_CHAPTER_PACKAGE_PATH> ; <ABSOLUTE_TEST_CHAPTER_PACKAGE_PATH>
-/java-learning/module-generate-agent/temp/worker/STEP_6_WORKER.md
+/java-learning/module-generate-agent/worker/STEP_6_WORKER.md
 ```
 
 Prime thay placeholder bằng đường dẫn thật trong module, đã preflight và khóa ownership. Giao worker **chỉ một Menu Cấp 1**; khi hàng con không liên tiếp phải ghi đủ các vùng thực tế. Worker tự đọc toàn văn file worker-only.
@@ -86,7 +87,7 @@ Prime thay placeholder bằng đường dẫn thật trong module, đã prefligh
 
 - Không **tự biên soạn/điền** `controller-description.yml`, `api-descriptions.yml`, `api-execution.yml`, `api-params.yml`, Swagger/OpenAPI description, summary, execution, parameter descriptions, request/response examples, use-case examples hoặc expected results. **Chỉ task `generateApiSwaggerDescription` được phép tạo/cập nhật skeleton kỹ thuật**; không dùng generator/merge/import để điền nội dung. Việc tạo **nội dung thật** cho `api-cases.yml` và Swagger descriptions thuộc STEP mới do người dùng yêu cầu sau; cả Prime lẫn worker STEP 6 đều không thực hiện.
 - Không mapping API ↔ Knowledge ↔ Quiz ↔ Interview (`readmeRelated`, `apiRelated`, file/anchor/controller/methodSignature hoặc quan hệ chéo). Mapping thuộc **STEP riêng khác**, không gộp vào STEP Swagger/use case nếu người dùng chưa quyết định.
-- Không viết, chỉnh sửa hoặc đồng bộ nội dung Google Sheets trong STEP 6; nguồn Knowledge chỉ đọc. Không chạy ByFiles/ByLocation import, không tự thay `J3` khi chưa có completion gate được duyệt.
+- Không viết, chỉnh sửa hoặc đồng bộ **nội dung Knowledge** trên Google Sheets trong STEP 6; nguồn Knowledge chỉ đọc, không chạy ByFiles/ByLocation import. **Ngoại lệ duy nhất: Prime ghi `J3 = STEP 6` sau khi toàn bộ completion gate ở bước 7 đã PASS và readback xác nhận**; worker không được ghi J3.
 
 Việc Spring/OpenAPI tự suy ra **cấu trúc kỹ thuật từ annotation/DTO để kiểm thử runtime** không phải công việc AI điền Swagger. Không chủ động tạo/sửa tài liệu Swagger do đó ở STEP 6; giữ nguyên metadata đã có nếu kiểm thử.
 

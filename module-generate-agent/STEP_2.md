@@ -5,8 +5,8 @@
 Giao cho **đúng một sub-worker** thực hiện **toàn bộ Roadmap của một tab module** từ **nguyên văn câu hỏi `C2`**. Kết quả gồm các milestone `F = Title`, `G = Purpose`, `H = Objectives` **và phần giới thiệu cơ bản của module tại `B17`**, dùng cho `content/readme/docs/vi/BASE.md`. Không chia roadmap giữa nhiều worker, không tạo đề bài mới thay cho `C2`, không ép WHAT/WHY/HOW hoặc số milestone trái với câu hỏi.
 
 - **File `STEP_2.md` này chỉ dành cho Prime. Worker KHÔNG đọc.**
-- **Toàn bộ chỉ dẫn thực thi dành cho worker nằm trong `/java-learning/module-generate-agent/temp/worker/STEP_2_WORKER.md`.** Mỗi worker chỉ đọc **toàn văn đúng file worker-only đó**; không đọc file Prime, STEP khác, General Rules, rules folder, TXT hoặc câu trả lời từ task khác.
-- Prime phải tự đọc `module-generate-agent/temp/GENERAL_AGENT_RULES.md`, **liệt kê và đọc đầy đủ mọi file hiện có trong `module-generate-agent/rules/`**, `module-generate-info.txt`, toàn văn **cả `STEP_2.md` và `worker/STEP_2_WORKER.md`** trước khi giao việc. Nếu mất context hoặc không chắc chắn, đọc lại.
+- **Toàn bộ chỉ dẫn thực thi dành cho worker nằm trong `/java-learning/module-generate-agent/worker/STEP_2_WORKER.md`.** Mỗi worker chỉ đọc **toàn văn đúng file worker-only đó**; không đọc file Prime, STEP khác, General Rules, rules folder, TXT hoặc câu trả lời từ task khác.
+- Prime phải tự đọc `module-generate-agent/GENERAL_AGENT_RULES.md`, **liệt kê và đọc đầy đủ mọi file hiện có trong `module-generate-agent/rules/`**, `module-generate-info.txt`, toàn văn **cả `STEP_2.md` và `worker/STEP_2_WORKER.md`** trước khi giao việc. Nếu mất context hoặc không chắc chắn, đọc lại.
 - **Một lần giao = toàn bộ Roadmap một tab = một lượt làm trọn** (đọc → tạo/hoàn thiện → kiểm tra → ghi → readback → báo cáo → SLEEPING). Không cần PREPARED, pha chờ thứ hai, hoặc Prime bổ sung giải thích giữa chừng.
 - **Tin nhắn Prime gửi worker CHỈ có bốn dòng:** link tab, **tọa độ `C2`, `A17`, `B17`, ô tiêu đề `Special Note` và ô giá trị của nó**, vùng Roadmap giới hạn chính xác và đường dẫn `worker/STEP_2_WORKER.md`. **Tuyệt đối không chép, diễn giải, tóm tắt hoặc chuyển tiếp nội dung Special Note trong tin giao việc**; không kèm lời chào, nội dung đề bài, rule, hint, ghi chú hay ví dụ. Worker tự đọc trực tiếp tất cả ô được giao.
 
@@ -31,7 +31,7 @@ Mỗi milestone = **một bộ ba F/G/H trên cùng hàng**. Nếu **bất kỳ 
 ## 2. Prime — xác minh tab và giao việc
 
 1. **Đọc đầy đủ context/rules** ở đầu file. Mỗi tab STEP 2 chỉ giao cho **một worker tại một thời điểm**. Kiểm tra pool `ACTIVE + SLEEPING` theo **Mode A/B của session** (A=3 mặc định; B=N do user cung cấp, thiếu N → BLOCKER); **ưu tiên tái sử dụng SLEEPING** và tuyệt đối không spawn khi còn worker SLEEPING; nếu phải spawn thì tạo lần lượt mỗi lệnh một worker theo Prime Rules. Không giao nhiệm vụ thứ hai cho worker ACTIVE; tôn trọng lệnh dừng/loại trừ worker.
-2. Đọc `module-generate-agent/temp/module-generate-info.txt`: lấy `Excel Page URL` và mapping **`<TÊN MODULE> sheet id : <SHEET_ID>`** đúng module. `SHEET_ID` là **gid của tab**, không phải ID file spreadsheet. Chuẩn hóa URL và lập `<URL_GỐC>/edit?gid=<SHEET_ID>#gid=<SHEET_ID>`.
+2. Đọc `module-generate-agent/module-generate-info.txt`: lấy `Excel Page URL` và mapping **`<TÊN MODULE> sheet id : <SHEET_ID>`** đúng module. `SHEET_ID` là **gid của tab**, không phải ID file spreadsheet. Chuẩn hóa URL và lập `<URL_GỐC>/edit?gid=<SHEET_ID>#gid=<SHEET_ID>`.
 3. **Xác minh** spreadsheet, gid, tên tab và `B1` đúng module. Nếu mapping không có/trùng/sai hoặc không đọc được tab: **BLOCKER**, không chọn tab theo suy đoán.
 4. **Xác định từ Sheet thực tế hai tọa độ Special Note:** tìm **ô tiêu đề có đúng nhãn `Special Note`** trong vùng `Module Project` của tab đích; xác định **ô giá trị ngay bên dưới, cùng cột** (ví dụ hiện tại `K2` và `K3`). Xác minh duy nhất, đúng cấu trúc, cả hai ô tồn tại và đọc được. Nếu thiếu nhãn, vị trí mơ hồ hoặc ô giá trị không truy cập được: **`BLOCKER: SPECIAL NOTE LOCATION`**, không tự giả định `K2/K3` hay giao thiếu tọa độ. **Prime chỉ gửi địa chỉ hai ô, TUYỆT ĐỐI không tóm tắt, sao chép, viết lại hay chuyển nội dung Special Note cho worker, kể cả khi nội dung dài.** Ô giá trị trống vẫn là vị trí hợp lệ và phải gửi để worker tự kiểm tra.
 5. Đọc **metadata/bố cục tab** để xác định giới hạn `F2:H<END>` nằm hoàn toàn phía trên Menu; kiểm tra header `F2:H2` và toàn vùng nội dung `F3:H<END>`, kể cả giá trị/công thức/ghi chú/chip. **Prime đọc và xác minh cả `A17` và `B17`**: A17 là nhãn/ngữ cảnh chỉ đọc, B17 phải là đích Introduction hợp lệ, không trùng Menu/header và chưa có nội dung/metadata cần bảo toàn. Không đoán từ tab khác.
@@ -57,7 +57,7 @@ Mỗi milestone = **một bộ ba F/G/H trên cùng hàng**. Nếu **bất kỳ 
 <LINK_TAB_ĐÃ_XÁC_MINH>
 C2, <SPECIAL_NOTE_TITLE_CELL>, <SPECIAL_NOTE_VALUE_CELL>, A17, B17
 F2:H<END_ROW_ĐÃ_XÁC_MINH>, B17
-/java-learning/module-generate-agent/temp/worker/STEP_2_WORKER.md
+/java-learning/module-generate-agent/worker/STEP_2_WORKER.md
 ```
 
 `<END_ROW_ĐÃ_XÁC_MINH>` là **số hàng cụ thể**, ví dụ `17` nếu Menu bắt đầu ở hàng 18. Hai tọa độ Special Note phải được thay bằng **địa chỉ ô thực**, ví dụ `K2, K3` nếu đã xác minh đúng; không gửi ký hiệu `...`, placeholder hay nội dung ô khi giao thật. Mọi yêu cầu thực thi nằm trong file worker-only.

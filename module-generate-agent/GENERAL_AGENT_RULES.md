@@ -1,756 +1,83 @@
-# GENERAL_AGENT_RULES.md
+# GENERAL AGENT RULES
 
-## 1. Purpose
+Các quy định chung áp dụng cho các tác vụ generate module trong thư mục `module-generate-agent/`.
 
-This file defines the standard workflow for AI agents that build, complete, or review the **learning content of one module** in `java-learning`.
+## 1. Nắm rõ rule context trước mỗi STEP — bắt buộc
 
-It is intentionally different from the repository-wide documentation:
+- **Nguồn rules bắt buộc là toàn bộ thư mục `module-generate-agent/rules/`**. Đặc biệt, quy định dành riêng cho Prime nằm ở **`module-generate-agent/rules/PRIME_RULES.md`**.
+- **Trước khi bắt đầu MỖI STEP**, Prime phải đọc `module-generate-agent/GENERAL_AGENT_RULES.md`, **liệt kê toàn bộ file hiện có trong `module-generate-agent/rules/` và đọc đầy đủ TỪNG file rules** (bao gồm `PRIME_RULES.md`, `HEARTBEAT.md` và mọi file rules được bổ sung sau này), rồi đọc file `module-generate-agent/STEP_<N>.md` tương ứng cùng những ngữ cảnh đầu vào mà STEP đó yêu cầu. **Nếu STEP có điều phối worker, Prime cũng phải đọc `module-generate-agent/worker/STEP_<N>_WORKER.md` tương ứng.** Không chọn đọc chỉ một rules file và không mặc định context từ STEP/phiên chat trước còn chính xác.
+- Nếu đã quên, không còn chắc chắn, context bị rút gọn/compaction, có thay đổi trong `rules/` hoặc chưa đọc hết nội dung liên quan, **phải đọc/đọc lại toàn bộ rules folder và tài liệu STEP cần thiết trước khi giao worker hoặc thực hiện thao tác**. Không được viện lý do đã đọc ở một lần trước để bỏ qua bước xác nhận này.
+- Prime phải xác định rõ **phạm vi toàn STEP, thứ tự thực hiện, điều kiện hoàn thành, vùng đọc/ghi, ownership, giới hạn worker và cách xác minh** trước khi phân công. Khi chuyển sang STEP mới, lặp lại cổng kiểm tra context này.
+- **Mọi STEP có điều phối worker bắt buộc dùng file worker-only đúng số STEP trong `module-generate-agent/worker/`.** Worker phải tự đọc **TOÀN VĂN file đó** trước khi thực hiện công việc, không chờ Prime chép lại chỉ dẫn. Quy tắc không đọc file MD/TXT khác **không cấm đọc chính file worker-only này**; worker không đọc STEP Prime, STEP khác, rules/TXT/source ngoài quyền đã giao.
+- `module-generate-agent/rules/PRIME_RULES.md` là quy định **bắt buộc dành cho Prime**, áp dụng xuyên suốt tất cả STEP nhưng **không thay thế việc đọc các file rules khác trong cùng thư mục**. Khi có mâu thuẫn, không được âm thầm bỏ qua; phải đối chiếu ràng buộc cụ thể của STEP và báo blocker nếu không thể thực hiện an toàn.
 
-```text
-AGENTS.md
-→ how an AI agent must work safely inside the repository
+## 2. Quy tắc giao việc Prime → Worker cho mọi STEP có worker
 
-ARCHITECTURE.md
-→ why the repository/build/runtime boundaries exist
+**Số STEP hiện hành:** STEP 2–4 như cũ; **STEP 5 = Prime setup SERVLET/BUILD_SWAGGER và sync Gradle ĐẦU STEP; worker review Knowledge, Difficulty, parent filename và tạo chapter Java/test skeleton**; **STEP 6 = worker xây dựng API chạy được trên skeleton đã được STEP 5 tạo, Prime giao source ownership và nghiệm thu**; **STEP 7 = worker biên soạn Swagger Controller/API/execution/cases VI+EN trong staging riêng theo Menu Cấp 1, Prime QA → merge vào file chính → cleanup → cập nhật J3** (`STEP_7.md`, `worker/STEP_7_WORKER.md`); **STEP 8 = Interview YAML** ở P:S hàng cha (`worker/STEP_8_WORKER.md`); **STEP 9 = Quiz YAML** ở T:W hàng cha (`worker/STEP_9_WORKER.md`); **STEP 10 = Video YAML** ở X:AA hàng cha (`worker/STEP_10_WORKER.md`). **API↔Knowledge/Quiz/Interview mapping vẫn thuộc STEP riêng**, không gộp STEP 7. Bộ GENERAL/STEP trong `module-generate-agent/` là workflow hiện hành.
 
-GENERAL_AGENT_RULES.md
-→ orchestrates the canonical module-generation steps
+**Phân quyền STEP 5/6:** Prime **đầu STEP 5** cấu hình đúng `master.json` của module (`MODULE_TYPE=SERVLET`, `BUILD_SWAGGER=TRUE`, **không tạo khóa `USE_SWAGGER` không tồn tại**), chạy Gradle settings/configuration sync, xác minh `*Application.java` do setup sinh, **trước khi giao worker**. **Mỗi worker STEP 5** tự tạo các thư mục `controller/dto/service/model/exception/repository` và test root trong **chapter package TÊN TIẾNG ANH** do Prime cấp: basename filename Markdown B cha PascalCase → lowercase snake_case (Java keyword thêm `_chapter`); B cha chưa có tên thì Prime xác định English chapter name dựa ý nghĩa A cha, **KHÔNG phiên âm tiếng Việt**. Worker vẫn tự chọn/ghi filename B cha theo quyền hiện hành; Prime đối chiếu tên filename ↔ package trước khi nghiệm thu. Prime **STEP 6** nhận skeleton đã nghiệm thu, giao đúng **hai đường dẫn main/test độc quyền** cho mỗi worker STEP 6 đọc toàn bộ chương và hiện thực API. Prime điều phối + nghiệm thu code, **sau toàn bộ tab chạy module-local `generateApiSwaggerDescription` để tạo skeleton `swagger/<language>/api-cases.yml`**, không điền Swagger info, execution/description, request examples, expected results hay API mapping; không viết Java thay worker. Worker STEP 6 không chạy generator Swagger.
 
-STEP_1_CURRICULUM_RULES.md
-→ area/module scope, ownership, boundary and Step 1 handoff
+**STEP 7 — staged Swagger isolation:** Prime xác minh I3 thuộc `java-learning/module/`, xác định chapter package/Controller từ source STEP 6, tạo `<I3>/src/main/resources/step7-temp/` và seed **chỉ subtree Controller thuộc chương** dưới `_seed/<chapter_package>/{vi,en}`. Mỗi worker STEP 7 **chỉ được đọc** Knowledge của chương trên Sheet, main/test source **bên trong chapter package được Prime chỉ định** và seed của chính chương; **chỉ được ghi** `step7-temp/<chapter_package>/{vi,en}` với 4 YAML: `controller-description.yml`, `api-descriptions.yml`, `api-execution.yml`, `api-cases.yml`. **Tuyệt đối không đọc/ghi Swagger chính, package khác, module khác hoặc `api-params.yml` dùng chung**. Sau khi toàn bộ chương QA PASS, **chính Prime** merge 8 YAML chính theo Controller/method/field whitelist với backup, DRY_RUN và rollback nếu cần; xử lý shared `api-params.yml` độc quyền, exact readback rồi **xóa sạch step7-temp chỉ khi thành công**. `.gitignore` bỏ qua staging; không cho staging lọt vào đóng gói/publish. STEP 7 không chạy Sheets importer, chỉ Prime cập nhật/readback `J3 = STEP 7` khi hoàn tất, theo `STEP_7.md`.
 
-STEP_2_ROADMAP_REFERENCE.md
-→ canonical roadmap architecture, contract, workflow and approval gate
+**Giao việc worker STEP 5/6/7 đều đúng bốn dòng:** (1) link Sheet/tab, (2) tọa độ đọc một Menu Cấp 1 và Knowledge; STEP 7 bắt buộc có A1, B1, I3; (3) vùng đọc/ghi: STEP 5 là **Sheet B cha + C:N/O/AB hàng con và main/test chỉ tạo skeleton**; STEP 6 là **hai package main/test được ghi source Java/test**; STEP 7 là **hai package main/test chỉ đọc + seed chapter chỉ đọc + staging chapter chỉ ghi**; (4) đường dẫn worker-only đúng STEP. Prime chốt ownership trước khi giao; worker không tự chọn root/chương/namespace khác. **Sync cấu hình Gradle đầu STEP 5** khác với **sync README ByLocation cuối STEP 5 sau toàn tab QA**. Không chạy importer hoặc ghi J3 chỉ vì đã sync cấu hình.
 
-STEP_3_MENU.md
-→ Menu + title skeleton/review for both new and existing modules
+**Lưu ý J3 lịch sử:** Trạng thái `STEP 6/7/8` đã ghi trên các Google Sheets **trước khi đổi số** có thể lần lượt chỉ Interview/Quiz/Video cũ. Không được hiểu chúng là bằng chứng hoàn thành STEP tương ứng theo cách đánh số hiện tại, cũng không tự sửa/nâng J3 hàng loạt. Khi tiếp tục xử lý một tab, Prime phải đối chiếu nội dung nguồn, kết quả import và lịch sử STEP thực tế trước khi quyết định trạng thái hiện hành; báo rõ khi cần chuyển đổi trạng thái.
 
-STEP_3_5_TEACHING_BLUEPRINT.md
-→ mandatory Teaching Blueprint design gate inside Step 4, after approved Step 3 Menu and before full Knowledge prose; not an extra canonical Step
+1. File nhiệm vụ duy nhất của worker tại STEP số `N` là **`/java-learning/module-generate-agent/worker/STEP_N_WORKER.md`**. Thiếu file tương ứng → `BLOCKER: WORKER CONTRACT MISSING`; Prime không thay thế bằng cách nhắn nguyên quy trình trong chat.
+2. **Prime chỉ được giao phạm vi đọc và phạm vi làm việc/ghi của worker**, kèm định danh nguồn/link cần thiết và **đường dẫn file worker-only**. Không gửi nội dung các ô, câu hỏi, đáp án, gợi ý, kết quả phân tích, bản nháp, rule, hướng dẫn thực thi, tóm tắt file worker hay lịch sử chat.
+3. Với các STEP Google Sheets, tin giao gồm **đúng bốn dòng**: (1) link tab đã xác minh, (2) các tọa độ/vùng được phép đọc, (3) các tọa độ/vùng được phép ghi/làm việc, (4) đường dẫn tuyệt đối file worker-only trong `module-generate-agent/worker/`. Prime phải thay placeholder bằng tọa độ thật; **không giao dải ghi vượt vùng quyền sở hữu**.
+4. Prime tự xác định và xác minh đầy đủ vùng đọc/ghi, nguồn, ownership và worker pool trước khi giao. Worker chỉ đọc/ghi trong các vùng đã định vị, tự thực hiện các bước theo file nhiệm vụ. Nếu thiếu file nhiệm vụ hoặc chưa rõ phạm vi → `BLOCKER`, không giao phỏng đoán.
+5. Prime có trách nhiệm đọc file worker-only để kiểm soát giao việc và nghiệm thu **nhưng không chuyển nội dung đó cho worker**. Worker tự đọc lại file khi bắt đầu nhiệm vụ mới hay mất context; không sử dụng nội dung phiên chat cũ để thay thế.
+6. Áp dụng cho **mọi STEP hiện hành hoặc bổ sung sau này** nếu có worker. STEP không dùng worker không bắt buộc có file worker-only. STEP riêng có thể giới hạn phạm vi chặt hơn, **không được cho phép bỏ qua file worker-only hoặc thêm lời hướng dẫn vào tin giao**.
 
-STEP_4_KNOWLEDGE.md
-→ Knowledge authoring/refactor against the approved Step 3 Menu
+### Quy tắc FILL-ONLY mặc định và ngoại lệ sửa ĐỊNH DẠNG cho STEP 4/8/9/10
 
-STEP_5_API.md / STEP_6_VIDEO.md / STEP_7_QUIZ.md / STEP_8_INTERVIEW.md
-→ downstream learning surfaces
+- **STEP 2, 3 và các STEP viết Sheet nội dung mới khác** giữ FILL-ONLY nghiêm ngặt: chỉ ghi vào vùng đích trống; vùng đã có nội dung/metadata cản trở → `BLOCKER: EXISTING TARGET CONTENT`, `WRITE=NOT_RUN`. **STEP 5** có ngoại lệ review/refactor trên Sheet và **chỉ tạo package skeleton rỗng trong namespace được giao**. **STEP 6 không ghi nội dung Knowledge lên Sheet** (ngoại trừ Prime cập nhật J3 sau completion gate), chỉ tạo/chỉnh Java source/test trong hai namespace được Prime cấp; phải kiểm tra quyền sở hữu trước khi sửa file đã có, không tự ghi đè source người khác.
+- **STEP 4, 8, 9, 10: FILL-ONLY VỀ NỘI DUNG, không phải khóa cứng lỗi định dạng.** Khi vùng đích trống hoàn toàn, worker được tạo mới như trước. Khi vùng đích đã có README Markdown (STEP 4) hoặc Interview/Quiz/Video YAML (STEP 8/9/10), **không được viết lại, bổ sung, cắt, đổi thứ tự hoặc cải thiện nội dung**, trừ chỉ thị đặc biệt tường minh của người dùng cho chính phạm vi. Nếu phát hiện **lỗi cú pháp/định dạng thực sự**, worker được **chỉnh sửa tối thiểu đúng lỗi đó ngay trên các ô đích thuộc ownership**, không cần chỉ thị thay nội dung.
+- **FORMAT-ONLY cho phép** sửa Markdown heading/list/table/code fence bị lỗi, YAML indentation/quoting/colon/block-scalar/fence Markdown nhúng hoặc việc chia fragment làm hỏng biểu diễn; chỉ sửa ký tự cấu trúc cần thiết để nội dung render/parse đúng. **Cấm đổi semantic payload**: câu chữ, khái niệm, câu hỏi/đáp án, đúng-sai, `correctAnswerId`, code mẫu, output, title, time, visual/script/purpose, ID, metadata, thứ tự, relation hay số lượng item. Không được lợi dụng lỗi QA nội dung để refactor. Với YAML hợp lệ, đối chiếu cấu trúc/giá trị sau parse trước–sau; với YAML/Markdown lỗi parser, so thủ công từng trường và đoạn văn bản gốc, chứng minh chỉ thay ký tự định dạng. Nếu không thể chứng minh nội dung giữ nguyên → `BLOCKER: FORMAT_FIX_NOT_PROVABLY_CONTENT_PRESERVING`, không ghi.
+- **Preflight bắt buộc cho cả hai nhánh:** đọc toàn bộ vùng đích (kể cả ô trống), `userEnteredValue`/formula, `effectiveValue`, `formattedValue`, note, validation, chipRuns và ownership; đọc lại ngay trước WRITE. Vùng đã có nội dung **hợp lệ** → giữ nguyên, báo `UNCHANGED` sau QA/readback, không giao sinh lại nội dung. Vùng có lỗi định dạng chứng minh được → chỉ sửa theo nhánh `FORMAT_FIX`, exact readback **bản sau sửa** và báo diff trước–sau, căn cứ bảo toàn nội dung. Không tự bù nội dung thiếu, không sửa ô nguồn/header/Template, không xóa note/format/validation, không ghi dữ liệu đang thuộc worker khác. Công thức/chip/metadata gây xung đột, thay đổi đồng thời, lỗi thiếu nội dung hoặc sửa vượt mục tiêu → blocker, không retry mù.
+- **Ngoại lệ sửa NỘI DUNG** ngoài STEP 5 chỉ khi có chỉ thị đặc biệt, tường minh của người dùng cho chính nhiệm vụ và phạm vi; `FORMAT_FIX` không phải quyền thay nội dung. Prime xác minh quyền sửa/ownership trước khi điều phối, QA độc lập diff/semantic preservation và chỉ công nhận `COMPLETED` hoặc `UNCHANGED` khi kết quả thật PASS. Tin giao Prime → Worker vẫn đúng bốn dòng định vị, không chèn nội dung rules hay chỉ thị vào tin giao.
 
-STEP_9_VALIDATION.md
-→ integrated validation + Coverage Review
+## 3. Giới hạn và tái sử dụng sub-worker
 
-STEP_10_COMMIT.md
-→ final commit / push / Merge Request workflow
+- **Chỉ có hai mode theo session hiện tại:** **Mode A — Normal Mode = tối đa 3 worker (mặc định)**; **Mode B — Special Mode = tối đa N worker với N là số nguyên dương người dùng yêu cầu rõ ràng trong session**. Tính cả `ACTIVE` và `SLEEPING`, xem `rules/PRIME_RULES.md §0`.
+- **Mode B không có N hợp lệ** → `BLOCKER: SPECIAL_MODE_WORKER_COUNT_REQUIRED`; **dừng và yêu cầu người dùng cung cấp số worker trước khi điều phối/spawn**, không tự gán mặc định.
+- **Luôn ưu tiên tái sử dụng worker hiện có** cho nhiệm vụ phù hợp. Worker `SLEEPING` phải được đánh thức/giao nhiệm vụ mới thay vì khởi tạo một worker khác.
+- **Tuyệt đối không spawn worker mới khi vẫn còn bất kỳ worker `SLEEPING` nào**, kể cả khi tổng số worker hiện tại chưa đạt giới hạn cho phép.
+- Chỉ xem xét spawn worker mới khi **không còn worker `SLEEPING`**, có nhu cầu thực sự và tổng số worker `ACTIVE` + `SLEEPING` **nhỏ hơn hạn mức Mode A hoặc N của Mode B trong session**. Worker `FAILED` hoặc `FINISHED` không còn tái sử dụng được thì được phép thay thế trong hạn mức này.
+- **Mode theo session:** mode và N (nếu là Mode B) chỉ hiệu lực cho session mà prompt đính kèm, không áp dụng xuyên phiên. Không có mode → A=3; mode hoặc số lượng mâu thuẫn → `BLOCKER: WORKER MODE CONFLICT`.
+- **Phải kiểm tra trạng thái pool trước mỗi quyết định spawn; spawn tuần tự, mỗi lệnh đúng 1 worker và đợi xác nhận thành công rồi mới spawn worker kế tiếp** theo `rules/PRIME_RULES.md §0`. Nếu worker hiện tại không phù hợp để nhận nhiệm vụ, chờ hoặc điều phối lại; không dùng lý do đó để vượt giới hạn hay bỏ qua quy tắc tái sử dụng.
 
-rules/**
-→ mandatory cross-cutting execution rules; every current file in this folder must be read before execution begins
-→ PRIME_RULES.md is mandatory Prime orchestration and per-sheet Current STEP recording policy
-→ MODULE_CONTENT_RULES.md is canonical for beginner-first pedagogy,
-  prerequisite evidence, WHAT/WHY/RELATION→HOW/EVIDENCE and Knowledge title quality
-```
+## 4. Nguồn dữ liệu Excel / Google Sheets
 
-### Mandatory rules-folder loading gate
+- Với **mọi tác vụ cần đọc hoặc ghi thông tin vào Excel/Google Sheets**, **Prime** phải đọc file `module-generate-agent/module-generate-info.txt` trước khi giao việc.
+- File TXT chứa URL gốc dưới nhãn `Excel Page URL` và danh sách mapping **`<TÊN MODULE> sheet id : <SHEET_ID>`** được STEP 1 ghi sau khi clone tab. `sheet id` là **ID của tab (gid)**, tuyệt đối không nhầm với spreadsheet/file ID nằm trong URL gốc.
+- Prime lấy **URL gốc + sheet id đúng tên module** từ TXT để lập link đến tab cụ thể: `<URL_GỐC>/edit?gid=<SHEET_ID>#gid=<SHEET_ID>` (chuẩn hóa dấu `/` hoặc phần `/edit` nếu URL gốc đã có). **Không hardcode URL hoặc tự suy đoán sheet id**.
+- Prime tự kiểm tra rằng tab trong link có tên/module đúng như mapping, rồi **chỉ gửi link tab, các vùng cần đọc, các vùng được phép làm việc/ghi và đường dẫn worker-only** đúng bốn dòng theo mục 2. Không để worker tự dò tab hoặc tài liệu khác.
+- Prime **không gửi nội dung câu hỏi, đáp án, suy luận hay context các lượt trước**; chỉ gửi thông tin định vị và đường dẫn file nhiệm vụ, không gửi giải thích hoặc tóm tắt nhiệm vụ.
+- Worker dùng **link và tọa độ Prime giao** để đọc trực tiếp dữ liệu từ tab, **tự đọc hướng dẫn ở `worker/STEP_N_WORKER.md`**, và không đọc các MD/TXT khác để tự tìm link/tab.
+- Nếu thiếu mapping, sheet id sai, hoặc tên module có nhiều mapping xung đột, Prime phải xác minh/sửa nguồn cấu hình theo STEP phù hợp hoặc báo blocker **trước khi giao worker**; không gửi link phỏng đoán.
+- Chỉ đọc/ghi đúng phạm vi được giao. Không chỉnh sửa `Template`, các tab khác hoặc ô ngoài phạm vi nhiệm vụ nếu chưa được yêu cầu.
+- Sau thao tác ghi, đọc lại vị trí đích để xác minh kết quả; nếu không truy cập được file TXT, spreadsheet hoặc tab đích thì báo lỗi, không tuyên bố hoàn thành.
 
-Before beginning **any** module-generation execution, authoring, review, worker scheduling, validation, long-running wait, or STEP transition under this orchestrator:
+## 5. Phạm vi
 
-```text
-1. read ../AGENTS.md;
-2. read ../ARCHITECTURE.md;
-3. read CURRENT GENERAL_AGENT_RULES.md;
-4. enumerate module-generate-agent/rules/ from CURRENT disk state;
-5. read EVERY current file in module-generate-agent/rules/ in full;
-6. only then resolve/read the canonical STEP_X_*.md rule and required upstream context;
-7. only then begin execution.
-```
+Áp dụng đồng thời cổng kiểm tra context, **hợp đồng giao việc Prime → Worker**, giới hạn/tái sử dụng worker, quy tắc định vị Google Sheets và **toàn bộ rules hiện hành trong `module-generate-agent/rules/`** (bao gồm `PRIME_RULES.md`). Các quy định mới sẽ được bổ sung khi người dùng yêu cầu.
 
-Do not cherry-pick only the rule file that appears relevant. The entire current `rules/` folder is a mandatory cross-cutting rule set so newly added rules automatically become part of execution governance without requiring every caller to know their filenames in advance.
+### isImportant: bổ sung metadata từ STEP 5
 
-If the contents of `rules/` change materially during a long-running workflow, re-enumerate and re-read the complete folder before the next STEP or parent phase begins.
-Before every STEP, Prime must verify that the complete current rules-folder context is understood; after compaction, uncertainty, or forgotten context, re-read the complete folder before assigning or executing work.
+Knowledge metadata có isImportant:boolean mặc định false. STEP 5 đánh giá trực tiếp bài của từng Menu Cấp 2 và ghi cột AB với TRUE/FALSE theo chapter ownership; nhãn AB19=isImportant, AB20:AB700 dropdown strict. Sheet importer chỉ lấy giá trị AB hợp lệ; AB trống bảo toàn metadata cũ hoặc dùng default false khi tạo section mới. syncMetadataReadme phải bảo toàn TRUE do người biên soạn đặt; Portal Knowledge projection xuất trường boolean vào index.json; UI tô nhạt và đánh sao vàng nếu TRUE. Không sử dụng O (Difficulty) để suy ra isImportant.
 
-Do not load unrelated canonical STEP files as competing authorities; only the CURRENT delegated STEP rule is required after the mandatory cross-cutting `rules/` set has been loaded.
 
-Files in `rules/` are cross-cutting execution governance only. They do not create new canonical STEPs and do not override higher repository authority or the applicable STEP-specific content/review/schema contract unless a rule explicitly owns a cross-cutting concern delegated to it.
+## 6. Prime kiểm tra/đồng bộ Google Sheets → ĐÚNG MỘT module sau STEP 2, 3, 4, 5, 8, 9, 10
 
-In this document, **build a module** means building its learning content and learning relationships. It does **not** mean changing the Gradle build architecture unless the task explicitly requires that.
-
-The target learning surfaces are:
-
-```text
-Curriculum / scope
-Roadmap
-Menu
-Knowledge
-API Docs / guided API experiments when applicable
-Video Script / presentation plan
-Quiz
-Interview
-Integrated validation / Coverage Review
-```
-
-The Portal is only a consumer/presentation layer. Do not write module learning content directly into `project-portal` generated data.
-
----
-
-## 2. Core learning model
-
-The module should read as one curriculum, not as several unrelated features.
-
-Preferred relationship:
-
-```text
-Module topic
-    ↓
-Roadmap Skeleton
-    ↓
-Module Roadmap
-    ↓
-Roadmap Review / approval
-    ↓
-README / Knowledge Menu structure
-    ↓
-Knowledge curriculum
-    ↓
-API experiments when the module exposes learning APIs
-    ↓
-Video presentation grounded in Knowledge + available evidence
-    ↓
-Quiz reinforcement
-    ↓
-Interview / explanation practice
-    ↓
-Coverage Review
-```
-
-The content surfaces have different roles:
-
-```text
-Roadmap
-→ canonical learning milestones, ordering, dependencies and module-level mental journey
-
-Knowledge
-→ canonical explanation of the concepts
-
-API Docs
-→ executable/demonstrable experiments that prove or illustrate Knowledge concepts
-
-Video
-→ one presentation artifact per Knowledge Menu; turns finalized Knowledge/evidence into scenes, visuals, narration and transitions
-
-Quiz
-→ checks recognition, reasoning, misconceptions, behavior and practical understanding
-
-Interview
-→ checks explanation, comparison, trade-offs, pitfalls, mental models and production reasoning
-
-Coverage Review
-→ checks whether the whole module forms a coherent curriculum without artificial filler
-```
-
-Do not optimize for raw counts. A smaller coherent module is better than a large module filled with duplicate or weak material.
-
-### Step 1 / Step 2 navigation
-
-Area Curriculum/scope rules live in [`STEP_1_CURRICULUM_RULES.md`](./STEP_1_CURRICULUM_RULES.md). ROADMAP + module-level Reference design/review rules live in [`STEP_2_ROADMAP_REFERENCE.md`](./STEP_2_ROADMAP_REFERENCE.md). This orchestrator does not duplicate either contract.
-
-This file only consumes the approved ROADMAP as the upstream source for Menu, Knowledge, API Docs, Video, Quiz and Interview. If downstream work reveals a missing module-level prerequisite or milestone, report a **ROADMAP GAP** and return to Step 2 instead of silently changing the learning journey here.
-
-This module-level playbook consumes these Step 1 decisions:
-
-```text
-area scope
-→ canonical module inventory
-→ primary concept ownership
-→ module boundaries
-→ inter-module dependencies
-→ recommended area learning path / waves
-```
-
-Do not redefine those decisions locally while authoring one module. If module work reveals a missing module, wrong primary owner, unclear boundary, broken inter-module dependency or another area-level inconsistency, report a **CURRICULUM GAP** and return to Step 1 Curriculum review.
-
-Once the area-level boundary is stable, continue through the canonical numbered step files.
-
----
-## 3. Canonical module-owned sources
-
-Agents must work on canonical module source, not generated Portal projections.
-
-Typical learning sources are:
-
-```text
-Module Reference
-module/.../reference/references.yml
-
-Knowledge
-module/.../readme/{lang}/menu/**/*.md
-module/.../src/main/resources/readme/{lang}/knowledge-metadata.yml
-
-API Docs
-module/.../src/main/resources/swagger/{lang}/controller-description.yml
-module/.../src/main/resources/swagger/{lang}/api-descriptions.yml
-module/.../src/main/resources/swagger/{lang}/api-execution.yml
-module/.../src/main/resources/swagger/{lang}/api-params.yml
-
-Video
-module/.../video/{lang}/menu/**/*.md
-
-Quiz
-module/.../src/main/resources/quiz/{lang}/question.yml
-
-Interview
-module/.../src/main/resources/interview/{lang}/question.yml
-```
-
-Actual paths and enabled capabilities must be confirmed from the module and current repository configuration before editing.
-
-`MODULE_LANGUAGE` is the language source of truth for localized learning artifacts. Do not invent a separate feature-specific language list.
-
-Module-level Reference is the intentional exception because it is a **shared non-localized catalog**:
-
-```text
-module/.../reference/references.yml
-→ one shared file for all module languages
-→ owned/curated in Step 2
-```
-
-Section-level references are not a second Reference subsystem. They remain ordinary localized Markdown inside Step 4 Knowledge sections.
-
-Generated or mixed-ownership fields must follow the preservation rules from `../AGENTS.md` and `../ARCHITECTURE.md`. Never regenerate human-owned content from scratch merely because an AI agent is rebuilding learning content.
-
----
-
-## 4. Module generation orchestration
-
-`GENERAL_AGENT_RULES.md` is the **orchestrator**. Detailed authoring rules belong to the canonical step files below; do not duplicate them here.
-
-### Canonical step numbering
-
-```text
-Step 1 — Curriculum / scope / ownership / boundary
-        ↓
-Step 2 — ROADMAP + Module Reference
-        ↓
-Step 3 — Menu + title only
-        ↓
-Step 4 — Teaching Blueprint Gate (STEP_3_5_TEACHING_BLUEPRINT.md), then Knowledge
-        ↓
-Step 5 — API learning documentation when applicable
-        ↓
-Step 6 — Video Script / Presentation Plan
-        ↓
-Step 7 — Quiz
-        ↓
-Step 8 — Interview
-        ↓
-Step 9 — Integrated validation + Coverage Review
-        ↓
-Step 10 — Commit / Push / Merge Request
-```
-
-The step number and execution order are stable across new and refactor workflows. Existing content may change what must be audited, but it does not remove Step 3 from the canonical sequence.
-
-`STEP_3_5_TEACHING_BLUEPRINT.md` is a **mandatory companion of canonical Step 4**, not its own numbered execution unit. All Step 4 **authoring/refactor** assignments run its design gate before full Knowledge prose; Step 4-only read/review passes use its teaching quality criteria without manufacturing a separate blueprint artifact. Do not introduce a new horizontal child barrier, initial author/reviewer turn or Step transition for this subphase.
-
-### New module workflow
-
-```text
-Step 1 → STEP_1_CURRICULUM_RULES.md
-Step 2 → STEP_2_ROADMAP_REFERENCE.md
-Step 3 → STEP_3_MENU.md
-Step 4 → STEP_4_KNOWLEDGE.md
-Step 5 → STEP_5_API.md
-Step 6 → STEP_6_VIDEO.md
-Step 7 → STEP_7_QUIZ.md
-Step 8 → STEP_8_INTERVIEW.md
-Step 9 → STEP_9_VALIDATION.md
-Step 10 → STEP_10_COMMIT.md
-```
-
-### Existing / refactor module workflow
-
-```text
-Step 1 → STEP_1_CURRICULUM_RULES.md
-Step 2 → STEP_2_ROADMAP_REFERENCE.md
-Step 3 → STEP_3_MENU.md
-         audit/refactor existing Menu against Step 1 + Step 2
-Step 4 → STEP_4_KNOWLEDGE.md
-         refactor Knowledge against the approved Step 3 Menu
-Step 5 → STEP_5_API.md
-Step 6 → STEP_6_VIDEO.md
-         reconcile Video path/H1/H2 mapping against the latest Knowledge before authoring/refactoring script
-Step 7 → STEP_7_QUIZ.md
-Step 8 → STEP_8_INTERVIEW.md
-Step 9 → STEP_9_VALIDATION.md
-Step 10 → STEP_10_COMMIT.md
-```
-
-Step 3 is **mandatory for both new and existing modules**.
-
-The difference is only the evidence being inspected:
-
-```text
-NEW MODULE
-→ derive Menu/chapter/title skeleton from approved Curriculum + ROADMAP when those artifacts exist
-→ for an isolated-step fallback with no Curriculum Map, derive from current repository evidence + authoritative real-world knowledge
-
-EXISTING / REFACTOR MODULE
-→ derive the same target Menu/chapter/title skeleton from approved Curriculum + ROADMAP when available
-→ if the Curriculum Map is absent in an isolated-step refactor, reconstruct the target from current valid content + authoritative real-world knowledge instead of freezing historical structure
-→ additionally inspect the old Menu/content structure as migration evidence
-→ preserve/reuse compatible structure where appropriate
-→ move/reorder/rename/split/merge structural items when needed
-```
-
-Existing Menu structure is never a reason to skip Step 3 and is never the curriculum authority. In canonical flow, Step 3 reconciles it with Step 1 + Step 2. In isolated fallback mode, Step 3 reconciles it with whatever approved upstream artifacts exist plus current repository evidence and authoritative real-world knowledge before Step 4 authors/refactors full Knowledge.
-
-### Curriculum Map context for Steps 2, 3, 4 and 5
-
-Steps 2, 3, 4 and 5 must **use the relevant Step 1 Curriculum Map when that artifact exists** at:
-
-```text
-module-generate-agent/temp/*_CURRICULUM_MAP.md
-```
-
-The target module path determines which area Curriculum Map is relevant. The agent must not select a Curriculum Map only because its filename looks similar.
-
-For each of Steps 2, 3, 4 and 5:
-
-```text
-GENERAL_AGENT_RULES.md
-        +
-target module/repository context
-        +
-relevant *_CURRICULUM_MAP.md from module-generate-agent/temp when present
-        +
-the requested STEP_X rule file
-        +
-required upstream output from earlier steps
-```
-
-must be present in working context before editing **when the Curriculum Map exists**.
-
-The Curriculum Map supplies:
-
-```text
-area scope
-module responsibility
-primary ownership
-neighboring-module boundaries
-inter-module dependencies
-recommended area learning order
-cross-module terminology ownership
-known duplication/gap risks
-```
-
-#### Missing Curriculum Map fallback for isolated-step refactor
-
-The absence of `module-generate-agent/temp/*_CURRICULUM_MAP.md` is **not by itself a blocker** when the user explicitly asks for an isolated Step 2, 3, 4 or 5 review/refactor rather than the canonical Step 1 → Step 9/10 flow.
-
-In that isolated-step case, reconstruct only the context needed for the requested step from:
-
-```text
-current module/repository content
-        +
-current Roadmap/Menu/Knowledge/API/source/reference/metadata as applicable
-        +
-neighboring-module content needed to detect ownership overlap
-        +
-authoritative external documentation
-        +
-established real-world behavior/practice for the technology and repository baseline
-```
-
-Then refactor the requested step from first principles. Do **not** fabricate a missing Curriculum Map, do not claim locally inferred scope is an approved Step 1 artifact, and do not silently execute Step 1 just to satisfy the old prerequisite.
-
-Evidence priority for this fallback is:
-
-```text
-authoritative technology behavior/documentation
-        ↓
-explicit repository architecture/governance and current approved upstream artifacts that do exist
-        ↓
-valid current learning content and source/runtime evidence
-        ↓
-historical structure/naming
-```
-
-If current repository evidence and authoritative behavior are sufficient to resolve scope/boundary, proceed with the isolated refactor. If a real cross-module ownership/boundary conflict remains ambiguous after that review, report a **CURRICULUM CONTEXT GAP** instead of inventing a global ownership decision.
-
-For a canonical full-chain run that starts from Step 1 (for example Step 1 → Step 9/10), do **not** use this fallback to skip Step 1. The canonical flow should materialize/review the Curriculum Map first, then downstream Steps 2–5 consume it normally.
-
-### Execute only the requested step
-
-When the user provides a module + step, perform **only that step**. A later step may inspect upstream outputs, but it must not silently execute or redesign another step.
-
-### Mandatory authoritative-source rule
-
-Before every step that inspects, designs, authors, refactors or validates learning content, consult authoritative documentation for the relevant technology.
-
-```text
-Java / Java Core
-→ Oracle Java documentation / Java API documentation
-→ Java Language Specification when language semantics are involved
-→ OpenJDK / JEP when version-sensitive behavior matters
-
-Spring
-→ spring.io / official Spring Reference Documentation
-
-Other technologies
-→ official specification / official vendor or project documentation
-```
-
-Repository implementation is important evidence, but it is not the only curriculum authority.
-
-### Reference ownership rule
-
-Keep the two Reference scopes separate:
-
-```text
-MODULE-LEVEL REFERENCE
-→ Step 2 ownership
-→ module/.../reference/references.yml
-→ shared across VI / EN
-→ curated learner-facing bibliography
-→ not a source of learning order
-
-SECTION-LEVEL REFERENCE
-→ Step 4 ownership
-→ authored directly inside Knowledge Markdown
-→ localized naturally with that Knowledge file
-→ use H3 such as "### References" / "### Tài liệu tham khảo"
-→ do not create a new H2 only for references
-```
-
-External research may use more sources than are ultimately published. Do not automatically dump browsing/research history into Module Reference or every Knowledge section.
-
-### Refactor preservation rule
-
-```text
-MOVE
-+ REORGANIZE
-+ SPLIT / MERGE
-+ RENAME when needed
-+ ADD missing curriculum content
-
-DO NOT silently DELETE existing learning knowledge
-```
-
-Incorrect, stale or out-of-scope content must be surfaced as an explicit review finding rather than silently discarded.
-
-### Step routing
-
-```text
-Step 1 → STEP_1_CURRICULUM_RULES.md
-Step 2 → STEP_2_ROADMAP_REFERENCE.md
-Step 3 → STEP_3_MENU.md
-Step 4 → STEP_4_KNOWLEDGE.md
-Step 5 → STEP_5_API.md
-Step 6 → STEP_6_VIDEO.md
-Step 7 → STEP_7_QUIZ.md
-Step 8 → STEP_8_INTERVIEW.md
-Step 9 → STEP_9_VALIDATION.md
-Step 10 → STEP_10_COMMIT.md
-```
-
-### Gap routing
-
-```text
-CURRICULUM GAP
-→ area/module inventory, ownership, boundary or inter-module dependency problem
-→ return to Step 1
-
-ROADMAP GAP
-→ missing/wrong milestone, prerequisite or module-internal learning order
-→ return to Step 2
-
-Menu / Knowledge issue
-→ structural Menu/chapter/title/path issue: resolve in Step 3 for both new and existing modules
-→ full explanation/body/pedagogy issue inside approved structure: resolve in Step 4
-```
-
----
-
-## 5. Multi-agent workflow without losing one unified learning flow
-
-Large modules may be split across workers to reduce context size and workload, but workers must not independently invent separate curricula.
-
-The dependency chain remains:
-
-```text
-Prime / Lead
-    ↓
-Step 1 scope / Curriculum + approved Step 2 ROADMAP
-    ↓
-Menu worker for both new and existing modules
-    ↓ stable chapter/title skeleton
-Knowledge worker(s)
-    ↓ approved/stable Knowledge structure
-API worker(s), when applicable
-    ↓ exact Knowledge relations established
-Video worker(s)
-    ↓ one Knowledge Menu → one presentation artifact
-Quiz worker(s) + Interview worker(s)
-    ↓
-Validation worker
-    ↓
-Independent Coverage Review
-    ↓
-Prime integration
-    ↓
-Step 10 final delivery
-```
-
-### Recommended responsibilities
-
-```text
-Prime / Lead agent
-→ coordinates the canonical step outputs
-→ consumes Step 1 scope/ownership instead of redefining it
-→ consumes the approved Step 2 ROADMAP instead of inventing another learning order
-→ resolves conflicts between workers
-→ ensures all phases use the same learning model
-
-Menu worker
-→ executes Step 3 Menu/title scaffolding
-→ for existing modules, audits and restructures the old Menu against Step 1 + Step 2
-→ consults authoritative technical sources to verify concept grouping and terminology
-→ does not write full Knowledge
-
-Knowledge worker
-→ executes Step 4
-→ first performs the Step 3.5 Teaching Blueprint + readiness gate on approved H2 identities
-→ writes/reviews README Knowledge + metadata
-→ consumes the approved Step 3 Menu for both new and existing modules
-→ migrates/refactors existing Knowledge into that approved structure when needed
-→ establishes stable file/anchor identities
-→ preserves the agreed three-layer flow and chapter-to-chapter narrative
-→ adds optional section-level References directly in Markdown when they materially help the learner
-→ keeps those References inside the owning H2 using H3/local content; does not invent a separate section-reference schema
-
-API worker
-→ starts only after Knowledge structure is sufficiently stable
-→ decides API applicability from Curriculum/Roadmap/Menu/Knowledge first
-→ treats current MODULE_TYPE/BUILD_SWAGGER/controllers as implementation evidence, never curriculum authority
-→ reconciles module config/runtime capability when the approved learning design requires or rejects an API surface
-→ then inspects/creates/refactors actual controllers/methods/source
-→ maps learning APIs to exact Knowledge
-→ writes API descriptions/execution/evidence
-
-Video worker
-→ executes Step 6 after Knowledge and applicable Step 5 evidence are stable
-→ preserves the one-Knowledge-Menu → one-Video mapping
-→ reconciles Video path/H1/H2 structure against the latest Knowledge before authoring
-→ turns Knowledge/evidence into spoken narration, visuals, transitions and scenes
-→ never treats Video as an alternate technical source of truth
-
-Quiz worker
-→ executes Step 7
-→ consumes Knowledge + finalized API mapping; may inspect Video for presentation context but does not derive technical truth from it
-→ creates non-duplicative assessment
-
-Interview worker
-→ executes Step 8
-→ consumes the same Knowledge + API map; Video may provide presentation context but not replace canonical Knowledge
-→ creates explanation/reasoning practice, not Quiz clones
-
-Validation worker
-→ checks schemas, relations, parity, generators and diffs
-
-Coverage reviewer
-→ reviews the integrated module from curriculum perspective
-→ should preferably be independent from the workers that authored the content
-```
-
-### What may run in parallel
-
-After a dependency is stable, bounded work may run in parallel.
-
-Examples:
-
-```text
-VI and EN wording work
-→ may run in parallel after the canonical topic/question structure is fixed
-
-Quiz and Interview authoring
-→ may run in parallel only when Step 6 Video is already complete or the Prime explicitly treats the two authoring tasks as bounded work after the canonical Step 6 handoff
-
-VI and EN Video narration
-→ may run in parallel after Knowledge H1/H2 mapping and presentation plan are fixed
-
-multiple chapter workers
-→ may run in parallel only when the Prime has already fixed chapter ownership,
-  terminology, learning narrative, cross-chapter boundaries and required transitions
-```
-
-### What must not run independently
-
-Avoid this pattern:
-
-```text
-Worker A invents Knowledge curriculum
-Worker B independently invents API curriculum
-Worker C independently invents Video curriculum
-Worker D independently invents Quiz curriculum
-Worker E independently invents Interview curriculum
-```
-
-Even if every file is individually valid, the result will usually be inconsistent.
-
-Instead use handoff artifacts between phases:
-
-```text
-Step 1 output
-→ module boundary / capability inventory / neighboring ownership
-
-Step 2 output
-→ approved milestone order + prerequisites + module mental journey
-→ curated shared module-level `reference/references.yml` when useful sources exist
-
-Step 3 output — both new and existing modules
-→ stable Menu/chapter/title skeleton
-
-Step 4 output
-→ canonical chapter/topic map
-→ major terminology + concept relationships
-→ chapter-order rationale / important transitions
-→ running-example plan when useful
-→ exact Knowledge files + anchors when full Knowledge is authored
-→ optional local section References embedded directly in the relevant Knowledge Markdown
-
-Step 5 output
-→ controller/method ↔ Knowledge mapping + API learning intent
-
-Step 6 output
-→ one Video source per target Knowledge Menu
-→ Knowledge H2 → Video section mapping
-→ scene/transition presentation plan grounded in Knowledge + available evidence
-
-Step 7 output
-→ Quiz tied to the established curriculum
-
-Step 8 output
-→ Interview tied to the established curriculum
-
-Step 9 output
-→ validated integrated module
-→ prioritized gaps/fixes, not a competing curriculum
-
-Step 10 output
-→ final delivery is governed by `STEP_10_COMMIT.md` as the canonical source-of-truth
-→ do not duplicate, reinterpret or infer commit / push / PR-MR / merge / verification / cleanup semantics here
-```
-
-Workers must inspect the latest upstream files before editing. Do not rely only on a stale task description if an upstream worker has changed the canonical Knowledge/API/Video structure.
-
----
-
-## 6. Cross-step quality rules
-
-### 6.1 Do not change concepts just to make relations convenient
-
-Never rewrite curriculum semantics merely to make a relation easier to fill.
-
-```text
-No exact relation
-→ blank relation is acceptable
-
-Real missing curriculum concept
-→ add/fix Knowledge because the concept belongs there
-
-Artificial missing relation
-→ do not manufacture Knowledge/API content
-```
-
-### 6.2 Do not create content solely to increase counts
-
-Avoid:
-
-```text
-duplicate Quiz questions
-near-identical Interview questions
-trivial APIs with no learning value
-tiny Knowledge sections that exist only as relation targets
-fake relation mappings
-```
-
-### 6.3 Preserve exact technical meaning across languages
-
-Localized wording may differ naturally, but these must remain equivalent:
-
-```text
-concept
-behavior
-correct Quiz answer
-question intent
-API relationship
-Knowledge relationship
-technical conclusion
-```
-
-Natural localization is preferred over literal translation. In particular, VI should read as Vietnamese technical writing, not English prose with Vietnamese connectors. EN should read as natural English. Both languages must preserve the same technical meaning, learning intent, anchor identity, and downstream relationships even when sentence structure and visible pedagogical headings differ.
-
-### 6.4 Source code is evidence, not the curriculum itself
-
-The learning content must remain understandable without forcing the learner to reverse-engineer Java source first.
-
-Use source to prove/explain behavior, especially in API execution documentation.
-
-### 6.5 Respect module boundaries
-
-Do not expand one module into a generic textbook covering adjacent technologies unless the extra material is necessary to understand the module itself.
-
-Cross-topic context is useful; curriculum scope creep is not.
-
-### 6.6 Do not write an encyclopedia of isolated definitions
-
-Avoid authoring a module as:
-
-```text
-chapter A → definition
-chapter B → definition
-chapter C → definition
-```
-
-even when every definition is technically correct.
-
-The learner must be able to understand the causal/learning relationship:
-
-```text
-problem
-→ concept
-→ why it helps
-→ relation to the domain
-→ Java mechanism
-→ evidence/code
-```
-
-Definitions are reference material. A curriculum needs a learning path around them.
-
-### 6.7 Do not confuse coverage with pedagogy
-
-These can all be true:
-
-```text
-all H2 anchors exist
-all metadata is valid
-all API relations resolve
-Quiz/Interview coverage is high
-build/projection passes
-```
-
-while the module is still pedagogically incomplete.
-
-Treat the following as separate review dimensions:
-
-```text
-coverage correctness
-→ did we include the important knowledge?
-
-technical correctness
-→ are explanations/code/runtime claims accurate?
-
-pedagogical coherence
-→ can a learner understand what, why, relation and learning order?
-```
-
-Do not declare a module complete from counts alone.
-
----
+- Với **STEP 2, 3, 4, 5, 8, 9 và 10**, **chính Prime** chịu trách nhiệm gọi task **module-local ByLocation** ở checkpoint chỉ khi **tất cả sub-worker của TOÀN tab hoàn thành, giải phóng ownership, Prime exact readback + QA PASS**. Không gọi từ worker, không chạy sau từng hàng/chương hoặc với trial một phần tab. **STEP 6 và STEP 7 không dùng Sheets importer**; riêng Prime cập nhật J3 tương ứng **sau khi đủ completion gate**, theo `STEP_6.md` / `STEP_7.md`. STEP 7 viết Swagger files qua staging+merge, không điền mapping API↔Knowledge.
+- **TUYỆT ĐỐI KHÔNG gọi `generateModuleContentFromSheetByFiles`** (root toàn spreadsheet), không dùng task tổng hợp `generateModuleContentFromSheetByLocation`. **STEP 2 chạy hai task module-local độc lập:** `generateModuleRoadmapFromSheetByLocation`, sau đó `fillIntroduction` để đọc `B17` và tạo `content/readme/docs/vi/BASE.md`. STEP 3/4/5 → `generateModuleReadmeFromSheetByLocation`; **STEP 5 còn có Gradle settings/configuration sync ngay đầu STEP, trước khi giao worker, không phải Sheets import**; STEP 6 → code Java, **không task Sheets sync**; **STEP 7 → Swagger VI/EN staging + Prime-only merge (không Sheets sync, không chạy lại generator STEP 6)**; STEP 8 → `generateModuleInterviewFromSheetByLocation` (sau Normalize); **STEP 9 → `generateModuleQuizFromSheetByLocation` (sau Normalize)**; **STEP 10 → `generateModuleVideoFromSheetByLocation`**.
+- Xác minh **fileUrl/gid/tên tab/B1**, **I3 = đường dẫn module thực tế** và Gradle module path được đăng ký; **không suy đoán path từ tên tab**. Lấy URL/gid từ mapping đã xác minh và truyền **`-PfileUrl=<URL> -PsheetID=<GID>`** vào task module-local (hoặc dùng extension đã cấu hình thật trong module). `task.gradle` chỉ là DSL tham khảo, không phải cấu hình thực thi. Thiếu module/task/config, I3 lệch hoặc lỗi xác thực → `BLOCKER: MODULE SYNC CONFIG`, không fallback ByFiles.
+- Chạy tại **root `java-learning`**: `.\gradlew.bat :<EXACT_MODULE_GRADLE_PATH>:<TASK_NAME> -PfileUrl=<URL> -PsheetID=<GID> -PsheetMode=DRY_RUN`; kiểm tra exit code + **status thực**, chỉ chạy cùng task/module với `-PsheetMode=APPLY` khi dữ liệu nguồn đầy đủ và DRY_RUN an toàn. Sau APPLY kiểm tra status và file đích đúng module. `DRY_RUN`/`SKIPPED_*` không phải sync thành công.
+- **STEP 3/4 là checkpoint thử task an toàn, không được APPLY dữ liệu chưa hoàn chỉnh.** STEP 3 cố ý để B cha trống và Knowledge chưa được tạo; STEP 4 đã có Knowledge nhưng filename B cha chỉ được STEP 5 đặt. Khi importer báo `SKIPPED_MISSING_FILENAME` hoặc không đủ Knowledge/filename đã được review, báo **`MODULE_SYNC=DEFERRED_UNTIL_STEP_5`**, `APPLY=NOT_RUN`; không coi module đã đồng bộ. Nếu thiếu cấu hình/Gradle lỗi thì báo `BLOCKER`, không che bằng DEFERRED. Được cập nhật J3 của STEP 3/4 nếu riêng phần Sheet đã QA PASS và status DEFERRED được báo rõ; không được tuyên bố module đã sync.
+- **README thực chỉ APPLY ở cuối STEP 5** sau toàn bộ Knowledge C:N đã review/QA PASS, B cha đầy đủ/duy nhất và importer DRY_RUN hợp lệ. Không tự điền filename thay worker. STEP 5 bắt buộc trả công nợ `DEFERRED_UNTIL_STEP_5` của STEP 3/4. **Importer cũng đồng bộ `content/readme/metadata/vi/knowledge-metadata.yml`** từ ID section Knowledge và O hàng con, dùng `ReadmeMetadataSyncService` hiện có (`difficulty=BASIC` khi chưa có; `aiGenerated=true`, `reviewed=false` mặc định), bảo toàn metadata cũ hợp lệ; Prime kiểm tra metadata file sau APPLY.
+- **STEP 8 có hai task liên tiếp khác nhau:** (1) root `normalizeInterviewQuestionsFromSheet -PfileUrl=<URL> -PsheetID=<GID> -PinterviewMode=DRY_RUN` rồi `APPLY`, với exact readback **YAML chuẩn hóa** đầy đủ trên Sheet (parser vẫn chấp nhận JSON legacy); (2) **module-local** `generateModuleInterviewFromSheetByLocation` với `-PsheetMode=DRY_RUN` rồi `APPLY` để sinh `content/interview/vi/question.yml`. Nếu importer báo `SKIPPED_NO_INTERVIEW_SCHEMA` / `SKIPPED_EMPTY_INTERVIEW`, không coi STEP 8 đã đồng bộ.
+- **STEP 9 có hai task liên tiếp:** (1) root `normalizeQuizQuestionsFromSheet -PfileUrl=<URL> -PsheetID=<GID> -PquizMode=DRY_RUN` rồi `APPLY`, exact readback YAML T:W; code cấp ID từ filename+ordinal, mặc định AI/review, thêm `readmeRelated.file`, để anchor/API rỗng. (2) Module-local `generateModuleQuizFromSheetByLocation` DRY_RUN → APPLY, tạo `content/quiz/vi/question.yml` (snapshot thay thế, phải QA diff trước APPLY). Cả hai task chỉ chạy sau QA toàn tab; mọi `SKIPPED_*`, orphan, missing chapter hoặc ID trùng là blocker. Worker không gọi task.
+- **STEP 10** sau worker + Prime QA toàn tab bắt buộc chạy module-local `generateModuleVideoFromSheetByLocation` DRY_RUN → APPLY, kiểm tra snapshot `content/video/vi/menu/<ordinal>.<stem>/video-script.yml`. Importer thay thế snapshot Video toàn thư mục; không APPLY khi chương còn thiếu/chỉ trial một phần. Nếu `SKIPPED_*`, lỗi validation, I3 hoặc output thiếu → `BLOCKER: MODULE VIDEO SYNC`, không nâng J3. Không gọi Gradle từ worker.
+- Prime ghi **`MODULE_SYNC_TASK`, `MODULE_PATH`, `TAB_GID`, `DRY_RUN`, `APPLY`, `SYNC_STATUS`, `DESTINATION`, `BLOCKER/DEFERRED`** cho STEP 2/3/4/5/8/9/10. **STEP 2 đòi hỏi Roadmap và `fillIntroduction` PASS**, STEP 5 đòi hỏi **module config sync đầu STEP + skeleton QA của mọi chương + Markdown/Knowledge metadata cuối STEP PASS**. STEP 2/5/8/9/10 chỉ nâng J3 khi đúng completion gate PASS/UNCHANGED được xác minh; STEP 3/4 có thể nâng J3 khi Sheet QA PASS và sync báo **DEFERRED**. **STEP 6 không có Sheets importer nhưng có completion gate J3**: chỉ Prime ghi `J3 = STEP 6` sau khi toàn bộ chương QA PASS/`API_NOT_REQUIRED` hợp lệ, không còn pending/blocker/writer, tích hợp build/test/runtime đạt và module-local `generateApiSwaggerDescription` sinh/kiểm tra skeleton thành công; đọc lại J3 chính xác theo `rules/PRIME_RULES.md §2`. Nếu gate chưa đạt, giữ nguyên J3. Không commit/push, không dùng `ByFiles`.

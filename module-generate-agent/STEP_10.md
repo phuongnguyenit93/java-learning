@@ -11,9 +11,9 @@
 
 ### Cổng context và phân tách PRIME / WORKER
 
-**File `STEP_10.md` này chỉ dành cho Prime.** Prime phải đọc đầy đủ `module-generate-agent/temp/GENERAL_AGENT_RULES.md`, liệt kê và đọc **mọi file hiện có** trong `module-generate-agent/rules/`, toàn văn STEP 10 này, **toàn văn `worker/STEP_10_WORKER.md`**, `module-generate-agent/temp/module-generate-info.txt`. `module-generate-agent/STEP_6_VIDEO.md` là tài liệu **legacy Markdown** thuộc workflow khác, không phải schema của STEP 10 này; không áp dụng định dạng Markdown của tài liệu đó. Đọc lại nếu context bị rút gọn.
+**File `STEP_10.md` này chỉ dành cho Prime.** Prime phải đọc đầy đủ `module-generate-agent/GENERAL_AGENT_RULES.md`, liệt kê và đọc **mọi file hiện có** trong `module-generate-agent/rules/`, toàn văn STEP 10 này, **toàn văn `worker/STEP_10_WORKER.md`**, `module-generate-agent/module-generate-info.txt`. Đọc lại nếu context bị rút gọn.
 
-**Toàn bộ quy định thực thi của worker nằm riêng trong `/java-learning/module-generate-agent/temp/worker/STEP_10_WORKER.md`.** Worker **chỉ đọc toàn văn file worker-only đó**. Prime gửi **4 dòng**: link tab, tọa độ nguồn `A<PARENT_ROW>` và bài con, vùng Video Script `X:AA` **trên cùng hàng cha**, đường dẫn worker-only. **Không đưa nội dung, script mẫu hoặc quy tắc vào tin giao.** Một lần giao = một chương = một Video YAML hoàn chỉnh.
+**Toàn bộ quy định thực thi của worker nằm riêng trong `/java-learning/module-generate-agent/worker/STEP_10_WORKER.md`.** Worker **chỉ đọc toàn văn file worker-only đó**. Prime gửi **4 dòng**: link tab, tọa độ nguồn `A<PARENT_ROW>` và bài con, vùng Video Script `X:AA` **trên cùng hàng cha**, đường dẫn worker-only. **Không đưa nội dung, script mẫu hoặc quy tắc vào tin giao.** Một lần giao = một chương = một Video YAML hoàn chỉnh.
 
 ---
 
@@ -75,7 +75,7 @@ Sau APPLY kiểm tra đúng `I3` và báo `MODULE_SYNC_TASK`, `MODULE_PATH`, `TA
 <LINK_TAB_ĐÃ_XÁC_MINH>
 A1, B1, <PARENT_CELL_A>, <PARENT_FILENAME_CELL_B>, <CHILD_B_RANGE>, <CHILD_C_TO_N_RANGE>
 <SCRIPT_RANGE_X_TO_AA_TRÊN_CHÍNH_HÀNG_PARENT>
-/java-learning/module-generate-agent/temp/worker/STEP_10_WORKER.md
+/java-learning/module-generate-agent/worker/STEP_10_WORKER.md
 ```
 
 Prime phải thay mọi placeholder bằng tọa độ/range chính xác. Nếu các hàng con không liên tiếp, truyền danh sách đầy đủ các ô tương ứng trên cùng dòng nguồn. **Không đưa nội dung từng ô, tóm tắt Knowledge, chỉ dẫn QA hoặc đoạn quy định worker vào tin giao.** Worker tự đọc toàn văn file riêng.
