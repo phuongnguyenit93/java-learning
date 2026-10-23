@@ -1,248 +1,1188 @@
-1.LanguagePurpose/LanguagePurpose.md:
-  language-basics-roadmap:
+1.LanguageOverview/LanguageOverview.md:
+  language-overview-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-2.SourceCodeStructure/SourceCodeStructure.md:
-  source-file-type-structure:
+  language-overview-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  language-overview-003:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  statement-expression-model:
+  language-overview-004:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  lexical-elements:
+  language-overview-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  language-overview-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  language-overview-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  language-overview-008:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-3.PrimitiveReference/PrimitiveReference.md:
-  primitive-vs-reference-model:
+2.ToolsAndExecution/ToolsAndExecution.md:
+  tools-and-execution-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  tools-and-execution-002:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  primitive-ranges-and-defaults:
+  tools-and-execution-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  tools-and-execution-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  tools-and-execution-005:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  reference-value-semantics:
+  tools-and-execution-006:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-4.VariablesScope/VariablesScope.md:
-  variable-kinds-and-lifetime:
+  tools-and-execution-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  tools-and-execution-008:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+3.ProgramStructure/ProgramStructure.md:
+  program-structure-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  scope-and-shadowing:
+  program-structure-002:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  definite-assignment:
+  program-structure-003:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-5.Null/Null.md:
-  null-reference:
+  program-structure-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  program-structure-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  program-structure-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  program-structure-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  program-structure-008:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  null-dereference:
+4.JavaVocabulary/JavaVocabulary.md:
+  java-vocabulary-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  null-comparison:
+  java-vocabulary-002:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  null-api-design:
+  java-vocabulary-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  java-vocabulary-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  java-vocabulary-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  java-vocabulary-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  java-vocabulary-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  java-vocabulary-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+5.Literals/Literals.md:
+  literals-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  literals-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  literals-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  literals-004:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-6.WrapperBoxing/WrapperBoxing.md:
-  wrapper-types:
+  literals-005:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  boxing-unboxing:
+  literals-006:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  wrapper-caching:
+  literals-007:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  unboxing-null:
+  literals-008:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  literals-009:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-7.Operators/Operators.md:
-  numeric-promotion:
+6.VariablesAndConstants/VariablesAndConstants.md:
+  variables-and-constants-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  short-circuit-operators:
+  variables-and-constants-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  variables-and-constants-003:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  bitwise-shift:
+  variables-and-constants-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  variables-and-constants-005:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  precedence-side-effects:
+  variables-and-constants-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  variables-and-constants-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  variables-and-constants-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  variables-and-constants-009:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-8.Casting/Casting.md:
-  primitive-casting:
+  variables-and-constants-010:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+7.PrimitiveTypes/PrimitiveTypes.md:
+  primitive-types-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  reference-upcast-downcast:
+  primitive-types-002:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-9.ControlFlow/ControlFlow.md:
-  branching-model:
+  primitive-types-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  primitive-types-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  primitive-types-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  primitive-types-006:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  loop-control:
+  primitive-types-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  primitive-types-008:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  primitive-types-009:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  primitive-types-010:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+8.CharactersAndStrings/CharactersAndStrings.md:
+  characters-and-strings-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  switch-expression:
+  characters-and-strings-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  characters-and-strings-003:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  control-flow-pitfalls:
+  characters-and-strings-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  characters-and-strings-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  characters-and-strings-006:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-10.Arrays/Arrays.md:
-  array-type-model:
+  characters-and-strings-007:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  array-initialization:
+  characters-and-strings-008:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  characters-and-strings-009:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  characters-and-strings-010:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+9.ReferencesAndNull/ReferencesAndNull.md:
+  references-and-null-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  array-covariance-risk:
+  references-and-null-002:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  multidimensional-arrays:
+  references-and-null-003:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-11.Methods/Methods.md:
-  method-signature:
+  references-and-null-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  references-and-null-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  references-and-null-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  references-and-null-007:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  method-invocation-conversion:
+  references-and-null-008:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+10.TypeConversion/TypeConversion.md:
+  type-conversion-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  overload-resolution-phases:
+  type-conversion-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  type-conversion-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  type-conversion-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  type-conversion-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  type-conversion-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  type-conversion-007:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  most-specific-overload:
+  type-conversion-008:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  type-conversion-009:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  type-conversion-010:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+11.PrimitiveWrappers/PrimitiveWrappers.md:
+  primitive-wrappers-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  null-overload-ambiguity:
+  primitive-wrappers-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  primitive-wrappers-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  primitive-wrappers-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  primitive-wrappers-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  primitive-wrappers-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  primitive-wrappers-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  primitive-wrappers-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+12.VarTypeInference/VarTypeInference.md:
+  var-type-inference-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  method-call-evaluation:
+  var-type-inference-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  var-type-inference-003:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  recursion-stack:
+  var-type-inference-004:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-12.Varargs/Varargs.md:
-  varargs-array-model:
+  var-type-inference-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  var-type-inference-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  var-type-inference-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  var-type-inference-008:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+13.Expressions/Expressions.md:
+  expressions-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  expressions-002:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  varargs-overload:
+  expressions-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  expressions-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  expressions-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  expressions-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  expressions-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  expressions-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+14.Arithmetic/Arithmetic.md:
+  arithmetic-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  varargs-generics-warning:
+  arithmetic-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  arithmetic-003:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-13.PassByValue/PassByValue.md:
-  java-pass-by-value:
+  arithmetic-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  arithmetic-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  arithmetic-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  arithmetic-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  arithmetic-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  arithmetic-009:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  arithmetic-010:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+15.AssignmentAndUnaryOperators/AssignmentAndUnaryOperators.md:
+  assignment-and-unary-operators-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  assignment-and-unary-operators-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  assignment-and-unary-operators-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  assignment-and-unary-operators-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  assignment-and-unary-operators-005:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  reference-copy-mutation:
+  assignment-and-unary-operators-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  assignment-and-unary-operators-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  assignment-and-unary-operators-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+16.Comparisons/Comparisons.md:
+  comparisons-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  comparisons-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  comparisons-003:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  reassignment-vs-mutation:
+  comparisons-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  comparisons-005:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  comparisons-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  comparisons-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  comparisons-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+17.LogicAndConditions/LogicAndConditions.md:
+  logic-and-conditions-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-14.PackagesImports/PackagesImports.md:
-  package-namespace:
+  logic-and-conditions-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  logic-and-conditions-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  logic-and-conditions-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  logic-and-conditions-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  logic-and-conditions-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  logic-and-conditions-007:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  import-resolution:
+  logic-and-conditions-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  logic-and-conditions-009:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+18.BitwiseOperators/BitwiseOperators.md:
+  bitwise-operators-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  static-import:
+  bitwise-operators-002:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  package-access:
+  bitwise-operators-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  bitwise-operators-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  bitwise-operators-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  bitwise-operators-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  bitwise-operators-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  bitwise-operators-008:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+19.IfStatements/IfStatements.md:
+  if-statements-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-15.TypeSystemMentalModel/TypeSystemMentalModel.md:
-  compile-time-vs-runtime-type:
+  if-statements-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  if-statements-003:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  assignment-compatibility:
+  if-statements-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  if-statements-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  if-statements-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  if-statements-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  if-statements-008:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+20.SwitchStatements/SwitchStatements.md:
+  switch-statements-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  instanceof-safe-cast:
+  switch-statements-002:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  class-cast-failure:
+  switch-statements-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  switch-statements-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  switch-statements-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  switch-statements-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  switch-statements-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  switch-statements-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  switch-statements-009:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  switch-statements-010:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+21.TypePatterns/TypePatterns.md:
+  type-patterns-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  overload-vs-override-dispatch:
+  type-patterns-002:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  type-system-boundaries:
+  type-patterns-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  type-patterns-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  type-patterns-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  type-patterns-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  type-patterns-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  type-patterns-008:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  type-patterns-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+22.Loops/Loops.md:
+  loops-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-16.LanguageBasicsSynthesis/LanguageBasicsSynthesis.md:
-  language-basics-synthesis:
+  loops-002:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  end-to-end-value-flow:
+  loops-003:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  language-basics-next-boundaries:
+  loops-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  loops-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  loops-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  loops-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  loops-008:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  loops-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  loops-010:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+23.IterationAndControlFlow/IterationAndControlFlow.md:
+  iteration-and-control-flow-001:
     difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  iteration-and-control-flow-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  iteration-and-control-flow-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  iteration-and-control-flow-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  iteration-and-control-flow-005:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  iteration-and-control-flow-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  iteration-and-control-flow-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  iteration-and-control-flow-008:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  iteration-and-control-flow-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+24.OneDimensionalArrays/OneDimensionalArrays.md:
+  one-dimensional-arrays-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  one-dimensional-arrays-002:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  one-dimensional-arrays-003:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  one-dimensional-arrays-004:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  one-dimensional-arrays-005:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  one-dimensional-arrays-006:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  one-dimensional-arrays-007:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  one-dimensional-arrays-008:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  one-dimensional-arrays-009:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  one-dimensional-arrays-010:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+25.MultidimensionalArrays/MultidimensionalArrays.md:
+  multidimensional-arrays-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  multidimensional-arrays-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  multidimensional-arrays-003:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  multidimensional-arrays-004:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  multidimensional-arrays-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  multidimensional-arrays-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  multidimensional-arrays-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  multidimensional-arrays-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  multidimensional-arrays-009:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+26.Methods/Methods.md:
+  methods-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  methods-002:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  methods-003:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  methods-004:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  methods-005:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  methods-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  methods-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  methods-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  methods-009:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  methods-010:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  methods-011:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+27.ScopeAndInitialization/ScopeAndInitialization.md:
+  scope-and-initialization-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  scope-and-initialization-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  scope-and-initialization-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  scope-and-initialization-004:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  scope-and-initialization-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  scope-and-initialization-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  scope-and-initialization-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  scope-and-initialization-008:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+28.ClassesAndObjects/ClassesAndObjects.md:
+  classes-and-objects-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  classes-and-objects-002:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  classes-and-objects-003:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  classes-and-objects-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  classes-and-objects-005:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  classes-and-objects-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  classes-and-objects-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  classes-and-objects-008:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  classes-and-objects-009:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  classes-and-objects-010:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  classes-and-objects-011:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  classes-and-objects-012:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+29.PackagesAndImports/PackagesAndImports.md:
+  packages-and-imports-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  packages-and-imports-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  packages-and-imports-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  packages-and-imports-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  packages-and-imports-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  packages-and-imports-006:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  packages-and-imports-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  packages-and-imports-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+  packages-and-imports-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+30.ErrorsAndExceptions/ErrorsAndExceptions.md:
+  errors-and-exceptions-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  errors-and-exceptions-002:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  errors-and-exceptions-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  errors-and-exceptions-004:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  errors-and-exceptions-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  errors-and-exceptions-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  errors-and-exceptions-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  errors-and-exceptions-008:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  errors-and-exceptions-009:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+31.BasicIO/BasicIO.md:
+  basic-io-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  basic-io-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  basic-io-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  basic-io-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  basic-io-005:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  basic-io-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  basic-io-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  basic-io-008:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  basic-io-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+32.PracticeAndQuality/PracticeAndQuality.md:
+  practice-and-quality-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  practice-and-quality-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  practice-and-quality-003:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+  practice-and-quality-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  practice-and-quality-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  practice-and-quality-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  practice-and-quality-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  practice-and-quality-008:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  practice-and-quality-009:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+  practice-and-quality-010:
+    difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
