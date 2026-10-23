@@ -5,6 +5,8 @@ import com.example.learning.task.sheets.export.plugin.ModuleSheetExcelExportPlug
 import com.example.learning.task.sheets.importexcel.plugin.ModuleSheetExcelImportPlugin
 import com.example.learning.task.sheets.task.GenerateModuleContentFromSheetByLocationTask
 import com.example.learning.task.sheets.task.FillIntroductionTask
+import com.example.learning.task.sheets.task.SyncModuleContentToExcelTask
+import com.example.learning.task.sheets.task.CloneModuleViToEnTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
@@ -24,6 +26,32 @@ class SheetsTaskPlugin
 
         project.pluginManager.apply(ModuleSheetExcelExportPlugin)
         project.pluginManager.apply(ModuleSheetExcelImportPlugin)
+
+        project.tasks.register('cloneModuleViToEn', CloneModuleViToEnTask) { task ->
+            task.group = 'sheets'
+            task.description = 'STEP 12A: replace module EN content with validated VI structure (DRY_RUN by default).'
+            task.mode.convention(project.providers.gradleProperty('sheetMode').orElse('DRY_RUN'))
+        }
+
+        // STEP 15: reverse content importers into an offline EN workbook.
+        // No Google write is performed; importExcelFromModuleSheet remains the
+        // explicitly separate, NEW-TAB-only upload task.
+        [
+                syncModuleIntroductionToExcel: 'INTRODUCTION',
+                syncModuleRoadmapToExcel: 'ROADMAP',
+                syncModuleReadmeToExcel: 'README',
+                syncModuleInterviewToExcel: 'INTERVIEW',
+                syncModuleQuizToExcel: 'QUIZ',
+                syncModuleVideoToExcel: 'VIDEO',
+                syncModuleContentToExcel: 'ALL'
+        ].each { String name, String part ->
+            project.tasks.register(name, SyncModuleContentToExcelTask) { task ->
+                task.group = 'sheets'
+                task.description = 'Sync module EN ' + part + ' into content/sheet/en/module.xlsx (DRY_RUN by default).'
+                task.part.convention(part)
+                task.mode.convention(project.providers.gradleProperty('sheetMode').orElse('DRY_RUN'))
+            }
+        }
 
         GenerateModuleContentFromSheetByLocationExtension extension =
                 project.extensions.create(

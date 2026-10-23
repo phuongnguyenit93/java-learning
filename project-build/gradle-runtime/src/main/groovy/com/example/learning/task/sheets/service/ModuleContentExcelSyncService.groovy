@@ -1,0 +1,447 @@
+package com.example.learning.task.sheets.service
+
+import org.apache.poi.ss.usermodel.Cell
+import org.apache.poi.ss.usermodel.CellType
+import org.apache.poi.ss.usermodel.DataFormatter
+import org.apache.poi.ss.usermodel.Row
+import org.apache.poi.ss.util.WorkbookUtil
+import org.apache.poi.xssf.usermodel.XSSFSheet
+import org.apache.poi.xssf.usermodel.XSSFWorkbook
+import org.gradle.api.GradleException
+import org.yaml.snakeyaml.Yaml
+
+import java.nio.file.Files
+import java.nio.file.LinkOption
+import java.nio.file.Path
+import java.nio.file.StandardCopyOption
+import java.util.regex.Matcher
+import java.util.regex.Pattern
+
+/**
+ * STEP 15: reverse module-local Sheet importers to an OFFLINE English Excel.
+ * The original VI workbook supplies row positions, styles and validation;
+ * EN module files supply only their corresponding authored content.
+ *
+ * This does NOT upload anything to Google Sheets. The separate existing
+ * importExcelFromModuleSheet task creates a new Google tab from the result.
+ */
+class ModuleContentExcelSyncService {
+    static final Set<String> PARTS = [
+            'INTRODUCTION', 'README', 'ROADMAP', 'QUIZ', 'INTERVIEW', 'VIDEO', 'ALL'
+    ] as Set
+    private static final Pattern SECTION = Pattern.compile(
+            '(?m)^##\\s+<a\\s+id="([^"]+)">([^\\r\\n]*?)</a>\\s*$')
+    private static final Pattern DETAILS_OPEN = Pattern.compile(
+            '(?s)^\\s*<details>\\s*<summary>[^<\\r\\n]*</summary>\\s*')
+    private static final Pattern DETAILS_END = Pattern.compile(
+            '(?s)\\s*</details>\\s*(?:- \\[[^\\r\\n]+\\]\\(#back-to-top\\)\\s*)?(?:---\\s*)?$')
+    private static final int CHUNK_SIZE = 30000
+    private static final DataFormatter FORMATTER = new DataFormatter(Locale.ROOT)
+
+    Map execute(File rootDirectory, File moduleDirectory, String part, boolean apply) {
+        String requested = part?.trim()?.toUpperCase(Locale.ROOT)
+        if (!PARTS.contains(requested)) {
+            throw new GradleException('Invalid module-to-Excel part: ' + part)
+        }
+        File root = rootDirectory.canonicalFile
+        File module = moduleDirectory.canonicalFile
+        Path moduleRoot = new File(root, 'module').canonicalFile.toPath()
+        if (!module.isDirectory() || module.toPath() == moduleRoot ||
+                !module.toPath().startsWith(moduleRoot) ||
+                !new File(module, 'gradle.properties').isFile()) {
+            throw new GradleException('Module-to-Excel requires a real Gradle module.')
+        }
+        String location = root.toPath().relativize(module.toPath())
+                .toString().replace(File.separatorChar, '/' as char)
+        RoadmapSheetImportService.resolveDestination(root, location)
+        File base = new File(module, 'content/sheet/vi/module.xlsx')
+        File target = new File(module, 'content/sheet/en/module.xlsx')
+        verifyLocalPath(module.toPath(), base.toPath())
+        verifyLocalPath(module.toPath(), target.toPath())
+        File source = target.isFile() ? target : base
+        if (!source.isFile()) {
+            throw new GradleException('Run STEP 12 first: missing VI module.xlsx.')
+        }
+        Map report = [part: requested, source: source, output: target,
+                      chapters: 0, items: 0, changedCells: 0]
+        source.withInputStream { input ->
+            new XSSFWorkbook(input).withCloseable { XSSFWorkbook book ->
+                if (book.numberOfSheets != 1) {
+                    throw new GradleException('Excel source must have exactly one worksheet.')
+                }
+                XSSFSheet sheet = book.getSheetAt(0)
+                if (text(sheet, 3, 9) != location) {
+                    throw new GradleException('Excel I3 does not match selected module: ' +
+                            location)
+                }
+                List<Map> groups = menu(sheet)
+                report.chapters = groups.size()
+                String[] selected = requested == 'ALL'
+                        ? ['INTRODUCTION','README','ROADMAP','INTERVIEW','QUIZ','VIDEO']
+                        : [requested]
+                selected.each { String name ->
+                    switch (name) {
+                        case 'INTRODUCTION':
+                            introduction(module, sheet, report)
+                            break
+                        case 'README':
+                            readme(module, sheet, groups, report)
+                            break
+                        case 'ROADMAP':
+                            roadmap(module, sheet, report)
+                            break
+                        case 'INTERVIEW':
+                            questions(module, sheet, groups, 'interview', 16, report)
+                            break
+                        case 'QUIZ':
+                            questions(module, sheet, groups, 'quiz', 20, report)
+                            break
+                        case 'VIDEO':
+                            video(module, sheet, groups, report)
+                            break
+                    }
+                }
+                if (!target.isFile()) {
+                    sheetName(sheet, book)
+                }
+                report.status = apply ? 'EXPORTED' : 'DRY_RUN'
+                if (apply) saveVerified(book, target, location)
+            }
+        }
+        return report
+    }
+
+    /** Original worksheet row numbers; do not invent row locations. */
+    static List<Map> menu(XSSFSheet sheet) {
+        if (text(sheet, 19, 1) != 'Menu Cấp 1' ||
+                text(sheet, 19, 2) != 'Menu Cấp 2') {
+            throw new GradleException('Invalid Sheet menu headers A19:B19.')
+        }
+        List<Map> groups = []
+        boolean ended = false
+        for (int i = 20; i <= sheet.lastRowNum + 1; i++) {
+            String title = text(sheet, i, 1)
+            String second = text(sheet, i, 2)
+            if (!title && !second) {
+                if (!groups.isEmpty()) ended = true
+                continue
+            }
+            if (ended) {
+                // Other fields can be populated beyond the last menu row.
+                if (title || second) throw new GradleException('Menu A/B has a gap at row ' + i)
+            }
+            if (title) {
+                if (!second || !(second ==~ /(?i)[a-z][a-z0-9]*\.md/)) {
+                    throw new GradleException('Bad chapter filename at B' + i)
+                }
+                String stem = second.substring(0, second.length() - 3)
+                groups.add([row: i, title: title, filename: second,
+                            source: groups.size() + 1 + '.' + stem + '/' + second,
+                            children: []])
+            } else {
+                if (groups.isEmpty()) throw new GradleException('Orphan lesson B' + i)
+                groups.last().children.add([row: i, title: second])
+            }
+        }
+        if (!groups) throw new GradleException('No Menu Cấp 1 in baseline workbook.')
+        return groups
+    }
+
+    private static void introduction(File module, XSSFSheet sheet, Map report) {
+        File file = required(new File(module, 'content/readme/docs/en/BASE.md'))
+        set(sheet, 17, 2, file.getText('UTF-8'), report)
+        report.items++
+    }
+
+    private static void readme(File module, XSSFSheet sheet, List<Map> groups, Map report) {
+        File menu = new File(module, 'content/readme/docs/en/menu')
+        File metadataFile = required(new File(module,
+                'content/readme/metadata/en/knowledge-metadata.yml'))
+        Map metadata = parseYaml(metadataFile)
+        groups.each { Map group ->
+            File file = required(new File(menu, group.source as String))
+            Map parsed = parseMarkdown(file.getText('UTF-8'))
+            List<Map> sections = parsed.sections as List<Map>
+            List<Map> lessons = group.children as List<Map>
+            if (sections.size() != lessons.size()) {
+                throw new GradleException('EN lesson count differs from VI Excel at ' +
+                        group.source + ': ' + sections.size() + '/' + lessons.size())
+            }
+            set(sheet, group.row as int, 1, parsed.title as String, report)
+            Map byAnchor = metadata[group.source] instanceof Map
+                    ? metadata[group.source] as Map : [:]
+            String stem = (group.filename as String).replaceFirst(/(?i)\.md$/, '')
+            String slug = ReadmeSheetImportService.slugFromStem(stem)
+            sections.eachWithIndex { Map section, int i ->
+                String expected = slug + '-' + String.format('%03d', i + 1)
+                if (section.id != expected) {
+                    throw new GradleException('EN README anchor mismatch: expected ' +
+                            expected + ', found ' + section.id + ' (' + group.source + ')')
+                }
+                int row = lessons[i].row as int
+                set(sheet, row, 2, section.title as String, report)
+                fragments(sheet, row, 3, 12, section.body as String, report)
+                Map detail = byAnchor[expected] instanceof Map
+                        ? byAnchor[expected] as Map : [:]
+                if (!detail) throw new GradleException('Missing EN metadata for ' + expected)
+                String difficulty = detail.difficulty?.toString() ?: ''
+                if (!(difficulty in ['BASIC', 'INTERMEDIATE', 'ADVANCED'])) {
+                    throw new GradleException('Invalid EN difficulty for ' + expected)
+                }
+                if (!(detail.isImportant instanceof Boolean)) {
+                    throw new GradleException('Invalid EN isImportant for ' + expected)
+                }
+                set(sheet, row, 15, difficulty, report)
+                set(sheet, row, 28, detail.isImportant, report)
+                report.items++
+            }
+        }
+    }
+
+    /** Strictly recognize generated top Menu/details; never guess a section boundary. */
+    static Map parseMarkdown(String markdown) {
+        String normalized = markdown.replace('\r\n', '\n').replace('\r', '\n')
+        Matcher h1 = Pattern.compile('(?m)^# ([^\\n]+)$').matcher(normalized)
+        if (!h1.find()) throw new GradleException('EN README has no H1 title.')
+        Matcher matcher = SECTION.matcher(normalized)
+        List<Map> sections = []
+        List<Integer> ends = []
+        while (matcher.find()) {
+            sections.add([id: matcher.group(1), title: unescape(matcher.group(2)),
+                          bodyStart: matcher.end(), start: matcher.start()])
+            ends.add(matcher.start())
+        }
+        if (!sections) throw new GradleException('EN README has no anchored sections.')
+        sections.eachWithIndex { Map section, int i ->
+            String tail = normalized.substring(section.bodyStart as int,
+                    i + 1 < sections.size() ? sections[i + 1].start as int : normalized.length())
+            Matcher open = DETAILS_OPEN.matcher(tail)
+            if (!open.find()) {
+                throw new GradleException('Expected generated <details> for ' + section.id)
+            }
+            tail = tail.substring(open.end())
+            Matcher close = DETAILS_END.matcher(tail)
+            if (!close.find()) {
+                throw new GradleException('Missing generated </details> for ' + section.id)
+            }
+            section.body = tail.substring(0, close.start()).replaceFirst('^\\n+', '')
+                    .replaceFirst('\\n+$', '')
+            section.remove('bodyStart')
+            section.remove('start')
+        }
+        return [title: unescape(h1.group(1)), sections: sections]
+    }
+
+    private static String unescape(String value) {
+        return value.replace('&lt;', '<').replace('&gt;', '>').replace('&quot;', '"')
+                .replace('&#39;', "'").replace('&#91;', '[').replace('&#93;', ']')
+                .replace('&amp;', '&')
+    }
+
+    private static void roadmap(File module, XSSFSheet sheet, Map report) {
+        Map document = parseYaml(required(new File(module, 'content/roadmap/en/roadmap.yml')))
+        List items = document.roadmap instanceof List ? document.roadmap as List : []
+        if (!items) throw new GradleException('Empty EN Roadmap.')
+        int count = 0
+        for (int r = 3; r <= sheet.lastRowNum + 1; r++) {
+            if (!text(sheet, r, 6) && !text(sheet, r, 7) && !text(sheet, r, 8)) break
+            count++
+        }
+        if (count != items.size()) {
+            throw new GradleException('Roadmap VI/EN milestone count mismatch: ' +
+                    count + '/' + items.size())
+        }
+        items.eachWithIndex { Object entry, int i ->
+            if (!(entry instanceof Map) || !(entry.objectives instanceof List) ||
+                    !(entry.title instanceof String) || !(entry.purpose instanceof String)) {
+                throw new GradleException('Invalid EN Roadmap milestone #' + (i + 1))
+            }
+            set(sheet, 3 + i, 6, entry.title, report)
+            set(sheet, 3 + i, 7, entry.purpose, report)
+            set(sheet, 3 + i, 8, entry.objectives.join('\n'), report)
+            report.items++
+        }
+        // Roadmap relatedKnowledge/relatedModules/dependsOn are NOT representable
+        // in F:H. Keep the module YAML canonical: never regenerate it from this Excel.
+    }
+
+    private static void questions(File module, XSSFSheet sheet, List<Map> groups,
+                                  String kind, int firstColumn, Map report) {
+        File yamlFile = new File(module, 'content/' + kind + '/en/question.yml')
+        if (!yamlFile.isFile()) {
+            File vi = new File(module, 'content/' + kind + '/vi/question.yml')
+            if (vi.isFile()) throw new GradleException('Missing EN ' + kind + ' source.')
+            return // not enabled
+        }
+        Map document = parseYaml(yamlFile)
+        List items = document.questions instanceof List ? document.questions as List : []
+        if (!items) throw new GradleException('Empty EN ' + kind + ' YAML.')
+        Map<String, Map> bySource = groups.collectEntries {
+            [(it.source.toString()): it]
+        }
+        Map<String, List> gathered = groups.collectEntries {
+            [(it.source.toString()): []]
+        }
+        items.eachWithIndex { Object item, int index ->
+            String source = item instanceof Map ? item.readmeRelated?.file?.toString() : null
+            if (!bySource.containsKey(source)) {
+                throw new GradleException('Cannot assign ' + kind + ' question #' +
+                        (index + 1) + ' to an EN Knowledge chapter: ' + source)
+            }
+            gathered[source].add(item)
+        }
+        groups.each { Map group ->
+            List chapter = gathered[group.source]
+            if (!chapter) {
+                // Interview may intentionally have no questions for a chapter;
+                // Quiz importer requires nonempty rows for every chapter.
+                if (kind == 'quiz') {
+                    throw new GradleException('Missing EN Quiz for ' + group.source)
+                }
+                fragments(sheet, group.row as int, firstColumn, 4, '', report)
+                return
+            }
+            String yamlText = new Yaml().dump([questions: chapter])
+            fragments(sheet, group.row as int, firstColumn, 4, yamlText, report)
+            report.items += chapter.size()
+        }
+    }
+
+    private static void video(File module, XSSFSheet sheet, List<Map> groups, Map report) {
+        File root = new File(module, 'content/video/en/menu')
+        if (!root.isDirectory()) {
+            File vi = new File(module, 'content/video/vi/menu')
+            boolean authoredVi = vi.isDirectory() && vi.listFiles()?.any { File chapter ->
+                chapter.isDirectory() && new File(chapter, 'video-script.yml').isFile()
+            }
+            if (authoredVi) {
+                throw new GradleException('Missing EN video tree.')
+            }
+            return
+        }
+        groups.each { Map group ->
+            String path = group.source.toString().replaceFirst('/[^/]+$', '/video-script.yml')
+            File file = new File(root, path)
+            if (!file.isFile()) {
+                // A chapter may not have an authored Video even when enabled.
+                fragments(sheet, group.row as int, 24, 4, '', report)
+                return
+            }
+            fragments(sheet, group.row as int, 24, 4, file.getText('UTF-8'), report)
+            report.items++
+        }
+    }
+
+    private static Map parseYaml(File file) {
+        Object result
+        try { result = new Yaml().load(file.getText('UTF-8')) }
+        catch (Exception error) {
+            throw new GradleException('Invalid YAML in ' + file + ': ' + error.message, error)
+        }
+        if (!(result instanceof Map)) {
+            throw new GradleException('Expected YAML mapping in ' + file)
+        }
+        return result as Map
+    }
+
+    static List<String> split(String text, int count) {
+        String value = text ?: ''
+        if (value.codePointCount(0, value.length()) > CHUNK_SIZE * count) {
+            throw new GradleException('Text exceeds ' + count + ' Excel fragments.')
+        }
+        List<String> result = []
+        int offset = 0
+        while (offset < value.length()) {
+            int n = Math.min(CHUNK_SIZE, value.codePointCount(offset, value.length()))
+            int next = value.offsetByCodePoints(offset, n)
+            result.add(value.substring(offset, next))
+            offset = next
+        }
+        while (result.size() < count) result.add('')
+        return result
+    }
+
+    private static void fragments(XSSFSheet sheet, int row, int col, int count,
+                                  String value, Map report) {
+        split(value, count).eachWithIndex { String part, int index ->
+            set(sheet, row, col + index, part, report)
+        }
+    }
+
+    static String text(XSSFSheet sheet, int row, int column) {
+        Cell cell = sheet.getRow(row - 1)?.getCell(column - 1)
+        if (cell == null || cell.cellType == CellType.BLANK) return ''
+        return FORMATTER.formatCellValue(cell)
+    }
+
+    private static void set(XSSFSheet sheet, int row, int column, Object value, Map report) {
+        Row targetRow = sheet.getRow(row - 1) ?: sheet.createRow(row - 1)
+        Cell cell = targetRow.getCell(column - 1) ?: targetRow.createCell(column - 1)
+        if (cell.cellType == CellType.FORMULA) {
+            throw new GradleException('Refusing to replace formula at row ' + row +
+                    ', column ' + column)
+        }
+        if (value instanceof Boolean && cell.cellType == CellType.BOOLEAN &&
+                cell.booleanCellValue == value) return
+        String actual = text(sheet, row, column)
+        String expected = value == null ? '' : value.toString()
+        if (actual == expected) return
+        if (expected.length() > 32767) {
+            throw new GradleException('Excel cell exceeds 32767 chars at row ' + row)
+        }
+        if (value instanceof Boolean) cell.setCellValue(value)
+        else cell.setCellValue(expected)
+        report.changedCells = (report.changedCells as int) + 1
+    }
+
+    private static void sheetName(XSSFSheet sheet, XSSFWorkbook book) {
+        String proposed = sheet.sheetName + ' EN'
+        book.setSheetName(0, WorkbookUtil.createSafeSheetName(proposed).take(31))
+    }
+
+    private static File required(File file) {
+        if (!file.isFile()) throw new GradleException('Missing EN source: ' + file)
+        return file
+    }
+
+    private static void verifyLocalPath(Path module, Path path) {
+        Path current = module
+        if (!path.normalize().startsWith(module)) {
+            throw new GradleException('Excel path escapes module: ' + path)
+        }
+        for (Path segment : module.relativize(path)) {
+            current = current.resolve(segment)
+            if (Files.isSymbolicLink(current)) {
+                throw new GradleException('Symlinked Excel path forbidden: ' + current)
+            }
+        }
+        if (Files.exists(path, LinkOption.NOFOLLOW_LINKS) &&
+                !Files.isRegularFile(path, LinkOption.NOFOLLOW_LINKS)) {
+            throw new GradleException('Not a regular Excel file: ' + path)
+        }
+    }
+
+    private static void saveVerified(XSSFWorkbook book, File file, String location) {
+        Files.createDirectories(file.parentFile.toPath())
+        Path tmp = Files.createTempFile(file.parentFile.toPath(), '.module-en-', '.xlsx')
+        try {
+            Files.newOutputStream(tmp).withCloseable { book.write(it) }
+            Files.newInputStream(tmp).withCloseable { input ->
+                new XSSFWorkbook(input).withCloseable { check ->
+                    if (check.numberOfSheets != 1 ||
+                            text(check.getSheetAt(0), 3, 9) != location) {
+                        throw new GradleException('English Excel readback failed.')
+                    }
+                }
+            }
+            try {
+                Files.move(tmp, file.toPath(), StandardCopyOption.ATOMIC_MOVE,
+                        StandardCopyOption.REPLACE_EXISTING)
+            } catch (java.nio.file.AtomicMoveNotSupportedException error) {
+                throw new GradleException('Atomic Excel replace not supported; original preserved.', error)
+            }
+        } finally {
+            Files.deleteIfExists(tmp)
+        }
+    }
+}

@@ -1,5 +1,7 @@
 # GENERAL AGENT RULES
 
+**Bổ sung STEP 12A (Prime-only, giữa STEP 12 và STEP 14):** Đọc `STEP_12A.md`; dùng Gradle task module-local `cloneModuleViToEn` theo DRY_RUN → APPLY để clone README/metadata/Roadmap/Quiz/Interview/Video/Swagger VI → EN. Không dịch, không tác động Excel/Google Sheets, không có worker. EN cũ có backup trong `build/step12a-backups/`; Prime chỉ cập nhật/readback `J3 = STEP 12A` khi QA toàn bộ PASS. **Không gọi lại clone sau khi STEP 14 đã dịch EN.**
+
 Các quy định chung áp dụng cho các tác vụ generate module trong thư mục `module-generate-agent/`.
 
 ## 1. Nắm rõ rule context trước mỗi STEP — bắt buộc
