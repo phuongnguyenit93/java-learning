@@ -3,136 +3,169 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   functional-why:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   functional-without:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   functional-prerequisites:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   functional-solution:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   functional-when:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   functional-learning-journey:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 2.PureFunctions/PureFunctions.md:
   purity-concept:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   purity-motivation:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   purity-input-output:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   referential-transparency:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   purity-boundaries:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 3.Immutability/Immutability.md:
   immutable-values:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   value-vs-state:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   immutable-updates:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   sharing-and-cost:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   immutability-limits:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 4.FunctionsComposition/FunctionsComposition.md:
   functions-as-values:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   higher-order-functions:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   function-composition:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   map-filter-reduce:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   transformation-walkthrough:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   composition-limits:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 5.SideEffects/SideEffects.md:
   effect-concept:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   pure-core-effects:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   effect-coordination:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   effect-testing:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   effects-real-world:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 6.Tradeoffs/Tradeoffs.md:
   functional-use-cases:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   functional-costs:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   functional-vs-other-styles:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   functional-end-to-end:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   functional-boundaries:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false

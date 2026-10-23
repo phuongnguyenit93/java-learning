@@ -3,19 +3,24 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   jdbc-why:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   jdbc-before:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   jdbc-model:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   jdbc-boundary:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false

@@ -3,15 +3,19 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   mvc-why:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   mvc-roles:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   mvc-boundary:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false

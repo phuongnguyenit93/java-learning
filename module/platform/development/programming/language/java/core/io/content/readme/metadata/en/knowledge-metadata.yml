@@ -3,229 +3,284 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   bytes-vs-characters:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   blocking-io-boundary:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   resource-lifecycle:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 2.ByteStreams/ByteStreams.md:
   inputstream-outputstream:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   standard-console-io:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   read-contract:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   partial-read-write:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   typed-binary-io:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   byte-stream-use-cases:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 3.CharacterStreams/CharacterStreams.md:
   reader-writer:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   charset-bridge:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 4.BufferedIO/BufferedIO.md:
   wrapper-composition:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   buffering-purpose:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   character-buffering:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   flush-semantics:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   buffer-size-tradeoff:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   buffered-wrappers:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 5.File/File.md:
   legacy-file-model:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   file-path-limitations:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   file-api-boundary:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 6.PathFiles/PathFiles.md:
   path-model:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   resolve-normalize:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   files-operations:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   temporary-files:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   file-attributes:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   filesystem-provider-model:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   file-permissions-ownership:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   directory-stream-walk:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   watch-service-boundary:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 7.BuffersChannels/BuffersChannels.md:
   buffer-state:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   flip-clear-compact:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   byte-order-structured-binary:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   channel-model:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   scatter-gather-boundary:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   bytebuffer-types:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 8.FileChannel/FileChannel.md:
   filechannel-random-access:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   filechannel-transfer:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   file-lock-boundary:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   memory-mapped-boundary:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   asynchronous-filechannel-boundary:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 9.ResourceManagement/ResourceManagement.md:
   closeable-lifecycle:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   resource-ownership:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   try-with-resources-io:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   close-wrapper-chain:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 10.Serialization/Serialization.md:
   java-serialization-model:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   serializable-graph:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   serialversionuid:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   transient-field:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   serialization-security-risk:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 11.ChoosingIO/ChoosingIO.md:
   choose-stream-reader-channel:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   memory-vs-streaming:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   charset-explicit:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   io-error-handling:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   io-performance-boundary:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false

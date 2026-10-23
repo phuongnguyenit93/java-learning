@@ -3,203 +3,252 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   boot-vs-framework-configuration:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   defaults-and-back-off-contract:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   auto-configuration-end-to-end-flow:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 2.ActivationDiscovery/ActivationDiscovery.md:
   spring-boot-application-and-enable-auto-configuration:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   candidate-discovery-vs-bean-creation:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   auto-configuration-imports:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   auto-configuration-package-isolation:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   application-base-package-boundary:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 3.ConditionModel/ConditionModel.md:
   condition-model-purpose:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   class-conditions:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   bean-conditions-and-timing:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   property-conditions:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   resource-and-web-conditions:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   optional-class-linkage:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 4.BackOffUserControl/BackOffUserControl.md:
   back-off-as-design-contract:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   user-defined-beans-win:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   bean-type-specificity:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   defaults-vs-forced-policy:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   back-off-failure-patterns:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 5.OrderingComposition/OrderingComposition.md:
   configuration-order-vs-bean-order:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   before-after-ordering:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   auto-configure-order:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   conditional-composition:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   optional-technology-isolation:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 6.ExclusionsDiagnostics/ExclusionsDiagnostics.md:
   when-to-exclude-auto-configuration:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   exclusion-mechanisms:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   condition-evaluation-report:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   debug-diagnostics:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   condition-diagnosis-playbook:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 7.CustomAuthoring/CustomAuthoring.md:
   auto-configuration-class-contract:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   registration-and-package-boundaries:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   configuration-properties-integration:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   optional-dependency-design:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   auto-configure-metadata:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   stable-auto-configuration-identities:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 8.AutoConfigurationTesting/AutoConfigurationTesting.md:
   why-focused-context-tests:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   application-context-runner:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   back-off-and-property-tests:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   filtered-class-loader:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   web-context-runners:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   condition-report-in-tests:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 9.StarterSynthesis/StarterSynthesis.md:
   starter-purpose:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   starter-split-or-combine:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   starter-naming:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   configuration-key-namespace:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   starter-dependency-opinion:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   starter-end-to-end-flow:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   auto-configuration-boundaries-next:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false

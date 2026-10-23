@@ -3,16 +3,20 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 1.Setup/Setup.md:
   setup-prometheus:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   config-prometheus-advance:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   config-prometheus-with-eureka-server:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false

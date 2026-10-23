@@ -3,1165 +3,1449 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aop-foundations-002:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aop-foundations-003:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aop-foundations-004:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aop-foundations-005:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aop-foundations-006:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aop-foundations-007:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aop-foundations-008:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aop-foundations-009:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 2.AOPComponentModel/AOPComponentModel.md:
   aop-component-model-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aop-component-model-002:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aop-component-model-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aop-component-model-004:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aop-component-model-005:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aop-component-model-006:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aop-component-model-007:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aop-component-model-008:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aop-component-model-009:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 3.JoinPoints/JoinPoints.md:
   join-points-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   join-points-002:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   join-points-003:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   join-points-004:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   join-points-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   join-points-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   join-points-007:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   join-points-008:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   join-points-009:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 4.PointcutBasics/PointcutBasics.md:
   pointcut-basics-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   pointcut-basics-002:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   pointcut-basics-003:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   pointcut-basics-004:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   pointcut-basics-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   pointcut-basics-006:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   pointcut-basics-007:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   pointcut-basics-008:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   pointcut-basics-009:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   pointcut-basics-010:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   pointcut-basics-011:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   pointcut-basics-012:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 5.ContextualPointcuts/ContextualPointcuts.md:
   contextual-pointcuts-001:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   contextual-pointcuts-002:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   contextual-pointcuts-003:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   contextual-pointcuts-004:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   contextual-pointcuts-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   contextual-pointcuts-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   contextual-pointcuts-007:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   contextual-pointcuts-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   contextual-pointcuts-009:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 6.AdviceLifecycle/AdviceLifecycle.md:
   advice-lifecycle-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   advice-lifecycle-002:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   advice-lifecycle-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   advice-lifecycle-004:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   advice-lifecycle-005:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   advice-lifecycle-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   advice-lifecycle-007:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   advice-lifecycle-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   advice-lifecycle-009:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 7.AroundAdvice/AroundAdvice.md:
   around-advice-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   around-advice-002:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   around-advice-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   around-advice-004:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   around-advice-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   around-advice-006:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   around-advice-007:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   around-advice-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   around-advice-009:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 8.AdviceData/AdviceData.md:
   advice-data-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   advice-data-002:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   advice-data-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   advice-data-004:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   advice-data-005:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   advice-data-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   advice-data-007:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   advice-data-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   advice-data-009:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 9.WeavingArchitecture/WeavingArchitecture.md:
   weaving-architecture-001:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   weaving-architecture-002:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   weaving-architecture-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   weaving-architecture-004:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   weaving-architecture-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   weaving-architecture-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   weaving-architecture-007:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   weaving-architecture-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   weaving-architecture-009:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   weaving-architecture-010:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 10.WeavingLifecycle/WeavingLifecycle.md:
   weaving-lifecycle-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   weaving-lifecycle-002:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   weaving-lifecycle-003:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   weaving-lifecycle-004:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   weaving-lifecycle-005:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   weaving-lifecycle-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   weaving-lifecycle-007:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   weaving-lifecycle-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   weaving-lifecycle-009:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 11.ProxyBasedAOP/ProxyBasedAOP.md:
   proxy-based-aop-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   proxy-based-aop-002:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   proxy-based-aop-003:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   proxy-based-aop-004:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   proxy-based-aop-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   proxy-based-aop-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   proxy-based-aop-007:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   proxy-based-aop-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   proxy-based-aop-009:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 12.AspectLifecycle/AspectLifecycle.md:
   aspect-lifecycle-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-lifecycle-002:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-lifecycle-003:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-lifecycle-004:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-lifecycle-005:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-lifecycle-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-lifecycle-007:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-lifecycle-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 13.MultiAspectCoordination/MultiAspectCoordination.md:
   multi-aspect-coordination-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   multi-aspect-coordination-002:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   multi-aspect-coordination-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   multi-aspect-coordination-004:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   multi-aspect-coordination-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   multi-aspect-coordination-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   multi-aspect-coordination-007:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   multi-aspect-coordination-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   multi-aspect-coordination-009:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 14.AspectExceptionContracts/AspectExceptionContracts.md:
   aspect-exception-contracts-001:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-exception-contracts-002:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-exception-contracts-003:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-exception-contracts-004:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-exception-contracts-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-exception-contracts-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-exception-contracts-007:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-exception-contracts-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-exception-contracts-009:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 15.AspectConcurrency/AspectConcurrency.md:
   aspect-concurrency-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-concurrency-002:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-concurrency-003:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-concurrency-004:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-concurrency-005:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-concurrency-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-concurrency-007:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-concurrency-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-concurrency-009:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 16.AdvancedControlFlow/AdvancedControlFlow.md:
   advanced-control-flow-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   advanced-control-flow-002:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   advanced-control-flow-003:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   advanced-control-flow-004:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   advanced-control-flow-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   advanced-control-flow-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   advanced-control-flow-007:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   advanced-control-flow-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   advanced-control-flow-009:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 17.StructuralCrosscutting/StructuralCrosscutting.md:
   structural-crosscutting-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   structural-crosscutting-002:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   structural-crosscutting-003:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   structural-crosscutting-004:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   structural-crosscutting-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   structural-crosscutting-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   structural-crosscutting-007:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   structural-crosscutting-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   structural-crosscutting-009:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 18.AspectAbstractionReuse/AspectAbstractionReuse.md:
   aspect-abstraction-reuse-001:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-abstraction-reuse-002:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-abstraction-reuse-003:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-abstraction-reuse-004:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-abstraction-reuse-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-abstraction-reuse-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-abstraction-reuse-007:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-abstraction-reuse-008:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-abstraction-reuse-009:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 19.AnnotationMetadata/AnnotationMetadata.md:
   annotation-metadata-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   annotation-metadata-002:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   annotation-metadata-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   annotation-metadata-004:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   annotation-metadata-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   annotation-metadata-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   annotation-metadata-007:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   annotation-metadata-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   annotation-metadata-009:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 20.AsyncBoundaries/AsyncBoundaries.md:
   async-boundaries-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   async-boundaries-002:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   async-boundaries-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   async-boundaries-004:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   async-boundaries-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   async-boundaries-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   async-boundaries-007:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   async-boundaries-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   async-boundaries-009:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 21.ProgramObservability/ProgramObservability.md:
   program-observability-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   program-observability-002:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   program-observability-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   program-observability-004:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   program-observability-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   program-observability-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   program-observability-007:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   program-observability-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   program-observability-009:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 22.ExecutionPolicies/ExecutionPolicies.md:
   execution-policies-001:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   execution-policies-002:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   execution-policies-003:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   execution-policies-004:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   execution-policies-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   execution-policies-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   execution-policies-007:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   execution-policies-008:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   execution-policies-009:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 23.AccessControl/AccessControl.md:
   access-control-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   access-control-002:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   access-control-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   access-control-004:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   access-control-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   access-control-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   access-control-007:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   access-control-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   access-control-009:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 24.AspectArchitectureDesign/AspectArchitectureDesign.md:
   aspect-architecture-design-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-architecture-design-002:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-architecture-design-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-architecture-design-004:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-architecture-design-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-architecture-design-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-architecture-design-007:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-architecture-design-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-architecture-design-009:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 25.AspectJInPractice/AspectJInPractice.md:
   aspect-j-in-practice-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-j-in-practice-002:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-j-in-practice-003:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-j-in-practice-004:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-j-in-practice-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-j-in-practice-006:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-j-in-practice-007:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-j-in-practice-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-j-in-practice-009:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-j-in-practice-010:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-j-in-practice-011:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 26.AspectTesting/AspectTesting.md:
   aspect-testing-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-testing-002:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-testing-003:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-testing-004:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-testing-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-testing-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-testing-007:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-testing-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-testing-009:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-testing-010:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 27.AOPDebuggingDiagnostics/AOPDebuggingDiagnostics.md:
   aop-debugging-diagnostics-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aop-debugging-diagnostics-002:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aop-debugging-diagnostics-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aop-debugging-diagnostics-004:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aop-debugging-diagnostics-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aop-debugging-diagnostics-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aop-debugging-diagnostics-007:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aop-debugging-diagnostics-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aop-debugging-diagnostics-009:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 28.AspectPerformanceResources/AspectPerformanceResources.md:
   aspect-performance-resources-001:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-performance-resources-002:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-performance-resources-003:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-performance-resources-004:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-performance-resources-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-performance-resources-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-performance-resources-007:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-performance-resources-008:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-performance-resources-009:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 29.AspectIntegrationDeployment/AspectIntegrationDeployment.md:
   aspect-integration-deployment-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-integration-deployment-002:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-integration-deployment-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-integration-deployment-004:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-integration-deployment-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-integration-deployment-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-integration-deployment-007:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-integration-deployment-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-integration-deployment-009:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 30.AOPPitfalls/AOPPitfalls.md:
   aop-pitfalls-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aop-pitfalls-002:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aop-pitfalls-003:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aop-pitfalls-004:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aop-pitfalls-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aop-pitfalls-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aop-pitfalls-007:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 31.AspectCapstoneExercises/AspectCapstoneExercises.md:
   aspect-capstone-exercises-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-capstone-exercises-002:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-capstone-exercises-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-capstone-exercises-004:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-capstone-exercises-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-capstone-exercises-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-capstone-exercises-007:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-capstone-exercises-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-capstone-exercises-009:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-capstone-exercises-010:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false

@@ -38,6 +38,7 @@ class ReadmeSheetImportServiceTest {
         assertEquals('BASIC', file['oop-basic-002'].difficulty)
         assertEquals(true, file['oop-basic-001'].aiGenerated)
         assertEquals(false, file['oop-basic-001'].reviewed)
+        assertEquals(false, file['oop-basic-001'].isImportant)
         assertEquals('DRY_RUN', service.syncImportedMetadata(module, prepared, false).status)
         assertEquals('UPDATED', service.syncImportedMetadata(module, prepared, true).status)
 
@@ -45,13 +46,22 @@ class ReadmeSheetImportServiceTest {
         Map existing = new Yaml().load(metadataFile.getText('UTF-8')) as Map
         existing['1.OOPBasic/OOPBasic.md']['oop-basic-001'].reviewed = true
         existing['1.OOPBasic/OOPBasic.md']['oop-basic-001'].aiGenerated = false
+        existing['1.OOPBasic/OOPBasic.md']['oop-basic-001'].isImportant = true
         metadataFile.setText(new Yaml().dump(existing),'UTF-8')
         String refreshed = service.prepareImportedMetadata(module,docs,levels)
         Map updated = new Yaml().load(refreshed) as Map
         assertEquals(true,updated['1.OOPBasic/OOPBasic.md']['oop-basic-001'].reviewed)
         assertEquals(false,updated['1.OOPBasic/OOPBasic.md']['oop-basic-001'].aiGenerated)
+        assertEquals(true,updated['1.OOPBasic/OOPBasic.md']['oop-basic-001'].isImportant)
         assertEquals('ADVANCED',updated['1.OOPBasic/OOPBasic.md']['oop-basic-001'].difficulty)
         assertEquals('BASIC',updated['1.OOPBasic/OOPBasic.md']['oop-basic-002'].difficulty)
+        // Explicit TRUE/FALSE in AB overrides existing flags; blank preserves.
+        def importances = ReadmeSheetImportService.buildSectionImportances(groups,
+                [[], [false], [true]])
+        String overridden = service.prepareImportedMetadata(module, docs, levels, importances)
+        Map flagged = new Yaml().load(overridden) as Map
+        assertEquals(false, flagged['1.OOPBasic/OOPBasic.md']['oop-basic-001'].isImportant)
+        assertEquals(true, flagged['1.OOPBasic/OOPBasic.md']['oop-basic-002'].isImportant)
     }
 
     @Test
@@ -62,6 +72,21 @@ class ReadmeSheetImportServiceTest {
             fail('Unexpected Difficulty accepted')
         } catch (GradleException expected) {
             assertTrue(expected.message.contains('O21'))
+        }
+    }
+
+    @Test
+    void validatesSheetImportanceAndKeepsBlankForHumanMetadata() {
+        List<Map> groups = [[filename:'Basics.md',children:[[row:21],[row:22],[row:23]]]]
+        Map flags = ReadmeSheetImportService.buildSectionImportances(groups,
+                [[], [true], ['FALSE'], []])
+        assertEquals([true, false, null], flags['1.Basics/Basics.md'])
+        try {
+            ReadmeSheetImportService.buildSectionImportances(groups,
+                    [[], ['yes'], [], []])
+            fail('Unexpected isImportant accepted')
+        } catch (GradleException expected) {
+            assertTrue(expected.message.contains('AB21'))
         }
     }
 

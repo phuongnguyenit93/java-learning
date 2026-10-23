@@ -68,6 +68,10 @@ Ví dụ đã đối chiếu với cây module thực tế:
 11. **Đọc lại và xác minh:** Kiểm tra tên tab, giá trị `B1`, `I3` khớp **chính xác** Location đã xác minh, `I1`/`I2` còn nguyên, `sheetId` thực tế và dòng mapping trong TXT đều trùng khớp. **Xác minh `pixelSize = 60` trên hàng 1 và hàng 700, `wrapStrategy = CLIP` trên vùng A1 đến cột cuối ở hàng 700** (có thể dùng API đọc grid/dimension metadata), và không thay đổi các trường ngoài field mask. Xác nhận `Template` vẫn tồn tại và không bị thay đổi. Nếu ghi/đọc lại `I3` hoặc định dạng thất bại, STEP 1 **chưa hoàn thành**; không tự clone thêm tab.
 12. **Báo cáo:** Trả về tên tab, chủ đề ở `B1`, **Location tại `I3`**, `sheetId`, dòng TXT vừa thêm, tình trạng format 700 hàng × tất cả cột (60 px, CLIP) và đường dẫn mở trực tiếp tab mới `<URL_GỐC>/edit?gid=<SHEET_ID>#gid=<SHEET_ID>`.
 
+## Dropdown isImportant kế thừa từ Template
+
+Template có 28 cột (`A:AB`): `AB18 = Importance`, `AB19 = isImportant`, `AB20:AB700` phải có Data Validation `ONE_OF_LIST` với hai lựa chọn `TRUE`, `FALSE` (`strict=true`, `showCustomUi=true`). Chỉ hàng Menu Cấp 2 được STEP 5 ghi; hàng cha trống. AB trống giữ metadata `isImportant` cũ (hoặc default `false` nếu chưa có). Bước clone/preflight/readback STEP 1 phải bảo đảm cấu trúc cột AB cùng dropdown, không sửa Template hoặc tab cũ ngoài lần migration đã được người dùng yêu cầu.
+
 ## Dropdown Difficulty bắt buộc kế thừa từ Template
 
 **Template chuẩn (gid=0):** tiêu đề Difficulty tại **O19**; toàn vùng **O20:O700** có Data Validation với condition **ONE_OF_LIST**, chính xác ba giá trị theo thứ tự **BASIC, INTERMEDIATE, ADVANCED**, **strict=true** (từ chối giá trị ngoài danh sách) và **showCustomUi=true** (hiện dropdown).
@@ -84,7 +88,7 @@ Quy tắc tích hợp vào quy trình STEP 1 ở trên:
 
 ## Nguyên tắc an toàn
 
-**Bố cục Template mới (27 cột):** sau Knowledge `C:N` và Difficulty `O`, giữ thứ tự **Interview P:S → Quiz T:W → Video X:AA**. Interview có `P18 = Interview`, `P19:S19 = Interview YAML` (parser còn chấp nhận `Interview JSON` legacy). STEP 1 khi clone giữ nguyên ba nhóm cột cùng header/dữ liệu/format và CLIP 700 hàng đến cột AA; không tự migration khi Template khác chưa khớp và phải báo `INTERVIEW_SCHEMA/QUIZ_SCHEMA/VIDEO_SCHEMA=NOT_CONFIGURED` nếu thiếu.
+**Bố cục Template mới (28 cột):** sau Knowledge `C:N` và Difficulty `O`, giữ thứ tự **Interview P:S → Quiz T:W → Video X:AA → isImportant AB**. Interview có `P18 = Interview`, `P19:S19 = Interview YAML` (parser còn chấp nhận `Interview JSON` legacy). STEP 1 khi clone giữ nguyên ba nhóm cột cùng header/dữ liệu/format và CLIP 700 hàng đến cột AB; không tự migration khi Template khác chưa khớp và phải báo `INTERVIEW_SCHEMA/QUIZ_SCHEMA/VIDEO_SCHEMA=NOT_CONFIGURED` nếu thiếu.
 
 **Quiz và Video:** `T18 = Quiz`, `T19:W19 = Quiz YAML`; `X18 = Video`, `X19:AA19 = Video Script`. **Không điền Quiz vào T20:W700 hoặc Video vào X20:AA700 khi clone**; STEP 9/10 workers sinh YAML vào hàng cha khi được giao. Ba spreadsheet `Module Content`, `Module Content 2`, `Module Content 3` đều đã được sắp xếp theo thứ tự này, không thay các vùng A:O.
 

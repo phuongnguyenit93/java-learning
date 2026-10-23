@@ -3,38 +3,47 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   hawtio-and-sba:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   jokolia:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   jmx-and-mbean:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   jmx-feature:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 0.Preset/Feature.md:
   hawtio-feature:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 1.Setup/AddBean.md:
   add-business-bean:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   managed-bean-by-spring-and-jmx:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 1.Setup/Path.md:
   path-hawtio:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false

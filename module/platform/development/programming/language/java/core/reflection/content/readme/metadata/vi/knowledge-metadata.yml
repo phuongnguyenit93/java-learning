@@ -3,208 +3,258 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   reflection-use-cases:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 2.ClassMetadata/ClassMetadata.md:
   class-object-entrypoints:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   class-names:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   class-kind:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   specialized-type-metadata:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   runtime-annotation-metadata:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   modifiers:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   superclass-interfaces:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   member-abstraction-model:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   declared-vs-public-members:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 3.Fields/Fields.md:
   field-discovery:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   field-modifiers:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   field-type-metadata:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 4.Methods/Methods.md:
   method-discovery:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   method-signature-metadata:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 5.Constructors/Constructors.md:
   constructor-discovery:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   constructor-metadata:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 6.DynamicInvocation/DynamicInvocation.md:
   field-read-write:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   method-invoke:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   invocation-exception:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   varargs-reflection:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   constructor-newinstance:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   constructor-reflection-failure:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   reflective-dispatch:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   argument-conversion:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   dynamic-array-reflection:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   method-handle-boundary:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   dynamic-invocation-design:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 7.AccessControl/AccessControl.md:
   language-vs-reflective-access:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   try-set-accessible:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   strong-encapsulation-boundary:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   accessible-object-risk:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 8.GenericTypeInspection/GenericTypeInspection.md:
   type-interface:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   parameterized-type:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   type-variable-bounds:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   wildcard-reflection:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   erasure-vs-signature-metadata:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 9.DynamicProxy/DynamicProxy.md:
   jdk-proxy-model:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   invocation-handler:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   proxy-interfaces:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   object-methods-proxy:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   proxy-limitations:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 10.LimitationsRisks/LimitationsRisks.md:
   reflection-cost-boundary:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   compile-time-safety-loss:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   encapsulation-breakage:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   reflection-performance:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   native-image-boundary:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   reflection-maintainability:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   reflection-decision-model:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false

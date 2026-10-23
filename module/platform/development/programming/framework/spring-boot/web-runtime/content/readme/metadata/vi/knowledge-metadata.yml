@@ -3,302 +3,375 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   web-runtime-problem:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   boot-to-server-flow:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   servlet-reactive-runtime-model:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   web-runtime-boundaries:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   web-runtime-learning-path:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 2.WebApplicationType/WebApplicationType.md:
   web-application-types:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   classpath-type-deduction:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   servlet-reactive-precedence:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   explicit-type-override:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   application-type-consequences:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 3.EmbeddedServerModel/EmbeddedServerModel.md:
   starter-server-defaults:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   supported-server-choices:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   replacing-default-server:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   web-server-factory-role:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   web-server-context-startup:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   server-selection-boundary:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 4.ServletServerAutoConfiguration/ServletServerAutoConfiguration.md:
   servlet-server-auto-config-trigger:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   servlet-server-factories:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   servlet-server-configuration-relation:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   servlet-server-backoff:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   servlet-server-customizer-chain:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   servlet-server-mvc-boundary:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 5.ReactiveServerAutoConfiguration/ReactiveServerAutoConfiguration.md:
   reactive-server-auto-config-trigger:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   reactor-netty-default:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   reactive-server-factories:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   reactive-server-configuration-relation:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   reactive-server-backoff:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   reactive-server-webflux-boundary:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 6.ServerProperties/ServerProperties.md:
   server-properties-model:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   common-server-namespace:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   port-address-endpoint-controls:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   server-specific-namespaces:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   portable-vs-server-specific-properties:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   external-configuration-handoff:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 7.ServerCustomization/ServerCustomization.md:
   server-customization-decision-order:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   web-server-factory-customizer:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   generic-vs-specific-factory-targets:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   customizer-ordering:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   custom-web-server-factory:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   advanced-server-topology:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 8.HttpFeatures/HttpFeatures.md:
   http-response-compression:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   http2-support:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   request-header-limits:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   connection-server-settings:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   access-logging:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   http-feature-portability:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 9.TlsSslBundles/TlsSslBundles.md:
   web-server-tls-entry-points:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   server-ssl-keystore-pem:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   ssl-bundle-consumption:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   bundle-vs-discrete-ssl-properties:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   server-name-indication:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   tls-ownership-boundary:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 10.ForwardedHeadersProxy/ForwardedHeadersProxy.md:
   proxy-request-metadata:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   forward-header-strategies:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   native-forward-headers:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   framework-forward-headers:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   cloud-forward-header-defaults:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   proxy-tls-termination:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   server-specific-proxy-settings:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   forwarded-header-trust-boundary:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 11.GracefulShutdown/GracefulShutdown.md:
   server-shutdown-modes:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   graceful-shutdown-lifecycle:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   shutdown-phase-timeout:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   server-specific-shutdown-behavior:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   in-flight-request-grace-period:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   shutdown-runtime-handoff:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 12.BootWebDefaults/BootWebDefaults.md:
   boot-web-defaults-map:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   convention-vs-explicit-web-control:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   spring-framework-web-handoff:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   container-internals-handoff:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   network-security-handoff:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   web-runtime-end-to-end-model:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false

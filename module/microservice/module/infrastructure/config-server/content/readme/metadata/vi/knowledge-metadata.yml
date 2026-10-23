@@ -3,23 +3,29 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   gradle-task-and-spring-cloud-config:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   spof-config-server:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   spring-cloud-server-config:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   hot-reload-spring-cloud-config:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   spring-cloud-server-precedence:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false

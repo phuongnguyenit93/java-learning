@@ -3,254 +3,316 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   why-git-snapshots:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   repository-and-working-tree:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   index-and-three-areas:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   git-objects-and-commits:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   file-tracking-and-states:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   initialize-and-clone:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   trace-file-across-areas:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   git-command-reference-and-docs:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 02-recording-commits.md:
   inspect-status-before-staging:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   ignore-and-track-files:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   working-tree-vs-staged-diff:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   stage-intentional-changes:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   commit-snapshot-and-message:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   read-log-and-parents:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   compare-history-points:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   verify-a-recorded-change:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 03-branches-refs-tags.md:
   commit-graph-and-references:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   branches-and-head:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   create-inspect-delete-branches:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   switch-and-uncommitted-changes:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   detached-head:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   tags-vs-branches:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   verify-branch-tag-positions:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 04-merges-and-conflicts.md:
   why-branches-diverge:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   fast-forward-merge:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   merge-base-and-three-way:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   merge-commit-and-parents:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   recognize-merge-conflicts:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   resolve-or-abort-merge:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   cherry-pick-vs-merge:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   verify-merged-outcome:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 05-remotes-and-sync.md:
   remote-repository-purpose:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   configure-and-inspect-remotes:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   local-remote-and-tracking-refs:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   upstream-relationship:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   fetch-vs-pull:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   push-and-rejected-updates:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   reconcile-divergent-history:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   verify-local-and-remote-history:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 06-rebase-and-rewrite.md:
   merge-versus-rebase-outcomes:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   rebase-replay-and-commit-ids:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   rebase-local-work:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   resolve-continue-or-abort-rebase:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   amend-a-local-commit:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   shared-history-rewrite-risk:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   verify-history-after-rebase:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 07-stash-undo-recovery.md:
   classify-uncommitted-and-shared-work:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   stash-work-in-progress:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   stash-tracked-and-untracked:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   restore-worktree-and-index:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   reset-modes-and-risk:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   revert-shared-commit:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   reflog-and-expiration:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   safe-recovery-decision:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 08-end-to-end-git.md:
   trace-change-to-commit:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   follow-branch-and-remote:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   select-merge-or-rebase-mechanics:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   diagnose-divergence-and-conflict:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   choose-safe-undo-in-context:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   verify-end-to-end-evidence:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   handoff-to-team-collaboration:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false

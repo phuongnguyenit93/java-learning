@@ -3,19 +3,24 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   mybatis-why:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   mybatis-model:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   mybatis-vs-orm:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   mybatis-boundary:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false

@@ -3,30 +3,37 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 1.Setup/Docker.md:
   docker-arthas:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   arthas-spring-boot-starter:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 1.Setup/Local.md:
   arthas-local:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   arthas-web-console:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   shutdown-arthas:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 2.Command/Command.md:
   arthas-command:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false

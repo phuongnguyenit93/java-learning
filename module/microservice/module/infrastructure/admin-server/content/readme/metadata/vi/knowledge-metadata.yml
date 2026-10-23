@@ -3,7 +3,9 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   admin-server-config:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false

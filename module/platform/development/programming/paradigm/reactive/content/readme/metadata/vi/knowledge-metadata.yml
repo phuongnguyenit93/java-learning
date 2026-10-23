@@ -3,156 +3,194 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   reactive-why:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
-  reactive-solution:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
-  reactive-streams-boundary:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
-  reactive-framework-boundary:
-    difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
+    isImportant: false
   reactive-values-vs-streams:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   reactive-foundation-bridge:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
+  reactive-solution:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  reactive-streams-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  reactive-framework-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
   reactive-learning-path:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 2.DataFlow/DataFlow.md:
   reactive-source-producer-consumer:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   reactive-transform-combine:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   reactive-push-pull:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   reactive-composition:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   reactive-subscribe-lifecycle:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   reactive-execution-timing:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   reactive-flow-trace:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 3.Backpressure/Backpressure.md:
   reactive-rate-mismatch:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   reactive-queue-overflow:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   reactive-demand-flow-control:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   reactive-overload-strategies:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   reactive-backpressure-boundary:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 4.ReactiveStreams/ReactiveStreams.md:
   reactive-spec-scope:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   reactive-four-roles:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   reactive-signal-sequence:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   reactive-request-n:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   reactive-protocol-failures:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   reactive-interoperability:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 5.ErrorCancellation/ErrorCancellation.md:
   reactive-terminal-success:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   reactive-terminal-failure:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   reactive-cancellation:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   reactive-inflight-signals:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   reactive-resource-cleanup:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   reactive-lifecycle-trace:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 6.Tradeoffs/Tradeoffs.md:
   reactive-end-to-end-example:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   reactive-compare-callback:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   reactive-async-parallel-boundary:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   reactive-debug-complexity:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   reactive-framework-handoff:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   reactive-final-decision:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false

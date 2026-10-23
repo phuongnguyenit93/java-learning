@@ -3,214 +3,266 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   validation-vs-binding:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   conversion-vs-formatting:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   validation-binding-module-boundary:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 2.PropertyAccess/PropertyAccess.md:
   property-path-model:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   bean-wrapper-role:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   binding-result-model:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   object-field-error-model:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   binding-error-policy:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 3.TypeConversion/TypeConversion.md:
   conversion-service-role:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   converter-registry:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   converter-contract:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   converter-factory-contract:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   generic-conditional-conversion:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   type-descriptor-context:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   conversion-failure-model:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   property-editor-boundary:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 4.Formatting/Formatting.md:
   formatting-purpose:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   printer-parser-contract:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   formatter-contract:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   formatter-registry:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   annotation-formatting:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   formatting-conversion-service:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   formatting-locale-boundary:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 5.Validation/Validation.md:
   validator-contract:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   errors-contract:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   nested-validation:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   validation-utils:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   smart-validator-hints:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   message-code-resolution:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   validation-i18n-boundary:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 6.DataBinder/DataBinder.md:
   data-binder-role:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   data-binding-flow:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   property-binding-model:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   constructor-binding-model:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   declarative-binding-61:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   binding-field-policies:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   data-binder-extension-points:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 7.BeanValidation/BeanValidation.md:
   bean-validation-boundary:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   spring-validator-adapter:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   local-validator-factory-bean:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   validation-groups-hints:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   method-validation-model:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   method-validation-adapter:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   method-validation-post-processor:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 8.SafeBinding/SafeBinding.md:
   binding-security-model:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   safe-input-models:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   safe-binding-controls:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   binding-validation-separation:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   mechanism-selection:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   validation-binding-end-to-end:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   validation-binding-handoffs:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false

@@ -3,1008 +3,1253 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   web-overview-002:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   web-overview-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   web-overview-004:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   web-overview-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   web-overview-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 2.HttpFundamentals/HttpFundamentals.md:
   http-fundamentals-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   http-fundamentals-002:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   http-fundamentals-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   http-fundamentals-004:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   http-fundamentals-005:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   http-fundamentals-006:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   http-fundamentals-007:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   http-fundamentals-008:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 3.ApplicationBootstrap/ApplicationBootstrap.md:
   application-bootstrap-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   application-bootstrap-002:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   application-bootstrap-003:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   application-bootstrap-004:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   application-bootstrap-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   application-bootstrap-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   application-bootstrap-007:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 4.MvcRequestLifecycle/MvcRequestLifecycle.md:
   mvc-request-lifecycle-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   mvc-request-lifecycle-002:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   mvc-request-lifecycle-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   mvc-request-lifecycle-004:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   mvc-request-lifecycle-005:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   mvc-request-lifecycle-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   mvc-request-lifecycle-007:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   mvc-request-lifecycle-008:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 5.RequestRouting/RequestRouting.md:
   request-routing-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   request-routing-002:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   request-routing-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   request-routing-004:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   request-routing-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   request-routing-006:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   request-routing-007:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   request-routing-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 6.ControllerInputs/ControllerInputs.md:
   controller-inputs-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   controller-inputs-002:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   controller-inputs-003:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   controller-inputs-004:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   controller-inputs-005:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   controller-inputs-006:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   controller-inputs-007:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   controller-inputs-008:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   controller-inputs-009:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   controller-inputs-010:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 7.BindingValidation/BindingValidation.md:
   binding-validation-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   binding-validation-002:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   binding-validation-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   binding-validation-004:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   binding-validation-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   binding-validation-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   binding-validation-007:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   binding-validation-008:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   binding-validation-009:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 8.HttpMessageBodies/HttpMessageBodies.md:
   http-message-bodies-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   http-message-bodies-002:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   http-message-bodies-003:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   http-message-bodies-004:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   http-message-bodies-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   http-message-bodies-006:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   http-message-bodies-007:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   http-message-bodies-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 9.RestResponses/RestResponses.md:
   rest-responses-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   rest-responses-002:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   rest-responses-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   rest-responses-004:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   rest-responses-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   rest-responses-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   rest-responses-007:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   rest-responses-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 10.ErrorHandling/ErrorHandling.md:
   error-handling-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   error-handling-002:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   error-handling-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   error-handling-004:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   error-handling-005:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   error-handling-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   error-handling-007:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   error-handling-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 11.ViewsForms/ViewsForms.md:
   views-forms-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   views-forms-002:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   views-forms-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   views-forms-004:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   views-forms-005:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   views-forms-006:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   views-forms-007:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   views-forms-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 12.SessionLocalization/SessionLocalization.md:
   session-localization-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   session-localization-002:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   session-localization-003:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   session-localization-004:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   session-localization-005:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   session-localization-006:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   session-localization-007:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   session-localization-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 13.FiltersInterceptors/FiltersInterceptors.md:
   filters-interceptors-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   filters-interceptors-002:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   filters-interceptors-003:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   filters-interceptors-004:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   filters-interceptors-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   filters-interceptors-006:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   filters-interceptors-007:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   filters-interceptors-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 14.FileResources/FileResources.md:
   file-resources-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   file-resources-002:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   file-resources-003:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   file-resources-004:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   file-resources-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   file-resources-006:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   file-resources-007:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   file-resources-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 15.CorsWebSecurity/CorsWebSecurity.md:
   cors-web-security-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   cors-web-security-002:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   cors-web-security-003:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   cors-web-security-004:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   cors-web-security-005:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   cors-web-security-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   cors-web-security-007:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   cors-web-security-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 16.HttpCaching/HttpCaching.md:
   http-caching-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   http-caching-002:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   http-caching-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   http-caching-004:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   http-caching-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   http-caching-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   http-caching-007:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 17.UriApiVersioning/UriApiVersioning.md:
   uri-api-versioning-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   uri-api-versioning-002:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   uri-api-versioning-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   uri-api-versioning-004:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   uri-api-versioning-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   uri-api-versioning-006:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   uri-api-versioning-007:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 18.MvcAsyncProcessing/MvcAsyncProcessing.md:
   mvc-async-processing-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   mvc-async-processing-002:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   mvc-async-processing-003:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   mvc-async-processing-004:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   mvc-async-processing-005:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   mvc-async-processing-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   mvc-async-processing-007:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   mvc-async-processing-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 19.MvcFunctionalEndpoints/MvcFunctionalEndpoints.md:
   mvc-functional-endpoints-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   mvc-functional-endpoints-002:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   mvc-functional-endpoints-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   mvc-functional-endpoints-004:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   mvc-functional-endpoints-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   mvc-functional-endpoints-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 20.WebfluxFoundations/WebfluxFoundations.md:
   webflux-foundations-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   webflux-foundations-002:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   webflux-foundations-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   webflux-foundations-004:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   webflux-foundations-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   webflux-foundations-006:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   webflux-foundations-007:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   webflux-foundations-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 21.WebfluxInfrastructure/WebfluxInfrastructure.md:
   webflux-infrastructure-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   webflux-infrastructure-002:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   webflux-infrastructure-003:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   webflux-infrastructure-004:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   webflux-infrastructure-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   webflux-infrastructure-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   webflux-infrastructure-007:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   webflux-infrastructure-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 22.WebfluxControllers/WebfluxControllers.md:
   webflux-controllers-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   webflux-controllers-002:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   webflux-controllers-003:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   webflux-controllers-004:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   webflux-controllers-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   webflux-controllers-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   webflux-controllers-007:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   webflux-controllers-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 23.WebfluxFunctionalEndpoints/WebfluxFunctionalEndpoints.md:
   webflux-functional-endpoints-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   webflux-functional-endpoints-002:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   webflux-functional-endpoints-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   webflux-functional-endpoints-004:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   webflux-functional-endpoints-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   webflux-functional-endpoints-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   webflux-functional-endpoints-007:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 24.WebfluxStreaming/WebfluxStreaming.md:
   webflux-streaming-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   webflux-streaming-002:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   webflux-streaming-003:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   webflux-streaming-004:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   webflux-streaming-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   webflux-streaming-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   webflux-streaming-007:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   webflux-streaming-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 25.SynchronousHttpClients/SynchronousHttpClients.md:
   synchronous-http-clients-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   synchronous-http-clients-002:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   synchronous-http-clients-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   synchronous-http-clients-004:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   synchronous-http-clients-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   synchronous-http-clients-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   synchronous-http-clients-007:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   synchronous-http-clients-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   synchronous-http-clients-009:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 26.WebClient/WebClient.md:
   web-client-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   web-client-002:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   web-client-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   web-client-004:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   web-client-005:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   web-client-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   web-client-007:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   web-client-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   web-client-009:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   web-client-010:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 27.HttpServiceClients/HttpServiceClients.md:
   http-service-clients-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   http-service-clients-002:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   http-service-clients-003:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   http-service-clients-004:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   http-service-clients-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   http-service-clients-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 28.WebsocketStomp/WebsocketStomp.md:
   websocket-stomp-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   websocket-stomp-002:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   websocket-stomp-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   websocket-stomp-004:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   websocket-stomp-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   websocket-stomp-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   websocket-stomp-007:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   websocket-stomp-008:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   websocket-stomp-009:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   websocket-stomp-010:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   websocket-stomp-011:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 29.WebTesting/WebTesting.md:
   web-testing-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   web-testing-002:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   web-testing-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   web-testing-004:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   web-testing-005:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   web-testing-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   web-testing-007:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   web-testing-008:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   web-testing-009:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   web-testing-010:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   web-testing-011:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 30.OperationsPractice/OperationsPractice.md:
   operations-practice-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   operations-practice-002:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   operations-practice-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   operations-practice-004:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   operations-practice-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   operations-practice-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   operations-practice-007:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   operations-practice-008:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   operations-practice-009:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   operations-practice-010:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   operations-practice-011:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false

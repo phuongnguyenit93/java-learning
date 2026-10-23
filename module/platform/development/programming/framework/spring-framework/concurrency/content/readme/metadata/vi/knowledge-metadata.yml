@@ -3,181 +3,225 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   execution-async-scheduling:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   spring-vs-jdk-concurrency:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   container-managed-task-infrastructure:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 2.Spring_Task_Executor/SpringExecutor.md:
   task-executor:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   task-executor-strategies:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   spring-executor-config:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   async-annotation:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   async-executor-selection:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   async-return-type:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   spring-executor-experiments:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 3.ContextPropagation/ContextPropagation.md:
   context-propagation-problem:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   task-decorator:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   context-propagating-task-decorator:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   context-ownership-boundaries:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   spring-async-demo:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 4.TaskScheduler/TaskScheduler.md:
   task-scheduler-purpose:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   scheduling-time-model:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   trigger-context:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   task-scheduler-implementations:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   scheduler-execution-models:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   runtime-rescheduling-cancellation:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   scheduler-lifecycle:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   quartz-boundary:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 5.Scheduling/Scheduling.md:
   scheduled-infrastructure:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   scheduled-trigger-modes:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   scheduled-cron-zone-timeunit:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   scheduled-scheduler-qualifier:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   scheduled-overlap:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   scheduled-failure:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   reactive-scheduled-methods:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   scheduling-configurer:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 6.VirtualThreadIntegration/VirtualThreadIntegration.md:
   virtual-thread-boundary:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   virtual-thread-task-executor:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   simple-async-task-executor-virtual:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   simple-async-task-scheduler:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   virtual-thread-fixed-delay:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   virtual-thread-concurrency-limits:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   virtual-thread-decision:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 7.LifecycleFailureProduction/LifecycleFailureProduction.md:
   executor-lifecycle:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   failure-boundaries:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   runtime-diagnostics:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   boot-auto-config-boundary:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   production-synthesis:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false

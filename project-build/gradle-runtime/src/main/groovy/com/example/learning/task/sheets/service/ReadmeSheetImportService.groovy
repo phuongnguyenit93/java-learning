@@ -68,11 +68,19 @@ class ReadmeSheetImportService {
                 .execute().values ?: []) as List<List<Object>>
         Map<String, List<String>> difficulties = buildSectionDifficulties(
                 parsed.groups as List<Map<String, Object>>, difficultyRows)
+        // AB is a per-lesson optional STEP 5 authoring field. Blank cells
+        // preserve human-edited metadata; explicit TRUE/FALSE override it.
+        List<List<Object>> importanceRows = (client.spreadsheets().values()
+                .get(spreadsheetId, "${tab}!AB20:AB${lastRow}")
+                .setValueRenderOption('UNFORMATTED_VALUE')
+                .execute().values ?: []) as List<List<Object>>
+        Map<String, List<Boolean>> importances = buildSectionImportances(
+                parsed.groups as List<Map<String, Object>>, importanceRows)
         File moduleDir = destination.parentFile.parentFile.parentFile.parentFile.parentFile
         ReadmeMetadataSyncService metadataService =
                 new ReadmeMetadataSyncService(org.gradle.api.logging.Logging.getLogger(ReadmeSheetImportService))
         String preparedMetadata = metadataService.prepareImportedMetadata(
-                moduleDir, documents, difficulties)
+                moduleDir, documents, difficulties, importances)
         Map<String, Object> sync =
                 syncDocuments(repositoryRoot, destination, documents, apply)
         Map metadataSync = metadataService.syncImportedMetadata(
@@ -268,6 +276,37 @@ class ReadmeSheetImportService {
                     throw new GradleException("Invalid Difficulty at O${child.row}: '${value}'.")
                 }
                 return value
+            }
+        }
+        return result
+    }
+
+    /** A blank AB cell means preserve existing metadata (or default false). */
+    static Map<String, List<Boolean>> buildSectionImportances(
+            List<Map<String, Object>> groups, List<List<Object>> rows) {
+        Map<String, List<Boolean>> result = new LinkedHashMap<>()
+        groups.eachWithIndex { Map group, int index ->
+            String filename = group.filename as String
+            String stem = filename.substring(0, filename.length() - 3)
+            String source = "${index + 1}.${stem}/${filename}"
+            result[source] = (group.children as List<Map>).collect { Map child ->
+                int offset = (child.row as int) - 20
+                List<Object> entry = offset >= 0 && offset < rows.size()
+                        ? (rows[offset] ?: []) : []
+                Object value = entry ? entry[0] : null
+                if (value == null || (value instanceof String && value.trim().isEmpty())) {
+                    return null
+                }
+                if (value instanceof Boolean) {
+                    return value
+                }
+                if (value instanceof String && value.trim().equalsIgnoreCase('TRUE')) {
+                    return true
+                }
+                if (value instanceof String && value.trim().equalsIgnoreCase('FALSE')) {
+                    return false
+                }
+                throw new GradleException("Invalid isImportant at AB${child.row}: '${value}'. Use TRUE or FALSE.")
             }
         }
         return result

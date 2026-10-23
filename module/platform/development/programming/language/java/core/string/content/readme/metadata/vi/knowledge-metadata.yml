@@ -3,1024 +3,1273 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-overview-002:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-overview-003:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-overview-004:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-overview-005:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-overview-006:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-overview-007:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-overview-008:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 2.StringCreation/StringCreation.md:
   string-creation-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-creation-002:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-creation-003:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-creation-004:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-creation-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-creation-006:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-creation-007:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-creation-008:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 3.UnicodeUtf16/UnicodeUtf16.md:
   unicode-utf16-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   unicode-utf16-002:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   unicode-utf16-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   unicode-utf16-004:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   unicode-utf16-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   unicode-utf16-006:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   unicode-utf16-007:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   unicode-utf16-008:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 4.StringImmutability/StringImmutability.md:
   string-immutability-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-immutability-002:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-immutability-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-immutability-004:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-immutability-005:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-immutability-006:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-immutability-007:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-immutability-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 5.StringPoolIntern/StringPoolIntern.md:
   string-pool-intern-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-pool-intern-002:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-pool-intern-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-pool-intern-004:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-pool-intern-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-pool-intern-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-pool-intern-007:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-pool-intern-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 6.StringAccess/StringAccess.md:
   string-access-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-access-002:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-access-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-access-004:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-access-005:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-access-006:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-access-007:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-access-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 7.StringExtraction/StringExtraction.md:
   string-extraction-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-extraction-002:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-extraction-003:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-extraction-004:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-extraction-005:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-extraction-006:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-extraction-007:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-extraction-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 8.StringComparison/StringComparison.md:
   string-comparison-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-comparison-002:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-comparison-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-comparison-004:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-comparison-005:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-comparison-006:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-comparison-007:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-comparison-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-comparison-009:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 9.StringSearch/StringSearch.md:
   string-search-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-search-002:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-search-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-search-004:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-search-005:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-search-006:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-search-007:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-search-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-search-009:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 10.StringWhitespace/StringWhitespace.md:
   string-whitespace-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-whitespace-002:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-whitespace-003:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-whitespace-004:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-whitespace-005:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-whitespace-006:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-whitespace-007:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-whitespace-008:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 11.StringTransformation/StringTransformation.md:
   string-transformation-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-transformation-002:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-transformation-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-transformation-004:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-transformation-005:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-transformation-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-transformation-007:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-transformation-008:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 12.CaseNormalization/CaseNormalization.md:
   case-normalization-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   case-normalization-002:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   case-normalization-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   case-normalization-004:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   case-normalization-005:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   case-normalization-006:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   case-normalization-007:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   case-normalization-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 13.StringConcatenation/StringConcatenation.md:
   string-concatenation-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-concatenation-002:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-concatenation-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-concatenation-004:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-concatenation-005:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-concatenation-006:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-concatenation-007:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-concatenation-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 14.StringBuilder/StringBuilder.md:
   string-builder-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-builder-002:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-builder-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-builder-004:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-builder-005:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-builder-006:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-builder-007:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-builder-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-builder-009:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-builder-010:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-builder-011:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-builder-012:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 15.StringBuffer/StringBuffer.md:
   string-buffer-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-buffer-002:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-buffer-003:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-buffer-004:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-buffer-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-buffer-006:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-buffer-007:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 16.StringJoining/StringJoining.md:
   string-joining-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-joining-002:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-joining-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-joining-004:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-joining-005:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-joining-006:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-joining-007:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 17.StringSplitting/StringSplitting.md:
   string-splitting-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-splitting-002:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-splitting-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-splitting-004:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-splitting-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-splitting-006:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-splitting-007:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-splitting-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-splitting-009:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 18.RegularExpressions/RegularExpressions.md:
   regular-expressions-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   regular-expressions-002:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   regular-expressions-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   regular-expressions-004:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   regular-expressions-005:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   regular-expressions-006:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   regular-expressions-007:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   regular-expressions-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   regular-expressions-009:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 19.RegexReplacement/RegexReplacement.md:
   regex-replacement-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   regex-replacement-002:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   regex-replacement-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   regex-replacement-004:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   regex-replacement-005:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   regex-replacement-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   regex-replacement-007:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   regex-replacement-008:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 20.StringFormatting/StringFormatting.md:
   string-formatting-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-formatting-002:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-formatting-003:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-formatting-004:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-formatting-005:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-formatting-006:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-formatting-007:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-formatting-008:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-formatting-009:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 21.TextBlocks/TextBlocks.md:
   text-blocks-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   text-blocks-002:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   text-blocks-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   text-blocks-004:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   text-blocks-005:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   text-blocks-006:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   text-blocks-007:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   text-blocks-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   text-blocks-009:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 22.StringLinesStreams/StringLinesStreams.md:
   string-lines-streams-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-lines-streams-002:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-lines-streams-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-lines-streams-004:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-lines-streams-005:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-lines-streams-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-lines-streams-007:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-lines-streams-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 23.StringEncoding/StringEncoding.md:
   string-encoding-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-encoding-002:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-encoding-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-encoding-004:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-encoding-005:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-encoding-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-encoding-007:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-encoding-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-encoding-009:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 24.ValueConversion/ValueConversion.md:
   value-conversion-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   value-conversion-002:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   value-conversion-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   value-conversion-004:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   value-conversion-005:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   value-conversion-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   value-conversion-007:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   value-conversion-008:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 25.StringCollections/StringCollections.md:
   string-collections-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-collections-002:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-collections-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-collections-004:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-collections-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-collections-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-collections-007:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 26.StringInternals/StringInternals.md:
   string-internals-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-internals-002:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-internals-003:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-internals-004:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-internals-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-internals-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-internals-007:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 27.StringPerformance/StringPerformance.md:
   string-performance-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-performance-002:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-performance-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-performance-004:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-performance-005:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-performance-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-performance-007:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-performance-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 28.StringApiDesign/StringApiDesign.md:
   string-api-design-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-api-design-002:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-api-design-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-api-design-004:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-api-design-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-api-design-006:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-api-design-007:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-api-design-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 29.StringTesting/StringTesting.md:
   string-testing-001:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-testing-002:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-testing-003:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-testing-004:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-testing-005:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-testing-006:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-testing-007:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-testing-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-testing-009:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 30.StringPractice/StringPractice.md:
   string-practice-001:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-practice-002:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-practice-003:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-practice-004:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-practice-005:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-practice-006:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-practice-007:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-practice-008:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   string-practice-009:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false

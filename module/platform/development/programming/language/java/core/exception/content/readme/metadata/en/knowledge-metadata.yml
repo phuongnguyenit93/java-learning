@@ -3,151 +3,187 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 2.ThrowableModel/ThrowableModel.md:
   throwable-hierarchy:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   error-vs-exception:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   stack-trace-cause:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 3.CheckedUncheckedContracts/CheckedUncheckedContracts.md:
   checked-exception:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   unchecked-exception:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   checked-vs-unchecked-design:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 4.ThrowingPropagation/ThrowingPropagation.md:
   throw-statement:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   throws-clause:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   exception-propagation:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   catch-selection:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   exception-chaining:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   lost-cause-pitfall:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   precise-rethrow:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   override-throws-rules:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   checked-exception-narrowing:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 5.HandlingCleanup/HandlingCleanup.md:
   try-catch-flow:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   multi-catch:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   finally-semantics:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   return-finally:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 6.ResourceSafeFailure/ResourceSafeFailure.md:
   autocloseable:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   resource-close-order:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   twr-vs-finally:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   primary-vs-suppressed:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   get-suppressed:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   close-failure:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   effective-final-resource:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 7.CustomExceptionsContext/CustomExceptionsContext.md:
   custom-exception-purpose:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   exception-context:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   exception-hierarchy-design:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 8.ExceptionBoundaryDesign/ExceptionBoundaryDesign.md:
   exception-boundaries:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   do-not-swallow:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   logging-boundary:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   exception-as-control-flow:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   cleanup-and-recovery:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 9.ExceptionSynthesis/ExceptionSynthesis.md:
   exception-synthesis:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false

@@ -3,15 +3,19 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   datadog-tracing:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   trace-id-and-span-id:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   custom-span:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false

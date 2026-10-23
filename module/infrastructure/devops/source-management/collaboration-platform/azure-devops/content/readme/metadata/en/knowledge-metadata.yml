@@ -3,274 +3,341 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   why-hosted-collaboration:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   git-versus-azure-repos-ownership:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   organization-project-repo-vocabulary:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   what-is-a-pull-request:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   reviewer-policy-and-merge-relation:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   boards-and-pipelines-boundary:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   trace-collaboration-surface:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 02-organizations-projects-repositories.md:
   organization-project-hierarchy:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   project-and-repository-boundary:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   multiple-git-repositories-in-project:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   repository-owner-admin-roles:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   project-visibility-versus-repo-access:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   public-project-retirement-2026:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   enable-disable-repos-service:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   verify-project-repo-structure:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 03-membership-and-access.md:
   access-level-vs-security-permission:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   readers-contributors-project-admins:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   direct-and-group-membership:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   permission-scopes-inheritance:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   allow-deny-not-set:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   explicit-inherited-effective-rights:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   access-to-read-contribute-admin:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   deny-and-specificity-exceptions:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   contribute-to-pr-vs-code:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   troubleshoot-effective-permissions:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 04-branches-forks-contributions.md:
   shared-branch-versus-fork:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   fork-origin-upstream:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   fork-permissions-and-policies:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   pull-request-source-target:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   create-contribution-request:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   draft-vs-ready-pull-request:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   verify-contribution-path:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 05-pull-request-review.md:
   pr-diff-and-description:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   reviewer-assignment-and-context:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   line-comments-discussion-threads:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   approve-versus-approve-suggestions:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   wait-for-author-versus-reject:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   review-vote-vs-pr-completion:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   author-revisions-and-re-review:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   verify-review-state:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 06-branch-policies-and-bypass.md:
   why-protect-target-branches:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   branch-permissions-vs-policies:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   required-vs-optional-policies:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   minimum-reviewers-and-self-approval:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   required-reviewers-and-comment-resolution:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   build-validation-status-checks:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   permitted-merge-types:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   bypass-on-pr-versus-push:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   diagnose-policy-failures:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 07-complete-pull-requests.md:
   merge-readiness-and-conflicts:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   complete-pr-versus-auto-complete:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   abandon-reactivate-versus-complete:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   pr-merge-options-and-traceability:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   work-item-and-pr-link:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   work-item-linking-policy:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   completion-record-and-work-item-state:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   target-permission-completion-scenario:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   diagnose-uncompleted-pr:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 08-end-to-end-azure-repos.md:
   map-org-project-repo:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   choose-contribution-path:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   open-draft-and-ready-pr:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   review-and-apply-policies:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   complete-with-work-item-trace:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   investigate-blocked-workflow:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   verify-end-to-end-evidence:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   handoff-to-neighboring-modules:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false

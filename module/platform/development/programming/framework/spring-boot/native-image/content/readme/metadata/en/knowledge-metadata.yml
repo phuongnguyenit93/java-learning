@@ -3,214 +3,266 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   native-image-problem:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   jvm-vs-native-runtime:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   native-image-benefits:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   native-image-cost-model:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   native-image-ownership-boundary:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 2.AOTPipeline/AOTPipeline.md:
   spring-aot-purpose:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aot-entry-model:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aot-generated-assets:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aot-condition-timing:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aot-runtime-handoff:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aot-diagnostic-evidence:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aot-auto-configuration-boundary:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 3.ClosedWorld/ClosedWorld.md:
   closed-world-model:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   fixed-build-time-classpath:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aot-bean-graph:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   profile-property-build-time:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   dynamic-behavior-review:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   closed-world-runtime-boundary:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 4.RuntimeHints/RuntimeHints.md:
   runtime-hints-purpose:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   runtime-hints-model:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   reflection-resource-proxy-hints:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   inferred-vs-explicit-hints:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   runtime-hints-registrar:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   reachability-metadata:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   missing-hint-diagnosis:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 5.BuildAndRun/BuildAndRun.md:
   native-build-workflow:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   graalvm-native-build-tools:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aot-to-native-compile:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   native-executable-output:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   native-buildpack-image:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   native-run-comparison:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   native-build-tooling-boundary:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 6.NativeTesting/NativeTesting.md:
   native-testing-purpose:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   jvm-first-test-strategy:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aot-jvm-validation:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   process-test-aot:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   native-test-execution:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   native-test-cost:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   native-testing-boundary:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 7.CompatibilityTradeoffs/CompatibilityTradeoffs.md:
   native-runtime-gains:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   native-build-cost:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   dependency-native-readiness:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   reachability-metadata-quality:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   native-failure-classification:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   when-not-native:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 8.ReadinessSynthesis/ReadinessSynthesis.md:
   native-readiness-flow:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   native-readiness-checklist:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   native-failure-location:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   native-delivery-choice:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   native-evidence-loop:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   native-module-handoffs:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false

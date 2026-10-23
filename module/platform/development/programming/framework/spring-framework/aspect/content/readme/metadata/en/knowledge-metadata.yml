@@ -3,321 +3,398 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   cross-cutting-demo:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   cross-cutting-conclusion:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 2.Terminology/Terminology.md:
   terminology-map:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   terminology-demo:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   spring-aop-vs-aspectj-style:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   terminology-conclusion:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 3.Proxy/Proxy.md:
   proxy-mental-model:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   proxy-demo:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   managed-vs-new-demo:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   proxy-strategies:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   proxy-conclusion:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 4.Pointcut/Pointcut.md:
   aop-declaration-styles:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   spring-aop-enablement:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   pointcut-mental-model:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   pointcut-designators-and-composition:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   pointcut-demo:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   spring-aop-pointcut-boundary:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   pointcut-conclusion:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 5.Annotation/Annotation.md:
   annotation-contract:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   annotation-demo:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   annotation-vs-expression:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   annotation-conclusion:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 6.Advice/Advice.md:
   advice-semantics:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   advice-success-demo:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   advice-failure-demo:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   advice-parameter-binding:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   advice-conclusion:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 7.Around/Around.md:
   around-mental-model:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   around-timing-demo:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   around-transform-demo:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   around-skip-demo:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   around-arguments-demo:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   around-exception-demo:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   around-conclusion:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 8.Ordering/Ordering.md:
   ordering-mental-model:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aspect-instantiation-models:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   ordering-demo:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   ordering-pitfall:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   ordering-conclusion:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 9.Introduction/Introduction.md:
   introduction-mental-model:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   declare-parents:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   introduction-demo:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   introduction-conclusion:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 10.ProxyFactory/ProxyFactory.md:
   proxy-factory-mental-model:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   jdk-vs-cglib:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   proxy-factory-demo:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   proxy-factory-conclusion:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 11.Advisor/Advisor.md:
   advisor-mental-model:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   pointcut-internals:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   static-dynamic-pointcut:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   advisor-demo:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   advisor-conclusion:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 12.Infrastructure/Infrastructure.md:
   auto-proxy-mental-model:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   framework-boot-aop-enablement-boundary:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   advised-interface:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   target-source-strategy:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   infrastructure-demo:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   infrastructure-conclusion:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 13.SelfInvocation/SelfInvocation.md:
   self-invocation-mental-model:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   self-invocation-demo:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   proxy-limitations:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   self-invocation-remediation:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   final-method-demo:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aop-debugging-checklist:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   self-invocation-conclusion:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 14.Patterns/Patterns.md:
   practical-patterns:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aop-design-tradeoffs:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   practical-demo:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aop-pitfalls:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   practical-conclusion:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 15.RuntimeBoundary/RuntimeBoundary.md:
   spring-aop-runtime:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   spring-aop-vs-aspectj:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   runtime-boundary-demo:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   framework-connections:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aop-end-to-end-synthesis:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   runtime-boundary-conclusion:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false

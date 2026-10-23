@@ -3,19 +3,24 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   ioc-di-why:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   ioc-di-before:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   ioc-di-solution:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   ioc-di-framework:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false

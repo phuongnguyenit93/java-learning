@@ -30,6 +30,9 @@ class ReadmeMetadataSyncService {
     static final boolean DEFAULT_REVIEWED =
             false
 
+    static final boolean DEFAULT_IS_IMPORTANT =
+            false
+
 
     static final Set<String> ALLOWED_DIFFICULTIES = [
             'BASIC',
@@ -170,7 +173,8 @@ ${moduleRoot.absolutePath}
      */
     String prepareImportedMetadata(File moduleDirectory,
                                    Map<String, String> documents,
-                                   Map<String, List<String>> difficulties) {
+                                   Map<String, List<String>> difficulties,
+                                   Map<String, List<Boolean>> importances = [:]) {
         File destination = new File(moduleDirectory,
                 "content/readme/metadata/vi/${METADATA_FILE_NAME}")
         Map existing = loadMap(destination)
@@ -190,8 +194,12 @@ ${moduleRoot.absolutePath}
             List<ReadmeKnowledgeParser.SectionCandidate> sections = parser.parse(virtualFile, markdown)
                     .findAll { it.valid }
             List<String> levels = difficulties[sourcePath] ?: []
+            List<Boolean> flags = importances[sourcePath] ?: Collections.nCopies(sections.size(), null)
             if (levels.size() != sections.size()) {
                 throw new GradleException("Knowledge Difficulty/ID count mismatch: ${sourcePath}")
+            }
+            if (flags.size() != sections.size()) {
+                throw new GradleException("Knowledge isImportant/ID count mismatch: ${sourcePath}")
             }
             sections.eachWithIndex { ReadmeKnowledgeParser.SectionCandidate section, int i ->
                 if (!allIds.add(section.id)) {
@@ -206,6 +214,11 @@ ${moduleRoot.absolutePath}
                         throw new GradleException("Invalid Sheet Knowledge Difficulty at ${sourcePath}: ${fromSheet}")
                     }
                     item.difficulty = fromSheet
+                }
+                // A blank AB cell preserves an existing human-owned flag.
+                // Only an explicit Sheet boolean overrides existing metadata.
+                if (flags[i] != null) {
+                    item.isImportant = flags[i]
                 }
                 // Blank O keeps an existing human-edited difficulty or applies
                 // the existing BASIC default for new sections.
@@ -525,6 +538,10 @@ Existing human-owned values are not overwritten automatically.
                     DEFAULT_REVIEWED
         }
 
+        if (!section.containsKey('isImportant') || section['isImportant'] == null) {
+            section['isImportant'] = DEFAULT_IS_IMPORTANT
+        }
+
 
         validateBooleanField(
                 section,
@@ -539,6 +556,14 @@ Existing human-owned values are not overwritten automatically.
         validateBooleanField(
                 section,
                 'reviewed',
+                modulePath,
+                language,
+                sourcePath,
+                sectionId
+        )
+        validateBooleanField(
+                section,
+                'isImportant',
                 modulePath,
                 language,
                 sourcePath,

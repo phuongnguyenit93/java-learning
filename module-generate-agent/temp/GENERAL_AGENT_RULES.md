@@ -62,6 +62,11 @@ Các quy định chung áp dụng cho các tác vụ generate module trong thư 
 
 Áp dụng đồng thời cổng kiểm tra context, **hợp đồng giao việc Prime → Worker**, giới hạn/tái sử dụng worker, quy tắc định vị Google Sheets và **toàn bộ rules hiện hành trong `module-generate-agent/rules/`** (bao gồm `PRIME_RULES.md`). Các quy định mới sẽ được bổ sung khi người dùng yêu cầu.
 
+### isImportant: bổ sung metadata từ STEP 5
+
+Knowledge metadata có isImportant:boolean mặc định false. STEP 5 đánh giá trực tiếp bài của từng Menu Cấp 2 và ghi cột AB với TRUE/FALSE theo chapter ownership; nhãn AB19=isImportant, AB20:AB700 dropdown strict. Sheet importer chỉ lấy giá trị AB hợp lệ; AB trống bảo toàn metadata cũ hoặc dùng default false khi tạo section mới. syncMetadataReadme phải bảo toàn TRUE do người biên soạn đặt; Portal Knowledge projection xuất trường boolean vào index.json; UI tô nhạt và đánh sao vàng nếu TRUE. Không sử dụng O (Difficulty) để suy ra isImportant.
+
+
 ## 6. Prime kiểm tra/đồng bộ Google Sheets → ĐÚNG MỘT module sau STEP 2, 3, 4, 5, 8, 9, 10
 
 - Với **STEP 2, 3, 4, 5, 7, 8 và 9**, **chính Prime** chịu trách nhiệm gọi task **module-local ByLocation** ở checkpoint chỉ khi **tất cả sub-worker của TOÀN tab hoàn thành, giải phóng ownership, Prime exact readback + QA PASS**. Không gọi từ worker, không chạy sau từng hàng/chương hoặc với trial một phần tab. **STEP 6 triển khai Java API không ghi Sheet hay dùng Sheets importer**; STEP Swagger info/examples có hợp đồng riêng sau.

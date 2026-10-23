@@ -3,19 +3,24 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   jpa-why:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   jpa-model:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   jpa-provider:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   jpa-boundary:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false

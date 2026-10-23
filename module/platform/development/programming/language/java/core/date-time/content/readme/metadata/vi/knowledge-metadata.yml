@@ -3,174 +3,215 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   immutable-date-time:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   choose-date-time-type:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 2.LocalDate/LocalDate.md:
   local-date-model:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   local-date-arithmetic:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   calendar-validity:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 3.LocalTime/LocalTime.md:
   local-time-model:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   local-time-precision:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   local-time-wrap:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 4.LocalDateTime/LocalDateTime.md:
   local-date-time-model:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   local-date-time-ambiguity:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   local-date-time-use-cases:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 5.Instant/Instant.md:
   instant-model:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   epoch-time:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   instant-use-cases:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 6.ZoneOffsetZoneId/ZoneOffsetZoneId.md:
   zone-offset:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   zone-id:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   zone-rules:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 7.ZonedOffsetDateTime/ZonedOffsetDateTime.md:
   zoned-date-time:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   offset-date-time:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   same-instant-vs-same-local:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   zone-conversion:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 8.DurationPeriod/DurationPeriod.md:
   duration-time-based:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   period-date-based:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   duration-vs-period:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 9.FormattingParsing/FormattingParsing.md:
   date-time-formatter:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   format-patterns:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   strict-smart-lenient:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   parse-target-type:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 10.ArithmeticComparison/ArithmeticComparison.md:
   temporal-arithmetic:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   between-semantics:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   date-time-comparison:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   dst-gap-overlap:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   business-calendar-boundary:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 11.Clock/Clock.md:
   clock-abstraction:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   fixed-clock-testing:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   clock-injection:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 12.LegacyInteropPitfalls/LegacyInteropPitfalls.md:
   legacy-date-calendar:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   legacy-conversion:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   system-default-zone-risk:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   timestamp-storage-boundary:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false

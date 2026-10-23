@@ -3,280 +3,348 @@
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   testability-through-ioc:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   unit-vs-integration-tests:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   test-scope-ladder:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   testing-boundaries:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 2.TestContextFramework/TestContextFramework.md:
   testcontext-framework-role:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   testcontext-core-abstractions:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   testcontext-bootstrap:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   smart-context-loading:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   test-execution-listeners:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   test-framework-integration:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 3.ContextConfiguration/ContextConfiguration.md:
   context-configuration-model:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   configuration-classes-and-locations:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   context-loader-selection:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   configuration-inheritance:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   context-hierarchy:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   web-application-context-configuration:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 4.TestFixtures/TestFixtures.md:
   fixture-dependency-injection:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   test-instance-and-constructor-injection:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   application-context-access:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   web-application-context-fixtures:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   request-and-session-scoped-fixtures:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 5.TestEnvironment/TestEnvironment.md:
   active-profiles:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   profile-resolution-and-inheritance:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   test-property-source:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   test-property-precedence:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   dynamic-property-source:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   environment-inheritance-and-cache-identity:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 6.ContextCaching/ContextCaching.md:
   context-cache-purpose:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   context-cache-key:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   context-cache-process-boundary:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   cache-size-and-eviction:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   dirties-context:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   context-failure-threshold:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   parallel-test-execution:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 7.TransactionalDatabaseTesting/TransactionalDatabaseTesting.md:
   test-managed-transactions:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   transaction-manager-resolution:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   transactional-test-semantics:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   rollback-and-commit:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   testtransaction-programmatic-control:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   transaction-lifecycle-callbacks:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   sql-test-fixtures:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   jdbc-test-utilities:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   transaction-testing-pitfalls:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 8.MockMvcTesting/MockMvcTesting.md:
   mockmvc-purpose-and-model:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   servlet-api-mocks:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   mockmvc-setup-strategies:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   request-building-and-dispatch:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   response-assertions:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   mvc-behavior-under-test:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   async-request-testing:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   mockmvc-limitations-and-live-server:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
 9.WebTestClientAndClientTesting/WebTestClientAndClientTesting.md:
   webtestclient-purpose-and-model:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   webflux-binding-modes:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   mockmvc-webtestclient-binding:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   live-server-binding:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
+    isImportant: false
   webtestclient-assertions:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   mockrestservice-server:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   mock-server-vs-live-integration:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 10.TestLifecycle/TestLifecycle.md:
   test-lifecycle-callbacks:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   testexecutionlistener-ordering:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   test-execution-events:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   application-event-recording:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   support-classes-and-composed-annotations:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   aot-test-support:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   execution-mode-constraints:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   test-scope-decision:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   testing-strategy-synthesis:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false

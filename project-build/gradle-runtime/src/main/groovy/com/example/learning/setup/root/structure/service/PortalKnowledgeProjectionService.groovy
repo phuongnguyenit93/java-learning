@@ -700,6 +700,7 @@ Section ids must be unique within one module/language.
                                 title      : candidate.title,
                                 content    : publicPath,
                                 difficulty : sectionMetadata.difficulty,
+                                isImportant: sectionMetadata.isImportant,
                                 aiGenerated: sectionMetadata.aiGenerated,
                                 reviewed   : sectionMetadata.reviewed
                         ]
@@ -972,9 +973,21 @@ ${ReadmeMetadataSyncService.ALLOWED_DIFFICULTIES.join(', ')}
                         sectionId
                 )
 
+        boolean isImportant =
+                resolveBooleanMetadata(
+                        section,
+                        'isImportant',
+                        ReadmeMetadataSyncService.DEFAULT_IS_IMPORTANT,
+                        routeId,
+                        language,
+                        sourcePath,
+                        sectionId
+                )
+
 
         return [
                 difficulty : difficulty,
+                isImportant: isImportant,
                 aiGenerated: aiGenerated,
                 reviewed   : reviewed
         ]

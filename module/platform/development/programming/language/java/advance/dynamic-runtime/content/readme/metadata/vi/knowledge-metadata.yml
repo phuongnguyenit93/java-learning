@@ -3,182 +3,226 @@
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   dynamic-runtime-problem-space:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   direct-reflection-invoke-boundary:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   dynamic-runtime-boundaries:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 2.TypedInvocation/TypedInvocation.md:
   method-type-model:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   method-handle-model:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   signature-polymorphism:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   invoke-exact-vs-invoke:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   invocation-type-failures:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 3.LookupAccess/LookupAccess.md:
   lookup-purpose:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   lookup-class-and-modes:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   lookup-context:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   member-handle-lookup:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   lookup-access-failures:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 4.MethodHandleAdaptation/MethodHandleAdaptation.md:
   method-handle-adaptation-model:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   method-handle-type-adaptation:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   method-handle-binding:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   method-handle-transformations:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   method-handle-composition:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   method-handle-guards:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 5.CallSite/CallSite.md:
   call-site-model:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   call-site-type-invariant:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   call-site-kinds:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   call-site-target-updates:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   call-site-linkage-vs-target-change:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 6.InvokeDynamic/InvokeDynamic.md:
   invokedynamic-purpose:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   bootstrap-method-contract:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   bootstrap-linkage-inputs:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   invokedynamic-linkage-lifecycle:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   invokedynamic-linkage-failures:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   invokedynamic-runtime-consumers:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
 7.VarHandle/VarHandle.md:
   var-handle-purpose:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   variable-and-coordinate-types:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   var-handle-creation:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   var-handle-access-modes:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   var-handle-access-mode-type:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   var-handle-atomic-updates:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   var-handle-memory-model-boundary:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
 8.Synthesis/Synthesis.md:
   choose-invocation-mechanism:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   choose-variable-access-mechanism:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   dynamic-runtime-failure-model:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   dynamic-linkage-end-to-end:
     difficulty: ADVANCED
     aiGenerated: true
     reviewed: false
+    isImportant: false
   runtime-framework-use-cases:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
   dynamic-runtime-handoffs:
     difficulty: INTERMEDIATE
     aiGenerated: true
     reviewed: false
+    isImportant: false
