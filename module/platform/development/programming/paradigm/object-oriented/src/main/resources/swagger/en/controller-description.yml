@@ -1,18 +1,126 @@
-BasicsExperimentController:
+AbstractionExperimentsController:
   description: |-
-    <h2>Object-oriented thinking experiments</h2>
-    <p>Three bounded runtime scenarios: BankAccount state, OrderAggregate lifecycle and ShippingPolicy polymorphism. HTTP controllers adapt JSON only; domain behavior lives in services and models. Every request is isolated, without real money or persistence.</p>
+    <h2>Abstraction Experiments Controller</h2>
+    <p>This is a description</p>
   readmeRelated:
     file: ''
 ClassesExperimentController:
   description: |-
-    <h2>Class members and behavior experiments</h2>
-    <p>Observe InventoryItem fields/methods, Workshop instances and reference aliases, and BankAccount invariants and transfer behavior. Each in-memory scenario has bounded operations and rejects invalid mutations.</p>
+    <h2>Classes Experiment Controller</h2>
+    <p>This is a description</p>
+  readmeRelated:
+    file: ''
+ClassDesignExperimentsController:
+  description: |-
+    <h2>Class Design Experiments Controller</h2>
+    <p>This is a description</p>
+  readmeRelated:
+    file: ''
+CompositionExperimentController:
+  description: |-
+    <h2>Composition Experiment Controller</h2>
+    <p>This is a description</p>
+  readmeRelated:
+    file: ''
+DesignPatternExperimentController:
+  description: |-
+    <h2>Design Pattern Experiment Controller</h2>
+    <p>This is a description</p>
+  readmeRelated:
+    file: ''
+DesignPitfallExperimentController:
+  description: |-
+    <h2>Design Pitfall Experiment Controller</h2>
+    <p>This is a description</p>
+  readmeRelated:
+    file: ''
+EncapsulationExperimentController:
+  description: |-
+    <h2>Encapsulation Experiment Controller</h2>
+    <p>This is a description</p>
+  readmeRelated:
+    file: ''
+InheritanceExperimentsController:
+  description: |-
+    <h2>Inheritance Experiments Controller</h2>
+    <p>This is a description</p>
+  readmeRelated:
+    file: ''
+InterfaceExperimentsController:
+  description: |-
+    <h2>Interface Experiments Controller</h2>
+    <p>This is a description</p>
+  readmeRelated:
+    file: ''
+LanguageMechanicsExperimentsController:
+  description: |-
+    <h2>Language Mechanics Experiments Controller</h2>
+    <p>This is a description</p>
+  readmeRelated:
+    file: ''
+LifecycleExperimentController:
+  description: |-
+    <h2>Lifecycle Experiment Controller</h2>
+    <p>This is a description</p>
+  readmeRelated:
+    file: ''
+ModelingExperimentController:
+  description: |-
+    <h2>Modeling Experiment Controller</h2>
+    <p>This is a description</p>
   readmeRelated:
     file: ''
 ObjectExperimentsController:
   description: |-
-    <h2>Object identity, copying and collaboration experiments</h2>
-    <p>Explore aliases, Java pass-by-value, value equality, shallow/deep copies, Optional absence and a traced checkout workflow. Side effects are simulated and scoped to one request.</p>
+    <h2>Object Experiments Controller</h2>
+    <p>This is a description</p>
+  readmeRelated:
+    file: ''
+BasicsExperimentController:
+  description: |-
+    <h2>Basics Experiment Controller</h2>
+    <p>This is a description</p>
+  readmeRelated:
+    file: ''
+PolymorphismExperimentsController:
+  description: |-
+    <h2>Polymorphism Experiments Controller</h2>
+    <p>This is a description</p>
+  readmeRelated:
+    file: ''
+PracticeExperimentController:
+  description: |-
+    <h2>Practice Experiment Controller</h2>
+    <p>This is a description</p>
+  readmeRelated:
+    file: ''
+RefactoringExperimentsController:
+  description: |-
+    <h2>Refactoring Experiments Controller</h2>
+    <p>This is a description</p>
+  readmeRelated:
+    file: ''
+RelationshipsExperimentsController:
+  description: |-
+    <h2>Relationships Experiments Controller</h2>
+    <p>This is a description</p>
+  readmeRelated:
+    file: ''
+SolidExperimentController:
+  description: |-
+    <h2>Solid Experiment Controller</h2>
+    <p>This is a description</p>
+  readmeRelated:
+    file: ''
+SubtypingExperimentController:
+  description: |-
+    <h2>Subtyping Experiment Controller</h2>
+    <p>This is a description</p>
+  readmeRelated:
+    file: ''
+TestingExperimentController:
+  description: |-
+    <h2>Testing Experiment Controller</h2>
+    <p>This is a description</p>
   readmeRelated:
     file: ''

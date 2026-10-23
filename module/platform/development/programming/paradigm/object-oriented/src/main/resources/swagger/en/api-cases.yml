@@ -1,0 +1,2463 @@
+AbstractionExperimentsController:
+  shippingQuote(ShippingQuoteRequest):
+    methodName: shippingQuote
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/abstraction/shipping/quote
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+  seatScenario(SeatScenarioRequest):
+    methodName: seatScenario
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/abstraction/seats/simulate
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+  leaveEvaluation(LeaveEvaluationRequest):
+    methodName: leaveEvaluation
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/abstraction/leave/evaluate
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+  catalogSearch(CatalogSearchRequest):
+    methodName: catalogSearch
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/abstraction/catalog/search
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+ClassesExperimentController:
+  inventory(InventoryRequest):
+    methodName: inventory
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/classes/inventory/experiment
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+  workshops(WorkshopRequest):
+    methodName: workshops
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/classes/workshops/experiment
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+  bank(BankRequest):
+    methodName: bank
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/classes/bank/experiment
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+ClassDesignExperimentsController:
+  library(LibraryRequest):
+    methodName: library
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/class-design/library/experiment
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+  checkout(CheckoutRequest):
+    methodName: checkout
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/class-design/checkout/experiment
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+  transfer(TransferRequest):
+    methodName: transfer
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/class-design/transfers/experiment
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+CompositionExperimentController:
+  notification(NotificationRequest):
+    methodName: notification
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/composition/notifications
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+  policies(PolicyRequest):
+    methodName: policies
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/composition/policies
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+  placeOrder(PlaceOrderRequest):
+    methodName: placeOrder
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/composition/orders
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+  resources(ResourceRequest):
+    methodName: resources
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/composition/resources
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+DesignPatternExperimentController:
+  pricing(PricingRequest):
+    methodName: pricing
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/design-patterns/pricing/experiment
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+  tasks(TasksRequest):
+    methodName: tasks
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/design-patterns/tasks/experiment
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+  report(ReportRequest):
+    methodName: report
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/design-patterns/reports/generate
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+DesignPitfallExperimentController:
+  seats(SeatsRequest):
+    methodName: seats
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/design-pitfalls/seats/experiment
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+  mutableKey(MutableKeyRequest):
+    methodName: mutableKey
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/design-pitfalls/mutable-key/experiment
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+  checkout(CheckoutRequest):
+    methodName: checkout
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/design-pitfalls/checkout/refactor
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+EncapsulationExperimentController:
+  cart(CartRequest):
+    methodName: cart
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/encapsulation/cart/experiment
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+  stock(StockRequest):
+    methodName: stock
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/encapsulation/stock/experiment
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+  snapshot(EventRequest):
+    methodName: snapshot
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/encapsulation/event-snapshot/experiment
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+  order(OrderRequest):
+    methodName: order
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/encapsulation/order/experiment
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+InheritanceExperimentsController:
+  calculatePay(PayrollRequest):
+    methodName: calculatePay
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/inheritance/payroll/calculate
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+  compareDelivery(DeliveryRequest):
+    methodName: compareDelivery
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/inheritance/delivery/compare
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+  constructorTrace(ConstructorRequest):
+    methodName: constructorTrace
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/inheritance/constructors/trace
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+  resolveCapabilities(CapabilitiesRequest):
+    methodName: resolveCapabilities
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/inheritance/capabilities/resolve
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+InterfaceExperimentsController:
+  shipping(ShippingRequest):
+    methodName: shipping
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/interfaces/shipping/quote
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+  documents(DocumentRequest):
+    methodName: documents
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/interfaces/documents/experiment
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+  checkout(CheckoutRequest):
+    methodName: checkout
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/interfaces/checkout/experiment
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+LanguageMechanicsExperimentsController:
+  generics(GenericBatchRequest):
+    methodName: generics
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/language-mechanics/generics/experiment
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+  stock(StockRequest):
+    methodName: stock
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/language-mechanics/stock/experiment
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+  shipping(ShippingRequest):
+    methodName: shipping
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/language-mechanics/shipping/experiment
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+LifecycleExperimentController:
+  create(CreationRequest):
+    methodName: create
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/lifecycle/creation
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+  references(ReferenceRequest):
+    methodName: references
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/lifecycle/references
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+  resources(ResourceRequest):
+    methodName: resources
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/lifecycle/resources
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+  publication(PublicationRequest):
+    methodName: publication
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/lifecycle/publication
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+ModelingExperimentController:
+  library(LibraryRequest):
+    methodName: library
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/modeling/library/experiment
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+  orders(OrderRequest):
+    methodName: orders
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/modeling/orders/experiment
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+ObjectExperimentsController:
+  references(ObjectExperimentDto.ReferenceRequest):
+    methodName: references
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/objects/references
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+  equality(ObjectExperimentDto.EqualityRequest):
+    methodName: equality
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/objects/equality
+    usage: true
+    cases:
+    - id: same_value
+      title: Distinct objects with equal values
+      description: Two separately created records compare equal and hash alike; a
+        HashSet retains one entry.
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body:
+          firstCode: SKU-01
+          secondCode: SKU-01
+      status: 200
+      response:
+        sameInstance: false
+        valueEquals: true
+        hashCodesEqual: true
+        hashSetSize: 1
+        defaultObjectEquals: false
+        aliasIsSameInstance: true
+    - id: different_value
+      title: Distinct product codes
+      description: Different record values are not equal and occupy two HashSet entries.
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body:
+          firstCode: A
+          secondCode: B
+      status: 200
+      response:
+        sameInstance: false
+        valueEquals: false
+        hashCodesEqual: false
+        hashSetSize: 2
+        defaultObjectEquals: false
+        aliasIsSameInstance: true
+    - id: invalid_code
+      title: Reject an empty product code
+      description: A blank firstCode is rejected with HTTP 400.
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body:
+          firstCode: ''
+          secondCode: A
+      status: 400
+      response:
+        error: firstCode must contain 1 to 80 nonblank characters
+  copies(ObjectExperimentDto.CopyRequest):
+    methodName: copies
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/objects/copies
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+  absence(ObjectExperimentDto.AbsenceRequest):
+    methodName: absence
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/objects/absence
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+  checkout(ObjectExperimentDto.CheckoutRequest):
+    methodName: checkout
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/objects/checkout
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+BasicsExperimentController:
+  simulateAccount(AccountSimulationRequest):
+    methodName: simulateAccount
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/basics/accounts/simulate
+    usage: true
+    cases:
+    - id: case_001
+      title: Successful deposit and withdrawal
+      description: A request-local account receives a deposit and a valid withdrawal;
+        the timeline exposes state before and after each action.
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers:
+          Content-Type: application/json
+        body:
+          accountId: DEMO-001
+          openingBalanceCents: 10000
+          actions:
+          - action: DEPOSIT
+            amountCents: 2500
+          - action: WITHDRAW
+            amountCents: 4000
+      status: 200
+      response:
+        accountId: DEMO-001
+        openingBalanceCents: 10000
+        finalBalanceCents: 8500
+        timeline:
+        - step: 1
+          action: DEPOSIT
+          amountCents: 2500
+          balanceBeforeCents: 10000
+          balanceAfterCents: 12500
+          accepted: true
+          reason: null
+        - step: 2
+          action: WITHDRAW
+          amountCents: 4000
+          balanceBeforeCents: 12500
+          balanceAfterCents: 8500
+          accepted: true
+          reason: null
+      detailDescription: |-
+        <p>Successful request-local account experiment. The Controller accepts POST /oop/basics/accounts/simulate and delegates to BasicsExperimentService.simulateAccount; amounts are integer cents, not persisted account balances.</p>
+        <ol>
+        <li>requireSteps accepts two actions within the 1–20 limit. BankAccount(&#39;DEMO-001&#39;,10000) validates the identifier and nonnegative opening balance.</li>
+        <li>DEPOSIT 2500 calls BankAccount.deposit: requirePositive passes and Math.addExact calculates 10000+2500=12500. Timeline step 1 records before=10000, after=12500, accepted=true.</li>
+        <li>WITHDRAW 4000 invokes BankAccount.withdraw. Since 4000&lt;=12500, the account becomes 8500. Step 2 records before=12500, after=8500, accepted=true and reason=null.</li>
+        <li>No exception escapes the service; AccountSimulationResponse reports finalBalanceCents=8500 and the two timeline entries, with HTTP 200.</li>
+        </ol>
+        <pre><code>controller.simulateAccount(request)
+          -&gt; service.simulateAccount(request)
+          -&gt; new BankAccount(&quot;DEMO-001&quot;,10000)
+          -&gt; deposit(2500): 10000 -&gt; 12500
+          -&gt; withdraw(4000): 12500 -&gt; 8500</code></pre>
+    - id: case_002
+      title: Insufficient funds without aborting the simulation
+      description: A withdrawal exceeding the balance is rejected in the business
+        timeline (HTTP 200); a later deposit still succeeds.
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers:
+          Content-Type: application/json
+        body:
+          accountId: WALLET-2
+          openingBalanceCents: 500
+          actions:
+          - action: WITHDRAW
+            amountCents: 800
+          - action: DEPOSIT
+            amountCents: 100
+      status: 200
+      response:
+        accountId: WALLET-2
+        openingBalanceCents: 500
+        finalBalanceCents: 600
+        timeline:
+        - step: 1
+          action: WITHDRAW
+          amountCents: 800
+          balanceBeforeCents: 500
+          balanceAfterCents: 500
+          accepted: false
+          reason: Insufficient balance
+        - step: 2
+          action: DEPOSIT
+          amountCents: 100
+          balanceBeforeCents: 500
+          balanceAfterCents: 600
+          accepted: true
+          reason: null
+      detailDescription: |-
+        <p>The first withdrawal is rejected at the domain level, but the request is valid and later actions still execute.</p>
+        <ol>
+        <li>BasicsExperimentService constructs BankAccount(&#39;WALLET-2&#39;,500) and iterates the two actions. WITHDRAW 800 reaches BankAccount.withdraw(800).</li>
+        <li>Because 800 exceeds 500, withdraw returns false without throwing. The service records accepted=false, reason=&#39;Insufficient balance&#39;, and unchanged before/after balances of 500.</li>
+        <li>The following DEPOSIT 100 succeeds and raises the balance from 500 to 600; timeline step 2 has accepted=true and reason=null.</li>
+        <li>The failed action is not a failed HTTP request. The service returns AccountSimulationResponse(finalBalanceCents=600), so HTTP status is 200 rather than 400.</li>
+        </ol>
+        <pre><code>withdraw(800) when balance=500 -&gt; false, unchanged
+        deposit(100) -&gt; balance=600
+        HTTP 200; timeline[0].accepted=false; timeline[1].accepted=true</code></pre>
+    - id: case_003
+      title: Zero deposit rejected without state mutation
+      description: An invalid deposit violates the BankAccount invariant and is recorded
+        in the timeline without interrupting later actions.
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers:
+          Content-Type: application/json
+        body:
+          accountId: BALANCE
+          openingBalanceCents: 500
+          actions:
+          - action: DEPOSIT
+            amountCents: 0
+          - action: DEPOSIT
+            amountCents: 100
+      status: 200
+      response:
+        accountId: BALANCE
+        openingBalanceCents: 500
+        finalBalanceCents: 600
+        timeline:
+        - step: 1
+          action: DEPOSIT
+          amountCents: 0
+          balanceBeforeCents: 500
+          balanceAfterCents: 500
+          accepted: false
+          reason: amountCents must be positive
+        - step: 2
+          action: DEPOSIT
+          amountCents: 100
+          balanceBeforeCents: 500
+          balanceAfterCents: 600
+          accepted: true
+          reason: null
+      detailDescription: |-
+        <p>A zero-amount deposit violates the BankAccount invariant, but the service catches the exception for that one action and continues.</p>
+        <ol>
+        <li>Create account BALANCE with openingBalanceCents=500; the two-element actions list passes requireSteps.</li>
+        <li>DEPOSIT 0 calls BankAccount.deposit(0), where requirePositive throws IllegalArgumentException(&#39;amountCents must be positive&#39;) before mutating the balance.</li>
+        <li>The catch inside BasicsExperimentService&#39;s action loop records accepted=false, the exact error reason, and before=after=500 for step 1.</li>
+        <li>The next DEPOSIT 100 succeeds, leaving 600. Since the per-action exception was handled, the overall response is HTTP 200 rather than 400.</li>
+        </ol>
+        <pre><code>deposit(0) -&gt; IllegalArgumentException
+        per-action catch -&gt; accepted=false, balance=500
+        deposit(100) -&gt; balance=600; HTTP 200</code></pre>
+    - id: case_004
+      title: Invalid account identifier — HTTP 400
+      description: An invalid request identifier fails before simulation and the scoped
+        exception handler returns INVALID_INPUT.
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers:
+          Content-Type: application/json
+        body:
+          accountId: bad id
+          openingBalanceCents: 100
+          actions:
+          - action: DEPOSIT
+            amountCents: 50
+      status: 400
+      response:
+        code: INVALID_INPUT
+        message: accountId must contain 1-40 letters, digits, '_' or '-'
+      detailDescription: |-
+        <p>The account identifier &#39;bad id&#39; contains a space and cannot satisfy BankAccount&#39;s constructor invariant, so this is a request-level HTTP 400 error.</p>
+        <ol>
+        <li>BasicsExperimentController forwards the request to the service; the one-element actions list passes requireSteps.</li>
+        <li>new BankAccount(&#39;bad id&#39;,100) checks [A-Za-z0-9_-]{1,40} and throws IllegalArgumentException before the actions loop.</li>
+        <li>This constructor failure is outside the per-action try/catch. BasicsExperimentExceptionHandler, scoped to BasicsExperimentController, catches it.</li>
+        <li>The handler returns HTTP 400 with code=&#39;INVALID_INPUT&#39; and the exact identifier rule message. There is no AccountSimulationResponse or timeline because construction failed.</li>
+        </ol>
+        <pre><code>new BankAccount(&quot;bad id&quot;,100)
+          -&gt; invalid accountId regex -&gt; IllegalArgumentException
+          -&gt; BasicsExperimentExceptionHandler.invalidInput
+          -&gt; HTTP 400 {code:&quot;INVALID_INPUT&quot;,message:&quot;accountId must contain 1-40 letters, digits, &#39;_&#39; or &#39;-&#39;&quot;}</code></pre>
+  simulateOrder(OrderSimulationRequest):
+    methodName: simulateOrder
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/basics/orders/simulate
+    usage: true
+    cases:
+    - id: case_001
+      title: Add two lines and confirm the order
+      description: The aggregate transitions from DRAFT to CONFIRMED; totals and line
+        counts are derived from real state.
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers:
+          Content-Type: application/json
+        body:
+          orderId: ORD-100
+          steps:
+          - action: ADD_LINE
+            sku: BOOK
+            quantity: 2
+            unitPriceCents: 1250
+          - action: ADD_LINE
+            sku: PEN
+            quantity: 3
+            unitPriceCents: 200
+          - action: CONFIRM
+      status: 200
+      response:
+        orderId: ORD-100
+        finalStatus: CONFIRMED
+        totalCents: 3100
+        timeline:
+        - step: 1
+          action: ADD_LINE
+          statusBefore: DRAFT
+          statusAfter: DRAFT
+          totalBeforeCents: 0
+          totalAfterCents: 2500
+          lineCountAfter: 1
+          accepted: true
+          reason: null
+        - step: 2
+          action: ADD_LINE
+          statusBefore: DRAFT
+          statusAfter: DRAFT
+          totalBeforeCents: 2500
+          totalAfterCents: 3100
+          lineCountAfter: 2
+          accepted: true
+          reason: null
+        - step: 3
+          action: CONFIRM
+          statusBefore: DRAFT
+          statusAfter: CONFIRMED
+          totalBeforeCents: 3100
+          totalAfterCents: 3100
+          lineCountAfter: 2
+          accepted: true
+          reason: null
+      detailDescription: |-
+        <p>A valid order goes from DRAFT to CONFIRMED after two line items are added to an OrderAggregate.</p>
+        <ol>
+        <li>The Controller delegates to simulateOrder with orderId=&#39;ORD-100&#39; and three steps; requireSteps allows 1–20 operations. new OrderAggregate starts in DRAFT with totalCents=0 and an empty list.</li>
+        <li>ADD_LINE BOOK validates the SKU, quantity=2 and unitPriceCents=1250. Math.multiplyExact yields 2500 and total becomes 2500; lineCountAfter=1.</li>
+        <li>ADD_LINE PEN contributes 3×200=600 and Math.addExact produces total=3100 with two lines. Both additions keep status DRAFT and accepted=true.</li>
+        <li>CONFIRM calls order.confirm(), verifies DRAFT with nonempty lines, and changes status to CONFIRMED without changing total=3100. HTTP 200 returns three before/after timeline entries.</li>
+        </ol>
+        <pre><code>new OrderAggregate(&quot;ORD-100&quot;) // DRAFT, total=0
+        addLine(&quot;BOOK&quot;,2,1250) -&gt; total=2500
+        addLine(&quot;PEN&quot;,3,200) -&gt; total=3100
+        confirm() -&gt; CONFIRMED; HTTP 200</code></pre>
+    - id: case_002
+      title: An empty order cannot be confirmed
+      description: The business rule rejects CONFIRM and keeps the order DRAFT; HTTP
+        200 carries the failure reason in the timeline.
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers:
+          Content-Type: application/json
+        body:
+          orderId: ORD-EMPTY
+          steps:
+          - action: CONFIRM
+      status: 200
+      response:
+        orderId: ORD-EMPTY
+        finalStatus: DRAFT
+        totalCents: 0
+        timeline:
+        - step: 1
+          action: CONFIRM
+          statusBefore: DRAFT
+          statusAfter: DRAFT
+          totalBeforeCents: 0
+          totalAfterCents: 0
+          lineCountAfter: 0
+          accepted: false
+          reason: Cannot confirm an empty order
+      detailDescription: |-
+        <p>CONFIRM is invalid on an empty OrderAggregate, but the service records a rejected simulation step instead of failing the HTTP request.</p>
+        <ol>
+        <li>OrderAggregate(&#39;ORD-EMPTY&#39;) starts as DRAFT with zero lines and totalCents=0; the single CONFIRM step satisfies requireSteps.</li>
+        <li>OrderAggregate.confirm() passes requireDraft but detects lines.isEmpty() and throws IllegalStateException(&#39;Cannot confirm an empty order&#39;).</li>
+        <li>BasicsExperimentService catches that exception inside the step loop, sets accepted=false and the exact reason, and preserves DRAFT, total=0 and lineCountAfter=0.</li>
+        <li>The service still returns OrderSimulationResponse, so the HTTP status is 200, not 400. The failure is reported in the timeline only.</li>
+        </ol>
+        <pre><code>new OrderAggregate(&quot;ORD-EMPTY&quot;) // DRAFT, lines=[]
+        confirm() -&gt; IllegalStateException(&quot;Cannot confirm an empty order&quot;)
+        per-step catch -&gt; accepted=false; status=DRAFT; HTTP 200</code></pre>
+    - id: case_003
+      title: Confirmed orders cannot be edited
+      description: Adding a line after CONFIRM fails without mutating the existing
+        total or line count.
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers:
+          Content-Type: application/json
+        body:
+          orderId: ORD-LOCK
+          steps:
+          - action: ADD_LINE
+            sku: BOOK
+            quantity: 1
+            unitPriceCents: 1500
+          - action: CONFIRM
+          - action: ADD_LINE
+            sku: PEN
+            quantity: 1
+            unitPriceCents: 100
+      status: 200
+      response:
+        orderId: ORD-LOCK
+        finalStatus: CONFIRMED
+        totalCents: 1500
+        timeline:
+        - step: 1
+          action: ADD_LINE
+          statusBefore: DRAFT
+          statusAfter: DRAFT
+          totalBeforeCents: 0
+          totalAfterCents: 1500
+          lineCountAfter: 1
+          accepted: true
+          reason: null
+        - step: 2
+          action: CONFIRM
+          statusBefore: DRAFT
+          statusAfter: CONFIRMED
+          totalBeforeCents: 1500
+          totalAfterCents: 1500
+          lineCountAfter: 1
+          accepted: true
+          reason: null
+        - step: 3
+          action: ADD_LINE
+          statusBefore: CONFIRMED
+          statusAfter: CONFIRMED
+          totalBeforeCents: 1500
+          totalAfterCents: 1500
+          lineCountAfter: 1
+          accepted: false
+          reason: 'Order must be DRAFT; actual status: CONFIRMED'
+      detailDescription: |-
+        <p>The third step attempts to change a CONFIRMED order. OrderAggregate blocks that mutation and preserves the already confirmed total and lines.</p>
+        <ol>
+        <li>Step 1 ADD_LINE BOOK adds 1×1500=1500 in DRAFT.</li>
+        <li>Step 2 CONFIRM succeeds because the aggregate contains one line; status becomes CONFIRMED, total remains 1500 and lineCount remains 1.</li>
+        <li>Step 3 ADD_LINE PEN calls OrderAggregate.addLine, but requireDraft sees CONFIRMED and throws IllegalStateException(&#39;Order must be DRAFT; actual status: CONFIRMED&#39;) before appending a line.</li>
+        <li>The service catches the error per step; step 3 has accepted=false, statusBefore=statusAfter=CONFIRMED, totalBefore=totalAfter=1500, lineCountAfter=1. The whole request returns HTTP 200.</li>
+        </ol>
+        <pre><code>addLine(&quot;BOOK&quot;,1,1500) -&gt; DRAFT,total=1500
+        confirm() -&gt; CONFIRMED
+        addLine(&quot;PEN&quot;,1,100) -&gt; requireDraft() fails
+        HTTP 200; finalStatus=CONFIRMED,totalCents=1500</code></pre>
+    - id: case_004
+      title: Invalid order identifier — HTTP 400
+      description: The request is rejected before the aggregate is created, using
+        the common error response.
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers:
+          Content-Type: application/json
+        body:
+          orderId: ORDER BAD
+          steps:
+          - action: CANCEL
+      status: 400
+      response:
+        code: INVALID_INPUT
+        message: orderId must contain 1-40 letters, digits, '_' or '-'
+      detailDescription: |-
+        <p>orderId=&#39;ORDER BAD&#39; includes a space and is rejected by the OrderAggregate constructor before the CANCEL action can run.</p>
+        <ol>
+        <li>The Controller forwards the request to BasicsExperimentService.simulateOrder; the one-item steps list passes requireSteps.</li>
+        <li>new OrderAggregate(&#39;ORDER BAD&#39;) checks [A-Za-z0-9_-]{1,40} and immediately throws IllegalArgumentException.</li>
+        <li>The constructor failure occurs outside the per-step catch and is handled by the controller-scoped BasicsExperimentExceptionHandler as HTTP 400.</li>
+        <li>The error response contains code=&#39;INVALID_INPUT&#39; and the exact identifier restriction message; no OrderSimulationResponse, timeline or CANCEL operation is produced.</li>
+        </ol>
+        <pre><code>new OrderAggregate(&quot;ORDER BAD&quot;)
+          -&gt; IllegalArgumentException(&quot;orderId must contain 1-40 letters, digits, &#39;_&#39; or &#39;-&#39;&quot;)
+          -&gt; BasicsExperimentExceptionHandler -&gt; HTTP 400</code></pre>
+  compareShipping(ShippingQuoteRequest):
+    methodName: compareShipping
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/basics/shipping/quotes
+    usage: true
+    cases:
+    - id: case_001
+      title: Compare pickup and courier at 12 km
+      description: Two ShippingPolicy implementations receive the same input but compute
+        distinct fees and payable totals.
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers:
+          Content-Type: application/json
+        body:
+          subtotalCents: 10000
+          distanceKm: 12
+      status: 200
+      response:
+        subtotalCents: 10000
+        distanceKm: 12
+        quotes:
+        - policy: PICKUP
+          feeCents: 0
+          payableCents: 10000
+        - policy: COURIER
+          feeCents: 6300
+          payableCents: 16300
+      detailDescription: |-
+        <p>Two interchangeable ShippingPolicy implementations calculate illustrative charges at 12 km; no real carrier is contacted.</p>
+        <ol>
+        <li>BasicsExperimentService.compareShipping receives subtotalCents=10000 and distanceKm=12. The subtotal is nonnegative and the distance lies within 0–100.</li>
+        <li>It iterates the fixed List.of(Pickup,Courier). Pickup.feeCents(12)=0, yielding payableCents=10000.</li>
+        <li>Courier.feeCents(12) uses exact arithmetic: 1500+400×12=6300 cents, and subtotal+fee=16300 cents.</li>
+        <li>HTTP 200 contains two quotes in policy order PICKUP/COURIER, feeCents 0/6300 and payableCents 10000/16300. These are teaching rules, not actual shipping prices.</li>
+        </ol>
+        <pre><code>Pickup.feeCents(12) = 0
+        Courier.feeCents(12) = 1500 + 400 * 12 = 6300
+        payable = subtotalCents + feeCents
+        PICKUP:10000; COURIER:16300; HTTP 200</code></pre>
+    - id: case_002
+      title: Zero distance still has a courier base fee
+      description: PICKUP is free, while COURIER applies its 1,500-cent base fee even
+        at distanceKm=0.
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers:
+          Content-Type: application/json
+        body:
+          subtotalCents: 1000
+          distanceKm: 0
+      status: 200
+      response:
+        subtotalCents: 1000
+        distanceKm: 0
+        quotes:
+        - policy: PICKUP
+          feeCents: 0
+          payableCents: 1000
+        - policy: COURIER
+          feeCents: 1500
+          payableCents: 2500
+      detailDescription: |-
+        <p>The distance boundary value 0 km is valid, yet Courier still charges its fixed base fee of 1500 cents.</p>
+        <ol>
+        <li>The service verifies subtotalCents=1000 &gt;= 0 and distanceKm=0 within 0–100.</li>
+        <li>Pickup.feeCents(0)=0, so payableCents=1000.</li>
+        <li>Courier.feeCents(0)=1500+400×0=1500, not zero because of the fixed component; payableCents=1000+1500=2500.</li>
+        <li>HTTP 200 returns quotes in PICKUP then COURIER order. The case isolates the difference between base fee and distance-based fee.</li>
+        </ol>
+        <pre><code>distanceKm=0
+        PICKUP fee=0 -&gt; payable=1000
+        COURIER fee=1500+(400*0)=1500 -&gt; payable=2500
+        HTTP 200</code></pre>
+    - id: case_003
+      title: Distance exceeds the accepted range — HTTP 400
+      description: A distance of 101 km exceeds the simulation limit of 0–100 km and
+        fails request validation.
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers:
+          Content-Type: application/json
+        body:
+          subtotalCents: 10000
+          distanceKm: 101
+      status: 400
+      response:
+        code: INVALID_INPUT
+        message: distanceKm must be between 0 and 100
+      detailDescription: |-
+        <p>distanceKm=101 exceeds the service&#39;s maximum distance of 100 km, so validation fails before quotes are generated.</p>
+        <ol>
+        <li>The Controller forwards the JSON request to BasicsExperimentService.compareShipping.</li>
+        <li>The service accepts nonnegative subtotalCents=10000, then evaluates (distanceKm &lt; 0 || distanceKm &gt; 100). With 101, it throws IllegalArgumentException(&#39;distanceKm must be between 0 and 100&#39;).</li>
+        <li>The exception is raised before iterating ShippingPolicy; no partial quotes or fee calculations are returned.</li>
+        <li>BasicsExperimentExceptionHandler maps the failure to HTTP 400 with code=&#39;INVALID_INPUT&#39; and the exact distance restriction message.</li>
+        </ol>
+        <pre><code>if (distanceKm &lt; 0 || distanceKm &gt; 100)
+            throw IllegalArgumentException(&quot;distanceKm must be between 0 and 100&quot;)
+        HTTP 400; no shipping quote calculation</code></pre>
+    - id: case_004
+      title: Negative subtotal — HTTP 400
+      description: A negative subtotal is rejected before evaluating any shipping
+        policy.
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers:
+          Content-Type: application/json
+        body:
+          subtotalCents: -1
+          distanceKm: 5
+      status: 400
+      response:
+        code: INVALID_INPUT
+        message: subtotalCents cannot be negative
+      detailDescription: |-
+        <p>subtotalCents=-1 violates the first validation in compareShipping and causes HTTP 400 even though distanceKm=5 is valid.</p>
+        <ol>
+        <li>BasicsExperimentController receives {-1,5} and calls BasicsExperimentService.compareShipping.</li>
+        <li>The service checks subtotalCents &lt; 0 before validating distanceKm and throws IllegalArgumentException(&#39;subtotalCents cannot be negative&#39;).</li>
+        <li>Neither Pickup nor Courier is invoked; no ShippingQuote is produced. Valid distance does not override the nonnegative subtotal requirement.</li>
+        <li>The controller-scoped exception handler responds HTTP 400, code=&#39;INVALID_INPUT&#39;, and the exact subtotal error message instead of a ShippingQuoteResponse.</li>
+        </ol>
+        <pre><code>if (subtotalCents &lt; 0)
+            throw IllegalArgumentException(&quot;subtotalCents cannot be negative&quot;)
+        HTTP 400; no Pickup/Courier calculation</code></pre>
+PolymorphismExperimentsController:
+  dispatch(DispatchRequest):
+    methodName: dispatch
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/polymorphism/dispatch/experiment
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+  payments(PaymentsRequest):
+    methodName: payments
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/polymorphism/payments/experiment
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+PracticeExperimentController:
+  bank(BankRequest):
+    methodName: bank
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/practice/bank/experiment
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+  orders(OrderRequest):
+    methodName: orders
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/practice/orders/experiment
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+  library(LibraryRequest):
+    methodName: library
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/practice/library/experiment
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+RefactoringExperimentsController:
+  checkout(CheckoutRequest):
+    methodName: checkout
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/refactoring/checkout/compare
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+  delivery(DeliveryRequest):
+    methodName: delivery
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/refactoring/delivery/compare
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+  alerts(AlertRequest):
+    methodName: alerts
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/refactoring/alerts/experiment
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+RelationshipsExperimentsController:
+  transfer(TransferRequest):
+    methodName: transfer
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/relationships/departments/transfer
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+  enroll(EnrollmentRequest):
+    methodName: enroll
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/relationships/enrollments/simulate
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+  ownership(OwnershipRequest):
+    methodName: ownership
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/relationships/ownership/compare
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+SolidExperimentController:
+  quote(QuoteRequest):
+    methodName: quote
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/solid/discount/quote
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+  experiment(ExperimentRequest):
+    methodName: experiment
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/solid/checkout/experiment
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+SubtypingExperimentController:
+  dispatch(DispatchRequest):
+    methodName: dispatch
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/subtyping/dispatch
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+  contract(DiscountRequest):
+    methodName: contract
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/subtyping/discount-contract
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+  geometry(GeometryRequest):
+    methodName: geometry
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/subtyping/geometry-contract
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+TestingExperimentController:
+  contracts(ContractRequest):
+    methodName: contracts
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/testing/inventory/contracts
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+  collaboration(CollaborationRequest):
+    methodName: collaboration
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/testing/checkout/collaboration
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+  regression(RegressionRequest):
+    methodName: regression
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/testing/pricing/regression
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Write a short title describing this case scenario'
+      description: 'TODO: Briefly explain this case purpose, context, and what to
+        observe'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
+        why this input produces the expected HTTP status and response, including business
+        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
+        and validating the request.</li><li>Trace the actual Service/Model method
+        calls and branches according to the Java source.</li><li>Explain each important
+        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
+        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'

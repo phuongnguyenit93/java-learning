@@ -4,6 +4,7 @@ import com.example.learning.task.swagger.config.SwaggerDescriptionDefaultConfig
 import com.example.learning.task.swagger.model.SwaggerDescriptionDefault
 import com.example.learning.task.swagger.model.SwaggerScanResult
 import com.example.learning.task.swagger.service.SwaggerJavaSourceScanner
+import com.example.learning.task.swagger.service.SwaggerApiCasesMergeService
 import com.example.learning.task.swagger.service.SwaggerYamlMergeService
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
@@ -118,6 +119,16 @@ Configure MODULE_LANGUAGE in master.json, for example:
         SwaggerYamlMergeService mergeService =
                 new SwaggerYamlMergeService()
 
+        SwaggerApiCasesMergeService casesMergeService =
+                new SwaggerApiCasesMergeService()
+
+
+        // Validate every language before modifying any existing Swagger YAML.
+        configuredLanguages.each { String language ->
+            casesMergeService.validate(
+                    new File(resourceDirectory, "swagger/${language}")
+            )
+        }
 
         configuredLanguages.each {
             String language ->
@@ -135,6 +146,12 @@ Configure MODULE_LANGUAGE in master.json, for example:
                         defaultsByLanguage[
                                 language
                         ]
+                )
+
+                // Case bodies and expected responses are authored separately.
+                casesMergeService.merge(
+                        swaggerDirectory,
+                        scanResult
                 )
 
 

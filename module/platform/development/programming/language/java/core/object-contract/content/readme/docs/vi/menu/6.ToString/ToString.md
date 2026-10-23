@@ -1,167 +1,186 @@
 # Biểu diễn văn bản với toString
 
-Không phải quy ước nào của Object cũng phục vụ cấu trúc dữ liệu. `toString` chủ yếu phục vụ **con người và công cụ chẩn đoán**: log, trình gỡ lỗi, thông báo lỗi của phép kiểm tra (`assertion`) hoặc kiểm thử, và văn bản hiển thị tạm thời.
+Sau `equals` và `hashCode`, ta biết Java nhận diện và tra cứu đối tượng như thế nào. Nhưng khi chương trình gặp lỗi và cần quan sát một đối tượng, chuỗi `com.example.UserId@5e2de80c` thường chưa giúp ta hiểu nó đang chứa giá trị gì. Đó là lúc `toString()` trở nên hữu ích.
 
-Một `toString` tốt giúp ta trả lời nhanh câu hỏi: **đối tượng này đang mang trạng thái gì đáng chú ý?** Nó không nên biến thành giao thức tuần tự hóa dữ liệu, ranh giới bảo mật hoặc nơi thực hiện xử lý nặng.
+`toString` là phương thức tạo **biểu diễn văn bản dành cho con người**. Kết quả của nó thường xuất hiện trong log, trình gỡ lỗi, thông báo kiểm thử và chuỗi được tạo tạm thời. Quy ước này độc lập với việc hai đối tượng có bằng nhau theo `equals` hoặc có cùng `hashCode` hay không.
 
 ## <a id="tostring-purpose">Mục đích của toString</a>
 
-Mọi lớp đều kế thừa `toString()` từ `Object` nếu không ghi đè.
+Mọi lớp Java đều thừa hưởng `public String toString()` từ `Object` (trực tiếp hoặc gián tiếp), trừ khi lớp hay lớp cha đã ghi đè. Phương thức này trả về một chuỗi mô tả đối tượng, giúp con người nhận biết trạng thái đáng chú ý khi xem log, trình gỡ lỗi hoặc thông báo kiểm thử. Nó không quyết định hai đối tượng có bằng nhau theo `equals` hay không.
 
-### `Object.toString()` MẶC ĐỊNH
+### Biểu diễn mặc định và biểu diễn ghi đè
 
-Biểu diễn mặc định có dạng gần như:
-
-```text
-fully.qualified.ClassName@hexHash
-```
-
-Ví dụ:
-
-```text
-com.example.UserId@5e2de80c
-```
-
-Phần sau dấu `@` đến từ `hashCode()` được biểu diễn ở hệ 16; nó **không phải mã định danh duy nhất của đối tượng** và có thể bị trùng. Biểu diễn mặc định đôi khi hữu ích như một dấu hiệu chẩn đoán thô, nhưng thường không cho ta thấy trạng thái nghiệp vụ quan trọng.
-
-Biểu diễn mặc định của `Object.toString()` không phải một định dạng lưu trữ ổn định để có thể dựa vào giữa các lần chạy JVM. Một lớp hoàn toàn có thể ghi đè `toString()` và chủ đích công bố định dạng ổn định, nhưng đoạn mã sử dụng chỉ nên dựa vào sự ổn định đó khi chính lớp đã nêu rõ cam kết này.
-
-Vì vậy lớp nghiệp vụ thường ghi đè:
+Định nghĩa `Object.toString()` mặc định ghép tên lớp lúc chạy, dấu `@` và giá trị `hashCode()` ở hệ 16:
 
 ```java
-@Override
-public String toString() {
-    return "UserId[value=" + value + "]";
+return getClass().getName() + "@" + Integer.toHexString(hashCode());
+```
+
+Chẳng hạn, kết quả có thể là `com.example.UserId@5e2de80c`. Nó cho biết kiểu của đối tượng và một mã băm, nhưng **không cho biết giá trị nghiệp vụ**. Mã băm có thể trùng giữa các đối tượng và không phải mã định danh duy nhất, bền vững qua các lần chạy. Nếu lớp ghi đè `hashCode()` nhưng giữ `Object.toString()`, phần sau dấu `@` phản ánh cách tính mã băm mới.
+
+Hãy đặt hai cách biểu diễn cạnh nhau. Lưu đoạn sau vào `ToStringDemo.java`, rồi chạy với Java 21 bằng `javac ToStringDemo.java` và `java ToStringDemo`:
+
+```java
+public class ToStringDemo {
+    static final class RawUserId {
+        private final String value;
+
+        RawUserId(String value) {
+            this.value = value;
+        }
+        // Không ghi đè toString(): dùng bản kế thừa từ Object.
+    }
+
+    static final class UserId {
+        private final String value;
+
+        UserId(String value) {
+            this.value = value;
+        }
+
+        @Override
+        public String toString() {
+            return "UserId[value=" + value + "]";
+        }
+    }
+
+    public static void main(String[] args) {
+        RawUserId raw = new RawUserId("U-100");
+        UserId readable = new UserId("U-100");
+
+        System.out.println(raw);
+        System.out.println(readable);
+        System.out.println("Đang xử lý " + readable);
+    }
 }
 ```
 
-Kết quả:
+Kết quả minh họa (phần mã băm ở dòng đầu có thể khác):
 
 ```text
+ToStringDemo$RawUserId@7adf9f5f
 UserId[value=U-100]
+Đang xử lý UserId[value=U-100]
 ```
 
-### VÌ SAO `toString` LÀ MỘT QUY ƯỚC?
+Hai đối tượng đều chứa giá trị `U-100`. Tuy nhiên, `RawUserId` chỉ trả về tên lớp và mã băm vì không ghi đè phương thức, còn `UserId` tự chọn cách hiển thị trường `value`. `@Override` giúp trình biên dịch xác nhận ta đang ghi đè đúng phương thức. Ở đây, giả định mã `U-100` được phép xuất hiện trong thông tin chẩn đoán; việc chọn trường nào để in vẫn phải phụ thuộc độ nhạy cảm của dữ liệu.
 
-JDK không bắt buộc một định dạng riêng cố định cho mọi lớp. Ở mức `Object`, `toString` được dùng để trả về biểu diễn văn bản của đối tượng và tài liệu Java khuyến nghị kết quả nên ngắn gọn, có thông tin hữu ích và dễ đọc với con người.
+### Vì sao đây là một quy ước?
 
-Ngoài kỳ vọng API đó, mã nguồn thực tế thường áp dụng thêm các **nguyên tắc thiết kế** vì `toString` có thể được gọi trong luồng log hoặc gỡ lỗi. Vì vậy một `toString` thực dụng nên:
+Tài liệu `Object` khuyến nghị `toString` trả về văn bản ngắn gọn, giàu thông tin và dễ đọc. JDK không áp đặt một định dạng nghiệp vụ chung: mỗi lớp quyết định **trạng thái nào đáng cho người đọc biết**. Các công cụ và đoạn mã sử dụng phương thức này dựa vào kỳ vọng mô tả đó.
 
-- phương thức trả về mô tả hữu ích;
-- không có tác dụng phụ bất ngờ;
-- đủ nhẹ và đủ an toàn để dùng khi gỡ lỗi hoặc ghi log;
-- không làm lộ dữ liệu mà đối tượng không nên phơi bày.
+Trong ví dụ trên, cả `System.out.println(readable)` lẫn phép nối chuỗi `"Đang xử lý " + readable` đều sử dụng biểu diễn của `readable` mà không cần viết `readable.toString()`. Các thư viện ghi log cũng có thể định dạng tham số đối tượng thành văn bản, nhưng thời điểm và cách thực hiện tùy API/logger cụ thể. Vì thế một lệnh log tưởng như đơn giản có thể làm nội dung `toString` xuất hiện trong log.
 
-Ba ý cuối không phải các luật ngôn ngữ riêng mà Java cưỡng chế. Chúng là nguyên tắc kỹ thuật giúp `toString` an toàn và hữu ích trong môi trường thực tế.
-
-### `toString` CÓ THỂ ĐƯỢC GỌI NGẦM
-
-Bạn không phải lúc nào cũng viết `.toString()` trực tiếp:
-
-```java
-System.out.println(userId);
-
-String message = "id=" + userId;
-
-logger.info("processing {}", userId);
-```
-
-Các API khác nhau có cách gọi chi tiết riêng, nhưng về mặt mô hình tư duy, biểu diễn của đối tượng có thể xuất hiện ở nhiều nơi ngoài một lời gọi trực tiếp.
+Đọc đến đây, bạn cần phân biệt được hai câu hỏi: **`equals` nói hai đối tượng có cùng giá trị logic hay không; `toString` nói con người sẽ nhìn thấy mô tả gì về một đối tượng**. Việc thay cách in không tự thay quy tắc bằng nhau hoặc mã băm.
 
 ## <a id="tostring-design">Thiết kế biểu diễn hữu ích</a>
 
-Một `toString` tốt thường:
+Khi kiểm tra một bản ghi sách, câu hỏi thường là “mã nào, tiêu đề nào?” chứ không phải “toàn bộ trường, ghi chú và mọi đối tượng liên quan gồm những gì?”. Thiết kế `toString` bắt đầu từ **nhu cầu chẩn đoán**, sau đó mới chọn các trường cần hiển thị.
 
-- ngắn gọn nhưng đủ thông tin;
-- hiển thị các trường dữ liệu quan trọng cho chẩn đoán;
-- có kết quả xác định hoặc ít nhất đủ ổn định để con người đọc;
-- không thực hiện I/O mạng, cơ sở dữ liệu hoặc tệp;
-- không thực hiện tính toán tốn kém;
-- hạn chế ném ngoại lệ trong lúc ghi log hoặc gỡ lỗi.
+### Chọn những trường đủ để hiểu tình huống
 
-### BIỂU DIỄN VĂN BẢN KHÔNG PHẢI TUẦN TỰ HÓA DỮ LIỆU
-
-Hai mục tiêu khác nhau:
-
-```text
-toString
-→ biểu diễn chẩn đoán dành cho con người
-
-JSON / protobuf / bộ tuần tự hóa chuyên dụng
-→ định dạng dành cho máy với lược đồ (schema) và chính sách tương thích riêng
-```
-
-Không nên phân tích ngược `toString()` để tái tạo đối tượng trừ khi lớp đó **công bố rõ ràng** một quy ước như vậy. Với lớp nghiệp vụ thông thường, định dạng `toString` có thể thay đổi khi nhu cầu gỡ lỗi thay đổi.
-
-### GIỮ KẾT QUẢ HỮU ÍCH, KHÔNG IN TOÀN BỘ MỌI THỨ
-
-Ví dụ một `Book` có hàng chục trường dữ liệu nhưng log thường chỉ cần:
+Ví dụ với một cuốn sách, người vận hành chỉ cần mã sách và tiêu đề để nhận biết bản ghi. Nội dung ghi chú nội bộ không cần đi theo mỗi lần in đối tượng. Lưu đoạn sau vào `BookLogDemo.java` rồi chạy bằng `javac BookLogDemo.java` và `java BookLogDemo`:
 
 ```java
-@Override
-public String toString() {
-    return "Book[id=" + id + ", title=" + title + "]";
+public class BookLogDemo {
+    static final class Book {
+        private final String id;
+        private final String title;
+        private final String internalNote;
+
+        Book(String id, String title, String internalNote) {
+            this.id = id;
+            this.title = title;
+            this.internalNote = internalNote;
+        }
+
+        @Override
+        public String toString() {
+            return "Book[id=" + id + ", title=" + title + "]";
+        }
+    }
+
+    public static void main(String[] args) {
+        Book book = new Book("B-7", "Java 21", "Chờ kiểm kê");
+        System.out.println("Kiểm tra: " + book);
+    }
 }
 ```
 
-In toàn bộ đồ thị đối tượng lớn có thể làm log nhiễu, chậm và khó đọc.
+```text
+Kiểm tra: Book[id=B-7, title=Java 21]
+```
 
-### CẨN THẬN VỚI ĐỒ THỊ ĐỐI TƯỢNG ĐỆ QUY
+Trong `main`, ba giá trị đều được đưa vào đối tượng `Book`. Nhưng lúc nối `"Kiểm tra: " + book`, Java lấy chuỗi do `Book.toString()` trả về; phương thức chỉ đọc `id` và `title`. Ghi chú `internalNote` không được đưa vào kết quả. Bằng cách đó, người đọc vẫn nhận ra cuốn sách mà không phải xem thêm dữ liệu ít liên quan. Nếu ghi chú cũng nhạy cảm, việc bỏ qua nó còn giúp giảm rủi ro phơi bày.
 
-Nếu hai đối tượng trỏ lẫn nhau và cả hai `toString` đều in toàn bộ đối tượng còn lại, biểu diễn có thể đệ quy vô hạn hoặc tạo kết quả rất lớn.
+Một `toString` thực dụng thường ngắn gọn, kết quả dễ dự đoán khi trạng thái không đổi, không có tác dụng phụ và đủ nhẹ để dùng lúc chẩn đoán lỗi. Đặc biệt, tránh I/O mạng, truy vấn cơ sở dữ liệu, đọc tệp hoặc tính toán nặng bên trong phương thức. Khi log lỗi đang diễn ra, một `toString` ném thêm ngoại lệ còn có thể che khuất nguyên nhân ban đầu. Đây là **nguyên tắc thiết kế** chứ không phải ràng buộc được trình biên dịch Java kiểm tra.
+
+### Tránh in cả đồ thị đối tượng
+
+Đối tượng có thể trỏ đến nhiều đối tượng khác. Nếu `Parent.toString()` in toàn bộ `Child`, còn `Child.toString()` lại in toàn bộ `Parent`, đường gọi sẽ lặp:
 
 ```text
 Parent.toString()
-→ in Child
-   → Child.toString()
-      → lại in Parent
-         → ...
+  → Child.toString()
+      → Parent.toString()
+          → ... (tiếp tục lặp)
 ```
 
-Vì vậy nên chọn trường dữ liệu cần biểu diễn có chủ ý thay vì tự động in toàn bộ đồ thị đối tượng.
+Kết quả có thể là `StackOverflowError`, một chuỗi quá lớn hoặc log rất khó đọc. Nếu cần thể hiện quan hệ, hãy ưu tiên in **mã định danh của đối tượng liên quan** thay vì nối toàn bộ đối tượng đó vào chuỗi.
 
-### RECORD VÀ BIỂU DIỄN ĐƯỢC TẠO TỰ ĐỘNG
+### Phân biệt văn bản chẩn đoán với tuần tự hóa
 
-Java record cung cấp `toString` tự động dựa trên các thành phần (`component`). Điều đó tiện lợi cho kiểu dữ liệu chuyên chở giá trị, nhưng vẫn cần xem xét ranh giới bảo mật và ghi log. “Được sinh tự động” không đồng nghĩa “an toàn để log ở mọi nơi”.
+Chuỗi `Book[id=B-7, title=Java 21]` giúp con người đọc log. Nó **không có lược đồ dữ liệu bắt buộc**, quy tắc escape, định dạng tương thích phiên bản hay cam kết để chương trình khác đọc ngược thành `Book`. Nếu sau này nhóm phát triển đổi cách in thành `Book(B-7 — Java 21)`, nhu cầu chẩn đoán có thể vẫn được đáp ứng nhưng mã cố phân tích chuỗi cũ sẽ hỏng.
+
+Khi cần truyền hoặc lưu dữ liệu theo hợp đồng có thể đọc bởi máy, hãy dùng cơ chế phù hợp như JSON, protobuf hoặc bộ tuần tự hóa chuyên dụng với lược đồ và quy tắc tương thích đã chọn. Chỉ dựa vào `toString` như một định dạng ổn định nếu chính API cụ thể **công bố rõ** cam kết ấy; đừng suy ra điều đó từ phương thức `Object.toString()`.
+
+Record trong Java tự tạo `toString` dựa trên các thành phần (`component`), rất tiện để quan sát giá trị. Nhưng tự động in tất cả thành phần không đồng nghĩa với an toàn để đưa vào log. Vấn đề này sẽ rõ hơn ở phần tiếp theo.
 
 ## <a id="tostring-sensitive-data">Dữ liệu nhạy cảm và ghi log</a>
 
-Không nên đưa mật khẩu, token, bí mật, đầy đủ dữ liệu thanh toán hoặc thông tin nhạy cảm vào `toString` chỉ vì chúng là trường dữ liệu của đối tượng.
+Một đối tượng có thể mang mật khẩu, access token, thông tin thanh toán hoặc dữ liệu cá nhân. Khi `toString` đưa các giá trị đó vào chuỗi, chúng có thể đi vào log, thông báo ngoại lệ, lỗi kiểm thử hoặc công cụ quan sát ngay cả khi lập trình viên không gọi trực tiếp `.toString()`.
 
-Ví dụ không nên:
+### Quan sát một lần lộ thông tin và cách sửa
+
+Giả sử ứng dụng cần biết yêu cầu `login` đã được xử lý, nhưng **không được ghi lại token**. Hai record dưới đây chứa cùng dữ liệu mẫu. Record đầu giữ `toString` tự sinh, record thứ hai tự ghi đè để che token. Lưu vào `SafeToStringDemo.java` rồi chạy với Java 21:
 
 ```java
-@Override
-public String toString() {
-    return "LoginRequest[user=" + user
-            + ", password=" + password + "]";
+public class SafeToStringDemo {
+    record UnsafeLoginRequest(String operation, String accessToken) {}
+
+    record LoginRequest(String operation, String accessToken) {
+        @Override
+        public String toString() {
+            return "LoginRequest[operation=" + operation
+                    + ", accessToken=<redacted>]";
+        }
+    }
+
+    public static void main(String[] args) {
+        var unsafe = new UnsafeLoginRequest("login", "demo-only-token");
+        var safe = new LoginRequest("login", "demo-only-token");
+
+        System.out.println(unsafe);
+        System.out.println(safe);
+    }
 }
 ```
 
-### TẠI SAO RỦI RO LỚN?
-
-`toString` có thể xuất hiện qua:
-
-- ghi log;
-- nối chuỗi;
-- IDE/trình gỡ lỗi;
-- lỗi của phép kiểm tra (`assertion`) hoặc kiểm thử;
-- thông báo ngoại lệ;
-- biểu diễn gián tiếp của cấu trúc dữ liệu hoặc đối tượng.
-
-Một trường dữ liệu nhạy cảm lọt vào `toString` có thể bị ghi ra log ở môi trường vận hành thực tế dù lập trình viên không chủ động gọi nó tại điểm đó.
-
-### CHE DỮ LIỆU (REDACTION) VÀ BIỂU DIỄN AN TOÀN
-
-Nếu cần hiển thị thông tin nhận diện, hãy cân nhắc biểu diễn đã che hoặc lược bỏ dữ liệu nhạy cảm:
-
-```java
-@Override
-public String toString() {
-    return "PaymentCard[last4=" + last4 + "]";
-}
+```text
+UnsafeLoginRequest[operation=login, accessToken=demo-only-token]
+LoginRequest[operation=login, accessToken=<redacted>]
 ```
 
-Chính sách bảo mật cụ thể thuộc mô-đun bảo mật chuyên sâu hơn, nhưng ranh giới ở đây rất rõ: **`toString` là bề mặt chẩn đoán, không phải nơi mặc định phơi bày toàn bộ trạng thái**.
+Ở dòng đầu, Java tạo biểu diễn record từ **cả hai** thành phần nên token mẫu xuất hiện nguyên vẹn. Ở dòng hai, phương thức ghi đè chỉ in thao tác `operation` và chuỗi cố định `<redacted>`; giá trị thật của `accessToken` không được nối vào kết quả. Thay token đầu vào bằng một chuỗi khác sẽ không làm lộ token mới qua `LoginRequest.toString()`.
 
-Sau cách đối tượng tự mô tả, hai chương cuối chuyển sang một nhóm quy ước khác: **thứ tự sắp xếp** — đối tượng nào đứng trước đối tượng nào, và ai sở hữu chính sách đó.
+### Vì sao cần quyết định từ lúc thiết kế lớp?
+
+Khi một log in ra đối tượng, khi phép kiểm tra thất bại kèm giá trị thực tế, hoặc khi một danh sách chứa đối tượng được đưa thành chuỗi, biểu diễn của các phần tử có thể được sử dụng gián tiếp. Vì vậy **không có lời gọi `.toString()` trong mã đang xem** không chứng minh rằng dữ liệu sẽ không bị đưa ra ngoài.
+
+Nguyên tắc thực hành là chỉ đưa những trường **thực sự cần thiết và được phép công bố trong bối cảnh chẩn đoán** vào `toString`. Có thể lược bỏ hẳn hoặc che cố định trường bí mật; với dữ liệu nhận diện, chỉ in một phần đã được chính sách cho phép. Ví dụ, thẻ thanh toán có thể chỉ hiện bốn số cuối **nếu** chính sách ghi log cho phép, chứ không in số thẻ đầy đủ.
+
+Lưu ý ranh giới: một `toString` đã che token chỉ bảo vệ **đường biểu diễn thông qua phương thức đó**. Mã khác vẫn có thể log riêng trường `accessToken`, hoặc một bộ tuần tự hóa có thể truy cập trực tiếp dữ liệu. Vì thế chính sách logging và kiểm soát dữ liệu nhạy cảm vẫn cần được áp dụng ở những nơi sử dụng dữ liệu.
+
+Một `toString` tốt trả lời được “đối tượng nào, trạng thái nào liên quan đến vấn đề?” mà không đưa thông tin bí mật vào chuỗi. Đó là cách giữ cho biểu diễn hữu ích khi gỡ lỗi, đồng thời không nhầm `toString` với một cơ chế bảo mật hoặc định dạng lưu trữ dữ liệu.
+
+Sau cách đối tượng tự mô tả, hai chương tiếp theo chuyển sang một nhóm quy ước khác: **thứ tự sắp xếp** — đối tượng nào đứng trước đối tượng nào, và ai sở hữu chính sách đó.

@@ -1,210 +1,287 @@
 # The equals/hashCode Contract
 
-`equals` and `hashCode` should not be designed independently. For hash-based collections they form **one combined contract**: hashing narrows the candidates, while equality confirms the logical match.
+Suppose two different `UserId` objects both hold `"U-100"`. If the application considers them the same user ID, a `HashSet` should recognize the second as already present, and a `HashMap` should find a value stored under the first. That behavior depends on **two methods cooperating**: `hashCode` helps a hash-based collection find candidates, and `equals` decides whether a candidate represents the same logical value.
 
-The previous chapters studied each method separately. This chapter focuses on **how they cooperate during lookup** and on observable runtime failures when the contract is broken.
+The preceding chapters introduced the methods individually. Here we follow an insertion and lookup, then change one condition at a time to see what goes wrong when their promises disagree or a key changes after insertion.
 
 ## <a id="equals-hashcode-consistency">Equal Objects Share a Hash Code</a>
 
-If equal objects return different hashes, `HashMap`/`HashSet` may search different regions and never reach the `equals` comparison.
+The joint contract has one essential implication: **if `a.equals(b)` is true, `a.hashCode()` and `b.hashCode()` must return the same integer**. Otherwise a hash-based collection may search where `b`'s hash points instead of where it stored `a`, never reaching the equality check.
 
-Whenever `equals` is overridden, `hashCode` should be reviewed at the same time.
+Consider two separately constructed IDs with the same value:
 
 ```text
-equals == true
-→ hashCode must match
+first  = new UserId("U-100")
+second = new UserId("U-100")
 
-hashCode matches
-→ does not imply equals == true
+first == second                   → false (different objects)
+first.equals(second)             → true  (same logical ID)
+first.hashCode() == second.hashCode() → must be true
+
+two hashes equal                 ↛ two objects necessarily equal
 ```
 
-### KEEP HASHING DERIVED FROM EQUALITY SEMANTICS
+The final line matters: different values may have the same hash (*a collision*). When that happens, the collection must still use `equals` to distinguish them. A hash code is a routing hint, not a unique ID or a verdict of equality.
 
-A design is easiest to reason about when `hashCode` is derived from the state that defines equality:
+### KEEP BOTH METHODS BASED ON THE SAME LOGICAL VALUE
 
-```java
-final class UserId {
-    private final String value;
+If the `value` field defines equality, deriving the hash from `value` makes equal IDs hash alike. The runnable `UserId` class in the next section uses `Objects.equals(value, that.value)` and `value.hashCode()` to make this relationship explicit. Its `value` is `final`, so its equality meaning cannot change after construction.
 
-    UserId(String value) {
-        this.value = Objects.requireNonNull(value);
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        return this == other
-                || (other instanceof UserId that
-                && Objects.equals(value, that.value));
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(value);
-    }
-}
-```
-
-If equality later changes from `value` to `namespace + value`, `hashCode` must be reconsidered too so every newly equal pair still hashes alike. It does not mechanically have to include every equality field, but omitting useful fields may increase collisions and reduce hash-distribution quality.
+If equality later changes to depend on both `namespace` and `value`, review the hash calculation in the same change. The formal rule does **not** demand that every equality field appear in `hashCode`: a constant hash would still give equal objects equal hashes. But including useful equality fields usually distributes unequal keys better and reduces unnecessary equality checks. Also, repeated hashes for an object must agree while its equality-relevant information remains unchanged.
 
 ## <a id="hash-collection-lookup">Hash Collection Lookup</a>
 
-At the mental-model level, lookup for a **non-null key** can be understood as:
+Think of a hash-based collection as an index with candidate groups. For a **non-null key**, its ordinary insertion and lookup can be understood in this order:
 
 ```text
-lookup key
-    ↓
-key.hashCode()
-    ↓
-collection uses the hash to narrow the candidate group
-    ↓
-inspect compatible candidates
-    ↓
-equals(...)
-    ↓
-match / no match
+add/put(original)                        contains/get(equal lookup object)
+  │                                          │
+  ├─ calculate original.hashCode()          ├─ calculate lookup.hashCode()
+  ├─ choose a candidate region              ├─ search compatible region
+  └─ store original (or key/value)          ├─ compare possible matches with equals
+                                             └─ return match or absence
 ```
 
-This is a **boundary model**, not a promise about every internal detail of a particular `HashMap` version. Implementations may optimize collision handling; your object only needs to honor the public contract collections rely on.
+If the lookup object hashes to the same region as the stored object, an equality check can confirm they represent the same logical key. If several unequal keys collide, `equals` distinguishes them within that candidate group. This is a learner-facing model of `HashSet`/`HashMap`, not a promise about bucket counts, collision algorithms, or every method call in a particular JDK implementation.
 
-`HashMap` also supports a `null` key through implementation-specific special handling, so the diagram should not be read as “Java always invokes `hashCode()` on every possible key.”
+### A RUNNABLE `HashSet` AND `HashMap` TRACE
 
-### EVIDENCE WITH `HashSet`
+Save the following as `HashLookupDemo.java` and run it with Java 21. Both lookups deliberately construct **new** objects rather than reuse the stored reference.
 
 ```java
-Set<UserId> ids = new HashSet<>();
-ids.add(new UserId("U-100"));
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
-System.out.println(ids.contains(new UserId("U-100")));
+public class HashLookupDemo {
+    static final class UserId {
+        private final String value;
+
+        UserId(String value) {
+            this.value = Objects.requireNonNull(value);
+        }
+
+        @Override
+        public boolean equals(Object other) {
+            return this == other
+                    || (other instanceof UserId that
+                    && Objects.equals(value, that.value));
+        }
+
+        @Override
+        public int hashCode() {
+            return value.hashCode();
+        }
+    }
+
+    public static void main(String[] args) {
+        UserId stored = new UserId("U-100");
+        UserId lookup = new UserId("U-100");
+
+        Set<UserId> ids = new HashSet<>();
+        ids.add(stored);
+
+        Map<UserId, String> names = new HashMap<>();
+        names.put(stored, "An");
+
+        System.out.println(stored == lookup);
+        System.out.println(stored.equals(lookup));
+        System.out.println(stored.hashCode() == lookup.hashCode());
+        System.out.println(ids.contains(lookup));
+        System.out.println(ids.add(lookup));
+        System.out.println(names.get(lookup));
+    }
+}
 ```
 
-For this to print `true`, two distinct instances need both:
+Expected output:
 
 ```text
-the same logical equality
-        +
-a consistent hash contract
+false
+true
+true
+true
+false
+An
 ```
 
-The caller does not need the original reference to look up an equivalent logical value.
+Trace the results in order:
 
-### `HashMap` USES THE SAME CONTRACT
+1. `stored == lookup` is `false`: the constructor ran twice, producing two instances.
+2. `equals` is `true`: both instances contain `"U-100"`; their `hashCode()` results are equal because both hash that same string.
+3. `ids.add(stored)` inserted the first ID. `ids.contains(lookup)` follows its compatible hash region and finds an equal element, so it returns `true`. A second `add` finds that equal value and returns `false` rather than adding a duplicate.
+4. `names.put(stored, "An")` associates the first ID with the name. `names.get(lookup)` finds the equal key through the same cooperating hash/equality checks and returns `"An"`.
 
-```java
-Map<UserId, String> names = new HashMap<>();
-names.put(new UserId("U-100"), "An");
-
-String name = names.get(new UserId("U-100"));
-```
-
-Callers normally expect `name` to be `"An"`. That expectation only makes sense when the key type has coherent equality and hashing semantics.
+The caller needs an **equivalent logical key**, not the exact reference used for insertion. `HashSet` also permits a `null` element and `HashMap` permits a `null` key; implementations handle these specially, so the non-null diagram is not a claim that `null.hashCode()` is invoked.
 
 ## <a id="broken-contract-effects">Effects of a Broken Contract</a>
 
-A classic bug is overriding `equals` but keeping the inherited `hashCode` behavior:
+Now keep equality based on `value` but deliberately calculate the hash from an unrelated number. Equal IDs will be directed to different candidate regions. This runnable counterexample makes the failure deterministic instead of relying on whether two default `Object.hashCode()` values happen to differ.
 
 ```java
-final class BrokenUserId {
-    private final String value;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
-    BrokenUserId(String value) {
-        this.value = value;
+public class BrokenContractDemo {
+    static final class BrokenUserId {
+        private final String value;
+        private final int unrelatedHash;
+
+        BrokenUserId(String value, int unrelatedHash) {
+            this.value = Objects.requireNonNull(value);
+            this.unrelatedHash = unrelatedHash;
+        }
+
+        @Override
+        public boolean equals(Object other) {
+            return this == other
+                    || (other instanceof BrokenUserId that
+                    && value.equals(that.value));
+        }
+
+        @Override
+        public int hashCode() {
+            return unrelatedHash; // intentionally violates the contract
+        }
     }
 
-    @Override
-    public boolean equals(Object other) {
-        return other instanceof BrokenUserId that
-                && Objects.equals(value, that.value);
-    }
+    public static void main(String[] args) {
+        BrokenUserId first = new BrokenUserId("U-100", 1);
+        BrokenUserId equal = new BrokenUserId("U-100", 2);
 
-    // intentionally no hashCode override
+        Set<BrokenUserId> ids = new HashSet<>();
+        ids.add(first);
+        System.out.println(first.equals(equal));
+        System.out.println(first.hashCode() == equal.hashCode());
+        System.out.println(ids.contains(equal));
+        System.out.println(ids.add(equal));
+        System.out.println(ids.size());
+
+        Map<BrokenUserId, String> names = new HashMap<>();
+        names.put(first, "An");
+        System.out.println(names.get(equal));
+    }
 }
 ```
 
-Two objects may then satisfy:
+Output with Java 21 `HashSet` and `HashMap`:
 
 ```text
-a.equals(b) == true
-
-but
-
-a.hashCode() != b.hashCode()
+true
+false
+false
+true
+2
+null
 ```
 
-Observable symptoms include:
+The first line proves the two keys are logically equal. Their hashes are `1` and `2`, so the second lookup follows a different candidate region and does not encounter the stored first key. The set incorrectly appears to admit two logical copies (`size()` is `2`), and the map cannot retrieve `"An"` using the equal key. These outputs illustrate a **key contract violation**, not an error in the collections.
 
-- a `HashSet` that appears to contain duplicate logical values;
-- `HashMap.get(equalKey)` missing an inserted entry;
-- `contains` returning false even though a logically equal object is stored.
+### THE COMMON ACCIDENTAL VERSION
 
-### THIS DOES NOT MEAN THE COLLECTION IS BROKEN
+Another common mistake overrides `equals` for a logical value but forgets `hashCode`, leaving the identity-oriented implementation inherited from `Object`. Different instances **may** then receive different hashes despite being equal. This outcome is not guaranteed for every pair, which is why the deliberate example above is more reliable for learning and testing.
 
-The collection operates under the documented assumption that keys honor their contract. It cannot reconstruct your domain equality semantics after the key violates that assumption.
+The repair is to derive `hashCode` from `value`, exactly as in `HashLookupDemo`:
+
+```java
+@Override
+public int hashCode() {
+    return value.hashCode();
+}
+```
+
+Changing the method restores the required implication for this equality design. A collision between **unequal** values would still be legal; the contract does not demand unique hashes.
 
 ## <a id="mutable-key-risk">Mutable Key Risk</a>
 
-Even correct methods can become operationally unsafe if equality state changes after insertion:
+There is a second kind of failure: `equals` and `hashCode` may be perfectly consistent at every moment, yet a key can become hard to find **after its equality-relevant state changes while it is stored**. Hash-based collections do not automatically relocate an entry when code edits a field on its key.
 
 ```text
-correct equals/hashCode implementation
-        +
-mutable key state
-        ↓
-lookup can still fail
+insert key whose value is "A" → hash 65 → stored along path for 65
+change that SAME object's value to "B" → hash 66
+look up the key again → search follows path for 66
+stored entry may still be on path for 65 → lookup misses it
 ```
 
-If a field used by `equals`/`hashCode` changes after insertion into a `HashMap` or `HashSet`, the object remains stored according to the structure created from its old state while a later lookup may follow a different search path derived from the new hash.
+Here the string hash values are known: `"A".hashCode()` is `65` and `"B".hashCode()` is `66`. This runnable Java 21 example observes both a set and a map:
 
 ```java
-final class UserKey {
-    String value;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
-    UserKey(String value) {
-        this.value = value;
+public class MutableKeyDemo {
+    static final class UserKey {
+        String value; // mutable equality-relevant state
+
+        UserKey(String value) {
+            this.value = Objects.requireNonNull(value);
+        }
+
+        @Override
+        public boolean equals(Object other) {
+            return this == other
+                    || (other instanceof UserKey that
+                    && value.equals(that.value));
+        }
+
+        @Override
+        public int hashCode() {
+            return value.hashCode();
+        }
     }
 
-    @Override
-    public boolean equals(Object other) {
-        return other instanceof UserKey that
-                && Objects.equals(value, that.value);
-    }
+    public static void main(String[] args) {
+        UserKey key = new UserKey("A");
+        Set<UserKey> ids = new HashSet<>();
+        Map<UserKey, String> names = new HashMap<>();
+        ids.add(key);
+        names.put(key, "An");
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(value);
+        System.out.println(ids.contains(key));
+        System.out.println(names.get(key));
+
+        key.value = "B";
+        System.out.println(key.hashCode());
+        System.out.println(ids.contains(key));
+        System.out.println(names.get(key));
+        System.out.println(ids.iterator().next() == key);
+        System.out.println(names.keySet().iterator().next() == key);
     }
 }
-
-UserKey key = new UserKey("U-100");
-Set<UserKey> set = new HashSet<>();
-set.add(key);
-
-key.value = "U-200";
-
-System.out.println(set.contains(key)); // may now be false
 ```
 
-Mental model:
+Output with Java 21 `HashSet` and `HashMap`:
 
 ```text
-insert
-hash("U-100")
-→ collection places/searches according to hash path A
-
-mutate key
-hash("U-200")
-→ later lookup may follow hash path B
-
-the object is still stored according to the old placement
+true
+An
+66
+false
+null
+true
+true
 ```
 
-The result can be that `contains/get/remove` cannot find an object that is physically still stored in the collection.
+Before mutation, both lookups succeed. After `key.value = "B"`, **the same reference** now reports hash `66` instead of the `65` used during insertion. The set's `contains` and map's `get` miss the original entry, but iterating over each collection still reveals that exact object reference. This is why even `remove(key)` may fail after mutation. The Java `Map` contract explicitly leaves behavior unspecified when a key is modified in a way that changes equality while stored; this concrete output must not be treated as a promise for every map implementation.
 
-### SAFE PRACTICE
+### KEEP HASH KEYS STABLE WHILE STORED
 
-Prefer immutable keys, or at least do not mutate equality/hash state while an object is being used as a key.
+Prefer keys whose equality-relevant state is immutable. If a key must change, remove it from every affected hash-based collection **before** the change, mutate it, then insert it again under its new meaning. Once the key has already been mutated, normal removal with that key may no longer work; rebuilding the affected collection with valid stable keys may be necessary.
 
-So key design asks more than “are the methods implemented correctly?” It also asks:
+Using `final` for a reference helps only if the data being hashed cannot change through that reference; a `final` field pointing to a mutable object does not by itself make a stable key. Before using a domain object as a key, ask: **will every value used by its `equals`/`hashCode` stay stable for as long as this collection stores it?**
 
-> Does equality-relevant state remain stable while the object is stored in the collection?
+### References
+
+- [Oracle Java 21 `Object` contract](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html) — formal equality and hash requirements.
+- [Oracle Java 21 `HashSet`](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/HashSet.html) — hash-backed set and its equality-based operations.
+- [Oracle Java 21 `Map`](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html) — the warning about mutating keys while stored.
 
 The next chapter moves from collection equality to a human-facing contract: **how an object should describe itself for diagnostics**.

@@ -1,5 +1,8 @@
 request:
-  summary: Experiment JSON request body
-  description: JSON request matching the endpoint DTO. Services and domain models
-    validate input bounds; see each method's description for scenario-specific evidence.
+  summary: Title not provided
+  description: Detailed description not provided
+  usage: true
+input:
+  summary: Title not provided
+  description: Detailed description not provided
   usage: true

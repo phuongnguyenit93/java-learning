@@ -6,7 +6,7 @@
 - Một worker phụ trách **một Menu Cấp 1**. Đọc toàn bộ Knowledge của chương, tạo một tài liệu Quiz YAML trong **T:W cùng hàng cha**, tối đa 4 ô × 30.000 Unicode code points/ô. Không viết Quiz ở hàng con.
 - Worker chỉ viết `questions[]` với **`question`, `answers`** (chính xác A/B/C/D, mỗi đáp án có `answer` và `explanation`) và **`correctAnswerId`**. Worker **không viết** question `id`, `aiGenerated`, `reviewed`, `readmeRelated`, `apiRelated` hoặc tự chỉnh module.
 - Prime phải đọc `temp/GENERAL_AGENT_RULES.md`, tất cả `module-generate-agent/rules/`, `module-generate-info.txt`, toàn bộ file này và `worker/STEP_8_WORKER.md`. **Worker chỉ tự đọc toàn bộ `worker/STEP_8_WORKER.md`**, không đọc Prime/rules/source repo. Prime chỉ gửi 4 dòng: URL tab, vùng nguồn chính xác, vùng đích T:W, đường dẫn worker-only.
-- Pool theo Mode A/B/C **chỉ trong session** (mặc định A=3, B=6, C=8; ACTIVE+SLEEPING); **reuse SLEEPING** trước, không tạo dư và không trùng ownership.
+- Pool theo Mode A/B **chỉ trong session** (A=3 mặc định; B=N do user chỉ định, thiếu N → BLOCKER; ACTIVE+SLEEPING); **reuse SLEEPING** trước, spawn tuần tự mỗi lệnh một worker, không tạo dư và không trùng ownership.
 
 ## 1. Mapping và preflight
 

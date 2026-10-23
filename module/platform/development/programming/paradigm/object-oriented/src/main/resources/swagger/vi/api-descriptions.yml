@@ -1,80 +1,99 @@
-BasicsExperimentController:
-  simulateAccount(AccountSimulationRequest):
-    summary: Theo dõi trạng thái tài khoản qua các lời gọi phương thức
-    description: Tạo một BankAccount trong phạm vi request, thực hiện tối đa 20 thao
-      tác nạp/rút và trả timeline số dư trước/sau, trạng thái chấp nhận cùng lý do
-      từ chối. Không lưu tài khoản và không giao dịch tiền thật.
+AbstractionExperimentsController:
+  shippingQuote(ShippingQuoteRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
     enableVideoYoutube: false
-    videoYoutubeId: ''
-    videoYoutubeTitle: ''
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
     aiGenerated: true
     reviewed: false
     readmeRelated:
       file: ''
       anchor: ''
-    methodName: simulateAccount
+    methodName: shippingQuote
     params:
     - request
-    path: com/example/learning/oop/basics/controller/BasicsExperimentController.java
-    mapping: '@PostMapping("/accounts/simulate")'
+    path: com/example/learning/oop/abstraction/controller/AbstractionExperimentsController.java
+    mapping: '@PostMapping("/shipping/quote")'
     httpMethods:
     - POST
     mappingPaths:
-    - /oop/basics/accounts/simulate
+    - /oop/abstraction/shipping/quote
     produces: [
       ]
     consumes: [
       ]
     usage: true
-  simulateOrder(OrderSimulationRequest):
-    summary: Quan sát cộng tác đối tượng và vòng đời đơn hàng
-    description: Mô phỏng tối đa 20 thao tác thêm dòng hàng, xác nhận hoặc hủy một
-      OrderAggregate. Phản hồi hiển thị trạng thái, tổng tiền và số dòng hàng sau
-      từng bước, kể cả bước bị từ chối.
+  seatScenario(SeatScenarioRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
     enableVideoYoutube: false
-    videoYoutubeId: ''
-    videoYoutubeTitle: ''
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
     aiGenerated: true
     reviewed: false
     readmeRelated:
       file: ''
       anchor: ''
-    methodName: simulateOrder
+    methodName: seatScenario
     params:
     - request
-    path: com/example/learning/oop/basics/controller/BasicsExperimentController.java
-    mapping: '@PostMapping("/orders/simulate")'
+    path: com/example/learning/oop/abstraction/controller/AbstractionExperimentsController.java
+    mapping: '@PostMapping("/seats/simulate")'
     httpMethods:
     - POST
     mappingPaths:
-    - /oop/basics/orders/simulate
+    - /oop/abstraction/seats/simulate
     produces: [
       ]
     consumes: [
       ]
     usage: true
-  compareShipping(ShippingQuoteRequest):
-    summary: So sánh hai cách thực thi cùng hợp đồng vận chuyển
-    description: Dùng hai implementation Pickup và Courier của ShippingPolicy để tính
-      báo giá trên cùng đơn hàng và quãng đường; trả danh sách chính sách, phí và
-      tổng phải trả. Đây chỉ là mức phí minh họa.
+  leaveEvaluation(LeaveEvaluationRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
     enableVideoYoutube: false
-    videoYoutubeId: ''
-    videoYoutubeTitle: ''
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
     aiGenerated: true
     reviewed: false
     readmeRelated:
       file: ''
       anchor: ''
-    methodName: compareShipping
+    methodName: leaveEvaluation
     params:
     - request
-    path: com/example/learning/oop/basics/controller/BasicsExperimentController.java
-    mapping: '@PostMapping("/shipping/quotes")'
+    path: com/example/learning/oop/abstraction/controller/AbstractionExperimentsController.java
+    mapping: '@PostMapping("/leave/evaluate")'
     httpMethods:
     - POST
     mappingPaths:
-    - /oop/basics/shipping/quotes
+    - /oop/abstraction/leave/evaluate
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  catalogSearch(CatalogSearchRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: catalogSearch
+    params:
+    - request
+    path: com/example/learning/oop/abstraction/controller/AbstractionExperimentsController.java
+    mapping: '@PostMapping("/catalog/search")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/abstraction/catalog/search
     produces: [
       ]
     consumes: [
@@ -82,12 +101,11 @@ BasicsExperimentController:
     usage: true
 ClassesExperimentController:
   inventory(InventoryRequest):
-    summary: Quan sát trường dữ liệu và phương thức bảo toàn trạng thái InventoryItem
-    description: Mô phỏng tối đa 20 lệnh restock, sell, rename trên một InventoryItem;
-      trả snapshot trước/sau và lý do các lần cập nhật bị từ chối.
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
     enableVideoYoutube: false
-    videoYoutubeId: ''
-    videoYoutubeTitle: ''
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -96,7 +114,7 @@ ClassesExperimentController:
     methodName: inventory
     params:
     - request
-    path: com/example/learning/oop/classes/ClassesExperimentController.java
+    path: com/example/learning/oop/class_chapter/controller/ClassesExperimentController.java
     mapping: '@PostMapping("/inventory/experiment")'
     httpMethods:
     - POST
@@ -108,13 +126,11 @@ ClassesExperimentController:
       ]
     usage: true
   workshops(WorkshopRequest):
-    summary: Phân biệt trạng thái instance, hằng lớp và tham chiếu alias
-    description: Tạo hai Workshop độc lập và một alias trỏ tới workshop thứ hai; thử
-      đăng ký nhiều lượt để so sánh giới hạn theo đối tượng và trạng thái chia sẻ
-      qua alias.
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
     enableVideoYoutube: false
-    videoYoutubeId: ''
-    videoYoutubeTitle: ''
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -123,7 +139,7 @@ ClassesExperimentController:
     methodName: workshops
     params:
     - request
-    path: com/example/learning/oop/classes/ClassesExperimentController.java
+    path: com/example/learning/oop/class_chapter/controller/ClassesExperimentController.java
     mapping: '@PostMapping("/workshops/experiment")'
     httpMethods:
     - POST
@@ -135,12 +151,11 @@ ClassesExperimentController:
       ]
     usage: true
   bank(BankRequest):
-    summary: Kiểm chứng đóng gói số dư và chuyển tiền nguyên tử trong bộ nhớ
-    description: Tạo hai BankAccount trong một request; chạy tối đa 20 thao tác deposit/withdraw/transfer
-      và ghi snapshot cả hai tài khoản trước/sau từng bước.
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
     enableVideoYoutube: false
-    videoYoutubeId: ''
-    videoYoutubeTitle: ''
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -149,7 +164,7 @@ ClassesExperimentController:
     methodName: bank
     params:
     - request
-    path: com/example/learning/oop/classes/ClassesExperimentController.java
+    path: com/example/learning/oop/class_chapter/controller/ClassesExperimentController.java
     mapping: '@PostMapping("/bank/experiment")'
     httpMethods:
     - POST
@@ -160,14 +175,721 @@ ClassesExperimentController:
     consumes: [
       ]
     usage: true
-ObjectExperimentsController:
-  references(ObjectExperimentDto.ReferenceRequest):
-    summary: Quan sát alias, identity và truyền tham chiếu theo giá trị
-    description: Tạo object gốc, alias và một object mới cùng trạng thái ban đầu;
-      thay đổi qua alias và thử gán lại tham số để quan sát sự khác biệt.
+ClassDesignExperimentsController:
+  library(LibraryRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
     enableVideoYoutube: false
-    videoYoutubeId: ''
-    videoYoutubeTitle: ''
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: library
+    params:
+    - request
+    path: com/example/learning/oop/class_design/controller/ClassDesignExperimentsController.java
+    mapping: '@PostMapping("/library/experiment")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/class-design/library/experiment
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  checkout(CheckoutRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: checkout
+    params:
+    - request
+    path: com/example/learning/oop/class_design/controller/ClassDesignExperimentsController.java
+    mapping: '@PostMapping("/checkout/experiment")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/class-design/checkout/experiment
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  transfer(TransferRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: transfer
+    params:
+    - request
+    path: com/example/learning/oop/class_design/controller/ClassDesignExperimentsController.java
+    mapping: '@PostMapping("/transfers/experiment")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/class-design/transfers/experiment
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+CompositionExperimentController:
+  notification(NotificationRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: notification
+    params:
+    - request
+    path: com/example/learning/oop/composition/controller/CompositionExperimentController.java
+    mapping: '@PostMapping("/notifications")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/composition/notifications
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  policies(PolicyRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: policies
+    params:
+    - request
+    path: com/example/learning/oop/composition/controller/CompositionExperimentController.java
+    mapping: '@PostMapping("/policies")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/composition/policies
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  placeOrder(PlaceOrderRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: placeOrder
+    params:
+    - request
+    path: com/example/learning/oop/composition/controller/CompositionExperimentController.java
+    mapping: '@PostMapping("/orders")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/composition/orders
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  resources(ResourceRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: resources
+    params:
+    - request
+    path: com/example/learning/oop/composition/controller/CompositionExperimentController.java
+    mapping: '@PostMapping("/resources")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/composition/resources
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+DesignPatternExperimentController:
+  pricing(PricingRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: pricing
+    params:
+    - request
+    path: com/example/learning/oop/design_patterns/controller/DesignPatternExperimentController.java
+    mapping: '@PostMapping("/pricing/experiment")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/design-patterns/pricing/experiment
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  tasks(TasksRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: tasks
+    params:
+    - request
+    path: com/example/learning/oop/design_patterns/controller/DesignPatternExperimentController.java
+    mapping: '@PostMapping("/tasks/experiment")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/design-patterns/tasks/experiment
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  report(ReportRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: report
+    params:
+    - request
+    path: com/example/learning/oop/design_patterns/controller/DesignPatternExperimentController.java
+    mapping: '@PostMapping("/reports/generate")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/design-patterns/reports/generate
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+DesignPitfallExperimentController:
+  seats(SeatsRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: seats
+    params:
+    - input
+    path: com/example/learning/oop/design_pitfalls/controller/DesignPitfallExperimentController.java
+    mapping: '@PostMapping("/seats/experiment")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/design-pitfalls/seats/experiment
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  mutableKey(MutableKeyRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: mutableKey
+    params:
+    - input
+    path: com/example/learning/oop/design_pitfalls/controller/DesignPitfallExperimentController.java
+    mapping: '@PostMapping("/mutable-key/experiment")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/design-pitfalls/mutable-key/experiment
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  checkout(CheckoutRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: checkout
+    params:
+    - input
+    path: com/example/learning/oop/design_pitfalls/controller/DesignPitfallExperimentController.java
+    mapping: '@PostMapping("/checkout/refactor")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/design-pitfalls/checkout/refactor
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+EncapsulationExperimentController:
+  cart(CartRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: cart
+    params:
+    - request
+    path: com/example/learning/oop/encapsulation/controller/EncapsulationExperimentController.java
+    mapping: '@PostMapping("/cart/experiment")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/encapsulation/cart/experiment
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  stock(StockRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: stock
+    params:
+    - request
+    path: com/example/learning/oop/encapsulation/controller/EncapsulationExperimentController.java
+    mapping: '@PostMapping("/stock/experiment")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/encapsulation/stock/experiment
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  snapshot(EventRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: snapshot
+    params:
+    - request
+    path: com/example/learning/oop/encapsulation/controller/EncapsulationExperimentController.java
+    mapping: '@PostMapping("/event-snapshot/experiment")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/encapsulation/event-snapshot/experiment
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  order(OrderRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: order
+    params:
+    - request
+    path: com/example/learning/oop/encapsulation/controller/EncapsulationExperimentController.java
+    mapping: '@PostMapping("/order/experiment")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/encapsulation/order/experiment
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+InheritanceExperimentsController:
+  calculatePay(PayrollRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: calculatePay
+    params:
+    - request
+    path: com/example/learning/oop/inheritance/controller/InheritanceExperimentsController.java
+    mapping: '@PostMapping("/payroll/calculate")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/inheritance/payroll/calculate
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  compareDelivery(DeliveryRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: compareDelivery
+    params:
+    - request
+    path: com/example/learning/oop/inheritance/controller/InheritanceExperimentsController.java
+    mapping: '@PostMapping("/delivery/compare")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/inheritance/delivery/compare
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  constructorTrace(ConstructorRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: constructorTrace
+    params:
+    - request
+    path: com/example/learning/oop/inheritance/controller/InheritanceExperimentsController.java
+    mapping: '@PostMapping("/constructors/trace")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/inheritance/constructors/trace
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  resolveCapabilities(CapabilitiesRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: resolveCapabilities
+    params:
+    - request
+    path: com/example/learning/oop/inheritance/controller/InheritanceExperimentsController.java
+    mapping: '@PostMapping("/capabilities/resolve")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/inheritance/capabilities/resolve
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+InterfaceExperimentsController:
+  shipping(ShippingRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: shipping
+    params:
+    - request
+    path: com/example/learning/oop/interface_chapter/controller/InterfaceExperimentsController.java
+    mapping: '@PostMapping("/shipping/quote")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/interfaces/shipping/quote
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  documents(DocumentRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: documents
+    params:
+    - request
+    path: com/example/learning/oop/interface_chapter/controller/InterfaceExperimentsController.java
+    mapping: '@PostMapping("/documents/experiment")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/interfaces/documents/experiment
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  checkout(CheckoutRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: checkout
+    params:
+    - request
+    path: com/example/learning/oop/interface_chapter/controller/InterfaceExperimentsController.java
+    mapping: '@PostMapping("/checkout/experiment")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/interfaces/checkout/experiment
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+LanguageMechanicsExperimentsController:
+  generics(GenericBatchRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: generics
+    params:
+    - request
+    path: com/example/learning/oop/language_mechanics/controller/LanguageMechanicsExperimentsController.java
+    mapping: '@PostMapping("/generics/experiment")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/language-mechanics/generics/experiment
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  stock(StockRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: stock
+    params:
+    - request
+    path: com/example/learning/oop/language_mechanics/controller/LanguageMechanicsExperimentsController.java
+    mapping: '@PostMapping("/stock/experiment")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/language-mechanics/stock/experiment
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  shipping(ShippingRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: shipping
+    params:
+    - request
+    path: com/example/learning/oop/language_mechanics/controller/LanguageMechanicsExperimentsController.java
+    mapping: '@PostMapping("/shipping/experiment")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/language-mechanics/shipping/experiment
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+LifecycleExperimentController:
+  create(CreationRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: create
+    params:
+    - request
+    path: com/example/learning/oop/lifecycle/controller/LifecycleExperimentController.java
+    mapping: '@PostMapping("/creation")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/lifecycle/creation
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  references(ReferenceRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -176,7 +898,134 @@ ObjectExperimentsController:
     methodName: references
     params:
     - request
-    path: com/example/learning/oop/objects/ObjectExperimentsController.java
+    path: com/example/learning/oop/lifecycle/controller/LifecycleExperimentController.java
+    mapping: '@PostMapping("/references")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/lifecycle/references
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  resources(ResourceRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: resources
+    params:
+    - request
+    path: com/example/learning/oop/lifecycle/controller/LifecycleExperimentController.java
+    mapping: '@PostMapping("/resources")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/lifecycle/resources
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  publication(PublicationRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: publication
+    params:
+    - request
+    path: com/example/learning/oop/lifecycle/controller/LifecycleExperimentController.java
+    mapping: '@PostMapping("/publication")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/lifecycle/publication
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+ModelingExperimentController:
+  library(LibraryRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: library
+    params:
+    - request
+    path: com/example/learning/oop/modeling/controller/ModelingExperimentController.java
+    mapping: '@PostMapping("/library/experiment")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/modeling/library/experiment
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  orders(OrderRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: orders
+    params:
+    - request
+    path: com/example/learning/oop/modeling/controller/ModelingExperimentController.java
+    mapping: '@PostMapping("/orders/experiment")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/modeling/orders/experiment
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+ObjectExperimentsController:
+  references(ObjectExperimentDto.ReferenceRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: references
+    params:
+    - request
+    path: com/example/learning/oop/object/controller/ObjectExperimentsController.java
     mapping: '@PostMapping("/references")'
     httpMethods:
     - POST
@@ -188,12 +1037,11 @@ ObjectExperimentsController:
       ]
     usage: true
   equality(ObjectExperimentDto.EqualityRequest):
-    summary: So sánh identity, equals/hashCode và tập hợp Set
-    description: Tạo hai ProductCode record theo input để so sánh ==, equals, hashCode
-      và số phần tử HashSet; đối chiếu một class mặc định chỉ có Object.equals.
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
     enableVideoYoutube: false
-    videoYoutubeId: ''
-    videoYoutubeTitle: ''
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -202,7 +1050,7 @@ ObjectExperimentsController:
     methodName: equality
     params:
     - request
-    path: com/example/learning/oop/objects/ObjectExperimentsController.java
+    path: com/example/learning/oop/object/controller/ObjectExperimentsController.java
     mapping: '@PostMapping("/equality")'
     httpMethods:
     - POST
@@ -214,13 +1062,11 @@ ObjectExperimentsController:
       ]
     usage: true
   copies(ObjectExperimentDto.CopyRequest):
-    summary: Phân biệt shallow copy, deep copy và collection bất biến bề ngoài
-    description: Tạo danh sách chứa mutable item, sao chép nông và sâu, chụp List.copyOf
-      và immutable record; mutate phần tử và thêm item rồi trả các danh sách sau thay
-      đổi.
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
     enableVideoYoutube: false
-    videoYoutubeId: ''
-    videoYoutubeTitle: ''
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -229,7 +1075,7 @@ ObjectExperimentsController:
     methodName: copies
     params:
     - request
-    path: com/example/learning/oop/objects/ObjectExperimentsController.java
+    path: com/example/learning/oop/object/controller/ObjectExperimentsController.java
     mapping: '@PostMapping("/copies")'
     httpMethods:
     - POST
@@ -241,12 +1087,11 @@ ObjectExperimentsController:
       ]
     usage: true
   absence(ObjectExperimentDto.AbsenceRequest):
-    summary: Biểu diễn object vắng mặt bằng Optional và collection rỗng
-    description: Tra cứu khách hàng giả lập theo lookupId và địa chỉ tùy chọn; trả
-      cờ found, optionalAddressPresent, tên hoặc danh sách địa chỉ rỗng.
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
     enableVideoYoutube: false
-    videoYoutubeId: ''
-    videoYoutubeTitle: ''
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -255,7 +1100,7 @@ ObjectExperimentsController:
     methodName: absence
     params:
     - request
-    path: com/example/learning/oop/objects/ObjectExperimentsController.java
+    path: com/example/learning/oop/object/controller/ObjectExperimentsController.java
     mapping: '@PostMapping("/absence")'
     httpMethods:
     - POST
@@ -267,13 +1112,11 @@ ObjectExperimentsController:
       ]
     usage: true
   checkout(ObjectExperimentDto.CheckoutRequest):
-    summary: Theo dõi cộng tác Cart–Inventory–Payment–Order–Notifier
-    description: Chạy một checkout mô phỏng trong bộ nhớ; trả events có thứ tự, số
-      lượng tồn kho trước/sau, kết quả payment và cờ notification mà không thực hiện
-      giao dịch thật.
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
     enableVideoYoutube: false
-    videoYoutubeId: ''
-    videoYoutubeTitle: ''
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
     aiGenerated: true
     reviewed: false
     readmeRelated:
@@ -282,12 +1125,570 @@ ObjectExperimentsController:
     methodName: checkout
     params:
     - request
-    path: com/example/learning/oop/objects/ObjectExperimentsController.java
+    path: com/example/learning/oop/object/controller/ObjectExperimentsController.java
     mapping: '@PostMapping("/checkout")'
     httpMethods:
     - POST
     mappingPaths:
     - /oop/objects/checkout
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+BasicsExperimentController:
+  simulateAccount(AccountSimulationRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: simulateAccount
+    params:
+    - request
+    path: com/example/learning/oop/oop_basic/controller/BasicsExperimentController.java
+    mapping: '@PostMapping("/accounts/simulate")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/basics/accounts/simulate
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  simulateOrder(OrderSimulationRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: simulateOrder
+    params:
+    - request
+    path: com/example/learning/oop/oop_basic/controller/BasicsExperimentController.java
+    mapping: '@PostMapping("/orders/simulate")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/basics/orders/simulate
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  compareShipping(ShippingQuoteRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: compareShipping
+    params:
+    - request
+    path: com/example/learning/oop/oop_basic/controller/BasicsExperimentController.java
+    mapping: '@PostMapping("/shipping/quotes")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/basics/shipping/quotes
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+PolymorphismExperimentsController:
+  dispatch(DispatchRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: dispatch
+    params:
+    - request
+    path: com/example/learning/oop/polymorphism/controller/PolymorphismExperimentsController.java
+    mapping: '@PostMapping("/dispatch/experiment")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/polymorphism/dispatch/experiment
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  payments(PaymentsRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: payments
+    params:
+    - request
+    path: com/example/learning/oop/polymorphism/controller/PolymorphismExperimentsController.java
+    mapping: '@PostMapping("/payments/experiment")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/polymorphism/payments/experiment
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+PracticeExperimentController:
+  bank(BankRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: bank
+    params:
+    - request
+    path: com/example/learning/oop/practice/controller/PracticeExperimentController.java
+    mapping: '@PostMapping("/bank/experiment")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/practice/bank/experiment
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  orders(OrderRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: orders
+    params:
+    - request
+    path: com/example/learning/oop/practice/controller/PracticeExperimentController.java
+    mapping: '@PostMapping("/orders/experiment")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/practice/orders/experiment
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  library(LibraryRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: library
+    params:
+    - request
+    path: com/example/learning/oop/practice/controller/PracticeExperimentController.java
+    mapping: '@PostMapping("/library/experiment")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/practice/library/experiment
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+RefactoringExperimentsController:
+  checkout(CheckoutRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: checkout
+    params:
+    - input
+    path: com/example/learning/oop/refactoring/controller/RefactoringExperimentsController.java
+    mapping: '@PostMapping("/checkout/compare")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/refactoring/checkout/compare
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  delivery(DeliveryRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: delivery
+    params:
+    - input
+    path: com/example/learning/oop/refactoring/controller/RefactoringExperimentsController.java
+    mapping: '@PostMapping("/delivery/compare")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/refactoring/delivery/compare
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  alerts(AlertRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: alerts
+    params:
+    - input
+    path: com/example/learning/oop/refactoring/controller/RefactoringExperimentsController.java
+    mapping: '@PostMapping("/alerts/experiment")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/refactoring/alerts/experiment
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+RelationshipsExperimentsController:
+  transfer(TransferRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: transfer
+    params:
+    - request
+    path: com/example/learning/oop/relationships/controller/RelationshipsExperimentsController.java
+    mapping: '@PostMapping("/departments/transfer")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/relationships/departments/transfer
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  enroll(EnrollmentRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: enroll
+    params:
+    - request
+    path: com/example/learning/oop/relationships/controller/RelationshipsExperimentsController.java
+    mapping: '@PostMapping("/enrollments/simulate")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/relationships/enrollments/simulate
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  ownership(OwnershipRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: ownership
+    params:
+    - request
+    path: com/example/learning/oop/relationships/controller/RelationshipsExperimentsController.java
+    mapping: '@PostMapping("/ownership/compare")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/relationships/ownership/compare
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+SolidExperimentController:
+  quote(QuoteRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: quote
+    params:
+    - request
+    path: com/example/learning/oop/solid/controller/SolidExperimentController.java
+    mapping: '@PostMapping("/discount/quote")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/solid/discount/quote
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  experiment(ExperimentRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: experiment
+    params:
+    - request
+    path: com/example/learning/oop/solid/controller/SolidExperimentController.java
+    mapping: '@PostMapping("/checkout/experiment")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/solid/checkout/experiment
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+SubtypingExperimentController:
+  dispatch(DispatchRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: dispatch
+    params:
+    - request
+    path: com/example/learning/oop/subtyping/controller/SubtypingExperimentController.java
+    mapping: '@PostMapping("/dispatch")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/subtyping/dispatch
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  contract(DiscountRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: contract
+    params:
+    - request
+    path: com/example/learning/oop/subtyping/controller/SubtypingExperimentController.java
+    mapping: '@PostMapping("/discount-contract")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/subtyping/discount-contract
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  geometry(GeometryRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: geometry
+    params:
+    - request
+    path: com/example/learning/oop/subtyping/controller/SubtypingExperimentController.java
+    mapping: '@PostMapping("/geometry-contract")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/subtyping/geometry-contract
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+TestingExperimentController:
+  contracts(ContractRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: contracts
+    params:
+    - request
+    path: com/example/learning/oop/testing/controller/TestingExperimentController.java
+    mapping: '@PostMapping("/inventory/contracts")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/testing/inventory/contracts
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  collaboration(CollaborationRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: collaboration
+    params:
+    - request
+    path: com/example/learning/oop/testing/controller/TestingExperimentController.java
+    mapping: '@PostMapping("/checkout/collaboration")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/testing/checkout/collaboration
+    produces: [
+      ]
+    consumes: [
+      ]
+    usage: true
+  regression(RegressionRequest):
+    summary: Chưa có tiêu đề
+    description: Chưa có mô tả chi tiết
+    enableVideoYoutube: false
+    videoYoutubeId: ID của video youtube chèn vào description trong API
+    videoYoutubeTitle: Tiêu đề của video
+    aiGenerated: true
+    reviewed: false
+    readmeRelated:
+      file: ''
+      anchor: ''
+    methodName: regression
+    params:
+    - request
+    path: com/example/learning/oop/testing/controller/TestingExperimentController.java
+    mapping: '@PostMapping("/pricing/regression")'
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/testing/pricing/regression
     produces: [
       ]
     consumes: [

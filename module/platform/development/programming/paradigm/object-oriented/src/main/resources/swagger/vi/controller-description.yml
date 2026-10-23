@@ -1,18 +1,126 @@
-BasicsExperimentController:
+AbstractionExperimentsController:
   description: |-
-    <h2>Thí nghiệm tư duy hướng đối tượng</h2>
-    <p>Kích hoạt ba tình huống runtime có giới hạn: trạng thái BankAccount, vòng đời OrderAggregate và đa hình ShippingPolicy. Controller chỉ nhận/trả JSON; nghiệp vụ thuộc Service và domain objects. Mỗi request độc lập, không ghi dữ liệu hay giao dịch thật.</p>
+    <h2>Abstraction Experiments Controller</h2>
+    <p>Đây là mô tả</p>
   readmeRelated:
     file: ''
 ClassesExperimentController:
   description: |-
-    <h2>Thí nghiệm lớp, thành viên và hành vi</h2>
-    <p>Quan sát field/method qua InventoryItem, quan hệ instance/alias qua Workshop và đóng gói số dư/chuyển tiền qua BankAccount. Các mô hình chỉ tồn tại trong request, có giới hạn thao tác và kiểm tra bất biến.</p>
+    <h2>Classes Experiment Controller</h2>
+    <p>Đây là mô tả</p>
+  readmeRelated:
+    file: ''
+ClassDesignExperimentsController:
+  description: |-
+    <h2>Class Design Experiments Controller</h2>
+    <p>Đây là mô tả</p>
+  readmeRelated:
+    file: ''
+CompositionExperimentController:
+  description: |-
+    <h2>Composition Experiment Controller</h2>
+    <p>Đây là mô tả</p>
+  readmeRelated:
+    file: ''
+DesignPatternExperimentController:
+  description: |-
+    <h2>Design Pattern Experiment Controller</h2>
+    <p>Đây là mô tả</p>
+  readmeRelated:
+    file: ''
+DesignPitfallExperimentController:
+  description: |-
+    <h2>Design Pitfall Experiment Controller</h2>
+    <p>Đây là mô tả</p>
+  readmeRelated:
+    file: ''
+EncapsulationExperimentController:
+  description: |-
+    <h2>Encapsulation Experiment Controller</h2>
+    <p>Đây là mô tả</p>
+  readmeRelated:
+    file: ''
+InheritanceExperimentsController:
+  description: |-
+    <h2>Inheritance Experiments Controller</h2>
+    <p>Đây là mô tả</p>
+  readmeRelated:
+    file: ''
+InterfaceExperimentsController:
+  description: |-
+    <h2>Interface Experiments Controller</h2>
+    <p>Đây là mô tả</p>
+  readmeRelated:
+    file: ''
+LanguageMechanicsExperimentsController:
+  description: |-
+    <h2>Language Mechanics Experiments Controller</h2>
+    <p>Đây là mô tả</p>
+  readmeRelated:
+    file: ''
+LifecycleExperimentController:
+  description: |-
+    <h2>Lifecycle Experiment Controller</h2>
+    <p>Đây là mô tả</p>
+  readmeRelated:
+    file: ''
+ModelingExperimentController:
+  description: |-
+    <h2>Modeling Experiment Controller</h2>
+    <p>Đây là mô tả</p>
   readmeRelated:
     file: ''
 ObjectExperimentsController:
   description: |-
-    <h2>Thí nghiệm identity, sao chép và cộng tác đối tượng</h2>
-    <p>Kiểm chứng alias, Java pass-by-value, equals/hashCode, shallow/deep copy, Optional và checkout qua các response có bằng chứng thực thi. Tất cả dữ liệu và side effect đều mô phỏng nội bộ.</p>
+    <h2>Object Experiments Controller</h2>
+    <p>Đây là mô tả</p>
+  readmeRelated:
+    file: ''
+BasicsExperimentController:
+  description: |-
+    <h2>Basics Experiment Controller</h2>
+    <p>Đây là mô tả</p>
+  readmeRelated:
+    file: ''
+PolymorphismExperimentsController:
+  description: |-
+    <h2>Polymorphism Experiments Controller</h2>
+    <p>Đây là mô tả</p>
+  readmeRelated:
+    file: ''
+PracticeExperimentController:
+  description: |-
+    <h2>Practice Experiment Controller</h2>
+    <p>Đây là mô tả</p>
+  readmeRelated:
+    file: ''
+RefactoringExperimentsController:
+  description: |-
+    <h2>Refactoring Experiments Controller</h2>
+    <p>Đây là mô tả</p>
+  readmeRelated:
+    file: ''
+RelationshipsExperimentsController:
+  description: |-
+    <h2>Relationships Experiments Controller</h2>
+    <p>Đây là mô tả</p>
+  readmeRelated:
+    file: ''
+SolidExperimentController:
+  description: |-
+    <h2>Solid Experiment Controller</h2>
+    <p>Đây là mô tả</p>
+  readmeRelated:
+    file: ''
+SubtypingExperimentController:
+  description: |-
+    <h2>Subtyping Experiment Controller</h2>
+    <p>Đây là mô tả</p>
+  readmeRelated:
+    file: ''
+TestingExperimentController:
+  description: |-
+    <h2>Testing Experiment Controller</h2>
+    <p>Đây là mô tả</p>
   readmeRelated:
     file: ''

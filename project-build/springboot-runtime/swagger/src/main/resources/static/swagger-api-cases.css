@@ -1,0 +1,104 @@
+.swagger-ui .swagger-api-cases {
+    margin: 12px 0 16px;
+    padding: 16px;
+    border: 1px solid #d0d7de;
+    border-radius: 8px;
+    background: #f8fafc;
+}
+
+.swagger-ui .swagger-api-cases h4 {
+    margin: 0 0 8px;
+    font-size: 17px;
+}
+
+.swagger-ui .swagger-api-cases-intro {
+    margin: 0 0 12px;
+    color: #48556a;
+    font-size: 13px;
+}
+
+.swagger-ui .swagger-api-case {
+    margin-top: 8px;
+    padding: 10px 12px;
+    border: 1px solid #d0d7de;
+    border-radius: 5px;
+    background: white;
+}
+
+.swagger-ui .swagger-api-case summary {
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.swagger-ui .swagger-api-case p {
+    margin: 10px 0;
+}
+
+.swagger-ui .swagger-api-case-details {
+    margin: 10px 0 14px;
+    line-height: 1.65;
+    overflow-wrap: anywhere;
+}
+
+.swagger-ui .swagger-api-case-details ol,
+.swagger-ui .swagger-api-case-details ul {
+    margin: 8px 0 12px;
+    padding-left: 24px;
+}
+
+.swagger-ui .swagger-api-case-details li {
+    margin: 4px 0;
+}
+
+.swagger-ui .swagger-api-case-details strong {
+    display: inline;
+    margin: 0;
+}
+
+.swagger-ui .swagger-api-case-details pre {
+    white-space: pre-wrap;
+    overflow-wrap: normal;
+}
+
+.swagger-ui .swagger-api-case-details code {
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+}
+
+.swagger-ui .swagger-api-case strong {
+    display: block;
+    margin-top: 10px;
+}
+
+.swagger-ui .swagger-api-case .swagger-api-case-details strong {
+    display: inline;
+    margin-top: 0;
+}
+
+.swagger-ui .swagger-api-case pre {
+    overflow-x: auto;
+    padding: 12px;
+    border-radius: 5px;
+    background: #f1f5f9;
+    color: #1f2937;
+    white-space: pre;
+    font-size: 12px;
+}
+
+/* Keep the selected description immediately beneath the Examples dropdown,
+   rather than after the JSON editor. Reorder only the named-examples layout. */
+.swagger-ui .opblock-section-request-body .opblock-description-wrapper > div:has(> .examples-select) {
+    display: flex;
+    flex-direction: column;
+}
+
+.swagger-ui .opblock-section-request-body .opblock-description-wrapper > div > .examples-select {
+    order: 1;
+}
+
+.swagger-ui .opblock-section-request-body .opblock-description-wrapper > div > .example {
+    order: 2;
+}
+
+.swagger-ui .opblock-section-request-body .opblock-description-wrapper > div > :not(.examples-select):not(.example):not(.renderedMarkdown) {
+    order: 3;
+}

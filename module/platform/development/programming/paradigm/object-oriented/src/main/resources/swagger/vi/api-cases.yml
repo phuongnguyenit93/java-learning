@@ -1,0 +1,2464 @@
+AbstractionExperimentsController:
+  shippingQuote(ShippingQuoteRequest):
+    methodName: shippingQuote
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/abstraction/shipping/quote
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+  seatScenario(SeatScenarioRequest):
+    methodName: seatScenario
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/abstraction/seats/simulate
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+  leaveEvaluation(LeaveEvaluationRequest):
+    methodName: leaveEvaluation
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/abstraction/leave/evaluate
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+  catalogSearch(CatalogSearchRequest):
+    methodName: catalogSearch
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/abstraction/catalog/search
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+ClassesExperimentController:
+  inventory(InventoryRequest):
+    methodName: inventory
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/classes/inventory/experiment
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+  workshops(WorkshopRequest):
+    methodName: workshops
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/classes/workshops/experiment
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+  bank(BankRequest):
+    methodName: bank
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/classes/bank/experiment
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+ClassDesignExperimentsController:
+  library(LibraryRequest):
+    methodName: library
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/class-design/library/experiment
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+  checkout(CheckoutRequest):
+    methodName: checkout
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/class-design/checkout/experiment
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+  transfer(TransferRequest):
+    methodName: transfer
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/class-design/transfers/experiment
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+CompositionExperimentController:
+  notification(NotificationRequest):
+    methodName: notification
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/composition/notifications
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+  policies(PolicyRequest):
+    methodName: policies
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/composition/policies
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+  placeOrder(PlaceOrderRequest):
+    methodName: placeOrder
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/composition/orders
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+  resources(ResourceRequest):
+    methodName: resources
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/composition/resources
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+DesignPatternExperimentController:
+  pricing(PricingRequest):
+    methodName: pricing
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/design-patterns/pricing/experiment
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+  tasks(TasksRequest):
+    methodName: tasks
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/design-patterns/tasks/experiment
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+  report(ReportRequest):
+    methodName: report
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/design-patterns/reports/generate
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+DesignPitfallExperimentController:
+  seats(SeatsRequest):
+    methodName: seats
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/design-pitfalls/seats/experiment
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+  mutableKey(MutableKeyRequest):
+    methodName: mutableKey
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/design-pitfalls/mutable-key/experiment
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+  checkout(CheckoutRequest):
+    methodName: checkout
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/design-pitfalls/checkout/refactor
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+EncapsulationExperimentController:
+  cart(CartRequest):
+    methodName: cart
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/encapsulation/cart/experiment
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+  stock(StockRequest):
+    methodName: stock
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/encapsulation/stock/experiment
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+  snapshot(EventRequest):
+    methodName: snapshot
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/encapsulation/event-snapshot/experiment
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+  order(OrderRequest):
+    methodName: order
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/encapsulation/order/experiment
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+InheritanceExperimentsController:
+  calculatePay(PayrollRequest):
+    methodName: calculatePay
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/inheritance/payroll/calculate
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+  compareDelivery(DeliveryRequest):
+    methodName: compareDelivery
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/inheritance/delivery/compare
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+  constructorTrace(ConstructorRequest):
+    methodName: constructorTrace
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/inheritance/constructors/trace
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+  resolveCapabilities(CapabilitiesRequest):
+    methodName: resolveCapabilities
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/inheritance/capabilities/resolve
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+InterfaceExperimentsController:
+  shipping(ShippingRequest):
+    methodName: shipping
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/interfaces/shipping/quote
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+  documents(DocumentRequest):
+    methodName: documents
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/interfaces/documents/experiment
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+  checkout(CheckoutRequest):
+    methodName: checkout
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/interfaces/checkout/experiment
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+LanguageMechanicsExperimentsController:
+  generics(GenericBatchRequest):
+    methodName: generics
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/language-mechanics/generics/experiment
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+  stock(StockRequest):
+    methodName: stock
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/language-mechanics/stock/experiment
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+  shipping(ShippingRequest):
+    methodName: shipping
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/language-mechanics/shipping/experiment
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+LifecycleExperimentController:
+  create(CreationRequest):
+    methodName: create
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/lifecycle/creation
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+  references(ReferenceRequest):
+    methodName: references
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/lifecycle/references
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+  resources(ResourceRequest):
+    methodName: resources
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/lifecycle/resources
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+  publication(PublicationRequest):
+    methodName: publication
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/lifecycle/publication
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+ModelingExperimentController:
+  library(LibraryRequest):
+    methodName: library
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/modeling/library/experiment
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+  orders(OrderRequest):
+    methodName: orders
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/modeling/orders/experiment
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+ObjectExperimentsController:
+  references(ObjectExperimentDto.ReferenceRequest):
+    methodName: references
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/objects/references
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+  equality(ObjectExperimentDto.EqualityRequest):
+    methodName: equality
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/objects/equality
+    usage: true
+    cases:
+    - id: same_value
+      title: Hai đối tượng khác nhau nhưng cùng giá trị
+      description: Hai record được tạo riêng biệt nhưng equals và hashCode bằng nhau;
+        HashSet giữ một phần tử.
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body:
+          firstCode: SKU-01
+          secondCode: SKU-01
+      status: 200
+      response:
+        sameInstance: false
+        valueEquals: true
+        hashCodesEqual: true
+        hashSetSize: 1
+        defaultObjectEquals: false
+        aliasIsSameInstance: true
+    - id: different_value
+      title: Hai mã sản phẩm khác nhau
+      description: Hai record có giá trị khác nhau nên equals trả về false và HashSet
+        có hai phần tử.
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body:
+          firstCode: A
+          secondCode: B
+      status: 200
+      response:
+        sameInstance: false
+        valueEquals: false
+        hashCodesEqual: false
+        hashSetSize: 2
+        defaultObjectEquals: false
+        aliasIsSameInstance: true
+    - id: invalid_code
+      title: Mã sản phẩm không hợp lệ
+      description: firstCode rỗng bị từ chối với HTTP 400.
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body:
+          firstCode: ''
+          secondCode: A
+      status: 400
+      response:
+        error: firstCode must contain 1 to 80 nonblank characters
+  copies(ObjectExperimentDto.CopyRequest):
+    methodName: copies
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/objects/copies
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+  absence(ObjectExperimentDto.AbsenceRequest):
+    methodName: absence
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/objects/absence
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+  checkout(ObjectExperimentDto.CheckoutRequest):
+    methodName: checkout
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/objects/checkout
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+BasicsExperimentController:
+  simulateAccount(AccountSimulationRequest):
+    methodName: simulateAccount
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/basics/accounts/simulate
+    usage: true
+    cases:
+    - id: case_001
+      title: Nạp rồi rút tiền thành công
+      description: Một tài khoản độc lập nhận tiền nạp và khoản rút hợp lệ; timeline
+        cho thấy trạng thái trước và sau từng thao tác.
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers:
+          Content-Type: application/json
+        body:
+          accountId: DEMO-001
+          openingBalanceCents: 10000
+          actions:
+          - action: DEPOSIT
+            amountCents: 2500
+          - action: WITHDRAW
+            amountCents: 4000
+      status: 200
+      response:
+        accountId: DEMO-001
+        openingBalanceCents: 10000
+        finalBalanceCents: 8500
+        timeline:
+        - step: 1
+          action: DEPOSIT
+          amountCents: 2500
+          balanceBeforeCents: 10000
+          balanceAfterCents: 12500
+          accepted: true
+          reason: null
+        - step: 2
+          action: WITHDRAW
+          amountCents: 4000
+          balanceBeforeCents: 12500
+          balanceAfterCents: 8500
+          accepted: true
+          reason: null
+      detailDescription: |-
+        <p>Case thành công: Controller nhận POST /oop/basics/accounts/simulate rồi chuyển DTO sang BasicsExperimentService.simulateAccount. Không có trạng thái tài khoản lưu giữa các request; mọi số tiền đều tính bằng cents.</p>
+        <ol>
+        <li>requireSteps xác nhận actions có 2 phần tử (giới hạn 1–20); BankAccount(&#39;DEMO-001&#39;, 10000) kiểm tra accountId hợp lệ và số dư khởi tạo không âm.</li>
+        <li>Bước 1 DEPOSIT 2500 gọi BankAccount.deposit, requirePositive vượt qua; Math.addExact cho 10000 + 2500 = 12500. Timeline ghi before=10000, after=12500, accepted=true.</li>
+        <li>Bước 2 WITHDRAW 4000 gọi BankAccount.withdraw, 4000 không vượt 12500 nên còn 8500. Timeline ghi before=12500, after=8500, accepted=true, reason=null.</li>
+        <li>Service trả finalBalanceCents=8500 và hai mục timeline; không exception thoát ra HTTP boundary nên status 200.</li>
+        </ol>
+        <pre><code>controller.simulateAccount(request)
+          -&gt; service.simulateAccount(request)
+          -&gt; new BankAccount(&quot;DEMO-001&quot;, 10000)
+          -&gt; deposit(2500): 10000 -&gt; 12500
+          -&gt; withdraw(4000): 12500 -&gt; 8500</code></pre>
+    - id: case_002
+      title: Không đủ số dư nhưng không hủy cả chuỗi
+      description: Rút nhiều hơn số dư bị từ chối ở mức nghiệp vụ, HTTP vẫn 200; lệnh
+        nạp tiếp theo vẫn thành công.
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers:
+          Content-Type: application/json
+        body:
+          accountId: WALLET-2
+          openingBalanceCents: 500
+          actions:
+          - action: WITHDRAW
+            amountCents: 800
+          - action: DEPOSIT
+            amountCents: 100
+      status: 200
+      response:
+        accountId: WALLET-2
+        openingBalanceCents: 500
+        finalBalanceCents: 600
+        timeline:
+        - step: 1
+          action: WITHDRAW
+          amountCents: 800
+          balanceBeforeCents: 500
+          balanceAfterCents: 500
+          accepted: false
+          reason: Insufficient balance
+        - step: 2
+          action: DEPOSIT
+          amountCents: 100
+          balanceBeforeCents: 500
+          balanceAfterCents: 600
+          accepted: true
+          reason: null
+      detailDescription: |-
+        <p>Case rút quá số dư: yêu cầu hợp lệ về mặt HTTP và DTO, nhưng thao tác WITHDRAW đầu tiên bị từ chối ở mức nghiệp vụ; chuỗi không bị dừng.</p>
+        <ol>
+        <li>BasicsExperimentService tạo BankAccount(&#39;WALLET-2&#39;,500) và duyệt 2 actions. Lệnh WITHDRAW 800 gọi BankAccount.withdraw(800).</li>
+        <li>Vì 800 &gt; 500, withdraw trả false mà không ném exception. Service ghi accepted=false, reason=&#39;Insufficient balance&#39;, balanceBeforeCents=balanceAfterCents=500.</li>
+        <li>Bước DEPOSIT 100 tiếp theo vẫn chạy, nâng số dư 500 thành 600; timeline bước hai accepted=true, reason=null.</li>
+        <li>Đây không phải lỗi toàn request: service trả AccountSimulationResponse(finalBalanceCents=600); Controller trả HTTP 200 thay vì HTTP 400.</li>
+        </ol>
+        <pre><code>withdraw(800) on balance=500 -&gt; false (unchanged)
+        DEPOSIT 100 -&gt; balance=600
+        HTTP 200; timeline[0].accepted=false; timeline[1].accepted=true</code></pre>
+    - id: case_003
+      title: Nạp 0 bị từ chối nhưng số dư giữ nguyên
+      description: Vi phạm invariant của đối tượng BankAccount được ghi trong timeline,
+        các bước sau vẫn xử lý.
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers:
+          Content-Type: application/json
+        body:
+          accountId: BALANCE
+          openingBalanceCents: 500
+          actions:
+          - action: DEPOSIT
+            amountCents: 0
+          - action: DEPOSIT
+            amountCents: 100
+      status: 200
+      response:
+        accountId: BALANCE
+        openingBalanceCents: 500
+        finalBalanceCents: 600
+        timeline:
+        - step: 1
+          action: DEPOSIT
+          amountCents: 0
+          balanceBeforeCents: 500
+          balanceAfterCents: 500
+          accepted: false
+          reason: amountCents must be positive
+        - step: 2
+          action: DEPOSIT
+          amountCents: 100
+          balanceBeforeCents: 500
+          balanceAfterCents: 600
+          accepted: true
+          reason: null
+      detailDescription: |-
+        <p>Case nạp 0: BankAccount chặn biến đổi không hợp lệ, nhưng service bắt lỗi cho riêng từng action để thử các hành động còn lại.</p>
+        <ol>
+        <li>Tạo tài khoản BALANCE với openingBalanceCents=500; actions có 2 phần tử nên vượt kiểm tra requireSteps.</li>
+        <li>Lệnh DEPOSIT 0 đi vào BankAccount.deposit(0); requirePositive ném IllegalArgumentException(&#39;amountCents must be positive&#39;) trước khi cập nhật balance.</li>
+        <li>Khối catch trong vòng lặp của BasicsExperimentService ghi bước một accepted=false, reason chính xác thông báo lỗi, balanceBeforeCents=balanceAfterCents=500.</li>
+        <li>Bước DEPOSIT 100 sau đó thành công, số dư cuối 600. Exception đã được bắt bên trong service nên HTTP 200; đây là lỗi action, không phải lỗi request.</li>
+        </ol>
+        <pre><code>deposit(0) -&gt; IllegalArgumentException
+        catch per action -&gt; accepted=false, balance=500
+        deposit(100) -&gt; balance=600; HTTP 200</code></pre>
+    - id: case_004
+      title: Mã tài khoản sai định dạng — HTTP 400
+      description: Lỗi ở đầu request không được đưa vào timeline; handler trả về mã
+        INVALID_INPUT.
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers:
+          Content-Type: application/json
+        body:
+          accountId: bad id
+          openingBalanceCents: 100
+          actions:
+          - action: DEPOSIT
+            amountCents: 50
+      status: 400
+      response:
+        code: INVALID_INPUT
+        message: accountId must contain 1-40 letters, digits, '_' or '-'
+      detailDescription: |-
+        <p>Case HTTP 400: mã &#39;bad id&#39; chứa dấu cách, không khớp invariant định danh tài khoản của BankAccount.</p>
+        <ol>
+        <li>BasicsExperimentController tiếp nhận request và gọi service.simulateAccount; requireSteps xác nhận mảng actions có một phần tử.</li>
+        <li>Khi new BankAccount(&#39;bad id&#39;,100), constructor kiểm tra regex [A-Za-z0-9_-]{1,40} và ném IllegalArgumentException ngay lập tức, trước vòng lặp xử lý actions.</li>
+        <li>Lỗi khởi tạo không nằm trong try/catch theo từng action nên thoát khỏi service. BasicsExperimentExceptionHandler, chỉ áp dụng cho BasicsExperimentController, bắt IllegalArgumentException.</li>
+        <li>Handler trả HTTP 400 với JSON code=&#39;INVALID_INPUT&#39; và message đúng văn bản invariant. Không có AccountSimulationResponse hay timeline vì tài khoản chưa được tạo.</li>
+        </ol>
+        <pre><code>new BankAccount(&quot;bad id&quot;,100)
+          -&gt; invalid accountId regex -&gt; IllegalArgumentException
+          -&gt; BasicsExperimentExceptionHandler.invalidInput
+          -&gt; HTTP 400 {code:&quot;INVALID_INPUT&quot;, message:&quot;accountId must contain 1-40 letters, digits, &#39;_&#39; or &#39;-&#39;&quot;}</code></pre>
+  simulateOrder(OrderSimulationRequest):
+    methodName: simulateOrder
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/basics/orders/simulate
+    usage: true
+    cases:
+    - id: case_001
+      title: Thêm hai mặt hàng và xác nhận đơn
+      description: Aggregate chuyển DRAFT → CONFIRMED, cộng tổng từ các dòng và phản
+        ánh số dòng sau mỗi bước.
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers:
+          Content-Type: application/json
+        body:
+          orderId: ORD-100
+          steps:
+          - action: ADD_LINE
+            sku: BOOK
+            quantity: 2
+            unitPriceCents: 1250
+          - action: ADD_LINE
+            sku: PEN
+            quantity: 3
+            unitPriceCents: 200
+          - action: CONFIRM
+      status: 200
+      response:
+        orderId: ORD-100
+        finalStatus: CONFIRMED
+        totalCents: 3100
+        timeline:
+        - step: 1
+          action: ADD_LINE
+          statusBefore: DRAFT
+          statusAfter: DRAFT
+          totalBeforeCents: 0
+          totalAfterCents: 2500
+          lineCountAfter: 1
+          accepted: true
+          reason: null
+        - step: 2
+          action: ADD_LINE
+          statusBefore: DRAFT
+          statusAfter: DRAFT
+          totalBeforeCents: 2500
+          totalAfterCents: 3100
+          lineCountAfter: 2
+          accepted: true
+          reason: null
+        - step: 3
+          action: CONFIRM
+          statusBefore: DRAFT
+          statusAfter: CONFIRMED
+          totalBeforeCents: 3100
+          totalAfterCents: 3100
+          lineCountAfter: 2
+          accepted: true
+          reason: null
+      detailDescription: |-
+        <p>Case thêm hàng và xác nhận: OrderAggregate giữ invariant và trạng thái DRAFT cho đến khi xác nhận thành công.</p>
+        <ol>
+        <li>Controller gọi simulateOrder với orderId=&#39;ORD-100&#39; và 3 steps; requireSteps cho phép số lượng 1–20. new OrderAggregate tạo status=DRAFT, totalCents=0, lines rỗng.</li>
+        <li>ADD_LINE BOOK: OrderAggregate.Line kiểm tra sku, quantity=2 và unitPriceCents=1250, Math.multiplyExact(2,1250)=2500; total thành 2500, lineCountAfter=1.</li>
+        <li>ADD_LINE PEN: 3×200=600, Math.addExact(2500,600)=3100, số dòng thành 2; cả hai bước vẫn DRAFT và accepted=true.</li>
+        <li>CONFIRM gọi order.confirm(), kiểm tra đang DRAFT và lines không rỗng rồi chuyển CONFIRMED, total vẫn 3100. Timeline 3 bước có giá trị before/after tương ứng; HTTP 200.</li>
+        </ol>
+        <pre><code>new OrderAggregate(&quot;ORD-100&quot;) // DRAFT, total=0
+        addLine(&quot;BOOK&quot;,2,1250) -&gt; total=2500
+        addLine(&quot;PEN&quot;,3,200) -&gt; total=3100
+        confirm() -&gt; CONFIRMED; HTTP 200</code></pre>
+    - id: case_002
+      title: Không thể xác nhận đơn rỗng
+      description: Nghiệp vụ từ chối CONFIRM; đơn vẫn ở DRAFT và HTTP trả 200 cùng
+        timeline giải thích.
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers:
+          Content-Type: application/json
+        body:
+          orderId: ORD-EMPTY
+          steps:
+          - action: CONFIRM
+      status: 200
+      response:
+        orderId: ORD-EMPTY
+        finalStatus: DRAFT
+        totalCents: 0
+        timeline:
+        - step: 1
+          action: CONFIRM
+          statusBefore: DRAFT
+          statusAfter: DRAFT
+          totalBeforeCents: 0
+          totalAfterCents: 0
+          lineCountAfter: 0
+          accepted: false
+          reason: Cannot confirm an empty order
+      detailDescription: |-
+        <p>Case xác nhận đơn rỗng: hành động CONFIRM thất bại nhưng request HTTP vẫn được xử lý và trả timeline mô tả lỗi nghiệp vụ.</p>
+        <ol>
+        <li>OrderAggregate(&#39;ORD-EMPTY&#39;) khởi tạo DRAFT, 0 dòng, totalCents=0; requireSteps chấp nhận một action CONFIRM.</li>
+        <li>OrderAggregate.confirm() gọi requireDraft() thành công rồi phát hiện lines.isEmpty() và ném IllegalStateException(&#39;Cannot confirm an empty order&#39;).</li>
+        <li>BasicsExperimentService bắt IllegalStateException trong vòng lặp, ghi accepted=false và reason đó; không đổi status DRAFT, totalCents=0, lineCountAfter=0.</li>
+        <li>Service trả OrderSimulationResponse chứ không ném lỗi lên Controller nên HTTP 200 (không phải 400); đây là thất bại một bước trong mô phỏng.</li>
+        </ol>
+        <pre><code>new OrderAggregate(&quot;ORD-EMPTY&quot;) // DRAFT, lines=[]
+        confirm() -&gt; IllegalStateException(&quot;Cannot confirm an empty order&quot;)
+        catch per step -&gt; accepted=false; status=DRAFT; HTTP 200</code></pre>
+    - id: case_003
+      title: Không được sửa đơn sau khi xác nhận
+      description: Việc thêm dòng vào đơn CONFIRMED bị từ chối, không làm đổi tổng
+        và số dòng trước đó.
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers:
+          Content-Type: application/json
+        body:
+          orderId: ORD-LOCK
+          steps:
+          - action: ADD_LINE
+            sku: BOOK
+            quantity: 1
+            unitPriceCents: 1500
+          - action: CONFIRM
+          - action: ADD_LINE
+            sku: PEN
+            quantity: 1
+            unitPriceCents: 100
+      status: 200
+      response:
+        orderId: ORD-LOCK
+        finalStatus: CONFIRMED
+        totalCents: 1500
+        timeline:
+        - step: 1
+          action: ADD_LINE
+          statusBefore: DRAFT
+          statusAfter: DRAFT
+          totalBeforeCents: 0
+          totalAfterCents: 1500
+          lineCountAfter: 1
+          accepted: true
+          reason: null
+        - step: 2
+          action: CONFIRM
+          statusBefore: DRAFT
+          statusAfter: CONFIRMED
+          totalBeforeCents: 1500
+          totalAfterCents: 1500
+          lineCountAfter: 1
+          accepted: true
+          reason: null
+        - step: 3
+          action: ADD_LINE
+          statusBefore: CONFIRMED
+          statusAfter: CONFIRMED
+          totalBeforeCents: 1500
+          totalAfterCents: 1500
+          lineCountAfter: 1
+          accepted: false
+          reason: 'Order must be DRAFT; actual status: CONFIRMED'
+      detailDescription: |-
+        <p>Case bất biến sau khi xác nhận: ADD_LINE cuối cùng cố sửa aggregate đã ở trạng thái CONFIRMED và bị từ chối, các giá trị cũ vẫn giữ nguyên.</p>
+        <ol>
+        <li>Bước 1 ADD_LINE BOOK 1×1500 tạo một dòng, total=1500, trạng thái DRAFT.</li>
+        <li>Bước 2 CONFIRM hợp lệ vì đơn có dòng; status chuyển CONFIRMED, total=1500, lineCount=1.</li>
+        <li>Bước 3 ADD_LINE PEN đi vào OrderAggregate.addLine(), nhưng requireDraft() thấy CONFIRMED và ném IllegalStateException(&#39;Order must be DRAFT; actual status: CONFIRMED&#39;) trước khi tạo/thêm dòng.</li>
+        <li>Service ghi bước 3 accepted=false, statusBefore=statusAfter=CONFIRMED, totalBefore=totalAfter=1500, lineCountAfter=1; vẫn HTTP 200 vì exception được bắt theo bước.</li>
+        </ol>
+        <pre><code>addLine(&quot;BOOK&quot;,1,1500) -&gt; DRAFT,total=1500
+        confirm() -&gt; CONFIRMED
+        addLine(&quot;PEN&quot;,1,100) -&gt; requireDraft() fails
+        HTTP 200; finalStatus=CONFIRMED,totalCents=1500</code></pre>
+    - id: case_004
+      title: Mã đơn hàng sai định dạng — HTTP 400
+      description: Request bị từ chối trước khi Aggregate khởi tạo, phản hồi theo
+        cấu trúc lỗi chung.
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers:
+          Content-Type: application/json
+        body:
+          orderId: ORDER BAD
+          steps:
+          - action: CANCEL
+      status: 400
+      response:
+        code: INVALID_INPUT
+        message: orderId must contain 1-40 letters, digits, '_' or '-'
+      detailDescription: |-
+        <p>Case HTTP 400: orderId=&#39;ORDER BAD&#39; chứa dấu cách nên aggregate không thể khởi tạo, dù action CANCEL là enum hợp lệ.</p>
+        <ol>
+        <li>Controller nhận POST /oop/basics/orders/simulate và gọi BasicsExperimentService.simulateOrder; requireSteps xác nhận một phần tử.</li>
+        <li>new OrderAggregate(&#39;ORDER BAD&#39;) kiểm tra orderId bằng regex [A-Za-z0-9_-]{1,40}; dấu cách khiến constructor ném IllegalArgumentException trước vòng lặp steps.</li>
+        <li>Exception này nằm ngoài catch theo từng action, được BasicsExperimentExceptionHandler của Controller bắt và ánh xạ HTTP 400.</li>
+        <li>Response chỉ gồm code=&#39;INVALID_INPUT&#39; và message về định dạng orderId; không có OrderSimulationResponse/timeline hay thao tác CANCEL.</li>
+        </ol>
+        <pre><code>new OrderAggregate(&quot;ORDER BAD&quot;)
+          -&gt; IllegalArgumentException(&quot;orderId must contain 1-40 letters, digits, &#39;_&#39; or &#39;-&#39;&quot;)
+          -&gt; BasicsExperimentExceptionHandler -&gt; HTTP 400</code></pre>
+  compareShipping(ShippingQuoteRequest):
+    methodName: compareShipping
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/basics/shipping/quotes
+    usage: true
+    cases:
+    - id: case_001
+      title: So sánh lấy hàng và giao tận nơi ở 12 km
+      description: Hai implementation của ShippingPolicy nhận cùng một đầu vào nhưng
+        cho phí và tổng thanh toán khác nhau.
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers:
+          Content-Type: application/json
+        body:
+          subtotalCents: 10000
+          distanceKm: 12
+      status: 200
+      response:
+        subtotalCents: 10000
+        distanceKm: 12
+        quotes:
+        - policy: PICKUP
+          feeCents: 0
+          payableCents: 10000
+        - policy: COURIER
+          feeCents: 6300
+          payableCents: 16300
+      detailDescription: |-
+        <p>Case so sánh ở 12 km: Service dùng cùng một hợp đồng ShippingPolicy để tính hai phương án độc lập, không gọi hãng vận chuyển thực.</p>
+        <ol>
+        <li>Controller nhận subtotalCents=10000, distanceKm=12 và gọi BasicsExperimentService.compareShipping; subtotal không âm, distance thuộc [0,100].</li>
+        <li>Duyệt List.of(new ShippingPolicy.Pickup(), new ShippingPolicy.Courier()) theo thứ tự cố định. Pickup.feeCents(12)=0; Math.addExact(10000,0)=10000.</li>
+        <li>Courier.feeCents(12)=1500 + 400×12 = 6300 bằng Math.multiplyExact/Math.addExact; tổng thanh toán 10000+6300=16300.</li>
+        <li>Response HTTP 200 có hai quotes với policy PICKUP/COURIER, phí 0/6300 và payableCents 10000/16300; đây là quy tắc minh họa chứ không phải giá ship thực tế.</li>
+        </ol>
+        <pre><code>Pickup.feeCents(12) = 0
+        Courier.feeCents(12) = 1500 + 400 * 12 = 6300
+        payable = subtotalCents + feeCents
+        PICKUP:10000; COURIER:16300; HTTP 200</code></pre>
+    - id: case_002
+      title: Khoảng cách 0 km vẫn có phí giao hàng cố định
+      description: PICKUP miễn phí; COURIER áp dụng phí cơ bản 1.500 cent ngay cả
+        khi distanceKm bằng 0.
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers:
+          Content-Type: application/json
+        body:
+          subtotalCents: 1000
+          distanceKm: 0
+      status: 200
+      response:
+        subtotalCents: 1000
+        distanceKm: 0
+        quotes:
+        - policy: PICKUP
+          feeCents: 0
+          payableCents: 1000
+        - policy: COURIER
+          feeCents: 1500
+          payableCents: 2500
+      detailDescription: |-
+        <p>Case ranh giới distanceKm=0: khoảng cách bằng 0 là hợp lệ nhưng Courier vẫn thu phí cơ bản 1500 cents.</p>
+        <ol>
+        <li>Service xác nhận subtotalCents=1000 không âm và distanceKm=0 nằm trong dải [0,100].</li>
+        <li>Pickup.feeCents(0)=0 nên payableCents=1000, đúng bằng tiền hàng.</li>
+        <li>Courier.feeCents(0)=1500+400×0=1500, không bằng 0 vì có phí cố định; payableCents=1000+1500=2500.</li>
+        <li>Hai kết quả được trả theo thứ tự PICKUP rồi COURIER, status HTTP 200; giúp phân biệt phí cố định với phí tỷ lệ khoảng cách.</li>
+        </ol>
+        <pre><code>distanceKm=0
+        PICKUP fee=0 -&gt; payable=1000
+        COURIER fee=1500+(400*0)=1500 -&gt; payable=2500
+        HTTP 200</code></pre>
+    - id: case_003
+      title: Khoảng cách vượt giới hạn — HTTP 400
+      description: Khoảng cách 101 km vượt giới hạn mô phỏng 0–100 km; service trả
+        lỗi đầu vào.
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers:
+          Content-Type: application/json
+        body:
+          subtotalCents: 10000
+          distanceKm: 101
+      status: 400
+      response:
+        code: INVALID_INPUT
+        message: distanceKm must be between 0 and 100
+      detailDescription: |-
+        <p>Case HTTP 400 vì khoảng cách vượt biên: distanceKm=101 lớn hơn giá trị tối đa 100 được Service cho phép.</p>
+        <ol>
+        <li>Controller chuyển JSON đến BasicsExperimentService.compareShipping.</li>
+        <li>Service kiểm tra subtotalCents=10000 không âm, sau đó kiểm tra if (distanceKm &lt; 0 || distanceKm &gt; 100); với 101, điều kiện đúng.</li>
+        <li>IllegalArgumentException(&#39;distanceKm must be between 0 and 100&#39;) được ném trước khi duyệt ShippingPolicy hoặc tính fee; không có danh sách quotes từng phần.</li>
+        <li>BasicsExperimentExceptionHandler chuyển lỗi thành HTTP 400, body {code:&#39;INVALID_INPUT&#39;, message:&#39;distanceKm must be between 0 and 100&#39;}.</li>
+        </ol>
+        <pre><code>if (distanceKm &lt; 0 || distanceKm &gt; 100)
+            throw IllegalArgumentException(&quot;distanceKm must be between 0 and 100&quot;)
+        HTTP 400; no shipping quote calculation</code></pre>
+    - id: case_004
+      title: Tổng tiền hàng âm — HTTP 400
+      description: Giá trị subtotalCents âm bị từ chối trước khi gọi các chiến lược
+        vận chuyển.
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers:
+          Content-Type: application/json
+        body:
+          subtotalCents: -1
+          distanceKm: 5
+      status: 400
+      response:
+        code: INVALID_INPUT
+        message: subtotalCents cannot be negative
+      detailDescription: |-
+        <p>Case HTTP 400 vì tổng tiền hàng âm: subtotalCents=-1 vi phạm kiểm tra đầu tiên trong compareShipping.</p>
+        <ol>
+        <li>Controller nhận body {-1,5} và gọi BasicsExperimentService.compareShipping.</li>
+        <li>Service kiểm tra subtotalCents &lt; 0 trước cả kiểm tra distanceKm, ném IllegalArgumentException(&#39;subtotalCents cannot be negative&#39;).</li>
+        <li>Chưa policy nào được gọi và không phát sinh ShippingQuote; distanceKm=5 hợp lệ nhưng không thể bỏ qua điều kiện tiền hàng không âm.</li>
+        <li>Exception handler của BasicsExperimentController trả HTTP 400 cùng code=&#39;INVALID_INPUT&#39; và message chính xác, không có ShippingQuoteResponse.</li>
+        </ol>
+        <pre><code>if (subtotalCents &lt; 0)
+            throw IllegalArgumentException(&quot;subtotalCents cannot be negative&quot;)
+        HTTP 400; no Pickup/Courier calculation</code></pre>
+PolymorphismExperimentsController:
+  dispatch(DispatchRequest):
+    methodName: dispatch
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/polymorphism/dispatch/experiment
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+  payments(PaymentsRequest):
+    methodName: payments
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/polymorphism/payments/experiment
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+PracticeExperimentController:
+  bank(BankRequest):
+    methodName: bank
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/practice/bank/experiment
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+  orders(OrderRequest):
+    methodName: orders
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/practice/orders/experiment
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+  library(LibraryRequest):
+    methodName: library
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/practice/library/experiment
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+RefactoringExperimentsController:
+  checkout(CheckoutRequest):
+    methodName: checkout
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/refactoring/checkout/compare
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+  delivery(DeliveryRequest):
+    methodName: delivery
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/refactoring/delivery/compare
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+  alerts(AlertRequest):
+    methodName: alerts
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/refactoring/alerts/experiment
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+RelationshipsExperimentsController:
+  transfer(TransferRequest):
+    methodName: transfer
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/relationships/departments/transfer
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+  enroll(EnrollmentRequest):
+    methodName: enroll
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/relationships/enrollments/simulate
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+  ownership(OwnershipRequest):
+    methodName: ownership
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/relationships/ownership/compare
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+SolidExperimentController:
+  quote(QuoteRequest):
+    methodName: quote
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/solid/discount/quote
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+  experiment(ExperimentRequest):
+    methodName: experiment
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/solid/checkout/experiment
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+SubtypingExperimentController:
+  dispatch(DispatchRequest):
+    methodName: dispatch
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/subtyping/dispatch
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+  contract(DiscountRequest):
+    methodName: contract
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/subtyping/discount-contract
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+  geometry(GeometryRequest):
+    methodName: geometry
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/subtyping/geometry-contract
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+TestingExperimentController:
+  contracts(ContractRequest):
+    methodName: contracts
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/testing/inventory/contracts
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+  collaboration(CollaborationRequest):
+    methodName: collaboration
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/testing/checkout/collaboration
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+  regression(RegressionRequest):
+    methodName: regression
+    httpMethods:
+    - POST
+    mappingPaths:
+    - /oop/testing/pricing/regression
+    usage: true
+    cases:
+    - id: case_001
+      title: 'TODO: Viết tiêu đề ngắn mô tả tình huống của case này'
+      description: 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của
+        case này'
+      input:
+        pathParams: {
+          }
+        queryParams: {
+          }
+        headers: {
+          }
+        body: null
+      status: null
+      response: null
+      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
+        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
+        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
+        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
+        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
+        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
+        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'

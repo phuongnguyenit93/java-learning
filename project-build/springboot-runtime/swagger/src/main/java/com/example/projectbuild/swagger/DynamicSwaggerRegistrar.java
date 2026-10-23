@@ -4,7 +4,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import io.swagger.v3.oas.models.Operation;
+import io.swagger.v3.oas.models.examples.Example;
+import io.swagger.v3.oas.models.media.Content;
+import io.swagger.v3.oas.models.media.MediaType;
 import io.swagger.v3.oas.models.parameters.Parameter;
+import io.swagger.v3.oas.models.responses.ApiResponse;
+import io.swagger.v3.oas.models.responses.ApiResponses;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.tags.Tag;
 import org.slf4j.Logger;
@@ -134,6 +139,7 @@ public class DynamicSwaggerRegistrar implements ImportBeanDefinitionRegistrar , 
             JsonNode apiDescs = loadYamlResource("swagger/" + language + "/api-descriptions.yml");
             JsonNode apiExecutions = loadYamlResource("swagger/" + language + "/api-execution.yml");
             JsonNode apiParams = loadYamlResource("swagger/" + language + "/api-params.yml");
+            JsonNode apiCases = loadYamlResource("swagger/" + language + "/api-cases.yml");
             JsonNode controllerDescs = loadYamlResource("swagger/" + language + "/controller-description.yml");
             Map<String, String> controllerByTag = new LinkedHashMap<>();
 
@@ -161,6 +167,7 @@ public class DynamicSwaggerRegistrar implements ImportBeanDefinitionRegistrar , 
 
                     mapMethodMetadata(operation, apiDescs, controllerName, methodSignature);
                     mapExecutionMetadata(operation, apiExecutions, controllerName, methodSignature);
+                    mapApiCasesMetadata(operation, apiCases, controllerName, methodSignature);
                     if (operation.getParameters() != null) {
                         operation.getParameters().forEach(parameter ->
                                 mapParameterMetadata(parameter, apiParams));
@@ -364,6 +371,118 @@ public class DynamicSwaggerRegistrar implements ImportBeanDefinitionRegistrar , 
         );
     }
 
+    /**
+     * A case is an authored, verified contract, not a guessed example from a DTO.
+     * OpenAPI's native named examples populate the Swagger UI request dropdown;
+     * the extension keeps the request and expected outcome together for learners.
+     * Incomplete generator placeholders are deliberately invisible.
+     */
+    private void mapApiCasesMetadata(
+            Operation operation,
+            JsonNode apiCases,
+            String controller,
+            String methodSignature
+    ) {
+        JsonNode endpoint = findMethodNode(apiCases, controller, methodSignature);
+        if (endpoint == null || !endpoint.path("usage").asBoolean(true)) {
+            return;
+        }
+        JsonNode authoredCases = endpoint.path("cases");
+        if (!authoredCases.isArray()) {
+            return;
+        }
+
+        List<Map<String, Object>> shown = new ArrayList<>();
+        for (JsonNode item : authoredCases) {
+            String id = item.path("id").asText("").trim();
+            String title = item.path("title").asText("").trim();
+            JsonNode statusNode = item.path("status");
+            if (id.isBlank() || title.isBlank() || title.startsWith("TODO:")
+                    || !statusNode.canConvertToInt()) {
+                continue;
+            }
+            int status = statusNode.asInt();
+            if (status < 100 || status > 599) {
+                continue;
+            }
+            String description = item.path("description").asText("");
+            // Detailed HTML teaching explanation is separate from the short
+            // description used by Swagger's native request/response examples.
+            String detailDescription = item.path("detailDescription").asText("");
+            // Instructional YAML defaults must never leak into public examples
+            // if an author fills the HTTP status before writing the explanation.
+            if (description.trim().startsWith("TODO:")
+                    || detailDescription.trim().startsWith("<p>TODO:")) {
+                continue;
+            }
+            JsonNode inputNode = item.path("input");
+            JsonNode bodyNode = inputNode.path("body");
+            JsonNode responseNode = item.path("response");
+
+            Map<String, Object> exampleCase = new LinkedHashMap<>();
+            exampleCase.put("id", id);
+            exampleCase.put("title", title);
+            exampleCase.put("description", description);
+            exampleCase.put("detailDescription", detailDescription);
+            exampleCase.put("status", status);
+            exampleCase.put("input", inputNode.isObject()
+                    ? yamlMapper.convertValue(inputNode, Object.class)
+                    : Map.of());
+            exampleCase.put("response", responseNode.isMissingNode()
+                    ? null : yamlMapper.convertValue(responseNode, Object.class));
+            shown.add(exampleCase);
+
+            if (!bodyNode.isMissingNode() && !bodyNode.isNull()
+                    && operation.getRequestBody() != null
+                    && operation.getRequestBody().getContent() != null) {
+                operation.getRequestBody().getContent().forEach((mediaTypeName, mediaType) -> {
+                    if (isJsonMediaType(mediaTypeName)) {
+                        mediaType.addExamples(id, new Example()
+                                .summary(title)
+                                .description(description)
+                                .value(yamlMapper.convertValue(bodyNode, Object.class)));
+                    }
+                });
+            }
+
+            ApiResponses responses = operation.getResponses();
+            if (responses == null) {
+                responses = new ApiResponses();
+                operation.setResponses(responses);
+            }
+            String statusCode = Integer.toString(status);
+            ApiResponse response = responses.get(statusCode);
+            if (response == null) {
+                response = new ApiResponse().description(title);
+                responses.addApiResponse(statusCode, response);
+            }
+            if (!responseNode.isMissingNode() && !responseNode.isNull()) {
+                Content content = response.getContent();
+                if (content == null) {
+                    content = new Content();
+                    response.setContent(content);
+                }
+                MediaType json = content.get("application/json");
+                if (json == null) {
+                    json = new MediaType();
+                    content.addMediaType("application/json", json);
+                }
+                json.addExamples(id, new Example()
+                        .summary(title)
+                        .description(description)
+                        .value(yamlMapper.convertValue(responseNode, Object.class)));
+            }
+        }
+        if (!shown.isEmpty()) {
+            operation.addExtension("x-api-cases", shown);
+        }
+    }
+
+    private static boolean isJsonMediaType(String mediaType) {
+        String type = mediaType.toLowerCase(java.util.Locale.ROOT);
+        return type.equals("application/json") || type.endsWith("+json");
+    }
+
     private void mapParameterMetadata(Parameter parameter, JsonNode apiParams) {
         // Đường dẫn trong YAML: moduleName -> ParameterName
         JsonNode paramNode = apiParams.path(parameter.getName());
@@ -460,6 +579,38 @@ public class DynamicSwaggerRegistrar implements ImportBeanDefinitionRegistrar , 
             normalizedMatch = field.getValue();
         }
 
-        return normalizedMatch;
+        if (normalizedMatch != null) {
+            return normalizedMatch;
+        }
+
+        // Java reflection includes the enclosing DTO type for nested records,
+        // e.g. "simulateAccount(BasicOopDtos.AccountSimulationRequest)".
+        // The source scanner may instead record "simulateAccount(AccountSimulationRequest)".
+        // Fall back to the innermost type name only when the match is UNIQUE.
+        // Exact / fully normalized signatures always take precedence above.
+        String simpleSignature = simplifyNestedTypeNames(normalizedSignature);
+        JsonNode simpleMatch = null;
+        Iterator<Map.Entry<String, JsonNode>> candidates = controllerNode.fields();
+        while (candidates.hasNext()) {
+            Map.Entry<String, JsonNode> candidate = candidates.next();
+            String candidateSignature = simplifyNestedTypeNames(
+                    MethodSignatureResolver.normalize(candidate.getKey()));
+            if (!simpleSignature.equals(candidateSignature)) {
+                continue;
+            }
+            if (simpleMatch != null) {
+                // Two distinct nested DTOs have the same innermost name.
+                // Refuse to guess which endpoint owns the metadata.
+                return null;
+            }
+            simpleMatch = candidate.getValue();
+        }
+        return simpleMatch;
+    }
+
+    private static String simplifyNestedTypeNames(String signature) {
+        return signature.replaceAll(
+                "(?<![\\w$])(?:[A-Z_$][\\w$]*\\.)+([A-Z_$][\\w$]*)",
+                "$1");
     }
 }

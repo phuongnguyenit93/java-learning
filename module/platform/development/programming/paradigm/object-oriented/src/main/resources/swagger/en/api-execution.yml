@@ -1,80 +1,222 @@
-BasicsExperimentController:
-  simulateAccount(AccountSimulationRequest):
-    execution: |-
-      <p><b>Concept:</b> An object owns its state and enforces invariants through its behavior.</p>
-      <ol><li>Validate the action sequence and create one BankAccount with the opening balance.</li><li>Dispatch DEPOSIT/WITHDRAW to the same instance; invalid amounts, overdrafts and arithmetic overflow cannot mutate the balance.</li><li>Return a per-operation timeline with before/after balances, accepted and reason.</li></ol>
-      <p><b>Observation:</b> Accepted actions mutate state; rejected actions leave the balance unchanged. Each request starts from fresh state.</p>
-      <p><b>Conclusion:</b> The entity, not the HTTP controller, owns account invariants.</p>
+AbstractionExperimentsController:
+  shippingQuote(ShippingQuoteRequest):
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
     usage: true
-  simulateOrder(OrderSimulationRequest):
-    execution: |-
-      <p><b>Concept:</b> A domain object coordinates its own data, lifecycle and invariants.</p>
-      <ol><li>Start with a DRAFT order; validate each SKU, quantity, price and overflow before ADD_LINE.</li><li>CONFIRM requires at least one line; CANCEL is permitted only in DRAFT.</li><li>Observe that operations after CONFIRMED/CANCELLED are rejected without changing status or amount.</li></ol>
-      <p><b>Observation:</b> The returned timeline shows status/total changes, line counts and rejected steps.</p>
-      <p><b>Conclusion:</b> State transitions belong in the aggregate rather than scattered caller conditions.</p>
+  seatScenario(SeatScenarioRequest):
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
     usage: true
-  compareShipping(ShippingQuoteRequest):
-    execution: |-
-      <p><b>Concept:</b> A common interface enables dispatch to different concrete implementations.</p>
-      <ol><li>Validate subtotalCents and a distanceKm between 0 and 100.</li><li>Invoke feeCents on Pickup and Courier through the same ShippingPolicy interface.</li><li>Return their policy names, individual fees and payable amounts.</li></ol>
-      <p><b>Observation:</b> The same input produces different fees according to the selected implementation.</p>
-      <p><b>Conclusion:</b> Polymorphism keeps algorithm selection inside objects rather than repeated class checks in the caller.</p>
+  leaveEvaluation(LeaveEvaluationRequest):
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    usage: true
+  catalogSearch(CatalogSearchRequest):
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
     usage: true
 ClassesExperimentController:
   inventory(InventoryRequest):
-    execution: |-
-      <p><b>Concept:</b> A class defines stable identity/pricing fields and controlled mutable state.</p>
-      <ol><li>Create an InventoryItem after validating identifier, name, price and initial stock.</li><li>Invoke restock, sell or rename methods with bounded inputs and record acceptance/rejection.</li><li>Return quantities, display name and total stock value after every action.</li></ol>
-      <p><b>Observation:</b> Valid operations mutate the intended fields; invalid operations do not partially modify the item.</p>
-      <p><b>Conclusion:</b> Methods establish a safer mutation boundary than exposing writable fields to callers.</p>
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
     usage: true
   workshops(WorkshopRequest):
-    execution: |-
-      <p><b>Concept:</b> Instances follow the same class rules while maintaining independent state; assigning references does not create instances.</p>
-      <ol><li>Instantiate first/second workshops and another independent copy of the second&#x27;s initial data.</li><li>Let alias reference second; call register on first and through alias.</li><li>Return registered counts, remaining capacity, rejected attempts and identity flags.</li></ol>
-      <p><b>Observation:</b> Changes through alias affect second but not the independent instance; all objects honor MAX_CAPACITY.</p>
-      <p><b>Conclusion:</b> Understanding class-wide rules versus instance state prevents aliasing misconceptions.</p>
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
     usage: true
   bank(BankRequest):
-    execution: |-
-      <p><b>Concept:</b> Encapsulated domain methods guard invariants even when two objects collaborate.</p>
-      <ol><li>Create distinct source and destination accounts with validated opening balances.</li><li>Apply account methods that validate amount, available balance and arithmetic overflow before updating both sides.</li><li>Return acceptance and snapshots for each action, including failed transfers.</li></ol>
-      <p><b>Observation:</b> A successful transfer preserves the combined amount; rejected actions cannot leave half an update.</p>
-      <p><b>Conclusion:</b> This is a single-threaded in-memory learning experiment, not real banking or transactional persistence.</p>
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    usage: true
+ClassDesignExperimentsController:
+  library(LibraryRequest):
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    usage: true
+  checkout(CheckoutRequest):
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    usage: true
+  transfer(TransferRequest):
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    usage: true
+CompositionExperimentController:
+  notification(NotificationRequest):
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    usage: true
+  policies(PolicyRequest):
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    usage: true
+  placeOrder(PlaceOrderRequest):
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    usage: true
+  resources(ResourceRequest):
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    usage: true
+DesignPatternExperimentController:
+  pricing(PricingRequest):
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    usage: true
+  tasks(TasksRequest):
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    usage: true
+  report(ReportRequest):
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    usage: true
+DesignPitfallExperimentController:
+  seats(SeatsRequest):
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    usage: true
+  mutableKey(MutableKeyRequest):
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    usage: true
+  checkout(CheckoutRequest):
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    usage: true
+EncapsulationExperimentController:
+  cart(CartRequest):
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    usage: true
+  stock(StockRequest):
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    usage: true
+  snapshot(EventRequest):
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    usage: true
+  order(OrderRequest):
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    usage: true
+InheritanceExperimentsController:
+  calculatePay(PayrollRequest):
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    usage: true
+  compareDelivery(DeliveryRequest):
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    usage: true
+  constructorTrace(ConstructorRequest):
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    usage: true
+  resolveCapabilities(CapabilitiesRequest):
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    usage: true
+InterfaceExperimentsController:
+  shipping(ShippingRequest):
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    usage: true
+  documents(DocumentRequest):
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    usage: true
+  checkout(CheckoutRequest):
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    usage: true
+LanguageMechanicsExperimentsController:
+  generics(GenericBatchRequest):
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    usage: true
+  stock(StockRequest):
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    usage: true
+  shipping(ShippingRequest):
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    usage: true
+LifecycleExperimentController:
+  create(CreationRequest):
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    usage: true
+  references(ReferenceRequest):
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    usage: true
+  resources(ResourceRequest):
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    usage: true
+  publication(PublicationRequest):
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    usage: true
+ModelingExperimentController:
+  library(LibraryRequest):
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    usage: true
+  orders(OrderRequest):
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
     usage: true
 ObjectExperimentsController:
   references(ObjectExperimentDto.ReferenceRequest):
-    execution: |-
-      <p><b>Concept:</b> Java copies reference values into parameters; aliases share instances, but parameter rebinding cannot rebind the caller variable.</p>
-      <ol><li>Create original and independently allocated objects, then alias = original.</li><li>Mutate shared state through the alias parameter and separately reassign a local parameter.</li><li>Return identity comparisons and values of original, alias and independent instance.</li></ol>
-      <p><b>Observation:</b> Original and alias show the same mutation; the independent object does not, and the caller alias survives parameter reassignment.</p>
-      <p><b>Conclusion:</b> Pass-by-value of a reference is different from copying the referenced object.</p>
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
     usage: true
   equality(ObjectExperimentDto.EqualityRequest):
-    execution: |-
-      <p><b>Concept:</b> Object identity and value equality are separate contracts.</p>
-      <ol><li>Create ProductCode records and an alias to the first instance.</li><li>Compare object identity, value equality, hash codes and HashSet cardinality.</li><li>Compare two distinct LegacyIdentityCode instances holding the same code.</li></ol>
-      <p><b>Observation:</b> Responses show sameInstance, valueEquals, hashCodesEqual, hashSetSize and defaultObjectEquals.</p>
-      <p><b>Conclusion:</b> Use value equality for data semantics instead of assuming == means matching content.</p>
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
     usage: true
   copies(ObjectExperimentDto.CopyRequest):
-    execution: |-
-      <p><b>Concept:</b> A new outer collection can still share elements; an unmodifiable list does not make its elements immutable.</p>
-      <ol><li>Construct the original list and a shallow copied container, deep copied elements, List.copyOf snapshot and immutable value.</li><li>Change the original element and append another item.</li><li>Return identity flags and element labels for each view.</li></ol>
-      <p><b>Observation:</b> The shallow and unmodifiable list reflect element mutation, while the deep copy and immutable value preserve earlier labels.</p>
-      <p><b>Conclusion:</b> Choose defensive copying deliberately when protecting object boundaries.</p>
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
     usage: true
   absence(ObjectExperimentDto.AbsenceRequest):
-    execution: |-
-      <p><b>Concept:</b> Absent objects and objects whose optional field is absent are different conditions.</p>
-      <ol><li>Create one local sample Customer and attempt lookupId resolution.</li><li>Use Optional.ofNullable and flatMap for optional address access.</li><li>Return a zero-or-one-element address list and explicit presence flags.</li></ol>
-      <p><b>Observation:</b> An unknown id yields found=false and an empty list; a present address yields one entry.</p>
-      <p><b>Conclusion:</b> Optional and empty collections make absence explicit at API boundaries.</p>
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
     usage: true
   checkout(ObjectExperimentDto.CheckoutRequest):
-    execution: |-
-      <p><b>Concept:</b> An object workflow emerges from messages exchanged between components with distinct responsibilities.</p>
-      <ol><li>Cart computes total; Inventory attempts reservation and may reject insufficient stock.</li><li>A simulated payment rejection releases reserved stock; approved payment constructs an Order.</li><li>Notifier records a simulated dispatch, while Trace captures actor, operation, observation and current stock.</li></ol>
-      <p><b>Observation:</b> The event trace explains success, stock rejection and payment-decline rollback.</p>
-      <p><b>Conclusion:</b> This bounded synchronous scenario illustrates collaboration, not a real distributed transaction.</p>
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    usage: true
+BasicsExperimentController:
+  simulateAccount(AccountSimulationRequest):
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    usage: true
+  simulateOrder(OrderSimulationRequest):
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    usage: true
+  compareShipping(ShippingQuoteRequest):
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    usage: true
+PolymorphismExperimentsController:
+  dispatch(DispatchRequest):
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    usage: true
+  payments(PaymentsRequest):
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    usage: true
+PracticeExperimentController:
+  bank(BankRequest):
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    usage: true
+  orders(OrderRequest):
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    usage: true
+  library(LibraryRequest):
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    usage: true
+RefactoringExperimentsController:
+  checkout(CheckoutRequest):
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    usage: true
+  delivery(DeliveryRequest):
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    usage: true
+  alerts(AlertRequest):
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    usage: true
+RelationshipsExperimentsController:
+  transfer(TransferRequest):
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    usage: true
+  enroll(EnrollmentRequest):
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    usage: true
+  ownership(OwnershipRequest):
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    usage: true
+SolidExperimentController:
+  quote(QuoteRequest):
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    usage: true
+  experiment(ExperimentRequest):
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    usage: true
+SubtypingExperimentController:
+  dispatch(DispatchRequest):
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    usage: true
+  contract(DiscountRequest):
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    usage: true
+  geometry(GeometryRequest):
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    usage: true
+TestingExperimentController:
+  contracts(ContractRequest):
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    usage: true
+  collaboration(CollaborationRequest):
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    usage: true
+  regression(RegressionRequest):
+    execution: <p>Description of how this API works. Replace this with HTML code.</p>
     usage: true

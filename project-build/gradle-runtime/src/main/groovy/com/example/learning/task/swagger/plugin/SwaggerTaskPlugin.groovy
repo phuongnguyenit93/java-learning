@@ -22,7 +22,7 @@ class SwaggerTaskPlugin
                     'documentation'
 
             task.description =
-                    'Generate and synchronize Swagger API description metadata from Java controllers.'
+                    'Generate Swagger descriptions and editable API case skeletons from Java controllers.'
 
 
             task.languages.set(

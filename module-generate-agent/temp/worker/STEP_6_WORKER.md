@@ -34,7 +34,7 @@
 
 ## KHÔNG thuộc STEP 6 — để STEP khác theo yêu cầu riêng của người dùng
 
-- **Swagger info / API documentation:** không soạn, cập nhật hay sinh `controller-description.yml`, `api-descriptions.yml`, `api-execution.yml`, `api-params.yml`; không viết summary/description, execution guide, params description, request/response examples, expected results hoặc use-case mẫu. Không chạy scanner/generator/merge/import để điền Swagger. Prime STEP 6 **cũng không làm phần này**; một STEP mới chưa đánh số sẽ được người dùng yêu cầu sau.
+- **Swagger info / API documentation:** worker không soạn, cập nhật hay sinh `controller-description.yml`, `api-descriptions.yml`, `api-execution.yml`, `api-params.yml`, `api-cases.yml`; không viết summary/description, execution guide, params description, request/response examples, expected results hoặc use-case mẫu. Worker **không chạy Swagger scanner/generator**. **Riêng Prime, sau khi toàn bộ worker STEP 6 xong, chạy `generateApiSwaggerDescription` để sinh skeleton `api-cases.yml` và metadata kỹ thuật; không tự điền nội dung.** Nội dung Swagger/use cases dành cho STEP mới chưa đánh số.
 - **Mapping:** không tạo hoặc sửa API ↔ Knowledge/Quiz/Interview, `readmeRelated`, `apiRelated`, file/anchor/controller/methodSignature hay các liên kết chéo; STEP mapping **riêng biệt** chưa được yêu cầu thực thi.
 - **Dữ liệu và dự án khác:** không ghi Google Sheets/J3, không sửa README/Quiz/Interview/Video/Template, Swagger resources, dependencies/setup/Application hoặc source thuộc worker khác; không chạy Sheet sync/ByFiles/ByLocation, không commit/push.
 

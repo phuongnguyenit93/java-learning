@@ -6,7 +6,7 @@
 - Các Menu Cấp 2 trở thành `sections[].title` đúng thứ tự; mỗi section chứa `items[]` gồm SCENE/TRANSITION với time, visual, script, purpose.
 - **Không còn bảng "Chủ đề" ở cột N**. Menu Cấp 1 `A<PARENT_ROW>` là `title`; worker viết YAML vào `X<PARENT_ROW>:AA<PARENT_ROW>`. Difficulty `O` dành riêng cho các hàng Menu Cấp 2.
 - **Mỗi worker chỉ có MỘT lượt công việc trọn vẹn**: đọc Knowledge → phân loại `NEW_FILL/FORMAT_FIX/UNCHANGED` → chỉ soạn toàn văn YAML khi tạo mới, hoặc sửa đúng format khi đã có script → preflight → ghi nếu cần → đọc lại → QA → báo cáo. **Không có PHA A/PHA B hoặc PREPARED**.
-- Pool theo **Mode A/B/C của session (tối đa 3/6/8 worker ACTIVE + SLEEPING, mặc định A)**, ưu tiên tái sử dụng. Mỗi worker sở hữu một chương, một hàng video; các worker làm song song không tranh chấp hàng.
+- Pool theo **Mode A/B của session (A=3 mặc định; B=N do user chỉ định, thiếu N → BLOCKER; tính cả ACTIVE + SLEEPING)**, ưu tiên tái sử dụng và spawn tuần tự mỗi lệnh một worker. Mỗi worker sở hữu một chương, một hàng video; các worker làm song song không tranh chấp hàng.
 - Không sửa Knowledge A:N, Difficulty O, Template, các tab khác, Gradle/source/video YAML file, cấu hình BUILD_VIDEO; không commit/push hoặc tự chạy STEP khác.
 
 ### Cổng context và phân tách PRIME / WORKER

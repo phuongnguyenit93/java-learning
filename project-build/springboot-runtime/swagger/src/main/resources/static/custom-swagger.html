@@ -23,6 +23,7 @@
             rel="stylesheet"
             href="swagger-api-execution.css"
     />
+    <link rel="stylesheet" href="swagger-api-cases.css" />
 
 
     <link
@@ -59,13 +60,10 @@
 <div id="swagger-ui"></div>
 
 <script>
-    const contextPath = window.location.pathname
-        .split("/")
-        .filter(Boolean)[0];
-
-    const basePath = contextPath
-        ? `/${contextPath}`
-        : "";
+    // Resolve the app base from the directory containing this page.
+    // /custom-swagger.html -> "", /oop/custom-swagger.html -> "/oop".
+    const basePath = new URL(".", window.location.href)
+        .pathname.replace(/\/$/, "");
 
     window.swaggerBasePath = basePath;
 
@@ -82,6 +80,7 @@
     loadScript(`${basePath}/swagger-ui/swagger-ui-standalone-preset.js`);
     loadScript(`${basePath}/swagger-youtube.js`);
     loadScript(`${basePath}/swagger-api-execution.js`);
+    loadScript(`${basePath}/swagger-api-cases.js`);
     loadScript(`${basePath}/swagger-execution-context.js`);
     loadScript(`${basePath}/swagger-ai-chat.js`);
 
@@ -103,6 +102,7 @@
                 SwaggerUIBundle.plugins.DownloadUrl,
                 YoutubePlugin,
                 ApiExecutionPlugin,
+                ApiCasesPlugin,
                 ExecutionContextPlugin
             ],
 

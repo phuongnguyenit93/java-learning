@@ -14,6 +14,8 @@ Comparator
 
 ## <a id="external-order">Thứ tự tùy chỉnh</a>
 
+Một `Comparator<T>` là một quy tắc nhận **hai giá trị kiểu `T`** và trả về số âm, `0` hoặc số dương để nói giá trị thứ nhất đứng trước, ngang hàng hay đứng sau giá trị thứ hai. Khác với `compareTo` của `Comparable`, quy tắc này được truyền từ **nơi cần sắp xếp**, nên lớp `Book` không phải chọn một thứ tự mặc định cho mọi tình huống.
+
 Ví dụ cùng một danh sách `Book` có thể được sắp xếp theo:
 
 - tiêu đề;
@@ -22,55 +24,94 @@ Ví dụ cùng một danh sách `Book` có thể được sắp xếp theo:
 - đánh giá;
 - nhiều trường dữ liệu kết hợp.
 
-Không nên sửa lớp nghiệp vụ mỗi khi cần thêm một góc nhìn.
+Không nên sửa lớp nghiệp vụ mỗi khi cần thêm một góc nhìn. Chạy ví dụ Java 21 sau:
 
 ```java
-Comparator<Book> byTitle =
-        Comparator.comparing(Book::title);
+import java.util.Comparator;
+import java.util.List;
 
-Comparator<Book> byPrice =
-        Comparator.comparing(Book::price);
+public class ComparatorViews {
+    record Book(int id, String title, int year, int pages) {}
+
+    public static void main(String[] args) {
+        List<Book> books = List.of(
+                new Book(1, "Java", 2022, 300),
+                new Book(2, "SQL", 2018, 220),
+                new Book(3, "Docker", 2024, 180)
+        );
+
+        Comparator<Book> byTitle = Comparator.comparing(Book::title);
+        Comparator<Book> byYear = Comparator.comparingInt(Book::year);
+
+        System.out.println(books.stream().sorted(byTitle).map(Book::title).toList());
+        System.out.println(books.stream().sorted(byYear).map(Book::title).toList());
+        System.out.println(books.stream().map(Book::title).toList());
+    }
+}
 ```
 
-Chọn `byTitle`, `byPrice` hay một `Comparator` khác chỉ thay đổi **cách đoạn mã sử dụng sắp thứ tự các `Book`**. Nó không viết lại `Book.equals` và cũng không tự thay đổi quy tắc bằng nhau của nghiệp vụ. Thứ tự và phép bằng nhau về mặt logic là hai chính sách riêng, dù khi dùng cấu trúc dữ liệu có thứ tự ta có thể quan sát rõ sự tương tác giữa chúng.
+Kết quả:
 
-Một `Comparator` đúng cũng phải áp đặt một **thứ tự toàn phần** trên tập giá trị mà nó được thiết kế để so sánh. Nếu chính sách cho phép `null`, chính comparator phải nói rõ `null` nằm ở đâu trong thứ tự đó.
+```text
+[Docker, Java, SQL]
+[SQL, Java, Docker]
+[Java, SQL, Docker]
+```
+
+`Book::title` lấy khóa là chuỗi tiêu đề, còn `Book::year` lấy khóa là năm xuất bản. Với `byTitle`, “Docker” đứng trước “Java”; với `byYear`, năm `2018` đưa “SQL” lên đầu. Hai lần `sorted(...)` tạo kết quả theo hai chính sách khác nhau; danh sách đầu vào vẫn giữ thứ tự ban đầu như dòng thứ ba. Nếu chọn `List.sort(comparator)` thì chính danh sách đó sẽ được sắp xếp tại chỗ.
+
+Chọn `byTitle`, `byYear` hay một `Comparator` khác chỉ thay đổi **cách đoạn mã sử dụng sắp thứ tự các `Book`**. Nó không viết lại `Book.equals` và cũng không tự thay đổi quy tắc bằng nhau của nghiệp vụ. Với `record Book` ở trên, `equals` vẫn xét các thành phần của bản ghi; quy tắc sắp theo tiêu đề không làm thay đổi điều đó.
+
+Một `Comparator` đúng phải tạo ra quan hệ thứ tự toàn phần nhất quán trên các giá trị mà nó chấp nhận: mọi cặp hợp lệ đều so sánh được, và kết quả `0` cho biết **ngang hàng theo thứ tự này**, không nhất thiết là bằng nhau theo `equals`. Nếu chính sách cho phép `null`, cần xác định rõ `null` nằm ở đâu.
 
 ### THỨ TỰ TỰ NHIÊN VÀ GÓC NHÌN NGHIỆP VỤ KHÔNG PHẢI MỘT
 
-Một kiểu dữ liệu có thể có thứ tự tự nhiên nhưng đoạn mã sử dụng vẫn cần comparator khác.
-
-Ví dụ `Version` có thứ tự tự nhiên theo phiên bản ngữ nghĩa, nhưng giao diện người dùng có thể cần hiển thị theo ngày phát hành. `Comparable` không nên bị sửa chỉ để phục vụ một màn hình cụ thể.
+Một kiểu dữ liệu có thể có thứ tự tự nhiên nhưng đoạn mã sử dụng vẫn cần comparator khác. Ví dụ `Version` có thể so sánh tự nhiên theo `major → minor → patch`, trong khi màn hình phát hành sắp các phiên bản theo ngày ra mắt. `Comparable` trả lời “kiểu dữ liệu có thứ tự mặc định nào?”, còn `Comparator` trả lời “ngữ cảnh này cần nhìn dữ liệu theo thứ tự nào?”. Hai cơ chế có thể cùng tồn tại.
 
 ## <a id="comparator-composition">Kết hợp Comparator</a>
 
-Java cung cấp các phương thức tạo và kết hợp `Comparator` giúp mô tả chính sách sắp xếp theo từng bước.
+Khi chỉ một tiêu chí không đủ để quyết định thứ tự, Java cho phép **nối các tiêu chí ưu tiên**. `thenComparing` chỉ chạy tiêu chí sau **nếu tiêu chí trước trả về `0`**. Các đoạn Java ngắn trong chương này là **những phần bổ sung**, không phải chương trình độc lập: để chạy, hãy đặt chúng bên trong `main` của lớp `ComparatorViews` ở ví dụ trước, sau phần khai báo `books`, `byTitle`, `byYear`; giữ `record Book` nằm trong lớp đó. Mỗi đoạn dùng lại các biến đã khai báo ở những đoạn ngay trước nó.
 
 ```java
-Comparator<Book> byTitleThenDate =
+Comparator<Book> byTitleThenYear =
         Comparator.comparing(Book::title)
-                  .thenComparing(Book::publishedAt);
+                  .thenComparingInt(Book::year);
 ```
 
 ### TIÊU CHÍ PHÂN ĐỊNH KHI TIÊU CHÍ TRƯỚC CHO KẾT QUẢ 0 (TIE-BREAKER)
 
-Nếu chỉ sắp xếp theo tiêu đề:
-
-```text
-Book("Java", 2022)
-Book("Java", 2024)
-```
-
-comparator có thể trả `0` dù hai quyển sách là hai đối tượng hoặc giá trị nghiệp vụ khác nhau. Với sắp xếp danh sách, điều này chỉ nói chúng cùng vị trí theo comparator. Với `TreeSet`/`TreeMap`, `compare(...) == 0` còn có thể làm chúng được xem như cùng một khóa theo thứ tự.
-
-Vì vậy tiêu chí phân định khi bằng nhau cần được thiết kế có chủ ý:
+Xét hai giá trị dùng `record Book` ở phần trước. Đặt đoạn này sau khai báo `byTitle` đã có trong `main` (không khai báo lại `byTitle`):
 
 ```java
-Comparator<Book> byTitleThenDateThenId =
-        Comparator.comparing(Book::title)
-                  .thenComparing(Book::publishedAt)
-                  .thenComparing(Book::id);
+Book first = new Book(1, "Java", 2022, 300);
+Book second = new Book(2, "Java", 2024, 220);
+
+System.out.println(first.equals(second));           // false
+System.out.println(byTitle.compare(first, second));  // 0
 ```
+
+Hai sách cùng tiêu đề nên `byTitle` trả `0`, dù `id` và năm khác nhau nên `equals` trả `false`. Khi nối `thenComparingInt(Book::year)`, phép so sánh đầu tiên trả `0` và Java chuyển sang so năm: `2022 < 2024`, nên `first` đứng trước `second`. Nếu tiêu đề khác nhau, tiêu chí năm **không được xét**.
+
+Với sắp xếp danh sách, hai phần tử ngang hàng vẫn có thể cùng xuất hiện. Nhưng `TreeSet`/`TreeMap` dùng `compare(...) == 0` để nhận ra **cùng một khóa theo thứ tự**:
+
+```java
+var withoutTieBreaker = new java.util.TreeSet<>(byTitle);
+System.out.println(withoutTieBreaker.add(first));   // true
+System.out.println(withoutTieBreaker.add(second));  // false
+System.out.println(withoutTieBreaker.size());       // 1
+
+Comparator<Book> byTitleThenYearThenId =
+        Comparator.comparing(Book::title)
+                  .thenComparingInt(Book::year)
+                  .thenComparingInt(Book::id);
+
+var withTieBreaker = new java.util.TreeSet<>(byTitleThenYearThenId);
+withTieBreaker.add(first);
+withTieBreaker.add(second);
+System.out.println(withTieBreaker.size());          // 2
+```
+
+Ở lần thêm thứ hai, `TreeSet` so tiêu đề và nhận `0` nên không thêm sách mới. Khi có tiêu chí năm (và `id` để tiếp tục phân định các trường hợp trùng năm), hai sách so sánh khác `0` nên cùng được lưu. Chỉ thêm tie-breaker nếu miền nghiệp vụ **muốn** phân biệt các khóa đó; mỗi tiêu chí bổ sung sẽ thay đổi cách cấu trúc có thứ tự nhận diện khóa.
 
 ### PHƯƠNG THỨC HỖ TRỢ CHUYÊN BIỆT CHO KIỂU NGUYÊN THỦY
 
@@ -79,42 +120,39 @@ Khi khóa là kiểu nguyên thủy, có thể tránh thao tác đóng hộp (`b
 ```java
 Comparator<Book> byPages =
         Comparator.comparingInt(Book::pages);
-
-Comparator<Book> bySales =
-        Comparator.comparingLong(Book::sales);
-
-Comparator<Book> byRating =
-        Comparator.comparingDouble(Book::rating);
 ```
+
+`comparingLong` và `comparingDouble` phục vụ khóa kiểu `long` và `double` tương ứng. Chọn phương thức đúng với kiểu dữ liệu; đừng viết phép trừ hai khóa số để tự tạo kết quả so sánh.
 
 ### `reversed()` VÀ THỨ TỰ KẾT HỢP
 
-```java
-Comparator<Book> newestFirst =
-        Comparator.comparing(Book::publishedAt)
-                  .reversed();
-```
-
-Cần đọc biểu thức như một chuỗi chính sách. Đặt `reversed()` ở đâu sẽ quyết định phần nào của thứ tự bị đảo, đặc biệt khi kết hợp nhiều comparator.
+Cần đọc biểu thức như một chuỗi chính sách. `reversed()` đảo dấu hướng so sánh của **toàn bộ comparator mà nó được gọi trên**. Đặt nó ở đâu sẽ quyết định phần nào của thứ tự bị đảo.
 
 Ví dụ hai chính sách sau **không giống nhau**:
 
 ```java
-// Đảo toàn bộ chuỗi: tiêu đề giảm dần, rồi ngày giảm dần.
+// Đảo toàn bộ chuỗi: tiêu đề giảm dần, rồi năm giảm dần.
 Comparator<Book> allDescending =
         Comparator.comparing(Book::title)
-                  .thenComparing(Book::publishedAt)
+                  .thenComparingInt(Book::year)
                   .reversed();
 
-// Giữ tiêu đề tăng dần, chỉ đảo tiêu chí ngày dùng để phân định khi tiêu đề bằng nhau.
-Comparator<Book> titleAscDateDesc =
+// Giữ tiêu đề tăng dần, chỉ đảo tiêu chí năm khi tiêu đề bằng nhau.
+Comparator<Book> titleAscYearDesc =
         Comparator.comparing(Book::title)
                   .thenComparing(
-                          Comparator.comparing(Book::publishedAt).reversed()
+                          Comparator.comparingInt(Book::year).reversed()
                   );
 ```
 
-Vì vậy phép kết hợp phải thể hiện rõ **tiêu chí nào là chính, tiêu chí nào chỉ dùng khi tiêu chí trước bằng nhau, và chính xác phần nào của chính sách bị đảo chiều**. Đảo toàn bộ `Comparator` đã kết hợp không giống với chỉ đảo một bước so sánh bên trong.
+Cho dữ liệu `Java#1 (2022)`, `Java#2 (2024)`, `SQL#3 (2021)`, `SQL#4 (2023)` theo đúng `id` trong `Book`, hai biểu thức tạo kết quả:
+
+```text
+allDescending    → [SQL#4, SQL#3, Java#2, Java#1]
+titleAscYearDesc → [Java#2, Java#1, SQL#4, SQL#3]
+```
+
+Trong cả hai cách, sách cùng tiêu đề có năm mới đứng trước; nhưng chỉ cách đầu đảo cả thứ tự tiêu đề, nên nhóm “SQL” đứng trước “Java”. Muốn “mới nhất trước” bất kể tiêu đề, có thể dùng `Comparator.comparingInt(Book::year).reversed()`.
 
 ### XỬ LÝ NULL LÀ MỘT CHÍNH SÁCH CẦN NÓI RÕ
 
@@ -126,11 +164,11 @@ Comparator<Book> byTitleNullLast =
         );
 ```
 
-`nullsFirst` / `nullsLast` giúp đoạn mã sử dụng nói rõ ngữ nghĩa thay vì để `null` gây lỗi bất ngờ.
+Ở đây `nullsLast` áp dụng lên **giá trị `title`**: một `Book` có tiêu đề `null` được đặt sau sách có tiêu đề khác `null`. Nó **không** tự cho phép cả đối tượng `Book` là `null`; nếu danh sách có phần tử `Book` bằng `null`, phải bao toàn bộ comparator bằng `Comparator.nullsLast(byTitleNullLast)`. `nullsFirst` thực hiện chiều ngược lại.
 
 ## <a id="comparator-contract">Quy tắc của Comparator</a>
 
-Comparator phải tạo ra một quan hệ thứ tự nhất quán.
+`Comparator.compare(a, b)` dùng dấu của kết quả, tương tự `Comparable.compareTo`: âm nghĩa là `a` đứng trước `b`, `0` nghĩa là hai giá trị ngang hàng theo chính sách này, dương nghĩa là `a` đứng sau `b`. Không cần trả đúng `-1` và `1`; **dấu** mới là hợp đồng mà API sử dụng. Để sắp xếp và tra cứu theo thứ tự hoạt động đáng tin cậy, dấu đó phải tuân thủ các quy tắc sau.
 
 ### ĐỐI XỨNG NGƯỢC VỀ DẤU
 
@@ -146,7 +184,7 @@ thì chiều ngược lại phải cho:
 compare(b, a) > 0
 ```
 
-Tổng quát hơn, dấu của hai phép so sánh đảo đối số phải đối nhau. Nếu không, comparator có thể đồng thời nói “a đứng trước b” và “b cũng đứng trước a”.
+Tổng quát hơn, dấu của hai phép so sánh đảo đối số phải đối nhau, kể cả khi một chiều trả `0`. Nếu không, comparator có thể đồng thời nói “a đứng trước b” và “b cũng đứng trước a”.
 
 ### TÍNH BẮC CẦU
 
@@ -164,6 +202,43 @@ a < c
 ```
 
 Một comparator kiểu vòng tròn “kéo-búa-bao” không tạo được thứ tự toàn phần hợp lệ cho thuật toán sắp xếp hoặc cấu trúc cây.
+
+### CẠM BẪY TRÀN SỐ KHI SO SÁNH BẰNG PHÉP TRỪ
+
+Một cách viết dễ mắc lỗi là `(a, b) -> a - b` khi khóa là `int`. Phép trừ có thể **tràn miền `int`**, khiến dấu bị đảo. Chạy đoạn Java 21 sau (có thể đặt trong `main`):
+
+```java
+Comparator<Integer> broken = (a, b) -> a - b;
+Comparator<Integer> correct = Integer::compare;
+
+int high = Integer.MAX_VALUE; // 2147483647
+int low = -1;
+System.out.println(broken.compare(high, low));
+System.out.println(broken.compare(low, high));
+System.out.println(correct.compare(high, low));
+System.out.println(correct.compare(low, high));
+```
+
+Kết quả:
+
+```text
+-2147483648
+-2147483648
+1
+-1
+```
+
+Theo toán học, `2147483647 - (-1) = 2147483648` và `-1 - 2147483647 = -2147483648`. Nhưng `int` chỉ chứa giá trị từ `-2147483648` đến `2147483647`, nên **phép trừ đầu bị tràn thành số âm**. `broken` tuyên bố `high` đứng trước `low` và `low` cũng đứng trước `high`: vi phạm quy tắc đối dấu.
+
+Tràn số còn có thể phá tính bắc cầu. Với `a = 2147483647`, `b = -1`, `c = 0`, comparator dùng phép trừ cho:
+
+```text
+compare(a, b) < 0   // tràn số: a bị xếp trước b
+compare(b, c) < 0   // -1 - 0 = -1
+compare(a, c) > 0   // 2147483647 - 0 > 0
+```
+
+Nó đồng thời nói `a < b` và `b < c`, nhưng `a > c`. Sửa bằng `Integer.compare(a, b)` hoặc `Comparator.comparingInt(...)`; tương tự, với `long` dùng `Long.compare` / `comparingLong`. Đừng trông chờ một thuật toán sắp xếp tự khắc phục được quan hệ so sánh sai.
 
 ### CÁC PHẦN TỬ SO SÁNH BẰNG 0 PHẢI HÀNH XỬ NHẤT QUÁN
 
@@ -185,7 +260,7 @@ phải nhất quán với dấu của:
 compare(b, c)
 ```
 
-Quy tắc này giúp nhóm các phần tử “bằng nhau theo thứ tự” thực sự tạo thành một lớp thứ tự nhất quán.
+Quy tắc này giúp nhóm các phần tử “bằng nhau theo thứ tự” thực sự tạo thành một lớp thứ tự nhất quán. Với `byTitle` ở phần trước, hai sách “Java” cùng nhận dấu âm khi so với một sách “SQL”, dù `id` hay năm của chúng khác nhau. Nếu một comparator trả `0` cho hai sách nhưng lại đặt một sách trước “SQL” và sách kia sau “SQL”, cấu trúc có thứ tự không thể xem chúng là cùng một khóa một cách đáng tin cậy.
 
 ### TÍNH NHẤT QUÁN VỚI PHÉP BẰNG NHAU
 
@@ -211,17 +286,13 @@ compare(a, b) != 0
 
 Trường hợp đầu có thể làm cấu trúc dữ liệu có thứ tự xem hai giá trị logic khác nhau như cùng một khóa theo thứ tự; trường hợp sau có thể làm nó giữ cả hai giá trị dù `equals` nói chúng bằng nhau. Điểm khác biệt ở đây là chính sách so sánh do đoạn mã sử dụng cung cấp và có thể thay đổi theo ngữ cảnh, thay vì nằm cố định trong kiểu dữ liệu như `Comparable`.
 
-Nếu cố ý định nghĩa thứ tự không nhất quán với `equals`, nên ghi rõ điều đó trong tài liệu để đoạn mã sử dụng không nhầm ngữ nghĩa của cấu trúc dữ liệu có thứ tự với phép bằng nhau về mặt logic của đối tượng.
+Nếu cố ý định nghĩa thứ tự không nhất quán với `equals`, nên ghi rõ điều đó trong tài liệu để đoạn mã sử dụng không nhầm ngữ nghĩa của cấu trúc dữ liệu có thứ tự với phép bằng nhau về mặt logic của đối tượng. Ví dụ hai `Book` ở phần kết hợp comparator có `equals == false` nhưng `byTitle.compare(...) == 0`: `TreeSet` từ chối lần thêm thứ hai, trong khi một `HashSet` có thể giữ cả hai nhờ quy tắc `equals` / `hashCode` của `record`.
 
-```java
-Set<Book> books = new TreeSet<>(Comparator.comparing(Book::title));
-```
-
-Nếu hai quyển sách khác nhau nhưng cùng tiêu đề, comparator trên có thể làm `TreeSet` chỉ giữ một khóa theo thứ tự. Đó không phải lỗi của `TreeSet`; comparator đã nói với cấu trúc dữ liệu rằng chúng bằng nhau theo quan hệ thứ tự.
+Chiều ngược lại cũng có thể xảy ra với comparator phụ thuộc dữ liệu ngoài những trường mà `equals` dùng: hai giá trị được `equals` xem bằng nhau nhưng comparator lại đặt ở hai vị trí khác nhau; `TreeSet` có thể giữ cả hai. Cần phân biệt **bằng nhau về mặt logic** và **ngang hàng theo tiêu chí sắp xếp** trước khi chọn khóa cho `TreeSet` hoặc `TreeMap`.
 
 ### TRẠNG THÁI SO SÁNH CÓ THỂ THAY ĐỔI
 
-Comparator dựa trên trường dữ liệu có thể thay đổi có thể làm cấu trúc dữ liệu có thứ tự mất tính nhất quán nếu trường đó thay đổi sau khi phần tử được đưa vào.
+Comparator dựa trên trường dữ liệu có thể thay đổi có thể làm cấu trúc dữ liệu có thứ tự mất tính nhất quán nếu trường đó thay đổi sau khi phần tử được đưa vào. Đây là rủi ro **theo thời gian**, khác với `compare(...) == 0` khi hai phần tử cùng tiêu chí.
 
 ```text
 đưa vào với price = 10
@@ -233,19 +304,46 @@ vị trí trong cây dựa trên price 10
 trạng thái đối tượng không còn khớp vị trí cũ trong thứ tự
 ```
 
-Rủi ro tương tự xảy ra nếu comparator phụ thuộc vào cấu hình bên ngoài có thể thay đổi, thời gian hiện tại hoặc trạng thái bên ngoài thay đổi giữa các lần so sánh. Hãy ưu tiên trạng thái liên quan tới thứ tự và chính sách so sánh ổn định khi đối tượng nằm trong cấu trúc cây.
+Khi cây đã đặt khóa ở vị trí tương ứng giá `10`, việc đối tượng tự đổi thành giá `1000` **không tự sắp xếp lại cây**. Lần tìm kiếm tiếp theo có thể đi theo nhánh dựa vào giá mới nhưng cấu trúc cũ vẫn còn, dẫn đến kết quả tra cứu không như mong đợi. Rủi ro tương tự xảy ra nếu comparator phụ thuộc vào cấu hình bên ngoài có thể thay đổi, thời gian hiện tại hoặc trạng thái bên ngoài thay đổi giữa các lần so sánh. Hãy ưu tiên trạng thái liên quan tới thứ tự và chính sách so sánh ổn định khi đối tượng nằm trong cấu trúc cây; nếu phải đổi khóa so sánh, loại phần tử ra, thay đổi rồi thêm lại theo chính sách phù hợp.
 
 ## <a id="sorting-stability-boundary">Tính ổn định khi sắp xếp</a>
 
-Phép sắp xếp ổn định giữ nguyên thứ tự xuất hiện tương đối của những phần tử mà comparator xem là bằng nhau.
+Phép **sắp xếp ổn định** (*stable sort*) giữ nguyên thứ tự tương đối ban đầu của **những phần tử mà comparator trả `0`**. Đây là thuộc tính của **thuật toán hoặc API sắp xếp**, không phải thuộc tính mà bản thân `Comparator` có thể tự bảo đảm.
 
-Ví dụ đầu vào:
+Trong Java 21, `List.sort(Comparator)` bảo đảm ổn định. Đoạn sau dùng danh sách công việc có tên và mức ưu tiên (số nhỏ được xếp trước):
 
-```text
-[A(priority=1), B(priority=1), C(priority=2)]
+```java
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
+public class StableSortExample {
+    record Task(String name, int priority) {}
+
+    public static void main(String[] args) {
+        List<Task> tasks = new ArrayList<>(List.of(
+                new Task("C", 2), new Task("B", 1),
+                new Task("A", 1), new Task("D", 2)
+        ));
+
+        tasks.sort(Comparator.comparingInt(Task::priority));
+        System.out.println(tasks.stream().map(Task::name).toList());
+
+        tasks.sort(Comparator.comparingInt(Task::priority)
+                             .thenComparing(Task::name));
+        System.out.println(tasks.stream().map(Task::name).toList());
+    }
+}
 ```
 
-Nếu chỉ sắp xếp theo `priority` và thuật toán/API bảo đảm tính ổn định, `A` vẫn đứng trước `B` sau khi sắp xếp vì comparator xem chúng ngang nhau.
+Kết quả:
+
+```text
+[B, A, C, D]
+[A, B, C, D]
+```
+
+Lần sắp xếp thứ nhất đưa mức ưu tiên `1` lên trước mức `2`. Trong từng mức, `B` vẫn trước `A` và `C` vẫn trước `D` đúng như thứ tự đầu vào, vì `compare(B, A) == 0` và `compare(C, D) == 0`. Lần thứ hai bổ sung `thenComparing(Task::name)`, làm `B` và `A` **không còn ngang hàng** nữa: tên “A” phải đứng trước “B”, nên đầu ra đổi thành `[A, B, C, D]`. Đây là kết quả của **thay đổi chính sách so sánh**, không phải `List.sort` mất tính ổn định.
 
 ### PHÂN BIỆT HAI QUY ƯỚC
 
@@ -257,7 +355,7 @@ tính nhất quán của comparator
 → thuộc tính của hàm xác định thứ tự
 ```
 
-Comparator tốt không tự bảo đảm phép sắp xếp ổn định. Ngược lại, một thuật toán sắp xếp ổn định cũng không sửa được comparator vi phạm tính bắc cầu.
+Comparator tuân thủ đối dấu và bắc cầu vẫn không tự bảo đảm một API sắp xếp sẽ ổn định; ta phải kiểm tra hợp đồng của API. Ngược lại, `List.sort` ổn định cũng không sửa được comparator vi phạm tính bắc cầu, chẳng hạn `(a, b) -> a - b` ở trên khi bị tràn số.
 
 Không nên giả định mọi API sắp xếp đều ổn định nếu tài liệu API không nói rõ.
 
