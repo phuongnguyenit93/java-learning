@@ -1,219 +1,1358 @@
-1.Lifecycle/Lifecycle.md:
-  loading-linking-initialization:
+1.Overview/Overview.md:
+  overview-001:
     difficulty: BASIC
+    isImportant: true
     aiGenerated: true
     reviewed: false
-    isImportant: false
-  linking-phases:
-    difficulty: BASIC
+  overview-002:
+    difficulty: INTERMEDIATE
+    isImportant: true
     aiGenerated: true
     reviewed: false
-    isImportant: false
-  load-vs-initialize:
+  overview-003:
     difficulty: BASIC
+    isImportant: true
     aiGenerated: true
     reviewed: false
-    isImportant: false
-2.BuiltInClassLoaders/BuiltInClassLoaders.md:
-  bootstrap-loader:
-    difficulty: BASIC
+  overview-004:
+    difficulty: INTERMEDIATE
+    isImportant: true
     aiGenerated: true
     reviewed: false
-    isImportant: false
-  platform-loader:
-    difficulty: BASIC
+  overview-005:
+    difficulty: ADVANCED
+    isImportant: true
     aiGenerated: true
     reviewed: false
+  overview-006:
+    difficulty: INTERMEDIATE
     isImportant: false
-  application-loader:
-    difficulty: BASIC
     aiGenerated: true
     reviewed: false
-    isImportant: false
-  loader-chain:
+  overview-007:
     difficulty: BASIC
+    isImportant: false
     aiGenerated: true
     reviewed: false
-    isImportant: false
-3.ParentDelegation/ParentDelegation.md:
-  parent-delegation:
-    difficulty: BASIC
+  overview-008:
+    difficulty: ADVANCED
+    isImportant: true
     aiGenerated: true
     reviewed: false
-    isImportant: false
-  initiating-vs-defining-loader:
+2.NamesAndBytecode/NamesAndBytecode.md:
+  names-and-bytecode-001:
     difficulty: BASIC
+    isImportant: true
     aiGenerated: true
     reviewed: false
+  names-and-bytecode-002:
+    difficulty: INTERMEDIATE
     isImportant: false
-  delegation-purpose:
-    difficulty: BASIC
     aiGenerated: true
     reviewed: false
-    isImportant: false
-  child-first-boundary:
-    difficulty: BASIC
+  names-and-bytecode-003:
+    difficulty: INTERMEDIATE
+    isImportant: true
     aiGenerated: true
     reviewed: false
-    isImportant: false
-  protected-packages-boundary:
+  names-and-bytecode-004:
     difficulty: BASIC
+    isImportant: true
     aiGenerated: true
     reviewed: false
-    isImportant: false
-4.CustomClassLoader/CustomClassLoader.md:
-  classloader-contract:
-    difficulty: BASIC
+  names-and-bytecode-005:
+    difficulty: INTERMEDIATE
+    isImportant: true
     aiGenerated: true
     reviewed: false
-    isImportant: false
-  define-class:
-    difficulty: BASIC
+  names-and-bytecode-006:
+    difficulty: ADVANCED
+    isImportant: true
     aiGenerated: true
     reviewed: false
-    isImportant: false
-  custom-source:
-    difficulty: BASIC
+  names-and-bytecode-007:
+    difficulty: INTERMEDIATE
+    isImportant: true
     aiGenerated: true
     reviewed: false
-    isImportant: false
-  custom-loader-safety:
-    difficulty: BASIC
+  names-and-bytecode-008:
+    difficulty: ADVANCED
+    isImportant: true
     aiGenerated: true
     reviewed: false
-    isImportant: false
-5.ClassIdentity/ClassIdentity.md:
-  class-identity-rule:
+3.ClassLifecycle/ClassLifecycle.md:
+  class-lifecycle-001:
     difficulty: BASIC
+    isImportant: true
     aiGenerated: true
     reviewed: false
-    isImportant: false
-  same-name-different-type:
-    difficulty: BASIC
+  class-lifecycle-002:
+    difficulty: INTERMEDIATE
+    isImportant: true
     aiGenerated: true
     reviewed: false
-    isImportant: false
-  class-cast-loader-failure:
-    difficulty: BASIC
+  class-lifecycle-003:
+    difficulty: INTERMEDIATE
+    isImportant: true
     aiGenerated: true
     reviewed: false
+  class-lifecycle-004:
+    difficulty: ADVANCED
     isImportant: false
-  loader-boundary-api:
-    difficulty: BASIC
     aiGenerated: true
     reviewed: false
-    isImportant: false
-6.ContextClassLoader/ContextClassLoader.md:
-  tccl-purpose:
-    difficulty: BASIC
+  class-lifecycle-005:
+    difficulty: INTERMEDIATE
+    isImportant: true
     aiGenerated: true
     reviewed: false
-    isImportant: false
-  tccl-discovery:
-    difficulty: BASIC
+  class-lifecycle-006:
+    difficulty: ADVANCED
+    isImportant: true
     aiGenerated: true
     reviewed: false
+  class-lifecycle-007:
+    difficulty: ADVANCED
     isImportant: false
-  tccl-lifecycle:
-    difficulty: BASIC
     aiGenerated: true
     reviewed: false
-    isImportant: false
-  tccl-leak-risk:
-    difficulty: BASIC
+  class-lifecycle-008:
+    difficulty: INTERMEDIATE
+    isImportant: true
     aiGenerated: true
     reviewed: false
-    isImportant: false
-7.ResourceLoading/ResourceLoading.md:
-  class-resource:
-    difficulty: BASIC
+  class-lifecycle-009:
+    difficulty: INTERMEDIATE
+    isImportant: true
     aiGenerated: true
     reviewed: false
-    isImportant: false
-  loader-resource:
-    difficulty: BASIC
+  class-lifecycle-010:
+    difficulty: INTERMEDIATE
+    isImportant: true
     aiGenerated: true
     reviewed: false
-    isImportant: false
-  resource-enumeration:
+4.ClassInitialization/ClassInitialization.md:
+  class-initialization-001:
     difficulty: BASIC
+    isImportant: true
     aiGenerated: true
     reviewed: false
-    isImportant: false
-  resource-stream-lifecycle:
+  class-initialization-002:
     difficulty: BASIC
+    isImportant: true
     aiGenerated: true
     reviewed: false
-    isImportant: false
-  classpath-vs-filesystem:
-    difficulty: BASIC
+  class-initialization-003:
+    difficulty: INTERMEDIATE
+    isImportant: true
     aiGenerated: true
     reviewed: false
-    isImportant: false
-  resource-vs-class-loading:
+  class-initialization-004:
     difficulty: BASIC
+    isImportant: true
     aiGenerated: true
     reviewed: false
-    isImportant: false
-8.Initialization/Initialization.md:
-  initialization-trigger:
-    difficulty: BASIC
+  class-initialization-005:
+    difficulty: INTERMEDIATE
+    isImportant: true
     aiGenerated: true
     reviewed: false
+  class-initialization-006:
+    difficulty: ADVANCED
     isImportant: false
-  constant-no-init:
-    difficulty: BASIC
     aiGenerated: true
     reviewed: false
-    isImportant: false
-  clinit-model:
-    difficulty: BASIC
+  class-initialization-007:
+    difficulty: INTERMEDIATE
+    isImportant: true
     aiGenerated: true
     reviewed: false
-    isImportant: false
-  initialization-once:
-    difficulty: BASIC
+  class-initialization-008:
+    difficulty: ADVANCED
+    isImportant: true
     aiGenerated: true
     reviewed: false
-    isImportant: false
-  initialization-locking:
-    difficulty: BASIC
+  class-initialization-009:
+    difficulty: ADVANCED
+    isImportant: true
     aiGenerated: true
     reviewed: false
-    isImportant: false
-  initialization-failure:
-    difficulty: BASIC
+  class-initialization-010:
+    difficulty: ADVANCED
+    isImportant: true
     aiGenerated: true
     reviewed: false
-    isImportant: false
-9.UnloadingLeaks/UnloadingLeaks.md:
-  class-unloading:
+5.BuiltInClassLoaders/BuiltInClassLoaders.md:
+  built-in-class-loaders-001:
     difficulty: BASIC
+    isImportant: true
     aiGenerated: true
     reviewed: false
-    isImportant: false
-  loader-retention:
-    difficulty: BASIC
+  built-in-class-loaders-002:
+    difficulty: INTERMEDIATE
+    isImportant: true
     aiGenerated: true
     reviewed: false
-    isImportant: false
-  static-threadlocal-leaks:
-    difficulty: BASIC
+  built-in-class-loaders-003:
+    difficulty: INTERMEDIATE
+    isImportant: true
     aiGenerated: true
     reviewed: false
-    isImportant: false
-  redeploy-leak:
-    difficulty: BASIC
+  built-in-class-loaders-004:
+    difficulty: INTERMEDIATE
+    isImportant: true
     aiGenerated: true
     reviewed: false
-    isImportant: false
-  unloading-observation:
+  built-in-class-loaders-005:
     difficulty: BASIC
+    isImportant: true
     aiGenerated: true
     reviewed: false
-    isImportant: false
-  end-to-end-synthesis:
-    difficulty: BASIC
+  built-in-class-loaders-006:
+    difficulty: INTERMEDIATE
+    isImportant: true
     aiGenerated: true
     reviewed: false
+  built-in-class-loaders-007:
+    difficulty: INTERMEDIATE
     isImportant: false
+    aiGenerated: true
+    reviewed: false
+  built-in-class-loaders-008:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  built-in-class-loaders-009:
+    difficulty: INTERMEDIATE
+    isImportant: false
+    aiGenerated: true
+    reviewed: false
+  built-in-class-loaders-010:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  built-in-class-loaders-011:
+    difficulty: ADVANCED
+    isImportant: false
+    aiGenerated: true
+    reviewed: false
+6.ParentDelegation/ParentDelegation.md:
+  parent-delegation-001:
+    difficulty: BASIC
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  parent-delegation-002:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  parent-delegation-003:
+    difficulty: BASIC
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  parent-delegation-004:
+    difficulty: BASIC
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  parent-delegation-005:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  parent-delegation-006:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  parent-delegation-007:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  parent-delegation-008:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  parent-delegation-009:
+    difficulty: ADVANCED
+    isImportant: false
+    aiGenerated: true
+    reviewed: false
+7.TypeIdentity/TypeIdentity.md:
+  type-identity-001:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  type-identity-002:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  type-identity-003:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  type-identity-004:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  type-identity-005:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  type-identity-006:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  type-identity-007:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  type-identity-008:
+    difficulty: INTERMEDIATE
+    isImportant: false
+    aiGenerated: true
+    reviewed: false
+  type-identity-009:
+    difficulty: BASIC
+    isImportant: false
+    aiGenerated: true
+    reviewed: false
+  type-identity-010:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+8.ClassLoadingAPI/ClassLoadingAPI.md:
+  class-loading-api-001:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  class-loading-api-002:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  class-loading-api-003:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  class-loading-api-004:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  class-loading-api-005:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  class-loading-api-006:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  class-loading-api-007:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  class-loading-api-008:
+    difficulty: ADVANCED
+    isImportant: false
+    aiGenerated: true
+    reviewed: false
+  class-loading-api-009:
+    difficulty: BASIC
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  class-loading-api-010:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  class-loading-api-011:
+    difficulty: INTERMEDIATE
+    isImportant: false
+    aiGenerated: true
+    reviewed: false
+9.ClasspathAndModulePath/ClasspathAndModulePath.md:
+  classpath-and-module-path-001:
+    difficulty: BASIC
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  classpath-and-module-path-002:
+    difficulty: BASIC
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  classpath-and-module-path-003:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  classpath-and-module-path-004:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  classpath-and-module-path-005:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  classpath-and-module-path-006:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  classpath-and-module-path-007:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  classpath-and-module-path-008:
+    difficulty: ADVANCED
+    isImportant: false
+    aiGenerated: true
+    reviewed: false
+  classpath-and-module-path-009:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  classpath-and-module-path-010:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+10.ResourceLoading/ResourceLoading.md:
+  resource-loading-001:
+    difficulty: BASIC
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  resource-loading-002:
+    difficulty: BASIC
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  resource-loading-003:
+    difficulty: BASIC
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  resource-loading-004:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  resource-loading-005:
+    difficulty: INTERMEDIATE
+    isImportant: false
+    aiGenerated: true
+    reviewed: false
+  resource-loading-006:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  resource-loading-007:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  resource-loading-008:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  resource-loading-009:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  resource-loading-010:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+11.ContextClassLoader/ContextClassLoader.md:
+  context-class-loader-001:
+    difficulty: BASIC
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  context-class-loader-002:
+    difficulty: INTERMEDIATE
+    isImportant: false
+    aiGenerated: true
+    reviewed: false
+  context-class-loader-003:
+    difficulty: BASIC
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  context-class-loader-004:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  context-class-loader-005:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  context-class-loader-006:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  context-class-loader-007:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  context-class-loader-008:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  context-class-loader-009:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+12.URLClassLoader/URLClassLoader.md:
+  url-class-loader-001:
+    difficulty: BASIC
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  url-class-loader-002:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  url-class-loader-003:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  url-class-loader-004:
+    difficulty: BASIC
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  url-class-loader-005:
+    difficulty: INTERMEDIATE
+    isImportant: false
+    aiGenerated: true
+    reviewed: false
+  url-class-loader-006:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  url-class-loader-007:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  url-class-loader-008:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  url-class-loader-009:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+13.CustomClassLoader/CustomClassLoader.md:
+  custom-class-loader-001:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  custom-class-loader-002:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  custom-class-loader-003:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  custom-class-loader-004:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  custom-class-loader-005:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  custom-class-loader-006:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  custom-class-loader-007:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  custom-class-loader-008:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  custom-class-loader-009:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  custom-class-loader-010:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  custom-class-loader-011:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  custom-class-loader-012:
+    difficulty: ADVANCED
+    isImportant: false
+    aiGenerated: true
+    reviewed: false
+14.LoadingPolicies/LoadingPolicies.md:
+  loading-policies-001:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  loading-policies-002:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  loading-policies-003:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  loading-policies-004:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  loading-policies-005:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  loading-policies-006:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  loading-policies-007:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  loading-policies-008:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  loading-policies-009:
+    difficulty: ADVANCED
+    isImportant: false
+    aiGenerated: true
+    reviewed: false
+15.ConcurrentClassLoading/ConcurrentClassLoading.md:
+  concurrent-class-loading-001:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  concurrent-class-loading-002:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  concurrent-class-loading-003:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  concurrent-class-loading-004:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  concurrent-class-loading-005:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  concurrent-class-loading-006:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  concurrent-class-loading-007:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  concurrent-class-loading-008:
+    difficulty: ADVANCED
+    isImportant: false
+    aiGenerated: true
+    reviewed: false
+16.PackagesAndCodeSources/PackagesAndCodeSources.md:
+  packages-and-code-sources-001:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  packages-and-code-sources-002:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  packages-and-code-sources-003:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  packages-and-code-sources-004:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  packages-and-code-sources-005:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  packages-and-code-sources-006:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  packages-and-code-sources-007:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  packages-and-code-sources-008:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+17.ModulesAndLayers/ModulesAndLayers.md:
+  modules-and-layers-001:
+    difficulty: BASIC
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  modules-and-layers-002:
+    difficulty: BASIC
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  modules-and-layers-003:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  modules-and-layers-004:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  modules-and-layers-005:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  modules-and-layers-006:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  modules-and-layers-007:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  modules-and-layers-008:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  modules-and-layers-009:
+    difficulty: INTERMEDIATE
+    isImportant: false
+    aiGenerated: true
+    reviewed: false
+  modules-and-layers-010:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  modules-and-layers-011:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  modules-and-layers-012:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+18.ServiceLoading/ServiceLoading.md:
+  service-loading-001:
+    difficulty: BASIC
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  service-loading-002:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  service-loading-003:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  service-loading-004:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  service-loading-005:
+    difficulty: ADVANCED
+    isImportant: false
+    aiGenerated: true
+    reviewed: false
+  service-loading-006:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  service-loading-007:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  service-loading-008:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  service-loading-009:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  service-loading-010:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+19.PluginArchitecture/PluginArchitecture.md:
+  plugin-architecture-001:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  plugin-architecture-002:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  plugin-architecture-003:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  plugin-architecture-004:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  plugin-architecture-005:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  plugin-architecture-006:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  plugin-architecture-007:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  plugin-architecture-008:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  plugin-architecture-009:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  plugin-architecture-010:
+    difficulty: INTERMEDIATE
+    isImportant: false
+    aiGenerated: true
+    reviewed: false
+20.DynamicClassDefinition/DynamicClassDefinition.md:
+  dynamic-class-definition-001:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  dynamic-class-definition-002:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  dynamic-class-definition-003:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  dynamic-class-definition-004:
+    difficulty: ADVANCED
+    isImportant: false
+    aiGenerated: true
+    reviewed: false
+  dynamic-class-definition-005:
+    difficulty: ADVANCED
+    isImportant: false
+    aiGenerated: true
+    reviewed: false
+  dynamic-class-definition-006:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  dynamic-class-definition-007:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  dynamic-class-definition-008:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  dynamic-class-definition-009:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+21.ClassUnloadingAndMemory/ClassUnloadingAndMemory.md:
+  class-unloading-and-memory-001:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  class-unloading-and-memory-002:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  class-unloading-and-memory-003:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  class-unloading-and-memory-004:
+    difficulty: INTERMEDIATE
+    isImportant: false
+    aiGenerated: true
+    reviewed: false
+  class-unloading-and-memory-005:
+    difficulty: ADVANCED
+    isImportant: false
+    aiGenerated: true
+    reviewed: false
+  class-unloading-and-memory-006:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  class-unloading-and-memory-007:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  class-unloading-and-memory-008:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  class-unloading-and-memory-009:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  class-unloading-and-memory-010:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+22.SecurityBoundaries/SecurityBoundaries.md:
+  security-boundaries-001:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  security-boundaries-002:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  security-boundaries-003:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  security-boundaries-004:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  security-boundaries-005:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  security-boundaries-006:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  security-boundaries-007:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+23.CommonClassLoadingErrors/CommonClassLoadingErrors.md:
+  common-class-loading-errors-001:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  common-class-loading-errors-002:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  common-class-loading-errors-003:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  common-class-loading-errors-004:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  common-class-loading-errors-005:
+    difficulty: ADVANCED
+    isImportant: false
+    aiGenerated: true
+    reviewed: false
+  common-class-loading-errors-006:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  common-class-loading-errors-007:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  common-class-loading-errors-008:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  common-class-loading-errors-009:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  common-class-loading-errors-010:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  common-class-loading-errors-011:
+    difficulty: ADVANCED
+    isImportant: false
+    aiGenerated: true
+    reviewed: false
+  common-class-loading-errors-012:
+    difficulty: ADVANCED
+    isImportant: false
+    aiGenerated: true
+    reviewed: false
+24.ClassLoadingDiagnostics/ClassLoadingDiagnostics.md:
+  class-loading-diagnostics-001:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  class-loading-diagnostics-002:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  class-loading-diagnostics-003:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  class-loading-diagnostics-004:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  class-loading-diagnostics-005:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  class-loading-diagnostics-006:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  class-loading-diagnostics-007:
+    difficulty: ADVANCED
+    isImportant: false
+    aiGenerated: true
+    reviewed: false
+  class-loading-diagnostics-008:
+    difficulty: INTERMEDIATE
+    isImportant: false
+    aiGenerated: true
+    reviewed: false
+  class-loading-diagnostics-009:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  class-loading-diagnostics-010:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  class-loading-diagnostics-011:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+25.ClassLoadingPerformance/ClassLoadingPerformance.md:
+  class-loading-performance-001:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  class-loading-performance-002:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  class-loading-performance-003:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  class-loading-performance-004:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  class-loading-performance-005:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  class-loading-performance-006:
+    difficulty: ADVANCED
+    isImportant: false
+    aiGenerated: true
+    reviewed: false
+  class-loading-performance-007:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  class-loading-performance-008:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+26.ClassLoadingVerification/ClassLoadingVerification.md:
+  class-loading-verification-001:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  class-loading-verification-002:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  class-loading-verification-003:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  class-loading-verification-004:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  class-loading-verification-005:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  class-loading-verification-006:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  class-loading-verification-007:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  class-loading-verification-008:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  class-loading-verification-009:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+27.ClassLoadingExercises/ClassLoadingExercises.md:
+  class-loading-exercises-001:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  class-loading-exercises-002:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  class-loading-exercises-003:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  class-loading-exercises-004:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  class-loading-exercises-005:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  class-loading-exercises-006:
+    difficulty: ADVANCED
+    isImportant: false
+    aiGenerated: true
+    reviewed: false
+  class-loading-exercises-007:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  class-loading-exercises-008:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  class-loading-exercises-009:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  class-loading-exercises-010:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+28.ReferenceTables/ReferenceTables.md:
+  reference-tables-001:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  reference-tables-002:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  reference-tables-003:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  reference-tables-004:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  reference-tables-005:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  reference-tables-006:
+    difficulty: INTERMEDIATE
+    isImportant: false
+    aiGenerated: true
+    reviewed: false
