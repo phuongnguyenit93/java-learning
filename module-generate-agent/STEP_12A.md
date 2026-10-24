@@ -50,4 +50,4 @@ Chạy từ repository root, thay đúng Gradle module path:
 ## 4. Phân ranh với STEP 14/15
 
 - STEP 14: worker dịch EN nhưng giữ nguyên technical identity: filename, anchors, IDs, methodSignature, correctAnswerId, Java code, input/output và metadata. **Không tự gọi cloneModuleViToEn**.
-- STEP 15: dùng `syncModule*ToExcel` để tổng hợp EN → Excel, `importExcelFromModuleSheet -Planguage=en` để tạo **tab Google Sheets EN mới**, rồi export tab chính thức về `content/sheet/en/module.xlsx`. Phải tránh tạo trùng tab và giữ lại gid để nghiệm thu STEP 15.
+- STEP 15: task `publishModuleEnSheet` clone tab `Template` sang tab EN có gid ổn định, dùng VI Excel và nội dung EN để ghi các ô bằng code, kiểm tra readback rồi export chính tab EN sang `content/sheet/en/module.xlsx`. Không dùng AI, không tạo tab mới từ Excel.

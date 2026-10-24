@@ -39,6 +39,16 @@ class ModuleContentExcelSyncService {
     private static final DataFormatter FORMATTER = new DataFormatter(Locale.ROOT)
 
     Map execute(File rootDirectory, File moduleDirectory, String part, boolean apply) {
+        return execute(rootDirectory, moduleDirectory, part, apply, false, null)
+    }
+
+    /**
+     * STEP 15 internal workflow. Render against the canonical VI workbook,
+     * never against stale EN Excel; write to a temporary build artifact, not
+     * the final exported EN snapshot.
+     */
+    Map execute(File rootDirectory, File moduleDirectory, String part, boolean apply,
+                boolean forceViBaseline, File outputOverride) {
         String requested = part?.trim()?.toUpperCase(Locale.ROOT)
         if (!PARTS.contains(requested)) {
             throw new GradleException('Invalid module-to-Excel part: ' + part)
@@ -55,10 +65,10 @@ class ModuleContentExcelSyncService {
                 .toString().replace(File.separatorChar, '/' as char)
         RoadmapSheetImportService.resolveDestination(root, location)
         File base = new File(module, 'content/sheet/vi/module.xlsx')
-        File target = new File(module, 'content/sheet/en/module.xlsx')
+        File target = outputOverride ?: new File(module, 'content/sheet/en/module.xlsx')
         verifyLocalPath(module.toPath(), base.toPath())
         verifyLocalPath(module.toPath(), target.toPath())
-        File source = target.isFile() ? target : base
+        File source = forceViBaseline ? base : (target.isFile() ? target : base)
         if (!source.isFile()) {
             throw new GradleException('Run STEP 12 first: missing VI module.xlsx.')
         }
@@ -239,7 +249,19 @@ class ModuleContentExcelSyncService {
     }
 
     private static void roadmap(File module, XSSFSheet sheet, Map report) {
-        Map document = parseYaml(required(new File(module, 'content/roadmap/en/roadmap.yml')))
+        File source = new File(module, 'content/roadmap/en/roadmap.yml')
+        if (!source.isFile()) {
+            if (new File(module, 'content/roadmap/vi/roadmap.yml').isFile()) {
+                throw new GradleException('Missing EN roadmap source.')
+            }
+            // Optional disabled Roadmap must not leak VI content into EN.
+            for (int r = 3; r <= sheet.lastRowNum + 1; r++) {
+                if (!text(sheet,r,6) && !text(sheet,r,7) && !text(sheet,r,8)) break
+                (6..8).each { int col -> set(sheet,r,col,'',report) }
+            }
+            return
+        }
+        Map document = parseYaml(source)
         List items = document.roadmap instanceof List ? document.roadmap as List : []
         if (!items) throw new GradleException('Empty EN Roadmap.')
         int count = 0
@@ -271,7 +293,10 @@ class ModuleContentExcelSyncService {
         if (!yamlFile.isFile()) {
             File vi = new File(module, 'content/' + kind + '/vi/question.yml')
             if (vi.isFile()) throw new GradleException('Missing EN ' + kind + ' source.')
-            return // not enabled
+            groups.each { Map group ->
+                fragments(sheet, group.row as int, firstColumn, 4, '', report)
+            }
+            return // optional capability disabled: wipe stale snapshot payload
         }
         Map document = parseYaml(yamlFile)
         List items = document.questions instanceof List ? document.questions as List : []
@@ -316,6 +341,9 @@ class ModuleContentExcelSyncService {
             }
             if (authoredVi) {
                 throw new GradleException('Missing EN video tree.')
+            }
+            groups.each { Map group ->
+                fragments(sheet, group.row as int, 24, 4, '', report)
             }
             return
         }

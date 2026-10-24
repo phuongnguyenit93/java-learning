@@ -7,6 +7,8 @@ import com.example.learning.task.sheets.task.GenerateModuleContentFromSheetByLoc
 import com.example.learning.task.sheets.task.FillIntroductionTask
 import com.example.learning.task.sheets.task.SyncModuleContentToExcelTask
 import com.example.learning.task.sheets.task.CloneModuleViToEnTask
+import com.example.learning.task.sheets.task.ModuleTranslationAuditTask
+import com.example.learning.task.sheets.task.ModuleEnSheetPublishTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
@@ -33,9 +35,44 @@ class SheetsTaskPlugin
             task.mode.convention(project.providers.gradleProperty('sheetMode').orElse('DRY_RUN'))
         }
 
-        // STEP 15: reverse content importers into an offline EN workbook.
-        // No Google write is performed; importExcelFromModuleSheet remains the
-        // explicitly separate, NEW-TAB-only upload task.
+        [
+                prepareModuleTranslation: 'PREPARE',
+                validateModuleTranslation: 'VALIDATE'
+        ].each { String taskName, String operation ->
+            project.tasks.register(taskName, ModuleTranslationAuditTask) { task ->
+                task.group = 'sheets'
+                task.description = 'STEP 14: ' + operation +
+                        ' translation files (never translates text or writes Google Sheets).'
+                task.operation.convention(operation)
+                task.mode.convention(project.providers.gradleProperty('translationMode')
+                        .orElse('DRY_RUN'))
+                task.runId.convention(project.providers.gradleProperty('translationRunId')
+                        .orElse(''))
+            }
+        }
+
+        // STEP 15: deterministic module EN publishing; the template is cloned
+        // first so that formatting/conditional formatting remain native.
+        [
+                cloneModuleTemplateToEnTab: 'CLONE',
+                syncModuleEnToSheet: 'SYNC',
+                validateModuleEnSheet: 'VERIFY',
+                exportPublishedEnSheet: 'EXPORT',
+                publishModuleEnSheet: 'PUBLISH'
+        ].each { String taskName, String phase ->
+            project.tasks.register(taskName, ModuleEnSheetPublishTask) { task ->
+                task.group = 'sheets'
+                task.description = 'STEP 15 ' + phase + ' (code only, one module, ' +
+                        'DRY_RUN by default).'
+                task.phase.convention(phase)
+                task.fileUrl.set(project.providers.gradleProperty('fileUrl')
+                        .orElse(project.providers.gradleProperty('fileURL')))
+                task.viGid.set(project.providers.gradleProperty('viGid'))
+                task.mode.convention(project.providers.gradleProperty('sheetMode').orElse('DRY_RUN'))
+            }
+        }
+
+        // Legacy reverse exporters are still available as separate offline tasks.
         [
                 syncModuleIntroductionToExcel: 'INTRODUCTION',
                 syncModuleRoadmapToExcel: 'ROADMAP',
