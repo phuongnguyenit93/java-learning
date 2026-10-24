@@ -21,13 +21,7 @@ AbstractionExperimentsController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
   seatScenario(SeatScenarioRequest):
     methodName: seatScenario
     httpMethods:
@@ -50,13 +44,7 @@ AbstractionExperimentsController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
   leaveEvaluation(LeaveEvaluationRequest):
     methodName: leaveEvaluation
     httpMethods:
@@ -79,13 +67,7 @@ AbstractionExperimentsController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
   catalogSearch(CatalogSearchRequest):
     methodName: catalogSearch
     httpMethods:
@@ -108,13 +90,7 @@ AbstractionExperimentsController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
 ClassesExperimentController:
   inventory(InventoryRequest):
     methodName: inventory
@@ -138,13 +114,7 @@ ClassesExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
   workshops(WorkshopRequest):
     methodName: workshops
     httpMethods:
@@ -167,13 +137,7 @@ ClassesExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
   bank(BankRequest):
     methodName: bank
     httpMethods:
@@ -196,13 +160,7 @@ ClassesExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
 ClassDesignExperimentsController:
   library(LibraryRequest):
     methodName: library
@@ -226,13 +184,7 @@ ClassDesignExperimentsController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
   checkout(CheckoutRequest):
     methodName: checkout
     httpMethods:
@@ -255,13 +207,7 @@ ClassDesignExperimentsController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
   transfer(TransferRequest):
     methodName: transfer
     httpMethods:
@@ -284,13 +230,7 @@ ClassDesignExperimentsController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
 CompositionExperimentController:
   notification(NotificationRequest):
     methodName: notification
@@ -314,13 +254,7 @@ CompositionExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
   policies(PolicyRequest):
     methodName: policies
     httpMethods:
@@ -343,13 +277,7 @@ CompositionExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
   placeOrder(PlaceOrderRequest):
     methodName: placeOrder
     httpMethods:
@@ -372,13 +300,7 @@ CompositionExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
   resources(ResourceRequest):
     methodName: resources
     httpMethods:
@@ -401,13 +323,7 @@ CompositionExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
 DesignPatternExperimentController:
   pricing(PricingRequest):
     methodName: pricing
@@ -431,13 +347,7 @@ DesignPatternExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
   tasks(TasksRequest):
     methodName: tasks
     httpMethods:
@@ -460,13 +370,7 @@ DesignPatternExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
   report(ReportRequest):
     methodName: report
     httpMethods:
@@ -489,13 +393,7 @@ DesignPatternExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
 DesignPitfallExperimentController:
   seats(SeatsRequest):
     methodName: seats
@@ -519,13 +417,7 @@ DesignPitfallExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
   mutableKey(MutableKeyRequest):
     methodName: mutableKey
     httpMethods:
@@ -548,13 +440,7 @@ DesignPitfallExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
   checkout(CheckoutRequest):
     methodName: checkout
     httpMethods:
@@ -577,13 +463,7 @@ DesignPitfallExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
 EncapsulationExperimentController:
   cart(CartRequest):
     methodName: cart
@@ -607,13 +487,7 @@ EncapsulationExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
   stock(StockRequest):
     methodName: stock
     httpMethods:
@@ -636,13 +510,7 @@ EncapsulationExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
   snapshot(EventRequest):
     methodName: snapshot
     httpMethods:
@@ -665,13 +533,7 @@ EncapsulationExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
   order(OrderRequest):
     methodName: order
     httpMethods:
@@ -694,13 +556,7 @@ EncapsulationExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
 InheritanceExperimentsController:
   calculatePay(PayrollRequest):
     methodName: calculatePay
@@ -724,13 +580,7 @@ InheritanceExperimentsController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
   compareDelivery(DeliveryRequest):
     methodName: compareDelivery
     httpMethods:
@@ -753,13 +603,7 @@ InheritanceExperimentsController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
   constructorTrace(ConstructorRequest):
     methodName: constructorTrace
     httpMethods:
@@ -782,13 +626,7 @@ InheritanceExperimentsController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
   resolveCapabilities(CapabilitiesRequest):
     methodName: resolveCapabilities
     httpMethods:
@@ -811,13 +649,7 @@ InheritanceExperimentsController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
 InterfaceExperimentsController:
   shipping(ShippingRequest):
     methodName: shipping
@@ -841,13 +673,7 @@ InterfaceExperimentsController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
   documents(DocumentRequest):
     methodName: documents
     httpMethods:
@@ -870,13 +696,7 @@ InterfaceExperimentsController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
   checkout(CheckoutRequest):
     methodName: checkout
     httpMethods:
@@ -899,13 +719,7 @@ InterfaceExperimentsController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
 LanguageMechanicsExperimentsController:
   generics(GenericBatchRequest):
     methodName: generics
@@ -929,13 +743,7 @@ LanguageMechanicsExperimentsController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
   stock(StockRequest):
     methodName: stock
     httpMethods:
@@ -958,13 +766,7 @@ LanguageMechanicsExperimentsController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
   shipping(ShippingRequest):
     methodName: shipping
     httpMethods:
@@ -987,13 +789,7 @@ LanguageMechanicsExperimentsController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
 LifecycleExperimentController:
   create(CreationRequest):
     methodName: create
@@ -1017,13 +813,7 @@ LifecycleExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
   references(ReferenceRequest):
     methodName: references
     httpMethods:
@@ -1046,13 +836,7 @@ LifecycleExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
   resources(ResourceRequest):
     methodName: resources
     httpMethods:
@@ -1075,13 +859,7 @@ LifecycleExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
   publication(PublicationRequest):
     methodName: publication
     httpMethods:
@@ -1104,13 +882,7 @@ LifecycleExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
 ModelingExperimentController:
   library(LibraryRequest):
     methodName: library
@@ -1134,13 +906,7 @@ ModelingExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
   orders(OrderRequest):
     methodName: orders
     httpMethods:
@@ -1163,13 +929,7 @@ ModelingExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
 ObjectExperimentsController:
   references(ObjectExperimentDto.ReferenceRequest):
     methodName: references
@@ -1193,13 +953,7 @@ ObjectExperimentsController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
   equality(ObjectExperimentDto.EqualityRequest):
     methodName: equality
     httpMethods:
@@ -1289,13 +1043,7 @@ ObjectExperimentsController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
   absence(ObjectExperimentDto.AbsenceRequest):
     methodName: absence
     httpMethods:
@@ -1318,13 +1066,7 @@ ObjectExperimentsController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
   checkout(ObjectExperimentDto.CheckoutRequest):
     methodName: checkout
     httpMethods:
@@ -1347,13 +1089,7 @@ ObjectExperimentsController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
 BasicsExperimentController:
   simulateAccount(AccountSimulationRequest):
     methodName: simulateAccount
@@ -1926,13 +1662,7 @@ PolymorphismExperimentsController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
   payments(PaymentsRequest):
     methodName: payments
     httpMethods:
@@ -1955,13 +1685,7 @@ PolymorphismExperimentsController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
 PracticeExperimentController:
   bank(BankRequest):
     methodName: bank
@@ -1985,13 +1709,7 @@ PracticeExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
   orders(OrderRequest):
     methodName: orders
     httpMethods:
@@ -2014,13 +1732,7 @@ PracticeExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
   library(LibraryRequest):
     methodName: library
     httpMethods:
@@ -2043,13 +1755,7 @@ PracticeExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
 RefactoringExperimentsController:
   checkout(CheckoutRequest):
     methodName: checkout
@@ -2073,13 +1779,7 @@ RefactoringExperimentsController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
   delivery(DeliveryRequest):
     methodName: delivery
     httpMethods:
@@ -2102,13 +1802,7 @@ RefactoringExperimentsController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
   alerts(AlertRequest):
     methodName: alerts
     httpMethods:
@@ -2131,13 +1825,7 @@ RefactoringExperimentsController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
 RelationshipsExperimentsController:
   transfer(TransferRequest):
     methodName: transfer
@@ -2161,13 +1849,7 @@ RelationshipsExperimentsController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
   enroll(EnrollmentRequest):
     methodName: enroll
     httpMethods:
@@ -2190,13 +1872,7 @@ RelationshipsExperimentsController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
   ownership(OwnershipRequest):
     methodName: ownership
     httpMethods:
@@ -2219,13 +1895,7 @@ RelationshipsExperimentsController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
 SolidExperimentController:
   quote(QuoteRequest):
     methodName: quote
@@ -2249,13 +1919,7 @@ SolidExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
   experiment(ExperimentRequest):
     methodName: experiment
     httpMethods:
@@ -2278,13 +1942,7 @@ SolidExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
 SubtypingExperimentController:
   dispatch(DispatchRequest):
     methodName: dispatch
@@ -2308,13 +1966,7 @@ SubtypingExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
   contract(DiscountRequest):
     methodName: contract
     httpMethods:
@@ -2337,13 +1989,7 @@ SubtypingExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
   geometry(GeometryRequest):
     methodName: geometry
     httpMethods:
@@ -2366,13 +2012,7 @@ SubtypingExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
 TestingExperimentController:
   contracts(ContractRequest):
     methodName: contracts
@@ -2396,13 +2036,7 @@ TestingExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
   collaboration(CollaborationRequest):
     methodName: collaboration
     httpMethods:
@@ -2425,13 +2059,7 @@ TestingExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'
   regression(RegressionRequest):
     methodName: regression
     httpMethods:
@@ -2454,10 +2082,4 @@ TestingExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Write valid HTML, not Markdown. Explain in detail
-        why this input produces the expected HTTP status and response, including business
-        rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving
-        and validating the request.</li><li>Trace the actual Service/Model method
-        calls and branches according to the Java source.</li><li>Explain each important
-        response value and why the request succeeds or fails.</li></ol><pre><code>TODO:
-        Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>'
+      detailDescription: '<p>TODO: Use HTML to explain why this case produces this result.</p>'

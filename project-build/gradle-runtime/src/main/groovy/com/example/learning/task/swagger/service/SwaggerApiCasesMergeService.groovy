@@ -171,8 +171,8 @@ class SwaggerApiCasesMergeService {
                         ? 'TODO: Chú thích ngắn mục tiêu, ngữ cảnh và điểm cần quan sát của case này'
                         : 'TODO: Briefly explain this case purpose, context, and what to observe',
                 detailDescription: vietnamese
-                        ? '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO: Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
-                        : '<p>TODO: Write valid HTML, not Markdown. Explain in detail why this input produces the expected HTTP status and response, including business rules and edge cases.</p><ol><li>Describe the Controller/endpoint receiving and validating the request.</li><li>Trace the actual Service/Model method calls and branches according to the Java source.</li><li>Explain each important response value and why the request succeeds or fails.</li></ol><pre><code>TODO: Illustrate the real code flow/method calls here using HTML &lt;pre&gt;&lt;code&gt;.</code></pre>',
+                        ? '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
+                        : '<p>TODO: Use HTML to explain why this case produces this result.</p>',
                 input      : [
                         pathParams : new LinkedHashMap<>(),
                         queryParams: new LinkedHashMap<>(),

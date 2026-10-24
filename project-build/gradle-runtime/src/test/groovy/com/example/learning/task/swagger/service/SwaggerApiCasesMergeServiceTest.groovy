@@ -67,8 +67,8 @@ class SwaggerApiCasesMergeServiceTest {
         assertTrue(api.cases[0].title.startsWith('TODO: '))
         assertTrue(api.cases[0].title.contains('this case'))
         assertTrue(api.cases[0].description.startsWith('TODO: '))
-        assertTrue(api.cases[0].detailDescription.contains('Write valid HTML'))
-        assertTrue(api.cases[0].detailDescription.contains('<pre><code>'))
+        assertEquals('<p>TODO: Use HTML to explain why this case produces this result.</p>',
+                api.cases[0].detailDescription)
         assertEquals([pathParams: [:], queryParams: [:], headers: [:], body: null],
                 api.cases[0].input)
         assertNull(api.cases[0].status)
@@ -101,7 +101,7 @@ class SwaggerApiCasesMergeServiceTest {
         Map upgradedOther = new LinkedHashMap(mergedCases[1] as Map)
         String guidance = upgradedOther.remove('detailDescription') as String
         assertEquals(edited.cases[1], upgradedOther)
-        assertTrue(guidance.contains('Write valid HTML'))
+        assertEquals('<p>TODO: Use HTML to explain why this case produces this result.</p>', guidance)
         String rerun = output.getText('UTF-8')
         service.merge(dir, scan('create(CreateRequest)', 'cancel(String)'))
         assertEquals(rerun, output.getText('UTF-8'))
@@ -135,8 +135,8 @@ class SwaggerApiCasesMergeServiceTest {
         def updated = after.DemoController['create(CreateRequest)'].cases[0]
         assertEquals('', updated.title)
         assertEquals('', updated.description)
-        assertTrue(updated.detailDescription.contains('Viết bằng mã HTML'))
-        assertTrue(updated.detailDescription.contains('<ol>'))
+        assertEquals('<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>',
+                updated.detailDescription)
         assertNull(updated.status)
         assertNull(updated.response)
         def updatedAuthored = after.DemoController['cancel(String)'].cases[0]
@@ -146,7 +146,8 @@ class SwaggerApiCasesMergeServiceTest {
         assertEquals(authored.input, updatedAuthored.input)
         assertEquals(authored.status, updatedAuthored.status)
         assertEquals(authored.response, updatedAuthored.response)
-        assertTrue(updatedAuthored.detailDescription.contains('Viết bằng mã HTML'))
+        assertEquals('<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>',
+                updatedAuthored.detailDescription)
 
         String firstPass = new File(dir, 'api-cases.yml').getText('UTF-8')
         service.merge(dir, scan('create(CreateRequest)', 'cancel(String)'))
@@ -195,10 +196,9 @@ class SwaggerApiCasesMergeServiceTest {
             String guidance = upgraded.remove('detailDescription') as String
             assertEquals(preservedFields, upgraded)
             assertTrue(guidance.startsWith('<p>TODO:'))
-            assertTrue(guidance.contains('<ol>'))
-            assertTrue(guidance.contains('<pre><code>'))
-            assertTrue(guidance.contains(language == 'vi'
-                    ? 'Viết bằng mã HTML' : 'Write valid HTML'))
+            assertEquals(language == 'vi'
+                    ? '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
+                    : '<p>TODO: Use HTML to explain why this case produces this result.</p>', guidance)
             assertEquals(api.cases[1], cases[1])
             assertEquals(api.cases[2], cases[2])
             assertEquals(api.cases[3], cases[3])

@@ -21,13 +21,7 @@ AbstractionExperimentsController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
   seatScenario(SeatScenarioRequest):
     methodName: seatScenario
     httpMethods:
@@ -50,13 +44,7 @@ AbstractionExperimentsController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
   leaveEvaluation(LeaveEvaluationRequest):
     methodName: leaveEvaluation
     httpMethods:
@@ -79,13 +67,7 @@ AbstractionExperimentsController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
   catalogSearch(CatalogSearchRequest):
     methodName: catalogSearch
     httpMethods:
@@ -108,13 +90,7 @@ AbstractionExperimentsController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
 ClassesExperimentController:
   inventory(InventoryRequest):
     methodName: inventory
@@ -138,13 +114,7 @@ ClassesExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
   workshops(WorkshopRequest):
     methodName: workshops
     httpMethods:
@@ -167,13 +137,7 @@ ClassesExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
   bank(BankRequest):
     methodName: bank
     httpMethods:
@@ -196,13 +160,7 @@ ClassesExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
 ClassDesignExperimentsController:
   library(LibraryRequest):
     methodName: library
@@ -226,13 +184,7 @@ ClassDesignExperimentsController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
   checkout(CheckoutRequest):
     methodName: checkout
     httpMethods:
@@ -255,13 +207,7 @@ ClassDesignExperimentsController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
   transfer(TransferRequest):
     methodName: transfer
     httpMethods:
@@ -284,13 +230,7 @@ ClassDesignExperimentsController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
 CompositionExperimentController:
   notification(NotificationRequest):
     methodName: notification
@@ -314,13 +254,7 @@ CompositionExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
   policies(PolicyRequest):
     methodName: policies
     httpMethods:
@@ -343,13 +277,7 @@ CompositionExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
   placeOrder(PlaceOrderRequest):
     methodName: placeOrder
     httpMethods:
@@ -372,13 +300,7 @@ CompositionExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
   resources(ResourceRequest):
     methodName: resources
     httpMethods:
@@ -401,13 +323,7 @@ CompositionExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
 DesignPatternExperimentController:
   pricing(PricingRequest):
     methodName: pricing
@@ -431,13 +347,7 @@ DesignPatternExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
   tasks(TasksRequest):
     methodName: tasks
     httpMethods:
@@ -460,13 +370,7 @@ DesignPatternExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
   report(ReportRequest):
     methodName: report
     httpMethods:
@@ -489,13 +393,7 @@ DesignPatternExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
 DesignPitfallExperimentController:
   seats(SeatsRequest):
     methodName: seats
@@ -519,13 +417,7 @@ DesignPitfallExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
   mutableKey(MutableKeyRequest):
     methodName: mutableKey
     httpMethods:
@@ -548,13 +440,7 @@ DesignPitfallExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
   checkout(CheckoutRequest):
     methodName: checkout
     httpMethods:
@@ -577,13 +463,7 @@ DesignPitfallExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
 EncapsulationExperimentController:
   cart(CartRequest):
     methodName: cart
@@ -607,13 +487,7 @@ EncapsulationExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
   stock(StockRequest):
     methodName: stock
     httpMethods:
@@ -636,13 +510,7 @@ EncapsulationExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
   snapshot(EventRequest):
     methodName: snapshot
     httpMethods:
@@ -665,13 +533,7 @@ EncapsulationExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
   order(OrderRequest):
     methodName: order
     httpMethods:
@@ -694,13 +556,7 @@ EncapsulationExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
 InheritanceExperimentsController:
   calculatePay(PayrollRequest):
     methodName: calculatePay
@@ -724,13 +580,7 @@ InheritanceExperimentsController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
   compareDelivery(DeliveryRequest):
     methodName: compareDelivery
     httpMethods:
@@ -753,13 +603,7 @@ InheritanceExperimentsController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
   constructorTrace(ConstructorRequest):
     methodName: constructorTrace
     httpMethods:
@@ -782,13 +626,7 @@ InheritanceExperimentsController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
   resolveCapabilities(CapabilitiesRequest):
     methodName: resolveCapabilities
     httpMethods:
@@ -811,13 +649,7 @@ InheritanceExperimentsController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
 InterfaceExperimentsController:
   shipping(ShippingRequest):
     methodName: shipping
@@ -841,13 +673,7 @@ InterfaceExperimentsController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
   documents(DocumentRequest):
     methodName: documents
     httpMethods:
@@ -870,13 +696,7 @@ InterfaceExperimentsController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
   checkout(CheckoutRequest):
     methodName: checkout
     httpMethods:
@@ -899,13 +719,7 @@ InterfaceExperimentsController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
 LanguageMechanicsExperimentsController:
   generics(GenericBatchRequest):
     methodName: generics
@@ -929,13 +743,7 @@ LanguageMechanicsExperimentsController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
   stock(StockRequest):
     methodName: stock
     httpMethods:
@@ -958,13 +766,7 @@ LanguageMechanicsExperimentsController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
   shipping(ShippingRequest):
     methodName: shipping
     httpMethods:
@@ -987,13 +789,7 @@ LanguageMechanicsExperimentsController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
 LifecycleExperimentController:
   create(CreationRequest):
     methodName: create
@@ -1017,13 +813,7 @@ LifecycleExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
   references(ReferenceRequest):
     methodName: references
     httpMethods:
@@ -1046,13 +836,7 @@ LifecycleExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
   resources(ResourceRequest):
     methodName: resources
     httpMethods:
@@ -1075,13 +859,7 @@ LifecycleExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
   publication(PublicationRequest):
     methodName: publication
     httpMethods:
@@ -1104,13 +882,7 @@ LifecycleExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
 ModelingExperimentController:
   library(LibraryRequest):
     methodName: library
@@ -1134,13 +906,7 @@ ModelingExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
   orders(OrderRequest):
     methodName: orders
     httpMethods:
@@ -1163,13 +929,7 @@ ModelingExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
 ObjectExperimentsController:
   references(ObjectExperimentDto.ReferenceRequest):
     methodName: references
@@ -1193,13 +953,7 @@ ObjectExperimentsController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
   equality(ObjectExperimentDto.EqualityRequest):
     methodName: equality
     httpMethods:
@@ -1290,13 +1044,7 @@ ObjectExperimentsController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
   absence(ObjectExperimentDto.AbsenceRequest):
     methodName: absence
     httpMethods:
@@ -1319,13 +1067,7 @@ ObjectExperimentsController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
   checkout(ObjectExperimentDto.CheckoutRequest):
     methodName: checkout
     httpMethods:
@@ -1348,13 +1090,7 @@ ObjectExperimentsController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
 BasicsExperimentController:
   simulateAccount(AccountSimulationRequest):
     methodName: simulateAccount
@@ -1927,13 +1663,7 @@ PolymorphismExperimentsController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
   payments(PaymentsRequest):
     methodName: payments
     httpMethods:
@@ -1956,13 +1686,7 @@ PolymorphismExperimentsController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
 PracticeExperimentController:
   bank(BankRequest):
     methodName: bank
@@ -1986,13 +1710,7 @@ PracticeExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
   orders(OrderRequest):
     methodName: orders
     httpMethods:
@@ -2015,13 +1733,7 @@ PracticeExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
   library(LibraryRequest):
     methodName: library
     httpMethods:
@@ -2044,13 +1756,7 @@ PracticeExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
 RefactoringExperimentsController:
   checkout(CheckoutRequest):
     methodName: checkout
@@ -2074,13 +1780,7 @@ RefactoringExperimentsController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
   delivery(DeliveryRequest):
     methodName: delivery
     httpMethods:
@@ -2103,13 +1803,7 @@ RefactoringExperimentsController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
   alerts(AlertRequest):
     methodName: alerts
     httpMethods:
@@ -2132,13 +1826,7 @@ RefactoringExperimentsController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
 RelationshipsExperimentsController:
   transfer(TransferRequest):
     methodName: transfer
@@ -2162,13 +1850,7 @@ RelationshipsExperimentsController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
   enroll(EnrollmentRequest):
     methodName: enroll
     httpMethods:
@@ -2191,13 +1873,7 @@ RelationshipsExperimentsController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
   ownership(OwnershipRequest):
     methodName: ownership
     httpMethods:
@@ -2220,13 +1896,7 @@ RelationshipsExperimentsController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
 SolidExperimentController:
   quote(QuoteRequest):
     methodName: quote
@@ -2250,13 +1920,7 @@ SolidExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
   experiment(ExperimentRequest):
     methodName: experiment
     httpMethods:
@@ -2279,13 +1943,7 @@ SolidExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
 SubtypingExperimentController:
   dispatch(DispatchRequest):
     methodName: dispatch
@@ -2309,13 +1967,7 @@ SubtypingExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
   contract(DiscountRequest):
     methodName: contract
     httpMethods:
@@ -2338,13 +1990,7 @@ SubtypingExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
   geometry(GeometryRequest):
     methodName: geometry
     httpMethods:
@@ -2367,13 +2013,7 @@ SubtypingExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
 TestingExperimentController:
   contracts(ContractRequest):
     methodName: contracts
@@ -2397,13 +2037,7 @@ TestingExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
   collaboration(CollaborationRequest):
     methodName: collaboration
     httpMethods:
@@ -2426,13 +2060,7 @@ TestingExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'
   regression(RegressionRequest):
     methodName: regression
     httpMethods:
@@ -2455,10 +2083,4 @@ TestingExperimentController:
         body: null
       status: null
       response: null
-      detailDescription: '<p>TODO: Viết bằng mã HTML (không phải Markdown). Giải thích
-        chi tiết vì sao input của case tạo ra HTTP status và response dự kiến, các
-        quy tắc nghiệp vụ và trường hợp biên.</p><ol><li>Nêu Controller và endpoint
-        nhận request, cách validate dữ liệu.</li><li>Mô tả luồng gọi Service, Model
-        và các phương thức/nhánh điều kiện thực sự chạy theo đúng source.</li><li>Giải
-        thích từng giá trị quan trọng của kết quả, lý do thành công hoặc lỗi.</li></ol><pre><code>TODO:
-        Minh họa code flow / lời gọi phương thức thực tế ở đây (HTML &lt;pre&gt;&lt;code&gt;).</code></pre>'
+      detailDescription: '<p>TODO: Viết bằng HTML, giải thích vì sao case này có kết quả như trên.</p>'

@@ -71,6 +71,9 @@ Chi tiết workflow: [`GENERAL_AGENT_RULES.md`](module-generate-agent/GENERAL_AG
 - [`STEP_8.md`](./module-generate-agent/STEP_8.md) — Interview YAML.
 - [`STEP_9.md`](./module-generate-agent/STEP_9.md) — Quiz YAML.
 - [`STEP_10.md`](./module-generate-agent/STEP_10.md) — Video YAML.
+- [`STEP_11.md`](./module-generate-agent/STEP_11.md) — Related metadata cho Swagger, Quiz, Interview theo chương và Roadmap toàn module.
+- [`STEP_12.md`](./module-generate-agent/STEP_12.md) — Xuất snapshot Google Sheets của module thành Excel offline.
+- [`STEP_FINAL.md`](./module-generate-agent/STEP_FINAL.md) — Prime QA Git, commit và push toàn bộ thay đổi thuộc module sau STEP cuối.
 - [`worker/`](./module-generate-agent/worker/) — hướng dẫn dành riêng cho worker của từng STEP.
 - [Learning Platform — Product & Frontend Architecture](https://github.com/phuongnguyenit93/learning-platform/blob/main/ARCHITECTURE.md) — Portal hiện tại, data contract và deployment ở repository frontend riêng.
 - [`STRUCTURE.md`](./STRUCTURE.md) — cây module generated.

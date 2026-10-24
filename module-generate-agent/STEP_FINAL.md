@@ -1,0 +1,44 @@
+# STEP FINAL — PRIME ONLY: Kiểm tra, commit và push toàn bộ thay đổi của một module
+
+## 0. Mục tiêu và phạm vi
+
+Đây là **bước kết thúc workflow của đúng một module**, thực hiện **sau STEP được đánh số cuối cùng đã hoàn tất và được nghiệm thu** (hiện có STEP 12; nếu sau này thêm STEP 13, 14... thì FINAL đứng sau các STEP đó). Mục tiêu là đưa **toàn bộ những thay đổi thuộc module đã thực hiện trong workflow** lên Git remote một cách đầy đủ, an toàn và có thể truy vết.
+
+- **Chỉ Prime thực hiện, KHÔNG có worker và KHÔNG tạo `STEP_FINAL_WORKER.md`**. Không spawn/đánh thức worker.
+- Đây là **bước Git**, không tạo Knowledge, Java, Swagger, Quiz, Interview, Video hoặc dữ liệu Sheet; không chạy lại các STEP trước chỉ để tạo thêm diff.
+- **Phải commit và push thật**, không coi `git add`, `git commit` hoặc báo cáo suông là hoàn thành. Không tự động merge PR/MR, xóa branch/worktree hoặc deploy khi chưa được phép theo workflow/session hiện hành.
+- **Không dùng `git add -A` tại repository root khi có thay đổi khác ownership.** “Tất cả thay đổi của module” = toàn bộ file thuộc module đó **và các file dùng chung thực sự được sửa phục vụ chính module đó, đã xác minh scope**; không có nghĩa là mọi thay đổi đang xuất hiện trong `git status`.
+- Giữ nguyên mọi thay đổi ở module khác, phiên khác, worker khác hoặc file chưa xác minh nguồn gốc. **Không tự stash, reset, checkout, clean, discard hoặc ghi đè thay đổi của người khác.**
+
+## 1. Preflight — xác định đúng module, branch và thay đổi
+
+1. Prime đọc toàn văn `module-generate-agent/GENERAL_AGENT_RULES.md`, **mọi file** trong `module-generate-agent/rules/`, file `STEP_FINAL.md` này, `module-generate-info.txt` và các bằng chứng completion liên quan. Không có worker contract hay handoff bốn dòng trong STEP FINAL.
+2. Từ Google Sheets mapping đã xác minh: module/tab/gid và ô `I3` phải xác định **duy nhất** một module Gradle thật bên trong `java-learning/module/`. Xác minh tên repo/worktree, branch hiện tại và remote bằng `git rev-parse --show-toplevel`, `git status --short --branch`, `git branch -vv`, `git remote -v`, `git worktree list`; không dùng nhầm main worktree khi công việc nằm trong worktree riêng.
+3. **Đối chiếu STEP cuối đã hoàn thành theo bằng chứng thực**, gồm QA/Gradle/importer/Swagger/related và snapshot/export nếu STEP tương ứng yêu cầu. `J3` chỉ là chỉ báo, không thay thế bằng chứng; trạng thái lỗi hoặc còn worker đang ghi trong scope → `BLOCKER: MODULE NOT READY`. Không dùng FINAL để “che” STEP còn dở.
+4. Lập **manifest file thay đổi thuộc module** từ `git status --porcelain=v1 --untracked-files=all`, `git diff --name-status`, `git diff --cached --name-status` và so với đúng `<I3>`. Kiểm tra cả **modified, added, deleted, renamed, staged và untracked**; không bỏ quên Java/test, README, metadata, Swagger, Roadmap, Interview, Quiz, Video, cấu hình module, tài liệu module hoặc marker `.gitkeep` cần thiết.
+5. Các thay đổi dùng chung ngoài `<I3>` (ví dụ `project-build/`, `learning-contract`, Gradle settings, catalog hay tài liệu root) **chỉ được đưa vào** nếu có bằng chứng chúng được thay cho chính module đang chốt và không kèm thay đổi ngoài phạm vi; nếu cùng một file chứa công việc từ nhiều module/session thì tách **đúng hunks được sở hữu**, không stage toàn file mù. Không chứng minh được ownership hoặc không tách an toàn → `BLOCKER: SHARED FILE OWNERSHIP`, không cuốn file đó vào commit.
+6. Kiểm tra `git status --ignored`/`git check-ignore -v` với các output đáng quan tâm. Các file như `build/`, staging tạm, credential, `.env`, và `content/sheet/<lang>/module.xlsx` (đang bị `.gitignore` bỏ qua) **không được force-add**. Báo rõ file liên quan nhưng không nằm trong Git, không âm thầm coi là đã push. Kiểm tra không chứa secret, token, key cá nhân, dữ liệu nhạy cảm hoặc file tạm.
+7. Xác định nhánh đích: nếu đang làm việc trong **worktree/feature branch** của module, commit/push trên **đúng branch đó**; không đổi sang `main` hay di chuyển thay đổi giữa worktree khi chưa xác minh. Nếu đang ở `main`, chỉ dùng `main` khi đó đúng là branch làm việc đã được phép trong phiên hiện hành; nhánh đang detached/không có upstream/remote không phù hợp → `BLOCKER: GIT TARGET`.
+
+## 2. QA trước khi commit
+
+1. Kiểm tra mọi thay đổi thuộc manifest và diff thực tế: `git diff --check`, `git diff --cached --check`, so với nguồn trước đó; file mới/tracked/deleted phải đúng yêu cầu. Không cho nội dung TODO/skeleton rỗng ngoài ý muốn, code test bị bỏ qua, generated output nhầm vào Git hoặc cập nhật YAML sai schema.
+2. Chạy **build/test/validation phù hợp với đúng module** ở JDK/toolchain của repo (JDK 21 nếu không có yêu cầu khác), ưu tiên Gradle task module-local, Swagger/Quiz/Interview/Roadmap schema checks và các test chung **thực sự bị thay đổi bởi module**. Không tự chạy importer `APPLY` lên Google Sheets trong FINAL. Nếu QA của STEP trước đã chạy và repo không đổi ở phần liên quan, Prime có thể đối chiếu bằng chứng thay vì chạy lại không cần thiết; phải chỉ rõ những gì đã kiểm tra.
+3. Trước staging, kiểm tra lại `git status`, không còn writer ngoài Prime cho những file định commit. Nếu có thay đổi đồng thời, hủy thao tác stage/commit đối với file xung đột và báo blocker; không overwrite.
+
+## 3. Stage → Commit → Push — Prime thực hiện tới cùng
+
+1. **Stage có chọn lọc bằng pathspec chính xác của manifest**: bao gồm toàn bộ file thuộc đúng `<I3>` và shared files/hunks đã được xác minh; với file bị xóa phải stage việc xóa. Không `git add .`, không `git add -A` toàn repo hoặc stage file ngoài scope; nếu có sẵn staged content không thuộc module, giữ nguyên và **không đưa vào commit này** (dùng index riêng hoặc cơ chế tương đương an toàn; nếu không khả thi → blocker, không unstage phá công việc của phiên khác).
+2. Đọc lại danh sách staged bằng `git diff --cached --name-status`, `git diff --cached --stat`, `git diff --cached --check` và **nội dung diff**; so chính xác với manifest. Nếu có file/hunk ngoài ownership, **không commit** cho đến khi phân tách an toàn. Không có diff staged vì tất cả thay đổi module đã được commit hợp lệ trước đó → xác minh commit/remote để xác định `ALREADY_COMMITTED`, không tạo empty commit.
+3. **Commit một commit đầy đủ của module** hoặc các commit tách biệt chỉ khi cần do cấu trúc repo/submodule. Dùng convention commit của repository/session; nếu chưa có, mẫu `<MODULE> generate content`. Không ghi thành công nếu `git commit` trả lỗi; lưu SHA, message, danh sách file đã commit. Không tự amend/rewrite commit đã push của người khác.
+4. **Fetch remote và xác minh nhánh** trước push. Nếu remote đã tiến lên, xử lý theo workflow branch đúng và chỉ khi working tree/index cho phép; **không force push, không `push --force-with-lease`, không tự rebase/reset bỏ thay đổi khác**. Conflict → `BLOCKER: REMOTE DIVERGED`, báo rõ. Push chính xác commit trên branch hiện tại đến remote/upstream đã xác minh (ví dụ `git push -u origin <feature-branch>` khi đúng branch); kiểm tra exit code.
+5. **Xác minh push bằng SHA trên remote tracking ref** (`git fetch`/`git ls-remote` hoặc đối chiếu upstream), không chỉ dựa vào log “Everything up-to-date”. Nếu commit đã ở remote, phân loại `ALREADY_PUSHED` có bằng chứng. Nếu push thất bại, giữ commit local và retry **có kiểm tra trạng thái**, không tạo commit trùng lặp.
+6. Chỉ khi **quy trình hiện hành có ủy quyền rõ** cho tạo/merge PR/MR thì tiếp tục PR/MR và kiểm tra merge; **commit/push không mặc nhiên đồng nghĩa merge**. Nếu không có yêu cầu merge, dừng sau khi push thành công và ghi rõ branch/PR chưa merge. **Không xóa worktree/branch** khi còn công việc hoặc khi merge chưa xác minh; việc dọn dẹp theo authorization của session.
+
+## 4. Completion, trạng thái Sheet và báo cáo
+
+- `STEP_FINAL` **không có số thứ tự**, nên **không thay giá trị `J3` thành “STEP FINAL”**; giữ nguyên `J3 = STEP N` của STEP cuối đã hoàn tất. Không tự thay đổi Sheet trong bước Git.
+- `COMPLETED` chỉ khi: module và ownership đúng, thay đổi thuộc module đã bao phủ đầy đủ (kể cả file thêm/xóa), QA không blocker, commit tồn tại với đúng manifest và **SHA đã push lên đúng remote/branch**, phần chưa tracked/ignored được báo rõ, ngoài scope được bảo toàn.
+- Nếu chỉ một phần thay đổi được commit/push, hoặc còn file/module liên quan bị bỏ sót/chưa kiểm tra, báo **`PARTIAL`/`BLOCKER`**, không tuyên bố “đã push hết”.
+- Báo cáo: `MODULE_I3`, `TAB_GID`, `WORKTREE`, `BRANCH`, `REMOTE`, `LAST_COMPLETED_STEP`, `FILES_INCLUDED`, `SHARED_FILES_INCLUDED`, `FILES_EXCLUDED`, `IGNORED_OUTPUTS`, `QA`, `COMMIT_SHA`, `COMMIT_MESSAGE`, `PUSH_RESULT`, `REMOTE_SHA`, `PR_MR_STATUS`, `REMAINING_DIRTY_FILES`, `BLOCKERS`.
+- Nếu ngắt session sau commit nhưng trước push: **đọc lại Git HEAD/status/remote** để tiếp tục push cùng commit. Nếu đã push thành công: chỉ xác minh và báo cáo, **không commit lại** hoặc stage lại thay đổi phát sinh ngoài scope.
