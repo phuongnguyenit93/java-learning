@@ -290,6 +290,9 @@ ${moduleDirectory.absolutePath}
 
         if (node.realModule) {
 
+            node.codeExplorerAvailable =
+                    new File(directory, 'content/code-explorer/material.yml').isFile()
+
             if (
                     'SERVLET'.equalsIgnoreCase(node.moduleType) ||
                             'REACTIVE'.equalsIgnoreCase(node.moduleType)
@@ -732,6 +735,11 @@ ${moduleDirectory.absolutePath}
                     resolveRouteId(
                             node
                     )
+
+            if (node.codeExplorerAvailable) {
+                result.codeExplorer =
+                        "/module/${resolveRouteId(node)}/code-explorer/index.json"
+            }
 
 
             if (!node.overviewSources.isEmpty()) {
@@ -1809,6 +1817,7 @@ ${exception.message}
         String description
         String sourceFingerprint
         boolean moduleDepend
+        boolean codeExplorerAvailable
         Map<String, File> overviewSources = [:]
         Set<String> knowledgeLanguages = [] as Set<String>
         Set<String> videoLanguages = [] as Set<String>

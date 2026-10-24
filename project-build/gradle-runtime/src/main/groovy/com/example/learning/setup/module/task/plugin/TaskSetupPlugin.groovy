@@ -1,5 +1,7 @@
 package com.example.learning.setup.module.task.plugin
 
+import com.example.learning.task.codeexplorer.plugin.CodeExplorerPlugin
+
 import com.example.learning.generated.root.ProjectPluginEnum
 import com.example.learning.setup.module.task.service.TaskGradleGeneratorService
 import groovy.json.JsonSlurper
@@ -42,6 +44,10 @@ class TaskSetupPlugin
 
             return
         }
+
+        // Optional, module-local static source material; no impact on Sheets,
+        // Swagger or the module's runnable application.
+        project.pluginManager.apply(CodeExplorerPlugin)
 
 
         List<Map> moduleDefinitions =

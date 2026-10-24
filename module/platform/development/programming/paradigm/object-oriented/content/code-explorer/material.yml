@@ -1,0 +1,11 @@
+# Code Explorer V1: only explicitly selected public learning source is packaged.
+# Expand this allowlist to more OOP chapters when their source is ready.
+version: 1
+type: CODE_EXPLORER
+id: oop-abstraction
+language: java
+sourceRoot: src/main/java
+include:
+  - com/example/learning/oop/abstraction/**/*.java
+apiMapping:
+  source: SWAGGER
