@@ -362,7 +362,7 @@ class ModuleEnSheetPublishService {
                         for (int row = 19; row <= lastMenu; row++) {
                             for (int col = 0; col <= 27; col++) {
                                 if (!(col in [0,1,14,27] || (col >= 2 && col <= 13) ||
-                                        (col >= 15 && col <= 26))) continue
+                                        (col >= 15 && col <= 22))) continue
                                 plan.add([r: row, c: col,
                                           value: cellValue(sheet.getRow(row)?.getCell(col))])
                             }
@@ -623,7 +623,7 @@ class ModuleEnSheetPublishService {
         List<String> files = ['content/sheet/vi/module.xlsx']
         for (String area : ['content/readme/docs/en', 'content/readme/metadata/en',
                             'content/roadmap/en', 'content/quiz/en',
-                            'content/interview/en', 'content/video/en',
+                            'content/interview/en',
                             'src/main/resources/swagger/en']) {
             File parent = new File(module, area)
             if (!parent.exists()) continue

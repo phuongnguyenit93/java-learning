@@ -1,7 +1,8 @@
 AbstractionExperimentsController:
   shippingQuote(ShippingQuoteRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: Báo giá theo hợp đồng lớp trừu tượng
+    description: '<p>Chọn kế hoạch ECONOMY hoặc EXPRESS và nhận phí vận chuyển qua cùng hợp đồng <code>ShippingPlan.quote</code>. API minh họa Template Method: tiền
+      điều kiện và quy trình tính tổng không thay đổi, còn cách tính phụ phí thuộc lớp con.</p>'
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -19,14 +20,13 @@ AbstractionExperimentsController:
     - POST
     mappingPaths:
     - /oop/abstraction/shipping/quote
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   seatScenario(SeatScenarioRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: Mô phỏng hợp đồng đặt và trả ghế
+    description: <p>Thực hiện chuỗi RESERVE/RELEASE trên một <code>SeatInventory</code> riêng của request. API cho thấy tiền điều kiện, hậu điều kiện, bất biến số
+      ghế còn lại và cam kết thao tác lỗi không làm thay đổi trạng thái.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -44,14 +44,13 @@ AbstractionExperimentsController:
     - POST
     mappingPaths:
     - /oop/abstraction/seats/simulate
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   leaveEvaluation(LeaveEvaluationRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: Đánh giá nghỉ phép qua chính sách chung
+    description: <p>Chọn STANDARD hoặc TRIAL để gọi hợp đồng <code>LeavePolicy.evaluate</code>, trả quyết định nhất quán với số ngày phép còn lại. Các chính sách
+      cùng giao diện nhưng có quy tắc bổ sung khác nhau.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -69,14 +68,13 @@ AbstractionExperimentsController:
     - POST
     mappingPaths:
     - /oop/abstraction/leave/evaluate
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   catalogSearch(CatalogSearchRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: Tìm sách mà không lộ cấu trúc lưu trữ
+    description: <p>Tìm theo nhan đề không phân biệt hoa/thường, giới hạn kết quả và tra ISBN qua một hợp đồng danh mục, đồng thời che giấu <code>HashMap</code> bên
+      trong. Kết quả được sắp xếp ổn định theo ISBN.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -94,15 +92,14 @@ AbstractionExperimentsController:
     - POST
     mappingPaths:
     - /oop/abstraction/catalog/search
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
 ClassesExperimentController:
   inventory(InventoryRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: Mô phỏng thay đổi thuộc tính hàng tồn kho
+    description: <p>Tạo <code>InventoryItem</code> rồi thực hiện restock, sell, rename có kiểm tra, trả snapshot đầu/từng bước/cuối. Minh họa đóng gói field, dữ liệu
+      không thay đổi như SKU/đơn giá và hành vi cập nhật có kiểm soát.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -120,14 +117,13 @@ ClassesExperimentController:
     - POST
     mappingPaths:
     - /oop/classes/inventory/experiment
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   workshops(WorkshopRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: Phân biệt workshop độc lập và alias tham chiếu
+    description: <p>Tạo hai <code>Workshop</code>, một alias của workshop thứ hai và một instance mới. Kết quả so sánh identity, số lần đăng ký và hằng số cấp lớp,
+      cho thấy gán tham chiếu khác với gọi <code>new</code>.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -145,14 +141,13 @@ ClassesExperimentController:
     - POST
     mappingPaths:
     - /oop/classes/workshops/experiment
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   bank(BankRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: Mô phỏng thao tác tài khoản ngân hàng
+    description: <p>Tạo hai <code>BankAccount</code> trong bộ nhớ và thực hiện deposit, withdraw hoặc transfer theo thứ tự. Các snapshot minh họa invariant số dư
+      và trạng thái nguyên vẹn khi một action bị từ chối.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -170,15 +165,15 @@ ClassesExperimentController:
     - POST
     mappingPaths:
     - /oop/classes/bank/experiment
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
 ClassDesignExperimentsController:
   library(LibraryRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: Mô phỏng mượn/trả sách, giới hạn mượn và truy vấn snapshot.
+    description: <p>Mô phỏng một thư viện có bản sách <code>BookCopy</code>, thực thể mượn <code>Loan</code> và chính sách <code>LoanPolicy</code>. Người học quan
+      sát các hành động <code>BORROW</code>, <code>RETURN</code>, <code>QUERY</code>, phí trễ hạn và trạng thái được bảo vệ khi thao tác không hợp lệ, không cần phụ
+      thuộc database hay để DTO nắm quy tắc.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -196,14 +191,14 @@ ClassDesignExperimentsController:
     - POST
     mappingPaths:
     - /oop/class-design/library/experiment
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   checkout(CheckoutRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: Tính tổng và giảm giá giỏ hàng, lưu snapshot đơn và xếp sự kiện biên nhận.
+    description: <p>Tách trách nhiệm của <code>ShoppingCart</code> (dòng hàng và subtotal), <code>CheckedOutOrder</code> (snapshot bất biến), <code>InMemoryOrderRepository</code>
+      (lưu bản chụp) và <code>InMemoryReceiptOutbox</code> (ghi nhận yêu cầu gửi biên nhận). API minh họa xử lý chiết khấu theo cents với phép tính nguyên có kiểm
+      tra tràn; xếp outbox không có nghĩa email đã gửi.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -221,14 +216,14 @@ ClassDesignExperimentsController:
     - POST
     mappingPaths:
     - /oop/class-design/checkout/experiment
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   transfer(TransferRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: Chuyển tiền giữa hai entity BankAccount qua value object Money.
+    description: <p>Sử dụng hai <code>BankAccount</code> có danh tính độc lập và <code>Money</code> là value object để chuyển một lượng tiền cùng đơn vị tiền tệ.
+      Kết quả trả số dư trước/sau; <code>BankAccount.transferTo()</code> tự giữ bất biến, ngăn chuyển vào cùng tài khoản, thiếu tiền hoặc cập nhật từng phần khi phép
+      toán lỗi.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -246,15 +241,17 @@ ClassDesignExperimentsController:
     - POST
     mappingPaths:
     - /oop/class-design/transfers/experiment
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
 CompositionExperimentController:
   notification(NotificationRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: Gh?p Formatter, Transport v? decorator ?? g?i th?ng b?o m? ph?ng
+    description: '<p>Nh?n th?ng tin ??n, ng??i nh?n, s? ti?n, ki?u hi?n th? <code>FULL</code>/<code>COMPACT</code>, k?nh <code>EMAIL</code>/<code>SMS</code> v? t?y
+      ch?n audit. Service gh?p <code>Formatter</code> v?i <code>RecordingTransport</code>, c? th? b?c b?ng <code>AuditedTransport</code>, r?i ?y quy?n cho <code>Notifier</code>.</p>
+
+      <p>Ph?n h?i ch?a n?i dung ?? format, tr?ng th?i ch?p nh?n v? trace theo th? t?. N?u transport t? ch?i, audit kh?ng ghi th?nh c?ng gi?. API gi?p hi?u Strategy,
+      Decorator v? delegation b?ng c?c ??i t??ng ??c l?p c? th? thay th?, kh?ng g?i tin nh?n th?t.</p>'
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -272,14 +269,16 @@ CompositionExperimentController:
     - POST
     mappingPaths:
     - /oop/composition/notifications
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   policies(PolicyRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: Thay ch?nh s?ch t?nh gi? v? ch?n policy cho t?ng l?n b?o gi?
+    description: '<p>T?o <code>SwitchablePricing</code> t? policy ban ??u (<code>NONE</code>, <code>FIXED</code>, <code>PERCENT</code>) r?i x? l? t?i ?a 20 b??c <code>SWITCH</code>,
+      <code>QUOTE</code> ho?c <code>QUOTE_WITH_POLICY</code>. K?t qu? l? timeline cho bi?t policy ?ang ho?t ??ng, policy th?c d?ng v? s? ti?n ph?i tr?.</p>
+
+      <p><code>SWITCH</code> thay collaborator trong <code>AtomicReference</code>, c?n <code>QUOTE_WITH_POLICY</code> truy?n collaborator v?o ri?ng m?t l?i g?i m?
+      kh?ng thay policy m?c ??nh. Ch?nh s?ch gi? l? b?t bi?n v? ch? t?n t?i trong request, kh?ng chia s? tr?ng th?i gi?a ng??i d?ng.</p>'
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -297,14 +296,16 @@ CompositionExperimentController:
     - POST
     mappingPaths:
     - /oop/composition/policies
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   placeOrder(PlaceOrderRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: ??t ??n qua OrderService v? repository c?ng t?c
+    description: '<p>Nh?n ID ??n h?ng v? 1?20 d?ng h?ng, sau ?? x?y d?ng <code>OrderPlacement.Order</code> c? danh s?ch d?ng h?ng b?t bi?n. <code>OrderService</code>
+      nh?n <code>OrderRepository</code> qua constructor v? g?i <code>save</code>, t?ch quy t?c ??n h?ng kh?i tri?n khai l?u tr?.</p>
+
+      <p><code>InMemoryOrderRepository</code> c? th? t? ch?i l?u c? ch? ? ?? quan s?t vi?c m?t l?n l?u th?t b?i kh?ng b? b?o th?nh c?ng. API tr? accepted, l? do l?i,
+      s? l?n th? l?u, c?c ??n th?c s? c? trong kho m? ph?ng v? ch? r? <code>IN_MEMORY_ONLY</code>.</p>'
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -322,14 +323,16 @@ CompositionExperimentController:
     - POST
     mappingPaths:
     - /oop/composition/orders
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   resources(ResourceRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: M? ph?ng quy?n s? h?u khi ??ng t?i nguy?n ???c ch?a
+    description: '<p>T?o m?t <code>TrackedHandle</code> gi? l?p v? gh?p v?o <code>Exporter</code>. V?i <code>OWNED</code>, exporter c? tr?ch nhi?m ??ng handle khi
+      ??ng ch?nh n?; v?i <code>BORROWED</code>, exporter ch? ??ng b?n th?n v? caller s? ??ng handle sau ??.</p>
+
+      <p>K?t qu? ghi nh?n trace t?o/ghi/??ng, tr?ng th?i ?? ??ng ? hai th?i ?i?m v? l?i ghi n?u c?. Th? nghi?m l?m r? quy?n s? h?u v? <code>try-with-resources</code>,
+      kh?ng suy di?n t? garbage collection v? kh?ng d?ng file hay socket th?t.</p>'
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -347,15 +350,15 @@ CompositionExperimentController:
     - POST
     mappingPaths:
     - /oop/composition/resources
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
 DesignPatternExperimentController:
   pricing(PricingRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: Thử Strategy giảm giá và thứ tự bọc Decorator trong báo giá.
+    description: <p>Tính giá cho cùng subtotal và phí giao hàng với ba chính sách <code>NONE</code>, <code>MEMBER_5</code>, <code>VOUCHER_30000</code>; đồng thời
+      trả kết quả của cả hai thứ tự <code>DISCOUNT_THEN_FEE</code> và <code>FEE_THEN_DISCOUNT</code>. Trường <code>executionTrace</code> chỉ rõ Decorator nào chạy
+      trước, vì thứ tự bao bọc có thể làm đổi số tiền và phạm vi áp dụng giảm giá.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -373,14 +376,14 @@ DesignPatternExperimentController:
     - POST
     mappingPaths:
     - /oop/design-patterns/pricing/experiment
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   tasks(TasksRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: Thực thi, hoàn tác, làm lại Command và theo dõi sự kiện Observer.
+    description: <p>Tạo <code>TaskBoard</code> mới cho mỗi request rồi chạy các action <code>ADD</code>, <code>COMPLETE</code>, <code>UNDO</code>, <code>REDO</code>,
+      <code>UNSUBSCRIBE_NOTIFY</code>. Lịch sử Command quyết định hành động nào có thể hoàn tác/làm lại; Observer nhận sự kiện sau khi lệnh thành công. Mỗi bước chụp
+      trạng thái task, độ sâu hai stack và lịch sử thông báo.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -398,14 +401,14 @@ DesignPatternExperimentController:
     - POST
     mappingPaths:
     - /oop/design-patterns/tasks/experiment
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   report(ReportRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: Tạo báo cáo TEXT hoặc CSV bằng Factory Method và Template Method.
+    description: <p>Dùng <code>TextCreator</code> hoặc <code>CsvCreator</code> để chọn kiểu báo cáo qua Factory Method. Mẫu <code>ReportTemplate.render()</code> cố
+      định chuỗi kiểm tra, header, các row và summary; các subclass chỉ tùy biến văn bản xuất ra. Kết quả cho biết nội dung, tổng tiền, số dòng và dấu vết thứ tự
+      thực thi.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -423,15 +426,14 @@ DesignPatternExperimentController:
     - POST
     mappingPaths:
     - /oop/design-patterns/reports/generate
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
 DesignPitfallExperimentController:
   seats(SeatsRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: Bảo vệ bất biến khi đặt và hủy ghế
+    description: <p>Tạo <code>SeatInventory</code> có các field được đóng gói và thay đổi qua <code>reserve</code>/<code>cancel</code>. Snapshot trước/sau cho thấy
+      điều kiện <code>0 ≤ reserved ≤ capacity</code>, thao tác thất bại không phá trạng thái và sự khác biệt với dữ liệu công khai/setter tùy ý.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -449,14 +451,13 @@ DesignPitfallExperimentController:
     - POST
     mappingPaths:
     - /oop/design-pitfalls/seats/experiment
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   mutableKey(MutableKeyRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: Quan sát lỗi khóa HashMap thay đổi và giải pháp stable ID
+    description: <p>Đối chiếu <code>UnsafeKey</code> dùng displayName thay đổi trong hashCode với record <code>StableId</code> bất biến. API quan sát tra cứu HashMap
+      trước/sau rename và cho thấy profile có thể đổi tên mà vẫn truy xuất qua định danh ổn định.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -474,14 +475,13 @@ DesignPitfallExperimentController:
     - POST
     mappingPaths:
     - /oop/design-pitfalls/mutable-key/experiment
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   checkout(CheckoutRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: Đối chiếu checkout nguyên khối với refactor tách trách nhiệm
+    description: <p>Chạy một yêu cầu qua <code>LegacyCheckout</code> gộp tồn kho, giảm giá, vận chuyển và <code>CheckoutWorkflow</code> dùng <code>StockGuard</code>,
+      <code>PriceRules</code>, <code>DeliveryRules</code>. So sánh báo giá và collaborationTrace để minh họa refactor không đổi hành vi, không tạo abstraction thừa.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -499,15 +499,14 @@ DesignPitfallExperimentController:
     - POST
     mappingPaths:
     - /oop/design-pitfalls/checkout/refactor
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
 EncapsulationExperimentController:
   cart(CartRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: Thử thao tác giỏ hàng qua phương thức bảo vệ trạng thái và snapshot.
+    description: <p>Cho phép thử <code>put</code>, <code>changeQuantity</code> và <code>remove</code> trên giỏ hàng có tối đa 25 dòng, kiểm tra số lượng/đơn giá và
+      tổng tiền bằng số nguyên VND. Kết quả ghi ảnh chụp trước/sau mỗi bước; thao tác sai bị từ chối mà không cập nhật giỏ hàng thật.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -525,14 +524,13 @@ EncapsulationExperimentController:
     - POST
     mappingPaths:
     - /oop/encapsulation/cart/experiment
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   stock(StockRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: Theo dõi bất biến tồn kho khi giữ, giao, hoàn và bổ sung hàng.
+    description: <p>Tạo <code>StockLedger</code> có <code>onHand</code>, <code>reserved</code>, <code>available</code>. Người gọi thử <code>restock</code>, <code>reserve</code>,
+      <code>release</code>, <code>ship</code> và quan sát điều kiện <code>0 &lt;= reserved &lt;= onHand &lt;= 1000000</code> vẫn được giữ sau cả bước thất bại.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -550,14 +548,13 @@ EncapsulationExperimentController:
     - POST
     mappingPaths:
     - /oop/encapsulation/stock/experiment
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   snapshot(EventRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: Kiểm chứng sao chép phòng vệ đối với ngày giờ và danh sách khách mời.
+    description: <p>Dùng <code>EventSnapshot</code> để minh họa sao chép <code>Date</code> mutable và chuyển <code>AttendeeDraft</code> mutable thành danh sách tên
+      bất biến. API cố ý sửa dữ liệu gốc và dữ liệu nhận từ getter để chứng minh bản chụp không bị ảnh hưởng.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -575,14 +572,13 @@ EncapsulationExperimentController:
     - POST
     mappingPaths:
     - /oop/encapsulation/event-snapshot/experiment
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   order(OrderRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: Mô phỏng chuyển trạng thái đơn hàng qua hành vi nghiệp vụ có kiểm soát.
+    description: <p>Mô phỏng <code>LifecycleOrder</code> với các hành vi <code>markPaid</code>, <code>ship</code>, <code>cancel</code>. Trạng thái chỉ đi từ <code>CREATED</code>
+      sang <code>PAID</code> rồi <code>SHIPPED</code>, hoặc từ <code>CREATED</code> sang <code>CANCELLED</code>; không cung cấp setter trạng thái tự do.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -600,15 +596,16 @@ EncapsulationExperimentController:
     - POST
     mappingPaths:
     - /oop/encapsulation/order/experiment
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
 InheritanceExperimentsController:
   calculatePay(PayrollRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: T?nh l??ng qua l?p cha v? ghi ?? ??ng
+    description: <p>Nh?n lo?i nh?n vi?n, m?, t?n v? th?ng tin l??ng ?? kh?i t?o m?t <code>Employee.Salaried</code> ho?c <code>Employee.Hourly</code>. Tr? ki?u khai
+      b?o <code>Employee</code>, ki?u runtime, c?ng th?c v? l??ng th?ng t?nh b?ng VND.</p><p>V? d? minh h?a l?p cha <code>abstract</code> b?o v? ID/t?n v?i tr??ng
+      private v? getter final, c?n hai l?p con ghi ?? <code>monthlyPayVnd()</code> v? <code>calculation()</code>. T?nh l??ng theo gi? d?ng <code>Math.multiplyExact</code>,
+      v? v?y overflow l? l?i r? r?ng.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -626,14 +623,15 @@ InheritanceExperimentsController:
     - POST
     mappingPaths:
     - /oop/inheritance/payroll/calculate
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   compareDelivery(DeliveryRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: So s?nh k? th?a s?u v?i composition trong t?nh ph?
+    description: '<p>Nh?n kho?ng c?ch, t?y ch?n ?u ti?n v? ng?y l? ?? t?nh ph? b?ng hai c?ch: c?y l?p <code>DeliveryPlan</code> t? city t?i holiday priority; v? chu?i
+      quy t?c c?ng ph? composition ???c vi?t tr?c ti?p trong service. Ph?n h?i g?m lo?i l?p, hai t?ng ph? v? trace c?a hai c?ch.</p><p>Minh h?a <code>super.distanceFee</code>
+      n?i ti?p qua nhi?u t?ng, trong khi <code>quote</code> final ??m b?o ki?m tra chung. K?t qu? b?ng nhau cho c?c t?y ch?n h?p l? d? m?c ph? thu?c trong k? th?a
+      ph?c t?p h?n.</p>'
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -651,14 +649,14 @@ InheritanceExperimentsController:
     - POST
     mappingPaths:
     - /oop/inheritance/delivery/compare
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   constructorTrace(ConstructorRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: Theo d?i constructor cha g?i override qu? s?m
+    description: <p>Ch?y hai chu?i kh?i t?o l?p cha/l?p con theo c?ng nh?n ??u v?o. Nh?nh unsafe c? constructor cha g?i method b? l?p con override tr??c khi field
+      initializer c?a con ch?y; nh?nh safe ch? ki?m tra sau khi constructor con ho?n t?t.</p><p>Tr? hai danh s?ch th? t? th?c thi, gi? tr? l?p cha quan s?t v? gi?
+      tr? cu?i. H?nh vi n?y gi?i th?ch r?i ro g?i ph??ng th?c c? th? b? override trong constructor, kh?ng ph?i th? nghi?m ??ng th?i.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -676,14 +674,15 @@ InheritanceExperimentsController:
     - POST
     mappingPaths:
     - /oop/inheritance/constructors/trace
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   resolveCapabilities(CapabilitiesRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: Gi?i quy?t xung ??t default method v? t?i s? d?ng h?nh vi
+    description: <p>Nh?n <code>itemId</code> v? chu?i nh?n CSV ?? ch?y <code>CapabilityResolution</code>. <code>MixedCapability</code> ch? ??ng k?t h?p <code>Printable.super.label()</code>
+      v? <code>Searchable.super.label()</code>; l?p c? ph??ng th?c th?c c?a superclass th?ng default method c?ng t?n.</p><p>??ng th?i <code>Taggable</code> t?i s?
+      d?ng default method ?? chu?n h?a c?c nh?n v? ch? th??ng v? lo?i b? kho?ng tr?ng ??u/cu?i. API cho th?y Java h? tr? nhi?u interface nh?ng xung ??t h?nh vi ph?i
+      ???c x? l? r? r?ng.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -701,15 +700,15 @@ InheritanceExperimentsController:
     - POST
     mappingPaths:
     - /oop/inheritance/capabilities/resolve
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
 InterfaceExperimentsController:
   shipping(ShippingRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: So sánh phí giao hàng qua hai implementation của ShippingFeePolicy.
+    description: <p>Thực hiện hợp đồng <code>ShippingFeePolicy</code> bằng <code>EconomyShippingPolicy</code> và <code>ExpressShippingPolicy</code>. API trả cả hai
+      mức giá cùng chính sách được chọn, minh họa cách <code>ShippingQuoteService</code> nhận interface qua constructor trong khi lớp trừu tượng <code>DistanceShippingPolicy</code>
+      chia sẻ thuật toán và trạng thái cấu hình.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -727,14 +726,14 @@ InterfaceExperimentsController:
     - POST
     mappingPaths:
     - /oop/interfaces/shipping/quote
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   documents(DocumentRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: Thực hành ba interface đọc, ghi, xuất bản trên cùng DocumentWorkspace.
+    description: <p>Một <code>DocumentWorkspace</code> được sử dụng đồng thời qua <code>DocumentReader</code>, <code>DocumentWriter</code> và <code>DocumentPublisher</code>.
+      Các hành động <code>save/read/publish</code> cho thấy tách interface theo vai trò, cùng truy cập một trạng thái, quy tắc bảo vệ tài liệu đã xuất bản và giải
+      quyết xung đột default method <code>roleName()</code>.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -752,14 +751,13 @@ InterfaceExperimentsController:
     - POST
     mappingPaths:
     - /oop/interfaces/documents/experiment
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   checkout(CheckoutRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: Thử thay PaymentGateway và PaymentRepository, xử lý replay theo requestId.
+    description: <p><code>CheckoutService</code> chỉ phụ thuộc vào hai hợp đồng <code>PaymentGateway</code> và <code>PaymentRepository</code>. Có thể thay gateway
+      chấp nhận/từ chối và kho HashMap/TreeMap, trong khi số lần gọi gateway và kết quả phát lại theo <code>requestId</code> được theo dõi theo từng request mô phỏng.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -777,15 +775,18 @@ InterfaceExperimentsController:
     - POST
     mappingPaths:
     - /oop/interfaces/checkout/experiment
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
 LanguageMechanicsExperimentsController:
   generics(GenericBatchRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: Thực hành PECS, bounded generics và typed cache
+    description: '<p>API nhận danh sách số nguyên, số thực, cache entries và khóa cần tra. Kết quả gồm <code>copiedValues</code> dạng chuỗi, tổng thập phân, số nguyên
+      lớn nhất, map <code>found</code> và danh sách <code>missing</code>.</p>
+
+      <p><code>NumericTransfers.copy</code> thể hiện PECS với <code>? extends T</code> để đọc và <code>? super T</code> để ghi. <code>greatest</code> dựa vào ràng
+      buộc <code>Comparable&lt;? super T&gt;</code>; <code>TypedCache&lt;K,V&gt;</code> minh họa kiểm tra kiểu lúc biên dịch. <code>BigDecimal</code> giúp tổng giữ
+      biểu diễn thập phân có thể kiểm chứng.</p>'
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -803,14 +804,17 @@ LanguageMechanicsExperimentsController:
     - POST
     mappingPaths:
     - /oop/language-mechanics/generics/experiment
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   stock(StockRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: Mô phỏng hợp đồng equality, tồn kho và chẩn đoán an toàn
+    description: '<p>API nhận một chuỗi hành động <code>REGISTER</code>, <code>READ</code>, <code>RESERVE</code>, <code>RESTOCK</code> theo khóa tenantId/sku. Từng
+      bước trả accepted, code, available và diagnostic.</p>
+
+      <p>Record <code>ProductKey</code> có equals/hashCode theo giá trị, giúp hai đối tượng khóa tương đương tra cùng bản ghi nhưng các tenant vẫn độc lập. <code>StockItem</code>
+      bảo vệ số lượng không âm; thiếu hàng trả <code>INSUFFICIENT_STOCK</code> mà không thay state. <code>toString()</code> chỉ đưa thông tin đã cho phép, không để
+      lộ contactEmail hoặc providerToken.</p>'
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -828,14 +832,16 @@ LanguageMechanicsExperimentsController:
     - POST
     mappingPaths:
     - /oop/language-mechanics/stock/experiment
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   shipping(ShippingRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: Báo giá giao vận với đa hình qua ShippingPolicy
+    description: '<p>API nhận nhiều yêu cầu báo giá với <code>serviceCode</code> và <code>weightGrams</code>. <code>standard</code> phí cố định 20000 VND; <code>express</code>
+      phí 35000 cộng 8000 mỗi kilogram làm tròn lên.</p>
+
+      <p>Cả hai lớp thực thi interface <code>ShippingPolicy</code>; Java chọn method <code>quoteVnd</code> theo runtime type. Service không hỗ trợ được ghi riêng
+      bằng <code>SERVICE_NOT_SUPPORTED</code>, không cộng phí vào tổng. Trọng lượng ngoài 1–100000 gram gây HTTP 400, không phải giá vận chuyển bằng 0.</p>'
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -853,15 +859,15 @@ LanguageMechanicsExperimentsController:
     - POST
     mappingPaths:
     - /oop/language-mechanics/shipping/experiment
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
 LifecycleExperimentController:
   create(CreationRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: So s?nh ba c?ch kh?i t?o CourseEnrollment
+    description: <p>T?o ??i t??ng <code>CourseEnrollment</code> t? m? kh?a h?c, capacity, danh s?ch h?c vi?n v? <code>style</code> l? <code>CONSTRUCTOR</code>, <code>STATIC_FACTORY</code>
+      ho?c <code>BUILDER</code>. API tr? h?c vi?n v? s? gh? c?n l?i.</p><p>C? ba nh?nh g?i chung constructor ki?m tra m? 1?40 k? t?, capacity 1?100, h?c vi?n h?p
+      l?, duy nh?t v? kh?ng v??t s?c ch?a. Danh s?ch ???c sao ch?p ?? b?o v? tr?ng th?i.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -879,14 +885,14 @@ LifecycleExperimentController:
     - POST
     mappingPaths:
     - /oop/lifecycle/creation
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   references(ReferenceRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: Quan s?t c?c node reachable t? root logic
+    description: <p>M? ph?ng ?? th? t?i ?a 15 node, t?p root logic v? t?i ?a 30 thao t?c <code>RETAIN</code>/<code>RELEASE</code>. API tr? snapshot b??c 0 v? sau
+      t?ng thao t?c, ph?n bi?t node c? ???ng ?i t? root v? node kh?ng reachable.</p><p>Chu tr?nh gi?a c?c node kh?ng c? ngh?a ?? th? c?n ???c truy c?p n?u c?c root
+      ??u b? th?. ??y l? ph?n t?ch ???ng ?i logic, kh?ng ph?i ph?p ?o GC root hay th?i ?i?m thu h?i b? nh? JVM.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -904,14 +910,14 @@ LifecycleExperimentController:
     - POST
     mappingPaths:
     - /oop/lifecycle/references
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   resources(ResourceRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: Theo d?i try-with-resources v? ngo?i l? ??ng
+    description: <p>Th?c hi?n kh?i <code>try-with-resources</code> v?i hai <code>TrackedResource</code> v? ba c? ch? ??ng g?y l?i body, ??ng outer, ??ng inner. K?t
+      qu? tr? s? ki?n, l?i ch?nh, l?i suppressed, tr?ng th?i ??ng v? ho?n th?nh.</p><p>Ch?ng minh Java t? ??ng ??ng inner tr??c outer d? body l?i, c?ng quy t?c ?u
+      ti?n l?i body ho?c l?i close ??u ti?n. ??ng t?i nguy?n l? h?nh ??ng x?c ??nh th?i ?i?m, kh?c thu h?i heap b?i GC.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -929,14 +935,14 @@ LifecycleExperimentController:
     - POST
     mappingPaths:
     - /oop/lifecycle/resources
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   publication(PublicationRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: So s?nh c?ng b? this s?m v? an to?n
+    description: <p>Ch?y hai ki?u ??ng k? listener v?i <code>label</code> h?p l?. <code>UnsafeListener</code> ??ng k? <code>this</code> tr??c l?c g?n field; callback
+      ??ng b? nh?n th?y <code>null</code>. <code>SafeListener</code> ???c t?o xong r?i m?i ??ng k? qua factory, n?n callback th?y label ?? kh?i t?o.</p><p>Tr? s?u
+      tr??ng quan s?t v? s? subscription ?? gi?i th?ch l?i <code>this</code>-escape m?t c?ch x?c ??nh, kh?ng d?a v?o race condition ho?c timing.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -954,15 +960,18 @@ LifecycleExperimentController:
     - POST
     mappingPaths:
     - /oop/lifecycle/publication
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
 ModelingExperimentController:
   library(LibraryRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: M? ph?ng m??n/tr? th? vi?n v?i snapshot v? lu?t nghi?p v?
+    description: '<p>Nh?n danh s?ch ??u s?ch, th?nh vi?n, b?n s?ch v?t l? v? chu?i h?nh ??ng BORROW/RETURN c? ng?y r? r?ng. Ph?n h?i th? hi?n object graph ban ??u,
+      tr??c/sau m?i h?nh ??ng, c?c l?i g?i gi?a ??i t??ng, m? lu?t nghi?p v? b? t? ch?i v? tr?ng th?i cu?i.</p>
+
+      <p>M? h?nh t?ch <code>BookTitle</code> kh?i <code>BookCopy</code>, d?ng <code>Member</code> qu?n l? quy?n m??n v? gi?i h?n t?i ?a ba kho?n m??n, <code>Loan</code>
+      l?u l?ch s?/h?n tr? 14 ng?y v? <code>LibraryModel</code> ph?i h?p c?c b?t bi?n xuy?n ??i t??ng. T? ch?i nghi?p v? ???c ghi trong step, kh?ng t? ??ng l? HTTP
+      400; input c?u tr?c sai th? HTTP 400.</p>'
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -980,14 +989,17 @@ ModelingExperimentController:
     - POST
     mappingPaths:
     - /oop/modeling/library/experiment
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   orders(OrderRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: Th? state machine ??n h?ng v? guard chuy?n tr?ng th?i
+    description: '<p>Nh?n orderId, totalVnd v? chu?i s? ki?n ??n h?ng ?? ch?y <code>ModeledOrder</code>, ghi snapshot tr??c/sau t?ng b??c c?ng k?t qu? accepted, m?
+      rule v? detail. M? h?nh b?t ??u ? <code>DRAFT</code>, c? th? qua <code>WAITING_PAYMENT</code>, <code>PAID</code>, <code>PACKING</code>, <code>SHIPPED</code>,
+      <code>DELIVERED</code> ho?c h?y h?p l? th?nh <code>CANCELLED</code>.</p>
+
+      <p><code>CONFIRM_PAYMENT</code> ph?i kh?p ch?nh x?c totalVnd; <code>SHIP</code> c?n trackingCode h?p l?; s? ki?n kh?ng c? c?nh cho tr?ng th?i hi?n t?i b? t?
+      ch?i m? kh?ng l?m ??i state. API cung c?p b?ng ch?ng th?c thi ?? ??i chi?u state diagram, kh?ng x? l? thanh to?n/v?n chuy?n th?t.</p>'
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1005,15 +1017,14 @@ ModelingExperimentController:
     - POST
     mappingPaths:
     - /oop/modeling/orders/experiment
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
 ObjectExperimentsController:
   references(ObjectExperimentDto.ReferenceRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: Quan sát alias và truyền tham chiếu theo giá trị trong Java.
+    description: <p>Tạo hai tham chiếu cùng trỏ một <code>MutableCounter</code> và một đối tượng riêng có trạng thái ban đầu tương đương. Response so sánh identity,
+      giá trị trước/sau thao tác qua tham số và việc gán lại biến tham số cục bộ.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1031,14 +1042,13 @@ ObjectExperimentsController:
     - POST
     mappingPaths:
     - /oop/objects/references
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   equality(ObjectExperimentDto.EqualityRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: So sánh identity, equals/hashCode và HashSet.
+    description: <p>So sánh hai <code>ProductCode</code> record theo <code>==</code>, <code>equals()</code>, <code>hashCode()</code> và số phần tử trong <code>HashSet</code>.
+      Đối chiếu với hai <code>LegacyIdentityCode</code> chỉ kế thừa <code>Object.equals()</code>.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1056,14 +1066,13 @@ ObjectExperimentsController:
     - POST
     mappingPaths:
     - /oop/objects/equality
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   copies(ObjectExperimentDto.CopyRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: Kiểm chứng bản sao nông, sâu và snapshot chỉ đọc.
+    description: <p>Tạo bản sao danh sách nông, bản sao có phần tử độc lập, danh sách <code>List.copyOf</code> và record giá trị. Thay đổi nhãn phần tử ban đầu rồi
+      thêm phần tử để phân biệt việc chia sẻ object với cấu trúc danh sách.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1081,14 +1090,13 @@ ObjectExperimentsController:
     - POST
     mappingPaths:
     - /oop/objects/copies
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   absence(ObjectExperimentDto.AbsenceRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: Phân biệt đối tượng không tìm thấy với thuộc tính vắng mặt.
+    description: <p>Tìm khách hàng trong dữ liệu mẫu chỉ có <code>C01</code> (Lan), biểu diễn bằng <code>Optional</code> và danh sách. Các cờ kết quả phân biệt khách
+      hàng không tồn tại với địa chỉ tùy chọn không tồn tại.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1106,14 +1114,13 @@ ObjectExperimentsController:
     - POST
     mappingPaths:
     - /oop/objects/absence
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   checkout(ObjectExperimentDto.CheckoutRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: Theo dõi checkout, giữ kho và hoàn kho bằng chuỗi sự kiện.
+    description: <p>Mô phỏng đối tượng <code>Cart</code>, <code>Inventory</code>, <code>PaymentGateway</code>, <code>Order</code> và <code>Notifier</code> cộng tác.
+      Kết quả ghi chuỗi sự kiện theo thứ tự, trạng thái tồn kho, thành công, hết hàng hoặc thanh toán bị từ chối.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1131,15 +1138,17 @@ ObjectExperimentsController:
     - POST
     mappingPaths:
     - /oop/objects/checkout
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
 BasicsExperimentController:
   simulateAccount(AccountSimulationRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: Mô phỏng giao dịch nạp và rút tiền trên tài khoản
+    description: '<p>API tạo một <code>BankAccount</code> mới từ <code>accountId</code> và <code>openingBalanceCents</code>, rồi xử lý 1–20 thao tác <code>DEPOSIT</code>/<code>WITHDRAW</code>.
+      Phản hồi trả <code>finalBalanceCents</code> và <code>timeline</code> thể hiện số dư trước/sau, kết quả chấp nhận và lý do từ chối của từng thao tác.</p>
+
+      <p>Minh họa tính đóng gói và bất biến số dư: số tiền phải dương, rút quá số dư không làm thay đổi trạng thái, nạp gây tràn số được từ chối an toàn. Mỗi request
+      có đối tượng riêng; không có cơ sở dữ liệu hay số dư chung giữa các request.</p>'
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1157,14 +1166,16 @@ BasicsExperimentController:
     - POST
     mappingPaths:
     - /oop/basics/accounts/simulate
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   simulateOrder(OrderSimulationRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: Mô phỏng vòng đời và quy tắc của đơn hàng
+    description: '<p>API tạo một <code>OrderAggregate</code> mới và chạy 1–20 bước <code>ADD_LINE</code>, <code>CONFIRM</code> hoặc <code>CANCEL</code>. Kết quả ghi
+      nhận trạng thái đơn, tổng tiền và số dòng hàng sau mỗi bước, kể cả bước bị từ chối.</p>
+
+      <p>Minh họa đối tượng chịu trách nhiệm bảo vệ quy tắc: chỉ được thêm dòng hoặc kết thúc đơn ở trạng thái <code>DRAFT</code>, không xác nhận đơn rỗng, và tính
+      tổng bằng phép toán có kiểm tra tràn số. Một bước sai không tự động hủy toàn bộ mô phỏng; lỗi đầu vào trước vòng lặp được trả qua HTTP 400.</p>'
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1182,14 +1193,16 @@ BasicsExperimentController:
     - POST
     mappingPaths:
     - /oop/basics/orders/simulate
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   compareShipping(ShippingQuoteRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: So sánh hai hiện thực chính sách vận chuyển
+    description: '<p>API nhận <code>subtotalCents</code> và <code>distanceKm</code>, áp dụng cả <code>ShippingPolicy.Pickup</code> và <code>ShippingPolicy.Courier</code>
+      lên cùng một yêu cầu, rồi trả danh sách <code>quotes</code> có <code>policy</code>, <code>feeCents</code> và <code>payableCents</code>.</p>
+
+      <p>Minh họa đa hình dựa trên interface: <code>PICKUP</code> có phí 0; <code>COURIER</code> có phí 1.500 + 400 × số km, tính theo đơn vị cent. Giá trị chỉ để
+      học, không phải báo giá giao vận thật; tổng tiền không âm và khoảng cách phải trong 0–100 km.</p>'
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1207,15 +1220,14 @@ BasicsExperimentController:
     - POST
     mappingPaths:
     - /oop/basics/shipping/quotes
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
 PolymorphismExperimentsController:
   dispatch(DispatchRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: So sánh overload, override, field hiding và static method hiding.
+    description: <p>Trả các giá trị tính toán của <code>Handler</code> và <code>PremiumHandler</code> khi gọi với <code>Event</code> hoặc <code>PriorityEvent</code>.
+      Minh họa lựa chọn chữ ký overload theo kiểu khai báo, dispatch động của override, và phân giải tĩnh của field/static method dù cùng một receiver thực.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1233,14 +1245,13 @@ PolymorphismExperimentsController:
     - POST
     mappingPaths:
     - /oop/polymorphism/dispatch/experiment
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   payments(PaymentsRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: Quan sát ba chiến lược thanh toán qua cùng interface PaymentMethod.
+    description: <p>Chạy liên tiếp các <code>PaymentCommand</code> qua <code>PaymentCheckoutService</code> mà không cần service phân nhánh theo lớp cụ thể. CARD kiểm
+      tra hạn mức, WALLET bảo vệ và trừ số dư riêng request, BANK tạo trạng thái PENDING; trả trạng thái và thống kê PAID/DECLINED/PENDING cùng số dư sau từng bước.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1258,15 +1269,18 @@ PolymorphismExperimentsController:
     - POST
     mappingPaths:
     - /oop/polymorphism/payments/experiment
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
 PracticeExperimentController:
   bank(BankRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: Thực hành chuyển tiền và bảo toàn số dư giữa hai tài khoản
+    description: '<p>Khởi tạo 1–10 tài khoản với ID, chủ sở hữu và số dư không âm; chạy 1–20 thao tác <code>DEPOSIT</code>, <code>WITHDRAW</code>, <code>TRANSFER</code>
+      với số tiền dương. Phản hồi cung cấp số dư ban đầu, snapshot trước/sau mỗi bước, accepted/detail và số dư cuối.</p>
+
+      <p><code>BankLedger</code> đồng bộ các thao tác trên một ledger trong request. <code>transfer</code> kiểm tra đủ tiền và khả năng cộng số dư đích bằng <code>Math.addExact</code>
+      trước khi trừ tiền nguồn, nên từ chối do thiếu tiền/tràn số không gây chuyển một phần. Các bước lỗi đã bắt được hiển thị trong HTTP 200, không phải giao dịch
+      ngân hàng hoặc cam kết lưu bền.</p>'
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1284,14 +1298,17 @@ PracticeExperimentController:
     - POST
     mappingPaths:
     - /oop/practice/bank/experiment
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   orders(OrderRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: Thực hành vòng đời đơn hàng và bất biến khi sửa dòng hàng
+    description: '<p>Khởi tạo <code>PracticeOrder</code> ở DRAFT, rồi thực hiện tối đa 20 lệnh <code>SET_LINE</code>, <code>CHANGE_QUANTITY</code>, <code>REMOVE_LINE</code>,
+      <code>PLACE</code>, <code>CANCEL</code>. Mỗi bước trả trạng thái trước/sau, accepted, detail và removed khi thao tác xóa.</p>
+
+      <p>Đối tượng tự chuẩn hóa SKU, dùng <code>LinkedHashMap</code> tránh trùng khóa và <code>List.copyOf</code> khi trả dòng hàng. Subtotal tối đa 10000000 cents,
+      giảm 5% nếu đạt 200000, miễn vận chuyển nếu subtotal bằng 0 hoặc từ 100000; các thao tác thay đổi dòng hàng chỉ hợp lệ ở DRAFT. Mọi số tiền đều là cents mô
+      phỏng, không phải thanh toán thực.</p>'
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1309,14 +1326,17 @@ PracticeExperimentController:
     - POST
     mappingPaths:
     - /oop/practice/orders/experiment
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   library(LibraryRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: Mô phỏng mượn trả sách và thay chính sách mà không đổi lịch sử
+    description: '<p>Nhận các đầu sách <code>NORMAL</code>/<code>REFERENCE</code>, thành viên active/inactive, bản sách vật lý và 1–25 thao tác có ngày <code>BORROW</code>,
+      <code>RETURN</code>, <code>REVISE_POLICY</code>. Phản hồi ghi snapshot bản sách, lịch sử phiếu mượn, số phiếu đang mở và rule từ chối.</p>
+
+      <p>Chính sách <code>LEGACY</code> cho tối đa ba phiếu đang mở và hạn trả 14 ngày; <code>REVISED</code> cho tối đa năm phiếu và hạn 7 ngày với REFERENCE, 14
+      ngày với NORMAL. Phiếu đã tạo giữ nguyên dueOn sau khi đổi policy; các quy tắc thành viên active, bản sách không thể mượn hai lần, nợ quá hạn và trả sách đúng
+      ngày vẫn được áp dụng. API chỉ minh họa kiểm chứng yêu cầu thay đổi trên một mô hình mới mỗi request.</p>'
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1334,15 +1354,18 @@ PracticeExperimentController:
     - POST
     mappingPaths:
     - /oop/practice/library/experiment
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
 RefactoringExperimentsController:
   checkout(CheckoutRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: So sánh kết quả thanh toán trước và sau khi tách trách nhiệm
+    description: '<p>Nhận trạng thái VIP và 1–100 dòng hàng (SKU, đơn giá, số lượng), tính đồng thời qua <code>LegacyCheckout</code> và thiết kế mới <code>ShoppingOrder</code>
+      + <code>PricingPolicy</code>. Trả hai <code>PricingView</code> gồm subtotal, discount, shipping, payable, total và receipt, kèm <code>equivalent</code>.</p>
+
+      <p>Refactor chuyển phép nhân về <code>OrderLine.lineAmountVnd()</code>, tổng về <code>ShoppingOrder.subtotalVnd()</code>, công thức giảm giá/giao hàng về <code>PricingPolicy</code>
+      và tạo hóa đơn về <code>ReceiptFormatter</code>. Giá trị tương đương quan sát được là bằng chứng quan trọng hơn số class; ngưỡng VIP từ 500000 và miễn phí giao
+      hàng nếu payable từ 700000 phải được giữ nguyên.</p>'
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1360,14 +1383,17 @@ RefactoringExperimentsController:
     - POST
     mappingPaths:
     - /oop/refactoring/checkout/compare
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   delivery(DeliveryRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: Kiểm chứng switch giao vận tương đương các DeliveryPolicy đa hình
+    description: '<p>Nhận 1–50 yêu cầu gồm <code>STANDARD</code>, <code>EXPRESS</code> hoặc <code>PICKUP</code>, giá trị đơn và trọng lượng. Mỗi dòng trả phí/ETA
+      của thuật toán switch cũ và <code>DeliveryPolicy</code> mới, cờ <code>equivalent</code> riêng cùng <code>allEquivalent</code> toàn batch.</p>
+
+      <p>Mô hình cũ dùng <code>LegacyDeliveryCalculator</code>, còn service mới chọn <code>StandardDeliveryPolicy</code>, <code>ExpressDeliveryPolicy</code>, <code>PickupDeliveryPolicy</code>
+      theo enum rồi dispatch qua interface. STANDARD miễn phí từ giá trị đơn 500000; EXPRESS có phí theo kilogram; PICKUP bằng 0. Đây là đối chiếu hành vi sau Replace
+      Conditional with Polymorphism, không phải giao hàng thật.</p>'
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1385,14 +1411,16 @@ RefactoringExperimentsController:
     - POST
     mappingPaths:
     - /oop/refactoring/delivery/compare
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   alerts(AlertRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: Mô phỏng alert bằng composition và retry có giới hạn
+    description: '<p>Nhận <code>channel</code> EMAIL hoặc SMS, người nhận, sự cố, số lần lỗi tạm thời và giới hạn lượt thử. <code>AlertDispatcher</code> không kế
+      thừa lớp gửi tin mà nhận <code>MessageChannel</code>; <code>RetryingChannel</code> bọc <code>RecordingMessageChannel</code> để retry riêng lỗi <code>TemporaryDeliveryFailure</code>.</p>
+
+      <p>Trả <code>delivered</code>, số lượt thử, danh sách sự kiện và thông điệp thực sự được ghi trong mô phỏng, với <code>outcome</code> là <code>DELIVERED</code>
+      hoặc <code>RETRY_EXHAUSTED</code>. Mỗi request có recorder mới, không dùng trạng thái chung. Lỗi cấu hình hoặc recipient/incident sai trả HTTP 400.</p>'
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1410,15 +1438,14 @@ RefactoringExperimentsController:
     - POST
     mappingPaths:
     - /oop/refactoring/alerts/experiment
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
 RelationshipsExperimentsController:
   transfer(TransferRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: Điều chuyển nhân viên và duy trì liên kết hai chiều
+    description: <p>Tạo phòng ban và nhân viên, rồi chuyển hoặc gỡ phân công. API chứng minh phải cập nhật cả <code>employee.department</code> và <code>department.members</code>,
+      cũng như đảm bảo thao tác vào phòng đầy không xóa liên kết cũ.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1436,14 +1463,13 @@ RelationshipsExperimentsController:
     - POST
     mappingPaths:
     - /oop/relationships/departments/transfer
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   enroll(EnrollmentRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: Mô phỏng quan hệ nhiều–nhiều học viên–khóa học
+    description: <p>Xây dựng các liên kết <code>studentId</code>/<code>courseId</code> qua <code>EnrollmentRegistry</code>; phân biệt ghi danh mới, ghi danh trùng,
+      hủy liên kết, và khả năng tạo lại liên kết với sequence khác. Một NotificationGateway được truyền tạm vào phương thức, không phải liên kết sở hữu lâu dài.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1461,14 +1487,13 @@ RelationshipsExperimentsController:
     - POST
     mappingPaths:
     - /oop/relationships/enrollments/simulate
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   ownership(OwnershipRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: Đối chiếu aggregation và composition theo vòng đời
+    description: <p>Cho thấy <code>Team</code> chỉ gom các <code>Member</code> vẫn tồn tại độc lập trong directory, trong khi <code>Order</code> tự tạo và sở hữu
+      <code>OrderLine</code>. Gỡ thành viên khỏi nhóm không xóa member; đóng đơn làm mất các dòng thành phần.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1486,15 +1511,14 @@ RelationshipsExperimentsController:
     - POST
     mappingPaths:
     - /oop/relationships/ownership/compare
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
 SolidExperimentController:
   quote(QuoteRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: Báo giá từ chính sách giảm giá theo hợp đồng
+    description: <p>Chọn NONE, TEN_PERCENT, LOYALTY hoặc BROKEN_NEGATIVE cùng số tiền trước giảm để thử hành vi qua một giao diện <code>DiscountPolicy</code>. Việc
+      bổ sung policy tuân thủ hợp đồng không đòi sửa thuật toán điều phối, trong khi một implementation trả giảm giá âm bị từ chối để minh họa LSP.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1512,14 +1536,13 @@ SolidExperimentController:
     - POST
     mappingPaths:
     - /oop/solid/discount/quote
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   experiment(ExperimentRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: Mô phỏng checkout qua các cổng lưu đơn và gửi biên nhận
+    description: <p>Chạy tối đa 16 lần checkout với đơn hàng và chính sách khác nhau, quan sát từng biên nhận, số đơn trong store và log gửi biên nhận. API minh họa
+      use case phụ thuộc các port nhỏ thay vì adapter cụ thể, lỗi attempt không làm ghi đơn hoặc gửi notice ngoài ý muốn, và trạng thái mô phỏng mới cho mỗi request.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1537,15 +1560,14 @@ SolidExperimentController:
     - POST
     mappingPaths:
     - /oop/solid/checkout/experiment
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
 SubtypingExperimentController:
   dispatch(DispatchRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: Quan sát dispatch, upcast và adapter qua PaymentMethod
+    description: <p>Nhận lựa chọn CARD, WALLET hoặc LEGACY_ADAPTER để gọi <code>description()</code>/<code>charge()</code> qua cùng interface <code>PaymentMethod</code>.
+      Response thể hiện kiểu khai báo, kiểu runtime, cùng reference sau upcast, kiểm tra <code>instanceof</code> và sự khác nhau giữa overload tĩnh và override động.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1563,14 +1585,13 @@ SubtypingExperimentController:
     - POST
     mappingPaths:
     - /oop/subtyping/dispatch
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   contract(DiscountRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: Đối chiếu tính thay thế của các chính sách giảm giá
+    description: <p>Thử một dãy giá hợp lệ của hợp đồng <code>DiscountPolicy.netCents</code> với FIXED, PERCENT hoặc STRICT_MINIMUM. API trả kết quả từng giá và cờ
+      <code>allCasesPass</code>; STRICT_MINIMUM cố tình tăng tiền điều kiện, giúp quan sát vi phạm LSP dù vẫn implements interface.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1588,14 +1609,13 @@ SubtypingExperimentController:
     - POST
     mappingPaths:
     - /oop/subtyping/discount-contract
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   geometry(GeometryRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: Kiểm tra hợp đồng Rectangle và phản ví dụ Square
+    description: <p>Thao tác setWidth/setHeight qua kiểu <code>MutableRectangle</code> nhưng đối tượng có thể là MutableRectangle hoặc MutableSquare. Kết quả chỉ
+      rõ hợp đồng thay đổi độc lập từng chiều có còn đúng không, và so sánh cách thiết kế tốt hơn qua interface <code>MeasurableShape</code> chỉ cam kết diện tích.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1613,15 +1633,16 @@ SubtypingExperimentController:
     - POST
     mappingPaths:
     - /oop/subtyping/geometry-contract
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
 TestingExperimentController:
   contracts(ContractRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: Kiểm thử hợp đồng SeatInventory trên MONITOR, ATOMIC và implementation có lỗi.
+    description: <p>Chạy cùng chuỗi <code>RESERVE</code>/<code>CANCEL</code> trên <code>MonitorSeatInventory</code>, <code>AtomicSeatInventory</code> và <code>BrokenSeatInventory</code>.
+      Mỗi bước được đối chiếu với mô hình tham chiếu độc lập về return value, snapshot và bất biến <code>0 &lt;= reserved &lt;= capacity</code>. Kết quả minh họa
+      contract testing và khả năng thay thế implementation (LSP); bản BROKEN cố ý thay đổi state khi trả false để cho thấy lỗi có thể kiểm chứng mà không cần đọc
+      private field.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1639,14 +1660,14 @@ TestingExperimentController:
     - POST
     mappingPaths:
     - /oop/testing/inventory/contracts
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   collaboration(CollaborationRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: Quan sát fake, stub và recording sender khi xử lý checkout nhiều tình huống.
+    description: <p>Chạy <code>CheckoutWorkflow</code> qua <code>FakeInventory</code>, <code>StubPayment</code> và <code>RecordingSender</code> được tiêm qua interface.
+      API ghi chính xác thứ tự tương tác và số lần gọi, phân biệt hết hàng, thanh toán bị từ chối/lỗi có bù trừ stock, và thanh toán thành công nhưng gửi biên nhận
+      thất bại. Đây là test double in-memory, không phát sinh thanh toán hoặc email thật.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1664,14 +1685,14 @@ TestingExperimentController:
     - POST
     mappingPaths:
     - /oop/testing/checkout/collaboration
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   regression(RegressionRequest):
-    summary: Chưa có tiêu đề
-    description: Chưa có mô tả chi tiết
+    summary: So sánh hóa đơn sau refactor và bắt lỗi tại ngưỡng miễn phí giao hàng.
+    description: <p>Đối chiếu hóa đơn từ <code>PerLineQuote</code>, <code>GroupedQuote</code> và <code>BrokenShippingQuote</code> trên cùng dữ liệu. Kiểm thử hồi
+      quy dựa trên <code>Invoice</code> (subtotal, discount, shipping, total) chứ không buộc số lần lookup nội bộ bằng nhau. Bản sai có điều kiện miễn phí giao hàng
+      <code>&gt;</code> thay vì <code>&gt;=</code> tạo lỗi đúng ở ngưỡng 100000 VND.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
@@ -1689,8 +1710,6 @@ TestingExperimentController:
     - POST
     mappingPaths:
     - /oop/testing/pricing/regression
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true

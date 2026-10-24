@@ -1,0 +1,8 @@
+# Shared language-neutral reference catalog for this module.
+references:
+  - title: "Google OR-Tools CP-SAT Solver"
+    url: "https://developers.google.com/optimization/cp/cp_solver"
+    description: "Practical constraint satisfaction and integer optimization examples."
+  - title: "Timefold Solver Documentation"
+    url: "https://docs.timefold.ai/timefold-solver/latest/"
+    description: "Modeling planning and scheduling optimization with hard and soft constraints."

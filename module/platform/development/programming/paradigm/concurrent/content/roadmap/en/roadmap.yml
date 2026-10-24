@@ -1,0 +1,38 @@
+# Curriculum roadmap for Concurrent Programming.
+# Review scope before authoring Knowledge/Menu in subsequent workflow steps.
+roadmap:
+  - id: concurrent-foundations
+    title: "Concurrency, parallelism and asynchrony"
+    purpose: "Distinguish concurrency, parallelism, asynchrony and interleaving."
+    objectives:
+      - "Distinguish concurrency, parallelism, asynchrony and interleaving."
+  - id: concurrent-shared-state
+    title: "Shared state and synchronization"
+    purpose: "Identify races, critical sections and ownership boundaries."
+    objectives:
+      - "Identify races, critical sections and ownership boundaries."
+  - id: concurrent-memory
+    title: "Visibility, atomicity and ordering"
+    purpose: "Explain visibility, atomicity and ordering across independently progressing tasks."
+    objectives:
+      - "Explain visibility, atomicity and ordering across independently progressing tasks."
+  - id: concurrent-message-passing
+    title: "Message passing and actors"
+    purpose: "Model message exchange, actor isolation, mailboxes and conceptual supervision."
+    objectives:
+      - "Model message exchange, actor isolation, mailboxes and conceptual supervision."
+  - id: concurrent-csp
+    title: "CSP and channels"
+    purpose: "Contrast channels with shared memory, including rendezvous and buffering."
+    objectives:
+      - "Contrast channels with shared memory, including rendezvous and buffering."
+  - id: concurrent-progress
+    title: "Progress and liveness"
+    purpose: "Recognize deadlocks, livelocks, starvation and fairness constraints."
+    objectives:
+      - "Recognize deadlocks, livelocks, starvation and fairness constraints."
+  - id: concurrent-lifecycle
+    title: "Cancellation, failures and testing"
+    purpose: "Plan cancellation, task lifetime, deterministic testing and trade-offs."
+    objectives:
+      - "Plan cancellation, task lifetime, deterministic testing and trade-offs."

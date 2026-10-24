@@ -1,0 +1,38 @@
+# Curriculum roadmap for Event-Driven Programming.
+# Review scope before authoring Knowledge/Menu in subsequent workflow steps.
+roadmap:
+  - id: eventdriven-events
+    title: "Events, commands and state"
+    purpose: "Distinguish events, commands, notifications and state transitions."
+    objectives:
+      - "Distinguish events, commands, notifications and state transitions."
+  - id: eventdriven-dispatch
+    title: "Publishers, dispatchers and handlers"
+    purpose: "Understand handler registration, dispatch and callback ownership."
+    objectives:
+      - "Understand handler registration, dispatch and callback ownership."
+  - id: eventdriven-event-loop
+    title: "Event loops and queues"
+    purpose: "Model queues, scheduling and the danger of long-running handlers."
+    objectives:
+      - "Model queues, scheduling and the danger of long-running handlers."
+  - id: eventdriven-ordering
+    title: "Ordering and reentrancy"
+    purpose: "Analyze ordering, nested dispatch, reentrancy and state consistency."
+    objectives:
+      - "Analyze ordering, nested dispatch, reentrancy and state consistency."
+  - id: eventdriven-failures
+    title: "Failures and handler lifecycle"
+    purpose: "Handle errors, timeouts, unsubscription and cleanup."
+    objectives:
+      - "Handle errors, timeouts, unsubscription and cleanup."
+  - id: eventdriven-integration
+    title: "Boundaries with Reactive and EDA"
+    purpose: "Differentiate in-process event handling from reactive streams and service-level event-driven architecture."
+    objectives:
+      - "Differentiate in-process event handling from reactive streams and service-level event-driven architecture."
+  - id: eventdriven-tradeoffs
+    title: "Design, testing and trade-offs"
+    purpose: "Build and test a simple dispatcher, ordering and hidden complexity."
+    objectives:
+      - "Build and test a simple dispatcher, ordering and hidden complexity."

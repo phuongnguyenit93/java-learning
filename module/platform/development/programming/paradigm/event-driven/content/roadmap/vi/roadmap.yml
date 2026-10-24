@@ -1,0 +1,38 @@
+# Curriculum roadmap for Lập trình hướng sự kiện.
+# Review scope before authoring Knowledge/Menu in subsequent workflow steps.
+roadmap:
+  - id: eventdriven-events
+    title: "Sự kiện, lệnh và trạng thái"
+    purpose: "Phân biệt event, command, notification và state transition."
+    objectives:
+      - "Phân biệt event, command, notification và state transition."
+  - id: eventdriven-dispatch
+    title: "Publisher, dispatcher và handler"
+    purpose: "Hiểu đăng ký handler, dispatch, callback và vấn đề ownership."
+    objectives:
+      - "Hiểu đăng ký handler, dispatch, callback và vấn đề ownership."
+  - id: eventdriven-event-loop
+    title: "Event loop và hàng đợi"
+    purpose: "Mô hình hóa queue, scheduling và trách nhiệm không chặn quá lâu trong handler."
+    objectives:
+      - "Mô hình hóa queue, scheduling và trách nhiệm không chặn quá lâu trong handler."
+  - id: eventdriven-ordering
+    title: "Thứ tự, reentrancy và nhất quán"
+    purpose: "Phân tích ordering, nested dispatch, reentrancy và race ở stateful handlers."
+    objectives:
+      - "Phân tích ordering, nested dispatch, reentrancy và race ở stateful handlers."
+  - id: eventdriven-failures
+    title: "Lỗi, retry và vòng đời handler"
+    purpose: "Chọn cách xử lý lỗi, timeout, unsubscribe và cleanup an toàn."
+    objectives:
+      - "Chọn cách xử lý lỗi, timeout, unsubscribe và cleanup an toàn."
+  - id: eventdriven-integration
+    title: "Định ranh Event-Driven Programming"
+    purpose: "Phân biệt callback/event loop với Reactive và kiến trúc truyền sự kiện giữa service."
+    objectives:
+      - "Phân biệt callback/event loop với Reactive và kiến trúc truyền sự kiện giữa service."
+  - id: eventdriven-tradeoffs
+    title: "Thiết kế, kiểm thử và đánh đổi"
+    purpose: "Xây một dispatcher đơn giản, kiểm thử ordering và đánh giá độ phức tạp ẩn."
+    objectives:
+      - "Xây một dispatcher đơn giản, kiểm thử ordering và đánh giá độ phức tạp ẩn."

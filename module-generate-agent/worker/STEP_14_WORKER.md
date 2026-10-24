@@ -19,7 +19,6 @@
 | `QUIZ` | `questions[].question`, `questions[].answers[].answer`, `questions[].answers[].explanation` |
 | `INTERVIEW` | `questions[].question`, `questions[].answer` |
 | `ROADMAP` | `roadmap[].title`, `roadmap[].purpose`, từng phần tử `roadmap[].objectives[]`, `roadmap[].relatedModules[].label` và `note` |
-| `VIDEO` | `title`, `sections[].title`, `sections[].items[].title` (nếu có), `visual`, `script`, `purpose` |
 | `SWAGGER_CONTROLLER_DESCRIPTION` | `<Controller>.description` (chỉ text trong HTML, không thay tag/attrs) |
 | `SWAGGER_API_DESCRIPTIONS` | `<Controller>.<method>.summary`, `description` |
 | `SWAGGER_API_EXECUTION` | `<Controller>.<method>.execution` (HTML text, giữ cấu trúc tag) |
@@ -32,7 +31,7 @@
 - **QUIZ:** `id`, thứ tự `questions` và thứ tự đáp án `A/B/C/D`, `correctAnswerId`, `readmeRelated`, `apiRelated`, metadata đều khóa. `explanation` của **mọi** lựa chọn đúng/sai đều phải dịch, không chỉ giải thích đáp án đúng. Không đảo vị trí đáp án.
 - **INTERVIEW:** Không tự tạo question ID; giữ **chính xác số lượng và thứ tự** câu, cặp `question/answer` tương ứng, metadata và relation. Không thêm phỏng vấn mới hoặc rút ngắn câu trả lời.
 - **ROADMAP:** `id`, `dependsOn`, `relatedKnowledge`, `relatedModules[].routeId`, số lượng/thứ tự milestone là khóa. Không dịch route/category ID.
-- **VIDEO:** `video.url`, `type` (SCENE/TRANSITION), `time`, số lượng/order sections/items và HTML/Java/media snippets đều khóa. Chỉ dịch lời thoại/nội dung visual/purpose, không tự tăng thời lượng video hoặc đổi số scene; các đoạn code trong YAML multi-line giữ nguyên.
+- **VIDEO không thuộc STEP 14:** file Video phải được chuyển sang `STEP_OPTIONAL_VIDEO_TRANSLATE` sau `STEP_FINAL`; nếu nhận file Video trong bước này, worker báo `BLOCKER: WRONG STEP`.
 - **SWAGGER:** Controller name, exact method signature, `usage`, `methodName`, `params`, `path`, `mapping`, `httpMethods`, `mappingPaths`, `consumes/produces`, `enableVideoYoutube`, `videoYoutubeId/title`, case `id`, `input`, `status`, `response`, `readmeRelated`, metadata đều khóa. Không "dịch" literal JSON body, lỗi kỹ thuật, Java code hoặc response gốc. `api-params.yml`: param keys và `usage` khóa.
 - **YAML comments** (bao gồm khối `# <quiz-schema>`, `# <roadmap-schema>`) là schema contract cố định, **không sửa/xóa/reflow**. Chỉ sửa đúng các scalar strings được whitelist; giữ YAML parser compatibility và Unicode.
 

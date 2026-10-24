@@ -87,7 +87,7 @@ class ModuleContentExcelSyncService {
                 List<Map> groups = menu(sheet)
                 report.chapters = groups.size()
                 String[] selected = requested == 'ALL'
-                        ? ['INTRODUCTION','README','ROADMAP','INTERVIEW','QUIZ','VIDEO']
+                        ? ['INTRODUCTION','README','ROADMAP','INTERVIEW','QUIZ']
                         : [requested]
                 selected.each { String name ->
                     switch (name) {

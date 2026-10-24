@@ -2,7 +2,7 @@
 
 ## 0. Mục đích và ranh giới
 
-STEP 11 chạy **sau STEP 10**, khi Knowledge, API/Swagger, Quiz, Interview và Video của đúng module đã được tạo/QA. Đây là bước **liên kết nội dung đã tồn tại**, không phải bước tạo, viết lại hay cải thiện bài học.
+STEP 11 chạy **sau STEP 10**, khi Knowledge, API/Swagger, Quiz và Interview của đúng module đã được tạo/QA. Đây là bước **liên kết nội dung đã tồn tại**, không phải bước tạo, viết lại hay cải thiện bài học. **Video đã chuyển thành STEP_OPTIONAL_VIDEO và STEP_OPTIONAL_VIDEO_TRANSLATE, chỉ chạy sau STEP_FINAL khi được yêu cầu; không phải prerequisite của STEP 11.**
 
 - **Một worker = một Menu Cấp 1, một lượt xử lý cả Swagger + Quiz + Interview** thuộc chương. Không chia ba worker theo ba loại tài liệu.
 - **Worker chỉ đề xuất** metadata liên kết trong staging riêng chương; **không sửa Google Sheets, YAML chính, README hay Java**. Prime lập danh mục, xác định ownership, kiểm tra độc lập, và **duy nhất Prime** áp dụng thay đổi sau khi mọi chương QA PASS.

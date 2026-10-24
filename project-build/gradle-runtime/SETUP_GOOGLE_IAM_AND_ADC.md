@@ -409,7 +409,7 @@ Luồng xử lý chung:
    lỗi khi đã có dữ liệu → SKIPPED/BLOCKER và không xóa. DRY_RUN không ghi.
    Không tác động readme/en, BASE, LIST hay Google Sheets.
 
-### Import Video Script từ STEP 8 — 100% Groovy/Java (không AI)
+### Import Video Script từ STEP_OPTIONAL_VIDEO (sau STEP_FINAL) — 100% Groovy/Java (không AI)
 
 VideoSheetImportService chạy sau Roadmap và README trong cả hai task.
 Mỗi Menu Cấp 1 ở `A<R>` có Video Script YAML tại đúng `P<R>:S<R>`

@@ -1,0 +1,38 @@
+# Curriculum roadmap for Metaprogramming.
+# Review scope before authoring Knowledge/Menu in subsequent workflow steps.
+roadmap:
+  - id: metaprogramming-foundations
+    title: "Programs as data"
+    purpose: "Distinguish program representations from application data."
+    objectives:
+      - "Distinguish program representations from application data."
+  - id: metaprogramming-representation
+    title: "Syntax, ASTs and representations"
+    purpose: "Contrast source text, syntax trees, semantic models and bytecode."
+    objectives:
+      - "Contrast source text, syntax trees, semantic models and bytecode."
+  - id: metaprogramming-staging
+    title: "Staging and execution phases"
+    purpose: "Explain compile-time versus runtime generation, validation and execution."
+    objectives:
+      - "Explain compile-time versus runtime generation, validation and execution."
+  - id: metaprogramming-macros
+    title: "Macros and hygiene"
+    purpose: "Explain macro expansion, unintended variable capture and safe transformations."
+    objectives:
+      - "Explain macro expansion, unintended variable capture and safe transformations."
+  - id: metaprogramming-generation
+    title: "Source generation and metadata"
+    purpose: "Distinguish annotation processing and generated source from metadata inspection."
+    objectives:
+      - "Distinguish annotation processing and generated source from metadata inspection."
+  - id: metaprogramming-runtime
+    title: "Runtime reflection and code generation"
+    purpose: "Compare introspection, dynamic proxies and runtime code-generation techniques."
+    objectives:
+      - "Compare introspection, dynamic proxies and runtime code-generation techniques."
+  - id: metaprogramming-tradeoffs
+    title: "Security, testing and trade-offs"
+    purpose: "Assess generated-code provenance, debugging, performance and trust boundaries."
+    objectives:
+      - "Assess generated-code provenance, debugging, performance and trust boundaries."

@@ -1,0 +1,8 @@
+# Shared language-neutral reference catalog for this module.
+references:
+  - title: "Apache Beam Programming Guide"
+    url: "https://beam.apache.org/documentation/programming-guide/"
+    description: "Transforms, data dependencies and execution models in batch and streaming pipelines."
+  - title: "TensorFlow Graphs and Functions"
+    url: "https://www.tensorflow.org/guide/intro_to_graphs"
+    description: "Data-dependency graphs and graph-based execution in a concrete domain."

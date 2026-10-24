@@ -2,7 +2,7 @@
 
 ## 0. Mục tiêu và phạm vi
 
-STEP 12 là bước **lưu snapshot Excel offline của đúng một tab module tiếng Việt**, sau khi những nội dung và liên kết thuộc STEP 1–11 đã được xử lý/QA. **Không dịch sang EN trong bước này** (bản dịch/chuyển ngữ sẽ thuộc STEP tiếp theo).
+STEP 12 là bước **lưu snapshot Excel offline của đúng một tab module tiếng Việt**, sau khi những nội dung và liên kết bắt buộc thuộc STEP 1–11 đã được xử lý/QA (**STEP 9 là Interview, STEP 10 là Quiz; Video là optional sau STEP_FINAL**). **Không dịch sang EN trong bước này** (bản dịch/chuyển ngữ thuộc STEP 14). Các ô Video X:AA còn trống hoàn toàn hợp lệ; Video được tạo riêng sau STEP_FINAL khi người dùng yêu cầu.
 
 - **Prime tự thực hiện toàn bộ, KHÔNG giao worker**; không cần `STEP_12_WORKER.md`, không spawn hoặc đánh thức worker để export.
 - **Dùng task đã có**: `:<EXACT_MODULE_GRADLE_PATH>:exportModuleSheetToExcel`. Không viết exporter mới, không tự dùng Google Sheets download cả workbook, không dùng `generateModuleContentFromSheetByFiles`, các importer khác hay task import ngược Excel lên Sheet.

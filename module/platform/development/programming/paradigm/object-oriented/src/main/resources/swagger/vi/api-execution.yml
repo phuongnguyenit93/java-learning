@@ -1,222 +1,925 @@
 AbstractionExperimentsController:
   shippingQuote(ShippingQuoteRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: '<p><code>shippingQuote</code> chuyển <code>ShippingQuoteRequest</code> đến <code>ShippingQuoteService.quote</code>, gọi <code>ShippingPlan.named</code>
+      để chọn <code>Economy</code> hoặc <code>Express</code> sau khi chuẩn hóa mã chính sách. Mã không hỗ trợ gây <code>IllegalArgumentException</code>.</p>
+
+      <p>Phương thức <code>ShippingPlan.quote</code> là <code>final</code>: kiểm tra <code>distanceKm</code> và <code>weightGrams</code> dương, làm tròn cân nặng
+      lên kg bằng chia nguyên rồi gọi phương thức trừu tượng <code>extraFee</code>. ECONOMY cộng 1.000 VND mỗi km vào phí gốc 10.000; EXPRESS cộng 2.000 VND/km và
+      3.000 VND/kg vào phí gốc 20.000. <code>Math.addExact</code>/<code>multiplyExact</code> giữ an toàn phép tính.</p>
+
+      <p>Service chuyển bản ghi <code>Quote</code> sang <code>ShippingQuoteResponse</code> và đặt <code>simulatedOnly=true</code>. Handler trả HTTP 400 khi sai đầu
+      vào và HTTP 422 khi tràn số, theo các exception được khai báo trong chapter.</p>'
     usage: true
   seatScenario(SeatScenarioRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: '<p><code>seatScenario</code> chuyển dữ liệu tới <code>SeatContractService.simulate</code>. Service kiểm tra capacity 1–1.000.000, danh sách 1–40 action,
+      các action khác null, số ghế dương, operation chỉ RESERVE/RELEASE sau khi trim và uppercase. Toàn bộ request được kiểm tra trước khi thực thi bất kỳ action
+      nào.</p>
+
+      <p>Một <code>InMemorySeatInventory</code> mới được tạo qua hợp đồng <code>SeatInventory</code>. Mỗi thao tác ghi <code>availableBefore</code>/<code>availableAfter</code>.
+      <code>reserve</code> quá số ghế hoặc <code>release</code> nhiều hơn đã giữ chỗ ném <code>IllegalStateException</code>, được bắt thành <code>accepted=false</code>
+      và mã <code>INSUFFICIENT_SEATS</code> hoặc <code>RELEASE_EXCEEDS_RESERVED</code>; thao tác hợp lệ khác vẫn chạy.</p>
+
+      <p>Service kiểm tra bất biến <code>0 ≤ available ≤ capacity</code> và thao tác bị từ chối không sửa state. <code>SeatScenarioResponse</code> trả capacity, available,
+      reserved, steps bất biến và <code>simulatedOnly=true</code>. Dữ liệu sai gây HTTP 400.</p>'
     usage: true
   leaveEvaluation(LeaveEvaluationRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: '<p><code>leaveEvaluation</code> gọi <code>LeaveEvaluationService.evaluate</code>, chuẩn hóa policy và tạo <code>StandardLeavePolicy</code> hoặc <code>TrialLeavePolicy</code>
+      dưới kiểu <code>LeavePolicy</code>. Record <code>LeaveRequest</code> kiểm tra employeeId không rỗng, requestedDays dương và remainingDays không âm.</p>
+
+      <p>Cả hai chính sách đều trả <code>INSUFFICIENT_BALANCE</code> nếu xin vượt số ngày còn lại. STANDARD phê duyệt nếu đủ; TRIAL còn giới hạn 2 ngày mỗi request.
+      <code>LeaveDecision.approved()</code> chỉ true khi code là APPROVED; không trừ ngày phép trong service.</p>
+
+      <p><code>LeaveEvaluationResponse</code> nêu policy, employeeId đã chuẩn hóa, decisionCode, approved, reason và <code>simulatedOnly=true</code>. Một quyết định
+      từ chối hợp lệ là HTTP 200; policy/đầu vào sai sinh HTTP 400.</p>'
     usage: true
   catalogSearch(CatalogSearchRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: '<p><code>catalogSearch</code> gửi <code>CatalogSearchRequest</code> tới <code>BookCatalogService.search</code>. Service kiểm tra tối đa 50 sách, keyword
+      dài 1–100 ký tự không trắng, limit 1–50 và phần tử sách khác null. <code>InMemoryCatalog</code> implements giao diện private <code>Catalog</code>, nhập sách
+      vào <code>HashMap</code> theo ISBN và từ chối ISBN trùng, tên/ISBN rỗng.</p>
+
+      <p>Keyword được trim, lower-case, tìm theo title rồi sắp xếp ISBN tăng dần. API trả tối đa <code>limit</code> sách nhưng giữ tổng số kết quả trong <code>totalMatches</code>.
+      Tra cứu <code>lookupIsbn</code> tùy chọn thông qua <code>Optional</code>, cho <code>lookup=null</code> và <code>found=false</code> khi không có.</p>
+
+      <p><code>CatalogSearchResponse</code> trả danh sách copy bất biến, lookup, found, totalMatches và simulatedOnly. Người gọi không nhìn thấy cấu trúc <code>Map</code>
+      hay phụ thuộc lưu trữ; đầu vào sai được handler chuyển HTTP 400.</p>'
     usage: true
 ClassesExperimentController:
   inventory(InventoryRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: '<p><code>inventory</code> nhận <code>InventoryRequest</code> rồi gọi <code>simulateInventory</code>. Service kiểm tra giá, số lượng, danh sách 1–20
+      thao tác, loại thao tác hợp lệ; <code>InventoryItem</code> kiểm tra SKU, tên, giá và tồn kho trước khi tạo object.</p>
+
+      <p>Service chụp <code>InventorySnapshot</code> trước/sau mỗi <code>restock</code>, <code>sell</code>, <code>rename</code>. Lỗi của action được bắt thành <code>InventoryStep.accepted=false</code>
+      với <code>detail</code>; các action sau vẫn thực hiện. <code>totalValueVnd</code> dùng <code>Math.multiplyExact</code>.</p>
+
+      <p>Trả <code>InventoryResult</code> gồm initial, steps, current, maxQuantity (HTTP 200). Lỗi kiểm tra trước vòng lặp được handler chuyển thành HTTP 400 với
+      <code>ErrorResult.error</code>.</p>'
     usage: true
   workshops(WorkshopRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: '<p><code>workshops</code> gọi <code>simulateWorkshops</code>, kiểm tra title/capacity và số lượt đăng ký 0–50. Constructor <code>Workshop</code> yêu
+      cầu tên 1–80 ký tự, sức chứa 1–50.</p>
+
+      <p>Service tạo <code>first</code>, <code>second</code>; phép gán <code>alias=second</code> giữ cùng object, còn <code>independent=new Workshop(...)</code> tạo
+      object khác. <code>registerRepeatedly</code> thử đăng ký; <code>register()</code> trả false khi đã đủ chỗ.</p>
+
+      <p><code>WorkshopResult</code> trả ba snapshot, cờ identity, thống kê accepted/rejected và <code>MAX_CAPACITY</code>. Đầu vào không hợp lệ trả HTTP 400.</p>'
     usage: true
   bank(BankRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: '<p><code>bank</code> gọi <code>simulateBank</code> để kiểm tra hai tài khoản, 1–20 action và type/amount. Constructor <code>BankAccount</code> kiểm
+      tra accountNumber, holderName, số dư đầu; service yêu cầu hai số tài khoản khác nhau.</p>
+
+      <p>Với từng action, service chụp snapshot rồi gọi <code>deposit</code>, <code>withdraw</code> hoặc <code>transferTo</code>. Model yêu cầu số tiền dương, đủ
+      số dư và kiểm tra tràn ở đích bằng <code>Math.addExact</code> trước khi đổi hai số dư. Exception của action được bắt thành <code>BankStep.accepted=false</code>.</p>
+
+      <p>Kết quả <code>BankResult</code> gồm snapshot đầu/cuối, steps và <code>scope</code> xác nhận chỉ mô phỏng bộ nhớ một request/thread. Lỗi cấu trúc đầu vào
+      trả HTTP 400.</p>'
     usage: true
 ClassDesignExperimentsController:
   library(LibraryRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: '<h3>Quy tắc mượn/trả thuộc domain, không thuộc controller</h3>
+
+      <p><code>library()</code> giao request cho <code>LibraryScenarioService.run()</code>. Service yêu cầu 1–40 bản sách, 1–50 hành động; <code>LoanPolicy</code>
+      bảo đảm số khoản mượn còn hiệu lực tối đa 1–20 và kỳ hạn 1–365 ngày. <code>InMemoryLoanRegistry</code> đăng ký <code>BookCopy</code>, từ chối copyId trùng hoặc
+      không tồn tại, quản lý các khoản mượn theo copyId.</p>
+
+      <p><code>BORROW</code> kiểm tra borrowerId/copyId/ngày mượn, yêu cầu sách tồn tại, hỏi <code>LoanPolicy.ensureEligible()</code> và tạo <code>Loan</code> với
+      <code>dueOn=borrowedOn.plusDays(loanDays)</code>. <code>InMemoryLoanRegistry.save()</code> từ chối cho mượn cùng bản sách đang active. <code>RETURN</code> tìm
+      loan, gọi <code>Loan.returnOn()</code>; entity tự chống trả hai lần hoặc trả trước ngày mượn, tính phí <code>max(0, daysBetween(dueOn, returnDate)) × 100</code>
+      cents. <code>QUERY</code> chỉ lấy snapshot, không sửa loan.</p>
+
+      <p>Trong vòng hành động, chỉ <code>IllegalStateException</code> được bắt thành <code>LibraryStep.accepted=false</code> và outcome là mã lỗi, nên các từ chối
+      như <code>COPY_ALREADY_BORROWED</code> hoặc <code>BORROWER_LIMIT_REACHED</code> vẫn nằm trong response HTTP 200. <code>IllegalArgumentException</code>, <code>NullPointerException</code>
+      và <code>ArithmeticException</code> thoát ra sẽ được handler trả HTTP 400. Kết quả gồm snapshot <code>loans</code> ở từng bước và <code>finalLoans</code>; toàn
+      bộ repository được tạo mới cho mỗi request.</p>'
     usage: true
   checkout(CheckoutRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: '<h3>Giỏ hàng, đơn được lưu và outbox có trách nhiệm riêng</h3>
+
+      <p><code>checkout()</code> gọi <code>CheckoutScenarioService.checkout()</code>, kiểm tra orderId/receiptAddress không rỗng, discountPercent trong 0–100, 1–100
+      dòng hàng. Mỗi <code>CartLine</code> kiểm tra SKU, số lượng 1–10000 và đơn giá cents không âm; <code>ShoppingCart</code> sở hữu các dòng và tính subtotal bằng
+      <code>Math.addExact()</code> sau phép nhân có kiểm tra tràn.</p>
+
+      <p>Service tính discount theo số nguyên cents: <code>(subtotal / 100) × percent + (subtotal % 100) × percent / 100</code>, có kiểm tra tràn và làm tròn xuống,
+      rồi lấy <code>total=subtotal-discount</code>. <code>CheckedOutOrder</code> chụp danh sách bằng <code>List.copyOf()</code> để dữ liệu được lưu không lệ thuộc
+      thay đổi tương lai của cart.</p>
+
+      <p>Chỉ sau khi tính và validate thành công, service tạo <code>InMemoryOrderRepository</code> và <code>InMemoryReceiptOutbox</code>, lưu order bằng ID và enqueue
+      <code>ReceiptEvent</code> đến <code>receiptAddress</code>. Response phản ánh order đã lưu, các dòng snapshot và một event trong outbox; không có email được
+      gửi thật hoặc lưu bền vững. Dữ liệu không hợp lệ và tràn số học trả HTTP 400 theo handler.</p>'
     usage: true
   transfer(TransferRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: '<h3>Entity nắm quyền chuyển tiền; Money bảo vệ phép toán</h3>
+
+      <p><code>transfer()</code> gọi <code>TransferScenarioService.transfer()</code>, chuyển mã tiền tệ bằng <code>Currency.getInstance()</code>, tạo hai <code>BankAccount</code>
+      với <code>Money</code> từ số dư cents. <code>Money</code> không cho số âm và chỉ cho cộng/trừ với cùng currency; <code>BankAccount</code> xác thực ID không
+      rỗng, giữ danh tính dù số dư biến đổi.</p>
+
+      <p>Service đọc <code>balance()</code> của hai tài khoản để tạo trước-trạng-thái mà không sửa dữ liệu, rồi gửi command <code>sender.transferTo(recipient, amount)</code>.
+      Domain kiểm tra khác tài khoản, amount dương, tính <code>debited=balance.minus(amount)</code> và <code>credited=recipient.balance.plus(amount)</code> xong mới
+      gán cả hai số dư. Vì thế thiếu tiền ném <code>IllegalStateException(INSUFFICIENT_FUNDS)</code> thành HTTP 409; số âm, cùng tài khoản hoặc tràn số học thành
+      HTTP 400, không tạo response số dư sau.</p>
+
+      <p>Trường hợp thành công trả <code>TransferResult</code> gồm ID, currency, fromBeforeCents/toBeforeCents và fromAfterCents/toAfterCents, minh họa hành vi theo
+      ý định thay cho việc client truy cập sâu để tự cập nhật thuộc tính.</p>'
     usage: true
 CompositionExperimentController:
   notification(NotificationRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: '<h3>Lu?ng l?p gh?p th?ng b?o</h3><ol>
+
+      <li><code>CompositionExperimentController.notification</code> chuy?n DTO cho <code>CompositionExperimentService.notification</code>. Service x?c th?c format,
+      channel, ID ??n, recipient theo regex v? totalCents trong 0?100000000; vi ph?m g?y HTTP 400 <code>INVALID_INPUT</code>.</li>
+
+      <li>Service ch?n <code>FullFormatter</code> ho?c <code>CompactFormatter</code> theo request, t?o <code>RecordingTransport</code> gi? channel v? c? failTransport;
+      n?u <code>audited</code> th? b?c n? b?ng <code>AuditedTransport</code>. <code>Notifier</code> nh?n c? hai collaborator qua constructor.</li>
+
+      <li><code>notifyPaid</code> g?i formatter t?o n?i dung, ghi <code>format:</code> r?i delegate <code>send</code> ghi <code>transport:</code>. N?u send th?nh
+      c?ng v? audit ???c b?t, decorator m?i ghi <code>audit:accepted</code>; khi send n?m <code>IllegalStateException</code>, Notifier b?t v? tr? accepted=false v?i
+      l? do l?i, kh?ng ghi audit.</li>
+
+      <li>HTTP 200 tr? <code>NotificationResponse</code> g?m channel, content, accepted, failure, trace; m?i request d?ng m?t pipeline m? ph?ng ??c l?p.</li></ol>'
     usage: true
   policies(PolicyRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: '<h3>Lu?ng ho?n ??i v? injection theo l?i g?i</h3><ol>
+
+      <li>Service ki?m tra danh s?ch <code>steps</code> c? 1?20 m?c, t?o <code>Policy</code> ban ??u qua <code>SwitchablePricing.create</code>, r?i x?c th?c to?n
+      b? action, tham s? policy v? subtotal 0?100000000 tr??c khi thay ??i b?t c? collaborator n?o. Gi? tr? FIXED ???c gi?i h?n 0?100000000, PERCENT 0?100.</li>
+
+      <li><code>SwitchablePricing</code> l?u policy trong <code>AtomicReference</code>. <code>SWITCH</code> g?i <code>replace</code>; <code>QUOTE</code> ch?p m?t
+      tham chi?u policy r?i t?nh v?i n?; <code>QUOTE_WITH_POLICY</code> t?o policy t?m qua <code>quoteWith</code>, kh?ng s?a policy ?ang ho?t ??ng.</li>
+
+      <li><code>NoDiscount</code> gi? nguy?n subtotal, <code>FixedDiscount</code> tr? t?i ?a t?i 0, <code>PercentDiscount</code> tr? theo ph?n tr?m ph?p to?n integer.
+      <code>quoteWith</code> ki?m tra k?t qu? payable trong kho?ng 0 t?i subtotal; timeline ghi <code>activePolicy</code> v? <code>usedPolicy</code> ri?ng bi?t.</li>
+
+      <li>Tr? HTTP 200 <code>PolicyResponse</code> v?i policy ban ??u/cu?i v? c?c b??c; l?i ??u v?o ho?c s? h?c tr?n tr? HTTP 400. State l? c?c b? t?ng request, kh?ng
+      d?ng policy to?n c?c.</li></ol>'
     usage: true
   placeOrder(PlaceOrderRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: '<h3>Lu?ng ?y quy?n l?u ??n</h3><ol>
+
+      <li><code>CompositionExperimentService.placeOrder</code> y?u c?u 1?20 d?ng. M?i <code>OrderLineInput</code> tr? th?nh <code>OrderPlacement.Line</code> ki?m
+      tra SKU, quantity 1?1000, unitPriceCents 0?100000000 v? t?nh ti?n b?ng <code>Math.multiplyExact</code>.</li>
+
+      <li><code>OrderPlacement.Order.create</code> c?ng subtotal b?ng <code>Math.addExact</code>, ki?m tra ID v? l?u snapshot b?ng <code>List.copyOf</code>. Tr??c
+      khi l?u, service t?o <code>InMemoryOrderRepository</code> theo c? failStorage r?i truy?n v?o constructor <code>OrderService</code>.</li>
+
+      <li><code>OrderService.place</code> ?y quy?n <code>repository.save</code>. Repository t?ng <code>saveAttempts</code> tr??c khi quy?t ??nh l?u ho?c n?m <code>IllegalStateException(&quot;Simulated
+      repository failure before save&quot;)</code>. Service b?t l?i n?y ?? tr? accepted=false v? storedOrders r?ng; validation l?i tr??c try tr? HTTP 400.</li>
+
+      <li>HTTP 200 tr? <code>PlaceOrderResponse</code> g?m s? l?n th?, ??n ?? l?u v? chu?i <code>IN_MEMORY_ONLY; no durable persistence or transaction implied</code>;
+      kh?ng kh?ng ??nh c? transaction hay l?u b?n.</li></ol>'
     usage: true
   resources(ResourceRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: '<h3>Lu?ng s? h?u v? ??ng handle</h3><ol>
+
+      <li>Service ki?m tra ownership kh?c null, content kh?ng r?ng v? d?i t?i ?a 100, r?i t?o <code>TrackedHandle</code> ghi <code>handle:open</code>. Service t?o
+      <code>Exporter</code> b?n trong <code>try-with-resources</code>, truy?n <code>ownsHandle=true</code> khi OWNED.</li>
+
+      <li><code>Exporter.export</code> ?y quy?n <code>TrackedHandle.write</code>, ghi <code>handle:write:</code>, c? th? n?m <code>IllegalStateException(&quot;Simulated
+      write failure&quot;)</code>. Khi r?i scope, <code>Exporter.close</code> lu?n ghi <code>exporter:close</code>, ??ng handle n?u OWNED.</li>
+
+      <li>Service b?t l?i ghi ???c m? ph?ng v? l?y c? <code>resourceClosedAfterExporter</code>. N?u BORROWED, handle v?n m? l?c ?? n?n caller (service) ??ng sau;
+      c? <code>resourceClosedAfterCaller</code> lu?n ph?n ?nh tr?ng th?i sau b??c n?y.</li>
+
+      <li>Tr? HTTP 200 <code>ResourceResponse</code> v?i trace/c?/l?i. ??y l? handle gi?, th? hi?n h?p ??ng v?ng ??i thay v? ph? thu?c th?i ?i?m GC.</li></ol>'
     usage: true
 DesignPatternExperimentController:
   pricing(PricingRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: '<h3>Strategy quyết định giảm giá, Decorator quyết định thứ tự</h3>
+
+      <p><code>pricing()</code> chuyển <code>PricingRequest</code> cho <code>DesignPatternExperimentService.price()</code>, yêu cầu subtotal, deliveryFee và order
+      không null. <code>PricingPipeline.calculate()</code> kiểm tra subtotal trong 0–1000000000000 VND, phí giao trong 0–1000000; Strategy thuộc <code>NONE</code>,
+      <code>MEMBER_5</code> hoặc <code>VOUCHER_30000</code>. Input ngoài phạm vi trả HTTP 400.</p>
+
+      <p><code>DiscountStrategy</code> tách thuật toán: NONE giảm 0, MEMBER_5 giảm 5% với <code>HALF_UP</code> tới đơn vị VND bằng <code>(subtotal × 5 + 50) / 100</code>,
+      VOUCHER_30000 giảm <code>min(30000, giá trước giảm)</code>. <code>PriceStage</code> và hai decorator tạo pipeline. Với <code>DISCOUNT_THEN_FEE</code>, lớp DeliveryDecorator
+      nằm ngoài DiscountDecorator; với <code>FEE_THEN_DISCOUNT</code>, lớp DiscountDecorator nằm ngoài DeliveryDecorator.</p>
+
+      <p>Service luôn tính hai <code>PricingOption</code> theo thứ tự giảm-trước và phí-trước, rồi lấy <code>selected</code> theo order của request. Trace ghi <code>BASE</code>,
+      <code>DISCOUNT_...</code> và <code>DELIVERY</code> đúng thứ tự chạy. <code>discountVnd</code> được suy từ <code>subtotal + deliveryFee - payable</code>; các
+      phép tính kiểm tra tràn, lỗi số học chưa bắt thành HTTP 422. Phạm vi <code>REQUEST_LOCAL_IN_MEMORY_NO_EXTERNAL_SIDE_EFFECTS</code> là mô phỏng.</p>'
     usage: true
   tasks(TasksRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: '<h3>Command ghi lịch sử, Observer phát tin sau commit</h3>
+
+      <p><code>tasks()</code> xác thực 1–20 <code>TaskAction</code> có type thuộc <code>ADD</code>, <code>COMPLETE</code>, <code>UNDO</code>, <code>REDO</code>, <code>UNSUBSCRIBE_NOTIFY</code>.
+      ADD cần id và title, COMPLETE cần id; type không hợp lệ trả HTTP 400 trước khi tạo board. Service tạo <code>TaskBoard</code> rỗng và <code>TaskCommandManager</code>,
+      đăng ký hai listener <code>AUDIT</code> và <code>NOTIFY</code> vào <code>Events</code>.</p>
+
+      <p><code>AddTask</code> và <code>CompleteTask</code> đóng gói lời gọi vào receiver <code>TaskBoard</code>. <code>execute()</code> chỉ push undo và xóa redo
+      sau khi action thành công; <code>undo()</code>/<code>redo()</code> chuyển Command giữa hai stack sau khi receiver thay đổi hợp lệ. <code>Events.publish()</code>
+      phát tuần tự cho listener còn đăng ký và ghi chuỗi <code>AUDIT:EXECUTE_...</code>/<code>NOTIFY:UNDO_...</code>. <code>UNSUBSCRIBE_NOTIFY</code> xóa chỉ NOTIFY,
+      không tạo Command hoặc sự kiện; observer AUDIT vẫn nhận các sự kiện sau đó.</p>
+
+      <p><code>TaskBoard</code> giới hạn 20 task, ID 2–24 ký tự, title 1–100 ký tự; không cho ID trùng, hoàn thành lại cùng trạng thái hay tìm ID vắng mặt. Trong
+      vòng lặp, lỗi <code>IllegalArgumentException</code>/<code>IllegalStateException</code> được ghi <code>TaskStep.accepted=false</code> với before và after giữ
+      nguyên, HTTP tổng thể vẫn 200. Chỉ các lệnh đã thực thi/hoàn tác/làm lại thành công mới có sự kiện và cập nhật lịch sử; tất cả thuộc một request.</p>'
     usage: true
   report(ReportRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: '<h3>Factory Method chọn sản phẩm, Template Method giữ thứ tự</h3>
+
+      <p><code>report()</code> yêu cầu <code>format</code> và 1–20 sales có <code>id</code>, <code>amountVnd</code>. Service chuyển từng DTO thành <code>ReportPatterns.Sale</code>,
+      đòi ID gồm 2–24 chữ hoa, chữ số hoặc gạch nối; amount 0–1000000000000 VND. Format chỉ cho <code>TEXT</code> hoặc <code>CSV</code>; dữ liệu sai trả HTTP 400
+      trước khi render.</p>
+
+      <p><code>TextCreator</code> và <code>CsvCreator</code> cài đặt <code>ReportCreator.createTemplate()</code> (Factory Method) để tạo <code>TextTemplate</code>
+      hoặc <code>CsvTemplate</code>. Cả hai dùng chung <code>ReportTemplate.render()</code> là phương thức <code>final</code>, kiểm tra danh sách rồi duyệt theo thứ
+      tự <code>HEADER</code>, một sự kiện <code>ROW:id</code> mỗi sale, cuối cùng <code>SUMMARY</code>. Chỉ các hook <code>header()</code>, <code>row()</code>, <code>summary()</code>
+      thay đổi định dạng chuỗi, nên tổng và trace giữ nguyên giữa TEXT/CSV.</p>
+
+      <p>Response <code>ReportResult</code> chứa <code>format</code>, chuỗi <code>content</code> bao gồm newline đúng thứ tự, <code>totalVnd</code>, <code>rowCount</code>
+      và <code>executionTrace</code>. Cộng tiền bằng <code>Math.addExact()</code>; nếu tràn, handler chuyển <code>ArithmeticException</code> thành HTTP 422, không
+      trả báo cáo thành công.</p>'
     usage: true
 DesignPitfallExperimentController:
   seats(SeatsRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: '<p><code>seats(SeatsRequest)</code> gọi <code>DesignPitfallExperimentService.seats</code>, kiểm tra capacity và 1–20 actions; mỗi action bắt buộc
+      có type RESERVE/CANCEL và seats không null. Constructor <code>SeatInventory</code> nhận capacity 1–10000 và khởi tạo reserved=0.</p>
+
+      <p>Vòng lặp chụp <code>SeatState</code> trước/sau, gọi <code>reserve</code> hoặc <code>cancel</code>. Hai method synchronized kiểm tra seats dương, chỗ còn
+      lại hoặc số ghế đã giữ trước khi đổi state. Service bắt IllegalArgumentException/IllegalStateException phát sinh ở action thành <code>SeatStep.accepted=false</code>
+      với detail, vẫn chạy bước tiếp theo.</p>
+
+      <p><code>SeatsResult</code> có initial, steps, current, invariantPreserved và scope <code>REQUEST_LOCAL_SINGLE_JVM_IN_MEMORY_NO_DURABLE_RESERVATIONS</code>.
+      synchronized chỉ bảo vệ object trong một JVM, không phải booking phân tán. Sai cấu trúc/capacity trả HTTP 400, action bị từ chối vẫn HTTP 200.</p>'
     usage: true
   mutableKey(MutableKeyRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: '<p><code>mutableKey(MutableKeyRequest)</code> gọi <code>MutableKeyDemonstration.observe</code> qua service. Tên phải có 1–24 ký tự ASCII in hoa, số
+      hoặc dấu gạch nối, hai tên phải khác nhau và khác <code>hashCode()</code>.</p>
+
+      <p>Model đưa <code>UnsafeKey</code> vào HashMap theo mã băm của displayName, rồi rename field đang tham gia hashCode/equals. containsKey trước rename là true,
+      sau rename false vì bucket cũ không đổi dù entry còn đó. Nhánh an toàn dùng record <code>StableId</code> bất biến làm key, đổi <code>Profile.displayName</code>
+      độc lập.</p>
+
+      <p><code>MutableKeyResult</code> trả tên, mã hash, flags lookup, số entry và profile đã đổi tên theo phép toán HashMap thực. Tên không hợp lệ, trùng nhau hoặc
+      trùng mã hash được handler chuyển HTTP 400 với <code>ErrorResponse.error</code>.</p>'
     usage: true
   checkout(CheckoutRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: '<p><code>checkout(CheckoutRequest)</code> gọi service kiểm tra unitPriceVnd, quantity, availableUnits, member, rồi dựng <code>CheckoutComparison.Input</code>.
+      Record xác minh SKU 2–24 ký tự viết hoa/số/gạch nối, giá 1–1000000000, số lượng 1–1000, tồn có sẵn 0–1000 và deliveryMode STANDARD hoặc EXPRESS.</p>
+
+      <p><code>CheckoutComparison.evaluate</code> gọi <code>LegacyCheckout.quote</code> trước, rồi <code>CheckoutWorkflow.quote</code> với ba collaborator cụ thể
+      StockGuard, PriceRules, DeliveryRules. Cả hai từ chối mua vượt tồn, tính subtotal bằng phép nhân nguyên, member giảm 5% với làm tròn theo <code>(subtotal*5+50)/100</code>,
+      giao STANDARD 20000, EXPRESS 35000. Nhánh refactor ghi 5 lời gọi vào collaborationTrace.</p>
+
+      <p>Service xác nhận sameResult và trả legacy/refactored, cùng trace và scope <code>PURE_IN_MEMORY_QUOTE_NO_STOCK_RESERVATION_PAYMENT_OR_PERSISTENCE</code>.
+      Sai input là HTTP 400; không đủ hàng hoặc phép toán tràn là HTTP 422. Không có thay đổi số lượng tồn thực.</p>'
     usage: true
 EncapsulationExperimentController:
   cart(CartRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: '<h3>Giỏ hàng có ranh giới kiểm soát</h3>
+
+      <p><code>cart()</code> chuyển <code>CartRequest</code> đến <code>EncapsulationExperimentService.simulateCart()</code>. Service bắt buộc <code>initialLines</code>
+      và 1–20 <code>actions</code>, kiểm tra kiểu hành động <code>put/changeQuantity/remove</code> và các trường cần thiết trước khi chạy. Các <code>CartLine</code>
+      kiểm tra SKU 1–24 ký tự ASCII chữ/số/dấu gạch, đơn giá từ 0 đến 1000000000000 VND và số lượng từ 1 đến 1000000; giỏ không có SKU trùng và chứa tối đa 25 dòng.</p>
+
+      <p><code>EncapsulatedCart</code> lưu <code>LinkedHashMap</code> private, tạo bản sao qua <code>copy()</code>, tính tổng bằng <code>Math.addExact</code>/<code>multiplyExact</code>,
+      chỉ <code>commit()</code> sau khi mọi kiểm tra thành công. Với <code>changeQuantity</code>, số lượng 0 xóa dòng; <code>remove</code> trên SKU chưa biết bị từ
+      chối. <code>cartState()</code> trả danh sách <code>CartLineState</code> và tổng tại mỗi thời điểm.</p>
+
+      <p>Trong vòng lặp, <code>IllegalArgumentException</code>, <code>IllegalStateException</code> và <code>ArithmeticException</code> của hành động được ghi vào
+      <code>CartStep</code> với <code>accepted=false</code>, <code>detail</code> là thông báo lỗi và trạng thái sau giữ nguyên. Request sai từ đầu trả HTTP 400. Kết
+      quả có <code>scope=REQUEST_LOCAL_IN_MEMORY_NO_PERSISTENCE</code>.</p>'
     usage: true
   stock(StockRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: '<h3>Bất biến tồn kho được giữ xuyên suốt</h3>
+
+      <p><code>stock()</code> gọi <code>simulateStock()</code>. Sau khi bắt buộc <code>initialOnHand</code>, <code>initialReserved</code>, 1–20 hành động hợp lệ có
+      units, service tạo <code>StockLedger</code>. Constructor yêu cầu SKU hợp lệ và <code>0 &lt;= reserved &lt;= onHand &lt;= 1000000</code>.</p>
+
+      <p><code>restock</code> tăng hàng trong giới hạn; <code>reserve</code> chỉ dùng số khả dụng <code>onHand - reserved</code>; <code>release</code> không được
+      vượt phần đã giữ; <code>ship</code> giảm đồng thời <code>onHand</code> và <code>reserved</code>. Mỗi thao tác kiểm tra units dương và toàn bộ điều kiện trước
+      khi gán field.</p>
+
+      <p><code>StockStep</code> ghi before/after, accepted và detail. Exception phát sinh trong từng hành động được bắt, đánh dấu từ chối trong kết quả HTTP 200 và
+      giữ nguyên invariant; dữ liệu khởi tạo sai do constructor ném <code>IllegalArgumentException</code> sẽ trả HTTP 400.</p>'
     usage: true
   snapshot(EventRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: '<h3>Bản chụp phòng vệ hai chiều</h3>
+
+      <p><code>snapshot()</code> gọi <code>simulateEvent()</code>, xác thực hai epoch millis, 1–19 khách mời ban đầu và hai tên thay đổi; <code>AttendeeDraft</code>
+      chỉ chấp nhận tên 1–80 ký tự không trắng. Service tạo <code>Date</code> mutable, danh sách draft và <code>EventSnapshot</code>.</p>
+
+      <p>Trong constructor, <code>EventSnapshot</code> sao chép thời điểm bằng <code>new Date(startsAt.getTime())</code>, lấy chuỗi tên từ draft mutable và lưu <code>List.copyOf</code>.
+      Sau đó service sửa <code>Date</code> bên ngoài, đổi tên khách đầu tiên và thêm người mới. <code>protectedSnapshot</code> giữ ngày giờ và tên cũ.</p>
+
+      <p>Service còn thử sửa <code>Date</code> trả về từ <code>startsAt()</code> và thêm phần tử vào danh sách từ <code>attendeeNames()</code>. Date getter trả bản
+      sao nên snapshot không đổi; danh sách từ chối thêm bằng <code>UnsupportedOperationException</code>. <code>EventResult</code> cho thấy before, draft đã đổi,
+      snapshot ban đầu, snapshot sau thử sửa qua getter và cờ <code>returnedListIsUnmodifiable</code>.</p>'
     usage: true
   order(OrderRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: '<h3>Đối tượng tự bảo vệ vòng đời đơn hàng</h3>
+
+      <p><code>order()</code> chuyển request tới <code>simulateOrder()</code>. Service bắt buộc items, 1–20 actions thuộc <code>markPaid/ship/cancel</code>, dựng
+      các <code>OrderItem</code> với SKU hợp lệ và số lượng 1–1000000. <code>LifecycleOrder</code> xác thực <code>orderId</code> 1–40 ký tự ASCII chữ/số/gạch nối,
+      1–25 items, sao chép danh sách bằng <code>List.copyOf</code> và bắt đầu ở <code>CREATED</code>.</p>
+
+      <p><code>markPaid()</code> chỉ từ <code>CREATED</code>, <code>ship()</code> chỉ từ <code>PAID</code>, <code>cancel()</code> chỉ từ <code>CREATED</code>. Mỗi
+      phương thức synchronized gọi <code>requireStatus()</code> trước khi đổi trạng thái, nên lời gọi bất hợp lệ ném <code>IllegalStateException</code> nhưng không
+      đổi order.</p>
+
+      <p>Service bắt lỗi từng hành động để trả <code>OrderStep</code> với before/after, accepted và thông điệp. Những nhánh từ chối nằm trong response HTTP 200; request/constructor
+      không hợp lệ trả HTTP 400. <code>scope=SIMULATED_ORDER_NO_REAL_PAYMENT_OR_SHIPPING</code> báo rõ chỉ mô phỏng, không có tiền hay giao hàng thật.</p>'
     usage: true
 InheritanceExperimentsController:
   calculatePay(PayrollRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: '<h3>Lu?ng t?nh l??ng ?a h?nh</h3><ol>
+
+      <li><code>InheritanceExperimentsController.calculatePay</code> g?i <code>PayrollInheritanceService.calculate</code>. Service ki?m tra <code>kind</code>, chu?n
+      h?a trim/uppercase b?ng <code>Locale.ROOT</code> r?i ch?n nh?nh <code>SALARIED</code> ho?c <code>HOURLY</code>.</li>
+
+      <li>Nh?nh salaried y?u c?u hourlyRateVnd/workedHours b?ng 0, t?o <code>Employee.Salaried</code>; hourly y?u c?u monthlySalaryVnd b?ng 0, t?o <code>Employee.Hourly</code>.
+      Constructor cha <code>Employee</code> ki?m tra ID/t?n kh?ng tr?ng v? trim hai tr??ng.</li>
+
+      <li>Service gi? tham chi?u khai b?o <code>Employee</code>. Java dispatch <code>calculation()</code> v? <code>monthlyPayVnd()</code> t?i l?p runtime; salaried
+      tr? m?c c? ??nh, hourly d?ng <code>Math.multiplyExact(hourlyRateVnd, workedHours)</code>, gi?i h?n workedHours 0?744.</li>
+
+      <li>Th?nh c?ng tr? <code>PayrollResponse</code> HTTP 200 v?i ki?u khai b?o, l?p runtime v? <code>simulatedOnly=true</code>. <code>IllegalArgumentException</code>
+      th?nh HTTP 400 <code>INVALID_INPUT</code>; nh?n qu? gi?i h?n long th?nh HTTP 422 <code>ARITHMETIC_OVERFLOW</code>.</li></ol>'
     usage: true
   compareDelivery(DeliveryRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: '<h3>Lu?ng so s?nh k? th?a v? composition</h3><ol>
+
+      <li><code>compareDelivery</code> chuy?n <code>DeliveryRequest</code> cho <code>DeliveryComparisonService.compare</code>, y?u c?u <code>distanceKm &gt; 0</code>
+      v? holiday ch? c? khi priority=true; l?i tr? HTTP 400.</li>
+
+      <li>Service ch?n <code>CityDelivery</code>, <code>PriorityCityDelivery</code> ho?c <code>HolidayPriorityDelivery</code>. <code>DeliveryPlan.quote()</code> l?
+      final: ki?m tra distance, g?i <code>distanceFee()</code> theo runtime, ki?m tra surcharge kh?ng ?m r?i th?m base 10000.</li>
+
+      <li>Nh?ng override g?i <code>super.distanceFee</code> ?? c?ng 1000?km, th?m 5000 khi priority v? th?m 7000 khi holiday. Trace ghi theo ??ng th? t? g?i cha tr??c
+      con; class cu?i holiday l? final.</li>
+
+      <li>Service c?n t?nh ??c l?p b?ng composition qua c?c t?y ch?n v? <code>Math.addExact</code>, ghi compositionTrace. HTTP 200 tr? hai ph?p t?nh, ki?u hierarchy,
+      traces, c? equal v? simulatedOnly; <code>ArithmeticException</code> th?nh HTTP 422.</li></ol>'
     usage: true
   constructorTrace(ConstructorRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: '<h3>Lu?ng constructor cha v? con</h3><ol>
+
+      <li><code>constructorTrace</code> g?i <code>ConstructorTraceService.trace</code>, ki?m tra request kh?c null; <code>ConstructorProbe.run</code> y?u c?u <code>initialLabel</code>
+      kh?ng tr?ng v? d?i t?i ?a 80 k? t?.</li>
+
+      <li><code>UnsafeChild</code> tr??c h?t g?i constructor <code>UnsafeParent</code>. Constructor cha th?m log r?i g?i <code>value()</code> c? th? override; dynamic
+      dispatch t?i <code>UnsafeChild.value()</code> khi field <code>label</code> c?n m?c ??nh null.</li>
+
+      <li>Sau constructor cha, field initializer con v? constructor con thi?t l?p nh?n ng??i d?ng; unsafe trace ch?a gi? tr? quan s?t s?m l? chu?i <code>null</code>.
+      <code>SafeParent</code> tr?nh g?i override; <code>SafeChild</code> g?n nh?n r?i m?i <code>inspectAfterInitialization()</code>.</li>
+
+      <li>Service tr? HTTP 200 <code>ConstructorResponse</code> ch?a unsafeSequence/safeSequence v? gi? tr? cu?i; nh?n kh?ng h?p l? tr? HTTP 400. C?c danh s?ch trace
+      ???c sao ch?p b?t bi?n.</li></ol>'
     usage: true
   resolveCapabilities(CapabilitiesRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: '<h3>Lu?ng ph?n gi?i default method</h3><ol>
+
+      <li><code>resolveCapabilities</code> nh?n <code>CapabilitiesRequest</code> v? g?i <code>CapabilityService.resolve</code>; model <code>CapabilityResolution.resolve</code>
+      ki?m tra itemId v? tagsCsv kh?ng tr?ng, gi?i h?n ?? d?i l?n l??t 80 v? 200.</li>
+
+      <li><code>MixedCapability</code> th?c hi?n hai interface <code>Printable</code> v? <code>Searchable</code> ??u c? <code>label()</code> default. Override bu?c
+      gi?i quy?t b?ng <code>Printable.super.label()</code> c?ng <code>Searchable.super.label()</code> r?i th?m itemId ?? trim.</li>
+
+      <li><code>ConcreteSuperclassWins</code> k? th?a <code>ConcreteBase.label()</code> v? th?c hi?n Printable; ph??ng th?c class ???c ?u ti?n n?n tr? <code>CLASS_WINS</code>.
+      <code>Taggable.parseTags</code> t?ch CSV, trim, lowercase v? t? ch?i nh?n r?ng.</li>
+
+      <li>HTTP 200 tr? <code>CapabilitiesResponse</code> v?i gi?i quy?t xung ??t, class-wins v? normalizedTags; input sai tr? HTTP 400. Nh?n ???c sao ch?p b?ng <code>List.copyOf</code>.</li></ol>'
     usage: true
 InterfaceExperimentsController:
   shipping(ShippingRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: '<h3>Chọn chính sách qua hợp đồng chung</h3>
+
+      <p><code>shipping()</code> gọi <code>InterfaceExperimentsService.shipping()</code> và kiểm tra đủ <code>distanceKm</code>, <code>orderValueVnd</code>, <code>selectedPolicy</code>.
+      <code>ShippingFeePolicy.requireValid()</code> giới hạn quãng đường 0–10000 km và giá trị đơn 0–1000000000000 VND; đầu vào sai ném <code>IllegalArgumentException</code>
+      và trả HTTP 400.</p>
+
+      <p>Service tạo <code>ShippingQuoteService</code> với lần lượt <code>EconomyShippingPolicy</code> và <code>ExpressShippingPolicy</code>. Cả hai mở rộng <code>DistanceShippingPolicy</code>,
+      chia sẻ phép tính <code>baseVnd + perKmVnd × distanceKm</code> bằng <code>Math.addExact</code>/<code>multiplyExact</code>. Economy áp dụng giá 10000 + 2500/km
+      nhưng miễn phí khi giá trị đơn từ 500000 VND; Express tính 20000 + 5000/km, không miễn phí.</p>
+
+      <p><code>allPolicies</code> luôn sắp ECONOMY trước EXPRESS. Service tìm <code>selectedPolicy</code> chính xác trong hai mã, trả <code>selected</code> và cờ
+      <code>freeEconomyShipping</code> dựa vào giá ECONOMY. Mã khác trả HTTP 400; phép toán tràn không được bắt trong service sẽ được handler chuyển thành 422.</p>'
     usage: true
   documents(DocumentRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: '<h3>Một đối tượng với ba vai trò độc lập</h3>
+
+      <p><code>documents()</code> kiểm tra 0–15 tài liệu đầu vào, 1–20 action, ID tài liệu duy nhất và hành động thuộc <code>save/read/publish</code> có trường <code>id</code>.
+      <code>DocumentEntry</code> yêu cầu ID chữ hoa/số/gạch nối dài 2–24, title 1–100 ký tự, content 1–2000 ký tự.</p>
+
+      <p>Một instance <code>DocumentWorkspace</code> được gán cho ba biến kiểu <code>DocumentReader</code>, <code>DocumentWriter</code>, <code>DocumentPublisher</code>.
+      Các vai trò cùng tham chiếu một object nên <code>sharedInstance=true</code>. Lớp hiện thực <code>roleName()</code> bằng <code>DocumentReader.super.roleName()</code>
+      cộng <code>DocumentPublisher.super.roleName()</code> để giải quyết xung đột default, trả <code>read+publish</code>.</p>
+
+      <p>Qua mỗi action, service chụp danh sách <code>DocumentState</code> có thứ tự ID. <code>save</code> tạo/cập nhật bản nháp nhưng cấm sửa tài liệu đã xuất bản
+      và giới hạn 15 tài liệu; <code>publish</code> chỉ cho tài liệu có tồn tại và chưa xuất bản; <code>read</code> trả <code>Optional</code>, có thể null khi không
+      tìm thấy. Lỗi xảy ra trong từng action được ghi thành <code>DocumentStep.accepted=false</code> và không phá trạng thái; response HTTP 200. Sai dữ liệu cấp request
+      trả HTTP 400.</p>'
     usage: true
   checkout(CheckoutRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: '<h3>Đổi gateway/kho mà vẫn giữ hợp đồng thanh toán</h3>
+
+      <p><code>checkout()</code> kiểm tra gateway <code>APPROVE</code>/<code>DECLINE</code>, repository <code>HASH_MAP</code>/<code>TREE_MAP</code>, 1–20 action và
+      từng <code>PaymentCommand</code> có <code>requestId</code>/<code>orderId</code> dài 3–36 ký tự chữ/số/gạch nối, số tiền nguyên VND trong 1–1000000000000. Lỗi
+      đầu vào được ánh xạ thành HTTP 400 trước khi chạy vòng lặp.</p>
+
+      <p>Service tiêm một implementation của <code>PaymentGateway</code> và <code>PaymentRepository</code> vào <code>CheckoutService</code>. <code>chargeOrReplay()</code>
+      tìm requestId trước khi gọi cổng. Nếu đã có receipt và cả orderId/số tiền khớp, trả <code>replayed=true</code> mà không tăng <code>gatewayCalls</code>. Nếu
+      cùng ID nhưng chi tiết khác, ném <code>IllegalStateException</code> và step bị từ chối. Request mới tăng số gọi cổng, tạo receipt APPROVED hoặc DECLINED và
+      lưu; gateway vi phạm hợp đồng receipt sẽ bị từ chối trước lưu.</p>
+
+      <p>Mỗi <code>CheckoutStep</code> ghi before/after, receipt (null nếu thất bại), accepted và replayed; hai repository đều trả <code>storedPayments</code> sắp
+      theo requestId. Lỗi trạng thái trong từng action trở thành step từ chối ở HTTP 200. <code>scope</code> nêu rõ không charge thật, không độ bền dữ liệu và không
+      đảm bảo idempotency đa luồng.</p>'
     usage: true
 LanguageMechanicsExperimentsController:
   generics(GenericBatchRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: '<h3>Luồng xử lý Generics</h3><ol>
+
+      <li><code>GenericBatchService.process</code> yêu cầu request và bốn list khác null, tổng lượng số tối đa 100, entries/lookup tối đa 50. Sai điều kiện dẫn đến
+      HTTP 400.</li>
+
+      <li>Service tạo <code>List&lt;Number&gt;</code> rồi gọi <code>NumericTransfers.copy</code> hai lần từ các nguồn Integer và Double. PECS cho phép đọc từ <code>?
+      extends T</code>, ghi vào <code>? super T</code>. Copy chụp snapshot bằng <code>List.copyOf</code> trước khi thêm phần tử.</li>
+
+      <li><code>NumericTransfers.sum</code> chuyển mỗi Number thành <code>BigDecimal</code>, kiểm tra Double hữu hạn và định dạng qua <code>toPlainString</code>.
+      Với list nguyên có phần tử, <code>greatest</code> dùng <code>Comparable</code>; list rỗng trả largestInteger=null.</li>
+
+      <li><code>TypedCache&lt;String,Integer&gt;</code> chỉ chấp nhận khóa theo regex và quantity không âm, từ chối khóa trùng. <code>lookup</code> qua Optional tạo
+      found và missing. HTTP 200 trả <code>GenericBatchResult</code>; lỗi hợp đồng trả HTTP 400 <code>INVALID_INPUT</code>.</li></ol>'
     usage: true
   stock(StockRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: '<h3>Luồng xử lý tồn kho</h3><ol>
+
+      <li><code>StockExperimentService.execute</code> yêu cầu 1–60 action. Với mỗi bước service tạo <code>ProductKey</code> từ tenantId/sku rồi truy vấn <code>StockRegistry</code>;
+      record có equals/hashCode theo hai thành phần.</li>
+
+      <li><code>REGISTER</code> kiểm tra quantity không âm, tạo StockItem hoặc từ chối <code>ALREADY_REGISTERED</code>. <code>READ</code> trả <code>FOUND</code> hoặc
+      <code>PRODUCT_NOT_FOUND</code> khi chưa có khóa.</li>
+
+      <li><code>RESTOCK</code> và <code>RESERVE</code> yêu cầu quantity dương. <code>restock</code> dùng <code>Math.addExact</code>; <code>reserve</code> trả <code>ReserveDeclined</code>
+      nếu thiếu, không làm thay số lượng, hoặc <code>ReserveAccepted</code> sau khi trừ tồn.</li>
+
+      <li>Service tạo các <code>StockStep</code> cùng diagnostic từ <code>StockItem.toString()</code>, chỉ chứa tenantId, sku, available. HTTP 200 trả steps và uniqueProducts.
+      Action sai, quantity sai hoặc tràn số là HTTP 400 với <code>error=INVALID_INPUT</code>.</li></ol>'
     usage: true
   shipping(ShippingRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: '<h3>Luồng báo giá đa hình</h3><ol>
+
+      <li><code>ShippingScenarioService.quote</code> kiểm tra toàn bộ 1–50 quote trước khi thực thi: serviceCode có nội dung dài tối đa 40, trọng lượng trong 1–100000
+      gram. Input không hợp lệ trở thành HTTP 400.</li>
+
+      <li>Map <code>Map&lt;String,ShippingPolicy&gt;</code> giữ hai dịch vụ standard và express. <code>ShippingPolicy.quoteVnd</code> dispatch tới <code>StandardShipping</code>
+      với phí 20000 hoặc <code>ExpressShipping</code> có công thức <code>(weightGrams+999L)/1000L</code> và phí 35000+8000 mỗi kilogram tính cước.</li>
+
+      <li>Code không có trong map trả <code>ShippingLine</code> với accepted=false, feeVnd=null, code=<code>SERVICE_NOT_SUPPORTED</code>. Dòng hợp lệ trả <code>QUOTED</code>;
+      cộng tổng bằng <code>Math.addExact</code>.</li>
+
+      <li>HTTP 200 trả danh sách quotes đúng thứ tự và <code>totalAcceptedFeesVnd</code> chỉ gồm khoản phí đã được chấp nhận. Không thực hiện giao vận thật.</li></ol>'
     usage: true
 LifecycleExperimentController:
   create(CreationRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: <h3>T?o ??i t??ng</h3><ol><li>Controller chuy?n <code>CreationRequest</code> cho <code>LifecycleExperimentService.create</code>; null request, capacity
+      ho?c style g?y <code>IllegalArgumentException</code>. Danh s?ch students v?ng m?t ???c thay b?ng <code>List.of()</code>.</li><li>Nh?nh <code>CONSTRUCTOR</code>
+      g?i constructor hai ho?c ba tham s? t?y danh s?ch r?ng; <code>STATIC_FACTORY</code> g?i <code>CourseEnrollment.of</code>; <code>BUILDER</code> l?n l??t <code>addStudent</code>
+      r?i <code>build</code>.</li><li>Constructor trung t?m ki?m tra m?, capacity, s? l??ng h?c vi?n v? ID duy nh?t; gi? <code>List.copyOf</code> v? t?nh <code>availableSeats()</code>.
+      Th?nh c?ng tr? <code>CreationResult</code> HTTP 200; vi ph?m b?t bi?n tr? HTTP 400 <code>INVALID_INPUT</code>, JSON sai ki?u tr? <code>INVALID_JSON</code>.</li></ol>
     usage: true
   references(ReferenceRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: <h3>Duy?t ?? th? logic</h3><ol><li>Service y?u c?u steps kh?ng null, t?i ?a 30; t?o <code>ReferenceGraph</code> t? 1?15 node v? t?i ?a 15 root. Graph
+      ki?m tra ID, c?nh li?n k?t v? root, r?i ghi snapshot ban ??u.</li><li>V?i m?i <code>RootStep</code>, <code>RETAIN</code> th?m root ch?a gi? ho?c <code>RELEASE</code>
+      b? root ?? gi?. <code>snapshot</code> duy?t b?ng stack v? visited set n?n x? l? ???c chu tr?nh.</li><li>HTTP 200 tr? <code>ReferenceResult</code> ch?a snapshot
+      theo th? t? node ??u v?o v? l?i nh?c ??y kh?ng ph?i ?o GC. Node ho?c thao t?c root sai th?nh <code>IllegalArgumentException</code> v? HTTP 400 <code>INVALID_INPUT</code>.</li></ol>
     usage: true
   resources(ResourceRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: <h3>??ng t?i nguy?n</h3><ol><li>Service m? <code>TrackedResource</code> outer r?i inner trong <code>try-with-resources</code>, ghi <code>open:outer</code>,
+      <code>open:inner</code>, <code>body:start</code>. T?y <code>bodyFails</code>, body n?m l?i ho?c ghi <code>body:success</code>.</li><li>Khi r?i scope, Java g?i
+      <code>close()</code> inner r?i outer, m?i l?n ??t closed=true v? ghi trace tr??c khi c? th? n?m <code>close failed</code>. N?u body ?? l?i, c?c l?i close ???c
+      suppressed; n?u body th?nh c?ng, l?i close ??u ti?n l? primary.</li><li>Service b?t <code>IllegalStateException</code> v? tr? HTTP 200 v?i <code>ResourceResult</code>
+      g?m trace, primaryFailure, suppressedFailures, closed v? completedWithoutFailure. Null request g?y HTTP 400.</li></ol>
     usage: true
   publication(PublicationRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: <h3>C?ng b? ??i t??ng</h3><ol><li>Controller g?i service v? <code>PublicationScenario.compare</code>, n?i ki?m tra label theo <code>[A-Za-z0-9_-]{1,40}</code>;
+      input sai tr? HTTP 400.</li><li><code>UnsafeListener</code> g?i <code>registry.register(this)</code> tr??c ph?p g?n field; registry k?ch ho?t <code>onEvent()</code>
+      ngay, v? v?y l?n ??u ??c null. Callback th? hai sau constructor th?y label.</li><li><code>SafeListener.createAndRegister</code> ho?n t?t g?n label tr??c khi
+      ??ng k?, c? hai callback ??u th?y label. HTTP 200 tr? <code>PublicationResult</code> v? m?i registry c? m?t subscription.</li></ol>
     usage: true
 ModelingExperimentController:
   library(LibraryRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: '<h3>Lu?ng object graph v? CRC th? vi?n</h3><ol>
+
+      <li><code>ModelingExperimentController.library</code> g?i <code>ModelingExperimentService.library</code>. Service y?u c?u 1?20 titles, 1?20 members, 1?30 copies
+      v? 1?25 actions; t?o c?c record/class ??ng ??nh danh, ki?m tra titleCode ???c copy tham chi?u v? ki?m tra action type, ID, ng?y ISO 2000?2099 kh?ng gi?m theo
+      th?i gian tr??c khi th?c thi.</li>
+
+      <li><code>LibraryModel</code> d?ng map identity cho Member, BookCopy v? l?ch s? Loan; <code>BookTitle</code> ri?ng bi?t v?i m?i b?n s?ch. Service ch?p <code>initial</code>
+      r?i t?ng b??c l?y <code>before</code>, g?i <code>borrow</code>/<code>returnLoan</code> v? thu th?p danh s?ch <code>calls</code> nh? m?t sequence diagram ki?m
+      ch?ng.</li>
+
+      <li>Khi m??n, domain ki?m tra th?nh vi?n t?n t?i/active (BR-01), gi?i h?n ba l??t ?ang ho?t ??ng (BR-02), b?n sao ch?a b? m??n (BR-03), r?i t?o Loan c? dueOn
+      b?ng borrowedOn+14 ng?y (BR-04) tr??c khi c?p nh?t copy, member v? history. Khi tr?, ki?m tra loan, ng?y v? tr?ng th?i ch?a tr? (BR-05), ??ng Loan, gi?i ph?ng
+      copy, gi?m activeLoans nh?ng v?n gi? l?ch s? (BR-06). C?c h?m LibraryModel n?y ???c synchronized tr?n object trong m?t request.</li>
+
+      <li><code>ModelRuleViolation</code> ???c b?t b?n trong t?ng action: <code>LibraryStep</code> c? accepted=false, rule/detail v? <code>before</code> b?ng <code>after</code>;
+      kh?ng tr? HTTP l?i cho vi ph?m d? ki?n. Sau m?i b??c ch?y <code>assertInvariants</code> ??i chi?u to?n ?? th?, tr? HTTP 200 <code>LibraryResult</code> v?i <code>invariantsSatisfied=true</code>
+      v? scope request-local. Input sai g?y <code>IllegalArgumentException</code> v? HTTP 400 body c? tr??ng <code>error</code>; b?t bi?n n?i b? sai g?y HTTP 422.</li></ol>'
     usage: true
   orders(OrderRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: '<h3>Lu?ng m?y tr?ng th?i ??n h?ng</h3><ol>
+
+      <li>Controller chuy?n <code>OrderRequest</code> cho <code>ModelingExperimentService.order</code>; service y?u c?u totalVnd kh?ng null, 1?20 actions v? m?i event
+      thu?c enum <code>ModeledOrder.Event</code>. Event sai t?n b? t? ch?i tr??c khi b?t ??u ch?y, v?i HTTP 400 <code>error</code>.</li>
+
+      <li><code>ModeledOrder</code> ki?m tra orderId theo regex v? totalVnd trong 1?1000000000000 r?i b?t ??u ? <code>DRAFT</code>. M?i action ch?p snapshot tr??c,
+      g?i <code>apply</code> v? ch?p snapshot sau. H?m apply d?ng switch theo state: DRAFT cho SUBMIT/CANCEL; WAITING_PAYMENT cho CONFIRM_PAYMENT/CANCEL; PAID cho
+      START_PACKING; PACKING cho SHIP; SHIPPED cho CONFIRM_DELIVERY; DELIVERED/CANCELLED l? terminal.</li>
+
+      <li>Kh?ng c? transition h?p l? sinh <code>INVALID_TRANSITION</code>; x?c nh?n s? ti?n kh?c total sinh <code>PAYMENT_GUARD</code>; SHIP thi?u trackingCode d?ng
+      <code>[A-Z0-9-]{3,32}</code> sinh <code>TRACKING_GUARD</code>. T?t c? guard ???c ki?m tra tr??c khi g?n trackingCode v? state n?n kh?ng c? ??t bi?n t?ng ph?n.</li>
+
+      <li>Service b?t <code>ModelRuleViolation</code> ? c?p t?ng b??c v? ghi accepted=false, rule, detail, before/after gi? nguy?n trong <code>OrderStep</code>; c?c
+      b??c sau v?n ch?y. HTTP 200 tr? <code>OrderResult</code> v?i initial, steps, current v? scope <code>REQUEST_LOCAL_ONLY_SIMULATED_ORDER_NO_PAYMENT_OR_EXTERNAL_SHIPPING</code>.
+      ??y l? m? ph?ng, kh?ng c? thanh to?n ho?c giao h?ng ngo?i h? th?ng.</li></ol>'
     usage: true
 ObjectExperimentsController:
   references(ObjectExperimentDto.ReferenceRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: '<h3>Tham chiếu cùng đối tượng</h3><p><code>references()</code> chuyển <code>ReferenceRequest</code> tới <code>ObjectSemanticsService.references()</code>.
+      Service xác thực <code>name</code> 1–80 ký tự không trắng, <code>initialValue</code> từ -100000 đến 100000 và <code>increment</code> từ 1 đến 1000.</p><ol><li>Tạo
+      <code>original</code> và <code>separatelyCreated</code> từ cùng tên/giá trị; <code>alias = original</code> chỉ sao chép tham chiếu.</li><li><code>addThroughParameter(alias,
+      increment)</code> sửa giá trị của object chung. <code>replaceParameterLocally(alias)</code> chỉ gán tham số cục bộ sang object mới, không đổi alias tại nơi
+      gọi.</li><li>Trả <code>ReferenceResult</code>: cả original/alias nhìn thấy giá trị tăng, còn instance độc lập giữ nguyên.</li></ol><p>Giá trị sai gây <code>IllegalArgumentException</code>
+      và HTTP 400.</p>'
     usage: true
   equality(ObjectExperimentDto.EqualityRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: <h3>Danh tính và bằng nhau theo giá trị</h3><p><code>equality()</code> xác thực hai mã (1–80 ký tự, <code>trim()</code>) rồi tạo hai record <code>ProductCode</code>
+      riêng, một alias của record đầu và <code>HashSet</code> chứa hai record.</p><p><code>sameInstance</code> luôn false do tạo hai instance; <code>valueEquals</code>
+      và <code>hashCodesEqual</code> dựa trên record, còn <code>hashSetSize</code> dựa trên tính duy nhất theo <code>equals()</code>/<code>hashCode()</code>. Hai
+      <code>LegacyIdentityCode</code> tạo riêng không override <code>equals()</code>, nên <code>defaultObjectEquals</code> false dù cùng mã; <code>aliasIsSameInstance</code>
+      true. Mã sai trả HTTP 400.</p>
     usage: true
   copies(ObjectExperimentDto.CopyRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: <h3>Chia sẻ phần tử khi sao chép</h3><p><code>copies()</code> kiểm tra ba nhãn bắt buộc rồi tạo <code>original</code> gồm một <code>MutableItem</code>.
+      <code>new ArrayList(original)</code> tạo danh sách khác nhưng giữ tham chiếu phần tử; <code>map(item -&gt; new MutableItem(...))</code> tạo phần tử riêng. <code>List.copyOf(original)</code>
+      có cấu trúc không sửa được nhưng vẫn chia sẻ object bên trong; record <code>ItemValue</code> chụp lại chuỗi gốc.</p><p>Sau khi đổi <code>original[0].label</code>
+      và thêm item, cả shallow và snapshot chỉ đọc nhìn thấy nhãn mới, nhưng không có phần tử vừa thêm. Deep copy và record giữ nhãn cũ. Service trả danh sách chuỗi
+      từ <code>labels()</code>.</p>
     usage: true
   absence(ObjectExperimentDto.AbsenceRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: <h3>Tìm kiếm và Optional</h3><p><code>absence()</code> yêu cầu <code>lookupId</code> 1–80 ký tự, còn <code>optionalAddress</code> cho phép null với
+      tối đa 80 ký tự. Tạo <code>Customer</code> mẫu <code>C01</code>/<code>Lan</code>; địa chỉ null, rỗng hoặc toàn khoảng trắng được xem là vắng mặt.</p><p><code>Optional.ofNullable(repository.get(lookupId))</code>
+      biểu diễn khách hàng tìm được; <code>flatMap(Customer::shippingAddress)</code> lấy Optional địa chỉ khi có khách hàng. Response trả <code>found</code>, <code>optionalAddressPresent</code>,
+      <code>customerName</code> (null nếu không tìm thấy) và danh sách địa chỉ 0 hoặc 1 phần tử. Dữ liệu mẫu được tạo lại mỗi request.</p>
     usage: true
   checkout(ObjectExperimentDto.CheckoutRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: <h3>Luồng checkout đồng bộ</h3><p><code>ObjectCheckoutService.simulate()</code> xác thực SKU, <code>startingStock</code> 0–1000, <code>quantity</code>
+      1–100, <code>paymentApproved</code> bắt buộc và <code>unitPrice</code> 0.01–1000000 với tối đa hai chữ số thập phân; lỗi trả HTTP 400.</p><ol><li>Tạo <code>Cart</code>,
+      <code>Inventory</code>, <code>PaymentGateway</code>, <code>Notifier</code> và <code>Trace</code> mới; ghi bước Client và <code>Cart.total()</code>.</li><li><code>Inventory.reserve()</code>
+      không đủ kho thì trả <code>STOCK_REJECTED</code>, không gọi payment.</li><li>Nếu payment từ chối, ghi sự kiện, gọi <code>Inventory.release()</code> để hoàn
+      số lượng đã giữ, rồi trả <code>PAYMENT_DECLINED</code>.</li><li>Nếu duyệt, tạo order ID <code>DEMO-ORDER</code>, giao dịch <code>DEMO-TXN</code>, đánh dấu thông
+      báo mô phỏng rồi trả <code>COMPLETED</code>.</li></ol><p>Cả ba outcome là HTTP 200 với <code>CheckoutResult</code>, <code>simulatedOnly</code> luôn true; sự
+      kiện có thứ tự và lượng tồn sau từng bước. Không có tác động bên ngoài request.</p>
     usage: true
 BasicsExperimentController:
   simulateAccount(AccountSimulationRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: '<h3>Luồng mô phỏng tài khoản</h3>
+
+      <ol>
+
+      <li><code>BasicsExperimentController.simulateAccount</code> nhận <code>AccountSimulationRequest</code> từ JSON và gọi <code>BasicsExperimentService.simulateAccount</code>.</li>
+
+      <li>Service kiểm tra request khác null, danh sách <code>actions</code> gồm 1–20 phần tử, rồi khởi tạo <code>BankAccount</code>. Constructor kiểm tra mã tài
+      khoản theo <code>[A-Za-z0-9_-]{1,40}</code> và số dư mở đầu không âm; lỗi giai đoạn này thành HTTP 400 bởi <code>BasicsExperimentExceptionHandler</code>.</li>
+
+      <li>Mỗi phần tử phải có <code>action</code>. Service chụp số dư trước thao tác và gọi <code>deposit</code> hoặc <code>withdraw</code>. <code>deposit</code>
+      yêu cầu số dương và dùng <code>Math.addExact</code>; <code>withdraw</code> yêu cầu số dương, trả <code>false</code> nếu thiếu tiền.</li>
+
+      <li>Lỗi <code>IllegalArgumentException</code> và <code>ArithmeticException</code> phát sinh trong thao tác được bắt riêng theo bước. Service ghi <code>accepted=false</code>,
+      lý do (ví dụ <code>Balance would overflow</code>) và giữ nguyên số dư; sau đó tiếp tục bước kế tiếp. Rút thiếu số dư dùng lý do <code>Insufficient balance</code>.</li>
+
+      <li>Service trả <code>AccountSimulationResponse</code> gồm số dư cuối và danh sách lịch sử bất biến; Controller trả HTTP 200. Không có ghi dữ liệu lâu dài hoặc
+      chia sẻ <code>BankAccount</code> giữa các lần gọi.</li>
+
+      </ol>'
     usage: true
   simulateOrder(OrderSimulationRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: '<h3>Luồng mô phỏng đơn hàng</h3>
+
+      <ol>
+
+      <li><code>BasicsExperimentController.simulateOrder</code> chuyển <code>OrderSimulationRequest</code> cho <code>BasicsExperimentService.simulateOrder</code>.
+      Service xác thực danh sách <code>steps</code> gồm 1–20 bước, sau đó tạo <code>OrderAggregate</code> ở trạng thái <code>DRAFT</code> với tổng bằng 0.</li>
+
+      <li>Ở mỗi bước service ghi trạng thái/tổng trước khi chạy và phân nhánh theo <code>OrderAction</code>: <code>ADD_LINE</code> kiểm tra lượng và đơn giá không
+      null rồi gọi <code>addLine</code>; <code>CONFIRM</code> gọi <code>confirm</code>; <code>CANCEL</code> gọi <code>cancel</code>.</li>
+
+      <li><code>OrderAggregate</code> chỉ cho thao tác khi còn <code>DRAFT</code>; dòng hàng kiểm tra SKU, số lượng 1–10000 và giá không âm. Các phép <code>Math.multiplyExact</code>/<code>Math.addExact</code>
+      tính trước khi thêm dòng để tránh sửa trạng thái nếu tràn số. <code>confirm</code> từ chối đơn rỗng; <code>confirm</code>/<code>cancel</code> là thay đổi trạng
+      thái một chiều.</li>
+
+      <li>Service bắt <code>IllegalStateException</code>, <code>IllegalArgumentException</code> và <code>ArithmeticException</code> phát sinh bên trong mỗi bước,
+      trả <code>accepted=false</code> và <code>reason</code> trong <code>timeline</code>, rồi xử lý bước kế tiếp. Mã đơn sai từ constructor hoặc danh sách bước sai
+      bị trả HTTP 400 trước vòng lặp.</li>
+
+      <li><code>OrderSimulationResponse</code> trả <code>finalStatus</code>, <code>totalCents</code> và diễn biến từng bước qua HTTP 200. Đơn được tạo cho một request
+      duy nhất, không lưu vào kho dữ liệu.</li>
+
+      </ol>'
     usage: true
   compareShipping(ShippingQuoteRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: '<h3>Luồng so sánh chính sách vận chuyển</h3>
+
+      <ol>
+
+      <li><code>BasicsExperimentController.compareShipping</code> nhận <code>ShippingQuoteRequest</code> và chuyển cho <code>BasicsExperimentService.compareShipping</code>.</li>
+
+      <li>Service kiểm tra request khác null, <code>subtotalCents</code> không âm và <code>distanceKm</code> trong 0–100; lỗi thành <code>IllegalArgumentException</code>,
+      được <code>BasicsExperimentExceptionHandler</code> trả HTTP 400 với <code>INVALID_INPUT</code>.</li>
+
+      <li>Service duyệt danh sách cố định theo thứ tự <code>ShippingPolicy.Pickup</code>, <code>ShippingPolicy.Courier</code> thông qua interface <code>ShippingPolicy</code>.
+      <code>Pickup.feeCents</code> trả 0; <code>Courier.feeCents</code> tính <code>1500 + 400 * distanceKm</code> bằng số học kiểm tra tràn.</li>
+
+      <li>Với mỗi policy, <code>Math.addExact</code> cộng phí vào tiền hàng và tạo <code>ShippingQuote</code>. Nếu xảy ra tràn số, service chuyển thành <code>IllegalArgumentException</code>
+      với nội dung <code>Payable amount would overflow</code> và HTTP 400; không trả báo giá từng phần.</li>
+
+      <li>Thành công trả HTTP 200 cùng <code>ShippingQuoteResponse</code> gồm hai quote theo thứ tự <code>PICKUP</code> rồi <code>COURIER</code>, làm rõ đa hình khi
+      cùng phương thức dẫn tới hai kết quả.</li>
+
+      </ol>'
     usage: true
 PolymorphismExperimentsController:
   dispatch(DispatchRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: '<h3>Overload trước, override sau</h3>
+
+      <p><code>dispatch()</code> chuyển <code>DispatchRequest</code> đến <code>DispatchMechanics.observe()</code>. Bắt buộc <code>weight</code> và <code>bonus</code>,
+      receiver thuộc BASE/PREMIUM, event thuộc EVENT/PRIORITY, bonus trong 0–100000; constructor <code>Event</code> yêu cầu weight 1–10000 và <code>PriorityEvent</code>
+      yêu cầu priority 1–100. Input sai được handler trả HTTP 400.</p>
+
+      <p><code>Handler handler</code> nhận instance <code>Handler</code> hoặc <code>PremiumHandler</code>, còn <code>Event event</code> nhận Event thường hoặc PriorityEvent.
+      Biểu thức <code>handler.handle(event)</code> chọn overload <code>handle(Event)</code> theo kiểu tĩnh của biến event. Nếu dùng <code>instanceof PriorityEvent
+      specialized</code>, lời gọi <code>handler.handle(specialized)</code> chọn overload <code>handle(PriorityEvent)</code>. Sau khi chọn overload, receiver Premium
+      thực thi override và cộng <code>bonus</code> vào kết quả từ <code>super.handle()</code>.</p>
+
+      <p>Base <code>handle(Event)</code> tính weight × 10 và <code>handle(PriorityEvent)</code> tính weight × 100 + priority. <code>identify()</code> dispatch theo
+      receiver runtime. Trái lại, <code>handler.label</code> luôn cho BASE-FIELD; truy cập bằng biến Premium cho PREMIUM-FIELD. <code>Handler.category()</code> là
+      BASE-STATIC, còn <code>PremiumHandler.category()</code> là PREMIUM-STATIC; đó là hiding, không phải override. Mọi trường hợp <code>sameReceiverObject=true</code>.</p>'
     usage: true
   payments(PaymentsRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: '<h3>Đa hình qua hợp đồng thanh toán</h3>
+
+      <p><code>payments()</code> yêu cầu <code>initialWalletBalanceVnd</code>, <code>cardLimitVnd</code> và 1–20 action. Constructor WALLET xác thực số dư 0–1000000000000,
+      CARD xác thực hạn mức 1–1000000000000. Trước khi thực thi, service duyệt toàn bộ action, chọn tên CARD/WALLET/BANK, tạo <code>PaymentCommand</code> với orderId
+      3–36 chữ hoa/số/gạch nối và amount 1–1000000000000. Đầu vào sai gây HTTP 400.</p>
+
+      <p>Map giữ các đối tượng bằng kiểu <code>PaymentMethod</code>. <code>PaymentCheckoutService.checkout()</code> chỉ gọi <code>method.pay(command)</code> và bảo
+      đảm outcome không null. CARD trả PAID nếu số tiền không vượt hạn mức, ngược lại DECLINED; WALLET trừ balance rồi trả PAID nếu đủ tiền, nếu thiếu trả DECLINED
+      và giữ số dư; BANK trả PENDING do chuyển khoản mô phỏng chưa được xác nhận.</p>
+
+      <p><code>PaymentStep</code> lưu index, method, orderId, amountVnd, status, detail và walletBalanceBeforeVnd/AfterVnd. CARD và BANK không đổi số dư WALLET. <code>PaymentsResult</code>
+      tổng số kết quả từng trạng thái và ghi rõ <code>REQUEST_LOCAL_SIMULATION_NO_REAL_PAYMENT_NO_DURABLE_STATE</code>.</p>'
     usage: true
 PracticeExperimentController:
   bank(BankRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: '<h3>Luồng sổ tài khoản ngân hàng mô phỏng</h3><ol>
+
+      <li><code>PracticeExperimentController.bank</code> gọi <code>PracticeExperimentService.bank</code>. Service yêu cầu accounts không null, 1–20 actions có type
+      hợp lệ và các trường id/amount/đích TRANSFER đầy đủ. <code>BankLedger</code> tạo 1–10 tài khoản, kiểm tra mã theo <code>[A-Z0-9-]{2,24}</code>, owner hợp lệ,
+      openingBalanceVnd không âm và ID không trùng.</li>
+
+      <li>Lấy <code>initial</code> bằng <code>ledger.snapshot()</code> theo thứ tự chèn vào <code>LinkedHashMap</code>. Mỗi action chụp <code>before</code>, rồi gọi
+      <code>deposit</code>, <code>withdraw</code> hoặc <code>transfer</code>. Các method đồng bộ, bắt buộc amount dương; deposit dùng <code>Math.addExact</code>,
+      withdraw kiểm tra đủ số dư.</li>
+
+      <li><code>transfer</code> kiểm tra tài khoản nguồn khác đích, sự tồn tại, đủ số dư và số đích cộng không tràn trước khi sửa cả hai account. <code>IllegalArgumentException</code>,
+      <code>IllegalStateException</code> hoặc <code>ArithmeticException</code> phát sinh trong một thao tác được service bắt để ghi <code>accepted=false</code>, <code>detail</code>
+      và <code>before=after</code>; các bước sau vẫn chạy.</li>
+
+      <li>Trả HTTP 200 <code>BankResult</code> với initial, steps, current và scope in-memory; input thiếu/loại action sai ở preflight gây HTTP 400. Không có transfer
+      hoặc lưu trữ ngân hàng thật.</li></ol>'
     usage: true
   orders(OrderRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: '<h3>Luồng đơn hàng và bất biến state</h3><ol>
+
+      <li><code>PracticeExperimentService.order</code> kiểm tra request và 1–20 actions, nhận đúng các type được hỗ trợ. Các action SET_LINE cần sku/price/quantity,
+      CHANGE_QUANTITY cần sku/quantity và REMOVE_LINE cần sku. Input không đủ bị từ chối HTTP 400 trước khi tạo <code>PracticeOrder</code>.</li>
+
+      <li><code>PracticeOrder</code> bắt đầu DRAFT; <code>setLine</code> tạo <code>Line</code> với SKU strip/uppercase, giá 1–1000000 cents và quantity 1–100. <code>changeQuantity</code>
+      chấp nhận 0 để xóa; <code>removeLine</code> trả boolean. Các thay đổi được dựng ở map tạm, gọi <code>commit</code> kiểm tra tổng tối đa 10000000 rồi mới thay
+      map gốc.</li>
+
+      <li><code>summary()</code> tính subtotal qua các Line, giảm 5% khi subtotal từ 200000, shipping=0 khi subtotal 0 hoặc từ 100000; dưới mức đó phí 15000. <code>place()</code>
+      yêu cầu DRAFT không rỗng rồi đổi PLACED; <code>cancel()</code> đổi CANCELLED và không được gọi lại. Mọi chỉnh sửa line ngoài DRAFT bị từ chối.</li>
+
+      <li>Service chụp <code>OrderState</code> gồm id/status/lines/summary trước và sau từng action. Lỗi nghiệp vụ/cập nhật trong vòng lặp được bắt thành <code>OrderStep.accepted=false</code>,
+      before=after và HTTP 200; <code>OrderResult</code> có scope không thanh toán/lưu bền. Input/preflight sai gây HTTP 400.</li></ol>'
     usage: true
   library(LibraryRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: '<h3>Luồng mượn trả và thay đổi chính sách</h3><ol>
+
+      <li><code>PracticeExperimentService.library</code> kiểm tra book/member/copy và 1–25 action hợp lệ. Service chuyển kind thành <code>PracticeLibrary.Kind</code>,
+      active thành boolean, parse <code>onDate</code> dạng ISO trong năm 2000–2099 và yêu cầu chuỗi ngày không giảm, trước khi dựng aggregate. Đầu sách/bản sách/mã
+      cần liên kết và không trùng.</li>
+
+      <li><code>PracticeLibrary</code> tạo các map identity, lịch sử loans và <code>LegacyPolicy</code>. Mỗi action có snapshot trước/sau; <code>borrow</code> kiểm
+      tra thành viên/copy, active (BR-01), bản đã được mượn (BR-03), phiếu quá hạn (BR-04), giới hạn phiếu đang mở (BR-02). Phiếu được tạo với ID <code>LOAN-n</code>
+      và dueOn tính một lần từ policy tại ngày mượn.</li>
+
+      <li><code>returnLoan</code> yêu cầu loan tồn tại, chưa trả (BR-06), ngày trả không trước ngày mượn (BR-07), rồi thay bằng record đã đóng mà giữ dueOn. <code>revise</code>
+      chỉ đổi LEGACY sang REVISED một lần (POLICY_ALREADY_REVISED); chính sách mới nâng giới hạn 3 lên 5 và hạn REFERENCE 14 xuống 7 ngày, không thay phiếu cũ.</li>
+
+      <li><code>RuleRejected</code> được service bắt trong từng bước, ghi <code>rule</code>/<code>detail</code> và snapshot không đổi; sau mỗi bước gọi <code>checkInvariants</code>.
+      Trả HTTP 200 <code>LibraryResult</code> với <code>invariantsPreserved=true</code>. Input, ngày hoặc kind sai trả HTTP 400, bất biến nội bộ lỗi không bắt tại
+      service được advice chuyển HTTP 422. Không dùng database hay khóa phân tán.</li></ol>'
     usage: true
 RefactoringExperimentsController:
   checkout(CheckoutRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: '<h3>Luồng đối chiếu tính tiền cũ và mới</h3><ol>
+
+      <li><code>RefactoringExperimentsController.checkout</code> gọi <code>CheckoutRefactoringService.compare</code>. Service kiểm tra request khác null, 1–100 dòng,
+      từng <code>LineInput</code> không null; <code>OrderLine</code> yêu cầu SKU có nội dung, số lượng dương và đơn giá không âm.</li>
+
+      <li><code>ShoppingOrder</code> chụp danh sách bằng <code>List.copyOf</code> để ngăn client sửa state đầu vào. <code>LegacyCheckout.price</code> cộng số tiền
+      bằng <code>Math.multiplyExact</code>/<code>Math.addExact</code>, áp dụng discount VIP 10% nếu subtotal từ 500000, và giao hàng miễn phí khi payable từ 700000;
+      trường hợp khác thêm 30000.</li>
+
+      <li>Thiết kế mới gọi <code>PricingPolicy.calculate</code>; đối tượng <code>ShoppingOrder.subtotalVnd()</code> ủy quyền phép nhân từng dòng cho <code>OrderLine.lineAmountVnd()</code>.
+      <code>PricingPolicy</code> giữ cùng hai quy tắc mức giảm và phí giao hàng; <code>ReceiptFormatter.format</code> sinh receipt cho mỗi nhánh.</li>
+
+      <li>Service chuyển cả hai giá trị thành <code>PricingView</code> và so sánh qua record equality, trả HTTP 200 <code>CheckoutComparison</code>. Lỗi số học hoặc
+      input thành HTTP 400 <code>error=INVALID_INPUT</code>. Endpoint đo sự tương đương, không tự thực hiện giao dịch hoặc thay đổi nguồn.</li></ol>'
     usage: true
   delivery(DeliveryRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: '<h3>Luồng chuyển switch thành đa hình</h3><ol>
+
+      <li><code>delivery</code> gọi <code>DeliveryRefactoringService.compare</code>, yêu cầu 1–50 mục. Mỗi mục có orderValueVnd không âm, weightKg trong 1–1000 và
+      type khớp enum <code>DeliveryType</code>, nếu không sẽ thành HTTP 400.</li>
+
+      <li>Service tính <code>before</code> từ <code>LegacyDeliveryCalculator.quote</code> dùng switch. Nó lấy <code>after</code> từ map <code>DeliveryType</code>
+      sang <code>DeliveryPolicy</code> rồi gọi <code>quote</code> theo runtime implementation, không cần if/else lặp lại.</li>
+
+      <li><code>StandardDeliveryPolicy</code> trả phí 0 khi orderValueVnd từ 500000, còn thấp hơn là 20000+5000×weightKg, ETA 5 ngày; <code>ExpressDeliveryPolicy</code>
+      trả 45000+10000×weightKg, ETA 1; <code>PickupDeliveryPolicy</code> trả 0, ETA 0. Các phép toán dùng hàm kiểm tra tràn.</li>
+
+      <li>Kết quả <code>DeliveryResult</code> có trước/sau của từng dòng, <code>equivalent</code> và <code>allEquivalent</code>, HTTP 200. Lỗi input/overflow đi đến
+      advice HTTP 400; cùng hành vi trước/sau mới là mục tiêu refactor.</li></ol>'
     usage: true
   alerts(AlertRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: '<h3>Luồng composition và retry cảnh báo</h3><ol>
+
+      <li><code>alerts</code> chuyển <code>AlertRequest</code> tới <code>AlertRefactoringService.execute</code>. Service tạo <code>RecordingMessageChannel</code>
+      riêng từng request, chấp nhận EMAIL/SMS và transientFailures từ 0–10; bọc nó bằng <code>RetryingChannel</code> với maxAttempts từ 1–5, sau đó chèn vào <code>AlertDispatcher</code>.</li>
+
+      <li><code>AlertDispatcher.sendCritical</code> kiểm tra recipient và incident không rỗng, độ dài tối đa lần lượt 120/200, rồi gửi chuỗi có tiền tố <code>[CRITICAL]
+      </code> qua interface <code>MessageChannel</code>. Không cần kế thừa channel để dùng hoặc thay implementation.</li>
+
+      <li><code>RetryingChannel.send</code> gọi delegate tối đa maxAttempts và chỉ bắt <code>TemporaryDeliveryFailure</code>. Recorder ghi sự kiện <code>TEMPORARY_FAILURE</code>
+      cho các lượt thử đầu đã cấu hình, hoặc <code>DELIVERED</code> cùng thông điệp khi thành công; lỗi thường khác không được retry.</li>
+
+      <li>Khi thành công service trả HTTP 200 <code>AlertResult</code> với outcome <code>DELIVERED</code>. Nếu hết lượt thử vì lỗi tạm thời, service bắt exception
+      và trả HTTP 200 <code>RETRY_EXHAUSTED</code>, không ghi nhận gửi thành công giả. Input sai trả HTTP 400.</li></ol>'
     usage: true
 RelationshipsExperimentsController:
   transfer(TransferRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: '<p><code>transfer(TransferRequest)</code> gọi <code>DepartmentTransferService.simulate</code>, tạo <code>DepartmentGraph</code> mới. Constructor kiểm
+      tra tối đa 30 phòng không trùng mã, capacity từ 1 đến 1000, tối đa 100 nhân viên ID duy nhất và mọi mã phòng khởi tạo phải tồn tại. Nếu phân công ban đầu vượt
+      sức chứa, request bị từ chối trước khi trả graph.</p>
+
+      <p><code>DepartmentGraph.transfer</code> xác thực toàn bộ 1–40 action và mã nhân viên/phòng đích trước khi xử lý. <code>move</code> kiểm tra sức chứa đích trước
+      khi gỡ nhân viên khỏi phòng cũ, sau đó cập nhật đồng thời <code>employee.department</code> và tập <code>department.members</code>. Chuyển vào cùng phòng trả
+      UNCHANGED, phòng đích đầy trả event accepted=false, DEPARTMENT_FULL và giữ nguyên quan hệ.</p>
+
+      <p>Sau từng action, <code>requireInvariant</code> kiểm tra tính nhất quán hai đầu. <code>TransferResponse</code> trả events, snapshot phòng ban và nhân viên
+      được sắp theo mã, <code>invariantHolds</code>, <code>simulatedOnly</code>. Sai đầu vào là HTTP 400; một lỗi trạng thái chưa được xử lý sẽ do handler chuyển
+      thành HTTP 409.</p>'
     usage: true
   enroll(EnrollmentRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: '<p><code>enroll(EnrollmentRequest)</code> gọi <code>EnrollmentScenarioService.simulate</code> và dựng một <code>EnrollmentRegistry</code> riêng. Constructor
+      xác minh 1–50 studentIds và 1–50 courseIds, không được trùng. <code>validateActions</code> kiểm tra trước toàn bộ 1–50 action chỉ dùng ENROLL/CANCEL và các
+      ID liên quan phải tồn tại.</p>
+
+      <p><code>EnrollmentRegistry</code> sở hữu map liên kết nhiều–nhiều với key kết hợp student/course. ENROLL mới tạo <code>EnrollmentView</code> có <code>enrollmentSequence</code>
+      tăng dần; ENROLL trùng trả DUPLICATE_ENROLLMENT, CANCEL không có liên kết trả NOT_ENROLLED. Các trường hợp bị từ chối không thay đổi map; sau CANCEL thành công,
+      ENROLL lại tạo một liên kết có sequence mới.</p>
+
+      <p><code>NotificationGateway</code> chỉ là phụ thuộc được truyền theo tham số của <code>apply</code>; callback tăng <code>notificationsSent</code> duy nhất
+      khi ghi danh mới thành công. <code>EnrollmentResponse</code> trả events, liên kết hiện tại đã sắp thứ tự, notificationsSent, uniquePairs và simulatedOnly. Dữ
+      liệu sai trả HTTP 400; lỗi nghiệp vụ đã được biểu diễn trong HTTP 200.</p>'
     usage: true
   ownership(OwnershipRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: '<p><code>ownership(OwnershipRequest)</code> chuyển tới <code>OwnershipComparisonService.compare</code>, sau đó <code>OwnershipScenario.compare</code>.
+      Model kiểm tra teamId/orderId, removeMemberId, 1–50 memberIds duy nhất và 1–30 orderLines với SKU duy nhất, quantity từ 1 đến 1000, đơn giá không âm. <code>Math.multiplyExact</code>
+      và <code>Math.addExact</code> tính các subtotal/tổng trước thay đổi quan hệ.</p>
+
+      <p>Directory quản lý các <code>Member</code> độc lập. <code>Team</code> chỉ giữ tập reference; xóa member khỏi Team không xóa entry trong directory. Ngược lại,
+      <code>Order</code> tự tạo <code>OrderLine</code> và sở hữu vòng đời chúng; <code>close()</code> làm rỗng lines và danh sách SKU, trong khi không đóng đơn thì
+      vẫn giữ chúng.</p>
+
+      <p><code>OwnershipResponse</code> trả thành viên còn thuộc Team, tổng và số line trước khi đóng, số line sau thao tác, orderClosed và simulatedOnly. Input không
+      hợp lệ trả HTTP 400; tràn số khi tính tiền trả HTTP 422 với <code>ARITHMETIC_OVERFLOW</code>.</p>'
     usage: true
 SolidExperimentController:
   quote(QuoteRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: '<p>Controller nhận <code>QuoteRequest</code> và gọi <code>SolidExperimentService.quote</code>. Service xác minh request và <code>subtotalCents</code>
+      không null, sau đó gọi <code>DiscountPricing.quote</code>. <code>DiscountPricing</code> được khởi tạo từ danh sách implementation <code>DiscountPolicy</code>
+      truyền qua constructor service; trong ứng dụng Spring, các component NONE, TEN_PERCENT, LOYALTY và BROKEN_NEGATIVE được tự động thu thập theo interface.</p>
+
+      <p><code>DiscountPricing.quote</code> từ chối subtotal âm, policyCode rỗng/không tồn tại. Sau khi tìm policy, nó gọi <code>discountCents(subtotal)</code> rồi
+      kiểm tra hậu điều kiện <code>0 &lt;= discount &lt;= subtotal</code>. NONE trả 0; TEN_PERCENT dùng chia nguyên 10; LOYALTY chỉ giảm 15% từ 50000 cent trở lên;
+      BROKEN_NEGATIVE cố ý trả -1 để chứng minh implementation hợp lệ về mặt kiểu vẫn có thể vi phạm LSP.</p>
+
+      <p>Thỏa hợp đồng thì trả <code>QuoteResult</code> gồm policyCode, subtotalCents, discountCents, payableCents. <code>IllegalArgumentException</code> được handler
+      chuyển thành HTTP 400 INVALID_INPUT; <code>PolicyContractException</code> thành HTTP 422 POLICY_CONTRACT; <code>ArithmeticException</code> thành HTTP 422 ARITHMETIC_OVERFLOW.</p>'
     usage: true
   experiment(ExperimentRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: '<p><code>experiment(ExperimentRequest)</code> chuyển tới <code>SolidExperimentService.experiment</code>, trước tiên yêu cầu danh sách 1–16 attempts.
+      Mỗi request tạo mới <code>MemoryOrderStore</code> và <code>MemoryReceiptSender</code>; service khởi tạo <code>CheckoutUseCase(pricing, store, sender)</code>,
+      minh họa DI bằng constructor ở use case. <code>CheckoutUseCase</code> chỉ phụ thuộc <code>OrderWriter</code>/<code>ReceiptSender</code> và <code>DiscountPricing</code>,
+      không phụ thuộc trực tiếp vào các class adapter.</p>
+
+      <p>Với từng attempt, <code>toOrder</code> xác thực 1–20 dòng đơn, các trường dòng bắt buộc và <code>PurchaseOrder</code> bảo đảm ID, SKU, số lượng/đơn giá.
+      <code>CheckoutUseCase.checkout</code> tính subtotal qua <code>Math.addExact</code>/<code>multiplyExact</code>, gọi <code>DiscountPricing.quote</code> và dựng
+      <code>CheckoutReceipt</code> trước khi <code>writer.save</code> rồi <code>sender.send</code>. <code>MemoryOrderStore</code> từ chối orderId trùng; các lỗi được
+      bắt tại vòng attempt và ghi thành rule POLICY_CONTRACT, ARITHMETIC_OVERFLOW, INVALID_INPUT hoặc ORDER_CONFLICT với <code>accepted=false</code>.</p>
+
+      <p>Cuối vòng lặp, service so sánh danh sách storedOrders với notices để tính <code>countsConsistent</code>, trả <code>ExperimentResult</code> gồm attempts,
+      storedOrders, notices, countsConsistent và scope request-local. Đây chỉ là mô phỏng trong bộ nhớ, không đảm bảo tính nguyên tử giữa adapter thật hoặc có transaction
+      liên hệ thống. Danh sách attempts rỗng hoặc quá 16 mới gây HTTP 400 ở cấp request; lỗi từng attempt trả HTTP 200 kèm chi tiết.</p>'
     usage: true
 SubtypingExperimentController:
   dispatch(DispatchRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: '<p><code>SubtypingExperimentController.dispatch</code> chuyển <code>DispatchRequest</code> vào <code>SubtypingExperimentService.dispatch</code>. Service
+      kiểm tra <code>implementation</code> và <code>amountCents</code> (1–100000000), chọn <code>CardPayment</code>, <code>WalletPayment</code> hoặc <code>LegacyPaymentAdapter</code>
+      bọc <code>LegacyGateway</code>.</p>
+
+      <p>Biến <code>payment</code> có kiểu khai báo <code>PaymentMethod</code>; gán <code>upcastReference=payment</code> không sao chép object. Gọi <code>payment.description()</code>
+      và <code>payment.charge(amount)</code> dispatch theo class runtime. Nhưng <code>PaymentMethods.inspect(upcastReference)</code> chọn overload <code>PaymentMethod</code>
+      tại compile-time; chỉ nhánh đã kiểm tra <code>instanceof CardPayment</code> mới có thể gọi overload <code>CardPayment</code> và lấy <code>lastFourDigits()</code>.</p>
+
+      <p><code>DispatchResult</code> trả cùng reference, runtime type, receipt, overload và capability; <code>LegacyGateway</code> không implements <code>PaymentMethod</code>
+      nhưng adapter có implements và delegate. Input sai ném <code>IllegalArgumentException</code> để handler trả HTTP 400.</p>'
     usage: true
   contract(DiscountRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: '<p><code>contract</code> chuyển <code>DiscountRequest</code> vào <code>discountContract</code>. Service yêu cầu implementation và 1–20 giá không null,
+      mỗi giá nằm trong 0–100000000. Constructor policy kiểm tra tham số của FIXED (discountCents), PERCENT (percent) hoặc STRICT_MINIMUM (minimumCents).</p>
+
+      <p>Với mỗi giá hợp lệ, service gọi <code>DiscountPolicy.netCents</code> qua interface và kiểm tra hậu điều kiện kết quả trong đoạn từ 0 tới giá gốc. <code>FixedDiscount</code>
+      trừ tối đa tới 0; <code>PercentDiscount</code> dùng phép chia số nguyên làm tròn xuống phần giảm; <code>StrictMinimumDiscount</code> cố tình từ chối một giá
+      nhỏ hơn minimum dù supertype cho phép.</p>
+
+      <p>Lỗi <code>IllegalArgumentException</code> phát sinh trong lần đánh giá một giá được ghi thành <code>DiscountCase</code> với netCents null, <code>satisfiedContract=false</code>
+      và mô tả vi phạm tiền điều kiện; các giá sau vẫn được kiểm tra. <code>DiscountResult.allCasesPass</code> tổng hợp kết quả. Cấu trúc request hoặc tham số policy
+      không hợp lệ trả HTTP 400; LSP thất bại ở từng case vẫn là HTTP 200.</p>'
     usage: true
   geometry(GeometryRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: '<p><code>geometry</code> chuyển <code>GeometryRequest</code> đến <code>geometryContract</code>; service kiểm tra <code>kind</code> và cả bốn kích
+      thước hiện diện, mỗi kích thước trong 1–10000. Riêng SQUARE_AS_RECTANGLE yêu cầu chiều rộng và chiều cao ban đầu bằng nhau.</p>
+
+      <p>Biến <code>rectangle</code> khai báo kiểu <code>MutableRectangle</code> nhưng có thể chứa <code>MutableSquare</code>. Service gọi <code>setWidth(newWidth)</code>
+      rồi kiểm tra height có giữ nguyên, tiếp tục <code>setHeight(newHeight)</code> và kiểm tra width có giữ nguyên. <code>MutableSquare</code> override cả hai setter
+      để buộc hai cạnh bằng nhau, trái hợp đồng setter độc lập của cha.</p>
+
+      <p><code>GeometryResult</code> ghi runtime type, kích thước/diện tích cuối, các cờ kiểm tra và diện tích hình chữ nhật mong đợi. Hai record bất biến <code>ImmutableRectangle</code>/<code>ImmutableSquare</code>
+      chỉ implements <code>MeasurableShape.area()</code>, tránh cam kết setter không phù hợp; input sai trả HTTP 400.</p>'
     usage: true
 TestingExperimentController:
   contracts(ContractRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: '<h3>Hợp đồng chung và mô hình tham chiếu độc lập</h3>
+
+      <p><code>contracts()</code> chuyển <code>ContractRequest</code> vào <code>InventoryContractService.run()</code>. Service kiểm tra capacity trong 1–100000 và
+      1–30 action, mỗi action phải là <code>RESERVE</code> hoặc <code>CANCEL</code> với seats 1–100000. Sai dữ liệu ném <code>IllegalArgumentException</code> và trả
+      HTTP 400 với <code>{code: INVALID_INPUT, detail: ...}</code>.</p>
+
+      <p>Service chạy ba inventory mới có cùng capacity: <code>MONITOR</code> dùng synchronized, <code>ATOMIC</code> dùng vòng CAS trên <code>AtomicInteger</code>,
+      còn <code>BROKEN_MUTATE_ON_REJECT</code> cố tình cộng seats ngay cả khi reservation vượt capacity. Trước từng action, máy trạng thái tham chiếu độc lập tính
+      expectedAccepted và expectedReserved theo quy tắc: chỉ nhận reserve nếu không vượt chỗ còn lại, chỉ nhận cancel nếu không vượt reserved; thao tác bị từ chối
+      không đổi state.</p>
+
+      <p>Mỗi <code>ContractStep</code> ghi <code>expectedAccepted</code>/<code>actualAccepted</code>, <code>expectedSnapshot</code>/<code>actualSnapshot</code> và
+      violations <code>RETURN_VALUE_MISMATCH</code>, <code>STATE_MISMATCH</code>, <code>INVARIANT_BROKEN</code> theo đúng thứ tự kiểm tra. <code>ContractRun.allPassed</code>
+      và <code>passedSteps</code> phản ánh từng implementation; kết quả chung <code>conformingImplementationsPassed</code> chỉ xét MONITOR/ATOMIC, <code>defectDetected</code>
+      true nếu bản BROKEN không vượt hợp đồng. HTTP 200 vẫn bình thường khi phát hiện lỗi: đây là kết quả của bài kiểm thử, không phải lỗi máy chủ.</p>'
     usage: true
   collaboration(CollaborationRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: '<h3>Thay thế dependency mà vẫn quan sát được nghiệp vụ</h3>
+
+      <p><code>collaboration()</code> giao request cho <code>CollaborationExperimentService.run()</code>. Service yêu cầu 1–12 scenarios; tiền kiểm tra tất cả stock
+      0–10000, quantity/price không null, <code>paymentMode=APPROVE/DECLINE/ERROR</code>, <code>receiptMode=SEND/ERROR</code>; <code>CheckoutWorkflow.Order</code>
+      kiểm tra orderId/sku 2–32 chữ/số/gạch nối, quantity 1–10000, giá không âm, và <code>totalVnd()</code> tính bằng <code>Math.multiplyExact()</code>. Input sai
+      trả HTTP 400; tràn trước thao tác cộng tác trả HTTP 422.</p>
+
+      <p>Với mỗi case, service tạo <code>FakeInventory</code>, <code>StubPayment</code> và <code>RecordingSender</code> riêng, cùng một danh sách <code>events</code>.
+      <code>CheckoutWorkflow.checkout()</code> tính total, gọi reserve trước; nếu hết hàng, trả <code>OUT_OF_STOCK</code> mà không gọi payment/receipt. Nếu charge
+      trả false, release và báo <code>PAYMENT_DECLINED_ROLLED_BACK</code>; nếu charge ném exception, cũng release và báo <code>PAYMENT_ERROR_ROLLED_BACK</code>. Charge
+      thành công mới gọi sender; nếu sender lỗi, trả <code>PAID_RECEIPT_FAILED</code> mà không giả vờ đã refund, còn gửi thành công trả <code>SUCCESS</code>.</p>
+
+      <p><code>CollaborationRun</code> trả payable, stock trước/sau, <code>paymentAttempts</code>, <code>sentReceipts</code>, sự kiện theo thứ tự và <code>invariantHolds</code>
+      dựa trên stock/receipt. Mọi giả lập đều giới hạn trong một request; <code>scope</code> xác nhận không network, giao dịch tiền, email hoặc state chung.</p>'
     usage: true
   regression(RegressionRequest):
-    execution: <p>Mô tả cách hoạt động của API này. Thay đoạn này bằng HTML code.</p>
+    execution: '<h3>Regression test giữ hợp đồng đầu ra khi implementation thay đổi</h3>
+
+      <p><code>regression()</code> gọi <code>RegressionExperimentService.run()</code>, yêu cầu member có giá trị và 1–20 mục giá cùng 1–20 dòng hàng. SKU phải gồm
+      2–32 chữ/số/gạch nối, giá không âm và mỗi dòng có quantity 1–10000, SKU tồn tại trong catalog. <code>QuoteRegression.RecordingCatalog</code> chỉ ghi số lần
+      tra cứu qua interface <code>Catalog</code>. Dữ liệu không hợp lệ trả HTTP 400.</p>
+
+      <p><code>PerLineQuote</code> tra giá cho từng dòng, <code>GroupedQuote</code> gộp quantity theo SKU trước khi tra. Cả hai dùng phép nhân/cộng exact, sau đó
+      cùng áp dụng giảm 5% theo cents nguyên khi <code>member=true</code>, phí giao 15000 nếu subtotal nhỏ hơn 100000 và miễn phí khi subtotal từ 100000 trở lên.
+      <code>BrokenShippingQuote</code> dựa vào bản grouped nhưng cố tình chỉ miễn phí khi subtotal lớn hơn 100000, tạo lỗi tại đúng ngưỡng.</p>
+
+      <p>Service tính một <code>baseline</code> từ PerLineQuote rồi trả ba <code>RegressionVariant</code> với <code>implementation</code>, <code>invoice</code>, <code>catalogLookups</code>
+      và <code>matchesBaseline</code>. <code>refactorPreservedBehavior</code> xét hóa đơn GROUPED; <code>seededDefectDetected</code> true nếu bản BROKEN khác baseline.
+      Việc refactor giảm lookup không bị coi là thay đổi nghiệp vụ; tràn long chưa bắt chuyển thành HTTP 422 với <code>{code: ARITHMETIC_OVERFLOW, detail: the requested
+      amounts overflow long}</code>.</p>'
     usage: true

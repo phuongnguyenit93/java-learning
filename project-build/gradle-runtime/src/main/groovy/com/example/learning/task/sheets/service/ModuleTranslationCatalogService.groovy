@@ -18,7 +18,6 @@ import java.security.MessageDigest
  */
 class ModuleTranslationCatalogService {
     private static final String DOC = 'content/readme/docs/'
-    private static final String VIDEO = 'content/video/'
     private static final String SWAGGER = 'src/main/resources/swagger/'
     private static final Map<String, String> SINGLE = [
             'content/readme/docs/en/BASE.md': 'INTRODUCTION',
@@ -161,13 +160,6 @@ class ModuleTranslationCatalogService {
         for (String path : walk(docs)) {
             if (!path.endsWith('.md')) throw new GradleException('Unexpected VI README: ' + path)
             targets[DOC + 'en/menu/' + path] = 'README'
-        }
-        File video = new File(module, VIDEO + 'vi/menu')
-        for (String path : walk(video)) {
-            if (!path.endsWith('/video-script.yml')) {
-                throw new GradleException('Unexpected VI Video: ' + path)
-            }
-            targets[VIDEO + 'en/menu/' + path] = 'VIDEO'
         }
         File swagger = new File(module, SWAGGER + 'vi')
         for (String path : walk(swagger)) {

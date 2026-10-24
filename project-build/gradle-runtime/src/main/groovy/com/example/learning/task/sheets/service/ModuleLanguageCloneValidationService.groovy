@@ -2,7 +2,6 @@ package com.example.learning.task.sheets.service
 
 import com.example.learning.setup.module.readme.service.ReadmeKnowledgeParser
 import com.example.learning.utils.schema.validate.ContractSchemaValidateUtils
-import com.example.learning.utils.schema.validate.VideoYamlContentUtils
 import groovy.json.JsonSlurper
 import org.gradle.api.GradleException
 import org.gradle.api.logging.Logging
@@ -113,17 +112,6 @@ class ModuleLanguageCloneValidationService {
                         kind + '/question.yml #' + (index + 1), false)
                 checkApi(question.apiRelated, apiDescriptions,
                         kind + '/question.yml #' + (index + 1))
-            }
-        }
-        trees['content/video'].each { String path, byte[] bytes ->
-            if (!path.endsWith('/' + VideoYamlContentUtils.FILENAME)) {
-                throw new GradleException('Unexpected VI Video file: ' + path)
-            }
-            VideoYamlContentUtils.parse(content(bytes))
-            String chapter = path.substring(0, path.lastIndexOf('/'))
-            if (chapter.startsWith('menu/')) chapter = chapter.substring('menu/'.length())
-            if (!sections.keySet().any { String source -> source.startsWith(chapter + '/') }) {
-                throw new GradleException('Video chapter does not match Knowledge: ' + chapter)
             }
         }
         swagger.each { String path, byte[] bytes ->

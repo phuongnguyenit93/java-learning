@@ -1,0 +1,38 @@
+# Curriculum roadmap for Lập trình theo luồng dữ liệu.
+# Review scope before authoring Knowledge/Menu in subsequent workflow steps.
+roadmap:
+  - id: dataflow-foundations
+    title: "Mô hình Dataflow và đồ thị phụ thuộc"
+    purpose: "Phân biệt phụ thuộc dữ liệu với thứ tự câu lệnh, xác định node/edge/input/output."
+    objectives:
+      - "Phân biệt phụ thuộc dữ liệu với thứ tự câu lệnh, xác định node/edge/input/output."
+  - id: dataflow-execution
+    title: "Readiness và kích hoạt tác vụ"
+    purpose: "Hiểu điều kiện đủ đầu vào, propagation và vòng đời một node tính toán."
+    objectives:
+      - "Hiểu điều kiện đủ đầu vào, propagation và vòng đời một node tính toán."
+  - id: dataflow-graph
+    title: "DAG, chu kỳ và phản hồi"
+    purpose: "Phân biệt luồng có hướng không chu kỳ với vòng phản hồi và cơ chế lặp."
+    objectives:
+      - "Phân biệt luồng có hướng không chu kỳ với vòng phản hồi và cơ chế lặp."
+  - id: dataflow-parallelism
+    title: "Song song hóa theo phụ thuộc"
+    purpose: "Nhận diện các nhánh độc lập, scheduling và giới hạn do critical path."
+    objectives:
+      - "Nhận diện các nhánh độc lập, scheduling và giới hạn do critical path."
+  - id: dataflow-determinism
+    title: "Tính quyết định và trạng thái"
+    purpose: "Giải thích ảnh hưởng của mutable state, side effects, retries và nondeterministic ordering."
+    objectives:
+      - "Giải thích ảnh hưởng của mutable state, side effects, retries và nondeterministic ordering."
+  - id: dataflow-streaming
+    title: "Dữ liệu hữu hạn và luồng dữ liệu liên tục"
+    purpose: "So sánh batch graph, streaming dataflow, buffering và ranh giới với Reactive."
+    objectives:
+      - "So sánh batch graph, streaming dataflow, buffering và ranh giới với Reactive."
+  - id: dataflow-tradeoffs
+    title: "Ứng dụng và đánh đổi trong hệ thống thực"
+    purpose: "Phân loại build graph, ETL, tensor graph và giới hạn của trừu tượng dataflow."
+    objectives:
+      - "Phân loại build graph, ETL, tensor graph và giới hạn của trừu tượng dataflow."

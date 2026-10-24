@@ -1,0 +1,38 @@
+# Curriculum roadmap for Dataflow Programming.
+# Review scope before authoring Knowledge/Menu in subsequent workflow steps.
+roadmap:
+  - id: dataflow-foundations
+    title: "Dataflow model and dependency graphs"
+    purpose: "Distinguish data dependencies from imperative statement ordering."
+    objectives:
+      - "Distinguish data dependencies from imperative statement ordering."
+  - id: dataflow-execution
+    title: "Execution readiness"
+    purpose: "Explain when nodes are eligible for execution and how outputs enable downstream work."
+    objectives:
+      - "Explain when nodes are eligible for execution and how outputs enable downstream work."
+  - id: dataflow-graph
+    title: "Graphs, cycles and feedback"
+    purpose: "Differentiate DAG computation, feedback loops and iterative execution."
+    objectives:
+      - "Differentiate DAG computation, feedback loops and iterative execution."
+  - id: dataflow-parallelism
+    title: "Dependency-driven parallelism"
+    purpose: "Identify independent branches, scheduling opportunities and critical paths."
+    objectives:
+      - "Identify independent branches, scheduling opportunities and critical paths."
+  - id: dataflow-determinism
+    title: "Determinism and state"
+    purpose: "Reason about mutable state, effects, retries and nondeterminism."
+    objectives:
+      - "Reason about mutable state, effects, retries and nondeterminism."
+  - id: dataflow-streaming
+    title: "Batch and streaming dataflow"
+    purpose: "Contrast batch and streaming computation with reactive signal models."
+    objectives:
+      - "Contrast batch and streaming computation with reactive signal models."
+  - id: dataflow-tradeoffs
+    title: "Applications and trade-offs"
+    purpose: "Compare build, ETL and computation graphs and their abstraction costs."
+    objectives:
+      - "Compare build, ETL and computation graphs and their abstraction costs."

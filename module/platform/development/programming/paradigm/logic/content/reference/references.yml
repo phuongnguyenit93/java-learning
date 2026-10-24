@@ -1,0 +1,8 @@
+# Shared language-neutral reference catalog for this module.
+references:
+  - title: "SWI-Prolog Documentation"
+    url: "https://www.swi-prolog.org/pldoc/"
+    description: "Prolog concepts and operational behavior."
+  - title: "Soufflé Datalog"
+    url: "https://souffle-lang.github.io/"
+    description: "Datalog's declarative rules and practical evaluation model."

@@ -1,0 +1,38 @@
+# Curriculum roadmap for Lập trình logic.
+# Review scope before authoring Knowledge/Menu in subsequent workflow steps.
+roadmap:
+  - id: logic-logic-model
+    title: "Quan hệ và suy luận logic"
+    purpose: "Biết cách mô tả tính đúng đắn của quan hệ và mục tiêu, phân biệt định nghĩa quan hệ với thuật toán tìm kiếm."
+    objectives:
+      - "Biết cách mô tả tính đúng đắn của quan hệ và mục tiêu, phân biệt định nghĩa quan hệ với thuật toán tìm kiếm."
+  - id: logic-facts-rules
+    title: "Dữ kiện, quy tắc và truy vấn"
+    purpose: "Biểu diễn fact, rule và goal; hiểu cách nhiều luật phối hợp để suy ra câu trả lời."
+    objectives:
+      - "Biểu diễn fact, rule và goal; hiểu cách nhiều luật phối hợp để suy ra câu trả lời."
+  - id: logic-unification
+    title: "Unification và biến logic"
+    purpose: "Hiểu matching, substitution và ràng buộc biến khi kiểm tra mục tiêu."
+    objectives:
+      - "Hiểu matching, substitution và ràng buộc biến khi kiểm tra mục tiêu."
+  - id: logic-resolution
+    title: "Resolution, tìm kiếm và backtracking"
+    purpose: "So sánh ngữ nghĩa khai báo với chiến lược thực thi; nhận diện tác động của thứ tự luật và tìm kiếm."
+    objectives:
+      - "So sánh ngữ nghĩa khai báo với chiến lược thực thi; nhận diện tác động của thứ tự luật và tìm kiếm."
+  - id: logic-recursion
+    title: "Đệ quy quan hệ và kết thúc"
+    purpose: "Mô hình hóa quan hệ bắc cầu; nhận diện chu kỳ, termination và chi phí tìm kiếm."
+    objectives:
+      - "Mô hình hóa quan hệ bắc cầu; nhận diện chu kỳ, termination và chi phí tìm kiếm."
+  - id: logic-negation
+    title: "Phủ định, thế giới đóng và giới hạn suy luận"
+    purpose: "Nhận biết phủ định như thất bại không luôn đồng nghĩa phủ định logic; đánh giá các giả định và giới hạn."
+    objectives:
+      - "Nhận biết phủ định như thất bại không luôn đồng nghĩa phủ định logic; đánh giá các giả định và giới hạn."
+  - id: logic-practice
+    title: "Mô hình tri thức và bài toán phù hợp"
+    purpose: "Thiết kế bài toán quan hệ nhỏ, so sánh với imperative/constraint và chọn hướng phù hợp."
+    objectives:
+      - "Thiết kế bài toán quan hệ nhỏ, so sánh với imperative/constraint và chọn hướng phù hợp."

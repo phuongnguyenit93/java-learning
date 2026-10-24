@@ -4,9 +4,9 @@
 
 - STEP 5: Review Knowledge, Difficulty, filename và đồng bộ README về module.
 - **STEP 6: Xây dựng API chạy được** theo Knowledge của từng chương; sau khi toàn bộ source được nghiệm thu, **Prime chạy task `generateApiSwaggerDescription` để sinh skeleton `swagger/{vi,en}/api-cases.yml`**. **Không điền nội dung Swagger/API Docs/use cases** ở STEP này.
-- STEP 8: Interview YAML (P:S), từ STEP 6 cũ.
-- STEP 9: Quiz YAML (T:W), từ STEP 7 cũ.
-- STEP 10: Video Script YAML (X:AA), từ STEP 8 cũ.
+- STEP 8: Chưa định nghĩa, để dành cho bước mới.
+- STEP 9: Interview YAML (P:S), từ STEP 8 cũ.
+- STEP 10: Quiz YAML (T:W), từ STEP 9 cũ. Video Script YAML (X:AA) chỉ chạy ở STEP_OPTIONAL_VIDEO sau STEP_FINAL.
 
 Đây là workflow **Google Sheets/Worker trong `module-generate-agent/`**. Không thay đổi bộ STEP canonical độc lập ở `module-generate-agent/STEP_*.md`. Việc đánh số không làm thay đổi nội dung, quyền sở hữu, task hay dữ liệu đã có của Interview/Quiz/Video.
 

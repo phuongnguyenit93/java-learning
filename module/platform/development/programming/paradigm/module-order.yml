@@ -4,13 +4,25 @@ children:
     order: 10
   declarative:
     order: 20
+  logic:
+    order: 25
+  constraint:
+    order: 27
   object-oriented:
     order: 30
   functional:
     order: 40
   data-oriented:
     order: 50
+  dataflow:
+    order: 55
   aop:
     order: 60
+  concurrent:
+    order: 62
+  event-driven:
+    order: 65
   reactive:
     order: 70
+  metaprogramming:
+    order: 80

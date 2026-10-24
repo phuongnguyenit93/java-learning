@@ -111,6 +111,15 @@ enum ModuleListEnum {
             []
     ),
 
+    CONCURRENT_PROGRAMMING(
+            'module:platform:development:programming:paradigm:concurrent',
+            'module/platform/development/programming/paradigm/concurrent',
+            'LIBRARY',
+            'Concurrent programming models, shared-state coordination, message passing and progress',
+            false,
+            []
+    ),
+
     CONFIG_SERVER(
             'module:microservice:module:infrastructure:config-server',
             'module/microservice/module/infrastructure/config-server',
@@ -118,6 +127,15 @@ enum ModuleListEnum {
             '',
             false,
             ['SPRING_ACTUATOR', 'EUREKA_CLIENT']
+    ),
+
+    CONSTRAINT_PROGRAMMING(
+            'module:platform:development:programming:paradigm:constraint',
+            'module/platform/development/programming/paradigm/constraint',
+            'LIBRARY',
+            'Constraint programming, propagation, search and combinatorial optimization',
+            false,
+            []
     ),
 
     DATABASE_MONGODB(
@@ -152,6 +170,15 @@ enum ModuleListEnum {
             'module/infrastructure/system/database/engine/relational/postgresql',
             'SERVLET',
             '',
+            false,
+            []
+    ),
+
+    DATAFLOW_PROGRAMMING(
+            'module:platform:development:programming:paradigm:dataflow',
+            'module/platform/development/programming/paradigm/dataflow',
+            'LIBRARY',
+            'Dataflow programming, dependency graphs, execution models and scheduling',
             false,
             []
     ),
@@ -620,6 +647,15 @@ enum ModuleListEnum {
             'module/microservice/module/infrastructure/eureka-server',
             'SERVLET',
             '',
+            false,
+            []
+    ),
+
+    EVENT_DRIVEN_PROGRAMMING(
+            'module:platform:development:programming:paradigm:event-driven',
+            'module/platform/development/programming/paradigm/event-driven',
+            'LIBRARY',
+            'Event-driven programming model, event dispatch, event loops and handler safety',
             false,
             []
     ),
@@ -1241,6 +1277,24 @@ enum ModuleListEnum {
             'internal/library/sample',
             '',
             '',
+            false,
+            []
+    ),
+
+    LOGIC_PROGRAMMING(
+            'module:platform:development:programming:paradigm:logic',
+            'module/platform/development/programming/paradigm/logic',
+            'LIBRARY',
+            'Logic programming paradigms, inference, unification and relational computation',
+            false,
+            []
+    ),
+
+    METAPROGRAMMING(
+            'module:platform:development:programming:paradigm:metaprogramming',
+            'module/platform/development/programming/paradigm/metaprogramming',
+            'LIBRARY',
+            'Metaprogramming concepts, code representations, generation, macros and reflection',
             false,
             []
     ),

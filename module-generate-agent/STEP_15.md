@@ -77,14 +77,14 @@ All default to `DRY_RUN`; only `APPLY` mutates Sheets or local files.
    `ModuleContentExcelSyncService` **forced to use VI snapshot as baseline**,
    never stale EN Excel.
 2. Map introduction B17, Roadmap F:H, Menu A/B, Knowledge C:N, difficulty O,
-   Interview P:S, Quiz T:W, Video X:AA, Importance AB. Use source VI row
+   Interview P:S, Quiz T:W, Importance AB. **Bỏ qua Video X:AA trong publish bắt buộc.** Use source VI row
    identities; fail on lost chapter ownership, mismatched section count, long
    text or invalid YAML.
 3. Translate **fixed template labels only** using literal code mappings and
    clear VI-only authoring prompts. No freeform AI translation.
 4. Upload only `userEnteredValue` with the Google Sheets API, preserving
    formatting, metadata, notes, validation, merged cells and conditional
-   coloring inherited from Template. Leave J3 untouched until validation.
+   coloring inherited from Template. Không ghi/đè **nội dung Video X20:AA các hàng chương**; header Video Script tại X19:AA19 vẫn là nhãn schema. Leave J3 untouched until validation.
 
 ## 5. Verify, mark status, export
 
@@ -115,6 +115,8 @@ all mapped values and native dropdowns/color rules pass; `J3 VI` and `J3 EN`
 read back STEP 15; final exported EN Excel is the snapshot of official EN gid,
 one sheet with J3 STEP 15. All changes remain module-local except the two
 authorized J3 Sheet cells. Do not commit/push; hand off to STEP_FINAL.
+
+**Video optional sau FINAL:** `STEP_OPTIONAL_VIDEO` tạo Video VI; `STEP_OPTIONAL_VIDEO_TRANSLATE` dịch EN và gọi `publishOptionalVideoEn` để **chỉ** đồng bộ X:AA của tab EN hiện hữu rồi export Excel EN. Không chạy lại `publishModuleEnSheet` hoặc sửa J3 để cập nhật Video.
 
 Final report:
 `MODULE_I3, SPREADSHEET_ID, VI_GID, EN_GID, EN_TAB, TEMPLATE_QA,

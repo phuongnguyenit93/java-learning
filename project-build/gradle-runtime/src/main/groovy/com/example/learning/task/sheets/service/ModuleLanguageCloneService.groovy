@@ -16,7 +16,7 @@ import java.nio.file.StandardCopyOption
 class ModuleLanguageCloneService {
     static final List<String> OWNED = [
             'content/readme/docs', 'content/readme/metadata', 'content/roadmap',
-            'content/quiz', 'content/interview', 'content/video',
+            'content/quiz', 'content/interview',
             'src/main/resources/swagger'
     ].asImmutable()
 

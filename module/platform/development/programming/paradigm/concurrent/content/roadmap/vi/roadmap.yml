@@ -1,0 +1,38 @@
+# Curriculum roadmap for Lập trình đồng thời.
+# Review scope before authoring Knowledge/Menu in subsequent workflow steps.
+roadmap:
+  - id: concurrent-foundations
+    title: "Đồng thời, song song và bất đồng bộ"
+    purpose: "Phân biệt concurrency, parallelism, asynchrony và interleaving."
+    objectives:
+      - "Phân biệt concurrency, parallelism, asynchrony và interleaving."
+  - id: concurrent-shared-state
+    title: "Trạng thái dùng chung và đồng bộ"
+    purpose: "Nhận diện race condition, critical section và ranh giới quyền sở hữu dữ liệu."
+    objectives:
+      - "Nhận diện race condition, critical section và ranh giới quyền sở hữu dữ liệu."
+  - id: concurrent-memory
+    title: "Visibility, atomicity và thứ tự"
+    purpose: "Giải thích vì sao thứ tự quan sát và memory visibility quyết định kết quả."
+    objectives:
+      - "Giải thích vì sao thứ tự quan sát và memory visibility quyết định kết quả."
+  - id: concurrent-message-passing
+    title: "Gửi thông điệp và Actor Model"
+    purpose: "Mô hình hóa trao đổi thông điệp, mailbox, isolation và supervision ở mức khái niệm."
+    objectives:
+      - "Mô hình hóa trao đổi thông điệp, mailbox, isolation và supervision ở mức khái niệm."
+  - id: concurrent-csp
+    title: "CSP, kênh và phối hợp"
+    purpose: "Phân biệt giao tiếp qua channel với shared memory; suy luận rendezvous và buffering."
+    objectives:
+      - "Phân biệt giao tiếp qua channel với shared memory; suy luận rendezvous và buffering."
+  - id: concurrent-progress
+    title: "Deadlock, livelock và starvation"
+    purpose: "Nhận diện điều kiện gây tắc nghẽn và vấn đề công bằng/tiến triển."
+    objectives:
+      - "Nhận diện điều kiện gây tắc nghẽn và vấn đề công bằng/tiến triển."
+  - id: concurrent-lifecycle
+    title: "Hủy, lỗi và kiểm thử đồng thời"
+    purpose: "Lập kế hoạch cancellation, structured lifetime, deterministic tests và trade-offs."
+    objectives:
+      - "Lập kế hoạch cancellation, structured lifetime, deterministic tests và trade-offs."

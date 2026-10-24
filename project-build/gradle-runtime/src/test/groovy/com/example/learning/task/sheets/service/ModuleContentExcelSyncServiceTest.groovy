@@ -43,8 +43,17 @@ class ModuleContentExcelSyncServiceTest {
                 assertEquals('Understand the example', ModuleContentExcelSyncService.text(sheet, 3, 7))
                 assertTrue(ModuleContentExcelSyncService.text(sheet, 20, 16).contains('English interview?'))
                 assertTrue(ModuleContentExcelSyncService.text(sheet, 20, 20).contains('English quiz?'))
-                assertTrue(ModuleContentExcelSyncService.text(sheet, 20, 24).contains('English video script'))
+                assertEquals('', ModuleContentExcelSyncService.text(sheet, 20, 24))
                 assertEquals('unchanged background', ModuleContentExcelSyncService.text(sheet, 1, 1))
+            }
+        }
+        // Video must be opt-in; the standalone VIDEO part still works later.
+        assertEquals('EXPORTED', service.execute(
+                f.root as File, f.module as File, 'VIDEO', true).status)
+        (f.target as File).withInputStream { input ->
+            new XSSFWorkbook(input).withCloseable { book ->
+                assertTrue(ModuleContentExcelSyncService.text(
+                        book.getSheetAt(0), 20, 24).contains('English video script'))
             }
         }
         Map replay = service.execute(f.root as File, f.module as File, 'QUIZ', false)

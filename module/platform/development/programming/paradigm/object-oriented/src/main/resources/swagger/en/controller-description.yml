@@ -1,126 +1,281 @@
 AbstractionExperimentsController:
-  description: |-
-    <h2>Abstraction Experiments Controller</h2>
-    <p>This is a description</p>
+  description: '<h2>Java abstraction experiments</h2>
+
+    <p><code>AbstractionExperimentsController</code> demonstrates calls through stable contracts while algorithm and storage details remain internal. Four independent
+    APIs quote shipping, simulate seat inventory, evaluate leave policies, and search a book catalog.</p>
+
+    <p>Shipping uses the abstract <code>ShippingPlan</code> template method; seat inventory and leave evaluation rely on <code>SeatInventory</code> and <code>LeavePolicy</code>
+    contracts; book catalog hides <code>HashMap</code> behind the private <code>Catalog</code> interface. All experiments are in-memory and request-local.</p>
+
+    <p>The controller-scoped <code>AbstractionExceptionHandler</code> maps invalid arguments to HTTP 400, state failures to HTTP 409, and arithmetic overflow to HTTP
+    422. A valid rejected leave decision or a rejected seat step can still return HTTP 200 with rejection details in the body.</p>'
   readmeRelated:
     file: ''
 ClassesExperimentController:
-  description: |-
-    <h2>Classes Experiment Controller</h2>
-    <p>This is a description</p>
+  description: '<h2>Java Class and Object experiments</h2>
+
+    <p><code>ClassesExperimentController</code> offers inventory, workshop registration, and bank-account simulations. Each JSON request delegates to <code>ClassesExperimentService</code>,
+    which constructs fresh in-memory objects and returns before/after snapshots.</p>
+
+    <p>The examples illustrate fields, methods, constructors, encapsulation, instances, reference aliases, and <code>static final</code> constants. The bank experiment
+    is a single-request/thread teaching model without persistence, not production banking.</p>
+
+    <p>Request-level <code>IllegalArgumentException</code> becomes HTTP 400 through <code>ClassesExperimentExceptionHandler</code>; action-level failures caught by
+    the service appear as rejected steps within HTTP 200.</p>'
   readmeRelated:
     file: ''
 ClassDesignExperimentsController:
-  description: |-
-    <h2>Class Design Experiments Controller</h2>
-    <p>This is a description</p>
+  description: '<h2>Class design and responsibility boundaries</h2>
+
+    <p><code>ClassDesignExperimentsController</code> exposes three OOP design exercises: a library borrowing lifecycle, shopping-cart checkout and a money transfer
+    between bank accounts. It is only an HTTP adapter; domain rules reside in <code>Loan</code>, <code>LoanPolicy</code>, <code>ShoppingCart</code>, <code>BankAccount</code>,
+    <code>Money</code> and focused services.</p>
+
+    <p>The experiments highlight cohesion, command/query separation, entities versus value objects, and decoupling storage and outbound interactions. All repositories
+    and the receipt outbox are request-local in-memory objects, not a durable database or real email service. The chapter-scoped handler maps invalid inputs/arithmetic
+    failures to HTTP 400 and propagated <code>IllegalStateException</code> to HTTP 409.</p>'
   readmeRelated:
     file: ''
 CompositionExperimentController:
-  description: |-
-    <h2>Composition Experiment Controller</h2>
-    <p>This is a description</p>
+  description: '<h2>Object composition, delegation and ownership experiments</h2>
+
+    <p><code>CompositionExperimentController</code> offers four POST experiments with has-a collaborators: combine a formatter and transport to build a notification,
+    replace pricing policy during execution, delegate order saving to a repository, and decide who closes an owned or borrowed resource.</p>
+
+    <ul><li><code>notification</code> builds a <code>Notifier</code> from <code>Formatter</code>, <code>Transport</code>, and an optional audit decorator.</li><li><code>policies</code>
+    shows policy replacement using <code>AtomicReference</code> and per-call collaborator injection.</li><li><code>placeOrder</code> composes <code>OrderService</code>
+    with an in-memory repository.</li><li><code>resources</code> compares <code>OWNED</code> and <code>BORROWED</code> cleanup contracts for <code>AutoCloseable</code>.</li></ul>
+
+    <p>All behavior is request-local and simulated: there is no external notification, durable storage, or operating-system resource. Chapter advice maps bad input
+    or arithmetic overflow to HTTP 400, while simulated transport, storage and write failures can be inspected in an HTTP 200 result DTO.</p>'
   readmeRelated:
     file: ''
 DesignPatternExperimentController:
-  description: |-
-    <h2>Design Pattern Experiment Controller</h2>
-    <p>This is a description</p>
+  description: '<h2>Executable Java design pattern experiments</h2>
+
+    <p><code>DesignPatternExperimentController</code> offers three focused exercises: a pricing pipeline demonstrating <code>Strategy</code> and <code>Decorator</code>;
+    a task board demonstrating <code>Command</code>, undo/redo and <code>Observer</code>; and report generation demonstrating <code>Factory Method</code> with <code>Template
+    Method</code>. Each applies patterns to a concrete trade-off rather than presenting them as mandatory architecture.</p>
+
+    <p>The controller is a thin HTTP adapter delegating JSON DTOs to <code>DesignPatternExperimentService</code>. Algorithms and state live in the corresponding models;
+    all simulations use request-local in-memory state, with no external notifications or persistence. Invalid input maps to HTTP 400; unhandled state/arithmetic exceptions
+    map to HTTP 422 through the chapter-scoped handler.</p>'
   readmeRelated:
     file: ''
 DesignPitfallExperimentController:
-  description: |-
-    <h2>Design Pitfall Experiment Controller</h2>
-    <p>This is a description</p>
+  description: '<h2>Java OOP design-pitfall experiments</h2>
+
+    <p><code>DesignPitfallExperimentController</code> provides three experiments: guarding seat-count invariants rather than exposing unrestricted setters, exposing
+    a mutable <code>HashMap</code> key failure, and comparing monolithic checkout against a responsibility-focused refactor. It delegates request JSON to <code>DesignPitfallExperimentService</code>
+    without holding domain state.</p>
+
+    <p>The examples concern encapsulation, shared state, <code>equals</code>/<code>hashCode</code>, God Classes, and behavior-preserving refactoring. Seat state exists
+    within one request/JVM, not durable reservations. Checkout is a pure in-memory quote without stock changes, payment, or persistence.</p>
+
+    <p>The controller-scoped <code>DesignPitfallExceptionHandler</code> maps IllegalArgumentException to HTTP 400 and IllegalStateException/ArithmeticException to
+    HTTP 422. An invalid individual seat operation is instead represented as a rejected step within HTTP 200.</p>'
   readmeRelated:
     file: ''
 EncapsulationExperimentController:
-  description: |-
-    <h2>Encapsulation Experiment Controller</h2>
-    <p>This is a description</p>
+  description: '<h2>Encapsulation experiments</h2>
+
+    <p><code>EncapsulationExperimentController</code> exposes four request-local examples of object boundaries and invariants: cart operations, inventory accounting,
+    event snapshots and order lifecycle rules. Each request delegates to <code>EncapsulationExperimentService</code>, which constructs fresh in-memory models and
+    returns JSON DTOs.</p>
+
+    <p><code>EncapsulatedCart</code> and <code>StockLedger</code> enforce invariants before mutation; <code>EventSnapshot</code> protects mutable inputs and getters;
+    <code>LifecycleOrder</code> owns legal state transitions. Initial input errors yield HTTP 400 and uncaught invalid-state/arithmetic failures yield HTTP 422. Rejected
+    individual simulation actions are captured as steps without changing the stored state.</p>'
   readmeRelated:
     file: ''
 InheritanceExperimentsController:
-  description: |-
-    <h2>Inheritance Experiments Controller</h2>
-    <p>This is a description</p>
+  description: '<h2>Java inheritance and behavior-extension experiments</h2>
+
+    <p><code>InheritanceExperimentsController</code> provides four POST demonstrations of superclass/subclass relationships, method overriding, <code>super</code>
+    calls, constructor ordering and Java interface default-method conflicts. Each request delegates to a dedicated service and returns a teaching-only result, never
+    updating real payroll or shipping systems.</p>
+
+    <ul><li><code>calculatePay</code>: dynamic dispatch from an <code>Employee</code> reference to <code>Salaried</code> or <code>Hourly</code>.</li><li><code>compareDelivery</code>:
+    deep <code>DeliveryPlan</code> overrides compared with composition-based fees.</li><li><code>constructorTrace</code>: an overridable method called by the parent
+    constructor before child initialization.</li><li><code>resolveCapabilities</code>: resolving competing default methods and concrete class priority.</li></ul>
+
+    <p><code>InheritanceExceptionHandler</code> maps invalid input to HTTP 400, invalid state to 409 and arithmetic overflow to 422. The endpoints expose observable
+    Java behavior through bounded examples.</p>'
   readmeRelated:
     file: ''
 InterfaceExperimentsController:
-  description: |-
-    <h2>Interface Experiments Controller</h2>
-    <p>This is a description</p>
+  description: '<h2>Java interface contracts and roles</h2>
+
+    <p><code>InterfaceExperimentsController</code> exposes three contract-based experiments: interchangeable <code>ShippingFeePolicy</code> implementations, one <code>DocumentWorkspace</code>
+    viewed through three narrow interfaces, and separately replaceable payment gateway/repository components.</p>
+
+    <p>The controller forwards JSON DTOs to <code>InterfaceExperimentsService</code>. Every document store and payment simulation is constructed per request; no real
+    payment or durable storage is involved. <code>InterfaceExperimentsExceptionHandler</code> maps invalid arguments to HTTP 400 and otherwise unhandled state/arithmetic
+    exceptions to HTTP 422.</p>'
   readmeRelated:
     file: ''
 LanguageMechanicsExperimentsController:
-  description: |-
-    <h2>Language Mechanics Experiments Controller</h2>
-    <p>This is a description</p>
+  description: '<h2>Java language mechanics experiments for object-oriented programs</h2>
+
+    <p><code>LanguageMechanicsExperimentsController</code> exposes three POST APIs demonstrating observable contracts: generic types and wildcards, value equality
+    and hashing, encapsulated mutable state with safe diagnostics, interface dispatch and input errors.</p>
+
+    <ul><li><code>generics</code> copies numbers using PECS, computes a precise decimal sum, finds the maximum through bounded generics, and queries <code>TypedCache&lt;String,
+    Integer&gt;</code>.</li><li><code>stock</code> uses immutable <code>ProductKey</code> values in a registry, enforces inventory rules in <code>StockItem</code>,
+    and redacts secrets from diagnostics.</li><li><code>shipping</code> selects implementations of <code>ShippingPolicy</code> and calls <code>quoteVnd</code> via
+    dynamic dispatch.</li></ul>
+
+    <p>The controller delegates DTOs to request-local services. No real stock or delivery system is used. Invalid arguments, nulls and arithmetic errors are mapped
+    to HTTP 400 with <code>{"error":"INVALID_INPUT"}</code>, while anticipated business refusals appear within HTTP 200 result DTOs.</p>'
   readmeRelated:
     file: ''
 LifecycleExperimentController:
-  description: |-
-    <h2>Lifecycle Experiment Controller</h2>
-    <p>This is a description</p>
+  description: '<h2>Java object lifecycle experiments</h2>
+
+    <p><code>LifecycleExperimentController</code> provides four independent POST experiments covering valid construction, logical graph reachability, deterministic
+    resource closure and premature object publication. It delegates JSON requests to <code>LifecycleExperimentService</code> without persisting state across requests.</p>
+
+    <ul><li><code>creation</code>: compare constructor, static factory and Builder on <code>CourseEnrollment</code>.</li><li><code>references</code>: trace paths
+    from logical roots without claiming to observe JVM GC.</li><li><code>resources</code>: inspect close order and suppressed exceptions.</li><li><code>publication</code>:
+    demonstrate synchronous callback behavior during a <code>this</code>-escape.</li></ul>
+
+    <p><code>IllegalArgumentException</code> maps to HTTP 400 <code>INVALID_INPUT</code>; unreadable JSON maps to <code>INVALID_JSON</code>. These teaching simulations
+    do not trigger GC or open real files and sockets.</p>'
   readmeRelated:
     file: ''
 ModelingExperimentController:
-  description: |-
-    <h2>Modeling Experiment Controller</h2>
-    <p>This is a description</p>
+  description: '<h2>Object-oriented domain modeling and state experiments</h2>
+
+    <p><code>ModelingExperimentController</code> exposes two POST endpoints that validate a Java domain model against executable scenarios rather than treating UML
+    as implementation. The controller delegates DTOs to <code>ModelingExperimentService</code>; decisions about business rules belong to domain objects.</p>
+
+    <ul><li><code>library</code> assembles <code>BookTitle</code>, <code>BookCopy</code>, <code>Member</code>, <code>Loan</code> and <code>LibraryModel</code>, returning
+    object-graph snapshots and call traces for BORROW/RETURN actions.</li><li><code>orders</code> exercises <code>ModeledOrder</code> with SUBMIT, CONFIRM_PAYMENT,
+    START_PACKING, SHIP, CONFIRM_DELIVERY and CANCEL, revealing transition guards and rejected events.</li></ul>
+
+    <p>These examples connect responsibilities and collaborators (CRC) to class, object, sequence and state diagrams through actual program behavior. Every request
+    creates a new in-memory model: there is no database, real payment or external shipping, and no guarantee of coordination across requests.</p>'
   readmeRelated:
     file: ''
 ObjectExperimentsController:
-  description: |-
-    <h2>Object Experiments Controller</h2>
-    <p>This is a description</p>
+  description: '<h2>Java object experiments</h2>
+
+    <p><code>ObjectExperimentsController</code> exposes five request-local OOP experiments: references and identity, value equality, shallow/deep copying, absent
+    data and collaborating objects in simulated checkout. Each API returns a record from <code>ObjectExperimentDto</code> as JSON.</p>
+
+    <p>The controller delegates to <code>ObjectSemanticsService</code> or <code>ObjectCheckoutService</code>. <code>ObjectExperimentExceptionHandler</code> maps <code>IllegalArgumentException</code>
+    to HTTP 400 with an <code>error</code> field. Checkout does not process real payments, persist stock or transmit notifications.</p>'
   readmeRelated:
     file: ''
 BasicsExperimentController:
-  description: |-
-    <h2>Basics Experiment Controller</h2>
-    <p>This is a description</p>
+  description: '<h2>Object-oriented programming experiments</h2>
+
+    <p><code>BasicsExperimentController</code> exposes three independent POST APIs for observing object state, encapsulated business rules, and interface-based polymorphism
+    through verifiable results. Each endpoint accepts JSON DTOs, delegates to <code>BasicsExperimentService</code>, and returns a response DTO without persisting
+    data.</p>
+
+    <ul><li>Apply deposits and withdrawals to a new <code>BankAccount</code>, recording each balance transition.</li><li>Apply line additions, confirmation, or cancellation
+    to a new <code>OrderAggregate</code>, observing its lifecycle rules.</li><li>Run two <code>ShippingPolicy</code> implementations against the same input to compare
+    fees.</li></ul>
+
+    <p>These are in-memory teaching experiments, not production banking, order-management, or carrier services. <code>BasicsExperimentExceptionHandler</code> maps
+    uncaught input <code>IllegalArgumentException</code> errors to HTTP 400 with <code>INVALID_INPUT</code>; errors handled inside an action loop appear in the HTTP
+    200 <code>timeline</code> instead.</p>'
   readmeRelated:
     file: ''
 PolymorphismExperimentsController:
-  description: |-
-    <h2>Polymorphism Experiments Controller</h2>
-    <p>This is a description</p>
+  description: '<h2>Java polymorphism experiments</h2>
+
+    <p><code>PolymorphismExperimentsController</code> exposes two JSON experiments. <code>dispatch</code> separates compile-time overload selection, runtime overriding
+    and static resolution of hidden fields/static methods. <code>payments</code> invokes CARD, WALLET and BANK implementations of <code>PaymentMethod</code> via a
+    shared contract.</p>
+
+    <p>The controller delegates to <code>PolymorphismExperimentsService</code>. Balances and model instances exist only within each request; no money is moved and
+    no data is persisted. <code>PolymorphismExceptionHandler</code> maps invalid arguments to HTTP 400 and otherwise unhandled invalid-state/arithmetic exceptions
+    to HTTP 422.</p>'
   readmeRelated:
     file: ''
 PracticeExperimentController:
-  description: |-
-    <h2>Practice Experiment Controller</h2>
-    <p>This is a description</p>
+  description: '<h2>Hands-on OOP experiments: bank accounts, orders and a library</h2>
+
+    <p><code>PracticeExperimentController</code> exposes three POST APIs for translating requirements into object responsibilities and executable invariants. The
+    thin controller binds JSON to DTOs and delegates to <code>PracticeExperimentService</code>; domain models control state and validate legal changes.</p>
+
+    <ul><li><code>bank</code> executes DEPOSIT/WITHDRAW/TRANSFER against a request-local <code>BankLedger</code>, with snapshots before and after each action.</li><li><code>orders</code>
+    drives <code>PracticeOrder</code> through DRAFT edits, PLACE and CANCEL, observing summaries and rejected edits.</li><li><code>library</code> operates <code>PracticeLibrary</code>
+    using physical copies and loans, including a LEGACY to REVISED policy change.</li></ul>
+
+    <p>All objects live within one request: there is no real bank, payment, library database or durable transaction. Expected business failures can appear as <code>steps[].accepted=false</code>
+    with unchanged state; malformed input before simulation returns HTTP 400, while unhandled invalid-state/arithmetic errors are mapped to HTTP 422 by chapter advice.</p>'
   readmeRelated:
     file: ''
 RefactoringExperimentsController:
-  description: |-
-    <h2>Refactoring Experiments Controller</h2>
-    <p>This is a description</p>
+  description: '<h2>Behavior-preserving refactoring experiments</h2>
+
+    <p><code>RefactoringExperimentsController</code> provides three POST APIs for comparing observable behavior while internal object-oriented design changes: extracting
+    responsibilities, replacing type switches with polymorphism, and composing collaborator interfaces instead of inheriting concrete transport behavior.</p>
+
+    <ul><li><code>checkout</code> compares monolithic calculation with <code>ShoppingOrder</code>, <code>OrderLine</code>, <code>PricingPolicy</code> and <code>ReceiptFormatter</code>.</li><li><code>delivery</code>
+    compares <code>LegacyDeliveryCalculator</code> switch logic against specialized <code>DeliveryPolicy</code> implementations.</li><li><code>alerts</code> composes
+    <code>AlertDispatcher</code>, <code>RecordingMessageChannel</code> and <code>RetryingChannel</code>.</li></ul>
+
+    <p>All amounts use integer VND; these are in-memory simulations without real payments, deliveries or messages. An invalid request or arithmetic overflow maps
+    to HTTP 400 with <code>error=INVALID_INPUT</code>; an expected exhausted temporary retry sequence returns HTTP 200 with <code>RETRY_EXHAUSTED</code>.</p>'
   readmeRelated:
     file: ''
 RelationshipsExperimentsController:
-  description: |-
-    <h2>Relationships Experiments Controller</h2>
-    <p>This is a description</p>
+  description: '<h2>Object relationship experiments in Java</h2>
+
+    <p><code>RelationshipsExperimentsController</code> demonstrates three relationship patterns: bidirectional employee–department associations, many-to-many student–course
+    enrollment, and aggregation versus composition through Team/Member and Order/OrderLine lifecycles.</p>
+
+    <p>The Controller accepts JSON DTOs and delegates to <code>DepartmentTransferService</code>, <code>EnrollmentScenarioService</code>, and <code>OwnershipComparisonService</code>.
+    The models enforce navigability, consistency at both ends of an association, link lifecycles, and ownership. Every experiment uses fresh in-memory state within
+    a single request.</p>
+
+    <p>The chapter-scoped <code>RelationshipsExceptionHandler</code> maps IllegalArgumentException to HTTP 400, IllegalStateException to HTTP 409, and ArithmeticException
+    to HTTP 422. A full department or duplicate enrollment is a rejected business event within HTTP 200, not automatically an HTTP error.</p>'
   readmeRelated:
     file: ''
 SolidExperimentController:
-  description: |-
-    <h2>Solid Experiment Controller</h2>
-    <p>This is a description</p>
+  description: '<h2>Java SOLID principle experiments</h2>
+
+    <p><code>SolidExperimentController</code> exposes two experiments: quoting through interchangeable <code>DiscountPolicy</code> implementations and executing a
+    checkout scenario through small <code>OrderWriter</code>/<code>ReceiptSender</code> ports. Together they demonstrate separating responsibilities, extending policy
+    behavior, and directing application dependencies toward contracts.</p>
+
+    <p>The example illustrates SRP with <code>PurchaseOrder</code>, <code>DiscountPricing</code>, and <code>CheckoutUseCase</code>; OCP and LSP through discount policies;
+    ISP through separate order reader and writer contracts; DIP through use-case interfaces; and constructor-based DI. Spring supplies policy implementations to the
+    service, while the order store and receipt sender are in-memory simulations, not a real database or email delivery.</p>
+
+    <p>The controller-scoped <code>SolidExperimentExceptionHandler</code> maps invalid quote inputs to HTTP 400 and pricing contract violations or arithmetic overflow
+    to HTTP 422. Checkout records most per-attempt errors in an HTTP 200 response and continues subsequent attempts, with observable stored-order and notice counts.</p>'
   readmeRelated:
     file: ''
 SubtypingExperimentController:
-  description: |-
-    <h2>Subtyping Experiment Controller</h2>
-    <p>This is a description</p>
+  description: '<h2>Java subtype and substitutability experiments</h2>
+
+    <p><code>SubtypingExperimentController</code> exposes three request-local experiments: payment dispatch via <code>PaymentMethod</code>, discount contract checks
+    through <code>DiscountPolicy</code>, and the <code>MutableSquare extends MutableRectangle</code> behavioral counterexample. No real payment, database persistence,
+    or shared business state is involved.</p>
+
+    <p>The chapter distinguishes declared from runtime types, reference-preserving upcasts, virtual overriding from compile-time overload resolution, nominal subtyping
+    with interfaces and adapters, and the Liskov Substitution Principle: a subtype relationship in Java syntax does not necessarily imply behavioral substitutability.</p>
+
+    <p>The chapter-scoped <code>SubtypingExperimentExceptionHandler</code> maps invalid arguments to HTTP 400 with <code>INVALID_INPUT</code> and unreadable JSON
+    to HTTP 400 with <code>INVALID_JSON</code>. Intentionally violated behavioral contracts are represented in normal HTTP 200 responses rather than fabricated server
+    errors.</p>'
   readmeRelated:
     file: ''
 TestingExperimentController:
-  description: |-
-    <h2>Testing Experiment Controller</h2>
-    <p>This is a description</p>
+  description: '<h2>OOP contract and collaboration testing experiments</h2>
+
+    <p><code>TestingExperimentController</code> exposes three demonstrations that test observable behavior rather than private state: exercising multiple <code>SeatInventory</code>
+    implementations against a reference model; replacing checkout dependencies with a fake, stub and recording sender; and detecting pricing regressions across a
+    baseline, refactor and deliberately defective implementation.</p>
+
+    <p>The HTTP adapter delegates DTOs to <code>InventoryContractService</code>, <code>CollaborationExperimentService</code> and <code>RegressionExperimentService</code>.
+    Each request creates fresh in-memory state and test doubles, with no real inventory, payment or email. The chapter-scoped exception handler maps <code>IllegalArgumentException</code>
+    to HTTP 400 with <code>code=INVALID_INPUT</code> and arithmetic overflow to HTTP 422 with <code>code=ARITHMETIC_OVERFLOW</code>.</p>'
   readmeRelated:
     file: ''

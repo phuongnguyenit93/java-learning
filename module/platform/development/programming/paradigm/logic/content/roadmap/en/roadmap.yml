@@ -1,0 +1,38 @@
+# Curriculum roadmap for Logic Programming.
+# Review scope before authoring Knowledge/Menu in subsequent workflow steps.
+roadmap:
+  - id: logic-logic-model
+    title: "Relations and logical inference"
+    purpose: "Describe relations and queries, distinguishing relational specifications from search algorithms."
+    objectives:
+      - "Describe relations and queries, distinguishing relational specifications from search algorithms."
+  - id: logic-facts-rules
+    title: "Facts, rules and queries"
+    purpose: "Represent facts, rules and goals, and reason about combining rules."
+    objectives:
+      - "Represent facts, rules and goals, and reason about combining rules."
+  - id: logic-unification
+    title: "Unification and logic variables"
+    purpose: "Understand matching, substitutions and variable bindings in goal evaluation."
+    objectives:
+      - "Understand matching, substitutions and variable bindings in goal evaluation."
+  - id: logic-resolution
+    title: "Resolution, search and backtracking"
+    purpose: "Contrast declarative meaning with operational strategies and rule ordering."
+    objectives:
+      - "Contrast declarative meaning with operational strategies and rule ordering."
+  - id: logic-recursion
+    title: "Relational recursion and termination"
+    purpose: "Model transitive relations and identify cycles, termination and search costs."
+    objectives:
+      - "Model transitive relations and identify cycles, termination and search costs."
+  - id: logic-negation
+    title: "Negation and inference limits"
+    purpose: "Distinguish negation-as-failure from classical negation and understand its assumptions."
+    objectives:
+      - "Distinguish negation-as-failure from classical negation and understand its assumptions."
+  - id: logic-practice
+    title: "Modeling and trade-offs"
+    purpose: "Design a small relational model and choose when logic, procedural or constraint approaches fit."
+    objectives:
+      - "Design a small relational model and choose when logic, procedural or constraint approaches fit."

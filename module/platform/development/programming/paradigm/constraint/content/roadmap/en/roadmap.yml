@@ -1,0 +1,38 @@
+# Curriculum roadmap for Constraint Programming.
+# Review scope before authoring Knowledge/Menu in subsequent workflow steps.
+roadmap:
+  - id: constraint-foundations
+    title: "Constraint satisfaction foundations"
+    purpose: "Describe variables, domains and constraints in a satisfaction problem."
+    objectives:
+      - "Describe variables, domains and constraints in a satisfaction problem."
+  - id: constraint-modeling
+    title: "Constraint modeling"
+    purpose: "Separate problem models from solvers and recognize global and redundant constraints."
+    objectives:
+      - "Separate problem models from solvers and recognize global and redundant constraints."
+  - id: constraint-propagation
+    title: "Propagation and domain filtering"
+    purpose: "Understand domain filtering, consistency and pruning before exhaustive exploration."
+    objectives:
+      - "Understand domain filtering, consistency and pruning before exhaustive exploration."
+  - id: constraint-search
+    title: "Search and backtracking"
+    purpose: "Reason about variable/value ordering and combinatorial explosion."
+    objectives:
+      - "Reason about variable/value ordering and combinatorial explosion."
+  - id: constraint-optimization
+    title: "Optimization and soft constraints"
+    purpose: "Distinguish feasible from optimal solutions and model objectives and trade-offs."
+    objectives:
+      - "Distinguish feasible from optimal solutions and model objectives and trade-offs."
+  - id: constraint-applications
+    title: "Scheduling and allocation"
+    purpose: "Model a small scheduling or allocation problem and diagnose infeasibility."
+    objectives:
+      - "Model a small scheduling or allocation problem and diagnose infeasibility."
+  - id: constraint-tradeoffs
+    title: "Complexity and trade-offs"
+    purpose: "Compare constraint solving with rule engines, procedural search and specialized algorithms."
+    objectives:
+      - "Compare constraint solving with rule engines, procedural search and specialized algorithms."

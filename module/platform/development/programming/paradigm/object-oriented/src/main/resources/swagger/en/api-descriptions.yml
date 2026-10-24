@@ -1,7 +1,8 @@
 AbstractionExperimentsController:
   shippingQuote(ShippingQuoteRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Quote shipping through an abstract-class contract
+    description: <p>Select ECONOMY or EXPRESS and receive a price from the shared <code>ShippingPlan.quote</code> contract. The template method fixes validation and
+      total calculation while each concrete plan supplies its own extra fee.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -19,14 +20,13 @@ AbstractionExperimentsController:
     - POST
     mappingPaths:
     - /oop/abstraction/shipping/quote
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   seatScenario(SeatScenarioRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Simulate seat reservation contracts
+    description: <p>Apply RESERVE/RELEASE steps to a request-local <code>SeatInventory</code>. The API demonstrates preconditions, postconditions, capacity invariants,
+      and the guarantee that rejected operations do not mutate state.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -44,14 +44,13 @@ AbstractionExperimentsController:
     - POST
     mappingPaths:
     - /oop/abstraction/seats/simulate
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   leaveEvaluation(LeaveEvaluationRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Evaluate interchangeable leave policies
+    description: <p>Select STANDARD or TRIAL under the shared <code>LeavePolicy.evaluate</code> contract. Each concrete policy returns decisions consistent with the
+      remaining balance while applying its own eligibility rule.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -69,14 +68,13 @@ AbstractionExperimentsController:
     - POST
     mappingPaths:
     - /oop/abstraction/leave/evaluate
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   catalogSearch(CatalogSearchRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Search books without exposing storage
+    description: <p>Search titles case-insensitively, limit results, and look up an ISBN through a catalog contract hiding its <code>HashMap</code> implementation.
+      Matches are sorted deterministically by ISBN.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -94,15 +92,14 @@ AbstractionExperimentsController:
     - POST
     mappingPaths:
     - /oop/abstraction/catalog/search
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
 ClassesExperimentController:
   inventory(InventoryRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Simulate inventory object mutations
+    description: <p>Create an <code>InventoryItem</code> and run validated restock, sell, and rename actions. Initial, per-step, and final snapshots demonstrate encapsulated
+      fields, immutable SKU/unit price, and guarded mutation methods.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -120,14 +117,13 @@ ClassesExperimentController:
     - POST
     mappingPaths:
     - /oop/classes/inventory/experiment
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   workshops(WorkshopRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Compare independent workshops and reference aliases
+    description: <p>Create two <code>Workshop</code> objects, an alias to the second, and a distinct copy. Identity flags, registration counts, and a class constant
+      illustrate why assigning a reference differs from calling <code>new</code>.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -145,14 +141,13 @@ ClassesExperimentController:
     - POST
     mappingPaths:
     - /oop/classes/workshops/experiment
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   bank(BankRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Simulate bank-account operations
+    description: <p>Create two in-memory <code>BankAccount</code> objects and run deposits, withdrawals, or transfers in order. Snapshots demonstrate balance invariants
+      and unchanged state after a rejected action.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -170,15 +165,15 @@ ClassesExperimentController:
     - POST
     mappingPaths:
     - /oop/classes/bank/experiment
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
 ClassDesignExperimentsController:
   library(LibraryRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Simulate library loans, borrower limits and read-only snapshots.
+    description: <p>Exercise a library model with <code>BookCopy</code> values, behavior-rich <code>Loan</code> entities and a <code>LoanPolicy</code>. Try <code>BORROW</code>,
+      <code>RETURN</code> and <code>QUERY</code>, observing late fees and protected state after rejected commands without placing business rules in DTOs or a database
+      layer.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -196,14 +191,14 @@ ClassDesignExperimentsController:
     - POST
     mappingPaths:
     - /oop/class-design/library/experiment
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   checkout(CheckoutRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Calculate a cart discount, persist an order snapshot and queue a receipt event.
+    description: <p>Separate <code>ShoppingCart</code> (items and subtotal), <code>CheckedOutOrder</code> (immutable snapshot), <code>InMemoryOrderRepository</code>
+      (storage) and <code>InMemoryReceiptOutbox</code> (outbound intent). The endpoint demonstrates integer-cent discounts with overflow checks; an outbox entry is
+      not proof that an email was sent.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -221,14 +216,14 @@ ClassDesignExperimentsController:
     - POST
     mappingPaths:
     - /oop/class-design/checkout/experiment
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   transfer(TransferRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Transfer funds between BankAccount entities using Money value objects.
+    description: <p>Transfer an amount of money between two identity-bearing <code>BankAccount</code> entities, using <code>Money</code> as a currency-aware value
+      object. The response exposes balances before and after; <code>BankAccount.transferTo()</code> guards account identity, sufficient funds and complete validation
+      before either balance is updated.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -246,15 +241,17 @@ ClassDesignExperimentsController:
     - POST
     mappingPaths:
     - /oop/class-design/transfers/experiment
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
 CompositionExperimentController:
   notification(NotificationRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Compose a formatter, transport and optional audit decorator
+    description: '<p>Accepts an order, recipient, amount, <code>FULL</code>/<code>COMPACT</code> format, <code>EMAIL</code>/<code>SMS</code> channel and audit option.
+      The service combines <code>Formatter</code>, <code>RecordingTransport</code> and optionally <code>AuditedTransport</code>, then delegates to <code>Notifier</code>.</p>
+
+      <p>The response includes formatted content, acceptance and an ordered trace. If transport rejects the message, the audit decorator does not falsely claim acceptance.
+      This demonstrates interchangeable collaborators, Strategy, Decorator and delegation without sending any real notification.</p>'
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -272,14 +269,16 @@ CompositionExperimentController:
     - POST
     mappingPaths:
     - /oop/composition/notifications
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   policies(PolicyRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Replace pricing policies and inject a policy for one quote
+    description: '<p>Builds <code>SwitchablePricing</code> with an initial <code>NONE</code>, <code>FIXED</code> or <code>PERCENT</code> policy, then runs up to 20
+      <code>SWITCH</code>, <code>QUOTE</code> and <code>QUOTE_WITH_POLICY</code> steps. A timeline records active policy, policy used, subtotal and payable amount.</p>
+
+      <p><code>SWITCH</code> replaces the collaborator held by <code>AtomicReference</code>; <code>QUOTE_WITH_POLICY</code> passes a temporary collaborator for only
+      one quote without changing the active one. Immutable policies and pricing state are local to the request.</p>'
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -297,14 +296,16 @@ CompositionExperimentController:
     - POST
     mappingPaths:
     - /oop/composition/policies
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   placeOrder(PlaceOrderRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Place an order through an injected repository collaborator
+    description: '<p>Accepts an order ID and 1?20 lines to build an immutable <code>OrderPlacement.Order</code>. <code>OrderService</code> receives an <code>OrderRepository</code>
+      through its constructor and delegates saving to it, separating business composition from persistence details.</p>
+
+      <p>The <code>InMemoryOrderRepository</code> can deliberately reject a save, revealing that failed delegation must not be reported as persisted success. The
+      response exposes acceptance, failure, save attempts, stored mock orders and the explicit <code>IN_MEMORY_ONLY</code> durability limitation.</p>'
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -322,14 +323,16 @@ CompositionExperimentController:
     - POST
     mappingPaths:
     - /oop/composition/orders
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   resources(ResourceRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Observe explicit closing for owned versus borrowed resources
+    description: '<p>Creates a simulated <code>TrackedHandle</code> and composes it with an <code>Exporter</code>. Under <code>OWNED</code> ownership, closing the
+      exporter also closes the handle; under <code>BORROWED</code> ownership, the exporter closes itself and the caller closes the handle afterward.</p>
+
+      <p>The response traces construction, write and close operations, records closure state at two points and reports simulated write failure. The experiment illustrates
+      explicit resource ownership and <code>try-with-resources</code>, not JVM garbage-collection timing or real file/socket activity.</p>'
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -347,15 +350,15 @@ CompositionExperimentController:
     - POST
     mappingPaths:
     - /oop/composition/resources
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
 DesignPatternExperimentController:
   pricing(PricingRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Compare discount Strategies and Decorator composition order in price quotes.
+    description: <p>Quote the same subtotal and delivery fee with one of <code>NONE</code>, <code>MEMBER_5</code> and <code>VOUCHER_30000</code> strategies, comparing
+      both <code>DISCOUNT_THEN_FEE</code> and <code>FEE_THEN_DISCOUNT</code> orderings. Each <code>executionTrace</code> exposes the decorator composition order,
+      which may change the effective discount and payable amount.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -373,14 +376,14 @@ DesignPatternExperimentController:
     - POST
     mappingPaths:
     - /oop/design-patterns/pricing/experiment
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   tasks(TasksRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Execute, undo and redo Commands while tracing Observer deliveries.
+    description: <p>Create a new <code>TaskBoard</code> for each request and run <code>ADD</code>, <code>COMPLETE</code>, <code>UNDO</code>, <code>REDO</code> and
+      <code>UNSUBSCRIBE_NOTIFY</code>. Command history tracks which changes can be undone or replayed; Observer listeners receive notifications after successful commands.
+      Each step contains task, stack-depth and delivery snapshots.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -398,14 +401,14 @@ DesignPatternExperimentController:
     - POST
     mappingPaths:
     - /oop/design-patterns/tasks/experiment
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   report(ReportRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Generate TEXT or CSV reports through Factory Method and Template Method.
+    description: <p>Use <code>TextCreator</code> or <code>CsvCreator</code> to select a rendering template via Factory Method. The shared <code>ReportTemplate.render()</code>
+      fixes validation, header, row and summary sequence; concrete templates customize only the generated text. The response includes content, total, row count and
+      execution trace.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -423,15 +426,14 @@ DesignPatternExperimentController:
     - POST
     mappingPaths:
     - /oop/design-patterns/reports/generate
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
 DesignPitfallExperimentController:
   seats(SeatsRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Preserve seat invariants during reservations and cancellations
+    description: <p>Construct a <code>SeatInventory</code> with encapsulated capacity/reserved fields and guarded <code>reserve</code>/<code>cancel</code> methods.
+      Before/after snapshots prove <code>0 ≤ reserved ≤ capacity</code> and unchanged state on rejection, unlike unsafe public state or arbitrary setters.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -449,14 +451,13 @@ DesignPitfallExperimentController:
     - POST
     mappingPaths:
     - /oop/design-pitfalls/seats/experiment
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   mutableKey(MutableKeyRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Demonstrate a mutable HashMap key and immutable ID alternative
+    description: <p>Contrast an <code>UnsafeKey</code> whose displayName participates in hashCode with an immutable record <code>StableId</code>. The endpoint reports
+      real HashMap lookups before/after renaming and demonstrates how mutable profile data can retain a stable map identity.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -474,14 +475,13 @@ DesignPitfallExperimentController:
     - POST
     mappingPaths:
     - /oop/design-pitfalls/mutable-key/experiment
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   checkout(CheckoutRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Compare monolithic checkout with a responsibility-separated workflow
+    description: <p>Run the same order through monolithic <code>LegacyCheckout</code> and a <code>CheckoutWorkflow</code> using concrete <code>StockGuard</code>,
+      <code>PriceRules</code>, and <code>DeliveryRules</code>. Compare quotes and collaborationTrace to teach a behavior-preserving refactor without premature abstraction.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -499,15 +499,14 @@ DesignPitfallExperimentController:
     - POST
     mappingPaths:
     - /oop/design-pitfalls/checkout/refactor
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
 EncapsulationExperimentController:
   cart(CartRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Try guarded cart operations and observe stable state snapshots.
+    description: <p>Try <code>put</code>, <code>changeQuantity</code> and <code>remove</code> on a cart limited to 25 lines. Validate quantities, VND unit prices
+      and exact totals; capture before/after snapshots for each step. Invalid operations are rejected without partially updating the cart.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -525,14 +524,13 @@ EncapsulationExperimentController:
     - POST
     mappingPaths:
     - /oop/encapsulation/cart/experiment
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   stock(StockRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Check inventory invariants through reserve, ship, release and restock.
+    description: <p>Create a <code>StockLedger</code> with on-hand, reserved and available units. Apply <code>restock</code>, <code>reserve</code>, <code>release</code>
+      and <code>ship</code> while maintaining <code>0 &lt;= reserved &lt;= onHand &lt;= 1000000</code>, including after rejected changes.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -550,14 +548,13 @@ EncapsulationExperimentController:
     - POST
     mappingPaths:
     - /oop/encapsulation/stock/experiment
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   snapshot(EventRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Demonstrate defensive copies of mutable dates and attendee drafts.
+    description: <p>Use <code>EventSnapshot</code> to demonstrate copying a mutable <code>Date</code> and converting mutable attendee drafts into immutable name values.
+      Deliberately mutate both external objects and getter results to verify the captured state remains unchanged.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -575,14 +572,13 @@ EncapsulationExperimentController:
     - POST
     mappingPaths:
     - /oop/encapsulation/event-snapshot/experiment
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   order(OrderRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Trace business-method guards across the order lifecycle.
+    description: <p>Simulate <code>LifecycleOrder</code> with guarded <code>markPaid</code>, <code>ship</code> and <code>cancel</code> methods. Only <code>CREATED</code>
+      to <code>PAID</code> to <code>SHIPPED</code>, or <code>CREATED</code> to <code>CANCELLED</code>, are permitted; no public free-form status setter exists.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -600,15 +596,16 @@ EncapsulationExperimentController:
     - POST
     mappingPaths:
     - /oop/encapsulation/order/experiment
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
 InheritanceExperimentsController:
   calculatePay(PayrollRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Calculate payroll using superclass dynamic dispatch
+    description: <p>Accepts employee kind, identity, and pay fields to construct either <code>Employee.Salaried</code> or <code>Employee.Hourly</code>. Returns declared
+      type <code>Employee</code>, runtime subclass, calculation mode and simulated monthly pay in VND.</p><p>The abstract superclass protects employee ID/name through
+      private fields and final accessors; subclasses override <code>monthlyPayVnd()</code> and <code>calculation()</code>. Hourly pay uses <code>Math.multiplyExact</code>
+      to report rather than silently wrap overflow.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -626,14 +623,15 @@ InheritanceExperimentsController:
     - POST
     mappingPaths:
     - /oop/inheritance/payroll/calculate
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   compareDelivery(DeliveryRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Compare a deep delivery hierarchy with composition
+    description: '<p>Accepts distance, priority and holiday options and computes fees two ways: through the <code>DeliveryPlan</code> class hierarchy, and through
+      compositional fee rules in the service. Returns the concrete hierarchy type, both fees, both traces and equality.</p><p>Shows successive <code>super.distanceFee</code>
+      calls in a deep hierarchy while final <code>quote</code> enforces shared validation. Composition expresses the same optional surcharges without a distinct subclass
+      for each combination.</p>'
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -651,14 +649,14 @@ InheritanceExperimentsController:
     - POST
     mappingPaths:
     - /oop/inheritance/delivery/compare
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   constructorTrace(ConstructorRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Trace an overridden call during parent construction
+    description: <p>Runs unsafe and safe parent/child construction sequences with the same label. In the unsafe path, a parent constructor invokes an overridable
+      method before the child field initializer runs; the safe path inspects the value after child construction.</p><p>Returns both execution traces, what the parent
+      observed, and the final value. This demonstrates the constructor virtual-dispatch hazard without relying on concurrency.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -676,14 +674,15 @@ InheritanceExperimentsController:
     - POST
     mappingPaths:
     - /oop/inheritance/constructors/trace
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   resolveCapabilities(CapabilitiesRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Resolve interface defaults and shared behavior
+    description: <p>Accepts <code>itemId</code> and CSV tags to execute <code>CapabilityResolution</code>. <code>MixedCapability</code> explicitly combines conflicting
+      <code>Printable.super.label()</code> and <code>Searchable.super.label()</code>; an inherited concrete class method wins over an interface default.</p><p>The
+      <code>Taggable</code> default method also normalizes comma-separated tags to lowercase and trims whitespace. The example teaches multiple-interface behavior
+      reuse without multiple class inheritance.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -701,15 +700,15 @@ InheritanceExperimentsController:
     - POST
     mappingPaths:
     - /oop/inheritance/capabilities/resolve
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
 InterfaceExperimentsController:
   shipping(ShippingRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Compare shipping quotes from interchangeable ShippingFeePolicy implementations.
+    description: <p>Exercise the <code>ShippingFeePolicy</code> contract via <code>EconomyShippingPolicy</code> and <code>ExpressShippingPolicy</code>. The API returns
+      both calculated prices and the selected policy. <code>ShippingQuoteService</code> receives an interface through constructor injection, while the <code>DistanceShippingPolicy</code>
+      abstract superclass shares configured state and the fee algorithm.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -727,14 +726,14 @@ InterfaceExperimentsController:
     - POST
     mappingPaths:
     - /oop/interfaces/shipping/quote
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   documents(DocumentRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Use reader, writer and publisher interfaces on one DocumentWorkspace.
+    description: <p>A single <code>DocumentWorkspace</code> serves as <code>DocumentReader</code>, <code>DocumentWriter</code> and <code>DocumentPublisher</code>.
+      The <code>save/read/publish</code> actions illustrate interface segregation, a common underlying object, restrictions on published documents, and an explicit
+      resolution of the <code>roleName()</code> default-method conflict.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -752,14 +751,13 @@ InterfaceExperimentsController:
     - POST
     mappingPaths:
     - /oop/interfaces/documents/experiment
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   checkout(CheckoutRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Swap PaymentGateway and PaymentRepository implementations with request-local replay.
+    description: <p><code>CheckoutService</code> depends only on <code>PaymentGateway</code> and <code>PaymentRepository</code> contracts. Choose an approving/declining
+      gateway and HashMap/TreeMap-backed repository, then inspect local gateway calls, receipts and replay behavior keyed by <code>requestId</code>.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -777,15 +775,16 @@ InterfaceExperimentsController:
     - POST
     mappingPaths:
     - /oop/interfaces/checkout/experiment
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
 LanguageMechanicsExperimentsController:
   generics(GenericBatchRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Explore PECS, bounded generics, and a typed cache
+    description: <p>Accepts <code>integers</code>, <code>decimals</code>, cache entries and lookup keys. The result contains copied number strings, a decimal-string
+      sum, the largest integer, found entries and missing keys.</p><p>Demonstrates PECS through <code>copy(List&lt;? extends T&gt;, List&lt;? super T&gt;)</code>,
+      a bounded generic <code>T extends Comparable&lt;? super T&gt;</code>, and a <code>TypedCache&lt;K,V&gt;</code> that preserves types at compile time. The sum
+      uses <code>BigDecimal</code> to avoid unnecessarily losing decimal precision in addition.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -803,14 +802,15 @@ LanguageMechanicsExperimentsController:
     - POST
     mappingPaths:
     - /oop/language-mechanics/generics/experiment
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   stock(StockRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Exercise inventory keys, stock outcomes and safe diagnostics
+    description: <p>Runs <code>REGISTER</code>, <code>READ</code>, <code>RESERVE</code> and <code>RESTOCK</code> actions against an inventory registry keyed by tenantId
+      plus sku. Each step reports acceptance, result code, available units and a controlled diagnostic string.</p><p><code>ProductKey</code> is an immutable record
+      with value-based <code>equals/hashCode</code>, keeping tenants distinct. <code>StockItem</code> enforces nonnegative stock. Shortage produces <code>INSUFFICIENT_STOCK</code>
+      in a result rather than a malformed request, while <code>toString()</code> deliberately omits contactEmail and providerToken.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -828,14 +828,15 @@ LanguageMechanicsExperimentsController:
     - POST
     mappingPaths:
     - /oop/language-mechanics/stock/experiment
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   shipping(ShippingRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Quote simulated delivery using ShippingPolicy implementations
+    description: <p>Accepts 1?50 quotes with serviceCode and weight in grams. <code>standard</code> costs a fixed 20000 VND; <code>express</code> costs 35000 plus
+      8000 per rounded-up kilogram.</p><p>Using the nominal Java <code>ShippingPolicy</code> interface, runtime dispatch selects <code>StandardShipping</code> or
+      <code>ExpressShipping</code> without casts. Unknown but structurally valid service codes yield per-line <code>SERVICE_NOT_SUPPORTED</code> and do not contribute
+      to the accepted-fee total. Weights outside 1?100000 grams cause HTTP 400.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -853,15 +854,15 @@ LanguageMechanicsExperimentsController:
     - POST
     mappingPaths:
     - /oop/language-mechanics/shipping/experiment
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
 LifecycleExperimentController:
   create(CreationRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Compare three CourseEnrollment construction styles
+    description: '<p>Creates <code>CourseEnrollment</code> from course code, capacity, students and <code>style</code> (<code>CONSTRUCTOR</code>, <code>STATIC_FACTORY</code>
+      or <code>BUILDER</code>). Returns the student list and available seats.</p><p>All paths use the same constructor checks: valid 1?40 character code, capacity
+      1?100, valid unique student IDs and no over-enrollment. Defensive copying protects object state.</p>'
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -879,14 +880,14 @@ LifecycleExperimentController:
     - POST
     mappingPaths:
     - /oop/lifecycle/creation
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   references(ReferenceRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Trace graph reachability from logical roots
+    description: <p>Simulates up to 15 linked nodes, a logical root set and up to 30 <code>RETAIN</code>/<code>RELEASE</code> operations. Returns an initial snapshot
+      and one per step, separating nodes reachable from supplied roots from nodes without a root path.</p><p>Cycles do not preserve reachability once all paths from
+      roots are removed. This is logical graph traversal, not observation of JVM GC roots or collection timing.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -904,14 +905,14 @@ LifecycleExperimentController:
     - POST
     mappingPaths:
     - /oop/lifecycle/references
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   resources(ResourceRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Observe try-with-resources and closing failures
+    description: <p>Runs a <code>try-with-resources</code> block with two <code>TrackedResource</code> instances and flags controlling failures in the body, outer
+      close or inner close. Returns event trace, primary and suppressed errors, close flags and completion status.</p><p>Demonstrates inner-before-outer closure regardless
+      of body outcome and precedence of a body failure or the first closing failure. Explicit resource closing is separate from JVM heap garbage collection.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -929,14 +930,15 @@ LifecycleExperimentController:
     - POST
     mappingPaths:
     - /oop/lifecycle/resources
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   publication(PublicationRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Compare unsafe and safe listener publication
+    description: <p>Runs two listener registration styles with a valid <code>label</code>. <code>UnsafeListener</code> registers <code>this</code> before assigning
+      its field; a synchronous callback sees <code>null</code>. <code>SafeListener</code> finishes initialization before factory-based registration, so the callback
+      sees the assigned label.</p><p>Returns observations and subscription counts to explain deterministic <code>this</code>-escape, without relying on thread racing
+      or timing.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -954,15 +956,18 @@ LifecycleExperimentController:
     - POST
     mappingPaths:
     - /oop/lifecycle/publication
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
 ModelingExperimentController:
   library(LibraryRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Simulate library borrowing with object snapshots and business rules
+    description: '<p>Accepts book titles, members, physical book copies and dated BORROW/RETURN actions. Returns the initial graph, before/after snapshots for each
+      action, collaboration calls, rejection rule codes and final state.</p>
+
+      <p>The model distinguishes <code>BookTitle</code> from <code>BookCopy</code>. <code>Member</code> enforces eligibility and a maximum of three active loans;
+      <code>Loan</code> stores history and a 14-day due date; <code>LibraryModel</code> coordinates invariants spanning multiple objects. Domain rejection appears
+      in a returned step rather than automatically causing HTTP 400; malformed request structure is HTTP 400.</p>'
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -980,14 +985,17 @@ ModelingExperimentController:
     - POST
     mappingPaths:
     - /oop/modeling/library/experiment
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   orders(OrderRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Exercise order-state transitions and guarded events
+    description: '<p>Accepts orderId, totalVnd and an action sequence for <code>ModeledOrder</code>, producing a snapshot before and after every step plus accepted,
+      rule code and detail. The model starts in <code>DRAFT</code> and can advance through <code>WAITING_PAYMENT</code>, <code>PAID</code>, <code>PACKING</code>,
+      <code>SHIPPED</code>, <code>DELIVERED</code>, or transition to <code>CANCELLED</code> when allowed.</p>
+
+      <p>Payment confirmation must exactly match totalVnd and shipping requires a valid trackingCode; events without legal edges are rejected without changing state.
+      This is executable evidence for a state diagram, not an actual payment or shipping service.</p>'
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -1005,15 +1013,14 @@ ModelingExperimentController:
     - POST
     mappingPaths:
     - /oop/modeling/orders/experiment
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
 ObjectExperimentsController:
   references(ObjectExperimentDto.ReferenceRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Observe aliases and Java pass-by-value reference semantics.
+    description: <p>Create two aliases of one <code>MutableCounter</code> alongside a separately allocated counter with matching initial fields. The response captures
+      identity and values before/after parameter-based mutation and local parameter reassignment.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -1031,14 +1038,13 @@ ObjectExperimentsController:
     - POST
     mappingPaths:
     - /oop/objects/references
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   equality(ObjectExperimentDto.EqualityRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Compare identity, equals/hashCode and HashSet membership.
+    description: <p>Compare two <code>ProductCode</code> records using <code>==</code>, <code>equals()</code>, <code>hashCode()</code> and <code>HashSet</code> size.
+      Contrast their value contract with two <code>LegacyIdentityCode</code> objects inheriting <code>Object.equals()</code>.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -1056,14 +1062,13 @@ ObjectExperimentsController:
     - POST
     mappingPaths:
     - /oop/objects/equality
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   copies(ObjectExperimentDto.CopyRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Test shallow/deep copies and read-only snapshots.
+    description: <p>Build a shallow list copy, a list containing independent element copies, a <code>List.copyOf</code> snapshot and a value record. Mutate the original
+      element and append an item to expose shared mutable elements versus independent list structure.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -1081,14 +1086,13 @@ ObjectExperimentsController:
     - POST
     mappingPaths:
     - /oop/objects/copies
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   absence(ObjectExperimentDto.AbsenceRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Distinguish a missing object from a missing optional field.
+    description: <p>Look up a customer in a local sample containing only <code>C01</code> (Lan). <code>Optional</code> and list values distinguish an absent customer
+      from an absent optional address without accessing a database.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -1106,14 +1110,13 @@ ObjectExperimentsController:
     - POST
     mappingPaths:
     - /oop/objects/absence
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   checkout(ObjectExperimentDto.CheckoutRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Trace object collaboration, stock reservation and compensation.
+    description: <p>Simulate cooperation among <code>Cart</code>, <code>Inventory</code>, <code>PaymentGateway</code>, <code>Order</code> and <code>Notifier</code>.
+      Return a trace, inventory before/after, and outcomes for success, inadequate stock or simulated payment rejection.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -1131,15 +1134,18 @@ ObjectExperimentsController:
     - POST
     mappingPaths:
     - /oop/objects/checkout
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
 BasicsExperimentController:
   simulateAccount(AccountSimulationRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Simulate deposits and withdrawals on an account
+    description: '<p>Creates a new <code>BankAccount</code> from <code>accountId</code> and <code>openingBalanceCents</code>, then executes 1–20 <code>DEPOSIT</code>/<code>WITHDRAW</code>
+      actions. The response reports <code>finalBalanceCents</code> and a <code>timeline</code> with balance before/after, acceptance, and rejection reasons for each
+      action.</p>
+
+      <p>Demonstrates encapsulation and balance invariants: amounts must be positive, an overdrawn withdrawal leaves state unchanged, and an overflowing deposit is
+      rejected safely. Each request has its own object; there is no database or shared account state.</p>'
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -1157,14 +1163,17 @@ BasicsExperimentController:
     - POST
     mappingPaths:
     - /oop/basics/accounts/simulate
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   simulateOrder(OrderSimulationRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Simulate order lifecycle and business invariants
+    description: '<p>Creates a new <code>OrderAggregate</code> and processes 1–20 <code>ADD_LINE</code>, <code>CONFIRM</code>, or <code>CANCEL</code> steps. The result
+      tracks the order status, total, and line count after every step, including rejected operations.</p>
+
+      <p>Demonstrates responsibility for enforcing invariants within an object: lines can be added and the order can be finalized only while <code>DRAFT</code>; an
+      empty order cannot be confirmed, and totals use overflow-checked arithmetic. A rejected step does not abort the whole simulation; invalid input before the loop
+      yields HTTP 400.</p>'
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -1182,14 +1191,16 @@ BasicsExperimentController:
     - POST
     mappingPaths:
     - /oop/basics/orders/simulate
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   compareShipping(ShippingQuoteRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Compare two shipping policy implementations
+    description: '<p>Accepts <code>subtotalCents</code> and <code>distanceKm</code>, applies both <code>ShippingPolicy.Pickup</code> and <code>ShippingPolicy.Courier</code>
+      to the same request, and returns <code>quotes</code> with <code>policy</code>, <code>feeCents</code>, and <code>payableCents</code>.</p>
+
+      <p>Demonstrates interface-based polymorphism: <code>PICKUP</code> costs zero, while <code>COURIER</code> costs 1,500 + 400 × distance in km, measured in cents.
+      These illustrative values are not real carrier prices; the subtotal must be nonnegative and the distance must be within 0–100 km.</p>'
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -1207,15 +1218,15 @@ BasicsExperimentController:
     - POST
     mappingPaths:
     - /oop/basics/shipping/quotes
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
 PolymorphismExperimentsController:
   dispatch(DispatchRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Contrast overload resolution, runtime overrides, field hiding and static hiding.
+    description: <p>Calculate outcomes from <code>Handler</code> and <code>PremiumHandler</code> called with either <code>Event</code> or <code>PriorityEvent</code>.
+      The results distinguish overload selection using the argument's declared type, runtime dispatch for overridden instance methods, and static resolution of fields
+      and class methods on the very same receiver.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -1233,14 +1244,14 @@ PolymorphismExperimentsController:
     - POST
     mappingPaths:
     - /oop/polymorphism/dispatch/experiment
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   payments(PaymentsRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Compare three simulated payment implementations through PaymentMethod.
+    description: <p>Process several <code>PaymentCommand</code> values through <code>PaymentCheckoutService</code> without branching in that service on concrete payment
+      types. CARD enforces a per-operation limit, WALLET debits a request-local balance and BANK reports PENDING, with per-step results and PAID/DECLINED/PENDING
+      counts.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -1258,15 +1269,18 @@ PolymorphismExperimentsController:
     - POST
     mappingPaths:
     - /oop/polymorphism/payments/experiment
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
 PracticeExperimentController:
   bank(BankRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Exercise transfers, withdrawals and atomic account balance rules
+    description: '<p>Initializes 1–10 accounts with ID, owner and nonnegative opening balance; runs 1–20 <code>DEPOSIT</code>, <code>WITHDRAW</code> and <code>TRANSFER</code>
+      actions with positive amounts. Returns initial balances, a before/after snapshot and acceptance/detail for each action, and the final ledger.</p>
+
+      <p><code>BankLedger</code> synchronizes operations on one request-local ledger. <code>transfer</code> verifies sufficient funds and uses <code>Math.addExact</code>
+      on the destination before deducting the source; an insufficient-funds or overflow refusal cannot partially transfer money. Caught action failures are returned
+      within HTTP 200, not real banking or durable transfer guarantees.</p>'
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -1284,14 +1298,17 @@ PracticeExperimentController:
     - POST
     mappingPaths:
     - /oop/practice/bank/experiment
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   orders(OrderRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Practice order lifecycle, line invariants and frozen snapshots
+    description: '<p>Creates a <code>PracticeOrder</code> in DRAFT and executes up to 20 <code>SET_LINE</code>, <code>CHANGE_QUANTITY</code>, <code>REMOVE_LINE</code>,
+      <code>PLACE</code> or <code>CANCEL</code> actions. Each result includes before/after state, acceptance/detail and a removed flag for removal.</p>
+
+      <p>The order normalizes SKU, stores distinct lines in a <code>LinkedHashMap</code> and returns defensive <code>List.copyOf</code> snapshots. Subtotal is capped
+      at 10000000 cents, a 5% discount applies from 200000, shipping is free for zero or at least 100000 subtotal, and line edits only work in DRAFT. These are simulated
+      cents, not actual payments.</p>'
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -1309,14 +1326,17 @@ PracticeExperimentController:
     - POST
     mappingPaths:
     - /oop/practice/orders/experiment
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   library(LibraryRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Simulate library loans and a non-retroactive borrowing policy change
+    description: '<p>Accepts <code>NORMAL</code>/<code>REFERENCE</code> books, active/inactive members, physical copies and 1–25 dated <code>BORROW</code>, <code>RETURN</code>
+      or <code>REVISE_POLICY</code> actions. The response records copy snapshots, historical loans, open count, and rule codes on expected refusals.</p>
+
+      <p>The <code>LEGACY</code> policy limits each member to three open loans and sets a 14-day due date. <code>REVISED</code> permits five and uses seven days for
+      REFERENCE copies while NORMAL remains 14 days. Existing loans retain their due dates after a policy change. Active-member, unavailable-copy, overdue-loan and
+      return-date constraints continue to apply; every request runs on a fresh in-memory library.</p>'
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -1334,15 +1354,19 @@ PracticeExperimentController:
     - POST
     mappingPaths:
     - /oop/practice/library/experiment
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
 RefactoringExperimentsController:
   checkout(CheckoutRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Compare checkout calculations before and after extracting responsibilities
+    description: '<p>Accepts a VIP flag and 1–100 order lines (SKU, unit price, quantity), calculating the same pricing via <code>LegacyCheckout</code> and a refactored
+      <code>ShoppingOrder</code> plus <code>PricingPolicy</code>. Both <code>PricingView</code> results include subtotal, discount, shipping, payable, total and receipt,
+      together with the <code>equivalent</code> flag.</p>
+
+      <p>Refactoring moves multiplication to <code>OrderLine.lineAmountVnd()</code>, sum-of-lines responsibility to <code>ShoppingOrder.subtotalVnd()</code>, discount/shipping
+      rules to <code>PricingPolicy</code>, and presentation to <code>ReceiptFormatter</code>. VIP discounts start at subtotal 500000, and shipping is free from payable
+      700000. Observable equivalence matters more than the number of extracted classes.</p>'
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -1360,14 +1384,17 @@ RefactoringExperimentsController:
     - POST
     mappingPaths:
     - /oop/refactoring/checkout/compare
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   delivery(DeliveryRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Verify polymorphic delivery policies match the legacy type switch
+    description: '<p>Accepts 1–50 <code>STANDARD</code>, <code>EXPRESS</code> or <code>PICKUP</code> delivery requests with order value and weight. Each entry returns
+      before/after fee and ETA, a per-entry <code>equivalent</code> flag, and a batch-wide <code>allEquivalent</code> flag.</p>
+
+      <p>The legacy <code>LegacyDeliveryCalculator</code> switches on the enum; the refactored service selects <code>StandardDeliveryPolicy</code>, <code>ExpressDeliveryPolicy</code>
+      or <code>PickupDeliveryPolicy</code> and dispatches through the interface. STANDARD becomes free at order value 500000, EXPRESS charges by weight, and PICKUP
+      costs zero. The endpoint checks Replace Conditional with Polymorphism, not actual delivery.</p>'
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -1385,14 +1412,17 @@ RefactoringExperimentsController:
     - POST
     mappingPaths:
     - /oop/refactoring/delivery/compare
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   alerts(AlertRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Simulate composed alert channels with bounded temporary-failure retries
+    description: '<p>Accepts EMAIL/SMS channel, recipient, incident, the number of simulated temporary failures, and a maximum attempt count. <code>AlertDispatcher</code>
+      has a <code>MessageChannel</code> dependency instead of extending a transport implementation; <code>RetryingChannel</code> decorates <code>RecordingMessageChannel</code>
+      and retries only <code>TemporaryDeliveryFailure</code>.</p>
+
+      <p>The response reports <code>delivered</code>, attempt count, recorded events and mock-delivered messages, with <code>DELIVERED</code> or <code>RETRY_EXHAUSTED</code>
+      outcome. Every request creates a new recorder, so counters are isolated. Bad channel or attempt settings, recipient and incident are HTTP 400.</p>'
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -1410,15 +1440,14 @@ RefactoringExperimentsController:
     - POST
     mappingPaths:
     - /oop/refactoring/alerts/experiment
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
 RelationshipsExperimentsController:
   transfer(TransferRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Transfer employees while maintaining bidirectional associations
+    description: <p>Create departments and employees, then transfer or remove assignments. The API demonstrates why both <code>employee.department</code> and <code>department.members</code>
+      must change consistently, and why a full destination cannot detach an employee from their prior department.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -1436,14 +1465,13 @@ RelationshipsExperimentsController:
     - POST
     mappingPaths:
     - /oop/relationships/departments/transfer
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   enroll(EnrollmentRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Simulate many-to-many student–course enrollments
+    description: <p>Manage studentId/courseId links through <code>EnrollmentRegistry</code>, including new enrollments, duplicates, cancellations, and re-enrollment
+      with a new sequence. A NotificationGateway is supplied as a temporary method dependency, not an owned long-lived association.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -1461,14 +1489,13 @@ RelationshipsExperimentsController:
     - POST
     mappingPaths:
     - /oop/relationships/enrollments/simulate
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   ownership(OwnershipRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Compare aggregation and composition lifecycles
+    description: <p>Demonstrate that <code>Team</code> aggregates references to <code>Member</code> objects surviving independently in a directory, whereas <code>Order</code>
+      creates and owns <code>OrderLine</code> instances. Removing a team member leaves the member intact; closing the order clears its owned lines.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -1486,15 +1513,14 @@ RelationshipsExperimentsController:
     - POST
     mappingPaths:
     - /oop/relationships/ownership/compare
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
 SolidExperimentController:
   quote(QuoteRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Quote prices using the discount-policy contract
+    description: <p>Select NONE, TEN_PERCENT, LOYALTY, or BROKEN_NEGATIVE along with a nonnegative subtotal. This endpoint illustrates extension through the <code>DiscountPolicy</code>
+      interface without changing the pricing coordinator, and rejection of a deliberately broken implementation that returns a negative discount and violates LSP.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -1512,14 +1538,13 @@ SolidExperimentController:
     - POST
     mappingPaths:
     - /oop/solid/discount/quote
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   experiment(ExperimentRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Simulate checkout through order-storage and receipt ports
+    description: <p>Run up to 16 checkout attempts, comparing receipts, stored orders, and simulated receipt notifications. The experiment shows a use case using
+      small contracts rather than concrete adapters, rejection of invalid attempts before their side effects, and fresh request-local storage and notification state.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -1537,15 +1562,15 @@ SolidExperimentController:
     - POST
     mappingPaths:
     - /oop/solid/checkout/experiment
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
 SubtypingExperimentController:
   dispatch(DispatchRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Observe dispatch, upcasting, and adapters via PaymentMethod
+    description: <p>Choose CARD, WALLET, or LEGACY_ADAPTER and call <code>description()</code> and <code>charge()</code> through <code>PaymentMethod</code>. The response
+      exposes declared/runtime types, shared identity after upcasting, <code>instanceof</code> checks, and the difference between static overload resolution and dynamic
+      overriding.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -1563,14 +1588,13 @@ SubtypingExperimentController:
     - POST
     mappingPaths:
     - /oop/subtyping/dispatch
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   contract(DiscountRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Check substitutability across discount policies
+    description: <p>Evaluate values admitted by the <code>DiscountPolicy.netCents</code> contract using FIXED, PERCENT, or STRICT_MINIMUM. Per-value results and <code>allCasesPass</code>
+      show that STRICT_MINIMUM strengthens a precondition and breaks LSP despite implementing the same interface.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -1588,14 +1612,13 @@ SubtypingExperimentController:
     - POST
     mappingPaths:
     - /oop/subtyping/discount-contract
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   geometry(GeometryRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Test the Rectangle contract against the Square counterexample
+    description: <p>Call setWidth/setHeight through <code>MutableRectangle</code> while the runtime object is a rectangle or square. The response checks independent
+      setter guarantees and compares an alternative design exposing only <code>MeasurableShape.area()</code>.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -1613,15 +1636,15 @@ SubtypingExperimentController:
     - POST
     mappingPaths:
     - /oop/subtyping/geometry-contract
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
 TestingExperimentController:
   contracts(ContractRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Contract-test MONITOR, ATOMIC and deliberately broken SeatInventory implementations.
+    description: '<p>Apply the same <code>RESERVE</code>/<code>CANCEL</code> sequence to <code>MonitorSeatInventory</code>, <code>AtomicSeatInventory</code> and <code>BrokenSeatInventory</code>.
+      Each step is independently checked for return values, snapshots and the invariant <code>0 &lt;= reserved &lt;= capacity</code>. This demonstrates black-box
+      contract testing and substitutability (LSP): the BROKEN implementation improperly mutates its state while rejecting a reservation.</p>'
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -1639,14 +1662,14 @@ TestingExperimentController:
     - POST
     mappingPaths:
     - /oop/testing/inventory/contracts
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   collaboration(CollaborationRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Observe fake, stub and recording collaborators throughout checkout branches.
+    description: <p>Run <code>CheckoutWorkflow</code> with injected <code>FakeInventory</code>, <code>StubPayment</code> and <code>RecordingSender</code>. Inspect
+      call order and counts across out-of-stock, declined/error payments with stock compensation, and successful payment followed by failed receipt delivery. These
+      are request-local test doubles, not real payments or emails.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -1664,14 +1687,14 @@ TestingExperimentController:
     - POST
     mappingPaths:
     - /oop/testing/checkout/collaboration
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true
   regression(RegressionRequest):
-    summary: Title not provided
-    description: Detailed description not provided
+    summary: Compare post-refactor invoices and expose the free-shipping threshold defect.
+    description: <p>Compare public invoice values from <code>PerLineQuote</code>, <code>GroupedQuote</code> and <code>BrokenShippingQuote</code> with the same input.
+      Regression correctness is defined by <code>Invoice</code> fields (subtotal, discount, shipping, total), not by matching internal catalog lookup counts. The
+      seeded defect changes free-shipping comparison from <code>&gt;=</code> to <code>&gt;</code>, making the error observable exactly at 100000 VND.</p>
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
@@ -1689,8 +1712,6 @@ TestingExperimentController:
     - POST
     mappingPaths:
     - /oop/testing/pricing/regression
-    produces: [
-      ]
-    consumes: [
-      ]
+    produces: []
+    consumes: []
     usage: true

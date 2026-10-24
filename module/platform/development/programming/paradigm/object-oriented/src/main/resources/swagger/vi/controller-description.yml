@@ -1,126 +1,281 @@
 AbstractionExperimentsController:
-  description: |-
-    <h2>Abstraction Experiments Controller</h2>
-    <p>Đây là mô tả</p>
+  description: '<h2>Thực nghiệm trừu tượng hóa trong Java</h2>
+
+    <p><code>AbstractionExperimentsController</code> minh họa cách người gọi làm việc qua hợp đồng rõ ràng, trong khi cấu trúc dữ liệu và thuật toán cụ thể nằm phía
+    sau các service/model. Bốn API độc lập gồm báo giá vận chuyển, đặt và trả ghế, đánh giá nghỉ phép và tìm kiếm sách.</p>
+
+    <p>Ví dụ vận chuyển dùng abstract class <code>ShippingPlan</code> giữ quy trình và cho phép các chính sách giá khác nhau; đặt ghế và nghỉ phép dùng <code>SeatInventory</code>,
+    <code>LeavePolicy</code> làm hợp đồng; danh mục ẩn <code>HashMap</code> sau giao diện <code>Catalog</code>. Mỗi lần gọi xử lý dữ liệu mô phỏng trong bộ nhớ, không
+    có lưu trữ bền vững.</p>
+
+    <p><code>AbstractionExceptionHandler</code> giới hạn cho Controller này và quy đổi lỗi đầu vào thành HTTP 400, lỗi trạng thái thành HTTP 409 và tràn số thành
+    HTTP 422. Một quyết định bị từ chối hợp lệ hoặc thao tác ghế bị từ chối trong kịch bản vẫn có thể trả HTTP 200 với mã kết quả trong body.</p>'
   readmeRelated:
     file: ''
 ClassesExperimentController:
-  description: |-
-    <h2>Classes Experiment Controller</h2>
-    <p>Đây là mô tả</p>
+  description: '<h2>Thực nghiệm Java Class và Object</h2>
+
+    <p><code>ClassesExperimentController</code> gồm ba API mô phỏng: tồn kho, đăng ký workshop và tài khoản ngân hàng. Mỗi API nhận JSON, chuyển cho <code>ClassesExperimentService</code>,
+    tạo object riêng trong bộ nhớ và trả snapshot trước/sau để quan sát thay đổi.</p>
+
+    <p>Chương minh họa field, method, constructor, instance, alias reference, encapsulation và hằng số <code>static final</code>. Mô phỏng tài khoản chỉ dùng một
+    request/thread, không có database và không phải hệ thống ngân hàng thật.</p>
+
+    <p>Lỗi đầu vào <code>IllegalArgumentException</code> ngoài vòng lặp action được <code>ClassesExperimentExceptionHandler</code> chuyển thành HTTP 400; lỗi trong
+    từng action trở thành bước bị từ chối, trả HTTP 200.</p>'
   readmeRelated:
     file: ''
 ClassDesignExperimentsController:
-  description: |-
-    <h2>Class Design Experiments Controller</h2>
-    <p>Đây là mô tả</p>
+  description: '<h2>Thực nghiệm thiết kế lớp và phân định trách nhiệm</h2>
+
+    <p><code>ClassDesignExperimentsController</code> cung cấp ba API thực hành thiết kế OOP: quản lý mượn/trả sách, checkout giỏ hàng và chuyển tiền giữa hai tài
+    khoản. Controller chỉ thực hiện vai trò HTTP adapter; quy tắc nằm trong <code>Loan</code>, <code>LoanPolicy</code>, <code>ShoppingCart</code>, <code>BankAccount</code>,
+    <code>Money</code> và các service phù hợp.</p>
+
+    <p>Các thí nghiệm nhấn mạnh cohesion, tách command/query, entity và value object, giới hạn coupling với nơi lưu trữ và tương tác bên ngoài. Repository và receipt
+    outbox ở đây đều là đối tượng in-memory riêng cho lời gọi, không phải database hoặc dịch vụ gửi email thật. Handler riêng chương chuyển lỗi đầu vào và số học
+    thành HTTP 400, còn <code>IllegalStateException</code> thoát khỏi service thành HTTP 409.</p>'
   readmeRelated:
     file: ''
 CompositionExperimentController:
-  description: |-
-    <h2>Composition Experiment Controller</h2>
-    <p>Đây là mô tả</p>
+  description: '<h2>Th? nghi?m Composition, Delegation v? quy?n s? h?u</h2>
+
+    <p><code>CompositionExperimentController</code> cung c?p b?n API POST minh h?a ??i t??ng c?ng t?c theo quan h? has-a: l?p b? ??nh d?ng v? transport ?? t?o th?ng
+    b?o; thay ch?nh s?ch ??nh gi? khi ch?y; ?y quy?n l?u ??n qua repository; v? ph?n ??nh ai ph?i ??ng t?i nguy?n.</p>
+
+    <ul><li><code>notification</code> t?o <code>Notifier</code> t? <code>Formatter</code>, <code>Transport</code> v? t?y ch?n decorator audit.</li><li><code>policies</code>
+    th?c h?nh thay <code>Policy</code> b?ng <code>AtomicReference</code> v? injection theo l?i g?i.</li><li><code>placeOrder</code> ph?i h?p <code>OrderService</code>
+    v?i repository trong b? nh?, t?ch tr?ch nhi?m nghi?p v? v? l?u tr?.</li><li><code>resources</code> so s?nh h?p ??ng <code>OWNED</code> v? <code>BORROWED</code>
+    ??i v?i <code>AutoCloseable</code>.</li></ul>
+
+    <p>To?n b? l? m? ph?ng trong m?t request, kh?ng g?i th?ng b?o th?t, kh?ng l?u b?n v? kh?ng m? t?i nguy?n h? ?i?u h?nh th?t. Handler c?a ch??ng ?nh x? l?i input
+    ho?c tr?n s? th?nh HTTP 400; l?i transport, l?u ??n ho?c ghi gi? l?p c? th? ???c tr? v? ngay trong DTO HTTP 200 ?? ph?n t?ch.</p>'
   readmeRelated:
     file: ''
 DesignPatternExperimentController:
-  description: |-
-    <h2>Design Pattern Experiment Controller</h2>
-    <p>Đây là mô tả</p>
+  description: '<h2>Thí nghiệm Design Patterns trong Java</h2>
+
+    <p><code>DesignPatternExperimentController</code> mở ba điểm thực hành có thể chạy được: pipeline báo giá thể hiện <code>Strategy</code> và <code>Decorator</code>;
+    bảng nhiệm vụ thể hiện <code>Command</code>, undo/redo và <code>Observer</code>; kết xuất báo cáo thể hiện <code>Factory Method</code> và <code>Template Method</code>.
+    Mỗi ví dụ đặt pattern vào một vấn đề cụ thể, thể hiện ích lợi và đánh đổi thay vì dùng pattern chỉ vì tên gọi.</p>
+
+    <p>Controller chỉ là HTTP adapter, chuyển JSON tới <code>DesignPatternExperimentService</code>; thuật toán và trạng thái nằm trong các model tương ứng. Thí nghiệm
+    dùng trạng thái in-memory riêng từng request, không thanh toán, không thông báo ra bên ngoài và không lưu bền vững. Input không hợp lệ trả HTTP 400; lỗi trạng
+    thái/số học thoát khỏi service trả HTTP 422 theo handler của riêng chương.</p>'
   readmeRelated:
     file: ''
 DesignPitfallExperimentController:
-  description: |-
-    <h2>Design Pitfall Experiment Controller</h2>
-    <p>Đây là mô tả</p>
+  description: '<h2>Thực nghiệm lỗi thiết kế trong Java OOP</h2>
+
+    <p><code>DesignPitfallExperimentController</code> cung cấp ba API minh họa: bảo vệ bất biến số ghế thay cho setter tùy ý, phân tích lỗi khóa <code>HashMap</code>
+    có thể thay đổi và so sánh checkout nguyên khối với phiên bản đã tách trách nhiệm. Controller chỉ chuyển JSON vào <code>DesignPitfallExperimentService</code>,
+    không lưu state.</p>
+
+    <p>Các tình huống liên quan đến encapsulation, trạng thái dùng chung, <code>equals</code>/<code>hashCode</code>, God Class và refactor có kiểm chứng. Ghế chỉ
+    mô phỏng trong một request/JVM; checkout chỉ tính giá trong bộ nhớ, không khóa tồn kho, thanh toán hay ghi đơn thật.</p>
+
+    <p><code>DesignPitfallExceptionHandler</code> áp dụng riêng chương: <code>IllegalArgumentException</code> trả HTTP 400; <code>IllegalStateException</code> và
+    <code>ArithmeticException</code> trả HTTP 422. Lỗi ở từng seat action được lưu thành bước từ chối trong response HTTP 200.</p>'
   readmeRelated:
     file: ''
 EncapsulationExperimentController:
-  description: |-
-    <h2>Encapsulation Experiment Controller</h2>
-    <p>Đây là mô tả</p>
+  description: '<h2>Thí nghiệm đóng gói đối tượng</h2>
+
+    <p><code>EncapsulationExperimentController</code> cung cấp bốn API mô phỏng ranh giới và quy tắc của đối tượng qua giỏ hàng, sổ theo dõi tồn kho, bản chụp sự
+    kiện và vòng đời đơn hàng. Mỗi request đi qua <code>EncapsulationExperimentService</code> để tạo mô hình mới trong bộ nhớ; controller chỉ nhận DTO và trả kết
+    quả JSON.</p>
+
+    <p>Người học quan sát cách <code>EncapsulatedCart</code> và <code>StockLedger</code> kiểm tra bất biến, <code>EventSnapshot</code> sao chép phòng vệ cả ở đầu
+    vào/đầu ra, và <code>LifecycleOrder</code> chỉ cho phép chuyển trạng thái hợp lệ. Lỗi đầu vào là HTTP 400; ngoại lệ trạng thái hoặc số học thoát khỏi service
+    là HTTP 422. Các thao tác bị từ chối trong chuỗi mô phỏng được ghi vào <code>steps</code> mà không làm thay đổi trạng thái.</p>'
   readmeRelated:
     file: ''
 InheritanceExperimentsController:
-  description: |-
-    <h2>Inheritance Experiments Controller</h2>
-    <p>Đây là mô tả</p>
+  description: '<h2>Th? nghi?m k? th?a v? m? r?ng h?nh vi trong Java</h2>
+
+    <p><code>InheritanceExperimentsController</code> cung c?p b?n API POST ?? quan s?t quan h? cha/con, ghi ?? ph??ng th?c, g?i <code>super</code>, chu?i constructor
+    v? c?ch Java gi?i quy?t xung ??t default method. M?i request ???c x? l? qua service v? tr? d? li?u m? ph?ng, kh?ng t?c ??ng h? th?ng l??ng hay giao v?n th?c.</p>
+
+    <ul><li><code>calculatePay</code>: d?ng tham chi?u <code>Employee</code> ?? g?i h?nh vi l??ng ri?ng c?a <code>Salaried</code> ho?c <code>Hourly</code>.</li><li><code>compareDelivery</code>:
+    ??i chi?u c?y <code>DeliveryPlan</code> c? nhi?u m?c override v?i ph?p c?ng ch?nh s?ch b?ng composition.</li><li><code>constructorTrace</code>: quan s?t g?i method
+    override t? constructor cha tr??c l?c l?p con g?n field.</li><li><code>resolveCapabilities</code>: gi?i quy?t hai default method tr?ng t?n v? ?u ti?n ph??ng th?c
+    instance c?a class.</li></ul>
+
+    <p><code>InheritanceExceptionHandler</code> ?nh x? l?i ??u v?o th?nh HTTP 400, l?i tr?ng th?i th?nh 409, v? l?i tr?n s? th?nh 422; c?c endpoint ch? minh h?a c?
+    ch? Java ?? ki?m ch?ng.</p>'
   readmeRelated:
     file: ''
 InterfaceExperimentsController:
-  description: |-
-    <h2>Interface Experiments Controller</h2>
-    <p>Đây là mô tả</p>
+  description: '<h2>Thí nghiệm hợp đồng và vai trò của interface Java</h2>
+
+    <p><code>InterfaceExperimentsController</code> cung cấp ba API để học cách lập trình theo hợp đồng: so sánh phí giao hàng giữa hai triển khai <code>ShippingFeePolicy</code>,
+    dùng một <code>DocumentWorkspace</code> qua ba interface nhỏ và thay thế cổng thanh toán/kho lưu trữ qua các interface độc lập.</p>
+
+    <p>Controller chỉ điều phối JSON sang <code>InterfaceExperimentsService</code>. Tất cả đối tượng thanh toán, lưu trữ và tài liệu đều được khởi tạo riêng cho request;
+    không có thanh toán thật hay dữ liệu bền vững. Lỗi đầu vào được <code>InterfaceExperimentsExceptionHandler</code> ánh xạ thành HTTP 400; exception trạng thái
+    hoặc số học chưa được bắt trong service tương ứng HTTP 422.</p>'
   readmeRelated:
     file: ''
 LanguageMechanicsExperimentsController:
-  description: |-
-    <h2>Language Mechanics Experiments Controller</h2>
-    <p>Đây là mô tả</p>
+  description: '<h2>Thí nghiệm cơ chế ngôn ngữ Java trong OOP</h2>
+
+    <p><code>LanguageMechanicsExperimentsController</code> cung cấp ba API POST minh họa generic type, bounded wildcard, hợp đồng equals/hashCode của object, đóng
+    gói trạng thái và biểu diễn chẩn đoán an toàn, cũng như đa hình qua interface.</p>
+
+    <ul><li><code>generics</code>: ghép Integer/Double bằng PECS, tính tổng BigDecimal, tìm giá trị lớn nhất và tra cứu <code>TypedCache&lt;String,Integer&gt;</code>.</li><li><code>stock</code>:
+    dùng record ProductKey làm khóa tồn kho, bảo vệ số lượng và lọc thông tin nhạy cảm trong <code>toString()</code>.</li><li><code>shipping</code>: lựa chọn StandardShipping
+    hoặc ExpressShipping qua interface <code>ShippingPolicy</code> và trả từng báo giá.</li></ul>
+
+    <p>Mỗi request xử lý trên đối tượng trong bộ nhớ, không gửi hàng thật. Các lỗi dữ liệu, null hoặc số học không hợp lệ trả HTTP 400 với <code>error=INVALID_INPUT</code>;
+    từ chối nghiệp vụ dự kiến nằm trong DTO HTTP 200.</p>'
   readmeRelated:
     file: ''
 LifecycleExperimentController:
-  description: |-
-    <h2>Lifecycle Experiment Controller</h2>
-    <p>Đây là mô tả</p>
+  description: '<h2>Th? nghi?m v?ng ??i ??i t??ng Java</h2>
+
+    <p><code>LifecycleExperimentController</code> nh?m b?n API POST ??c l?p ?? kh?o s?t t?o ??i t??ng h?p l?, ?? th? tham chi?u, ??ng t?i nguy?n v? nguy c? c?ng b?
+    ??i t??ng tr??c khi ho?n t?t kh?i t?o. Controller nh?n JSON DTO v? ?y quy?n <code>LifecycleExperimentService</code>, kh?ng l?u d? li?u gi?a c?c request.</p>
+
+    <ul><li><code>creation</code>: so s?nh constructor, static factory v? Builder tr?n <code>CourseEnrollment</code>.</li><li><code>references</code>: duy?t ?? th?
+    t? root logic, kh?ng ?o GC th?c t?.</li><li><code>resources</code>: theo d?i th? t? close v? suppressed exception.</li><li><code>publication</code>: minh h?a
+    <code>this</code>-escape qua callback ??ng b?.</li></ul>
+
+    <p>L?i <code>IllegalArgumentException</code> tr? HTTP 400 <code>INVALID_INPUT</code>; JSON kh?ng ??c ???c tr? <code>INVALID_JSON</code>. ??y l? m? ph?ng h?c t?p,
+    kh?ng ch?y GC hay m? file/socket th?t.</p>'
   readmeRelated:
     file: ''
 ModelingExperimentController:
-  description: |-
-    <h2>Modeling Experiment Controller</h2>
-    <p>Đây là mô tả</p>
+  description: '<h2>M? h?nh h?a mi?n nghi?p v? b?ng ??i t??ng v? tr?ng th?i</h2>
+
+    <p><code>ModelingExperimentController</code> c? hai API POST cho ph?p ki?m ch?ng m? h?nh Java t? y?u c?u s? d?ng th?c t?, thay v? ch? ??c UML t?nh. Controller
+    ch? chuy?n DTO sang <code>ModelingExperimentService</code>; quy?t ??nh nghi?p v? thu?c c?c ??i t??ng model.</p>
+
+    <ul><li><code>library</code> d?ng <code>BookTitle</code>, <code>BookCopy</code>, <code>Member</code>, <code>Loan</code> v? <code>LibraryModel</code>, tr? object-graph
+    snapshot c?ng trace theo t?ng h?nh ??ng BORROW/RETURN.</li><li><code>orders</code> ?i?u khi?n <code>ModeledOrder</code> qua SUBMIT, CONFIRM_PAYMENT, START_PACKING,
+    SHIP, CONFIRM_DELIVERY v? CANCEL ?? quan s?t chuy?n tr?ng th?i, guard v? ???ng t? ch?i.</li></ul>
+
+    <p>?i?m nh?n l? ph?n chia tr?ch nhi?m, CRC, s? ?? l?p/??i t??ng/tu?n t?/tr?ng th?i v? ki?m tra b?t bi?n b?ng k?t qu? th?c thi. C? hai m? h?nh ???c t?o m?i cho
+    t?ng HTTP request, kh?ng c? database, thanh to?n th?t hay v?n chuy?n ngo?i; trace kh?ng ph?i ch?ng c? t?nh nh?t qu?n xuy?n request.</p>'
   readmeRelated:
     file: ''
 ObjectExperimentsController:
-  description: |-
-    <h2>Object Experiments Controller</h2>
-    <p>Đây là mô tả</p>
+  description: '<h2>Thực hành về đối tượng Java</h2>
+
+    <p><code>ObjectExperimentsController</code> cung cấp năm API minh họa danh tính/tham chiếu, phép bằng nhau theo giá trị, sao chép nông/sâu, dữ liệu vắng mặt và
+    sự phối hợp giữa các đối tượng trong checkout mô phỏng. Các phép thử đều có trạng thái riêng theo request, trả JSON qua các record trong <code>ObjectExperimentDto</code>.</p>
+
+    <p>Controller ủy quyền cho <code>ObjectSemanticsService</code> và <code>ObjectCheckoutService</code>. <code>ObjectExperimentExceptionHandler</code> biến <code>IllegalArgumentException</code>
+    thành HTTP 400 với trường <code>error</code>. Checkout không thu tiền thật, lưu kho hay gửi thông báo ra ngoài.</p>'
   readmeRelated:
     file: ''
 BasicsExperimentController:
-  description: |-
-    <h2>Basics Experiment Controller</h2>
-    <p>Đây là mô tả</p>
+  description: '<h2>Mô phỏng nền tảng hướng đối tượng</h2>
+
+    <p><code>BasicsExperimentController</code> cung cấp ba API POST độc lập để quan sát trạng thái đối tượng, đóng gói quy tắc nghiệp vụ và đa hình qua kết quả có
+    thể kiểm chứng. Các API nhận DTO JSON, chuyển xử lý cho <code>BasicsExperimentService</code> và trả lại DTO kết quả thay vì lưu dữ liệu.</p>
+
+    <ul><li>Mô phỏng nạp/rút tiền trên <code>BankAccount</code> mới, theo dõi từng thay đổi số dư.</li><li>Mô phỏng thêm dòng hàng, xác nhận/hủy trên <code>OrderAggregate</code>
+    mới, quan sát quy tắc chuyển trạng thái.</li><li>Áp dụng hai hiện thực <code>ShippingPolicy</code> cho cùng dữ liệu để so sánh phí.</li></ul>
+
+    <p>Đây là các thí nghiệm trong bộ nhớ, không phải tài khoản ngân hàng, đơn hàng hoặc dịch vụ giao vận thật. <code>BasicsExperimentExceptionHandler</code> chuyển
+    lỗi đầu vào <code>IllegalArgumentException</code> chưa được xử lý thành HTTP 400 kèm <code>INVALID_INPUT</code>; lỗi hành động được bắt bên trong vòng lặp mô
+    phỏng sẽ xuất hiện trong <code>timeline</code> của HTTP 200.</p>'
   readmeRelated:
     file: ''
 PolymorphismExperimentsController:
-  description: |-
-    <h2>Polymorphism Experiments Controller</h2>
-    <p>Đây là mô tả</p>
+  description: '<h2>Thực hành đa hình trong Java</h2>
+
+    <p><code>PolymorphismExperimentsController</code> phơi bày hai thí nghiệm độc lập qua JSON. <code>dispatch</code> chứng minh overload được chọn theo kiểu tham
+    số lúc biên dịch, override được chọn theo receiver lúc chạy, còn field và static method bị che khuất. <code>payments</code> thử ba implementation của <code>PaymentMethod</code>
+    gồm CARD, WALLET và BANK.</p>
+
+    <p>Controller chỉ chuyển request cho <code>PolymorphismExperimentsService</code>. Mọi số dư và trạng thái đều thuộc request mô phỏng, không thanh toán thật hay
+    lưu dữ liệu bền vững. <code>PolymorphismExceptionHandler</code> ánh xạ đầu vào sai thành HTTP 400, và lỗi trạng thái/số học chưa được xử lý thành HTTP 422.</p>'
   readmeRelated:
     file: ''
 PracticeExperimentController:
-  description: |-
-    <h2>Practice Experiment Controller</h2>
-    <p>Đây là mô tả</p>
+  description: '<h2>Thí nghiệm tổng hợp OOP: tài khoản, đơn hàng và thư viện</h2>
+
+    <p><code>PracticeExperimentController</code> cung cấp ba API POST để thực hành thiết kế đối tượng và bảo vệ bất biến với tình huống gần nghiệp vụ thực tế. Controller
+    mỏng nhận JSON rồi chuyển cho <code>PracticeExperimentService</code>; model sở hữu phép tính, điều kiện hợp lệ và việc chuyển trạng thái.</p>
+
+    <ul><li><code>bank</code> thực hiện DEPOSIT/WITHDRAW/TRANSFER trên <code>BankLedger</code> có nhiều tài khoản, kèm snapshot trước/sau từng hành động.</li><li><code>orders</code>
+    tập thao tác <code>PracticeOrder</code>: chỉnh dòng hàng trong DRAFT, PLACE, CANCEL, xem tổng tiền và sự từ chối khi trạng thái không phù hợp.</li><li><code>library</code>
+    mô phỏng <code>PracticeLibrary</code> với bản sách vật lý, phiếu mượn, trả sách và thay chính sách LEGACY sang REVISED.</li></ul>
+
+    <p>Đây là các đối tượng in-memory riêng cho từng request: không có tài khoản ngân hàng, thanh toán, kho thư viện hoặc database thật. Vi phạm nghiệp vụ dự kiến
+    có thể được trả trong <code>steps[].accepted=false</code> cùng snapshot không thay đổi; đầu vào sai trước khi chạy trả HTTP 400, còn lỗi trạng thái/số học không
+    bắt tại tầng service trả HTTP 422 theo advice của chương.</p>'
   readmeRelated:
     file: ''
 RefactoringExperimentsController:
-  description: |-
-    <h2>Refactoring Experiments Controller</h2>
-    <p>Đây là mô tả</p>
+  description: '<h2>Thí nghiệm refactoring có kiểm thử bảo vệ</h2>
+
+    <p><code>RefactoringExperimentsController</code> cung cấp ba API POST để kiểm chứng sự tương đương hành vi khi thay đổi thiết kế bên trong: tách phương thức/lớp
+    và chuyển phép tính về đúng đối tượng, thay điều kiện theo loại bằng đa hình, và thay phụ thuộc kế thừa cứng bằng các collaborator được ghép qua interface.</p>
+
+    <ul><li><code>checkout</code> so sánh chương trình tính tiền đơn khối với mô hình <code>ShoppingOrder</code>, <code>OrderLine</code>, <code>PricingPolicy</code>
+    và <code>ReceiptFormatter</code>.</li><li><code>delivery</code> đối chiếu <code>LegacyDeliveryCalculator</code> dùng switch với <code>DeliveryPolicy</code> theo
+    từng loại giao hàng.</li><li><code>alerts</code> lắp <code>AlertDispatcher</code>, <code>RecordingMessageChannel</code> và <code>RetryingChannel</code> để xem
+    kết quả gửi và retry.</li></ul>
+
+    <p>Thí nghiệm dùng giá tiền nguyên VND và collaborator trong bộ nhớ; không gửi cảnh báo thật hoặc giao vận thật. Service trả kết quả quan sát được, không tự chỉnh
+    Java source. Đầu vào sai hoặc số học tràn được <code>RefactoringExceptionHandler</code> chuyển thành HTTP 400 với <code>error=INVALID_INPUT</code>, còn thất bại
+    gửi tạm thời sau hết retry là HTTP 200 với <code>RETRY_EXHAUSTED</code>.</p>'
   readmeRelated:
     file: ''
 RelationshipsExperimentsController:
-  description: |-
-    <h2>Relationships Experiments Controller</h2>
-    <p>Đây là mô tả</p>
+  description: '<h2>Thực nghiệm quan hệ đối tượng trong Java</h2>
+
+    <p><code>RelationshipsExperimentsController</code> minh họa ba dạng quan hệ: liên kết hai chiều giữa nhân viên và phòng ban; quan hệ nhiều–nhiều giữa học viên
+    và khóa học; và tập hợp (aggregation) đối chiếu với hợp thành (composition) qua Team/Member và Order/OrderLine.</p>
+
+    <p>Controller nhận DTO JSON rồi chuyển tới <code>DepartmentTransferService</code>, <code>EnrollmentScenarioService</code> và <code>OwnershipComparisonService</code>.
+    Model quản lý hướng liên kết, bất biến hai chiều, vòng đời của liên kết cùng thành phần được sở hữu; mọi dữ liệu mô phỏng chỉ nằm trong một request và trong bộ
+    nhớ.</p>
+
+    <p><code>RelationshipsExceptionHandler</code> áp dụng riêng cho chương, ánh xạ IllegalArgumentException thành HTTP 400, IllegalStateException thành HTTP 409 và
+    ArithmeticException thành HTTP 422. Phòng ban đầy hoặc ghi danh trùng được thể hiện là event bị từ chối trong response HTTP 200.</p>'
   readmeRelated:
     file: ''
 SolidExperimentController:
-  description: |-
-    <h2>Solid Experiment Controller</h2>
-    <p>Đây là mô tả</p>
+  description: '<h2>Thực nghiệm các nguyên tắc SOLID trong Java</h2>
+
+    <p><code>SolidExperimentController</code> cung cấp hai API thực nghiệm: tính báo giá qua các <code>DiscountPolicy</code> và chạy chuỗi checkout sử dụng các cổng
+    <code>OrderWriter</code>/<code>ReceiptSender</code>. Qua đó có thể thấy trách nhiệm được phân tách, hành vi chính sách có thể mở rộng và phụ thuộc của nghiệp
+    vụ hướng về hợp đồng.</p>
+
+    <p>Ví dụ minh họa SRP qua <code>PurchaseOrder</code>, <code>DiscountPricing</code> và <code>CheckoutUseCase</code>; OCP và LSP qua các implementation chính sách
+    giảm giá; ISP qua cổng đọc/ghi đơn tách biệt; DIP qua use case phụ thuộc interface và DI qua constructor. Spring cung cấp danh sách policy cho service; các adapter
+    lưu đơn/gửi biên nhận trong chương là mô phỏng in-memory, không lưu database hoặc gửi email.</p>
+
+    <p><code>SolidExperimentExceptionHandler</code> xử lý riêng Controller này: request sai trả HTTP 400, lỗi hợp đồng policy hoặc tràn số ở API quote trả HTTP 422.
+    Trong checkout experiment, lỗi của mỗi attempt thường được ghi trong response HTTP 200 cùng số đơn và thông báo đã mô phỏng, thay vì dừng các attempt sau.</p>'
   readmeRelated:
     file: ''
 SubtypingExperimentController:
-  description: |-
-    <h2>Subtyping Experiment Controller</h2>
-    <p>Đây là mô tả</p>
+  description: '<h2>Thực nghiệm kiểu con và tính thay thế trong Java</h2>
+
+    <p><code>SubtypingExperimentController</code> cung cấp ba API để học quan hệ kiểu con: gọi hành vi thanh toán qua interface <code>PaymentMethod</code>, kiểm tra
+    hợp đồng <code>DiscountPolicy</code>, và phản ví dụ <code>MutableSquare extends MutableRectangle</code>. Tất cả chạy trong bộ nhớ theo request, không thu tiền
+    hoặc ghi dữ liệu thật.</p>
+
+    <p>Bài học phân biệt kiểu khai báo với kiểu runtime, upcast không tạo object mới, dispatch phương thức override với chọn overload theo kiểu compile-time, nominal
+    subtyping bằng <code>implements</code> và adapter, và Liskov Substitution Principle (LSP): có quan hệ kiểu con về cú pháp không đảm bảo thay thế đúng hành vi.</p>
+
+    <p><code>SubtypingExperimentExceptionHandler</code> chuyển <code>IllegalArgumentException</code> thành HTTP 400 mã <code>INVALID_INPUT</code>, JSON không khớp
+    kiểu thành HTTP 400 mã <code>INVALID_JSON</code>. Các trường hợp vi phạm hợp đồng mô phỏng được ghi trong response HTTP 200, không tự coi là lỗi server.</p>'
   readmeRelated:
     file: ''
 TestingExperimentController:
-  description: |-
-    <h2>Testing Experiment Controller</h2>
-    <p>Đây là mô tả</p>
+  description: '<h2>Thực nghiệm kiểm thử hợp đồng và cộng tác OOP</h2>
+
+    <p><code>TestingExperimentController</code> cung cấp ba thí nghiệm kiểm chứng hành vi công khai thay vì phụ thuộc private field: so sánh các implementation của
+    <code>SeatInventory</code> với máy trạng thái tham chiếu, thay cộng tác viên trong checkout bằng fake/stub/recording object, và phát hiện hồi quy giá tiền giữa
+    implementation gốc, bản refactor và bản cố ý có lỗi.</p>
+
+    <p>Ba endpoint chỉ chuyển DTO sang <code>InventoryContractService</code>, <code>CollaborationExperimentService</code> và <code>RegressionExperimentService</code>.
+    Các trạng thái và test double được tạo mới theo request; không có tồn kho thật, cổng thanh toán thật hay gửi email. Handler riêng chương ánh xạ <code>IllegalArgumentException</code>
+    thành HTTP 400 với <code>code=INVALID_INPUT</code>, còn <code>ArithmeticException</code> thành HTTP 422 với <code>code=ARITHMETIC_OVERFLOW</code>.</p>'
   readmeRelated:
     file: ''

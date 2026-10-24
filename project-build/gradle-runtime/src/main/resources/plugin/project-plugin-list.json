@@ -105,6 +105,11 @@
         "implementationClass": "com.example.learning.setup.settings.properties.plugin.PropertiesSetupPlugin"
     },
     {
+        "name": "codeExplorerPlugin",
+        "id": "com.example.learning.task.codeexplorer.plugin",
+        "implementationClass": "com.example.learning.task.codeexplorer.plugin.CodeExplorerPlugin"
+    },
+    {
         "name": "databaseTaskPlugin",
         "id": "com.example.learning.task.database.plugin",
         "implementationClass": "com.example.learning.task.database.plugin.DatabaseTaskPlugin"

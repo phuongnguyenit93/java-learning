@@ -9,6 +9,7 @@ import com.example.learning.task.sheets.task.SyncModuleContentToExcelTask
 import com.example.learning.task.sheets.task.CloneModuleViToEnTask
 import com.example.learning.task.sheets.task.ModuleTranslationAuditTask
 import com.example.learning.task.sheets.task.ModuleEnSheetPublishTask
+import com.example.learning.task.sheets.task.PublishOptionalVideoEnTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
@@ -73,6 +74,15 @@ class SheetsTaskPlugin
         }
 
         // Legacy reverse exporters are still available as separate offline tasks.
+        project.tasks.register('publishOptionalVideoEn', PublishOptionalVideoEnTask) { task ->
+            task.group = 'sheets'
+            task.description = 'Optional post-FINAL Video EN only; sync X:AA and re-export EN Excel.'
+            task.fileUrl.set(project.providers.gradleProperty('fileUrl')
+                    .orElse(project.providers.gradleProperty('fileURL')))
+            task.viGid.set(project.providers.gradleProperty('viGid'))
+            task.mode.convention(project.providers.gradleProperty('sheetMode').orElse('DRY_RUN'))
+        }
+
         [
                 syncModuleIntroductionToExcel: 'INTRODUCTION',
                 syncModuleRoadmapToExcel: 'ROADMAP',

@@ -16,7 +16,7 @@ class ModuleTranslationCatalogServiceTest {
         def service = new ModuleTranslationCatalogService()
         Map dry = service.execute(f.root as File, f.module as File, 'trial', 'PREPARE', false)
         assertEquals('DRY_RUN', dry.status)
-        assertEquals(6, dry.total)
+        assertEquals(5, dry.total)
         assertFalse((dry.manifest as File).exists())
         Map prepared = service.execute(f.root as File, f.module as File,
                 'trial', 'PREPARE', true)
@@ -35,9 +35,9 @@ class ModuleTranslationCatalogServiceTest {
         Map checked = service.execute(f.root as File, f.module as File,
                 'trial', 'VALIDATE', false)
         assertEquals('VALIDATED_STRUCTURE', checked.status)
-        assertEquals(6, checked.total)
+        assertEquals(5, checked.total)
         assertEquals(2, checked.translated)
-        assertEquals(4, checked.pending)
+        assertEquals(3, checked.pending)
         assertTrue(checked.semanticQaRequired)
         File snapshot = new File(f.module as File,
                 'build/step14/trial/baseline/content/quiz/en/question.yml')

@@ -1,222 +1,944 @@
 AbstractionExperimentsController:
   shippingQuote(ShippingQuoteRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: '<p><code>shippingQuote</code> delegates its <code>ShippingQuoteRequest</code> to <code>ShippingQuoteService.quote</code>. <code>ShippingPlan.named</code>
+      normalizes the plan code and creates an <code>Economy</code> or <code>Express</code> implementation; unsupported plans raise IllegalArgumentException.</p>
+
+      <p>The <code>final ShippingPlan.quote</code> template validates positive distance/weight, rounds grams up to kilograms with integer arithmetic, and invokes
+      the abstract <code>extraFee</code>. ECONOMY adds 1000 VND/km to a 10000 base; EXPRESS adds 2000 VND/km plus 3000 VND/billed kg to a 20000 base. Exact arithmetic
+      rejects overflow.</p>
+
+      <p>The service copies the Quote record into <code>ShippingQuoteResponse</code> with <code>simulatedOnly=true</code>. Invalid arguments map to HTTP 400; arithmetic
+      overflow maps to HTTP 422 under the chapter error handler.</p>'
     usage: true
   seatScenario(SeatScenarioRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: '<p><code>seatScenario</code> delegates to <code>SeatContractService.simulate</code>, which validates capacity 1–1000000, 1–40 actions, non-null actions,
+      positive seats, and RESERVE/RELEASE after trimming and uppercasing each operation. The entire action list is validated before any operation executes.</p>
+
+      <p>The service creates a fresh <code>InMemorySeatInventory</code> through the <code>SeatInventory</code> interface and records availableBefore/After per step.
+      Over-reservation or excessive release raises IllegalStateException, caught as <code>accepted=false</code> with INSUFFICIENT_SEATS or RELEASE_EXCEEDS_RESERVED,
+      while subsequent valid steps can continue.</p>
+
+      <p>Contract checks enforce <code>0 ≤ available ≤ capacity</code> and unchanged state on rejection. <code>SeatScenarioResponse</code> contains capacity, available,
+      reserved, immutable steps, and simulatedOnly. Malformed requests yield HTTP 400.</p>'
     usage: true
   leaveEvaluation(LeaveEvaluationRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: '<p><code>leaveEvaluation</code> delegates to <code>LeaveEvaluationService.evaluate</code>, normalizes policy and instantiates <code>StandardLeavePolicy</code>
+      or <code>TrialLeavePolicy</code> under <code>LeavePolicy</code>. The immutable <code>LeaveRequest</code> requires a nonblank employee ID, positive requestedDays,
+      and nonnegative remainingDays.</p>
+
+      <p>Both policies return INSUFFICIENT_BALANCE if requestedDays exceed remainingDays. STANDARD approves within balance; TRIAL additionally limits each request
+      to two days. <code>LeaveDecision.approved()</code> is true only for APPROVED, and no leave balance is decremented by this API.</p>
+
+      <p><code>LeaveEvaluationResponse</code> exposes normalized policy, employee ID, decisionCode, approved, reason, and simulatedOnly. A valid rejected decision
+      returns HTTP 200, while invalid policy/input yields HTTP 400.</p>'
     usage: true
   catalogSearch(CatalogSearchRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: '<p><code>catalogSearch</code> calls <code>BookCatalogService.search</code>, which requires at most 50 non-null book records, a nonblank keyword of
+      at most 100 characters, and limit 1–50. The private <code>InMemoryCatalog</code> implements <code>Catalog</code> and indexes books in a <code>HashMap</code>,
+      rejecting duplicate ISBN and blank ISBN/title.</p>
+
+      <p>Keyword trimming and lowercase normalization precede title matching. Results are sorted by ISBN; <code>limit</code> truncates the returned matches while
+      totalMatches preserves the full count. The optional <code>lookupIsbn</code> uses <code>Optional</code>, producing lookup=null and found=false when absent.</p>
+
+      <p><code>CatalogSearchResponse</code> returns immutable copied matches, lookup, found, totalMatches, and simulatedOnly; no storage representation escapes through
+      the API. Invalid input maps to HTTP 400.</p>'
     usage: true
 ClassesExperimentController:
   inventory(InventoryRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: '<p><code>inventory</code> delegates <code>InventoryRequest</code> to <code>simulateInventory</code>. The service validates price, initial quantity,
+      1–20 actions, and supported types; the <code>InventoryItem</code> constructor validates SKU, name, unit price, and quantity.</p>
+
+      <p>It snapshots the object before/after each <code>restock</code>, <code>sell</code>, or <code>rename</code>. A caught action exception is stored as <code>InventoryStep.accepted=false</code>
+      with its message, allowing later actions to continue. Snapshot value uses <code>Math.multiplyExact</code>.</p>
+
+      <p>HTTP 200 returns <code>InventoryResult</code> with initial, steps, current, and maxQuantity. Invalid request-level input yields HTTP 400 and <code>ErrorResult.error</code>.</p>'
     usage: true
   workshops(WorkshopRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: '<p><code>workshops</code> calls <code>simulateWorkshops</code>, validating required titles/capacities and 0–50 registration attempts. The <code>Workshop</code>
+      constructor requires a title of 1–80 characters and capacity 1–50.</p>
+
+      <p>It constructs <code>first</code> and <code>second</code>; <code>alias=second</code> shares one instance, whereas <code>independent=new Workshop(...)</code>
+      creates a separate instance. <code>registerRepeatedly</code> calls <code>register()</code>, which returns false once full.</p>
+
+      <p><code>WorkshopResult</code> contains three snapshots, identity flags, accepted/rejected counts, and <code>MAX_CAPACITY</code>. Invalid input maps to HTTP
+      400.</p>'
     usage: true
   bank(BankRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: '<p><code>bank</code> delegates to <code>simulateBank</code>, which checks two account specs, 1–20 actions, and each type/amount. The <code>BankAccount</code>
+      constructor validates account number, holder, opening balance; the service requires distinct account numbers.</p>
+
+      <p>Each action snapshots both accounts and invokes <code>deposit</code>, <code>withdraw</code>, or <code>transferTo</code>. The model enforces positive amounts,
+      available funds, and checks destination overflow via <code>Math.addExact</code> before changing both balances. Caught action errors become rejected <code>BankStep</code>
+      entries.</p>
+
+      <p><code>BankResult</code> includes initial/final snapshots, steps, and a <code>scope</code> stating this is a single-request/thread in-memory simulation. Invalid
+      request input maps to HTTP 400.</p>'
     usage: true
 ClassDesignExperimentsController:
   library(LibraryRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: '<h3>Borrowing rules live in the domain model</h3>
+
+      <p><code>library()</code> delegates to <code>LibraryScenarioService.run()</code>, which requires 1–40 copies and 1–50 actions. <code>LoanPolicy</code> validates
+      a maximum of 1–20 active loans per borrower and a period of 1–365 days. <code>InMemoryLoanRegistry</code> registers <code>BookCopy</code> records, rejects duplicate
+      or unknown copy IDs and owns the request-local loan map.</p>
+
+      <p><code>BORROW</code> validates borrower, copy and date, checks the copy exists and <code>LoanPolicy.ensureEligible()</code>, then constructs <code>Loan</code>
+      with a due date calculated using <code>borrowedOn.plusDays(loanDays)</code>. <code>InMemoryLoanRegistry.save()</code> rejects borrowing a copy that is already
+      active. <code>RETURN</code> retrieves the existing loan and calls <code>Loan.returnOn()</code>, which forbids multiple returns and pre-borrow dates, then computes
+      <code>max(0, daysBetween(dueOn, returnDate)) × 100</code> cents in late fees. <code>QUERY</code> only reads a snapshot.</p>
+
+      <p>Within the action loop, only <code>IllegalStateException</code> becomes <code>LibraryStep.accepted=false</code> with an outcome such as <code>COPY_ALREADY_BORROWED</code>
+      or <code>BORROWER_LIMIT_REACHED</code> inside HTTP 200. Invalid arguments, nulls or arithmetic exceptions escape to the scoped HTTP 400 handler. The response
+      includes each step''s loan snapshot and <code>finalLoans</code>; storage is constructed anew per request.</p>'
     usage: true
   checkout(CheckoutRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: '<h3>Cart, persisted order and outbound intent are separate</h3>
+
+      <p><code>checkout()</code> delegates to <code>CheckoutScenarioService.checkout()</code>, validating nonblank orderId/receiptAddress, discountPercent 0–100 and
+      1–100 lines. Each <code>CartLine</code> requires a valid SKU, quantity 1–10000 and a nonnegative unit price in cents. <code>ShoppingCart</code> owns line items
+      and calculates the subtotal with exact multiplication and addition.</p>
+
+      <p>The service computes the integer-cent discount as <code>(subtotal / 100) × percent + (subtotal % 100) × percent / 100</code>, checking overflow and rounding
+      down, then sets <code>total=subtotal-discount</code>. <code>CheckedOutOrder</code> defensively captures the line list using <code>List.copyOf()</code>, so its
+      stored representation no longer depends on future cart edits.</p>
+
+      <p>Only after validation and arithmetic succeeds does the service instantiate <code>InMemoryOrderRepository</code> and <code>InMemoryReceiptOutbox</code>, store
+      the order and enqueue a <code>ReceiptEvent</code> for the supplied address. The response includes stored lines and a queued event, not proof of sent email or
+      durable persistence. Invalid input and overflow produce HTTP 400.</p>'
     usage: true
   transfer(TransferRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: '<h3>The entity owns the transfer; Money owns valid arithmetic</h3>
+
+      <p><code>transfer()</code> calls <code>TransferScenarioService.transfer()</code>, resolves the supplied currency through <code>Currency.getInstance()</code>,
+      and creates two <code>BankAccount</code> entities with <code>Money</code> opening balances. <code>Money</code> forbids negative amounts and cross-currency arithmetic,
+      while <code>BankAccount</code> requires a nonblank ID and maintains identity as balances change.</p>
+
+      <p>The service queries both accounts'' <code>balance()</code> to capture before-values without mutation, then commands <code>sender.transferTo(recipient, amount)</code>.
+      The entity rejects same-account transfers and zero amounts, calculates both <code>debited=balance.minus(amount)</code> and <code>credited=recipient.balance.plus(amount)</code>
+      before assigning either balance. Insufficient funds raise <code>IllegalStateException(INSUFFICIENT_FUNDS)</code> and return HTTP 409; invalid arguments, negative
+      values and overflow return HTTP 400 without a partial response.</p>
+
+      <p>A successful <code>TransferResult</code> includes the account IDs, currency and both before/after balances. This demonstrates intention-revealing commands
+      in the entity instead of clients traversing and mutating nested state themselves.</p>'
     usage: true
 CompositionExperimentController:
   notification(NotificationRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: '<h3>Notification composition flow</h3><ol>
+
+      <li><code>CompositionExperimentController.notification</code> delegates the DTO to <code>CompositionExperimentService.notification</code>. It validates format,
+      channel, order ID, recipient pattern and totalCents from 0?100000000; invalid input yields HTTP 400 <code>INVALID_INPUT</code>.</li>
+
+      <li>The service chooses <code>FullFormatter</code> or <code>CompactFormatter</code>, creates a <code>RecordingTransport</code> with channel and failTransport,
+      and optionally wraps it in <code>AuditedTransport</code>. All collaborators are constructor-injected into <code>Notifier</code>.</li>
+
+      <li><code>notifyPaid</code> formats the message and logs <code>format:</code>, then delegates send and logs <code>transport:</code>. Audit logs <code>audit:accepted</code>
+      only after a successful send; a simulated <code>IllegalStateException</code> is caught by Notifier, leaving accepted=false with a failure reason and no false
+      audit event.</li>
+
+      <li>HTTP 200 returns <code>NotificationResponse</code> with channel, content, accepted, failure and trace. Each request uses an isolated mock pipeline.</li></ol>'
     usage: true
   policies(PolicyRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: '<h3>Policy replacement and per-call injection</h3><ol>
+
+      <li>The service requires 1?20 steps, constructs the initial policy using <code>SwitchablePricing.create</code>, and validates all actions, policy parameters
+      and quote subtotals in 0?100000000 before executing. FIXED discount is 0?100000000, while PERCENT is 0?100.</li>
+
+      <li><code>SwitchablePricing</code> holds the active policy in <code>AtomicReference</code>. <code>SWITCH</code> invokes <code>replace</code>; <code>QUOTE</code>
+      snapshots the active collaborator for a quote; <code>QUOTE_WITH_POLICY</code> uses <code>quoteWith</code> and a per-call policy without changing the active
+      one.</li>
+
+      <li><code>NoDiscount</code> keeps subtotal, <code>FixedDiscount</code> deducts at most subtotal, and <code>PercentDiscount</code> uses integer percentage arithmetic.
+      <code>quoteWith</code> checks payable within zero to subtotal and the timeline distinguishes <code>activePolicy</code> from <code>usedPolicy</code>.</li>
+
+      <li>HTTP 200 returns <code>PolicyResponse</code> with initial/final policies and the timeline; invalid input or arithmetic overflow returns HTTP 400. Policy
+      state is not shared between HTTP requests.</li></ol>'
     usage: true
   placeOrder(PlaceOrderRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: '<h3>Delegated order placement</h3><ol>
+
+      <li><code>CompositionExperimentService.placeOrder</code> requires 1?20 lines. Each <code>OrderLineInput</code> becomes an <code>OrderPlacement.Line</code> validating
+      SKU, quantity 1?1000, unitPriceCents 0?100000000 and multiplication via <code>Math.multiplyExact</code>.</li>
+
+      <li><code>OrderPlacement.Order.create</code> totals line subtotals using <code>Math.addExact</code>, validates the order ID and copies lines with <code>List.copyOf</code>.
+      The service creates <code>InMemoryOrderRepository</code> using failStorage and injects it into <code>OrderService</code>.</li>
+
+      <li><code>OrderService.place</code> delegates to <code>repository.save</code>. Repository increments <code>saveAttempts</code> before either saving or throwing
+      <code>IllegalStateException(&quot;Simulated repository failure before save&quot;)</code>. The service catches this simulated failure for accepted=false and
+      empty storedOrders; earlier validation errors yield HTTP 400.</li>
+
+      <li>HTTP 200 returns <code>PlaceOrderResponse</code> with attempts, stored orders and <code>IN_MEMORY_ONLY; no durable persistence or transaction implied</code>;
+      it does not claim real transactions or durable data.</li></ol>'
     usage: true
   resources(ResourceRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: '<h3>Resource ownership and closure</h3><ol>
+
+      <li>The service validates nonnull ownership and nonblank content of at most 100 characters, then creates <code>TrackedHandle</code>, logging <code>handle:open</code>.
+      Within <code>try-with-resources</code> it constructs <code>Exporter</code> with ownsHandle=true for OWNED.</li>
+
+      <li><code>Exporter.export</code> delegates to <code>TrackedHandle.write</code>, which logs <code>handle:write:</code> and may throw <code>IllegalStateException(&quot;Simulated
+      write failure&quot;)</code>. On leaving scope, <code>Exporter.close</code> logs <code>exporter:close</code> and closes the handle if owned.</li>
+
+      <li>The service catches the simulated write exception and observes <code>resourceClosedAfterExporter</code>. For BORROWED, the handle is still open there, so
+      the caller (service) closes it afterward. <code>resourceClosedAfterCaller</code> reflects the later state.</li>
+
+      <li>HTTP 200 returns <code>ResourceResponse</code> with events, flags and failure. The simulated handle illustrates explicit lifecycle contracts independently
+      of GC.</li></ol>'
     usage: true
 DesignPatternExperimentController:
   pricing(PricingRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: '<h3>Strategy chooses discounts; Decorator sets their order</h3>
+
+      <p><code>pricing()</code> forwards the <code>PricingRequest</code> to <code>DesignPatternExperimentService.price()</code>, requiring non-null subtotal, deliveryFee
+      and order. <code>PricingPipeline.calculate()</code> validates subtotal 0–1000000000000 VND and fee 0–1000000, accepting only <code>NONE</code>, <code>MEMBER_5</code>
+      and <code>VOUCHER_30000</code> strategies. Invalid values map to HTTP 400.</p>
+
+      <p><code>DiscountStrategy</code> isolates the algorithm: NONE subtracts zero; MEMBER_5 applies 5% rounded HALF_UP to whole VND via <code>(subtotal × 5 + 50)
+      / 100</code>; VOUCHER_30000 subtracts <code>min(30000, pre-discount amount)</code>. <code>PriceStage</code> and two decorators form the pipeline. <code>DISCOUNT_THEN_FEE</code>
+      places DeliveryDecorator outside DiscountDecorator; <code>FEE_THEN_DISCOUNT</code> reverses the wrappers.</p>
+
+      <p>The service always computes both <code>PricingOption</code> values in discount-first/fee-first order, then selects one by request order. Its trace records
+      <code>BASE</code>, <code>DISCOUNT_...</code> and <code>DELIVERY</code> as applied. <code>discountVnd</code> is calculated as <code>subtotal + deliveryFee -
+      payable</code>; exact arithmetic rejects overflow via HTTP 422. The scope remains <code>REQUEST_LOCAL_IN_MEMORY_NO_EXTERNAL_SIDE_EFFECTS</code>.</p>'
     usage: true
   tasks(TasksRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: '<h3>Command tracks history; Observer delivers after commit</h3>
+
+      <p><code>tasks()</code> validates 1–20 <code>TaskAction</code> entries of type <code>ADD</code>, <code>COMPLETE</code>, <code>UNDO</code>, <code>REDO</code>
+      or <code>UNSUBSCRIBE_NOTIFY</code>. ADD needs id/title and COMPLETE needs id; unsupported types fail with HTTP 400 before constructing state. The service creates
+      a fresh <code>TaskBoard</code>, <code>TaskCommandManager</code> and two <code>Events</code> listeners named AUDIT and NOTIFY.</p>
+
+      <p><code>AddTask</code> and <code>CompleteTask</code> encapsulate changes to the receiver <code>TaskBoard</code>. <code>execute()</code> pushes onto undo history
+      and clears redo only after successful mutation; <code>undo()</code>/<code>redo()</code> move a Command between stacks after successful receiver changes. <code>Events.publish()</code>
+      synchronously records deliveries such as <code>AUDIT:EXECUTE_...</code> or <code>NOTIFY:UNDO_...</code>. <code>UNSUBSCRIBE_NOTIFY</code> removes only NOTIFY,
+      without recording a Command or emitting an event; AUDIT remains active.</p>
+
+      <p><code>TaskBoard</code> supports at most 20 tasks, 2–24-character IDs and nonblank titles up to 100 characters; it rejects duplicates, completing an already-complete
+      task and unknown IDs. During individual actions, <code>IllegalArgumentException</code> or <code>IllegalStateException</code> becomes <code>TaskStep.accepted=false</code>
+      with unchanged before/after, within overall HTTP 200. Only successful execute/undo/redo operations update history and publish events; all state is request-local.</p>'
     usage: true
   report(ReportRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: '<h3>Factory Method chooses templates; Template Method fixes sequence</h3>
+
+      <p><code>report()</code> requires a <code>format</code> and 1–20 sales with ID and amount. Each DTO becomes a <code>ReportPatterns.Sale</code> enforcing 2–24
+      uppercase letters/digits/hyphens in the ID and amount 0–1000000000000 VND. Only <code>TEXT</code> and <code>CSV</code> formats are supported; malformed input
+      yields HTTP 400 before rendering.</p>
+
+      <p><code>TextCreator</code> and <code>CsvCreator</code> override <code>ReportCreator.createTemplate()</code> (Factory Method), producing <code>TextTemplate</code>
+      or <code>CsvTemplate</code>. Both use the same <code>final ReportTemplate.render()</code>, which validates the sales list, emits <code>HEADER</code>, one <code>ROW:id</code>
+      entry per sale, then <code>SUMMARY</code>. Only the <code>header()</code>, <code>row()</code> and <code>summary()</code> hooks customize formatting; totals
+      and execution traces stay consistent across formats.</p>
+
+      <p><code>ReportResult</code> contains format, content with its newlines, <code>totalVnd</code>, <code>rowCount</code> and <code>executionTrace</code>. The total
+      uses <code>Math.addExact()</code>; uncaught overflow maps to HTTP 422 rather than returning a partial report.</p>'
     usage: true
 DesignPitfallExperimentController:
   seats(SeatsRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: '<p><code>seats(SeatsRequest)</code> delegates to <code>DesignPitfallExperimentService.seats</code>. It validates capacity, a list of 1–20 actions,
+      RESERVE/CANCEL action types, and non-null seats. The <code>SeatInventory</code> constructor requires capacity 1–10000 and starts reserved at zero.</p>
+
+      <p>For each action the service snapshots <code>SeatState</code> before/after calling <code>reserve</code> or <code>cancel</code>. These synchronized methods
+      enforce positive seats and available/reserved limits before state mutation. IllegalArgumentException/IllegalStateException thrown within one action become <code>SeatStep.accepted=false</code>
+      with detail while later steps continue.</p>
+
+      <p><code>SeatsResult</code> includes initial, steps, current, invariantPreserved, and scope <code>REQUEST_LOCAL_SINGLE_JVM_IN_MEMORY_NO_DURABLE_RESERVATIONS</code>.
+      synchronized protects one JVM object, not cross-node bookings. Bad request structure/capacity yields HTTP 400, while a rejected action remains part of HTTP
+      200.</p>'
     usage: true
   mutableKey(MutableKeyRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: '<p><code>mutableKey(MutableKeyRequest)</code> calls <code>MutableKeyDemonstration.observe</code> via the service. Names must contain 1–24 uppercase
+      ASCII letters, digits, or hyphens; their text and <code>hashCode()</code> values must differ.</p>
+
+      <p>The model inserts an <code>UnsafeKey</code> into a HashMap using displayName-derived hashing, then mutates its displayName. containsKey is true before rename,
+      then false because its original bucket is unchanged even though the entry remains. In the safe branch, immutable record <code>StableId</code> remains the map
+      key while <code>Profile.displayName</code> changes independently.</p>
+
+      <p><code>MutableKeyResult</code> exposes names, hashes, lookup flags, entry counts, and renamed profile based on actual HashMap operations. Invalid, equal,
+      or hash-colliding names map to HTTP 400 using <code>ErrorResponse.error</code>.</p>'
     usage: true
   checkout(CheckoutRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: '<p><code>checkout(CheckoutRequest)</code> delegates to the service, which checks unitPriceVnd, quantity, availableUnits, and member, then constructs
+      <code>CheckoutComparison.Input</code>. The record validates a 2–24 uppercase/digit/hyphen SKU, price 1–1000000000, quantity 1–1000, availableUnits 0–1000, and
+      deliveryMode STANDARD or EXPRESS.</p>
+
+      <p><code>CheckoutComparison.evaluate</code> calls monolithic <code>LegacyCheckout.quote</code> first, then <code>CheckoutWorkflow.quote</code> with concrete
+      StockGuard, PriceRules, and DeliveryRules collaborators. Both reject insufficient stock, compute integer price×quantity, apply a rounded 5% member discount
+      via <code>(subtotal*5+50)/100</code>, and add 20000 for STANDARD or 35000 for EXPRESS. The refactored path records five collaborator calls.</p>
+
+      <p>The service requires sameResult and returns legacy/refactored quotes, a trace, and scope <code>PURE_IN_MEMORY_QUOTE_NO_STOCK_RESERVATION_PAYMENT_OR_PERSISTENCE</code>.
+      Invalid input yields HTTP 400; unavailable inventory or arithmetic overflow yields HTTP 422. No real inventory or payment is changed.</p>'
     usage: true
 EncapsulationExperimentController:
   cart(CartRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: '<h3>Guarded cart mutations</h3>
+
+      <p><code>cart()</code> delegates <code>CartRequest</code> to <code>EncapsulationExperimentService.simulateCart()</code>. The service requires <code>initialLines</code>
+      and 1–20 supported <code>put/changeQuantity/remove</code> actions, checking required action fields upfront. Each <code>CartLine</code> enforces a 1–24-character
+      ASCII alphanumeric/hyphen SKU, unit price 0–1000000000000 VND and quantity 1–1000000. The cart rejects duplicate SKUs and permits at most 25 lines.</p>
+
+      <p><code>EncapsulatedCart</code> owns a private <code>LinkedHashMap</code>. Mutations use <code>copy()</code>, validation with exact arithmetic, then <code>commit()</code>
+      only after every check succeeds. <code>changeQuantity</code> to zero removes a line; removing an unknown SKU fails. <code>cartState()</code> converts internal
+      lines to DTO snapshots and calculates each total.</p>
+
+      <p>Exceptions raised during one action are caught and recorded as <code>CartStep.accepted=false</code> with the original error in <code>detail</code> and unchanged
+      state; the overall response remains HTTP 200. Invalid initial input is mapped to HTTP 400. The result marks its scope as <code>REQUEST_LOCAL_IN_MEMORY_NO_PERSISTENCE</code>.</p>'
     usage: true
   stock(StockRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: '<h3>Preserving inventory invariants</h3>
+
+      <p><code>stock()</code> forwards to <code>simulateStock()</code>, requiring initial stock fields and 1–20 valid stock actions with units. The <code>StockLedger</code>
+      constructor validates the SKU and <code>0 &lt;= reserved &lt;= onHand &lt;= 1000000</code>.</p>
+
+      <p><code>restock</code> grows on-hand stock within the limit; <code>reserve</code> consumes only available units (<code>onHand - reserved</code>); <code>release</code>
+      cannot exceed reserved units; <code>ship</code> decreases on-hand and reserved together. Each operation checks positive amounts and other constraints before
+      updating fields.</p>
+
+      <p><code>StockStep</code> captures before/after, accepted and detail. Exceptions raised within an action become a rejected step in an HTTP 200 response with
+      unchanged state. Invalid construction values instead cause <code>IllegalArgumentException</code> and HTTP 400.</p>'
     usage: true
   snapshot(EventRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: '<h3>Two-way defensive snapshots</h3>
+
+      <p><code>snapshot()</code> calls <code>simulateEvent()</code>, validating two epoch-millisecond timestamps, 1–19 initial names and the names for two mutations.
+      <code>AttendeeDraft</code> requires nonblank names of at most 80 characters. The service constructs a mutable <code>Date</code>, draft attendees and an <code>EventSnapshot</code>.</p>
+
+      <p><code>EventSnapshot</code> copies the input date via <code>new Date(startsAt.getTime())</code>, projects mutable drafts into string names and stores <code>List.copyOf</code>.
+      The service then edits the caller-owned date, renames the first draft and adds another. <code>protectedSnapshot</code> retains its original date and names.</p>
+
+      <p>The service also mutates a date returned by <code>startsAt()</code> and attempts to append to <code>attendeeNames()</code>. The date accessor returns a copy;
+      the list throws <code>UnsupportedOperationException</code>. <code>EventResult</code> exposes the original, modified draft, protected snapshot and post-getter
+      snapshot, plus the unmodifiable-list flag.</p>'
     usage: true
   order(OrderRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: '<h3>Order lifecycle owns its transitions</h3>
+
+      <p><code>order()</code> delegates to <code>simulateOrder()</code>, which requires an items list, 1–20 <code>markPaid/ship/cancel</code> actions and items with
+      valid SKU/quantity. <code>LifecycleOrder</code> validates a 1–40-character ASCII alphanumeric/hyphen order ID, 1–25 non-null items and copies them using <code>List.copyOf</code>,
+      starting at <code>CREATED</code>.</p>
+
+      <p>Synchronized <code>markPaid()</code> requires <code>CREATED</code>, <code>ship()</code> requires <code>PAID</code>, and <code>cancel()</code> requires <code>CREATED</code>.
+      Each calls <code>requireStatus()</code> before mutation, so an illegal call throws <code>IllegalStateException</code> while preserving state.</p>
+
+      <p>The service catches exceptions per action and records before/after, accepted and detail in <code>OrderStep</code>. Such rejected steps are part of HTTP 200
+      responses; malformed initialization yields HTTP 400. <code>scope=SIMULATED_ORDER_NO_REAL_PAYMENT_OR_SHIPPING</code> makes the simulation boundary explicit.</p>'
     usage: true
 InheritanceExperimentsController:
   calculatePay(PayrollRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: '<h3>Polymorphic payroll flow</h3><ol>
+
+      <li><code>InheritanceExperimentsController.calculatePay</code> calls <code>PayrollInheritanceService.calculate</code>. It validates <code>kind</code>, trims
+      and normalizes it via <code>Locale.ROOT</code>, then branches on <code>SALARIED</code> or <code>HOURLY</code>.</li>
+
+      <li>Salaried requires zero hourly rate and worked hours, constructing <code>Employee.Salaried</code>; hourly requires zero monthlySalaryVnd and constructs <code>Employee.Hourly</code>.
+      The superclass <code>Employee</code> constructor checks nonblank ID/name and trims both fields.</li>
+
+      <li>The service uses an <code>Employee</code> reference. Runtime dispatch selects the subclass <code>calculation()</code> and <code>monthlyPayVnd()</code>:
+      a fixed salary for Salaried, or <code>Math.multiplyExact(hourlyRateVnd, workedHours)</code> for Hourly with 0?744 hours.</li>
+
+      <li>HTTP 200 returns <code>PayrollResponse</code> with declared/runtime classes and <code>simulatedOnly=true</code>. Invalid input maps to HTTP 400 <code>INVALID_INPUT</code>,
+      while long multiplication overflow maps to HTTP 422 <code>ARITHMETIC_OVERFLOW</code>.</li></ol>'
     usage: true
   compareDelivery(DeliveryRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: '<h3>Inheritance versus composition fee flow</h3><ol>
+
+      <li><code>compareDelivery</code> passes <code>DeliveryRequest</code> to <code>DeliveryComparisonService.compare</code>, enforcing <code>distanceKm &gt; 0</code>
+      and requiring priority when holiday is enabled. Invalid combinations produce HTTP 400.</li>
+
+      <li>The service selects <code>CityDelivery</code>, <code>PriorityCityDelivery</code> or <code>HolidayPriorityDelivery</code>. Final <code>DeliveryPlan.quote()</code>
+      validates the distance, calls dynamically dispatched <code>distanceFee()</code>, rejects negative surcharges and adds fixed base 10000.</li>
+
+      <li>Each override calls <code>super.distanceFee</code> to accumulate 1000?km, optional priority 5000, and optional holiday 7000. The trace records parent behavior
+      before subclass additions; the holiday leaf is final.</li>
+
+      <li>Separately, the service computes the same options with compositional arithmetic and <code>Math.addExact</code>, collecting <code>compositionTrace</code>.
+      HTTP 200 returns fees, traces, concrete class, equality and simulatedOnly; arithmetic overflow returns HTTP 422.</li></ol>'
     usage: true
   constructorTrace(ConstructorRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: '<h3>Parent and child construction flow</h3><ol>
+
+      <li><code>constructorTrace</code> calls <code>ConstructorTraceService.trace</code>, requiring a nonnull request. <code>ConstructorProbe.run</code> validates
+      a nonblank <code>initialLabel</code> up to 80 characters.</li>
+
+      <li><code>UnsafeChild</code> first invokes <code>UnsafeParent</code> constructor. The parent records its start and calls virtual <code>value()</code>, which
+      dispatches to <code>UnsafeChild.value()</code> while child <code>label</code> still has the default null value.</li>
+
+      <li>After the parent returns, the child field initializer and constructor assign the label. The unsafe trace records the early observation as string <code>null</code>.
+      <code>SafeParent</code> avoids overridable calls, while <code>SafeChild</code> assigns the field before <code>inspectAfterInitialization()</code>.</li>
+
+      <li>HTTP 200 returns <code>ConstructorResponse</code> with immutable unsafeSequence/safeSequence and final values. Invalid labels yield HTTP 400.</li></ol>'
     usage: true
   resolveCapabilities(CapabilitiesRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: '<h3>Default-method resolution flow</h3><ol>
+
+      <li><code>resolveCapabilities</code> delegates <code>CapabilitiesRequest</code> through <code>CapabilityService.resolve</code> to <code>CapabilityResolution.resolve</code>,
+      validating nonblank itemId/tagsCsv with length limits 80 and 200.</li>
+
+      <li><code>MixedCapability</code> implements <code>Printable</code> and <code>Searchable</code> with conflicting default <code>label()</code>. The override explicitly
+      calls <code>Printable.super.label()</code> and <code>Searchable.super.label()</code> and appends the trimmed itemId.</li>
+
+      <li><code>ConcreteSuperclassWins</code> inherits <code>ConcreteBase.label()</code> while implementing Printable; the concrete class implementation wins, yielding
+      <code>CLASS_WINS</code>. <code>Taggable.parseTags</code> splits CSV, trims, lowercases and rejects empty tags.</li>
+
+      <li>HTTP 200 returns <code>CapabilitiesResponse</code> with the explicit resolution, class-wins result and immutable normalizedTags; invalid input returns HTTP
+      400.</li></ol>'
     usage: true
 InterfaceExperimentsController:
   shipping(ShippingRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: '<h3>Choosing implementations behind a shared contract</h3>
+
+      <p><code>shipping()</code> delegates to <code>InterfaceExperimentsService.shipping()</code>, which requires non-null <code>distanceKm</code>, <code>orderValueVnd</code>
+      and <code>selectedPolicy</code>. <code>ShippingFeePolicy.requireValid()</code> bounds distance to 0–10000 km and order value to 0–1000000000000 VND; invalid
+      inputs yield HTTP 400.</p>
+
+      <p>The service creates <code>ShippingQuoteService</code> instances with <code>EconomyShippingPolicy</code> and <code>ExpressShippingPolicy</code>. Both extend
+      <code>DistanceShippingPolicy</code>, whose configured algorithm computes <code>baseVnd + perKmVnd × distanceKm</code> using exact arithmetic. Economy costs
+      10000 + 2500 per km unless the order value is at least 500000 VND, when it is free; Express always costs 20000 + 5000 per km.</p>
+
+      <p><code>allPolicies</code> lists ECONOMY followed by EXPRESS. The service matches the requested code exactly to return <code>selected</code> and sets <code>freeEconomyShipping</code>
+      from Economy''s calculated fee. Unsupported codes yield HTTP 400; any uncaught arithmetic exception would map to HTTP 422.</p>'
     usage: true
   documents(DocumentRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: '<h3>One object implementing three narrow roles</h3>
+
+      <p><code>documents()</code> validates 0–15 initial documents, 1–20 actions, unique document IDs and supported <code>save/read/publish</code> actions with an
+      ID. <code>DocumentEntry</code> requires a 2–24 character uppercase/digit/hyphen ID, nonblank 1–100-character title and nonblank 1–2000-character content.</p>
+
+      <p>One <code>DocumentWorkspace</code> instance is referenced through <code>DocumentReader</code>, <code>DocumentWriter</code> and <code>DocumentPublisher</code>.
+      All roles share the same object, so <code>sharedInstance=true</code>. The class overrides <code>roleName()</code> to resolve independent interface defaults
+      using <code>DocumentReader.super.roleName()</code> and <code>DocumentPublisher.super.roleName()</code>, yielding <code>read+publish</code>.</p>
+
+      <p>Each action captures sorted <code>DocumentState</code> snapshots. <code>save</code> creates or revises drafts but cannot edit a published entry or exceed
+      15 documents; <code>publish</code> requires an existing unpublished entry; <code>read</code> returns an <code>Optional</code>, possibly absent. Exceptions inside
+      an action become <code>DocumentStep.accepted=false</code> with unchanged state and HTTP 200. Malformed initial input instead yields HTTP 400.</p>'
     usage: true
   checkout(CheckoutRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: '<h3>Replacing payment and repository implementations</h3>
+
+      <p><code>checkout()</code> validates gateway <code>APPROVE</code>/<code>DECLINE</code>, repository <code>HASH_MAP</code>/<code>TREE_MAP</code>, 1–20 actions,
+      and a <code>PaymentCommand</code> per action. Command request/order IDs must be 3–36 ASCII letters/digits/hyphens and amount must be integer VND within 1–1000000000000.
+      Invalid requests are rejected with HTTP 400 before processing.</p>
+
+      <p>The service injects a <code>PaymentGateway</code> and a <code>PaymentRepository</code> into <code>CheckoutService</code>. <code>chargeOrReplay()</code> checks
+      the repository first: a matching stored requestId/orderId/amount is returned as <code>replayed=true</code> without another gateway call; a reused requestId
+      with different details throws <code>IllegalStateException</code>. For a new ID it increments <code>gatewayCalls</code>, charges through the selected fake gateway,
+      verifies the receipt matches the command and stores APPROVED or DECLINED status.</p>
+
+      <p>Each <code>CheckoutStep</code> includes snapshots, a nullable receipt, accepted and replayed flags. Either repository lists receipts sorted by requestId.
+      Per-action state conflicts become rejected steps within HTTP 200, whereas invalid input returns HTTP 400. The response <code>scope</code> explicitly disclaims
+      real charging, durable storage and concurrent idempotency.</p>'
     usage: true
 LanguageMechanicsExperimentsController:
   generics(GenericBatchRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: '<h3>PECS, bounded generics and cache execution</h3><ol>
+
+      <li><code>LanguageMechanicsExperimentsController.generics</code> calls <code>GenericBatchService.process</code>, which requires a nonnull request and all four
+      lists. It limits combined numeric elements to 100, entries to 50, and lookups to 50; invalid inputs map to HTTP 400.</li>
+
+      <li>The service creates <code>List&lt;Number&gt;</code> and calls <code>NumericTransfers.copy</code> on integer and decimal lists, reading from <code>? extends
+      T</code> producers into a <code>? super T</code> consumer. The method snapshots its source via <code>List.copyOf</code>, allowing even self-copy to terminate.</li>
+
+      <li><code>NumericTransfers.sum</code> turns each <code>Number</code> into <code>BigDecimal</code> from its string representation, rejects non-finite doubles,
+      and formats the result through <code>stripTrailingZeros().toPlainString()</code>. <code>greatest</code> relies on <code>Comparable&lt;? super T&gt;</code> when
+      integers are nonempty; otherwise largestInteger is null.</li>
+
+      <li><code>TypedCache&lt;String,Integer&gt;</code> validates 1?40 character keys and nonnegative quantities, rejects duplicate keys, and uses Optional lookup
+      for the found map or missing list. HTTP 200 returns <code>GenericBatchResult</code> with copiedValues, sum, largestInteger, found and missing. Invalid/null
+      inputs map to HTTP 400 <code>{"error":"INVALID_INPUT"}</code>.</li></ol>'
     usage: true
   stock(StockRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: '<h3>StockItem and ProductKey contract flow</h3><ol>
+
+      <li><code>stock</code> delegates to <code>StockExperimentService.execute</code>, requiring 1?60 actions and a nonnull type for each. It creates a fresh <code>StockRegistry</code>;
+      for every action, it builds <code>ProductKey(tenantId,sku)</code> and looks it up through record equality and hashing.</li>
+
+      <li><code>REGISTER</code> accepts nonnegative quantity and reports <code>ALREADY_REGISTERED</code> for an existing key or constructs <code>StockItem</code>
+      with <code>REGISTERED</code>. <code>READ</code> yields <code>FOUND</code> or <code>PRODUCT_NOT_FOUND</code>.</li>
+
+      <li><code>RESTOCK</code> and <code>RESERVE</code> require positive quantity. Restock uses <code>Math.addExact</code>; reserve returns sealed <code>ReserveDeclined</code>
+      without mutation on shortage or <code>ReserveAccepted</code> after decrementing. These expected outcomes become <code>StockStep</code> results inside HTTP 200,
+      not business exceptions.</li>
+
+      <li>Successful lookups carry a <code>StockItem.toString()</code> diagnostic restricted to tenantId/sku/available, omitting contactEmail/providerToken. HTTP
+      200 returns steps and uniqueProducts. Invalid action, quantity or overflow maps to HTTP 400 <code>error=INVALID_INPUT</code>.</li></ol>'
     usage: true
   shipping(ShippingRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: '<h3>Polymorphic shipping quote flow</h3><ol>
+
+      <li><code>shipping</code> delegates to <code>ShippingScenarioService.quote</code>. The service requires 1?50 requests and prevalidates the entire list: serviceCode
+      must be nonblank and at most 40 characters; weightGrams must be 1?100000. Invalid input produces HTTP 400 <code>INVALID_INPUT</code>.</li>
+
+      <li>A <code>Map&lt;String,ShippingPolicy&gt;</code> holds <code>standard</code> and <code>express</code>. For known services, <code>ShippingPolicy.quoteVnd</code>
+      dynamically dispatches: <code>StandardShipping</code> returns 20000, while <code>ExpressShipping</code> uses billedKilograms=(weightGrams+999)/1000 and checked
+      arithmetic for 35000 + 8000?billedKilograms.</li>
+
+      <li>An unsupported service is not dispatched and produces <code>ShippingLine</code> with accepted=false, feeVnd=null and <code>SERVICE_NOT_SUPPORTED</code>.
+      For accepted entries, <code>Math.addExact</code> adds each fee to <code>totalAcceptedFeesVnd</code> and the code is <code>QUOTED</code>.</li>
+
+      <li>HTTP 200 returns <code>ShippingResult</code> preserving input order and summing accepted quotes only. Pricing is illustrative and no shipping is performed.</li></ol>'
     usage: true
 LifecycleExperimentController:
   create(CreationRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: <h3>Object construction</h3><ol><li>The controller delegates <code>CreationRequest</code> to <code>LifecycleExperimentService.create</code>. Null request,
+      capacity or style triggers <code>IllegalArgumentException</code>; missing students becomes <code>List.of()</code>.</li><li><code>CONSTRUCTOR</code> invokes
+      the two- or three-argument constructor depending on whether students is empty; <code>STATIC_FACTORY</code> invokes <code>CourseEnrollment.of</code>; <code>BUILDER</code>
+      calls <code>addStudent</code> before <code>build</code>.</li><li>The common constructor validates identifiers, capacity and student uniqueness, stores <code>List.copyOf</code>,
+      and computes <code>availableSeats()</code>. Valid input returns HTTP 200 <code>CreationResult</code>; invalid invariants return HTTP 400 <code>INVALID_INPUT</code>
+      and malformed JSON returns <code>INVALID_JSON</code>.</li></ol>
     usage: true
   references(ReferenceRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: <h3>Logical graph traversal</h3><ol><li>The service requires a nonnull steps list of at most 30 and creates <code>ReferenceGraph</code> from 1?15 nodes
+      and at most 15 roots. The graph validates identifiers, links and roots before producing the initial snapshot.</li><li>Each <code>RootStep</code> <code>RETAIN</code>s
+      an unheld root or <code>RELEASE</code>s an existing root. <code>snapshot</code> uses a stack and visited set so cycles are safe.</li><li>HTTP 200 returns <code>ReferenceResult</code>
+      with snapshots in input node order and an explicit disclaimer that JVM garbage collection was not measured. Invalid node references or root operations become
+      HTTP 400 <code>INVALID_INPUT</code>.</li></ol>
     usage: true
   resources(ResourceRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: <h3>Resource closing</h3><ol><li>The service opens outer and inner <code>TrackedResource</code> objects in <code>try-with-resources</code>, logging
+      <code>open:outer</code>, <code>open:inner</code> and <code>body:start</code>. <code>bodyFails</code> either throws or allows <code>body:success</code>.</li><li>Java
+      closes inner before outer. Each close marks closed=true and logs the event before optionally throwing <code>close failed</code>. Errors during close are suppressed
+      by a body failure; without a body error the first close failure is primary.</li><li>The service catches <code>IllegalStateException</code> and returns HTTP
+      200 <code>ResourceResult</code> with trace, primaryFailure, suppressedFailures, closed and completedWithoutFailure. A null request causes HTTP 400.</li></ol>
     usage: true
   publication(PublicationRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: <h3>Publishing a listener</h3><ol><li>The controller delegates to <code>PublicationScenario.compare</code>, which validates label against <code>[A-Za-z0-9_-]{1,40}</code>
+      and returns HTTP 400 for invalid input.</li><li><code>UnsafeListener</code> invokes <code>registry.register(this)</code> before assigning the field. Registration
+      immediately calls <code>onEvent()</code>, which sees null; a later callback sees the label.</li><li><code>SafeListener.createAndRegister</code> assigns its
+      label before registration, so both callbacks see it. HTTP 200 <code>PublicationResult</code> reports one subscription in each registry.</li></ol>
     usage: true
 ModelingExperimentController:
   library(LibraryRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: '<h3>Library graph and CRC execution</h3><ol>
+
+      <li><code>ModelingExperimentController.library</code> calls <code>ModelingExperimentService.library</code>. The service requires 1?20 titles, 1?20 members,
+      1?30 copies and 1?25 actions. It creates domain objects, validates copy-to-title references and checks action types, identifiers and chronological ISO dates
+      from 2000?2099 before processing anything.</li>
+
+      <li><code>LibraryModel</code> holds identity maps for Member, BookCopy and historical Loan, separate from BookTitle identities. The service creates an <code>initial</code>
+      snapshot and, for each action, captures <code>before</code>, invokes <code>borrow</code> or <code>returnLoan</code>, records actual <code>calls</code>, then
+      captures <code>after</code> for a sequence-diagram trace.</li>
+
+      <li>Borrowing checks that the member exists and is active (BR-01), is under three active loans (BR-02), and the physical copy is available (BR-03), then creates
+      a Loan due 14 days later (BR-04) before updating copy, member and history. Returning validates loan ID, date, and one-way return state (BR-05), marks the loan
+      returned, frees the copy and decrements active loans while preserving history (BR-06). The LibraryModel methods are synchronized on the request-local object.</li>
+
+      <li><code>ModelRuleViolation</code> is caught within an individual action, producing accepted=false with rule/detail and unchanged before/after snapshots, rather
+      than an HTTP failure. <code>assertInvariants</code> checks the whole object graph after each step. HTTP 200 returns <code>LibraryResult</code> with invariantsSatisfied=true
+      and request-local scope. Invalid input becomes HTTP 400 with an <code>error</code> field; broken internal invariants become HTTP 422.</li></ol>'
     usage: true
   orders(OrderRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: '<h3>Order state-machine execution</h3><ol>
+
+      <li>The controller passes <code>OrderRequest</code> to <code>ModelingExperimentService.order</code>; the service requires nonnull totalVnd, 1?20 actions and
+      each event to match <code>ModeledOrder.Event</code>. Unknown event names are rejected before the simulation begins with HTTP 400 and <code>error</code>.</li>
+
+      <li><code>ModeledOrder</code> validates orderId by pattern and totalVnd from 1?1000000000000, beginning in <code>DRAFT</code>. Each action snapshots before/after
+      around <code>apply</code>. State switching permits SUBMIT/CANCEL from DRAFT; CONFIRM_PAYMENT/CANCEL from WAITING_PAYMENT; START_PACKING from PAID; SHIP from
+      PACKING; CONFIRM_DELIVERY from SHIPPED; DELIVERED/CANCELLED are terminal.</li>
+
+      <li>Disallowed transitions raise <code>INVALID_TRANSITION</code>. Mismatched payment raises <code>PAYMENT_GUARD</code>; SHIP with trackingCode outside <code>[A-Z0-9-]{3,32}</code>
+      raises <code>TRACKING_GUARD</code>. The guards all run before trackingCode/state assignment to prevent partial state changes.</li>
+
+      <li>The service catches <code>ModelRuleViolation</code> per step and records accepted=false, rule, detail and unchanged before/after in <code>OrderStep</code>;
+      subsequent steps still execute. HTTP 200 returns <code>OrderResult</code> with initial/steps/current and <code>REQUEST_LOCAL_ONLY_SIMULATED_ORDER_NO_PAYMENT_OR_EXTERNAL_SHIPPING</code>
+      scope. There is no real payment or shipment.</li></ol>'
     usage: true
 ObjectExperimentsController:
   references(ObjectExperimentDto.ReferenceRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: <h3>Aliased references</h3><p><code>references()</code> forwards <code>ReferenceRequest</code> to <code>ObjectSemanticsService.references()</code>.
+      Validation requires nonblank <code>name</code> length 1–80, <code>initialValue</code> -100000 to 100000, and <code>increment</code> 1 to 1000.</p><ol><li>Create
+      original and separatelyCreated counters from identical fields; <code>alias = original</code> copies a reference value, not the object.</li><li><code>addThroughParameter(alias,
+      increment)</code> mutates the shared counter; <code>replaceParameterLocally(alias)</code> reassigns only its local parameter to a new instance.</li><li><code>ReferenceResult</code>
+      shows both original and alias observe the increment, while the independent instance retains its original value.</li></ol><p>Invalid input raises <code>IllegalArgumentException</code>,
+      mapped to HTTP 400.</p>
     usage: true
   equality(ObjectExperimentDto.EqualityRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: <h3>Identity versus value equality</h3><p><code>equality()</code> validates and trims two nonblank codes of length 1–80. It constructs distinct <code>ProductCode</code>
+      records, an alias of the first and a <code>HashSet</code> containing both records.</p><p><code>sameInstance</code> is false because two instances were constructed.
+      <code>valueEquals</code> and <code>hashCodesEqual</code> come from the record contract, and <code>hashSetSize</code> reflects equality-based uniqueness. Two
+      separately allocated <code>LegacyIdentityCode</code> objects do not override <code>equals()</code>, so <code>defaultObjectEquals</code> is false even for the
+      same stored code; the alias always matches identity. Invalid codes yield HTTP 400.</p>
     usage: true
   copies(ObjectExperimentDto.CopyRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: <h3>Sharing elements versus containers</h3><p><code>copies()</code> validates three labels and builds original with a single mutable <code>MutableItem</code>.
+      <code>new ArrayList(original)</code> creates another list holding the same element. Mapping each item to <code>new MutableItem(...)</code> creates independent
+      elements; <code>List.copyOf(original)</code> disallows structural changes but still references the same element. An <code>ItemValue</code> record captures the
+      original string.</p><p>After changing the original item's label and adding a new item, shallow and the unmodifiable snapshot observe the new label but not the
+      appended item. The deep copy and record keep the previous label. The response projects these views through <code>labels()</code>.</p>
     usage: true
   absence(ObjectExperimentDto.AbsenceRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: <h3>Lookup and Optional</h3><p><code>absence()</code> requires a nonblank <code>lookupId</code> of 1–80 characters; <code>optionalAddress</code> may
+      be null but is limited to 80 characters. It builds a sample <code>Customer</code> for ID <code>C01</code>, named <code>Lan</code>; null/blank/whitespace-only
+      addresses are treated as absent.</p><p><code>Optional.ofNullable(repository.get(lookupId))</code> represents a found customer, and <code>flatMap(Customer::shippingAddress)</code>
+      accesses its address only if present. The response contains separate <code>found</code> and <code>optionalAddressPresent</code> flags, a nullable <code>customerName</code>,
+      and a zero-or-one-element address list. All sample state is recreated each request.</p>
     usage: true
   checkout(ObjectExperimentDto.CheckoutRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: <h3>Synchronous checkout</h3><p><code>ObjectCheckoutService.simulate()</code> validates a nonblank SKU, <code>startingStock</code> 0–1000, <code>quantity</code>
+      1–100, required <code>paymentApproved</code>, and <code>unitPrice</code> from 0.01 to 1000000 with up to two decimal places. Invalid inputs yield HTTP 400.</p><ol><li>Construct
+      fresh <code>Cart</code>, <code>Inventory</code>, <code>PaymentGateway</code>, <code>Notifier</code> and <code>Trace</code>; record client entry and <code>Cart.total()</code>.</li><li>When
+      <code>Inventory.reserve()</code> fails, return <code>STOCK_REJECTED</code> without invoking payment.</li><li>On simulated payment rejection, record the gateway
+      event, call <code>Inventory.release()</code> to restore stock, and return <code>PAYMENT_DECLINED</code>.</li><li>On approval, create order <code>DEMO-ORDER</code>
+      with transaction <code>DEMO-TXN</code>, simulate notification and return <code>COMPLETED</code>.</li></ol><p>All three business outcomes have HTTP 200 and a
+      <code>CheckoutResult</code> containing numbered events and stock after each operation; <code>simulatedOnly</code> is true. No external effects persist.</p>
     usage: true
 BasicsExperimentController:
   simulateAccount(AccountSimulationRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: '<h3>Account simulation flow</h3>
+
+      <ol>
+
+      <li><code>BasicsExperimentController.simulateAccount</code> binds JSON to <code>AccountSimulationRequest</code> and delegates to <code>BasicsExperimentService.simulateAccount</code>.</li>
+
+      <li>The service rejects a null request or an <code>actions</code> list outside 1–20 elements, then creates a new <code>BankAccount</code>. Its constructor validates
+      the identifier using <code>[A-Za-z0-9_-]{1,40}</code> and rejects negative opening balances; uncaught input errors reach <code>BasicsExperimentExceptionHandler</code>
+      as HTTP 400.</li>
+
+      <li>Each entry must have an action type. The service captures the previous balance and invokes <code>deposit</code> or <code>withdraw</code>. A deposit requires
+      a positive amount and uses <code>Math.addExact</code>; a withdrawal requires a positive amount and returns <code>false</code> if funds are insufficient.</li>
+
+      <li>Within each action, <code>IllegalArgumentException</code> and <code>ArithmeticException</code> are caught. The service records <code>accepted=false</code>,
+      an explanatory reason such as <code>Balance would overflow</code>, and the unchanged balance before continuing. Insufficient funds generate the reason <code>Insufficient
+      balance</code>.</li>
+
+      <li>The service constructs <code>AccountSimulationResponse</code> with the final balance and immutable timeline. The controller returns HTTP 200; no account
+      is persisted or shared across requests.</li>
+
+      </ol>'
     usage: true
   simulateOrder(OrderSimulationRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: '<h3>Order simulation flow</h3>
+
+      <ol>
+
+      <li><code>BasicsExperimentController.simulateOrder</code> delegates the <code>OrderSimulationRequest</code> to <code>BasicsExperimentService.simulateOrder</code>.
+      The service validates 1–20 <code>steps</code> and creates an <code>OrderAggregate</code> in <code>DRAFT</code> with a zero total.</li>
+
+      <li>For each step the service snapshots the previous status and total, then dispatches by <code>OrderAction</code>: <code>ADD_LINE</code> checks nonnull quantity/price
+      before calling <code>addLine</code>, <code>CONFIRM</code> calls <code>confirm</code>, and <code>CANCEL</code> calls <code>cancel</code>.</li>
+
+      <li><code>OrderAggregate</code> permits modifications only while <code>DRAFT</code>. Each line validates its SKU, quantity from 1 to 10000, and nonnegative
+      unit price. It computes <code>Math.multiplyExact</code> and <code>Math.addExact</code> before mutating state. An empty order cannot be confirmed, and confirmation/cancellation
+      are one-way status changes.</li>
+
+      <li>Per-step <code>IllegalStateException</code>, <code>IllegalArgumentException</code>, and <code>ArithmeticException</code> become <code>accepted=false</code>
+      plus a <code>reason</code> in the timeline; subsequent steps still run. A malformed order ID or invalid step count fails before the loop and produces HTTP 400.</li>
+
+      <li>The <code>OrderSimulationResponse</code> returns <code>finalStatus</code>, <code>totalCents</code>, and every step over HTTP 200. The aggregate is confined
+      to a single request and is never saved.</li>
+
+      </ol>'
     usage: true
   compareShipping(ShippingQuoteRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: '<h3>Shipping policy comparison flow</h3>
+
+      <ol>
+
+      <li><code>BasicsExperimentController.compareShipping</code> accepts <code>ShippingQuoteRequest</code> and delegates to <code>BasicsExperimentService.compareShipping</code>.</li>
+
+      <li>The service checks for a nonnull request, a nonnegative <code>subtotalCents</code>, and a <code>distanceKm</code> between 0 and 100. Violations throw <code>IllegalArgumentException</code>,
+      which <code>BasicsExperimentExceptionHandler</code> maps to HTTP 400 and <code>INVALID_INPUT</code>.</li>
+
+      <li>The service iterates a fixed list in the order <code>ShippingPolicy.Pickup</code>, then <code>ShippingPolicy.Courier</code> through the <code>ShippingPolicy</code>
+      interface. <code>Pickup.feeCents</code> returns 0; <code>Courier.feeCents</code> computes <code>1500 + 400 * distanceKm</code> using checked arithmetic.</li>
+
+      <li>For each policy, <code>Math.addExact</code> adds the fee to the subtotal and produces a <code>ShippingQuote</code>. Any arithmetic overflow is converted
+      into <code>IllegalArgumentException</code> with <code>Payable amount would overflow</code> and HTTP 400; no partial quote list is returned.</li>
+
+      <li>On success, HTTP 200 returns <code>ShippingQuoteResponse</code> with two quotes ordered <code>PICKUP</code> then <code>COURIER</code>, showing how the same
+      interface operation can yield different outcomes.</li>
+
+      </ol>'
     usage: true
 PolymorphismExperimentsController:
   dispatch(DispatchRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: '<h3>Overload first, override second</h3>
+
+      <p><code>dispatch()</code> forwards a <code>DispatchRequest</code> to <code>DispatchMechanics.observe()</code>. Weight and bonus must be present; receiver must
+      be BASE/PREMIUM, event must be EVENT/PRIORITY, bonus 0–100000, Event weight 1–10000, and PriorityEvent priority 1–100. Violations result in HTTP 400.</p>
+
+      <p>A <code>Handler handler</code> variable holds a Handler or PremiumHandler, while <code>Event event</code> holds Event or PriorityEvent. <code>handler.handle(event)</code>
+      chooses the <code>handle(Event)</code> overload from the declared argument type. In the <code>instanceof PriorityEvent specialized</code> branch, <code>handler.handle(specialized)</code>
+      selects <code>handle(PriorityEvent)</code>. After overload selection, the receiver''s runtime type determines whether a Premium override adds <code>bonus</code>
+      to <code>super.handle()</code>.</p>
+
+      <p>Base <code>handle(Event)</code> computes weight × 10 and <code>handle(PriorityEvent)</code> computes weight × 100 + priority. <code>identify()</code> dispatches
+      dynamically. By contrast, <code>handler.label</code> is BASE-FIELD while a Premium-typed reference accesses PREMIUM-FIELD. <code>Handler.category()</code> is
+      BASE-STATIC and <code>PremiumHandler.category()</code> is PREMIUM-STATIC: those members are hidden, not overridden. <code>sameReceiverObject</code> is always
+      true.</p>'
     usage: true
   payments(PaymentsRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: '<h3>Polymorphism via the payment contract</h3>
+
+      <p><code>payments()</code> requires <code>initialWalletBalanceVnd</code>, <code>cardLimitVnd</code> and 1–20 actions. WALLET validates balance 0–1000000000000
+      and CARD validates limit 1–1000000000000. Before execution, every action selects CARD/WALLET/BANK and creates a <code>PaymentCommand</code> with a 3–36-character
+      uppercase-letter/digit/hyphen order ID and amount 1–1000000000000. Bad inputs yield HTTP 400.</p>
+
+      <p>The map stores each implementation as <code>PaymentMethod</code>. <code>PaymentCheckoutService.checkout()</code> only calls <code>method.pay(command)</code>
+      and requires a non-null outcome. CARD returns PAID within its limit or DECLINED above it; WALLET debits its balance and returns PAID if funds are sufficient,
+      otherwise DECLINED without mutation; BANK returns PENDING because its simulated transfer has not been confirmed.</p>
+
+      <p><code>PaymentStep</code> includes index, method, orderId, amountVnd, status, detail and wallet balances before/after. CARD and BANK leave the wallet untouched.
+      <code>PaymentsResult</code> counts each status and declares <code>REQUEST_LOCAL_SIMULATION_NO_REAL_PAYMENT_NO_DURABLE_STATE</code>.</p>'
     usage: true
 PracticeExperimentController:
   bank(BankRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: '<h3>Simulated bank-ledger flow</h3><ol>
+
+      <li><code>PracticeExperimentController.bank</code> calls <code>PracticeExperimentService.bank</code>, requiring nonnull accounts and 1–20 actions with recognized
+      types and the relevant account/amount/transfer target fields. <code>BankLedger</code> constructs 1–10 accounts, validating IDs against <code>[A-Z0-9-]{2,24}</code>,
+      owner, nonnegative balances and unique IDs.</li>
+
+      <li>It captures <code>initial</code> using <code>ledger.snapshot()</code> in <code>LinkedHashMap</code> insertion order. Each action snapshots <code>before</code>,
+      then invokes synchronized <code>deposit</code>, <code>withdraw</code> or <code>transfer</code>. All amounts must be positive; deposit uses <code>Math.addExact</code>
+      and withdrawal checks available funds.</li>
+
+      <li><code>transfer</code> rejects the same source and destination, checks account existence and funds, and verifies that destination addition will not overflow
+      before mutating either balance. The service catches <code>IllegalArgumentException</code>, <code>IllegalStateException</code> and <code>ArithmeticException</code>
+      inside a step, yielding <code>accepted=false</code>, a detail message and unchanged before/after. Later actions continue.</li>
+
+      <li>HTTP 200 returns <code>BankResult</code> with initial/steps/current and an in-memory scope string. Missing or unsupported action types fail prevalidation
+      with HTTP 400. No real account or durable banking operation occurs.</li></ol>'
     usage: true
   orders(OrderRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: '<h3>Order lifecycle and guarded mutation flow</h3><ol>
+
+      <li><code>PracticeExperimentService.order</code> validates the request and 1–20 action types. SET_LINE requires sku/price/quantity; CHANGE_QUANTITY requires
+      sku/quantity; REMOVE_LINE requires sku. Missing fields cause HTTP 400 before a <code>PracticeOrder</code> is instantiated.</li>
+
+      <li>The order starts in DRAFT. <code>setLine</code> builds a <code>Line</code> with stripped uppercased SKU, price 1–1000000 cents and quantity 1–100. <code>changeQuantity</code>
+      accepts zero to remove a line; <code>removeLine</code> returns a boolean. Mutation is prepared in a temporary map and <code>commit</code> validates a maximum
+      subtotal of 10000000 before touching the original map.</li>
+
+      <li><code>summary()</code> totals lines, discounts 5% at subtotal 200000 or above, and charges zero shipping when subtotal is zero or at least 100000; below
+      that it charges 15000. <code>place()</code> requires a nonempty DRAFT and switches to PLACED; <code>cancel()</code> switches to CANCELLED once. Edits outside
+      DRAFT are rejected.</li>
+
+      <li>The service snapshots each <code>OrderState</code> id/status/lines/summary before and after the action. Domain and mutation errors inside the loop produce
+      <code>OrderStep.accepted=false</code> and unchanged snapshots within HTTP 200. <code>OrderResult</code> is scoped to an in-memory, non-payment simulation; malformed
+      prevalidation input returns HTTP 400.</li></ol>'
     usage: true
   library(LibraryRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: '<h3>Library loan and policy-change flow</h3><ol>
+
+      <li><code>PracticeExperimentService.library</code> validates books/members/copies and 1–25 actions. It parses book kinds into <code>PracticeLibrary.Kind</code>,
+      checks member activity flags, ISO <code>onDate</code> years 2000–2099 and nondecreasing action dates before building the aggregate. Book/copy identifiers must
+      link correctly and be unique.</li>
+
+      <li><code>PracticeLibrary</code> initializes identity maps, historical loans and a <code>LegacyPolicy</code>. Each action has a before/after snapshot. <code>borrow</code>
+      checks member/copy existence, active eligibility (BR-01), copy occupancy (BR-03), overdue open loans (BR-04), and the open-loan limit (BR-02). It creates <code>LOAN-n</code>
+      with a due date calculated once from the current policy.</li>
+
+      <li><code>returnLoan</code> requires a known, open loan (BR-06) and a return date no earlier than the borrow date (BR-07), then replaces the history entry with
+      a closed record preserving dueOn. <code>revise</code> permits LEGACY to REVISED only once (POLICY_ALREADY_REVISED). The revised policy raises the limit from
+      three to five and shortens new REFERENCE loans from 14 to seven days without rewriting existing loans.</li>
+
+      <li>The service catches <code>RuleRejected</code> per action, recording rule/detail and unchanged snapshots, and runs <code>checkInvariants</code> after every
+      step. HTTP 200 returns <code>LibraryResult</code> with invariantsPreserved=true. Bad input, date or book kind is HTTP 400; uncaught internal invariant errors
+      map to HTTP 422. This is not a database or distributed lock.</li></ol>'
     usage: true
 RefactoringExperimentsController:
   checkout(CheckoutRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: '<h3>Comparing original and refactored checkout</h3><ol>
+
+      <li><code>RefactoringExperimentsController.checkout</code> delegates to <code>CheckoutRefactoringService.compare</code>, requiring a nonnull request with 1–100
+      lines. Each <code>LineInput</code> must exist, and <code>OrderLine</code> requires nonblank SKU, positive quantity and nonnegative unit price.</li>
+
+      <li><code>ShoppingOrder</code> snapshots lines using <code>List.copyOf</code> so callers cannot mutate its inputs. <code>LegacyCheckout.price</code> computes
+      multiplication/sums with checked arithmetic, a 10% VIP discount at subtotal 500000 or above, and free shipping at payable 700000 or above; otherwise shipping
+      adds 30000.</li>
+
+      <li>In the refactored path, <code>PricingPolicy.calculate</code> calls <code>ShoppingOrder.subtotalVnd()</code>, which delegates per-line multiplication to
+      <code>OrderLine.lineAmountVnd()</code>. <code>PricingPolicy</code> preserves the discount/shipping rules, and <code>ReceiptFormatter.format</code> constructs
+      a receipt for both results.</li>
+
+      <li>The service maps the two <code>Pricing</code> objects to <code>PricingView</code> records and compares value equality, returning HTTP 200 <code>CheckoutComparison</code>.
+      Invalid input or arithmetic overflow maps to HTTP 400 <code>INVALID_INPUT</code>. This verifies equivalence; it does not execute a payment or modify source
+      code.</li></ol>'
     usage: true
   delivery(DeliveryRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: '<h3>Replacing a type switch with polymorphism</h3><ol>
+
+      <li><code>delivery</code> delegates to <code>DeliveryRefactoringService.compare</code> and requires 1–50 entries. For every entry, orderValueVnd must be nonnegative,
+      weightKg in 1–1000, and type must match the <code>DeliveryType</code> enum; violations map to HTTP 400.</li>
+
+      <li>The service calls <code>LegacyDeliveryCalculator.quote</code> for <code>before</code>, then obtains <code>DeliveryPolicy</code> from a <code>Map&lt;DeliveryType,DeliveryPolicy&gt;</code>
+      and invokes its <code>quote</code> method for <code>after</code>, relying on runtime dispatch rather than a repeated switch.</li>
+
+      <li><code>StandardDeliveryPolicy</code> charges zero for orders worth at least 500000; otherwise 20000+5000×weightKg, ETA 5 days. <code>ExpressDeliveryPolicy</code>
+      charges 45000+10000×weightKg, ETA 1; <code>PickupDeliveryPolicy</code> charges zero, ETA 0. Arithmetic is overflow-checked.</li>
+
+      <li>HTTP 200 <code>DeliveryResult</code> contains each before/after pair, an <code>equivalent</code> flag and <code>allEquivalent</code>. Invalid inputs/overflow
+      go to HTTP 400; matching outcomes are the refactoring goal.</li></ol>'
     usage: true
   alerts(AlertRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: '<h3>Composing an alert with a retry decorator</h3><ol>
+
+      <li><code>alerts</code> calls <code>AlertRefactoringService.execute</code>. The service constructs a new <code>RecordingMessageChannel</code> for each request,
+      permitting EMAIL/SMS and transientFailures 0–10. It wraps this in <code>RetryingChannel</code> with maxAttempts 1–5, then injects that into <code>AlertDispatcher</code>.</li>
+
+      <li><code>AlertDispatcher.sendCritical</code> requires nonblank recipient and incident of at most 120/200 characters, prefixing the incident with <code>[CRITICAL]
+      </code>. It only depends on <code>MessageChannel</code> and does not inherit a transport implementation.</li>
+
+      <li><code>RetryingChannel.send</code> calls its delegate up to maxAttempts and only catches <code>TemporaryDeliveryFailure</code>. The recorder logs <code>TEMPORARY_FAILURE</code>
+      for configured early attempts, or <code>DELIVERED</code> and a message on success. Other exception categories are not retried.</li>
+
+      <li>On success the service returns HTTP 200 <code>AlertResult</code> with <code>DELIVERED</code>. When all temporary-failure retries are exhausted, the service
+      catches the exception and returns HTTP 200 <code>RETRY_EXHAUSTED</code> with no false delivery claim. Invalid inputs return HTTP 400.</li></ol>'
     usage: true
 RelationshipsExperimentsController:
   transfer(TransferRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: '<p><code>transfer(TransferRequest)</code> delegates to <code>DepartmentTransferService.simulate</code>, constructing a fresh <code>DepartmentGraph</code>.
+      Its constructor checks up to 30 distinct department codes, capacities 1–1000, up to 100 distinct employee IDs, and valid initial department references. An initial
+      assignment exceeding department capacity is rejected without returning a partially built graph.</p>
+
+      <p><code>DepartmentGraph.transfer</code> prevalidates all 1–40 actions and their employee/target IDs. <code>move</code> checks target capacity before detaching
+      an employee, then updates both <code>employee.department</code> and <code>department.members</code>. Transferring to the current department returns UNCHANGED;
+      transferring to a full department records accepted=false and DEPARTMENT_FULL while preserving the original link.</p>
+
+      <p>After each action, <code>requireInvariant</code> checks both ends. <code>TransferResponse</code> exposes events plus sorted department and employee snapshots,
+      invariantHolds, and simulatedOnly. Invalid input yields HTTP 400; an unhandled model state failure is mapped to HTTP 409 by the scoped handler.</p>'
     usage: true
   enroll(EnrollmentRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: '<p><code>enroll(EnrollmentRequest)</code> delegates to <code>EnrollmentScenarioService.simulate</code>, creating a request-local <code>EnrollmentRegistry</code>.
+      The constructor requires 1–50 unique student IDs and 1–50 unique course IDs. <code>validateActions</code> prechecks all 1–50 actions, each exactly ENROLL or
+      CANCEL with known IDs.</p>
+
+      <p>The Registry owns a many-to-many map keyed by student/course pairs. A successful new ENROLL creates an <code>EnrollmentView</code> with an increasing <code>enrollmentSequence</code>.
+      A duplicate ENROLL returns DUPLICATE_ENROLLMENT; cancelling an absent pair returns NOT_ENROLLED. Neither rejection mutates the map. Re-enrolling after a successful
+      cancellation creates a new sequence.</p>
+
+      <p><code>NotificationGateway</code> is passed into <code>apply</code> as a temporary dependency, with a callback incrementing notificationsSent only on successful
+      new enrollments. <code>EnrollmentResponse</code> includes events, sorted active links, notificationsSent, uniquePairs, and simulatedOnly. Invalid inputs yield
+      HTTP 400, while modeled business rejections remain HTTP 200.</p>'
     usage: true
   ownership(OwnershipRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: '<p><code>ownership(OwnershipRequest)</code> delegates to <code>OwnershipComparisonService.compare</code> and then <code>OwnershipScenario.compare</code>.
+      The model validates teamId/orderId, removeMemberId, 1–50 unique memberIds, and 1–30 OrderLines with unique SKU, quantity 1–1000, and nonnegative unit price.
+      <code>Math.multiplyExact</code> and <code>Math.addExact</code> calculate subtotals and total before relationship changes.</p>
+
+      <p>A directory owns independently existing <code>Member</code> instances, while <code>Team</code> aggregates references: removing a member from Team does not
+      delete the directory entry. By contrast, <code>Order</code> constructs its <code>OrderLine</code> components, whose lifetime it owns. Calling <code>close()</code>
+      clears both lines and SKU tracking, while leaving the order open preserves them.</p>
+
+      <p><code>OwnershipResponse</code> contains remaining Team members, pre-close total and line count, post-action line count, orderClosed, and simulatedOnly. Invalid
+      input returns HTTP 400; arithmetic overflow in the price calculation maps to HTTP 422 ARITHMETIC_OVERFLOW.</p>'
     usage: true
 SolidExperimentController:
   quote(QuoteRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: '<p>The Controller forwards <code>QuoteRequest</code> to <code>SolidExperimentService.quote</code>, which requires a request and non-null subtotalCents
+      before delegating to <code>DiscountPricing.quote</code>. The pricing coordinator receives a list of <code>DiscountPolicy</code> implementations in the service
+      constructor. Within Spring, NONE, TEN_PERCENT, LOYALTY, and BROKEN_NEGATIVE policies are discovered as interface-implementing components.</p>
+
+      <p><code>DiscountPricing.quote</code> rejects a negative subtotal, a blank policyCode, or an unknown policy. It invokes the selected <code>discountCents(subtotal)</code>
+      and validates the postcondition <code>0 &lt;= discount &lt;= subtotal</code>. NONE returns zero; TEN_PERCENT uses integer division by ten; LOYALTY applies a
+      15% discount only at or above 50000 cents; BROKEN_NEGATIVE deliberately returns -1, illustrating a nominal implementation that violates LSP.</p>
+
+      <p>A valid policy produces <code>QuoteResult</code> with policyCode, subtotalCents, discountCents, and payableCents. The scoped handler maps IllegalArgumentException
+      to HTTP 400 INVALID_INPUT, PolicyContractException to HTTP 422 POLICY_CONTRACT, and ArithmeticException to HTTP 422 ARITHMETIC_OVERFLOW.</p>'
     usage: true
   experiment(ExperimentRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: '<p><code>experiment(ExperimentRequest)</code> calls <code>SolidExperimentService.experiment</code>, which first requires 1–16 attempts. Each request
+      creates a new <code>MemoryOrderStore</code> and <code>MemoryReceiptSender</code>, constructing <code>CheckoutUseCase(pricing, store, sender)</code> through
+      constructor injection. The checkout use case depends on the <code>OrderWriter</code>/<code>ReceiptSender</code> ports and <code>DiscountPricing</code> rather
+      than importing concrete adapters.</p>
+
+      <p>For each attempt, <code>toOrder</code> validates 1–20 lines and mandatory line fields; <code>PurchaseOrder</code> validates the order ID, SKU, quantity,
+      and unit price. <code>CheckoutUseCase.checkout</code> computes the subtotal with <code>Math.addExact</code>/<code>multiplyExact</code>, calls <code>DiscountPricing.quote</code>,
+      and constructs a <code>CheckoutReceipt</code> before calling <code>writer.save</code> then <code>sender.send</code>. <code>MemoryOrderStore</code> rejects duplicate
+      order IDs. Per-attempt exceptions are caught and represented as POLICY_CONTRACT, ARITHMETIC_OVERFLOW, INVALID_INPUT, or ORDER_CONFLICT with accepted=false.</p>
+
+      <p>After the loop, the service compares storedOrders with notices to derive <code>countsConsistent</code>, returning <code>ExperimentResult</code> with attempts,
+      storedOrders, notices, countsConsistent, and request-local scope. This in-memory example does not guarantee atomicity across real-world adapters or offer a
+      distributed transaction. An empty or oversized attempts list causes request-level HTTP 400, while rejected individual attempts appear in a normal HTTP 200 response.</p>'
     usage: true
 SubtypingExperimentController:
   dispatch(DispatchRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: '<p><code>SubtypingExperimentController.dispatch</code> forwards <code>DispatchRequest</code> to <code>SubtypingExperimentService.dispatch</code>.
+      The service validates implementation and amountCents (1–100000000), then creates <code>CardPayment</code>, <code>WalletPayment</code>, or <code>LegacyPaymentAdapter</code>
+      wrapping a <code>LegacyGateway</code>.</p>
+
+      <p>The variable <code>payment</code> is declared as <code>PaymentMethod</code>; assigning <code>upcastReference=payment</code> does not copy the object. Calls
+      to <code>payment.description()</code> and <code>payment.charge(amount)</code> dispatch to the runtime implementation. In contrast, <code>PaymentMethods.inspect(upcastReference)</code>
+      selects the PaymentMethod overload at compile time; only after <code>instanceof CardPayment</code> does the service invoke the CardPayment overload and retrieve
+      <code>lastFourDigits()</code>.</p>
+
+      <p><code>DispatchResult</code> contains identity, runtime type, receipt, overload selections, and capabilities. <code>LegacyGateway</code> itself does not implement
+      PaymentMethod, but its adapter does and delegates the call. Invalid input raises IllegalArgumentException, mapped to HTTP 400.</p>'
     usage: true
   contract(DiscountRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: '<p><code>contract</code> delegates <code>DiscountRequest</code> to <code>discountContract</code>. The service requires an implementation, 1–20 non-null
+      prices within 0–100000000, then constructs FIXED (discountCents), PERCENT (percent), or STRICT_MINIMUM (minimumCents) with implementation-specific parameter
+      validation.</p>
+
+      <p>For each valid price it calls <code>DiscountPolicy.netCents</code> and verifies the postcondition that the result lies between zero and the original price.
+      <code>FixedDiscount</code> floors the result at zero; <code>PercentDiscount</code> uses integer division for percentage reduction; <code>StrictMinimumDiscount</code>
+      deliberately rejects prices below its own minimum even when the supertype contract accepts them.</p>
+
+      <p>An IllegalArgumentException during one price evaluation becomes a <code>DiscountCase</code> with netCents null, satisfiedContract=false, and a precondition-failure
+      explanation. The service continues other prices and builds <code>DiscountResult.allCasesPass</code>. Invalid request fields or policy parameters cause HTTP
+      400, while an LSP failure inside a valid experiment remains HTTP 200.</p>'
     usage: true
   geometry(GeometryRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: '<p><code>geometry</code> calls <code>geometryContract</code>. The service checks kind and all four dimensions, each within 1–10000; SQUARE_AS_RECTANGLE
+      additionally requires equal initial width and height.</p>
+
+      <p>The <code>rectangle</code> variable has declared type <code>MutableRectangle</code> and may hold a <code>MutableSquare</code>. It invokes setWidth(newWidth)
+      and tests whether height stayed unchanged, then invokes setHeight(newHeight) and checks whether width stayed unchanged. MutableSquare overrides both setters
+      to change both dimensions, violating the parent''s independent-setter contract.</p>
+
+      <p><code>GeometryResult</code> exposes the runtime type, final dimensions and area, independent-setter flags, and expected rectangle area. The immutable <code>ImmutableRectangle</code>
+      and <code>ImmutableSquare</code> implement only <code>MeasurableShape.area()</code>, avoiding incompatible setter promises; invalid input is returned as HTTP
+      400.</p>'
     usage: true
 TestingExperimentController:
   contracts(ContractRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: '<h3>Shared contract, independent reference state machine</h3>
+
+      <p><code>contracts()</code> delegates <code>ContractRequest</code> to <code>InventoryContractService.run()</code>. It requires capacity 1–100000 and 1–30 actions;
+      each action is <code>RESERVE</code> or <code>CANCEL</code> with seats 1–100000. Invalid input throws <code>IllegalArgumentException</code> and produces HTTP
+      400 with <code>{code: INVALID_INPUT, detail: ...}</code>.</p>
+
+      <p>Three fresh inventories share the requested capacity: <code>MONITOR</code> uses synchronized methods, <code>ATOMIC</code> uses <code>AtomicInteger</code>
+      compare-and-set loops, and <code>BROKEN_MUTATE_ON_REJECT</code> deliberately increments reservations even on an over-capacity rejection. An independent reference
+      model computes expectedAccepted/expectedReserved before each action: reserve only within remaining capacity; cancel only up to reserved quantity; rejected operations
+      preserve state.</p>
+
+      <p>Every <code>ContractStep</code> compares expected/actual accepted values and snapshots, adding <code>RETURN_VALUE_MISMATCH</code>, <code>STATE_MISMATCH</code>
+      and <code>INVARIANT_BROKEN</code> in that order when applicable. A run exposes <code>allPassed</code> and <code>passedSteps</code>. The aggregate <code>conformingImplementationsPassed</code>
+      checks MONITOR and ATOMIC, while <code>defectDetected</code> indicates a failed BROKEN run. HTTP 200 is expected even when the seeded implementation fails its
+      contract: detecting that defect is the purpose of the experiment.</p>'
     usage: true
   collaboration(CollaborationRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: '<h3>Substitutable dependencies with observable results</h3>
+
+      <p><code>collaboration()</code> delegates to <code>CollaborationExperimentService.run()</code>. It validates 1–12 scenarios, stock 0–10000, non-null quantity/price,
+      <code>paymentMode=APPROVE/DECLINE/ERROR</code> and <code>receiptMode=SEND/ERROR</code>. <code>CheckoutWorkflow.Order</code> requires 2–32 letter/digit/hyphen
+      orderId and sku, quantity 1–10000 and nonnegative price, and computes <code>totalVnd()</code> via <code>Math.multiplyExact()</code>. Bad inputs produce HTTP
+      400; overflow before collaborator calls maps to HTTP 422.</p>
+
+      <p>For every scenario the service constructs an independent <code>FakeInventory</code>, <code>StubPayment</code> and <code>RecordingSender</code> sharing a
+      recording <code>events</code> list. <code>CheckoutWorkflow.checkout()</code> computes total, then reserves stock; an out-of-stock rejection returns <code>OUT_OF_STOCK</code>
+      without calling payment or receipt. A false charge releases inventory and returns <code>PAYMENT_DECLINED_ROLLED_BACK</code>; a charge exception also releases
+      stock and returns <code>PAYMENT_ERROR_ROLLED_BACK</code>. Only approved payment proceeds to receipt sending. A failed sender yields <code>PAID_RECEIPT_FAILED</code>
+      without claiming a refund; successful sending yields <code>SUCCESS</code>.</p>
+
+      <p><code>CollaborationRun</code> exposes payable, before/after stock, <code>paymentAttempts</code>, <code>sentReceipts</code>, ordered events and a derived
+      <code>invariantHolds</code> flag. Each fake operates within its own request scenario; the <code>scope</code> explicitly rules out network calls, real money
+      transfers, actual emails and cross-request shared state.</p>'
     usage: true
   regression(RegressionRequest):
-    execution: <p>Description of how this API works. Replace this with HTML code.</p>
+    execution: '<h3>Regression testing preserves public behavior across refactors</h3>
+
+      <p><code>regression()</code> delegates to <code>RegressionExperimentService.run()</code>, requiring a member flag, 1–20 catalog prices and 1–20 lines. Catalog
+      SKUs must be 2–32 letters/digits/hyphens, prices nonnegative; lines need quantity 1–10000 and a SKU in the catalog. <code>QuoteRegression.RecordingCatalog</code>
+      records lookup counts through the <code>Catalog</code> interface. Invalid inputs produce HTTP 400.</p>
+
+      <p><code>PerLineQuote</code> looks up each line separately, while <code>GroupedQuote</code> combines quantities per SKU before pricing. Both use exact multiplication/addition
+      and the same invoice rule: a member receives a truncated integer 5% discount, shipping costs 15000 below subtotal 100000 and becomes free at or above that threshold.
+      <code>BrokenShippingQuote</code> wraps the grouped calculation but intentionally uses greater-than rather than greater-or-equal, changing its invoice at the
+      exact threshold.</p>
+
+      <p>The service computes a PerLineQuote <code>baseline</code> and three <code>RegressionVariant</code> objects holding <code>implementation</code>, <code>invoice</code>,
+      <code>catalogLookups</code> and <code>matchesBaseline</code>. <code>refactorPreservedBehavior</code> checks grouped invoice equality; <code>seededDefectDetected</code>
+      reports mismatch for BROKEN. Reduced internal lookups are not considered behavioral regressions. An uncaught long overflow maps to HTTP 422 with <code>{code:
+      ARITHMETIC_OVERFLOW, detail: the requested amounts overflow long}</code>.</p>'
     usage: true

@@ -1992,6 +1992,12 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <a href='./module/platform/development/programming/paradigm/declarative'>🪄 declarative</a>
 </li>
 <li>
+  <a href='./module/platform/development/programming/paradigm/logic'>🪄 logic</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/paradigm/constraint'>🪄 constraint</a>
+</li>
+<li>
   <a href='./module/platform/development/programming/paradigm/object-oriented'>🪄 object-oriented</a>
 </li>
 <li>
@@ -2001,10 +2007,22 @@ Sử dụng mũi tên để đóng/mở các phân cấp module.
   <a href='./module/platform/development/programming/paradigm/data-oriented'>🪄 data-oriented</a>
 </li>
 <li>
+  <a href='./module/platform/development/programming/paradigm/dataflow'>🪄 dataflow</a>
+</li>
+<li>
   <a href='./module/platform/development/programming/paradigm/aop'>🪄 aop</a>
 </li>
 <li>
+  <a href='./module/platform/development/programming/paradigm/concurrent'>🪄 concurrent</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/paradigm/event-driven'>🪄 event-driven</a>
+</li>
+<li>
   <a href='./module/platform/development/programming/paradigm/reactive'>🪄 reactive</a>
+</li>
+<li>
+  <a href='./module/platform/development/programming/paradigm/metaprogramming'>🪄 metaprogramming</a>
 </li>
 </ul>
 </details>

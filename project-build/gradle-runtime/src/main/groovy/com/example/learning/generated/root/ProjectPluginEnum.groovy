@@ -120,6 +120,11 @@ enum ProjectPluginEnum {
             'com.example.learning.setup.settings.properties.plugin.PropertiesSetupPlugin'
     ),
 
+    CODE_EXPLORER_PLUGIN(
+            'com.example.learning.task.codeexplorer.plugin',
+            'com.example.learning.task.codeexplorer.plugin.CodeExplorerPlugin'
+    ),
+
     DATABASE_TASK_PLUGIN(
             'com.example.learning.task.database.plugin',
             'com.example.learning.task.database.plugin.DatabaseTaskPlugin'

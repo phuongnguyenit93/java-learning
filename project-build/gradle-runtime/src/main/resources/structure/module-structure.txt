@@ -473,11 +473,17 @@ module
     │   │   └── paradigm
     │   │       ├── imperative [IMPERATIVE_PROGRAMMING] : Imperative Programming paradigm, state, commands and procedural organization
     │   │       ├── declarative [DECLARATIVE_PROGRAMMING] : Declarative Programming paradigm, intent-oriented specification and related styles
+    │   │       ├── logic [LOGIC_PROGRAMMING] : Logic programming paradigms, inference, unification and relational computation
+    │   │       ├── constraint [CONSTRAINT_PROGRAMMING] : Constraint programming, propagation, search and combinatorial optimization
     │   │       ├── object-oriented [OBJECT_ORIENTED_PROGRAMMING] : Object-Oriented Programming paradigm concepts and object collaboration
     │   │       ├── functional [FUNCTIONAL_PROGRAMMING] : Functional Programming paradigm concepts and trade-offs
     │   │       ├── data-oriented [DATA_ORIENTED_PROGRAMMING] : Data-Oriented Programming principles and data-centric program design
+    │   │       ├── dataflow [DATAFLOW_PROGRAMMING] : Dataflow programming, dependency graphs, execution models and scheduling
     │   │       ├── aop [ASPECT_ORIENTED_PROGRAMMING] : Aspect-Oriented Programming concepts, cross-cutting concerns, terminology and implementation models
-    │   │       └── reactive [REACTIVE_PROGRAMMING] : Reactive Programming paradigm, data flow and backpressure concepts
+    │   │       ├── concurrent [CONCURRENT_PROGRAMMING] : Concurrent programming models, shared-state coordination, message passing and progress
+    │   │       ├── event-driven [EVENT_DRIVEN_PROGRAMMING] : Event-driven programming model, event dispatch, event loops and handler safety
+    │   │       ├── reactive [REACTIVE_PROGRAMMING] : Reactive Programming paradigm, data flow and backpressure concepts
+    │   │       └── metaprogramming [METAPROGRAMMING] : Metaprogramming concepts, code representations, generation, macros and reflection
     │   ├── software-design
     │   │   ├── architecture
     │   │   │   ├── fundamentals

@@ -1,0 +1,38 @@
+# Curriculum roadmap for Lập trình ràng buộc.
+# Review scope before authoring Knowledge/Menu in subsequent workflow steps.
+roadmap:
+  - id: constraint-foundations
+    title: "Constraint Satisfaction Problem (CSP)"
+    purpose: "Mô tả biến, miền giá trị và tập ràng buộc tạo nên bài toán thỏa mãn."
+    objectives:
+      - "Mô tả biến, miền giá trị và tập ràng buộc tạo nên bài toán thỏa mãn."
+  - id: constraint-modeling
+    title: "Mô hình hóa ràng buộc"
+    purpose: "Phân biệt mô hình với thuật toán giải, ràng buộc toàn cục và điều kiện dư thừa."
+    objectives:
+      - "Phân biệt mô hình với thuật toán giải, ràng buộc toàn cục và điều kiện dư thừa."
+  - id: constraint-propagation
+    title: "Lan truyền và thu hẹp miền"
+    purpose: "Hiểu constraint propagation, consistency và pruning mà không liệt kê mọi nghiệm."
+    objectives:
+      - "Hiểu constraint propagation, consistency và pruning mà không liệt kê mọi nghiệm."
+  - id: constraint-search
+    title: "Backtracking và heuristic tìm kiếm"
+    purpose: "Đánh giá thứ tự chọn biến, giá trị và các trường hợp bùng nổ tổ hợp."
+    objectives:
+      - "Đánh giá thứ tự chọn biến, giá trị và các trường hợp bùng nổ tổ hợp."
+  - id: constraint-optimization
+    title: "Tối ưu hóa, ràng buộc cứng và mềm"
+    purpose: "Phân biệt feasibility với optimum; mô hình hóa objective và ưu tiên đánh đổi."
+    objectives:
+      - "Phân biệt feasibility với optimum; mô hình hóa objective và ưu tiên đánh đổi."
+  - id: constraint-applications
+    title: "Xếp lịch và phân bổ tài nguyên"
+    purpose: "Xây mô hình ca làm hoặc phân bổ tài nguyên, diễn giải trường hợp không có nghiệm."
+    objectives:
+      - "Xây mô hình ca làm hoặc phân bổ tài nguyên, diễn giải trường hợp không có nghiệm."
+  - id: constraint-tradeoffs
+    title: "Độ khó tính toán và phạm vi sử dụng"
+    purpose: "So sánh constraint solving với rule engines, search và thuật toán chuyên dụng."
+    objectives:
+      - "So sánh constraint solving với rule engines, search và thuật toán chuyên dụng."
