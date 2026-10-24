@@ -19,9 +19,12 @@ import yaml
 
 EXPOSED_FIELDS = (
     "overview", "knowledge", "roadmap", "video", "quiz",
-    "interview", "api", "reference",
+    "interview", "api", "reference", "codeExplorer",
 )
 ALLOWED_EXTENSIONS = frozenset({".json", ".yml", ".yaml", ".md"})
+EXPLORER_SOURCE_RE = re.compile(
+    r"^module/[A-Z0-9_-]+/code-explorer/files/(?:[A-Za-z0-9_$-]+/)*[A-Za-z0-9_$-]+\.java$"
+)
 # Temporarily exclude cross-module Knowledge search from Java data releases.
 DISABLED_SEARCH_PREFIX = "search/knowledge-search."
 SHA_RE = re.compile(r"^[0-9a-f]{40}$")
@@ -119,7 +122,7 @@ def validate(directory):
     files = sorted(directory.rglob("*"))
     regular = []
     casefolded = set()
-    counts = {extension: 0 for extension in ALLOWED_EXTENSIONS}
+    counts = {extension: 0 for extension in ALLOWED_EXTENSIONS | {".java"}}
     for file in files:
         if file.is_symlink():
             fail(f"Symbolic links are forbidden in the artifact: {file}")
@@ -136,7 +139,8 @@ def validate(directory):
             fail(f"Case-insensitive duplicate generated path: {relative}")
         casefolded.add(folded)
         suffix = file.suffix.lower()
-        if suffix not in ALLOWED_EXTENSIONS:
+        if suffix not in ALLOWED_EXTENSIONS and not (
+                suffix == ".java" and EXPLORER_SOURCE_RE.fullmatch(relative)):
             fail(
                 f"Forbidden generated file type: {relative} "
                 f"(allowed: {', '.join(sorted(ALLOWED_EXTENSIONS))})"
@@ -169,6 +173,7 @@ def validate(directory):
 
     seen_modules = set()
     checked_refs = 0
+    explorers = {}
 
     def walk(node):
         nonlocal checked_refs
@@ -181,6 +186,11 @@ def validate(directory):
             if module_id in seen_modules:
                 fail(f"Duplicate routeId in catalog: {module_id}")
             seen_modules.add(module_id)
+            if node.get("codeExplorer") is not None:
+                expected = f"/module/{module_id}/code-explorer/index.json"
+                if node["codeExplorer"] != expected:
+                    fail(f"Unexpected Code Explorer catalog path for {module_id}")
+                explorers[module_id] = directory / expected.lstrip("/")
             for field in EXPOSED_FIELDS:
                 value = node.get(field)
                 if value is None:
@@ -198,6 +208,48 @@ def validate(directory):
     walk(root)
     if not seen_modules or checked_refs == 0:
         fail("No module data references were validated")
+
+    # Code Explorer is a private-to-this-material allowlist for Java sources.
+    # Validate every declared source by SHA-256, and reject orphan/extra Java.
+    claimed_java = set()
+    for module_id, index_file in explorers.items():
+        index = json.loads(index_file.read_text(encoding="utf-8"))
+        if (index.get("version") != 1 or index.get("type") != "CODE_EXPLORER"
+                or not isinstance(index.get("files"), list)
+                or not index["files"]
+                or not isinstance(index.get("id"), str)):
+            fail(f"Invalid Code Explorer index for {module_id}")
+        folder = index_file.parent
+        for key in ("symbols", "references", "apiMap"):
+            name = index.get(key)
+            if name not in ("symbols.json", "references.json", "api-map.json"):
+                fail(f"Invalid Code Explorer {key} reference: {module_id}")
+            resolve_asset(directory, f"/module/{module_id}/code-explorer/{name}")
+            checked_refs += 1
+        local = set()
+        for entry in index["files"]:
+            if not isinstance(entry, dict):
+                fail(f"Invalid Code Explorer source entry: {module_id}")
+            path = entry.get("path")
+            if (not isinstance(path, str) or
+                    not EXPLORER_SOURCE_RE.fullmatch(f"module/{module_id}/code-explorer/files/{path}")):
+                fail(f"Unsafe Code Explorer Java path: {path!r}")
+            relative = f"module/{module_id}/code-explorer/files/{path}"
+            if relative in local or relative in claimed_java:
+                fail(f"Duplicate Code Explorer source: {relative}")
+            local.add(relative)
+            claimed_java.add(relative)
+            source = folder / "files" / path
+            if (not source.is_file() or source.stat().st_size != entry.get("bytes")
+                    or sha256(source) != entry.get("sha256")):
+                fail(f"Code Explorer source checksum mismatch: {relative}")
+            checked_refs += 1
+    actual_java = {
+        file.relative_to(directory).as_posix()
+        for file in regular if file.suffix.lower() == ".java"
+    }
+    if actual_java != claimed_java:
+        fail(f"Unclaimed Code Explorer Java assets: {sorted(actual_java - claimed_java)[:5]}")
 
     # Generated Knowledge/Video indexes may refer to lazy-loaded static files.
     # Check those references too, not only the module's index.json.

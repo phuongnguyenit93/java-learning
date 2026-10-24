@@ -42,6 +42,16 @@ Run from the root of `java-learning`:
 - No Java application execution, no Sheets, no commit or push.
 - Repeated builds with unchanged input produce the same JSON and Java bytes.
 
+The standard Java data release pipeline now runs
+`./gradlew generatePortalData`, which includes `generatePortalCodeExplorer`
+for **every opted-in module** (the same allowlist/symbol engine).
+`scripts/publish-java-data.py` validates the generated Java files against the
+manifest's SHA-256 values before packaging them in `java-learning-data.zip`.
+Only `module/<ROUTE_ID>/code-explorer/files/**/*.java` is authorized:
+arbitrary Java source elsewhere in the dataset remains forbidden.
+The downstream `learning-platform` release consumer verifies these checksums
+again before syncing the bundle.
+
 ## Bundle contract
 
 | Asset | Purpose |
@@ -52,8 +62,10 @@ Run from the root of `java-learning`:
 | `api-map.json` | Swagger HTTP verb + path + method signature → source method |
 | `files/**/*.java` | Original allowlisted source, unchanged and read-only |
 
-The frontend may fetch
-`/module/<SERVICE_NAME>/code-explorer/index.json`; load the other JSONs
+The producer catalog declares
+`/module/<SERVICE_NAME>/code-explorer/index.json`. The frontend maps this
+through the existing Java asset prefix and requests
+`/language/java/module/<SERVICE_NAME>/code-explorer/index.json`, loading the other JSONs
 on demand and lazily fetch individual `files/<path>` from the bundle.
 All source line and column positions are **1-based** for Monaco.
 

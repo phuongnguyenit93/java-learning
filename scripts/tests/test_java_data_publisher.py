@@ -168,6 +168,46 @@ class JavaDataPublisherTests(unittest.TestCase):
                     publisher.validate(self.data)
                 forbidden.unlink()
 
+    def test_code_explorer_java_is_allowlisted_and_verified(self):
+        import hashlib
+        source = b"package demo;\npublic class Example {}\n"
+        path = "demo/Example.java"
+        folder = self.module / "code-explorer"
+        self.write_text(folder / "files" / path, source.decode("utf-8"))
+        # On Windows the text fixture may have CRLF on disk; the material
+        # contract always hashes source bytes rather than normalized text.
+        source = (folder / "files" / path).read_bytes()
+        self.write_json(folder / "index.json", {
+            "version": 1, "type": "CODE_EXPLORER", "id": "example",
+            "files": [{"path": path, "bytes": len(source),
+                       "sha256": hashlib.sha256(source).hexdigest()}],
+            "symbols": "symbols.json", "references": "references.json",
+            "apiMap": "api-map.json",
+        })
+        for asset in ("symbols.json", "references.json", "api-map.json"):
+            self.write_json(folder / asset, {"version": 1})
+        catalog_file = self.data / "module-catalog.json"
+        catalog = json.loads(catalog_file.read_text(encoding="utf-8"))
+        catalog["root"]["children"][0]["codeExplorer"] = (
+            "/module/EXAMPLE/code-explorer/index.json")
+        self.write_json(catalog_file, catalog)
+        files, _, refs, _ = publisher.validate(self.data)
+        self.assertTrue(any(f.suffix == ".java" for f in files))
+        self.assertGreaterEqual(refs, 8)
+        self.write_text(folder / "files" / path, "tampered")
+        with self.assertRaisesRegex(ValueError, "checksum mismatch"):
+            publisher.validate(self.data)
+
+    def test_unclaimed_java_and_unrelated_java_are_rejected(self):
+        extra = self.module / "code-explorer" / "files" / "Demo.java"
+        self.write_text(extra, "public class Demo {}")
+        with self.assertRaisesRegex(ValueError, "Unclaimed Code Explorer"):
+            publisher.validate(self.data)
+        extra.unlink()
+        self.write_text(self.module / "Example.java", "public class Example {}")
+        with self.assertRaisesRegex(ValueError, "Forbidden generated file type"):
+            publisher.validate(self.data)
+
     def test_package_rejects_forbidden_file_before_creating_archive(self):
         self.write_text(self.module / "hidden.jar", "not allowed\n")
         output = self.root / "release"

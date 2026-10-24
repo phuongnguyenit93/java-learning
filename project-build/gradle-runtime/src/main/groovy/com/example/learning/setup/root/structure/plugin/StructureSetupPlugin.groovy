@@ -9,6 +9,7 @@ import com.example.learning.setup.root.structure.service.PortalQuizProjectionSer
 import com.example.learning.setup.root.structure.service.PortalReferenceProjectionService
 import com.example.learning.setup.root.structure.service.PortalRoadmapProjectionService
 import com.example.learning.setup.root.structure.service.PortalVideoProjectionService
+import com.example.learning.task.codeexplorer.service.CodeExplorerMaterialService
 import com.example.learning.setup.root.structure.task.GenerateModuleOrderTask
 import org.gradle.api.GradleException
 import org.gradle.api.Plugin
@@ -540,6 +541,26 @@ ${project.path}
                 )
         }
 
+        def generatePortalCodeExplorer =
+                project.tasks.register('generatePortalCodeExplorer') { task ->
+                    task.group = 'learning portal'
+                    task.description = 'Generate and publish static Code Explorer bundles for opted-in modules.'
+                    task.dependsOn(generatePortalModuleData)
+                    task.doLast {
+                        CodeExplorerMaterialService generator = new CodeExplorerMaterialService()
+                        def configs = project.fileTree(new File(project.projectDir, 'module')) {
+                            include '**/content/code-explorer/material.yml'
+                            exclude '**/build/**'
+                        }.files.toList().sort { it.absolutePath }
+                        configs.each { File config ->
+                            File moduleDirectory = config.parentFile.parentFile.parentFile
+                            Map result = generator.execute(project.projectDir, moduleDirectory, true, true)
+                            project.logger.lifecycle('[PORTAL-CODE-EXPLORER] {}: {} Java files, {} API entries',
+                                    result.module, result.files, result.apis)
+                        }
+                    }
+                }
+
 
         project.tasks.register(
                 'generatePortalData'
@@ -564,7 +585,8 @@ ${project.path}
                         generatePortalInterview,
                         generatePortalRoadmap,
                         generatePortalVideo,
-                        generatePortalReference
+                        generatePortalReference,
+                        generatePortalCodeExplorer
                 )
         }
 
