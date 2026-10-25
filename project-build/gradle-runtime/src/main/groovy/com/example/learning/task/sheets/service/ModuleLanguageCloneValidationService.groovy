@@ -125,6 +125,35 @@ class ModuleLanguageCloneValidationService {
             }
         }
         chapterAnchors.each { String chapter, Set<String> anchors ->
+            String sectionPath = 'menu/' + chapter + '/summary/section.md'
+            String summariesPath = 'menu/' + chapter + '/summary/summaries.yml'
+            boolean sectionExists = docs.containsKey(sectionPath)
+            boolean summariesExist = docs.containsKey(summariesPath)
+            if (sectionExists != summariesExist) {
+                throw new GradleException('Incomplete VI Summary chapter: ' + chapter)
+            }
+            if (summariesExist) {
+                if (!content(docs[sectionPath]).trim()) {
+                    throw new GradleException('Empty VI Summary section: ' + chapter)
+                }
+                Map summaryData = yaml(docs[summariesPath], summariesPath)
+                if (summaryData.keySet() != (['summaries'] as Set) ||
+                        !(summaryData.summaries instanceof List) ||
+                        (summaryData.summaries as List).size() != anchors.size()) {
+                    throw new GradleException('Invalid VI Summary lessons: ' + chapter)
+                }
+                List ids = (summaryData.summaries as List).collect { Object value ->
+                    if (!(value instanceof Map) || !(value.id instanceof String) ||
+                            !(value.title instanceof String) || !value.title.trim() ||
+                            !(value.summary instanceof String) || !value.summary.trim()) {
+                        throw new GradleException('Invalid VI Summary entry in ' + chapter)
+                    }
+                    value.id
+                }
+                if (ids != anchors.toList()) {
+                    throw new GradleException('Summary IDs/order do not match Knowledge: ' + chapter)
+                }
+            }
             ['quiz', 'interview'].each { String kind ->
                 String path = 'menu/' + chapter + '/' + kind + '/question.yml'
                 if (!docs.containsKey(path)) return
@@ -143,6 +172,15 @@ class ModuleLanguageCloneValidationService {
                     String chapter = path.split('/')[1]
                     if (!chapterAnchors.containsKey(chapter)) {
                         throw new GradleException('Question YAML has no Knowledge chapter: ' + path)
+                    }
+                }
+        docs.keySet().findAll { it ==~ /menu\/[^\/]+\/summary\/[^\/]+/ }
+                .each { String path ->
+                    String chapter = path.split('/')[1]
+                    if (!chapterAnchors.containsKey(chapter) ||
+                            !(path.endsWith('/summary/section.md') ||
+                                    path.endsWith('/summary/summaries.yml'))) {
+                        throw new GradleException('Unexpected Summary file: ' + path)
                     }
                 }
         swagger.each { String path, byte[] bytes ->

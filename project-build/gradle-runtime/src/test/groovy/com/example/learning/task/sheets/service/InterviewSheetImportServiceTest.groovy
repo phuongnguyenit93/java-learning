@@ -111,9 +111,10 @@ class InterviewSheetImportServiceTest {
     }
 
     @Test
-    void blankOrPartialChaptersDoNotRemoveOtherQuestions() {
-        assertEquals('SKIPPED_EMPTY_INTERVIEW',
+    void blankChaptersAreAuthoritativeEmptySnapshots() {
+        assertEquals('READY',
                 InterviewSheetImportService.collectQuestions(CHAPTERS, rowsWith([:])).status)
+        assertEquals([:], InterviewSheetImportService.collectQuestions([], rowsWith([:])).byChapter)
         Map imported = InterviewSheetImportService.collectQuestions(CHAPTERS,
                 rowsWith([23: [JsonOutput.toJson([questions: [
                         [question: 'Question', answer: 'Answer']

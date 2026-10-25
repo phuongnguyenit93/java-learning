@@ -1,5 +1,7 @@
 # STEP 5 — WORKER ONLY: Chapter Review, Learning Objectives, Liên kết bài học và Package Skeleton
 
+> **2026-10-25 Summary amendment:** The capability name is Summary. `AC18=Summary`, `AC19=Summary Markdown`; legacy `Learning Objectives` labels may remain on existing tabs if Prime validates both. Continue to author the same Markdown rubric (0/1/2/3) in assigned AC child cells and chapter flow in AC parent. Do not author YAML: Prime's code-only task generates `summary/section.md` + `summary/summaries.yml` from AC after review. This header update overrides older literal AC header checks below.
+
 > Chỉ dành cho worker. Prime dùng STEP_5.md để điều phối; bạn bắt buộc tự đọc TOÀN VĂN đúng file worker/STEP_5_WORKER.md này trước khi làm, đọc lại nếu mất context. Không đọc STEP_5.md, STEP khác, file rules/TXT hoặc dùng lịch sử hội thoại làm tiêu chuẩn. Prime đã **chuyển MODULE_TYPE=SERVLET, bật BUILD_SWAGGER, sync Gradle và provision AC18/19 trước khi giao**. Tin giao chỉ có bốn dòng: link tab; A/B hàng cha + C:N/O/AB/AC hàng con + **AC hàng cha + AC18/19 + Special Note**; **vùng ghi B cha, C:N/O/AB/AC của từng hàng con, AC hàng cha và HAI đường dẫn tuyệt đối package Java main/test**; đường dẫn file này. Không gửi tóm tắt tiêu chí refactor, filename gợi ý hay Java code mẫu.
 
 ## W1. Một chương, một lượt, một owner

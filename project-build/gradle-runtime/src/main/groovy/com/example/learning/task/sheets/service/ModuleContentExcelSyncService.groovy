@@ -27,7 +27,8 @@ import java.util.regex.Pattern
  */
 class ModuleContentExcelSyncService {
     static final Set<String> PARTS = [
-            'INTRODUCTION', 'README', 'ROADMAP', 'QUIZ', 'INTERVIEW', 'VIDEO', 'ALL'
+            'INTRODUCTION', 'README', 'ROADMAP', 'QUIZ', 'INTERVIEW', 'VIDEO',
+            'REFERENCE', 'SUMMARY', 'ALL'
     ] as Set
     private static final Pattern SECTION = Pattern.compile(
             '(?m)^##\\s+<a\\s+id="([^"]+)">([^\\r\\n]*?)</a>\\s*$')
@@ -87,7 +88,7 @@ class ModuleContentExcelSyncService {
                 List<Map> groups = menu(sheet)
                 report.chapters = groups.size()
                 String[] selected = requested == 'ALL'
-                        ? ['INTRODUCTION','README','ROADMAP','INTERVIEW','QUIZ']
+                        ? ['INTRODUCTION','README','ROADMAP','INTERVIEW','QUIZ','REFERENCE','SUMMARY']
                         : [requested]
                 selected.each { String name ->
                     switch (name) {
@@ -108,6 +109,12 @@ class ModuleContentExcelSyncService {
                             break
                         case 'VIDEO':
                             video(module, sheet, groups, report)
+                            break
+                        case 'REFERENCE':
+                            reference(module, sheet, report)
+                            break
+                        case 'SUMMARY':
+                            summary(module, sheet, groups, report)
                             break
                     }
                 }
@@ -163,6 +170,82 @@ class ModuleContentExcelSyncService {
         File file = required(new File(module, 'content/readme/docs/en/BASE.md'))
         set(sheet, 17, 2, file.getText('UTF-8'), report)
         report.items++
+    }
+
+    /** Shared Reference: same canonical YAML in VI and EN. */
+    private static void reference(File module, XSSFSheet sheet, Map report) {
+        String header = text(sheet, 2, 12)
+        if (header && header != 'Reference') {
+            throw new GradleException('Unexpected Reference schema at L2.')
+        }
+        File source = new File(module, 'content/reference/references.yml')
+        if (!source.isFile()) {
+            if (text(sheet, 3, 12)) throw new GradleException('Reference source missing but L3 is authored.')
+            return
+        }
+        String yaml = source.getText('UTF-8')
+        // Skeleton comments are not authored, but YAML may have leading comments.
+        Object parsed = new Yaml().load(yaml)
+        if (parsed == null) return
+        ReferenceSheetImportService.parseReference(yaml)
+        set(sheet, 2, 12, 'Reference', report)
+        set(sheet, 3, 12, yaml, report)
+        report.items++
+    }
+
+    /** STEP 14 translated Summary is projected into the same AC parent/child rows. */
+    private static void summary(File module, XSSFSheet sheet, List<Map> groups, Map report) {
+        String label = text(sheet, 18, 29)
+        String header = text(sheet, 19, 29)
+        if (!label && !header) {
+            File viMenu = new File(module, 'content/readme/docs/vi/menu')
+            if (viMenu.isDirectory() && viMenu.listFiles()?.any { File chapter ->
+                chapter.isDirectory() &&
+                        new File(chapter, 'summary/summaries.yml').isFile()
+            }) {
+                throw new GradleException('VI Summary exists but Excel lacks AC18:AC19 schema.')
+            }
+            return
+        }
+        if (!([label,header] in [['Summary','Summary Markdown'],
+                ['Learning Objectives','Learning Objectives Markdown']])) {
+            throw new GradleException('Invalid Summary headers in VI Excel AC18:AC19.')
+        }
+        File enMenu = new File(module, 'content/readme/docs/en/menu')
+        groups.each { Map group ->
+            String chapter = group.source.toString().replaceFirst('/[^/]+$', '')
+            File section = new File(enMenu, chapter + '/summary/section.md')
+            File summary = new File(enMenu, chapter + '/summary/summaries.yml')
+            File viSummary = new File(module, 'content/readme/docs/vi/menu/' +
+                    chapter + '/summary/summaries.yml')
+            if (!section.isFile() || !summary.isFile()) {
+                if (viSummary.isFile() || text(sheet, group.row as int, 29) ||
+                        (group.children as List<Map>).any { text(sheet, it.row as int, 29) }) {
+                    throw new GradleException('Missing translated EN Summary for chapter ' + chapter)
+                }
+                return
+            }
+            Map doc = parseYaml(summary)
+            if (!(doc.summaries instanceof List) ||
+                    (doc.summaries as List).size() != (group.children as List).size()) {
+                throw new GradleException('EN Summary lesson count mismatch: ' + chapter)
+            }
+            set(sheet, group.row as int, 29, section.getText('UTF-8'), report)
+            String stem = group.filename.toString().replaceFirst(/(?i)\.md$/, '')
+            String slug = ReadmeSheetImportService.slugFromStem(stem)
+            (group.children as List<Map>).eachWithIndex { Map child, int i ->
+                Map item = (doc.summaries as List)[i] as Map
+                String id = slug + '-' + String.format('%03d', i + 1)
+                if (item.id != id || !(item.title instanceof String) ||
+                        !(item.summary instanceof String) || !item.summary.trim()) {
+                    throw new GradleException('Invalid EN Summary lesson ' + id)
+                }
+                set(sheet, child.row as int, 29, item.summary as String, report)
+                report.items++
+            }
+        }
+        set(sheet, 18, 29, 'Summary', report)
+        set(sheet, 19, 29, 'Summary Markdown', report)
     }
 
     private static void readme(File module, XSSFSheet sheet, List<Map> groups, Map report) {

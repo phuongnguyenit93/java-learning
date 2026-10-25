@@ -12,6 +12,59 @@ class ModuleContentExcelSyncServiceTest {
     @Rule public TemporaryFolder tmp = new TemporaryFolder()
 
     @Test
+    void exportsReferenceAndTranslatedSummaryWithoutChangingVietnameseExcel() {
+        Map f = fixture()
+        File module = f.module as File
+        File viWorkbook = f.source as File
+        new XSSFWorkbook(new ByteArrayInputStream(viWorkbook.bytes)).withCloseable { book ->
+            def s = book.getSheetAt(0)
+            cell(s, 2, 12, 'Reference')
+            cell(s, 3, 12, 'references: []')
+            cell(s, 18, 29, 'Summary')
+            cell(s, 19, 29, 'Summary Markdown')
+            cell(s, 20, 29, '# VI section')
+            cell(s, 21, 29, '## VI lesson')
+            viWorkbook.withOutputStream { book.write(it) }
+        }
+        byte[] sourceBefore = viWorkbook.bytes
+        write(module, 'content/reference/references.yml', '''references:
+  - title: Language Specification
+    url: https://docs.oracle.com/javase/specs/
+''')
+        write(module, 'content/readme/docs/vi/menu/1.Basic/summary/section.md', '# VI section')
+        write(module, 'content/readme/docs/vi/menu/1.Basic/summary/summaries.yml',
+                'summaries:\n  - {id: basic-001, title: VN, summary: Lesson VI}\n')
+        write(module, 'content/readme/docs/en/menu/1.Basic/summary/section.md', '# English section')
+        write(module, 'content/readme/docs/en/menu/1.Basic/summary/summaries.yml',
+                'summaries:\n  - {id: basic-001, title: English, summary: Lesson EN}\n')
+        Map result = new ModuleContentExcelSyncService().execute(
+                f.root as File, module, 'ALL', true)
+        assertEquals('EXPORTED', result.status)
+        assertArrayEquals(sourceBefore, viWorkbook.bytes)
+        (f.target as File).withInputStream { input ->
+            new XSSFWorkbook(input).withCloseable { book ->
+                def s = book.getSheetAt(0)
+                assertTrue(ModuleContentExcelSyncService.text(s, 3, 12)
+                        .contains('Language Specification'))
+                assertEquals('Summary', ModuleContentExcelSyncService.text(s, 18, 29))
+                assertEquals('Summary Markdown', ModuleContentExcelSyncService.text(s, 19, 29))
+                assertEquals('# English section', ModuleContentExcelSyncService.text(s, 20, 29))
+                assertEquals('Lesson EN', ModuleContentExcelSyncService.text(s, 21, 29))
+            }
+        }
+        File summaryEn = new File(module,
+                'content/readme/docs/en/menu/1.Basic/summary/summaries.yml')
+        summaryEn.setText(summaryEn.getText('UTF-8').replace('basic-001', 'other-001'), 'UTF-8')
+        try {
+            new ModuleContentExcelSyncService().execute(f.root as File, module,
+                    'SUMMARY', false)
+            fail('Invalid EN Summary ID accepted')
+        } catch (GradleException expected) {
+            assertTrue(expected.message.contains('Invalid EN Summary lesson'))
+        }
+    }
+
+    @Test
     void reversesAllPartsIntoSingleEnglishWorkbookWithoutChangingVietnameseBaseline() {
         Map f = fixture()
         File source = f.source as File

@@ -24,9 +24,9 @@ class ModuleTranslationValidationService {
     static void compare(String type, byte[] vi, byte[] en) {
         String source = decode(vi)
         String target = decode(en)
-        if (type in ['README', 'INTRODUCTION']) {
+        if (type in ['README', 'INTRODUCTION', 'SUMMARY_SECTION']) {
             markdown(source, target)
-        } else if (type ==~ /QUIZ|INTERVIEW|ROADMAP|VIDEO|SWAGGER_.+/) {
+        } else if (type ==~ /QUIZ|INTERVIEW|ROADMAP|VIDEO|SUMMARY_LESSONS|SWAGGER_.+/) {
             yaml(type, source, target)
         } else {
             throw new GradleException('Unknown translation type: ' + type)
@@ -143,7 +143,11 @@ class ModuleTranslationValidationService {
             if ((a as String).trim() && !(b as String).trim()) {
                 throw new GradleException('Translated scalar was erased: ' + path)
             }
-            lockedTokens(a as String, b as String, path)
+            if (type == 'SUMMARY_LESSONS' && path.endsWith('.summary')) {
+                markdown(a as String, b as String)
+            } else {
+                lockedTokens(a as String, b as String, path)
+            }
         } else if (a != b || a?.getClass() != b?.getClass()) {
             throw new GradleException('Protected translation field changed: ' + path)
         }
@@ -151,6 +155,8 @@ class ModuleTranslationValidationService {
 
     static boolean editable(String type, String path) {
         switch (type) {
+            case 'SUMMARY_LESSONS':
+                return path ==~ /summaries\[\d+\]\.(title|summary)/
             case 'QUIZ':
                 return path ==~ /questions\[\d+\]\.(question|answers\[\d+\]\.(answer|explanation))/
             case 'INTERVIEW':

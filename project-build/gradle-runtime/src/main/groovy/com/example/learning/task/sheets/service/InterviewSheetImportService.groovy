@@ -43,8 +43,7 @@ class InterviewSheetImportService {
         List<List<Object>> menuRows = (sheets.spreadsheets().values()
                 .get(id, tab + '!A19:B').execute().values ?: []) as List<List<Object>>
         Map parsed = ReadmeSheetImportService.parseMenu(menuRows)
-        if (parsed.status == 'SKIPPED_EMPTY_MENU' ||
-                parsed.status == 'SKIPPED_MISSING_FILENAME') {
+        if (!(parsed.status in ['READY', 'SKIPPED_EMPTY_MENU'])) {
             return base + [status: parsed.status, questionCount: 0,
                            chapterCount: 0, missingRows: parsed.missingRows ?: [],
                            clearedOldFiles: 0]
@@ -53,11 +52,11 @@ class InterviewSheetImportService {
         List<List<Object>> rows = (sheets.spreadsheets().values()
                 .get(id, tab + '!P18:S').setValueRenderOption('FORMULA')
                 .execute().values ?: []) as List<List<Object>>
-        Map assembled = collectQuestions(groups, rows)
-        if (assembled.status == 'SKIPPED_EMPTY_INTERVIEW') {
-            return base + [status: assembled.status, questionCount: 0,
+        if (rows.every { List<Object> cells -> (0..3).every { int c -> !raw(cells, c) } }) {
+            return base + [status: 'SKIPPED_NO_INTERVIEW_SCHEMA', questionCount: 0,
                            chapterCount: 0, clearedOldFiles: 0]
         }
+        Map assembled = collectQuestions(groups, rows)
         Map<String, String> chapterFiles = [:]
         (assembled.byChapter as Map<String, List<Map>>).each { String chapter, List<Map> items ->
             chapterFiles[chapter] = renderYaml(items)
@@ -73,20 +72,13 @@ class InterviewSheetImportService {
     /**
      * Interview range begins at P18, unlike the Menu range beginning at A19.
      * Validating EVERY P:S data row prevents unnoticed orphan Interview cells.
-     * Blank chapters are permitted (e.g. during incremental authoring), but
-     * an entirely blank source never clears the existing module Interview.
+     * Blank chapters are omitted. A valid Interview schema with no authored
+     * questions is an authoritative empty snapshot: clean old Interview output.
      */
     static Map collectQuestions(List<Map> groups, List<List<Object>> rows) {
         Set<Integer> parentRows = groups.collect {
             (it.parentRow as Number).intValue()
         } as Set<Integer>
-        boolean anyContent = (2..<Math.max(2, rows.size())).any { int i ->
-            (0..3).any { int col -> raw(row(rows, i), col) }
-        }
-        if (!anyContent) {
-            return [status: 'SKIPPED_EMPTY_INTERVIEW', questions: [],
-                    chapterCount: 0]
-        }
         List<String> labels = (0..3).collect { int col -> raw(row(rows, 1), col).trim() }
         if (raw(row(rows, 0), 0).trim() != 'Interview' ||
                 !(labels.unique().size() == 1 && labels[0] in ['Interview YAML', 'Interview JSON'])) {

@@ -171,6 +171,10 @@ class ModuleTranslationCatalogService {
                 targets[DOC + 'en/menu/' + path] = 'QUIZ'
             } else if (path ==~ /[^\/]+\/interview\/question\.yml/) {
                 targets[DOC + 'en/menu/' + path] = 'INTERVIEW'
+            } else if (path ==~ /[^\/]+\/summary\/section\.md/) {
+                targets[DOC + 'en/menu/' + path] = 'SUMMARY_SECTION'
+            } else if (path ==~ /[^\/]+\/summary\/summaries\.yml/) {
+                targets[DOC + 'en/menu/' + path] = 'SUMMARY_LESSONS'
             }
         }
         File swagger = new File(module, SWAGGER + 'vi')
@@ -205,12 +209,14 @@ class ModuleTranslationCatalogService {
                         it ==~ /menu\/[^\/]+\.md/ ||
                         it ==~ /menu\/[^\/]+\/knowledge\/[^\/]+\.md/ ||
                         it ==~ /menu\/[^\/]+\/metadata\/knowledge-metadata\.yml/ ||
-                        it ==~ /menu\/[^\/]+\/(quiz|interview)\/question\.yml/ } as Set
+                        it ==~ /menu\/[^\/]+\/(quiz|interview)\/question\.yml/ ||
+                        it ==~ /menu\/[^\/]+\/summary\/(section\.md|summaries\.yml)/ } as Set
                 b = b.findAll { it in ['BASE.md', 'LIST.md'] ||
                         it ==~ /menu\/[^\/]+\.md/ ||
                         it ==~ /menu\/[^\/]+\/knowledge\/[^\/]+\.md/ ||
                         it ==~ /menu\/[^\/]+\/metadata\/knowledge-metadata\.yml/ ||
-                        it ==~ /menu\/[^\/]+\/(quiz|interview)\/question\.yml/ } as Set
+                        it ==~ /menu\/[^\/]+\/(quiz|interview)\/question\.yml/ ||
+                        it ==~ /menu\/[^\/]+\/summary\/(section\.md|summaries\.yml)/ } as Set
             }
             if (a != b) throw new GradleException('VI/EN tree mismatch: ' + area)
         }

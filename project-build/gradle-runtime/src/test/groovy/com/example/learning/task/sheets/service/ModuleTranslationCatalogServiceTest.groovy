@@ -11,6 +11,32 @@ class ModuleTranslationCatalogServiceTest {
     @Rule public TemporaryFolder temp = new TemporaryFolder()
 
     @Test
+    void summaryTranslationInventoryAndProtectedIdsAreChecked() {
+        Map f = fixture()
+        File module = f.module as File
+        String viSection = '# Mục tiêu\n\n## Nội dung\n'
+        String summaryYaml = 'summaries:\n  - id: basic-001\n    title: Bài học\n    summary: "## Nội dung"\n'
+        for (String lang : ['vi', 'en']) {
+            write(module, "content/readme/docs/${lang}/menu/1.Basic/summary/section.md",viSection)
+            write(module, "content/readme/docs/${lang}/menu/1.Basic/summary/summaries.yml",summaryYaml)
+        }
+        List<Map> files = ModuleTranslationCatalogService.inventory(module)
+        assertTrue(files.any { it.type == 'SUMMARY_SECTION' })
+        assertTrue(files.any { it.type == 'SUMMARY_LESSONS' })
+        byte[] source = summaryYaml.getBytes('UTF-8')
+        byte[] translated = summaryYaml.replace('Bài học','Lesson')
+                .replace('Nội dung','Contents').getBytes('UTF-8')
+        ModuleTranslationValidationService.compare('SUMMARY_LESSONS', source, translated)
+        try {
+            ModuleTranslationValidationService.compare('SUMMARY_LESSONS', source,
+                    summaryYaml.replace('basic-001','other-001').getBytes('UTF-8'))
+            fail('Summary ID should be protected')
+        } catch (GradleException expected) {
+            assertTrue(expected.message.contains('Protected translation field'))
+        }
+    }
+
+    @Test
     void preparesOneJobPerFileAndValidatesOnlyTranslatableFields() {
         Map f = fixture()
         def service = new ModuleTranslationCatalogService()

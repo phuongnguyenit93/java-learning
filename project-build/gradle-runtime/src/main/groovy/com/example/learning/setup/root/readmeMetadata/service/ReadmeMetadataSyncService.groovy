@@ -168,16 +168,14 @@ ${moduleRoot.absolutePath}
 
     /**
      * Prepare metadata for a Sheet README snapshot before replacing its files.
-     * Reuses the existing Knowledge anchor parser/defaults, preserving review
-     * and AI flags already present in the human-editable metadata file.
+     * Sheet is the only source for imported metadata. Derive fields from the
+     * new Knowledge/Sheet values and deterministic defaults, never from files
+     * left in the module (including any legacy metadata).
      */
     String prepareImportedMetadata(File moduleDirectory,
                                    Map<String, String> documents,
                                    Map<String, List<String>> difficulties,
                                    Map<String, List<Boolean>> importances = [:]) {
-        File destination = new File(moduleDirectory,
-                "content/readme/metadata/vi/${METADATA_FILE_NAME}")
-        Map existing = loadMap(destination)
         Map next = new LinkedHashMap()
         Set<String> allIds = new LinkedHashSet<>()
         File menuDirectory = new File(moduleDirectory, 'content/readme/docs/vi/menu')
@@ -185,18 +183,6 @@ ${moduleRoot.absolutePath}
             String knowledgePath = normalizeKnowledgePath(sourcePath)
             if (next.containsKey(knowledgePath)) {
                 throw new GradleException('Duplicate imported Knowledge path: ' + knowledgePath)
-            }
-            String chapter = knowledgePath.split('/')[0]
-            Map chapterRoot = loadChapterSections(chapterMetadataFile(menuDirectory, chapter))
-            Map oldFile = new LinkedHashMap(existingKnowledgeMetadata(existing, knowledgePath))
-            chapterRoot.each { Object id, Object entry ->
-                Map previous = resolveOptionalMap(oldFile[id],
-                        'Invalid legacy Knowledge metadata: ' + id) ?: [:]
-                Map current = resolveOptionalMap(entry,
-                        'Invalid chapter Knowledge metadata: ' + id) ?: [:]
-                Map merged = new LinkedHashMap(previous)
-                merged.putAll(current)
-                oldFile[id] = merged
             }
             Map nextFile = new LinkedHashMap()
             File virtualFile = new File(menuDirectory, knowledgePath)
@@ -218,9 +204,7 @@ ${moduleRoot.absolutePath}
                 if (!allIds.add(section.id)) {
                     throw new GradleException('Duplicate Knowledge ID: ' + section.id)
                 }
-                Map old = resolveOptionalMap(oldFile[section.id],
-                        "Invalid Knowledge metadata entry: ${sourcePath}/${section.id}") ?: [:]
-                Map item = new LinkedHashMap(old)
+                Map item = new LinkedHashMap()
                 String fromSheet = levels[i]?.trim()?.toUpperCase(Locale.ROOT)
                 if (fromSheet) {
                     if (!ALLOWED_DIFFICULTIES.contains(fromSheet)) {
@@ -228,13 +212,11 @@ ${moduleRoot.absolutePath}
                     }
                     item.difficulty = fromSheet
                 }
-                // A blank AB cell preserves an existing human-owned flag.
-                // Only an explicit Sheet boolean overrides existing metadata.
+                // A blank AB cell uses the defined default false.
                 if (flags[i] != null) {
                     item.isImportant = flags[i]
                 }
-                // Blank O keeps an existing human-edited difficulty or applies
-                // the existing BASIC default for new sections.
+                // Blank O always uses the defined BASIC default.
                 ensureRequiredFields(item, moduleDirectory.absolutePath, 'vi',
                         sourcePath, section.id)
                 nextFile[section.id] = item
@@ -242,6 +224,33 @@ ${moduleRoot.absolutePath}
             if (nextFile) next[knowledgePath] = nextFile
         }
         return next.isEmpty() ? '{}\n' : writer.dump(next)
+    }
+
+    /** Convert prepared entries into complete new metadata/ directory files. */
+    Map<String, String> importedChapterMetadataFiles(String prepared) {
+        Object parsed = reader.load(prepared)
+        if (!(parsed instanceof Map)) {
+            throw new GradleException('Invalid prepared Sheet Metadata.')
+        }
+        Map<String, Map> perChapter = new LinkedHashMap<>()
+        (parsed as Map).each { Object sourcePath, Object entries ->
+            String path = normalizeKnowledgePath(sourcePath as String)
+            String chapter = path.split('/')[0]
+            Map sections = perChapter.computeIfAbsent(chapter) { new LinkedHashMap() }
+            Map values = resolveOptionalMap(entries,
+                    'Invalid prepared Sheet Metadata: ' + path) ?: [:]
+            values.each { Object id, Object fields ->
+                if (sections.containsKey(id)) {
+                    throw new GradleException('Duplicate Sheet Metadata ID in ' + chapter + ': ' + id)
+                }
+                sections[id] = fields
+            }
+        }
+        Map<String, String> files = new LinkedHashMap<>()
+        perChapter.each { String chapter, Map entries ->
+            files[chapter + '/metadata/' + METADATA_FILE_NAME] = writer.dump([sections: entries])
+        }
+        return files
     }
 
     /** Call only after the corresponding README snapshot was applied. */
@@ -268,10 +277,7 @@ ${moduleRoot.absolutePath}
         }
         List<WritePlan> plans = perChapter.collect { String chapter, Map entries ->
             File target = chapterMetadataFile(menuDirectory, chapter)
-            Map current = loadChapterSections(target)
-            Map next = new LinkedHashMap(current)
-            next.putAll(entries)
-            return new WritePlan(target, writer.dump([sections: next]))
+            return new WritePlan(target, writer.dump([sections: entries]))
         }
         if (plans.isEmpty()) {
             return [status: 'UNCHANGED', file: null, files: []]

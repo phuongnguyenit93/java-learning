@@ -335,6 +335,8 @@ ${moduleDirectory.absolutePath}
                             moduleLanguages
                     )
 
+            node.summaryLanguages = findSummaryLanguages(directory, moduleLanguages)
+
 
             node.roadmapLanguages =
                     findRoadmapLanguages(
@@ -779,6 +781,13 @@ ${moduleDirectory.absolutePath}
                                 }
             }
 
+            if (!node.summaryLanguages.isEmpty()) {
+                result.summary = node.summaryLanguages.toList().sort().collectEntries {
+                    String language ->
+                        [(language): "/module/${resolveRouteId(node)}/summary/${language}/index.json"]
+                }
+            }
+
 
             if (node.referenceAvailable) {
                 result.reference =
@@ -1097,6 +1106,22 @@ ${moduleDirectory.absolutePath}
 
 
         return PortalReferenceProjectionService.hasAuthoredReferences(referenceFile)
+    }
+
+    private static Set<String> findSummaryLanguages(File moduleDirectory, List<String> declared) {
+        Set<String> result = new LinkedHashSet<>()
+        declared.each { String lang ->
+            File menu = new File(moduleDirectory, 'content/readme/docs/' + lang + '/menu')
+            if (!menu.isDirectory()) return
+            File[] chapters = menu.listFiles()
+            if (chapters == null) throw new GradleException('Cannot list Summary menu: ' + menu)
+            if (chapters.any { File chapter -> chapter.isDirectory() &&
+                    new File(chapter, 'summary/section.md').isFile() &&
+                    new File(chapter, 'summary/summaries.yml').isFile() }) {
+                result.add(lang)
+            }
+        }
+        return result
     }
 
 
@@ -1703,6 +1728,7 @@ ${exception.message}
         boolean codeExplorerAvailable
         Map<String, File> overviewSources = [:]
         Set<String> knowledgeLanguages = [] as Set<String>
+        Set<String> summaryLanguages = [] as Set<String>
         Set<String> videoLanguages = [] as Set<String>
         Set<String> roadmapLanguages = [] as Set<String>
         boolean referenceAvailable

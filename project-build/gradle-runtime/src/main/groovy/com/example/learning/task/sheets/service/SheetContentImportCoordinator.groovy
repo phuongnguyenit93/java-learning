@@ -15,6 +15,8 @@ class SheetContentImportCoordinator {
     private final VideoSheetImportService videoImporter
     private final InterviewSheetImportService interviewImporter
     private final QuizSheetImportService quizImporter
+    private final ReferenceSheetImportService referenceImporter
+    private final SummarySheetImportService summaryImporter
 
     SheetContentImportCoordinator(
             SheetsMetadataReaderService sheetsReader = new SheetsMetadataReaderService(),
@@ -22,7 +24,9 @@ class SheetContentImportCoordinator {
             ReadmeSheetImportService readmeImporter = new ReadmeSheetImportService(),
             VideoSheetImportService videoImporter = new VideoSheetImportService(),
             InterviewSheetImportService interviewImporter = new InterviewSheetImportService(),
-            QuizSheetImportService quizImporter = new QuizSheetImportService()
+            QuizSheetImportService quizImporter = new QuizSheetImportService(),
+            ReferenceSheetImportService referenceImporter = new ReferenceSheetImportService(),
+            SummarySheetImportService summaryImporter = new SummarySheetImportService()
     ) {
         this.sheetsReader = sheetsReader
         this.roadmapImporter = roadmapImporter
@@ -30,6 +34,8 @@ class SheetContentImportCoordinator {
         this.videoImporter = videoImporter
         this.interviewImporter = interviewImporter
         this.quizImporter = quizImporter
+        this.referenceImporter = referenceImporter
+        this.summaryImporter = summaryImporter
     }
 
     Map<String, Object> importByLocation(
@@ -56,9 +62,9 @@ class SheetContentImportCoordinator {
             boolean apply,
             String part
     ) {
-        if (!(part in ['ALL', 'ROADMAP', 'README', 'VIDEO', 'INTERVIEW', 'QUIZ'])) {
+        if (!(part in ['ALL', 'ROADMAP', 'README', 'VIDEO', 'INTERVIEW', 'QUIZ', 'REFERENCE', 'SUMMARY'])) {
             throw new GradleException(
-                    "Invalid Sheet import part '${part}'. Use ALL, ROADMAP, README, VIDEO, INTERVIEW or QUIZ."
+                    "Invalid Sheet import part '${part}'. Use ALL, ROADMAP, README, VIDEO, INTERVIEW, QUIZ, REFERENCE or SUMMARY."
             )
         }
         File root = rootDirectory.canonicalFile
@@ -89,6 +95,10 @@ class SheetContentImportCoordinator {
                 return interviewImporter.execute(root, context, apply)
             case 'QUIZ':
                 return quizImporter.execute(root, context, apply)
+            case 'REFERENCE':
+                return referenceImporter.execute(root, context, apply)
+            case 'SUMMARY':
+                return summaryImporter.execute(root, context, apply)
             default:
                 return importTab(root, context, apply)
         }

@@ -17,7 +17,7 @@ class ReadmeSheetImportServiceTest {
     public TemporaryFolder temporary = new TemporaryFolder()
 
     @Test
-    void metadataFromKnowledgeIdsAndDifficultyPreservesExistingReviewFlags() {
+    void metadataFromKnowledgeIdsAndDifficultyIgnoresExistingReviewFlags() {
         File root = temporary.newFolder('metadata-import')
         File module = new File(root, 'module/test-module')
         assertTrue(module.mkdirs())
@@ -52,12 +52,12 @@ class ReadmeSheetImportServiceTest {
         metadataFile.setText(new Yaml().dump(existing),'UTF-8')
         String refreshed = service.prepareImportedMetadata(module,docs,levels)
         Map updated = new Yaml().load(refreshed) as Map
-        assertEquals(true,updated['1.OOPBasic/knowledge/OOPBasic.md']['oop-basic-001'].reviewed)
-        assertEquals(false,updated['1.OOPBasic/knowledge/OOPBasic.md']['oop-basic-001'].aiGenerated)
-        assertEquals(true,updated['1.OOPBasic/knowledge/OOPBasic.md']['oop-basic-001'].isImportant)
+        assertEquals(false,updated['1.OOPBasic/knowledge/OOPBasic.md']['oop-basic-001'].reviewed)
+        assertEquals(true,updated['1.OOPBasic/knowledge/OOPBasic.md']['oop-basic-001'].aiGenerated)
+        assertEquals(false,updated['1.OOPBasic/knowledge/OOPBasic.md']['oop-basic-001'].isImportant)
         assertEquals('ADVANCED',updated['1.OOPBasic/knowledge/OOPBasic.md']['oop-basic-001'].difficulty)
         assertEquals('BASIC',updated['1.OOPBasic/knowledge/OOPBasic.md']['oop-basic-002'].difficulty)
-        // Explicit TRUE/FALSE in AB overrides existing flags; blank preserves.
+        // Explicit TRUE/FALSE in AB is the only source; blank uses false.
         def importances = ReadmeSheetImportService.buildSectionImportances(groups,
                 [[], [false], [true]])
         String overridden = service.prepareImportedMetadata(module, docs, levels, importances)
@@ -97,7 +97,7 @@ class ReadmeSheetImportServiceTest {
         assertEquals('SKIPPED_EMPTY_MENU', ReadmeSheetImportService.parseMenu([
                 ['Menu Cấp 1', 'Menu Cấp 2'], []
         ]).status)
-        assertEquals('SKIPPED_EMPTY_MENU', ReadmeSheetImportService.parseMenu([]).status)
+        assertEquals('SKIPPED_NO_MENU_SCHEMA', ReadmeSheetImportService.parseMenu([]).status)
         Map missing = ReadmeSheetImportService.parseMenu([
                 ['Menu Cấp 1', 'Menu Cấp 2'],
                 ['Tư duy OOP', 'OOPBasic.md'],
@@ -319,6 +319,50 @@ class ReadmeSheetImportServiceTest {
         assertTrue(sibling.isFile())
         assertEquals('keep this', sibling.getText('UTF-8'))
         assertFalse(new File(root, '.gradle/sheet-readme-backups').exists())
+    }
+
+    @Test
+    void sheetReadmeReplacesKnowledgeAndMetadataIncludingStaleChaptersAndLegacy() {
+        File root = temporary.newFolder('fresh-readme-metadata')
+        File menu = ReadmeSheetImportService.resolveMenuDirectory(root, 'module/example')
+        File oldKnowledge = new File(menu, '2.Removed/knowledge/Old.md')
+        assertTrue(oldKnowledge.parentFile.mkdirs())
+        oldKnowledge.setText('OLD KNOWLEDGE', 'UTF-8')
+        File oldMetadata = new File(menu, '2.Removed/metadata/knowledge-metadata.yml')
+        assertTrue(oldMetadata.parentFile.mkdirs())
+        oldMetadata.setText('sections: {stale: {reviewed: true}}', 'UTF-8')
+        File oldNewChapterMetadata = new File(menu, '1.Basic/metadata/obsolete.yml')
+        assertTrue(oldNewChapterMetadata.parentFile.mkdirs())
+        oldNewChapterMetadata.setText('OLD EXTRA', 'UTF-8')
+        File interview = new File(menu, '2.Removed/interview/question.yml')
+        assertTrue(interview.parentFile.mkdirs())
+        interview.setText('keep interview', 'UTF-8')
+        File oldLegacy = new File(root, 'module/example/content/readme/metadata/vi/knowledge-metadata.yml')
+        assertTrue(oldLegacy.parentFile.mkdirs())
+        oldLegacy.setText('OLD LEGACY METADATA', 'UTF-8')
+        Map nextKnowledge = ['1.Basic/knowledge/Basic.md':
+                '# Basics\n\n## <a id="basic-001">First</a>\n']
+        def metadata = new ReadmeMetadataSyncService(Logging.getLogger(ReadmeSheetImportServiceTest))
+        String prepared = metadata.prepareImportedMetadata(new File(root, 'module/example'),
+                nextKnowledge, ['1.Basic/knowledge/Basic.md': ['INTERMEDIATE']])
+        Map nextMetadata = metadata.importedChapterMetadataFiles(prepared)
+        assertEquals('DRY_RUN', ReadmeSheetImportService.syncDocuments(
+                root, menu, nextKnowledge, false, nextMetadata).status)
+        assertTrue(oldKnowledge.exists())
+        assertEquals('UPDATED', ReadmeSheetImportService.syncDocuments(
+                root, menu, nextKnowledge, true, nextMetadata).status)
+        assertFalse(oldKnowledge.exists())
+        assertFalse(oldMetadata.exists())
+        assertFalse(oldNewChapterMetadata.exists())
+        assertFalse(oldLegacy.exists())
+        assertEquals('keep interview', interview.getText('UTF-8'))
+        assertEquals(nextKnowledge['1.Basic/knowledge/Basic.md'],
+                new File(menu, '1.Basic/knowledge/Basic.md').getText('UTF-8'))
+        Map fresh = new Yaml().load(new File(menu,
+                '1.Basic/metadata/knowledge-metadata.yml').getText('UTF-8')) as Map
+        assertEquals(['basic-001'] as Set, fresh.sections.keySet())
+        assertEquals('INTERMEDIATE', fresh.sections['basic-001'].difficulty)
+        assertEquals(false, fresh.sections['basic-001'].reviewed)
     }
 
     @Test

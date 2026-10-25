@@ -40,7 +40,7 @@ class VideoSheetImportService {
         List<List<Object>> menuRows = (sheets.spreadsheets().values()
                 .get(id, tab + '!A19:B').execute().values ?: []) as List<List<Object>>
         Map parsed = ReadmeSheetImportService.parseMenu(menuRows)
-        if (parsed.status != 'READY') {
+        if (!(parsed.status in ['READY', 'SKIPPED_EMPTY_MENU'])) {
             return base + [status: parsed.status, videoCount: 0,
                            writtenVideos: 0, skippedEmptyVideos: 0,
                            pendingVideos: 0, clearedOldFiles: 0,

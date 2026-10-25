@@ -53,7 +53,7 @@ Sau Normalize APPLY và readback PASS, chạy đúng module có `I3` khớp (kh�
 .\gradlew.bat :<EXACT_MODULE_GRADLE_PATH>:generateModuleQuizFromSheetByLocation -PfileUrl=<URL> -PsheetID=<GID> -PsheetMode=APPLY
 ```
 
-- Task ghi snapshot **`content/readme/docs/vi/menu/<chapter>/quiz/question.yml`** cho từng chương. Trước APPLY phải preflight toàn bộ YAML/schema/ID, stage mọi chương rồi thay đúng **file Quiz sở hữu**; nếu lỗi ghi, rollback bytes trước đó. Không động Knowledge/Metadata/Interview/Video hoặc Quiz EN. **Không APPLY nếu còn chương trống**, schema không hợp lệ, hoặc `SKIPPED_*`.
+- Task ghi snapshot **`content/readme/docs/vi/menu/<chapter>/quiz/question.yml`** cho từng chương. Trước APPLY phải preflight toàn bộ YAML/schema/ID, stage mọi chương rồi **CLEAN toàn bộ thư mục `quiz/` VI cũ + legacy Quiz VI của module trước FILL**; nếu lỗi ghi, rollback. Không động Knowledge/Metadata/Interview/Video hoặc Quiz EN. **Completion gate STEP 10 vẫn không APPLY khi còn chương trống**, schema không hợp lệ, hoặc `SKIPPED_*`; importer thuần code hiểu chapter trống trong snapshot hợp lệ là xóa Quiz cũ ở chương đó.
 - Validate `quiz.schema.json` qua `QuizQuestionSchemaService`, kiểm tra question IDs unique toàn module, đúng 4 đáp án và correctAnswerId. Readback file theo từng chương, counts, flags/câu hỏi. `generatePortalData` xuất một Quiz YAML mỗi chương, `index.json` theo ngôn ngữ và resolve anchor trong Knowledge cùng chương.
 - Chỉ sau **toàn tab Worker+QA PASS, Normalize DRY_RUN/APPLY/readback PASS, ByLocation DRY_RUN/APPLY/output QA PASS** Prime mới update/readback `J3 = STEP 10` với preflight `J2` theo PRIME_RULES. Báo `NORMALIZE_STATUS`, `MODULE_SYNC_STATUS`, `DESTINATION`, `QUESTION_COUNT`, `READBACK`, blockers; không commit/push.
 

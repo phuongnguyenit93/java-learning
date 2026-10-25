@@ -246,7 +246,7 @@ class ModuleEnSheetPublishServiceTest {
             @Override protected void ensureStatusEditable(Map ctx,int gid,String title) { }
             @Override protected int duplicate(Map ctx,int template,int gid,String title) {
                 operations.add('duplicate')
-                tabs.add([gid:gid.toString(),title:title,moduleLocation:'',rows:700,columns:28])
+                tabs.add([gid:gid.toString(),title:title,moduleLocation:'',rows:700,columns:29])
                 return gid
             }
             @Override protected void verifyIdentity(Map ctx,int gid,String title,String module) {

@@ -1,5 +1,7 @@
 # STEP 15 — PRIME ONLY: Publish module EN to Google Sheets + Excel
 
+> **2026-10-25:** Follow `REFERENCE_SUMMARY_IMPORT.md`. EN Template requires 29 columns; Reference from shared `content/reference/references.yml` maps to L3, Summary EN `section.md` and `summaries.yml` to AC parent/children. Header labels are `L2=Reference`, `AC18=Summary`, `AC19=Summary Markdown`; exact readback and EN Summary content validation are mandatory. Existing below-step rules describing only A:AB are superseded by this AC extension.
+
 ## 0. Hard rule: code-only, no AI, no workers
 
 STEP 15 is **entirely deterministic**: Gradle/Groovy, Google Sheets API and

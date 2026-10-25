@@ -7,6 +7,7 @@ import com.example.learning.setup.root.structure.service.PortalKnowledgeProjecti
 import com.example.learning.setup.root.structure.service.PortalKnowledgeSearchProjectionService
 import com.example.learning.setup.root.structure.service.PortalQuizProjectionService
 import com.example.learning.setup.root.structure.service.PortalReferenceProjectionService
+import com.example.learning.setup.root.structure.service.PortalSummaryProjectionService
 import com.example.learning.setup.root.structure.service.PortalRoadmapProjectionService
 import com.example.learning.setup.root.structure.service.PortalVideoProjectionService
 import com.example.learning.task.codeexplorer.service.CodeExplorerMaterialService
@@ -87,6 +88,9 @@ ${project.path}
                 new PortalReferenceProjectionService(
                         project.logger
                 )
+
+        PortalSummaryProjectionService summaryService =
+                new PortalSummaryProjectionService(project.logger)
 
 
         PortalVideoProjectionService videoService =
@@ -470,6 +474,14 @@ ${project.path}
                 }
 
 
+        def generatePortalSummary = project.tasks.register('generatePortalSummary') { task ->
+            task.group = 'learning portal'
+            task.description = 'Build read-only VI/EN chapter Summary JSON from summary/ files.'
+            task.dependsOn(cleanupLegacyPortalData)
+            task.inputs.files(portalDataInputs)
+            task.doLast { summaryService.generate(project) }
+        }
+
         generatePortalKnowledge.configure {
             task ->
 
@@ -541,6 +553,10 @@ ${project.path}
                 )
         }
 
+        generatePortalSummary.configure { task ->
+            task.mustRunAfter(generatePortalModuleData)
+        }
+
         def generatePortalCodeExplorer =
                 project.tasks.register('generatePortalCodeExplorer') { task ->
                     task.group = 'learning portal'
@@ -586,6 +602,7 @@ ${project.path}
                         generatePortalRoadmap,
                         generatePortalVideo,
                         generatePortalReference,
+                        generatePortalSummary,
                         generatePortalCodeExplorer
                 )
         }

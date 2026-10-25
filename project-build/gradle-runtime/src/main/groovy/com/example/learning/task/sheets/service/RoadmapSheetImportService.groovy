@@ -64,6 +64,16 @@ class RoadmapSheetImportService {
             )
         }
         if (isFirstMilestoneEmpty(firstRows)) {
+            // Only an actually empty authored range may clear the old snapshot.
+            // Do not treat a blank F3:H3 followed by authored data as deletion.
+            List<List<Object>> trailing = (client.spreadsheets().values()
+                    .get(spreadsheetId, "${quotedTab}!F4:H500")
+                    .execute().values ?: []) as List<List<Object>>
+            if (trailing.any { List<Object> row ->
+                (0..<3).any { int column -> textAt(row, column) }
+            }) {
+                throw new GradleException('Roadmap F3:H3 is empty but later F:H rows contain data.')
+            }
             String before = destination.isFile() ? destination.getText('UTF-8') : null
             Map empty = syncRoadmap(repositoryRoot, destination, before, [], apply)
             return [

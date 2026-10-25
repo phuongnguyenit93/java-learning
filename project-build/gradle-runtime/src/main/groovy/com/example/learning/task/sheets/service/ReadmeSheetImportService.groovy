@@ -11,10 +11,9 @@ import org.gradle.api.GradleException
  * source-of-truth snapshot. Parent A rows use B as the AI-authored filename;
  * child B rows use C:N as optional, contiguous Markdown fragments.
  *
- * No AI call is performed here. Only each chapter's knowledge/ directory is
- * Sheet-owned; chapter siblings (Video, objectives, links) are never touched.
- * The existing README metadata service synchronizes
- * the matching vi/knowledge-metadata.yml using generated section IDs and O.
+ * No AI call is performed here. The VI knowledge/ and metadata/ directories
+ * are cleaned and refilled together from Sheet data, never merged with the
+ * previous module. Interview/Quiz/Video and other siblings are not touched.
  */
 class ReadmeSheetImportService {
 
@@ -40,7 +39,7 @@ class ReadmeSheetImportService {
         Map<String, Object> parsed = parseMenu(menuRows)
         if (parsed.status != 'READY') {
             Map<String, Object> cleared = parsed.status == 'SKIPPED_EMPTY_MENU'
-                    ? syncDocuments(repositoryRoot, destination, [:], apply)
+                    ? syncDocuments(repositoryRoot, destination, [:], apply, [:])
                     : [status: parsed.status, clearedOldFiles: 0]
             return [
                     status: cleared.status == 'CLEARED_EMPTY' ?
@@ -82,18 +81,19 @@ class ReadmeSheetImportService {
                 new ReadmeMetadataSyncService(org.gradle.api.logging.Logging.getLogger(ReadmeSheetImportService))
         String preparedMetadata = metadataService.prepareImportedMetadata(
                 moduleDir, documents, difficulties, importances)
-        Map<String, Object> sync =
-                syncDocuments(repositoryRoot, destination, documents, apply)
-        Map metadataSync = metadataService.syncImportedMetadata(
-                moduleDir, preparedMetadata, apply)
+        Map<String, String> metadataDocuments =
+                metadataService.importedChapterMetadataFiles(preparedMetadata)
+        Map<String, Object> sync = syncDocuments(
+                repositoryRoot, destination, documents, apply, metadataDocuments)
         return [
                 status: sync.status, tab: session.tabTitle,
                 gid: session.sheetId, location: session.moduleLocation,
                 groups: parsed.groups.size(), lessons: parsed.lessons,
                 directory: destination,
                 clearedOldFiles: sync.clearedOldFiles,
-                metadataStatus: metadataSync.status,
-                metadataFile: metadataSync.file
+                metadataStatus: sync.status,
+                metadataFile: metadataDocuments.isEmpty() ? null :
+                        new File(destination, metadataDocuments.keySet().first())
         ]
     }
 
@@ -102,16 +102,25 @@ class ReadmeSheetImportService {
      * Missing B filename at ANY parent skips this importer, without writes.
      */
     static Map<String, Object> parseMenu(List<List<Object>> rows) {
-        // The first data row is the quick skip contract, even on a tab
-        // whose Menu header has not been prepared yet.
-        if (!cell(rows, 1, 0)) {
-            return [status: 'SKIPPED_EMPTY_MENU', groups: [], lessons: 0, missingRows: []]
+        boolean hasMenuHeader = cell(rows, 0, 0) == MENU_HEADER &&
+                cell(rows, 0, 1) == LESSON_HEADER
+        if (!hasMenuHeader && rows.every { List<Object> cells ->
+            cells == null || cells.every { it == null || !it.toString().trim() }
+        }) {
+            return [status: 'SKIPPED_NO_MENU_SCHEMA', groups: [], lessons: 0, missingRows: []]
         }
-        if (cell(rows, 0, 0) != MENU_HEADER ||
-                cell(rows, 0, 1) != LESSON_HEADER) {
+        if (!hasMenuHeader) {
             throw new GradleException(
                     "Invalid Menu headers at A19:B19; expected '${MENU_HEADER}', '${LESSON_HEADER}'."
             )
+        }
+        if (!cell(rows, 1, 0)) {
+            if (cell(rows, 1, 1) || rows.drop(2).any { List<Object> row ->
+                (row ?: []).any { Object cell -> cell != null && cell.toString().trim() }
+            }) {
+                throw new GradleException('Menu has data after empty first parent row A20.')
+            }
+            return [status: 'SKIPPED_EMPTY_MENU', groups: [], lessons: 0, missingRows: []]
         }
         List<Map<String, Object>> groups = []
         List<Integer> missingRows = []
@@ -282,7 +291,7 @@ class ReadmeSheetImportService {
         return result
     }
 
-    /** A blank AB cell means preserve existing metadata (or default false). */
+    /** A blank AB cell means the new snapshot uses default false. */
     static Map<String, List<Boolean>> buildSectionImportances(
             List<Map<String, Object>> groups, List<List<Object>> rows) {
         Map<String, List<Boolean>> result = new LinkedHashMap<>()
@@ -345,7 +354,9 @@ class ReadmeSheetImportService {
     }
 
     /**
-     * Knowledge-only snapshots, one <chapter>/knowledge/ directory at a time.
+     * Chapter snapshots: Knowledge and optionally its derived Metadata, all
+     * chapters in ONE clean/fill transaction. A null metadata map means that
+     * the legacy knowledge-only API must not touch metadata.
      * Never replace the whole menu tree or a chapter folder: those directories
      * contain independent content owned by other importers and people.
      *
@@ -356,7 +367,8 @@ class ReadmeSheetImportService {
             File repositoryRoot,
             File menuDirectory,
             Map<String, String> expected,
-            boolean apply
+            boolean apply,
+            Map<String, String> metadataDocuments = null
     ) {
         File moduleRoot = new File(repositoryRoot.canonicalFile, 'module').canonicalFile
         File menu = menuDirectory.canonicalFile
@@ -394,29 +406,38 @@ class ReadmeSheetImportService {
                         !byChapter.containsKey(chapter.name)) byChapter[chapter.name] = [:]
             }
         }
-        // Preflight all targets before modifying any chapter.
+        Map<File, Map<String, String>> targets = new LinkedHashMap<>()
         byChapter.each { String chapter, Map<String, String> docs ->
-            File folder = new File(menu, chapter + '/knowledge')
-            SheetSnapshotReplaceService.replace(repositoryRoot, folder, docs, false)
+            targets[new File(menu, chapter + '/knowledge')] = docs
         }
-        int previousCount = 0
-        int written = 0
-        boolean changed = false
-        byChapter.each { String chapter, Map<String, String> docs ->
-            File folder = new File(menu, chapter + '/knowledge')
-            Map<String, String> before = SheetSnapshotReplaceService.readTree(folder)
-            previousCount += before.size()
-            if (before != docs) changed = true
-            if (apply) {
-                SheetSnapshotReplaceService.replace(repositoryRoot, folder, docs, true)
-                written += docs.size()
+        if (metadataDocuments != null) {
+            Map<String, Map<String, String>> metadataByChapter = new LinkedHashMap<>()
+            metadataDocuments.each { String relative, String content ->
+                def match = (relative =~ /\A([0-9]+\.[A-Za-z][A-Za-z0-9]*)\/metadata\/knowledge-metadata\.yml\z/)
+                if (!match.matches() || content == null) {
+                    throw new GradleException('Invalid Sheet Metadata snapshot path: ' + relative)
+                }
+                metadataByChapter[match.group(1)] = ['knowledge-metadata.yml': content]
             }
+            if (menu.isDirectory()) {
+                menu.listFiles().findAll { File chapter -> chapter.isDirectory() &&
+                        (chapter.name ==~ /[0-9]+\.[A-Za-z0-9][A-Za-z0-9 _.-]*/) &&
+                        new File(chapter, 'metadata').exists() }.each { File chapter ->
+                    if (!metadataByChapter.containsKey(chapter.name)) {
+                        metadataByChapter[chapter.name] = [:]
+                    }
+                }
+            }
+            metadataByChapter.each { String chapter, Map<String, String> files ->
+                targets[new File(menu, chapter + '/metadata')] = files
+            }
+            // Legacy module-wide VI Metadata is obsolete, never a source of truth.
+            File module = menu.parentFile.parentFile.parentFile.parentFile.parentFile
+            File legacy = new File(module, 'content/readme/metadata/vi')
+            if (legacy.exists()) targets[legacy] = [:]
         }
-        return [status: !apply ? (changed ? 'DRY_RUN' : 'UNCHANGED') :
-                !changed ? 'UNCHANGED' : expected.isEmpty() ? 'CLEARED_EMPTY' :
-                previousCount == 0 ? 'IMPORTED' : 'UPDATED',
-                clearedOldFiles: apply ? previousCount : 0,
-                expectedFiles: expected.size(), writtenFiles: apply ? written : 0]
+        Map result = SheetSnapshotReplaceService.replaceAll(repositoryRoot, targets, apply)
+        return result + [writtenFiles: apply ? expected.size() : 0]
     }
 
     static Map<String, String> readTree(File root) {

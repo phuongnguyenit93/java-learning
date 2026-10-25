@@ -275,8 +275,8 @@ class ModuleEnSheetPublishService {
 
     /** Ensure the Google-native dropdown and conditional color rules survived. */
     private static void inspectNativeFormatting(Map ctx, Map tab) {
-        if ((tab.rows as int) < 700 || (tab.columns as int) < 28) {
-            throw new GradleException('Template/EN grid requires 700 rows and 28 columns.')
+        if ((tab.rows as int) < 700 || (tab.columns as int) < 29) {
+            throw new GradleException('Template/EN grid requires 700 rows and 29 columns (AC Summary).')
         }
         String name = ModuleEnSheetPublishService.quote(tab.title as String)
         List<String> ranges = ['O20','O21','O700','AB20','AB700'].collect {
@@ -360,9 +360,9 @@ class ModuleEnSheetPublishService {
                             if (a || b) lastMenu = row
                         }
                         for (int row = 19; row <= lastMenu; row++) {
-                            for (int col = 0; col <= 27; col++) {
+                            for (int col = 0; col <= 28; col++) {
                                 if (!(col in [0,1,14,27] || (col >= 2 && col <= 13) ||
-                                        (col >= 15 && col <= 22))) continue
+                                        (col >= 15 && col <= 22) || col == 28)) continue
                                 plan.add([r: row, c: col,
                                           value: cellValue(sheet.getRow(row)?.getCell(col))])
                             }
@@ -377,6 +377,11 @@ class ModuleEnSheetPublishService {
                             }
                         }
                         plan.add([r: 16, c: 1, value: cellValue(sheet.getRow(16)?.getCell(1))])
+                        // Reference is shared across languages and has no AI translation.
+                        plan.add([r: 1, c: 11, value: 'Reference'])
+                        plan.add([r: 2, c: 11, value: cellValue(sheet.getRow(2)?.getCell(11))])
+                        plan.add([r: 17, c: 28, value: 'Summary'])
+                        plan.add([r: 18, c: 28, value: 'Summary Markdown'])
                         // Fixed labels are translated by code, not by an AI service.
                         Map<String,String> labels = [
                                 'A1':'Topic', 'A17':'Introduction', 'A18':'Menu',

@@ -53,12 +53,12 @@ class QuizSheetImportServiceTest {
     }
 
     @Test
-    void blocksIncompleteChapterOrOrphanDataAndSkipsAllBlank() {
-        assertEquals('SKIPPED_EMPTY_QUIZ',
+    void blankQuizChaptersAreAbsentFromSnapshotAndOrphansFail() {
+        assertEquals('READY',
                 QuizSheetImportService.collectQuestions(GROUPS, rowsWith([:])).status)
-        expectInvalid('Incomplete Quiz') {
-            QuizSheetImportService.collectQuestions(GROUPS, rowsWith([20: [authored('Only one')]]))
-        }
+        assertEquals([:], QuizSheetImportService.collectQuestions([], rowsWith([:])).byChapter)
+        Map partial = QuizSheetImportService.collectQuestions(GROUPS, rowsWith([20: [authored('Only one')]]))
+        assertEquals(['1.OOPBasic'], partial.byChapter.keySet().toList())
         expectInvalid('non-parent row') {
             QuizSheetImportService.collectQuestions(GROUPS, rowsWith([
                     20: [authored('One')], 21: ['orphan'], 23: [authored('Two')]

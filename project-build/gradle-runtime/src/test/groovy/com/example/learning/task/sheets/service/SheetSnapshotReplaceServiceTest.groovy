@@ -103,19 +103,63 @@ class SheetSnapshotReplaceServiceTest {
     }
 
     @Test
-    void legacyModuleWideQuizAndInterviewTargetsCannotBeReplaced() {
+    void legacyModuleWideQuizAndInterviewViAreOwnedButOtherLanguagesAreNot() {
         File root = temporary.newFolder('legacy-question-protection')
         ['quiz', 'interview'].each { String kind ->
             File directory = new File(root, "module/example/content/${kind}/vi")
             assertTrue(directory.mkdirs())
             File source = new File(directory, 'question.yml')
             source.setText('questions: []', 'UTF-8')
-            assertFailure {
-                SheetSnapshotReplaceService.replace(root, directory,
-                        ['question.yml': 'questions: []'], true)
-            }
-            assertEquals('questions: []', source.getText('UTF-8'))
+            File stale = new File(directory, 'old-questions.yml')
+            stale.setText('STALE', 'UTF-8')
+            File english = new File(root, "module/example/content/${kind}/en/question.yml")
+            assertTrue(english.parentFile.mkdirs())
+            english.setText('EN', 'UTF-8')
+            assertEquals('CLEARED_EMPTY', SheetSnapshotReplaceService.replace(
+                    root, directory, [:], true).status)
+            assertFalse(source.exists())
+            assertFalse(stale.exists())
+            assertEquals('EN', english.getText('UTF-8'))
         }
+    }
+
+    @Test
+    void cleanAllKindsBeforeFillAndRollbackEveryDirectoryAfterInjectedFailure() {
+        File root = temporary.newFolder('multi-snapshot')
+        File chapter = new File(root, 'module/example/content/readme/docs/vi/menu/1.Basic')
+        Map<File, Map<String, String>> next = new LinkedHashMap<>()
+        ['knowledge', 'metadata', 'interview', 'quiz', 'video'].each { String kind ->
+            File folder = new File(chapter, kind)
+            assertTrue(folder.mkdirs())
+            new File(folder, 'stale.txt').setText('OLD-' + kind, 'UTF-8')
+            String file = kind == 'knowledge' ? 'Basic.md' :
+                    kind == 'metadata' ? 'knowledge-metadata.yml' :
+                    kind == 'video' ? 'video-script.yml' : 'question.yml'
+            next[folder] = [(file): 'NEW-' + kind]
+        }
+        File unaffected = new File(chapter, 'chapter-links.md')
+        unaffected.setText('PRESERVE', 'UTF-8')
+        assertEquals('DRY_RUN', SheetSnapshotReplaceService.replaceAll(root, next, false).status)
+        try {
+            SheetSnapshotReplaceService.replaceAll(root, next, true) { String phase, File folder ->
+                if (phase == 'FILL' && folder.name == 'metadata') {
+                    throw new IOException('Simulated failure after some clean/fill operations')
+                }
+            }
+            fail('Expected rollback')
+        } catch (GradleException expected) {
+            assertTrue(expected.message.contains('Unable to clean/fill'))
+        }
+        next.keySet().each { File folder ->
+            assertEquals(['stale.txt': 'OLD-' + folder.name], SheetSnapshotReplaceService.readTree(folder))
+        }
+        assertEquals('PRESERVE', unaffected.getText('UTF-8'))
+        assertEquals('UPDATED', SheetSnapshotReplaceService.replaceAll(root, next, true).status)
+        next.each { File folder, Map<String, String> expected ->
+            assertEquals(expected, SheetSnapshotReplaceService.readTree(folder))
+        }
+        assertEquals('PRESERVE', unaffected.getText('UTF-8'))
+        assertEquals('UNCHANGED', SheetSnapshotReplaceService.replaceAll(root, next, true).status)
     }
 
     private static void assertFailure(Closure action) {

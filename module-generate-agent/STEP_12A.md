@@ -1,5 +1,7 @@
 # STEP 12A — PRIME ONLY: Clone cấu trúc và nội dung VI → EN bằng Gradle
 
+> **2026-10-25 Summary:** STEP 12A đã clone toàn bộ cây docs (ngoại trừ Video), vì vậy phải bao gồm `menu/<chapter>/summary/section.md` và `summaries.yml` nếu VI có. Validate Summary YAML/root `summaries`, số bài, order và `id` khớp Knowledge trước APPLY. STEP 14 sau đó dịch nội dung Summary EN; Reference là module-wide shared nên không clone/dịch. Xem `REFERENCE_SUMMARY_IMPORT.md`.
+
 ## 0. Mục tiêu và ranh giới
 
 - STEP 12A diễn ra **sau STEP 12, trước STEP 14**. Mục tiêu: xóa lệch cấu trúc EN cũ, thay bằng bản clone chính xác của VI theo technical identity để worker STEP 14 **chỉ dịch văn bản**, không phải tái tạo structure. **Video là ngoại lệ loại theo FILE, dù nằm trong subtree Docs**: không clone/ghi đè/xóa `content/readme/docs/{vi,en}/menu/<chapter>/video/video-script.yml`; Video xử lý hoàn toàn trong optional steps sau STEP_FINAL.

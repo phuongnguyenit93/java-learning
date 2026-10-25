@@ -1,5 +1,7 @@
 # STEP 12 — PRIME ONLY: Export một tab Google Sheets thành `content/sheet/vi/module.xlsx`
 
+> **2026-10-25:** See `REFERENCE_SUMMARY_IMPORT.md`: verify snapshot retains Reference L2/L3 and Summary AC18/19 plus all parent/child AC values, including Excel's 32,767 UTF-16 character limit. A 28-column workbook is insufficient if the source tab already has AC.
+
 ## 0. Mục tiêu và phạm vi
 
 STEP 12 là bước **lưu snapshot Excel offline của đúng một tab module tiếng Việt**, sau khi những nội dung và liên kết bắt buộc thuộc STEP 1–11 đã được xử lý/QA (**STEP 9 là Interview, STEP 10 là Quiz; Video là optional sau STEP_FINAL**). **Không dịch sang EN trong bước này** (bản dịch/chuyển ngữ thuộc STEP 14). Các ô Video X:AA còn trống hoàn toàn hợp lệ; Video được tạo riêng sau STEP_FINAL khi người dùng yêu cầu.

@@ -25,6 +25,9 @@ class ChapterQuestionSnapshotServiceTest {
         File quiz = new File(first, 'quiz/question.yml')
         assertTrue(quiz.parentFile.mkdirs())
         quiz.setText('OLD', 'UTF-8')
+        File obsolete = new File(first, 'quiz/archive/old-quiz.yml')
+        assertTrue(obsolete.parentFile.mkdirs())
+        obsolete.setText('OBSOLETE', 'UTF-8')
         File stale = new File(second, 'quiz/question.yml')
         assertTrue(stale.parentFile.mkdirs())
         stale.setText('STALE', 'UTF-8')
@@ -44,12 +47,17 @@ class ChapterQuestionSnapshotServiceTest {
         Map applied = ChapterQuestionSnapshotService.replace(root, module, 'quiz', next, true)
         assertEquals('UPDATED', applied.status)
         assertEquals('NEW', quiz.getText('UTF-8'))
+        assertFalse(obsolete.exists())
         assertFalse(stale.exists())
         assertFalse(old.exists())
         assertEquals('INTERVIEW', interview.getText('UTF-8'))
         assertEquals('sections: {}', meta.getText('UTF-8'))
         assertEquals('UNCHANGED',
                 ChapterQuestionSnapshotService.replace(root, module, 'quiz', next, false).status)
+        assertEquals('CLEARED_EMPTY',
+                ChapterQuestionSnapshotService.replace(root, module, 'quiz', [:], true).status)
+        assertFalse(quiz.parentFile.exists())
+        assertEquals('INTERVIEW', interview.getText('UTF-8'))
     }
 
     @Test

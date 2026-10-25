@@ -13,7 +13,7 @@ class ReadmeMetadataSyncServiceTest {
     public TemporaryFolder tmp = new TemporaryFolder()
 
     @Test
-    void migratedArticleInChapterWithSpacesPreservesLegacyRootMetadata() {
+    void importIgnoresLegacyMetadataAndBuildsDefaultsFromSheet() {
         File module = tmp.newFolder('module')
         File metadata = new File(module,
                 'content/readme/metadata/vi/knowledge-metadata.yml')
@@ -36,13 +36,12 @@ class ReadmeMetadataSyncServiceTest {
         Map root = new Yaml().load(result)
 
         assertEquals([source] as Set, root.keySet())
-        assertEquals([difficulty: 'ADVANCED', reviewed: true,
-                      aiGenerated: false, isImportant: true,
-                      humanNote: 'preserve-this'], root[source]['existing-id'])
+        assertEquals([difficulty: 'BASIC', aiGenerated: true,
+                      reviewed: false, isImportant: false], root[source]['existing-id'])
     }
 
     @Test
-    void chapterLegacyMetadataMigratesWithNewPathTakingPrecedence() {
+    void oldLegacyPathDoesNotInfluenceImportedMetadata() {
         File module = tmp.newFolder('otherModule')
         File metadata = new File(module,
                 'content/readme/metadata/vi/knowledge-metadata.yml')
@@ -66,11 +65,11 @@ class ReadmeMetadataSyncServiceTest {
                 [(source): [null]], [(source): [null]])
         Map root = new Yaml().load(result)
         Map section = root['2.Spring_Task_Executor/knowledge/Lesson.md']['stable-id']
-        assertEquals('INTERMEDIATE', section.difficulty)
-        assertEquals(true, section.reviewed)
-        assertEquals(false, section.aiGenerated)
-        assertEquals(true, section.isImportant)
-        assertEquals('newer-path', section.humanNote)
+        assertEquals('BASIC', section.difficulty)
+        assertEquals(false, section.reviewed)
+        assertEquals(true, section.aiGenerated)
+        assertEquals(false, section.isImportant)
+        assertFalse(section.containsKey('humanNote'))
     }
 
     @Test
@@ -94,7 +93,7 @@ class ReadmeMetadataSyncServiceTest {
     }
 
     @Test
-    void importWritesSectionsWrapperIntoEachChapterAndNeverOverwritesOtherChapter() {
+    void importWritesFreshSectionsWrapperIntoEachChapter() {
         File module = tmp.newFolder('chapters')
         ReadmeMetadataSyncService service = new ReadmeMetadataSyncService(
                 Logging.getLogger(ReadmeMetadataSyncServiceTest))
@@ -122,7 +121,7 @@ class ReadmeMetadataSyncServiceTest {
         a.sections['first-id'].reviewed = true
         firstFile.setText(new Yaml().dump(a), 'UTF-8')
         Map result = new Yaml().load(service.prepareImportedMetadata(module, docs, levels))
-        assertEquals(true, result[first]['first-id'].reviewed)
+        assertEquals(false, result[first]['first-id'].reviewed)
         assertEquals('DRY_RUN',
                 service.syncImportedMetadata(module, prepared, false).status)
         assertFalse(new File(module,
@@ -130,7 +129,7 @@ class ReadmeMetadataSyncServiceTest {
     }
 
     @Test
-    void refusesNonWrappedLocalMetadataRatherThanSilentlyDroppingFlags() {
+    void importedMetadataDoesNotReadMalformedOldChapterFile() {
         File module = tmp.newFolder('strict-wrapper')
         File file = new File(module,
                 'content/readme/docs/vi/menu/1.Basic/metadata/knowledge-metadata.yml')
@@ -144,15 +143,11 @@ class ReadmeMetadataSyncServiceTest {
         ReadmeMetadataSyncService service = new ReadmeMetadataSyncService(
                 Logging.getLogger(ReadmeMetadataSyncServiceTest))
         String source = '1.Basic/knowledge/Basic.md'
-        try {
-            service.prepareImportedMetadata(module,
-                    [(source): '## <a id="basic-001">Basic</a>\n'],
-                    [(source): ['']], [(source): [null]])
-            fail('Legacy unwrapped local metadata must not be silently rewritten.')
-        }
-        catch (org.gradle.api.GradleException expected) {
-            assertTrue(expected.message.contains('only sections'))
-        }
+        Map fresh = new Yaml().load(service.prepareImportedMetadata(module,
+                [(source): '## <a id="basic-001">Basic</a>\n'],
+                [(source): ['']], [(source): [null]]))
+        assertEquals('BASIC', fresh[source]['basic-001'].difficulty)
+        assertEquals(false, fresh[source]['basic-001'].reviewed)
         assertTrue(file.getText('UTF-8').startsWith('basic-001:'))
     }
 }

@@ -57,7 +57,7 @@ class ChapterVideoSnapshotServiceTest {
         assertTrue(stale.exists())
         Map applied = ChapterVideoSnapshotService.replace(root, module, next, true)
         assertEquals('UPDATED', applied.status)
-        assertEquals(1, applied.clearedOldFiles)
+        assertEquals(2, applied.clearedOldFiles)
         assertEquals(VideoSheetImportServiceTest.SCRIPT, authored.getText('UTF-8'))
         assertFalse(stale.exists())
         assertEquals('Knowledge content', readme.getText('UTF-8'))
@@ -75,7 +75,7 @@ class ChapterVideoSnapshotServiceTest {
     }
 
     @Test
-    void missingKnowledgeAndOrphanVideoRejectEntireImport() {
+    void missingNewKnowledgeBlocksButStaleOrphanVideoIsCleaned() {
         File root = temp.newFolder('missing-video')
         File module = new File(root, 'module/demo')
         File valid = chapter(module, '1.OOPBasic')
@@ -91,16 +91,14 @@ class ChapterVideoSnapshotServiceTest {
         File orphan = new File(module, 'content/readme/docs/vi/menu/3.Orphan/video/video-script.yml')
         assertTrue(orphan.parentFile.mkdirs())
         orphan.setText('orphan', 'UTF-8')
-        shouldFail('Missing Knowledge chapter') {
-            ChapterVideoSnapshotService.replace(root, module,
-                    ['1.OOPBasic': VideoSheetImportServiceTest.SCRIPT], true)
-        }
-        assertEquals('preserve', existing.getText('UTF-8'))
-        assertEquals('orphan', orphan.getText('UTF-8'))
+        assertEquals('UPDATED', ChapterVideoSnapshotService.replace(root, module,
+                ['1.OOPBasic': VideoSheetImportServiceTest.SCRIPT], true).status)
+        assertEquals(VideoSheetImportServiceTest.SCRIPT, existing.getText('UTF-8'))
+        assertFalse(orphan.exists())
     }
 
     @Test
-    void legacyMigrationWaitsForCommitAndDoesNotDeleteUnexpectedFiles() {
+    void legacyVideoDirectoryIsEntirelyCleanedWhenSheetImported() {
         File root = temp.newFolder('legacy-video')
         File module = new File(root, 'module/demo')
         File one = chapter(module, '1.OOPBasic')
@@ -109,13 +107,6 @@ class ChapterVideoSnapshotServiceTest {
         legacy.setText('legacy bytes', 'UTF-8')
         File extra = new File(legacy.parentFile, 'my-notes.md')
         extra.setText('unowned bytes', 'UTF-8')
-        shouldFail('Orphan or unexpected legacy Video file') {
-            ChapterVideoSnapshotService.replace(root, module,
-                    ['1.OOPBasic': VideoSheetImportServiceTest.SCRIPT], true)
-        }
-        assertFalse(script(one).exists())
-        assertEquals('legacy bytes', legacy.getText('UTF-8'))
-        assertTrue(extra.delete())
         assertEquals('DRY_RUN', ChapterVideoSnapshotService.replace(root, module,
                 ['1.OOPBasic': VideoSheetImportServiceTest.SCRIPT], false).status)
         assertEquals('legacy bytes', legacy.getText('UTF-8'))
@@ -124,6 +115,7 @@ class ChapterVideoSnapshotServiceTest {
         assertEquals('UPDATED', applied.status)
         assertEquals(VideoSheetImportServiceTest.SCRIPT, script(one).getText('UTF-8'))
         assertFalse(legacy.exists())
+        assertFalse(extra.exists())
     }
 
     @Test
@@ -141,19 +133,21 @@ class ChapterVideoSnapshotServiceTest {
         File legacy = new File(module, 'content/video/vi/menu/1.OOPBasic/video-script.yml')
         assertTrue(legacy.parentFile.mkdirs())
         legacy.setText('legacy bytes', 'UTF-8')
-        shouldFail('Unable to commit Video chapter snapshot') {
+        shouldFail('Unable to clean/fill Sheet snapshot') {
             ChapterVideoSnapshotService.replace(root, module,
                     ['1.OOPBasic': VideoSheetImportServiceTest.SCRIPT], true) { File file ->
-                if (file == current) throw new IOException('Injected failure after first write')
+                if (file.canonicalFile == current.canonicalFile)
+                    throw new IOException('Injected failure after first write')
             }
         }
         assertEquals('previous bytes', current.getText('UTF-8'))
         assertEquals('stale bytes', stale.getText('UTF-8'))
         assertEquals('legacy bytes', legacy.getText('UTF-8'))
-        shouldFail('Unable to commit Video chapter snapshot') {
+        shouldFail('Unable to clean/fill Sheet snapshot') {
             ChapterVideoSnapshotService.replace(root, module,
                     ['1.OOPBasic': VideoSheetImportServiceTest.SCRIPT], true) { File file ->
-                if (file == legacy) throw new IOException('Injected failure after legacy removal')
+                if (file.canonicalFile == legacy.canonicalFile)
+                    throw new IOException('Injected failure after legacy removal')
             }
         }
         assertEquals('previous bytes', current.getText('UTF-8'))
@@ -162,24 +156,22 @@ class ChapterVideoSnapshotServiceTest {
     }
 
     @Test
-    void refusesInvalidYamlAndDirectoryOccupationBeforeAnyWrite() {
+    void validatesYamlAndCleansUnexpectedOldVideoFilesAndDirectories() {
         File root = temp.newFolder('invalid-video')
         File module = new File(root, 'module/demo')
         File one = chapter(module, '1.OOPBasic')
         File two = chapter(module, '2.Class')
         File occupied = script(two)
         assertTrue(occupied.mkdirs())
-        shouldFail('Video destination occupied by non-file') {
-            ChapterVideoSnapshotService.replace(root, module,
-                    ['1.OOPBasic': VideoSheetImportServiceTest.SCRIPT,
-                     '2.Class': VideoSheetImportServiceTest.SCRIPT], true)
-        }
-        assertFalse(script(one).exists())
         shouldFail('Invalid Video Script YAML') {
             ChapterVideoSnapshotService.replace(root, module,
                     ['1.OOPBasic': 'title: [invalid'], true)
         }
         assertFalse(script(one).exists())
+        assertEquals('IMPORTED', ChapterVideoSnapshotService.replace(root, module,
+                ['1.OOPBasic': VideoSheetImportServiceTest.SCRIPT,
+                 '2.Class': VideoSheetImportServiceTest.SCRIPT], true).status)
+        assertEquals(VideoSheetImportServiceTest.SCRIPT, occupied.getText('UTF-8'))
     }
 
     @Test

@@ -135,6 +135,12 @@ sections:
     }
 
     @Test
+    void validVideoSchemaWithNoMenuCreatesEmptyAuthoritativeSnapshot() {
+        assertEquals([:], VideoSheetImportService.parseSheet([], [
+                ['Video Script', 'Video Script', 'Video Script', 'Video Script']]))
+    }
+
+    @Test
     void legacyOwnedFilesAreRemovedAfterChapterImportAndEnglishPreserved() {
         File root = temp.newFolder('legacy-video')
         File module = new File(root, 'module/example')
