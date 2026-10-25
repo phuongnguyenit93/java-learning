@@ -1,41 +1,25 @@
 sections:
   memory-layout-purpose:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   value-layouts:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   struct-layout:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   sequence-layout:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   union-layout:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   address-layout:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   layout-alignment-offset:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   layout-path-access:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false

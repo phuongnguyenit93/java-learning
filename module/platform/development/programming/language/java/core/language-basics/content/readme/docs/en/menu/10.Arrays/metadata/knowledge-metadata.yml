@@ -1,21 +1,13 @@
 sections:
   array-type-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   array-initialization:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   array-covariance-risk:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   multidimensional-arrays:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

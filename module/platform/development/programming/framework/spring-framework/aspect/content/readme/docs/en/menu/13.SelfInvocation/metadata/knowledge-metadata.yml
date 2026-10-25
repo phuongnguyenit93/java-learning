@@ -1,36 +1,22 @@
 sections:
   self-invocation-mental-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   self-invocation-demo:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   proxy-limitations:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   self-invocation-remediation:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   final-method-demo:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   aop-debugging-checklist:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   self-invocation-conclusion:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

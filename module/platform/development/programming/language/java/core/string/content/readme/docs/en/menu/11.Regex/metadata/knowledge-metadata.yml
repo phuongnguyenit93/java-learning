@@ -1,31 +1,19 @@
 sections:
   regex-purpose:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   pattern-matcher:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   regex-syntax-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   regex-groups:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   regex-quantifiers:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   regex-performance:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

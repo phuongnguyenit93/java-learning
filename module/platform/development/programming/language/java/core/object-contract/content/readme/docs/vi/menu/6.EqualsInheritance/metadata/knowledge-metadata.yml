@@ -2,45 +2,27 @@ sections:
   equals-inheritance-001:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   equals-inheritance-002:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   equals-inheritance-003:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   equals-inheritance-004:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   equals-inheritance-005:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   equals-inheritance-006:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   equals-inheritance-007:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   equals-inheritance-008:
     difficulty: ADVANCED
     isImportant: false
-    aiGenerated: true
-    reviewed: false
   equals-inheritance-009:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false

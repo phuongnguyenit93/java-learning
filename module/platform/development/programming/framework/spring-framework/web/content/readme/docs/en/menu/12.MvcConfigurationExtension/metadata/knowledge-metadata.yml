@@ -1,46 +1,28 @@
 sections:
   enable-web-mvc:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   web-mvc-configurer:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   path-matching-configuration:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   conversion-validation-configuration:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   message-converter-content-negotiation-configuration:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   interceptor-cors-resource-view-configuration:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   async-support-configuration:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   custom-mvc-spis:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   framework-defaults-vs-customization:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

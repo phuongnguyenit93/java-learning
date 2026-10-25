@@ -1,36 +1,22 @@
 sections:
   data-slice-purpose:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   datajpa-test-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   datajpa-transaction-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   jdbc-test-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   data-test-database-customization:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   data-slice-integration-handoff:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   data-testing-framework-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

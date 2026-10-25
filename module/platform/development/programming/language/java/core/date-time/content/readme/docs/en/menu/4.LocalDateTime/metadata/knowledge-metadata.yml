@@ -1,16 +1,10 @@
 sections:
   local-date-time-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   local-date-time-ambiguity:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   local-date-time-use-cases:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

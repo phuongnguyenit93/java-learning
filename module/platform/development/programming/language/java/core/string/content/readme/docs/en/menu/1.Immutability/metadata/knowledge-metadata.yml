@@ -1,21 +1,13 @@
 sections:
   string-purpose:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   string-immutability:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   immutability-consequences:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   string-operation-new-value:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

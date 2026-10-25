@@ -1,41 +1,25 @@
 sections:
   scheduled-infrastructure:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   scheduled-trigger-modes:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   scheduled-cron-zone-timeunit:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   scheduled-scheduler-qualifier:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   scheduled-overlap:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   scheduled-failure:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   reactive-scheduled-methods:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   scheduling-configurer:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

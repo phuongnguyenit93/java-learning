@@ -1,21 +1,13 @@
 sections:
   symmetric-encryption-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   cipher-transformation:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   iv-and-parameters:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   symmetric-encryption-workflow:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false

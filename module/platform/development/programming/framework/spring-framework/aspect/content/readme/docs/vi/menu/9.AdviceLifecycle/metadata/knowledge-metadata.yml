@@ -1,51 +1,31 @@
 sections:
   advice-lifecycle-001:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   advice-lifecycle-002:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   advice-lifecycle-003:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   advice-lifecycle-004:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   advice-lifecycle-005:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   advice-lifecycle-006:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   advice-lifecycle-007:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   advice-lifecycle-008:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   advice-lifecycle-009:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   advice-lifecycle-010:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false

@@ -1,41 +1,25 @@
 sections:
   enable-caching:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   cacheable:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   cache-put:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   cache-evict:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   caching-composition:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   cache-config:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   caching-configurer:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   cache-operation-configuration-precedence:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

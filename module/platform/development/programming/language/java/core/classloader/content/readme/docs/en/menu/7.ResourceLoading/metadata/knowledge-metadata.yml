@@ -1,31 +1,19 @@
 sections:
   class-resource:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   loader-resource:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   resource-enumeration:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   resource-stream-lifecycle:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   classpath-vs-filesystem:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   resource-vs-class-loading:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

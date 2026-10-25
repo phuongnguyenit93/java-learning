@@ -1,26 +1,16 @@
 sections:
   startup-as-evidence:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   reading-startup-output:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   defaults-observable-overridable:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   startup-failure-classes:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   diagnostics-handoff:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

@@ -1,51 +1,31 @@
 sections:
   rsocket-message-handler:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   rsocket-message-mapping:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   rsocket-connect-mapping:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   rsocket-interaction-cardinality:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   rsocket-service-interface:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   rsocket-exchange:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   rsocket-service-proxy:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   rsocket-service-method-contract:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   rsocket-responder-symmetry:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   rsocket-neighbor-boundaries:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false

@@ -2,45 +2,27 @@ sections:
   hash-code-contract-001:
     difficulty: BASIC
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   hash-code-contract-002:
     difficulty: BASIC
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   hash-code-contract-003:
     difficulty: BASIC
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   hash-code-contract-004:
     difficulty: INTERMEDIATE
     isImportant: false
-    aiGenerated: true
-    reviewed: false
   hash-code-contract-005:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   hash-code-contract-006:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   hash-code-contract-007:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   hash-code-contract-008:
     difficulty: INTERMEDIATE
     isImportant: false
-    aiGenerated: true
-    reviewed: false
   hash-code-contract-009:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false

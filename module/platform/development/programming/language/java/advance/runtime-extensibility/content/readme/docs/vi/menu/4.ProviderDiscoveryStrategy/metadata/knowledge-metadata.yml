@@ -1,31 +1,19 @@
 sections:
   discovery-vs-selection:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   provider-selection-policy:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   capability-based-selection:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   provider-ordering-caveats:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   no-provider-and-fallback:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   duplicate-and-broken-providers:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false

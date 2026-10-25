@@ -6,8 +6,6 @@ AnnotationInspectionController:
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 4.Retention/knowledge/Retention.md
       anchor: retention-use-case
@@ -34,8 +32,6 @@ BuiltInAnnotationController:
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 2.BuiltIn/knowledge/BuiltIn.md
       anchor: override-annotation
@@ -61,8 +57,6 @@ InheritedAnnotationController:
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 7.RepeatableInherited/knowledge/RepeatableInherited.md
       anchor: inherited-class-only
@@ -88,8 +82,6 @@ MetaAnnotationController:
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 6.MetaAnnotation/knowledge/MetaAnnotation.md
       anchor: target-meta
@@ -115,8 +107,6 @@ RepeatableAnnotationController:
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 7.RepeatableInherited/knowledge/RepeatableInherited.md
       anchor: get-annotations-by-type

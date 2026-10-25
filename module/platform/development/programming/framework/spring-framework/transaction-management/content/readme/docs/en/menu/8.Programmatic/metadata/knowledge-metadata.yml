@@ -1,26 +1,16 @@
 sections:
   transaction-declarative-vs-programmatic:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   transaction-template:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   transaction-direct-manager:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   transaction-transactional-operator:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   transaction-programmatic-tradeoffs:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false

@@ -24,8 +24,6 @@ AdvisorController:
       anchor: advisor-demo
       file: ''
     usage: true
-    aiGenerated: true
-    reviewed: false
 RuntimeBoundaryController:
   inspectRuntimeBoundary():
     summary: Quan sát ranh giới runtime của Spring AOP
@@ -52,8 +50,6 @@ RuntimeBoundaryController:
       anchor: runtime-boundary-demo
       file: ''
     usage: true
-    aiGenerated: true
-    reviewed: false
 InfrastructureController:
   inspectInfrastructure():
     summary: Quan sát hạ tầng bên trong Spring AOP
@@ -79,8 +75,6 @@ InfrastructureController:
       anchor: infrastructure-demo
       file: ''
     usage: true
-    aiGenerated: true
-    reviewed: false
 IntroductionController:
   observeIntroduction():
     summary: Quan sát AOP Introduction
@@ -106,8 +100,6 @@ IntroductionController:
       anchor: introduction-demo
       file: ''
     usage: true
-    aiGenerated: true
-    reviewed: false
 ProgrammaticProxyController:
   compareProxyFactoryStrategies():
     summary: So sánh JDK proxy và CGLIB bằng ProxyFactory
@@ -133,8 +125,6 @@ ProgrammaticProxyController:
       anchor: proxy-factory-demo
       file: ''
     usage: true
-    aiGenerated: true
-    reviewed: false
 AdviceLifecycleController:
   success():
     summary: Quan sát thứ tự Advice khi thực thi thành công
@@ -160,8 +150,6 @@ AdviceLifecycleController:
       anchor: advice-success-demo
       file: ''
     usage: true
-    aiGenerated: true
-    reviewed: false
   failure():
     summary: Quan sát Advice khi target ném exception
     description: Thực thi một target method thất bại để quan sát @AfterThrowing và
@@ -186,8 +174,6 @@ AdviceLifecycleController:
       anchor: advice-failure-demo
       file: ''
     usage: true
-    aiGenerated: true
-    reviewed: false
 AnnotationDrivenController:
   trackByAnnotation():
     summary: Áp dụng AOP thông qua custom annotation
@@ -213,8 +199,6 @@ AnnotationDrivenController:
       anchor: annotation-demo
       file: ''
     usage: true
-    aiGenerated: true
-    reviewed: false
 AroundAdviceController:
   timing():
     summary: Đo thời gian thực thi bằng @Around Advice
@@ -240,8 +224,6 @@ AroundAdviceController:
       anchor: around-timing-demo
       file: ''
     usage: true
-    aiGenerated: true
-    reviewed: false
   transform():
     summary: Thay đổi return value bằng @Around Advice
     description: Minh họa @Around Advice có thể đọc và thay thế giá trị trả về sau
@@ -266,8 +248,6 @@ AroundAdviceController:
       anchor: around-transform-demo
       file: ''
     usage: true
-    aiGenerated: true
-    reviewed: false
   skip():
     summary: Bỏ qua target bằng @Around Advice
     description: Minh họa việc không gọi proceed() sẽ khiến target method không được
@@ -292,8 +272,6 @@ AroundAdviceController:
       anchor: around-skip-demo
       file: ''
     usage: true
-    aiGenerated: true
-    reviewed: false
   arguments():
     summary: Thay đổi argument bằng @Around Advice
     description: Minh họa cách @Around Advice đọc và thay đổi argument của lời gọi
@@ -318,8 +296,6 @@ AroundAdviceController:
       anchor: around-arguments-demo
       file: ''
     usage: true
-    aiGenerated: true
-    reviewed: false
   exceptionPropagation():
     summary: Quan sát exception đi qua @Around Advice
     description: Minh họa @Around Advice bắt được exception để quan sát nhưng vẫn
@@ -344,8 +320,6 @@ AroundAdviceController:
       anchor: around-exception-demo
       file: ''
     usage: true
-    aiGenerated: true
-    reviewed: false
 CrossCuttingController:
   observeCrossCutting():
     summary: Quan sát logging như một cross-cutting concern
@@ -371,8 +345,6 @@ CrossCuttingController:
       anchor: cross-cutting-demo
       file: ''
     usage: true
-    aiGenerated: true
-    reviewed: false
 OrderingController:
   observeOrdering():
     summary: Quan sát thứ tự lồng nhau của nhiều Aspect
@@ -398,8 +370,6 @@ OrderingController:
       anchor: ordering-demo
       file: ''
     usage: true
-    aiGenerated: true
-    reviewed: false
 PracticalPatternController:
   checkout(String):
     summary: Áp dụng auditing và timing trong tình huống thực tế
@@ -425,8 +395,6 @@ PracticalPatternController:
       anchor: practical-demo
       file: ''
     usage: true
-    aiGenerated: true
-    reviewed: false
 PointcutController:
   comparePointcuts():
     summary: So sánh các biểu thức Pointcut phổ biến của Spring AOP
@@ -452,8 +420,6 @@ PointcutController:
       anchor: pointcut-demo
       file: ''
     usage: true
-    aiGenerated: true
-    reviewed: false
 ProxyMentalModelController:
   inspectProxy():
     summary: Quan sát Spring AOP proxy
@@ -479,8 +445,6 @@ ProxyMentalModelController:
       anchor: proxy-demo
       file: ''
     usage: true
-    aiGenerated: true
-    reviewed: false
   compareManagedBeanAndPlainObject():
     summary: So sánh Spring-managed bean với object tạo bằng new
     description: So sánh một Spring-managed bean đi qua AOP interception với object
@@ -505,8 +469,6 @@ ProxyMentalModelController:
       anchor: managed-vs-new-demo
       file: ''
     usage: true
-    aiGenerated: true
-    reviewed: false
 SelfInvocationController:
   compareSelfInvocation():
     summary: So sánh self-invocation với lời gọi qua proxy
@@ -532,8 +494,6 @@ SelfInvocationController:
       anchor: self-invocation-demo
       file: ''
     usage: true
-    aiGenerated: true
-    reviewed: false
   finalMethodLimitation():
     summary: Minh họa giới hạn của final method với proxy
     description: Chứng minh final method trên class-based proxy không thể bị override
@@ -558,8 +518,6 @@ SelfInvocationController:
       anchor: final-method-demo
       file: ''
     usage: true
-    aiGenerated: true
-    reviewed: false
 TerminologyController:
   inspectTerminology():
     summary: Quan sát các thuật ngữ AOP trong một lời gọi thực tế
@@ -585,5 +543,3 @@ TerminologyController:
       anchor: terminology-demo
       file: ''
     usage: true
-    aiGenerated: true
-    reviewed: false

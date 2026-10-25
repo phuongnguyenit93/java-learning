@@ -1,31 +1,19 @@
 sections:
   spring-boot-purpose:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   boot-vs-framework:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   convention-over-configuration:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   externalized-configuration-orientation:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   boot-capability-map:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   fundamentals-learning-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

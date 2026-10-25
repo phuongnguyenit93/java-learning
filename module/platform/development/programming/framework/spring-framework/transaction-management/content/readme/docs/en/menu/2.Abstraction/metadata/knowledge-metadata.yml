@@ -1,41 +1,25 @@
 sections:
   transaction-manager-strategy:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   transaction-platform-manager:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   transaction-reactive-manager:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   transaction-definition:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   transaction-status:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   transaction-lifecycle:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   transaction-manager-selection:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   transaction-local-vs-global:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false

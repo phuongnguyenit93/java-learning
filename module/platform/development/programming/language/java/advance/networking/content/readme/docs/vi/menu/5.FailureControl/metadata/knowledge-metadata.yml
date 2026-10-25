@@ -1,36 +1,22 @@
 sections:
   network-wait-points:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   socket-timeouts:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   socket-options:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   network-failure-model:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   network-resource-cleanup:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   network-cancellation:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   networking-pitfalls:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false

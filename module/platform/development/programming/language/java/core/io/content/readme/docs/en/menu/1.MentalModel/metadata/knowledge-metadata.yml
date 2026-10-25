@@ -1,21 +1,13 @@
 sections:
   io-data-flow:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   bytes-vs-characters:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   blocking-io-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   resource-lifecycle:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

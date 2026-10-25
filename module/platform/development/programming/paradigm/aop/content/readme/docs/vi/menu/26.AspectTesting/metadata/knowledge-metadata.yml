@@ -1,51 +1,31 @@
 sections:
   aspect-testing-001:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   aspect-testing-002:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   aspect-testing-003:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   aspect-testing-004:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   aspect-testing-005:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   aspect-testing-006:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   aspect-testing-007:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   aspect-testing-008:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   aspect-testing-009:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   aspect-testing-010:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false

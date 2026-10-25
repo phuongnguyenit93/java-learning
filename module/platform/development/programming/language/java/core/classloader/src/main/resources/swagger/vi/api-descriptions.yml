@@ -7,8 +7,6 @@ ClassLoaderChainController:
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 2.BuiltInClassLoaders/knowledge/BuiltInClassLoaders.md
       anchor: loader-chain
@@ -35,8 +33,6 @@ ClassLifecycleController:
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 1.Lifecycle/knowledge/Lifecycle.md
       anchor: load-vs-initialize
@@ -63,8 +59,6 @@ ResourceLoadingController:
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 7.ResourceLoading/knowledge/ResourceLoading.md
       anchor: loader-resource
@@ -91,8 +85,6 @@ CustomClassLoaderController:
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 5.ClassIdentity/knowledge/ClassIdentity.md
       anchor: same-name-different-type
@@ -119,8 +111,6 @@ ClassIdentityController:
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 5.ClassIdentity/knowledge/ClassIdentity.md
       anchor: class-cast-loader-failure
@@ -146,8 +136,6 @@ ContextClassLoaderController:
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 6.ContextClassLoader/knowledge/ContextClassLoader.md
       anchor: tccl-lifecycle
@@ -174,8 +162,6 @@ InitializationController:
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 8.Initialization/knowledge/Initialization.md
       anchor: initialization-failure

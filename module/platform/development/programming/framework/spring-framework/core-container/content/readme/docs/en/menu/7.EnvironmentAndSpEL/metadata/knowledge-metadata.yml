@@ -1,41 +1,25 @@
 sections:
   environment-abstraction:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   property-sources-and-precedence:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   property-placeholders:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   profiles:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   spel-purpose:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   spel-evaluation-model:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   spel-in-bean-definitions:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   boot-config-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

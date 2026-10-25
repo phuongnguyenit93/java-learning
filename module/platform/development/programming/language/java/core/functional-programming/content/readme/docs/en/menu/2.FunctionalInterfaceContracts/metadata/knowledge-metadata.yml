@@ -1,46 +1,28 @@
 sections:
   functional-interface-purpose:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   sam-contract:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   functional-interface-function-type:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   sam-object-method-rule:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   sam-inherited-method-rule:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   functional-interface-annotation:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   non-abstract-interface-methods:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   custom-functional-interface:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   functional-interface-contract-violations:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false

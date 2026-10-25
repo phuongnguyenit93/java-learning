@@ -9,8 +9,6 @@ InstrumentationController:
     enableVideoYoutube: false
     videoYoutubeId: ''
     videoYoutubeTitle: ''
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 5.InstrumentationApi/knowledge/InstrumentationApi.md
       anchor: capability-model
@@ -39,8 +37,6 @@ InstrumentationController:
     enableVideoYoutube: false
     videoYoutubeId: ''
     videoYoutubeTitle: ''
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 7.TransformationPipeline/knowledge/TransformationPipeline.md
       anchor: retransform-capability-groups

@@ -1,41 +1,25 @@
 sections:
   string-immutability-001:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   string-immutability-002:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   string-immutability-003:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   string-immutability-004:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   string-immutability-005:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   string-immutability-006:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   string-immutability-007:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   string-immutability-008:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false

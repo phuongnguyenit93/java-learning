@@ -1,31 +1,19 @@
 sections:
   auto-configuration-class-contract:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   registration-and-package-boundaries:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   configuration-properties-integration:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   optional-dependency-design:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   auto-configure-metadata:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   stable-auto-configuration-identities:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

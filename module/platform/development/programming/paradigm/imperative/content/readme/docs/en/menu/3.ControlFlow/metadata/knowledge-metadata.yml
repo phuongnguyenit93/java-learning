@@ -1,31 +1,19 @@
 sections:
   imperative-control-purpose:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   imperative-branch-selection:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   imperative-repetition:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   imperative-loop-progress:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   imperative-termination:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   imperative-control-trace:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

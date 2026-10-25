@@ -1,41 +1,25 @@
 sections:
   sorted-set-001:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   sorted-set-002:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   sorted-set-003:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   sorted-set-004:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   sorted-set-005:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   sorted-set-006:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   sorted-set-007:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   sorted-set-008:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false

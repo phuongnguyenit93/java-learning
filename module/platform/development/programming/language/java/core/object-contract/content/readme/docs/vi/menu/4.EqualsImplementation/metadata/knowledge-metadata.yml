@@ -2,50 +2,30 @@ sections:
   equals-implementation-001:
     difficulty: BASIC
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   equals-implementation-002:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   equals-implementation-003:
     difficulty: BASIC
     isImportant: false
-    aiGenerated: true
-    reviewed: false
   equals-implementation-004:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   equals-implementation-005:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   equals-implementation-006:
     difficulty: BASIC
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   equals-implementation-007:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   equals-implementation-008:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   equals-implementation-009:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   equals-implementation-010:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false

@@ -1,26 +1,16 @@
 sections:
   purity-concept:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   purity-motivation:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   purity-input-output:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   referential-transparency:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   purity-boundaries:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

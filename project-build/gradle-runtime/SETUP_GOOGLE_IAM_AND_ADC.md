@@ -187,7 +187,7 @@ credential phù hợp. Không cần hardcode access token hoặc đường dẫn
 
 ### Root Interview YAML Normalize — tác vụ ghi Google Sheets, khác với importer đọc
 
-`normalizeInterviewQuestionsFromSheet` là task root nhận **`fileUrl`** (URL spreadsheet) và **`sheetID`** (gid tab), chạy bằng Groovy/Google Sheets API. Nó đọc YAML `questions` ở `P:S` trên các hàng Menu Cấp 1 (chấp nhận legacy JSON), thêm mặc định `aiGenerated:true`, `reviewed:false`, `readmeRelated.file` theo tên file chương; `anchor`/API được để trống nếu chưa có. Metadata đã có giữ nguyên; kết quả **YAML** chuẩn hóa ghi lại **chính P:S**, không sửa module.
+`normalizeInterviewQuestionsFromSheet` là task root nhận **`fileUrl`** (URL spreadsheet) và **`sheetID`** (gid tab), chạy bằng Groovy/Google Sheets API. Nó đọc YAML `questions` ở `P:S` trên các hàng Menu Cấp 1 (chấp nhận legacy JSON), chuẩn hóa `readmeRelated.anchor` theo chương và `apiRelated`; các field legacy bị loại khỏi YAML kết quả. Kết quả chuẩn hóa ghi lại **chính P:S**, không sửa module.
 
 Phân quyền có chủ đích:
 
@@ -251,7 +251,7 @@ Thêm `-PsheetMode=APPLY` để thực sự cập nhật **chỉ cây đầu ra 
 .\gradlew.bat :<MODULE_PATH>:generateModuleInterviewFromSheetByLocation -PsheetMode=APPLY
 ```
 
-Importer đọc `P18:S19` để kiểm tra header và đọc các mảnh **YAML `P:S` tại hàng Menu Cấp 1** (cũng nhận JSON cũ). Groovy nối các mảnh theo đúng Unicode, parse danh sách `questions`, điền/giữ đầy đủ `question`, `answer`, `aiGenerated`, `reviewed`, `readmeRelated.file/anchor` và `apiRelated` theo schema rồi serialize YAML **một file duy nhất**:
+Importer đọc `P18:S19` để kiểm tra header và đọc các mảnh **YAML `P:S` tại hàng Menu Cấp 1** (cũng nhận JSON cũ). Groovy nối các mảnh theo đúng Unicode, parse danh sách `questions`, điền/giữ đầy đủ `question`, `answer` `readmeRelated.file/anchor` và `apiRelated` theo schema rồi serialize YAML **một file duy nhất**:
 
 `<module>/content/interview/vi/question.yml`
 

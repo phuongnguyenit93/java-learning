@@ -1,41 +1,25 @@
 sections:
   oop-basic-001:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   oop-basic-002:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   oop-basic-003:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   oop-basic-004:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   oop-basic-005:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   oop-basic-006:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   oop-basic-007:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   oop-basic-008:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false

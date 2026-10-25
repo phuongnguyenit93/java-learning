@@ -1,36 +1,22 @@
 sections:
   spring-singleton-scope:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   prototype-scope:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   web-aware-scopes:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   eager-vs-lazy-initialization:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   scoped-dependency-mismatch:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   dynamic-dependency-lookup:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   custom-scopes:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false

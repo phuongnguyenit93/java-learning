@@ -2,50 +2,30 @@ sections:
   limitations-alternatives-001:
     difficulty: BASIC
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   limitations-alternatives-002:
     difficulty: INTERMEDIATE
     isImportant: false
-    aiGenerated: true
-    reviewed: false
   limitations-alternatives-003:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   limitations-alternatives-004:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   limitations-alternatives-005:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   limitations-alternatives-006:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   limitations-alternatives-007:
     difficulty: INTERMEDIATE
     isImportant: false
-    aiGenerated: true
-    reviewed: false
   limitations-alternatives-008:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   limitations-alternatives-009:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   limitations-alternatives-010:
     difficulty: ADVANCED
     isImportant: false
-    aiGenerated: true
-    reviewed: false

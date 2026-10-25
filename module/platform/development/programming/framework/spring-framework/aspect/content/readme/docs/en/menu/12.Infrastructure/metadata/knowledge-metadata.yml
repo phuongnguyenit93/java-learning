@@ -1,31 +1,19 @@
 sections:
   auto-proxy-mental-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   framework-boot-aop-enablement-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   advised-interface:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   target-source-strategy:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   infrastructure-demo:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   infrastructure-conclusion:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

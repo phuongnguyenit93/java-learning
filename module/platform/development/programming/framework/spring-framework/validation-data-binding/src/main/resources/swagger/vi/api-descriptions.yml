@@ -7,8 +7,6 @@ DataBinderExperimentController:
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: ''
       anchor: data-binding-flow
@@ -36,8 +34,6 @@ SafeBindingExperimentController:
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: ''
       anchor: safe-binding-controls
@@ -64,8 +60,6 @@ ValidationExperimentController:
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: ''
       anchor: validation-vs-binding
@@ -91,8 +85,6 @@ ValidationExperimentController:
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: ''
       anchor: validation-vs-binding

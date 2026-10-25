@@ -1,61 +1,37 @@
 sections:
   pointcut-basics-001:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   pointcut-basics-002:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   pointcut-basics-003:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   pointcut-basics-004:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   pointcut-basics-005:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   pointcut-basics-006:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   pointcut-basics-007:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   pointcut-basics-008:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   pointcut-basics-009:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   pointcut-basics-010:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   pointcut-basics-011:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   pointcut-basics-012:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false

@@ -1,26 +1,16 @@
 sections:
   bean-definition-metadata:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   bean-factory-role:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   application-context-role:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   object-graph-assembly:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   container-bootstrap-refresh:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false

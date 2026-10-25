@@ -1,36 +1,22 @@
 sections:
   around-mental-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   around-timing-demo:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   around-transform-demo:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   around-skip-demo:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   around-arguments-demo:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   around-exception-demo:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   around-conclusion:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

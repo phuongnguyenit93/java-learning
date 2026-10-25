@@ -1,36 +1,22 @@
 sections:
   configuration-validation-purpose:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   validated-configuration-properties:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   nested-validation:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   binding-vs-validation-failure:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   configuration-metadata-purpose:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   configuration-processor:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   metadata-tooling-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

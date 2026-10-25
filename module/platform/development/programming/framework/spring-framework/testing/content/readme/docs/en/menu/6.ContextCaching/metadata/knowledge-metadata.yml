@@ -1,36 +1,22 @@
 sections:
   context-cache-purpose:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   context-cache-key:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   context-cache-process-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   cache-size-and-eviction:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   dirties-context:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   context-failure-threshold:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   parallel-test-execution:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false

@@ -1,36 +1,22 @@
 sections:
   mvc-binding-lifecycle:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   web-data-binder-and-init-binder:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   validation-and-binding-result:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   mvc-method-validation-6-1:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   validation-exception-paths:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   validated-aop-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   safe-binding:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

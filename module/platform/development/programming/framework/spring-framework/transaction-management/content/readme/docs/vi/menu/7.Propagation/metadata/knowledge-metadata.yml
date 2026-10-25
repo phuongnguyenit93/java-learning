@@ -1,36 +1,22 @@
 sections:
   transaction-physical-logical:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   transaction-propagation-required:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   transaction-propagation-requires-new:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   transaction-propagation-nested:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   transaction-propagation-supports:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   transaction-propagation-suspension:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   transaction-propagation-rollback-only:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false

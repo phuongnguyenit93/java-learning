@@ -1,31 +1,19 @@
 sections:
   imperative-procedure-purpose:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   imperative-procedure-contract:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   imperative-procedure-local-state:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   imperative-procedure-effects:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   imperative-procedure-decomposition:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   imperative-procedure-limitations:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

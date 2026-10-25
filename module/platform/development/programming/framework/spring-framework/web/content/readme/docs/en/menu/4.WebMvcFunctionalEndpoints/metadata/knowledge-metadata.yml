@@ -1,26 +1,16 @@
 sections:
   webmvc-fn-mental-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   router-functions-and-request-predicates:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   handler-functions-request-response:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   handler-filter-functions:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   annotated-and-functional-coexistence:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

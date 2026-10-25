@@ -2,45 +2,27 @@ sections:
   dynamic-class-definition-001:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   dynamic-class-definition-002:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   dynamic-class-definition-003:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   dynamic-class-definition-004:
     difficulty: ADVANCED
     isImportant: false
-    aiGenerated: true
-    reviewed: false
   dynamic-class-definition-005:
     difficulty: ADVANCED
     isImportant: false
-    aiGenerated: true
-    reviewed: false
   dynamic-class-definition-006:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   dynamic-class-definition-007:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   dynamic-class-definition-008:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   dynamic-class-definition-009:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false

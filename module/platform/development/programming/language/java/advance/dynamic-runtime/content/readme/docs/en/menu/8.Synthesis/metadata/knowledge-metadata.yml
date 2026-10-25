@@ -1,31 +1,19 @@
 sections:
   choose-invocation-mechanism:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   choose-variable-access-mechanism:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   dynamic-runtime-failure-model:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   dynamic-linkage-end-to-end:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   runtime-framework-use-cases:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   dynamic-runtime-handoffs:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false

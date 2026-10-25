@@ -1,26 +1,16 @@
 sections:
   jsse-model:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   ssl-context-managers:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   tls-handshake-security:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   endpoint-identification:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   tls-algorithm-constraints:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false

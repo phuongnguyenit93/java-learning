@@ -1,26 +1,16 @@
 sections:
   http-message-converters:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   request-response-body-conversion:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   content-negotiation-and-media-types:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   response-entity-status-and-headers:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   request-response-body-advice:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

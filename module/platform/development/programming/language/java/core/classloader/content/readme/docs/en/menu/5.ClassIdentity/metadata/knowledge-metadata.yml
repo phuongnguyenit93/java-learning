@@ -1,21 +1,13 @@
 sections:
   class-identity-rule:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   same-name-different-type:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   class-cast-loader-failure:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   loader-boundary-api:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

@@ -7,8 +7,6 @@ GenericMethodController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 2.GenericTypesAndMethods/knowledge/GenericTypesAndMethods.md
       anchor: type-inference
@@ -35,8 +33,6 @@ VarianceController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 4.InvarianceAndSubtyping/knowledge/InvarianceAndSubtyping.md
       anchor: generic-invariance
@@ -63,8 +59,6 @@ WildcardController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 5.WildcardsAndPECS/knowledge/WildcardsAndPECS.md
       anchor: pecs-rule
@@ -91,8 +85,6 @@ RawTypeController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 6.RawTypesAndLegacyBoundaries/knowledge/RawTypesAndLegacyBoundaries.md
       anchor: heap-pollution
@@ -119,8 +111,6 @@ ErasureController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 7.TypeErasureAndRuntimeModel/knowledge/TypeErasureAndRuntimeModel.md
       anchor: erased-runtime-type
@@ -146,8 +136,6 @@ ErasureController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 7.TypeErasureAndRuntimeModel/knowledge/TypeErasureAndRuntimeModel.md
       anchor: bridge-method

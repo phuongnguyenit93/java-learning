@@ -2,50 +2,30 @@ sections:
   executable-parameters-001:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   executable-parameters-002:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   executable-parameters-003:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   executable-parameters-004:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   executable-parameters-005:
     difficulty: BASIC
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   executable-parameters-006:
     difficulty: ADVANCED
     isImportant: false
-    aiGenerated: true
-    reviewed: false
   executable-parameters-007:
     difficulty: ADVANCED
     isImportant: false
-    aiGenerated: true
-    reviewed: false
   executable-parameters-008:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   executable-parameters-009:
     difficulty: ADVANCED
     isImportant: false
-    aiGenerated: true
-    reviewed: false
   executable-parameters-010:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false

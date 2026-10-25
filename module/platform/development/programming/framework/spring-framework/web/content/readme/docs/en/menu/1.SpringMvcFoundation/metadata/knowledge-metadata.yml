@@ -1,26 +1,16 @@
 sections:
   spring-mvc-purpose:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   servlet-request-response-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   spring-web-and-spring-webmvc:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   framework-vs-boot-web:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   spring-web-module-boundaries:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

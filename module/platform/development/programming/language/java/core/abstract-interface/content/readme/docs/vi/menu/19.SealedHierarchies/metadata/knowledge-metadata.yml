@@ -2,45 +2,27 @@ sections:
   sealed-hierarchies-001:
     difficulty: BASIC
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   sealed-hierarchies-002:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   sealed-hierarchies-003:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   sealed-hierarchies-004:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   sealed-hierarchies-005:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   sealed-hierarchies-006:
     difficulty: INTERMEDIATE
     isImportant: false
-    aiGenerated: true
-    reviewed: false
   sealed-hierarchies-007:
     difficulty: INTERMEDIATE
     isImportant: false
-    aiGenerated: true
-    reviewed: false
   sealed-hierarchies-008:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   sealed-hierarchies-009:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false

@@ -1,26 +1,16 @@
 sections:
   parent-delegation:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   initiating-vs-defining-loader:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   delegation-purpose:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   child-first-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   protected-packages-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

@@ -1,16 +1,10 @@
 sections:
   numeric-type-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   integer-vs-floating:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   numeric-conversions:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

@@ -1,46 +1,28 @@
 sections:
   class-object-entrypoints:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   class-names:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   class-kind:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   specialized-type-metadata:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   runtime-annotation-metadata:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   modifiers:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   superclass-interfaces:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   member-abstraction-model:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   declared-vs-public-members:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

@@ -1,51 +1,31 @@
 sections:
   aspect-beans-001:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   aspect-beans-002:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   aspect-beans-003:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   aspect-beans-004:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   aspect-beans-005:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   aspect-beans-006:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   aspect-beans-007:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   aspect-beans-008:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   aspect-beans-009:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   aspect-beans-010:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false

@@ -1,36 +1,22 @@
 sections:
   transaction-declarative-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   transaction-enable-management:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   transactional-metadata:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   transaction-interceptor:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   transaction-proxy-boundary:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   transaction-aspectj-mode:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   transaction-metadata-precedence:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false

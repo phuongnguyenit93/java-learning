@@ -11,8 +11,6 @@ OrderPreviewController:
     enableVideoYoutube: false
     videoYoutubeId: ''
     videoYoutubeTitle: ''
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 6.DataFlow/knowledge/DataFlow.md
       anchor: dop-flow-scenario

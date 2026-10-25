@@ -1,26 +1,16 @@
 sections:
   transaction-bound-resources:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   transaction-synchronization:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   transaction-synchronization-manager:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   transaction-aware-infrastructure:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   transaction-resource-boundary:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false

@@ -1,41 +1,25 @@
 sections:
   reactive-what:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   reactive-why:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   reactive-values-vs-streams:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   reactive-foundation-bridge:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   reactive-solution:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   reactive-streams-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   reactive-framework-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   reactive-learning-path:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

@@ -174,7 +174,7 @@ class ModuleLanguageCloneServiceTest {
         write(module, 'content/readme/docs/vi/menu/2.More/knowledge/More.md',
                 '# More\n\n## <a id="more-001">More lesson</a>\n\nMore body')
         write(module, 'content/readme/docs/vi/menu/2.More/metadata/knowledge-metadata.yml',
-                'sections:\n  more-001: {difficulty: BASIC, reviewed: false}')
+                'sections:\n  more-001: {difficulty: BASIC}')
         write(module, 'content/readme/docs/vi/menu/2.More/quiz/question.yml', '''
 questions:
   - id: quiz-second
@@ -185,8 +185,8 @@ questions:
       - {id: C, answer: Third, explanation: Test}
       - {id: D, answer: Fourth, explanation: Test}
     correctAnswerId: A
-    aiGenerated: true
-    reviewed: false
+
+
     readmeRelated: {anchor: basic-001}
     apiRelated: {controller: "", methodSignature: ""}
 '''.trim())
@@ -241,8 +241,8 @@ questions:
 sections:
   basic-001:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
+
+
     isImportant: false
 '''.trim())
         write(module, 'content/roadmap/vi/roadmap.yml', '''
@@ -267,8 +267,8 @@ questions:
       - {id: C, answer: Three, explanation: Wrong}
       - {id: D, answer: Four, explanation: Wrong}
     correctAnswerId: A
-    aiGenerated: true
-    reviewed: false
+
+
     readmeRelated: {anchor: basic-001}
     apiRelated: {controller: ExampleController, methodSignature: "demo()"}
 '''.trim())
@@ -276,8 +276,8 @@ questions:
 questions:
   - question: Vietnamese interview question?
     answer: Vietnamese answer
-    aiGenerated: true
-    reviewed: false
+
+
     readmeRelated: {anchor: basic-001}
     apiRelated: {controller: "", methodSignature: ""}
 '''.trim())

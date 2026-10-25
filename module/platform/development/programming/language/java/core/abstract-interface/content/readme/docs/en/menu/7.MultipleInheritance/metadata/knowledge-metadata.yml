@@ -1,21 +1,13 @@
 sections:
   default-method-conflict:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   class-wins-rule:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   explicit-super-interface:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   diamond-interface:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

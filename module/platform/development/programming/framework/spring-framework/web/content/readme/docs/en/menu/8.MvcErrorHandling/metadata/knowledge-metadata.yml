@@ -1,36 +1,22 @@
 sections:
   handler-exception-resolver-chain:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   exception-handler-and-controller-advice:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   response-status-errors:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   error-response-and-problem-detail:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   response-entity-exception-handler:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   validation-error-responses:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   mvc-error-boundaries:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

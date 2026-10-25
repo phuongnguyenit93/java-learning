@@ -1,36 +1,22 @@
 sections:
   testing-strategy-spectrum:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   smallest-context-strategy:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   real-server-strategy:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   real-service-strategy:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   context-cache-strategy:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   testing-failure-classification:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   testing-module-handoffs:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

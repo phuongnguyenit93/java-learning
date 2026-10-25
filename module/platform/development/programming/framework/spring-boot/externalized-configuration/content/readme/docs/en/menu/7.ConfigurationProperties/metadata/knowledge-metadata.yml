@@ -1,41 +1,25 @@
 sections:
   configuration-properties-purpose:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   prefix-namespace:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   properties-registration:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   javabean-binding:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   constructor-binding:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   record-binding:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   third-party-bean-binding:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   configuration-properties-lifecycle-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

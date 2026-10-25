@@ -1,41 +1,25 @@
 sections:
   streams-spliterators-001:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   streams-spliterators-002:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   streams-spliterators-003:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   streams-spliterators-004:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   streams-spliterators-005:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   streams-spliterators-006:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   streams-spliterators-007:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   streams-spliterators-008:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false

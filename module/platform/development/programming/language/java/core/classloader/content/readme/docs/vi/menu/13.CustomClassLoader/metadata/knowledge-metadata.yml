@@ -2,60 +2,36 @@ sections:
   custom-class-loader-001:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   custom-class-loader-002:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   custom-class-loader-003:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   custom-class-loader-004:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   custom-class-loader-005:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   custom-class-loader-006:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   custom-class-loader-007:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   custom-class-loader-008:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   custom-class-loader-009:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   custom-class-loader-010:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   custom-class-loader-011:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   custom-class-loader-012:
     difficulty: ADVANCED
     isImportant: false
-    aiGenerated: true
-    reviewed: false

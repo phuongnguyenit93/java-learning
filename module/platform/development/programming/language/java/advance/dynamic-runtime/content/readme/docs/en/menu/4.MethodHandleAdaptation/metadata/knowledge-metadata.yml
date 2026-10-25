@@ -1,31 +1,19 @@
 sections:
   method-handle-adaptation-model:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   method-handle-type-adaptation:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   method-handle-binding:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   method-handle-transformations:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   method-handle-composition:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   method-handle-guards:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false

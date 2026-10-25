@@ -7,8 +7,6 @@ TransactionExperimentController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 4.Declarative/knowledge/Declarative.md
       anchor: transaction-proxy-boundary
@@ -34,8 +32,6 @@ TransactionExperimentController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: ''
       anchor: transaction-rollback-defaults
@@ -62,8 +58,6 @@ TransactionExperimentController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 7.Propagation/knowledge/Propagation.md
       anchor: transaction-propagation-rollback-only
@@ -89,8 +83,6 @@ TransactionExperimentController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 7.Propagation/knowledge/Propagation.md
       anchor: transaction-propagation-requires-new
@@ -116,8 +108,6 @@ TransactionExperimentController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 10.EventsLifecycle/knowledge/EventsLifecycle.md
       anchor: transaction-event-listener

@@ -1,26 +1,16 @@
 sections:
   boot-aware-development-run:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   gradle-bootrun:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   maven-spring-boot-run:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   build-tool-run-vs-packaged-run:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   run-task-runtime-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

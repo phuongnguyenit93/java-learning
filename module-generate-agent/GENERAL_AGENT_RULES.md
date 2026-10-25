@@ -81,7 +81,7 @@ Các quy định chung áp dụng cho các tác vụ generate module trong thư 
 
 ### isImportant: bổ sung metadata từ STEP 5
 
-Knowledge metadata có isImportant:boolean mặc định false. STEP 5 đánh giá trực tiếp bài của từng Menu Cấp 2 và ghi cột AB với TRUE/FALSE theo chapter ownership; nhãn AB19=isImportant, AB20:AB700 dropdown strict. **Sheet README importer là CLEAN → FILL**: AB trống luôn dùng default false, O trống luôn BASIC; `reviewed=false`, `aiGenerated=true` là các default xác định bởi code; không đọc/merge metadata cũ từ module/legacy. Task độc lập `syncMetadataReadme` không phải Sheet import và giữ quy tắc riêng. Portal Knowledge projection xuất isImportant vào index.json; UI tô nhạt và đánh sao vàng nếu TRUE. Không sử dụng O (Difficulty) để suy ra isImportant.
+Knowledge metadata có isImportant:boolean mặc định false. STEP 5 đánh giá trực tiếp bài của từng Menu Cấp 2 và ghi cột AB với TRUE/FALSE theo chapter ownership; nhãn AB19=isImportant, AB20:AB700 dropdown strict. **Sheet README importer là CLEAN → FILL**: AB trống luôn dùng default false, O trống luôn BASIC; `difficulty=BASIC`, `isImportant=false` là các default xác định bởi code; không đọc/merge metadata cũ từ module/legacy. Task độc lập `syncMetadataReadme` không phải Sheet import và giữ quy tắc riêng. Portal Knowledge projection xuất isImportant vào index.json; UI tô nhạt và đánh sao vàng nếu TRUE. Không sử dụng O (Difficulty) để suy ra isImportant.
 
 
 ## 6. Prime kiểm tra/đồng bộ Google Sheets → ĐÚNG MỘT module sau STEP 2, 3, 4, 5, 9, 10, 11 (và optional Video sau FINAL)

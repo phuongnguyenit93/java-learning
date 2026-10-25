@@ -1,51 +1,31 @@
 sections:
   troubleshooting-001:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   troubleshooting-002:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   troubleshooting-003:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   troubleshooting-004:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   troubleshooting-005:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   troubleshooting-006:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   troubleshooting-007:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   troubleshooting-008:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   troubleshooting-009:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   troubleshooting-010:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false

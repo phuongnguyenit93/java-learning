@@ -1,16 +1,10 @@
 sections:
   field-discovery:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   field-modifiers:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   field-type-metadata:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false

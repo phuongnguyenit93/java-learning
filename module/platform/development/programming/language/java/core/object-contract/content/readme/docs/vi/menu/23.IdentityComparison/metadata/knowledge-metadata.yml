@@ -2,35 +2,21 @@ sections:
   identity-comparison-001:
     difficulty: BASIC
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   identity-comparison-002:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   identity-comparison-003:
     difficulty: ADVANCED
     isImportant: false
-    aiGenerated: true
-    reviewed: false
   identity-comparison-004:
     difficulty: BASIC
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   identity-comparison-005:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   identity-comparison-006:
     difficulty: ADVANCED
     isImportant: false
-    aiGenerated: true
-    reviewed: false
   identity-comparison-007:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false

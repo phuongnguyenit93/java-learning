@@ -39,7 +39,7 @@ questions:
 ```
 
 - Root **chỉ** `questions` là list không rỗng. Mỗi item **chỉ** `question` (nonblank string), `answers` (chính xác bốn object có đúng `id`, `answer`, `explanation`) và `correctAnswerId` thuộc A/B/C/D. Mỗi ID A/B/C/D xuất hiện **một lần**; không gán nhiều đáp án đúng.
-- **Không ghi** question `id`, `aiGenerated`, `reviewed`, `readmeRelated`, `apiRelated` hoặc metadata; code Normalize sẽ bổ sung. Không dùng JSON/JSONL, YAML multiple documents, custom tag, alias/anchor, placeholder hoặc TODO.
+- **Không ghi** question `id` `readmeRelated`, `apiRelated` hoặc metadata; code Normalize sẽ bổ sung. Không dùng JSON/JSONL, YAML multiple documents, custom tag, alias/anchor, placeholder hoặc TODO.
 - `answer` và `explanation` có thể dùng YAML literal block `|-` để giữ Markdown nhiều dòng; YAML sau parse phải bảo toàn nội dung dự kiến.
 
 ## W4 — Preflight, write, readback

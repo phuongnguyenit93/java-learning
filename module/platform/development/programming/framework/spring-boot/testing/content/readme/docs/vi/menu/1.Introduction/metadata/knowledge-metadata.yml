@@ -1,36 +1,22 @@
 sections:
   boot-testing-role:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   boot-testing-problem:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   boot-test-support-modules:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   springapplication-test-bootstrap:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   primary-test-configuration-discovery:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   testing-ownership-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   testing-learning-path:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

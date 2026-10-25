@@ -1,21 +1,13 @@
 sections:
   bootjar-bootwar-repackage:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   executable-vs-plain-archive:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   jar-vs-war-packaging:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   packaging-main-class:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

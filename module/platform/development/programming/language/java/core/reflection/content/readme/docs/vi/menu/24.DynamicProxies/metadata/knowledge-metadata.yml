@@ -2,70 +2,42 @@ sections:
   dynamic-proxies-001:
     difficulty: BASIC
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   dynamic-proxies-002:
     difficulty: BASIC
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   dynamic-proxies-003:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   dynamic-proxies-004:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   dynamic-proxies-005:
     difficulty: BASIC
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   dynamic-proxies-006:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   dynamic-proxies-007:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   dynamic-proxies-008:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   dynamic-proxies-009:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   dynamic-proxies-010:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   dynamic-proxies-011:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   dynamic-proxies-012:
     difficulty: ADVANCED
     isImportant: false
-    aiGenerated: true
-    reviewed: false
   dynamic-proxies-013:
     difficulty: INTERMEDIATE
     isImportant: false
-    aiGenerated: true
-    reviewed: false
   dynamic-proxies-014:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false

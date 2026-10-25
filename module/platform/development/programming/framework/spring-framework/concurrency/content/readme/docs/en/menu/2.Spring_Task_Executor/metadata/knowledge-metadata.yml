@@ -1,36 +1,22 @@
 sections:
   task-executor:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   task-executor-strategies:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   spring-executor-config:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   async-annotation:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   async-executor-selection:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   async-return-type:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   spring-executor-experiments:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false

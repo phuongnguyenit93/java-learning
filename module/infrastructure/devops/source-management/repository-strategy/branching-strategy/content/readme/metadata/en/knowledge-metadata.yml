@@ -1,274 +1,168 @@
 01-strategy-foundations.md:
   why-branching-strategy:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   git-mechanics-vs-team-policy:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   parallel-work-integration-risk:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   mainline-work-release-vocabulary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   integrated-vs-releasable:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   strategy-decisions-and-handoffs:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
 02-branch-lifetime-and-cadence.md:
   short-vs-long-lived-branches:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   cadence-change-size-feedback:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   divergence-and-conflict-evidence:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   review-small-increments:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   incomplete-work-policy:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
 03-trunk-based-development.md:
   tbd-definition-purpose:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   single-trunk-reliable-mainline:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   direct-vs-short-branch:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   frequent-integration-small-changes:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   feature-flags-release-branches:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   tbd-evidence-antipatterns:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
 04-github-flow.md:
   github-flow-purpose:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   default-branch-pr-cycle:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   github-flow-review-value:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   github-flow-vs-tbd:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   workflow-vs-github-platform:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
 05-git-flow.md:
   git-flow-context:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   main-develop-roles:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   feature-release-hotfix-roles:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   release-stabilization-handoffs:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   multiple-maintained-versions-caveat:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   git-flow-costs-continuous-delivery:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
 06-integration-history-policy.md:
   target-history-policy-purpose:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   merge-commit-result:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   squash-merge-result:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   rebase-and-merge-result:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   server-integration-vs-local-rebase:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   history-rewrite-risk:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   traceability-revert-diagnostics:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
 07-release-hotfix-policy.md:
   release-from-main-vs-branch:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   release-branch-lifecycle:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   hotfix-targets-and-propagation:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   backport-forwardport-policy:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   release-branch-divergence-cost:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
 08-team-governance.md:
   branch-purpose-naming:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   branch-lifetime-cleanup:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   review-expectations:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   premerge-gates-policy:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   mainline-health-ownership:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   vendor-enforcement-boundary:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
 09-selection-and-diagnostics.md:
   compare-three-models:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   selection-context:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   long-branch-delayed-integration:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   repeat-conflicts-opacity:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   missing-hotfix-backports:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   sample-team-policy-evidence:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   strategy-handoffs:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false

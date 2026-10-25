@@ -1,31 +1,19 @@
 sections:
   mvc-functional-endpoints-001:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   mvc-functional-endpoints-002:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   mvc-functional-endpoints-003:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   mvc-functional-endpoints-004:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   mvc-functional-endpoints-005:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   mvc-functional-endpoints-006:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false

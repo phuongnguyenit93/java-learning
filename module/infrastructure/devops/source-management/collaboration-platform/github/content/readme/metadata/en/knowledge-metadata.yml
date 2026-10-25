@@ -1,213 +1,131 @@
 01-github-foundations.md:
   github-as-hosting-platform:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   unmanaged-change-collaboration-risks:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   git-versus-github:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   repository-and-history:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   accounts-organizations-and-repository-context:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   participants-and-contribution:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   pull-request-basics:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   github-collaboration-map:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
 02-repository-hosting.md:
   personal-vs-organization-repos:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   repository-visibility-and-plans:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   repository-settings-and-default-branch:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   repository-access-and-discovery:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
 03-contribution-paths.md:
   shared-repository-contribution:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   fork-and-upstream:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   pr-head-base:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   draft-vs-ready:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   pr-lifecycle:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
 04-pull-request-reviews.md:
   pr-context-diffs-and-checks:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   review-comments-decisions:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   change-request-rework:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   reviewer-requests-codeowners:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   code-owner-approval-vs-request:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
 05-repository-access.md:
   orgs-teams-and-outside-collaborators:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   repo-roles:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   review-and-maintenance-permissions:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   least-privilege-pitfalls:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
 06-branch-protection.md:
   branch-protection-rules:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   rulesets-and-overlap:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   required-pr-review-and-approval:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   checks-and-merge-eligibility:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   push-bypass-and-troubleshooting:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
 07-issues-and-releases.md:
   issues-as-work-items:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   issue-assignees-labels-milestones:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   linking-issues-prs:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   git-tags-vs-github-releases:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   release-notes-and-assets:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
 08-team-workflow.md:
   issue-to-pr-to-merge:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   review-and-access-blockers:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   protection-and-check-blockers:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   verify-accepted-change-and-release:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   handoffs-to-git-policy-ci:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false

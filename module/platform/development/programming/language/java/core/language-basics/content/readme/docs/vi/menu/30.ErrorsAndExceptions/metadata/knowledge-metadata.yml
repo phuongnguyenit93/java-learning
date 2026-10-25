@@ -1,46 +1,28 @@
 sections:
   errors-and-exceptions-001:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   errors-and-exceptions-002:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   errors-and-exceptions-003:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   errors-and-exceptions-004:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   errors-and-exceptions-005:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   errors-and-exceptions-006:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   errors-and-exceptions-007:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   errors-and-exceptions-008:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   errors-and-exceptions-009:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false

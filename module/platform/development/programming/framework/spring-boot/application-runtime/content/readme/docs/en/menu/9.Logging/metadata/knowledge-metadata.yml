@@ -1,31 +1,19 @@
 sections:
   early-logging-bootstrap:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   logging-system-abstraction:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   boot-logging-properties:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   spring-logging-config-files:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   logging-groups-output-rotation:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   logging-observability-handoff:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

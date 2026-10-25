@@ -1,51 +1,31 @@
 sections:
   webflux-blocking-thread-starvation:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   webflux-buffering-scheduler-pitfalls:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   webflux-backpressure-cancellation:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   webflux-connection-lifetime:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   webflux-resource-limits:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   webflux-mvc-decision:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   webflux-dependency-stack-fit:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   webflux-team-complexity:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   webflux-neighboring-module-handoffs:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   webflux-end-to-end-flow:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false

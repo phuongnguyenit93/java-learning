@@ -1,36 +1,22 @@
 sections:
   spring-config-import:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   import-precedence:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   fixed-vs-relative-imports:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   optional-imports:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   extension-hints:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   configtree-imports:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   import-failure-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

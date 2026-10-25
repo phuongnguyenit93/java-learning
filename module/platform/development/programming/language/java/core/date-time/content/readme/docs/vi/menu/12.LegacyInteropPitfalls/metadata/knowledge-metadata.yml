@@ -1,21 +1,13 @@
 sections:
   legacy-date-calendar:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   legacy-conversion:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   system-default-zone-risk:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   timestamp-storage-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

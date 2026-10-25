@@ -4,7 +4,7 @@
 
 - **STEP 10 = Quiz**; **STEP 9 = Interview YAML**; Video thuộc các optional STEP sau STEP_FINAL.
 - Một worker phụ trách **một Menu Cấp 1**. Đọc toàn bộ Knowledge của chương, tạo một tài liệu Quiz YAML trong **T:W cùng hàng cha**, tối đa 4 ô × 30.000 Unicode code points/ô. Không viết Quiz ở hàng con.
-- Worker chỉ viết `questions[]` với **`question`, `answers`** (chính xác A/B/C/D, mỗi đáp án có `answer` và `explanation`) và **`correctAnswerId`**. Worker **không viết** question `id`, `aiGenerated`, `reviewed`, `readmeRelated`, `apiRelated` hoặc tự chỉnh module.
+- Worker chỉ viết `questions[]` với **`question`, `answers`** (chính xác A/B/C/D, mỗi đáp án có `answer` và `explanation`) và **`correctAnswerId`**. Worker **không viết** question `id` `readmeRelated`, `apiRelated` hoặc tự chỉnh module.
 - Prime phải đọc `GENERAL_AGENT_RULES.md`, tất cả `module-generate-agent/rules/`, `module-generate-info.txt`, toàn bộ file này và `worker/STEP_10_WORKER.md`. **Worker chỉ tự đọc toàn bộ `worker/STEP_10_WORKER.md`**, không đọc Prime/rules/source repo. Prime chỉ gửi 4 dòng: URL tab, vùng nguồn chính xác, vùng đích T:W, đường dẫn worker-only.
 - Pool theo Mode A/B **chỉ trong session** (A=3 mặc định; B=N do user chỉ định, thiếu N → BLOCKER; ACTIVE+SLEEPING); **reuse SLEEPING** trước, spawn tuần tự mỗi lệnh một worker, không tạo dư và không trùng ownership.
 
@@ -40,7 +40,7 @@ Task **`normalizeQuizQuestionsFromSheet`**; mặc định DRY_RUN; yêu cầu UR
 ```
 
 - Code parse YAML, không gọi AI. Với câu hỏi **chưa có** `id`, tạo ID **`<lowercase filename stem>-001`, `-002`, ...**, tránh mọi ID đang có; ID cũ phải giữ nguyên, trùng ID → BLOCKER, không bao giờ tự đánh lại ID khi đổi thứ tự. Filename đã đổi nhưng ID tồn tại vẫn giữ; nếu cần migrate ID, xử lý chủ động sau.
-- Điền `aiGenerated: true`, `reviewed: false` mặc định; **không reset human-edited**. Chỉ điền `readmeRelated.anchor: ''` (không còn `file`); `apiRelated.controller: ''`, `apiRelated.methodSignature: ''`. Metadata và related hợp lệ đã có được giữ; `file` từ dữ liệu legacy chỉ được chấp nhận khi khớp chương, sau đó bỏ khỏi YAML Normalize.
+- Điền `readmeRelated`/`apiRelated` mặc định; **không reset human-edited**. Chỉ điền `readmeRelated.anchor: ''` (không còn `file`); `apiRelated.controller: ''`, `apiRelated.methodSignature: ''`. Metadata và related hợp lệ đã có được giữ; `file` từ dữ liệu legacy chỉ được chấp nhận khi khớp chương, sau đó bỏ khỏi YAML Normalize.
 - `readmeRelated.anchor: ''` nghĩa là chưa có liên kết Knowledge; không tự đoán anchor/API. Khi có anchor, Portal chỉ tìm Knowledge **trong cùng chương** và tự tạo `file + anchor` ở output.
 - Preflight mọi row, ngăn orphan/missing Quiz và fragment gap/oversize, snapshot fingerprint trước batch, một batch ghi T:W, exact readback và idempotent. Không ghi module.
 

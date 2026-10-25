@@ -1,41 +1,25 @@
 sections:
   relaxed-binding:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   environment-variable-mapping:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   nested-object-binding:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   list-set-binding:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   map-binding:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   list-replacement:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   type-conversion:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   duration-datasize-types:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

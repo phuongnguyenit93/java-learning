@@ -1,46 +1,28 @@
 sections:
   flexible-dependencies-001:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   flexible-dependencies-002:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   flexible-dependencies-003:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   flexible-dependencies-004:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   flexible-dependencies-005:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   flexible-dependencies-006:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   flexible-dependencies-007:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   flexible-dependencies-008:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   flexible-dependencies-009:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false

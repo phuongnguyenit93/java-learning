@@ -8,8 +8,6 @@ JmsObservabilityExperimentController:
     enableVideoYoutube: false
     videoYoutubeId: ''
     videoYoutubeTitle: ''
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: ''
       anchor: jms-observability-61
@@ -37,8 +35,6 @@ JmsTemplateExperimentController:
     enableVideoYoutube: false
     videoYoutubeId: ''
     videoYoutubeTitle: ''
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: ''
       anchor: jms-template-request-reply
@@ -66,8 +62,6 @@ JmsTransactionExperimentController:
     enableVideoYoutube: false
     videoYoutubeId: ''
     videoYoutubeTitle: ''
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: ''
       anchor: jms-session-transacted

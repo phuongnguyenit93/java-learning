@@ -1,11 +1,7 @@
 sections:
   generic-type-purpose:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   type-parameter:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

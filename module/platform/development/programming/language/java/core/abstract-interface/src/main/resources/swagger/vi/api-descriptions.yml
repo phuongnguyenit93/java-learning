@@ -7,8 +7,6 @@ AbstractClassController:
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 2.AbstractClass/knowledge/AbstractClass.md
       anchor: abstract-class-model
@@ -35,8 +33,6 @@ DefaultMethodController:
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 6.DefaultStaticPrivate/knowledge/DefaultStaticPrivate.md
       anchor: default-method
@@ -62,8 +58,6 @@ DefaultMethodController:
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 7.MultipleInheritance/knowledge/MultipleInheritance.md
       anchor: default-method-conflict
@@ -90,8 +84,6 @@ InterfaceController:
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 3.Interface/knowledge/Interface.md
       anchor: interface-implementation
@@ -119,8 +111,6 @@ InterfaceEvolutionController:
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 6.DefaultStaticPrivate/knowledge/DefaultStaticPrivate.md
       anchor: default-method-evolution

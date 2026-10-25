@@ -1,26 +1,16 @@
 sections:
   jms-purpose:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   jms-producer-consumer-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   jms-sync-async-consumption:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   jms-framework-spec-provider-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   jms-61-api-baseline:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

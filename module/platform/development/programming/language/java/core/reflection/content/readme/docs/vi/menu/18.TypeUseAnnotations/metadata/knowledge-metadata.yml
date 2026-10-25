@@ -2,45 +2,27 @@ sections:
   type-use-annotations-001:
     difficulty: BASIC
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   type-use-annotations-002:
     difficulty: BASIC
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   type-use-annotations-003:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   type-use-annotations-004:
     difficulty: INTERMEDIATE
     isImportant: false
-    aiGenerated: true
-    reviewed: false
   type-use-annotations-005:
     difficulty: ADVANCED
     isImportant: false
-    aiGenerated: true
-    reviewed: false
   type-use-annotations-006:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   type-use-annotations-007:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   type-use-annotations-008:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   type-use-annotations-009:
     difficulty: ADVANCED
     isImportant: false
-    aiGenerated: true
-    reviewed: false

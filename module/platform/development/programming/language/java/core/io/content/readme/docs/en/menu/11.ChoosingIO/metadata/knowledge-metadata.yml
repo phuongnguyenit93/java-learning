@@ -1,26 +1,16 @@
 sections:
   choose-stream-reader-channel:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   memory-vs-streaming:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   charset-explicit:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   io-error-handling:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   io-performance-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

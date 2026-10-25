@@ -1,51 +1,31 @@
 sections:
   http-client-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   http-client-configuration:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   http-request-building:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   http-response-handling:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   http-sync-async:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   http-flow-streaming:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   http-client-policies:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   http-client-resource-sharing:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   http-client-lifecycle:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   http-integration-boundary:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false

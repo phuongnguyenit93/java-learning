@@ -1,31 +1,19 @@
 sections:
   custom-endpoint-purpose:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   endpoint-operation-annotations:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   technology-agnostic-custom-endpoints:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   web-jmx-specific-endpoints:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   endpoint-extensions:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   business-api-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

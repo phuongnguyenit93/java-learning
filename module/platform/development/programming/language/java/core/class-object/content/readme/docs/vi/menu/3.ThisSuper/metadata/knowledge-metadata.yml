@@ -1,16 +1,10 @@
 sections:
   this-reference:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   super-access:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   constructor-chaining-order:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

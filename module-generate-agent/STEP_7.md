@@ -73,7 +73,7 @@ Prime thay placeholder bằng vùng thật/đường dẫn tuyệt đối, khôn
 | File dưới `swagger/{vi,en}/` | Key thuộc chapter | Worker chỉ biên soạn | Cấm đổi |
 | --- | --- | --- | --- |
 | `controller-description.yml` | `<ControllerName>` | `description`: HTML giải thích nhiệm vụ Controller/chương | Controller key; `readmeRelated` |
-| `api-descriptions.yml` | `<ControllerName>.<methodSignature>` | `summary`, `description` | `methodName`, `params`, `path`, `mapping`, `httpMethods`, `mappingPaths`, `produces`, `consumes`, `usage`, `aiGenerated`, `reviewed`, `enableVideoYoutube`, `videoYoutubeId`, `videoYoutubeTitle`, `readmeRelated` |
+| `api-descriptions.yml` | `<ControllerName>.<methodSignature>` | `summary`, `description` | `methodName`, `params`, `path`, `mapping`, `httpMethods`, `mappingPaths`, `produces`, `consumes`, `usage`, `enableVideoYoutube`, `videoYoutubeId`, `videoYoutubeTitle`, `readmeRelated` |
 | `api-execution.yml` | `<ControllerName>.<methodSignature>` | `execution`: HTML giải thích đúng Controller → Service → domain/nhánh thực thi | `usage`, Controller/method keys |
 | `api-cases.yml` | `<ControllerName>.<methodSignature>.cases[]` | `id`, `title`, `description`, `input`, `status`, `response`, `detailDescription` (HTML) theo tình huống thật | `methodName`, `httpMethods`, `mappingPaths`, `usage`, Controller/method keys |
 | `api-params.yml` | `request`, `input`, các shared params khác | **Worker KHÔNG sửa**; Prime xử lý riêng sau merge nếu có nhu cầu | Toàn file ở phase worker |

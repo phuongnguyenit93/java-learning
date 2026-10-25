@@ -1,46 +1,28 @@
 sections:
   exception-control-flow-001:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   exception-control-flow-002:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   exception-control-flow-003:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   exception-control-flow-004:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   exception-control-flow-005:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   exception-control-flow-006:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   exception-control-flow-007:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   exception-control-flow-008:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   exception-control-flow-009:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false

@@ -1,16 +1,10 @@
 sections:
   object-root-type:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   object-core-methods:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   clone-finalize-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

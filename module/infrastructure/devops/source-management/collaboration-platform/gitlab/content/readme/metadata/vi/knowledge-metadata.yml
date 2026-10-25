@@ -1,243 +1,149 @@
 01-gitlab-foundations.md:
   gitlab-hosting-purpose:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   unstructured-collaboration-risks:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   git-versus-gitlab:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   gitlab-project-repository:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   gitlab-namespace-basics:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   gitlab-participants:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   gitlab-mr-introduction:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   gitlab-workflow-concepts:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
 02-projects-and-groups.md:
   project-namespace-ownership:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   groups-and-subgroups:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   project-repository-settings:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   project-visibility-offerings:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   projects-group-collaboration-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
 03-members-and-access.md:
   access-roles-overview:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   direct-inherited-shared-membership:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   effective-project-permissions:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   access-for-mr-contribution:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   permission-troubleshooting:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
 04-merge-request-proposals.md:
   shared-project-contribution:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   forked-project-contribution:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   source-target-project-branches:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   mr-description-assignee-draft:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   mr-lifecycle-states:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
 05-reviews-and-approvals.md:
   review-context-diff-discussions:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   mr-reviewers-vs-assignees:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   review-comments-vs-approvals:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   request-changes-tier-gate:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   approval-rules-required-approvers:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   code-owners-vs-approval-rules:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   follow-up-reviews:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
 06-protected-branches.md:
   protected-branches-purpose:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   allowed-to-merge-vs-push:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   project-group-branch-rules:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   overlapping-rule-precedence:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   code-owner-approval-protected-target:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   merge-checks-and-pipeline-boundary:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   blocked-merge-diagnosis:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
 07-issues-and-releases.md:
   gitlab-issue-purpose:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   issue-assignees-labels-milestones:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   issues-linked-to-merge-requests:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   git-tag-vs-gitlab-release:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   release-notes-assets-boundary:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
 08-team-workflow.md:
   issue-to-mr-approval-merge:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   roles-access-review-blockers:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   protected-branch-approval-blockers:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   merge-to-release-metadata:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   handoff-to-git-strategy-ci:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false

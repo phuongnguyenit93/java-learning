@@ -1,31 +1,19 @@
 sections:
   ffm-definition-purpose:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   ffm-jni-relationship:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   ffm-java21-java22-boundary:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   ffm-core-abstractions:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   ffm-safety-model:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   ffm-restricted-operations:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false

@@ -1,41 +1,25 @@
 sections:
   exception-overview-001:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   exception-overview-002:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   exception-overview-003:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   exception-overview-004:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   exception-overview-005:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   exception-overview-006:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   exception-overview-007:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   exception-overview-008:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false

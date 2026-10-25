@@ -1,46 +1,28 @@
 sections:
   object-reachability-001:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   object-reachability-002:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   object-reachability-003:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   object-reachability-004:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   object-reachability-005:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   object-reachability-006:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   object-reachability-007:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   object-reachability-008:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   object-reachability-009:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false

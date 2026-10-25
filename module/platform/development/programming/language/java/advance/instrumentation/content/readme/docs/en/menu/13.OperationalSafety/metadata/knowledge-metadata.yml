@@ -1,36 +1,22 @@
 sections:
   agent-trust-security:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   startup-runtime-overhead:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   classloader-module-visibility:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   dynamic-attach-policy:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   remove-transformer-race:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   rollback-strategy:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   compatibility-testing:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false

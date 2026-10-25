@@ -1,11 +1,7 @@
 sections:
   primitive-casting:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   reference-upcast-downcast:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

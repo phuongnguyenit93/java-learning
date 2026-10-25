@@ -1,31 +1,19 @@
 sections:
   declarative-result-spec:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   declarative-predicates:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   declarative-spec-completeness:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   declarative-evaluator-role:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   declarative-semantics-plan:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   declarative-execution-tradeoffs:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

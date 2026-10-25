@@ -8,8 +8,6 @@ AccessReflectionController:
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 7.AccessControl/knowledge/AccessControl.md
       anchor: try-set-accessible
@@ -36,8 +34,6 @@ ClassMetadataController:
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 2.ClassMetadata/knowledge/ClassMetadata.md
       anchor: class-kind
@@ -64,8 +60,6 @@ ConstructorReflectionController:
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 6.DynamicInvocation/knowledge/DynamicInvocation.md
       anchor: constructor-newinstance
@@ -92,8 +86,6 @@ DynamicProxyController:
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 9.DynamicProxy/knowledge/DynamicProxy.md
       anchor: invocation-handler
@@ -120,8 +112,6 @@ FieldReflectionController:
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 6.DynamicInvocation/knowledge/DynamicInvocation.md
       anchor: field-read-write
@@ -148,8 +138,6 @@ GenericReflectionController:
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 8.GenericTypeInspection/knowledge/GenericTypeInspection.md
       anchor: parameterized-type
@@ -176,8 +164,6 @@ MethodReflectionController:
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 6.DynamicInvocation/knowledge/DynamicInvocation.md
       anchor: method-invoke

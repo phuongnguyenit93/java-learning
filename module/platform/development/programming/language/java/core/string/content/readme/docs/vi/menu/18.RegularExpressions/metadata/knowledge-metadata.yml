@@ -1,46 +1,28 @@
 sections:
   regular-expressions-001:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   regular-expressions-002:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   regular-expressions-003:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   regular-expressions-004:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   regular-expressions-005:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   regular-expressions-006:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   regular-expressions-007:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   regular-expressions-008:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   regular-expressions-009:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false

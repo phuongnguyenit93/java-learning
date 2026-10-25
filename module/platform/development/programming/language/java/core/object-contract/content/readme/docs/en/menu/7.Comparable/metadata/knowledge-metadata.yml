@@ -1,16 +1,10 @@
 sections:
   natural-order:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   compareto-contract:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   compareto-equals-consistency:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false

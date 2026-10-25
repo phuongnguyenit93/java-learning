@@ -1,31 +1,19 @@
 sections:
   starter-server-defaults:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   supported-server-choices:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   replacing-default-server:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   web-server-factory-role:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   web-server-context-startup:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   server-selection-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

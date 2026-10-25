@@ -1,21 +1,13 @@
 sections:
   access-levels:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   protected-cross-package:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   encapsulation-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   java-modifier-map:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

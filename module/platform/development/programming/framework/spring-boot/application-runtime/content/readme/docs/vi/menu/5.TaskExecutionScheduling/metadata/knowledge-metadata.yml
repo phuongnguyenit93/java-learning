@@ -1,36 +1,22 @@
 sections:
   boot-task-execution-purpose:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   application-task-executor:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   task-execution-properties:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   boot-task-scheduler:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   task-scheduling-properties:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   custom-executor-scheduler-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   framework-concurrency-handoff:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

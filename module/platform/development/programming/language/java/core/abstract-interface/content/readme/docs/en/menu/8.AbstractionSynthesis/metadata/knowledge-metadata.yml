@@ -1,21 +1,13 @@
 sections:
   abstraction-design-synthesis:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   abstraction-design-example:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   abstraction-design-checklist:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   abstraction-final-mental-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

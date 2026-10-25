@@ -1,26 +1,16 @@
 sections:
   web-application-types:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   classpath-type-deduction:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   servlet-reactive-precedence:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   explicit-type-override:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   application-type-consequences:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

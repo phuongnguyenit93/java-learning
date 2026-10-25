@@ -1,16 +1,10 @@
 sections:
   primitive-vs-reference-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   primitive-ranges-and-defaults:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   reference-value-semantics:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

@@ -1,21 +1,13 @@
 sections:
   repeatable-container:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   get-annotations-by-type:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   inherited-class-only:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   annotation-inheritance-boundaries:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

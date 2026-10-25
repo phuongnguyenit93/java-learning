@@ -1,16 +1,10 @@
 sections:
   duration-time-based:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   period-date-based:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   duration-vs-period:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

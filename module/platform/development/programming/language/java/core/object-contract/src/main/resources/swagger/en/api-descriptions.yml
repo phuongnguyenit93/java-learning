@@ -7,8 +7,6 @@ EqualityController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 2.IdentityEquality/knowledge/IdentityEquality.md
       anchor: identity-vs-equality
@@ -35,8 +33,6 @@ HashContractController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 5.EqualsHashCode/knowledge/EqualsHashCode.md
       anchor: broken-contract-effects
@@ -62,8 +58,6 @@ HashContractController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 5.EqualsHashCode/knowledge/EqualsHashCode.md
       anchor: mutable-key-risk
@@ -90,8 +84,6 @@ OrderingController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 8.Comparator/knowledge/Comparator.md
       anchor: external-order
@@ -117,8 +109,6 @@ OrderingController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 7.Comparable/knowledge/Comparable.md
       anchor: compareto-equals-consistency

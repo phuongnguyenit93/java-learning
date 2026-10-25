@@ -234,7 +234,7 @@ System.out.println("KEEP");
                 'content/readme/docs/vi/menu/1.Basic/knowledge/Basic.md':
                         '# Chương\n## <a id="basic-001">Bài học</a>\nNội dung giải thích',
                 'content/readme/docs/vi/menu/1.Basic/metadata/knowledge-metadata.yml':
-                        'sections:\n  basic-001: {difficulty: BASIC, reviewed: false}',
+                        'sections:\n  basic-001: {difficulty: BASIC}',
                 'content/roadmap/vi/roadmap.yml':
                         'roadmap:\n  - id: stable\n    title: Tiêu đề\n    purpose: Mục tiêu\n    objectives: [Hiểu nguyên lý]',
                 'content/readme/docs/vi/menu/1.Basic/quiz/question.yml': '''questions:
@@ -246,16 +246,16 @@ System.out.println("KEEP");
       - {id: C, answer: Không, explanation: Giải thích không}
       - {id: D, answer: Khác, explanation: Giải thích khác}
     correctAnswerId: A
-    aiGenerated: true
-    reviewed: false
+
+
     readmeRelated: {anchor: basic-001}
     apiRelated: {controller: "", methodSignature: ""}
 ''',
                 'content/readme/docs/vi/menu/1.Basic/interview/question.yml': '''questions:
   - question: Câu phỏng vấn?
     answer: Trả lời thực hành
-    aiGenerated: true
-    reviewed: false
+
+
     readmeRelated: {anchor: basic-001}
     apiRelated: {controller: "", methodSignature: ""}
 ''',

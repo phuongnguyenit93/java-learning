@@ -1,26 +1,16 @@
 sections:
   model-and-view:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   view-resolution-and-logical-names:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   redirects-and-flash-attributes:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   uri-building:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   view-technology-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

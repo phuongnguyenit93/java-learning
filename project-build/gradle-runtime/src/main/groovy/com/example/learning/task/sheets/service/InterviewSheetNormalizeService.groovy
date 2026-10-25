@@ -141,8 +141,10 @@ class InterviewSheetNormalizeService {
                 !(parsed.questions instanceof List) || (parsed.questions as List).isEmpty()) {
             throw new GradleException('Interview row ' + row + ': root must contain only nonempty questions[].')
         }
-        List<String> keys = ['question', 'answer', 'aiGenerated', 'reviewed',
-                             'readmeRelated', 'apiRelated']
+        // Read historical Sheet cells but NEVER write these retired flags.
+        List<String> legacyOnly = ['aiGenerated', 'reviewed']
+        List<String> keys = ['question', 'answer',
+                             'readmeRelated', 'apiRelated'] + legacyOnly
         List<Map> items = []
         (parsed.questions as List).eachWithIndex { Object obj, int index ->
             String at = 'Interview row ' + row + ' question #' + (index + 1)
@@ -150,13 +152,16 @@ class InterviewSheetNormalizeService {
                 throw new GradleException(at + ': unknown field/non-object.')
             }
             Map q = obj as Map
+            legacyOnly.each { String flagName ->
+                if (q.containsKey(flagName) && !(q[flagName] instanceof Boolean)) {
+                    throw new GradleException(at + ': legacy field ' + flagName + ' must be boolean.')
+                }
+            }
             ['question', 'answer'].each { String field ->
                 if (!(q[field] instanceof String) || (q[field] as String).trim().isEmpty()) {
                     throw new GradleException(at + ': ' + field + ' must be nonblank string.')
                 }
             }
-            boolean ai = flag(q, 'aiGenerated', true, at)
-            boolean reviewed = flag(q, 'reviewed', false, at)
             Map readme = relation(q, 'readmeRelated', 'file', 'anchor', at)
             Map api = relation(q, 'apiRelated', 'controller', 'methodSignature', at)
             String legacyFile = file.replace('/knowledge/', '/')
@@ -165,7 +170,6 @@ class InterviewSheetNormalizeService {
             }
             items.add([
                     question: q.question, answer: q.answer,
-                    aiGenerated: ai, reviewed: reviewed,
                     readmeRelated: [anchor: readme.anchor],
                     apiRelated: [controller: api.controller,
                                  methodSignature: api.methodSignature]

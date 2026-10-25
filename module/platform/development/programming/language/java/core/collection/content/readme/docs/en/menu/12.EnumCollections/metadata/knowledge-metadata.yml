@@ -1,16 +1,10 @@
 sections:
   enumset-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   enummap-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   enum-collection-benefits:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

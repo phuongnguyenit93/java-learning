@@ -1,31 +1,19 @@
 sections:
   bson-in-mongodb:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   document-in-mongodb:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   objectId-in-mongodb:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   dynamic-schema:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   acid-in-mongodb:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   mongodb-with-hikaricp:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

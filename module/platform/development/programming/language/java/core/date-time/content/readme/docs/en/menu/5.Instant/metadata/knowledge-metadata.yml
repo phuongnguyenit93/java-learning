@@ -1,16 +1,10 @@
 sections:
   instant-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   epoch-time:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   instant-use-cases:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

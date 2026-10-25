@@ -1,16 +1,10 @@
 sections:
   cross-cutting-concern:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   cross-cutting-demo:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   cross-cutting-conclusion:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

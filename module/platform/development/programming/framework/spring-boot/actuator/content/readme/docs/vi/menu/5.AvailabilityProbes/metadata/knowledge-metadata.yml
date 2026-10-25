@@ -1,26 +1,16 @@
 sections:
   availability-health-handoff:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   liveness-readiness-health-groups:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   probe-endpoint-paths:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   probe-external-dependency-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   application-runtime-availability-ownership:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

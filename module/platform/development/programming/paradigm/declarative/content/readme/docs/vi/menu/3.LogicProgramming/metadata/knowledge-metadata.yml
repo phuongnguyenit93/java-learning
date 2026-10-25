@@ -1,31 +1,19 @@
 sections:
   declarative-logic-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   declarative-facts-relations:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   declarative-inference-rules:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   declarative-goal-queries:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   declarative-search-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   declarative-prolog-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

@@ -1,31 +1,19 @@
 sections:
   servlet-server-auto-config-trigger:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   servlet-server-factories:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   servlet-server-configuration-relation:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   servlet-server-backoff:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   servlet-server-customizer-chain:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   servlet-server-mvc-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

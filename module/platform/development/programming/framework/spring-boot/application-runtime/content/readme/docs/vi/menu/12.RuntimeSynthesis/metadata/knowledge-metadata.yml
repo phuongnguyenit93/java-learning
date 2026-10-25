@@ -1,26 +1,16 @@
 sections:
   runtime-end-to-end-flow:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   runtime-hook-selection:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   runtime-state-and-services:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   runtime-problem-classification:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   runtime-module-handoffs:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

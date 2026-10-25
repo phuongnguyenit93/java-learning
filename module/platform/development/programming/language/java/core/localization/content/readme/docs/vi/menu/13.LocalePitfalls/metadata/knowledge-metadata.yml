@@ -1,26 +1,16 @@
 sections:
   default-locale:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   turkish-i:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   default-locale-production-risk:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   format-parse-roundtrip:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   localization-synthesis:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

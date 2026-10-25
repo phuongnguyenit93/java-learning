@@ -1,26 +1,16 @@
 sections:
   practical-patterns:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   aop-design-tradeoffs:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   practical-demo:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   aop-pitfalls:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   practical-conclusion:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

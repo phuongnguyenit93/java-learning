@@ -1,46 +1,28 @@
 sections:
   list-001:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   list-002:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   list-003:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   list-004:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   list-005:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   list-006:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   list-007:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   list-008:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   list-009:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false

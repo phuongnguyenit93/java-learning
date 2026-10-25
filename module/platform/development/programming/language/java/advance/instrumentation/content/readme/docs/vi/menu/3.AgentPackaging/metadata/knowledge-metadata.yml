@@ -1,31 +1,19 @@
 sections:
   agent-jar:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   agent-manifest:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   agent-entry-points:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   agent-arguments:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   agent-capability-declarations:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   executable-jar-agent:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

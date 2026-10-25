@@ -7,8 +7,6 @@ ReactiveContextController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: ''
       anchor: ''
@@ -35,8 +33,6 @@ ReactiveContextController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: ''
       anchor: webflux-blocking-execution
@@ -63,8 +59,6 @@ ReactiveContextController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: ''
       anchor: webflux-reactor-context
@@ -91,8 +85,6 @@ ReactiveHttpDataController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: ''
       anchor: webflux-streaming-vs-aggregation

@@ -26,8 +26,6 @@ TaskExecutorController:
     readmeRelated:
       file: 3.ContextPropagation/knowledge/ContextPropagation.md
       anchor: spring-async-demo
-    aiGenerated: true
-    reviewed: false
   asyncVoidException():
     summary: Quan sát lỗi của phương thức void @Async
     description: Gọi một phương thức void @Async cố tình ném lỗi và quan sát AsyncUncaughtExceptionHandler
@@ -54,8 +52,6 @@ TaskExecutorController:
     readmeRelated:
       file: 2.Spring_Task_Executor/knowledge/SpringExecutor.md
       anchor: async-return-type
-    aiGenerated: true
-    reviewed: false
   saturation():
     summary: Quan sát bão hòa và từ chối của ThreadPoolTaskExecutor
     description: Tạo một ThreadPoolTaskExecutor cô lập với core=1, max=2 và một queue
@@ -82,8 +78,6 @@ TaskExecutorController:
     readmeRelated:
       file: 2.Spring_Task_Executor/knowledge/SpringExecutor.md
       anchor: spring-executor-config
-    aiGenerated: true
-    reviewed: false
 TaskSchedulerExperimentController:
   executionModels():
     summary: So sánh mô hình thực thi của Spring scheduler
@@ -112,5 +106,3 @@ TaskSchedulerExperimentController:
     readmeRelated:
       file: 4.TaskScheduler/knowledge/TaskScheduler.md
       anchor: scheduler-execution-models
-    aiGenerated: true
-    reviewed: false

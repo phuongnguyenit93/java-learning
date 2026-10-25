@@ -2,50 +2,30 @@ sections:
   type-names-identity-001:
     difficulty: BASIC
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   type-names-identity-002:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   type-names-identity-003:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   type-names-identity-004:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   type-names-identity-005:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   type-names-identity-006:
     difficulty: ADVANCED
     isImportant: false
-    aiGenerated: true
-    reviewed: false
   type-names-identity-007:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   type-names-identity-008:
     difficulty: BASIC
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   type-names-identity-009:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   type-names-identity-010:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false

@@ -1,36 +1,22 @@
 sections:
   web-environment-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   web-environment-mock:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   web-environment-real-server:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   web-environment-none:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   real-server-test-clients:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   real-server-transaction-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   web-runtime-testing-handoff:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

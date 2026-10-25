@@ -1,31 +1,19 @@
 sections:
   application-runtime-role:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   application-runtime-problem:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   runtime-inputs-and-context:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   runtime-phase-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   steady-state-runtime:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   runtime-ownership-handoffs:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

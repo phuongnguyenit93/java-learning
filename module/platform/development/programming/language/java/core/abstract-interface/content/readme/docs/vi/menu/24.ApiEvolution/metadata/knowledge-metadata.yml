@@ -2,45 +2,27 @@ sections:
   api-evolution-001:
     difficulty: BASIC
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   api-evolution-002:
     difficulty: BASIC
     isImportant: false
-    aiGenerated: true
-    reviewed: false
   api-evolution-003:
     difficulty: INTERMEDIATE
     isImportant: false
-    aiGenerated: true
-    reviewed: false
   api-evolution-004:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   api-evolution-005:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   api-evolution-006:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   api-evolution-007:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   api-evolution-008:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   api-evolution-009:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false

@@ -8,8 +8,6 @@ EncodingController:
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 10.Encoding/knowledge/Encoding.md
       anchor: charset-encode-decode
@@ -36,8 +34,6 @@ EncodingController:
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 10.Encoding/knowledge/Encoding.md
       anchor: charset-encode-decode
@@ -64,8 +60,6 @@ RegexController:
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 11.Regex/knowledge/Regex.md
       anchor: regex-groups
@@ -92,8 +86,6 @@ RegexController:
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 11.Regex/knowledge/Regex.md
       anchor: regex-performance
@@ -121,8 +113,6 @@ StringConcatController:
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 5.Concatenation/knowledge/Concatenation.md
       anchor: loop-concat-cost
@@ -151,8 +141,6 @@ StringPoolController:
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 2.StringPool/knowledge/StringPool.md
       anchor: pool-identity
@@ -180,8 +168,6 @@ UnicodeController:
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 9.UnicodeCodePoint/knowledge/UnicodeCodePoint.md
       anchor: surrogate-pairs
@@ -208,8 +194,6 @@ UnicodeController:
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 9.UnicodeCodePoint/knowledge/UnicodeCodePoint.md
       anchor: canonical-equivalence

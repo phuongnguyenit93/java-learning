@@ -2,50 +2,30 @@ sections:
   practice-001:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   practice-002:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   practice-003:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   practice-004:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   practice-005:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   practice-006:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   practice-007:
     difficulty: ADVANCED
     isImportant: false
-    aiGenerated: true
-    reviewed: false
   practice-008:
     difficulty: INTERMEDIATE
     isImportant: false
-    aiGenerated: true
-    reviewed: false
   practice-009:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   practice-010:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false

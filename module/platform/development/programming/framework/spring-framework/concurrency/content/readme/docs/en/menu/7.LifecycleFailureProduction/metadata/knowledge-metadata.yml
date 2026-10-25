@@ -1,26 +1,16 @@
 sections:
   executor-lifecycle:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   failure-boundaries:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   runtime-diagnostics:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   boot-auto-config-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   production-synthesis:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

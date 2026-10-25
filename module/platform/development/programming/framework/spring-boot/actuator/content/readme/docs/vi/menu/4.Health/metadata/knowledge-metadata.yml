@@ -1,31 +1,19 @@
 sections:
   health-endpoint-purpose:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   health-contributor-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   composite-health-contributors:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   health-status-aggregation:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   health-detail-visibility:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   custom-health-indicators:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

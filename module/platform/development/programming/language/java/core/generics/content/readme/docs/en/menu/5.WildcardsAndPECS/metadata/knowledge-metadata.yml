@@ -1,56 +1,34 @@
 sections:
   unbounded-wildcard:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   wildcard-vs-object:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   wildcard-placement:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   wildcard-vs-type-parameter:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   extends-wildcard:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   super-wildcard:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   pecs-rule:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   read-from-producer:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   write-to-consumer:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   pecs-api-design:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   wildcard-capture:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false

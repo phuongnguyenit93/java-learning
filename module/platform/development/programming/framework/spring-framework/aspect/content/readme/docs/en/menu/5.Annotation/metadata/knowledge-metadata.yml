@@ -1,21 +1,13 @@
 sections:
   annotation-contract:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   annotation-demo:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   annotation-vs-expression:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   annotation-conclusion:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

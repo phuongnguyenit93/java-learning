@@ -1,31 +1,19 @@
 sections:
   functions-as-values:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   higher-order-functions:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   function-composition:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   map-filter-reduce:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   transformation-walkthrough:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   composition-limits:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

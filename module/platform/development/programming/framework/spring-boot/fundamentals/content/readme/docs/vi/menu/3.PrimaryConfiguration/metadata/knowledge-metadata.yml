@@ -1,26 +1,16 @@
 sections:
   primary-configuration-purpose:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   springbootapplication-composition:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   root-package-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   customizing-composition:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   auto-configuration-handoff:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

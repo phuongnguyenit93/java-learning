@@ -7,8 +7,6 @@ BigDecimalController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 5.BigDecimal/knowledge/BigDecimal.md
       anchor: big-decimal-construction
@@ -34,8 +32,6 @@ BigDecimalController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 8.BigDecimalComparison/knowledge/BigDecimalComparison.md
       anchor: big-decimal-equals
@@ -60,8 +56,6 @@ BigDecimalController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 5.BigDecimal/knowledge/BigDecimal.md
       anchor: big-decimal-arithmetic
@@ -86,8 +80,6 @@ BigDecimalController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 6.PrecisionScale/knowledge/PrecisionScale.md
       anchor: precision-vs-scale
@@ -112,8 +104,6 @@ BigDecimalController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 6.PrecisionScale/knowledge/PrecisionScale.md
       anchor: math-context
@@ -138,8 +128,6 @@ BigDecimalController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 7.Rounding/knowledge/Rounding.md
       anchor: rounding-modes
@@ -164,8 +152,6 @@ BigDecimalController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 8.BigDecimalComparison/knowledge/BigDecimalComparison.md
       anchor: big-decimal-collections
@@ -192,8 +178,6 @@ FloatingPointController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 3.FloatingPoint/knowledge/FloatingPoint.md
       anchor: precision-rounding-error
@@ -219,8 +203,6 @@ FloatingPointController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 3.FloatingPoint/knowledge/FloatingPoint.md
       anchor: nan-infinity-negative-zero
@@ -245,8 +227,6 @@ FloatingPointController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 3.FloatingPoint/knowledge/FloatingPoint.md
       anchor: floating-point-comparison
@@ -273,8 +253,6 @@ IntegerArithmeticController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 2.IntegerOverflow/knowledge/IntegerOverflow.md
       anchor: integer-overflow-wraparound
@@ -299,8 +277,6 @@ IntegerArithmeticController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 1.NumericModel/knowledge/NumericModel.md
       anchor: numeric-conversions
@@ -326,8 +302,6 @@ IntegerArithmeticController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 2.IntegerOverflow/knowledge/IntegerOverflow.md
       anchor: boundary-values
@@ -354,8 +328,6 @@ RandomController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 10.Random/knowledge/Random.md
       anchor: pseudo-random-model
@@ -381,8 +353,6 @@ BigIntegerController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 4.BigInteger/knowledge/BigInteger.md
       anchor: big-integer-operations
@@ -407,8 +377,6 @@ BigIntegerController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 4.BigInteger/knowledge/BigInteger.md
       anchor: big-integer-operations
@@ -434,8 +402,6 @@ MathController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 9.Math/knowledge/Math.md
       anchor: math-core-functions
@@ -460,8 +426,6 @@ MathController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 9.Math/knowledge/Math.md
       anchor: exact-arithmetic-methods

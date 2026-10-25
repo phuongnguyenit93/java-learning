@@ -2,45 +2,27 @@ sections:
   loading-policies-001:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   loading-policies-002:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   loading-policies-003:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   loading-policies-004:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   loading-policies-005:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   loading-policies-006:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   loading-policies-007:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   loading-policies-008:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   loading-policies-009:
     difficulty: ADVANCED
     isImportant: false
-    aiGenerated: true
-    reviewed: false

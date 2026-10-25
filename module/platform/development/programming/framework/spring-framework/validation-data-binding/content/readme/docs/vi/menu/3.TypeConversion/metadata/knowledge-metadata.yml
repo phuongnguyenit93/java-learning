@@ -1,41 +1,25 @@
 sections:
   conversion-service-role:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   converter-registry:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   converter-contract:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   converter-factory-contract:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   generic-conditional-conversion:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   type-descriptor-context:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   conversion-failure-model:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   property-editor-boundary:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false

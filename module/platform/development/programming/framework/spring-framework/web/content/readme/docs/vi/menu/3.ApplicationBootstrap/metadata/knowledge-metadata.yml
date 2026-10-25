@@ -1,36 +1,22 @@
 sections:
   application-bootstrap-001:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   application-bootstrap-002:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   application-bootstrap-003:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   application-bootstrap-004:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   application-bootstrap-005:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   application-bootstrap-006:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   application-bootstrap-007:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false

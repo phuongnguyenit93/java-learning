@@ -1,36 +1,22 @@
 sections:
   runtime-hints-purpose:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   runtime-hints-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   reflection-resource-proxy-hints:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   inferred-vs-explicit-hints:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   runtime-hints-registrar:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   reachability-metadata:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   missing-hint-diagnosis:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

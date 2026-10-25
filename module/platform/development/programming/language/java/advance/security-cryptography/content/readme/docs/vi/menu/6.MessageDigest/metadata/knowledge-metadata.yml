@@ -1,21 +1,13 @@
 sections:
   digest-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   message-digest-workflow:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   trusted-digest-reference:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   digest-limitations:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false

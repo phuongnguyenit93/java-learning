@@ -1,16 +1,10 @@
 sections:
   interface-extends-interface:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   multiple-interface-hierarchy:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   interface-redeclaration:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

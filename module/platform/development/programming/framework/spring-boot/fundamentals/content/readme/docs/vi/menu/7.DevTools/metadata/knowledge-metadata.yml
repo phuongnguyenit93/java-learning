@@ -1,31 +1,19 @@
 sections:
   devtools-purpose:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   restart-classloader-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   livereload-property-defaults:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   devtools-setup-restart-scope:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   remote-devtools-security:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   devtools-production-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

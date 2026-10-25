@@ -1,31 +1,19 @@
 sections:
   actuator-role:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   actuator-problem:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   production-management-surface:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   runtime-state-vs-actuator-view:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   actuator-boundaries:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   actuator-learning-path:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

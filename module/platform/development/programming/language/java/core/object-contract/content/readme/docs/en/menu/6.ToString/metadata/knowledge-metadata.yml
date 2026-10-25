@@ -1,16 +1,10 @@
 sections:
   tostring-purpose:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   tostring-design:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   tostring-sensitive-data:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

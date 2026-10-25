@@ -1,16 +1,10 @@
 sections:
   source-file-type-structure:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   statement-expression-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   lexical-elements:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

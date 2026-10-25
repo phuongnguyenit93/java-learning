@@ -1,31 +1,19 @@
 sections:
   springapplication-event-timeline:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   pre-context-events:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   context-started-ready-events:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   failed-event-path:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   early-listener-registration:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   event-hook-selection:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

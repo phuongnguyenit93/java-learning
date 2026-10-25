@@ -1,41 +1,25 @@
 sections:
   http-message-bodies-001:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   http-message-bodies-002:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   http-message-bodies-003:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   http-message-bodies-004:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   http-message-bodies-005:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   http-message-bodies-006:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   http-message-bodies-007:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   http-message-bodies-008:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false

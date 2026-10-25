@@ -1,16 +1,10 @@
 sections:
   i18n-vs-l10n:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   locale-sensitive-data:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   localization-boundaries:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

@@ -1,31 +1,19 @@
 sections:
   active-profiles:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   profile-resolution-and-inheritance:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   test-property-source:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   test-property-precedence:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   dynamic-property-source:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   environment-inheritance-and-cache-identity:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false

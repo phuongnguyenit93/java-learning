@@ -1,26 +1,16 @@
 sections:
   messageformat-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   translation-key-design:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   messageformat-types:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   quote-escaping:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   messageformat-locale:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

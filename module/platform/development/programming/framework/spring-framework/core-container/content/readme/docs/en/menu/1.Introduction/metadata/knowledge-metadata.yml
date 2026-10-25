@@ -1,26 +1,16 @@
 sections:
   container-purpose:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   managed-beans-vs-plain-objects:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   inversion-of-control:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   dependency-injection-role:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   container-module-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

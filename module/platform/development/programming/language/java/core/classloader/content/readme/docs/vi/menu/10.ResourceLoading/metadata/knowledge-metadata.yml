@@ -2,50 +2,30 @@ sections:
   resource-loading-001:
     difficulty: BASIC
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   resource-loading-002:
     difficulty: BASIC
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   resource-loading-003:
     difficulty: BASIC
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   resource-loading-004:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   resource-loading-005:
     difficulty: INTERMEDIATE
     isImportant: false
-    aiGenerated: true
-    reviewed: false
   resource-loading-006:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   resource-loading-007:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   resource-loading-008:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   resource-loading-009:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   resource-loading-010:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false

@@ -1,31 +1,19 @@
 sections:
   boot-web-defaults-map:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   convention-vs-explicit-web-control:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   spring-framework-web-handoff:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   container-internals-handoff:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   network-security-handoff:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   web-runtime-end-to-end-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

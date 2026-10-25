@@ -8,8 +8,6 @@ ApplicationRuntimeExperimentController:
     enableVideoYoutube: false
     videoYoutubeId: ''
     videoYoutubeTitle: ''
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 2.ApplicationLifecycleEvents/knowledge/ApplicationLifecycleEvents.md
       anchor: context-started-ready-events
@@ -35,8 +33,6 @@ ApplicationRuntimeExperimentController:
     enableVideoYoutube: false
     videoYoutubeId: ''
     videoYoutubeTitle: ''
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 3.ArgumentsAndRunners/knowledge/ArgumentsAndRunners.md
       anchor: application-arguments-model
@@ -63,8 +59,6 @@ ApplicationRuntimeExperimentController:
     enableVideoYoutube: false
     videoYoutubeId: ''
     videoYoutubeTitle: ''
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 5.TaskExecutionScheduling/knowledge/TaskExecutionScheduling.md
       anchor: application-task-executor

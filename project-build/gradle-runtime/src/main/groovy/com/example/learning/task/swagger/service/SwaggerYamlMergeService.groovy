@@ -22,9 +22,7 @@ class SwaggerYamlMergeService {
             'description',
             'videoYoutubeId',
             'videoYoutubeTitle',
-            'readmeRelated',
-            'aiGenerated',
-            'reviewed'
+            'readmeRelated'
     ] as Set
 
     private final Yaml reader
@@ -1059,6 +1057,10 @@ ${parameterName}
             SwaggerDescriptionDefault defaults
     ) {
 
+        // Legacy Swagger YAML must not be able to restore removed fields.
+        entry.remove('aiGenerated')
+        entry.remove('reviewed')
+
         /*
          * Quan trọng:
          *
@@ -1130,32 +1132,6 @@ ${parameterName}
                     'videoYoutubeTitle'
             ] =
                     defaults.videoYoutubeTitle
-        }
-
-
-        if (
-                !entry.containsKey(
-                        'aiGenerated'
-                )
-        ) {
-
-            entry[
-                    'aiGenerated'
-            ] =
-                    defaults.aiGenerated
-        }
-
-
-        if (
-                !entry.containsKey(
-                        'reviewed'
-                )
-        ) {
-
-            entry[
-                    'reviewed'
-            ] =
-                    defaults.reviewed
         }
 
 
@@ -1258,6 +1234,10 @@ ${controllerName}
 ${methodIdentity}
 """
                                 )
+
+                        // Includes stale/inactive methods as well as active ones.
+                        apiEntry.remove('aiGenerated')
+                        apiEntry.remove('reviewed')
 
 
                         apiEntry[

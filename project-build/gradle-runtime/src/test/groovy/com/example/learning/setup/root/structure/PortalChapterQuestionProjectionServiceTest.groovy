@@ -167,14 +167,12 @@ class PortalChapterQuestionProjectionServiceTest {
             // values, which its safe loader intentionally refuses to parse.
             String answer -> [id: answer, answer: 'Answer ' + answer,
                               explanation: 'Explanation ' + answer]
-        }, correctAnswerId: 'A', aiGenerated: true, reviewed: false,
-                readmeRelated: [anchor: anchor],
+        }, correctAnswerId: 'A', readmeRelated: [anchor: anchor],
                 apiRelated: [controller: '', methodSignature: '']]
     }
 
     private static Map interviewQuestion(String anchor) {
         return [question: 'Interview question?', answer: 'Answer with examples.',
-                aiGenerated: true, reviewed: false,
                 readmeRelated: [anchor: anchor],
                 apiRelated: [controller: '', methodSignature: '']]
     }

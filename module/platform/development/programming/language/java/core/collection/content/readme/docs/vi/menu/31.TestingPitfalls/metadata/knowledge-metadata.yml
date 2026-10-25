@@ -1,46 +1,28 @@
 sections:
   testing-pitfalls-001:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   testing-pitfalls-002:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   testing-pitfalls-003:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   testing-pitfalls-004:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   testing-pitfalls-005:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   testing-pitfalls-006:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   testing-pitfalls-007:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   testing-pitfalls-008:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   testing-pitfalls-009:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false

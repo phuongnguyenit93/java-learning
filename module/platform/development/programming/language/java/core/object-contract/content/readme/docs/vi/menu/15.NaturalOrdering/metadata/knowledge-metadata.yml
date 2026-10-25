@@ -2,45 +2,27 @@ sections:
   natural-ordering-001:
     difficulty: BASIC
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   natural-ordering-002:
     difficulty: BASIC
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   natural-ordering-003:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   natural-ordering-004:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   natural-ordering-005:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   natural-ordering-006:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   natural-ordering-007:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   natural-ordering-008:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   natural-ordering-009:
     difficulty: ADVANCED
     isImportant: false
-    aiGenerated: true
-    reviewed: false

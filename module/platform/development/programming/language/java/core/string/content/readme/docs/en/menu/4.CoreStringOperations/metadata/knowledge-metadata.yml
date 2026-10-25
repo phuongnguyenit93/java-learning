@@ -1,36 +1,22 @@
 sections:
   string-char-sequence:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   string-inspection:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   string-search:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   string-extraction:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   string-transformation:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   string-split-join:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   string-conversion-formatting:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

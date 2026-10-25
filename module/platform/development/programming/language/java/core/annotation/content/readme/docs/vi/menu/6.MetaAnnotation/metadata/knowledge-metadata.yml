@@ -1,26 +1,16 @@
 sections:
   retention-meta:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   target-meta:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   documented-meta:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   inherited-meta:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   repeatable-meta:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

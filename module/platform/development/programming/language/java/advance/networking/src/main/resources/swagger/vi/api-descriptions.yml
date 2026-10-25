@@ -8,8 +8,6 @@ FailureExperimentController:
     enableVideoYoutube: false
     videoYoutubeId: ''
     videoYoutubeTitle: ''
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: ''
       anchor: socket-timeouts
@@ -38,8 +36,6 @@ NioExperimentController:
     enableVideoYoutube: false
     videoYoutubeId: ''
     videoYoutubeTitle: ''
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: ''
       anchor: selector-readiness-model
@@ -67,8 +63,6 @@ TcpExperimentController:
     enableVideoYoutube: false
     videoYoutubeId: ''
     videoYoutubeTitle: ''
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: ''
       anchor: tcp-message-framing
@@ -97,8 +91,6 @@ UdpExperimentController:
     enableVideoYoutube: false
     videoYoutubeId: ''
     videoYoutubeTitle: ''
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: ''
       anchor: datagram-packet-addressing

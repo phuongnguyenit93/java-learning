@@ -32,7 +32,7 @@ Chính worker tạo `<I3>/src/main/resources/step7-temp/<chapter_package>/` vớ
 | File | Key cụ thể | Chỉ thay field | Tuyệt đối giữ nguyên |
 | --- | --- | --- | --- |
 | `controller-description.yml` | `<ControllerName>` | `description`: HTML giới thiệu vai trò, nghiệp vụ và các API/chức năng của Controller trong chapter | `readmeRelated`, tên Controller |
-| `api-descriptions.yml` | `<ControllerName>.<methodSignature>` | `summary` (ngắn, rõ), `description` (nêu API làm gì, ý nghĩa nghiệp vụ/kiến thức) | `methodName`, `params`, `path`, `mapping`, `httpMethods`, `mappingPaths`, `produces`, `consumes`, `usage`, `aiGenerated`, `reviewed`, `readmeRelated`, `enableVideoYoutube`, `videoYoutubeId`, `videoYoutubeTitle` |
+| `api-descriptions.yml` | `<ControllerName>.<methodSignature>` | `summary` (ngắn, rõ), `description` (nêu API làm gì, ý nghĩa nghiệp vụ/kiến thức) | `methodName`, `params`, `path`, `mapping`, `httpMethods`, `mappingPaths`, `produces`, `consumes`, `usage`, `readmeRelated`, `enableVideoYoutube`, `videoYoutubeId`, `videoYoutubeTitle` |
 | `api-execution.yml` | `<ControllerName>.<methodSignature>` | `execution`: HTML giải thích code flow và cơ chế thực thi có ý nghĩa | `usage`, Controller/method keys |
 | `api-cases.yml` | `<ControllerName>.<methodSignature>.cases[]` | Case cụ thể: `id`, `title`, `description`, `input`, `status`, `response`, `detailDescription` (HTML) | `methodName`, `httpMethods`, `mappingPaths`, `usage`, Controller/method keys |
 | `api-params.yml` (chỉ tồn tại ở Swagger chính) | `request`, `input` và key dùng chung | **KHÔNG ĐƯỢC ĐỌC/GHI/SINH** | Prime chịu trách nhiệm độc quyền ở checkpoint khác |
@@ -54,7 +54,7 @@ Các YAML output chỉ được chứa Controller/method thuộc seed của chap
 - Seed có **case/field đã được biên soạn hợp lệ** → giữ nguyên. Chỉ sửa nội dung cũ nếu kiểm chứng sai so với Java source hoặc không đáp ứng nội dung học tập, và **nêu chính xác lý do/diff**; không xóa/ghi đè để sinh lại từ đầu.
 - Case cũ phải giữ ID ổn định. Với case mới, dùng `case_001`, `case_002`... **không trùng case ID trong cùng method**, không reuse ID để chỉ tình huống khác; nếu seed đã có case_001 đầy đủ, bắt đầu từ ID tiếp theo.
 - `methodName`/`path`/`mapping`/`httpMethods`/`mappingPaths`/`params`/`usage` và toàn bộ metadata ngoài whitelist là **nguồn kỹ thuật do Prime seed**, không được chỉnh ngay cả khi nhận thấy lỗi; báo Prime `BLOCKER: TECHNICAL_METADATA_MISMATCH`.
-- `readmeRelated`, `aiGenerated`, `reviewed`, `enableVideoYoutube`, `videoYoutubeId`, `videoYoutubeTitle` và metadata liên kết khác **thuộc STEP khác/người review**, không chạm.
+- `readmeRelated`, `enableVideoYoutube`, `videoYoutubeId`, `videoYoutubeTitle` và metadata liên kết khác **thuộc STEP khác/người review**, không chạm.
 
 ## W3. Trình tự thao tác và preflight/QA
 

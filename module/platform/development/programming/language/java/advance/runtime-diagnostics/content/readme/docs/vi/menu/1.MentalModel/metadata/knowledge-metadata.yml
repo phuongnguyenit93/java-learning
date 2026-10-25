@@ -1,26 +1,16 @@
 sections:
   runtime-diagnostics-purpose:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   diagnostic-reasoning-loop:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   evidence-quality-and-cost:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   diagnostic-readiness-principle:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   diagnostic-scope-boundaries:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

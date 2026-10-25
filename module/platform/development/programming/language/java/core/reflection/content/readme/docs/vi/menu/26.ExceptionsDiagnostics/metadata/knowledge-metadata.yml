@@ -2,60 +2,36 @@ sections:
   exceptions-diagnostics-001:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   exceptions-diagnostics-002:
     difficulty: BASIC
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   exceptions-diagnostics-003:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   exceptions-diagnostics-004:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   exceptions-diagnostics-005:
     difficulty: BASIC
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   exceptions-diagnostics-006:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   exceptions-diagnostics-007:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   exceptions-diagnostics-008:
     difficulty: ADVANCED
     isImportant: false
-    aiGenerated: true
-    reviewed: false
   exceptions-diagnostics-009:
     difficulty: ADVANCED
     isImportant: false
-    aiGenerated: true
-    reviewed: false
   exceptions-diagnostics-010:
     difficulty: ADVANCED
     isImportant: false
-    aiGenerated: true
-    reviewed: false
   exceptions-diagnostics-011:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   exceptions-diagnostics-012:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false

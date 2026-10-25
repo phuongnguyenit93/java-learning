@@ -1,21 +1,13 @@
 sections:
   build-tooling-purpose:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   build-tooling-problem:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   build-time-runtime-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   build-deployment-handoff:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

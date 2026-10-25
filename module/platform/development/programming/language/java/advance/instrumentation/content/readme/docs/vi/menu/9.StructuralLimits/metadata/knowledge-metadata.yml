@@ -1,31 +1,19 @@
 sections:
   modification-boundary:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   schema-change-limits:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   structural-attribute-limits:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   unmodifiable-classes:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   verification-linkage-constraints:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   version-compatibility:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false

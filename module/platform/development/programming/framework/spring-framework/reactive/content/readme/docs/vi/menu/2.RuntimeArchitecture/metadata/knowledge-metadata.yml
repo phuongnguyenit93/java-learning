@@ -1,56 +1,34 @@
 sections:
   webflux-reactive-http-adapter:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   webflux-http-handler-web-handler:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   webflux-server-web-exchange:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   webflux-web-handler-chain:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   webflux-dispatcher-handler:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   webflux-dispatch-strategies:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   webflux-result-handling-paths:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   webflux-reactive-adapter-registry:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   webflux-server-runtime-options:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   webflux-runtime-threading:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   webflux-config-foundation:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false

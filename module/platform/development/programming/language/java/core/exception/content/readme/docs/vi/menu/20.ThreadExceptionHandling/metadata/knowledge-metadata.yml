@@ -1,51 +1,31 @@
 sections:
   thread-exception-handling-001:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   thread-exception-handling-002:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   thread-exception-handling-003:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   thread-exception-handling-004:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   thread-exception-handling-005:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   thread-exception-handling-006:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   thread-exception-handling-007:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   thread-exception-handling-008:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   thread-exception-handling-009:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   thread-exception-handling-010:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false

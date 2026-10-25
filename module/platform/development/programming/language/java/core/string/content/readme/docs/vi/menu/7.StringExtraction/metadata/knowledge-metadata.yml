@@ -1,41 +1,25 @@
 sections:
   string-extraction-001:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   string-extraction-002:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   string-extraction-003:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   string-extraction-004:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   string-extraction-005:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   string-extraction-006:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   string-extraction-007:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   string-extraction-008:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false

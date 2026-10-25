@@ -1,31 +1,19 @@
 sections:
   aop-compile-time:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   aop-load-time:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   aop-runtime:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   aop-model-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   aop-aspectj-spring-boundary:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   aop-interception-limits:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false

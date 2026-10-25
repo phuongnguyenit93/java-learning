@@ -1,56 +1,34 @@
 sections:
   webflux-functional-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   webflux-router-function:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   webflux-handler-function:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   webflux-server-request-response:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   webflux-route-predicates:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   webflux-route-composition:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   webflux-route-filters:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   webflux-functional-dispatcher-integration:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   webflux-direct-http-handler-adaptation:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   webflux-functional-view-rendering:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   webflux-annotated-vs-functional:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

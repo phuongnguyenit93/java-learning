@@ -1,16 +1,10 @@
 sections:
   throwable-hierarchy:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   error-vs-exception:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   stack-trace-cause:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

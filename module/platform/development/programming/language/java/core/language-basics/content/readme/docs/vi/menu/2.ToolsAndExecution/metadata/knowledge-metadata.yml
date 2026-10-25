@@ -1,41 +1,25 @@
 sections:
   tools-and-execution-001:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   tools-and-execution-002:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   tools-and-execution-003:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   tools-and-execution-004:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   tools-and-execution-005:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   tools-and-execution-006:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   tools-and-execution-007:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   tools-and-execution-008:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false

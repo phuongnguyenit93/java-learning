@@ -1,26 +1,16 @@
 sections:
   call-site-model:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   call-site-type-invariant:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   call-site-kinds:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   call-site-target-updates:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   call-site-linkage-vs-target-change:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false

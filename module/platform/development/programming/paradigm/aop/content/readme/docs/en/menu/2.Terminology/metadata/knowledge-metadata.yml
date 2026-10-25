@@ -1,46 +1,28 @@
 sections:
   aop-aspect:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   aop-join-point:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   aop-pointcut:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   aop-advice:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   aop-target:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   aop-weaving:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   aop-advice-kinds:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   aop-effective-execution:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   aop-selection-example:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

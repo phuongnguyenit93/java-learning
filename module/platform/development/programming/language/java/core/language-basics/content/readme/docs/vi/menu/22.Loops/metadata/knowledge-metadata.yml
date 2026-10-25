@@ -1,51 +1,31 @@
 sections:
   loops-001:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   loops-002:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   loops-003:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   loops-004:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   loops-005:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   loops-006:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   loops-007:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   loops-008:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   loops-009:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   loops-010:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false

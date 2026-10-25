@@ -1,31 +1,19 @@
 sections:
   server-properties-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   common-server-namespace:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   port-address-endpoint-controls:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   server-specific-namespaces:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   portable-vs-server-specific-properties:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   external-configuration-handoff:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

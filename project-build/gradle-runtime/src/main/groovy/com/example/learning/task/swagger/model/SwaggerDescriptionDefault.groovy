@@ -16,9 +16,6 @@ class SwaggerDescriptionDefault {
 
     final String execution
 
-    final boolean aiGenerated
-
-    final boolean reviewed
 
 
     SwaggerDescriptionDefault(
@@ -28,9 +25,7 @@ class SwaggerDescriptionDefault {
             String videoYoutubeId,
             String videoYoutubeTitle,
             String controllerDescriptionParagraph,
-            String execution,
-            boolean aiGenerated,
-            boolean reviewed
+            String execution
     ) {
 
         this.summary =
@@ -54,10 +49,5 @@ class SwaggerDescriptionDefault {
         this.execution =
                 execution
 
-        this.aiGenerated =
-                aiGenerated
-
-        this.reviewed =
-                reviewed
     }
 }

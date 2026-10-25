@@ -36,8 +36,6 @@ class ReadmeSheetImportServiceTest {
         assertEquals(['oop-basic-001','oop-basic-002'], file.keySet().toList())
         assertEquals('ADVANCED', file['oop-basic-001'].difficulty)
         assertEquals('BASIC', file['oop-basic-002'].difficulty)
-        assertEquals(true, file['oop-basic-001'].aiGenerated)
-        assertEquals(false, file['oop-basic-001'].reviewed)
         assertEquals(false, file['oop-basic-001'].isImportant)
         assertEquals('DRY_RUN', service.syncImportedMetadata(module, prepared, false).status)
         assertEquals('UPDATED', service.syncImportedMetadata(module, prepared, true).status)
@@ -46,14 +44,10 @@ class ReadmeSheetImportServiceTest {
                 'content/readme/docs/vi/menu/1.OOPBasic/metadata/knowledge-metadata.yml')
         Map existing = new Yaml().load(metadataFile.getText('UTF-8')) as Map
         assertEquals(['sections'] as Set, existing.keySet())
-        existing.sections['oop-basic-001'].reviewed = true
-        existing.sections['oop-basic-001'].aiGenerated = false
         existing.sections['oop-basic-001'].isImportant = true
         metadataFile.setText(new Yaml().dump(existing),'UTF-8')
         String refreshed = service.prepareImportedMetadata(module,docs,levels)
         Map updated = new Yaml().load(refreshed) as Map
-        assertEquals(false,updated['1.OOPBasic/knowledge/OOPBasic.md']['oop-basic-001'].reviewed)
-        assertEquals(true,updated['1.OOPBasic/knowledge/OOPBasic.md']['oop-basic-001'].aiGenerated)
         assertEquals(false,updated['1.OOPBasic/knowledge/OOPBasic.md']['oop-basic-001'].isImportant)
         assertEquals('ADVANCED',updated['1.OOPBasic/knowledge/OOPBasic.md']['oop-basic-001'].difficulty)
         assertEquals('BASIC',updated['1.OOPBasic/knowledge/OOPBasic.md']['oop-basic-002'].difficulty)
@@ -330,7 +324,7 @@ class ReadmeSheetImportServiceTest {
         oldKnowledge.setText('OLD KNOWLEDGE', 'UTF-8')
         File oldMetadata = new File(menu, '2.Removed/metadata/knowledge-metadata.yml')
         assertTrue(oldMetadata.parentFile.mkdirs())
-        oldMetadata.setText('sections: {stale: {reviewed: true}}', 'UTF-8')
+        oldMetadata.setText('sections: {stale: {}}', 'UTF-8')
         File oldNewChapterMetadata = new File(menu, '1.Basic/metadata/obsolete.yml')
         assertTrue(oldNewChapterMetadata.parentFile.mkdirs())
         oldNewChapterMetadata.setText('OLD EXTRA', 'UTF-8')
@@ -362,7 +356,6 @@ class ReadmeSheetImportServiceTest {
                 '1.Basic/metadata/knowledge-metadata.yml').getText('UTF-8')) as Map
         assertEquals(['basic-001'] as Set, fresh.sections.keySet())
         assertEquals('INTERMEDIATE', fresh.sections['basic-001'].difficulty)
-        assertEquals(false, fresh.sections['basic-001'].reviewed)
     }
 
     @Test

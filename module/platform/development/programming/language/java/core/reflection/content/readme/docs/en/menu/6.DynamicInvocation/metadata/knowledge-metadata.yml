@@ -1,56 +1,34 @@
 sections:
   field-read-write:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   method-invoke:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   invocation-exception:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   varargs-reflection:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   constructor-newinstance:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   constructor-reflection-failure:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   reflective-dispatch:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   argument-conversion:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   dynamic-array-reflection:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   method-handle-boundary:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   dynamic-invocation-design:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false

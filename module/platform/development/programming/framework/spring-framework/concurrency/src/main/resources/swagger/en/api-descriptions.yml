@@ -26,8 +26,6 @@ TaskExecutorController:
     readmeRelated:
       file: 3.ContextPropagation/knowledge/ContextPropagation.md
       anchor: spring-async-demo
-    aiGenerated: true
-    reviewed: false
   asyncVoidException():
     summary: Observe exceptions from void @Async methods
     description: Invoke a void @Async method that intentionally throws and observe
@@ -55,8 +53,6 @@ TaskExecutorController:
     readmeRelated:
       file: 2.Spring_Task_Executor/knowledge/SpringExecutor.md
       anchor: async-return-type
-    aiGenerated: true
-    reviewed: false
   saturation():
     summary: Observe ThreadPoolTaskExecutor saturation and rejection
     description: Create an isolated ThreadPoolTaskExecutor with core=1, max=2, and
@@ -83,8 +79,6 @@ TaskExecutorController:
     readmeRelated:
       file: 2.Spring_Task_Executor/knowledge/SpringExecutor.md
       anchor: spring-executor-config
-    aiGenerated: true
-    reviewed: false
 TaskSchedulerExperimentController:
   executionModels():
     summary: Compare Spring scheduler execution models
@@ -112,5 +106,3 @@ TaskSchedulerExperimentController:
     readmeRelated:
       file: 4.TaskScheduler/knowledge/TaskScheduler.md
       anchor: scheduler-execution-models
-    aiGenerated: true
-    reviewed: false

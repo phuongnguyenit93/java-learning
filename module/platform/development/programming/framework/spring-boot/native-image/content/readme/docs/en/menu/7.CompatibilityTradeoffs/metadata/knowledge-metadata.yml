@@ -1,31 +1,19 @@
 sections:
   native-runtime-gains:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   native-build-cost:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   dependency-native-readiness:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   reachability-metadata-quality:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   native-failure-classification:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   when-not-native:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

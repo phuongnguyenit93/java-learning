@@ -1,26 +1,16 @@
 sections:
   r2dbc-connection-factory-database-client:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   r2dbc-reactive-sql-execution:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   r2dbc-parameter-binding-bind-markers:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   r2dbc-result-mapping-cardinality-null:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   r2dbc-generated-values-statement-filters:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false

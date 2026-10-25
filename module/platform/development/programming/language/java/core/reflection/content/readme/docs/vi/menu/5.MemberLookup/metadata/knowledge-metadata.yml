@@ -2,55 +2,33 @@ sections:
   member-lookup-001:
     difficulty: BASIC
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   member-lookup-002:
     difficulty: BASIC
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   member-lookup-003:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   member-lookup-004:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   member-lookup-005:
     difficulty: INTERMEDIATE
     isImportant: false
-    aiGenerated: true
-    reviewed: false
   member-lookup-006:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   member-lookup-007:
     difficulty: ADVANCED
     isImportant: false
-    aiGenerated: true
-    reviewed: false
   member-lookup-008:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   member-lookup-009:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   member-lookup-010:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   member-lookup-011:
     difficulty: ADVANCED
     isImportant: false
-    aiGenerated: true
-    reviewed: false

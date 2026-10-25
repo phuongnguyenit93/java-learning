@@ -1,26 +1,16 @@
 sections:
   erasure-model:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   erased-runtime-type:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   generic-signature-metadata:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   bridge-method:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   non-reifiable-types:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false

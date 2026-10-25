@@ -1,26 +1,16 @@
 sections:
   temporal-arithmetic:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   between-semantics:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   date-time-comparison:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   dst-gap-overlap:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   business-calendar-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

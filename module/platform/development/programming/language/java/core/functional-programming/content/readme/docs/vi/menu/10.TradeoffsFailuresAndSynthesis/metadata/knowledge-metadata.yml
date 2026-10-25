@@ -1,56 +1,34 @@
 sections:
   side-effects-in-lambdas:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   hidden-mutation-state:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   checked-exception-constraint:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   checked-exception-adaptation:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   debugging-composed-behavior:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   readability-vs-chaining:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   functional-vs-imperative-choice:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   functional-vs-oop-choice:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   purity-immutability-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   common-functional-pitfalls:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   functional-programming-synthesis:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

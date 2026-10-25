@@ -43,6 +43,18 @@ class InterviewSheetNormalizeServiceTest {
     }
 
     @Test
+    void oldSheetGovernanceFieldsAreDroppedDuringNormalize() {
+        Map input = [questions: [[question: 'Q', answer: 'A',
+                aiGenerated: true, reviewed: false]]]
+        Map result = InterviewSheetNormalizeService.normalizeYaml(
+                JsonOutput.toJson(input), FILE, 20)
+        assertEquals(['question', 'answer', 'readmeRelated', 'apiRelated'] as Set,
+                result.questions[0].keySet())
+        assertFalse(InterviewSheetNormalizeService.renderYaml(result).contains('aiGenerated'))
+        assertFalse(InterviewSheetNormalizeService.renderYaml(result).contains('reviewed'))
+    }
+
+    @Test
     void rawQuestionAnswerGetsCanonicalDefaults() {
         String source = JsonOutput.toJson([
                 questions: [
@@ -52,10 +64,7 @@ class InterviewSheetNormalizeServiceTest {
         ])
         Map result = InterviewSheetNormalizeService.normalizeJson(source, FILE, 20)
         assertEquals(2, result.questions.size())
-        assertEquals(['question', 'answer', 'aiGenerated', 'reviewed',
-                      'readmeRelated', 'apiRelated'], result.questions[0].keySet().toList())
-        assertEquals(true, result.questions[0].aiGenerated)
-        assertEquals(false, result.questions[0].reviewed)
+        assertEquals(['question', 'answer', 'readmeRelated', 'apiRelated'], result.questions[0].keySet().toList())
         assertEquals([anchor: ''], result.questions[0].readmeRelated)
         assertEquals([controller: '', methodSignature: ''], result.questions[0].apiRelated)
         assertEquals('Giải thích encapsulation?', result.questions[1].question)
@@ -65,7 +74,6 @@ class InterviewSheetNormalizeServiceTest {
     void repeatedNormalizationPreservesReviewedAndRelatedFields() {
         Map existing = [questions: [[
                 question: 'Tình huống?', answer: 'Giải thích.',
-                aiGenerated: false, reviewed: true,
                 readmeRelated: [file: FILE, anchor: 'oop-invariant'],
                 apiRelated: [controller: 'OOPController', methodSignature: 'explain()']
         ]]]
@@ -82,15 +90,12 @@ class InterviewSheetNormalizeServiceTest {
     @Test
     void migratesLegacyReadmePathWithoutChangingHumanFields() {
         Map source = [questions: [[question: 'Q', answer: '**Markdown**',
-                aiGenerated: false, reviewed: true,
                 readmeRelated: [file: '1.OOPBasic/OOPBasic.md', anchor: 'existing-anchor'],
                 apiRelated: [controller: 'Api', methodSignature: 'run()']]]]
         Map result = InterviewSheetNormalizeService.normalizeYaml(
                 JsonOutput.toJson(source), FILE, 20)
         assertFalse(result.questions[0].readmeRelated.containsKey('file'))
         assertEquals('existing-anchor', result.questions[0].readmeRelated.anchor)
-        assertEquals(false, result.questions[0].aiGenerated)
-        assertEquals(true, result.questions[0].reviewed)
         assertEquals('**Markdown**', result.questions[0].answer)
         assertEquals('Api', result.questions[0].apiRelated.controller)
     }
@@ -101,7 +106,7 @@ class InterviewSheetNormalizeServiceTest {
                 readmeRelated: [file: 'wrong.md', anchor: '']]]], 'conflicting README')
         assertInvalid([questions: [[question: 'Q', answer: 'A', other: 'extra']]], 'unknown field')
         assertInvalid([questions: [[question: 'Q', answer: ' ']]], 'nonblank string')
-        assertInvalid([questions: [[question: 'Q', answer: 'A', reviewed: 'false']]], 'must be boolean')
+        assertInvalid([questions: [[question: 'Q', answer: 'A', unsupportedFlag: 'false']]], 'unknown field')
         assertInvalid([questions: [[question: 'Q', answer: 'A',
                 apiRelated: [controller: 5]]]], 'invalid relation')
         assertInvalid([questions: []], 'nonempty questions')

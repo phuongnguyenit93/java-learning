@@ -24,8 +24,6 @@ AdvisorController:
     readmeRelated:
       file: ''
       anchor: advisor-demo
-    aiGenerated: true
-    reviewed: false
 RuntimeBoundaryController:
   inspectRuntimeBoundary():
     summary: Inspect the runtime boundary of Spring AOP
@@ -52,8 +50,6 @@ RuntimeBoundaryController:
     readmeRelated:
       file: ''
       anchor: runtime-boundary-demo
-    aiGenerated: true
-    reviewed: false
 InfrastructureController:
   inspectInfrastructure():
     summary: Inspect Spring AOP infrastructure
@@ -79,8 +75,6 @@ InfrastructureController:
     readmeRelated:
       file: ''
       anchor: infrastructure-demo
-    aiGenerated: true
-    reviewed: false
 IntroductionController:
   observeIntroduction():
     summary: Observe an AOP introduction
@@ -106,8 +100,6 @@ IntroductionController:
     readmeRelated:
       file: ''
       anchor: introduction-demo
-    aiGenerated: true
-    reviewed: false
 ProgrammaticProxyController:
   compareProxyFactoryStrategies():
     summary: Compare JDK and CGLIB ProxyFactory strategies
@@ -133,8 +125,6 @@ ProgrammaticProxyController:
     readmeRelated:
       file: ''
       anchor: proxy-factory-demo
-    aiGenerated: true
-    reviewed: false
 AdviceLifecycleController:
   success():
     summary: Observe advice order on successful execution
@@ -160,8 +150,6 @@ AdviceLifecycleController:
     readmeRelated:
       file: ''
       anchor: advice-success-demo
-    aiGenerated: true
-    reviewed: false
   failure():
     summary: Observe advice order when an exception is thrown
     description: Executes a failing target method to observe @AfterThrowing and @After
@@ -186,8 +174,6 @@ AdviceLifecycleController:
     readmeRelated:
       file: ''
       anchor: advice-failure-demo
-    aiGenerated: true
-    reviewed: false
 AnnotationDrivenController:
   trackByAnnotation():
     summary: Apply AOP through a custom annotation
@@ -213,8 +199,6 @@ AnnotationDrivenController:
     readmeRelated:
       file: ''
       anchor: annotation-demo
-    aiGenerated: true
-    reviewed: false
 AroundAdviceController:
   timing():
     summary: Measure execution with @Around advice
@@ -240,8 +224,6 @@ AroundAdviceController:
     readmeRelated:
       file: ''
       anchor: around-timing-demo
-    aiGenerated: true
-    reviewed: false
   transform():
     summary: Transform a return value with @Around advice
     description: Demonstrates that @Around advice can inspect and replace the value
@@ -266,8 +248,6 @@ AroundAdviceController:
     readmeRelated:
       file: ''
       anchor: around-transform-demo
-    aiGenerated: true
-    reviewed: false
   skip():
     summary: Skip target execution with @Around advice
     description: Demonstrates that omitting proceed() prevents the target method from
@@ -292,8 +272,6 @@ AroundAdviceController:
     readmeRelated:
       file: ''
       anchor: around-skip-demo
-    aiGenerated: true
-    reviewed: false
   arguments():
     summary: Modify method arguments with @Around advice
     description: Demonstrates how @Around advice can read and replace invocation arguments
@@ -318,8 +296,6 @@ AroundAdviceController:
     readmeRelated:
       file: ''
       anchor: around-arguments-demo
-    aiGenerated: true
-    reviewed: false
   exceptionPropagation():
     summary: Observe exception propagation through @Around advice
     description: Demonstrates an @Around advice observing an exception and rethrowing
@@ -344,8 +320,6 @@ AroundAdviceController:
     readmeRelated:
       file: ''
       anchor: around-exception-demo
-    aiGenerated: true
-    reviewed: false
 CrossCuttingController:
   observeCrossCutting():
     summary: Observe a cross-cutting logging concern
@@ -371,8 +345,6 @@ CrossCuttingController:
     readmeRelated:
       file: ''
       anchor: cross-cutting-demo
-    aiGenerated: true
-    reviewed: false
 OrderingController:
   observeOrdering():
     summary: Observe nested Aspect ordering
@@ -398,8 +370,6 @@ OrderingController:
     readmeRelated:
       file: ''
       anchor: ordering-demo
-    aiGenerated: true
-    reviewed: false
 PracticalPatternController:
   checkout(String):
     summary: Apply practical auditing and timing aspects
@@ -425,8 +395,6 @@ PracticalPatternController:
     readmeRelated:
       file: ''
       anchor: practical-demo
-    aiGenerated: true
-    reviewed: false
 PointcutController:
   comparePointcuts():
     summary: Compare common Spring AOP pointcut expressions
@@ -452,8 +420,6 @@ PointcutController:
     readmeRelated:
       file: ''
       anchor: pointcut-demo
-    aiGenerated: true
-    reviewed: false
 ProxyMentalModelController:
   inspectProxy():
     summary: Inspect a Spring AOP proxy
@@ -479,8 +445,6 @@ ProxyMentalModelController:
     readmeRelated:
       file: ''
       anchor: proxy-demo
-    aiGenerated: true
-    reviewed: false
   compareManagedBeanAndPlainObject():
     summary: Compare a managed proxy with a plain Java object
     description: Compares a Spring-managed bean that passes through AOP interception
@@ -505,8 +469,6 @@ ProxyMentalModelController:
     readmeRelated:
       file: ''
       anchor: managed-vs-new-demo
-    aiGenerated: true
-    reviewed: false
 SelfInvocationController:
   compareSelfInvocation():
     summary: Compare self-invocation with external proxy invocation
@@ -532,8 +494,6 @@ SelfInvocationController:
     readmeRelated:
       file: ''
       anchor: self-invocation-demo
-    aiGenerated: true
-    reviewed: false
   finalMethodLimitation():
     summary: Demonstrate the final-method proxy limitation
     description: Shows that a final method on a class-based proxy cannot be overridden
@@ -558,8 +518,6 @@ SelfInvocationController:
     readmeRelated:
       file: ''
       anchor: final-method-demo
-    aiGenerated: true
-    reviewed: false
 TerminologyController:
   inspectTerminology():
     summary: Inspect core AOP terminology in a real invocation
@@ -585,5 +543,3 @@ TerminologyController:
     readmeRelated:
       file: ''
       anchor: terminology-demo
-    aiGenerated: true
-    reviewed: false

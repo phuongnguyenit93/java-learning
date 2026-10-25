@@ -232,8 +232,8 @@ questions:
       - {id: C, answer: Three, explanation: Explanation C}
       - {id: D, answer: Four, explanation: Explanation D}
     correctAnswerId: A
-    aiGenerated: true
-    reviewed: false
+
+
     readmeRelated: {anchor: more-001}
     apiRelated: {controller: "", methodSignature: ""}
 '''.trim())
@@ -241,8 +241,8 @@ questions:
 questions:
   - question: Second chapter interview?
     answer: Second chapter answer
-    aiGenerated: true
-    reviewed: false
+
+
     readmeRelated: {anchor: more-001}
     apiRelated: {controller: "", methodSignature: ""}
 '''.trim())

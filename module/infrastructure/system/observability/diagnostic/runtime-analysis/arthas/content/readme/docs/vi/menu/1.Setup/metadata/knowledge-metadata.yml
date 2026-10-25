@@ -1,26 +1,16 @@
 sections:
   docker-arthas:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   arthas-spring-boot-starter:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   arthas-local:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   arthas-web-console:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   shutdown-arthas:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

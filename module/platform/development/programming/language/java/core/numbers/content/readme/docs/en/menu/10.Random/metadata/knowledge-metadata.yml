@@ -1,16 +1,10 @@
 sections:
   pseudo-random-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   threadlocal-random-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   random-not-security:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

@@ -1,31 +1,19 @@
 sections:
   element-equality-effects:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   hash-bucket-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   sorted-equality-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   collection-equality-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   collection-equality-contracts:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   mutable-element-risk:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

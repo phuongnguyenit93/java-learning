@@ -2,35 +2,21 @@ sections:
   static-and-private-001:
     difficulty: BASIC
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   static-and-private-002:
     difficulty: BASIC
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   static-and-private-003:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   static-and-private-004:
     difficulty: BASIC
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   static-and-private-005:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   static-and-private-006:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   static-and-private-007:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false

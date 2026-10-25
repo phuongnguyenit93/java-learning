@@ -1,21 +1,13 @@
 sections:
   classloader-contract:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   define-class:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   custom-source:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   custom-loader-safety:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

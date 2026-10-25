@@ -1,41 +1,25 @@
 sections:
   var-type-inference-001:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   var-type-inference-002:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   var-type-inference-003:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   var-type-inference-004:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   var-type-inference-005:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   var-type-inference-006:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   var-type-inference-007:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   var-type-inference-008:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false

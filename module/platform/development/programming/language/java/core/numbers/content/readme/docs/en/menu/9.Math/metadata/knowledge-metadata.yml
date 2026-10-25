@@ -1,16 +1,10 @@
 sections:
   math-core-functions:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   exact-arithmetic-methods:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   strictmath-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

@@ -1,26 +1,16 @@
 sections:
   spring-boot-application-and-enable-auto-configuration:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   candidate-discovery-vs-bean-creation:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   auto-configuration-imports:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   auto-configuration-package-isolation:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   application-base-package-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

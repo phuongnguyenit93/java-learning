@@ -7,8 +7,6 @@ AeadExperimentController:
     enableVideoYoutube: false
     videoYoutubeId: ''
     videoYoutubeTitle: ''
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 11.AuthenticatedEncryption/knowledge/AuthenticatedEncryption.md
       anchor: aead-decryption-failure
@@ -35,8 +33,6 @@ DigitalSignatureExperimentController:
     enableVideoYoutube: false
     videoYoutubeId: ''
     videoYoutubeTitle: ''
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 8.DigitalSignature/knowledge/DigitalSignature.md
       anchor: signature-data-contract
@@ -64,8 +60,6 @@ KeyDerivationExperimentController:
     enableVideoYoutube: false
     videoYoutubeId: ''
     videoYoutubeTitle: ''
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 13.KeyDerivation/knowledge/KeyDerivation.md
       anchor: salt-and-work-factor
@@ -92,8 +86,6 @@ KeyEstablishmentExperimentController:
     enableVideoYoutube: false
     videoYoutubeId: ''
     videoYoutubeTitle: ''
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 12.KeyEstablishment/knowledge/KeyEstablishment.md
       anchor: agreement-vs-kem
@@ -120,8 +112,6 @@ MacExperimentController:
     enableVideoYoutube: false
     videoYoutubeId: ''
     videoYoutubeTitle: ''
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 7.Mac/knowledge/Mac.md
       anchor: mac-workflow

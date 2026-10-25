@@ -1,31 +1,19 @@
 sections:
   context-configuration-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   configuration-classes-and-locations:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   context-loader-selection:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   configuration-inheritance:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   context-hierarchy:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   web-application-context-configuration:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false

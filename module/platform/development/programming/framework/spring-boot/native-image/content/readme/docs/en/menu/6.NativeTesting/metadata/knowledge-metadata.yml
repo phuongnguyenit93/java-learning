@@ -1,36 +1,22 @@
 sections:
   native-testing-purpose:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   jvm-first-test-strategy:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   aot-jvm-validation:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   process-test-aot:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   native-test-execution:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   native-test-cost:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   native-testing-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

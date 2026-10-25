@@ -7,8 +7,6 @@ ArenaExperimentController:
     enableVideoYoutube: false
     videoYoutubeId: ''
     videoYoutubeTitle: ''
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: ''
       anchor: temporal-safety
@@ -34,8 +32,6 @@ ArenaExperimentController:
     enableVideoYoutube: false
     videoYoutubeId: ''
     videoYoutubeTitle: ''
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: ''
       anchor: arena-thread-access
@@ -65,8 +61,6 @@ LinkerExperimentController:
     enableVideoYoutube: false
     videoYoutubeId: ''
     videoYoutubeTitle: ''
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: ''
       anchor: downcall-handle
@@ -94,8 +88,6 @@ MemoryLayoutExperimentController:
     enableVideoYoutube: false
     videoYoutubeId: ''
     videoYoutubeTitle: ''
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: ''
       anchor: layout-path-access
@@ -123,8 +115,6 @@ MemorySegmentExperimentController:
     enableVideoYoutube: false
     videoYoutubeId: ''
     videoYoutubeTitle: ''
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: ''
       anchor: segment-spatial-bounds

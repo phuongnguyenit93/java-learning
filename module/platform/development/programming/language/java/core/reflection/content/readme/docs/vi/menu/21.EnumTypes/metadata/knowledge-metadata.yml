@@ -2,35 +2,21 @@ sections:
   enum-types-001:
     difficulty: BASIC
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   enum-types-002:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   enum-types-003:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   enum-types-004:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   enum-types-005:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   enum-types-006:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   enum-types-007:
     difficulty: ADVANCED
     isImportant: false
-    aiGenerated: true
-    reviewed: false

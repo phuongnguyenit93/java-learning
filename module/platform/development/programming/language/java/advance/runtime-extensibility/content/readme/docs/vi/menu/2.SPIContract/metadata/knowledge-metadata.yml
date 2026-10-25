@@ -1,26 +1,16 @@
 sections:
   spi-contract-purpose:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   service-type-design:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   provider-type-design:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   provider-as-factory:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   contract-stability:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false

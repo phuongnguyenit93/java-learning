@@ -2,50 +2,30 @@ sections:
   dynamic-arrays-001:
     difficulty: BASIC
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   dynamic-arrays-002:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   dynamic-arrays-003:
     difficulty: BASIC
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   dynamic-arrays-004:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   dynamic-arrays-005:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   dynamic-arrays-006:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   dynamic-arrays-007:
     difficulty: INTERMEDIATE
     isImportant: false
-    aiGenerated: true
-    reviewed: false
   dynamic-arrays-008:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   dynamic-arrays-009:
     difficulty: ADVANCED
     isImportant: false
-    aiGenerated: true
-    reviewed: false
   dynamic-arrays-010:
     difficulty: BASIC
     isImportant: true
-    aiGenerated: true
-    reviewed: false

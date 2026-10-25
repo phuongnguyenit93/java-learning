@@ -1,31 +1,19 @@
 sections:
   jms-listener-concurrency:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   jms-ordering-tradeoffs:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   jms-selectors-subscriptions:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   jms-recovery-backoff:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   jms-connection-factory-wrappers:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   jms-dmlc-cache-levels:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false

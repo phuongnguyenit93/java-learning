@@ -9,8 +9,6 @@ RuntimeDiagnosticsExperimentController:
     enableVideoYoutube: false
     videoYoutubeId: ''
     videoYoutubeTitle: ''
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 3.ThreadDiagnostics/knowledge/ThreadDiagnostics.md
       anchor: locks-deadlocks-and-contention
@@ -38,8 +36,6 @@ RuntimeDiagnosticsExperimentController:
     enableVideoYoutube: false
     videoYoutubeId: ''
     videoYoutubeTitle: ''
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 4.HeapGcDiagnostics/knowledge/HeapGcDiagnostics.md
       anchor: class-histogram
@@ -67,8 +63,6 @@ RuntimeDiagnosticsExperimentController:
     enableVideoYoutube: false
     videoYoutubeId: ''
     videoYoutubeTitle: ''
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 6.JFR/knowledge/JFR.md
       anchor: cpu-thread-lock-analysis
@@ -96,8 +90,6 @@ RuntimeDiagnosticsExperimentController:
     enableVideoYoutube: false
     videoYoutubeId: ''
     videoYoutubeTitle: ''
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 7.ManagementJMX/knowledge/ManagementJMX.md
       anchor: platform-management-surfaces

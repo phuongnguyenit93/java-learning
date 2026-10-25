@@ -1,46 +1,28 @@
 sections:
   text-blocks-001:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   text-blocks-002:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   text-blocks-003:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   text-blocks-004:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   text-blocks-005:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   text-blocks-006:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   text-blocks-007:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   text-blocks-008:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   text-blocks-009:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false

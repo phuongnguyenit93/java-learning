@@ -2,40 +2,24 @@ sections:
   object-monitor-001:
     difficulty: BASIC
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   object-monitor-002:
     difficulty: BASIC
     isImportant: false
-    aiGenerated: true
-    reviewed: false
   object-monitor-003:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   object-monitor-004:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   object-monitor-005:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   object-monitor-006:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   object-monitor-007:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   object-monitor-008:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false

@@ -1,41 +1,25 @@
 sections:
   lambda-lexical-scope:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   captured-local-variables:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   captured-local-values:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   effectively-final:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   instance-static-state-access:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   lambda-this:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   lambda-vs-anonymous-class-scope:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   captured-reference-mutation:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false

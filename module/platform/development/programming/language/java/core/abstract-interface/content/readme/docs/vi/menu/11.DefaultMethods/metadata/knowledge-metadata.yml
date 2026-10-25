@@ -2,45 +2,27 @@ sections:
   default-methods-001:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   default-methods-002:
     difficulty: BASIC
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   default-methods-003:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   default-methods-004:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   default-methods-005:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   default-methods-006:
     difficulty: ADVANCED
     isImportant: false
-    aiGenerated: true
-    reviewed: false
   default-methods-007:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   default-methods-008:
     difficulty: ADVANCED
     isImportant: false
-    aiGenerated: true
-    reviewed: false
   default-methods-009:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false

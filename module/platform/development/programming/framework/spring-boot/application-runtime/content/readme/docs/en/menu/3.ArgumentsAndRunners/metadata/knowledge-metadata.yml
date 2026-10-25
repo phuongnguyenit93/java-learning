@@ -1,31 +1,19 @@
 sections:
   application-arguments-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   runner-timing:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   applicationrunner-vs-commandlinerunner:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   runner-ordering:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   runner-use-cases:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   runner-antipatterns:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

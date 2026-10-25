@@ -1,16 +1,10 @@
 sections:
   allocation-initialization-construction:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   constructor-dynamic-dispatch-risk:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   this-escape:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

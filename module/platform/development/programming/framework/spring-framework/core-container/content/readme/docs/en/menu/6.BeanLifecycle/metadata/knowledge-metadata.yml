@@ -1,41 +1,25 @@
 sections:
   bean-lifecycle-overview:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   instantiation-and-population:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   aware-callbacks:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   initialization-callbacks:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   destruction-callbacks:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   lifecycle-smartlifecycle:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   startup-order-depends-on:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   lifecycle-failure-boundaries:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false

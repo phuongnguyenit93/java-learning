@@ -1,21 +1,13 @@
 sections:
   mac-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   mac-shared-secret:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   mac-workflow:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   mac-comparison:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

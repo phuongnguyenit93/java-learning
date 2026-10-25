@@ -1,16 +1,10 @@
 sections:
   rounding-modes:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   rounding-at-boundaries:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   financial-rounding-policy:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

@@ -1,26 +1,16 @@
 sections:
   amber-definition:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   amber-transparent-data:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   amber-valid-variants:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   amber-separate-operations:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   amber-sharvit-comparison:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

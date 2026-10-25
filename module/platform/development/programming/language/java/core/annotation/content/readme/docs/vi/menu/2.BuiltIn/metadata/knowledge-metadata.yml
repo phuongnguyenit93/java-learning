@@ -1,26 +1,16 @@
 sections:
   override-annotation:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   deprecated-annotation:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   suppresswarnings:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   safevarargs:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   functionalinterface:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

@@ -1,353 +1,215 @@
 01-repository-topology-foundations.md:
   what-is-repository-topology:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   why-repository-boundaries-matter:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   monorepo-definition:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   polyrepo-definition:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   repository-versus-project-module:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   repository-versus-service-deployment:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   ownership-coordination-independence:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   monorepo-is-not-monolith:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   recognize-topology-in-examples:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
 02-boundaries-and-ownership.md:
   what-is-code-ownership:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   ownership-by-path-or-component:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   ownership-by-repository:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   discoverability-and-reuse:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   ownership-versus-access-control:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   team-boundary-versus-repository-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   service-count-is-not-repository-count:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   verify-ownership-boundaries:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
 03-cross-component-coordination.md:
   what-is-cross-component-change:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   why-coordination-gets-expensive:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   single-history-coordinated-change:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   multiple-repositories-linked-changes:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   integration-order-and-compatibility:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   review-responsibility-and-context:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   traceability-across-components:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   coordination-failure-evidence:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   compare-cross-repo-change-scenario:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
 04-shared-code-and-dependency-compatibility.md:
   shared-library-and-consumers:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   dependency-boundary-vs-repository-boundary:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   coordinated-library-update-in-monorepo:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   version-adoption-across-polyrepos:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   interface-contract-and-compatibility:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   dependency-consistency-vs-autonomy:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   co-location-does-not-force-versions:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   compare-dependency-migration-evidence:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
 05-release-coupling-and-independence.md:
   change-coupling-vs-release-coupling:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   why-independent-release-matters:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   monorepo-can-release-independently:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   polyrepo-can-be-release-coupled:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   shared-interface-upgrade-release-risks:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   validation-boundaries-and-readiness:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   release-cadence-and-team-coordination:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   analyze-release-independence-scenario:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
 06-access-and-repository-governance.md:
   repository-access-boundary:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   path-ownership-and-review-governance:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   review-rules-vs-access-isolation:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   restricted-source-and-compliance:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   governance-consistency-across-polyrepos:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   monorepo-ownership-gaps:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   polyrepo-policy-drift:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   compare-governance-constraints:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
 07-scale-tooling-and-ci-strategy.md:
   repository-scale-dimensions:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   source-history-and-feedback-latency:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   changed-scope-and-affected-work:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   strategic-build-test-ci-requirements:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   polyrepo-configuration-duplication:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   monorepo-tooling-investment:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   tooling-choice-and-team-autonomy:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   indicators-of-topology-strain:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   evidence-for-scale-tradeoffs:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
 08-choose-split-consolidate.md:
   topology-decision-criteria:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   cross-team-change-frequency:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   ownership-access-dependency-release-matrix:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   when-to-consolidate-repositories:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   when-to-split-repository:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   migration-costs-and-risk:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   transition-plan-and-observable-outcomes:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   evaluate-monorepo-case-evidence:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   compare-balanced-case-scenarios:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   handoff-to-neighboring-owners:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false

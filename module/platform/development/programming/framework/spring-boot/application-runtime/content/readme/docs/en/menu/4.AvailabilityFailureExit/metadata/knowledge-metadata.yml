@@ -1,41 +1,25 @@
 sections:
   liveness-readiness-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   availability-state-transitions:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   availability-shutdown-transition:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   availability-api:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   startup-failure-analysis:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   shutdown-hook:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   application-exit-codes:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   shutdown-boundaries:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

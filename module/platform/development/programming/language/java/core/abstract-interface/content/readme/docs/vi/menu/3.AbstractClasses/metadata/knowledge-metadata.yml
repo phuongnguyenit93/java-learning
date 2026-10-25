@@ -2,50 +2,30 @@ sections:
   abstract-classes-001:
     difficulty: BASIC
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   abstract-classes-002:
     difficulty: BASIC
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   abstract-classes-003:
     difficulty: BASIC
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   abstract-classes-004:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   abstract-classes-005:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   abstract-classes-006:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   abstract-classes-007:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   abstract-classes-008:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   abstract-classes-009:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   abstract-classes-010:
     difficulty: ADVANCED
     isImportant: false
-    aiGenerated: true
-    reviewed: false

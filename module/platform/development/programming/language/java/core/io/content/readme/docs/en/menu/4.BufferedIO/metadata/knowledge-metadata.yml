@@ -1,31 +1,19 @@
 sections:
   wrapper-composition:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   buffering-purpose:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   character-buffering:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   flush-semantics:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   buffer-size-tradeoff:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   buffered-wrappers:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

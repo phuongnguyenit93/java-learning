@@ -1,21 +1,13 @@
 sections:
   reproducible-packaging-purpose:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   archive-order-and-timestamps:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   reproducibility-expectation:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   reproducibility-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

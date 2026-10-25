@@ -1,26 +1,16 @@
 sections:
   immutable-values:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   value-vs-state:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   immutable-updates:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   sharing-and-cost:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   immutability-limits:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

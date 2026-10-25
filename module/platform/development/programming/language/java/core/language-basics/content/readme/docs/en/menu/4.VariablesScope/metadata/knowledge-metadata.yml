@@ -1,16 +1,10 @@
 sections:
   variable-kinds-and-lifetime:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   scope-and-shadowing:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   definite-assignment:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

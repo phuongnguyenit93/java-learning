@@ -1,26 +1,16 @@
 sections:
   filters-interceptors-and-placement:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   cors-processing:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   forwarded-headers:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   async-dispatch-cross-cutting:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   security-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

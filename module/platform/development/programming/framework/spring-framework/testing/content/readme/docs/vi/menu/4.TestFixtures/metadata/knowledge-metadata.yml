@@ -1,26 +1,16 @@
 sections:
   fixture-dependency-injection:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   test-instance-and-constructor-injection:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   application-context-access:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   web-application-context-fixtures:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   request-and-session-scoped-fixtures:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false

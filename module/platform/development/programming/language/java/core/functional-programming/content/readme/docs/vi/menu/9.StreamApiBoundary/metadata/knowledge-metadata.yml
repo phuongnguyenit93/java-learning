@@ -1,31 +1,19 @@
 sections:
   stream-functional-interface-bridge:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   stream-behavior-contracts:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   stream-lambda-method-reference:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   collection-vs-stream-boundary:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   stream-mechanics-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   stream-learning-handoff:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

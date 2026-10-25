@@ -1,46 +1,28 @@
 sections:
   iteration-and-control-flow-001:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   iteration-and-control-flow-002:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   iteration-and-control-flow-003:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   iteration-and-control-flow-004:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   iteration-and-control-flow-005:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   iteration-and-control-flow-006:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   iteration-and-control-flow-007:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   iteration-and-control-flow-008:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   iteration-and-control-flow-009:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false

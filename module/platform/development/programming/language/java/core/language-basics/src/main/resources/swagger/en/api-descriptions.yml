@@ -7,8 +7,6 @@ ArrayController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 10.Arrays/knowledge/Arrays.md
       anchor: array-covariance-risk
@@ -34,8 +32,6 @@ ArrayController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 10.Arrays/knowledge/Arrays.md
       anchor: array-initialization
@@ -62,8 +58,6 @@ CastingController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 15.TypeSystemMentalModel/knowledge/TypeSystemMentalModel.md
       anchor: class-cast-failure
@@ -90,8 +84,6 @@ MethodDispatchController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 15.TypeSystemMentalModel/knowledge/TypeSystemMentalModel.md
       anchor: overload-vs-override-dispatch
@@ -118,8 +110,6 @@ OperatorController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 7.Operators/knowledge/Operators.md
       anchor: short-circuit-operators
@@ -146,8 +136,6 @@ OverloadResolutionController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 11.Methods/knowledge/Methods.md
       anchor: overload-resolution-phases
@@ -174,8 +162,6 @@ PassByValueController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 13.PassByValue/knowledge/PassByValue.md
       anchor: reference-copy-mutation
@@ -202,8 +188,6 @@ TypeSystemController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 15.TypeSystemMentalModel/knowledge/TypeSystemMentalModel.md
       anchor: compile-time-vs-runtime-type
@@ -228,8 +212,6 @@ TypeSystemController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 15.TypeSystemMentalModel/knowledge/TypeSystemMentalModel.md
       anchor: assignment-compatibility
@@ -256,8 +238,6 @@ WrapperController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 6.WrapperBoxing/knowledge/WrapperBoxing.md
       anchor: wrapper-caching
@@ -283,8 +263,6 @@ ControlFlowController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 15.TypeSystemMentalModel/knowledge/TypeSystemMentalModel.md
       anchor: instanceof-safe-cast

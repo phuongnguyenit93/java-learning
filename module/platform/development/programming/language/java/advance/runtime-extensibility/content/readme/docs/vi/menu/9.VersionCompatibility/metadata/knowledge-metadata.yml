@@ -1,31 +1,19 @@
 sections:
   compatibility-contract:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   spi-evolution-rules:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   host-provider-version-negotiation:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   dependency-version-conflicts:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   capability-versioning:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   compatibility-testing:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false

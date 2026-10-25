@@ -1,26 +1,16 @@
 sections:
   text-block-syntax:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   incidental-whitespace:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   escape-processing:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   text-block-not-template:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   string-synthesis:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

@@ -1,16 +1,10 @@
 sections:
   local-date-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   local-date-arithmetic:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   calendar-validity:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

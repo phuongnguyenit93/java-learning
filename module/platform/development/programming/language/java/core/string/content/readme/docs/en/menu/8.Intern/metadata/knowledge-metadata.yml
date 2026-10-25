@@ -1,16 +1,10 @@
 sections:
   intern-semantics:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   intern-identity:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   intern-tradeoffs:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

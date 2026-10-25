@@ -7,8 +7,6 @@ AliasingController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 13.ObjectAliasingMutability/knowledge/ObjectAliasingMutability.md
       anchor: aliasing-model
@@ -35,8 +33,6 @@ ConstructionController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 8.ObjectCreationLifecycle/knowledge/ObjectCreationLifecycle.md
       anchor: constructor-dynamic-dispatch-risk
@@ -62,8 +58,6 @@ CopyController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 12.CopySemantics/knowledge/CopySemantics.md
       anchor: shallow-copy
@@ -90,8 +84,6 @@ EnumController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 11.Enum/knowledge/Enum.md
       anchor: enum-constant-specific
@@ -120,8 +112,6 @@ ImmutabilityController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 14.ImmutabilityDefensiveCopy/knowledge/ImmutabilityDefensiveCopy.md
       anchor: defensive-copy-output
@@ -150,8 +140,6 @@ InitializationController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 7.InitializationOrder/knowledge/InitializationOrder.md
       anchor: inheritance-initialization-order
@@ -178,8 +166,6 @@ NestedClassController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 9.NestedInnerClass/knowledge/NestedInnerClass.md
       anchor: capture-semantics

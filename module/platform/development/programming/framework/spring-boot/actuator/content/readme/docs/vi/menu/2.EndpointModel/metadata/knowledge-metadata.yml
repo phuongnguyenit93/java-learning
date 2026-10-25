@@ -1,26 +1,16 @@
 sections:
   actuator-endpoint-abstraction:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   endpoint-id-and-operations:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   built-in-endpoint-catalog:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   technology-agnostic-endpoints:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   endpoint-configuration-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

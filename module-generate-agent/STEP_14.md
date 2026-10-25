@@ -16,7 +16,7 @@ Trước khi kiểm tra, Prime đọc **toàn văn** `module-generate-agent/GENE
   - `content/readme/docs/{vi,en}/` (`BASE.md`, `LIST.md`, `menu/**`).
   - `content/roadmap/{vi,en}/`.
   - `src/main/resources/swagger/{vi,en}/`.
-- Kiểm tra thứ tự/chỉ số Menu Cấp 1, tên folder/filename, chapter và section Knowledge. Mỗi file Markdown EN phải có **cùng tập và thứ tự anchor ID** với VI; `menu/<chapter>/metadata/knowledge-metadata.yml` phải khớp bytes/anchor/giá trị kỹ thuật (`difficulty`, `isImportant`, `aiGenerated`, `reviewed`). `menu/<chapter>/{quiz,interview}/question.yml` thuộc cùng cây docs.
+- Kiểm tra thứ tự/chỉ số Menu Cấp 1, tên folder/filename, chapter và section Knowledge. Mỗi file Markdown EN phải có **cùng tập và thứ tự anchor ID** với VI; `menu/<chapter>/metadata/knowledge-metadata.yml` phải khớp bytes/anchor/giá trị kỹ thuật (`difficulty`, `isImportant`). `menu/<chapter>/{quiz,interview}/question.yml` thuộc cùng cây docs.
 - Vì STEP 12A chỉ clone, **nội dung EN tại thời điểm này vẫn là tiếng Việt**. Đối chiếu byte/hash VI/EN cho mọi file nằm trong scope, **ngoại trừ `LIST.md`**: ở EN, chỉ header ngôn ngữ và đích link `content/readme/docs/vi/menu/` → `content/readme/docs/en/menu/` được khác.
 - Nếu một khả năng thuộc phạm vi bắt buộc không có nguồn VI (ví dụ Quiz không được tạo), xác minh vùng EN tương ứng **không còn dữ liệu cũ**. **Video nằm ngoài ownership của STEP 12A/14**; không kiểm kê, xóa, clone hay dịch Video trong bước này.
 
@@ -25,7 +25,7 @@ Trước khi kiểm tra, Prime đọc **toàn văn** `module-generate-agent/GENE
 ### Gate 2 — Quiz/Interview giữ nguyên cấu trúc và relation
 
 - Đối chiếu `questions[]` giữa VI và EN: **cùng số lượng, cùng thứ tự và cùng nội dung tại thời điểm clone**.
-- **Quiz:** bảo toàn `id` từng câu, thứ tự bốn đáp án `A/B/C/D`, `correctAnswerId`, `explanation`, `aiGenerated`, `reviewed`, `readmeRelated` và `apiRelated`. Không tái tạo ID mới.
+- **Quiz:** bảo toàn `id` từng câu, thứ tự bốn đáp án `A/B/C/D`, `correctAnswerId`, `explanation`, `readmeRelated` và `apiRelated`. Không tái tạo ID mới.
 - **Interview:** bảo toàn thứ tự và toàn bộ câu hỏi/câu trả lời, metadata và relation. Interview không có ID câu hỏi bắt buộc như Quiz; đối chiếu **theo vị trí + chapter chứa file question.yml** (kèm fingerprint nếu cần).
 - Validate `readmeRelated.anchor` bằng **Knowledge của cùng chapter và ngôn ngữ**; file không được authored trong relation. Validate `apiRelated.controller + methodSignature` bằng Swagger/API thực tế. Relation trống hợp lệ theo schema thì được giữ trống, **không được tự suy diễn**.
 

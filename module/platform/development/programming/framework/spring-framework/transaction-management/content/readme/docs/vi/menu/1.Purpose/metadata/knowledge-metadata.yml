@@ -1,26 +1,16 @@
 sections:
   transaction-purpose:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   transaction-unit-of-work:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   transaction-service-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   transaction-framework-value:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   transaction-local-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

@@ -8,8 +8,6 @@ AsyncMvcExperimentController:
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: ''
       anchor: servlet-async-lifecycle
@@ -36,8 +34,6 @@ ConditionalCacheExperimentController:
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: ''
       anchor: conditional-requests-and-http-caching
@@ -64,8 +60,6 @@ HttpClientExperimentController:
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: ''
       anchor: status-and-error-handling
@@ -92,8 +86,6 @@ HttpClientExperimentController:
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 14.HttpServiceInterfaces/knowledge/HttpServiceInterfaces.md
       anchor: synchronous-http-client-adapters
@@ -121,8 +113,6 @@ MvcInputExperimentController:
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: ''
       anchor: validation-exception-paths
@@ -148,8 +138,6 @@ MvcInputExperimentController:
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: ''
       anchor: mvc-method-validation-6-1

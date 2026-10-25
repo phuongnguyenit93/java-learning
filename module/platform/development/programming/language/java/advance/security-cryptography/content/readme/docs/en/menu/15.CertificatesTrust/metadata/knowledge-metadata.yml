@@ -1,26 +1,16 @@
 sections:
   x509-certificate-model:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   certification-path:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   trust-anchor-validation:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   certificate-revocation:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   trust-vs-identity:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false

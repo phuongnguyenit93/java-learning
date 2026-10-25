@@ -42,7 +42,6 @@ class InterviewSheetImportServiceTest {
         String annotated = JsonOutput.toJson([questions: [[
                 question: 'Khi nào dùng encapsulation?',
                 answer: 'Khi cần bảo vệ invariant và API.',
-                aiGenerated: false, reviewed: true,
                 readmeRelated: [file: '2.Encapsulation/Encapsulation.md', anchor: 'defining'],
                 apiRelated: [controller: 'DemoController', methodSignature: 'show()']
         ]]])
@@ -59,10 +58,6 @@ class InterviewSheetImportServiceTest {
         assertEquals([anchor: ''], imported.questions[0].readmeRelated)
         assertEquals(['1.OOPBasic','2.Encapsulation'], imported.byChapter.keySet().toList())
         assertEquals('', imported.questions[0].readmeRelated.anchor)
-        assertEquals(true, imported.questions[0].aiGenerated)
-        assertEquals(false, imported.questions[0].reviewed)
-        assertEquals(true, imported.questions[1].reviewed)
-        assertEquals(false, imported.questions[1].aiGenerated)
         assertEquals('defining', imported.questions[1].readmeRelated.anchor)
         assertEquals('DemoController', imported.questions[1].apiRelated.controller)
 
@@ -170,8 +165,7 @@ class InterviewSheetImportServiceTest {
         assertTrue(roadmap.parentFile.mkdirs())
         roadmap.text = 'existing roadmap'
         String yaml = InterviewSheetImportService.renderYaml([[
-                question: 'Q', answer: 'A', aiGenerated: true, reviewed: false,
-                readmeRelated: [anchor: ''],
+                question: 'Q', answer: 'A', readmeRelated: [anchor: ''],
                 apiRelated: [controller: '', methodSignature: '']
         ]])
 

@@ -1,46 +1,28 @@
 sections:
   optional-purpose:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   optional-creation:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   optional-null-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   optional-presence:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   optional-transform-filter:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   optional-consumption:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   optional-fallback-and-failure:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   optional-api-design:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   optional-misuse:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false

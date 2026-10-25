@@ -2,40 +2,24 @@ sections:
   equality-semantics-001:
     difficulty: BASIC
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   equality-semantics-002:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   equality-semantics-003:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   equality-semantics-004:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   equality-semantics-005:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   equality-semantics-006:
     difficulty: ADVANCED
     isImportant: false
-    aiGenerated: true
-    reviewed: false
   equality-semantics-007:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   equality-semantics-008:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false

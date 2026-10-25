@@ -1,26 +1,16 @@
 sections:
   breakiterator-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   character-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   word-sentence-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   line-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   breakiterator-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

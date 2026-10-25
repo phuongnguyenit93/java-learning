@@ -5,8 +5,6 @@ ExceptionDesignController:
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 8.ExceptionBoundaryDesign/knowledge/ExceptionBoundaryDesign.md
       anchor: exception-boundaries
@@ -28,8 +26,6 @@ FinallyController:
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 5.HandlingCleanup/knowledge/HandlingCleanup.md
       anchor: return-finally
@@ -51,8 +47,6 @@ PropagationController:
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 4.ThrowingPropagation/knowledge/ThrowingPropagation.md
       anchor: exception-propagation
@@ -73,8 +67,6 @@ PropagationController:
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 4.ThrowingPropagation/knowledge/ThrowingPropagation.md
       anchor: exception-chaining
@@ -96,8 +88,6 @@ ResourceController:
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 6.ResourceSafeFailure/knowledge/ResourceSafeFailure.md
       anchor: resource-close-order
@@ -118,8 +108,6 @@ ResourceController:
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 6.ResourceSafeFailure/knowledge/ResourceSafeFailure.md
       anchor: primary-vs-suppressed

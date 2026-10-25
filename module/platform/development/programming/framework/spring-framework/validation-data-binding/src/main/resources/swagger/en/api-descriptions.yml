@@ -7,8 +7,6 @@ DataBinderExperimentController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: ''
       anchor: data-binding-flow
@@ -36,8 +34,6 @@ SafeBindingExperimentController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: ''
       anchor: safe-binding-controls
@@ -64,8 +60,6 @@ ValidationExperimentController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: ''
       anchor: validation-vs-binding
@@ -92,8 +86,6 @@ ValidationExperimentController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: ''
       anchor: validation-vs-binding

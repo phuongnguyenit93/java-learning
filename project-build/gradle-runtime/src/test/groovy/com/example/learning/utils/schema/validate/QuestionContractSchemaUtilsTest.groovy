@@ -42,10 +42,8 @@ class QuestionContractSchemaUtilsTest {
         assertEquals('questions', descriptor.document.root.name)
         assertEquals('id', descriptor.document.root.uniqueBy)
         Map fields = descriptor.document.root.item.fields as Map
-        assertEquals(['id', 'question', 'aiGenerated', 'reviewed', 'readmeRelated',
+        assertEquals(['id', 'question', 'readmeRelated',
                       'apiRelated', 'correctAnswerId', 'answers'] as Set, fields.keySet() as Set)
-        assertEquals(true, fields.aiGenerated.default)
-        assertEquals(false, fields.reviewed.default)
         assertEquals(4, fields.answers.size)
         assertEquals('id', fields.answers.uniqueBy)
         assertEquals(['A', 'B', 'C', 'D'], fields.answers.item.fields.id.values)
@@ -56,7 +54,6 @@ class QuestionContractSchemaUtilsTest {
         assertTrue(service.renderSkeleton('vi').endsWith('questions: []\n'))
         Map question = [
                 id: 'quiz-1', question: 'Một câu hỏi hợp lệ',
-                aiGenerated: true, reviewed: false,
                 readmeRelated: [file: '', anchor: ''],
                 apiRelated: [controller: '', methodSignature: ''],
                 answers: ['A', 'B', 'C', 'D'].collect { String id ->
@@ -82,17 +79,13 @@ class QuestionContractSchemaUtilsTest {
         assertEquals(2, descriptor.version)
         assertEquals('Cấu trúc câu hỏi Interview', descriptor.title.vi)
         Map fields = descriptor.document.root.item.fields as Map
-        assertEquals(['question', 'answer', 'aiGenerated', 'reviewed',
-                      'readmeRelated', 'apiRelated'] as Set, fields.keySet() as Set)
-        assertEquals(true, fields.aiGenerated.default)
-        assertEquals(false, fields.reviewed.default)
+        assertEquals(['question', 'answer', 'readmeRelated', 'apiRelated'] as Set, fields.keySet() as Set)
 
         def service = new InterviewQuestionSchemaService()
         assertTrue(service.renderCommentBlock('vi').contains('Cấu trúc câu hỏi Interview'))
         assertTrue(service.renderSkeleton('en').endsWith('questions: []\n'))
         File file = temporary.newFile('interview-question.yml')
         Map item = [question: 'Why?', answer: 'Because.',
-                    aiGenerated: true, reviewed: false,
                     readmeRelated: [file: '1.Basic/Basic.md', anchor: ''],
                     apiRelated: [controller: '', methodSignature: '']]
         file.setText(new org.yaml.snakeyaml.Yaml().dump([questions: [item]]), 'UTF-8')

@@ -1,21 +1,13 @@
 sections:
   dop-immutable-principle:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   dop-state-update:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   dop-state-history:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   dop-state-coordination:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

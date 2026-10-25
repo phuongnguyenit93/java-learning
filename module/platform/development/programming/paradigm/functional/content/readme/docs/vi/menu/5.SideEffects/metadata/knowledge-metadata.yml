@@ -1,26 +1,16 @@
 sections:
   effect-concept:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   pure-core-effects:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   effect-coordination:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   effect-testing:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   effects-real-world:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

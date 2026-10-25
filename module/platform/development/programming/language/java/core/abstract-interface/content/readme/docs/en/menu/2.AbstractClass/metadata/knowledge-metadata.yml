@@ -1,21 +1,13 @@
 sections:
   abstract-class-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   abstract-method:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   abstract-constructor:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   abstract-class-limits:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

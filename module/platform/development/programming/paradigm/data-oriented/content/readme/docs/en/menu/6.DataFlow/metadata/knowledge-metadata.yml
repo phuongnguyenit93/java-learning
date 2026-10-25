@@ -1,26 +1,16 @@
 sections:
   dop-flow-scenario:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   dop-flow-validate:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   dop-flow-transform:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   dop-flow-coordinate:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   dop-flow-observe:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

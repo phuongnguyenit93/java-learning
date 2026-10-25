@@ -9,8 +9,6 @@ RuntimeExtensibilityController:
     enableVideoYoutube: false
     videoYoutubeId: ''
     videoYoutubeTitle: ''
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 3.ServiceLoaderIntegration/knowledge/ServiceLoaderIntegration.md
       anchor: lazy-discovery-and-cache
@@ -37,8 +35,6 @@ RuntimeExtensibilityController:
     enableVideoYoutube: false
     videoYoutubeId: ''
     videoYoutubeTitle: ''
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 4.ProviderDiscoveryStrategy/knowledge/ProviderDiscoveryStrategy.md
       anchor: discovery-vs-selection
@@ -65,8 +61,6 @@ RuntimeExtensibilityController:
     enableVideoYoutube: false
     videoYoutubeId: ''
     videoYoutubeTitle: ''
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 8.PluginIsolationDesign/knowledge/PluginIsolationDesign.md
       anchor: class-identity-boundaries
@@ -96,8 +90,6 @@ RuntimeExtensibilityController:
     enableVideoYoutube: false
     videoYoutubeId: ''
     videoYoutubeTitle: ''
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 7.PluginLifecycle/knowledge/PluginLifecycle.md
       anchor: replacement-and-upgrade

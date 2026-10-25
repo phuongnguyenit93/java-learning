@@ -1,26 +1,16 @@
 sections:
   filechannel-random-access:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   filechannel-transfer:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   file-lock-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   memory-mapped-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   asynchronous-filechannel-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

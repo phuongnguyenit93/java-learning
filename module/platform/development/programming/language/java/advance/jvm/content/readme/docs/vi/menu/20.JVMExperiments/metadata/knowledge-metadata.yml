@@ -1,61 +1,37 @@
 sections:
   jvm-experiments-001:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   jvm-experiments-002:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   jvm-experiments-003:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   jvm-experiments-004:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   jvm-experiments-005:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   jvm-experiments-006:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   jvm-experiments-007:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   jvm-experiments-008:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   jvm-experiments-009:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   jvm-experiments-010:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   jvm-experiments-011:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   jvm-experiments-012:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false

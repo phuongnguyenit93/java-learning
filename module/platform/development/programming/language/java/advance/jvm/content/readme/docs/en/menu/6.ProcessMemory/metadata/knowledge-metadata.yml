@@ -1,46 +1,28 @@
 sections:
   process-memory-purpose:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   runtime-areas-vs-process-memory:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   thread-and-native-stack-memory:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   class-metadata-memory:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   compiled-code-memory:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   direct-and-offheap-memory-awareness:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   process-memory-growth:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   nonheap-resource-exhaustion:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   native-memory-vs-native-interoperability:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false

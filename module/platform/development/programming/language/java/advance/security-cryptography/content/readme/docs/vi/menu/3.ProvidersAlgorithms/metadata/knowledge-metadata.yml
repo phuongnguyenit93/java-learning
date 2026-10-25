@@ -1,26 +1,16 @@
 sections:
   jca-jce-architecture:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   engine-spi-provider:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   algorithm-names-transformations:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   provider-selection:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   security-properties-constraints:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false

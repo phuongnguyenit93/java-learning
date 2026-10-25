@@ -2,50 +2,30 @@ sections:
   class-loading-exercises-001:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   class-loading-exercises-002:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   class-loading-exercises-003:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   class-loading-exercises-004:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   class-loading-exercises-005:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   class-loading-exercises-006:
     difficulty: ADVANCED
     isImportant: false
-    aiGenerated: true
-    reviewed: false
   class-loading-exercises-007:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   class-loading-exercises-008:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   class-loading-exercises-009:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   class-loading-exercises-010:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false

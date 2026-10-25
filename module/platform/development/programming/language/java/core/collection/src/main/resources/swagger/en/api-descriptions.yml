@@ -5,8 +5,6 @@ ListController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 2.List/knowledge/List.md
       anchor: arraylist-model
@@ -26,8 +24,6 @@ SetController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 3.Set/knowledge/Set.md
       anchor: set-semantics
@@ -47,8 +43,6 @@ MapController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 4.Map/knowledge/Map.md
       anchor: map-compute-merge
@@ -68,8 +62,6 @@ QueueController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 5.QueueDeque/knowledge/QueueDeque.md
       anchor: exception-vs-special-value
@@ -89,8 +81,6 @@ IterationController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 10.FailFast/knowledge/FailFast.md
       anchor: concurrent-modification-exception
@@ -110,8 +100,6 @@ ImmutabilityController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 9.MutableImmutable/knowledge/MutableImmutable.md
       anchor: view-vs-copy
@@ -131,8 +119,6 @@ HashingController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 8.EqualityHashing/knowledge/EqualityHashing.md
       anchor: mutable-element-risk
@@ -152,8 +138,6 @@ EnumCollectionController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 12.EnumCollections/knowledge/EnumCollections.md
       anchor: enum-collection-benefits

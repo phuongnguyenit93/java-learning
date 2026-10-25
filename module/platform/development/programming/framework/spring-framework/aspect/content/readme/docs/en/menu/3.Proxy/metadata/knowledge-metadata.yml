@@ -1,26 +1,16 @@
 sections:
   proxy-mental-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   proxy-demo:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   managed-vs-new-demo:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   proxy-strategies:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   proxy-conclusion:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

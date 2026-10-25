@@ -1,11 +1,7 @@
 sections:
   static-config-and-dynamic-config:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   spring-cloud-server-shutdown:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

@@ -160,8 +160,11 @@ class QuizSheetNormalizeService {
         if (!(prefix ==~ /[a-z][a-z0-9]*/)) {
             throw new GradleException('Invalid Quiz filename stem at row ' + row + ': ' + filenameStem)
         }
+        // These names are allowed only when READING old Sheet YAML. They are
+        // discarded and can never appear in the normalized/published output.
+        List<String> legacyOnly = ['aiGenerated', 'reviewed']
         List<String> keys = ['id', 'question', 'answers', 'correctAnswerId',
-                             'aiGenerated', 'reviewed', 'readmeRelated', 'apiRelated']
+                             'readmeRelated', 'apiRelated'] + legacyOnly
         List<Map> items = []
         Set<String> usedIds = new LinkedHashSet<>()
         (parsed.questions as List).each { Object obj ->
@@ -179,6 +182,11 @@ class QuizSheetNormalizeService {
                 throw new GradleException(at + ': unknown field/non-object.')
             }
             Map q = obj as Map
+            legacyOnly.each { String flagName ->
+                if (q.containsKey(flagName) && !(q[flagName] instanceof Boolean)) {
+                    throw new GradleException(at + ': legacy field ' + flagName + ' must be boolean.')
+                }
+            }
             ['question'].each { String field ->
                 if (!(q[field] instanceof String) || (q[field] as String).trim().isEmpty()) {
                     throw new GradleException(at + ': ' + field + ' must be nonblank string.')
@@ -210,8 +218,6 @@ class QuizSheetNormalizeService {
                 questionId = prefix + '-' + String.format('%03d', nextNumber++)
                 usedIds.add(questionId)
             }
-            boolean ai = flag(q, 'aiGenerated', true, at)
-            boolean reviewed = flag(q, 'reviewed', false, at)
             Map readme = relation(q, 'readmeRelated', 'file', 'anchor', at)
             Map api = relation(q, 'apiRelated', 'controller', 'methodSignature', at)
             String legacyFile = file.replace('/knowledge/', '/')
@@ -220,7 +226,6 @@ class QuizSheetNormalizeService {
             }
             items.add([
                     id: questionId, question: q.question,
-                    aiGenerated: ai, reviewed: reviewed,
                     readmeRelated: [anchor: readme.anchor],
                     apiRelated: [controller: api.controller,
                                  methodSignature: api.methodSignature],

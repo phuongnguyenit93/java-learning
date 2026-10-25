@@ -1,41 +1,25 @@
 sections:
   tree-map-001:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   tree-map-002:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   tree-map-003:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   tree-map-004:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   tree-map-005:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   tree-map-006:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   tree-map-007:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   tree-map-008:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false

@@ -7,8 +7,6 @@ CacheConcurrencyController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: ''
       anchor: cacheable-sync
@@ -35,8 +33,6 @@ CacheInterceptionController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: ''
       anchor: self-invocation
@@ -63,8 +59,6 @@ CacheKeyController:
     enableVideoYoutube: false
     videoYoutubeId: ID of youtube video add to API description
     videoYoutubeTitle: Title of video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: ''
       anchor: cache-key-design-pitfalls

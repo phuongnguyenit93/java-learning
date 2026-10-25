@@ -1,26 +1,16 @@
 sections:
   property-path-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   bean-wrapper-role:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   binding-result-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   object-field-error-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   binding-error-policy:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false

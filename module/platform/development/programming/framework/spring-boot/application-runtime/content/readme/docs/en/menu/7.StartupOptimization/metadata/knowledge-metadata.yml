@@ -1,26 +1,16 @@
 sections:
   lazy-initialization-purpose:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   lazy-initialization-tradeoffs:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   startup-measurement:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   application-startup-tracking:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   startup-observability-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

@@ -2,45 +2,27 @@ sections:
   context-class-loader-001:
     difficulty: BASIC
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   context-class-loader-002:
     difficulty: INTERMEDIATE
     isImportant: false
-    aiGenerated: true
-    reviewed: false
   context-class-loader-003:
     difficulty: BASIC
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   context-class-loader-004:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   context-class-loader-005:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   context-class-loader-006:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   context-class-loader-007:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   context-class-loader-008:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   context-class-loader-009:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false

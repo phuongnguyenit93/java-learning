@@ -1,26 +1,16 @@
 sections:
   security-goal-before-api:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   algorithm-provider-portability:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   secret-key-nonce-handling:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   crypto-failure-handling:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   end-to-end-crypto-review:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false

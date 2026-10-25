@@ -2,40 +2,24 @@ sections:
   hash-collections-001:
     difficulty: BASIC
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   hash-collections-002:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   hash-collections-003:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   hash-collections-004:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   hash-collections-005:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   hash-collections-006:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   hash-collections-007:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   hash-collections-008:
     difficulty: ADVANCED
     isImportant: false
-    aiGenerated: true
-    reviewed: false

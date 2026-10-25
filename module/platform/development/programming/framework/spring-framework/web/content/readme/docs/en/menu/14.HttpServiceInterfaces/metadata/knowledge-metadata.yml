@@ -1,31 +1,19 @@
 sections:
   http-exchange-contract:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   http-service-proxy-factory:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   http-exchange-adapter-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   synchronous-http-client-adapters:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   service-method-arguments-and-return-values:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   reactive-adapter-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

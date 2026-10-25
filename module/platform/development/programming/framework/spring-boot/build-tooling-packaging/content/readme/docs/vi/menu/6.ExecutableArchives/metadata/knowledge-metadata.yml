@@ -1,26 +1,16 @@
 sections:
   nested-archive-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   boot-archive-layout:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   spring-boot-loader-purpose:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   archive-indexes:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   archive-extraction-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

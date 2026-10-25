@@ -1,26 +1,16 @@
 sections:
   lifecycle-what:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   lifecycle-why:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   lifecycle-before:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   lifecycle-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   lifecycle-relations:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

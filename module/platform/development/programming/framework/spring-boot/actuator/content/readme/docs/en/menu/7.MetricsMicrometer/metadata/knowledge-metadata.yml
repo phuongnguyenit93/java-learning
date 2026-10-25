@@ -1,31 +1,19 @@
 sections:
   micrometer-meter-registry-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   metrics-endpoint-purpose:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   meter-name-measurements:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   tag-filtered-metrics:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   metrics-export-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   metric-design-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

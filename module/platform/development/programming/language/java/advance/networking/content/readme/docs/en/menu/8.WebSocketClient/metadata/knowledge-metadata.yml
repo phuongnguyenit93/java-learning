@@ -1,41 +1,25 @@
 sections:
   websocket-client-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   websocket-opening-handshake:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   websocket-listener-lifecycle:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   websocket-demand-control:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   websocket-message-fragmentation:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   websocket-send-completion:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   websocket-close-error:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   websocket-integration-boundary:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false

@@ -1,26 +1,16 @@
 sections:
   instrumentation-purpose:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   instrumentation-problem:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   instrumentation-mechanism:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   instrumentation-use-case-shape:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   instrumentation-boundaries:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

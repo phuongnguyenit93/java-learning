@@ -1,51 +1,31 @@
 sections:
   try-catch-001:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   try-catch-002:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   try-catch-003:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   try-catch-004:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   try-catch-005:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   try-catch-006:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   try-catch-007:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   try-catch-008:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   try-catch-009:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   try-catch-010:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false

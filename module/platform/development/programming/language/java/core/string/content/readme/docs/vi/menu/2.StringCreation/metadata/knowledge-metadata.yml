@@ -1,41 +1,25 @@
 sections:
   string-creation-001:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   string-creation-002:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   string-creation-003:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   string-creation-004:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   string-creation-005:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   string-creation-006:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   string-creation-007:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   string-creation-008:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false

@@ -1,21 +1,13 @@
 sections:
   boot-build-image:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   oci-image-output:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   image-builder-connection:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   image-publication:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

@@ -1,36 +1,22 @@
 sections:
   generic-type-declaration:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   diamond-operator:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   generic-method-syntax:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   generic-constructor:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   type-inference:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   static-generic-method:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   generic-method-vs-type:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

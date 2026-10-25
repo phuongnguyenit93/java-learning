@@ -1,31 +1,19 @@
 sections:
   jackson-what:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   jackson-why:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   jackson-before:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   jackson-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   jackson-object-mapping-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   jackson-spring-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

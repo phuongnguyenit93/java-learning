@@ -1,31 +1,19 @@
 sections:
   actuator-production-flow:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   direct-management-vs-telemetry:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   health-metrics-logging-relation:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   external-observability-handoff:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   management-troubleshooting-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   actuator-end-to-end-boundaries:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

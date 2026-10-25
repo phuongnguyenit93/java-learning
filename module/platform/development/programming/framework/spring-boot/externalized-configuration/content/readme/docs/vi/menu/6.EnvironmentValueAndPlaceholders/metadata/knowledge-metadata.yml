@@ -1,36 +1,22 @@
 sections:
   environment-access:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   placeholder-resolution:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   placeholder-defaults:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   value-injection:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   canonical-property-names:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   value-vs-configuration-properties:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   spel-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

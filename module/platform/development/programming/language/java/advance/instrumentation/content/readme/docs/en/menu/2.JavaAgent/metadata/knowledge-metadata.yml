@@ -1,26 +1,16 @@
 sections:
   java-agent-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   agent-class-contract:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   instrumentation-service-handoff:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   agent-startup-shapes:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   agent-trust-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

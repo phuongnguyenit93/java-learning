@@ -1,36 +1,22 @@
 sections:
   linker-model:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   symbol-lookup:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   library-symbol-lookup:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   function-descriptor:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   linker-abi-mapping:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   method-handle-boundary:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   jextract-generated-bindings:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false

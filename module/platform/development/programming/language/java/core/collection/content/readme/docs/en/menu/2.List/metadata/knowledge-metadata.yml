@@ -1,26 +1,16 @@
 sections:
   list-semantics:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   list-practical-boundaries:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   arraylist-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   linkedlist-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   list-equality:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

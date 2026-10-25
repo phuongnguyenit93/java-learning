@@ -28,10 +28,8 @@ class QuizSheetNormalizeServiceTest {
     void addsStableFilenameIdsAndFullDefaults() {
         Map result = normalize([questions: [authored('Đầu tiên?'), authored('Thứ hai?')]])
         assertEquals(['oopbasic-001', 'oopbasic-002'], result.questions*.id)
-        assertEquals(['id', 'question', 'aiGenerated', 'reviewed', 'readmeRelated',
+        assertEquals(['id', 'question', 'readmeRelated',
                       'apiRelated', 'answers', 'correctAnswerId'], result.questions[0].keySet().toList())
-        assertEquals(true, result.questions[0].aiGenerated)
-        assertEquals(false, result.questions[0].reviewed)
         assertEquals([anchor: ''], result.questions[0].readmeRelated)
         assertEquals([controller: '', methodSignature: ''], result.questions[0].apiRelated)
         assertEquals(['A', 'B', 'C', 'D'], result.questions[0].answers*.id)
@@ -43,29 +41,34 @@ class QuizSheetNormalizeServiceTest {
     }
 
     @Test
+    void legacySheetFlagsAreReadButRemovedFromQuizSnapshot() {
+        Map old = authored() + [aiGenerated: false, reviewed: true]
+        Map normalized = normalize([questions: [old]])
+        assertEquals(['id', 'question', 'readmeRelated', 'apiRelated',
+                'answers', 'correctAnswerId'] as Set,
+                normalized.questions[0].keySet())
+        assertFalse(QuizSheetNormalizeService.renderYaml(normalized).contains('aiGenerated'))
+        assertFalse(QuizSheetNormalizeService.renderYaml(normalized).contains('reviewed'))
+    }
+
+    @Test
     void preservesExistingIdsAndHumanEditedFlagsOnReorder() {
-        Map first = authored('Một') + [id: 'oopbasic-012', aiGenerated: false,
-                reviewed: true, readmeRelated: [file: FILE, anchor: 'some-anchor'],
+        Map first = authored('Một') + [id: 'oopbasic-012', readmeRelated: [file: FILE, anchor: 'some-anchor'],
                 apiRelated: [controller: 'DemoController', methodSignature: 'run()']]
         Map second = authored('Hai') + [id: 'custom-human-id']
         Map normalized = normalize([questions: [second, first, authored('Mới')]])
         assertEquals(['custom-human-id', 'oopbasic-012', 'oopbasic-001'], normalized.questions*.id)
-        assertEquals(false, normalized.questions[1].aiGenerated)
-        assertEquals(true, normalized.questions[1].reviewed)
         assertEquals('some-anchor', normalized.questions[1].readmeRelated.anchor)
         assertEquals('DemoController', normalized.questions[1].apiRelated.controller)
     }
 
     @Test
     void migratesLegacyReadmePathButPreservesQuizIdentityAndReview() {
-        Map source = authored() + [id: 'manually-edited', aiGenerated: false,
-                reviewed: true, readmeRelated: [file: '1.OOPBasic/OOPBasic.md', anchor: 'old-anchor'],
+        Map source = authored() + [id: 'manually-edited', readmeRelated: [file: '1.OOPBasic/OOPBasic.md', anchor: 'old-anchor'],
                 apiRelated: [controller: 'Catalog', methodSignature: 'lookup()']]
         Map result = normalize([questions: [source]])
         assertEquals('manually-edited', result.questions[0].id)
         assertEquals([anchor: 'old-anchor'], result.questions[0].readmeRelated)
-        assertEquals(false, result.questions[0].aiGenerated)
-        assertEquals(true, result.questions[0].reviewed)
         assertEquals('Catalog', result.questions[0].apiRelated.controller)
     }
 

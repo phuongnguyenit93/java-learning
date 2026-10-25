@@ -1,31 +1,19 @@
 sections:
   full-context-purpose:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   springboottest-context-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   full-context-configuration-discovery:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   full-context-fidelity-cost:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   full-context-vs-slice:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   web-environment-handoff:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

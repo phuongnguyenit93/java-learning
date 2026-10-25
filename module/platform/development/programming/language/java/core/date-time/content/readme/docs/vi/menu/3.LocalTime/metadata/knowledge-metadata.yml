@@ -1,16 +1,10 @@
 sections:
   local-time-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   local-time-precision:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   local-time-wrap:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

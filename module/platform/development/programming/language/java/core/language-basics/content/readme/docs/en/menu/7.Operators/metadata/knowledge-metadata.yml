@@ -1,21 +1,13 @@
 sections:
   numeric-promotion:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   short-circuit-operators:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   bitwise-shift:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   precedence-side-effects:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

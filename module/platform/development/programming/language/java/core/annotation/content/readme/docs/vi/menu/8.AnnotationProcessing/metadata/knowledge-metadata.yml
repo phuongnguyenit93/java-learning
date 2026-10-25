@@ -1,31 +1,19 @@
 sections:
   processing-rounds:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   processor-contract:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   supported-types-source-version:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   generated-source:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   processing-vs-reflection:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   processor-pitfalls:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

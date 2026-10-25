@@ -8,8 +8,6 @@ DynamicRuntimeController:
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 4.MethodHandleAdaptation/knowledge/MethodHandleAdaptation.md
       anchor: method-handle-type-adaptation
@@ -36,8 +34,6 @@ DynamicRuntimeController:
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 3.LookupAccess/knowledge/LookupAccess.md
       anchor: lookup-context
@@ -63,8 +59,6 @@ DynamicRuntimeController:
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 5.CallSite/knowledge/CallSite.md
       anchor: call-site-target-updates
@@ -90,8 +84,6 @@ DynamicRuntimeController:
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: 7.VarHandle/knowledge/VarHandle.md
       anchor: var-handle-atomic-updates

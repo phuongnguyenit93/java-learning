@@ -1,21 +1,13 @@
 sections:
   key-models:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   key-generation:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   key-factory-specification:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   key-material-boundary:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false

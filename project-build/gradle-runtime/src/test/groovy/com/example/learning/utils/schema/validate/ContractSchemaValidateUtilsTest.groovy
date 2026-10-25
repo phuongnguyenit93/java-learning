@@ -28,8 +28,7 @@ class ContractSchemaValidateUtilsTest {
     @Test
     void strictRelationIsDifferentFromLegacyQuestionMode() {
         Map quiz = [questions: [[
-            id:'1',question:'Question?',aiGenerated:true,reviewed:false,
-            readmeRelated:[file:'1.Chapter/Chapter.md'],
+            id:'1',question:'Question?',readmeRelated:[file:'1.Chapter/Chapter.md'],
             apiRelated:[controller:'',methodSignature:''],
             correctAnswerId:'A',
             answers:['A','B','C','D'].collect { String letter ->

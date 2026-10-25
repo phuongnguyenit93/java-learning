@@ -1,31 +1,19 @@
 sections:
   property-source-order:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   default-and-config-data-position:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   environment-system-json-cli:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   propertysource-timing:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   precedence-reasoning:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   test-precedence-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

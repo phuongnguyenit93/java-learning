@@ -1,26 +1,16 @@
 sections:
   springapplication-role:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   main-to-context:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   bootstrap-flow:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   high-level-lifecycle:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   runtime-handoff:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

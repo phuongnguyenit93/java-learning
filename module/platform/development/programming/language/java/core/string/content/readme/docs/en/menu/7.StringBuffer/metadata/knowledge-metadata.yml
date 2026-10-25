@@ -1,16 +1,10 @@
 sections:
   buffer-synchronization:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   builder-vs-buffer:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   thread-safety-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

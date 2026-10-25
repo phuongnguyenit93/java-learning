@@ -2,40 +2,24 @@ sections:
   interface-declaration-001:
     difficulty: BASIC
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   interface-declaration-002:
     difficulty: BASIC
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   interface-declaration-003:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   interface-declaration-004:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   interface-declaration-005:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   interface-declaration-006:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   interface-declaration-007:
     difficulty: INTERMEDIATE
     isImportant: false
-    aiGenerated: true
-    reviewed: false
   interface-declaration-008:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false

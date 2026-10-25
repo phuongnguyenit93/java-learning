@@ -1,31 +1,19 @@
 sections:
   bcp47-language-tag:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   for-language-tag:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   locale-matching:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   language-script-region:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   locale-extensions:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   canonicalization-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

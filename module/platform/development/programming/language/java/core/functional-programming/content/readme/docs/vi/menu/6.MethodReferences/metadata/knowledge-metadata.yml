@@ -1,46 +1,28 @@
 sections:
   method-reference-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   static-method-reference:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   bound-instance-method-reference:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   unbound-instance-method-reference:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   constructor-reference:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   method-reference-target-adaptation:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   method-reference-result-adaptation:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   overloaded-method-reference:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   method-reference-vs-lambda:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

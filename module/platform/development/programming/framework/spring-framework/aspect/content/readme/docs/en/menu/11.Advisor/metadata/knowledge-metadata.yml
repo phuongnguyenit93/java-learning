@@ -1,26 +1,16 @@
 sections:
   advisor-mental-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   pointcut-internals:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   static-dynamic-pointcut:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   advisor-demo:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   advisor-conclusion:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

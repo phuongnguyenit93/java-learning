@@ -1,21 +1,13 @@
 sections:
   key-establishment-purpose:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   key-agreement-model:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   kem-model:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   agreement-vs-kem:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false

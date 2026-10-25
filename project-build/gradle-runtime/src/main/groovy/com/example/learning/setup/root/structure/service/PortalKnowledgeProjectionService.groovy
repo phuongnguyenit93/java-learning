@@ -709,8 +709,6 @@ Section ids must be unique within one module/language.
                                 content    : publicPath,
                                 difficulty : sectionMetadata.difficulty,
                                 isImportant: sectionMetadata.isImportant,
-                                aiGenerated: sectionMetadata.aiGenerated,
-                                reviewed   : sectionMetadata.reviewed
                         ]
                 )
 
@@ -974,29 +972,6 @@ ${ReadmeMetadataSyncService.ALLOWED_DIFFICULTIES.join(', ')}
         }
 
 
-        boolean aiGenerated =
-                resolveBooleanMetadata(
-                        section,
-                        'aiGenerated',
-                        ReadmeMetadataSyncService.DEFAULT_AI_GENERATED,
-                        routeId,
-                        language,
-                        sourcePath,
-                        sectionId
-                )
-
-
-        boolean reviewed =
-                resolveBooleanMetadata(
-                        section,
-                        'reviewed',
-                        ReadmeMetadataSyncService.DEFAULT_REVIEWED,
-                        routeId,
-                        language,
-                        sourcePath,
-                        sectionId
-                )
-
         boolean isImportant =
                 resolveBooleanMetadata(
                         section,
@@ -1011,9 +986,7 @@ ${ReadmeMetadataSyncService.ALLOWED_DIFFICULTIES.join(', ')}
 
         return [
                 difficulty : difficulty,
-                isImportant: isImportant,
-                aiGenerated: aiGenerated,
-                reviewed   : reviewed
+                isImportant: isImportant
         ]
     }
 

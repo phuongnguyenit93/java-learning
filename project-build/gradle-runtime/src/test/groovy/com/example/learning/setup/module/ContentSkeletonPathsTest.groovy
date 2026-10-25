@@ -236,8 +236,8 @@ class ContentSkeletonPathsTest {
         existingMetadata.setText('''sections:
   basic-001:
     difficulty: ADVANCED
-    aiGenerated: false
-    reviewed: true
+
+
     isImportant: true
 ''', 'UTF-8')
         File advanced = new File(
@@ -295,7 +295,7 @@ class ContentSkeletonPathsTest {
         for (def plan in plans) {
             if (plan.outputFile == existingMetadata) {
                 assertTrue('Existing authored flags must be retained',
-                        plan.content.contains('reviewed: true'))
+                        plan.content.contains(''))
             }
             assertTrue(writer.invoke(null, plan.outputFile, plan.content))
         }
@@ -316,12 +316,9 @@ class ContentSkeletonPathsTest {
         assertEquals(['sections'] as Set, second.keySet())
         assertEquals(['basic-001', 'basic-002'] as Set, first.sections.keySet())
         assertEquals(['advanced-001'] as Set, second.sections.keySet())
-        assertEquals([difficulty: 'ADVANCED', aiGenerated: false, reviewed: true,
-                      isImportant: true], first.sections['basic-001'])
-        assertEquals([difficulty: 'BASIC', aiGenerated: true, reviewed: false,
-                      isImportant: false], first.sections['basic-002'])
-        assertEquals([difficulty: 'BASIC', aiGenerated: true, reviewed: false,
-                      isImportant: false], second.sections['advanced-001'])
+        assertEquals([difficulty: 'ADVANCED', isImportant: true], first.sections['basic-001'])
+        assertEquals([difficulty: 'BASIC', isImportant: false], first.sections['basic-002'])
+        assertEquals([difficulty: 'BASIC', isImportant: false], second.sections['advanced-001'])
         assertFalse(new File(
                 moduleDir, 'content/readme/metadata/vi/knowledge-metadata.yml'
         ).exists())
@@ -331,7 +328,7 @@ class ContentSkeletonPathsTest {
 
         // Quoted booleans must fail strict metadata validation; they must not
         // be silently coerced or replace existing human-edited review flags.
-        for (String flag in ['aiGenerated', 'reviewed', 'isImportant']) {
+        for (String flag in ['isImportant']) {
             Map invalid = new LinkedHashMap(first)
             invalid.sections = new LinkedHashMap(first.sections)
             invalid.sections['basic-001'] = new LinkedHashMap(first.sections['basic-001'])

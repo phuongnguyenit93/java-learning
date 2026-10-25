@@ -1,31 +1,19 @@
 sections:
   class-unloading:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   loader-retention:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   static-threadlocal-leaks:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   redeploy-leak:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   unloading-observation:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   end-to-end-synthesis:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

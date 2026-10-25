@@ -1,31 +1,19 @@
 sections:
   buffer-state:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   flip-clear-compact:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   byte-order-structured-binary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   channel-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   scatter-gather-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   bytebuffer-types:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

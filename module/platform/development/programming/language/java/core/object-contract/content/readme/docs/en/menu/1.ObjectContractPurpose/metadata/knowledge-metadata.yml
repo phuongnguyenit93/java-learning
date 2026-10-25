@@ -1,6 +1,4 @@
 sections:
   object-contract-purpose:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

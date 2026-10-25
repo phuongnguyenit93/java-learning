@@ -1,21 +1,13 @@
 sections:
   equals-hashcode-consistency:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   hash-collection-lookup:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   broken-contract-effects:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   mutable-key-risk:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false

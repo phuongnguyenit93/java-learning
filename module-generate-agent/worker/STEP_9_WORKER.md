@@ -38,7 +38,7 @@ questions:
 
 Ví dụ trên **chỉ minh họa định dạng**, không phải nội dung cần sao chép.
 
-- Root chỉ có `questions` là **danh sách không rỗng**. Mỗi phần tử **chỉ có `question` và `answer`**, đều là YAML string không blank. Không sinh `aiGenerated`, `reviewed`, `readmeRelated`, `apiRelated`, `difficulty` hay metadata khác. Các field này do code Normalize thêm sau khi Prime QA toàn tab.
+- Root chỉ có `questions` là **danh sách không rỗng**. Mỗi phần tử **chỉ có `question` và `answer`**, đều là YAML string không blank. Không sinh `readmeRelated`, `apiRelated`, `difficulty` hay metadata khác. Các field này do code Normalize thêm sau khi Prime QA toàn tab.
 - Không dùng JSON, JSONL, YAML nhiều document (`---` lặp lại), alias/anchor YAML, custom tag hoặc comments xen vào dữ liệu. Quote giá trị chứa dấu `:`/ký tự đặc biệt hoặc dùng `|-` cho multiline; không để parser tự chuyển câu trả lời thành map/list/boolean.
 - Mỗi câu trả lời có thể chứa Markdown, Java code fence, bảng hoặc xuống dòng, **nhưng toàn bộ nội dung phải nằm trong scalar `answer`**. Sau khi YAML parse, phải còn đúng chuỗi Markdown/whitespace đã soạn.
 

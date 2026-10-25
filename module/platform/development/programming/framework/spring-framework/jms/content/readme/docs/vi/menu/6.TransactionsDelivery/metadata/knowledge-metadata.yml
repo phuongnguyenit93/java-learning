@@ -1,31 +1,19 @@
 sections:
   jms-acknowledgement-model:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   jms-session-transacted:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   jms-local-transaction-manager:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   jms-thread-bound-resources:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   jms-jta-xa-boundary:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   jms-redelivery-idempotency:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false

@@ -1,21 +1,13 @@
 sections:
   branching-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   loop-control:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   switch-expression:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   control-flow-pitfalls:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

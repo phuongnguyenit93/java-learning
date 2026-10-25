@@ -1,6 +1,4 @@
 sections:
   contract-synthesis:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false

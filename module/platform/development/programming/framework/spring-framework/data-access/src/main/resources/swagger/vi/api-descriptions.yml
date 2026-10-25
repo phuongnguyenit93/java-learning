@@ -7,8 +7,6 @@ DaoExceptionExperimentController:
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: ''
       anchor: jdbc-r2dbc-exception-translation
@@ -35,8 +33,6 @@ JdbcCoreExperimentController:
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: ''
       anchor: jdbc-row-mapping-cardinality
@@ -63,8 +59,6 @@ R2dbcExperimentController:
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: ''
       anchor: r2dbc-reactive-sql-execution
@@ -91,8 +85,6 @@ ResourceParticipationExperimentController:
     enableVideoYoutube: false
     videoYoutubeId: ID của video youtube chèn vào description trong API
     videoYoutubeTitle: Tiêu đề của video
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: ''
       anchor: thread-vs-subscriber-context-resources

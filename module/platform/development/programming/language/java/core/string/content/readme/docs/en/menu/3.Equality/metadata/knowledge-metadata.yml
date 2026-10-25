@@ -1,16 +1,10 @@
 sections:
   string-equals:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   string-reference-equality:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   case-insensitive-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

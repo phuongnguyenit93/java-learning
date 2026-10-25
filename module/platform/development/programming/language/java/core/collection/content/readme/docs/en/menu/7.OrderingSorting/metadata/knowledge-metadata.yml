@@ -1,36 +1,22 @@
 sections:
   encounter-order:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   natural-ordering:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   comparison-result-contract:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   comparator-ordering:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   navigable-range-operations:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   stable-sort:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   collections-utility-algorithms:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

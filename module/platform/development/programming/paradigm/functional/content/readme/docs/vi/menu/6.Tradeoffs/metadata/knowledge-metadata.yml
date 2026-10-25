@@ -1,26 +1,16 @@
 sections:
   functional-use-cases:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   functional-costs:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   functional-vs-other-styles:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   functional-end-to-end:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   functional-boundaries:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

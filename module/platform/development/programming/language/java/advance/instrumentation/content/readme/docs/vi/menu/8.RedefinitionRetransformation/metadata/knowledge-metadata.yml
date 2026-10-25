@@ -1,26 +1,16 @@
 sections:
   redefine-purpose:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   retransform-purpose:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   redefine-vs-retransform:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   active-frame-behavior:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   existing-state-behavior:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false

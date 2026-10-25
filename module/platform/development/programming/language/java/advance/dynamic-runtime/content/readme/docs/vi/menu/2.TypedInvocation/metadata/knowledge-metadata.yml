@@ -1,26 +1,16 @@
 sections:
   method-type-model:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   method-handle-model:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   signature-polymorphism:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   invoke-exact-vs-invoke:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   invocation-type-failures:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false

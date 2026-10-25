@@ -23,13 +23,6 @@ class ReadmeMetadataSyncService {
             'BASIC'
 
 
-    static final boolean DEFAULT_AI_GENERATED =
-            true
-
-
-    static final boolean DEFAULT_REVIEWED =
-            false
-
     static final boolean DEFAULT_IS_IMPORTANT =
             false
 
@@ -375,6 +368,10 @@ ${moduleRoot.absolutePath}
             String sectionId
     ) {
 
+        // Drop obsolete metadata when synchronizing older local chapter files.
+        section.remove('aiGenerated')
+        section.remove('reviewed')
+
         Object difficultyValue =
                 section[
                         'difficulty'
@@ -433,60 +430,11 @@ Existing human-owned values are not overwritten automatically.
         }
 
 
-        if (
-                !section.containsKey(
-                        'aiGenerated'
-                ) ||
-                        section[
-                                'aiGenerated'
-                        ] == null
-        ) {
-
-            section[
-                    'aiGenerated'
-            ] =
-                    DEFAULT_AI_GENERATED
-        }
-
-
-        if (
-                !section.containsKey(
-                        'reviewed'
-                ) ||
-                        section[
-                                'reviewed'
-                        ] == null
-        ) {
-
-            section[
-                    'reviewed'
-            ] =
-                    DEFAULT_REVIEWED
-        }
-
         if (!section.containsKey('isImportant') || section['isImportant'] == null) {
             section['isImportant'] = DEFAULT_IS_IMPORTANT
         }
 
 
-        validateBooleanField(
-                section,
-                'aiGenerated',
-                modulePath,
-                language,
-                sourcePath,
-                sectionId
-        )
-
-
-        validateBooleanField(
-                section,
-                'reviewed',
-                modulePath,
-                language,
-                sourcePath,
-                sectionId
-        )
         validateBooleanField(
                 section,
                 'isImportant',

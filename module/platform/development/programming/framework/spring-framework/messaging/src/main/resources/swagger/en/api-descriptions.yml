@@ -9,8 +9,6 @@ ChannelExperimentController:
     enableVideoYoutube: false
     videoYoutubeId: ''
     videoYoutubeTitle: ''
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: ''
       anchor: channel-delivery-semantics
@@ -38,8 +36,6 @@ RSocketExperimentController:
     enableVideoYoutube: false
     videoYoutubeId: ''
     videoYoutubeTitle: ''
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: ''
       anchor: rsocket-interaction-cardinality
@@ -68,8 +64,6 @@ StompExperimentController:
     enableVideoYoutube: false
     videoYoutubeId: ''
     videoYoutubeTitle: ''
-    aiGenerated: true
-    reviewed: false
     readmeRelated:
       file: ''
       anchor: application-message-flow

@@ -1,36 +1,22 @@
 sections:
   jms-enable-jms:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   jms-listener-container-factory:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   jms-listener-endpoint-registry:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   jms-listener-method-signature:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   jms-listener-conversion-validation:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   jms-listener-replies:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   jms-programmatic-endpoints:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false

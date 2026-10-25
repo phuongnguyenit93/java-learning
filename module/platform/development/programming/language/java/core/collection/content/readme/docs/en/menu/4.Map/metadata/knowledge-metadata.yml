@@ -1,51 +1,31 @@
 sections:
   map-semantics:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   map-basic-contract:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   map-entry-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   map-views:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   map-default-operations:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   map-equality:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   hashmap-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   linkedhashmap-order:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   treemap-order:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   map-compute-merge:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

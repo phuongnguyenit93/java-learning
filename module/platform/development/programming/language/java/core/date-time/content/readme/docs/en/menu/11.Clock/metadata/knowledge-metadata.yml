@@ -1,16 +1,10 @@
 sections:
   clock-abstraction:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   fixed-clock-testing:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   clock-injection:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

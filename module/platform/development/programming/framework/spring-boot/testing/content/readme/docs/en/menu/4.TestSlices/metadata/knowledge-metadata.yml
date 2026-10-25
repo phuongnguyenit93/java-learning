@@ -1,31 +1,19 @@
 sections:
   test-slice-purpose:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   test-slice-context-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   test-slice-auto-configuration-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   single-slice-rule:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   smallest-slice-decision:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   slice-full-context-handoff:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

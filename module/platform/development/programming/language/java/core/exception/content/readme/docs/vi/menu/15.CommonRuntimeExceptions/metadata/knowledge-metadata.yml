@@ -1,61 +1,37 @@
 sections:
   common-runtime-exceptions-001:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   common-runtime-exceptions-002:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   common-runtime-exceptions-003:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   common-runtime-exceptions-004:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   common-runtime-exceptions-005:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   common-runtime-exceptions-006:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   common-runtime-exceptions-007:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   common-runtime-exceptions-008:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   common-runtime-exceptions-009:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   common-runtime-exceptions-010:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   common-runtime-exceptions-011:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   common-runtime-exceptions-012:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false

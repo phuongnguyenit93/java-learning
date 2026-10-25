@@ -1,61 +1,37 @@
 sections:
   runtime-data-areas-purpose:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   vm-wide-vs-thread-private-areas:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   pc-register:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   jvm-stacks:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   heap:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   method-area:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   runtime-constant-pool-area:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   native-method-stacks:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   stack-frame-model:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   local-variables-and-operand-stack:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   frame-lifecycle-and-completion:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   runtime-area-failure-boundaries:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false

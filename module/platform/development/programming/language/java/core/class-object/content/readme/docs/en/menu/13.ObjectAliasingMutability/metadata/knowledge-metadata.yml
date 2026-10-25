@@ -1,16 +1,10 @@
 sections:
   aliasing-model:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   shared-mutable-state:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   aliasing-in-collections:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

@@ -1,41 +1,25 @@
 sections:
   message-payload-headers:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   message-building-access:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   message-channel:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   subscribable-channel:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   message-handler:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   channel-delivery-semantics:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   message-conversion:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   messaging-errors:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

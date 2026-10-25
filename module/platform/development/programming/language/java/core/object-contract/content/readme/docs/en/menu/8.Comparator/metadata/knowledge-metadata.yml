@@ -1,21 +1,13 @@
 sections:
   external-order:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   comparator-composition:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   comparator-contract:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   sorting-stability-boundary:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false

@@ -1,46 +1,28 @@
 sections:
   packages-and-imports-001:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   packages-and-imports-002:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   packages-and-imports-003:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   packages-and-imports-004:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   packages-and-imports-005:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   packages-and-imports-006:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   packages-and-imports-007:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   packages-and-imports-008:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   packages-and-imports-009:
     difficulty: ADVANCED
-    aiGenerated: true
-    reviewed: false
     isImportant: false

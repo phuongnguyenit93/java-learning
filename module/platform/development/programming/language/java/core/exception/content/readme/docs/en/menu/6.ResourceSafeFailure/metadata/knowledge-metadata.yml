@@ -1,36 +1,22 @@
 sections:
   autocloseable:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   resource-close-order:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   twr-vs-finally:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   primary-vs-suppressed:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   get-suppressed:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   close-failure:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   effective-final-resource:
     difficulty: INTERMEDIATE
-    aiGenerated: true
-    reviewed: false
     isImportant: false

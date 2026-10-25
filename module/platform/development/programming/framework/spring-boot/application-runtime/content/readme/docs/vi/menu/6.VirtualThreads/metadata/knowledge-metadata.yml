@@ -1,26 +1,16 @@
 sections:
   virtual-thread-switch:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   virtual-executor-scheduler:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   virtual-thread-pool-properties:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   virtual-thread-daemon-keepalive:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   virtual-thread-java-boundary:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

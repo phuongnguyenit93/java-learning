@@ -1,16 +1,10 @@
 sections:
   static-initializer:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   instance-initializer:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   initializer-use-cases:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

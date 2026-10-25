@@ -1,21 +1,13 @@
 sections:
   terminology-map:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   terminology-demo:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   spring-aop-vs-aspectj-style:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false
   terminology-conclusion:
     difficulty: BASIC
-    aiGenerated: true
-    reviewed: false
     isImportant: false

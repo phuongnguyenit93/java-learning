@@ -2,55 +2,33 @@ sections:
   argument-conversions-001:
     difficulty: BASIC
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   argument-conversions-002:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   argument-conversions-003:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   argument-conversions-004:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   argument-conversions-005:
     difficulty: BASIC
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   argument-conversions-006:
     difficulty: BASIC
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   argument-conversions-007:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   argument-conversions-008:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   argument-conversions-009:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   argument-conversions-010:
     difficulty: ADVANCED
     isImportant: true
-    aiGenerated: true
-    reviewed: false
   argument-conversions-011:
     difficulty: INTERMEDIATE
     isImportant: true
-    aiGenerated: true
-    reviewed: false
