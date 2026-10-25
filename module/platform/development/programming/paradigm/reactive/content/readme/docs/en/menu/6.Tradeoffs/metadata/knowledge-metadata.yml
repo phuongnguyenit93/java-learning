@@ -1,0 +1,31 @@
+sections:
+  reactive-end-to-end-example:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  reactive-compare-callback:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  reactive-async-parallel-boundary:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  reactive-debug-complexity:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  reactive-framework-handoff:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  reactive-final-decision:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

@@ -1,0 +1,46 @@
+sections:
+  bean-definition-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  bean-definition-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  bean-definition-003:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  bean-definition-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  bean-definition-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  bean-definition-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  bean-definition-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  bean-definition-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  bean-definition-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

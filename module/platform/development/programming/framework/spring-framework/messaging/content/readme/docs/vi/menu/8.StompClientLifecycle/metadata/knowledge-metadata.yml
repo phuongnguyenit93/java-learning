@@ -1,0 +1,36 @@
+sections:
+  websocket-stomp-client:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  reactor-netty-tcp-stomp-client:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  stomp-session-lifecycle:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  stomp-client-subscriptions:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  stomp-client-heartbeats:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  stomp-client-receipts:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  stomp-connection-recovery:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

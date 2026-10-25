@@ -1,0 +1,36 @@
+sections:
+  postmortem-diagnostics-purpose:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  fatal-error-log:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  core-dump-and-jhsdb:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  oome-heap-dump:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  preserve-logs-and-recordings:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  correlate-crash-artifacts:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  native-crash-handoff:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

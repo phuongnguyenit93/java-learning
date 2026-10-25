@@ -1,0 +1,41 @@
+sections:
+  reflection-reference-001:
+    difficulty: BASIC
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  reflection-reference-002:
+    difficulty: BASIC
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  reflection-reference-003:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  reflection-reference-004:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  reflection-reference-005:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  reflection-reference-006:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  reflection-reference-007:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  reflection-reference-008:
+    difficulty: INTERMEDIATE
+    isImportant: false
+    aiGenerated: true
+    reviewed: false

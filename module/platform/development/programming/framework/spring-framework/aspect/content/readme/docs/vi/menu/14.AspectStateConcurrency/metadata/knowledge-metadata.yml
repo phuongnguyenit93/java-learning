@@ -1,0 +1,51 @@
+sections:
+  aspect-state-concurrency-001:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  aspect-state-concurrency-002:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  aspect-state-concurrency-003:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  aspect-state-concurrency-004:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  aspect-state-concurrency-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  aspect-state-concurrency-006:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  aspect-state-concurrency-007:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  aspect-state-concurrency-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  aspect-state-concurrency-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  aspect-state-concurrency-010:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

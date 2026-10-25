@@ -1,0 +1,21 @@
+sections:
+  spring-concurrency-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  execution-async-scheduling:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  spring-vs-jdk-concurrency:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  container-managed-task-infrastructure:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

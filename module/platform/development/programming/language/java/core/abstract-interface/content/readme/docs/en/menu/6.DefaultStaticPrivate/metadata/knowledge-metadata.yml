@@ -1,0 +1,21 @@
+sections:
+  default-method:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  static-interface-method:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  private-interface-method:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  default-method-evolution:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

@@ -1,0 +1,31 @@
+sections:
+  reactive-terminal-success:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  reactive-terminal-failure:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  reactive-cancellation:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  reactive-inflight-signals:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  reactive-resource-cleanup:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  reactive-lifecycle-trace:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

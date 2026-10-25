@@ -1,0 +1,31 @@
+sections:
+  servlet-async-lifecycle:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  deferred-single-result:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  servlet-streaming:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  reactive-return-values-in-mvc:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  async-timeouts-executor-and-dispatch:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  async-mvc-vs-webflux:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

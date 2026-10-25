@@ -1,0 +1,61 @@
+sections:
+  string-builder-001:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  string-builder-002:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  string-builder-003:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  string-builder-004:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  string-builder-005:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  string-builder-006:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  string-builder-007:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  string-builder-008:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  string-builder-009:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  string-builder-010:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  string-builder-011:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  string-builder-012:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

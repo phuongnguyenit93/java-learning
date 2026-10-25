@@ -1,0 +1,11 @@
+sections:
+  class-object-synthesis:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  class-object-module-boundaries:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

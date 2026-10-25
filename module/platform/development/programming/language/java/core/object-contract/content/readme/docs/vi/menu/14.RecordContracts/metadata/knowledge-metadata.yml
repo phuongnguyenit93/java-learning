@@ -1,0 +1,46 @@
+sections:
+  record-contracts-001:
+    difficulty: BASIC
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  record-contracts-002:
+    difficulty: BASIC
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  record-contracts-003:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  record-contracts-004:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  record-contracts-005:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  record-contracts-006:
+    difficulty: BASIC
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  record-contracts-007:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  record-contracts-008:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  record-contracts-009:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false

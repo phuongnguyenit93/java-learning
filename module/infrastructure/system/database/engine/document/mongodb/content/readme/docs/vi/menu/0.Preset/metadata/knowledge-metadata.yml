@@ -1,0 +1,11 @@
+sections:
+  extract-mongo-atlas:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  backup-mongo-local:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

@@ -1,0 +1,21 @@
+sections:
+  asymmetric-encryption-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  public-private-key-roles:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  asymmetric-encryption-limits:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  hybrid-encryption-model:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

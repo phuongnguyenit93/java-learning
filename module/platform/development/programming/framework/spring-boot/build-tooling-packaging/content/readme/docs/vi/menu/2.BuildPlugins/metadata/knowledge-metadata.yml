@@ -1,0 +1,21 @@
+sections:
+  boot-build-plugins:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  plugin-responsibilities:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  plugin-vs-build-tool:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  plugin-choice-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

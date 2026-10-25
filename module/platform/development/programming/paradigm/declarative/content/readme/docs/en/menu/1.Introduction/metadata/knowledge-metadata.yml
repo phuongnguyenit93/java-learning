@@ -1,0 +1,31 @@
+sections:
+  declarative-what:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  declarative-why:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  declarative-before:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  declarative-solution:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  declarative-relations:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  declarative-learning-path:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

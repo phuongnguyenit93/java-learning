@@ -1,0 +1,26 @@
+sections:
+  configuration-order-vs-bean-order:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  before-after-ordering:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  auto-configure-order:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  conditional-composition:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  optional-technology-isolation:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

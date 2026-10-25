@@ -1,0 +1,16 @@
+sections:
+  class-initialization-order:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  instance-initialization-order:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  inheritance-initialization-order:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

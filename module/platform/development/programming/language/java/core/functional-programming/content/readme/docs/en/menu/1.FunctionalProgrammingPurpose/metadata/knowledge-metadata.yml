@@ -1,0 +1,41 @@
+sections:
+  functional-programming-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  hard-coded-behavior-problem:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  behavior-before-lambdas:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  behavior-parameterization:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  functional-interface-bridge:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  functional-multi-paradigm-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  functional-style-use-cases:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  functional-programming-module-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

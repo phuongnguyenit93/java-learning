@@ -1,0 +1,26 @@
+sections:
+  multipart-request-resolution:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  locale-resolution:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  static-resources-and-resource-chain:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  conditional-requests-and-http-caching:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  default-servlet-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

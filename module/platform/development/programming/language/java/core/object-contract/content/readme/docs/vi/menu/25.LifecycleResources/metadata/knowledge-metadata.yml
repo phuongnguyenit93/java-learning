@@ -1,0 +1,31 @@
+sections:
+  lifecycle-resources-001:
+    difficulty: BASIC
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  lifecycle-resources-002:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  lifecycle-resources-003:
+    difficulty: BASIC
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  lifecycle-resources-004:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  lifecycle-resources-005:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  lifecycle-resources-006:
+    difficulty: ADVANCED
+    isImportant: false
+    aiGenerated: true
+    reviewed: false

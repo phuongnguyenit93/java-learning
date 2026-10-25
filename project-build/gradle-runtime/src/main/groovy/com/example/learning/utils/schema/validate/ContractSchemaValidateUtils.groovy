@@ -65,10 +65,17 @@ final class ContractSchemaValidateUtils {
                 // Preserve legacy accepted file-only Knowledge/API references.
                 // Full strict contract validation remains the default elsewhere.
                 Map properties = data.properties.questions.items.properties as Map
-                ['readmeRelated': 'readmeRelation', 'apiRelated': 'apiRelation'].each {
+                ['readmeRelated': 'chapterReadmeRelation', 'apiRelated': 'apiRelation'].each {
                     String field, String definition ->
                     Map resolved = new LinkedHashMap(common['$defs'][definition] as Map)
                     resolved.remove('anyOf')
+                    // Legacy source may contain a file-only reference; new
+                    // chapter authoring contains anchor only. Strict schema
+                    // still requires anchor for freshly generated content.
+                    if (field == 'readmeRelated') {
+                        resolved.remove('required')
+                        resolved.additionalProperties = true
+                    }
                     properties[field] = resolved
                 }
             }

@@ -1,0 +1,16 @@
+sections:
+  locale-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  locale-construction:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  locale-equality:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

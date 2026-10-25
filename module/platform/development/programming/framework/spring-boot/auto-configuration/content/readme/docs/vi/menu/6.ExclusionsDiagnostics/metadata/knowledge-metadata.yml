@@ -1,0 +1,26 @@
+sections:
+  when-to-exclude-auto-configuration:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  exclusion-mechanisms:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  condition-evaluation-report:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  debug-diagnostics:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  condition-diagnosis-playbook:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

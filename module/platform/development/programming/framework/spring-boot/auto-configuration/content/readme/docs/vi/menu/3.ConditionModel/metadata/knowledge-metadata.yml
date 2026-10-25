@@ -1,0 +1,31 @@
+sections:
+  condition-model-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  class-conditions:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  bean-conditions-and-timing:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  property-conditions:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  resource-and-web-conditions:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  optional-class-linkage:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

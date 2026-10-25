@@ -1,0 +1,21 @@
+sections:
+  static-nested-class:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  inner-class:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  local-anonymous-class:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  capture-semantics:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

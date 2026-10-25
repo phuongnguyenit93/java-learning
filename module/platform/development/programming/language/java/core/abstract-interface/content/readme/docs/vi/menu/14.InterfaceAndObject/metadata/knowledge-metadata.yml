@@ -1,0 +1,31 @@
+sections:
+  interface-and-object-001:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  interface-and-object-002:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  interface-and-object-003:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  interface-and-object-004:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  interface-and-object-005:
+    difficulty: INTERMEDIATE
+    isImportant: false
+    aiGenerated: true
+    reviewed: false
+  interface-and-object-006:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false

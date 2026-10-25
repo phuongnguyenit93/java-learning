@@ -1,0 +1,11 @@
+sections:
+  open-rewrite-basic:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  open-rewrite-setup:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

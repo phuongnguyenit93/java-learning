@@ -1,0 +1,36 @@
+sections:
+  reactive-source-producer-consumer:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  reactive-transform-combine:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  reactive-push-pull:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  reactive-composition:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  reactive-subscribe-lifecycle:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  reactive-execution-timing:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  reactive-flow-trace:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

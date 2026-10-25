@@ -1,0 +1,31 @@
+sections:
+  localized-date-format:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  locale-vs-zone:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  locale-week-conventions:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  localized-numbering-calendar:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  localized-pattern:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  localized-parsing:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

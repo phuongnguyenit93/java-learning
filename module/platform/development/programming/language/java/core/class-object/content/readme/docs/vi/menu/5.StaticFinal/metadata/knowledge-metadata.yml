@@ -1,0 +1,21 @@
+sections:
+  static-vs-instance:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  final-variable-reference:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  static-initialization:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  constants-design:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

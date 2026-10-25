@@ -1,0 +1,36 @@
+sections:
+  test-auto-configuration-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  slice-imported-auto-configuration:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  auto-configure-annotations:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  exclude-test-auto-configuration:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  import-auto-configuration:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  test-context-missing-bean-diagnosis:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  test-auto-config-ownership-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

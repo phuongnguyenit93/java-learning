@@ -1,0 +1,21 @@
+sections:
+  code-data-concept:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  behavior-coupling:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  data-visibility:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  separation-tradeoffs:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

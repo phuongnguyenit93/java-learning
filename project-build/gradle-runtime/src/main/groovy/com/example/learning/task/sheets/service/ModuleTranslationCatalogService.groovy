@@ -21,8 +21,6 @@ class ModuleTranslationCatalogService {
     private static final String SWAGGER = 'src/main/resources/swagger/'
     private static final Map<String, String> SINGLE = [
             'content/readme/docs/en/BASE.md': 'INTRODUCTION',
-            'content/quiz/en/question.yml': 'QUIZ',
-            'content/interview/en/question.yml': 'INTERVIEW',
             'content/roadmap/en/roadmap.yml': 'ROADMAP'
     ].asImmutable()
     private static final Map<String, String> API_TYPES = [
@@ -52,6 +50,7 @@ class ModuleTranslationCatalogService {
         checkPath(module, manifest)
         List<Map> inventory = inventory(module)
         if (!inventory) throw new GradleException('No translatable EN files in module.')
+        verifyProtected(module)
         if (selected == 'PREPARE') {
             if (manifest.exists()) {
                 throw new GradleException('STEP 14 manifest already exists: ' + manifest +
@@ -127,10 +126,20 @@ class ModuleTranslationCatalogService {
                          result: changed ? 'STRUCTURE_PASS_NEEDS_SEMANTIC_QA' : 'PENDING',
                          afterSha256: sha(actual)])
         }
-        // Verify nontranslatable LIST/metadata against the original STEP 12A clone
-        // through the module-independent rules; they must not be changed by workers.
-        ['content/readme/docs/en/LIST.md',
-         'content/readme/metadata/en/knowledge-metadata.yml'].each { String path ->
+        return [status: 'VALIDATED_STRUCTURE', module: location, runId: runId,
+                total: original.size(), translated: translated, pending: pending,
+                semanticQaRequired: true, files: results]
+    }
+
+    private static void verifyProtected(File module) {
+        List<String> protectedFiles = ['content/readme/docs/en/LIST.md']
+        File docs = new File(module, DOC + 'vi/menu')
+        for (String path : walk(docs)) {
+            if (path ==~ /[^\/]+\/metadata\/knowledge-metadata\.yml/) {
+                protectedFiles.add(DOC + 'en/menu/' + path)
+            }
+        }
+        protectedFiles.each { String path ->
             String vi = toVi(path)
             byte[] expected = bytes(module, vi)
             if (path.endsWith('/LIST.md')) {
@@ -145,9 +154,6 @@ class ModuleTranslationCatalogService {
                 throw new GradleException('Protected EN file changed: ' + path)
             }
         }
-        return [status: 'VALIDATED_STRUCTURE', module: location, runId: runId,
-                total: original.size(), translated: translated, pending: pending,
-                semanticQaRequired: true, files: results]
     }
 
     static List<Map> inventory(File module) {
@@ -161,6 +167,10 @@ class ModuleTranslationCatalogService {
             if (path ==~ /[^\/]+\.md/ ||
                     path ==~ /[^\/]+\/knowledge\/[^\/]+\.md/) {
                 targets[DOC + 'en/menu/' + path] = 'README'
+            } else if (path ==~ /[^\/]+\/quiz\/question\.yml/) {
+                targets[DOC + 'en/menu/' + path] = 'QUIZ'
+            } else if (path ==~ /[^\/]+\/interview\/question\.yml/) {
+                targets[DOC + 'en/menu/' + path] = 'INTERVIEW'
             }
         }
         File swagger = new File(module, SWAGGER + 'vi')
@@ -183,8 +193,7 @@ class ModuleTranslationCatalogService {
                          viSha256: sha(viFile.bytes), enSha256: sha(enFile.bytes)])
         }
         // Optional localized subtrees must not retain EN-only files.
-        for (String area : ['content/readme/docs', 'content/quiz',
-                             'content/interview', 'content/roadmap',
+        for (String area : ['content/readme/docs', 'content/roadmap',
                              'content/video', SWAGGER[0..-2]]) {
             File vi = new File(module, area + '/vi')
             File en = new File(module, area + '/en')
@@ -193,10 +202,14 @@ class ModuleTranslationCatalogService {
             if (area == 'content/readme/docs') {
                 a = a.findAll { it in ['BASE.md', 'LIST.md'] ||
                         it ==~ /menu\/[^\/]+\.md/ ||
-                        it ==~ /menu\/[^\/]+\/knowledge\/[^\/]+\.md/ } as Set
+                        it ==~ /menu\/[^\/]+\/knowledge\/[^\/]+\.md/ ||
+                        it ==~ /menu\/[^\/]+\/metadata\/knowledge-metadata\.yml/ ||
+                        it ==~ /menu\/[^\/]+\/(quiz|interview)\/question\.yml/ } as Set
                 b = b.findAll { it in ['BASE.md', 'LIST.md'] ||
                         it ==~ /menu\/[^\/]+\.md/ ||
-                        it ==~ /menu\/[^\/]+\/knowledge\/[^\/]+\.md/ } as Set
+                        it ==~ /menu\/[^\/]+\/knowledge\/[^\/]+\.md/ ||
+                        it ==~ /menu\/[^\/]+\/metadata\/knowledge-metadata\.yml/ ||
+                        it ==~ /menu\/[^\/]+\/(quiz|interview)\/question\.yml/ } as Set
             }
             if (a != b) throw new GradleException('VI/EN tree mismatch: ' + area)
         }

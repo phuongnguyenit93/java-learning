@@ -70,14 +70,15 @@ class ModuleContentExcelSyncServiceTest {
         def service = new ModuleContentExcelSyncService()
         service.execute(f.root as File, f.module as File, 'ALL', true)
         byte[] original = (f.target as File).bytes
-        File quiz = new File(f.module as File, 'content/quiz/en/question.yml')
+        File quiz = new File(f.module as File,
+                'content/readme/docs/en/menu/1.Basic/quiz/question.yml')
         quiz.setText(quiz.getText('UTF-8')
-                .replace('1.Basic/knowledge/Basic.md', '99.Wrong/knowledge/Wrong.md'), 'UTF-8')
+                .replace('anchor: basic-001', 'anchor: unknown-001'), 'UTF-8')
         try {
             service.execute(f.root as File, f.module as File, 'QUIZ', true)
             fail('Expected unknown chapter link failure')
         } catch (GradleException expected) {
-            assertTrue(expected.message.contains('Cannot assign quiz'))
+            assertTrue(expected.message.contains('Unresolved chapter quiz readmeRelated anchor'))
         }
         assertArrayEquals(original, (f.target as File).bytes)
     }
@@ -118,6 +119,82 @@ class ModuleContentExcelSyncServiceTest {
                         ModuleContentExcelSyncService.text(book.getSheetAt(0), 21, 3))
             }
         }
+    }
+
+    @Test
+    void exportsTwoChaptersSeparatelyAndRejectsCrossChapterQuestionAnchors() {
+        Map f = fixture()
+        File module = f.module as File
+        File baseline = f.source as File
+        new XSSFWorkbook(new ByteArrayInputStream(baseline.bytes)).withCloseable { book ->
+            def sheet = book.getSheetAt(0)
+            cell(sheet, 22, 1, 'Chương thứ hai')
+            cell(sheet, 22, 2, 'More.md')
+            cell(sheet, 23, 2, 'Bài thứ hai')
+            baseline.withOutputStream { book.write(it) }
+        }
+        write(module, 'content/readme/docs/en/menu/2.More/knowledge/More.md', '''
+# English second chapter
+
+## <a id="more-001">English second lesson</a>
+
+<details>
+<summary>Click for details</summary>
+
+Second knowledge body
+
+</details>
+'''.trim())
+        write(module, 'content/readme/docs/en/menu/2.More/metadata/knowledge-metadata.yml', '''
+sections:
+  more-001: {difficulty: INTERMEDIATE, isImportant: false}
+'''.trim())
+        File secondQuiz = new File(module,
+                'content/readme/docs/en/menu/2.More/quiz/question.yml')
+        write(module, 'content/readme/docs/en/menu/2.More/quiz/question.yml', '''
+questions:
+  - id: more-quiz-001
+    question: Second chapter quiz?
+    answers:
+      - {id: A, answer: One, explanation: Explanation A}
+      - {id: B, answer: Two, explanation: Explanation B}
+      - {id: C, answer: Three, explanation: Explanation C}
+      - {id: D, answer: Four, explanation: Explanation D}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {anchor: more-001}
+    apiRelated: {controller: "", methodSignature: ""}
+'''.trim())
+        write(module, 'content/readme/docs/en/menu/2.More/interview/question.yml', '''
+questions:
+  - question: Second chapter interview?
+    answer: Second chapter answer
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {anchor: more-001}
+    apiRelated: {controller: "", methodSignature: ""}
+'''.trim())
+        def service = new ModuleContentExcelSyncService()
+        assertEquals('EXPORTED', service.execute(f.root as File, module, 'ALL', true).status)
+        (f.target as File).withInputStream { input ->
+            new XSSFWorkbook(input).withCloseable { book ->
+                def sheet = book.getSheetAt(0)
+                assertEquals('Second knowledge body', ModuleContentExcelSyncService.text(sheet, 23, 3))
+                assertEquals('INTERMEDIATE', ModuleContentExcelSyncService.text(sheet, 23, 15))
+                assertTrue(ModuleContentExcelSyncService.text(sheet, 22, 20).contains('Second chapter quiz?'))
+                assertTrue(ModuleContentExcelSyncService.text(sheet, 22, 16).contains('Second chapter interview?'))
+            }
+        }
+        byte[] published = (f.target as File).bytes
+        secondQuiz.setText(secondQuiz.getText('UTF-8').replace('more-001', 'basic-001'), 'UTF-8')
+        try {
+            service.execute(f.root as File, module, 'QUIZ', true)
+            fail('Cross-chapter anchor should be rejected')
+        } catch (GradleException expected) {
+            assertTrue(expected.message.contains('Unresolved chapter quiz readmeRelated anchor'))
+        }
+        assertArrayEquals(published, (f.target as File).bytes)
     }
 
     @Test
@@ -178,8 +255,8 @@ English body
 - [Back to top](#back-to-top)
 ---
 '''.trim() + '\n')
-        write(module, 'content/readme/metadata/en/knowledge-metadata.yml', '''
-1.Basic/knowledge/Basic.md:
+        write(module, 'content/readme/docs/en/menu/1.Basic/metadata/knowledge-metadata.yml', '''
+sections:
   basic-001:
     difficulty: ADVANCED
     isImportant: true
@@ -192,13 +269,13 @@ roadmap:
     objectives: [Objective A, Objective B]
     relatedKnowledge: [Basic]
 '''.trim())
-        write(module, 'content/interview/en/question.yml', '''
+        write(module, 'content/readme/docs/en/menu/1.Basic/interview/question.yml', '''
 questions:
   - question: English interview?
     answer: The answer
-    readmeRelated: {file: "1.Basic/knowledge/Basic.md", anchor: "basic-001"}
+    readmeRelated: {anchor: basic-001}
 '''.trim())
-        write(module, 'content/quiz/en/question.yml', '''
+        write(module, 'content/readme/docs/en/menu/1.Basic/quiz/question.yml', '''
 questions:
   - id: quiz-001
     question: English quiz?
@@ -208,7 +285,7 @@ questions:
       - {id: C, answer: Maybe, explanation: incorrect}
       - {id: D, answer: None, explanation: incorrect}
     correctAnswerId: A
-    readmeRelated: {file: "1.Basic/knowledge/Basic.md", anchor: "basic-001"}
+    readmeRelated: {anchor: basic-001}
 '''.trim())
         write(module, 'content/video/en/menu/1.Basic/video-script.yml', '''
 title: English video script

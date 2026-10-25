@@ -32,7 +32,7 @@ class QuizSheetNormalizeServiceTest {
                       'apiRelated', 'answers', 'correctAnswerId'], result.questions[0].keySet().toList())
         assertEquals(true, result.questions[0].aiGenerated)
         assertEquals(false, result.questions[0].reviewed)
-        assertEquals([file: FILE, anchor: ''], result.questions[0].readmeRelated)
+        assertEquals([anchor: ''], result.questions[0].readmeRelated)
         assertEquals([controller: '', methodSignature: ''], result.questions[0].apiRelated)
         assertEquals(['A', 'B', 'C', 'D'], result.questions[0].answers*.id)
         assertEquals('B', result.questions[0].correctAnswerId)
@@ -63,7 +63,7 @@ class QuizSheetNormalizeServiceTest {
                 apiRelated: [controller: 'Catalog', methodSignature: 'lookup()']]
         Map result = normalize([questions: [source]])
         assertEquals('manually-edited', result.questions[0].id)
-        assertEquals([file: FILE, anchor: 'old-anchor'], result.questions[0].readmeRelated)
+        assertEquals([anchor: 'old-anchor'], result.questions[0].readmeRelated)
         assertEquals(false, result.questions[0].aiGenerated)
         assertEquals(true, result.questions[0].reviewed)
         assertEquals('Catalog', result.questions[0].apiRelated.controller)

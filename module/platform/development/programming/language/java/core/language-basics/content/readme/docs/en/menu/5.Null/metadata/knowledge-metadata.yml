@@ -1,0 +1,21 @@
+sections:
+  null-reference:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  null-dereference:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  null-comparison:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  null-api-design:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

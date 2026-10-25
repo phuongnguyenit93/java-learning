@@ -15,8 +15,7 @@ import java.nio.file.StandardCopyOption
  */
 class ModuleLanguageCloneService {
     static final List<String> OWNED = [
-            'content/readme/docs', 'content/readme/metadata', 'content/roadmap',
-            'content/quiz', 'content/interview',
+            'content/readme/docs', 'content/roadmap',
             'src/main/resources/swagger'
     ].asImmutable()
 
@@ -157,10 +156,9 @@ class ModuleLanguageCloneService {
 
     private static void requireSource(Map<String, Map<String, byte[]>> trees) {
         Map docs = trees['content/readme/docs']
-        Map metadata = trees['content/readme/metadata']
         if (!docs.containsKey('BASE.md') || !docs.containsKey('LIST.md') ||
-                !docs.keySet().any { it.startsWith('menu/') && it.endsWith('.md') } ||
-                !metadata.containsKey('knowledge-metadata.yml')) {
+                !docs.keySet().any { it ==~ /menu\/[^\/]+\.md/ ||
+                        it ==~ /menu\/[^\/]+\/knowledge\/[^\/]+\.md/ }) {
             throw new GradleException('Incomplete VI README/metadata; refusing to replace EN.')
         }
     }

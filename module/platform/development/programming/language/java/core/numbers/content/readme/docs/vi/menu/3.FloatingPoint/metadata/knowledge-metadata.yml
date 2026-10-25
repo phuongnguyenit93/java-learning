@@ -1,0 +1,21 @@
+sections:
+  binary-floating-point:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  precision-rounding-error:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  nan-infinity-negative-zero:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  floating-point-comparison:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

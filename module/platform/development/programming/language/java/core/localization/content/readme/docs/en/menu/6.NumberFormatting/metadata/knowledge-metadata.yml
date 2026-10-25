@@ -1,0 +1,26 @@
+sections:
+  number-format:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  decimal-format:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  compact-number-format:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  parsing-numbers:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  formatting-vs-domain-value:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

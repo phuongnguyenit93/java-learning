@@ -1,0 +1,26 @@
+sections:
+  declare-annotation:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  annotation-restrictions:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  annotation-elements-defaults:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  marker-annotation:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  custom-annotation-design:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

@@ -9,7 +9,7 @@ import org.yaml.snakeyaml.Yaml
 import java.nio.file.Files
 
 /**
- * Sheet Quiz YAML -> the module's Vietnamese question.yml.
+ * Sheet Quiz YAML -> each chapter's quiz/question.yml.
  * Only Groovy/Sheets API/SnakeYAML are used; no AI, Sheet writes or metadata inference.
  */
 class QuizSheetImportService {
@@ -17,6 +17,7 @@ class QuizSheetImportService {
 
     Map<String, Object> execute(File root, Map<String, Object> context, boolean apply) {
         File directory = resolveDirectory(root, context.moduleLocation as String)
+        File module = new File(root.canonicalFile, context.moduleLocation as String).canonicalFile
         Sheets sheets = context.client as Sheets
         String id = context.spreadsheetId as String
         String tab = "'" + (context.tabTitle as String).replace("'", "''") + "'"
@@ -56,10 +57,12 @@ class QuizSheetImportService {
             return base + [status: assembled.status, questionCount: 0,
                            chapterCount: 0, clearedOldFiles: 0]
         }
-        String yaml = renderYaml(assembled.questions as List<Map>)
-        Map sync = SheetSnapshotReplaceService.replace(
-                root, directory, ['question.yml': yaml], apply
-        )
+        Map<String, String> chapterFiles = [:]
+        (assembled.byChapter as Map<String, List<Map>>).each { String chapter, List<Map> items ->
+            chapterFiles[chapter] = renderYaml(items)
+        }
+        Map sync = ChapterQuestionSnapshotService.replace(root, module, 'quiz',
+                chapterFiles, apply)
         return base + sync + [
                 questionCount: (assembled.questions as List).size(),
                 chapterCount: assembled.chapterCount
@@ -98,6 +101,7 @@ class QuizSheetImportService {
         }
 
         List<Map> questions = []
+        Map<String, List<Map>> byChapter = new LinkedHashMap<>()
         int chapters = 0
         groups.eachWithIndex { Map group, int i ->
             int sheetRow = (group.parentRow as Number).intValue()
@@ -124,7 +128,10 @@ class QuizSheetImportService {
                     authoredYaml.toString(), file,
                     filename.substring(0, filename.length() - 3), sheetRow
             )
-            questions.addAll(normalized.questions as List<Map>)
+            List<Map> authored = normalized.questions as List<Map>
+            String chapter = "${i + 1}.${filename.substring(0, filename.length() - 3)}"
+            byChapter[chapter] = authored
+            questions.addAll(authored)
             chapters++
         }
         // The parent basename determines the ID namespace. Guard even legacy
@@ -133,7 +140,8 @@ class QuizSheetImportService {
         if (uniqueIds.size() != questions.size()) {
             throw new GradleException('Duplicate Quiz question IDs across chapters.')
         }
-        return [status: 'READY', questions: questions, chapterCount: chapters]
+        return [status: 'READY', questions: questions, chapterCount: chapters,
+                byChapter: byChapter]
     }
 
     /** Complete schema fields are serialized; content is not rewritten by AI. */
@@ -168,7 +176,7 @@ class QuizSheetImportService {
         File base = new File(root.canonicalFile, 'module').canonicalFile
         File directory = new File(
                 root.canonicalFile,
-                "${location}/content/quiz/vi"
+                "${location}/content/readme/docs/vi/menu"
         ).canonicalFile
         if (!directory.toPath().startsWith(base.toPath()) ||
                 directory.toPath() == base.toPath()) {

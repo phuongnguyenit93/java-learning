@@ -1,0 +1,31 @@
+sections:
+  list-choice:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  set-choice:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  map-choice:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  queue-choice:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  null-policy-matrix:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  choice-by-characteristics:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

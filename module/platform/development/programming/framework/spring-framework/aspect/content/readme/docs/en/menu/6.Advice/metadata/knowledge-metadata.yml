@@ -1,0 +1,26 @@
+sections:
+  advice-semantics:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  advice-success-demo:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  advice-failure-demo:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  advice-parameter-binding:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  advice-conclusion:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

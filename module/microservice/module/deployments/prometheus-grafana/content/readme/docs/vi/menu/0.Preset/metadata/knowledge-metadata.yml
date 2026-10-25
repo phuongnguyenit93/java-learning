@@ -1,0 +1,6 @@
+sections:
+  prometheus-and-grafana:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

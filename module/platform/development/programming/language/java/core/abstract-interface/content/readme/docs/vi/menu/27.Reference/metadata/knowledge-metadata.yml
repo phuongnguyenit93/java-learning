@@ -1,0 +1,26 @@
+sections:
+  reference-001:
+    difficulty: BASIC
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  reference-002:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  reference-003:
+    difficulty: ADVANCED
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  reference-004:
+    difficulty: INTERMEDIATE
+    isImportant: true
+    aiGenerated: true
+    reviewed: false
+  reference-005:
+    difficulty: INTERMEDIATE
+    isImportant: false
+    aiGenerated: true
+    reviewed: false

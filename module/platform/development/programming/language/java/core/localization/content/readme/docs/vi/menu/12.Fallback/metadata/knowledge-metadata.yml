@@ -1,0 +1,21 @@
+sections:
+  bundle-candidate-chain:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  default-locale-fallback:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  base-bundle:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  missing-resource:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

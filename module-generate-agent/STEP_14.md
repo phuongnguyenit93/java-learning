@@ -1,6 +1,6 @@
 # STEP 14 — Translation VI → EN (Prime + Worker)
 
-> **Quy trình:** Hoàn tất 6 preflight gate của STEP 12A → lập catalog/backup → giao worker **mỗi lượt một file** → Prime QA từng file → QA toàn module → J3 readback. Whitelist/blacklist nằm trong `worker/STEP_14_WORKER.md`. Không thực thi STEP 15 khi STEP 14 chưa hoàn tất.
+> **Quy trình:** Hoàn tất preflight gate của STEP 12A → lập catalog/backup → giao worker **mỗi lượt một file** → Prime QA từng file → QA toàn module → J3 readback. Whitelist/blacklist nằm trong `worker/STEP_14_WORKER.md`. Không thực thi STEP 15 khi STEP 14 chưa hoàn tất.
 
 ## 0. PRE-FLIGHT GATE — BẮT BUỘC trước khi bắt đầu STEP 14
 
@@ -12,12 +12,9 @@ Trước khi kiểm tra, Prime đọc **toàn văn** `module-generate-agent/GENE
 
 - So sánh **chính xác danh sách file và đường dẫn tương đối** của các subtree được STEP 12A quản lý:
   - `content/readme/docs/{vi,en}/` (`BASE.md`, `LIST.md`, `menu/**`).
-  - `content/readme/metadata/{vi,en}/`.
   - `content/roadmap/{vi,en}/`.
-  - `content/quiz/{vi,en}/`.
-  - `content/interview/{vi,en}/`.
   - `src/main/resources/swagger/{vi,en}/`.
-- Kiểm tra thứ tự/chỉ số Menu Cấp 1, tên folder/filename, chapter và section Knowledge. Mỗi file Markdown EN phải có **cùng tập và thứ tự anchor ID** với VI; metadata phải có cùng file keys, section keys và giá trị kỹ thuật (`difficulty`, `isImportant`, `aiGenerated`, `reviewed`).
+- Kiểm tra thứ tự/chỉ số Menu Cấp 1, tên folder/filename, chapter và section Knowledge. Mỗi file Markdown EN phải có **cùng tập và thứ tự anchor ID** với VI; `menu/<chapter>/metadata/knowledge-metadata.yml` phải khớp bytes/anchor/giá trị kỹ thuật (`difficulty`, `isImportant`, `aiGenerated`, `reviewed`). `menu/<chapter>/{quiz,interview}/question.yml` thuộc cùng cây docs.
 - Vì STEP 12A chỉ clone, **nội dung EN tại thời điểm này vẫn là tiếng Việt**. Đối chiếu byte/hash VI/EN cho mọi file nằm trong scope, **ngoại trừ `LIST.md`**: ở EN, chỉ header ngôn ngữ và đích link `content/readme/docs/vi/menu/` → `content/readme/docs/en/menu/` được khác.
 - Nếu một khả năng thuộc phạm vi bắt buộc không có nguồn VI (ví dụ Quiz không được tạo), xác minh vùng EN tương ứng **không còn dữ liệu cũ**. **Video nằm ngoài ownership của STEP 12A/14**; không kiểm kê, xóa, clone hay dịch Video trong bước này.
 
@@ -27,8 +24,8 @@ Trước khi kiểm tra, Prime đọc **toàn văn** `module-generate-agent/GENE
 
 - Đối chiếu `questions[]` giữa VI và EN: **cùng số lượng, cùng thứ tự và cùng nội dung tại thời điểm clone**.
 - **Quiz:** bảo toàn `id` từng câu, thứ tự bốn đáp án `A/B/C/D`, `correctAnswerId`, `explanation`, `aiGenerated`, `reviewed`, `readmeRelated` và `apiRelated`. Không tái tạo ID mới.
-- **Interview:** bảo toàn thứ tự và toàn bộ câu hỏi/câu trả lời, metadata và relation. Interview không có ID câu hỏi bắt buộc như Quiz; đối chiếu **theo vị trí + chapter thuộc `readmeRelated.file`** (kèm fingerprint nếu cần).
-- Validate `readmeRelated.file + anchor` bằng **README của cùng ngôn ngữ**, và `apiRelated.controller + methodSignature` bằng Swagger/API thực tế. Relation trống hợp lệ theo schema thì được giữ trống, **không được tự suy diễn**.
+- **Interview:** bảo toàn thứ tự và toàn bộ câu hỏi/câu trả lời, metadata và relation. Interview không có ID câu hỏi bắt buộc như Quiz; đối chiếu **theo vị trí + chapter chứa file question.yml** (kèm fingerprint nếu cần).
+- Validate `readmeRelated.anchor` bằng **Knowledge của cùng chapter và ngôn ngữ**; file không được authored trong relation. Validate `apiRelated.controller + methodSignature` bằng Swagger/API thực tế. Relation trống hợp lệ theo schema thì được giữ trống, **không được tự suy diễn**.
 
 **FAIL:** thiếu/thừa/tráo câu, sai đáp án đúng, ID/metadata/relationship drift hoặc relation không xác định được đích.
 
@@ -81,12 +78,12 @@ Chỉ khi **cả 6 gate = PASS** thì ghi `STEP_14_PRECHECK=PASS` vào báo cáo
 | --- | --- |
 | README | Mỗi `content/readme/docs/en/menu/<chapter>/knowledge/<file>.md` |
 | INTRODUCTION | `content/readme/docs/en/BASE.md` |
-| QUIZ | Toàn bộ `content/quiz/en/question.yml` |
-| INTERVIEW | Toàn bộ `content/interview/en/question.yml` |
+| QUIZ | Mỗi `content/readme/docs/en/menu/<chapter>/quiz/question.yml` |
+| INTERVIEW | Mỗi `content/readme/docs/en/menu/<chapter>/interview/question.yml` |
 | ROADMAP | Toàn bộ `content/roadmap/en/roadmap.yml` |
 | SWAGGER | **Mỗi file riêng**: `controller-description.yml`, `api-descriptions.yml`, `api-execution.yml`, `api-cases.yml`, `api-params.yml` dưới `src/main/resources/swagger/en/` nếu hiện hữu |
 
-**Prime-only/không dịch:** `content/readme/docs/en/LIST.md` (link/menu kỹ thuật STEP 12A), `content/readme/metadata/en/knowledge-metadata.yml`, schema comment của YAML, Java code/test, Reference, Excel, Google Sheets, Portal, Gradle/config, toàn bộ VI. Module thiếu capability thì `NOT_APPLICABLE`; file bất thường/không xác định type thì BLOCKER.
+**Prime-only/không dịch:** `content/readme/docs/en/LIST.md` (link/menu kỹ thuật STEP 12A), mọi `content/readme/docs/en/menu/<chapter>/metadata/knowledge-metadata.yml`, schema comment của YAML, Java code/test, Reference, Excel, Google Sheets, Portal, Gradle/config, toàn bộ VI. Module thiếu capability thì `NOT_APPLICABLE`; file bất thường/không xác định type thì BLOCKER.
 
 ## 2. Prime lập danh mục, snapshot và giao đúng location
 

@@ -1,0 +1,16 @@
+sections:
+  loading-linking-initialization:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  linking-phases:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  load-vs-initialize:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

@@ -1,0 +1,36 @@
+sections:
+  method-signature:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  method-invocation-conversion:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  overload-resolution-phases:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  most-specific-overload:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  null-overload-ambiguity:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  method-call-evaluation:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  recursion-stack:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

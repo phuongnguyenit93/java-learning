@@ -83,6 +83,30 @@ class ModuleEnSheetPublishServiceTest {
     }
 
     @Test
+    void detectsDriftWithinChapterInterviewSource() {
+        Map f = fixture()
+        File question = new File(f.module,
+                'content/readme/docs/en/menu/1.Basic/interview/question.yml')
+        assertTrue(question.parentFile.mkdirs())
+        question.setText('questions:\n  - question: Original question\n', 'UTF-8')
+        List<String> events = []
+        List<Map> tabs = [
+                [gid:'0', title:'Template', moduleLocation:'', rows:700, columns:28],
+                [gid:'111', title:'OOP', moduleLocation:'module/demo', rows:700, columns:28]
+        ]
+        def service = mocked(tabs, events)
+        service.execute(f.root, f.module, URL, '111', 'CLONE', true)
+        question.setText('questions:\n  - question: Updated question\n', 'UTF-8')
+        try {
+            service.execute(f.root, f.module, URL, '111', 'CLONE', true)
+            fail('Chapter question source drift must invalidate the stored mapping')
+        } catch (GradleException expected) {
+            assertTrue(expected.message.contains('sourceSha256'))
+        }
+        assertEquals(1, events.count { it.startsWith('duplicate:') })
+    }
+
+    @Test
     void preservesOnlyContentCellsWhileLeavingFormattingAndHeadersUntouched() {
         Map f = fixture()
         File en = new File(f.module, 'build/step15/upload.xlsx')

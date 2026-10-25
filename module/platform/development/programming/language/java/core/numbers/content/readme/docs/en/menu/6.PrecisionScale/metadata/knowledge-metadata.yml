@@ -1,0 +1,16 @@
+sections:
+  precision-vs-scale:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  scale-transformations:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  math-context:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

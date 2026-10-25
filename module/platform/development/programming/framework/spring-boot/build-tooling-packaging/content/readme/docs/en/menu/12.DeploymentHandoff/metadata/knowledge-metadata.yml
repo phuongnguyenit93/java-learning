@@ -1,0 +1,31 @@
+sections:
+  artifact-strategy:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  delivery-environment-fit:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  deployment-ownership-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  normal-jvm-vs-native-handoff:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  end-to-end-build-flow:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  build-failure-classification:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

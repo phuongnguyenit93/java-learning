@@ -1,0 +1,31 @@
+sections:
+  web-runtime-role:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  web-runtime-problem:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  boot-to-server-flow:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  servlet-reactive-runtime-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  web-runtime-boundaries:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  web-runtime-learning-path:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

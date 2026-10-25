@@ -1,0 +1,16 @@
+sections:
+  big-decimal-equals:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  big-decimal-compareto:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  big-decimal-collections:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

@@ -1,0 +1,31 @@
+sections:
+  native-readiness-flow:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  native-readiness-checklist:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  native-failure-location:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  native-delivery-choice:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  native-evidence-loop:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  native-module-handoffs:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

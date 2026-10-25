@@ -1,0 +1,31 @@
+sections:
+  server-customization-decision-order:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  web-server-factory-customizer:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-vs-specific-factory-targets:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  customizer-ordering:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  custom-web-server-factory:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  advanced-server-topology:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

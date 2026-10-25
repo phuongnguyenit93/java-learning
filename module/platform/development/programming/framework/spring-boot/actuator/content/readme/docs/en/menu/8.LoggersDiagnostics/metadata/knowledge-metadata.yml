@@ -1,0 +1,36 @@
+sections:
+  loggers-endpoint:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  configured-effective-log-levels:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  runtime-log-level-changes:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  threaddump-endpoint:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  heapdump-endpoint:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  diagnostic-analysis-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  diagnostic-exposure-risk:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

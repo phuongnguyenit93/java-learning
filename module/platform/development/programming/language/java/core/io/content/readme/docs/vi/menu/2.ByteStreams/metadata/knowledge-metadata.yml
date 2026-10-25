@@ -1,0 +1,31 @@
+sections:
+  inputstream-outputstream:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  standard-console-io:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  read-contract:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  partial-read-write:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  typed-binary-io:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  byte-stream-use-cases:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

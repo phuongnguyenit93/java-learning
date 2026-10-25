@@ -1,0 +1,31 @@
+sections:
+  initialization-trigger:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  constant-no-init:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  clinit-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  initialization-once:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  initialization-locking:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  initialization-failure:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

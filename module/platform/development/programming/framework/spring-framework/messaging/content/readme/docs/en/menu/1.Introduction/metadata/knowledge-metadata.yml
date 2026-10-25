@@ -1,0 +1,31 @@
+sections:
+  messaging-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  direct-coupling-limits:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  spring-messaging-foundation:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  messaging-programming-models:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  neighboring-module-boundaries:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  messaging-learning-path:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

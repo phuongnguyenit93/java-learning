@@ -166,7 +166,7 @@ class InterviewSheetNormalizeService {
             items.add([
                     question: q.question, answer: q.answer,
                     aiGenerated: ai, reviewed: reviewed,
-                    readmeRelated: [file: file, anchor: readme.anchor],
+                    readmeRelated: [anchor: readme.anchor],
                     apiRelated: [controller: api.controller,
                                  methodSignature: api.methodSignature]
             ])

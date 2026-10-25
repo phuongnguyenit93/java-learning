@@ -45,8 +45,8 @@ class QuizSheetImportServiceTest {
         assertEquals('READY', result.status)
         assertEquals(2, result.chapterCount)
         assertEquals(['oopbasic-001', 'encapsulation-001'], result.questions*.id)
-        assertEquals('1.OOPBasic/OOPBasic.md', result.questions[0].readmeRelated.file)
-        assertEquals('2.Encapsulation/Encapsulation.md', result.questions[1].readmeRelated.file)
+        assertEquals([anchor: ''], result.questions[0].readmeRelated)
+        assertEquals(['1.OOPBasic','2.Encapsulation'], result.byChapter.keySet().toList())
         String yaml = QuizSheetImportService.renderYaml(result.questions as List<Map>)
         assertTrue(yaml.startsWith('# <quiz-schema>'))
         assertEquals(result.questions, new Yaml().load(yaml).questions)
@@ -75,18 +75,22 @@ class QuizSheetImportServiceTest {
     void snapshotReplacesOnlyQuizViAndLeavesOtherLanguageUntouched() {
         File root = tmp.newFolder('repository')
         File target = QuizSheetImportService.resolveDirectory(root, 'module/sandbox/demo')
-        assertTrue(target.mkdirs())
-        new File(target, 'question.yml').setText('OLD', 'UTF-8')
-        File english = new File(target.parentFile, 'en/question.yml')
+        File chapter = new File(target, '1.OOPBasic')
+        assertTrue(new File(chapter, 'knowledge').mkdirs())
+        File existing = new File(chapter, 'quiz/question.yml')
+        assertTrue(existing.parentFile.mkdirs())
+        existing.setText('OLD', 'UTF-8')
+        File english = new File(root, 'module/sandbox/demo/content/readme/docs/en/menu/1.OOPBasic/quiz/question.yml')
         assertTrue(english.parentFile.mkdirs())
         english.setText('EN', 'UTF-8')
-        Map dry = SheetSnapshotReplaceService.replace(root, target,
-                ['question.yml': 'NEW'], false)
+        Map dry = ChapterQuestionSnapshotService.replace(root,
+                new File(root, 'module/sandbox/demo'), 'quiz', ['1.OOPBasic':'NEW'], false)
         assertEquals('DRY_RUN', dry.status)
-        assertEquals('OLD', new File(target, 'question.yml').getText('UTF-8'))
-        assertEquals('UPDATED', SheetSnapshotReplaceService.replace(root, target,
-                ['question.yml': 'NEW'], true).status)
-        assertEquals('NEW', new File(target, 'question.yml').getText('UTF-8'))
+        assertEquals('OLD', existing.getText('UTF-8'))
+        assertEquals('UPDATED', ChapterQuestionSnapshotService.replace(root,
+                new File(root, 'module/sandbox/demo'), 'quiz',
+                ['1.OOPBasic': 'NEW'], true).status)
+        assertEquals('NEW', existing.getText('UTF-8'))
         assertEquals('EN', english.getText('UTF-8'))
     }
 

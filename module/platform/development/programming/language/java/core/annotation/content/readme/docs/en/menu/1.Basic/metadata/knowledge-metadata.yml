@@ -1,0 +1,11 @@
+sections:
+  annotation-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  annotation-syntax:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

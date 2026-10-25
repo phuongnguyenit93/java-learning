@@ -769,90 +769,106 @@ Section ids must be unique within one module/language.
     }
 
 
+    /**
+     * Resolve chapter-local, sections-wrapped metadata without altering the public
+     * Portal Knowledge index contract. Legacy central entries are read-only
+     * fallback for unmigrated root Markdown and staged article migrations.
+     */
     private Map<String, Object> loadKnowledgeMetadata(
-            Project moduleProject,
-            String language
+            Project moduleProject, String language
     ) {
+        File menu = new File(moduleProject.projectDir,
+                'content/readme/docs/' + language + '/menu')
+        File legacyFile = new File(moduleProject.projectDir,
+                'content/readme/metadata/' + language + '/' +
+                        ReadmeMetadataSyncService.METADATA_FILE_NAME)
+        Map<String, Object> legacy = readKnowledgeMetadataFile(legacyFile)
+        Map<String, Object> result = new LinkedHashMap<>(legacy)
+        if (!menu.isDirectory()) return result
 
-        File metadataFile =
-                new File(
-                        moduleProject.projectDir,
-                        "content/readme/metadata/${language}/${ReadmeMetadataSyncService.METADATA_FILE_NAME}"
-                )
-
-
-        if (
-                !metadataFile.exists() ||
-                        metadataFile.length() == 0
-        ) {
-
-            return new LinkedHashMap<>()
+        File[] folders = menu.listFiles()
+        if (folders == null) {
+            throw new GradleException('Unable to list Portal Knowledge menu: ' + menu)
         }
-
-
-        if (!metadataFile.isFile()) {
-
-            throw new GradleException(
-                    """
-Portal README knowledge metadata path exists but is not a file:
-
-${metadataFile.absolutePath}
-""".stripIndent()
-            )
+        folders.each { File chapter ->
+            if (!chapter.isDirectory() || !(chapter.name ==~ /\d+\..+/)) return
+            File localMetadata = new File(chapter,
+                    'metadata/' + ReadmeMetadataSyncService.METADATA_FILE_NAME)
+            if (!localMetadata.isFile()) return
+            if (!localMetadata.canonicalFile.toPath().startsWith(
+                    chapter.canonicalFile.toPath())) {
+                throw new GradleException('Portal Knowledge metadata escapes chapter: ' +
+                        localMetadata)
+            }
+            Map<String, Object> local = readChapterSections(localMetadata)
+            File knowledge = new File(chapter, 'knowledge')
+            if (!knowledge.isDirectory()) return
+            File[] articles = knowledge.listFiles()
+            if (articles == null) {
+                throw new GradleException('Unable to read Portal Knowledge: ' + knowledge)
+            }
+            articles.each { File article ->
+                if (!article.isFile() || !article.name.toLowerCase(Locale.ROOT).endsWith('.md'))
+                    return
+                String sourcePath = chapter.name + '/knowledge/' + article.name
+                String oldPath = chapter.name + '/' + article.name
+                boolean uniqueFlatOwner = folders.count { File other ->
+                    other.isDirectory() && new File(other, 'knowledge/' + article.name).isFile()
+                } == 1
+                Map combined = new LinkedHashMap()
+                List<String> keys = uniqueFlatOwner ?
+                        [article.name, oldPath, sourcePath] : [oldPath, sourcePath]
+                keys.each { String key ->
+                    Object entries = legacy[key]
+                    if (entries != null) {
+                        combined.putAll(resolveMetadataMap(entries,
+                                'Invalid Portal legacy Knowledge metadata: ' + key))
+                    }
+                }
+                combined.putAll(local)
+                result[sourcePath] = combined
+            }
         }
+        return result
+    }
 
-
+    private Map<String, Object> readKnowledgeMetadataFile(File file) {
+        if (!file.exists() || file.length() == 0) return new LinkedHashMap<>()
+        if (!file.isFile()) {
+            throw new GradleException('Portal Knowledge metadata is not a file: ' + file)
+        }
         Object loaded
-
-
         try {
-
-            loaded =
-                    yamlReader.load(
-                            metadataFile.getText(
-                                    'UTF-8'
-                            )
-                    )
+            loaded = yamlReader.load(file.getText('UTF-8'))
         }
-        catch (Exception exception) {
-
+        catch (Exception e) {
             throw new GradleException(
-                    """
-Unable to parse Portal README knowledge metadata YAML.
-
-File:
-${metadataFile.absolutePath}
-
-Cause:
-${exception.message}
-""".stripIndent(),
-                    exception
-            )
+                    'Cannot parse Portal Knowledge metadata: ' + file + ': ' + e.message, e)
         }
-
-
-        if (loaded == null) {
-
-            return new LinkedHashMap<>()
-        }
-
-
+        if (loaded == null) return new LinkedHashMap<>()
         if (!(loaded instanceof Map)) {
-
-            throw new GradleException(
-                    """
-Invalid Portal README knowledge metadata YAML structure.
-
-Expected root object to be a map.
-
-File:
-${metadataFile.absolutePath}
-""".stripIndent()
-            )
+            throw new GradleException('Portal Knowledge metadata must be a map: ' + file)
         }
-
-
         return loaded as Map<String, Object>
+    }
+
+    private Map<String, Object> readChapterSections(File file) {
+        Map<String, Object> root = readKnowledgeMetadataFile(file)
+        if (root.size() != 1 || !root.containsKey('sections') ||
+                !(root.sections instanceof Map)) {
+            throw new GradleException(
+                    'Portal Knowledge metadata must contain only sections: {anchor: fields}: ' +
+                            file.absolutePath)
+        }
+        Map sections = root.sections as Map
+        sections.each { Object anchor, Object entry ->
+            if (!(anchor instanceof String) || !(entry instanceof Map)) {
+                throw new GradleException(
+                        'Invalid Portal Knowledge section metadata: ' + file.absolutePath +
+                                ' #' + anchor)
+            }
+        }
+        return sections as Map<String, Object>
     }
 
 

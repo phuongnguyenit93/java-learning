@@ -1,0 +1,16 @@
+sections:
+  string-pool-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  literal-vs-new:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  pool-identity:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

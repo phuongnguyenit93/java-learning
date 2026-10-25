@@ -1,0 +1,16 @@
+sections:
+  numeric-decision-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  numeric-policy-boundaries:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  numeric-synthesis-cases:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

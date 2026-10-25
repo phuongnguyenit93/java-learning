@@ -1,0 +1,21 @@
+sections:
+  structural-modification:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  fail-fast-best-effort:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  concurrent-modification-exception:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  iterator-safe-mutation:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

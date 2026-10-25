@@ -1,0 +1,21 @@
+sections:
+  queue-semantics:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  deque-semantics:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  exception-vs-special-value:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  priority-queue:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

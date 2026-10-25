@@ -1,0 +1,26 @@
+sections:
+  packaging-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  executable-artifact:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  boot-loader-layout-mental-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  run-packaged-application:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  packaging-tooling-handoff:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

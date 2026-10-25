@@ -1,0 +1,21 @@
+sections:
+  dockerfile-vs-buildpacks:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  archive-vs-image-layering:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  control-standardization-maintenance:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  image-cache-strategy:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

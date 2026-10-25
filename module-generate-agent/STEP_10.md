@@ -40,8 +40,8 @@ Task **`normalizeQuizQuestionsFromSheet`**; mặc định DRY_RUN; yêu cầu UR
 ```
 
 - Code parse YAML, không gọi AI. Với câu hỏi **chưa có** `id`, tạo ID **`<lowercase filename stem>-001`, `-002`, ...**, tránh mọi ID đang có; ID cũ phải giữ nguyên, trùng ID → BLOCKER, không bao giờ tự đánh lại ID khi đổi thứ tự. Filename đã đổi nhưng ID tồn tại vẫn giữ; nếu cần migrate ID, xử lý chủ động sau.
-- Điền `aiGenerated: true`, `reviewed: false` mặc định; **không reset human-edited**. Điền `readmeRelated.file` từ B cha thành `<chapter-index>.<stem>/<filename>` như STEP 9, `readmeRelated.anchor: ''`; `apiRelated.controller: ''`, `apiRelated.methodSignature: ''`. Metadata và related hợp lệ đã có được giữ. `file` xung đột → BLOCKER.
-- Partial `readmeRelated.file` + anchor trống được phép **tạm thời** nhờ `LEGACY_QUESTION_LINKS`; strict contract và Portal cần cặp file/anchor đầy đủ sau enrichment (Portal có thể cảnh báo). Không tự đoán anchor/API.
+- Điền `aiGenerated: true`, `reviewed: false` mặc định; **không reset human-edited**. Chỉ điền `readmeRelated.anchor: ''` (không còn `file`); `apiRelated.controller: ''`, `apiRelated.methodSignature: ''`. Metadata và related hợp lệ đã có được giữ; `file` từ dữ liệu legacy chỉ được chấp nhận khi khớp chương, sau đó bỏ khỏi YAML Normalize.
+- `readmeRelated.anchor: ''` nghĩa là chưa có liên kết Knowledge; không tự đoán anchor/API. Khi có anchor, Portal chỉ tìm Knowledge **trong cùng chương** và tự tạo `file + anchor` ở output.
 - Preflight mọi row, ngăn orphan/missing Quiz và fragment gap/oversize, snapshot fingerprint trước batch, một batch ghi T:W, exact readback và idempotent. Không ghi module.
 
 ## 4. Quiz ByLocation — Prime, một module
@@ -53,8 +53,8 @@ Sau Normalize APPLY và readback PASS, chạy đúng module có `I3` khớp (kh�
 .\gradlew.bat :<EXACT_MODULE_GRADLE_PATH>:generateModuleQuizFromSheetByLocation -PfileUrl=<URL> -PsheetID=<GID> -PsheetMode=APPLY
 ```
 
-- Task chỉ ghi snapshot **`content/quiz/vi/question.yml`** của đúng module. Trước APPLY phải kiểm tra diff với file cũ, đặc biệt Quiz cũ có human edits; snapshot thay thế file cũ. **Không APPLY nếu còn chương trống**, schema không hợp lệ, hoặc `SKIPPED_*`.
-- Validate `quiz.schema.json` qua `QuizQuestionSchemaService` (legacy file-only compatibility), kiểm tra question IDs unique toàn module, đúng 4 đáp án và correctAnswerId. Readback file, counts, các path/flags/câu hỏi; không thay đổi en Quiz.
+- Task ghi snapshot **`content/readme/docs/vi/menu/<chapter>/quiz/question.yml`** cho từng chương. Trước APPLY phải preflight toàn bộ YAML/schema/ID, stage mọi chương rồi thay đúng **file Quiz sở hữu**; nếu lỗi ghi, rollback bytes trước đó. Không động Knowledge/Metadata/Interview/Video hoặc Quiz EN. **Không APPLY nếu còn chương trống**, schema không hợp lệ, hoặc `SKIPPED_*`.
+- Validate `quiz.schema.json` qua `QuizQuestionSchemaService`, kiểm tra question IDs unique toàn module, đúng 4 đáp án và correctAnswerId. Readback file theo từng chương, counts, flags/câu hỏi. `generatePortalData` xuất một Quiz YAML mỗi chương, `index.json` theo ngôn ngữ và resolve anchor trong Knowledge cùng chương.
 - Chỉ sau **toàn tab Worker+QA PASS, Normalize DRY_RUN/APPLY/readback PASS, ByLocation DRY_RUN/APPLY/output QA PASS** Prime mới update/readback `J3 = STEP 10` với preflight `J2` theo PRIME_RULES. Báo `NORMALIZE_STATUS`, `MODULE_SYNC_STATUS`, `DESTINATION`, `QUESTION_COUNT`, `READBACK`, blockers; không commit/push.
 
 ### Prime giao worker — đúng bốn dòng

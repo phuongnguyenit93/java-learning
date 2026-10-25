@@ -1,0 +1,16 @@
+sections:
+  abstract-vs-interface-state:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  abstract-vs-interface-inheritance:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  selection-guidance:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

@@ -1,0 +1,21 @@
+sections:
+  text-vs-bytes:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  charset-encode-decode:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  default-charset-risk:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  malformed-input:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

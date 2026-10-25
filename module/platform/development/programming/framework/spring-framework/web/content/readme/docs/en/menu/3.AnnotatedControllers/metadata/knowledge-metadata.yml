@@ -1,0 +1,26 @@
+sections:
+  annotated-controller-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  request-mapping-and-conditions:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  handler-method-inputs:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  model-and-session-state:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  handler-return-values-and-response-handling:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

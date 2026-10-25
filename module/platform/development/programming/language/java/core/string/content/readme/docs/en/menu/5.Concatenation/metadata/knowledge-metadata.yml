@@ -1,0 +1,21 @@
+sections:
+  concat-semantics:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  compile-time-concat:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  runtime-concat:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  loop-concat-cost:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

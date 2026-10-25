@@ -1,0 +1,16 @@
+sections:
+  date-time-domains:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  immutable-date-time:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  choose-date-time-type:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

@@ -1,0 +1,16 @@
+sections:
+  builder-mutable-buffer:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  builder-usage:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  builder-capacity:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

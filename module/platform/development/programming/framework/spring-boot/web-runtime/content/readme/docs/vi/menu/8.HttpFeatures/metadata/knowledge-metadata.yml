@@ -1,0 +1,31 @@
+sections:
+  http-response-compression:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  http2-support:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  request-header-limits:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  connection-server-settings:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  access-logging:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  http-feature-portability:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

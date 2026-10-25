@@ -1,0 +1,21 @@
+sections:
+  interface-contract:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  interface-fields:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  interface-method-kinds:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  interface-implementation:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

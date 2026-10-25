@@ -1,0 +1,26 @@
+sections:
+  java-serialization-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  serializable-graph:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  serialversionuid:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  transient-field:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  serialization-security-risk:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

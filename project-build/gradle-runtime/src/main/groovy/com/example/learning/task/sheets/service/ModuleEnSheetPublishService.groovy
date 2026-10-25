@@ -621,9 +621,7 @@ class ModuleEnSheetPublishService {
     private static String shaSources(File module) {
         MessageDigest digest = MessageDigest.getInstance('SHA-256')
         List<String> files = ['content/sheet/vi/module.xlsx']
-        for (String area : ['content/readme/docs/en', 'content/readme/metadata/en',
-                            'content/roadmap/en', 'content/quiz/en',
-                            'content/interview/en',
+        for (String area : ['content/readme/docs/en', 'content/roadmap/en',
                             'src/main/resources/swagger/en']) {
             File parent = new File(module, area)
             if (!parent.exists()) continue

@@ -1,0 +1,26 @@
+sections:
+  end-to-end-boot-flow:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  classpath-configuration-conventions:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  common-misconceptions:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  ownership-handoff-map:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  next-learning-path:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

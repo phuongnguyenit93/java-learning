@@ -221,7 +221,7 @@ class QuizSheetNormalizeService {
             items.add([
                     id: questionId, question: q.question,
                     aiGenerated: ai, reviewed: reviewed,
-                    readmeRelated: [file: file, anchor: readme.anchor],
+                    readmeRelated: [anchor: readme.anchor],
                     apiRelated: [controller: api.controller,
                                  methodSignature: api.methodSignature],
                     answers: answers, correctAnswerId: q.correctAnswerId

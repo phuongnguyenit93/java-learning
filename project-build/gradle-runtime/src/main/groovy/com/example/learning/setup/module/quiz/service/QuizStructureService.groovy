@@ -6,9 +6,10 @@ import org.gradle.api.Project
 import org.gradle.api.logging.Logger
 
 /**
- * BUILD_QUIZ only provisions the module content directory. Authored
- * question.yml files belong to the Sheet importer/content workflow and must
- * never be created or rewritten as a side effect of Gradle configuration.
+ * Chapter Quiz question.yml belongs beside the chapter Knowledge under
+ * content/readme/docs/<lang>/menu/<chapter>/quiz/. The Sheet importer
+ * creates that folder when its chapter has authored content. Never recreate
+ * legacy content/quiz during Gradle configuration.
  */
 class QuizStructureService {
     private final Logger logger
@@ -27,11 +28,6 @@ class QuizStructureService {
         if (directory.exists() && !directory.isDirectory()) {
             throw new GradleException("Quiz content path is not a directory: ${directory.absolutePath}")
         }
-        if (!directory.isDirectory()) {
-            if (!directory.mkdirs() && !directory.isDirectory()) {
-                throw new GradleException("Unable to create Quiz content directory: ${directory.absolutePath}")
-            }
-            logger.lifecycle('[QUIZ-STRUCTURE] Created directory: {}', directory.absolutePath)
-        }
+        // Existing legacy content is retained for migration/review, not mutated.
     }
 }

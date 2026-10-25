@@ -1,0 +1,21 @@
+sections:
+  bootstrap-loader:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  platform-loader:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  application-loader:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  loader-chain:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

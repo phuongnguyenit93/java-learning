@@ -1,0 +1,26 @@
+sections:
+  enum-type-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  enum-fields-constructors:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  enum-interface:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  enum-constant-specific:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  enum-values-valueof:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

@@ -80,6 +80,11 @@ All default to `DRY_RUN`; only `APPLY` mutates Sheets or local files.
    Interview P:S, Quiz T:W, Importance AB. **Bỏ qua Video X:AA trong publish bắt buộc.** Use source VI row
    identities; fail on lost chapter ownership, mismatched section count, long
    text or invalid YAML.
+   Đọc `menu/<chapter>/knowledge/<file>.md`, metadata tại
+   `menu/<chapter>/metadata/knowledge-metadata.yml`, và Interview/Quiz tại
+   `menu/<chapter>/{interview,quiz}/question.yml` của ngôn ngữ EN.
+   Mỗi câu hỏi chỉ lưu `readmeRelated.anchor`; chapter được xác định bằng
+   vị trí file, không dựa vào `readmeRelated.file`.
 3. Translate **fixed template labels only** using literal code mappings and
    clear VI-only authoring prompts. No freeform AI translation.
 4. Upload only `userEnteredValue` with the Google Sheets API, preserving

@@ -1,0 +1,11 @@
+sections:
+  context-path-mistake:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  eureka-config-list:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

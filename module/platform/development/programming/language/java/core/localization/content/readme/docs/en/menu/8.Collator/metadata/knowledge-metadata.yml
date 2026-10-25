@@ -1,0 +1,21 @@
+sections:
+  collator-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  collation-strength:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  collator-vs-string-order:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  sorting-user-text:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

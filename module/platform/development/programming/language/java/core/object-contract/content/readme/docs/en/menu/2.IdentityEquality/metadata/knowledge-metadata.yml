@@ -1,0 +1,16 @@
+sections:
+  identity-vs-equality:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  reference-equality:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  value-object-equality:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

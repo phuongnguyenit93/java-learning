@@ -1,0 +1,31 @@
+sections:
+  hawtio-define:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  hawtio-and-sba:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  jokolia:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  jmx-and-mbean:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  jmx-feature:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  hawtio-feature:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

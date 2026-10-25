@@ -1,0 +1,36 @@
+sections:
+  starter-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  starter-split-or-combine:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  starter-naming:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  configuration-key-namespace:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  starter-dependency-opinion:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  starter-end-to-end-flow:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  auto-configuration-boundaries-next:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

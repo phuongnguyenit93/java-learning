@@ -1,0 +1,16 @@
+sections:
+  big-integer-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  big-integer-immutability:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  big-integer-operations:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

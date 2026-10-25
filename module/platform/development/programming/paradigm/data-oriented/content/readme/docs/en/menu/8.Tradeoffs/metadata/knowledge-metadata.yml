@@ -1,0 +1,26 @@
+sections:
+  dop-choose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  dop-costs:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  dop-functional-relation:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  dop-versus-dod:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  dop-handoff:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

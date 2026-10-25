@@ -1,0 +1,31 @@
+sections:
+  declarative-query-result:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  declarative-query-filter:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  declarative-query-order:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  declarative-policy-config:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  declarative-query-strategy:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  declarative-dsl-limit:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

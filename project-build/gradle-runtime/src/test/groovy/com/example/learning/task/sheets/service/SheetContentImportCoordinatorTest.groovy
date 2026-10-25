@@ -115,11 +115,12 @@ class SheetContentImportCoordinatorTest {
         Map combined = coordinator.importByLocation(
                 root, module, 'https://example', '8', false
         )
-        assertEquals(['ROADMAP', 'README', 'VIDEO', 'INTERVIEW'], called)
+        assertEquals(['ROADMAP', 'README', 'VIDEO', 'INTERVIEW', 'QUIZ'], called)
         assertEquals('ROADMAP', combined.part)
         assertEquals('README', combined.readme.part)
         assertEquals('VIDEO', combined.video.part)
         assertEquals('INTERVIEW', combined.interview.part)
+        assertEquals('QUIZ', combined.quiz.part)
     }
 
     @Test
@@ -246,6 +247,12 @@ class SheetContentImportCoordinatorTest {
                 return [status: 'SKIPPED_EMPTY_INTERVIEW', questionCount: 0]
             }
         }
-        return new SheetContentImportCoordinator(reader, roadmap, readme, video, interview)
+        QuizSheetImportService quiz = new QuizSheetImportService() {
+            @Override
+            Map<String, Object> execute(File root, Map<String, Object> context, boolean apply) {
+                return [status: 'SKIPPED_EMPTY_QUIZ', questionCount: 0]
+            }
+        }
+        return new SheetContentImportCoordinator(reader, roadmap, readme, video, interview, quiz)
     }
 }

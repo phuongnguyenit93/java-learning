@@ -1,0 +1,21 @@
+sections:
+  tccl-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  tccl-discovery:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  tccl-lifecycle:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  tccl-leak-risk:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

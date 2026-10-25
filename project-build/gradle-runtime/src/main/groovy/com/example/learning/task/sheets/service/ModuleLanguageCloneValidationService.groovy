@@ -19,14 +19,13 @@ import java.nio.file.attribute.BasicFileAttributes
 /** Read-only structural and relation preflight, shared by DRY_RUN and APPLY. */
 class ModuleLanguageCloneValidationService {
     private static final String DOCS = 'content/readme/docs'
-    private static final String META = 'content/readme/metadata'
     private static final String SWAGGER = 'src/main/resources/swagger'
 
     static void validate(Map<String, Map<String, byte[]>> trees, File repositoryRoot) {
         Map<String, byte[]> docs = trees[DOCS]
-        Map<String, byte[]> metaTree = trees[META]
-        Map metadata = yaml(metaTree['knowledge-metadata.yml'], 'knowledge-metadata.yml')
         Map<String, Set<String>> sections = new LinkedHashMap<>()
+        Map<String, Set<String>> chapterAnchors = new LinkedHashMap<>()
+        Map<String, Map<String, Set<String>>> chapterSections = new LinkedHashMap<>()
         Set<String> chapterIds = new LinkedHashSet<>()
         ReadmeKnowledgeParser parser = new ReadmeKnowledgeParser(
                 Logging.getLogger(ModuleLanguageCloneValidationService))
@@ -49,20 +48,46 @@ class ModuleLanguageCloneValidationService {
                 throw new GradleException('Duplicate Knowledge chapter identity: ' + stem)
             }
             sections[source] = ids as Set
-            Map info = metadata[source] instanceof Map ? metadata[source] as Map : null
-            if (info == null || info.keySet() != sections[source]) {
-                throw new GradleException('Knowledge metadata does not match README anchors: ' +
-                        source)
+            if (source.contains('/knowledge/')) {
+                String chapter = source.substring(0, source.indexOf('/knowledge/'))
+                Map<String, Set<String>> files = chapterSections.computeIfAbsent(
+                        chapter) { new LinkedHashMap<>() }
+                files[source] = sections[source]
+                Set<String> known = chapterAnchors.computeIfAbsent(
+                        chapter) { new LinkedHashSet<>() }
+                if (!Collections.disjoint(known, sections[source])) {
+                    throw new GradleException('Duplicate Knowledge anchor within chapter: ' + chapter)
+                }
+                known.addAll(sections[source])
             }
         }
-        if (!sections || metadata.keySet() != sections.keySet()) {
-            throw new GradleException('README menu files do not match metadata file keys.')
+        if (!sections) {
+            throw new GradleException('Missing VI Knowledge Markdown files.')
+        }
+        chapterSections.each { String chapter, Map<String, Set<String>> files ->
+            String path = 'menu/' + chapter + '/metadata/knowledge-metadata.yml'
+            Map metadata = yaml(docs[path], path)
+            Map values = metadata.containsKey('sections')
+                    ? (metadata.sections instanceof Map ? metadata.sections as Map : null)
+                    : metadata
+            if (values == null ||
+                    (metadata.containsKey('sections') &&
+                            metadata.keySet() != (['sections'] as Set)) ||
+                    values.keySet() != chapterAnchors[chapter] ||
+                    values.values().any { !(it instanceof Map) }) {
+                throw new GradleException('Knowledge metadata does not match README anchors: ' +
+                        path)
+            }
         }
         List<String> listed = []
         String list = content(docs['LIST.md'])
         def matcher = (list =~ /content\/readme\/docs\/en\/menu\/([^)\s]+)/)
         matcher.each { found ->
-            listed.add(java.net.URLDecoder.decode(found[1].toString(), 'UTF-8'))
+            String path = java.net.URLDecoder.decode(found[1].toString(), 'UTF-8')
+            if (path ==~ /[^\/]+\.md/ ||
+                    path ==~ /[^\/]+\/knowledge\/[^\/]+\.md/) {
+                listed.add(path)
+            }
         }
         if (listed.toSet() != sections.keySet() || listed.size() != sections.size()) {
             throw new GradleException('LIST.md EN links do not match the Knowledge tree.')
@@ -99,22 +124,27 @@ class ModuleLanguageCloneValidationService {
                 }
             }
         }
-        ['quiz', 'interview'].each { String kind ->
-            Map<String, byte[]> files = trees['content/' + kind]
-            if (files.isEmpty()) return
-            if (files.keySet() != (['question.yml'] as Set)) {
-                throw new GradleException('Unexpected VI ' + kind + ' files: ' + files.keySet())
-            }
-            Map document = yaml(files['question.yml'], kind + '/question.yml')
-            ContractSchemaValidateUtils.validateData(kind, document,
-                    ContractSchemaValidateUtils.LEGACY_QUESTION_LINKS)
-            (document.questions as List).eachWithIndex { Map question, int index ->
-                checkReadme(question.readmeRelated, sections,
-                        kind + '/question.yml #' + (index + 1), false)
-                checkApi(question.apiRelated, apiDescriptions,
-                        kind + '/question.yml #' + (index + 1))
+        chapterAnchors.each { String chapter, Set<String> anchors ->
+            ['quiz', 'interview'].each { String kind ->
+                String path = 'menu/' + chapter + '/' + kind + '/question.yml'
+                if (!docs.containsKey(path)) return
+                Map document = yaml(docs[path], path)
+                ContractSchemaValidateUtils.validateData(kind, document)
+                (document.questions as List).eachWithIndex { Map question, int index ->
+                    checkChapterAnchor(question.readmeRelated, anchors,
+                            path + ' #' + (index + 1))
+                    checkApi(question.apiRelated, apiDescriptions,
+                            path + ' #' + (index + 1))
+                }
             }
         }
+        docs.keySet().findAll { it ==~ /menu\/[^\/]+\/(quiz|interview)\/question\.yml/ }
+                .each { String path ->
+                    String chapter = path.split('/')[1]
+                    if (!chapterAnchors.containsKey(chapter)) {
+                        throw new GradleException('Question YAML has no Knowledge chapter: ' + path)
+                    }
+                }
         swagger.each { String path, byte[] bytes ->
             if (!(path in ['api-descriptions.yml', 'api-execution.yml',
                            'api-cases.yml', 'controller-description.yml', 'api-params.yml'])) {
@@ -154,6 +184,20 @@ class ModuleLanguageCloneValidationService {
                 (!anchor && !allowFileOnly)) {
             throw new GradleException('Unresolved readmeRelated in ' + owner +
                     ': file=' + file + ', anchor=' + anchor)
+        }
+    }
+
+    private static void checkChapterAnchor(Object relation, Set<String> anchors, String owner) {
+        if (!(relation instanceof Map)) {
+            throw new GradleException('Invalid readmeRelated in ' + owner)
+        }
+        if ((relation as Map).containsKey('file')) {
+            throw new GradleException('Chapter readmeRelated must contain only anchor in ' + owner)
+        }
+        String anchor = ((relation as Map).anchor ?: '').toString().trim()
+        if (anchor && !anchors.contains(anchor)) {
+            throw new GradleException('Unresolved readmeRelated in ' + owner +
+                    ': anchor=' + anchor)
         }
     }
 

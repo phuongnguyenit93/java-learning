@@ -1,0 +1,36 @@
+sections:
+  utf16-char-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  code-point:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  surrogate-pairs:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  unicode-iteration:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  code-unit-code-point-grapheme:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  unicode-normalization:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  canonical-equivalence:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

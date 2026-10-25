@@ -1,0 +1,31 @@
+sections:
+  imperative-correctness:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  imperative-state-risks:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  imperative-debug-tracing:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  imperative-control-tradeoffs:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  imperative-declarative-contrast:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  imperative-paradigm-bridges:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

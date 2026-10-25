@@ -1,0 +1,21 @@
+sections:
+  security-goals:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  cryptography-role:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  threat-model-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  primitive-by-goal:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

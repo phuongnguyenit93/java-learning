@@ -1,0 +1,26 @@
+sections:
+  modifiable-vs-unmodifiable:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  immutable-factory:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  copy-of:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  backed-view-fixed-size-snapshot:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  view-vs-copy:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

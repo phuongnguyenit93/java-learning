@@ -92,4 +92,67 @@ class ReadmeMetadataSyncServiceTest {
         List<File> found = scanner.invoke(null, menu) as List<File>
         assertEquals([article.canonicalFile], found*.canonicalFile)
     }
+
+    @Test
+    void importWritesSectionsWrapperIntoEachChapterAndNeverOverwritesOtherChapter() {
+        File module = tmp.newFolder('chapters')
+        ReadmeMetadataSyncService service = new ReadmeMetadataSyncService(
+                Logging.getLogger(ReadmeMetadataSyncServiceTest))
+        String first = '1.First/knowledge/First.md'
+        String second = '2.Second/knowledge/Second.md'
+        Map docs = [(first): '## <a id="first-id">First</a>\n',
+                    (second): '## <a id="second-id">Second</a>\n']
+        Map levels = [(first): ['BASIC'], (second): ['ADVANCED']]
+        String prepared = service.prepareImportedMetadata(module, docs, levels)
+        assertEquals('DRY_RUN', service.syncImportedMetadata(module, prepared, false).status)
+        assertEquals('UPDATED', service.syncImportedMetadata(module, prepared, true).status)
+
+        File firstFile = new File(module,
+                'content/readme/docs/vi/menu/1.First/metadata/knowledge-metadata.yml')
+        File secondFile = new File(module,
+                'content/readme/docs/vi/menu/2.Second/metadata/knowledge-metadata.yml')
+        Map a = new Yaml().load(firstFile.getText('UTF-8'))
+        Map b = new Yaml().load(secondFile.getText('UTF-8'))
+        assertEquals(['sections'] as Set, a.keySet())
+        assertEquals(['sections'] as Set, b.keySet())
+        assertEquals(['first-id'] as Set, a.sections.keySet())
+        assertEquals(['second-id'] as Set, b.sections.keySet())
+        assertEquals('ADVANCED', b.sections['second-id'].difficulty)
+        assertEquals(false, a.sections['first-id'].reviewed)
+        a.sections['first-id'].reviewed = true
+        firstFile.setText(new Yaml().dump(a), 'UTF-8')
+        Map result = new Yaml().load(service.prepareImportedMetadata(module, docs, levels))
+        assertEquals(true, result[first]['first-id'].reviewed)
+        assertEquals('DRY_RUN',
+                service.syncImportedMetadata(module, prepared, false).status)
+        assertFalse(new File(module,
+                'content/readme/metadata/vi/knowledge-metadata.yml').exists())
+    }
+
+    @Test
+    void refusesNonWrappedLocalMetadataRatherThanSilentlyDroppingFlags() {
+        File module = tmp.newFolder('strict-wrapper')
+        File file = new File(module,
+                'content/readme/docs/vi/menu/1.Basic/metadata/knowledge-metadata.yml')
+        assertTrue(file.parentFile.mkdirs())
+        file.setText('''basic-001:
+  difficulty: ADVANCED
+  aiGenerated: false
+  reviewed: true
+  isImportant: true
+''', 'UTF-8')
+        ReadmeMetadataSyncService service = new ReadmeMetadataSyncService(
+                Logging.getLogger(ReadmeMetadataSyncServiceTest))
+        String source = '1.Basic/knowledge/Basic.md'
+        try {
+            service.prepareImportedMetadata(module,
+                    [(source): '## <a id="basic-001">Basic</a>\n'],
+                    [(source): ['']], [(source): [null]])
+            fail('Legacy unwrapped local metadata must not be silently rewritten.')
+        }
+        catch (org.gradle.api.GradleException expected) {
+            assertTrue(expected.message.contains('only sections'))
+        }
+        assertTrue(file.getText('UTF-8').startsWith('basic-001:'))
+    }
 }

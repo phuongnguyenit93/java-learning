@@ -1,0 +1,21 @@
+sections:
+  upper-bounded-type:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  multiple-bounds:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  recursive-bound:
+    difficulty: ADVANCED
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  bound-api-capability:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

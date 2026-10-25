@@ -1,0 +1,11 @@
+sections:
+  hikari-basic:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  hikari-config:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

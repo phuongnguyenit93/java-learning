@@ -102,6 +102,22 @@ class SheetSnapshotReplaceServiceTest {
         assertEquals('Independent YAML', objectives.getText('UTF-8'))
     }
 
+    @Test
+    void legacyModuleWideQuizAndInterviewTargetsCannotBeReplaced() {
+        File root = temporary.newFolder('legacy-question-protection')
+        ['quiz', 'interview'].each { String kind ->
+            File directory = new File(root, "module/example/content/${kind}/vi")
+            assertTrue(directory.mkdirs())
+            File source = new File(directory, 'question.yml')
+            source.setText('questions: []', 'UTF-8')
+            assertFailure {
+                SheetSnapshotReplaceService.replace(root, directory,
+                        ['question.yml': 'questions: []'], true)
+            }
+            assertEquals('questions: []', source.getText('UTF-8'))
+        }
+    }
+
     private static void assertFailure(Closure action) {
         try {
             action.call()

@@ -1,0 +1,26 @@
+sections:
+  dop-schema-concept:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  dop-schema-optional:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  dop-validation-boundaries:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  dop-validation-failure:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  dop-schema-tradeoffs:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

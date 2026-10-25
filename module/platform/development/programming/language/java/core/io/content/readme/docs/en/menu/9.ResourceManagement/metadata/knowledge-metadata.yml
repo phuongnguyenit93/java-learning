@@ -1,0 +1,21 @@
+sections:
+  closeable-lifecycle:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  resource-ownership:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  try-with-resources-io:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  close-wrapper-chain:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

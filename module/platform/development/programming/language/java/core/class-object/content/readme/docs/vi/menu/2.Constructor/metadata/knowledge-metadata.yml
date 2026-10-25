@@ -1,0 +1,21 @@
+sections:
+  constructor-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  constructor-overloading:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  default-constructor:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  constructor-exceptions:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

@@ -1,0 +1,16 @@
+sections:
+  zone-offset:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  zone-id:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  zone-rules:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

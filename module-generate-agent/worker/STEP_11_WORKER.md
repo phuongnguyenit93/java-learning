@@ -24,10 +24,10 @@
 | --- | --- | --- |
 | Swagger Controller | `readmeRelated` | `file` README chapter đúng theo language, không cần anchor |
 | Swagger method | `readmeRelated` | `file` (hoặc kế thừa Controller) + `anchor` section có thật, giải thích method |
-| Quiz mỗi `id` | `readmeRelated` và `apiRelated` riêng | `file/anchor` và `controller/methodSignature` từng cặp hoàn chỉnh |
+| Quiz mỗi `id` | `readmeRelated` và `apiRelated` riêng | **Chỉ `anchor`** cùng chương và `controller/methodSignature` cho API |
 | Interview mỗi identity | Hai field trên riêng | Lấy identity `parentRow:ordinal:fingerprint` từ seed, không tạo ID mới |
 
-- Quiz/Interview đã có `readmeRelated.file` do Normalize: **bảo toàn file đúng chương** và chỉ đề xuất anchor phù hợp. Nếu target hợp lý ở chương khác nhưng Normalize cấm file khác → `REVIEW: CROSS_CHAPTER_QUESTION`, không đưa target trái schema vào `SET`.
+- Quiz/Interview không chứa `readmeRelated.file` trong nguồn; **chỉ đề xuất anchor cùng chương**. Nếu target phù hợp nằm ở chương khác → `REVIEW: CROSS_CHAPTER_QUESTION`, không đưa target trái schema vào `SET`. Swagger vẫn giữ đầy đủ `file` riêng.
 - API phải dùng tên Controller, `methodSignature` nguyên văn trong danh mục và method `usage:true` nếu muốn điều hướng trên Portal. Không liên kết `usage:false` như API đang hoạt động. API không phù hợp là `NO_MATCH`, không suy từ tên class.
 - Swagger VI/EN độc lập: không copy file/anchor VI vào EN nếu file EN/anchor EN không có thật. Các method có `usage:false` vẫn phải được audit và bảo toàn metadata hiện hữu, nhưng không tạo liên kết Portal mới chỉ để đủ coverage.
 - `KEEP` chỉ khi relation gốc đúng cả tồn tại lẫn ngữ nghĩa. Relation gốc không hợp lệ → `REVIEW`, **không overwrite**. `NO_MATCH` cũng không xóa existing.
@@ -78,7 +78,7 @@ Ví dụ chỉ thể hiện cấu trúc, **không dùng các ID/path ví dụ l�
 - `kind`: `swagger-controller` / `swagger-method` / `quiz` / `interview`.
 - `key`: Controller name; Swagger method `ControllerName#exactMethodSignature`; Quiz `id`; Interview **đúng identity trong seed**.
 - `decision`: `SET` / `KEEP` / `NO_MATCH` / `REVIEW` (case-sensitive).
-- `value`: **chỉ có khi `SET`**, gồm `file` (Controller), `file+anchor` (Knowledge), hoặc `controller+methodSignature` (API); đích lấy từ lookup chính xác. Không đề xuất `value` khi `KEEP/NO_MATCH/REVIEW`.
+- `value`: **chỉ có khi `SET`**, gồm `file` (Swagger Controller), `file+anchor` (Swagger method), **`anchor` duy nhất (Quiz/Interview)**, hoặc `controller+methodSignature` (API); đích lấy từ lookup chính xác. Không đề xuất `value` khi `KEEP/NO_MATCH/REVIEW`.
 - `evidence`: một giải thích ngắn, có căn cứ trong content/behavior. Không trích dài, không nhồi điểm số hay confidence giả tạo.
 - Field hiện có đúng hoặc không có match thì không cần ghi giá trị: Prime sẽ giữ nguyên bytes/semantic payload. **Không đề xuất xóa, đảo thứ tự, reset metadata hoặc đổi chapter owner.**
 

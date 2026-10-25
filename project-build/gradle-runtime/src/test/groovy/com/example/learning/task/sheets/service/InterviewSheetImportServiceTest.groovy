@@ -56,7 +56,8 @@ class InterviewSheetImportServiceTest {
         assertEquals('READY', imported.status)
         assertEquals(2, imported.chapterCount)
         assertEquals(2, imported.questions.size())
-        assertEquals('1.OOPBasic/OOPBasic.md', imported.questions[0].readmeRelated.file)
+        assertEquals([anchor: ''], imported.questions[0].readmeRelated)
+        assertEquals(['1.OOPBasic','2.Encapsulation'], imported.byChapter.keySet().toList())
         assertEquals('', imported.questions[0].readmeRelated.anchor)
         assertEquals(true, imported.questions[0].aiGenerated)
         assertEquals(false, imported.questions[0].reviewed)
@@ -88,7 +89,7 @@ class InterviewSheetImportServiceTest {
         assertEquals('READY', imported.status)
         assertEquals(1, imported.chapterCount)
         assertTrue(imported.questions[0].answer.contains('```java'))
-        assertEquals('1.OOPBasic/OOPBasic.md', imported.questions[0].readmeRelated.file)
+        assertEquals([anchor: ''], imported.questions[0].readmeRelated)
         assertEquals(imported.questions, new Yaml().load(
                 InterviewSheetImportService.renderYaml(imported.questions as List<Map>)).questions)
     }
@@ -118,8 +119,7 @@ class InterviewSheetImportServiceTest {
                         [question: 'Question', answer: 'Answer']
                 ]])]]))
         assertEquals(1, imported.chapterCount)
-        assertEquals('2.Encapsulation/Encapsulation.md',
-                imported.questions[0].readmeRelated.file)
+        assertEquals(['2.Encapsulation'], imported.byChapter.keySet().toList())
     }
 
     @Test
@@ -153,32 +153,37 @@ class InterviewSheetImportServiceTest {
     }
 
     @Test
-    void onlyInterviewDirectoryIsReplacedOnApply() {
+    void onlyChapterInterviewIsReplacedOnApply() {
         File root = tmp.newFolder('repository')
         String location = 'module/sandbox/demo'
         File directory = InterviewSheetImportService.resolveDirectory(root, location)
-        assertTrue(directory.mkdirs())
-        new File(directory, 'question.yml').text = 'old interview'
+        File chapter = new File(directory, '1.OOPBasic')
+        assertTrue(new File(chapter, 'knowledge').mkdirs())
+        File existing = new File(chapter, 'interview/question.yml')
+        assertTrue(existing.parentFile.mkdirs())
+        existing.text = 'old interview'
+        File metadata = new File(chapter, 'metadata/knowledge-metadata.yml')
+        assertTrue(metadata.parentFile.mkdirs())
+        metadata.text = 'preserve metadata'
         File roadmap = new File(root, location + '/content/roadmap/vi/roadmap.yml')
         assertTrue(roadmap.parentFile.mkdirs())
         roadmap.text = 'existing roadmap'
         String yaml = InterviewSheetImportService.renderYaml([[
                 question: 'Q', answer: 'A', aiGenerated: true, reviewed: false,
-                readmeRelated: [file: '1.OOPBasic/OOPBasic.md', anchor: ''],
+                readmeRelated: [anchor: ''],
                 apiRelated: [controller: '', methodSignature: '']
         ]])
 
-        Map dryRun = SheetSnapshotReplaceService.replace(
-                root, directory, ['question.yml': yaml], false
-        )
+        Map dryRun = ChapterQuestionSnapshotService.replace(
+                root, new File(root, location), 'interview', ['1.OOPBasic': yaml], false)
         assertEquals('DRY_RUN', dryRun.status)
-        assertEquals('old interview', new File(directory, 'question.yml').text)
+        assertEquals('old interview', existing.text)
 
-        Map applied = SheetSnapshotReplaceService.replace(
-                root, directory, ['question.yml': yaml], true
-        )
+        Map applied = ChapterQuestionSnapshotService.replace(
+                root, new File(root, location), 'interview', ['1.OOPBasic': yaml], true)
         assertEquals('UPDATED', applied.status)
-        assertEquals(yaml, new File(directory, 'question.yml').getText('UTF-8'))
+        assertEquals(yaml, existing.getText('UTF-8'))
+        assertEquals('preserve metadata', metadata.text)
         assertEquals('existing roadmap', roadmap.text)
     }
 

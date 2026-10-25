@@ -16,7 +16,7 @@ class ModuleTranslationCatalogServiceTest {
         def service = new ModuleTranslationCatalogService()
         Map dry = service.execute(f.root as File, f.module as File, 'trial', 'PREPARE', false)
         assertEquals('DRY_RUN', dry.status)
-        assertEquals(5, dry.total)
+        assertEquals(6, dry.total)
         assertFalse((dry.manifest as File).exists())
         Map prepared = service.execute(f.root as File, f.module as File,
                 'trial', 'PREPARE', true)
@@ -24,7 +24,8 @@ class ModuleTranslationCatalogServiceTest {
         assertTrue((prepared.manifest as File).isFile())
         assertEquals('module/demo', new groovy.json.JsonSlurper()
                 .parse(prepared.manifest as File).module)
-        File quiz = new File(f.module as File, 'content/quiz/en/question.yml')
+        File quiz = new File(f.module as File,
+                'content/readme/docs/en/menu/1.Basic/quiz/question.yml')
         quiz.setText(quiz.getText('UTF-8').replace('Câu hỏi', 'English question')
                 .replace('Giải thích', 'Explanation'), 'UTF-8')
         File doc = new File(f.module as File,
@@ -35,12 +36,12 @@ class ModuleTranslationCatalogServiceTest {
         Map checked = service.execute(f.root as File, f.module as File,
                 'trial', 'VALIDATE', false)
         assertEquals('VALIDATED_STRUCTURE', checked.status)
-        assertEquals(5, checked.total)
+        assertEquals(6, checked.total)
         assertEquals(2, checked.translated)
-        assertEquals(3, checked.pending)
+        assertEquals(4, checked.pending)
         assertTrue(checked.semanticQaRequired)
         File snapshot = new File(f.module as File,
-                'build/step14/trial/baseline/content/quiz/en/question.yml')
+                'build/step14/trial/baseline/content/readme/docs/en/menu/1.Basic/quiz/question.yml')
         assertTrue(snapshot.getText('UTF-8').contains('Câu hỏi'))
         assertFalse(snapshot.getText('UTF-8').contains('English question'))
     }
@@ -50,7 +51,8 @@ class ModuleTranslationCatalogServiceTest {
         Map f = fixture()
         def service = new ModuleTranslationCatalogService()
         service.execute(f.root as File, f.module as File, 'review1', 'PREPARE', true)
-        File quiz = new File(f.module as File, 'content/quiz/en/question.yml')
+        File quiz = new File(f.module as File,
+                'content/readme/docs/en/menu/1.Basic/quiz/question.yml')
         quiz.setText(quiz.getText('UTF-8').replace('correctAnswerId: A',
                 'correctAnswerId: B'), 'UTF-8')
         try {
@@ -145,14 +147,33 @@ System.out.println("KEEP");
         write(module, 'content/readme/docs/en/menu/LegacyRoot.md',
                 '# Legacy root Knowledge')
         List<Map> inventory = ModuleTranslationCatalogService.inventory(module)
-        assertEquals(6, inventory.size())
+        assertEquals(7, inventory.size())
         assertEquals(2, inventory.count { it.type == 'README' })
+        assertEquals(1, inventory.count { it.type == 'QUIZ' })
+        assertEquals(1, inventory.count { it.type == 'INTERVIEW' })
         assertTrue(inventory.any { it.enPath ==
                 'content/readme/docs/en/menu/1.Basic/knowledge/Basic.md' })
         assertTrue(inventory.any { it.enPath ==
                 'content/readme/docs/en/menu/LegacyRoot.md' })
         assertFalse(inventory.any { it.enPath?.contains('chapter-links') ||
                 it.enPath?.contains('Legacy.md') || it.enPath?.contains('extra.md') })
+    }
+
+    @Test
+    void rejectsPerChapterMetadataTranslationsEvenIfQuestionsAreValid() {
+        Map f = fixture()
+        File module = f.module as File
+        def service = new ModuleTranslationCatalogService()
+        service.execute(f.root as File, module, 'metadata-guard', 'PREPARE', true)
+        File metadata = new File(module,
+                'content/readme/docs/en/menu/1.Basic/metadata/knowledge-metadata.yml')
+        metadata.setText(metadata.getText('UTF-8').replace('BASIC', 'ADVANCED'), 'UTF-8')
+        try {
+            service.execute(f.root as File, module, 'metadata-guard', 'VALIDATE', false)
+            fail('Chapter metadata must remain byte identical to VI')
+        } catch (GradleException expected) {
+            assertTrue(expected.message.contains('Protected EN file changed'))
+        }
     }
 
     private Map fixture() {
@@ -166,11 +187,11 @@ System.out.println("KEEP");
                         '# README MODULE STRUCTURE (VI)\n* [Basic](content/readme/docs/vi/menu/1.Basic/knowledge/Basic.md)',
                 'content/readme/docs/vi/menu/1.Basic/knowledge/Basic.md':
                         '# Chương\n## <a id="basic-001">Bài học</a>\nNội dung giải thích',
-                'content/readme/metadata/vi/knowledge-metadata.yml':
-                        '1.Basic/knowledge/Basic.md:\n  basic-001: {difficulty: BASIC, reviewed: false}',
+                'content/readme/docs/vi/menu/1.Basic/metadata/knowledge-metadata.yml':
+                        'sections:\n  basic-001: {difficulty: BASIC, reviewed: false}',
                 'content/roadmap/vi/roadmap.yml':
                         'roadmap:\n  - id: stable\n    title: Tiêu đề\n    purpose: Mục tiêu\n    objectives: [Hiểu nguyên lý]',
-                'content/quiz/vi/question.yml': '''questions:
+                'content/readme/docs/vi/menu/1.Basic/quiz/question.yml': '''questions:
   - id: stable-id
     question: Câu hỏi?
     answers:
@@ -179,7 +200,18 @@ System.out.println("KEEP");
       - {id: C, answer: Không, explanation: Giải thích không}
       - {id: D, answer: Khác, explanation: Giải thích khác}
     correctAnswerId: A
-    readmeRelated: {file: "1.Basic/knowledge/Basic.md", anchor: "basic-001"}
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {anchor: basic-001}
+    apiRelated: {controller: "", methodSignature: ""}
+''',
+                'content/readme/docs/vi/menu/1.Basic/interview/question.yml': '''questions:
+  - question: Câu phỏng vấn?
+    answer: Trả lời thực hành
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {anchor: basic-001}
+    apiRelated: {controller: "", methodSignature: ""}
 ''',
                 'content/video/vi/menu/1.Basic/video-script.yml':
                         'title: Tiêu đề\nsections:\n  - title: Bài học\n    items:\n      - {type: SCENE, time: "00:00-00:10", visual: Hình ảnh, script: Thuyết minh, purpose: Mục đích}',

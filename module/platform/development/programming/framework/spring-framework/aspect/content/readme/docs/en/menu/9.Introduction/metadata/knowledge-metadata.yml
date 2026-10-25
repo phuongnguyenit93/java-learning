@@ -1,0 +1,21 @@
+sections:
+  introduction-mental-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  declare-parents:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  introduction-demo:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  introduction-conclusion:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

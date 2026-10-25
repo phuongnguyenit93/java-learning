@@ -1,0 +1,26 @@
+sections:
+  generic-concept:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-domain-example:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-operations:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-failure-modes:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  generic-contracts:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

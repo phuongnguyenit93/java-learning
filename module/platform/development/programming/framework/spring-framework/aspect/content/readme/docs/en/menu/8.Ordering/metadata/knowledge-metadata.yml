@@ -1,0 +1,26 @@
+sections:
+  ordering-mental-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  aspect-instantiation-models:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  ordering-demo:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  ordering-pitfall:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  ordering-conclusion:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

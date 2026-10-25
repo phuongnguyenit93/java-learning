@@ -1,0 +1,21 @@
+sections:
+  package-namespace:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  import-resolution:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  static-import:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  package-access:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

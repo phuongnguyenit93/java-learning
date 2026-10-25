@@ -1,0 +1,31 @@
+sections:
+  imperative-state-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  imperative-commands-values:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  imperative-assignment:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  imperative-sequencing:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  imperative-state-tracing:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  imperative-unexpected-mutation:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

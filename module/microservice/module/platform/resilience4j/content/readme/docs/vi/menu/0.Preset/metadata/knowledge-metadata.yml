@@ -1,0 +1,36 @@
+sections:
+  resilience-4j:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  resilience-4j-config:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  semaphore-and-resilience-4j:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  ignore-noretry-and-fallback:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  3-state-of-circuit-breaker:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  time-limiter-resilience-4j:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  time-limiter-with-async:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

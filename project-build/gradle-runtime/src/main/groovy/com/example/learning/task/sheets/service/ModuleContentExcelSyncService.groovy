@@ -167,11 +167,14 @@ class ModuleContentExcelSyncService {
 
     private static void readme(File module, XSSFSheet sheet, List<Map> groups, Map report) {
         File menu = new File(module, 'content/readme/docs/en/menu')
-        File metadataFile = required(new File(module,
-                'content/readme/metadata/en/knowledge-metadata.yml'))
-        Map metadata = parseYaml(metadataFile)
         groups.each { Map group ->
             File file = required(new File(menu, group.knowledgeSource as String))
+            String chapter = group.source.toString().replaceFirst('/[^/]+$', '')
+            File metadataFile = required(new File(menu,
+                    chapter + '/metadata/knowledge-metadata.yml'))
+            Map metadata = parseYaml(metadataFile)
+            Map byAnchor = metadata.sections instanceof Map
+                    ? metadata.sections as Map : metadata
             Map parsed = parseMarkdown(file.getText('UTF-8'))
             List<Map> sections = parsed.sections as List<Map>
             List<Map> lessons = group.children as List<Map>
@@ -180,8 +183,6 @@ class ModuleContentExcelSyncService {
                         group.knowledgeSource + ': ' + sections.size() + '/' + lessons.size())
             }
             set(sheet, group.row as int, 1, parsed.title as String, report)
-            Map byAnchor = metadata[group.knowledgeSource] instanceof Map
-                    ? metadata[group.knowledgeSource] as Map : [:]
             String stem = (group.filename as String).replaceFirst(/(?i)\.md$/, '')
             String slug = ReadmeSheetImportService.slugFromStem(stem)
             sections.eachWithIndex { Map section, int i ->
@@ -291,46 +292,44 @@ class ModuleContentExcelSyncService {
 
     private static void questions(File module, XSSFSheet sheet, List<Map> groups,
                                   String kind, int firstColumn, Map report) {
-        File yamlFile = new File(module, 'content/' + kind + '/en/question.yml')
-        if (!yamlFile.isFile()) {
-            File vi = new File(module, 'content/' + kind + '/vi/question.yml')
-            if (vi.isFile()) throw new GradleException('Missing EN ' + kind + ' source.')
-            groups.each { Map group ->
-                fragments(sheet, group.row as int, firstColumn, 4, '', report)
-            }
-            return // optional capability disabled: wipe stale snapshot payload
-        }
-        Map document = parseYaml(yamlFile)
-        List items = document.questions instanceof List ? document.questions as List : []
-        if (!items) throw new GradleException('Empty EN ' + kind + ' YAML.')
-        Map<String, Map> bySource = groups.collectEntries {
-            [(it.knowledgeSource.toString()): it]
-        }
-        Map<String, List> gathered = groups.collectEntries {
-            [(it.knowledgeSource.toString()): []]
-        }
-        items.eachWithIndex { Object item, int index ->
-            String source = item instanceof Map ? item.readmeRelated?.file?.toString() : null
-            if (!bySource.containsKey(source)) {
-                throw new GradleException('Cannot assign ' + kind + ' question #' +
-                        (index + 1) + ' to an EN Knowledge chapter: ' + source)
-            }
-            gathered[source].add(item)
+        File menu = new File(module, 'content/readme/docs/en/menu')
+        boolean anyChapter = groups.any { Map group ->
+            String chapter = group.source.toString().replaceFirst('/[^/]+$', '')
+            new File(menu, chapter + '/' + kind + '/question.yml').isFile()
         }
         groups.each { Map group ->
-            List chapter = gathered[group.knowledgeSource]
-            if (!chapter) {
-                // Interview may intentionally have no questions for a chapter;
-                // Quiz importer requires nonempty rows for every chapter.
-                if (kind == 'quiz') {
-                    throw new GradleException('Missing EN Quiz for ' + group.knowledgeSource)
+            String chapter = group.source.toString().replaceFirst('/[^/]+$', '')
+            File yamlFile = new File(menu, chapter + '/' + kind + '/question.yml')
+            File vi = new File(module, 'content/readme/docs/vi/menu/' +
+                    chapter + '/' + kind + '/question.yml')
+            if (!yamlFile.isFile()) {
+                if (vi.isFile() || (kind == 'quiz' && anyChapter)) {
+                    throw new GradleException('Missing EN ' + kind + ' for chapter ' + chapter)
                 }
                 fragments(sheet, group.row as int, firstColumn, 4, '', report)
                 return
             }
-            String yamlText = new Yaml().dump([questions: chapter])
+            Map document = parseYaml(yamlFile)
+            List items = document.questions instanceof List ? document.questions as List : []
+            if (!items) throw new GradleException('Empty EN ' + kind + ' YAML: ' + yamlFile)
+            File knowledge = required(new File(menu, group.knowledgeSource as String))
+            Set<String> anchors = (parseMarkdown(knowledge.getText('UTF-8'))
+                    .sections as List<Map>).collect { it.id.toString() } as Set
+            items.eachWithIndex { Object item, int index ->
+                if (!(item instanceof Map) || !(item.readmeRelated instanceof Map) ||
+                        (item.readmeRelated as Map).containsKey('file')) {
+                    throw new GradleException('Invalid chapter ' + kind +
+                            ' readmeRelated #' + (index + 1) + ': ' + yamlFile)
+                }
+                String anchor = (item.readmeRelated.anchor ?: '').toString().trim()
+                if (anchor && !anchors.contains(anchor)) {
+                    throw new GradleException('Unresolved chapter ' + kind +
+                            ' readmeRelated anchor #' + (index + 1) + ': ' + anchor)
+                }
+            }
+            String yamlText = new Yaml().dump([questions: items])
             fragments(sheet, group.row as int, firstColumn, 4, yamlText, report)
-            report.items += chapter.size()
+            report.items += items.size()
         }
     }
 

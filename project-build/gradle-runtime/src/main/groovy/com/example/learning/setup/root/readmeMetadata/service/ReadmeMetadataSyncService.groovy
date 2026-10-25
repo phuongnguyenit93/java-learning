@@ -130,8 +130,8 @@ ${moduleRoot.absolutePath}
                     LanguageSource languageSource ->
 
 
-                        plans.add(
-                                buildWritePlan(
+                        plans.addAll(
+                                buildChapterWritePlans(
                                         moduleProject,
                                         languageSource
                                 )
@@ -160,7 +160,7 @@ ${moduleRoot.absolutePath}
 
 
         logger.lifecycle(
-                '🧩 [README-METADATA] Synced {} language metadata files ({} changed).',
+                '🧩 [README-METADATA] Synced {} chapter metadata files ({} changed).',
                 plans.size(),
                 changedFiles
         )
@@ -186,7 +186,18 @@ ${moduleRoot.absolutePath}
             if (next.containsKey(knowledgePath)) {
                 throw new GradleException('Duplicate imported Knowledge path: ' + knowledgePath)
             }
-            Map oldFile = existingKnowledgeMetadata(existing, knowledgePath)
+            String chapter = knowledgePath.split('/')[0]
+            Map chapterRoot = loadChapterSections(chapterMetadataFile(menuDirectory, chapter))
+            Map oldFile = new LinkedHashMap(existingKnowledgeMetadata(existing, knowledgePath))
+            chapterRoot.each { Object id, Object entry ->
+                Map previous = resolveOptionalMap(oldFile[id],
+                        'Invalid legacy Knowledge metadata: ' + id) ?: [:]
+                Map current = resolveOptionalMap(entry,
+                        'Invalid chapter Knowledge metadata: ' + id) ?: [:]
+                Map merged = new LinkedHashMap(previous)
+                merged.putAll(current)
+                oldFile[id] = merged
+            }
             Map nextFile = new LinkedHashMap()
             File virtualFile = new File(menuDirectory, knowledgePath)
             if (sourcePath.startsWith('/') || sourcePath.contains('\\') ||
@@ -235,222 +246,108 @@ ${moduleRoot.absolutePath}
 
     /** Call only after the corresponding README snapshot was applied. */
     Map syncImportedMetadata(File moduleDirectory, String prepared, boolean apply) {
-        File output = new File(moduleDirectory,
-                "content/readme/metadata/vi/${METADATA_FILE_NAME}")
-        if (output.isFile() && output.getText('UTF-8') == prepared) {
-            return [status: 'UNCHANGED', file: output]
+        Object parsed = reader.load(prepared)
+        if (!(parsed instanceof Map)) {
+            throw new GradleException('Invalid prepared README Knowledge metadata.')
         }
-        if (!apply) return [status: 'DRY_RUN', file: output]
-        boolean changed = writeSafelyIfChanged(output, prepared)
-        return [status: changed ? 'UPDATED' : 'UNCHANGED', file: output]
+        File menuDirectory = new File(moduleDirectory, 'content/readme/docs/vi/menu')
+        Map<String, Map> perChapter = new LinkedHashMap<>()
+        (parsed as Map).each { Object path, Object entries ->
+            String normalized = normalizeKnowledgePath(path as String)
+            String chapter = normalized.split('/')[0]
+            Map result = perChapter.computeIfAbsent(chapter) { new LinkedHashMap() }
+            Map source = resolveOptionalMap(entries,
+                    'Invalid imported Knowledge metadata: ' + normalized) ?: [:]
+            source.each { Object id, Object metadata ->
+                if (result.containsKey(id) && result[id] != metadata) {
+                    throw new GradleException(
+                            'Conflicting imported Knowledge anchor in chapter ' + chapter + ': ' + id)
+                }
+                result[id] = metadata
+            }
+        }
+        List<WritePlan> plans = perChapter.collect { String chapter, Map entries ->
+            File target = chapterMetadataFile(menuDirectory, chapter)
+            Map current = loadChapterSections(target)
+            Map next = new LinkedHashMap(current)
+            next.putAll(entries)
+            return new WritePlan(target, writer.dump([sections: next]))
+        }
+        if (plans.isEmpty()) {
+            return [status: 'UNCHANGED', file: null, files: []]
+        }
+        boolean changed = plans.any { WritePlan plan ->
+            !plan.outputFile.isFile() || plan.outputFile.getText('UTF-8') != plan.content
+        }
+        if (!changed) return [status: 'UNCHANGED', file: plans.first().outputFile,
+                              files: plans*.outputFile]
+        if (!apply) return [status: 'DRY_RUN', file: plans.first().outputFile,
+                            files: plans*.outputFile]
+        int count = plans.count { WritePlan plan ->
+            writeSafelyIfChanged(plan.outputFile, plan.content)
+        }
+        return [status: count ? 'UPDATED' : 'UNCHANGED',
+                file: plans.first().outputFile, files: plans*.outputFile]
+    }
+
+    private static File chapterMetadataFile(File menuDirectory, String chapter) {
+        if (!(chapter ==~ /\d+\..+/) || chapter.contains('/') ||
+                chapter.contains('\\') || chapter in ['.', '..']) {
+            throw new GradleException('Unsafe Knowledge chapter: ' + chapter)
+        }
+        File target = new File(menuDirectory, chapter + '/metadata/' + METADATA_FILE_NAME)
+        if (!target.canonicalFile.toPath().startsWith(menuDirectory.canonicalFile.toPath())) {
+            throw new GradleException('Knowledge metadata target escapes menu: ' + target)
+        }
+        return target
     }
 
 
-    private WritePlan buildWritePlan(
-            Project moduleProject,
-            LanguageSource languageSource
+    /**
+     * Each chapter owns a sections: {anchor-ID: fields} map under metadata/.
+     * Only menu/<chapter>/knowledge/*.md contributes Knowledge sections.
+     */
+    private List<WritePlan> buildChapterWritePlans(
+            Project moduleProject, LanguageSource source
     ) {
+        File legacyFile = new File(moduleProject.projectDir,
+                'content/readme/metadata/' + source.language + '/' + METADATA_FILE_NAME)
+        Map legacy = loadMap(legacyFile)
+        Map<String, List<File>> chapters = collectMarkdownFiles(source.menuDirectory)
+                .groupBy { File file -> file.parentFile.parentFile.name }
+        List<WritePlan> plans = []
+        Set<String> globalIds = new LinkedHashSet<>()
 
-        File outputFile =
-                new File(
-                        moduleProject.projectDir,
-                        "content/readme/metadata/${languageSource.language}/${METADATA_FILE_NAME}"
-                )
-
-
-        Map<String, Object> existingRoot =
-                loadMap(
-                        outputFile
-                )
-
-
-        Map<String, Object> synchronizedRoot =
-                new LinkedHashMap<>()
-
-
-        Set<String> sectionIds =
-                new LinkedHashSet<>()
-
-
-        Map<String, String> sectionSources =
-                new LinkedHashMap<>()
-
-
-        collectMarkdownFiles(
-                languageSource.menuDirectory
-        ).each {
-            File markdownFile ->
-
-
-                String sourcePath =
-                        relativePath(
-                                languageSource.menuDirectory,
-                                markdownFile
-                        )
-
-
-                Map<String, Object> existingFileEntry =
-                        resolveOptionalMap(
-                                existingKnowledgeMetadata(existingRoot, sourcePath),
-                                """
-Invalid README metadata file entry.
-
-Module:
-${moduleProject.path}
-
-Language:
-${languageSource.language}
-
-README file:
-${sourcePath}
-""".stripIndent()
-                        )
-
-
-                Map<String, Object> synchronizedFileEntry =
-                        new LinkedHashMap<>()
-
-
-                parser.parse(
-                        markdownFile
-                )
-                        .findAll {
-                            ReadmeKnowledgeParser.SectionCandidate candidate ->
-
-
-                                candidate.valid
-                        }
-                        .each {
-                            ReadmeKnowledgeParser.SectionCandidate candidate ->
-
-
-                                if (!sectionIds.add(candidate.id)) {
-
-                                    throw new GradleException(
-                                            """
-Duplicate README knowledge section id detected.
-
-Module:
-${moduleProject.path}
-
-Language:
-${languageSource.language}
-
-Section id:
-${candidate.id}
-
-First source:
-${sectionSources[candidate.id]}
-
-Duplicate source:
-${sourcePath}
-
-Section ids must be unique within one module/language.
-""".stripIndent()
-                                    )
-                                }
-
-
-                                sectionSources[
-                                        candidate.id
-                                ] =
-                                        sourcePath
-
-
-                                Map<String, Object> existingSection =
-                                        resolveOptionalMap(
-                                                existingFileEntry == null
-                                                        ? null
-                                                        : existingFileEntry[
-                                                                candidate.id
-                                                        ],
-                                                """
-Invalid README metadata section entry.
-
-Module:
-${moduleProject.path}
-
-Language:
-${languageSource.language}
-
-README file:
-${sourcePath}
-
-Section id:
-${candidate.id}
-""".stripIndent()
-                                        )
-
-
-                                Map<String, Object> synchronizedSection =
-                                        existingSection == null
-                                                ? new LinkedHashMap<>()
-                                                : new LinkedHashMap<>(
-                                                        existingSection
-                                                )
-
-
-                                ensureRequiredFields(
-                                        synchronizedSection,
-                                        moduleProject,
-                                        languageSource.language,
-                                        sourcePath,
-                                        candidate.id
-                                )
-
-
-                                synchronizedFileEntry[
-                                        candidate.id
-                                ] =
-                                        synchronizedSection
-                        }
-
-
-                if (!synchronizedFileEntry.isEmpty()) {
-
-                    synchronizedRoot[
-                            sourcePath
-                    ] =
-                            synchronizedFileEntry
+        chapters.each { String chapter, List<File> articles ->
+            File target = chapterMetadataFile(source.menuDirectory, chapter)
+            Map existing = loadChapterSections(target)
+            Map next = new LinkedHashMap(existing)
+            Set<String> chapterIds = new LinkedHashSet<>()
+            articles.each { File article ->
+                String sourcePath = relativePath(source.menuDirectory, article)
+                Map fromLegacy = existingKnowledgeMetadata(legacy, sourcePath,
+                        source.menuDirectory)
+                parser.parse(article).findAll { it.valid }.each { section ->
+                    String id = section.id
+                    if (!chapterIds.add(id) || !globalIds.add(id)) {
+                        throw new GradleException('Duplicate Knowledge anchor: ' + id +
+                                ' in ' + sourcePath)
+                    }
+                    Map old = resolveOptionalMap(fromLegacy[id],
+                            'Invalid legacy Knowledge metadata: ' + sourcePath + '#' + id) ?: [:]
+                    Map current = resolveOptionalMap(existing[id],
+                            'Invalid chapter Knowledge metadata: ' + sourcePath + '#' + id) ?: [:]
+                    Map merged = new LinkedHashMap(old)
+                    merged.putAll(current)
+                    ensureRequiredFields(merged, moduleProject, source.language, sourcePath, id)
+                    next[id] = merged
                 }
-        }
-
-
-        // Staged migration: do not scan legacy menu Markdown, but keep its
-        // metadata while that original file still exists and has not moved.
-        Set<String> migratedLegacyKeys = new LinkedHashSet<>()
-        synchronizedRoot.keySet().each { String path ->
-            migratedLegacyKeys.add(path.replace('/knowledge/', '/'))
-            migratedLegacyKeys.add(path.substring(path.lastIndexOf('/') + 1))
-        }
-        existingRoot.each { Object oldPath, Object oldMetadata ->
-            if (!(oldPath instanceof String) ||
-                    migratedLegacyKeys.contains(oldPath) ||
-                    synchronizedRoot.containsKey(oldPath)) return
-            String sourcePath = oldPath as String
-            if (sourcePath.startsWith('/') || sourcePath.contains('\\') ||
-                    sourcePath.split('/').any { it in ['', '.', '..'] } ||
-                    !sourcePath.toLowerCase(Locale.ROOT).endsWith('.md')) return
-            File legacyFile = new File(languageSource.menuDirectory, sourcePath)
-            if (legacyFile.canonicalFile.toPath().startsWith(
-                    languageSource.menuDirectory.canonicalFile.toPath()) &&
-                    legacyFile.isFile()) {
-                synchronizedRoot[sourcePath] = oldMetadata
+            }
+            if (!next.isEmpty()) {
+                plans.add(new WritePlan(target, writer.dump([sections: next])))
             }
         }
-
-        String content =
-                synchronizedRoot.isEmpty()
-                        ? '{}\n'
-                        : writer.dump(
-                                synchronizedRoot
-                        )
-
-
-        return new WritePlan(
-                outputFile,
-                content
-        )
+        return plans
     }
 
 
@@ -726,6 +623,28 @@ The file will NOT be overwritten.
     }
 
 
+    /** Local metadata has exactly one root key: sections. The legacy central
+     * file is read separately by loadMap() and retains its per-file keys. */
+    private Map<String, Object> loadChapterSections(File file) {
+        if (!file.exists()) return new LinkedHashMap<>()
+        Map root = loadMap(file)
+        if (root.size() != 1 || !root.containsKey('sections') ||
+                !(root.sections instanceof Map)) {
+            throw new GradleException(
+                    'Chapter Knowledge metadata must contain only sections: {anchor: fields}: ' +
+                            file.absolutePath)
+        }
+        Map sections = root.sections as Map
+        sections.each { Object anchor, Object metadata ->
+            if (!(anchor instanceof String) || !(metadata instanceof Map)) {
+                throw new GradleException(
+                        'Invalid chapter Knowledge section entry: ' + file.absolutePath +
+                                ' #' + anchor)
+            }
+        }
+        return sections as Map<String, Object>
+    }
+
     private static Map<String, Object> resolveOptionalMap(
             Object value,
             String message
@@ -776,13 +695,25 @@ The file will NOT be overwritten.
      * fields are retained from the legacy entry.
      */
     private static Map<String, Object> existingKnowledgeMetadata(
-            Map root, String knowledgePath
+            Map root, String knowledgePath, File menuDirectory = null
     ) {
         String canonical = normalizeKnowledgePath(knowledgePath)
         String legacy = canonical.replace('/knowledge/', '/')
         String legacyRootFile = canonical.substring(canonical.lastIndexOf('/') + 1)
         Map merged = new LinkedHashMap()
-        [legacyRootFile, legacy, canonical].unique().each { String key ->
+        boolean uniqueFlatOwner = true
+        if (menuDirectory?.isDirectory()) {
+            List<File> matches = (menuDirectory.listFiles() ?: [])
+                    .findAll { File chapter ->
+                        chapter.isDirectory() &&
+                                new File(chapter, 'knowledge/' + legacyRootFile).isFile()
+                    }
+            uniqueFlatOwner = matches.isEmpty() ||
+                    (matches.size() == 1 && matches.first().name == canonical.split('/')[0])
+        }
+        List<String> keys = uniqueFlatOwner ?
+                [legacyRootFile, legacy, canonical] : [legacy, canonical]
+        keys.unique().each { String key ->
             Map oldEntries = resolveOptionalMap(root[key],
                     'Invalid Knowledge metadata file: ' + key) ?: [:]
             oldEntries.each { Object sectionId, Object entry ->

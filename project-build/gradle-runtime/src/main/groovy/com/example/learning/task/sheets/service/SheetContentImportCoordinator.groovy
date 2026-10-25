@@ -159,6 +159,7 @@ class SheetContentImportCoordinator {
                 item.readme = result.readme
                 item.video = result.video
                 item.interview = result.interview
+                item.quiz = result.quiz
             }
             catch (Exception error) {
                 item.status = 'FAILED'
@@ -196,6 +197,10 @@ class SheetContentImportCoordinator {
         Map<String, Object> interview = interviewImporter.execute(
                 rootDirectory, context, apply
         )
-        return roadmap + [readme: readme, video: video, interview: interview]
+        Map<String, Object> quiz = quizImporter.execute(
+                rootDirectory, context, apply
+        )
+        return roadmap + [readme: readme, video: video, interview: interview,
+                          quiz: quiz]
     }
 }

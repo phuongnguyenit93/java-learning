@@ -1,0 +1,21 @@
+sections:
+  annotation-use-sites:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  elementtype-targets:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  type-use-annotation:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  target-design:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

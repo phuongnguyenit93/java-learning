@@ -42,11 +42,13 @@ class ReadmeSheetImportServiceTest {
         assertEquals('DRY_RUN', service.syncImportedMetadata(module, prepared, false).status)
         assertEquals('UPDATED', service.syncImportedMetadata(module, prepared, true).status)
 
-        File metadataFile = new File(module,'content/readme/metadata/vi/knowledge-metadata.yml')
+        File metadataFile = new File(module,
+                'content/readme/docs/vi/menu/1.OOPBasic/metadata/knowledge-metadata.yml')
         Map existing = new Yaml().load(metadataFile.getText('UTF-8')) as Map
-        existing['1.OOPBasic/knowledge/OOPBasic.md']['oop-basic-001'].reviewed = true
-        existing['1.OOPBasic/knowledge/OOPBasic.md']['oop-basic-001'].aiGenerated = false
-        existing['1.OOPBasic/knowledge/OOPBasic.md']['oop-basic-001'].isImportant = true
+        assertEquals(['sections'] as Set, existing.keySet())
+        existing.sections['oop-basic-001'].reviewed = true
+        existing.sections['oop-basic-001'].aiGenerated = false
+        existing.sections['oop-basic-001'].isImportant = true
         metadataFile.setText(new Yaml().dump(existing),'UTF-8')
         String refreshed = service.prepareImportedMetadata(module,docs,levels)
         Map updated = new Yaml().load(refreshed) as Map

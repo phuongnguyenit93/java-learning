@@ -1,0 +1,21 @@
+sections:
+  data-access-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  data-access-problem-without-spring:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  data-access-responsibility-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  jdbc-vs-r2dbc-paths:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

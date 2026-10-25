@@ -1,0 +1,21 @@
+sections:
+  keystore-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  keystore-entry-types:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  keystore-protection:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  keystore-vs-truststore:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

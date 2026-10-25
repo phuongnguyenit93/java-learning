@@ -1,0 +1,31 @@
+sections:
+  cache-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  cache-vs-source-of-truth:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  cache-vs-buffer-and-storage:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  cache-candidate-criteria:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  spring-cache-abstraction-boundary:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  provider-owned-concerns:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

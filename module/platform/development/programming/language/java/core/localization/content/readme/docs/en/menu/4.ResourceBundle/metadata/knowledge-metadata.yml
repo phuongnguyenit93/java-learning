@@ -1,0 +1,21 @@
+sections:
+  resourcebundle-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  bundle-naming:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  properties-vs-class-bundle:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  bundle-cache:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

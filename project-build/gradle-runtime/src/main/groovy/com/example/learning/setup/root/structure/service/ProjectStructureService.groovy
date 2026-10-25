@@ -7,6 +7,7 @@ import groovy.json.JsonSlurper
 import org.gradle.api.GradleException
 import org.gradle.api.Project
 import org.gradle.api.logging.Logger
+import org.yaml.snakeyaml.Yaml
 
 
 class ProjectStructureService {
@@ -373,8 +374,8 @@ ${moduleDirectory.absolutePath}
                     )
 
 
-            node.quizLanguages =
-                    findQuizLanguages(
+            node.quizQuestionCounts =
+                    findQuestionCounts(
                             directory,
                             moduleLanguages,
                             'TRUE'.equalsIgnoreCase(
@@ -382,12 +383,13 @@ ${moduleDirectory.absolutePath}
                                             master,
                                             'BUILD_QUIZ'
                                     )
-                            )
+                            ),
+                            'quiz'
                     )
 
 
-            node.interviewLanguages =
-                    findInterviewLanguages(
+            node.interviewQuestionCounts =
+                    findQuestionCounts(
                             directory,
                             moduleLanguages,
                             'TRUE'.equalsIgnoreCase(
@@ -395,7 +397,8 @@ ${moduleDirectory.absolutePath}
                                             master,
                                             'BUILD_INTERVIEW'
                                     )
-                            )
+                            ),
+                            'interview'
                     )
         }
 
@@ -829,35 +832,37 @@ ${moduleDirectory.absolutePath}
             }
 
 
-            if (!node.quizLanguages.isEmpty()) {
+            if (!node.quizQuestionCounts.isEmpty()) {
 
                 result.quiz =
-                        node.quizLanguages
+                        node.quizQuestionCounts.keySet()
                                 .toList()
                                 .sort()
                                 .collectEntries {
                                     String language ->
 
                                     [
-                                            (language): "/module/${resolveRouteId(node)}/quiz/${language}/question.yml"
+                                            (language): "/module/${resolveRouteId(node)}/quiz/${language}/index.json"
                                     ]
                                 }
+                result.quizQuestionCounts = node.quizQuestionCounts
             }
 
 
-            if (!node.interviewLanguages.isEmpty()) {
+            if (!node.interviewQuestionCounts.isEmpty()) {
 
                 result.interview =
-                        node.interviewLanguages
+                        node.interviewQuestionCounts.keySet()
                                 .toList()
                                 .sort()
                                 .collectEntries {
                                     String language ->
 
                                     [
-                                            (language): "/module/${resolveRouteId(node)}/interview/${language}/question.yml"
+                                            (language): "/module/${resolveRouteId(node)}/interview/${language}/index.json"
                                     ]
                                 }
+                result.interviewQuestionCounts = node.interviewQuestionCounts
             }
 
 
@@ -1254,99 +1259,47 @@ ${moduleDirectory.absolutePath}
     }
 
 
-    private static Set<String> findQuizLanguages(
+    /**
+     * The catalog links only languages that have authored chapter questions.
+     * Empty chapter skeletons and legacy central YAML do not count as content.
+     */
+    private static Map<String, Integer> findQuestionCounts(
             File moduleDirectory,
             List<String> moduleLanguages,
-            boolean quizEnabled
+            boolean enabled,
+            String kind
     ) {
+        if (!enabled) return [:]
 
-        if (!quizEnabled) {
-            return [] as Set<String>
-        }
-
-
-        File quizDirectory =
-                new File(
-                        moduleDirectory,
-                        'content/quiz'
-                )
-
-
-        if (!quizDirectory.isDirectory()) {
-            return [] as Set<String>
-        }
-
-
-        Set<String> result =
-                new LinkedHashSet<>()
-
-
-        moduleLanguages.each {
-            String language ->
-
-            File questionFile =
-                    new File(
-                            quizDirectory,
-                            "${language}/question.yml"
-                    )
-
-
-            if (questionFile.isFile()) {
-                result.add(
-                        language
-                )
+        Map<String, Integer> counts = new LinkedHashMap<>()
+        moduleLanguages.each { String language ->
+            File menu = new File(moduleDirectory, "content/readme/docs/${language}/menu")
+            if (!menu.isDirectory()) return
+            File[] chapters = menu.listFiles()
+            if (chapters == null) {
+                throw new GradleException("Unable to list question chapters: ${menu}")
             }
-        }
 
-
-        return result
-    }
-
-
-    private static Set<String> findInterviewLanguages(
-            File moduleDirectory,
-            List<String> moduleLanguages,
-            boolean interviewEnabled
-    ) {
-
-        if (!interviewEnabled) {
-            return [] as Set<String>
-        }
-
-
-        File interviewDirectory =
-                new File(
-                        moduleDirectory,
-                        'content/interview'
-                )
-
-
-        if (!interviewDirectory.isDirectory()) {
-            return [] as Set<String>
-        }
-
-
-        Set<String> result =
-                new LinkedHashSet<>()
-
-
-        moduleLanguages.each {
-            String language ->
-
-            File questionFile =
-                    new File(
-                            interviewDirectory,
-                            "${language}/question.yml"
-                    )
-
-
-            if (questionFile.isFile()) {
-                result.add(language)
+            int total = 0
+            chapters.findAll { File chapter ->
+                chapter.isDirectory() && chapter.name ==~ /\d+\..+/
+            }.each { File chapter ->
+                File source = new File(chapter, "${kind}/question.yml")
+                if (!source.isFile()) return
+                Object document
+                try {
+                    document = new Yaml().load(source.getText('UTF-8'))
+                } catch (Exception exception) {
+                    throw new GradleException("Unable to parse ${kind} YAML: ${source}", exception)
+                }
+                if (!(document instanceof Map) || !((document as Map).questions instanceof List)) {
+                    throw new GradleException("Invalid ${kind} questions root: ${source}")
+                }
+                total += ((document as Map).questions as List).size()
             }
+            if (total > 0) counts[language] = total
         }
-
-
-        return result
+        return counts
     }
 
 
@@ -1824,8 +1777,8 @@ ${exception.message}
         Set<String> roadmapLanguages = [] as Set<String>
         boolean referenceAvailable
         Set<String> apiLanguages = [] as Set<String>
-        Set<String> quizLanguages = [] as Set<String>
-        Set<String> interviewLanguages = [] as Set<String>
+        Map<String, Integer> quizQuestionCounts = [:]
+        Map<String, Integer> interviewQuestionCounts = [:]
         List<StructureNode> children = []
     }
 }

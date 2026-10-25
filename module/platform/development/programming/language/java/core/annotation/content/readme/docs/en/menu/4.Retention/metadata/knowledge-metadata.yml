@@ -1,0 +1,21 @@
+sections:
+  retention-source:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  retention-class:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  retention-runtime:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  retention-use-case:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

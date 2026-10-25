@@ -1,0 +1,26 @@
+sections:
+  layered-archive-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  default-layer-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  layer-order-and-cache:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  custom-layering:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  archive-layer-vs-container-runtime:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

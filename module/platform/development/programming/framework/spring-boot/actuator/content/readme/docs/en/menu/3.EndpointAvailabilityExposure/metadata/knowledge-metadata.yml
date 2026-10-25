@@ -1,0 +1,36 @@
+sections:
+  endpoint-enablement:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  endpoint-exposure:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  endpoint-availability:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  web-endpoint-surface:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  jmx-endpoint-surface:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  actuator-base-path:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  exposure-defaults-and-risk:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

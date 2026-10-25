@@ -1,0 +1,21 @@
+sections:
+  immutable-object-design:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  defensive-copy-input:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  defensive-copy-output:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  deep-immutability:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

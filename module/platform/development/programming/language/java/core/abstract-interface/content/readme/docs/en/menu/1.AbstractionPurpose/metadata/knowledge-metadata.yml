@@ -1,0 +1,21 @@
+sections:
+  abstraction-mechanism-purpose:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  abstraction-mechanism-roles:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  abstraction-running-example:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  abstraction-learning-roadmap:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

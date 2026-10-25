@@ -26,7 +26,7 @@ class InterviewSheetNormalizeServiceTest {
         Map normalized = InterviewSheetNormalizeService.normalizeYaml(source, FILE, 20)
         assertEquals(2, normalized.questions.size())
         assertTrue(normalized.questions[0].answer.contains('```java'))
-        assertEquals([file: FILE, anchor: ''], normalized.questions[0].readmeRelated)
+        assertEquals([anchor: ''], normalized.questions[0].readmeRelated)
         String yaml = InterviewSheetNormalizeService.renderYaml(normalized)
         assertEquals(normalized, new Yaml().load(yaml))
         assertEquals(yaml, InterviewSheetNormalizeService.renderYaml(
@@ -56,7 +56,7 @@ class InterviewSheetNormalizeServiceTest {
                       'readmeRelated', 'apiRelated'], result.questions[0].keySet().toList())
         assertEquals(true, result.questions[0].aiGenerated)
         assertEquals(false, result.questions[0].reviewed)
-        assertEquals([file: FILE, anchor: ''], result.questions[0].readmeRelated)
+        assertEquals([anchor: ''], result.questions[0].readmeRelated)
         assertEquals([controller: '', methodSignature: ''], result.questions[0].apiRelated)
         assertEquals('Giải thích encapsulation?', result.questions[1].question)
     }
@@ -71,7 +71,8 @@ class InterviewSheetNormalizeServiceTest {
         ]]]
         String original = JsonOutput.toJson(existing)
         Map normalized = InterviewSheetNormalizeService.normalizeJson(original, FILE, 20)
-        assertEquals(existing, normalized)
+        assertEquals('oop-invariant', normalized.questions[0].readmeRelated.anchor)
+        assertFalse(normalized.questions[0].readmeRelated.containsKey('file'))
         String serialized = JsonOutput.prettyPrint(JsonOutput.toJson(normalized)) + '\n'
         assertEquals(normalized, InterviewSheetNormalizeService.normalizeJson(serialized, FILE, 20))
         assertEquals(serialized, JsonOutput.prettyPrint(JsonOutput.toJson(
@@ -86,7 +87,7 @@ class InterviewSheetNormalizeServiceTest {
                 apiRelated: [controller: 'Api', methodSignature: 'run()']]]]
         Map result = InterviewSheetNormalizeService.normalizeYaml(
                 JsonOutput.toJson(source), FILE, 20)
-        assertEquals(FILE, result.questions[0].readmeRelated.file)
+        assertFalse(result.questions[0].readmeRelated.containsKey('file'))
         assertEquals('existing-anchor', result.questions[0].readmeRelated.anchor)
         assertEquals(false, result.questions[0].aiGenerated)
         assertEquals(true, result.questions[0].reviewed)

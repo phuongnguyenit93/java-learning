@@ -9,7 +9,7 @@ import org.yaml.snakeyaml.Yaml
 import java.nio.file.Files
 
 /**
- * Sheet Interview YAML (and legacy JSON) -> the module's Vietnamese question.yml.
+ * Sheet Interview YAML (and legacy JSON) -> each chapter's interview/question.yml.
  * Only Groovy/Sheets API/SnakeYAML are used; no AI, Sheet writes or metadata inference.
  */
 class InterviewSheetImportService {
@@ -17,6 +17,7 @@ class InterviewSheetImportService {
 
     Map<String, Object> execute(File root, Map<String, Object> context, boolean apply) {
         File directory = resolveDirectory(root, context.moduleLocation as String)
+        File module = new File(root.canonicalFile, context.moduleLocation as String).canonicalFile
         Sheets sheets = context.client as Sheets
         String id = context.spreadsheetId as String
         String tab = "'" + (context.tabTitle as String).replace("'", "''") + "'"
@@ -57,10 +58,12 @@ class InterviewSheetImportService {
             return base + [status: assembled.status, questionCount: 0,
                            chapterCount: 0, clearedOldFiles: 0]
         }
-        String yaml = renderYaml(assembled.questions as List<Map>)
-        Map sync = SheetSnapshotReplaceService.replace(
-                root, directory, ['question.yml': yaml], apply
-        )
+        Map<String, String> chapterFiles = [:]
+        (assembled.byChapter as Map<String, List<Map>>).each { String chapter, List<Map> items ->
+            chapterFiles[chapter] = renderYaml(items)
+        }
+        Map sync = ChapterQuestionSnapshotService.replace(root, module, 'interview',
+                chapterFiles, apply)
         return base + sync + [
                 questionCount: (assembled.questions as List).size(),
                 chapterCount: assembled.chapterCount
@@ -101,6 +104,7 @@ class InterviewSheetImportService {
         }
 
         List<Map> questions = []
+        Map<String, List<Map>> byChapter = new LinkedHashMap<>()
         int chapters = 0
         groups.eachWithIndex { Map group, int i ->
             int sheetRow = (group.parentRow as Number).intValue()
@@ -124,10 +128,14 @@ class InterviewSheetImportService {
             Map normalized = InterviewSheetNormalizeService.normalizeYaml(
                     authoredYaml.toString(), file, sheetRow
             )
-            questions.addAll(normalized.questions as List<Map>)
+            List<Map> authored = normalized.questions as List<Map>
+            String chapter = "${i + 1}.${filename.substring(0, filename.length() - 3)}"
+            byChapter[chapter] = authored
+            questions.addAll(authored)
             chapters++
         }
-        return [status: 'READY', questions: questions, chapterCount: chapters]
+        return [status: 'READY', questions: questions, chapterCount: chapters,
+                byChapter: byChapter]
     }
 
     /** Complete schema fields are serialized; content is not rewritten by AI. */
@@ -143,7 +151,7 @@ class InterviewSheetImportService {
         String result = new InterviewQuestionSchemaService().renderCommentBlock('vi') +
                 '\n\n' + new Yaml(options).dump([questions: questions])
 
-        // Validate the EXACT serialized document with the existing module
+        // Validate the EXACT serialized chapter document with the source
         // Interview schema before allowing even one old file to be deleted.
         File staged = Files.createTempFile('sheet-interview-validate-', '.yml').toFile()
         try {
@@ -162,7 +170,7 @@ class InterviewSheetImportService {
         File base = new File(root.canonicalFile, 'module').canonicalFile
         File directory = new File(
                 root.canonicalFile,
-                "${location}/content/interview/vi"
+                "${location}/content/readme/docs/vi/menu"
         ).canonicalFile
         if (!directory.toPath().startsWith(base.toPath()) ||
                 directory.toPath() == base.toPath()) {

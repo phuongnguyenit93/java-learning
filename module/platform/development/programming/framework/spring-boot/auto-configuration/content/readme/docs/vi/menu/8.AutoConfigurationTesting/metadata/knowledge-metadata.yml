@@ -1,0 +1,31 @@
+sections:
+  why-focused-context-tests:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  application-context-runner:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  back-off-and-property-tests:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  filtered-class-loader:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  web-context-runners:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  condition-report-in-tests:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

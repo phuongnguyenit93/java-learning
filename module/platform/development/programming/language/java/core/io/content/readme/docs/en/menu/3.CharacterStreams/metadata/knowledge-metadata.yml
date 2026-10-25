@@ -1,0 +1,11 @@
+sections:
+  reader-writer:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  charset-bridge:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

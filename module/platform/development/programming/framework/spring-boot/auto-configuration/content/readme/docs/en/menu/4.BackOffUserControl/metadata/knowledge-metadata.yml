@@ -1,0 +1,26 @@
+sections:
+  back-off-as-design-contract:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  user-defined-beans-win:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  bean-type-specificity:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  defaults-vs-forced-policy:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  back-off-failure-patterns:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

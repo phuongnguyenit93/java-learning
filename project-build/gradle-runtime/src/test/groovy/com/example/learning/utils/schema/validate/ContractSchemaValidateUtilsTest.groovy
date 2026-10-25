@@ -29,7 +29,7 @@ class ContractSchemaValidateUtilsTest {
     void strictRelationIsDifferentFromLegacyQuestionMode() {
         Map quiz = [questions: [[
             id:'1',question:'Question?',aiGenerated:true,reviewed:false,
-            readmeRelated:[file:'1.Chapter/Chapter.md',anchor:''],
+            readmeRelated:[file:'1.Chapter/Chapter.md'],
             apiRelated:[controller:'',methodSignature:''],
             correctAnswerId:'A',
             answers:['A','B','C','D'].collect { String letter ->
@@ -39,7 +39,7 @@ class ContractSchemaValidateUtilsTest {
         ContractSchemaValidateUtils.validateData('quiz',quiz,
                 ContractSchemaValidateUtils.LEGACY_QUESTION_LINKS)
         shouldFail(GradleException) { ContractSchemaValidateUtils.validateData('quiz',quiz) }
-        quiz.questions[0].readmeRelated.anchor = 'chapter-1'
+        quiz.questions[0].readmeRelated = [anchor: 'chapter-1']
         ContractSchemaValidateUtils.validateData('quiz',quiz)
         quiz.questions[0].answers[3].id='A'
         shouldFail(GradleException) { ContractSchemaValidateUtils.validateData('quiz',quiz) }

@@ -1,0 +1,21 @@
+sections:
+  wrapper-types:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  boxing-unboxing:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  wrapper-caching:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  unboxing-null:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

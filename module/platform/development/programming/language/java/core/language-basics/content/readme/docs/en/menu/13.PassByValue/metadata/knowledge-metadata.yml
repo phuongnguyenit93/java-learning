@@ -1,0 +1,16 @@
+sections:
+  java-pass-by-value:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  reference-copy-mutation:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  reassignment-vs-mutation:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

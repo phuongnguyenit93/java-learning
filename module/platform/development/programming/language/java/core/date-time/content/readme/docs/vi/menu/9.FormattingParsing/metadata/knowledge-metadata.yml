@@ -1,0 +1,21 @@
+sections:
+  date-time-formatter:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  format-patterns:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  strict-smart-lenient:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  parse-target-type:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

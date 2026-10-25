@@ -1,0 +1,16 @@
+sections:
+  integer-overflow-wraparound:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  checked-arithmetic:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  boundary-values:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

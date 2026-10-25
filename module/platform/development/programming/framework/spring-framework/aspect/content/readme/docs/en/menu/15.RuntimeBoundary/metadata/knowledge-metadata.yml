@@ -1,0 +1,31 @@
+sections:
+  spring-aop-runtime:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  spring-aop-vs-aspectj:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  runtime-boundary-demo:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  framework-connections:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  aop-end-to-end-synthesis:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  runtime-boundary-conclusion:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

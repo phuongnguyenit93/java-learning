@@ -1,0 +1,21 @@
+sections:
+  reference-copy:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  shallow-copy:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  deep-copy:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  copy-strategies:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

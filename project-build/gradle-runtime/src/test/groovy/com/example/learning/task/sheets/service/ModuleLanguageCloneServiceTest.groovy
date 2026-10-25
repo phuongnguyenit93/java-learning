@@ -20,7 +20,7 @@ class ModuleLanguageCloneServiceTest {
         Map beforeVi = snapshotVi(module)
         Map dry = service.execute(f.root as File, module, false)
         assertEquals('DRY_RUN', dry.status)
-        assertEquals(6, dry.groups)
+        assertEquals(3, dry.groups)
         assertEquals('old English', file(module, 'content/readme/docs/en/menu/Old.md').text)
         assertEquals(beforeVi, snapshotVi(module))
         assertEquals('Excel VI unaffected', file(module, 'content/sheet/vi/module.xlsx').text)
@@ -34,6 +34,15 @@ class ModuleLanguageCloneServiceTest {
         assertFalse(file(module, 'content/readme/docs/en/menu/Old.md').exists())
         assertEquals('Vietnamese knowledge body', file(module,
                 'content/readme/docs/en/menu/1.Basic/knowledge/Basic.md').text.readLines().last())
+        assertEquals(file(module,
+                'content/readme/docs/vi/menu/1.Basic/metadata/knowledge-metadata.yml').bytes.toList(),
+                file(module,
+                'content/readme/docs/en/menu/1.Basic/metadata/knowledge-metadata.yml').bytes.toList())
+        assertTrue(file(module,
+                'content/readme/docs/en/menu/1.Basic/quiz/question.yml').text
+                .contains('anchor: basic-001'))
+        assertTrue(file(module,
+                'content/readme/docs/en/menu/1.Basic/interview/question.yml').isFile())
         assertTrue(file(module, 'content/readme/docs/en/LIST.md').text
                 .contains('content/readme/docs/en/menu/1.Basic/knowledge/Basic.md'))
         assertFalse(file(module, 'content/readme/docs/en/LIST.md').text
@@ -53,7 +62,7 @@ class ModuleLanguageCloneServiceTest {
     void danglingViReadmeRelationBlocksDryRunAndApplyBeforeDeletingEnglish() {
         Map f = fixture()
         File module = f.module as File
-        File quiz = file(module, 'content/quiz/vi/question.yml')
+        File quiz = file(module, 'content/readme/docs/vi/menu/1.Basic/quiz/question.yml')
         quiz.text = quiz.text.replace('basic-001', 'nonexistent-001')
         [false, true].each { boolean apply ->
             try {
@@ -85,8 +94,6 @@ class ModuleLanguageCloneServiceTest {
         }
         assertEquals(original, file(module, 'content/readme/docs/en/menu/Old.md').text)
         assertFalse(file(module, 'content/readme/docs/en/menu/1.Basic/knowledge/Basic.md').exists())
-        assertEquals('old metadata', file(module,
-                'content/readme/metadata/en/knowledge-metadata.yml').text)
         assertEquals('old English roadmap', file(module,
                 'content/roadmap/en/roadmap.yml').text)
     }
@@ -95,7 +102,8 @@ class ModuleLanguageCloneServiceTest {
     void invalidViAnchorMetadataBlocksReplacement() {
         Map f = fixture()
         File module = f.module as File
-        File metadata = file(module, 'content/readme/metadata/vi/knowledge-metadata.yml')
+        File metadata = file(module,
+                'content/readme/docs/vi/menu/1.Basic/metadata/knowledge-metadata.yml')
         metadata.text = metadata.text.replace('basic-001:', 'wrong-001:')
         try {
             new ModuleLanguageCloneService().execute(f.root as File, module, true)
@@ -122,6 +130,39 @@ class ModuleLanguageCloneServiceTest {
     }
 
     @Test
+    void chapterQuestionCannotResolveAnchorFromAnotherChapter() {
+        Map f = fixture()
+        File module = f.module as File
+        write(module, 'content/readme/docs/vi/menu/2.More/knowledge/More.md',
+                '# More\n\n## <a id="more-001">More lesson</a>\n\nMore body')
+        write(module, 'content/readme/docs/vi/menu/2.More/metadata/knowledge-metadata.yml',
+                'sections:\n  more-001: {difficulty: BASIC, reviewed: false}')
+        write(module, 'content/readme/docs/vi/menu/2.More/quiz/question.yml', '''
+questions:
+  - id: quiz-second
+    question: Belongs to second chapter?
+    answers:
+      - {id: A, answer: First, explanation: Test}
+      - {id: B, answer: Second, explanation: Test}
+      - {id: C, answer: Third, explanation: Test}
+      - {id: D, answer: Fourth, explanation: Test}
+    correctAnswerId: A
+    aiGenerated: true
+    reviewed: false
+    readmeRelated: {anchor: basic-001}
+    apiRelated: {controller: "", methodSignature: ""}
+'''.trim())
+        File list = file(module, 'content/readme/docs/vi/LIST.md')
+        list.append('* [More](content/readme/docs/vi/menu/2.More/knowledge/More.md)\n', 'UTF-8')
+        try {
+            new ModuleLanguageCloneService().execute(f.root as File, module, false)
+            fail('A chapter question cannot link to an anchor in a different chapter')
+        } catch (GradleException error) {
+            assertTrue(error.message.contains('Unresolved readmeRelated'))
+        }
+    }
+
+    @Test
     void ignoresAuxiliaryMarkdownUnderChapterWhenCheckingKnowledgeRelations() {
         Map f = fixture()
         File module = f.module as File
@@ -139,8 +180,6 @@ class ModuleLanguageCloneServiceTest {
         File module = f.module as File
         write(module, 'content/readme/docs/vi/menu/LegacyRoot.md',
                 '# Legacy\n\n## <a id="legacy-001">Legacy lesson</a>\n\nLegacy body')
-        File metadata = file(module, 'content/readme/metadata/vi/knowledge-metadata.yml')
-        metadata.append('\nLegacyRoot.md:\n  legacy-001: {difficulty: BASIC}\n', 'UTF-8')
         File list = file(module, 'content/readme/docs/vi/LIST.md')
         list.append('* [Legacy](content/readme/docs/vi/menu/LegacyRoot.md)\n', 'UTF-8')
 
@@ -160,8 +199,8 @@ class ModuleLanguageCloneServiceTest {
                 '* **1.Basic**\n    * [Basic](content/readme/docs/vi/menu/1.Basic/knowledge/Basic.md)\n')
         write(module, 'content/readme/docs/vi/menu/1.Basic/knowledge/Basic.md',
                 '# Basic\n\n## <a id="basic-001">Vietnamese lesson</a>\n\nVietnamese knowledge body')
-        write(module, 'content/readme/metadata/vi/knowledge-metadata.yml', '''
-1.Basic/knowledge/Basic.md:
+        write(module, 'content/readme/docs/vi/menu/1.Basic/metadata/knowledge-metadata.yml', '''
+sections:
   basic-001:
     difficulty: BASIC
     aiGenerated: true
@@ -180,7 +219,7 @@ roadmap:
         label: Demo
         note: Illustrate a stable module route
 '''.trim())
-        write(module, 'content/quiz/vi/question.yml', '''
+        write(module, 'content/readme/docs/vi/menu/1.Basic/quiz/question.yml', '''
 questions:
   - id: quiz-001
     question: A Vietnamese question?
@@ -192,16 +231,16 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.Basic/knowledge/Basic.md", anchor: "basic-001"}
+    readmeRelated: {anchor: basic-001}
     apiRelated: {controller: ExampleController, methodSignature: "demo()"}
 '''.trim())
-        write(module, 'content/interview/vi/question.yml', '''
+        write(module, 'content/readme/docs/vi/menu/1.Basic/interview/question.yml', '''
 questions:
   - question: Vietnamese interview question?
     answer: Vietnamese answer
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.Basic/knowledge/Basic.md", anchor: "basic-001"}
+    readmeRelated: {anchor: basic-001}
     apiRelated: {controller: "", methodSignature: ""}
 '''.trim())
         write(module, 'content/video/vi/menu/1.Basic/video-script.yml', '''
@@ -224,7 +263,6 @@ ExampleController:
     readmeRelated: {file: "1.Basic/knowledge/Basic.md", anchor: "basic-001"}
 '''.trim())
         write(module, 'content/readme/docs/en/menu/Old.md', 'old English')
-        write(module, 'content/readme/metadata/en/knowledge-metadata.yml', 'old metadata')
         write(module, 'content/roadmap/en/roadmap.yml', 'old English roadmap')
         write(module, 'src/main/resources/swagger/en/old.yml', 'old swagger')
         write(module, 'content/sheet/vi/module.xlsx', 'Excel VI unaffected')

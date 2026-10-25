@@ -2,7 +2,7 @@
 
 ## 0. Mục tiêu và ranh giới
 
-- STEP 12A diễn ra **sau STEP 12, trước STEP 14**. Mục tiêu: xóa lệch cấu trúc EN cũ, thay bằng bản clone chính xác của VI theo technical identity để worker STEP 14 **chỉ dịch văn bản**, không phải tái tạo structure. **Video không thuộc sáu subtree clone bắt buộc**, không đọc/ghi/xóa `content/video/en`; Video xử lý hoàn toàn trong optional steps sau STEP_FINAL.
+- STEP 12A diễn ra **sau STEP 12, trước STEP 14**. Mục tiêu: xóa lệch cấu trúc EN cũ, thay bằng bản clone chính xác của VI theo technical identity để worker STEP 14 **chỉ dịch văn bản**, không phải tái tạo structure. **Video không thuộc ba subtree clone bắt buộc**, không đọc/ghi/xóa `content/video/en`; Video xử lý hoàn toàn trong optional steps sau STEP_FINAL.
 - **Prime-only**, không giao worker, không dịch tự động, không tạo Google Sheets EN hoặc Excel EN (để dành STEP 15).
 - **Không clone** Java source/test, build config, `master.json`, `content/sheet/{vi,en}/module.xlsx`, `content/reference/references.yml`, JSON Portal đã generate hoặc source ở module khác.
 - **Chỉ dùng task module-local** `cloneModuleViToEn` ở `project-build/gradle-runtime`. Không dùng các Sheet importer để tái tạo EN và không gọi task dịch.
@@ -12,8 +12,8 @@
 
 1. Đọc đầy đủ `module-generate-agent/GENERAL_AGENT_RULES.md`, toàn bộ `module-generate-agent/rules/`, file STEP này và `module-generate-info.txt`. Xác nhận module I3 hợp lệ, source VI đã nghiệm thu STEP 11 và STEP 12.
 2. Xác nhận không có worker/actor đang ghi vào VI hoặc EN; không có tiến trình STEP 14 đang dịch EN.
-3. Kiểm tra các vùng source VI: `content/readme/docs/vi/` (BASE, LIST, menu), `content/readme/metadata/vi/`, `content/roadmap/vi/`, `content/quiz/vi/`, `content/interview/vi/` và `src/main/resources/swagger/vi/`. **Không kiểm kê/cloning Video như một cổng bắt buộc.**
-4. Mỗi subtree EN tương ứng là **đích bị thay thế toàn bộ**. Khi VI optional không tồn tại, EN cũ của thành phần đó bị dọn. README/docs và metadata VI phải đủ dữ liệu mới được APPLY.
+3. Kiểm tra ba vùng source VI: `content/readme/docs/vi/` (`BASE.md`, `LIST.md`, `menu/<chapter>/knowledge/*.md`, `metadata/knowledge-metadata.yml`, `interview/question.yml`, `quiz/question.yml` bên trong từng chapter), `content/roadmap/vi/` và `src/main/resources/swagger/vi/`. **Không kiểm kê/cloning Video hay các Portal output `content/interview/` / `content/quiz/`.**
+4. Mỗi subtree EN tương ứng là **đích bị thay thế toàn bộ**. Khi VI optional không tồn tại, EN cũ của thành phần đó bị dọn. Knowledge và metadata của từng chapter VI phải đủ dữ liệu mới được APPLY.
 5. Nếu đã dịch EN ở STEP 14, **KHÔNG chạy lại STEP 12A** vì nó sẽ thay toàn bộ bản dịch.
 
 ## 2. Task và quy trình
@@ -24,8 +24,8 @@ Chạy từ repository root, thay đúng Gradle module path:
 .\gradlew.bat :<MODULE_GRADLE_PATH>:cloneModuleViToEn -PsheetMode=DRY_RUN --console=plain
 ```
 
-- DRY_RUN: không ghi EN, không thay Excel, không tác động Google Sheets; trả danh sách **6 vùng clone** bắt buộc, số file và thay đổi dự kiến.
-- Validation **trước APPLY**: README anchors, Knowledge metadata, `LIST.md` (đổi link vi/menu → en/menu và heading VI → EN), Roadmap schema/relatedKnowledge, Quiz/Interview schema + `readmeRelated` + `apiRelated`, Swagger YAML + `readmeRelated`. Video không thuộc gate này. Relation không có target chắc chắn sẽ **FAIL**, không đoán bằng AI hay đổi anchor/ID.
+- DRY_RUN: không ghi EN, không thay Excel, không tác động Google Sheets; trả danh sách **3 vùng clone** bắt buộc, số file và thay đổi dự kiến.
+- Validation **trước APPLY**: README anchors, metadata nằm trong từng chapter, `LIST.md` (đổi link vi/menu → en/menu và heading VI → EN), Roadmap schema/relatedKnowledge, mỗi `<chapter>/{quiz,interview}/question.yml` theo schema và `readmeRelated.anchor` trong chính chapter đó, `apiRelated`, Swagger YAML + `readmeRelated`. Video không thuộc gate này. Relation không có target chắc chắn sẽ **FAIL**, không đoán bằng AI hay đổi anchor/ID.
 - Vấn đề trong VI phải xử lý ở nguồn (đặc biệt STEP 11), QA rồi chạy DRY_RUN lại.
 - Khi DRY_RUN PASS, chạy cùng task, đổi `-PsheetMode=APPLY`.
 

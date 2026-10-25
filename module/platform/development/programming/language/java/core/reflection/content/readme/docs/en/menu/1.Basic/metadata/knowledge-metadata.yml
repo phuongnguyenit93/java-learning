@@ -1,0 +1,11 @@
+sections:
+  reflection-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  reflection-use-cases:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

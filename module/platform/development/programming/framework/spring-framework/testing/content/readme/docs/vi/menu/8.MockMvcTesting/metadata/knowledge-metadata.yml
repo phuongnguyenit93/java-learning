@@ -1,0 +1,41 @@
+sections:
+  mockmvc-purpose-and-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  servlet-api-mocks:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  mockmvc-setup-strategies:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  request-building-and-dispatch:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  response-assertions:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  mvc-behavior-under-test:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  async-request-testing:
+    difficulty: INTERMEDIATE
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  mockmvc-limitations-and-live-server:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false

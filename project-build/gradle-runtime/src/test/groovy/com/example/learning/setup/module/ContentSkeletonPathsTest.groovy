@@ -7,6 +7,7 @@ import com.example.learning.setup.module.reference.service.ReferenceStructureSer
 import com.example.learning.setup.module.roadmap.service.RoadmapStructureService
 import com.example.learning.setup.root.readmeMetadata.service.ReadmeMetadataSyncService
 import org.gradle.testfixtures.ProjectBuilder
+import org.yaml.snakeyaml.Yaml
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
@@ -46,8 +47,8 @@ class ContentSkeletonPathsTest {
 
         assertTrue(new File(moduleDir, 'README.md').isFile())
         assertTrue(new File(moduleDir, 'content/reference/references.yml').isFile())
-        assertTrue(new File(moduleDir, 'content/quiz').isDirectory())
-        assertTrue(new File(moduleDir, 'content/interview').isDirectory())
+        assertFalse(new File(moduleDir, 'content/quiz').exists())
+        assertFalse(new File(moduleDir, 'content/interview').exists())
         assertTrue(new File(moduleDir, 'content/roadmap').isDirectory())
         for (String language in ['vi', 'en']) {
             assertTrue(new File(moduleDir, "content/readme/docs/${language}/BASE.md").isFile())
@@ -196,9 +197,28 @@ class ContentSkeletonPathsTest {
         )
         assertTrue(markdown.parentFile.mkdirs())
         markdown.setText(
-                '# Basic\n\n## <a id="basic-001">Overview</a>\n\nDescription\n',
+                '# Basic\n\n## <a id="basic-001">Overview</a>\n\nDescription\n' +
+                '## <a id="basic-002">New section</a>\n\nDescription\n',
                 'UTF-8'
         )
+        File existingMetadata = new File(
+                moduleDir,
+                'content/readme/docs/vi/menu/1.Basic/metadata/knowledge-metadata.yml'
+        )
+        assertTrue(existingMetadata.parentFile.mkdirs())
+        existingMetadata.setText('''sections:
+  basic-001:
+    difficulty: ADVANCED
+    aiGenerated: false
+    reviewed: true
+    isImportant: true
+''', 'UTF-8')
+        File advanced = new File(
+                moduleDir, 'content/readme/docs/vi/menu/2.Advanced/knowledge/Advanced.md'
+        )
+        assertTrue(advanced.parentFile.mkdirs())
+        advanced.setText('# Advanced\n\n## <a id="advanced-001">Overview</a>\n',
+                'UTF-8')
 
         def rootProject = ProjectBuilder.builder()
                 .withProjectDir(rootDirectory).build()
@@ -231,28 +251,75 @@ class ContentSkeletonPathsTest {
         assertEquals('Expected one Knowledge language source', 1, languages.size())
 
         // ProjectBuilder's synthetic hierarchy can differ from a real multi-project
-        // Gradle settings evaluation. Exercise the actual metadata write plan and
-        // safe writer directly to verify the persisted location.
+        // Gradle settings evaluation. Exercise each chapter-local metadata plan
+        // and the safe writer directly to verify persisted location and flags.
         def service = new ReadmeMetadataSyncService(rootProject.logger)
         def planMethod = ReadmeMetadataSyncService.declaredMethods.find {
-            it.name == 'buildWritePlan'
+            it.name == 'buildChapterWritePlans'
         }
-        assertNotNull(planMethod)
+        assertNotNull('Chapter metadata planner must be available', planMethod)
         planMethod.accessible = true
-        def plan = planMethod.invoke(service, moduleProject, languages.first())
+        def plans = planMethod.invoke(service, moduleProject, languages.first())
+        assertEquals('One metadata file per chapter', 2, plans.size())
         def writer = ReadmeMetadataSyncService.getDeclaredMethod(
                 'writeSafelyIfChanged', File.class, String.class
         )
         writer.accessible = true
-        assertTrue(writer.invoke(null, plan.outputFile, plan.content))
+        for (def plan in plans) {
+            if (plan.outputFile == existingMetadata) {
+                assertTrue('Existing authored flags must be retained',
+                        plan.content.contains('reviewed: true'))
+            }
+            assertTrue(writer.invoke(null, plan.outputFile, plan.content))
+        }
 
         File metadata = new File(
-                moduleDir, 'content/readme/metadata/vi/knowledge-metadata.yml'
+                moduleDir,
+                'content/readme/docs/vi/menu/1.Basic/metadata/knowledge-metadata.yml'
         )
-        assertTrue('Knowledge metadata must live under content', metadata.isFile())
-        assertTrue(metadata.getText('UTF-8').contains('difficulty: BASIC'))
+        File secondMetadata = new File(
+                moduleDir,
+                'content/readme/docs/vi/menu/2.Advanced/metadata/knowledge-metadata.yml'
+        )
+        assertTrue('Knowledge metadata must live beside its chapter', metadata.isFile())
+        assertTrue('Each chapter must have its own metadata', secondMetadata.isFile())
+        Map first = new Yaml().load(metadata.getText('UTF-8')) as Map
+        Map second = new Yaml().load(secondMetadata.getText('UTF-8')) as Map
+        assertEquals(['sections'] as Set, first.keySet())
+        assertEquals(['sections'] as Set, second.keySet())
+        assertEquals(['basic-001', 'basic-002'] as Set, first.sections.keySet())
+        assertEquals(['advanced-001'] as Set, second.sections.keySet())
+        assertEquals([difficulty: 'ADVANCED', aiGenerated: false, reviewed: true,
+                      isImportant: true], first.sections['basic-001'])
+        assertEquals([difficulty: 'BASIC', aiGenerated: true, reviewed: false,
+                      isImportant: false], first.sections['basic-002'])
+        assertEquals([difficulty: 'BASIC', aiGenerated: true, reviewed: false,
+                      isImportant: false], second.sections['advanced-001'])
+        assertFalse(new File(
+                moduleDir, 'content/readme/metadata/vi/knowledge-metadata.yml'
+        ).exists())
         assertFalse(new File(
                 moduleDir, 'src/main/resources/readme/vi/knowledge-metadata.yml'
         ).exists())
+
+        // Quoted booleans must fail strict metadata validation; they must not
+        // be silently coerced or replace existing human-edited review flags.
+        for (String flag in ['aiGenerated', 'reviewed', 'isImportant']) {
+            Map invalid = new LinkedHashMap(first)
+            invalid.sections = new LinkedHashMap(first.sections)
+            invalid.sections['basic-001'] = new LinkedHashMap(first.sections['basic-001'])
+            invalid.sections['basic-001'][flag] = 'true'
+            metadata.setText(new Yaml().dump(invalid), 'UTF-8')
+            try {
+                planMethod.invoke(service, moduleProject, languages.first())
+                fail('String flag ' + flag + ' must be rejected')
+            }
+            catch (java.lang.reflect.InvocationTargetException expected) {
+                assertTrue(expected.cause instanceof org.gradle.api.GradleException)
+                assertTrue(expected.cause.message,
+                        expected.cause.message.contains(
+                                'Expected YAML boolean true or false'))
+            }
+        }
     }
 }

@@ -1,0 +1,16 @@
+sections:
+  big-decimal-model:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  big-decimal-construction:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
+  big-decimal-arithmetic:
+    difficulty: BASIC
+    aiGenerated: true
+    reviewed: false
+    isImportant: false
