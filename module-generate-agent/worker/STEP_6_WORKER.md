@@ -1,5 +1,8 @@
 # STEP 6 — WORKER ONLY: Xây dựng API
 
+**CURRENT_STEP policy (2026-10-25):** Progress is owned ONLY by `CURRENT_STEP.VALUE` (string) in the verified module `master.json`, never by any Google Sheet/Excel cell. Prime updates after full QA using `module-generate-agent/CURRENT_STEP.md`; Worker does not write it. Any old cell, label, formula, or Sheet-readback instructions about progress below are superseded. The STEP-specific completion gates still apply.
+
+
 **Worker phải tự đọc TOÀN BỘ file này trước khi thực hiện nhiệm vụ**, không đọc file Prime, rules/MD/TXT ngoài nguồn được phép đọc. Tin giao việc Prime → Worker luôn gồm **đúng 4 dòng định vị**: URL Sheet/tab, các ô nguồn của **một chương**, **cả hai đường dẫn tuyệt đối tới package Java main và test mà Prime cấp quyền ghi**, và đường dẫn tuyệt đối tới file worker-only này. Worker không tự mở rộng vùng đọc/ghi hay chọn package khác.
 
 ## Chỉ HAI trách nhiệm của Worker
@@ -36,7 +39,7 @@
 
 - **Swagger info / API documentation:** worker không soạn, cập nhật hay sinh `controller-description.yml`, `api-descriptions.yml`, `api-execution.yml`, `api-params.yml`, `api-cases.yml`; không viết summary/description, execution guide, params description, request/response examples, expected results hoặc use-case mẫu. Worker **không chạy Swagger scanner/generator**. **Riêng Prime, sau khi toàn bộ worker STEP 6 xong, chạy `generateApiSwaggerDescription` để sinh skeleton `api-cases.yml` và metadata kỹ thuật; không tự điền nội dung.** Nội dung Swagger/use cases dành cho STEP mới chưa đánh số.
 - **Mapping:** không tạo hoặc sửa API ↔ Knowledge/Quiz/Interview, `readmeRelated`, `apiRelated`, file/anchor/controller/methodSignature hay các liên kết chéo; STEP mapping **riêng biệt** chưa được yêu cầu thực thi.
-- **Dữ liệu và dự án khác:** không ghi Google Sheets/J3, không sửa README/Quiz/Interview/Video/Template, Swagger resources, dependencies/setup/Application hoặc source thuộc worker khác; không chạy Sheet sync/ByFiles/ByLocation, không commit/push.
+- **Dữ liệu và dự án khác:** không ghi Google Sheets/CURRENT_STEP.VALUE, không sửa README/Quiz/Interview/Video/Template, Swagger resources, dependencies/setup/Application hoặc source thuộc worker khác; không chạy Sheet sync/ByFiles/ByLocation, không commit/push.
 
 Việc Spring tự tạo OpenAPI **cấu trúc kỹ thuật ở runtime** khi kiểm thử không có nghĩa worker được phép viết/tạo các YAML hoặc các ví dụ Swagger.
 

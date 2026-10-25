@@ -1,5 +1,8 @@
 # Reference / Summary — Sheet is the authored source of truth (2026-10-25)
 
+**CURRENT_STEP policy (2026-10-25):** Progress is owned ONLY by `CURRENT_STEP.VALUE` (string) in the verified module `master.json`, never by any Google Sheet/Excel cell. Prime updates after full QA using `module-generate-agent/CURRENT_STEP.md`; Worker does not write it. Any old cell, label, formula, or Sheet-readback instructions about progress below are superseded. The STEP-specific completion gates still apply.
+
+
 This document supersedes outdated STEP statements claiming Reference has no authoring checkpoint, AC is not imported, AC18/19 must be named `Learning Objectives`, or STEP 15 ends at AB.
 
 ## Reference — STEP 2
@@ -7,7 +10,7 @@ This document supersedes outdated STEP statements claiming Reference has no auth
 - Source: `L2 = Reference`, `L3 = references: [...]` YAML on the selected module tab. `K2/K3` remain Special Note; `L3` must never be used for other purposes.
 - Worker authors vetted Reference YAML **in L3**, using sources appropriate to C2/Special Note. Preserve valid existing content, no automatic rewrite. Use only real URLs; require `title`, `url`, optional `description`. Hard limit: 30,000 Unicode code points **and** 32,767 UTF-16 units; do not spill into neighboring cells.
 - Prime validates L2/L3 and full YAML, then runs module-local `generateModuleReferenceFromSheetByLocation` `-PsheetMode=DRY_RUN` → `APPLY`; exact readback `content/reference/references.yml`. The importer is deterministic, does not call AI, cleans **only** `content/reference/`, and writes the L3 bytes. The file is language-neutral. A blank L3 means `SKIPPED_EMPTY_REFERENCE` (no delete); an explicit `references: []` means intentionally empty Reference. Missing L2 is `SKIPPED_NO_REFERENCE_SCHEMA` if L3 is also empty.
-- **Backfill:** If Roadmap/B17 are already complete, Prime may assign only L2/L3 to worker, without reauthoring Roadmap/B17 or touching F:H. Validate and sync Reference separately. For a newly authored STEP 2, require Reference PASS along with Roadmap and Introduction before advancing J3.
+- **Backfill:** If Roadmap/B17 are already complete, Prime may assign only L2/L3 to worker, without reauthoring Roadmap/B17 or touching F:H. Validate and sync Reference separately. For a newly authored STEP 2, require Reference PASS along with Roadmap and Introduction before advancing CURRENT_STEP.VALUE.
 
 ## Summary — STEP 5
 

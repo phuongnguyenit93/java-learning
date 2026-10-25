@@ -1,5 +1,8 @@
 # STEP_OPTIONAL_VIDEO — WORKER ONLY: Một chương, một Video Script YAML
 
+**CURRENT_STEP policy (2026-10-25):** Progress is owned ONLY by `CURRENT_STEP.VALUE` (string) in the verified module `master.json`, never by any Google Sheet/Excel cell. Prime updates after full QA using `module-generate-agent/CURRENT_STEP.md`; Worker does not write it. Any old cell, label, formula, or Sheet-readback instructions about progress below are superseded. The STEP-specific completion gates still apply.
+
+
 > Chỉ dành cho worker. Prime điều phối trong STEP_OPTIONAL_VIDEO.md; bạn chỉ đọc TOÀN VĂN file này. Prime gửi link tab, tọa độ nguồn và **vùng X:AA tại đúng hàng Menu Cấp 1** cùng đường dẫn file worker. Không chia hai pha.
 
 **FILL-ONLY VỀ NỘI DUNG — CHO PHÉP FORMAT_FIX:** Đọc/preflight toàn `X<PARENT_ROW>:AA<PARENT_ROW>`. Trống hết → viết Video YAML mới. Đã có script → **không thay title/sections/scenes, lời thoại, visual, purpose, timeline, code hoặc metadata** nếu không có chỉ thị đặc biệt tường minh từ người dùng; chỉ được sửa tối thiểu cú pháp/định dạng YAML và Markdown nhúng khi có lỗi thực và chứng minh không thay đổi nội dung. YAML hợp lệ → `UNCHANGED`, không ghi lại; lỗi không thể sửa thuần định dạng → BLOCKER.
@@ -12,7 +15,7 @@
 
 1. Xác minh URL tab/gid do Prime giao. Đọc trực tiếp **chỉ** `A1,B1,A<PARENT>,B<PARENT>`, các `B<child>` và toàn bộ `C:N` trên đúng hàng con được giao. Ghép nguyên văn các ô Knowledge C→N **không separator**; đọc đủ mọi bài.
 2. `A<PARENT>` là tên Menu Cấp 1 / `title` YAML. `B<PARENT>` phải là **filename Knowledge `.md` hợp lệ** đã hoàn tất STEP 5; không tự đổi thành `.yml`. Mỗi `B<child>` là một `sections[].title` đúng nguyên văn và đúng thứ tự. Tên file thực tế khi nhập module được code suy ra từ B cha: `content/readme/docs/vi/menu/<ordinal>.<stem>/video/video-script.yml`. Worker **không đặt path** và không ghi tên file trong YAML.
-3. Chỉ ghi `X<PARENT_ROW>:AA<PARENT_ROW>` của hàng cha. Không chọn số hàng từ chỉ số chương, không viết các hàng con, không sửa A:W, J3, Template, tab khác hoặc repo.
+3. Chỉ ghi `X<PARENT_ROW>:AA<PARENT_ROW>` của hàng cha. Không chọn số hàng từ chỉ số chương, không viết các hàng con, không sửa A:W, CURRENT_STEP.VALUE, Template, tab khác hoặc repo.
 4. Nếu Knowledge thiếu/truncated, Menu cha sai, filename B cha chưa QA hoặc header `X19:AA19 = Video Script` không đúng theo Prime: báo BLOCKER, không đoán. Vùng có script sẵn chỉ được đánh giá `UNCHANGED` hoặc sửa đúng lỗi `FORMAT_FIX` theo quy tắc đầu file, không sinh lại.
 
 ### W2 — Chuẩn Video YAML phải tạo
@@ -82,4 +85,4 @@ Ví dụ chỉ minh họa cấu trúc: thay toàn bộ tên, lời thoại, ví 
 
 Gửi Prime đúng một báo cáo: `STATUS=COMPLETED/UNCHANGED/BLOCKER/FAILED`, `MODE=NEW_FILL/FORMAT_FIX/UNCHANGED`, tab/gid, `PARENT_CELL_A`, `PARENT_FILENAME_CELL_B`, `CHILD_ROWS`, `SCRIPT_RANGE_X_TO_AA_PARENT`, `READ_COVERAGE`, `SECTIONS`, `SCENES`, `TRANSITIONS`, `TOTAL_UNICODE_CHARS`, `FILLED_CELLS`, `YAML_PARSE=PASS/FAIL`, `READBACK=PASS/FAIL`, `CHAPTER_QA=PASS/FAIL`, `FORMAT_DIFF`, `CONTENT_PRESERVED=PASS/FAIL`, `PRESERVATION`, `BLOCKERS`.
 
-**Một lần giao, một chương, làm trọn rồi SLEEPING.** Không nhận chương khác, không spawn, không sửa source/commit hoặc J3. Prime tự QA độc lập.
+**Một lần giao, một chương, làm trọn rồi SLEEPING.** Không nhận chương khác, không spawn, không sửa source/commit hoặc CURRENT_STEP.VALUE. Prime tự QA độc lập.

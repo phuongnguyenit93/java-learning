@@ -1,5 +1,8 @@
 # STEP 3 — WORKER ONLY: Tạo Menu hai cấp
 
+**CURRENT_STEP policy (2026-10-25):** Progress is owned ONLY by `CURRENT_STEP.VALUE` (string) in the verified module `master.json`, never by any Google Sheet/Excel cell. Prime updates after full QA using `module-generate-agent/CURRENT_STEP.md`; Worker does not write it. Any old cell, label, formula, or Sheet-readback instructions about progress below are superseded. The STEP-specific completion gates still apply.
+
+
 > **Chỉ dành cho worker.** Prime điều phối theo `STEP_3.md`; bạn **chỉ đọc toàn văn file `worker/STEP_3_WORKER.md` này**, không đọc STEP Prime, STEP khác, General Rules, rules folder, TXT hoặc lịch sử bài cũ. Prime chỉ gửi **bốn dòng**: link tab; tọa độ `C3`, `A18:B19` và **hai ô tiêu đề/giá trị Special Note**; vùng ghi `A20:B<END>`; đường dẫn file này. **Prime không cung cấp nội dung hay tóm tắt Special Note; bạn BẮT BUỘC tự đọc nguyên văn hai ô đó trong Google Sheets.** Tự thực hiện trọn W1–W5.
 
 **FILL-ONLY — KHÔNG REPLACE:** Trước khi soạn Menu, kiểm tra **toàn vùng nội dung đích `A20:B<END>`** (header `A18:B19` chỉ đọc, không phải nội dung đích). **Nếu bất kỳ ô nào đã có nội dung**, báo `BLOCKER: EXISTING TARGET CONTENT`, ghi tọa độ, `WRITE=NOT_RUN` rồi **DỪNG ngay toàn nhiệm vụ**. Không làm lại Menu, không fill phần còn trống, không ghi một phần hay tự nhận `COMPLETED/UNCHANGED`. Chỉ được replace khi có **chỉ thị đặc biệt tường minh của người dùng** cho đúng phạm vi.
@@ -9,7 +12,7 @@
 1. Một nhiệm vụ = **toàn bộ Menu hai cấp của đúng một tab**, do **một mình bạn** tạo/kiểm tra/ghi trong một lượt: đọc → soạn → QA → preflight → ghi → readback → báo cáo → SLEEPING. Không chia giữa hai worker, không PREPARED/PHA A-B.
 2. Mở đúng **link tab/gid** Prime đưa, xác minh tab; đọc **nguyên văn toàn bộ `C3`** (giữ mọi dòng xuống hàng, lưu ý và ràng buộc; nếu là formula, lấy nội dung hiển thị), **hai ô Special Note ở đúng tọa độ Prime giao**, **header `A18:B19`** và **vùng Menu `A20:B<END>`** để preflight/readback. Đọc **đầy đủ từng ký tự, xuống dòng và ràng buộc trong giá trị Special Note**, không lấy lời kể/tóm tắt từ Prime hay context cũ thay thế. Nếu giá trị trống vẫn phải đọc và xác nhận. Không tự tìm tab, file TXT/MD khác, câu trả lời cũ, cột C trở đi, roadmap hay video.
 3. Xác minh **ô tiêu đề đúng nhãn `Special Note` và ô giá trị nằm ngay bên dưới cùng cột**. Nếu nhãn/tọa độ không đúng, thiếu hoặc không đọc được: `BLOCKER: INVALID SPECIAL NOTE CELLS`; **không tự đoán K2/K3 hay dò ô thay thế**. `C3` trống/không khả thi → `BLOCKER: EMPTY/INVALID C3`; sai tab/gid → `BLOCKER: INVALID TARGET SHEET`; header thiếu/khác nghĩa/không khớp `A18=Khu vực Menu`, `A19=Menu Cấp 1`, `B19=Menu Cấp 2` → `BLOCKER: MENU HEADER CONFLICT`. Không tự sửa những ô này.
-4. Chỉ được ghi **giá trị văn bản** trong `A20:B<END>` đúng tab. Tuyệt đối không sửa `C3`, `B1`, `A18:B19`, `J3`, **hai ô Special Note (chỉ đọc)**, cột C trở đi, vùng STEP khác, format, notes/validation, hàng/tab/file khác. Không spawn worker, sửa source, commit/push hoặc tự nhận nhiệm vụ kế tiếp.
+4. Chỉ được ghi **giá trị văn bản** trong `A20:B<END>` đúng tab. Tuyệt đối không sửa `C3`, `B1`, `A18:B19`, `CURRENT_STEP.VALUE`, **hai ô Special Note (chỉ đọc)**, cột C trở đi, vùng STEP khác, format, notes/validation, hàng/tab/file khác. Không spawn worker, sửa source, commit/push hoặc tự nhận nhiệm vụ kế tiếp.
 
 ## W2. Xây dựng toàn bộ Menu đúng yêu cầu C3
 
@@ -48,4 +51,4 @@
 
 Báo Prime: `STATUS=COMPLETED/BLOCKER/FAILED`, `SHEET/gid`, `SOURCE=C3`, `SPECIAL_NOTE_CELLS` (hai tọa độ, xác nhận tự đọc trực tiếp, ghi chú trống/có nội dung và đã áp dụng hoặc blocker; **không cần chép ghi chú vào báo cáo**), `OUTPUT_RANGE`, `COUNT_LEVEL_1`, `COUNT_LEVEL_2`, `PREFLIGHT`, `READBACK=PASS/FAIL`, `STRUCTURE_QA=PASS/FAIL`, `CONTENT_QA=PASS/FAIL`, `PRESERVED`, `BLOCKERS` kèm tọa độ nếu có.
 
-**Chỉ một Menu trên một tab được giao.** Báo cáo xong release ownership rồi SLEEPING; không nhận nhiệm vụ mới nếu chưa được Prime giao, không tự cập nhật `J3` hoặc hai ô Special Note, không làm STEP khác.
+**Chỉ một Menu trên một tab được giao.** Báo cáo xong release ownership rồi SLEEPING; không nhận nhiệm vụ mới nếu chưa được Prime giao, không tự cập nhật `CURRENT_STEP.VALUE` hoặc hai ô Special Note, không làm STEP khác.

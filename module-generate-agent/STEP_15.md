@@ -1,5 +1,8 @@
 # STEP 15 — PRIME ONLY: Publish module EN to Google Sheets + Excel
 
+**CURRENT_STEP policy (2026-10-25):** Progress is owned ONLY by `CURRENT_STEP.VALUE` (string) in the verified module `master.json`, never by any Google Sheet/Excel cell. Prime updates after full QA using `module-generate-agent/CURRENT_STEP.md`; Worker does not write it. Any old cell, label, formula, or Sheet-readback instructions about progress below are superseded. The STEP-specific completion gates still apply.
+
+
 > **2026-10-25:** Follow `REFERENCE_SUMMARY_IMPORT.md`. EN Template requires 29 columns; Reference from shared `content/reference/references.yml` maps to L3, Summary EN `section.md` and `summaries.yml` to AC parent/children. Header labels are `L2=Reference`, `AC18=Summary`, `AC19=Summary Markdown`; exact readback and EN Summary content validation are mandatory. Existing below-step rules describing only A:AB are superseded by this AC extension.
 
 ## 0. Hard rule: code-only, no AI, no workers
@@ -26,8 +29,7 @@ than being pushed into Sheet cells.
 
 1. Read `GENERAL_AGENT_RULES.md`, all `rules/`, STEP 15 and current module-info
    mapping. Confirm STEP 14 fully completed and readback on the VI gid.
-2. Verify VI tab `I3` exact module root-relative path, `J2 = Current STEP` and
-   `J3 = STEP 14`; verify STEP 12 offline VI Excel has exactly one worksheet,
+2. Verify VI tab `I3` exact module root-relative path, `CURRENT_STEP.VALUE = "14"` in module `master.json`; verify STEP 12 offline VI Excel has exactly one worksheet,
    correct `I3` and final VI menu row mapping.
 3. Validate the Google-native `Template`: 700+ rows, A:AB, Difficulty
    dropdown BASIC/INTERMEDIATE/ADVANCED at O20/O21/O700, isImportant
@@ -54,7 +56,7 @@ and the spreadsheet URL / VI gid from current module-info.
 | `syncModuleEnToSheet` | Render module EN via VI Excel row layout and upload **values only** |
 | `validateModuleEnSheet` | Exact typed cell readback vs prepared upload workbook |
 | `exportPublishedEnSheet` | Export verified EN gid to Excel EN |
-| `publishModuleEnSheet` | Clone → sync → verify → J3 EN → export → J3 VI |
+| `publishModuleEnSheet` | Clone → sync → verify → export EN; Prime cập nhật tiến độ trong `master.json` sau QA |
 
 All default to `DRY_RUN`; only `APPLY` mutates Sheets or local files.
 
@@ -91,21 +93,14 @@ All default to `DRY_RUN`; only `APPLY` mutates Sheets or local files.
    clear VI-only authoring prompts. No freeform AI translation.
 4. Upload only `userEnteredValue` with the Google Sheets API, preserving
    formatting, metadata, notes, validation, merged cells and conditional
-   coloring inherited from Template. Không ghi/đè **nội dung Video X20:AA các hàng chương**; header Video Script tại X19:AA19 vẫn là nhãn schema. Leave J3 untouched until validation.
+   coloring inherited from Template. Không ghi/đè **nội dung Video X20:AA các hàng chương**; header Video Script tại X19:AA19 vẫn là nhãn schema. Leave CURRENT_STEP.VALUE untouched until validation.
 
-## 5. Verify, mark status, export
+## 5. Verify, export, and update master.json
 
-1. Compare exact uploaded cell values (including blanks, booleans, numeric
-   values) via Google API readback; incomplete batches or unexpected cells
-   are blockers. Recheck source SHA-256 and EN I3/title.
-2. After all data and native formatting PASS, set/readback
-   `EN J3 = STEP 15` while ensuring `J2 = Current STEP`.
-3. Export **the official EN gid** using `ModuleSheetExcelExportService` into
-   `<MODULE>/content/sheet/en/module.xlsx`. It must have one worksheet and
-   `J3 = STEP 15`. Do not use an intermediary workbook as final output.
-4. Persist phase `EXPORTED`, then set/readback `VI J3 = STEP 15` as the final
-   update. If that update fails, keep the completed EN tab/Excel and report a
-   resumable blocker; never duplicate again.
+1. Verify the uploaded EN content and all native Sheet formatting. Confirm the exact VI gid/I3, no drift in source hashes, and no conflicts.
+2. Export the verified official EN gid to `<MODULE>/content/sheet/en/module.xlsx`. Verify one worksheet and exact content readback. Do not require any STEP value in the workbook or Google Sheets.
+3. Persist phase `EXPORTED` in `content/sheet/en/publish-state.json`. The Gradle publisher **never reads or writes J2/J3**. It checks the module `master.json` has `CURRENT_STEP.VALUE = "14"` (or 15/FINAL for safe published replay).
+4. After **all** STEP 15 gates PASS, Prime alone updates `CURRENT_STEP.VALUE = "15"` in the verified module `master.json` and exact readback. If this update fails, the EN Sheet/Excel remains valid and can be resumed using the recorded state; do not duplicate the tab.
 
 ## 6. Recovery, completion gate and handoff
 
@@ -117,15 +112,10 @@ All default to `DRY_RUN`; only `APPLY` mutates Sheets or local files.
 - Missing metadata / unavailable template format / schema or mapping error?
   BLOCKER, no AI-generated workaround.
 
-**COMPLETED only if** EN gid and persistent mapping agree; Template is intact;
-all mapped values and native dropdowns/color rules pass; `J3 VI` and `J3 EN`
-read back STEP 15; final exported EN Excel is the snapshot of official EN gid,
-one sheet with J3 STEP 15. All changes remain module-local except the two
-authorized J3 Sheet cells. Do not commit/push; hand off to STEP_FINAL.
+**COMPLETED only if** the EN gid/persistent mapping agree, Template is unchanged, all translated values and native formatting pass exact readback, the official EN Excel has one valid worksheet, and Prime verifies `CURRENT_STEP.VALUE = "15"` in the *module master.json*. No Sheet cell is a completion marker. The only Sheet writes are the authorized EN content and tab initialization. Do not commit/push; hand off to STEP_FINAL.
 
-**Video optional sau FINAL:** `STEP_OPTIONAL_VIDEO` tạo Video VI; `STEP_OPTIONAL_VIDEO_TRANSLATE` dịch EN và gọi `publishOptionalVideoEn` để **chỉ** đồng bộ X:AA của tab EN hiện hữu rồi export Excel EN. Không chạy lại `publishModuleEnSheet` hoặc sửa J3 để cập nhật Video.
+**Video optional sau FINAL:** `STEP_OPTIONAL_VIDEO` tạo Video VI; `STEP_OPTIONAL_VIDEO_TRANSLATE` dịch EN và gọi `publishOptionalVideoEn` để **chỉ** đồng bộ X:AA của tab EN hiện hữu rồi export Excel EN. Không chạy lại `publishModuleEnSheet` hoặc sửa CURRENT_STEP.VALUE để cập nhật Video.
 
 Final report:
 `MODULE_I3, SPREADSHEET_ID, VI_GID, EN_GID, EN_TAB, TEMPLATE_QA,
-SOURCE_SHA256, CLONE, SYNC, CELL_READBACK, FORMAT_QA, J3_VI,
-J3_EN, XLSX_OUTPUT, XLSX_J3, RESUME_STATUS, BLOCKER`.
+SOURCE_SHA256, CLONE, SYNC, CELL_READBACK, FORMAT_QA, CURRENT_STEP_MASTER_BEFORE, CURRENT_STEP_MASTER_AFTER, XLSX_OUTPUT, RESUME_STATUS, BLOCKER`.

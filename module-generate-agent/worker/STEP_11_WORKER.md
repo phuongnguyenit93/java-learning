@@ -1,12 +1,15 @@
 # STEP 11 — WORKER ONLY: Related metadata cho một Menu Cấp 1
 
+**CURRENT_STEP policy (2026-10-25):** Progress is owned ONLY by `CURRENT_STEP.VALUE` (string) in the verified module `master.json`, never by any Google Sheet/Excel cell. Prime updates after full QA using `module-generate-agent/CURRENT_STEP.md`; Worker does not write it. Any old cell, label, formula, or Sheet-readback instructions about progress below are superseded. The STEP-specific completion gates still apply.
+
+
 **BẮT BUỘC đọc toàn văn file này trước khi làm việc và sau compaction.** Prime giao đúng bốn dòng: link tab (định danh, **không cho ghi**), tọa độ chương/hàng cha Interview+Quiz, đường dẫn `READ` input snapshot và `WRITE` proposal riêng chương, đường dẫn file worker-only này. Không đọc STEP Prime, GENERAL, rules/TXT, source repo hoặc thư mục ngoài scope đã giao; không yêu cầu Prime paste content.
 
 ## W1 — Nguồn và ownership
 
 1. **Một worker = một Menu Cấp 1 = cả ba nhóm Swagger / Quiz / Interview**. Chỉ đọc `<ABSOLUTE_STEP11_SEED_CHAPTER_DIR>/input.yml` và dữ liệu **được nhúng trong snapshot chương đó**. Prime đã lấy Knowledge/anchor từ README và source canonical, câu hỏi từ YAML Google Sheets/Module, API từ Swagger, kèm lookup ID/method hợp lệ của toàn module. Không đi dò tài liệu/chương khác. Nếu seed thiếu thân Knowledge, text câu hỏi, metadata hoặc mô tả API cần thiết → `REVIEW: INSUFFICIENT_CONTEXT`; không bịa relation hay đọc vượt quyền.
 2. Xác nhận `moduleId`, language, parent row/chapter filename, danh sách Quiz ID/Interview identity, Controller/method ownership và `sourceSha256` trong seed. **Chỉ dùng identity được cấp**, không chuyển câu hỏi hay Controller sang chương khác. Lookup module-level **chỉ là danh sách ứng viên/đích chính xác**, không trao quyền ghi file chung.
-3. File **duy nhất** được tạo/ghi là `<ABSOLUTE_STEP11_CHAPTER_PROPOSAL_FILE>` trong `build/step11/<RUN_ID>/chapters/<CHAPTER_KEY>/`. Không sửa `input.yml`, `_prime-manifest.yml`, Sheet P:S/T:W, Swagger, `content`, Java/test, `rules`, J3 hoặc bất cứ shared file nào. Không chạy importer, Gradle, git, commit/push.
+3. File **duy nhất** được tạo/ghi là `<ABSOLUTE_STEP11_CHAPTER_PROPOSAL_FILE>` trong `build/step11/<RUN_ID>/chapters/<CHAPTER_KEY>/`. Không sửa `input.yml`, `_prime-manifest.yml`, Sheet P:S/T:W, Swagger, `content`, Java/test, `rules`, CURRENT_STEP.VALUE hoặc bất cứ shared file nào. Không chạy importer, Gradle, git, commit/push.
 4. Seed thiếu chapter, hash không khớp, duplicate identity, hai worker tranh cùng Controller hoặc nguồn không parse được → `BLOCKER`, không ghi proposal phỏng đoán.
 
 ## W2 — Đánh giá relation theo ý nghĩa thực

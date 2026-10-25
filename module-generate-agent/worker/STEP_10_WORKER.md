@@ -1,5 +1,8 @@
 # STEP 10 — WORKER ONLY: Quiz YAML cho MỘT chương
 
+**CURRENT_STEP policy (2026-10-25):** Progress is owned ONLY by `CURRENT_STEP.VALUE` (string) in the verified module `master.json`, never by any Google Sheet/Excel cell. Prime updates after full QA using `module-generate-agent/CURRENT_STEP.md`; Worker does not write it. Any old cell, label, formula, or Sheet-readback instructions about progress below are superseded. The STEP-specific completion gates still apply.
+
+
 > **BẮT BUỘC tự đọc TOÀN VĂN file worker-only này.** Prime chỉ cung cấp đúng URL tab, tọa độ nguồn, vùng T:W hàng cha và đường dẫn file này. Không tự đọc file Prime/rules/STEP khác, source repository hay lịch sử chat để thay Knowledge trên Sheet.
 
 **FILL-ONLY VỀ NỘI DUNG — CHO PHÉP FORMAT_FIX:** Preflight cả `T<PARENT_ROW>:W<PARENT_ROW>`. Trống hết → tạo Quiz YAML mới. Đã có nội dung → **không thay câu hỏi, bốn đáp án/giải thích, `correctAnswerId`, thứ tự hoặc metadata**, trừ chỉ thị đặc biệt tường minh của người dùng; chỉ được sửa lỗi YAML/Markdown nhúng về mặt cú pháp (indent, quote, dấu phân cách, code fence...) và chứng minh toàn bộ giá trị nội dung giữ nguyên. YAML hợp lệ → `UNCHANGED` không ghi; không chứng minh được sửa format thuần túy → BLOCKER.
@@ -7,7 +10,7 @@
 ## W1 — Phạm vi nguồn và ghi
 
 1. Một worker = **một Menu Cấp 1**. Chỉ đọc `A1`, `B1`, A cha, B filename cha, tất cả tiêu đề B con và **toàn văn Knowledge C:N của mỗi hàng con** Prime giao (ghép C→N không separator), Difficulty O nếu được giao.
-2. **Chỉ được ghi T:W trên đúng hàng cha** của chương. Không sửa A:S hay X:AA, Difficulty O, Video X:AA, Interview P:S, các hàng con/Template/tab khác, J3 hoặc source module. Không spawn worker, chạy Gradle/import hay commit/push.
+2. **Chỉ được ghi T:W trên đúng hàng cha** của chương. Không sửa A:S hay X:AA, Difficulty O, Video X:AA, Interview P:S, các hàng con/Template/tab khác, CURRENT_STEP.VALUE hoặc source module. Không spawn worker, chạy Gradle/import hay commit/push.
 3. Header `T18=Quiz`, `T19:W19=Quiz YAML`, và filename `.md` từ B cha phải đúng; nguồn không đủ hoặc ô đích không an toàn → BLOCKER, không đoán.
 
 ## W2 — Chất lượng trắc nghiệm
@@ -48,4 +51,4 @@ questions:
 2. Nếu YAML dài >120.000 Unicode code points: `BLOCKER: QUIZ CAPACITY`, không truncate hoặc mượn cột khác. Chia tối đa 4 fragments ≤30.000 Unicode/ô không cắt giữa surrogate pair, ghép T→W không thêm separator phải đúng 100%.
 3. Preflight **cả T:W trước khi soạn và ngay trước WRITE**: `userEnteredValue`/formula, `effectiveValue`, `formattedValue`, `note`, `dataValidation`, `chipRuns`; ownership và Knowledge phải unchanged. Trống hoàn toàn → `NEW_FILL`. Có YAML cũ → nối T→W, giữ snapshot, phân biệt `UNCHANGED` (đã hợp lệ) với `FORMAT_FIX` (lỗi cú pháp/định dạng thật). Không tạo lại Quiz hoặc thêm đáp án vào tài liệu cũ; nguồn đổi, formula/chip hoặc ownership xung đột → BLOCKER.
 4. `FORMAT_FIX` chỉ sửa ký tự cấu trúc và Markdown nhúng, giữ **mọi question/answer/explanation, `correctAnswerId`, số lượng, thứ tự, ID, metadata và nội dung code**. YAML hợp lệ trước sửa → so parsed values; YAML hỏng cú pháp → đối chiếu từng scalar gốc. Không chứng minh bảo toàn → `BLOCKER: FORMAT_FIX_NOT_PROVABLY_CONTENT_PRESERVING`, không ghi. Chỉ ghi text-only trong T:W, không đổi format/notes/validation. Readback bốn ô, nối không separator và so đúng bản cuối đã QA, parse và so diff trước–sau; lỗi write không rõ thì không retry mù.
-5. Báo Prime: `STATUS=COMPLETED/UNCHANGED/BLOCKER/FAILED`, `MODE=NEW_FILL/FORMAT_FIX/UNCHANGED`, `PARENT_CELL`, `CHILD_ROWS`, `SOURCE_COVERAGE`, `OUTPUT_RANGE`, `QUESTION_COUNT`, `TOTAL_UNICODE_CHARS`, `FILLED_CELLS`, `PREFLIGHT`, `YAML_PARSE`, `TECHNICAL_QA`, `DISTRACTOR_QA`, `FORMAT_DIFF`, `CONTENT_PRESERVED=PASS/FAIL`, `READBACK`, `BLOCKER`. `COMPLETED` chỉ khi QA + READBACK PASS; `UNCHANGED` chỉ khi dữ liệu hợp lệ và không write. Sau đó **SLEEPING**, không chạy Normalize/import/J3.
+5. Báo Prime: `STATUS=COMPLETED/UNCHANGED/BLOCKER/FAILED`, `MODE=NEW_FILL/FORMAT_FIX/UNCHANGED`, `PARENT_CELL`, `CHILD_ROWS`, `SOURCE_COVERAGE`, `OUTPUT_RANGE`, `QUESTION_COUNT`, `TOTAL_UNICODE_CHARS`, `FILLED_CELLS`, `PREFLIGHT`, `YAML_PARSE`, `TECHNICAL_QA`, `DISTRACTOR_QA`, `FORMAT_DIFF`, `CONTENT_PRESERVED=PASS/FAIL`, `READBACK`, `BLOCKER`. `COMPLETED` chỉ khi QA + READBACK PASS; `UNCHANGED` chỉ khi dữ liệu hợp lệ và không write. Sau đó **SLEEPING**, không chạy Normalize/import/CURRENT_STEP.VALUE.

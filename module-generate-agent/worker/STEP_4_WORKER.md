@@ -1,5 +1,8 @@
 # STEP 4 — WORKER ONLY: Một bài Knowledge README trên Google Sheets
 
+**CURRENT_STEP policy (2026-10-25):** Progress is owned ONLY by `CURRENT_STEP.VALUE` (string) in the verified module `master.json`, never by any Google Sheet/Excel cell. Prime updates after full QA using `module-generate-agent/CURRENT_STEP.md`; Worker does not write it. Any old cell, label, formula, or Sheet-readback instructions about progress below are superseded. The STEP-specific completion gates still apply.
+
+
 > **Chỉ dành cho worker.** Prime điều phối bằng `STEP_4.md`; worker **chỉ đọc file `worker/STEP_4_WORKER.md` này** để lấy quy trình, không đọc `STEP_4.md`, STEP khác, `GENERAL_AGENT_RULES.md`, file rules, TXT, README cũ hoặc lịch sử hội thoại để làm nội dung. Prime **chỉ gửi bốn dòng gồm link tab, tọa độ sáu ô nguồn (bốn ô bài học và hai ô Special Note), vùng đích và đường dẫn file này; không gửi thêm hướng dẫn/nội dung ghi chú**. Worker **bắt buộc tự đọc nguyên văn Special Note trên Google Sheets** và thực hiện trọn vẹn W1–W5 theo file này.
 
 **STEP 4 — CHỈ NEW_FILL, KHÔNG REVIEW BÀI CŨ:** Worker **chỉ tạo Markdown mới khi toàn bộ 12 ô C<R>:N<R> đang trống**. Nếu bất kỳ ô nào đã có dữ liệu (kể cả một fragment), trả `STATUS=SKIPPED_EXISTING`, `WRITE=NOT_RUN` và **không đọc sâu, review, sửa, bổ sung, format-fix hay ghi đè bài đó**. STEP 5 chịu trách nhiệm review/refactor nội dung đã có. Worker chỉ thực hiện một lượt cho đúng hàng Prime giao; không tự tìm bài khác.
@@ -9,7 +12,7 @@
 1. Một lượt giao việc = **duy nhất một Menu Cấp 2 tại B<R>**, một vùng đích C<R>:N<R>. **Chỉ khi cả 12 ô hoàn toàn trống**, tự làm trọn: đọc nguồn + Special Note → soạn Markdown mới đầy đủ → QA → preflight xác nhận vẫn trống → WRITE → exact readback → báo cáo → SLEEPING. Nếu vùng đích đã có bất kỳ nội dung từ đầu hay xuất hiện do concurrent write, `SKIPPED_EXISTING`/`BLOCKER`, không sửa. Không có PHA A/B hoặc chờ Prime cấp ô tiếp theo.
 2. Dùng đúng **link tab/gid Prime giao**; đọc trực tiếp từ Google Sheets **chỉ sáu ô nguồn**: `A1`, `B1`, `A<PARENT_ROW>`, `B<ITEM_ROW>`, `<SPECIAL_NOTE_TITLE_CELL>` và `<SPECIAL_NOTE_VALUE_CELL>`. Đọc **đầy đủ nguyên văn** cả ô nhãn và ô giá trị Special Note, giữ mọi ký tự/xuống dòng/ràng buộc; giá trị trống vẫn phải xác minh. **Không dùng lời kể/tóm tắt của Prime thay nội dung Sheet.** Không đọc menu cấp 1/2 khác, câu trả lời hàng khác hay sheet khác. Có thể đọc **duy nhất vùng đích của mình** `C<R>:N<R>` để preflight và readback.
 3. `A<PARENT_ROW>` phải xác định đúng ngữ cảnh cha của `B<R>`. `B<R>` là **đề bài trực tiếp**, không tự biến thành câu hỏi mới. Xác minh ô nhãn đúng `Special Note` và ô giá trị nằm **ngay dưới cùng cột**; nếu nhãn/tọa độ không hợp lệ, thiếu, không đọc được: `BLOCKER: INVALID SPECIAL NOTE CELLS`, **không tự đoán K2/K3 hoặc dò ô thay thế**. Nếu tên/ô nguồn bài học trống, sai tab/gid hoặc không khớp: `BLOCKER: INVALID SOURCE CELLS`; không tự dò hay chọn bài thay thế.
-4. Chỉ có quyền thay đổi **giá trị văn bản** các ô cần dùng trong `C<R>:N<R>` trên đúng hàng; không sửa `A:B`, **hai ô Special Note (chỉ đọc)**, Roadmap, header, `J3`, Difficulty `O`, Video `X:AA`, định dạng, notes, validations, các hàng/tab/file khác. Không spawn worker, commit/push hoặc tự chạy STEP khác.
+4. Chỉ có quyền thay đổi **giá trị văn bản** các ô cần dùng trong `C<R>:N<R>` trên đúng hàng; không sửa `A:B`, **hai ô Special Note (chỉ đọc)**, Roadmap, header, `CURRENT_STEP.VALUE`, Difficulty `O`, Video `X:AA`, định dạng, notes, validations, các hàng/tab/file khác. Không spawn worker, commit/push hoặc tự chạy STEP khác.
 
 ## W2. Tạo **một chuỗi** README Markdown độc lập
 
@@ -38,4 +41,4 @@
 
 Gửi Prime một báo cáo có: `STATUS=COMPLETED/SKIPPED_EXISTING/BLOCKER/FAILED`; `MODE=NEW_FILL/SKIPPED_EXISTING`; `SHEET/gid`, `SOURCE=A1,B1,A<PARENT>,B<R>`, `SPECIAL_NOTE_CELLS=<TITLE_CELL>,<VALUE_CELL>`, `OUTPUT_RANGE`, `TOTAL_CHARS`, `CHARS_PER_CELL`, `PREFLIGHT` (12 ô trống trước soạn/trước ghi, sáu ô nguồn unchanged), `READBACK` và `CONTENT_QA` (**chỉ với NEW_FILL**), `PRESERVED`, `BLOCKERS`. Với `SKIPPED_EXISTING` báo `WRITE=NOT_RUN` và không đánh giá/sao chép nội dung cũ.
 
-**Một nhiệm vụ, một lần giao, chỉ một bài.** Báo cáo xong thì giải phóng ownership và SLEEPING; không tự nhận hàng mới, tự sửa file repo, cập nhật `J3`, thay đổi Special Note hoặc thực hiện hành động ngoài phạm vi.
+**Một nhiệm vụ, một lần giao, chỉ một bài.** Báo cáo xong thì giải phóng ownership và SLEEPING; không tự nhận hàng mới, tự sửa file repo, cập nhật `CURRENT_STEP.VALUE`, thay đổi Special Note hoặc thực hiện hành động ngoài phạm vi.

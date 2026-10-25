@@ -40,8 +40,8 @@ class ModuleOptionalVideoEnPublishService extends ModuleEnSheetPublishService {
         String location = root.toPath().relativize(module.toPath()).toString()
                 .replace(File.separatorChar, '/' as char)
         Map vi = reader.openTab(fileUrl, viGid)
-        if (vi.moduleLocation != location || readStatus(vi) != 'STEP 15') {
-            throw new GradleException('VI module/gid or STEP 15 status mismatch.')
+        if (vi.moduleLocation != location || ModuleCurrentStepService.read(module) != 'FINAL') {
+            throw new GradleException('VI module/gid mismatch or STEP_FINAL not completed in master.json.')
         }
         File checkpoint = safe(module, 'content/sheet/en/publish-state.json')
         if (!checkpoint.isFile()) throw new GradleException('STEP 15 EN publish state missing.')
@@ -65,12 +65,6 @@ class ModuleOptionalVideoEnPublishService extends ModuleEnSheetPublishService {
         }
         if (!tab || tab.moduleLocation != location) {
             throw new GradleException('Existing STEP 15 EN tab not found at pinned gid.')
-        }
-        List<List<Object>> status = readGrid(context, enTitle,
-                [[r:1,c:9], [r:2,c:9]])
-        if (status[0]?.first() != 'Current STEP' ||
-                status[1]?.first() != 'STEP 15') {
-            throw new GradleException('EN J2/J3 must remain STEP 15.')
         }
         List<Map> changes = plan(module)
         if (!changes) throw new GradleException('No authored VI/EN Video to publish.')
@@ -118,10 +112,8 @@ class ModuleOptionalVideoEnPublishService extends ModuleEnSheetPublishService {
         File workbook = result.file as File
         workbook.withInputStream { stream ->
             new XSSFWorkbook(stream).withCloseable { XSSFWorkbook book ->
-                if (book.numberOfSheets != 1 ||
-                        ModuleContentExcelSyncService.text(book.getSheetAt(0), 3, 10)
-                        != 'STEP 15') {
-                    throw new GradleException('Optional Video EN Excel/J3 readback failed.')
+                if (book.numberOfSheets != 1) {
+                    throw new GradleException('Optional Video EN Excel structure invalid.')
                 }
                 changes.each { Map entry ->
                     if (ModuleContentExcelSyncService.text(book.getSheetAt(0),

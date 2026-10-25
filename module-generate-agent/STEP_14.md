@@ -1,14 +1,17 @@
 # STEP 14 — Translation VI → EN (Prime + Worker)
 
+**CURRENT_STEP policy (2026-10-25):** Progress is owned ONLY by `CURRENT_STEP.VALUE` (string) in the verified module `master.json`, never by any Google Sheet/Excel cell. Prime updates after full QA using `module-generate-agent/CURRENT_STEP.md`; Worker does not write it. Any old cell, label, formula, or Sheet-readback instructions about progress below are superseded. The STEP-specific completion gates still apply.
+
+
 > **2026-10-25:** Follow `REFERENCE_SUMMARY_IMPORT.md`. STEP 14 must translate existing VI `<chapter>/summary/section.md` and all `summaries.yml` items into EN without altering IDs/order/code/links/Markdown structure. Reference is language-neutral and must not be translated. Prime QA/readback Summary EN before STEP 15.
 
-> **Quy trình:** Hoàn tất preflight gate của STEP 12A → lập catalog/backup → giao worker **mỗi lượt một file** → Prime QA từng file → QA toàn module → J3 readback. Whitelist/blacklist nằm trong `worker/STEP_14_WORKER.md`. Không thực thi STEP 15 khi STEP 14 chưa hoàn tất.
+> **Quy trình:** Hoàn tất preflight gate của STEP 12A → lập catalog/backup → giao worker **mỗi lượt một file** → Prime QA từng file → QA toàn module → CURRENT_STEP.VALUE readback. Whitelist/blacklist nằm trong `worker/STEP_14_WORKER.md`. Không thực thi STEP 15 khi STEP 14 chưa hoàn tất.
 
 ## 0. PRE-FLIGHT GATE — BẮT BUỘC trước khi bắt đầu STEP 14
 
-**Prime chịu trách nhiệm nghiệm thu STEP 12A trước khi giao bất kỳ chương nào cho worker dịch.** Đây là một **hard gate**: chỉ cần một hạng mục FAIL/UNKNOWN thì **KHÔNG giao worker, KHÔNG viết EN, KHÔNG cập nhật J3 sang STEP 14**.
+**Prime chịu trách nhiệm nghiệm thu STEP 12A trước khi giao bất kỳ chương nào cho worker dịch.** Đây là một **hard gate**: chỉ cần một hạng mục FAIL/UNKNOWN thì **KHÔNG giao worker, KHÔNG viết EN, KHÔNG cập nhật CURRENT_STEP.VALUE sang STEP 14**.
 
-Trước khi kiểm tra, Prime đọc **toàn văn** `module-generate-agent/GENERAL_AGENT_RULES.md`, liệt kê/đọc **toàn bộ** `module-generate-agent/rules/`, đọc STEP 14 này, `STEP_12A.md`, `module-generate-info.txt`; xác định đúng module từ **I3 + workbook/gid đã xác minh**, không suy luận từ tên tab. Đọc kết quả thực thi STEP 12A, không tin trạng thái J3 một cách đơn độc.
+Trước khi kiểm tra, Prime đọc **toàn văn** `module-generate-agent/GENERAL_AGENT_RULES.md`, liệt kê/đọc **toàn bộ** `module-generate-agent/rules/`, đọc STEP 14 này, `STEP_12A.md`, `module-generate-info.txt`; xác định đúng module từ **I3 + workbook/gid đã xác minh**, không suy luận từ tên tab. Đọc kết quả thực thi STEP 12A, không tin trạng thái CURRENT_STEP.VALUE một cách đơn độc.
 
 ### Gate 1 — Đối chiếu toàn bộ cấu trúc VI/EN
 
@@ -58,15 +61,15 @@ Trước khi kiểm tra, Prime đọc **toàn văn** `module-generate-agent/GENE
 
 **FAIL:** EN sót file cũ, backup thiếu/corrupt khi cần, rollback incomplete, có tác động ngoài scope.
 
-### Gate 6 — J3 của STEP 12A đã cập nhật và readback
+### Gate 6 — CURRENT_STEP.VALUE của STEP 12A đã cập nhật và readback
 
-- Prime xác minh tab nguồn đúng workbook/gid, `J2 = Current STEP`, đối chiếu I3/module và lịch sử STEP để tránh hiểu nhầm trạng thái cũ.
-- **Chính xác `J3 = STEP 12A`**, đã được **ghi và readback từ Google Sheets** sau completion gate của STEP 12A. Không chấp nhận chỉ có log Gradle PASS hoặc giá trị snapshot Excel cũ.
-- Nếu giá trị J3 khác hoặc không có bằng chứng readback → `BLOCKER: STEP_12A_J3_NOT_CONFIRMED`. Không tự ghi J3 thành STEP 14, cũng không tự đánh dấu STEP 12A hoàn thành thay cho quy trình riêng.
+- Prime xác minh tab nguồn đúng workbook/gid, `CURRENT_STEP = Current STEP`, đối chiếu I3/module và lịch sử STEP để tránh hiểu nhầm trạng thái cũ.
+- **Chính xác `CURRENT_STEP.VALUE = "12A"` trong `master.json` của đúng module**, đã được Prime exact readback sau completion gate STEP 12A. Không dùng trạng thái từ Google Sheets hoặc Excel.
+- Nếu giá trị CURRENT_STEP.VALUE khác hoặc không có bằng chứng readback → `BLOCKER: STEP_12A_CURRENT_STEP.VALUE_NOT_CONFIRMED`. Không tự ghi CURRENT_STEP.VALUE thành STEP 14, cũng không tự đánh dấu STEP 12A hoàn thành thay cho quy trình riêng.
 
 ### Quyết định cuối cùng của Prime
 
-Chỉ khi **cả 6 gate = PASS** thì ghi `STEP_14_PRECHECK=PASS` vào báo cáo Prime, khóa snapshot technical fields/anchors/links làm baseline và mới được phép chuẩn bị dịch. Báo cáo tối thiểu: `MODULE_I3, TAB_GID, GATE_1_STRUCTURE, GATE_2_QUESTIONS, GATE_3_SWAGGER, GATE_4_SCHEMA_RELATIONS, GATE_5_BACKUP_SCOPE, GATE_6_J3, BASELINE_HASHES, BLOCKER`.
+Chỉ khi **cả 6 gate = PASS** thì ghi `STEP_14_PRECHECK=PASS` vào báo cáo Prime, khóa snapshot technical fields/anchors/links làm baseline và mới được phép chuẩn bị dịch. Báo cáo tối thiểu: `MODULE_I3, TAB_GID, GATE_1_STRUCTURE, GATE_2_QUESTIONS, GATE_3_SWAGGER, GATE_4_SCHEMA_RELATIONS, GATE_5_BACKUP_SCOPE, GATE_6_CURRENT_STEP.VALUE, BASELINE_HASHES, BLOCKER`.
 
 **Quy tắc resume quan trọng:** Sáu gate này áp dụng **ngay trước lần dịch đầu tiên**, khi EN còn là bản clone tiếng Việt. Nếu STEP 14 đã dịch dở và resume, **không so EN với VI theo từng byte** và **tuyệt đối không chạy lại `cloneModuleViToEn`**. Prime phải kiểm tra snapshot/baseline đã khóa, bảo toàn file/ID/anchor/related/technical fields, giữ phần dịch hợp lệ và chỉ giao phần còn thiếu.
 
@@ -91,7 +94,7 @@ Chỉ khi **cả 6 gate = PASS** thì ghi `STEP_14_PRECHECK=PASS` vào báo cáo
 
 ## 2. Prime lập danh mục, snapshot và giao đúng location
 
-1. Đọc General + tất cả rules + STEP 14 + **toàn văn** `worker/STEP_14_WORKER.md` và module-info. Qua đủ 6 PRE-FLIGHT GATE mục 0 **trước khi giao worker đầu tiên**. Không coi trạng thái J3 đơn độc là bằng chứng đã clone.
+1. Đọc General + tất cả rules + STEP 14 + **toàn văn** `worker/STEP_14_WORKER.md` và module-info. Qua đủ 6 PRE-FLIGHT GATE mục 0 **trước khi giao worker đầu tiên**. Không coi trạng thái CURRENT_STEP.VALUE đơn độc là bằng chứng đã clone.
 2. Prime dùng code catalog trong `gradle-runtime` để rà **toàn bộ file**, cặp VI/EN, type, SHA-256 và kiểm tra cấu trúc ban đầu. Tạo ledger/manifest trong `<MODULE>/build/step14/<RUN_ID>/`, backup EN trước dịch và readback. Đây là backup **riêng STEP 14**; không xóa backup STEP 12A.
 3. Cấp quyền **đọc/ghi độc quyền đúng MỘT EN file** cho worker hiện tại. Worker không được ghi VI, file EN khác, file dùng chung hay các file của Prime. Không hai worker cùng chỉnh cùng một file, kể cả các Controller khác nhau nằm trong một Swagger YAML.
 4. Pool tuân `PRIME_RULES.md`: Mode A mặc định tối đa **3 worker ACTIVE+SLEEPING**; Mode B chỉ có N do user chỉ định trong session. **Tận dụng SLEEPING trước**, chỉ spawn từng worker một. Prime tiếp tục phân công các file đang chờ cho đến hết danh mục; không tạo worker dư.
@@ -113,7 +116,7 @@ Khi toàn bộ worker được giao đã giải phóng ownership, chạy:
 .\gradlew.bat :<MODULE_GRADLE_PATH>:validateModuleTranslation -PtranslationRunId=<RUN_ID> --console=plain
 ```
 
-`VALIDATE` là **read-only**: so file VI/EN theo whitelist/structure, bảo vệ metadata và LIST, xác minh baseline/VI chưa drift; ghi ra từng file `PENDING` (byte-identical VI) hoặc `STRUCTURE_PASS_NEEDS_SEMANTIC_QA` (có thay đổi trong whitelist). **Hai trạng thái trên không phải chứng nhận chất lượng dịch:** Prime vẫn phải rà đủ coverage và ý nghĩa. Không tự nâng file `PENDING` thành PASS hoặc chỉ nhìn counters để cập nhật J3.
+`VALIDATE` là **read-only**: so file VI/EN theo whitelist/structure, bảo vệ metadata và LIST, xác minh baseline/VI chưa drift; ghi ra từng file `PENDING` (byte-identical VI) hoặc `STRUCTURE_PASS_NEEDS_SEMANTIC_QA` (có thay đổi trong whitelist). **Hai trạng thái trên không phải chứng nhận chất lượng dịch:** Prime vẫn phải rà đủ coverage và ý nghĩa. Không tự nâng file `PENDING` thành PASS hoặc chỉ nhìn counters để cập nhật CURRENT_STEP.VALUE.
 
 ### Hợp đồng giao việc — đúng bốn dòng
 
@@ -139,13 +142,13 @@ Prime cấp **đường dẫn tuyệt đối thực**, không paste nội dung n
 2. Quiz: cùng số câu, ID, A/B/C/D order, correctAnswerId, relations. Interview: cùng số câu/thứ tự và metadata/relations, đối chiếu theo index do không có question ID bắt buộc. Roadmap: cùng milestone ID/order/dependencies, relatedKnowledge/relatedModules.routeId. Swagger: cùng Controller/method, request/response/cases/status, chỉ đổi text mô tả. Video không thuộc STEP 14.
 3. **Ngữ nghĩa phải QA riêng**: no omitted sentence/paragraph, no added explanation/hallucination; thuật ngữ Java/Spring nhất quán. Validator tự động **không thể chứng minh** bản dịch không thêm/bớt ý, nên Prime cần so nội dung thực tế. Không coi việc worker báo COMPLETED là đủ.
 4. File sai → thu hồi ownership, ghi evidence, restore **chỉ file đó** từ STEP14 backup (không xóa bản dịch file khác) rồi giao lại. Tuyệt đối **không gọi cloneModuleViToEn** sau khi dịch bắt đầu.
-5. Prime chạy code validation trên từng file và toàn manifest; tất cả files phải `PASSED` hoặc `SKIP_NO_TRANSLATABLE_TEXT` có căn cứ. PENDING/REVIEW/FAILED/BLOCKER → không cập nhật J3, không STEP 15.
+5. Prime chạy code validation trên từng file và toàn manifest; tất cả files phải `PASSED` hoặc `SKIP_NO_TRANSLATABLE_TEXT` có căn cứ. PENDING/REVIEW/FAILED/BLOCKER → không cập nhật CURRENT_STEP.VALUE, không STEP 15.
 
 ## 5. Completion gate và bàn giao
 
 - Sáu preflight gates đã PASS; không có worker đang ghi. Tất cả files trong manifest đã QA dịch và readback, không đổi cấu trúc/technical identity, không thêm/bớt nội dung, không sửa VI hay vùng ngoài scope.
 - Cây VI/EN bắt buộc, Knowledge anchor/metadata, Quiz/Interview IDs/order/correct answer, Swagger kỹ thuật, Roadmap relations và toàn bộ YAML schema/related **PASS**; backup đọc được và có rollback theo file. Không đòi Video.
-- Prime xác minh tab nguồn VI bằng gid/I3/J2, sau đó ghi **`J3 = STEP 14`** trên đúng tab và readback theo `PRIME_RULES.md`. **Không tạo tab EN hay Excel EN** ở STEP 14 — việc đó thuộc STEP 15.
-- Báo cáo: `MODULE_I3, VI_GID, TOTAL_FILES, README, INTRODUCTION, QUIZ, INTERVIEW, ROADMAP, SWAGGER, PASSED, SKIPPED, PENDING, REVIEW, FAILED, STRUCTURE_QA, RELATION_QA, TRANSLATION_QA, J3_READBACK, BLOCKER`.
+- Prime xác minh nguồn VI bằng gid/I3, sau đó ghi **`CURRENT_STEP.VALUE = "14"` trong `master.json` của đúng module** và exact readback theo `PRIME_RULES.md`. **Không tạo tab EN hay Excel EN** ở STEP 14 — việc đó thuộc STEP 15.
+- Báo cáo: `MODULE_I3, VI_GID, TOTAL_FILES, README, INTRODUCTION, QUIZ, INTERVIEW, ROADMAP, SWAGGER, PASSED, SKIPPED, PENDING, REVIEW, FAILED, STRUCTURE_QA, RELATION_QA, TRANSLATION_QA, CURRENT_STEP.VALUE_READBACK, BLOCKER`.
 
 **Resume:** dùng ledger/backup/chỉ file chưa hoàn tất, không so EN↔VI bytes như preflight lần đầu, không chạy lại STEP 12A và không dịch đè file đã được QA PASS.

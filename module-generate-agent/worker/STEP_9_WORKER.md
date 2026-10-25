@@ -1,5 +1,8 @@
 # STEP 9 — WORKER ONLY: Interview YAML cho MỘT chương
 
+**CURRENT_STEP policy (2026-10-25):** Progress is owned ONLY by `CURRENT_STEP.VALUE` (string) in the verified module `master.json`, never by any Google Sheet/Excel cell. Prime updates after full QA using `module-generate-agent/CURRENT_STEP.md`; Worker does not write it. Any old cell, label, formula, or Sheet-readback instructions about progress below are superseded. The STEP-specific completion gates still apply.
+
+
 > **BẮT BUỘC tự đọc TOÀN VĂN file worker-only này.** Không đọc file Prime, STEP khác, GENERAL/rules/TXT, source repo hoặc lịch sử chat để thay nguồn Google Sheets. Prime chỉ gửi link tab, tọa độ nguồn, vùng P:S được ghi và đường dẫn file này.
 
 **FILL-ONLY VỀ NỘI DUNG — CHO PHÉP FORMAT_FIX:** Preflight **cả `P<PARENT_ROW>:S<PARENT_ROW>`**. Vùng trống → sinh Interview YAML mới. Vùng đã có YAML → **tuyệt đối không sửa/thêm/bớt câu hỏi, câu trả lời, Markdown có ý nghĩa, thứ tự hoặc metadata**, trừ chỉ thị đặc biệt tường minh của người dùng. Chỉ được sửa tối thiểu lỗi cú pháp/định dạng YAML hoặc Markdown nhúng (indent, quote, block scalar, code fence...) mà vẫn giữ đúng giá trị nội dung. YAML hợp lệ → `UNCHANGED`; lỗi định dạng không thể sửa mà chứng minh giữ nguyên nội dung → blocker, không ghi.
@@ -7,7 +10,7 @@
 ## W1 — Nguồn và quyền ghi
 
 1. Một nhiệm vụ = một Menu Cấp 1 và mọi Menu Cấp 2 của chương đó. Chỉ đọc `A1`, `B1`, A/B hàng cha, tên B và **toàn bộ Knowledge C:N** trên từng hàng con được Prime giao; Difficulty O chỉ đọc nếu được giao. Ghép Knowledge **C→N không thêm separator**, đọc toàn văn từng bài chứ không chỉ tiêu đề.
-2. **Chỉ ghi `P<PARENT_ROW>:S<PARENT_ROW>` ở hàng cha**; tối đa bốn ô × 30.000 Unicode code points/ô. Không ghi hàng con, không sửa A:O/T:AA, J3, Template, tab khác hay source/module. Không spawn worker hoặc commit/push.
+2. **Chỉ ghi `P<PARENT_ROW>:S<PARENT_ROW>` ở hàng cha**; tối đa bốn ô × 30.000 Unicode code points/ô. Không ghi hàng con, không sửa A:O/T:AA, CURRENT_STEP.VALUE, Template, tab khác hay source/module. Không spawn worker hoặc commit/push.
 3. A cha là chủ đề phỏng vấn, B cha là filename Knowledge `.md` (chỉ đọc). Nếu nguồn thiếu, hàng con lạc chương, filename/headers sai hoặc vùng ghi không an toàn, báo BLOCKER, không suy đoán.
 
 ## W2 — Nội dung và chất lượng câu trả lời
@@ -52,4 +55,4 @@ Ví dụ trên **chỉ minh họa định dạng**, không phải nội dung c�
 
 ## W5 — Báo Prime và SLEEPING
 
-Báo một lần: `STATUS=COMPLETED/UNCHANGED/BLOCKER/FAILED`, `MODE=NEW_FILL/FORMAT_FIX/UNCHANGED`, tab/gid, `PARENT_CELL`, `CHILD_ROWS`, `READ_COVERAGE`, `OUTPUT_RANGE_P_TO_S`, `QUESTION_COUNT`, `TOTAL_UNICODE_CHARS`, `FILLED_CELLS`, `PREFLIGHT`, `YAML_PARSE=PASS/FAIL`, `ANSWER_MARKDOWN_QA=PASS/FAIL`, `READBACK=PASS/FAIL`, `CONTENT_QA=PASS/FAIL`, `FORMAT_DIFF`, `CONTENT_PRESERVED=PASS/FAIL`, `PRESERVATION`, `BLOCKERS`. Sau đó chuyển **SLEEPING**; không tự chạy Normalize, import, STEP 10 hay cập nhật J3.
+Báo một lần: `STATUS=COMPLETED/UNCHANGED/BLOCKER/FAILED`, `MODE=NEW_FILL/FORMAT_FIX/UNCHANGED`, tab/gid, `PARENT_CELL`, `CHILD_ROWS`, `READ_COVERAGE`, `OUTPUT_RANGE_P_TO_S`, `QUESTION_COUNT`, `TOTAL_UNICODE_CHARS`, `FILLED_CELLS`, `PREFLIGHT`, `YAML_PARSE=PASS/FAIL`, `ANSWER_MARKDOWN_QA=PASS/FAIL`, `READBACK=PASS/FAIL`, `CONTENT_QA=PASS/FAIL`, `FORMAT_DIFF`, `CONTENT_PRESERVED=PASS/FAIL`, `PRESERVATION`, `BLOCKERS`. Sau đó chuyển **SLEEPING**; không tự chạy Normalize, import, STEP 10 hay cập nhật CURRENT_STEP.VALUE.

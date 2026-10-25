@@ -149,7 +149,7 @@ class ModuleEnSheetPublishServiceTest {
         assertTrue(plan.any { it.r==20 && it.c==1 && it.value=='English lesson' })
         assertTrue(plan.any { it.r==20 && it.c==2 && it.value=='English knowledge' })
         assertTrue(plan.any { it.r==2 && it.c==5 && it.value=='Milestone' })
-        assertFalse(plan.any { it.r==2 && it.c==9 }) // J3 must be managed separately
+        assertFalse(plan.any { it.r==2 && it.c==9 }) // Legacy Excel progress is never written
         assertTrue(plan.any { it.r==18 && it.c==0 && it.value=='Chapter' })
         assertTrue(plan.any { it.r==18 && it.c==15 && it.value=='Interview YAML' })
         assertFalse(plan.any { it.r==18 && it.c==14 }) // Difficulty header preserved
@@ -228,8 +228,7 @@ class ModuleEnSheetPublishServiceTest {
                 File output = new File(module,'content/sheet/en/module.xlsx')
                 Files.createDirectories(output.parentFile.toPath())
                 new XSSFWorkbook().withCloseable { XSSFWorkbook book ->
-                    book.createSheet('OOP EN').createRow(2).createCell(9)
-                            .setCellValue('STEP 15')
+                    book.createSheet('OOP EN')
                     output.withOutputStream { book.write(it) }
                 }
                 operations.add('export')
@@ -238,12 +237,8 @@ class ModuleEnSheetPublishServiceTest {
         }
         ModuleEnSheetPublishService service = new ModuleEnSheetPublishService(
                 reader,workbooks,exporter) {
-            @Override protected String readStatus(Map vi) {
-                cells['111:2:9']?.toString() ?: 'STEP 14'
-            }
             @Override protected void verifyTemplate(Map ctx, Map template) { }
             @Override protected void verifyClonedFormatting(Map ctx, Map tab) { }
-            @Override protected void ensureStatusEditable(Map ctx,int gid,String title) { }
             @Override protected int duplicate(Map ctx,int template,int gid,String title) {
                 operations.add('duplicate')
                 tabs.add([gid:gid.toString(),title:title,moduleLocation:'',rows:700,columns:29])
@@ -277,8 +272,8 @@ class ModuleEnSheetPublishServiceTest {
         assertEquals('APPLIED',completed.status)
         assertEquals(1,operations.count{it=='duplicate'})
         assertEquals(1,operations.count{it=='export'})
-        assertEquals('STEP 15',cells['111:2:9'])
-        assertEquals('STEP 15',cells[enGid+':2:9'])
+        assertFalse(cells.containsKey('111:2:9'))
+        assertFalse(cells.containsKey(enGid+':2:9'))
         assertEquals('EXPORTED',new JsonSlurper().parse(new File(f.module,
                 'content/sheet/en/publish-state.json')).phase)
         int afterWrites = operations.size()
@@ -301,7 +296,6 @@ class ModuleEnSheetPublishServiceTest {
             }
         }
         return new ModuleEnSheetPublishService(reader) {
-            @Override protected String readStatus(Map vi) { 'STEP 14' }
             @Override protected void verifyTemplate(Map ctx, Map template) {
                 assertEquals('Template', template.title)
             }
@@ -332,6 +326,9 @@ class ModuleEnSheetPublishServiceTest {
         File module = new File(root, 'module/demo')
         assertTrue(module.mkdirs())
         new File(module, 'gradle.properties').text = '# module'
+        new File(module, 'master.json').setText('''{
+  "CURRENT_STEP": {"TYPE": "string", "VALUE": "14"}
+}''', 'UTF-8')
         File vi = new File(module, 'content/sheet/vi/module.xlsx')
         assertTrue(vi.parentFile.mkdirs())
         new XSSFWorkbook().withCloseable { XSSFWorkbook book ->

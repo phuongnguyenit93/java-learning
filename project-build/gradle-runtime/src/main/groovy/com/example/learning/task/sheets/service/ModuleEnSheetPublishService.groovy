@@ -83,10 +83,9 @@ class ModuleEnSheetPublishService {
         int gid = ModuleEnSheetPublishService.deterministicGid(
                 context.spreadsheetId as String, location)
         Map state = ModuleEnSheetPublishService.loadState(statePath)
-        String viStatus = readStatus(vi)
-        if (viStatus != 'STEP 14' &&
-                !(viStatus == 'STEP 15' && state.phase == 'EXPORTED')) {
-            throw new GradleException('STEP 14 has not completed on VI tab J3: ' + viStatus)
+        String viStatus = ModuleCurrentStepService.read(module)
+        if (!(viStatus in ['14','15','FINAL'])) {
+            throw new GradleException('STEP 14 has not completed in module master.json: ' + viStatus)
         }
         ModuleEnSheetPublishService.verifyState(state,
                 context.spreadsheetId as String, viGid, location,
@@ -104,9 +103,8 @@ class ModuleEnSheetPublishService {
                       existing: found != null, state: statePath.absolutePath,
                       sourceSha256: sourceHash, url: spreadsheetUrl + '#gid=' + gid]
         if (selected in ['PUBLISH','EXPORT'] && state.phase == 'EXPORTED' &&
-                viStatus == 'STEP 15' && found != null) {
+                viStatus in ['14', '15', 'FINAL'] && found != null) {
             verifyIdentity(context, gid, title, location)
-            requireStep15(context, gid, title)
             File finished = new File(module, 'content/sheet/en/module.xlsx')
             ModuleEnSheetPublishService.requireFinishedExcel(finished)
             result.status = 'ALREADY_PUBLISHED'
@@ -179,37 +177,21 @@ class ModuleEnSheetPublishService {
             }
             if (apply) {
                 if (selected in ['PUBLISH','EXPORT']) {
-                    // Final completion marker is set on EN before the snapshot.
-                    markStep15(context, gid, title, location)
+                    // Only Prime may advance CURRENT_STEP in master.json after QA.
                 }
                 Map exported = exporter.execute(root, module, spreadsheetUrl,
                         result.url as String, 'en', true)
                 result.excel = exported.file.absolutePath
                 result.exportedCells = exported.cells
-                // Verify the offline snapshot contains the completed status.
+                // Verify a valid offline snapshot; no J3 writes/reads.
                 ModuleEnSheetPublishService.requireFinishedExcel(
                         new File(module, 'content/sheet/en/module.xlsx'))
                 ModuleEnSheetPublishService.saveState(statePath,
                         ModuleEnSheetPublishService.stateData(result,
                                 context.spreadsheetId as String, viGid, 'EXPORTED'))
-                if (selected in ['PUBLISH','EXPORT']) {
-                    markViStep15(context, Integer.parseInt(viGid), vi.tabTitle as String)
-                }
             }
         }
         return result
-    }
-
-    protected String readStatus(Map vi) {
-        Sheets client = vi.client as Sheets
-        String address = ModuleEnSheetPublishService.quote(vi.tabTitle as String) + '!J2:J3'
-        List values = client.spreadsheets().values().get(
-                vi.spreadsheetId as String, address).execute().values ?: []
-        if (values.size() < 2 || !values[0] ||
-                values[0][0]?.toString() != 'Current STEP') {
-            throw new GradleException('J2 label must be Current STEP.')
-        }
-        return values[1] ? values[1][0]?.toString() : ''
     }
 
     private void cloneAndPersist(Map context, Map template, Map found, File statePath,
@@ -341,7 +323,7 @@ class ModuleEnSheetPublishService {
     /**
      * Compose an exact, VALUE-ONLY update plan from the VI-sheet-shaped EN
      * workbook. All template userEnteredFormat, validations, and notes remain.
-     * We never touch J3 here or overwrite schema/header cells.
+     * The old Sheet J3 is outside all content ownership; progress lives in master.json.
      */
     static List<Map> contentPlan(File translatedExcel, File viExcel) {
         return translatedExcel.withInputStream { InputStream input ->
@@ -521,56 +503,6 @@ class ModuleEnSheetPublishService {
         return values
     }
 
-    protected void markStep15(Map context, int gid, String title, String location) {
-        requireStepLabel(context, title)
-        ensureStatusEditable(context, gid, title)
-        writeValues(context, gid, [[r: 2, c: 9, value: 'STEP 15']])
-        requireStep15(context, gid, title)
-    }
-
-    protected void markViStep15(Map context, int gid, String viTitle) {
-        requireStepLabel(context, viTitle)
-        ensureStatusEditable(context, gid, viTitle)
-        List current = readGrid(context, viTitle, [[r:2,c:9]])
-        if (!current || !current[0] || !(current[0][0]?.toString() in
-                ['STEP 14','STEP 15'])) {
-            throw new GradleException('VI J3 changed during STEP 15.')
-        }
-        writeValues(context, gid, [[r:2,c:9,value:'STEP 15']])
-        requireStep15(context, gid, viTitle)
-    }
-
-    /** Fail instead of silently replacing a user's J3 formula. */
-    protected void ensureStatusEditable(Map context, int gid, String title) {
-        Spreadsheet response = (context.client as Sheets).spreadsheets()
-                .get(context.spreadsheetId as String)
-                .setRanges([ModuleEnSheetPublishService.quote(title) + '!J3'])
-                .setFields('sheets(properties(sheetId),data(rowData(values(userEnteredValue))))')
-                .execute()
-        def target = (response.sheets ?: []).find {
-            it.properties?.sheetId == gid
-        }
-        def value = target?.data?.first()?.rowData?.first()?.values?.first()?.userEnteredValue
-        if (value?.formulaValue != null) {
-            throw new GradleException('Refusing to overwrite J3 formula on ' + title)
-        }
-    }
-
-    private void requireStep15(Map context, int gid, String title) {
-        requireStepLabel(context, title)
-        List items = readGrid(context, title, [[r:2,c:9]])
-        if (!items || !items[0] || items[0][0]?.toString() != 'STEP 15') {
-            throw new GradleException('EN J3 STEP 15 readback failed.')
-        }
-    }
-
-    private void requireStepLabel(Map context, String title) {
-        List items = readGrid(context, title, [[r:1,c:9]])
-        if (!items || !items[0] || items[0][0]?.toString() != 'Current STEP') {
-            throw new GradleException('EN J2 label does not match.')
-        }
-    }
-
     static String a1(int r, int c) {
         int i = c + 1
         String col = ''
@@ -666,10 +598,8 @@ class ModuleEnSheetPublishService {
         try {
             file.withInputStream { stream ->
                 new XSSFWorkbook(stream).withCloseable { XSSFWorkbook xlsx ->
-                    if (xlsx.numberOfSheets != 1 ||
-                            ModuleContentExcelSyncService.text(xlsx.getSheetAt(0), 3, 10)
-                            != 'STEP 15') {
-                        throw new GradleException('Published EN Excel/J3 verification failed.')
+                    if (xlsx.numberOfSheets != 1) {
+                        throw new GradleException('Published EN Excel workbook structure invalid.')
                     }
                 }
             }

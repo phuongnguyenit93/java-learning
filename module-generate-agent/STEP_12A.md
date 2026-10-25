@@ -1,5 +1,8 @@
 # STEP 12A — PRIME ONLY: Clone cấu trúc và nội dung VI → EN bằng Gradle
 
+**CURRENT_STEP policy (2026-10-25):** Progress is owned ONLY by `CURRENT_STEP.VALUE` (string) in the verified module `master.json`, never by any Google Sheet/Excel cell. Prime updates after full QA using `module-generate-agent/CURRENT_STEP.md`; Worker does not write it. Any old cell, label, formula, or Sheet-readback instructions about progress below are superseded. The STEP-specific completion gates still apply.
+
+
 > **2026-10-25 Summary:** STEP 12A đã clone toàn bộ cây docs (ngoại trừ Video), vì vậy phải bao gồm `menu/<chapter>/summary/section.md` và `summaries.yml` nếu VI có. Validate Summary YAML/root `summaries`, số bài, order và `id` khớp Knowledge trước APPLY. STEP 14 sau đó dịch nội dung Summary EN; Reference là module-wide shared nên không clone/dịch. Xem `REFERENCE_SUMMARY_IMPORT.md`.
 
 ## 0. Mục tiêu và ranh giới
@@ -46,8 +49,8 @@ Chạy từ repository root, thay đúng Gradle module path:
 - VI không bị sửa, tất cả EN được quản lý khớp VI về file, anchor, metadata, schema và related; LIST EN trỏ đúng EN.
 - Excel VI/EN (nếu tồn tại), Java/test, Reference và Portal generated không đổi.
 - Xác minh backup/staging/Git status, không có staging ngoài `build/`. **Không** commit/push hoặc chạy STEP 14.
-- **Prime** kiểm tra `J2 = Current STEP`, đọc lại J3, cập nhật **`J3 = STEP 12A`** trên đúng tab nguồn khi tất cả gate PASS và readback nguyên văn. Task Gradle **không tự cập nhật Google Sheets**.
-- Báo cáo: `MODULE_I3`, `VI_FOLDERS`, `EN_REPLACED`, `FILES`, `RELATED_QA`, `DRY_RUN`, `APPLY`, `BACKUP_PATH`, `ROLLBACK`, `READBACK`, `J3_READBACK`, `GIT_STATUS`, `BLOCKER`.
+- **Prime** xác minh đúng module qua I3, snapshot `master.json`, cập nhật **`CURRENT_STEP.VALUE = "12A"` trong `master.json`** khi tất cả gate PASS và exact readback nguyên văn. Task Gradle **không tự cập nhật Google Sheets**.
+- Báo cáo: `MODULE_I3`, `VI_FOLDERS`, `EN_REPLACED`, `FILES`, `RELATED_QA`, `DRY_RUN`, `APPLY`, `BACKUP_PATH`, `ROLLBACK`, `READBACK`, `CURRENT_STEP.VALUE_READBACK`, `GIT_STATUS`, `BLOCKER`.
 
 ## 4. Phân ranh với STEP 14/15
 

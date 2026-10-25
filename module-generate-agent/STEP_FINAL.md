@@ -1,5 +1,8 @@
 # STEP FINAL — PRIME ONLY: Kiểm tra, commit và push toàn bộ thay đổi của một module
 
+**CURRENT_STEP policy (2026-10-25):** Progress is owned ONLY by `CURRENT_STEP.VALUE` (string) in the verified module `master.json`, never by any Google Sheet/Excel cell. Prime updates after full QA using `module-generate-agent/CURRENT_STEP.md`; Worker does not write it. Any old cell, label, formula, or Sheet-readback instructions about progress below are superseded. The STEP-specific completion gates still apply.
+
+
 ## 0. Mục tiêu và phạm vi
 
 Đây là **bước kết thúc workflow BẮT BUỘC của đúng một module**, thực hiện **sau STEP 15 đã hoàn tất và được nghiệm thu** (hoặc STEP bắt buộc cuối nếu sau này thêm bước mới). Mục tiêu là đưa **toàn bộ những thay đổi thuộc module đã thực hiện trong workflow** lên Git remote một cách đầy đủ, an toàn và có thể truy vết. **`STEP_OPTIONAL_VIDEO` và `STEP_OPTIONAL_VIDEO_TRANSLATE` đứng SAU STEP_FINAL**, chỉ chạy khi có yêu cầu. Không yêu cầu Video tồn tại khi chốt FINAL.
@@ -14,7 +17,7 @@
 
 1. Prime đọc toàn văn `module-generate-agent/GENERAL_AGENT_RULES.md`, **mọi file** trong `module-generate-agent/rules/`, file `STEP_FINAL.md` này, `module-generate-info.txt` và các bằng chứng completion liên quan. Không có worker contract hay handoff bốn dòng trong STEP FINAL.
 2. Từ Google Sheets mapping đã xác minh: module/tab/gid và ô `I3` phải xác định **duy nhất** một module Gradle thật bên trong `java-learning/module/`. Xác minh tên repo/worktree, branch hiện tại và remote bằng `git rev-parse --show-toplevel`, `git status --short --branch`, `git branch -vv`, `git remote -v`, `git worktree list`; không dùng nhầm main worktree khi công việc nằm trong worktree riêng.
-3. **Đối chiếu STEP bắt buộc cuối đã hoàn thành theo bằng chứng thực**, gồm QA/Gradle/importer/Swagger/related và snapshot/export nếu STEP tương ứng yêu cầu. **Video optional không phải blocker của FINAL**. `J3` chỉ là chỉ báo, không thay thế bằng chứng; trạng thái lỗi hoặc còn worker đang ghi trong scope → `BLOCKER: MODULE NOT READY`. Không dùng FINAL để “che” STEP còn dở.
+3. **Đối chiếu STEP bắt buộc cuối đã hoàn thành theo bằng chứng thực**, gồm QA/Gradle/importer/Swagger/related và snapshot/export nếu STEP tương ứng yêu cầu. **Video optional không phải blocker của FINAL**. `CURRENT_STEP.VALUE` chỉ là chỉ báo, không thay thế bằng chứng; trạng thái lỗi hoặc còn worker đang ghi trong scope → `BLOCKER: MODULE NOT READY`. Không dùng FINAL để “che” STEP còn dở.
 4. Lập **manifest file thay đổi thuộc module** từ `git status --porcelain=v1 --untracked-files=all`, `git diff --name-status`, `git diff --cached --name-status` và so với đúng `<I3>`. Kiểm tra cả **modified, added, deleted, renamed, staged và untracked**; không bỏ quên Java/test, README, metadata, Swagger, Roadmap, Interview, Quiz, Video, cấu hình module, tài liệu module hoặc marker `.gitkeep` cần thiết.
 5. Các thay đổi dùng chung ngoài `<I3>` (ví dụ `project-build/`, `learning-contract`, Gradle settings, catalog hay tài liệu root) **chỉ được đưa vào** nếu có bằng chứng chúng được thay cho chính module đang chốt và không kèm thay đổi ngoài phạm vi; nếu cùng một file chứa công việc từ nhiều module/session thì tách **đúng hunks được sở hữu**, không stage toàn file mù. Không chứng minh được ownership hoặc không tách an toàn → `BLOCKER: SHARED FILE OWNERSHIP`, không cuốn file đó vào commit.
 6. Kiểm tra `git status --ignored`/`git check-ignore -v` với các output đáng quan tâm. Các file như `build/`, staging tạm, credential, `.env`, và `content/sheet/<lang>/module.xlsx` (đang bị `.gitignore` bỏ qua) **không được force-add**. Báo rõ file liên quan nhưng không nằm trong Git, không âm thầm coi là đã push. Kiểm tra không chứa secret, token, key cá nhân, dữ liệu nhạy cảm hoặc file tạm.
@@ -37,7 +40,7 @@
 
 ## 4. Completion, trạng thái Sheet và báo cáo
 
-- `STEP_FINAL` **không có số thứ tự**, nên **không thay giá trị `J3` thành “STEP FINAL”**; giữ nguyên `J3 = STEP N` của STEP cuối đã hoàn tất. Không tự thay đổi Sheet trong bước Git.
+- `STEP_FINAL` **không có số thứ tự** nhưng có trạng thái kết thúc riêng: **sau khi toàn bộ QA, commit/push và cleanup của STEP_FINAL hoàn tất**, Prime ghi `CURRENT_STEP.VALUE = "FINAL"` (string) trong **đúng `master.json` của module**, exact readback và đưa thay đổi trạng thái này vào commit/push kết thúc. Không cập nhật Sheet. Nếu không thể phát hành trạng thái FINAL an toàn, báo blocker và không tuyên bố hoàn tất.
 - `COMPLETED` chỉ khi: module và ownership đúng, thay đổi thuộc module đã bao phủ đầy đủ (kể cả file thêm/xóa), QA không blocker, commit tồn tại với đúng manifest và **SHA đã push lên đúng remote/branch**, phần chưa tracked/ignored được báo rõ, ngoài scope được bảo toàn.
 - Nếu chỉ một phần thay đổi được commit/push, hoặc còn file/module liên quan bị bỏ sót/chưa kiểm tra, báo **`PARTIAL`/`BLOCKER`**, không tuyên bố “đã push hết”.
 - Báo cáo: `MODULE_I3`, `TAB_GID`, `WORKTREE`, `BRANCH`, `REMOTE`, `LAST_COMPLETED_STEP`, `FILES_INCLUDED`, `SHARED_FILES_INCLUDED`, `FILES_EXCLUDED`, `IGNORED_OUTPUTS`, `QA`, `COMMIT_SHA`, `COMMIT_MESSAGE`, `PUSH_RESULT`, `REMOTE_SHA`, `PR_MR_STATUS`, `REMAINING_DIRTY_FILES`, `BLOCKERS`.

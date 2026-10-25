@@ -280,6 +280,7 @@ ${moduleDirectory.absolutePath}
                         path: relativePath,
                         realModule: new File(directory, 'gradle.properties').isFile(),
                         serviceName: getMasterValue(master, 'SERVICE_NAME'),
+                        currentStep: nodeCurrentStep(master, directory),
                         moduleType: getMasterValue(master, 'MODULE_TYPE'),
                         javaBasePackage: getMasterValue(master, 'JAVA_BASE_PACKAGE'),
                         description: getMasterValue(master, 'SERVICE_NAME_DESCRIBE'),
@@ -853,6 +854,10 @@ ${moduleDirectory.absolutePath}
 
         if (node.serviceName != null && !node.serviceName.isBlank()) {
             result.serviceName = node.serviceName
+        }
+
+        if (node.realModule) {
+            result.currentStep = node.currentStep
         }
 
 
@@ -1532,6 +1537,20 @@ ${exception.message}
                 ?.trim()
     }
 
+    /** Never guess progress from content; absent old masters explicitly mean 0. */
+    private static String nodeCurrentStep(Map master, File directory) {
+        Object value = master?.get('CURRENT_STEP')
+        if (value == null) return '0'
+        if (!(value instanceof Map) || !(value.VALUE instanceof String)) {
+            throw new GradleException('CURRENT_STEP must be a string VALUE in ' + directory)
+        }
+        String step = value.VALUE as String
+        if (!(step ==~ /(?:0|[1-9][0-9]*[A-Z]?|FINAL)/)) {
+            throw new GradleException('Invalid CURRENT_STEP ' + step + ' in ' + directory)
+        }
+        return step
+    }
+
 
     private static List<String> getMasterStringList(
             Map master,
@@ -1720,6 +1739,7 @@ ${exception.message}
         String path
         boolean realModule
         String serviceName
+        String currentStep = '0'
         String moduleType
         String javaBasePackage
         String description

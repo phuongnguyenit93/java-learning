@@ -1,5 +1,8 @@
 # STEP 3 — PRIME ONLY: Điều phối Menu hai cấp
 
+**CURRENT_STEP policy (2026-10-25):** Progress is owned ONLY by `CURRENT_STEP.VALUE` (string) in the verified module `master.json`, never by any Google Sheet/Excel cell. Prime updates after full QA using `module-generate-agent/CURRENT_STEP.md`; Worker does not write it. Any old cell, label, formula, or Sheet-readback instructions about progress below are superseded. The STEP-specific completion gates still apply.
+
+
 ## Mục tiêu và phân tách PRIME / WORKER
 
 Giao cho **đúng một sub-worker** tự đọc **nguyên văn câu hỏi tại `C3`** của tab module, tạo **toàn bộ Menu hai cấp** đúng đề và ghi từ hàng 20 trong **`A20:B...`**. **Một worker chịu trách nhiệm cả Menu Cấp 1 và Menu Cấp 2**, không chia đôi hoặc giao các nhóm cho worker khác.
@@ -23,7 +26,7 @@ Giao cho **đúng một sub-worker** tự đọc **nguyên văn câu hỏi tại
 
 Menu do STEP 3 tạo **bắt đầu đúng hàng 20** (không ghi `A19:B19`). Mỗi nhóm lớn ở cột A; mục con đầu tiên ở cột B **ngay hàng kế tiếp**, các mục con tiếp theo liên tiếp; nhóm lớn sau bắt đầu ngay sau mục con cuối, không xen hàng trắng và không viết cả A/B trên một hàng. Không tạo cấp 3.
 
-`<END>` là **hàng cuối thực tế của lưới tab**, do Prime xác minh từ metadata, không tự suy đoán hoặc gửi ký hiệu `...`. Khu vực Menu chỉ `A:B`; **cột C:N là Knowledge trên hàng Menu Cấp 2**, `O` là Difficulty trên hàng Menu Cấp 2, `X:AA` là Video Script trên hàng Menu Cấp 1, Roadmap `F:H` phía trên, `J3` là Current STEP và các ô `Special Note` (chỉ đọc); **worker không được sửa những vùng này**.
+`<END>` là **hàng cuối thực tế của lưới tab**, do Prime xác minh từ metadata, không tự suy đoán hoặc gửi ký hiệu `...`. Khu vực Menu chỉ `A:B`; **cột C:N là Knowledge trên hàng Menu Cấp 2**, `O` là Difficulty trên hàng Menu Cấp 2, `X:AA` là Video Script trên hàng Menu Cấp 1, Roadmap `F:H` phía trên, `CURRENT_STEP.VALUE` là Current STEP và các ô `Special Note` (chỉ đọc); **worker không được sửa những vùng này**.
 
 ## 2. Prime — xác minh nguồn và điều phối
 
@@ -34,7 +37,7 @@ Menu do STEP 3 tạo **bắt đầu đúng hàng 20** (không ghi `A19:B19`). M�
 5. Nếu có Menu đã tồn tại, ghi nhận là dữ liệu phải bảo toàn: không tạo phiên bản thứ hai hoặc làm lại đè lên. Nếu nguồn/header sai, vùng không đủ chỗ, có dữ liệu không thể tránh, hoặc không xác minh được tab: `BLOCKER`, không giao ghi.
 6. Gửi một worker **duy nhất bốn dòng tọa độ và đường dẫn** theo mẫu dưới. Không gửi `C3`, **nội dung/diễn giải/tóm tắt Special Note**, Menu do Prime viết, context/hướng dẫn nội dung, lịch sử trò chuyện hay tóm tắt rules. Worker tự đọc `C3`, **hai ô Special Note**, `A18:B19`, `A20:B<END>` trực tiếp, chỉ đọc hướng dẫn `worker/STEP_3_WORKER.md`.
 7. Khi worker báo xong, Prime **đọc lại toàn bộ vùng Menu**, đối chiếu số lượng và thứ tự nhóm/nhánh với yêu cầu `C3` và Special Note (nếu có), cấu trúc hàng A/B, header và dữ liệu ngoài vùng được bảo toàn. **Không chỉ tin báo cáo worker**; `COMPLETED` cần `READBACK PASS` và `PRIME_QA PASS`. Nếu blocker/failed, xem trạng thái thực và điều phối phần còn thiếu an toàn, không retry mù.
-8. Chỉ sau khi **toàn bộ Menu của tab thực sự hoàn thành**, mọi worker đã báo cáo/release và Prime QA PASS, Prime chạy **đúng module** `generateModuleReadmeFromSheetByLocation` **DRY_RUN** với `-PfileUrl=<URL>` và `-PsheetID=<GID>` theo `GENERAL_AGENT_RULES.md §6`. STEP 3 để B cha trống và Knowledge chưa có, nên trạng thái `SKIPPED_MISSING_FILENAME`/chưa đủ Knowledge phải báo **`MODULE_SYNC=DEFERRED_UNTIL_STEP_5`, `APPLY=NOT_RUN`**, không coi đã đồng bộ. Không APPLY README chưa đầy đủ. Nếu config/task lỗi thì báo BLOCKER. Khi phần Sheet QA PASS và trạng thái DEFERRED được ghi rõ, Prime mới kiểm tra `J2 = Current STEP` và `J3`, cập nhật an toàn **`J3 = STEP 3`** và đọc lại exact. Nếu còn worker/blocker, không ghi J3. Worker không chạy task. Hai ô Special Note được giữ nguyên.
+8. Chỉ sau khi **toàn bộ Menu của tab thực sự hoàn thành**, mọi worker đã báo cáo/release và Prime QA PASS, Prime chạy **đúng module** `generateModuleReadmeFromSheetByLocation` **DRY_RUN** với `-PfileUrl=<URL>` và `-PsheetID=<GID>` theo `GENERAL_AGENT_RULES.md §6`. STEP 3 để B cha trống và Knowledge chưa có, nên trạng thái `SKIPPED_MISSING_FILENAME`/chưa đủ Knowledge phải báo **`MODULE_SYNC=DEFERRED_UNTIL_STEP_5`, `APPLY=NOT_RUN`**, không coi đã đồng bộ. Không APPLY README chưa đầy đủ. Nếu config/task lỗi thì báo BLOCKER. Khi phần Sheet QA PASS và trạng thái DEFERRED được ghi rõ, Prime mới kiểm tra `CURRENT_STEP = Current STEP` và `CURRENT_STEP.VALUE`, cập nhật an toàn **`CURRENT_STEP.VALUE = "3"** và đọc lại exact. Nếu còn worker/blocker, không ghi CURRENT_STEP.VALUE. Worker không chạy task. Hai ô Special Note được giữ nguyên.
 
 ### Tin nhắn Prime gửi một worker — CHỈ bốn dòng
 
@@ -57,11 +60,11 @@ Prime kiểm tra báo cáo worker gồm:
 - `SPECIAL_NOTE`: worker xác nhận **đọc nguyên văn ô tiêu đề và ô giá trị** tại địa chỉ Prime gửi; báo có nội dung/trống và đã áp dụng nếu có, **không cần chuyển nội dung ghi chú vào báo cáo**.
 - `STRUCTURE_QA`: mỗi A là hàng cha riêng (B trống), con ở B hàng tiếp theo (A trống), không hàng trắng xen kẽ, không vượt `<END>`.
 - `READBACK=PASS/FAIL`, `CONTENT_QA`, `PRESERVED`, `BLOCKERS`; Prime tự đọc lại dữ liệu trực tiếp.
-- `CURRENT_STEP`: chỉ Prime báo ghi/readback `J3 = STEP 3` khi đủ điều kiện.
+- `CURRENT_STEP`: chỉ Prime báo ghi/readback `CURRENT_STEP.VALUE = "3" khi đủ điều kiện.
 - `MODULE_SYNC`: đúng task `generateModuleReadmeFromSheetByLocation`, module/I3/gid, DRY_RUN status, `APPLY=NOT_RUN`, `DEFERRED_UNTIL_STEP_5` hoặc blocker thật; không dùng ByFiles.
 
 ## 4. Phạm vi và điều kiện hoàn thành
 
-- STEP 3 chỉ tạo **Menu hai cấp** từ đề `C3` **và Special Note do worker tự đọc**, ghi `A20:B<END>` của đúng tab. Giữ nguyên header `A18:B19`, `C3`, `B1`, `J3` (đến khi Prime cập nhật trạng thái), **cả hai ô Special Note**, Roadmap, Knowledge, Video, Template và tab khác.
+- STEP 3 chỉ tạo **Menu hai cấp** từ đề `C3` **và Special Note do worker tự đọc**, ghi `A20:B<END>` của đúng tab. Giữ nguyên header `A18:B19`, `C3`, `B1`, `CURRENT_STEP.VALUE` (đến khi Prime cập nhật trạng thái), **cả hai ô Special Note**, Roadmap, Knowledge, Video, Template và tab khác.
 - Không viết Knowledge Markdown vào cột C trở đi, không tự chạy STEP 4, không sửa source hoặc commit/push.
-- **STEP 3 Sheet COMPLETED** khi Menu đầy đủ/đúng C3, readback chính xác, Prime QA PASS, module-local README DRY_RUN đã được kiểm tra **không có lỗi task/config** và `J3` được cập nhật/readback an toàn. `DEFERRED_UNTIL_STEP_5` **không có nghĩa module đã sync**; STEP 5 chịu trách nhiệm APPLY thực. Nếu còn blocker hoặc thiếu mục, **không cập nhật J3**, phải nêu rõ.
+- **STEP 3 Sheet COMPLETED** khi Menu đầy đủ/đúng C3, readback chính xác, Prime QA PASS, module-local README DRY_RUN đã được kiểm tra **không có lỗi task/config** và `CURRENT_STEP.VALUE` được cập nhật/readback an toàn. `DEFERRED_UNTIL_STEP_5` **không có nghĩa module đã sync**; STEP 5 chịu trách nhiệm APPLY thực. Nếu còn blocker hoặc thiếu mục, **không cập nhật CURRENT_STEP.VALUE**, phải nêu rõ.
