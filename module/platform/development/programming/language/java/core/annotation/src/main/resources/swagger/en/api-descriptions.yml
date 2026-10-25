@@ -9,7 +9,7 @@ AnnotationInspectionController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 4.Retention/Retention.md
+      file: 4.Retention/knowledge/Retention.md
       anchor: retention-use-case
     methodName: retention
     params: [
@@ -37,7 +37,7 @@ BuiltInAnnotationController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 2.BuiltIn/BuiltIn.md
+      file: 2.BuiltIn/knowledge/BuiltIn.md
       anchor: override-annotation
     methodName: compilerContracts
     params: [
@@ -65,7 +65,7 @@ InheritedAnnotationController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 7.RepeatableInherited/RepeatableInherited.md
+      file: 7.RepeatableInherited/knowledge/RepeatableInherited.md
       anchor: inherited-class-only
     methodName: inheritance
     params: [
@@ -92,7 +92,7 @@ MetaAnnotationController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 6.MetaAnnotation/MetaAnnotation.md
+      file: 6.MetaAnnotation/knowledge/MetaAnnotation.md
       anchor: target-meta
     methodName: inspectTargets
     params: [
@@ -119,7 +119,7 @@ RepeatableAnnotationController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 7.RepeatableInherited/RepeatableInherited.md
+      file: 7.RepeatableInherited/knowledge/RepeatableInherited.md
       anchor: get-annotations-by-type
     methodName: repeatable
     params: [

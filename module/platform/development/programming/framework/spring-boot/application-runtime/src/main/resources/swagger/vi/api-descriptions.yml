@@ -11,7 +11,7 @@ ApplicationRuntimeExperimentController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 2.ApplicationLifecycleEvents/ApplicationLifecycleEvents.md
+      file: 2.ApplicationLifecycleEvents/knowledge/ApplicationLifecycleEvents.md
       anchor: context-started-ready-events
     methodName: lifecycleTimeline
     params: [
@@ -38,7 +38,7 @@ ApplicationRuntimeExperimentController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 3.ArgumentsAndRunners/ArgumentsAndRunners.md
+      file: 3.ArgumentsAndRunners/knowledge/ArgumentsAndRunners.md
       anchor: application-arguments-model
     methodName: applicationArguments
     params: [
@@ -66,7 +66,7 @@ ApplicationRuntimeExperimentController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 5.TaskExecutionScheduling/TaskExecutionScheduling.md
+      file: 5.TaskExecutionScheduling/knowledge/TaskExecutionScheduling.md
       anchor: application-task-executor
     methodName: taskExecutor
     params: [

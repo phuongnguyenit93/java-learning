@@ -1,10 +1,10 @@
-1.ObjectContractPurpose/ObjectContractPurpose.md:
+1.ObjectContractPurpose/knowledge/ObjectContractPurpose.md:
   object-contract-purpose:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
     isImportant: false
-2.IdentityEquality/IdentityEquality.md:
+2.IdentityEquality/knowledge/IdentityEquality.md:
   identity-vs-equality:
     difficulty: BASIC
     aiGenerated: true
@@ -20,7 +20,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-3.Equals/Equals.md:
+3.Equals/knowledge/Equals.md:
   equals-contract:
     difficulty: BASIC
     aiGenerated: true
@@ -36,7 +36,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-4.HashCode/HashCode.md:
+4.HashCode/knowledge/HashCode.md:
   hashcode-contract:
     difficulty: BASIC
     aiGenerated: true
@@ -47,7 +47,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-5.EqualsHashCode/EqualsHashCode.md:
+5.EqualsHashCode/knowledge/EqualsHashCode.md:
   equals-hashcode-consistency:
     difficulty: BASIC
     aiGenerated: true
@@ -68,7 +68,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-6.ToString/ToString.md:
+6.ToString/knowledge/ToString.md:
   tostring-purpose:
     difficulty: BASIC
     aiGenerated: true
@@ -84,7 +84,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-7.Comparable/Comparable.md:
+7.Comparable/knowledge/Comparable.md:
   natural-order:
     difficulty: BASIC
     aiGenerated: true
@@ -100,7 +100,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-8.Comparator/Comparator.md:
+8.Comparator/knowledge/Comparator.md:
   external-order:
     difficulty: BASIC
     aiGenerated: true
@@ -121,7 +121,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-9.ContractSynthesis/ContractSynthesis.md:
+9.ContractSynthesis/knowledge/ContractSynthesis.md:
   contract-synthesis:
     difficulty: INTERMEDIATE
     aiGenerated: true

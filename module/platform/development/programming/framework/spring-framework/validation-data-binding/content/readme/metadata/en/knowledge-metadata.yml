@@ -1,4 +1,4 @@
-1.Foundation/Foundation.md:
+1.Foundation/knowledge/Foundation.md:
   validation-binding-purpose:
     difficulty: BASIC
     aiGenerated: true
@@ -19,7 +19,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-2.PropertyAccess/PropertyAccess.md:
+2.PropertyAccess/knowledge/PropertyAccess.md:
   property-path-model:
     difficulty: BASIC
     aiGenerated: true
@@ -45,7 +45,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-3.TypeConversion/TypeConversion.md:
+3.TypeConversion/knowledge/TypeConversion.md:
   conversion-service-role:
     difficulty: BASIC
     aiGenerated: true
@@ -86,7 +86,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-4.Formatting/Formatting.md:
+4.Formatting/knowledge/Formatting.md:
   formatting-purpose:
     difficulty: BASIC
     aiGenerated: true
@@ -122,7 +122,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-5.Validation/Validation.md:
+5.Validation/knowledge/Validation.md:
   validator-contract:
     difficulty: BASIC
     aiGenerated: true
@@ -158,7 +158,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-6.DataBinder/DataBinder.md:
+6.DataBinder/knowledge/DataBinder.md:
   data-binder-role:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -194,7 +194,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-7.BeanValidation/BeanValidation.md:
+7.BeanValidation/knowledge/BeanValidation.md:
   bean-validation-boundary:
     difficulty: BASIC
     aiGenerated: true
@@ -230,7 +230,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-8.SafeBinding/SafeBinding.md:
+8.SafeBinding/knowledge/SafeBinding.md:
   binding-security-model:
     difficulty: INTERMEDIATE
     aiGenerated: true

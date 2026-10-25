@@ -1,4 +1,4 @@
-1.FunctionalProgrammingPurpose/FunctionalProgrammingPurpose.md:
+1.FunctionalProgrammingPurpose/knowledge/FunctionalProgrammingPurpose.md:
   functional-programming-purpose:
     difficulty: BASIC
     aiGenerated: true
@@ -39,7 +39,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-2.FunctionalInterfaceContracts/FunctionalInterfaceContracts.md:
+2.FunctionalInterfaceContracts/knowledge/FunctionalInterfaceContracts.md:
   functional-interface-purpose:
     difficulty: BASIC
     aiGenerated: true
@@ -85,7 +85,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-3.LambdaAndTargetTyping/LambdaAndTargetTyping.md:
+3.LambdaAndTargetTyping/knowledge/LambdaAndTargetTyping.md:
   lambda-expression-model:
     difficulty: BASIC
     aiGenerated: true
@@ -126,7 +126,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-4.CaptureScopeAndState/CaptureScopeAndState.md:
+4.CaptureScopeAndState/knowledge/CaptureScopeAndState.md:
   lambda-lexical-scope:
     difficulty: BASIC
     aiGenerated: true
@@ -167,7 +167,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-5.StandardFunctionalInterfaces/StandardFunctionalInterfaces.md:
+5.StandardFunctionalInterfaces/knowledge/StandardFunctionalInterfaces.md:
   java-util-function-overview:
     difficulty: BASIC
     aiGenerated: true
@@ -223,7 +223,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-6.MethodReferences/MethodReferences.md:
+6.MethodReferences/knowledge/MethodReferences.md:
   method-reference-model:
     difficulty: BASIC
     aiGenerated: true
@@ -269,7 +269,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-7.BehaviorCompositionAndHigherOrderUse/BehaviorCompositionAndHigherOrderUse.md:
+7.BehaviorCompositionAndHigherOrderUse/knowledge/BehaviorCompositionAndHigherOrderUse.md:
   higher-order-methods:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -315,7 +315,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-8.OptionalAndAbsence/OptionalAndAbsence.md:
+8.OptionalAndAbsence/knowledge/OptionalAndAbsence.md:
   optional-purpose:
     difficulty: BASIC
     aiGenerated: true
@@ -361,7 +361,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-9.StreamApiBoundary/StreamApiBoundary.md:
+9.StreamApiBoundary/knowledge/StreamApiBoundary.md:
   stream-functional-interface-bridge:
     difficulty: BASIC
     aiGenerated: true
@@ -392,7 +392,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-10.TradeoffsFailuresAndSynthesis/TradeoffsFailuresAndSynthesis.md:
+10.TradeoffsFailuresAndSynthesis/knowledge/TradeoffsFailuresAndSynthesis.md:
   side-effects-in-lambdas:
     difficulty: INTERMEDIATE
     aiGenerated: true

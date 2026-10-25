@@ -1,17 +1,17 @@
 # 📂 README MODULE STRUCTURE (VI)
 
 * **1.Introduction**
-    * [FunctionalProgramming](content/readme/docs/vi/menu/1.Introduction/FunctionalProgramming.md)
+    * [FunctionalProgramming](content/readme/docs/vi/menu/1.Introduction/knowledge/FunctionalProgramming.md)
 * **2.PureFunctions**
-    * [PureFunctions](content/readme/docs/vi/menu/2.PureFunctions/PureFunctions.md)
+    * [PureFunctions](content/readme/docs/vi/menu/2.PureFunctions/knowledge/PureFunctions.md)
 * **3.Immutability**
-    * [Immutability](content/readme/docs/vi/menu/3.Immutability/Immutability.md)
+    * [Immutability](content/readme/docs/vi/menu/3.Immutability/knowledge/Immutability.md)
 * **4.FunctionsComposition**
-    * [FunctionsComposition](content/readme/docs/vi/menu/4.FunctionsComposition/FunctionsComposition.md)
+    * [FunctionsComposition](content/readme/docs/vi/menu/4.FunctionsComposition/knowledge/FunctionsComposition.md)
 * **5.SideEffects**
-    * [SideEffects](content/readme/docs/vi/menu/5.SideEffects/SideEffects.md)
+    * [SideEffects](content/readme/docs/vi/menu/5.SideEffects/knowledge/SideEffects.md)
 * **6.Tradeoffs**
-    * [Tradeoffs](content/readme/docs/vi/menu/6.Tradeoffs/Tradeoffs.md)
+    * [Tradeoffs](content/readme/docs/vi/menu/6.Tradeoffs/knowledge/Tradeoffs.md)
 
 # Lập trình hàm
 

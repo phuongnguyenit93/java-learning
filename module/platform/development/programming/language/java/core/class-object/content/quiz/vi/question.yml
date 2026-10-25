@@ -49,7 +49,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.ClassObject/ClassObject.md", anchor: "class-object-model"}
+    readmeRelated: {file: "1.ClassObject/knowledge/ClassObject.md", anchor: "class-object-model"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: constructor-default-rule
@@ -62,7 +62,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.Constructor/Constructor.md", anchor: "default-constructor"}
+    readmeRelated: {file: "2.Constructor/knowledge/Constructor.md", anchor: "default-constructor"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: constructor-chaining
@@ -75,7 +75,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.ThisSuper/ThisSuper.md", anchor: "constructor-chaining-order"}
+    readmeRelated: {file: "3.ThisSuper/knowledge/ThisSuper.md", anchor: "constructor-chaining-order"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: protected-cross-package
@@ -88,7 +88,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.AccessModifier/AccessModifier.md", anchor: "protected-cross-package"}
+    readmeRelated: {file: "4.AccessModifier/knowledge/AccessModifier.md", anchor: "protected-cross-package"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: final-reference-mutability
@@ -101,7 +101,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.StaticFinal/StaticFinal.md", anchor: "final-variable-reference"}
+    readmeRelated: {file: "5.StaticFinal/knowledge/StaticFinal.md", anchor: "final-variable-reference"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: initialization-parent-child
@@ -114,7 +114,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.InitializationOrder/InitializationOrder.md", anchor: "inheritance-initialization-order"}
+    readmeRelated: {file: "7.InitializationOrder/knowledge/InitializationOrder.md", anchor: "inheritance-initialization-order"}
     apiRelated: {controller: "InitializationController", methodSignature: "traceOrder()"}
 
   - id: constructor-override-risk
@@ -127,7 +127,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.ObjectCreationLifecycle/ObjectCreationLifecycle.md", anchor: "constructor-dynamic-dispatch-risk"}
+    readmeRelated: {file: "8.ObjectCreationLifecycle/knowledge/ObjectCreationLifecycle.md", anchor: "constructor-dynamic-dispatch-risk"}
     apiRelated: {controller: "ConstructionController", methodSignature: "constructorDispatchRisk()"}
 
   - id: inner-class-outer
@@ -140,7 +140,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.NestedInnerClass/NestedInnerClass.md", anchor: "inner-class"}
+    readmeRelated: {file: "9.NestedInnerClass/knowledge/NestedInnerClass.md", anchor: "inner-class"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: enum-ordinal-persistence
@@ -153,7 +153,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "11.Enum/Enum.md", anchor: "enum-values-valueof"}
+    readmeRelated: {file: "11.Enum/knowledge/Enum.md", anchor: "enum-values-valueof"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: shallow-copy-nested
@@ -166,7 +166,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "12.CopySemantics/CopySemantics.md", anchor: "shallow-copy"}
+    readmeRelated: {file: "12.CopySemantics/knowledge/CopySemantics.md", anchor: "shallow-copy"}
     apiRelated: {controller: "CopyController", methodSignature: "shallowVsDeep()"}
 
   - id: aliasing-visible-mutation
@@ -179,7 +179,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "13.ObjectAliasingMutability/ObjectAliasingMutability.md", anchor: "aliasing-model"}
+    readmeRelated: {file: "13.ObjectAliasingMutability/knowledge/ObjectAliasingMutability.md", anchor: "aliasing-model"}
     apiRelated: {controller: "AliasingController", methodSignature: "mutateAlias()"}
 
   - id: defensive-copy-input
@@ -192,7 +192,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "14.ImmutabilityDefensiveCopy/ImmutabilityDefensiveCopy.md", anchor: "defensive-copy-input"}
+    readmeRelated: {file: "14.ImmutabilityDefensiveCopy/knowledge/ImmutabilityDefensiveCopy.md", anchor: "defensive-copy-input"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: defensive-copy-output
@@ -205,7 +205,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "14.ImmutabilityDefensiveCopy/ImmutabilityDefensiveCopy.md", anchor: "defensive-copy-output"}
+    readmeRelated: {file: "14.ImmutabilityDefensiveCopy/knowledge/ImmutabilityDefensiveCopy.md", anchor: "defensive-copy-output"}
     apiRelated: {controller: "ImmutabilityController", methodSignature: "defensiveCopy()"}
 
   - id: clone-finalization-boundary
@@ -218,7 +218,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "10.ObjectClass/ObjectClass.md", anchor: "clone-finalize-boundary"}
+    readmeRelated: {file: "10.ObjectClass/knowledge/ObjectClass.md", anchor: "clone-finalize-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: instance-initializer-order
@@ -231,7 +231,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.InitializationBlocks/InitializationBlocks.md", anchor: "instance-initializer"}
+    readmeRelated: {file: "6.InitializationBlocks/knowledge/InitializationBlocks.md", anchor: "instance-initializer"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: instance-state-identity
@@ -244,7 +244,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.ClassObject/ClassObject.md", anchor: "fields-methods-state"}
+    readmeRelated: {file: "1.ClassObject/knowledge/ClassObject.md", anchor: "fields-methods-state"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: reference-reachability-lifetime
@@ -257,7 +257,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.ClassObject/ClassObject.md", anchor: "object-reference-lifecycle"}
+    readmeRelated: {file: "1.ClassObject/knowledge/ClassObject.md", anchor: "object-reference-lifecycle"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: constructor-invariants
@@ -270,7 +270,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.Constructor/Constructor.md", anchor: "constructor-purpose"}
+    readmeRelated: {file: "2.Constructor/knowledge/Constructor.md", anchor: "constructor-purpose"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: constructor-overloading-signature
@@ -283,7 +283,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.Constructor/Constructor.md", anchor: "constructor-overloading"}
+    readmeRelated: {file: "2.Constructor/knowledge/Constructor.md", anchor: "constructor-overloading"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: constructor-failure-publication
@@ -296,7 +296,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.Constructor/Constructor.md", anchor: "constructor-exceptions"}
+    readmeRelated: {file: "2.Constructor/knowledge/Constructor.md", anchor: "constructor-exceptions"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: this-current-instance
@@ -309,7 +309,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.ThisSuper/ThisSuper.md", anchor: "this-reference"}
+    readmeRelated: {file: "3.ThisSuper/knowledge/ThisSuper.md", anchor: "this-reference"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: super-same-object
@@ -322,7 +322,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.ThisSuper/ThisSuper.md", anchor: "super-access"}
+    readmeRelated: {file: "3.ThisSuper/knowledge/ThisSuper.md", anchor: "super-access"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: access-package-private
@@ -335,7 +335,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.AccessModifier/AccessModifier.md", anchor: "access-levels"}
+    readmeRelated: {file: "4.AccessModifier/knowledge/AccessModifier.md", anchor: "access-levels"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: encapsulation-small-surface
@@ -348,7 +348,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.AccessModifier/AccessModifier.md", anchor: "encapsulation-boundary"}
+    readmeRelated: {file: "4.AccessModifier/knowledge/AccessModifier.md", anchor: "encapsulation-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: modifier-domain-separation
@@ -361,7 +361,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.AccessModifier/AccessModifier.md", anchor: "java-modifier-map"}
+    readmeRelated: {file: "4.AccessModifier/knowledge/AccessModifier.md", anchor: "java-modifier-map"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: static-instance-sharing
@@ -374,7 +374,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.StaticFinal/StaticFinal.md", anchor: "static-vs-instance"}
+    readmeRelated: {file: "5.StaticFinal/knowledge/StaticFinal.md", anchor: "static-vs-instance"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: static-init-once-class
@@ -387,7 +387,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.StaticFinal/StaticFinal.md", anchor: "static-initialization"}
+    readmeRelated: {file: "5.StaticFinal/knowledge/StaticFinal.md", anchor: "static-initialization"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: compile-time-constant
@@ -400,7 +400,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.StaticFinal/StaticFinal.md", anchor: "constants-design"}
+    readmeRelated: {file: "5.StaticFinal/knowledge/StaticFinal.md", anchor: "constants-design"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: static-initializer-timing
@@ -413,7 +413,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.InitializationBlocks/InitializationBlocks.md", anchor: "static-initializer"}
+    readmeRelated: {file: "6.InitializationBlocks/knowledge/InitializationBlocks.md", anchor: "static-initializer"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: initializer-readability
@@ -426,7 +426,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.InitializationBlocks/InitializationBlocks.md", anchor: "initializer-use-cases"}
+    readmeRelated: {file: "6.InitializationBlocks/knowledge/InitializationBlocks.md", anchor: "initializer-use-cases"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: class-init-super-first
@@ -439,7 +439,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.InitializationOrder/InitializationOrder.md", anchor: "class-initialization-order"}
+    readmeRelated: {file: "7.InitializationOrder/knowledge/InitializationOrder.md", anchor: "class-initialization-order"}
     apiRelated: {controller: "InitializationController", methodSignature: "traceOrder()"}
 
   - id: object-creation-default-values
@@ -452,7 +452,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.ObjectCreationLifecycle/ObjectCreationLifecycle.md", anchor: "allocation-initialization-construction"}
+    readmeRelated: {file: "8.ObjectCreationLifecycle/knowledge/ObjectCreationLifecycle.md", anchor: "allocation-initialization-construction"}
     apiRelated: {controller: "ConstructionController", methodSignature: "constructorDispatchRisk()"}
 
   - id: this-escape-publication
@@ -465,7 +465,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.ObjectCreationLifecycle/ObjectCreationLifecycle.md", anchor: "this-escape"}
+    readmeRelated: {file: "8.ObjectCreationLifecycle/knowledge/ObjectCreationLifecycle.md", anchor: "this-escape"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: static-nested-no-outer
@@ -478,7 +478,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.NestedInnerClass/NestedInnerClass.md", anchor: "static-nested-class"}
+    readmeRelated: {file: "9.NestedInnerClass/knowledge/NestedInnerClass.md", anchor: "static-nested-class"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: local-anonymous-this
@@ -491,7 +491,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.NestedInnerClass/NestedInnerClass.md", anchor: "local-anonymous-class"}
+    readmeRelated: {file: "9.NestedInnerClass/knowledge/NestedInnerClass.md", anchor: "local-anonymous-class"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: effectively-final-capture
@@ -504,7 +504,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.NestedInnerClass/NestedInnerClass.md", anchor: "capture-semantics"}
+    readmeRelated: {file: "9.NestedInnerClass/knowledge/NestedInnerClass.md", anchor: "capture-semantics"}
     apiRelated: {controller: "NestedClassController", methodSignature: "capture()"}
 
   - id: object-root-primitives
@@ -517,7 +517,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "10.ObjectClass/ObjectClass.md", anchor: "object-root-type"}
+    readmeRelated: {file: "10.ObjectClass/knowledge/ObjectClass.md", anchor: "object-root-type"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: object-method-boundary
@@ -530,7 +530,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "10.ObjectClass/ObjectClass.md", anchor: "object-core-methods"}
+    readmeRelated: {file: "10.ObjectClass/knowledge/ObjectClass.md", anchor: "object-core-methods"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: enum-instance-identity
@@ -543,7 +543,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "11.Enum/Enum.md", anchor: "enum-type-model"}
+    readmeRelated: {file: "11.Enum/knowledge/Enum.md", anchor: "enum-type-model"}
     apiRelated: {controller: "EnumController", methodSignature: "enumBehavior()"}
 
   - id: enum-interface-behavior
@@ -556,7 +556,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "11.Enum/Enum.md", anchor: "enum-interface"}
+    readmeRelated: {file: "11.Enum/knowledge/Enum.md", anchor: "enum-interface"}
     apiRelated: {controller: "EnumController", methodSignature: "enumBehavior()"}
 
   - id: reference-copy-not-object
@@ -569,7 +569,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "12.CopySemantics/CopySemantics.md", anchor: "reference-copy"}
+    readmeRelated: {file: "12.CopySemantics/knowledge/CopySemantics.md", anchor: "reference-copy"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: deep-copy-ownership
@@ -582,7 +582,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "12.CopySemantics/CopySemantics.md", anchor: "deep-copy"}
+    readmeRelated: {file: "12.CopySemantics/knowledge/CopySemantics.md", anchor: "deep-copy"}
     apiRelated: {controller: "CopyController", methodSignature: "shallowVsDeep()"}
 
   - id: class-object-synthesis-chain
@@ -595,5 +595,5 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "15.ClassObjectSynthesis/ClassObjectSynthesis.md", anchor: "class-object-synthesis"}
+    readmeRelated: {file: "15.ClassObjectSynthesis/knowledge/ClassObjectSynthesis.md", anchor: "class-object-synthesis"}
     apiRelated: {controller: "", methodSignature: ""}

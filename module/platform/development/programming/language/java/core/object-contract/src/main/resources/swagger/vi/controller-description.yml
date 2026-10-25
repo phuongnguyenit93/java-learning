@@ -4,7 +4,7 @@ EqualityController:
     <p>Nhóm thí nghiệm giúp quan sát trực tiếp sự khác nhau giữa <strong>định danh tham chiếu</strong> và <strong>phép bằng nhau về mặt logic</strong>.</p>
     <p>Mục tiêu là nhìn thấy hai đối tượng có định danh khác nhau vẫn có thể bằng nhau theo quy tắc nghiệp vụ, thay vì chỉ ghi nhớ rằng <code>==</code> và <code>equals</code> khác nhau.</p>
   readmeRelated:
-    file: 2.IdentityEquality/IdentityEquality.md
+    file: 2.IdentityEquality/knowledge/IdentityEquality.md
 HashContractController:
   description: |-
     <h2>Quy ước giữa equals và hashCode</h2>
@@ -12,11 +12,11 @@ HashContractController:
     <p>Hai endpoint tập trung vào hai dạng lỗi thực tế: hai đối tượng bằng nhau nhưng có mã băm khác nhau, và khóa bị thay đổi sau khi đã được đưa vào cấu trúc dữ liệu.</p>
     <p>Đây cũng là minh chứng trực tiếp cho ý chính của mô-đun: thư viện dựa vào các cam kết về hành vi của đối tượng dù trình biên dịch không thể chứng minh phần triển khai giữ đúng mọi quy tắc ngữ nghĩa.</p>
   readmeRelated:
-    file: 5.EqualsHashCode/EqualsHashCode.md
+    file: 5.EqualsHashCode/knowledge/EqualsHashCode.md
 OrderingController:
   description: |-
     <h2>Thứ tự sắp xếp</h2>
     <p>Nhóm thí nghiệm so sánh thứ tự tự nhiên qua <code>Comparable</code> với chính sách sắp xếp do đoạn mã sử dụng cung cấp qua <code>Comparator</code>.</p>
     <p>Đồng thời quan sát hệ quả khi quan hệ “bằng nhau theo thứ tự” (<code>compareTo == 0</code>) không trùng với phép bằng nhau về mặt logic.</p>
   readmeRelated:
-    file: 8.Comparator/Comparator.md
+    file: 8.Comparator/knowledge/Comparator.md

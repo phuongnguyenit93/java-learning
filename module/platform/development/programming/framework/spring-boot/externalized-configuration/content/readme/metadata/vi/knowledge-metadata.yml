@@ -1,4 +1,4 @@
-1.ConfigurationMentalModel/ConfigurationMentalModel.md:
+1.ConfigurationMentalModel/knowledge/ConfigurationMentalModel.md:
   externalized-configuration-purpose:
     difficulty: BASIC
     aiGenerated: true
@@ -29,7 +29,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-2.PropertySourcesAndPrecedence/PropertySourcesAndPrecedence.md:
+2.PropertySourcesAndPrecedence/knowledge/PropertySourcesAndPrecedence.md:
   property-source-order:
     difficulty: BASIC
     aiGenerated: true
@@ -60,7 +60,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-3.ConfigDataFilesAndLocations/ConfigDataFilesAndLocations.md:
+3.ConfigDataFilesAndLocations/knowledge/ConfigDataFilesAndLocations.md:
   config-data-role:
     difficulty: BASIC
     aiGenerated: true
@@ -106,7 +106,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-4.ConfigDataImportsAndTrees/ConfigDataImportsAndTrees.md:
+4.ConfigDataImportsAndTrees/knowledge/ConfigDataImportsAndTrees.md:
   spring-config-import:
     difficulty: BASIC
     aiGenerated: true
@@ -142,7 +142,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-5.ProfilesAndActivation/ProfilesAndActivation.md:
+5.ProfilesAndActivation/knowledge/ProfilesAndActivation.md:
   profile-purpose:
     difficulty: BASIC
     aiGenerated: true
@@ -188,7 +188,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-6.EnvironmentValueAndPlaceholders/EnvironmentValueAndPlaceholders.md:
+6.EnvironmentValueAndPlaceholders/knowledge/EnvironmentValueAndPlaceholders.md:
   environment-access:
     difficulty: BASIC
     aiGenerated: true
@@ -224,7 +224,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-7.ConfigurationProperties/ConfigurationProperties.md:
+7.ConfigurationProperties/knowledge/ConfigurationProperties.md:
   configuration-properties-purpose:
     difficulty: BASIC
     aiGenerated: true
@@ -265,7 +265,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-8.RelaxedAndComplexBinding/RelaxedAndComplexBinding.md:
+8.RelaxedAndComplexBinding/knowledge/RelaxedAndComplexBinding.md:
   relaxed-binding:
     difficulty: BASIC
     aiGenerated: true
@@ -306,7 +306,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-9.ValidationAndMetadata/ValidationAndMetadata.md:
+9.ValidationAndMetadata/knowledge/ValidationAndMetadata.md:
   configuration-validation-purpose:
     difficulty: BASIC
     aiGenerated: true
@@ -342,7 +342,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-10.DiagnosticsAndSynthesis/DiagnosticsAndSynthesis.md:
+10.DiagnosticsAndSynthesis/knowledge/DiagnosticsAndSynthesis.md:
   resolution-pipeline-synthesis:
     difficulty: BASIC
     aiGenerated: true

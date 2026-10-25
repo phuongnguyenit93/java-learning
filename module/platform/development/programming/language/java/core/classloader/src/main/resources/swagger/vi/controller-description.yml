@@ -3,40 +3,40 @@ ClassIdentityController:
     <h2>Định danh class qua ranh giới ClassLoader</h2>
     <p>Quan sát cùng tên nhị phân nhưng khác ClassLoader định nghĩa dẫn tới hai kiểu không tương thích và ép kiểu thất bại.</p>
   readmeRelated:
-    file: 5.ClassIdentity/ClassIdentity.md
+    file: 5.ClassIdentity/knowledge/ClassIdentity.md
 ClassLifecycleController:
   description: |-
     <h2>Nạp class khác với khởi tạo class</h2>
     <p>Dùng một ClassLoader mới cho mỗi lần gọi để chứng minh một Class có thể đã được nạp khi chạy nhưng phần khởi tạo static vẫn chưa chạy.</p>
   readmeRelated:
-    file: 1.Lifecycle/Lifecycle.md
+    file: 1.Lifecycle/knowledge/Lifecycle.md
 ClassLoaderChainController:
   description: |-
     <h2>Chuỗi ClassLoader có sẵn</h2>
     <p>Quan sát Application/System, Platform và ranh giới Bootstrap để thấy class của ứng dụng và class JDK được định nghĩa bởi các tầng ClassLoader khác nhau.</p>
   readmeRelated:
-    file: 2.BuiltInClassLoaders/BuiltInClassLoaders.md
+    file: 2.BuiltInClassLoaders/knowledge/BuiltInClassLoaders.md
 ContextClassLoaderController:
   description: |-
     <h2>Vòng đời của Thread Context ClassLoader</h2>
     <p>Thực hành lưu, gán và khôi phục TCCL trong phạm vi nhỏ để ngữ cảnh ClassLoader không bị giữ lại hoặc truyền nhầm sang công việc khác.</p>
   readmeRelated:
-    file: 6.ContextClassLoader/ContextClassLoader.md
+    file: 6.ContextClassLoader/knowledge/ContextClassLoader.md
 CustomClassLoaderController:
   description: |-
     <h2>Định danh class qua hai ClassLoader tùy chỉnh độc lập</h2>
     <p>Dùng hai ClassLoader tùy chỉnh làm cơ chế thử nghiệm để chứng minh cùng tên nhị phân và cùng bytecode vẫn có thể tạo hai kiểu khác nhau khi chạy.</p>
   readmeRelated:
-    file: 5.ClassIdentity/ClassIdentity.md
+    file: 5.ClassIdentity/knowledge/ClassIdentity.md
 InitializationController:
   description: |-
     <h2>Lỗi khởi tạo và trạng thái lỗi của class</h2>
     <p>Dùng một định danh class mới cho mỗi request để quan sát lần khởi tạo đầu thất bại và lần sử dụng chủ động sau không chạy lại bộ khởi tạo.</p>
   readmeRelated:
-    file: 8.Initialization/Initialization.md
+    file: 8.Initialization/knowledge/Initialization.md
 ResourceLoadingController:
   description: |-
     <h2>Tìm tài nguyên qua Class và ClassLoader</h2>
     <p>So sánh đường dẫn tương đối theo gói, đường dẫn tuyệt đối qua Class và đường dẫn tính từ gốc ClassLoader trên cùng một tài nguyên được đóng gói.</p>
   readmeRelated:
-    file: 7.ResourceLoading/ResourceLoading.md
+    file: 7.ResourceLoading/knowledge/ResourceLoading.md

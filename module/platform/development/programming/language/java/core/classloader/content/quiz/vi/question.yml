@@ -49,7 +49,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.Lifecycle/Lifecycle.md", anchor: "loading-linking-initialization"}
+    readmeRelated: {file: "1.Lifecycle/knowledge/Lifecycle.md", anchor: "loading-linking-initialization"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: classloader-q02
@@ -62,7 +62,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.Lifecycle/Lifecycle.md", anchor: "loading-linking-initialization"}
+    readmeRelated: {file: "1.Lifecycle/knowledge/Lifecycle.md", anchor: "loading-linking-initialization"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: classloader-q03
@@ -75,7 +75,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.Lifecycle/Lifecycle.md", anchor: "linking-phases"}
+    readmeRelated: {file: "1.Lifecycle/knowledge/Lifecycle.md", anchor: "linking-phases"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: classloader-q04
@@ -88,7 +88,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.Lifecycle/Lifecycle.md", anchor: "linking-phases"}
+    readmeRelated: {file: "1.Lifecycle/knowledge/Lifecycle.md", anchor: "linking-phases"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: classloader-q05
@@ -101,7 +101,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.Lifecycle/Lifecycle.md", anchor: "load-vs-initialize"}
+    readmeRelated: {file: "1.Lifecycle/knowledge/Lifecycle.md", anchor: "load-vs-initialize"}
     apiRelated: {controller: "ClassLifecycleController", methodSignature: "loadWithoutInit()"}
 
   - id: classloader-q06
@@ -114,7 +114,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.BuiltInClassLoaders/BuiltInClassLoaders.md", anchor: "loader-chain"}
+    readmeRelated: {file: "2.BuiltInClassLoaders/knowledge/BuiltInClassLoaders.md", anchor: "loader-chain"}
     apiRelated: {controller: "ClassLoaderChainController", methodSignature: "inspectChain()"}
 
   - id: classloader-q07
@@ -127,7 +127,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.BuiltInClassLoaders/BuiltInClassLoaders.md", anchor: "bootstrap-loader"}
+    readmeRelated: {file: "2.BuiltInClassLoaders/knowledge/BuiltInClassLoaders.md", anchor: "bootstrap-loader"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: classloader-q08
@@ -140,7 +140,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.BuiltInClassLoaders/BuiltInClassLoaders.md", anchor: "platform-loader"}
+    readmeRelated: {file: "2.BuiltInClassLoaders/knowledge/BuiltInClassLoaders.md", anchor: "platform-loader"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: classloader-q09
@@ -153,7 +153,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.ParentDelegation/ParentDelegation.md", anchor: "parent-delegation"}
+    readmeRelated: {file: "3.ParentDelegation/knowledge/ParentDelegation.md", anchor: "parent-delegation"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: classloader-q10
@@ -166,7 +166,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.ParentDelegation/ParentDelegation.md", anchor: "delegation-purpose"}
+    readmeRelated: {file: "3.ParentDelegation/knowledge/ParentDelegation.md", anchor: "delegation-purpose"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: classloader-q11
@@ -179,7 +179,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.ParentDelegation/ParentDelegation.md", anchor: "child-first-boundary"}
+    readmeRelated: {file: "3.ParentDelegation/knowledge/ParentDelegation.md", anchor: "child-first-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: classloader-q12
@@ -192,7 +192,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.ParentDelegation/ParentDelegation.md", anchor: "protected-packages-boundary"}
+    readmeRelated: {file: "3.ParentDelegation/knowledge/ParentDelegation.md", anchor: "protected-packages-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: classloader-q13
@@ -205,7 +205,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.CustomClassLoader/CustomClassLoader.md", anchor: "classloader-contract"}
+    readmeRelated: {file: "4.CustomClassLoader/knowledge/CustomClassLoader.md", anchor: "classloader-contract"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: classloader-q14
@@ -218,7 +218,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.CustomClassLoader/CustomClassLoader.md", anchor: "define-class"}
+    readmeRelated: {file: "4.CustomClassLoader/knowledge/CustomClassLoader.md", anchor: "define-class"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: classloader-q35
@@ -231,7 +231,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.CustomClassLoader/CustomClassLoader.md", anchor: "custom-source"}
+    readmeRelated: {file: "4.CustomClassLoader/knowledge/CustomClassLoader.md", anchor: "custom-source"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: classloader-q15
@@ -244,7 +244,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.Lifecycle/Lifecycle.md", anchor: "linking-phases"}
+    readmeRelated: {file: "1.Lifecycle/knowledge/Lifecycle.md", anchor: "linking-phases"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: classloader-q16
@@ -257,7 +257,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.CustomClassLoader/CustomClassLoader.md", anchor: "custom-loader-safety"}
+    readmeRelated: {file: "4.CustomClassLoader/knowledge/CustomClassLoader.md", anchor: "custom-loader-safety"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: classloader-q17
@@ -270,7 +270,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.ClassIdentity/ClassIdentity.md", anchor: "same-name-different-type"}
+    readmeRelated: {file: "5.ClassIdentity/knowledge/ClassIdentity.md", anchor: "same-name-different-type"}
     apiRelated: {controller: "CustomClassLoaderController", methodSignature: "sameNameIdentity()"}
 
   - id: classloader-q18
@@ -283,7 +283,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.ParentDelegation/ParentDelegation.md", anchor: "initiating-vs-defining-loader"}
+    readmeRelated: {file: "3.ParentDelegation/knowledge/ParentDelegation.md", anchor: "initiating-vs-defining-loader"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: classloader-q19
@@ -296,7 +296,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.ClassIdentity/ClassIdentity.md", anchor: "class-cast-loader-failure"}
+    readmeRelated: {file: "5.ClassIdentity/knowledge/ClassIdentity.md", anchor: "class-cast-loader-failure"}
     apiRelated: {controller: "ClassIdentityController", methodSignature: "crossLoaderCast()"}
 
   - id: classloader-q20
@@ -309,7 +309,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.ClassIdentity/ClassIdentity.md", anchor: "loader-boundary-api"}
+    readmeRelated: {file: "5.ClassIdentity/knowledge/ClassIdentity.md", anchor: "loader-boundary-api"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: classloader-q21
@@ -322,7 +322,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.ContextClassLoader/ContextClassLoader.md", anchor: "tccl-purpose"}
+    readmeRelated: {file: "6.ContextClassLoader/knowledge/ContextClassLoader.md", anchor: "tccl-purpose"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: classloader-q36
@@ -335,7 +335,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.ContextClassLoader/ContextClassLoader.md", anchor: "tccl-discovery"}
+    readmeRelated: {file: "6.ContextClassLoader/knowledge/ContextClassLoader.md", anchor: "tccl-discovery"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: classloader-q22
@@ -348,7 +348,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.ContextClassLoader/ContextClassLoader.md", anchor: "tccl-lifecycle"}
+    readmeRelated: {file: "6.ContextClassLoader/knowledge/ContextClassLoader.md", anchor: "tccl-lifecycle"}
     apiRelated: {controller: "ContextClassLoaderController", methodSignature: "temporaryTccl()"}
 
   - id: classloader-q23
@@ -361,7 +361,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.ContextClassLoader/ContextClassLoader.md", anchor: "tccl-leak-risk"}
+    readmeRelated: {file: "6.ContextClassLoader/knowledge/ContextClassLoader.md", anchor: "tccl-leak-risk"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: classloader-q24
@@ -374,7 +374,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.ResourceLoading/ResourceLoading.md", anchor: "class-resource"}
+    readmeRelated: {file: "7.ResourceLoading/knowledge/ResourceLoading.md", anchor: "class-resource"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: classloader-q25
@@ -387,7 +387,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.ResourceLoading/ResourceLoading.md", anchor: "loader-resource"}
+    readmeRelated: {file: "7.ResourceLoading/knowledge/ResourceLoading.md", anchor: "loader-resource"}
     apiRelated: {controller: "ResourceLoadingController", methodSignature: "resolve()"}
 
   - id: classloader-q26
@@ -400,7 +400,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.ResourceLoading/ResourceLoading.md", anchor: "resource-enumeration"}
+    readmeRelated: {file: "7.ResourceLoading/knowledge/ResourceLoading.md", anchor: "resource-enumeration"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: classloader-q27
@@ -413,7 +413,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.ResourceLoading/ResourceLoading.md", anchor: "classpath-vs-filesystem"}
+    readmeRelated: {file: "7.ResourceLoading/knowledge/ResourceLoading.md", anchor: "classpath-vs-filesystem"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: classloader-q37
@@ -426,7 +426,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.ResourceLoading/ResourceLoading.md", anchor: "resource-vs-class-loading"}
+    readmeRelated: {file: "7.ResourceLoading/knowledge/ResourceLoading.md", anchor: "resource-vs-class-loading"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: classloader-q41
@@ -439,7 +439,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.ResourceLoading/ResourceLoading.md", anchor: "resource-stream-lifecycle"}
+    readmeRelated: {file: "7.ResourceLoading/knowledge/ResourceLoading.md", anchor: "resource-stream-lifecycle"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: classloader-q38
@@ -452,7 +452,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.Initialization/Initialization.md", anchor: "initialization-trigger"}
+    readmeRelated: {file: "8.Initialization/knowledge/Initialization.md", anchor: "initialization-trigger"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: classloader-q28
@@ -465,7 +465,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.Initialization/Initialization.md", anchor: "clinit-model"}
+    readmeRelated: {file: "8.Initialization/knowledge/Initialization.md", anchor: "clinit-model"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: classloader-q39
@@ -478,7 +478,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.Initialization/Initialization.md", anchor: "initialization-once"}
+    readmeRelated: {file: "8.Initialization/knowledge/Initialization.md", anchor: "initialization-once"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: classloader-q29
@@ -491,7 +491,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.Initialization/Initialization.md", anchor: "initialization-locking"}
+    readmeRelated: {file: "8.Initialization/knowledge/Initialization.md", anchor: "initialization-locking"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: classloader-q30
@@ -504,7 +504,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.Initialization/Initialization.md", anchor: "initialization-failure"}
+    readmeRelated: {file: "8.Initialization/knowledge/Initialization.md", anchor: "initialization-failure"}
     apiRelated: {controller: "InitializationController", methodSignature: "failureState()"}
 
   - id: classloader-q31
@@ -517,7 +517,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.Initialization/Initialization.md", anchor: "constant-no-init"}
+    readmeRelated: {file: "8.Initialization/knowledge/Initialization.md", anchor: "constant-no-init"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: classloader-q32
@@ -530,7 +530,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.UnloadingLeaks/UnloadingLeaks.md", anchor: "class-unloading"}
+    readmeRelated: {file: "9.UnloadingLeaks/knowledge/UnloadingLeaks.md", anchor: "class-unloading"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: classloader-q40
@@ -543,7 +543,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.UnloadingLeaks/UnloadingLeaks.md", anchor: "loader-retention"}
+    readmeRelated: {file: "9.UnloadingLeaks/knowledge/UnloadingLeaks.md", anchor: "loader-retention"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: classloader-q33
@@ -556,7 +556,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.UnloadingLeaks/UnloadingLeaks.md", anchor: "static-threadlocal-leaks"}
+    readmeRelated: {file: "9.UnloadingLeaks/knowledge/UnloadingLeaks.md", anchor: "static-threadlocal-leaks"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: classloader-q34
@@ -569,7 +569,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.UnloadingLeaks/UnloadingLeaks.md", anchor: "unloading-observation"}
+    readmeRelated: {file: "9.UnloadingLeaks/knowledge/UnloadingLeaks.md", anchor: "unloading-observation"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: classloader-q42
@@ -582,5 +582,5 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.UnloadingLeaks/UnloadingLeaks.md", anchor: "end-to-end-synthesis"}
+    readmeRelated: {file: "9.UnloadingLeaks/knowledge/UnloadingLeaks.md", anchor: "end-to-end-synthesis"}
     apiRelated: {controller: "", methodSignature: ""}

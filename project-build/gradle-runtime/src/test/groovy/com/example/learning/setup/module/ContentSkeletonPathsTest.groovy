@@ -192,7 +192,7 @@ class ContentSkeletonPathsTest {
                 'MODULE_LANGUAGE=vi\n', 'UTF-8'
         )
         File markdown = new File(
-                moduleDir, 'content/readme/docs/vi/menu/1.Basic/Basic.md'
+                moduleDir, 'content/readme/docs/vi/menu/1.Basic/knowledge/Basic.md'
         )
         assertTrue(markdown.parentFile.mkdirs())
         markdown.setText(

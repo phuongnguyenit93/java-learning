@@ -88,7 +88,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "5.StartupObservation/StartupObservation.md"
+      file: "5.StartupObservation/knowledge/StartupObservation.md"
       anchor: "startup-failure-classes"
     apiRelated:
       controller: ""
@@ -132,7 +132,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "9.FundamentalsSynthesis/FundamentalsSynthesis.md"
+      file: "9.FundamentalsSynthesis/knowledge/FundamentalsSynthesis.md"
       anchor: "ownership-handoff-map"
     apiRelated:
       controller: ""

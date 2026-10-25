@@ -1,23 +1,23 @@
 # 📂 README MODULE STRUCTURE (VI)
 
 * **1.MentalModel**
-    * [RuntimeDiagnostics](content/readme/docs/vi/menu/1.MentalModel/RuntimeDiagnostics.md)
+    * [RuntimeDiagnostics](content/readme/docs/vi/menu/1.MentalModel/knowledge/RuntimeDiagnostics.md)
 * **2.JdkDiagnosticTools**
-    * [JdkDiagnosticTools](content/readme/docs/vi/menu/2.JdkDiagnosticTools/JdkDiagnosticTools.md)
+    * [JdkDiagnosticTools](content/readme/docs/vi/menu/2.JdkDiagnosticTools/knowledge/JdkDiagnosticTools.md)
 * **3.ThreadDiagnostics**
-    * [ThreadDiagnostics](content/readme/docs/vi/menu/3.ThreadDiagnostics/ThreadDiagnostics.md)
+    * [ThreadDiagnostics](content/readme/docs/vi/menu/3.ThreadDiagnostics/knowledge/ThreadDiagnostics.md)
 * **4.HeapGcDiagnostics**
-    * [HeapGcDiagnostics](content/readme/docs/vi/menu/4.HeapGcDiagnostics/HeapGcDiagnostics.md)
+    * [HeapGcDiagnostics](content/readme/docs/vi/menu/4.HeapGcDiagnostics/knowledge/HeapGcDiagnostics.md)
 * **5.NativeMemoryTracking**
-    * [NativeMemoryTracking](content/readme/docs/vi/menu/5.NativeMemoryTracking/NativeMemoryTracking.md)
+    * [NativeMemoryTracking](content/readme/docs/vi/menu/5.NativeMemoryTracking/knowledge/NativeMemoryTracking.md)
 * **6.JFR**
-    * [JFR](content/readme/docs/vi/menu/6.JFR/JFR.md)
+    * [JFR](content/readme/docs/vi/menu/6.JFR/knowledge/JFR.md)
 * **7.ManagementJMX**
-    * [ManagementJMX](content/readme/docs/vi/menu/7.ManagementJMX/ManagementJMX.md)
+    * [ManagementJMX](content/readme/docs/vi/menu/7.ManagementJMX/knowledge/ManagementJMX.md)
 * **8.CrashPostmortemDiagnostics**
-    * [CrashPostmortemDiagnostics](content/readme/docs/vi/menu/8.CrashPostmortemDiagnostics/CrashPostmortemDiagnostics.md)
+    * [CrashPostmortemDiagnostics](content/readme/docs/vi/menu/8.CrashPostmortemDiagnostics/knowledge/CrashPostmortemDiagnostics.md)
 * **9.TroubleshootingWorkflow**
-    * [TroubleshootingWorkflow](content/readme/docs/vi/menu/9.TroubleshootingWorkflow/TroubleshootingWorkflow.md)
+    * [TroubleshootingWorkflow](content/readme/docs/vi/menu/9.TroubleshootingWorkflow/knowledge/TroubleshootingWorkflow.md)
 
 # Runtime Diagnostics
 

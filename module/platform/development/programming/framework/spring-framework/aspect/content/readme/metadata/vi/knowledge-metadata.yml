@@ -1,4 +1,4 @@
-1.SpringAOPScope/SpringAOPScope.md:
+1.SpringAOPScope/knowledge/SpringAOPScope.md:
   spring-aop-scope-001:
     difficulty: BASIC
     aiGenerated: true
@@ -39,7 +39,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-2.SpringAOPSetup/SpringAOPSetup.md:
+2.SpringAOPSetup/knowledge/SpringAOPSetup.md:
   spring-aop-setup-001:
     difficulty: BASIC
     aiGenerated: true
@@ -85,7 +85,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-3.AspectBeans/AspectBeans.md:
+3.AspectBeans/knowledge/AspectBeans.md:
   aspect-beans-001:
     difficulty: BASIC
     aiGenerated: true
@@ -136,7 +136,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-4.AutoProxyMechanics/AutoProxyMechanics.md:
+4.AutoProxyMechanics/knowledge/AutoProxyMechanics.md:
   auto-proxy-mechanics-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -187,7 +187,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-5.JdkCglibProxies/JdkCglibProxies.md:
+5.JdkCglibProxies/knowledge/JdkCglibProxies.md:
   jdk-cglib-proxies-001:
     difficulty: BASIC
     aiGenerated: true
@@ -248,7 +248,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-6.InvocationBoundaries/InvocationBoundaries.md:
+6.InvocationBoundaries/knowledge/InvocationBoundaries.md:
   invocation-boundaries-001:
     difficulty: BASIC
     aiGenerated: true
@@ -299,7 +299,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-7.SpringPointcutExpressions/SpringPointcutExpressions.md:
+7.SpringPointcutExpressions/knowledge/SpringPointcutExpressions.md:
   spring-pointcut-expressions-001:
     difficulty: BASIC
     aiGenerated: true
@@ -360,7 +360,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-8.ReusablePointcuts/ReusablePointcuts.md:
+8.ReusablePointcuts/knowledge/ReusablePointcuts.md:
   reusable-pointcuts-001:
     difficulty: BASIC
     aiGenerated: true
@@ -406,7 +406,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-9.AdviceLifecycle/AdviceLifecycle.md:
+9.AdviceLifecycle/knowledge/AdviceLifecycle.md:
   advice-lifecycle-001:
     difficulty: BASIC
     aiGenerated: true
@@ -457,7 +457,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-10.AroundAdvice/AroundAdvice.md:
+10.AroundAdvice/knowledge/AroundAdvice.md:
   around-advice-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -508,7 +508,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-11.AdviceContextArguments/AdviceContextArguments.md:
+11.AdviceContextArguments/knowledge/AdviceContextArguments.md:
   advice-context-arguments-001:
     difficulty: BASIC
     aiGenerated: true
@@ -564,7 +564,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-12.AdviceOrdering/AdviceOrdering.md:
+12.AdviceOrdering/knowledge/AdviceOrdering.md:
   advice-ordering-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -615,7 +615,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-13.ReturnExceptionHandling/ReturnExceptionHandling.md:
+13.ReturnExceptionHandling/knowledge/ReturnExceptionHandling.md:
   return-exception-handling-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -661,7 +661,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-14.AspectStateConcurrency/AspectStateConcurrency.md:
+14.AspectStateConcurrency/knowledge/AspectStateConcurrency.md:
   aspect-state-concurrency-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -712,7 +712,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-15.CustomAspectAnnotations/CustomAspectAnnotations.md:
+15.CustomAspectAnnotations/knowledge/CustomAspectAnnotations.md:
   custom-aspect-annotations-001:
     difficulty: BASIC
     aiGenerated: true
@@ -758,7 +758,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-16.XMLAopConfiguration/XMLAopConfiguration.md:
+16.XMLAopConfiguration/knowledge/XMLAopConfiguration.md:
   xml-aop-configuration-001:
     difficulty: BASIC
     aiGenerated: true
@@ -814,7 +814,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-17.PointcutAPI/PointcutAPI.md:
+17.PointcutAPI/knowledge/PointcutAPI.md:
   pointcut-api-001:
     difficulty: BASIC
     aiGenerated: true
@@ -865,7 +865,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-18.AdviceAdvisorAPI/AdviceAdvisorAPI.md:
+18.AdviceAdvisorAPI/knowledge/AdviceAdvisorAPI.md:
   advice-advisor-api-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -911,7 +911,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-19.ProgrammaticProxyCreation/ProgrammaticProxyCreation.md:
+19.ProgrammaticProxyCreation/knowledge/ProgrammaticProxyCreation.md:
   programmatic-proxy-creation-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -962,7 +962,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-20.ProxyInspection/ProxyInspection.md:
+20.ProxyInspection/knowledge/ProxyInspection.md:
   proxy-inspection-001:
     difficulty: BASIC
     aiGenerated: true
@@ -1003,7 +1003,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-21.AdvancedAutoProxy/AdvancedAutoProxy.md:
+21.AdvancedAutoProxy/knowledge/AdvancedAutoProxy.md:
   advanced-auto-proxy-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -1049,7 +1049,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-22.TargetSource/TargetSource.md:
+22.TargetSource/knowledge/TargetSource.md:
   target-source-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -1095,7 +1095,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-23.IntroductionInterceptors/IntroductionInterceptors.md:
+23.IntroductionInterceptors/knowledge/IntroductionInterceptors.md:
   introduction-interceptors-001:
     difficulty: BASIC
     aiGenerated: true
@@ -1141,7 +1141,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-24.SpringFeatureIntegration/SpringFeatureIntegration.md:
+24.SpringFeatureIntegration/knowledge/SpringFeatureIntegration.md:
   spring-feature-integration-001:
     difficulty: ADVANCED
     aiGenerated: true
@@ -1192,7 +1192,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-25.AspectjIntegration/AspectjIntegration.md:
+25.AspectjIntegration/knowledge/AspectjIntegration.md:
   aspectj-integration-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -1248,7 +1248,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-26.SpringAOPTesting/SpringAOPTesting.md:
+26.SpringAOPTesting/knowledge/SpringAOPTesting.md:
   spring-aop-testing-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -1309,7 +1309,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-27.AOPTroubleshooting/AOPTroubleshooting.md:
+27.AOPTroubleshooting/knowledge/AOPTroubleshooting.md:
   aop-troubleshooting-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -1370,7 +1370,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-28.AOPPerformanceMaintenance/AOPPerformanceMaintenance.md:
+28.AOPPerformanceMaintenance/knowledge/AOPPerformanceMaintenance.md:
   aop-performance-maintenance-001:
     difficulty: ADVANCED
     aiGenerated: true
@@ -1426,7 +1426,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-29.AOPPracticalWorkshop/AOPPracticalWorkshop.md:
+29.AOPPracticalWorkshop/knowledge/AOPPracticalWorkshop.md:
   aop-practical-workshop-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -1487,7 +1487,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-30.SpringAopReview/SpringAopReview.md:
+30.SpringAopReview/knowledge/SpringAopReview.md:
   spring-aop-review-001:
     difficulty: INTERMEDIATE
     aiGenerated: true

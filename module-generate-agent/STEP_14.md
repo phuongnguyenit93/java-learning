@@ -79,7 +79,7 @@ Chỉ khi **cả 6 gate = PASS** thì ghi `STEP_14_PRECHECK=PASS` vào báo cáo
 
 | Type | Một file cho một lượt worker |
 | --- | --- |
-| README | Mỗi `content/readme/docs/en/menu/<chapter>/<file>.md` |
+| README | Mỗi `content/readme/docs/en/menu/<chapter>/knowledge/<file>.md` |
 | INTRODUCTION | `content/readme/docs/en/BASE.md` |
 | QUIZ | Toàn bộ `content/quiz/en/question.yml` |
 | INTERVIEW | Toàn bộ `content/interview/en/question.yml` |

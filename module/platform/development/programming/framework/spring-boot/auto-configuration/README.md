@@ -1,23 +1,23 @@
 # 📂 README MODULE STRUCTURE (EN)
 
 * **1.AutoConfigurationFoundation**
-    * [AutoConfigurationFoundation](content/readme/docs/en/menu/1.AutoConfigurationFoundation/AutoConfigurationFoundation.md)
+    * [AutoConfigurationFoundation](content/readme/docs/en/menu/1.AutoConfigurationFoundation/knowledge/AutoConfigurationFoundation.md)
 * **2.ActivationDiscovery**
-    * [ActivationDiscovery](content/readme/docs/en/menu/2.ActivationDiscovery/ActivationDiscovery.md)
+    * [ActivationDiscovery](content/readme/docs/en/menu/2.ActivationDiscovery/knowledge/ActivationDiscovery.md)
 * **3.ConditionModel**
-    * [ConditionModel](content/readme/docs/en/menu/3.ConditionModel/ConditionModel.md)
+    * [ConditionModel](content/readme/docs/en/menu/3.ConditionModel/knowledge/ConditionModel.md)
 * **4.BackOffUserControl**
-    * [BackOffUserControl](content/readme/docs/en/menu/4.BackOffUserControl/BackOffUserControl.md)
+    * [BackOffUserControl](content/readme/docs/en/menu/4.BackOffUserControl/knowledge/BackOffUserControl.md)
 * **5.OrderingComposition**
-    * [OrderingComposition](content/readme/docs/en/menu/5.OrderingComposition/OrderingComposition.md)
+    * [OrderingComposition](content/readme/docs/en/menu/5.OrderingComposition/knowledge/OrderingComposition.md)
 * **6.ExclusionsDiagnostics**
-    * [ExclusionsDiagnostics](content/readme/docs/en/menu/6.ExclusionsDiagnostics/ExclusionsDiagnostics.md)
+    * [ExclusionsDiagnostics](content/readme/docs/en/menu/6.ExclusionsDiagnostics/knowledge/ExclusionsDiagnostics.md)
 * **7.CustomAuthoring**
-    * [CustomAuthoring](content/readme/docs/en/menu/7.CustomAuthoring/CustomAuthoring.md)
+    * [CustomAuthoring](content/readme/docs/en/menu/7.CustomAuthoring/knowledge/CustomAuthoring.md)
 * **8.AutoConfigurationTesting**
-    * [AutoConfigurationTesting](content/readme/docs/en/menu/8.AutoConfigurationTesting/AutoConfigurationTesting.md)
+    * [AutoConfigurationTesting](content/readme/docs/en/menu/8.AutoConfigurationTesting/knowledge/AutoConfigurationTesting.md)
 * **9.StarterSynthesis**
-    * [StarterSynthesis](content/readme/docs/en/menu/9.StarterSynthesis/StarterSynthesis.md)
+    * [StarterSynthesis](content/readme/docs/en/menu/9.StarterSynthesis/knowledge/StarterSynthesis.md)
 
 # Spring Boot Auto-configuration
 

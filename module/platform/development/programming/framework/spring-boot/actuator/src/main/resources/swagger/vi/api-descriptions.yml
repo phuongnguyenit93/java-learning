@@ -10,7 +10,7 @@ ActuatorLearningController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 4.Health/Health.md
+      file: 4.Health/knowledge/Health.md
       anchor: custom-health-indicators
     methodName: setDependencyAvailable
     params:
@@ -37,7 +37,7 @@ ActuatorLearningController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 7.MetricsMicrometer/MetricsMicrometer.md
+      file: 7.MetricsMicrometer/knowledge/MetricsMicrometer.md
       anchor: tag-filtered-metrics
     methodName: recordMetric
     params:
@@ -62,7 +62,7 @@ ActuatorLearningController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 9.CustomEndpoints/CustomEndpoints.md
+      file: 9.CustomEndpoints/knowledge/CustomEndpoints.md
       anchor: endpoint-operation-annotations
     usage: true
     videoYoutubeId: ID của video youtube chèn vào description trong API
@@ -88,7 +88,7 @@ ActuatorLearningController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 9.CustomEndpoints/CustomEndpoints.md
+      file: 9.CustomEndpoints/knowledge/CustomEndpoints.md
       anchor: technology-agnostic-custom-endpoints
     usage: true
     videoYoutubeId: ID của video youtube chèn vào description trong API

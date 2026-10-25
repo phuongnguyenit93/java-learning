@@ -1,4 +1,4 @@
-1.Overview/Overview.md:
+1.Overview/knowledge/Overview.md:
   overview-001:
     difficulty: BASIC
     aiGenerated: true
@@ -39,7 +39,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-2.CollectionContracts/CollectionContracts.md:
+2.CollectionContracts/knowledge/CollectionContracts.md:
   collection-contracts-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -80,7 +80,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-3.ElementTypes/ElementTypes.md:
+3.ElementTypes/knowledge/ElementTypes.md:
   element-types-001:
     difficulty: BASIC
     aiGenerated: true
@@ -116,7 +116,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-4.EqualityHashing/EqualityHashing.md:
+4.EqualityHashing/knowledge/EqualityHashing.md:
   equality-hashing-001:
     difficulty: BASIC
     aiGenerated: true
@@ -157,7 +157,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-5.ComparisonSorting/ComparisonSorting.md:
+5.ComparisonSorting/knowledge/ComparisonSorting.md:
   comparison-sorting-001:
     difficulty: BASIC
     aiGenerated: true
@@ -198,7 +198,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-6.Iteration/Iteration.md:
+6.Iteration/knowledge/Iteration.md:
   iteration-001:
     difficulty: BASIC
     aiGenerated: true
@@ -239,7 +239,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-7.List/List.md:
+7.List/knowledge/List.md:
   list-001:
     difficulty: BASIC
     aiGenerated: true
@@ -285,7 +285,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-8.ArrayList/ArrayList.md:
+8.ArrayList/knowledge/ArrayList.md:
   array-list-001:
     difficulty: BASIC
     aiGenerated: true
@@ -326,7 +326,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-9.LinkedList/LinkedList.md:
+9.LinkedList/knowledge/LinkedList.md:
   linked-list-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -362,7 +362,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-10.Set/Set.md:
+10.Set/knowledge/Set.md:
   set-001:
     difficulty: BASIC
     aiGenerated: true
@@ -398,7 +398,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-11.HashBasedSet/HashBasedSet.md:
+11.HashBasedSet/knowledge/HashBasedSet.md:
   hash-based-set-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -439,7 +439,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-12.SortedSet/SortedSet.md:
+12.SortedSet/knowledge/SortedSet.md:
   sorted-set-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -480,7 +480,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-13.QueueDeque/QueueDeque.md:
+13.QueueDeque/knowledge/QueueDeque.md:
   queue-deque-001:
     difficulty: BASIC
     aiGenerated: true
@@ -526,7 +526,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-14.PriorityQueue/PriorityQueue.md:
+14.PriorityQueue/knowledge/PriorityQueue.md:
   priority-queue-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -567,7 +567,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-15.Map/Map.md:
+15.Map/knowledge/Map.md:
   map-001:
     difficulty: BASIC
     aiGenerated: true
@@ -618,7 +618,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-16.HashMap/HashMap.md:
+16.HashMap/knowledge/HashMap.md:
   hash-map-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -664,7 +664,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-17.LinkedHashMap/LinkedHashMap.md:
+17.LinkedHashMap/knowledge/LinkedHashMap.md:
   linked-hash-map-001:
     difficulty: BASIC
     aiGenerated: true
@@ -705,7 +705,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-18.TreeMap/TreeMap.md:
+18.TreeMap/knowledge/TreeMap.md:
   tree-map-001:
     difficulty: BASIC
     aiGenerated: true
@@ -746,7 +746,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-19.SpecializedCollections/SpecializedCollections.md:
+19.SpecializedCollections/knowledge/SpecializedCollections.md:
   specialized-collections-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -787,7 +787,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-20.SequencedCollections/SequencedCollections.md:
+20.SequencedCollections/knowledge/SequencedCollections.md:
   sequenced-collections-001:
     difficulty: BASIC
     aiGenerated: true
@@ -828,7 +828,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-21.ViewsCopies/ViewsCopies.md:
+21.ViewsCopies/knowledge/ViewsCopies.md:
   views-copies-001:
     difficulty: BASIC
     aiGenerated: true
@@ -869,7 +869,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-22.UnmodifiableCollections/UnmodifiableCollections.md:
+22.UnmodifiableCollections/knowledge/UnmodifiableCollections.md:
   unmodifiable-collections-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -910,7 +910,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-23.CollectionsUtilities/CollectionsUtilities.md:
+23.CollectionsUtilities/knowledge/CollectionsUtilities.md:
   collections-utilities-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -956,7 +956,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-24.ArrayConversion/ArrayConversion.md:
+24.ArrayConversion/knowledge/ArrayConversion.md:
   array-conversion-001:
     difficulty: BASIC
     aiGenerated: true
@@ -997,7 +997,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-25.StreamsSpliterators/StreamsSpliterators.md:
+25.StreamsSpliterators/knowledge/StreamsSpliterators.md:
   streams-spliterators-001:
     difficulty: BASIC
     aiGenerated: true
@@ -1038,7 +1038,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-26.ThreadSafety/ThreadSafety.md:
+26.ThreadSafety/knowledge/ThreadSafety.md:
   thread-safety-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -1079,7 +1079,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-27.ConcurrentMapsSets/ConcurrentMapsSets.md:
+27.ConcurrentMapsSets/knowledge/ConcurrentMapsSets.md:
   concurrent-maps-sets-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -1120,7 +1120,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-28.ConcurrentQueues/ConcurrentQueues.md:
+28.ConcurrentQueues/knowledge/ConcurrentQueues.md:
   concurrent-queues-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -1161,7 +1161,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-29.CustomCollections/CustomCollections.md:
+29.CustomCollections/knowledge/CustomCollections.md:
   custom-collections-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -1202,7 +1202,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-30.Performance/Performance.md:
+30.Performance/knowledge/Performance.md:
   performance-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -1243,7 +1243,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-31.TestingPitfalls/TestingPitfalls.md:
+31.TestingPitfalls/knowledge/TestingPitfalls.md:
   testing-pitfalls-001:
     difficulty: BASIC
     aiGenerated: true
@@ -1289,7 +1289,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-32.PracticalExercises/PracticalExercises.md:
+32.PracticalExercises/knowledge/PracticalExercises.md:
   practical-exercises-001:
     difficulty: INTERMEDIATE
     aiGenerated: true

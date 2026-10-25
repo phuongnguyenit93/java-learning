@@ -12,7 +12,7 @@ InstrumentationController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 5.InstrumentationApi/InstrumentationApi.md
+      file: 5.InstrumentationApi/knowledge/InstrumentationApi.md
       anchor: capability-model
     methodName: agentStatus
     params: [
@@ -42,7 +42,7 @@ InstrumentationController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 7.TransformationPipeline/TransformationPipeline.md
+      file: 7.TransformationPipeline/knowledge/TransformationPipeline.md
       anchor: retransform-capability-groups
     methodName: retransformGroups
     params: [

@@ -10,7 +10,7 @@ AeadExperimentController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 11.AuthenticatedEncryption/AuthenticatedEncryption.md
+      file: 11.AuthenticatedEncryption/knowledge/AuthenticatedEncryption.md
       anchor: aead-decryption-failure
     methodName: tamperDetection
     params: [
@@ -37,7 +37,7 @@ DigitalSignatureExperimentController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 8.DigitalSignature/DigitalSignature.md
+      file: 8.DigitalSignature/knowledge/DigitalSignature.md
       anchor: signature-data-contract
     methodName: tamper
     params: [
@@ -66,7 +66,7 @@ KeyDerivationExperimentController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 13.KeyDerivation/KeyDerivation.md
+      file: 13.KeyDerivation/knowledge/KeyDerivation.md
       anchor: salt-and-work-factor
     methodName: saltEffect
     params: [
@@ -94,7 +94,7 @@ KeyEstablishmentExperimentController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 12.KeyEstablishment/KeyEstablishment.md
+      file: 12.KeyEstablishment/knowledge/KeyEstablishment.md
       anchor: agreement-vs-kem
     methodName: compare
     params: [
@@ -121,7 +121,7 @@ MacExperimentController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 7.Mac/Mac.md
+      file: 7.Mac/knowledge/Mac.md
       anchor: mac-workflow
     methodName: tamper
     params: [

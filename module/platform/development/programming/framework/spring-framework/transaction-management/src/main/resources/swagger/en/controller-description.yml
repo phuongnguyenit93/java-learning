@@ -3,4 +3,4 @@ TransactionExperimentController:
     <h2>Spring Transaction Runtime Experiments</h2>
     <p>Runs bounded H2-backed experiments against a real in-memory H2 database so proxy boundaries, rollback decisions, propagation, and transaction-bound event phases are visible as committed rows and runtime traces.</p>
   readmeRelated:
-    file: 6.Rollback/Rollback.md
+    file: 6.Rollback/knowledge/Rollback.md

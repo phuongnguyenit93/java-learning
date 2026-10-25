@@ -1,4 +1,4 @@
-1.Introduction/SpringMessaging.md:
+1.Introduction/knowledge/SpringMessaging.md:
   messaging-purpose:
     difficulty: BASIC
     aiGenerated: true
@@ -29,7 +29,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-2.MessageModel/MessageModel.md:
+2.MessageModel/knowledge/MessageModel.md:
   message-payload-headers:
     difficulty: BASIC
     aiGenerated: true
@@ -70,7 +70,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-3.WebSocketFoundation/WebSocketFoundation.md:
+3.WebSocketFoundation/knowledge/WebSocketFoundation.md:
   websocket-use-cases:
     difficulty: BASIC
     aiGenerated: true
@@ -116,7 +116,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-4.StompModel/StompModel.md:
+4.StompModel/knowledge/StompModel.md:
   stomp-purpose:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -162,7 +162,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-5.StompMessageFlow/StompMessageFlow.md:
+5.StompMessageFlow/knowledge/StompMessageFlow.md:
   enable-websocket-message-broker:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -208,7 +208,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-6.StompApplicationHandling/StompApplicationHandling.md:
+6.StompApplicationHandling/knowledge/StompApplicationHandling.md:
   message-mapping:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -254,7 +254,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-7.BrokerRouting/BrokerRouting.md:
+7.BrokerRouting/knowledge/BrokerRouting.md:
   simple-broker:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -300,7 +300,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-8.StompClientLifecycle/StompClientLifecycle.md:
+8.StompClientLifecycle/knowledge/StompClientLifecycle.md:
   websocket-stomp-client:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -336,7 +336,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-9.StompLifecycleInterception/StompLifecycleInterception.md:
+9.StompLifecycleInterception/knowledge/StompLifecycleInterception.md:
   stomp-application-events:
     difficulty: ADVANCED
     aiGenerated: true
@@ -387,7 +387,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-10.RSocketInteraction/RSocketInteraction.md:
+10.RSocketInteraction/knowledge/RSocketInteraction.md:
   rsocket-purpose:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -438,7 +438,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-11.RSocketRequester/RSocketRequester.md:
+11.RSocketRequester/knowledge/RSocketRequester.md:
   rsocket-requester-role:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -484,7 +484,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-12.RSocketResponders/RSocketResponders.md:
+12.RSocketResponders/knowledge/RSocketResponders.md:
   rsocket-message-handler:
     difficulty: ADVANCED
     aiGenerated: true
@@ -535,7 +535,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-13.OperationsTestingDecisions/OperationsTestingDecisions.md:
+13.OperationsTestingDecisions/knowledge/OperationsTestingDecisions.md:
   messaging-executor-capacity:
     difficulty: ADVANCED
     aiGenerated: true

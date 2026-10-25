@@ -44,7 +44,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "3.BeanRegistration/BeanRegistration.md"
+      file: "3.BeanRegistration/knowledge/BeanRegistration.md"
       anchor: "full-vs-lite-configuration"
     apiRelated:
       controller: "ConfigurationExperimentController"
@@ -69,7 +69,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.DependencyInjection/DependencyInjection.md"
+      file: "4.DependencyInjection/knowledge/DependencyInjection.md"
       anchor: "dependency-resolution-failures"
     apiRelated:
       controller: "DependencyFailureExperimentController"
@@ -94,7 +94,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "5.BeanScope/BeanScope.md"
+      file: "5.BeanScope/knowledge/BeanScope.md"
       anchor: "scoped-dependency-mismatch"
     apiRelated:
       controller: "ScopeExperimentController"
@@ -144,7 +144,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.DependencyInjection/DependencyInjection.md"
+      file: "4.DependencyInjection/knowledge/DependencyInjection.md"
       anchor: "primary-and-qualifier"
     apiRelated:
       controller: ""
@@ -169,7 +169,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "5.BeanScope/BeanScope.md"
+      file: "5.BeanScope/knowledge/BeanScope.md"
       anchor: "eager-vs-lazy-initialization"
     apiRelated:
       controller: ""
@@ -194,7 +194,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "7.EnvironmentAndSpEL/EnvironmentAndSpEL.md"
+      file: "7.EnvironmentAndSpEL/knowledge/EnvironmentAndSpEL.md"
       anchor: "property-placeholders"
     apiRelated:
       controller: ""
@@ -219,7 +219,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "8.ApplicationContextServices/ApplicationContextServices.md"
+      file: "8.ApplicationContextServices/knowledge/ApplicationContextServices.md"
       anchor: "application-events"
     apiRelated:
       controller: ""
@@ -244,7 +244,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "9.ExtensionPoints/ExtensionPoints.md"
+      file: "9.ExtensionPoints/knowledge/ExtensionPoints.md"
       anchor: "extension-point-purpose"
     apiRelated:
       controller: ""
@@ -269,7 +269,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "10.ContainerDesignAndDiagnostics/ContainerDesignAndDiagnostics.md"
+      file: "10.ContainerDesignAndDiagnostics/knowledge/ContainerDesignAndDiagnostics.md"
       anchor: "startup-failure-diagnosis"
     apiRelated:
       controller: ""

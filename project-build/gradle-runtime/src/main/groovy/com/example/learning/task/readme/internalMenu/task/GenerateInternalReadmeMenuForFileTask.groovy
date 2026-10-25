@@ -40,7 +40,7 @@ Example:
 generateInternalReadmeMenuForFile {
 
     location =
-        'content/readme/docs/vi/menu/1.Basic/BasicThread.md'
+        'content/readme/docs/vi/menu/1.Basic/knowledge/BasicThread.md'
 }
 """
             )

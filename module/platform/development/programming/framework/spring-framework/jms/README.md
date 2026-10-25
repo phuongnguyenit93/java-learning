@@ -1,21 +1,21 @@
 # 📂 README MODULE STRUCTURE (EN)
 
 * **1.Foundations**
-    * [SpringJmsFoundations](content/readme/docs/en/menu/1.Foundations/SpringJmsFoundations.md)
+    * [SpringJmsFoundations](content/readme/docs/en/menu/1.Foundations/knowledge/SpringJmsFoundations.md)
 * **2.TemplateAccess**
-    * [JmsTemplateAccess](content/readme/docs/en/menu/2.TemplateAccess/JmsTemplateAccess.md)
+    * [JmsTemplateAccess](content/readme/docs/en/menu/2.TemplateAccess/knowledge/JmsTemplateAccess.md)
 * **3.DestinationsConversionMetadata**
-    * [DestinationsConversionMetadata](content/readme/docs/en/menu/3.DestinationsConversionMetadata/DestinationsConversionMetadata.md)
+    * [DestinationsConversionMetadata](content/readme/docs/en/menu/3.DestinationsConversionMetadata/knowledge/DestinationsConversionMetadata.md)
 * **4.ListenerContainer**
-    * [ListenerContainer](content/readme/docs/en/menu/4.ListenerContainer/ListenerContainer.md)
+    * [ListenerContainer](content/readme/docs/en/menu/4.ListenerContainer/knowledge/ListenerContainer.md)
 * **5.AnnotationEndpoints**
-    * [AnnotationEndpoints](content/readme/docs/en/menu/5.AnnotationEndpoints/AnnotationEndpoints.md)
+    * [AnnotationEndpoints](content/readme/docs/en/menu/5.AnnotationEndpoints/knowledge/AnnotationEndpoints.md)
 * **6.TransactionsDelivery**
-    * [TransactionsDelivery](content/readme/docs/en/menu/6.TransactionsDelivery/TransactionsDelivery.md)
+    * [TransactionsDelivery](content/readme/docs/en/menu/6.TransactionsDelivery/knowledge/TransactionsDelivery.md)
 * **7.ConcurrencyRecoveryLifecycle**
-    * [ConcurrencyRecoveryLifecycle](content/readme/docs/en/menu/7.ConcurrencyRecoveryLifecycle/ConcurrencyRecoveryLifecycle.md)
+    * [ConcurrencyRecoveryLifecycle](content/readme/docs/en/menu/7.ConcurrencyRecoveryLifecycle/knowledge/ConcurrencyRecoveryLifecycle.md)
 * **8.ProductionReadiness**
-    * [ProductionReadiness](content/readme/docs/en/menu/8.ProductionReadiness/ProductionReadiness.md)
+    * [ProductionReadiness](content/readme/docs/en/menu/8.ProductionReadiness/knowledge/ProductionReadiness.md)
 
 # Spring JMS
 

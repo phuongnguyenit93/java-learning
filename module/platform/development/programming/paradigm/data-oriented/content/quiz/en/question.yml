@@ -45,7 +45,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.DataOrientedProgramming/DataOrientedProgramming.md"
+      file: "1.DataOrientedProgramming/knowledge/DataOrientedProgramming.md"
       anchor: "dop-concept"
     apiRelated:
       controller: ""
@@ -69,7 +69,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.DataOrientedProgramming/DataOrientedProgramming.md"
+      file: "1.DataOrientedProgramming/knowledge/DataOrientedProgramming.md"
       anchor: "dop-motivation"
     apiRelated:
       controller: ""
@@ -93,7 +93,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.DataOrientedProgramming/DataOrientedProgramming.md"
+      file: "1.DataOrientedProgramming/knowledge/DataOrientedProgramming.md"
       anchor: "dop-prerequisites"
     apiRelated:
       controller: ""
@@ -117,7 +117,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.DataOrientedProgramming/DataOrientedProgramming.md"
+      file: "1.DataOrientedProgramming/knowledge/DataOrientedProgramming.md"
       anchor: "dop-context"
     apiRelated:
       controller: ""
@@ -141,7 +141,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.DataOrientedProgramming/DataOrientedProgramming.md"
+      file: "1.DataOrientedProgramming/knowledge/DataOrientedProgramming.md"
       anchor: "dop-sharvit-model"
     apiRelated:
       controller: ""
@@ -165,7 +165,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.DataOrientedProgramming/DataOrientedProgramming.md"
+      file: "1.DataOrientedProgramming/knowledge/DataOrientedProgramming.md"
       anchor: "dop-terminology"
     apiRelated:
       controller: ""
@@ -189,7 +189,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.DataOrientedProgramming/DataOrientedProgramming.md"
+      file: "1.DataOrientedProgramming/knowledge/DataOrientedProgramming.md"
       anchor: "dop-learning-path"
     apiRelated:
       controller: ""
@@ -213,7 +213,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.CodeDataSeparation/CodeDataSeparation.md"
+      file: "2.CodeDataSeparation/knowledge/CodeDataSeparation.md"
       anchor: "code-data-concept"
     apiRelated:
       controller: ""
@@ -237,7 +237,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.CodeDataSeparation/CodeDataSeparation.md"
+      file: "2.CodeDataSeparation/knowledge/CodeDataSeparation.md"
       anchor: "behavior-coupling"
     apiRelated:
       controller: ""
@@ -261,7 +261,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.CodeDataSeparation/CodeDataSeparation.md"
+      file: "2.CodeDataSeparation/knowledge/CodeDataSeparation.md"
       anchor: "data-visibility"
     apiRelated:
       controller: ""
@@ -285,7 +285,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.CodeDataSeparation/CodeDataSeparation.md"
+      file: "2.CodeDataSeparation/knowledge/CodeDataSeparation.md"
       anchor: "separation-tradeoffs"
     apiRelated:
       controller: ""
@@ -309,7 +309,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "3.GenericData/GenericData.md"
+      file: "3.GenericData/knowledge/GenericData.md"
       anchor: "generic-concept"
     apiRelated:
       controller: ""
@@ -333,7 +333,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "3.GenericData/GenericData.md"
+      file: "3.GenericData/knowledge/GenericData.md"
       anchor: "generic-domain-example"
     apiRelated:
       controller: "OrderPreviewController"
@@ -357,7 +357,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "3.GenericData/GenericData.md"
+      file: "3.GenericData/knowledge/GenericData.md"
       anchor: "generic-operations"
     apiRelated:
       controller: ""
@@ -381,7 +381,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "3.GenericData/GenericData.md"
+      file: "3.GenericData/knowledge/GenericData.md"
       anchor: "generic-failure-modes"
     apiRelated:
       controller: "OrderPreviewController"
@@ -405,7 +405,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "3.GenericData/GenericData.md"
+      file: "3.GenericData/knowledge/GenericData.md"
       anchor: "generic-contracts"
     apiRelated:
       controller: ""
@@ -429,7 +429,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.ImmutableData/ImmutableData.md"
+      file: "4.ImmutableData/knowledge/ImmutableData.md"
       anchor: "dop-immutable-principle"
     apiRelated:
       controller: ""
@@ -453,7 +453,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.ImmutableData/ImmutableData.md"
+      file: "4.ImmutableData/knowledge/ImmutableData.md"
       anchor: "dop-state-update"
     apiRelated:
       controller: ""
@@ -477,7 +477,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.ImmutableData/ImmutableData.md"
+      file: "4.ImmutableData/knowledge/ImmutableData.md"
       anchor: "dop-state-history"
     apiRelated:
       controller: "OrderPreviewController"
@@ -501,7 +501,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.ImmutableData/ImmutableData.md"
+      file: "4.ImmutableData/knowledge/ImmutableData.md"
       anchor: "dop-state-coordination"
     apiRelated:
       controller: ""
@@ -525,7 +525,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "5.DataSchema/DataSchema.md"
+      file: "5.DataSchema/knowledge/DataSchema.md"
       anchor: "dop-schema-concept"
     apiRelated:
       controller: ""
@@ -549,7 +549,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "5.DataSchema/DataSchema.md"
+      file: "5.DataSchema/knowledge/DataSchema.md"
       anchor: "dop-schema-optional"
     apiRelated:
       controller: ""
@@ -573,7 +573,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "5.DataSchema/DataSchema.md"
+      file: "5.DataSchema/knowledge/DataSchema.md"
       anchor: "dop-validation-boundaries"
     apiRelated:
       controller: "OrderPreviewController"
@@ -597,7 +597,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "5.DataSchema/DataSchema.md"
+      file: "5.DataSchema/knowledge/DataSchema.md"
       anchor: "dop-validation-failure"
     apiRelated:
       controller: "OrderPreviewController"
@@ -621,7 +621,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "5.DataSchema/DataSchema.md"
+      file: "5.DataSchema/knowledge/DataSchema.md"
       anchor: "dop-schema-tradeoffs"
     apiRelated:
       controller: ""
@@ -645,7 +645,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "6.DataFlow/DataFlow.md"
+      file: "6.DataFlow/knowledge/DataFlow.md"
       anchor: "dop-flow-scenario"
     apiRelated:
       controller: "OrderPreviewController"
@@ -669,7 +669,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "6.DataFlow/DataFlow.md"
+      file: "6.DataFlow/knowledge/DataFlow.md"
       anchor: "dop-flow-validate"
     apiRelated:
       controller: "OrderPreviewController"
@@ -693,7 +693,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "6.DataFlow/DataFlow.md"
+      file: "6.DataFlow/knowledge/DataFlow.md"
       anchor: "dop-flow-transform"
     apiRelated:
       controller: "OrderPreviewController"
@@ -717,7 +717,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "6.DataFlow/DataFlow.md"
+      file: "6.DataFlow/knowledge/DataFlow.md"
       anchor: "dop-flow-coordinate"
     apiRelated:
       controller: ""
@@ -741,7 +741,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "6.DataFlow/DataFlow.md"
+      file: "6.DataFlow/knowledge/DataFlow.md"
       anchor: "dop-flow-observe"
     apiRelated:
       controller: "OrderPreviewController"
@@ -765,7 +765,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "7.JavaPerspective/JavaPerspective.md"
+      file: "7.JavaPerspective/knowledge/JavaPerspective.md"
       anchor: "amber-definition"
     apiRelated:
       controller: ""
@@ -789,7 +789,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "7.JavaPerspective/JavaPerspective.md"
+      file: "7.JavaPerspective/knowledge/JavaPerspective.md"
       anchor: "amber-transparent-data"
     apiRelated:
       controller: ""
@@ -813,7 +813,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "7.JavaPerspective/JavaPerspective.md"
+      file: "7.JavaPerspective/knowledge/JavaPerspective.md"
       anchor: "amber-valid-variants"
     apiRelated:
       controller: ""
@@ -837,7 +837,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "7.JavaPerspective/JavaPerspective.md"
+      file: "7.JavaPerspective/knowledge/JavaPerspective.md"
       anchor: "amber-separate-operations"
     apiRelated:
       controller: ""
@@ -861,7 +861,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "7.JavaPerspective/JavaPerspective.md"
+      file: "7.JavaPerspective/knowledge/JavaPerspective.md"
       anchor: "amber-sharvit-comparison"
     apiRelated:
       controller: ""
@@ -885,7 +885,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "8.Tradeoffs/Tradeoffs.md"
+      file: "8.Tradeoffs/knowledge/Tradeoffs.md"
       anchor: "dop-choose"
     apiRelated:
       controller: ""
@@ -909,7 +909,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "8.Tradeoffs/Tradeoffs.md"
+      file: "8.Tradeoffs/knowledge/Tradeoffs.md"
       anchor: "dop-costs"
     apiRelated:
       controller: ""
@@ -933,7 +933,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "8.Tradeoffs/Tradeoffs.md"
+      file: "8.Tradeoffs/knowledge/Tradeoffs.md"
       anchor: "dop-functional-relation"
     apiRelated:
       controller: ""
@@ -957,7 +957,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "8.Tradeoffs/Tradeoffs.md"
+      file: "8.Tradeoffs/knowledge/Tradeoffs.md"
       anchor: "dop-versus-dod"
     apiRelated:
       controller: ""
@@ -981,7 +981,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "8.Tradeoffs/Tradeoffs.md"
+      file: "8.Tradeoffs/knowledge/Tradeoffs.md"
       anchor: "dop-handoff"
     apiRelated:
       controller: "OrderPreviewController"

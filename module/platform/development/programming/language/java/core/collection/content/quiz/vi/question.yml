@@ -49,7 +49,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.Hierarchy/Hierarchy.md", anchor: "collection-purpose"}
+    readmeRelated: {file: "1.Hierarchy/knowledge/Hierarchy.md", anchor: "collection-purpose"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: collection-q02
@@ -62,7 +62,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.Hierarchy/Hierarchy.md", anchor: "collection-vs-collections"}
+    readmeRelated: {file: "1.Hierarchy/knowledge/Hierarchy.md", anchor: "collection-vs-collections"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: collection-q03
@@ -75,7 +75,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.Hierarchy/Hierarchy.md", anchor: "interface-vs-implementation"}
+    readmeRelated: {file: "1.Hierarchy/knowledge/Hierarchy.md", anchor: "interface-vs-implementation"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: collection-q04
@@ -88,7 +88,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.Hierarchy/Hierarchy.md", anchor: "collection-api-contract"}
+    readmeRelated: {file: "1.Hierarchy/knowledge/Hierarchy.md", anchor: "collection-api-contract"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: collection-q05
@@ -101,7 +101,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.List/List.md", anchor: "list-semantics"}
+    readmeRelated: {file: "2.List/knowledge/List.md", anchor: "list-semantics"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: collection-q06
@@ -114,7 +114,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "11.ImplementationChoice/ImplementationChoice.md", anchor: "list-choice"}
+    readmeRelated: {file: "11.ImplementationChoice/knowledge/ImplementationChoice.md", anchor: "list-choice"}
     apiRelated: {controller: "ListController", methodSignature: "arrayVsLinked()"}
 
   - id: collection-q07
@@ -127,7 +127,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.List/List.md", anchor: "list-practical-boundaries"}
+    readmeRelated: {file: "2.List/knowledge/List.md", anchor: "list-practical-boundaries"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: collection-q08
@@ -140,7 +140,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.List/List.md", anchor: "list-practical-boundaries"}
+    readmeRelated: {file: "2.List/knowledge/List.md", anchor: "list-practical-boundaries"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: collection-q09
@@ -153,7 +153,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.List/List.md", anchor: "list-practical-boundaries"}
+    readmeRelated: {file: "2.List/knowledge/List.md", anchor: "list-practical-boundaries"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: collection-q10
@@ -166,7 +166,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.Set/Set.md", anchor: "set-algebra"}
+    readmeRelated: {file: "3.Set/knowledge/Set.md", anchor: "set-algebra"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: collection-q11
@@ -179,7 +179,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.Set/Set.md", anchor: "set-equality"}
+    readmeRelated: {file: "3.Set/knowledge/Set.md", anchor: "set-equality"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: collection-q12
@@ -192,7 +192,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.Set/Set.md", anchor: "hashset-model"}
+    readmeRelated: {file: "3.Set/knowledge/Set.md", anchor: "hashset-model"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: collection-q13
@@ -205,7 +205,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.Set/Set.md", anchor: "linkedhashset-order"}
+    readmeRelated: {file: "3.Set/knowledge/Set.md", anchor: "linkedhashset-order"}
     apiRelated: {controller: "SetController", methodSignature: "uniquenessAndOrder()"}
 
   - id: collection-q14
@@ -218,7 +218,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.Set/Set.md", anchor: "treeset-order"}
+    readmeRelated: {file: "3.Set/knowledge/Set.md", anchor: "treeset-order"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: collection-q15
@@ -231,7 +231,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.Map/Map.md", anchor: "map-semantics"}
+    readmeRelated: {file: "4.Map/knowledge/Map.md", anchor: "map-semantics"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: collection-q16
@@ -244,7 +244,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.Map/Map.md", anchor: "map-views"}
+    readmeRelated: {file: "4.Map/knowledge/Map.md", anchor: "map-views"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: collection-q17
@@ -257,7 +257,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.Map/Map.md", anchor: "map-default-operations"}
+    readmeRelated: {file: "4.Map/knowledge/Map.md", anchor: "map-default-operations"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: collection-q18
@@ -270,7 +270,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "11.ImplementationChoice/ImplementationChoice.md", anchor: "map-choice"}
+    readmeRelated: {file: "11.ImplementationChoice/knowledge/ImplementationChoice.md", anchor: "map-choice"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: collection-q19
@@ -283,7 +283,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.Map/Map.md", anchor: "map-compute-merge"}
+    readmeRelated: {file: "4.Map/knowledge/Map.md", anchor: "map-compute-merge"}
     apiRelated: {controller: "MapController", methodSignature: "orderingAndCompute()"}
 
   - id: collection-q20
@@ -296,7 +296,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.QueueDeque/QueueDeque.md", anchor: "exception-vs-special-value"}
+    readmeRelated: {file: "5.QueueDeque/knowledge/QueueDeque.md", anchor: "exception-vs-special-value"}
     apiRelated: {controller: "QueueController", methodSignature: "queueOperations()"}
 
   - id: collection-q21
@@ -309,7 +309,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.QueueDeque/QueueDeque.md", anchor: "deque-semantics"}
+    readmeRelated: {file: "5.QueueDeque/knowledge/QueueDeque.md", anchor: "deque-semantics"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: collection-q22
@@ -322,7 +322,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.QueueDeque/QueueDeque.md", anchor: "priority-queue"}
+    readmeRelated: {file: "5.QueueDeque/knowledge/QueueDeque.md", anchor: "priority-queue"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: collection-q23
@@ -335,7 +335,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.Iteration/Iteration.md", anchor: "enhanced-for"}
+    readmeRelated: {file: "6.Iteration/knowledge/Iteration.md", anchor: "enhanced-for"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: collection-q24
@@ -348,7 +348,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.Iteration/Iteration.md", anchor: "listiterator-contract"}
+    readmeRelated: {file: "6.Iteration/knowledge/Iteration.md", anchor: "listiterator-contract"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: collection-q25
@@ -361,7 +361,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.Iteration/Iteration.md", anchor: "spliterator-boundary"}
+    readmeRelated: {file: "6.Iteration/knowledge/Iteration.md", anchor: "spliterator-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: collection-q26
@@ -374,7 +374,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.OrderingSorting/OrderingSorting.md", anchor: "encounter-order"}
+    readmeRelated: {file: "7.OrderingSorting/knowledge/OrderingSorting.md", anchor: "encounter-order"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: collection-q27
@@ -387,7 +387,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.OrderingSorting/OrderingSorting.md", anchor: "comparison-result-contract"}
+    readmeRelated: {file: "7.OrderingSorting/knowledge/OrderingSorting.md", anchor: "comparison-result-contract"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: collection-q28
@@ -400,7 +400,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.OrderingSorting/OrderingSorting.md", anchor: "navigable-range-operations"}
+    readmeRelated: {file: "7.OrderingSorting/knowledge/OrderingSorting.md", anchor: "navigable-range-operations"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: collection-q29
@@ -413,7 +413,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.OrderingSorting/OrderingSorting.md", anchor: "stable-sort"}
+    readmeRelated: {file: "7.OrderingSorting/knowledge/OrderingSorting.md", anchor: "stable-sort"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: collection-q30
@@ -426,7 +426,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.OrderingSorting/OrderingSorting.md", anchor: "collections-utility-algorithms"}
+    readmeRelated: {file: "7.OrderingSorting/knowledge/OrderingSorting.md", anchor: "collections-utility-algorithms"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: collection-q31
@@ -439,7 +439,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.EqualityHashing/EqualityHashing.md", anchor: "collection-equality-boundary"}
+    readmeRelated: {file: "8.EqualityHashing/knowledge/EqualityHashing.md", anchor: "collection-equality-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: collection-q32
@@ -452,7 +452,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.EqualityHashing/EqualityHashing.md", anchor: "mutable-element-risk"}
+    readmeRelated: {file: "8.EqualityHashing/knowledge/EqualityHashing.md", anchor: "mutable-element-risk"}
     apiRelated: {controller: "HashingController", methodSignature: "mutableKey()"}
 
   - id: collection-q33
@@ -465,7 +465,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.MutableImmutable/MutableImmutable.md", anchor: "view-vs-copy"}
+    readmeRelated: {file: "9.MutableImmutable/knowledge/MutableImmutable.md", anchor: "view-vs-copy"}
     apiRelated: {controller: "ImmutabilityController", methodSignature: "viewVsCopy()"}
 
   - id: collection-q34
@@ -478,7 +478,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.MutableImmutable/MutableImmutable.md", anchor: "backed-view-fixed-size-snapshot"}
+    readmeRelated: {file: "9.MutableImmutable/knowledge/MutableImmutable.md", anchor: "backed-view-fixed-size-snapshot"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: collection-q35
@@ -491,7 +491,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "10.FailFast/FailFast.md", anchor: "concurrent-modification-exception"}
+    readmeRelated: {file: "10.FailFast/knowledge/FailFast.md", anchor: "concurrent-modification-exception"}
     apiRelated: {controller: "IterationController", methodSignature: "failFast()"}
 
   - id: collection-q36
@@ -504,7 +504,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "11.ImplementationChoice/ImplementationChoice.md", anchor: "null-policy-matrix"}
+    readmeRelated: {file: "11.ImplementationChoice/knowledge/ImplementationChoice.md", anchor: "null-policy-matrix"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: collection-q37
@@ -517,7 +517,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "11.ImplementationChoice/ImplementationChoice.md", anchor: "choice-by-characteristics"}
+    readmeRelated: {file: "11.ImplementationChoice/knowledge/ImplementationChoice.md", anchor: "choice-by-characteristics"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: collection-q38
@@ -530,7 +530,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "12.EnumCollections/EnumCollections.md", anchor: "enumset-model"}
+    readmeRelated: {file: "12.EnumCollections/knowledge/EnumCollections.md", anchor: "enumset-model"}
     apiRelated: {controller: "EnumCollectionController", methodSignature: "specializedCollections()"}
 
   - id: collection-q39
@@ -543,7 +543,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "12.EnumCollections/EnumCollections.md", anchor: "enummap-model"}
+    readmeRelated: {file: "12.EnumCollections/knowledge/EnumCollections.md", anchor: "enummap-model"}
     apiRelated: {controller: "EnumCollectionController", methodSignature: "specializedCollections()"}
 
   - id: collection-q40
@@ -556,5 +556,5 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.Hierarchy/Hierarchy.md", anchor: "collection-hierarchy"}
+    readmeRelated: {file: "1.Hierarchy/knowledge/Hierarchy.md", anchor: "collection-hierarchy"}
     apiRelated: {controller: "", methodSignature: ""}

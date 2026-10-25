@@ -1,17 +1,17 @@
 # 📂 README MODULE STRUCTURE (VI)
 
 * **1.Introduction**
-    * [ReactiveProgramming](content/readme/docs/vi/menu/1.Introduction/ReactiveProgramming.md)
+    * [ReactiveProgramming](content/readme/docs/vi/menu/1.Introduction/knowledge/ReactiveProgramming.md)
 * **2.DataFlow**
-    * [DataFlow](content/readme/docs/vi/menu/2.DataFlow/DataFlow.md)
+    * [DataFlow](content/readme/docs/vi/menu/2.DataFlow/knowledge/DataFlow.md)
 * **3.Backpressure**
-    * [Backpressure](content/readme/docs/vi/menu/3.Backpressure/Backpressure.md)
+    * [Backpressure](content/readme/docs/vi/menu/3.Backpressure/knowledge/Backpressure.md)
 * **4.ReactiveStreams**
-    * [ReactiveStreams](content/readme/docs/vi/menu/4.ReactiveStreams/ReactiveStreams.md)
+    * [ReactiveStreams](content/readme/docs/vi/menu/4.ReactiveStreams/knowledge/ReactiveStreams.md)
 * **5.ErrorCancellation**
-    * [ErrorCancellation](content/readme/docs/vi/menu/5.ErrorCancellation/ErrorCancellation.md)
+    * [ErrorCancellation](content/readme/docs/vi/menu/5.ErrorCancellation/knowledge/ErrorCancellation.md)
 * **6.Tradeoffs**
-    * [Tradeoffs](content/readme/docs/vi/menu/6.Tradeoffs/Tradeoffs.md)
+    * [Tradeoffs](content/readme/docs/vi/menu/6.Tradeoffs/knowledge/Tradeoffs.md)
 
 # Lập trình phản ứng (Reactive Programming)
 

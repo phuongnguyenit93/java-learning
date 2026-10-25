@@ -34,7 +34,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.MentalModel/NativeInteroperability.md"
+      file: "1.MentalModel/knowledge/NativeInteroperability.md"
       anchor: "managed-native-boundary"
     apiRelated:
       controller: ""
@@ -46,7 +46,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "12.DecisionsSynthesis/DecisionsSynthesis.md"
+      file: "12.DecisionsSynthesis/knowledge/DecisionsSynthesis.md"
       anchor: "jni-vs-ffm"
     apiRelated:
       controller: ""
@@ -82,7 +82,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "11.SafetyPitfalls/SafetyPitfalls.md"
+      file: "11.SafetyPitfalls/knowledge/SafetyPitfalls.md"
       anchor: "layout-descriptor-mismatch"
     apiRelated:
       controller: ""
@@ -94,7 +94,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "10.DowncallUpcall/DowncallUpcall.md"
+      file: "10.DowncallUpcall/knowledge/DowncallUpcall.md"
       anchor: "downcall-handle"
     apiRelated:
       controller: "LinkerExperimentController"
@@ -118,7 +118,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "12.DecisionsSynthesis/DecisionsSynthesis.md"
+      file: "12.DecisionsSynthesis/knowledge/DecisionsSynthesis.md"
       anchor: "end-to-end-native-integration"
     apiRelated:
       controller: ""

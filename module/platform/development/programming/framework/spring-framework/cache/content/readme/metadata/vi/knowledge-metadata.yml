@@ -1,4 +1,4 @@
-1.CachePurpose/CachePurpose.md:
+1.CachePurpose/knowledge/CachePurpose.md:
   cache-purpose:
     difficulty: BASIC
     aiGenerated: true
@@ -29,7 +29,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-2.CacheAbstraction/CacheAbstraction.md:
+2.CacheAbstraction/knowledge/CacheAbstraction.md:
   cache-interface:
     difficulty: BASIC
     aiGenerated: true
@@ -65,7 +65,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-3.DeclarativeCaching/DeclarativeCaching.md:
+3.DeclarativeCaching/knowledge/DeclarativeCaching.md:
   enable-caching:
     difficulty: BASIC
     aiGenerated: true
@@ -106,7 +106,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-4.KeyAndResolution/KeyAndResolution.md:
+4.KeyAndResolution/knowledge/KeyAndResolution.md:
   default-key-generation:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -147,7 +147,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-5.ConsistencyAndInvalidation/ConsistencyAndInvalidation.md:
+5.ConsistencyAndInvalidation/knowledge/ConsistencyAndInvalidation.md:
   population-put-eviction:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -183,7 +183,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-6.InterceptionBoundary/InterceptionBoundary.md:
+6.InterceptionBoundary/knowledge/InterceptionBoundary.md:
   cache-interceptor-infrastructure:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -219,7 +219,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-7.ConcurrencyAndAsync/ConcurrencyAndAsync.md:
+7.ConcurrencyAndAsync/knowledge/ConcurrencyAndAsync.md:
   concurrent-cache-miss:
     difficulty: ADVANCED
     aiGenerated: true
@@ -265,7 +265,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-8.ProviderInteroperability/ProviderInteroperability.md:
+8.ProviderInteroperability/knowledge/ProviderInteroperability.md:
   concurrent-map-provider:
     difficulty: ADVANCED
     aiGenerated: true
@@ -306,7 +306,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-9.FailureAndTransaction/FailureAndTransaction.md:
+9.FailureAndTransaction/knowledge/FailureAndTransaction.md:
   cache-error-handler:
     difficulty: ADVANCED
     aiGenerated: true
@@ -342,7 +342,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-10.CacheStrategy/CacheStrategy.md:
+10.CacheStrategy/knowledge/CacheStrategy.md:
   select-cache-candidate:
     difficulty: INTERMEDIATE
     aiGenerated: true

@@ -49,7 +49,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.Basic/Basic.md", anchor: "annotation-model"}
+    readmeRelated: {file: "1.Basic/knowledge/Basic.md", anchor: "annotation-model"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: annotation-syntax
@@ -62,7 +62,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.Basic/Basic.md", anchor: "annotation-syntax"}
+    readmeRelated: {file: "1.Basic/knowledge/Basic.md", anchor: "annotation-syntax"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: override-annotation
@@ -75,7 +75,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.BuiltIn/BuiltIn.md", anchor: "override-annotation"}
+    readmeRelated: {file: "2.BuiltIn/knowledge/BuiltIn.md", anchor: "override-annotation"}
     apiRelated: {controller: "BuiltInAnnotationController", methodSignature: "compilerContracts()"}
 
   - id: deprecated-annotation
@@ -88,7 +88,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.BuiltIn/BuiltIn.md", anchor: "deprecated-annotation"}
+    readmeRelated: {file: "2.BuiltIn/knowledge/BuiltIn.md", anchor: "deprecated-annotation"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: suppresswarnings
@@ -101,7 +101,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.BuiltIn/BuiltIn.md", anchor: "suppresswarnings"}
+    readmeRelated: {file: "2.BuiltIn/knowledge/BuiltIn.md", anchor: "suppresswarnings"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: safevarargs
@@ -114,7 +114,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.BuiltIn/BuiltIn.md", anchor: "safevarargs"}
+    readmeRelated: {file: "2.BuiltIn/knowledge/BuiltIn.md", anchor: "safevarargs"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: functionalinterface
@@ -127,7 +127,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.BuiltIn/BuiltIn.md", anchor: "functionalinterface"}
+    readmeRelated: {file: "2.BuiltIn/knowledge/BuiltIn.md", anchor: "functionalinterface"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: declare-annotation
@@ -140,7 +140,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.CustomAnnotation/CustomAnnotation.md", anchor: "declare-annotation"}
+    readmeRelated: {file: "3.CustomAnnotation/knowledge/CustomAnnotation.md", anchor: "declare-annotation"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: annotation-restrictions
@@ -153,7 +153,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.CustomAnnotation/CustomAnnotation.md", anchor: "annotation-restrictions"}
+    readmeRelated: {file: "3.CustomAnnotation/knowledge/CustomAnnotation.md", anchor: "annotation-restrictions"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: annotation-elements-defaults
@@ -166,7 +166,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.CustomAnnotation/CustomAnnotation.md", anchor: "annotation-elements-defaults"}
+    readmeRelated: {file: "3.CustomAnnotation/knowledge/CustomAnnotation.md", anchor: "annotation-elements-defaults"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: marker-annotation
@@ -179,7 +179,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.CustomAnnotation/CustomAnnotation.md", anchor: "marker-annotation"}
+    readmeRelated: {file: "3.CustomAnnotation/knowledge/CustomAnnotation.md", anchor: "marker-annotation"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: custom-annotation-design
@@ -192,7 +192,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.CustomAnnotation/CustomAnnotation.md", anchor: "custom-annotation-design"}
+    readmeRelated: {file: "3.CustomAnnotation/knowledge/CustomAnnotation.md", anchor: "custom-annotation-design"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: retention-source
@@ -205,7 +205,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.Retention/Retention.md", anchor: "retention-source"}
+    readmeRelated: {file: "4.Retention/knowledge/Retention.md", anchor: "retention-source"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: retention-class
@@ -218,7 +218,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.Retention/Retention.md", anchor: "retention-class"}
+    readmeRelated: {file: "4.Retention/knowledge/Retention.md", anchor: "retention-class"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: retention-runtime
@@ -231,7 +231,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.Retention/Retention.md", anchor: "retention-runtime"}
+    readmeRelated: {file: "4.Retention/knowledge/Retention.md", anchor: "retention-runtime"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: retention-use-case
@@ -244,7 +244,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.Retention/Retention.md", anchor: "retention-use-case"}
+    readmeRelated: {file: "4.Retention/knowledge/Retention.md", anchor: "retention-use-case"}
     apiRelated: {controller: "AnnotationInspectionController", methodSignature: "retention()"}
 
   - id: annotation-use-sites
@@ -257,7 +257,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.Target/Target.md", anchor: "annotation-use-sites"}
+    readmeRelated: {file: "5.Target/knowledge/Target.md", anchor: "annotation-use-sites"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: elementtype-targets
@@ -270,7 +270,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.Target/Target.md", anchor: "elementtype-targets"}
+    readmeRelated: {file: "5.Target/knowledge/Target.md", anchor: "elementtype-targets"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: type-use-annotation
@@ -283,7 +283,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.Target/Target.md", anchor: "type-use-annotation"}
+    readmeRelated: {file: "5.Target/knowledge/Target.md", anchor: "type-use-annotation"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: target-design
@@ -296,7 +296,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.Target/Target.md", anchor: "target-design"}
+    readmeRelated: {file: "5.Target/knowledge/Target.md", anchor: "target-design"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: retention-meta
@@ -309,7 +309,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.MetaAnnotation/MetaAnnotation.md", anchor: "retention-meta"}
+    readmeRelated: {file: "6.MetaAnnotation/knowledge/MetaAnnotation.md", anchor: "retention-meta"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: target-meta
@@ -322,7 +322,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.MetaAnnotation/MetaAnnotation.md", anchor: "target-meta"}
+    readmeRelated: {file: "6.MetaAnnotation/knowledge/MetaAnnotation.md", anchor: "target-meta"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: documented-meta
@@ -335,7 +335,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.MetaAnnotation/MetaAnnotation.md", anchor: "documented-meta"}
+    readmeRelated: {file: "6.MetaAnnotation/knowledge/MetaAnnotation.md", anchor: "documented-meta"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: inherited-meta
@@ -348,7 +348,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.MetaAnnotation/MetaAnnotation.md", anchor: "inherited-meta"}
+    readmeRelated: {file: "6.MetaAnnotation/knowledge/MetaAnnotation.md", anchor: "inherited-meta"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: repeatable-meta
@@ -361,7 +361,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.MetaAnnotation/MetaAnnotation.md", anchor: "repeatable-meta"}
+    readmeRelated: {file: "6.MetaAnnotation/knowledge/MetaAnnotation.md", anchor: "repeatable-meta"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: repeatable-container
@@ -374,7 +374,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.RepeatableInherited/RepeatableInherited.md", anchor: "repeatable-container"}
+    readmeRelated: {file: "7.RepeatableInherited/knowledge/RepeatableInherited.md", anchor: "repeatable-container"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: get-annotations-by-type
@@ -387,7 +387,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.RepeatableInherited/RepeatableInherited.md", anchor: "get-annotations-by-type"}
+    readmeRelated: {file: "7.RepeatableInherited/knowledge/RepeatableInherited.md", anchor: "get-annotations-by-type"}
     apiRelated: {controller: "RepeatableAnnotationController", methodSignature: "repeatable()"}
 
   - id: inherited-class-only
@@ -400,7 +400,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.RepeatableInherited/RepeatableInherited.md", anchor: "inherited-class-only"}
+    readmeRelated: {file: "7.RepeatableInherited/knowledge/RepeatableInherited.md", anchor: "inherited-class-only"}
     apiRelated: {controller: "InheritedAnnotationController", methodSignature: "inheritance()"}
 
   - id: annotation-inheritance-boundaries
@@ -413,7 +413,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.RepeatableInherited/RepeatableInherited.md", anchor: "annotation-inheritance-boundaries"}
+    readmeRelated: {file: "7.RepeatableInherited/knowledge/RepeatableInherited.md", anchor: "annotation-inheritance-boundaries"}
     apiRelated: {controller: "InheritedAnnotationController", methodSignature: "inheritance()"}
 
   - id: processing-rounds
@@ -426,7 +426,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.AnnotationProcessing/AnnotationProcessing.md", anchor: "processing-rounds"}
+    readmeRelated: {file: "8.AnnotationProcessing/knowledge/AnnotationProcessing.md", anchor: "processing-rounds"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: processor-contract
@@ -439,7 +439,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.AnnotationProcessing/AnnotationProcessing.md", anchor: "processor-contract"}
+    readmeRelated: {file: "8.AnnotationProcessing/knowledge/AnnotationProcessing.md", anchor: "processor-contract"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: supported-types-source-version
@@ -452,7 +452,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.AnnotationProcessing/AnnotationProcessing.md", anchor: "supported-types-source-version"}
+    readmeRelated: {file: "8.AnnotationProcessing/knowledge/AnnotationProcessing.md", anchor: "supported-types-source-version"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: generated-source
@@ -465,7 +465,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.AnnotationProcessing/AnnotationProcessing.md", anchor: "generated-source"}
+    readmeRelated: {file: "8.AnnotationProcessing/knowledge/AnnotationProcessing.md", anchor: "generated-source"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: processing-vs-reflection
@@ -478,7 +478,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.AnnotationProcessing/AnnotationProcessing.md", anchor: "processing-vs-reflection"}
+    readmeRelated: {file: "8.AnnotationProcessing/knowledge/AnnotationProcessing.md", anchor: "processing-vs-reflection"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: processor-pitfalls
@@ -491,7 +491,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.AnnotationProcessing/AnnotationProcessing.md", anchor: "processor-pitfalls"}
+    readmeRelated: {file: "8.AnnotationProcessing/knowledge/AnnotationProcessing.md", anchor: "processor-pitfalls"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: annotation-fit
@@ -504,7 +504,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.AnnotationDesign/AnnotationDesign.md", anchor: "annotation-fit"}
+    readmeRelated: {file: "9.AnnotationDesign/knowledge/AnnotationDesign.md", anchor: "annotation-fit"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: annotation-alternatives
@@ -517,7 +517,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.AnnotationDesign/AnnotationDesign.md", anchor: "annotation-alternatives"}
+    readmeRelated: {file: "9.AnnotationDesign/knowledge/AnnotationDesign.md", anchor: "annotation-alternatives"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: annotation-end-to-end
@@ -530,7 +530,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.AnnotationDesign/AnnotationDesign.md", anchor: "annotation-end-to-end"}
+    readmeRelated: {file: "9.AnnotationDesign/knowledge/AnnotationDesign.md", anchor: "annotation-end-to-end"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: annotation-overuse-pitfalls
@@ -543,7 +543,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.AnnotationDesign/AnnotationDesign.md", anchor: "annotation-overuse-pitfalls"}
+    readmeRelated: {file: "9.AnnotationDesign/knowledge/AnnotationDesign.md", anchor: "annotation-overuse-pitfalls"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: annotation-design-checklist
@@ -556,5 +556,5 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.AnnotationDesign/AnnotationDesign.md", anchor: "annotation-design-checklist"}
+    readmeRelated: {file: "9.AnnotationDesign/knowledge/AnnotationDesign.md", anchor: "annotation-design-checklist"}
     apiRelated: {controller: "", methodSignature: ""}

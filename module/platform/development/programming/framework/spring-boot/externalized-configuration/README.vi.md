@@ -1,25 +1,25 @@
 # 📂 README MODULE STRUCTURE (VI)
 
 * **1.ConfigurationMentalModel**
-    * [ConfigurationMentalModel](content/readme/docs/vi/menu/1.ConfigurationMentalModel/ConfigurationMentalModel.md)
+    * [ConfigurationMentalModel](content/readme/docs/vi/menu/1.ConfigurationMentalModel/knowledge/ConfigurationMentalModel.md)
 * **2.PropertySourcesAndPrecedence**
-    * [PropertySourcesAndPrecedence](content/readme/docs/vi/menu/2.PropertySourcesAndPrecedence/PropertySourcesAndPrecedence.md)
+    * [PropertySourcesAndPrecedence](content/readme/docs/vi/menu/2.PropertySourcesAndPrecedence/knowledge/PropertySourcesAndPrecedence.md)
 * **3.ConfigDataFilesAndLocations**
-    * [ConfigDataFilesAndLocations](content/readme/docs/vi/menu/3.ConfigDataFilesAndLocations/ConfigDataFilesAndLocations.md)
+    * [ConfigDataFilesAndLocations](content/readme/docs/vi/menu/3.ConfigDataFilesAndLocations/knowledge/ConfigDataFilesAndLocations.md)
 * **4.ConfigDataImportsAndTrees**
-    * [ConfigDataImportsAndTrees](content/readme/docs/vi/menu/4.ConfigDataImportsAndTrees/ConfigDataImportsAndTrees.md)
+    * [ConfigDataImportsAndTrees](content/readme/docs/vi/menu/4.ConfigDataImportsAndTrees/knowledge/ConfigDataImportsAndTrees.md)
 * **5.ProfilesAndActivation**
-    * [ProfilesAndActivation](content/readme/docs/vi/menu/5.ProfilesAndActivation/ProfilesAndActivation.md)
+    * [ProfilesAndActivation](content/readme/docs/vi/menu/5.ProfilesAndActivation/knowledge/ProfilesAndActivation.md)
 * **6.EnvironmentValueAndPlaceholders**
-    * [EnvironmentValueAndPlaceholders](content/readme/docs/vi/menu/6.EnvironmentValueAndPlaceholders/EnvironmentValueAndPlaceholders.md)
+    * [EnvironmentValueAndPlaceholders](content/readme/docs/vi/menu/6.EnvironmentValueAndPlaceholders/knowledge/EnvironmentValueAndPlaceholders.md)
 * **7.ConfigurationProperties**
-    * [ConfigurationProperties](content/readme/docs/vi/menu/7.ConfigurationProperties/ConfigurationProperties.md)
+    * [ConfigurationProperties](content/readme/docs/vi/menu/7.ConfigurationProperties/knowledge/ConfigurationProperties.md)
 * **8.RelaxedAndComplexBinding**
-    * [RelaxedAndComplexBinding](content/readme/docs/vi/menu/8.RelaxedAndComplexBinding/RelaxedAndComplexBinding.md)
+    * [RelaxedAndComplexBinding](content/readme/docs/vi/menu/8.RelaxedAndComplexBinding/knowledge/RelaxedAndComplexBinding.md)
 * **9.ValidationAndMetadata**
-    * [ValidationAndMetadata](content/readme/docs/vi/menu/9.ValidationAndMetadata/ValidationAndMetadata.md)
+    * [ValidationAndMetadata](content/readme/docs/vi/menu/9.ValidationAndMetadata/knowledge/ValidationAndMetadata.md)
 * **10.DiagnosticsAndSynthesis**
-    * [DiagnosticsAndSynthesis](content/readme/docs/vi/menu/10.DiagnosticsAndSynthesis/DiagnosticsAndSynthesis.md)
+    * [DiagnosticsAndSynthesis](content/readme/docs/vi/menu/10.DiagnosticsAndSynthesis/knowledge/DiagnosticsAndSynthesis.md)
 
 # Spring Boot Externalized Configuration
 

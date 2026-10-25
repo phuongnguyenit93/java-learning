@@ -33,7 +33,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.Introduction/DeclarativeProgramming.md"
+      file: "1.Introduction/knowledge/DeclarativeProgramming.md"
       anchor: "declarative-what"
     apiRelated:
       controller: ""
@@ -43,7 +43,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.Introduction/DeclarativeProgramming.md"
+      file: "1.Introduction/knowledge/DeclarativeProgramming.md"
       anchor: "declarative-why"
     apiRelated:
       controller: ""
@@ -53,7 +53,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.Introduction/DeclarativeProgramming.md"
+      file: "1.Introduction/knowledge/DeclarativeProgramming.md"
       anchor: "declarative-before"
     apiRelated:
       controller: ""
@@ -63,7 +63,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.Introduction/DeclarativeProgramming.md"
+      file: "1.Introduction/knowledge/DeclarativeProgramming.md"
       anchor: "declarative-solution"
     apiRelated:
       controller: ""
@@ -73,7 +73,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.Introduction/DeclarativeProgramming.md"
+      file: "1.Introduction/knowledge/DeclarativeProgramming.md"
       anchor: "declarative-relations"
     apiRelated:
       controller: ""
@@ -83,7 +83,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.Introduction/DeclarativeProgramming.md"
+      file: "1.Introduction/knowledge/DeclarativeProgramming.md"
       anchor: "declarative-learning-path"
     apiRelated:
       controller: ""
@@ -93,7 +93,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.IntentVsProcedure/IntentVsProcedure.md"
+      file: "2.IntentVsProcedure/knowledge/IntentVsProcedure.md"
       anchor: "declarative-result-spec"
     apiRelated:
       controller: ""
@@ -103,7 +103,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.IntentVsProcedure/IntentVsProcedure.md"
+      file: "2.IntentVsProcedure/knowledge/IntentVsProcedure.md"
       anchor: "declarative-predicates"
     apiRelated:
       controller: ""
@@ -113,7 +113,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.IntentVsProcedure/IntentVsProcedure.md"
+      file: "2.IntentVsProcedure/knowledge/IntentVsProcedure.md"
       anchor: "declarative-spec-completeness"
     apiRelated:
       controller: ""
@@ -123,7 +123,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.IntentVsProcedure/IntentVsProcedure.md"
+      file: "2.IntentVsProcedure/knowledge/IntentVsProcedure.md"
       anchor: "declarative-evaluator-role"
     apiRelated:
       controller: ""
@@ -133,7 +133,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.IntentVsProcedure/IntentVsProcedure.md"
+      file: "2.IntentVsProcedure/knowledge/IntentVsProcedure.md"
       anchor: "declarative-semantics-plan"
     apiRelated:
       controller: ""
@@ -143,7 +143,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.IntentVsProcedure/IntentVsProcedure.md"
+      file: "2.IntentVsProcedure/knowledge/IntentVsProcedure.md"
       anchor: "declarative-execution-tradeoffs"
     apiRelated:
       controller: ""
@@ -153,7 +153,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "3.LogicProgramming/LogicProgramming.md"
+      file: "3.LogicProgramming/knowledge/LogicProgramming.md"
       anchor: "declarative-logic-model"
     apiRelated:
       controller: ""
@@ -163,7 +163,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "3.LogicProgramming/LogicProgramming.md"
+      file: "3.LogicProgramming/knowledge/LogicProgramming.md"
       anchor: "declarative-facts-relations"
     apiRelated:
       controller: ""
@@ -173,7 +173,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "3.LogicProgramming/LogicProgramming.md"
+      file: "3.LogicProgramming/knowledge/LogicProgramming.md"
       anchor: "declarative-inference-rules"
     apiRelated:
       controller: ""
@@ -183,7 +183,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "3.LogicProgramming/LogicProgramming.md"
+      file: "3.LogicProgramming/knowledge/LogicProgramming.md"
       anchor: "declarative-goal-queries"
     apiRelated:
       controller: ""
@@ -193,7 +193,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "3.LogicProgramming/LogicProgramming.md"
+      file: "3.LogicProgramming/knowledge/LogicProgramming.md"
       anchor: "declarative-search-boundary"
     apiRelated:
       controller: ""
@@ -203,7 +203,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "3.LogicProgramming/LogicProgramming.md"
+      file: "3.LogicProgramming/knowledge/LogicProgramming.md"
       anchor: "declarative-prolog-boundary"
     apiRelated:
       controller: ""
@@ -213,7 +213,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.QueryRuleStyles/QueryRuleStyles.md"
+      file: "4.QueryRuleStyles/knowledge/QueryRuleStyles.md"
       anchor: "declarative-query-result"
     apiRelated:
       controller: ""
@@ -223,7 +223,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.QueryRuleStyles/QueryRuleStyles.md"
+      file: "4.QueryRuleStyles/knowledge/QueryRuleStyles.md"
       anchor: "declarative-query-filter"
     apiRelated:
       controller: ""
@@ -233,7 +233,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.QueryRuleStyles/QueryRuleStyles.md"
+      file: "4.QueryRuleStyles/knowledge/QueryRuleStyles.md"
       anchor: "declarative-query-order"
     apiRelated:
       controller: ""
@@ -243,7 +243,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.QueryRuleStyles/QueryRuleStyles.md"
+      file: "4.QueryRuleStyles/knowledge/QueryRuleStyles.md"
       anchor: "declarative-policy-config"
     apiRelated:
       controller: ""
@@ -253,7 +253,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.QueryRuleStyles/QueryRuleStyles.md"
+      file: "4.QueryRuleStyles/knowledge/QueryRuleStyles.md"
       anchor: "declarative-query-strategy"
     apiRelated:
       controller: ""
@@ -263,7 +263,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.QueryRuleStyles/QueryRuleStyles.md"
+      file: "4.QueryRuleStyles/knowledge/QueryRuleStyles.md"
       anchor: "declarative-dsl-limit"
     apiRelated:
       controller: ""
@@ -273,7 +273,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "5.Tradeoffs/Tradeoffs.md"
+      file: "5.Tradeoffs/knowledge/Tradeoffs.md"
       anchor: "declarative-intent-benefits"
     apiRelated:
       controller: ""
@@ -283,7 +283,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "5.Tradeoffs/Tradeoffs.md"
+      file: "5.Tradeoffs/knowledge/Tradeoffs.md"
       anchor: "declarative-engine-costs"
     apiRelated:
       controller: ""
@@ -293,7 +293,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "5.Tradeoffs/Tradeoffs.md"
+      file: "5.Tradeoffs/knowledge/Tradeoffs.md"
       anchor: "declarative-spec-pitfalls"
     apiRelated:
       controller: ""
@@ -303,7 +303,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "5.Tradeoffs/Tradeoffs.md"
+      file: "5.Tradeoffs/knowledge/Tradeoffs.md"
       anchor: "declarative-effect-limits"
     apiRelated:
       controller: ""
@@ -313,7 +313,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "5.Tradeoffs/Tradeoffs.md"
+      file: "5.Tradeoffs/knowledge/Tradeoffs.md"
       anchor: "declarative-imperative-contrast"
     apiRelated:
       controller: ""
@@ -323,7 +323,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "5.Tradeoffs/Tradeoffs.md"
+      file: "5.Tradeoffs/knowledge/Tradeoffs.md"
       anchor: "declarative-paradigm-handoff"
     apiRelated:
       controller: ""

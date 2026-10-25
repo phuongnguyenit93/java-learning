@@ -49,7 +49,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.IntegerOverflow/IntegerOverflow.md", anchor: "integer-overflow-wraparound"}
+    readmeRelated: {file: "2.IntegerOverflow/knowledge/IntegerOverflow.md", anchor: "integer-overflow-wraparound"}
     apiRelated: {controller: "IntegerArithmeticController", methodSignature: "overflow()"}
 
   - id: integer-add-exact
@@ -62,7 +62,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.IntegerOverflow/IntegerOverflow.md", anchor: "checked-arithmetic"}
+    readmeRelated: {file: "2.IntegerOverflow/knowledge/IntegerOverflow.md", anchor: "checked-arithmetic"}
     apiRelated: {controller: "IntegerArithmeticController", methodSignature: "overflow()"}
 
   - id: floating-decimal-approx
@@ -75,7 +75,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.FloatingPoint/FloatingPoint.md", anchor: "precision-rounding-error"}
+    readmeRelated: {file: "3.FloatingPoint/knowledge/FloatingPoint.md", anchor: "precision-rounding-error"}
     apiRelated: {controller: "FloatingPointController", methodSignature: "precision()"}
 
   - id: nan-comparison
@@ -88,7 +88,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.FloatingPoint/FloatingPoint.md", anchor: "nan-infinity-negative-zero"}
+    readmeRelated: {file: "3.FloatingPoint/knowledge/FloatingPoint.md", anchor: "nan-infinity-negative-zero"}
     apiRelated: {controller: "FloatingPointController", methodSignature: "specialValues()"}
 
   - id: biginteger-immutable
@@ -101,7 +101,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.BigInteger/BigInteger.md", anchor: "big-integer-immutability"}
+    readmeRelated: {file: "4.BigInteger/knowledge/BigInteger.md", anchor: "big-integer-immutability"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: bigdecimal-double-constructor
@@ -114,7 +114,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.BigDecimal/BigDecimal.md", anchor: "big-decimal-construction"}
+    readmeRelated: {file: "5.BigDecimal/knowledge/BigDecimal.md", anchor: "big-decimal-construction"}
     apiRelated: {controller: "BigDecimalController", methodSignature: "construction()"}
 
   - id: bigdecimal-nonterminating-division
@@ -127,7 +127,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.BigDecimal/BigDecimal.md", anchor: "big-decimal-arithmetic"}
+    readmeRelated: {file: "5.BigDecimal/knowledge/BigDecimal.md", anchor: "big-decimal-arithmetic"}
     apiRelated: {controller: "BigDecimalController", methodSignature: "divisionAndRounding()"}
 
   - id: precision-vs-scale
@@ -140,7 +140,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.PrecisionScale/PrecisionScale.md", anchor: "precision-vs-scale"}
+    readmeRelated: {file: "6.PrecisionScale/knowledge/PrecisionScale.md", anchor: "precision-vs-scale"}
     apiRelated: {controller: "BigDecimalController", methodSignature: "precisionScale()"}
 
   - id: rounding-domain-policy
@@ -153,7 +153,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.Rounding/Rounding.md", anchor: "financial-rounding-policy"}
+    readmeRelated: {file: "7.Rounding/knowledge/Rounding.md", anchor: "financial-rounding-policy"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: bigdecimal-equals-compareto
@@ -166,7 +166,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.BigDecimalComparison/BigDecimalComparison.md", anchor: "big-decimal-equals"}
+    readmeRelated: {file: "8.BigDecimalComparison/knowledge/BigDecimalComparison.md", anchor: "big-decimal-equals"}
     apiRelated: {controller: "BigDecimalController", methodSignature: "comparison()"}
 
   - id: random-seed-reproducible
@@ -179,7 +179,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "10.Random/Random.md", anchor: "pseudo-random-model"}
+    readmeRelated: {file: "10.Random/knowledge/Random.md", anchor: "pseudo-random-model"}
     apiRelated: {controller: "RandomController", methodSignature: "seededSequence()"}
 
   - id: secure-random-boundary
@@ -192,7 +192,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "11.SecureRandom/SecureRandom.md", anchor: "secure-random-purpose"}
+    readmeRelated: {file: "11.SecureRandom/knowledge/SecureRandom.md", anchor: "secure-random-purpose"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: numeric-model-domain
@@ -205,7 +205,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.NumericModel/NumericModel.md", anchor: "numeric-type-model"}
+    readmeRelated: {file: "1.NumericModel/knowledge/NumericModel.md", anchor: "numeric-type-model"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: strictmath-boundary
@@ -218,7 +218,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.Math/Math.md", anchor: "strictmath-boundary"}
+    readmeRelated: {file: "9.Math/knowledge/Math.md", anchor: "strictmath-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: numeric-intermediate-overflow
@@ -231,7 +231,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.NumericModel/NumericModel.md", anchor: "numeric-conversions"}
+    readmeRelated: {file: "1.NumericModel/knowledge/NumericModel.md", anchor: "numeric-conversions"}
     apiRelated: {controller: "IntegerArithmeticController", methodSignature: "intermediateOverflow()"}
 
   - id: integer-abs-min-boundary
@@ -244,7 +244,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.IntegerOverflow/IntegerOverflow.md", anchor: "boundary-values"}
+    readmeRelated: {file: "2.IntegerOverflow/knowledge/IntegerOverflow.md", anchor: "boundary-values"}
     apiRelated: {controller: "IntegerArithmeticController", methodSignature: "boundaryCases()"}
 
   - id: integer-divide-min-minus-one
@@ -257,7 +257,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.IntegerOverflow/IntegerOverflow.md", anchor: "boundary-values"}
+    readmeRelated: {file: "2.IntegerOverflow/knowledge/IntegerOverflow.md", anchor: "boundary-values"}
     apiRelated: {controller: "IntegerArithmeticController", methodSignature: "boundaryCases()"}
 
   - id: floating-signed-zero
@@ -270,7 +270,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.FloatingPoint/FloatingPoint.md", anchor: "nan-infinity-negative-zero"}
+    readmeRelated: {file: "3.FloatingPoint/knowledge/FloatingPoint.md", anchor: "nan-infinity-negative-zero"}
     apiRelated: {controller: "FloatingPointController", methodSignature: "specialValues()"}
 
   - id: floating-tolerance-domain
@@ -283,7 +283,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.FloatingPoint/FloatingPoint.md", anchor: "floating-point-comparison"}
+    readmeRelated: {file: "3.FloatingPoint/knowledge/FloatingPoint.md", anchor: "floating-point-comparison"}
     apiRelated: {controller: "FloatingPointController", methodSignature: "comparison()"}
 
   - id: biginteger-exact-conversion
@@ -296,7 +296,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.BigInteger/BigInteger.md", anchor: "big-integer-operations"}
+    readmeRelated: {file: "4.BigInteger/knowledge/BigInteger.md", anchor: "big-integer-operations"}
     apiRelated: {controller: "BigIntegerController", methodSignature: "conversionBoundary()"}
 
   - id: biginteger-remainder-vs-mod
@@ -309,7 +309,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.BigInteger/BigInteger.md", anchor: "big-integer-operations"}
+    readmeRelated: {file: "4.BigInteger/knowledge/BigInteger.md", anchor: "big-integer-operations"}
     apiRelated: {controller: "BigIntegerController", methodSignature: "remainderVsMod()"}
 
   - id: bigdecimal-valueof-after-double-arithmetic
@@ -322,7 +322,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.BigDecimal/BigDecimal.md", anchor: "big-decimal-construction"}
+    readmeRelated: {file: "5.BigDecimal/knowledge/BigDecimal.md", anchor: "big-decimal-construction"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: bigdecimal-multiply-scale
@@ -335,7 +335,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.BigDecimal/BigDecimal.md", anchor: "big-decimal-arithmetic"}
+    readmeRelated: {file: "5.BigDecimal/knowledge/BigDecimal.md", anchor: "big-decimal-arithmetic"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: mathcontext-vs-setscale
@@ -348,7 +348,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.PrecisionScale/PrecisionScale.md", anchor: "math-context"}
+    readmeRelated: {file: "6.PrecisionScale/knowledge/PrecisionScale.md", anchor: "math-context"}
     apiRelated: {controller: "BigDecimalController", methodSignature: "mathContextVsScale()"}
 
   - id: rounding-negative-half-tie
@@ -361,7 +361,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.Rounding/Rounding.md", anchor: "rounding-modes"}
+    readmeRelated: {file: "7.Rounding/knowledge/Rounding.md", anchor: "rounding-modes"}
     apiRelated: {controller: "BigDecimalController", methodSignature: "roundingModes()"}
 
   - id: rounding-double-rounding
@@ -374,7 +374,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.Rounding/Rounding.md", anchor: "rounding-at-boundaries"}
+    readmeRelated: {file: "7.Rounding/knowledge/Rounding.md", anchor: "rounding-at-boundaries"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: bigdecimal-hashset-treeset
@@ -387,7 +387,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.BigDecimalComparison/BigDecimalComparison.md", anchor: "big-decimal-collections"}
+    readmeRelated: {file: "8.BigDecimalComparison/knowledge/BigDecimalComparison.md", anchor: "big-decimal-collections"}
     apiRelated: {controller: "BigDecimalController", methodSignature: "collectionSemantics()"}
 
   - id: math-floor-division-negative
@@ -400,7 +400,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.Math/Math.md", anchor: "math-core-functions"}
+    readmeRelated: {file: "9.Math/knowledge/Math.md", anchor: "math-core-functions"}
     apiRelated: {controller: "MathController", methodSignature: "floorDivision()"}
 
   - id: math-abs-exact-boundary
@@ -413,7 +413,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.Math/Math.md", anchor: "exact-arithmetic-methods"}
+    readmeRelated: {file: "9.Math/knowledge/Math.md", anchor: "exact-arithmetic-methods"}
     apiRelated: {controller: "MathController", methodSignature: "exactBoundaries()"}
 
   - id: threadlocalrandom-boundary
@@ -426,7 +426,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "10.Random/Random.md", anchor: "threadlocal-random-boundary"}
+    readmeRelated: {file: "10.Random/knowledge/Random.md", anchor: "threadlocal-random-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: random-modulo-pitfall
@@ -439,7 +439,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "10.Random/Random.md", anchor: "pseudo-random-model"}
+    readmeRelated: {file: "10.Random/knowledge/Random.md", anchor: "pseudo-random-model"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: securerandom-setseed-behavior
@@ -452,7 +452,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "11.SecureRandom/SecureRandom.md", anchor: "entropy-seeding"}
+    readmeRelated: {file: "11.SecureRandom/knowledge/SecureRandom.md", anchor: "entropy-seeding"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: numeric-policy-boundary
@@ -465,7 +465,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "12.NumericSynthesis/NumericSynthesis.md", anchor: "numeric-policy-boundaries"}
+    readmeRelated: {file: "12.NumericSynthesis/knowledge/NumericSynthesis.md", anchor: "numeric-policy-boundaries"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: numeric-synthesis-case-selection
@@ -478,5 +478,5 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "12.NumericSynthesis/NumericSynthesis.md", anchor: "numeric-synthesis-cases"}
+    readmeRelated: {file: "12.NumericSynthesis/knowledge/NumericSynthesis.md", anchor: "numeric-synthesis-cases"}
     apiRelated: {controller: "", methodSignature: ""}

@@ -1167,17 +1167,17 @@ README language structure và `generateFinalReadme` lấy danh sách language tr
 Knowledge Markdown và Knowledge governance có ownership tách nhau:
 
 ```text
-readme/{lang}/menu/**/*.md
+content/readme/docs/{lang}/menu/<chapter>/knowledge/**/*.md
 → canonical content + anchored section existence
 
-src/main/resources/readme/{lang}/knowledge-metadata.yml
+content/readme/metadata/{lang}/knowledge-metadata.yml
 → per-section difficulty / AI provenance / review state
 ```
 
 `knowledge-metadata.yml` có shape theo README relative path rồi exact anchored section id:
 
 ```yaml
-1.Basic/Basic.md:
+1.Basic/knowledge/Basic.md:
   thread-state:
     difficulty: ADVANCED
     aiGenerated: true

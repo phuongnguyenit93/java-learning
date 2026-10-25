@@ -12,7 +12,7 @@ DynamicRuntimeController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 4.MethodHandleAdaptation/MethodHandleAdaptation.md
+      file: 4.MethodHandleAdaptation/knowledge/MethodHandleAdaptation.md
       anchor: method-handle-type-adaptation
     methodName: methodHandle
     params: [
@@ -41,7 +41,7 @@ DynamicRuntimeController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 3.LookupAccess/LookupAccess.md
+      file: 3.LookupAccess/knowledge/LookupAccess.md
       anchor: lookup-context
     methodName: lookup
     params: [
@@ -69,7 +69,7 @@ DynamicRuntimeController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 5.CallSite/CallSite.md
+      file: 5.CallSite/knowledge/CallSite.md
       anchor: call-site-target-updates
     methodName: callSite
     params: [
@@ -97,7 +97,7 @@ DynamicRuntimeController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 7.VarHandle/VarHandle.md
+      file: 7.VarHandle/knowledge/VarHandle.md
       anchor: var-handle-atomic-updates
     methodName: varHandle
     params: [

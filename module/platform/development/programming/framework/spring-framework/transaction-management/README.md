@@ -1,27 +1,27 @@
 # 📂 README MODULE STRUCTURE (EN)
 
 * **1.Purpose**
-    * [Purpose](content/readme/docs/en/menu/1.Purpose/Purpose.md)
+    * [Purpose](content/readme/docs/en/menu/1.Purpose/knowledge/Purpose.md)
 * **2.Abstraction**
-    * [Abstraction](content/readme/docs/en/menu/2.Abstraction/Abstraction.md)
+    * [Abstraction](content/readme/docs/en/menu/2.Abstraction/knowledge/Abstraction.md)
 * **3.ResourceSynchronization**
-    * [ResourceSynchronization](content/readme/docs/en/menu/3.ResourceSynchronization/ResourceSynchronization.md)
+    * [ResourceSynchronization](content/readme/docs/en/menu/3.ResourceSynchronization/knowledge/ResourceSynchronization.md)
 * **4.Declarative**
-    * [Declarative](content/readme/docs/en/menu/4.Declarative/Declarative.md)
+    * [Declarative](content/readme/docs/en/menu/4.Declarative/knowledge/Declarative.md)
 * **5.TransactionPolicy**
-    * [TransactionPolicy](content/readme/docs/en/menu/5.TransactionPolicy/TransactionPolicy.md)
+    * [TransactionPolicy](content/readme/docs/en/menu/5.TransactionPolicy/knowledge/TransactionPolicy.md)
 * **6.Rollback**
-    * [Rollback](content/readme/docs/en/menu/6.Rollback/Rollback.md)
+    * [Rollback](content/readme/docs/en/menu/6.Rollback/knowledge/Rollback.md)
 * **7.Propagation**
-    * [Propagation](content/readme/docs/en/menu/7.Propagation/Propagation.md)
+    * [Propagation](content/readme/docs/en/menu/7.Propagation/knowledge/Propagation.md)
 * **8.Programmatic**
-    * [Programmatic](content/readme/docs/en/menu/8.Programmatic/Programmatic.md)
+    * [Programmatic](content/readme/docs/en/menu/8.Programmatic/knowledge/Programmatic.md)
 * **9.Reactive**
-    * [Reactive](content/readme/docs/en/menu/9.Reactive/Reactive.md)
+    * [Reactive](content/readme/docs/en/menu/9.Reactive/knowledge/Reactive.md)
 * **10.EventsLifecycle**
-    * [EventsLifecycle](content/readme/docs/en/menu/10.EventsLifecycle/EventsLifecycle.md)
+    * [EventsLifecycle](content/readme/docs/en/menu/10.EventsLifecycle/knowledge/EventsLifecycle.md)
 * **11.BoundarySynthesis**
-    * [BoundarySynthesis](content/readme/docs/en/menu/11.BoundarySynthesis/BoundarySynthesis.md)
+    * [BoundarySynthesis](content/readme/docs/en/menu/11.BoundarySynthesis/knowledge/BoundarySynthesis.md)
 
 # Spring Transaction Management
 

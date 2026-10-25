@@ -1,4 +1,4 @@
-1.WebOverview/WebOverview.md:
+1.WebOverview/knowledge/WebOverview.md:
   web-overview-001:
     difficulty: BASIC
     aiGenerated: true
@@ -29,7 +29,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-2.HttpFundamentals/HttpFundamentals.md:
+2.HttpFundamentals/knowledge/HttpFundamentals.md:
   http-fundamentals-001:
     difficulty: BASIC
     aiGenerated: true
@@ -70,7 +70,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-3.ApplicationBootstrap/ApplicationBootstrap.md:
+3.ApplicationBootstrap/knowledge/ApplicationBootstrap.md:
   application-bootstrap-001:
     difficulty: BASIC
     aiGenerated: true
@@ -106,7 +106,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-4.MvcRequestLifecycle/MvcRequestLifecycle.md:
+4.MvcRequestLifecycle/knowledge/MvcRequestLifecycle.md:
   mvc-request-lifecycle-001:
     difficulty: BASIC
     aiGenerated: true
@@ -147,7 +147,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-5.RequestRouting/RequestRouting.md:
+5.RequestRouting/knowledge/RequestRouting.md:
   request-routing-001:
     difficulty: BASIC
     aiGenerated: true
@@ -188,7 +188,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-6.ControllerInputs/ControllerInputs.md:
+6.ControllerInputs/knowledge/ControllerInputs.md:
   controller-inputs-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -239,7 +239,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-7.BindingValidation/BindingValidation.md:
+7.BindingValidation/knowledge/BindingValidation.md:
   binding-validation-001:
     difficulty: BASIC
     aiGenerated: true
@@ -285,7 +285,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-8.HttpMessageBodies/HttpMessageBodies.md:
+8.HttpMessageBodies/knowledge/HttpMessageBodies.md:
   http-message-bodies-001:
     difficulty: BASIC
     aiGenerated: true
@@ -326,7 +326,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-9.RestResponses/RestResponses.md:
+9.RestResponses/knowledge/RestResponses.md:
   rest-responses-001:
     difficulty: BASIC
     aiGenerated: true
@@ -367,7 +367,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-10.ErrorHandling/ErrorHandling.md:
+10.ErrorHandling/knowledge/ErrorHandling.md:
   error-handling-001:
     difficulty: BASIC
     aiGenerated: true
@@ -408,7 +408,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-11.ViewsForms/ViewsForms.md:
+11.ViewsForms/knowledge/ViewsForms.md:
   views-forms-001:
     difficulty: BASIC
     aiGenerated: true
@@ -449,7 +449,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-12.SessionLocalization/SessionLocalization.md:
+12.SessionLocalization/knowledge/SessionLocalization.md:
   session-localization-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -490,7 +490,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-13.FiltersInterceptors/FiltersInterceptors.md:
+13.FiltersInterceptors/knowledge/FiltersInterceptors.md:
   filters-interceptors-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -531,7 +531,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-14.FileResources/FileResources.md:
+14.FileResources/knowledge/FileResources.md:
   file-resources-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -572,7 +572,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-15.CorsWebSecurity/CorsWebSecurity.md:
+15.CorsWebSecurity/knowledge/CorsWebSecurity.md:
   cors-web-security-001:
     difficulty: BASIC
     aiGenerated: true
@@ -613,7 +613,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-16.HttpCaching/HttpCaching.md:
+16.HttpCaching/knowledge/HttpCaching.md:
   http-caching-001:
     difficulty: BASIC
     aiGenerated: true
@@ -649,7 +649,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-17.UriApiVersioning/UriApiVersioning.md:
+17.UriApiVersioning/knowledge/UriApiVersioning.md:
   uri-api-versioning-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -685,7 +685,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-18.MvcAsyncProcessing/MvcAsyncProcessing.md:
+18.MvcAsyncProcessing/knowledge/MvcAsyncProcessing.md:
   mvc-async-processing-001:
     difficulty: BASIC
     aiGenerated: true
@@ -726,7 +726,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-19.MvcFunctionalEndpoints/MvcFunctionalEndpoints.md:
+19.MvcFunctionalEndpoints/knowledge/MvcFunctionalEndpoints.md:
   mvc-functional-endpoints-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -757,7 +757,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-20.WebfluxFoundations/WebfluxFoundations.md:
+20.WebfluxFoundations/knowledge/WebfluxFoundations.md:
   webflux-foundations-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -798,7 +798,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-21.WebfluxInfrastructure/WebfluxInfrastructure.md:
+21.WebfluxInfrastructure/knowledge/WebfluxInfrastructure.md:
   webflux-infrastructure-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -839,7 +839,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-22.WebfluxControllers/WebfluxControllers.md:
+22.WebfluxControllers/knowledge/WebfluxControllers.md:
   webflux-controllers-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -880,7 +880,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-23.WebfluxFunctionalEndpoints/WebfluxFunctionalEndpoints.md:
+23.WebfluxFunctionalEndpoints/knowledge/WebfluxFunctionalEndpoints.md:
   webflux-functional-endpoints-001:
     difficulty: BASIC
     aiGenerated: true
@@ -916,7 +916,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-24.WebfluxStreaming/WebfluxStreaming.md:
+24.WebfluxStreaming/knowledge/WebfluxStreaming.md:
   webflux-streaming-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -957,7 +957,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-25.SynchronousHttpClients/SynchronousHttpClients.md:
+25.SynchronousHttpClients/knowledge/SynchronousHttpClients.md:
   synchronous-http-clients-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -1003,7 +1003,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-26.WebClient/WebClient.md:
+26.WebClient/knowledge/WebClient.md:
   web-client-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -1054,7 +1054,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-27.HttpServiceClients/HttpServiceClients.md:
+27.HttpServiceClients/knowledge/HttpServiceClients.md:
   http-service-clients-001:
     difficulty: BASIC
     aiGenerated: true
@@ -1085,7 +1085,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-28.WebsocketStomp/WebsocketStomp.md:
+28.WebsocketStomp/knowledge/WebsocketStomp.md:
   websocket-stomp-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -1141,7 +1141,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-29.WebTesting/WebTesting.md:
+29.WebTesting/knowledge/WebTesting.md:
   web-testing-001:
     difficulty: BASIC
     aiGenerated: true
@@ -1197,7 +1197,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-30.OperationsPractice/OperationsPractice.md:
+30.OperationsPractice/knowledge/OperationsPractice.md:
   operations-practice-001:
     difficulty: INTERMEDIATE
     aiGenerated: true

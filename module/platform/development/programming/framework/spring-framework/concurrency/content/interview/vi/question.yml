@@ -35,7 +35,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "3.ContextPropagation/ContextPropagation.md"
+      file: "3.ContextPropagation/knowledge/ContextPropagation.md"
       anchor: "task-decorator"
     apiRelated:
       controller: "TaskExecutorController"
@@ -48,7 +48,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.MentalModel/SpringConcurrency.md"
+      file: "1.MentalModel/knowledge/SpringConcurrency.md"
       anchor: "execution-async-scheduling"
     apiRelated:
       controller: ""
@@ -61,7 +61,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.Spring_Task_Executor/SpringExecutor.md"
+      file: "2.Spring_Task_Executor/knowledge/SpringExecutor.md"
       anchor: "spring-executor-config"
     apiRelated:
       controller: "TaskExecutorController"
@@ -74,7 +74,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.TaskScheduler/TaskScheduler.md"
+      file: "4.TaskScheduler/knowledge/TaskScheduler.md"
       anchor: "scheduler-execution-models"
     apiRelated:
       controller: "TaskSchedulerExperimentController"
@@ -87,7 +87,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "5.Scheduling/Scheduling.md"
+      file: "5.Scheduling/knowledge/Scheduling.md"
       anchor: "scheduled-overlap"
     apiRelated:
       controller: ""
@@ -100,7 +100,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "6.VirtualThreadIntegration/VirtualThreadIntegration.md"
+      file: "6.VirtualThreadIntegration/knowledge/VirtualThreadIntegration.md"
       anchor: "virtual-thread-concurrency-limits"
     apiRelated:
       controller: ""
@@ -113,7 +113,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "7.LifecycleFailureProduction/LifecycleFailureProduction.md"
+      file: "7.LifecycleFailureProduction/knowledge/LifecycleFailureProduction.md"
       anchor: "failure-boundaries"
     apiRelated:
       controller: ""
@@ -126,7 +126,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "7.LifecycleFailureProduction/LifecycleFailureProduction.md"
+      file: "7.LifecycleFailureProduction/knowledge/LifecycleFailureProduction.md"
       anchor: "executor-lifecycle"
     apiRelated:
       controller: ""

@@ -1,4 +1,4 @@
-1.Overview/Overview.md:
+1.Overview/knowledge/Overview.md:
   overview-001:
     difficulty: BASIC
     isImportant: true
@@ -39,7 +39,7 @@
     isImportant: false
     aiGenerated: true
     reviewed: false
-2.ObjectIdentity/ObjectIdentity.md:
+2.ObjectIdentity/knowledge/ObjectIdentity.md:
   object-identity-001:
     difficulty: BASIC
     isImportant: true
@@ -80,7 +80,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-3.EqualsContract/EqualsContract.md:
+3.EqualsContract/knowledge/EqualsContract.md:
   equals-contract-001:
     difficulty: INTERMEDIATE
     isImportant: true
@@ -121,7 +121,7 @@
     isImportant: false
     aiGenerated: true
     reviewed: false
-4.EqualsImplementation/EqualsImplementation.md:
+4.EqualsImplementation/knowledge/EqualsImplementation.md:
   equals-implementation-001:
     difficulty: BASIC
     isImportant: true
@@ -172,7 +172,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-5.EqualitySemantics/EqualitySemantics.md:
+5.EqualitySemantics/knowledge/EqualitySemantics.md:
   equality-semantics-001:
     difficulty: BASIC
     isImportant: true
@@ -213,7 +213,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-6.EqualsInheritance/EqualsInheritance.md:
+6.EqualsInheritance/knowledge/EqualsInheritance.md:
   equals-inheritance-001:
     difficulty: INTERMEDIATE
     isImportant: true
@@ -259,7 +259,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-7.HashCodeContract/HashCodeContract.md:
+7.HashCodeContract/knowledge/HashCodeContract.md:
   hash-code-contract-001:
     difficulty: BASIC
     isImportant: true
@@ -305,7 +305,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-8.HashCodeImplementation/HashCodeImplementation.md:
+8.HashCodeImplementation/knowledge/HashCodeImplementation.md:
   hash-code-implementation-001:
     difficulty: INTERMEDIATE
     isImportant: true
@@ -351,7 +351,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-9.HashCollections/HashCollections.md:
+9.HashCollections/knowledge/HashCollections.md:
   hash-collections-001:
     difficulty: BASIC
     isImportant: true
@@ -392,7 +392,7 @@
     isImportant: false
     aiGenerated: true
     reviewed: false
-10.MutableState/MutableState.md:
+10.MutableState/knowledge/MutableState.md:
   mutable-state-001:
     difficulty: INTERMEDIATE
     isImportant: true
@@ -433,7 +433,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-11.StandardTypes/StandardTypes.md:
+11.StandardTypes/knowledge/StandardTypes.md:
   standard-types-001:
     difficulty: BASIC
     isImportant: true
@@ -479,7 +479,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-12.ArraysNested/ArraysNested.md:
+12.ArraysNested/knowledge/ArraysNested.md:
   arrays-nested-001:
     difficulty: BASIC
     isImportant: true
@@ -525,7 +525,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-13.CollectionValueSemantics/CollectionValueSemantics.md:
+13.CollectionValueSemantics/knowledge/CollectionValueSemantics.md:
   collection-value-semantics-001:
     difficulty: BASIC
     isImportant: true
@@ -566,7 +566,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-14.RecordContracts/RecordContracts.md:
+14.RecordContracts/knowledge/RecordContracts.md:
   record-contracts-001:
     difficulty: BASIC
     isImportant: true
@@ -612,7 +612,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-15.NaturalOrdering/NaturalOrdering.md:
+15.NaturalOrdering/knowledge/NaturalOrdering.md:
   natural-ordering-001:
     difficulty: BASIC
     isImportant: true
@@ -658,7 +658,7 @@
     isImportant: false
     aiGenerated: true
     reviewed: false
-16.Comparators/Comparators.md:
+16.Comparators/knowledge/Comparators.md:
   comparators-001:
     difficulty: BASIC
     isImportant: true
@@ -709,7 +709,7 @@
     isImportant: false
     aiGenerated: true
     reviewed: false
-17.OrderedCollections/OrderedCollections.md:
+17.OrderedCollections/knowledge/OrderedCollections.md:
   ordered-collections-001:
     difficulty: INTERMEDIATE
     isImportant: true
@@ -750,7 +750,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-18.ObjectsUtilities/ObjectsUtilities.md:
+18.ObjectsUtilities/knowledge/ObjectsUtilities.md:
   objects-utilities-001:
     difficulty: BASIC
     isImportant: true
@@ -796,7 +796,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-19.ToStringRepresentation/ToStringRepresentation.md:
+19.ToStringRepresentation/knowledge/ToStringRepresentation.md:
   to-string-representation-001:
     difficulty: BASIC
     isImportant: true
@@ -847,7 +847,7 @@
     isImportant: false
     aiGenerated: true
     reviewed: false
-20.RealWorldClasses/RealWorldClasses.md:
+20.RealWorldClasses/knowledge/RealWorldClasses.md:
   real-world-classes-001:
     difficulty: BASIC
     isImportant: true
@@ -883,7 +883,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-21.CloneContract/CloneContract.md:
+21.CloneContract/knowledge/CloneContract.md:
   clone-contract-001:
     difficulty: INTERMEDIATE
     isImportant: true
@@ -934,7 +934,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-22.CopyIndependence/CopyIndependence.md:
+22.CopyIndependence/knowledge/CopyIndependence.md:
   copy-independence-001:
     difficulty: BASIC
     isImportant: true
@@ -980,7 +980,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-23.IdentityComparison/IdentityComparison.md:
+23.IdentityComparison/knowledge/IdentityComparison.md:
   identity-comparison-001:
     difficulty: BASIC
     isImportant: true
@@ -1016,7 +1016,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-24.ObjectMonitor/ObjectMonitor.md:
+24.ObjectMonitor/knowledge/ObjectMonitor.md:
   object-monitor-001:
     difficulty: BASIC
     isImportant: true
@@ -1057,7 +1057,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-25.LifecycleResources/LifecycleResources.md:
+25.LifecycleResources/knowledge/LifecycleResources.md:
   lifecycle-resources-001:
     difficulty: BASIC
     isImportant: true
@@ -1088,7 +1088,7 @@
     isImportant: false
     aiGenerated: true
     reviewed: false
-26.ContractDesign/ContractDesign.md:
+26.ContractDesign/knowledge/ContractDesign.md:
   contract-design-001:
     difficulty: INTERMEDIATE
     isImportant: true
@@ -1129,7 +1129,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-27.ContractVerification/ContractVerification.md:
+27.ContractVerification/knowledge/ContractVerification.md:
   contract-verification-001:
     difficulty: BASIC
     isImportant: true
@@ -1180,7 +1180,7 @@
     isImportant: false
     aiGenerated: true
     reviewed: false
-28.PracticalExercises/PracticalExercises.md:
+28.PracticalExercises/knowledge/PracticalExercises.md:
   practical-exercises-001:
     difficulty: INTERMEDIATE
     isImportant: true

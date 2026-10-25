@@ -1,4 +1,4 @@
-1.Hierarchy/Hierarchy.md:
+1.Hierarchy/knowledge/Hierarchy.md:
   collection-purpose:
     difficulty: BASIC
     aiGenerated: true
@@ -49,7 +49,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-2.List/List.md:
+2.List/knowledge/List.md:
   list-semantics:
     difficulty: BASIC
     aiGenerated: true
@@ -75,7 +75,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-3.Set/Set.md:
+3.Set/knowledge/Set.md:
   set-semantics:
     difficulty: BASIC
     aiGenerated: true
@@ -106,7 +106,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-4.Map/Map.md:
+4.Map/knowledge/Map.md:
   map-semantics:
     difficulty: BASIC
     aiGenerated: true
@@ -157,7 +157,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-5.QueueDeque/QueueDeque.md:
+5.QueueDeque/knowledge/QueueDeque.md:
   queue-semantics:
     difficulty: BASIC
     aiGenerated: true
@@ -178,7 +178,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-6.Iteration/Iteration.md:
+6.Iteration/knowledge/Iteration.md:
   iterator-contract:
     difficulty: BASIC
     aiGenerated: true
@@ -204,7 +204,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-7.OrderingSorting/OrderingSorting.md:
+7.OrderingSorting/knowledge/OrderingSorting.md:
   encounter-order:
     difficulty: BASIC
     aiGenerated: true
@@ -240,7 +240,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-8.EqualityHashing/EqualityHashing.md:
+8.EqualityHashing/knowledge/EqualityHashing.md:
   element-equality-effects:
     difficulty: BASIC
     aiGenerated: true
@@ -271,7 +271,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-9.MutableImmutable/MutableImmutable.md:
+9.MutableImmutable/knowledge/MutableImmutable.md:
   modifiable-vs-unmodifiable:
     difficulty: BASIC
     aiGenerated: true
@@ -297,7 +297,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-10.FailFast/FailFast.md:
+10.FailFast/knowledge/FailFast.md:
   structural-modification:
     difficulty: BASIC
     aiGenerated: true
@@ -318,7 +318,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-11.ImplementationChoice/ImplementationChoice.md:
+11.ImplementationChoice/knowledge/ImplementationChoice.md:
   list-choice:
     difficulty: BASIC
     aiGenerated: true
@@ -349,7 +349,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-12.EnumCollections/EnumCollections.md:
+12.EnumCollections/knowledge/EnumCollections.md:
   enumset-model:
     difficulty: BASIC
     aiGenerated: true

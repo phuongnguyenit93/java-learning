@@ -1,4 +1,4 @@
-1.AOPFoundations/AOPFoundations.md:
+1.AOPFoundations/knowledge/AOPFoundations.md:
   aop-foundations-001:
     difficulty: BASIC
     aiGenerated: true
@@ -44,7 +44,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-2.AOPComponentModel/AOPComponentModel.md:
+2.AOPComponentModel/knowledge/AOPComponentModel.md:
   aop-component-model-001:
     difficulty: BASIC
     aiGenerated: true
@@ -90,7 +90,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-3.JoinPoints/JoinPoints.md:
+3.JoinPoints/knowledge/JoinPoints.md:
   join-points-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -136,7 +136,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-4.PointcutBasics/PointcutBasics.md:
+4.PointcutBasics/knowledge/PointcutBasics.md:
   pointcut-basics-001:
     difficulty: BASIC
     aiGenerated: true
@@ -197,7 +197,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-5.ContextualPointcuts/ContextualPointcuts.md:
+5.ContextualPointcuts/knowledge/ContextualPointcuts.md:
   contextual-pointcuts-001:
     difficulty: ADVANCED
     aiGenerated: true
@@ -243,7 +243,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-6.AdviceLifecycle/AdviceLifecycle.md:
+6.AdviceLifecycle/knowledge/AdviceLifecycle.md:
   advice-lifecycle-001:
     difficulty: BASIC
     aiGenerated: true
@@ -289,7 +289,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-7.AroundAdvice/AroundAdvice.md:
+7.AroundAdvice/knowledge/AroundAdvice.md:
   around-advice-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -335,7 +335,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-8.AdviceData/AdviceData.md:
+8.AdviceData/knowledge/AdviceData.md:
   advice-data-001:
     difficulty: BASIC
     aiGenerated: true
@@ -381,7 +381,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-9.WeavingArchitecture/WeavingArchitecture.md:
+9.WeavingArchitecture/knowledge/WeavingArchitecture.md:
   weaving-architecture-001:
     difficulty: ADVANCED
     aiGenerated: true
@@ -432,7 +432,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-10.WeavingLifecycle/WeavingLifecycle.md:
+10.WeavingLifecycle/knowledge/WeavingLifecycle.md:
   weaving-lifecycle-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -478,7 +478,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-11.ProxyBasedAOP/ProxyBasedAOP.md:
+11.ProxyBasedAOP/knowledge/ProxyBasedAOP.md:
   proxy-based-aop-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -524,7 +524,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-12.AspectLifecycle/AspectLifecycle.md:
+12.AspectLifecycle/knowledge/AspectLifecycle.md:
   aspect-lifecycle-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -565,7 +565,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-13.MultiAspectCoordination/MultiAspectCoordination.md:
+13.MultiAspectCoordination/knowledge/MultiAspectCoordination.md:
   multi-aspect-coordination-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -611,7 +611,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-14.AspectExceptionContracts/AspectExceptionContracts.md:
+14.AspectExceptionContracts/knowledge/AspectExceptionContracts.md:
   aspect-exception-contracts-001:
     difficulty: ADVANCED
     aiGenerated: true
@@ -657,7 +657,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-15.AspectConcurrency/AspectConcurrency.md:
+15.AspectConcurrency/knowledge/AspectConcurrency.md:
   aspect-concurrency-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -703,7 +703,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-16.AdvancedControlFlow/AdvancedControlFlow.md:
+16.AdvancedControlFlow/knowledge/AdvancedControlFlow.md:
   advanced-control-flow-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -749,7 +749,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-17.StructuralCrosscutting/StructuralCrosscutting.md:
+17.StructuralCrosscutting/knowledge/StructuralCrosscutting.md:
   structural-crosscutting-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -795,7 +795,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-18.AspectAbstractionReuse/AspectAbstractionReuse.md:
+18.AspectAbstractionReuse/knowledge/AspectAbstractionReuse.md:
   aspect-abstraction-reuse-001:
     difficulty: ADVANCED
     aiGenerated: true
@@ -841,7 +841,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-19.AnnotationMetadata/AnnotationMetadata.md:
+19.AnnotationMetadata/knowledge/AnnotationMetadata.md:
   annotation-metadata-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -887,7 +887,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-20.AsyncBoundaries/AsyncBoundaries.md:
+20.AsyncBoundaries/knowledge/AsyncBoundaries.md:
   async-boundaries-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -933,7 +933,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-21.ProgramObservability/ProgramObservability.md:
+21.ProgramObservability/knowledge/ProgramObservability.md:
   program-observability-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -979,7 +979,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-22.ExecutionPolicies/ExecutionPolicies.md:
+22.ExecutionPolicies/knowledge/ExecutionPolicies.md:
   execution-policies-001:
     difficulty: ADVANCED
     aiGenerated: true
@@ -1025,7 +1025,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-23.AccessControl/AccessControl.md:
+23.AccessControl/knowledge/AccessControl.md:
   access-control-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -1071,7 +1071,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-24.AspectArchitectureDesign/AspectArchitectureDesign.md:
+24.AspectArchitectureDesign/knowledge/AspectArchitectureDesign.md:
   aspect-architecture-design-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -1117,7 +1117,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-25.AspectJInPractice/AspectJInPractice.md:
+25.AspectJInPractice/knowledge/AspectJInPractice.md:
   aspect-j-in-practice-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -1173,7 +1173,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-26.AspectTesting/AspectTesting.md:
+26.AspectTesting/knowledge/AspectTesting.md:
   aspect-testing-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -1224,7 +1224,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-27.AOPDebuggingDiagnostics/AOPDebuggingDiagnostics.md:
+27.AOPDebuggingDiagnostics/knowledge/AOPDebuggingDiagnostics.md:
   aop-debugging-diagnostics-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -1270,7 +1270,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-28.AspectPerformanceResources/AspectPerformanceResources.md:
+28.AspectPerformanceResources/knowledge/AspectPerformanceResources.md:
   aspect-performance-resources-001:
     difficulty: ADVANCED
     aiGenerated: true
@@ -1316,7 +1316,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-29.AspectIntegrationDeployment/AspectIntegrationDeployment.md:
+29.AspectIntegrationDeployment/knowledge/AspectIntegrationDeployment.md:
   aspect-integration-deployment-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -1362,7 +1362,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-30.AOPPitfalls/AOPPitfalls.md:
+30.AOPPitfalls/knowledge/AOPPitfalls.md:
   aop-pitfalls-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -1398,7 +1398,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-31.AspectCapstoneExercises/AspectCapstoneExercises.md:
+31.AspectCapstoneExercises/knowledge/AspectCapstoneExercises.md:
   aspect-capstone-exercises-001:
     difficulty: INTERMEDIATE
     aiGenerated: true

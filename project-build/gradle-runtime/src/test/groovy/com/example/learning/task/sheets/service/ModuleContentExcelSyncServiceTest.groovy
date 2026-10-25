@@ -72,7 +72,7 @@ class ModuleContentExcelSyncServiceTest {
         byte[] original = (f.target as File).bytes
         File quiz = new File(f.module as File, 'content/quiz/en/question.yml')
         quiz.setText(quiz.getText('UTF-8')
-                .replace('1.Basic/Basic.md', '99.Wrong/Wrong.md'), 'UTF-8')
+                .replace('1.Basic/knowledge/Basic.md', '99.Wrong/knowledge/Wrong.md'), 'UTF-8')
         try {
             service.execute(f.root as File, f.module as File, 'QUIZ', true)
             fail('Expected unknown chapter link failure')
@@ -89,7 +89,7 @@ class ModuleContentExcelSyncServiceTest {
         service.execute(f.root as File, f.module as File, 'ALL', true)
         byte[] old = (f.target as File).bytes
         File readme = new File(f.module as File,
-                'content/readme/docs/en/menu/1.Basic/Basic.md')
+                'content/readme/docs/en/menu/1.Basic/knowledge/Basic.md')
         readme.setText(readme.getText('UTF-8').replace('basic-001', 'changed-001'), 'UTF-8')
         try {
             service.execute(f.root as File, f.module as File, 'README', true)
@@ -98,6 +98,26 @@ class ModuleContentExcelSyncServiceTest {
             assertTrue(expected.message.contains('anchor mismatch'))
         }
         assertArrayEquals(old, (f.target as File).bytes)
+    }
+
+    @Test
+    void doesNotTreatOtherChapterMarkdownAsKnowledge() {
+        Map f = fixture()
+        File module = f.module as File
+        write(module, 'content/readme/docs/en/menu/1.Basic/chapter-links.md',
+                '# Auxiliary chapter links without Knowledge anchors')
+        write(module, 'content/readme/docs/en/menu/1.Basic/Basic.md',
+                '# Old location should not be used')
+
+        Map result = new ModuleContentExcelSyncService().execute(
+                f.root as File, module, 'ALL', true)
+        assertEquals('EXPORTED', result.status)
+        (f.target as File).withInputStream { input ->
+            new XSSFWorkbook(input).withCloseable { book ->
+                assertEquals('English body',
+                        ModuleContentExcelSyncService.text(book.getSheetAt(0), 21, 3))
+            }
+        }
     }
 
     @Test
@@ -138,7 +158,7 @@ class ModuleContentExcelSyncServiceTest {
             source.withOutputStream { book.write(it) }
         }
         write(module, 'content/readme/docs/en/BASE.md', '# English introduction')
-        write(module, 'content/readme/docs/en/menu/1.Basic/Basic.md', '''
+        write(module, 'content/readme/docs/en/menu/1.Basic/knowledge/Basic.md', '''
 <a id="back-to-top"></a>
 
 # English chapter
@@ -159,7 +179,7 @@ English body
 ---
 '''.trim() + '\n')
         write(module, 'content/readme/metadata/en/knowledge-metadata.yml', '''
-1.Basic/Basic.md:
+1.Basic/knowledge/Basic.md:
   basic-001:
     difficulty: ADVANCED
     isImportant: true
@@ -176,7 +196,7 @@ roadmap:
 questions:
   - question: English interview?
     answer: The answer
-    readmeRelated: {file: "1.Basic/Basic.md", anchor: "basic-001"}
+    readmeRelated: {file: "1.Basic/knowledge/Basic.md", anchor: "basic-001"}
 '''.trim())
         write(module, 'content/quiz/en/question.yml', '''
 questions:
@@ -188,7 +208,7 @@ questions:
       - {id: C, answer: Maybe, explanation: incorrect}
       - {id: D, answer: None, explanation: incorrect}
     correctAnswerId: A
-    readmeRelated: {file: "1.Basic/Basic.md", anchor: "basic-001"}
+    readmeRelated: {file: "1.Basic/knowledge/Basic.md", anchor: "basic-001"}
 '''.trim())
         write(module, 'content/video/en/menu/1.Basic/video-script.yml', '''
 title: English video script

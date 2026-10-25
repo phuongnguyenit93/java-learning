@@ -1,10 +1,10 @@
-1.ExceptionPurpose/ExceptionPurpose.md:
+1.ExceptionPurpose/knowledge/ExceptionPurpose.md:
   exception-purpose:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
     isImportant: false
-2.ThrowableModel/ThrowableModel.md:
+2.ThrowableModel/knowledge/ThrowableModel.md:
   throwable-hierarchy:
     difficulty: BASIC
     aiGenerated: true
@@ -20,7 +20,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-3.CheckedUncheckedContracts/CheckedUncheckedContracts.md:
+3.CheckedUncheckedContracts/knowledge/CheckedUncheckedContracts.md:
   checked-exception:
     difficulty: BASIC
     aiGenerated: true
@@ -36,7 +36,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-4.ThrowingPropagation/ThrowingPropagation.md:
+4.ThrowingPropagation/knowledge/ThrowingPropagation.md:
   throw-statement:
     difficulty: BASIC
     aiGenerated: true
@@ -82,7 +82,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-5.HandlingCleanup/HandlingCleanup.md:
+5.HandlingCleanup/knowledge/HandlingCleanup.md:
   try-catch-flow:
     difficulty: BASIC
     aiGenerated: true
@@ -103,7 +103,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-6.ResourceSafeFailure/ResourceSafeFailure.md:
+6.ResourceSafeFailure/knowledge/ResourceSafeFailure.md:
   autocloseable:
     difficulty: BASIC
     aiGenerated: true
@@ -139,7 +139,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-7.CustomExceptionsContext/CustomExceptionsContext.md:
+7.CustomExceptionsContext/knowledge/CustomExceptionsContext.md:
   custom-exception-purpose:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -155,7 +155,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-8.ExceptionBoundaryDesign/ExceptionBoundaryDesign.md:
+8.ExceptionBoundaryDesign/knowledge/ExceptionBoundaryDesign.md:
   exception-boundaries:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -181,7 +181,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-9.ExceptionSynthesis/ExceptionSynthesis.md:
+9.ExceptionSynthesis/knowledge/ExceptionSynthesis.md:
   exception-synthesis:
     difficulty: INTERMEDIATE
     aiGenerated: true

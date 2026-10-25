@@ -11,7 +11,7 @@ TransactionExperimentController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 4.Declarative/Declarative.md
+      file: 4.Declarative/knowledge/Declarative.md
       anchor: transaction-proxy-boundary
     methodName: proxyBoundary
     params: [
@@ -66,7 +66,7 @@ TransactionExperimentController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 7.Propagation/Propagation.md
+      file: 7.Propagation/knowledge/Propagation.md
       anchor: transaction-propagation-rollback-only
     methodName: requiredRollbackOnly
     params: [
@@ -93,7 +93,7 @@ TransactionExperimentController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 7.Propagation/Propagation.md
+      file: 7.Propagation/knowledge/Propagation.md
       anchor: transaction-propagation-requires-new
     methodName: requiresNew
     params: [
@@ -120,7 +120,7 @@ TransactionExperimentController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 10.EventsLifecycle/EventsLifecycle.md
+      file: 10.EventsLifecycle/knowledge/EventsLifecycle.md
       anchor: transaction-event-listener
     methodName: eventPhases
     params: [

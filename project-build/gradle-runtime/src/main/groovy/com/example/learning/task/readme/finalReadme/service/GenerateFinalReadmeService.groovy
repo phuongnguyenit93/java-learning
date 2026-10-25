@@ -199,6 +199,7 @@ ${baseFile.absolutePath}
         buildTree(
                 projectDirectory,
                 menuDirectory,
+                menuDirectory,
                 '',
                 content,
                 counter
@@ -226,6 +227,7 @@ ${baseFile.absolutePath}
 
     private static void buildTree(
             File projectDirectory,
+            File menuDirectory,
             File currentDirectory,
             String indent,
             StringBuilder content,
@@ -255,19 +257,25 @@ ${baseFile.absolutePath}
 
                 if (
                         containsMarkdownFile(
-                                file
+                                file,
+                                menuDirectory
                         )
                 ) {
 
-                    content.append(
-                            "${indent}* **${file.name}**\n"
-                    )
+                    boolean isKnowledgeDirectory = file.name == 'knowledge'
+
+                    if (!isKnowledgeDirectory) {
+                        content.append(
+                                "${indent}* **${file.name}**\n"
+                        )
+                    }
 
 
                     buildTree(
                             projectDirectory,
+                            menuDirectory,
                             file,
-                            indent + '    ',
+                            isKnowledgeDirectory ? indent : indent + '    ',
                             content,
                             counter
                     )
@@ -280,7 +288,7 @@ ${baseFile.absolutePath}
 
             if (
                     !file.isFile() ||
-                            !file.name.endsWith('.md')
+                            !isKnowledgeMarkdownFile(menuDirectory, file)
             ) {
 
                 return
@@ -397,7 +405,8 @@ ${baseFile.absolutePath}
 
 
     private static boolean containsMarkdownFile(
-            File directory
+            File directory,
+            File menuDirectory
     ) {
 
         File[] children =
@@ -425,7 +434,7 @@ ${baseFile.absolutePath}
 
             if (
                     child.isFile() &&
-                            child.name.endsWith('.md')
+                            isKnowledgeMarkdownFile(menuDirectory, child)
             ) {
 
                 return true
@@ -435,13 +444,34 @@ ${baseFile.absolutePath}
             if (child.isDirectory()) {
 
                 return containsMarkdownFile(
-                        child
+                        child,
+                        menuDirectory
                 )
             }
 
 
             return false
         }
+    }
+
+
+    private static boolean isKnowledgeMarkdownFile(
+            File menuDirectory,
+            File markdownFile
+    ) {
+
+        if (
+                !markdownFile.name.toLowerCase(Locale.ROOT).endsWith('.md') ||
+                        markdownFile.name.equalsIgnoreCase('chapter-links.md')
+        ) {
+            return false
+        }
+
+        def relative = menuDirectory.toPath().relativize(markdownFile.toPath())
+
+        return relative.nameCount == 1 ||
+                (relative.nameCount >= 3 &&
+                        relative.getName(1).toString() == 'knowledge')
     }
 
 

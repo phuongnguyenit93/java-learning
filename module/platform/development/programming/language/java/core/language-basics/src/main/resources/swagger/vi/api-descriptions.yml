@@ -8,7 +8,7 @@ ArrayController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 10.Arrays/Arrays.md
+      file: 10.Arrays/knowledge/Arrays.md
       anchor: array-covariance-risk
     methodName: covarianceFailure
     params: [
@@ -33,7 +33,7 @@ ArrayController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 10.Arrays/Arrays.md
+      file: 10.Arrays/knowledge/Arrays.md
       anchor: array-initialization
     methodName: copyReferenceElements
     params: [
@@ -59,7 +59,7 @@ CastingController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 15.TypeSystemMentalModel/TypeSystemMentalModel.md
+      file: 15.TypeSystemMentalModel/knowledge/TypeSystemMentalModel.md
       anchor: class-cast-failure
     methodName: safeAndUnsafeCast
     params:
@@ -85,7 +85,7 @@ MethodDispatchController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 15.TypeSystemMentalModel/TypeSystemMentalModel.md
+      file: 15.TypeSystemMentalModel/knowledge/TypeSystemMentalModel.md
       anchor: overload-vs-override-dispatch
     methodName: overloadVsOverride
     params: [
@@ -111,7 +111,7 @@ OperatorController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 7.Operators/Operators.md
+      file: 7.Operators/knowledge/Operators.md
       anchor: short-circuit-operators
     methodName: shortCircuit
     params: [
@@ -137,7 +137,7 @@ OverloadResolutionController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 11.Methods/Methods.md
+      file: 11.Methods/knowledge/Methods.md
       anchor: overload-resolution-phases
     methodName: selectionMatrix
     params: [
@@ -163,7 +163,7 @@ PassByValueController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 13.PassByValue/PassByValue.md
+      file: 13.PassByValue/knowledge/PassByValue.md
       anchor: reference-copy-mutation
     methodName: mutateAndReassign
     params: [
@@ -189,7 +189,7 @@ TypeSystemController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 15.TypeSystemMentalModel/TypeSystemMentalModel.md
+      file: 15.TypeSystemMentalModel/knowledge/TypeSystemMentalModel.md
       anchor: compile-time-vs-runtime-type
     methodName: inspectRuntimeType
     params:
@@ -214,7 +214,7 @@ TypeSystemController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 15.TypeSystemMentalModel/TypeSystemMentalModel.md
+      file: 15.TypeSystemMentalModel/knowledge/TypeSystemMentalModel.md
       anchor: assignment-compatibility
     methodName: conversionContexts
     params: [
@@ -240,7 +240,7 @@ WrapperController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 6.WrapperBoxing/WrapperBoxing.md
+      file: 6.WrapperBoxing/knowledge/WrapperBoxing.md
       anchor: wrapper-caching
     methodName: wrapperIdentity
     params: [
@@ -266,7 +266,7 @@ ControlFlowController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 15.TypeSystemMentalModel/TypeSystemMentalModel.md
+      file: 15.TypeSystemMentalModel/knowledge/TypeSystemMentalModel.md
       anchor: instanceof-safe-cast
     methodName: patternSwitch
     params: [

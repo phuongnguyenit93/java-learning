@@ -31,7 +31,8 @@ class ModuleLanguageCloneValidationService {
         ReadmeKnowledgeParser parser = new ReadmeKnowledgeParser(
                 Logging.getLogger(ModuleLanguageCloneValidationService))
         docs.findAll { String path, byte[] bytes ->
-            path.startsWith('menu/') && path.endsWith('.md')
+            path ==~ /menu\/[^\/]+\.md/ ||
+                    path ==~ /menu\/[^\/]+\/knowledge\/[^\/]+\.md/
         }.each { String path, byte[] bytes ->
             String source = path.substring('menu/'.length())
             def candidates = parser.parse(new File(source), content(bytes))

@@ -459,47 +459,33 @@ ${swaggerDirectory.absolutePath}
                 )
 
 
-        if (
-                normalized == null ||
-                        normalized.isBlank() ||
-                        normalized.startsWith('/') ||
-                        normalized == '..' ||
-                        normalized.contains('../')
-        ) {
+        if (normalized == null || normalized.isBlank()) {
             return false
         }
 
 
-        int separator =
-                normalized.indexOf('/')
-
-
-        if (
-                separator <= 0 ||
-                        separator >= normalized.length() - 1
-        ) {
+        List<String> segments = normalized.split('/') as List<String>
+        if (segments.size() != 3 ||
+                !(segments[0] ==~ /\d+\..+/) ||
+                segments[1] != 'knowledge' ||
+                (segments[2] in ['', '.', '..']) ||
+                !segments[2].toLowerCase(Locale.ROOT).endsWith('.md')) {
             return false
         }
 
 
-        String folder =
-                normalized.substring(
-                        0,
-                        separator
-                )
-
-
-        if (
-                !(folder ==~ /\d+\..+/)
-        ) {
+        File knowledgeDirectory = new File(menuDirectory,
+                segments[0] + '/knowledge')
+        File target = new File(menuDirectory, normalized)
+        if (!knowledgeDirectory.canonicalFile.toPath()
+                .startsWith(menuDirectory.canonicalFile.toPath()) ||
+                !target.canonicalFile.toPath()
+                        .startsWith(knowledgeDirectory.canonicalFile.toPath())) {
             return false
         }
 
 
-        return new File(
-                menuDirectory,
-                normalized
-        ).isFile()
+        return target.isFile()
     }
 
 

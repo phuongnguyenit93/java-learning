@@ -1,27 +1,27 @@
 # 📂 README MODULE STRUCTURE (VI)
 
 * **1.MentalModel**
-    * [RuntimeExtensibility](content/readme/docs/vi/menu/1.MentalModel/RuntimeExtensibility.md)
+    * [RuntimeExtensibility](content/readme/docs/vi/menu/1.MentalModel/knowledge/RuntimeExtensibility.md)
 * **2.SPIContract**
-    * [SPIContract](content/readme/docs/vi/menu/2.SPIContract/SPIContract.md)
+    * [SPIContract](content/readme/docs/vi/menu/2.SPIContract/knowledge/SPIContract.md)
 * **3.ServiceLoaderIntegration**
-    * [ServiceLoaderIntegration](content/readme/docs/vi/menu/3.ServiceLoaderIntegration/ServiceLoaderIntegration.md)
+    * [ServiceLoaderIntegration](content/readme/docs/vi/menu/3.ServiceLoaderIntegration/knowledge/ServiceLoaderIntegration.md)
 * **4.ProviderDiscoveryStrategy**
-    * [ProviderDiscoveryStrategy](content/readme/docs/vi/menu/4.ProviderDiscoveryStrategy/ProviderDiscoveryStrategy.md)
+    * [ProviderDiscoveryStrategy](content/readme/docs/vi/menu/4.ProviderDiscoveryStrategy/knowledge/ProviderDiscoveryStrategy.md)
 * **5.ClasspathModulePathIntegration**
-    * [ClasspathModulePathIntegration](content/readme/docs/vi/menu/5.ClasspathModulePathIntegration/ClasspathModulePathIntegration.md)
+    * [ClasspathModulePathIntegration](content/readme/docs/vi/menu/5.ClasspathModulePathIntegration/knowledge/ClasspathModulePathIntegration.md)
 * **6.PluginArchitecture**
-    * [PluginArchitecture](content/readme/docs/vi/menu/6.PluginArchitecture/PluginArchitecture.md)
+    * [PluginArchitecture](content/readme/docs/vi/menu/6.PluginArchitecture/knowledge/PluginArchitecture.md)
 * **7.PluginLifecycle**
-    * [PluginLifecycle](content/readme/docs/vi/menu/7.PluginLifecycle/PluginLifecycle.md)
+    * [PluginLifecycle](content/readme/docs/vi/menu/7.PluginLifecycle/knowledge/PluginLifecycle.md)
 * **8.PluginIsolationDesign**
-    * [PluginIsolationDesign](content/readme/docs/vi/menu/8.PluginIsolationDesign/PluginIsolationDesign.md)
+    * [PluginIsolationDesign](content/readme/docs/vi/menu/8.PluginIsolationDesign/knowledge/PluginIsolationDesign.md)
 * **9.VersionCompatibility**
-    * [VersionCompatibility](content/readme/docs/vi/menu/9.VersionCompatibility/VersionCompatibility.md)
+    * [VersionCompatibility](content/readme/docs/vi/menu/9.VersionCompatibility/knowledge/VersionCompatibility.md)
 * **10.ModuleLayerIntegration**
-    * [ModuleLayerIntegration](content/readme/docs/vi/menu/10.ModuleLayerIntegration/ModuleLayerIntegration.md)
+    * [ModuleLayerIntegration](content/readme/docs/vi/menu/10.ModuleLayerIntegration/knowledge/ModuleLayerIntegration.md)
 * **11.SynthesisAndPitfalls**
-    * [SynthesisAndPitfalls](content/readme/docs/vi/menu/11.SynthesisAndPitfalls/SynthesisAndPitfalls.md)
+    * [SynthesisAndPitfalls](content/readme/docs/vi/menu/11.SynthesisAndPitfalls/knowledge/SynthesisAndPitfalls.md)
 
 # Runtime Extensibility
 

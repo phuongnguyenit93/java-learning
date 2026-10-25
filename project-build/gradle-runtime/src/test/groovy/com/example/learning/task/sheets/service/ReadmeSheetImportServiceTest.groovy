@@ -28,11 +28,11 @@ class ReadmeSheetImportServiceTest {
                  ['Nội dung hai']])
         Map levels = ReadmeSheetImportService.buildSectionDifficulties(groups,
                 [[], ['ADVANCED'], []])
-        assertEquals(['ADVANCED', ''], levels['1.OOPBasic/OOPBasic.md'])
+        assertEquals(['ADVANCED', ''], levels['1.OOPBasic/knowledge/OOPBasic.md'])
         def service = new ReadmeMetadataSyncService(Logging.getLogger(ReadmeSheetImportServiceTest))
         String prepared = service.prepareImportedMetadata(module, docs, levels)
         Map metadata = new Yaml().load(prepared) as Map
-        Map file = metadata['1.OOPBasic/OOPBasic.md'] as Map
+        Map file = metadata['1.OOPBasic/knowledge/OOPBasic.md'] as Map
         assertEquals(['oop-basic-001','oop-basic-002'], file.keySet().toList())
         assertEquals('ADVANCED', file['oop-basic-001'].difficulty)
         assertEquals('BASIC', file['oop-basic-002'].difficulty)
@@ -44,24 +44,24 @@ class ReadmeSheetImportServiceTest {
 
         File metadataFile = new File(module,'content/readme/metadata/vi/knowledge-metadata.yml')
         Map existing = new Yaml().load(metadataFile.getText('UTF-8')) as Map
-        existing['1.OOPBasic/OOPBasic.md']['oop-basic-001'].reviewed = true
-        existing['1.OOPBasic/OOPBasic.md']['oop-basic-001'].aiGenerated = false
-        existing['1.OOPBasic/OOPBasic.md']['oop-basic-001'].isImportant = true
+        existing['1.OOPBasic/knowledge/OOPBasic.md']['oop-basic-001'].reviewed = true
+        existing['1.OOPBasic/knowledge/OOPBasic.md']['oop-basic-001'].aiGenerated = false
+        existing['1.OOPBasic/knowledge/OOPBasic.md']['oop-basic-001'].isImportant = true
         metadataFile.setText(new Yaml().dump(existing),'UTF-8')
         String refreshed = service.prepareImportedMetadata(module,docs,levels)
         Map updated = new Yaml().load(refreshed) as Map
-        assertEquals(true,updated['1.OOPBasic/OOPBasic.md']['oop-basic-001'].reviewed)
-        assertEquals(false,updated['1.OOPBasic/OOPBasic.md']['oop-basic-001'].aiGenerated)
-        assertEquals(true,updated['1.OOPBasic/OOPBasic.md']['oop-basic-001'].isImportant)
-        assertEquals('ADVANCED',updated['1.OOPBasic/OOPBasic.md']['oop-basic-001'].difficulty)
-        assertEquals('BASIC',updated['1.OOPBasic/OOPBasic.md']['oop-basic-002'].difficulty)
+        assertEquals(true,updated['1.OOPBasic/knowledge/OOPBasic.md']['oop-basic-001'].reviewed)
+        assertEquals(false,updated['1.OOPBasic/knowledge/OOPBasic.md']['oop-basic-001'].aiGenerated)
+        assertEquals(true,updated['1.OOPBasic/knowledge/OOPBasic.md']['oop-basic-001'].isImportant)
+        assertEquals('ADVANCED',updated['1.OOPBasic/knowledge/OOPBasic.md']['oop-basic-001'].difficulty)
+        assertEquals('BASIC',updated['1.OOPBasic/knowledge/OOPBasic.md']['oop-basic-002'].difficulty)
         // Explicit TRUE/FALSE in AB overrides existing flags; blank preserves.
         def importances = ReadmeSheetImportService.buildSectionImportances(groups,
                 [[], [false], [true]])
         String overridden = service.prepareImportedMetadata(module, docs, levels, importances)
         Map flagged = new Yaml().load(overridden) as Map
-        assertEquals(false, flagged['1.OOPBasic/OOPBasic.md']['oop-basic-001'].isImportant)
-        assertEquals(true, flagged['1.OOPBasic/OOPBasic.md']['oop-basic-002'].isImportant)
+        assertEquals(false, flagged['1.OOPBasic/knowledge/OOPBasic.md']['oop-basic-001'].isImportant)
+        assertEquals(true, flagged['1.OOPBasic/knowledge/OOPBasic.md']['oop-basic-002'].isImportant)
     }
 
     @Test
@@ -80,7 +80,7 @@ class ReadmeSheetImportServiceTest {
         List<Map> groups = [[filename:'Basics.md',children:[[row:21],[row:22],[row:23]]]]
         Map flags = ReadmeSheetImportService.buildSectionImportances(groups,
                 [[], [true], ['FALSE'], []])
-        assertEquals([true, false, null], flags['1.Basics/Basics.md'])
+        assertEquals([true, false, null], flags['1.Basics/knowledge/Basics.md'])
         try {
             ReadmeSheetImportService.buildSectionImportances(groups,
                     [[], ['yes'], [], []])
@@ -157,8 +157,8 @@ class ReadmeSheetImportServiceTest {
         Map<String, String> docs = ReadmeSheetImportService.buildDocuments(
                 menu.groups as List<Map<String, Object>>, knowledge
         )
-        assertEquals(['1.OOPBasic/OOPBasic.md', '2.Class/Class.md'], docs.keySet().toList())
-        String oop = docs['1.OOPBasic/OOPBasic.md']
+        assertEquals(['1.OOPBasic/knowledge/OOPBasic.md', '2.Class/knowledge/Class.md'], docs.keySet().toList())
+        String oop = docs['1.OOPBasic/knowledge/OOPBasic.md']
         assertTrue(oop.contains('id="oop-basic-001"'))
         assertTrue(oop.contains('id="oop-basic-002"'))
         assertTrue(oop.contains('id="oop-basic-003"'))
@@ -167,7 +167,7 @@ class ReadmeSheetImportServiceTest {
         assertTrue(oop.contains('<summary>Xem chi tiết</summary>'))
         assertTrue(oop.contains('## Menu'))
         assertTrue(oop.contains('- [Chưa có bài](#oop-basic-003)'))
-        assertTrue(docs['2.Class/Class.md'].contains('id="class-001"'))
+        assertTrue(docs['2.Class/knowledge/Class.md'].contains('id="class-001"'))
         assertEquals(docs, ReadmeSheetImportService.buildDocuments(
                 menu.groups as List<Map<String, Object>>, knowledge
         ))
@@ -190,7 +190,7 @@ class ReadmeSheetImportServiceTest {
                 menu.groups as List<Map<String, Object>>,
                 [[], ['Nội dung một'], ['Nội dung hai']]
         )
-        String result = docs['1.GenericAPI/GenericAPI.md']
+        String result = docs['1.GenericAPI/knowledge/GenericAPI.md']
         assertTrue(result.contains('# API &lt;T&gt; &amp; Java'))
         assertTrue(result.contains('Diamond &lt;&gt; và Map&lt;K,List&lt;V&gt;&gt;'))
         assertTrue(result.contains('List&lt;String&gt;&#91;&#93;'))
@@ -228,7 +228,7 @@ class ReadmeSheetImportServiceTest {
                 menu.groups as List<Map<String, Object>>,
                 [[], chunks]
         )
-        String readme = result['1.Encapsulation/Encapsulation.md']
+        String readme = result['1.Encapsulation/knowledge/Encapsulation.md']
         assertNotNull(readme)
         assertTrue(readme.contains(chunks.join('')))
         assertTrue(readme.contains(chunks.last()))
@@ -252,19 +252,21 @@ class ReadmeSheetImportServiceTest {
     }
 
     @Test
-    void dryRunThenApplyPermanentlyDeletesOldMenuBeforeReplacement() {
+    void knowledgeOnlySnapshotPreservesChapterSiblingsAndReplacesOnlyKnowledge() {
         File root = temporary.newFolder('repo')
         File menu = ReadmeSheetImportService.resolveMenuDirectory(root, 'module/example')
-        File legacy = new File(menu, '1.Legacy/Legacy.md')
+        File legacy = new File(menu, '1.Legacy/knowledge/Legacy.md')
         assertTrue(legacy.parentFile.mkdirs())
         legacy.setText('Old README content', 'UTF-8')
-        File nested = new File(menu, '1.Legacy/subfolder/Orphan.md')
+        File nested = new File(menu, '1.Legacy/knowledge/subfolder/Orphan.md')
         assertTrue(nested.parentFile.mkdirs())
         nested.setText('stale nested content', 'UTF-8')
-        File unrelated = new File(menu, 'readme-generated.tmp')
+        File unrelated = new File(menu, '1.Legacy/chapter-links.md')
         unrelated.setText('stale temporary content', 'UTF-8')
+        File video = new File(menu, '1.Legacy/video-script.yml')
+        video.setText('human-owned Video stays', 'UTF-8')
         Map<String, String> next = [
-                '1.OOPBasic/OOPBasic.md': '# Tư duy OOP\n\n## <a id="oop-basic-001">Lesson</a>\n'
+                '1.OOPBasic/knowledge/OOPBasic.md': '# Tư duy OOP\n\n## <a id="oop-basic-001">Lesson</a>\n'
         ]
         assertEquals('DRY_RUN', ReadmeSheetImportService.syncDocuments(root, menu, next, false).status)
         assertTrue(legacy.isFile())
@@ -274,31 +276,37 @@ class ReadmeSheetImportServiceTest {
 
         Map result = ReadmeSheetImportService.syncDocuments(root, menu, next, true)
         assertEquals('UPDATED', result.status)
-        assertEquals(3, result.clearedOldFiles)
-        assertEquals(next, ReadmeSheetImportService.readTree(menu))
+        assertEquals(2, result.clearedOldFiles)
         assertFalse(legacy.exists())
         assertFalse(nested.exists())
-        assertFalse(unrelated.exists())
-        assertEquals(['1.OOPBasic'], menu.list().toList())
+        assertTrue(unrelated.exists())
+        assertEquals('stale temporary content', unrelated.getText('UTF-8'))
+        assertEquals('human-owned Video stays', video.getText('UTF-8'))
+        assertTrue(new File(menu, '1.OOPBasic/knowledge/OOPBasic.md').isFile())
         assertFalse(new File(root, '.gradle/sheet-readme-backups').exists())
         assertEquals('UNCHANGED', ReadmeSheetImportService.syncDocuments(root, menu, next, true).status)
-        assertEquals(next, ReadmeSheetImportService.readTree(menu))
+        assertEquals('# Tư duy OOP\n\n## <a id="oop-basic-001">Lesson</a>\n',
+                new File(menu, '1.OOPBasic/knowledge/OOPBasic.md').getText('UTF-8'))
 
-        Map<String, String> revised = ['1.Class/Class.md': 'New lesson']
+        Map<String, String> revised = ['1.Class/knowledge/Class.md': 'New lesson']
         Map updated = ReadmeSheetImportService.syncDocuments(root, menu, revised, true)
         assertEquals('UPDATED', updated.status)
         assertEquals(1, updated.clearedOldFiles)
-        assertEquals(revised, ReadmeSheetImportService.readTree(menu))
+        assertTrue(new File(menu, '1.Class/knowledge/Class.md').isFile())
+        assertTrue(unrelated.exists())
+        assertTrue(video.exists())
         assertFalse(new File(root, '.gradle/sheet-readme-backups').exists())
     }
 
     @Test
-    void emptySheetSnapshotClearsOldMenuWithoutBackup() {
+    void emptySheetSnapshotClearsOnlyKnowledge() {
         File root = temporary.newFolder('empty-snapshot')
         File menu = ReadmeSheetImportService.resolveMenuDirectory(root, 'module/example')
-        File old = new File(menu, '1.Old/Old.md')
+        File old = new File(menu, '1.Old/knowledge/Old.md')
         assertTrue(old.parentFile.mkdirs())
         old.setText('Original remains intact', 'UTF-8')
+        File sibling = new File(menu, '1.Old/chapter-links.md')
+        sibling.setText('keep this', 'UTF-8')
         assertEquals('DRY_RUN',
                 ReadmeSheetImportService.syncDocuments(root, menu, [:], false).status)
         assertTrue(old.isFile())
@@ -306,7 +314,8 @@ class ReadmeSheetImportServiceTest {
         assertEquals('CLEARED_EMPTY', cleared.status)
         assertEquals(1, cleared.clearedOldFiles)
         assertFalse(old.exists())
-        assertTrue(ReadmeSheetImportService.readTree(menu).isEmpty())
+        assertTrue(sibling.isFile())
+        assertEquals('keep this', sibling.getText('UTF-8'))
         assertFalse(new File(root, '.gradle/sheet-readme-backups').exists())
     }
 
@@ -319,7 +328,7 @@ class ReadmeSheetImportServiceTest {
         data.setText('keep', 'UTF-8')
         expectFailure {
             ReadmeSheetImportService.syncDocuments(
-                    root, unrelated, ['1.Class/Class.md': 'new'], true
+                root, unrelated, ['1.Class/knowledge/Class.md': 'new'], true
             )
         }
         assertEquals('keep', data.getText('UTF-8'))

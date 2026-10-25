@@ -1,25 +1,25 @@
 # 📂 README MODULE STRUCTURE (VI)
 
 * **1.Introduction**
-    * [SpringTesting](content/readme/docs/vi/menu/1.Introduction/SpringTesting.md)
+    * [SpringTesting](content/readme/docs/vi/menu/1.Introduction/knowledge/SpringTesting.md)
 * **2.TestContextFramework**
-    * [TestContextFramework](content/readme/docs/vi/menu/2.TestContextFramework/TestContextFramework.md)
+    * [TestContextFramework](content/readme/docs/vi/menu/2.TestContextFramework/knowledge/TestContextFramework.md)
 * **3.ContextConfiguration**
-    * [ContextConfiguration](content/readme/docs/vi/menu/3.ContextConfiguration/ContextConfiguration.md)
+    * [ContextConfiguration](content/readme/docs/vi/menu/3.ContextConfiguration/knowledge/ContextConfiguration.md)
 * **4.TestFixtures**
-    * [TestFixtures](content/readme/docs/vi/menu/4.TestFixtures/TestFixtures.md)
+    * [TestFixtures](content/readme/docs/vi/menu/4.TestFixtures/knowledge/TestFixtures.md)
 * **5.TestEnvironment**
-    * [TestEnvironment](content/readme/docs/vi/menu/5.TestEnvironment/TestEnvironment.md)
+    * [TestEnvironment](content/readme/docs/vi/menu/5.TestEnvironment/knowledge/TestEnvironment.md)
 * **6.ContextCaching**
-    * [ContextCaching](content/readme/docs/vi/menu/6.ContextCaching/ContextCaching.md)
+    * [ContextCaching](content/readme/docs/vi/menu/6.ContextCaching/knowledge/ContextCaching.md)
 * **7.TransactionalDatabaseTesting**
-    * [TransactionalDatabaseTesting](content/readme/docs/vi/menu/7.TransactionalDatabaseTesting/TransactionalDatabaseTesting.md)
+    * [TransactionalDatabaseTesting](content/readme/docs/vi/menu/7.TransactionalDatabaseTesting/knowledge/TransactionalDatabaseTesting.md)
 * **8.MockMvcTesting**
-    * [MockMvcTesting](content/readme/docs/vi/menu/8.MockMvcTesting/MockMvcTesting.md)
+    * [MockMvcTesting](content/readme/docs/vi/menu/8.MockMvcTesting/knowledge/MockMvcTesting.md)
 * **9.WebTestClientAndClientTesting**
-    * [WebTestClientAndClientTesting](content/readme/docs/vi/menu/9.WebTestClientAndClientTesting/WebTestClientAndClientTesting.md)
+    * [WebTestClientAndClientTesting](content/readme/docs/vi/menu/9.WebTestClientAndClientTesting/knowledge/WebTestClientAndClientTesting.md)
 * **10.TestLifecycle**
-    * [TestLifecycle](content/readme/docs/vi/menu/10.TestLifecycle/TestLifecycle.md)
+    * [TestLifecycle](content/readme/docs/vi/menu/10.TestLifecycle/knowledge/TestLifecycle.md)
 
 # Spring Framework Testing
 

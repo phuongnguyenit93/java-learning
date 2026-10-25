@@ -49,7 +49,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.GenericsPurpose/GenericsPurpose.md", anchor: "generic-type-purpose"}
+    readmeRelated: {file: "1.GenericsPurpose/knowledge/GenericsPurpose.md", anchor: "generic-type-purpose"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: type-parameter-vs-argument
@@ -62,7 +62,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.GenericsPurpose/GenericsPurpose.md", anchor: "type-parameter"}
+    readmeRelated: {file: "1.GenericsPurpose/knowledge/GenericsPurpose.md", anchor: "type-parameter"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: diamond-vs-raw
@@ -75,7 +75,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.GenericTypesAndMethods/GenericTypesAndMethods.md", anchor: "diamond-operator"}
+    readmeRelated: {file: "2.GenericTypesAndMethods/knowledge/GenericTypesAndMethods.md", anchor: "diamond-operator"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: generic-method-syntax
@@ -88,7 +88,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.GenericTypesAndMethods/GenericTypesAndMethods.md", anchor: "generic-method-syntax"}
+    readmeRelated: {file: "2.GenericTypesAndMethods/knowledge/GenericTypesAndMethods.md", anchor: "generic-method-syntax"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: generic-constructor-scope
@@ -101,7 +101,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.GenericTypesAndMethods/GenericTypesAndMethods.md", anchor: "generic-constructor"}
+    readmeRelated: {file: "2.GenericTypesAndMethods/knowledge/GenericTypesAndMethods.md", anchor: "generic-constructor"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: method-type-inference
@@ -114,7 +114,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.GenericTypesAndMethods/GenericTypesAndMethods.md", anchor: "type-inference"}
+    readmeRelated: {file: "2.GenericTypesAndMethods/knowledge/GenericTypesAndMethods.md", anchor: "type-inference"}
     apiRelated: {controller: "GenericMethodController", methodSignature: "inference()"}
 
   - id: method-vs-class-type-parameter
@@ -127,7 +127,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.GenericTypesAndMethods/GenericTypesAndMethods.md", anchor: "generic-method-vs-type"}
+    readmeRelated: {file: "2.GenericTypesAndMethods/knowledge/GenericTypesAndMethods.md", anchor: "generic-method-vs-type"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: upper-bound-capability
@@ -140,7 +140,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.BoundedTypeParameters/BoundedTypeParameters.md", anchor: "upper-bounded-type"}
+    readmeRelated: {file: "3.BoundedTypeParameters/knowledge/BoundedTypeParameters.md", anchor: "upper-bounded-type"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: multiple-bounds-order
@@ -153,7 +153,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.BoundedTypeParameters/BoundedTypeParameters.md", anchor: "multiple-bounds"}
+    readmeRelated: {file: "3.BoundedTypeParameters/knowledge/BoundedTypeParameters.md", anchor: "multiple-bounds"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: recursive-bound-meaning
@@ -166,7 +166,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.BoundedTypeParameters/BoundedTypeParameters.md", anchor: "recursive-bound"}
+    readmeRelated: {file: "3.BoundedTypeParameters/knowledge/BoundedTypeParameters.md", anchor: "recursive-bound"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: declaration-subtyping
@@ -179,7 +179,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.InvarianceAndSubtyping/InvarianceAndSubtyping.md", anchor: "generic-declaration-subtyping"}
+    readmeRelated: {file: "4.InvarianceAndSubtyping/knowledge/InvarianceAndSubtyping.md", anchor: "generic-declaration-subtyping"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: generic-invariance
@@ -192,7 +192,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.InvarianceAndSubtyping/InvarianceAndSubtyping.md", anchor: "generic-invariance"}
+    readmeRelated: {file: "4.InvarianceAndSubtyping/knowledge/InvarianceAndSubtyping.md", anchor: "generic-invariance"}
     apiRelated: {controller: "VarianceController", methodSignature: "invariance()"}
 
   - id: arrays-vs-generics
@@ -205,7 +205,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.InvarianceAndSubtyping/InvarianceAndSubtyping.md", anchor: "variance-vs-arrays"}
+    readmeRelated: {file: "4.InvarianceAndSubtyping/knowledge/InvarianceAndSubtyping.md", anchor: "variance-vs-arrays"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: wildcard-vs-object
@@ -218,7 +218,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.WildcardsAndPECS/WildcardsAndPECS.md", anchor: "wildcard-vs-object"}
+    readmeRelated: {file: "5.WildcardsAndPECS/knowledge/WildcardsAndPECS.md", anchor: "wildcard-vs-object"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: wildcard-placement-rule
@@ -231,7 +231,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.WildcardsAndPECS/WildcardsAndPECS.md", anchor: "wildcard-placement"}
+    readmeRelated: {file: "5.WildcardsAndPECS/knowledge/WildcardsAndPECS.md", anchor: "wildcard-placement"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: unbounded-wildcard-purpose
@@ -244,7 +244,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.WildcardsAndPECS/WildcardsAndPECS.md", anchor: "wildcard-vs-type-parameter"}
+    readmeRelated: {file: "5.WildcardsAndPECS/knowledge/WildcardsAndPECS.md", anchor: "wildcard-vs-type-parameter"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: extends-read-write
@@ -257,7 +257,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.WildcardsAndPECS/WildcardsAndPECS.md", anchor: "extends-wildcard"}
+    readmeRelated: {file: "5.WildcardsAndPECS/knowledge/WildcardsAndPECS.md", anchor: "extends-wildcard"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: super-read-write
@@ -270,7 +270,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.WildcardsAndPECS/WildcardsAndPECS.md", anchor: "super-wildcard"}
+    readmeRelated: {file: "5.WildcardsAndPECS/knowledge/WildcardsAndPECS.md", anchor: "super-wildcard"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: pecs-core-rule
@@ -283,7 +283,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.WildcardsAndPECS/WildcardsAndPECS.md", anchor: "pecs-rule"}
+    readmeRelated: {file: "5.WildcardsAndPECS/knowledge/WildcardsAndPECS.md", anchor: "pecs-rule"}
     apiRelated: {controller: "WildcardController", methodSignature: "producerConsumer()"}
 
   - id: extends-not-readonly
@@ -296,7 +296,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.WildcardsAndPECS/WildcardsAndPECS.md", anchor: "read-from-producer"}
+    readmeRelated: {file: "5.WildcardsAndPECS/knowledge/WildcardsAndPECS.md", anchor: "read-from-producer"}
     apiRelated: {controller: "WildcardController", methodSignature: "producerConsumer()"}
 
   - id: consumer-target
@@ -309,7 +309,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.WildcardsAndPECS/WildcardsAndPECS.md", anchor: "write-to-consumer"}
+    readmeRelated: {file: "5.WildcardsAndPECS/knowledge/WildcardsAndPECS.md", anchor: "write-to-consumer"}
     apiRelated: {controller: "WildcardController", methodSignature: "producerConsumer()"}
 
   - id: wildcard-capture-helper
@@ -322,7 +322,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.WildcardsAndPECS/WildcardsAndPECS.md", anchor: "wildcard-capture"}
+    readmeRelated: {file: "5.WildcardsAndPECS/knowledge/WildcardsAndPECS.md", anchor: "wildcard-capture"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: raw-type-purpose
@@ -335,7 +335,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.RawTypesAndLegacyBoundaries/RawTypesAndLegacyBoundaries.md", anchor: "raw-type-compatibility"}
+    readmeRelated: {file: "6.RawTypesAndLegacyBoundaries/knowledge/RawTypesAndLegacyBoundaries.md", anchor: "raw-type-compatibility"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: unchecked-warning-meaning
@@ -348,7 +348,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.RawTypesAndLegacyBoundaries/RawTypesAndLegacyBoundaries.md", anchor: "unchecked-warning"}
+    readmeRelated: {file: "6.RawTypesAndLegacyBoundaries/knowledge/RawTypesAndLegacyBoundaries.md", anchor: "unchecked-warning"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: heap-pollution-failure
@@ -361,7 +361,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.RawTypesAndLegacyBoundaries/RawTypesAndLegacyBoundaries.md", anchor: "heap-pollution"}
+    readmeRelated: {file: "6.RawTypesAndLegacyBoundaries/knowledge/RawTypesAndLegacyBoundaries.md", anchor: "heap-pollution"}
     apiRelated: {controller: "RawTypeController", methodSignature: "heapPollution()"}
 
   - id: erasure-runtime-class
@@ -374,7 +374,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.TypeErasureAndRuntimeModel/TypeErasureAndRuntimeModel.md", anchor: "erased-runtime-type"}
+    readmeRelated: {file: "7.TypeErasureAndRuntimeModel/knowledge/TypeErasureAndRuntimeModel.md", anchor: "erased-runtime-type"}
     apiRelated: {controller: "ErasureController", methodSignature: "inspectRuntimeTypes()"}
 
   - id: generic-signature-metadata
@@ -387,7 +387,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.TypeErasureAndRuntimeModel/TypeErasureAndRuntimeModel.md", anchor: "generic-signature-metadata"}
+    readmeRelated: {file: "7.TypeErasureAndRuntimeModel/knowledge/TypeErasureAndRuntimeModel.md", anchor: "generic-signature-metadata"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: bridge-method-purpose
@@ -400,7 +400,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.TypeErasureAndRuntimeModel/TypeErasureAndRuntimeModel.md", anchor: "bridge-method"}
+    readmeRelated: {file: "7.TypeErasureAndRuntimeModel/knowledge/TypeErasureAndRuntimeModel.md", anchor: "bridge-method"}
     apiRelated: {controller: "ErasureController", methodSignature: "bridgeMethod()"}
 
   - id: reifiable-instanceof-java21
@@ -413,7 +413,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.TypeErasureAndRuntimeModel/TypeErasureAndRuntimeModel.md", anchor: "non-reifiable-types"}
+    readmeRelated: {file: "7.TypeErasureAndRuntimeModel/knowledge/TypeErasureAndRuntimeModel.md", anchor: "non-reifiable-types"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: no-generic-primitives
@@ -426,7 +426,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.GenericLimitationsAndApiDesign/GenericLimitationsAndApiDesign.md", anchor: "no-generic-primitives"}
+    readmeRelated: {file: "8.GenericLimitationsAndApiDesign/knowledge/GenericLimitationsAndApiDesign.md", anchor: "no-generic-primitives"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: no-new-t
@@ -439,7 +439,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.GenericLimitationsAndApiDesign/GenericLimitationsAndApiDesign.md", anchor: "no-new-type-parameter"}
+    readmeRelated: {file: "8.GenericLimitationsAndApiDesign/knowledge/GenericLimitationsAndApiDesign.md", anchor: "no-new-type-parameter"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: generic-array-restriction
@@ -452,7 +452,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.GenericLimitationsAndApiDesign/GenericLimitationsAndApiDesign.md", anchor: "generic-array-limit"}
+    readmeRelated: {file: "8.GenericLimitationsAndApiDesign/knowledge/GenericLimitationsAndApiDesign.md", anchor: "generic-array-limit"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: runtime-type-token
@@ -465,7 +465,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.GenericLimitationsAndApiDesign/GenericLimitationsAndApiDesign.md", anchor: "runtime-type-information-limit"}
+    readmeRelated: {file: "8.GenericLimitationsAndApiDesign/knowledge/GenericLimitationsAndApiDesign.md", anchor: "runtime-type-information-limit"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: static-class-type-parameter
@@ -478,7 +478,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.GenericLimitationsAndApiDesign/GenericLimitationsAndApiDesign.md", anchor: "static-type-parameter-limit"}
+    readmeRelated: {file: "8.GenericLimitationsAndApiDesign/knowledge/GenericLimitationsAndApiDesign.md", anchor: "static-type-parameter-limit"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: erasure-signature-clash
@@ -491,7 +491,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.GenericLimitationsAndApiDesign/GenericLimitationsAndApiDesign.md", anchor: "erasure-signature-clash"}
+    readmeRelated: {file: "8.GenericLimitationsAndApiDesign/knowledge/GenericLimitationsAndApiDesign.md", anchor: "erasure-signature-clash"}
     apiRelated: {controller: "", methodSignature: ""}
   - id: generic-exception-rule
     question: "Which statement about generics and exceptions is correct?"
@@ -503,5 +503,5 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.GenericLimitationsAndApiDesign/GenericLimitationsAndApiDesign.md", anchor: "generic-exception-limit"}
+    readmeRelated: {file: "8.GenericLimitationsAndApiDesign/knowledge/GenericLimitationsAndApiDesign.md", anchor: "generic-exception-limit"}
     apiRelated: {controller: "", methodSignature: ""}

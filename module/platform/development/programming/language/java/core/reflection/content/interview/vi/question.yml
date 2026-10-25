@@ -35,7 +35,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '1.Basic/Basic.md'
+      file: '1.Basic/knowledge/Basic.md'
       anchor: 'reflection-model'
     apiRelated:
       controller: ''
@@ -48,7 +48,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '10.LimitationsRisks/LimitationsRisks.md'
+      file: '10.LimitationsRisks/knowledge/LimitationsRisks.md'
       anchor: 'reflection-cost-boundary'
     apiRelated:
       controller: ''
@@ -61,7 +61,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '2.ClassMetadata/ClassMetadata.md'
+      file: '2.ClassMetadata/knowledge/ClassMetadata.md'
       anchor: 'class-object-entrypoints'
     apiRelated:
       controller: ''
@@ -74,7 +74,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '2.ClassMetadata/ClassMetadata.md'
+      file: '2.ClassMetadata/knowledge/ClassMetadata.md'
       anchor: 'class-kind'
     apiRelated:
       controller: 'ClassMetadataController'
@@ -87,7 +87,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '2.ClassMetadata/ClassMetadata.md'
+      file: '2.ClassMetadata/knowledge/ClassMetadata.md'
       anchor: 'specialized-type-metadata'
     apiRelated:
       controller: 'ClassMetadataController'
@@ -100,7 +100,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '2.ClassMetadata/ClassMetadata.md'
+      file: '2.ClassMetadata/knowledge/ClassMetadata.md'
       anchor: 'declared-vs-public-members'
     apiRelated:
       controller: ''
@@ -113,7 +113,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '2.ClassMetadata/ClassMetadata.md'
+      file: '2.ClassMetadata/knowledge/ClassMetadata.md'
       anchor: 'member-abstraction-model'
     apiRelated:
       controller: ''
@@ -126,7 +126,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '6.DynamicInvocation/DynamicInvocation.md'
+      file: '6.DynamicInvocation/knowledge/DynamicInvocation.md'
       anchor: 'field-read-write'
     apiRelated:
       controller: 'FieldReflectionController'
@@ -139,7 +139,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '3.Fields/Fields.md'
+      file: '3.Fields/knowledge/Fields.md'
       anchor: 'field-modifiers'
     apiRelated:
       controller: ''
@@ -152,7 +152,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '4.Methods/Methods.md'
+      file: '4.Methods/knowledge/Methods.md'
       anchor: 'method-discovery'
     apiRelated:
       controller: ''
@@ -165,7 +165,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '6.DynamicInvocation/DynamicInvocation.md'
+      file: '6.DynamicInvocation/knowledge/DynamicInvocation.md'
       anchor: 'method-invoke'
     apiRelated:
       controller: ''
@@ -178,7 +178,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '6.DynamicInvocation/DynamicInvocation.md'
+      file: '6.DynamicInvocation/knowledge/DynamicInvocation.md'
       anchor: 'invocation-exception'
     apiRelated:
       controller: 'MethodReflectionController'
@@ -191,7 +191,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '6.DynamicInvocation/DynamicInvocation.md'
+      file: '6.DynamicInvocation/knowledge/DynamicInvocation.md'
       anchor: 'varargs-reflection'
     apiRelated:
       controller: ''
@@ -204,7 +204,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '5.Constructors/Constructors.md'
+      file: '5.Constructors/knowledge/Constructors.md'
       anchor: 'constructor-discovery'
     apiRelated:
       controller: 'ConstructorReflectionController'
@@ -217,7 +217,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '6.DynamicInvocation/DynamicInvocation.md'
+      file: '6.DynamicInvocation/knowledge/DynamicInvocation.md'
       anchor: 'constructor-reflection-failure'
     apiRelated:
       controller: ''
@@ -230,7 +230,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '7.AccessControl/AccessControl.md'
+      file: '7.AccessControl/knowledge/AccessControl.md'
       anchor: 'language-vs-reflective-access'
     apiRelated:
       controller: ''
@@ -243,7 +243,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '7.AccessControl/AccessControl.md'
+      file: '7.AccessControl/knowledge/AccessControl.md'
       anchor: 'strong-encapsulation-boundary'
     apiRelated:
       controller: 'AccessReflectionController'
@@ -256,7 +256,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '8.GenericTypeInspection/GenericTypeInspection.md'
+      file: '8.GenericTypeInspection/knowledge/GenericTypeInspection.md'
       anchor: 'type-interface'
     apiRelated:
       controller: ''
@@ -269,7 +269,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '8.GenericTypeInspection/GenericTypeInspection.md'
+      file: '8.GenericTypeInspection/knowledge/GenericTypeInspection.md'
       anchor: 'type-variable-bounds'
     apiRelated:
       controller: ''
@@ -282,7 +282,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '8.GenericTypeInspection/GenericTypeInspection.md'
+      file: '8.GenericTypeInspection/knowledge/GenericTypeInspection.md'
       anchor: 'erasure-vs-signature-metadata'
     apiRelated:
       controller: 'GenericReflectionController'
@@ -295,7 +295,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '6.DynamicInvocation/DynamicInvocation.md'
+      file: '6.DynamicInvocation/knowledge/DynamicInvocation.md'
       anchor: 'reflective-dispatch'
     apiRelated:
       controller: ''
@@ -308,7 +308,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '6.DynamicInvocation/DynamicInvocation.md'
+      file: '6.DynamicInvocation/knowledge/DynamicInvocation.md'
       anchor: 'argument-conversion'
     apiRelated:
       controller: ''
@@ -321,7 +321,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '6.DynamicInvocation/DynamicInvocation.md'
+      file: '6.DynamicInvocation/knowledge/DynamicInvocation.md'
       anchor: 'dynamic-array-reflection'
     apiRelated:
       controller: ''
@@ -334,7 +334,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '6.DynamicInvocation/DynamicInvocation.md'
+      file: '6.DynamicInvocation/knowledge/DynamicInvocation.md'
       anchor: 'method-handle-boundary'
     apiRelated:
       controller: ''
@@ -347,7 +347,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '10.LimitationsRisks/LimitationsRisks.md'
+      file: '10.LimitationsRisks/knowledge/LimitationsRisks.md'
       anchor: 'reflection-performance'
     apiRelated:
       controller: ''
@@ -360,7 +360,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '10.LimitationsRisks/LimitationsRisks.md'
+      file: '10.LimitationsRisks/knowledge/LimitationsRisks.md'
       anchor: 'reflection-maintainability'
     apiRelated:
       controller: ''
@@ -373,7 +373,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '10.LimitationsRisks/LimitationsRisks.md'
+      file: '10.LimitationsRisks/knowledge/LimitationsRisks.md'
       anchor: 'native-image-boundary'
     apiRelated:
       controller: ''
@@ -386,7 +386,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '9.DynamicProxy/DynamicProxy.md'
+      file: '9.DynamicProxy/knowledge/DynamicProxy.md'
       anchor: 'object-methods-proxy'
     apiRelated:
       controller: 'DynamicProxyController'
@@ -399,7 +399,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '9.DynamicProxy/DynamicProxy.md'
+      file: '9.DynamicProxy/knowledge/DynamicProxy.md'
       anchor: 'proxy-limitations'
     apiRelated:
       controller: ''
@@ -412,7 +412,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '10.LimitationsRisks/LimitationsRisks.md'
+      file: '10.LimitationsRisks/knowledge/LimitationsRisks.md'
       anchor: 'reflection-decision-model'
     apiRelated:
       controller: ''

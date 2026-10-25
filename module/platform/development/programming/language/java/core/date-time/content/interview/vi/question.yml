@@ -36,7 +36,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.MentalModel/MentalModel.md"
+      file: "1.MentalModel/knowledge/MentalModel.md"
       anchor: "date-time-domains"
     apiRelated:
       controller: ""
@@ -49,7 +49,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.MentalModel/MentalModel.md"
+      file: "1.MentalModel/knowledge/MentalModel.md"
       anchor: "date-time-domains"
     apiRelated:
       controller: ""
@@ -62,7 +62,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.MentalModel/MentalModel.md"
+      file: "1.MentalModel/knowledge/MentalModel.md"
       anchor: "immutable-date-time"
     apiRelated:
       controller: ""
@@ -75,7 +75,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.MentalModel/MentalModel.md"
+      file: "1.MentalModel/knowledge/MentalModel.md"
       anchor: "choose-date-time-type"
     apiRelated:
       controller: ""
@@ -88,7 +88,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.LocalDate/LocalDate.md"
+      file: "2.LocalDate/knowledge/LocalDate.md"
       anchor: "local-date-model"
     apiRelated:
       controller: ""
@@ -101,7 +101,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.LocalDate/LocalDate.md"
+      file: "2.LocalDate/knowledge/LocalDate.md"
       anchor: "local-date-arithmetic"
     apiRelated:
       controller: ""
@@ -114,7 +114,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.LocalDate/LocalDate.md"
+      file: "2.LocalDate/knowledge/LocalDate.md"
       anchor: "calendar-validity"
     apiRelated:
       controller: ""
@@ -127,7 +127,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "3.LocalTime/LocalTime.md"
+      file: "3.LocalTime/knowledge/LocalTime.md"
       anchor: "local-time-model"
     apiRelated:
       controller: ""
@@ -140,7 +140,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "3.LocalTime/LocalTime.md"
+      file: "3.LocalTime/knowledge/LocalTime.md"
       anchor: "local-time-precision"
     apiRelated:
       controller: ""
@@ -153,7 +153,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "3.LocalTime/LocalTime.md"
+      file: "3.LocalTime/knowledge/LocalTime.md"
       anchor: "local-time-wrap"
     apiRelated:
       controller: ""
@@ -166,7 +166,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.LocalDateTime/LocalDateTime.md"
+      file: "4.LocalDateTime/knowledge/LocalDateTime.md"
       anchor: "local-date-time-model"
     apiRelated:
       controller: ""
@@ -179,7 +179,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.LocalDateTime/LocalDateTime.md"
+      file: "4.LocalDateTime/knowledge/LocalDateTime.md"
       anchor: "local-date-time-ambiguity"
     apiRelated:
       controller: ""
@@ -192,7 +192,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.LocalDateTime/LocalDateTime.md"
+      file: "4.LocalDateTime/knowledge/LocalDateTime.md"
       anchor: "local-date-time-use-cases"
     apiRelated:
       controller: ""
@@ -205,7 +205,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "5.Instant/Instant.md"
+      file: "5.Instant/knowledge/Instant.md"
       anchor: "instant-model"
     apiRelated:
       controller: ""
@@ -218,7 +218,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "5.Instant/Instant.md"
+      file: "5.Instant/knowledge/Instant.md"
       anchor: "epoch-time"
     apiRelated:
       controller: ""
@@ -231,7 +231,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "5.Instant/Instant.md"
+      file: "5.Instant/knowledge/Instant.md"
       anchor: "instant-use-cases"
     apiRelated:
       controller: ""
@@ -244,7 +244,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "6.ZoneOffsetZoneId/ZoneOffsetZoneId.md"
+      file: "6.ZoneOffsetZoneId/knowledge/ZoneOffsetZoneId.md"
       anchor: "zone-offset"
     apiRelated:
       controller: ""
@@ -257,7 +257,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "6.ZoneOffsetZoneId/ZoneOffsetZoneId.md"
+      file: "6.ZoneOffsetZoneId/knowledge/ZoneOffsetZoneId.md"
       anchor: "zone-id"
     apiRelated:
       controller: ""
@@ -270,7 +270,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "6.ZoneOffsetZoneId/ZoneOffsetZoneId.md"
+      file: "6.ZoneOffsetZoneId/knowledge/ZoneOffsetZoneId.md"
       anchor: "zone-id"
     apiRelated:
       controller: ""
@@ -283,7 +283,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "6.ZoneOffsetZoneId/ZoneOffsetZoneId.md"
+      file: "6.ZoneOffsetZoneId/knowledge/ZoneOffsetZoneId.md"
       anchor: "zone-rules"
     apiRelated:
       controller: ""
@@ -296,7 +296,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "7.ZonedOffsetDateTime/ZonedOffsetDateTime.md"
+      file: "7.ZonedOffsetDateTime/knowledge/ZonedOffsetDateTime.md"
       anchor: "zoned-date-time"
     apiRelated:
       controller: ""
@@ -309,7 +309,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "7.ZonedOffsetDateTime/ZonedOffsetDateTime.md"
+      file: "7.ZonedOffsetDateTime/knowledge/ZonedOffsetDateTime.md"
       anchor: "offset-date-time"
     apiRelated:
       controller: ""
@@ -322,7 +322,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "7.ZonedOffsetDateTime/ZonedOffsetDateTime.md"
+      file: "7.ZonedOffsetDateTime/knowledge/ZonedOffsetDateTime.md"
       anchor: "same-instant-vs-same-local"
     apiRelated:
       controller: ""
@@ -335,7 +335,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "7.ZonedOffsetDateTime/ZonedOffsetDateTime.md"
+      file: "7.ZonedOffsetDateTime/knowledge/ZonedOffsetDateTime.md"
       anchor: "zone-conversion"
     apiRelated:
       controller: ""
@@ -348,7 +348,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "8.DurationPeriod/DurationPeriod.md"
+      file: "8.DurationPeriod/knowledge/DurationPeriod.md"
       anchor: "duration-time-based"
     apiRelated:
       controller: ""
@@ -361,7 +361,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "8.DurationPeriod/DurationPeriod.md"
+      file: "8.DurationPeriod/knowledge/DurationPeriod.md"
       anchor: "period-date-based"
     apiRelated:
       controller: ""
@@ -374,7 +374,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "8.DurationPeriod/DurationPeriod.md"
+      file: "8.DurationPeriod/knowledge/DurationPeriod.md"
       anchor: "duration-vs-period"
     apiRelated:
       controller: ""
@@ -387,7 +387,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "9.FormattingParsing/FormattingParsing.md"
+      file: "9.FormattingParsing/knowledge/FormattingParsing.md"
       anchor: "date-time-formatter"
     apiRelated:
       controller: ""
@@ -400,7 +400,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "9.FormattingParsing/FormattingParsing.md"
+      file: "9.FormattingParsing/knowledge/FormattingParsing.md"
       anchor: "format-patterns"
     apiRelated:
       controller: ""
@@ -413,7 +413,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "9.FormattingParsing/FormattingParsing.md"
+      file: "9.FormattingParsing/knowledge/FormattingParsing.md"
       anchor: "strict-smart-lenient"
     apiRelated:
       controller: ""
@@ -426,7 +426,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "9.FormattingParsing/FormattingParsing.md"
+      file: "9.FormattingParsing/knowledge/FormattingParsing.md"
       anchor: "parse-target-type"
     apiRelated:
       controller: ""
@@ -439,7 +439,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "10.ArithmeticComparison/ArithmeticComparison.md"
+      file: "10.ArithmeticComparison/knowledge/ArithmeticComparison.md"
       anchor: "temporal-arithmetic"
     apiRelated:
       controller: ""
@@ -452,7 +452,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "10.ArithmeticComparison/ArithmeticComparison.md"
+      file: "10.ArithmeticComparison/knowledge/ArithmeticComparison.md"
       anchor: "between-semantics"
     apiRelated:
       controller: ""
@@ -465,7 +465,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "10.ArithmeticComparison/ArithmeticComparison.md"
+      file: "10.ArithmeticComparison/knowledge/ArithmeticComparison.md"
       anchor: "between-semantics"
     apiRelated:
       controller: ""
@@ -478,7 +478,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "10.ArithmeticComparison/ArithmeticComparison.md"
+      file: "10.ArithmeticComparison/knowledge/ArithmeticComparison.md"
       anchor: "date-time-comparison"
     apiRelated:
       controller: ""
@@ -491,7 +491,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "10.ArithmeticComparison/ArithmeticComparison.md"
+      file: "10.ArithmeticComparison/knowledge/ArithmeticComparison.md"
       anchor: "dst-gap-overlap"
     apiRelated:
       controller: ""
@@ -504,7 +504,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "10.ArithmeticComparison/ArithmeticComparison.md"
+      file: "10.ArithmeticComparison/knowledge/ArithmeticComparison.md"
       anchor: "business-calendar-boundary"
     apiRelated:
       controller: ""
@@ -517,7 +517,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "11.Clock/Clock.md"
+      file: "11.Clock/knowledge/Clock.md"
       anchor: "clock-abstraction"
     apiRelated:
       controller: ""
@@ -530,7 +530,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "11.Clock/Clock.md"
+      file: "11.Clock/knowledge/Clock.md"
       anchor: "fixed-clock-testing"
     apiRelated:
       controller: ""
@@ -543,7 +543,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "11.Clock/Clock.md"
+      file: "11.Clock/knowledge/Clock.md"
       anchor: "clock-injection"
     apiRelated:
       controller: ""
@@ -556,7 +556,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "12.LegacyInteropPitfalls/LegacyInteropPitfalls.md"
+      file: "12.LegacyInteropPitfalls/knowledge/LegacyInteropPitfalls.md"
       anchor: "legacy-date-calendar"
     apiRelated:
       controller: ""
@@ -569,7 +569,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "12.LegacyInteropPitfalls/LegacyInteropPitfalls.md"
+      file: "12.LegacyInteropPitfalls/knowledge/LegacyInteropPitfalls.md"
       anchor: "legacy-conversion"
     apiRelated:
       controller: ""
@@ -582,7 +582,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "12.LegacyInteropPitfalls/LegacyInteropPitfalls.md"
+      file: "12.LegacyInteropPitfalls/knowledge/LegacyInteropPitfalls.md"
       anchor: "legacy-conversion"
     apiRelated:
       controller: ""
@@ -595,7 +595,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "12.LegacyInteropPitfalls/LegacyInteropPitfalls.md"
+      file: "12.LegacyInteropPitfalls/knowledge/LegacyInteropPitfalls.md"
       anchor: "system-default-zone-risk"
     apiRelated:
       controller: ""
@@ -608,7 +608,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "12.LegacyInteropPitfalls/LegacyInteropPitfalls.md"
+      file: "12.LegacyInteropPitfalls/knowledge/LegacyInteropPitfalls.md"
       anchor: "system-default-zone-risk"
     apiRelated:
       controller: ""
@@ -621,7 +621,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "12.LegacyInteropPitfalls/LegacyInteropPitfalls.md"
+      file: "12.LegacyInteropPitfalls/knowledge/LegacyInteropPitfalls.md"
       anchor: "timestamp-storage-boundary"
     apiRelated:
       controller: ""
@@ -634,7 +634,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "12.LegacyInteropPitfalls/LegacyInteropPitfalls.md"
+      file: "12.LegacyInteropPitfalls/knowledge/LegacyInteropPitfalls.md"
       anchor: "timestamp-storage-boundary"
     apiRelated:
       controller: ""

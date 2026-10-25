@@ -8,7 +8,7 @@ ListController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 2.List/List.md
+      file: 2.List/knowledge/List.md
       anchor: arraylist-model
     methodName: arrayVsLinked
     params: []
@@ -29,7 +29,7 @@ SetController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 3.Set/Set.md
+      file: 3.Set/knowledge/Set.md
       anchor: set-semantics
     methodName: uniquenessAndOrder
     params: []
@@ -50,7 +50,7 @@ MapController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 4.Map/Map.md
+      file: 4.Map/knowledge/Map.md
       anchor: map-compute-merge
     methodName: orderingAndCompute
     params: []
@@ -71,7 +71,7 @@ QueueController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 5.QueueDeque/QueueDeque.md
+      file: 5.QueueDeque/knowledge/QueueDeque.md
       anchor: exception-vs-special-value
     methodName: queueOperations
     params: []
@@ -92,7 +92,7 @@ IterationController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 10.FailFast/FailFast.md
+      file: 10.FailFast/knowledge/FailFast.md
       anchor: concurrent-modification-exception
     methodName: failFast
     params: []
@@ -113,7 +113,7 @@ ImmutabilityController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 9.MutableImmutable/MutableImmutable.md
+      file: 9.MutableImmutable/knowledge/MutableImmutable.md
       anchor: view-vs-copy
     methodName: viewVsCopy
     params: []
@@ -134,7 +134,7 @@ HashingController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 8.EqualityHashing/EqualityHashing.md
+      file: 8.EqualityHashing/knowledge/EqualityHashing.md
       anchor: mutable-element-risk
     methodName: mutableKey
     params: []
@@ -155,7 +155,7 @@ EnumCollectionController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 12.EnumCollections/EnumCollections.md
+      file: 12.EnumCollections/knowledge/EnumCollections.md
       anchor: enum-collection-benefits
     methodName: specializedCollections
     params: []

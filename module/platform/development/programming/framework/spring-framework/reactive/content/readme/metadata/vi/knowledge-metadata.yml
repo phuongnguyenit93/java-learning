@@ -1,4 +1,4 @@
-1.Purpose/WebFluxPurpose.md:
+1.Purpose/knowledge/WebFluxPurpose.md:
   webflux-purpose:
     difficulty: BASIC
     aiGenerated: true
@@ -44,7 +44,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-2.RuntimeArchitecture/WebFluxRuntime.md:
+2.RuntimeArchitecture/knowledge/WebFluxRuntime.md:
   webflux-reactive-http-adapter:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -100,7 +100,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-3.HttpDataFlow/ReactiveHttpDataFlow.md:
+3.HttpDataFlow/knowledge/ReactiveHttpDataFlow.md:
   webflux-reactive-body-model:
     difficulty: BASIC
     aiGenerated: true
@@ -156,7 +156,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-4.AnnotatedControllers/AnnotatedControllers.md:
+4.AnnotatedControllers/knowledge/AnnotatedControllers.md:
   webflux-annotated-controller-model:
     difficulty: BASIC
     aiGenerated: true
@@ -207,7 +207,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-5.FunctionalEndpoints/FunctionalEndpoints.md:
+5.FunctionalEndpoints/knowledge/FunctionalEndpoints.md:
   webflux-functional-model:
     difficulty: BASIC
     aiGenerated: true
@@ -263,7 +263,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-6.CrossCuttingProcessing/CrossCuttingProcessing.md:
+6.CrossCuttingProcessing/knowledge/CrossCuttingProcessing.md:
   webflux-webfilter-chain:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -319,7 +319,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-7.WebClient/WebClient.md:
+7.WebClient/knowledge/WebClient.md:
   webclient-purpose:
     difficulty: BASIC
     aiGenerated: true
@@ -385,7 +385,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-8.ProductionBoundaries/ProductionBoundaries.md:
+8.ProductionBoundaries/knowledge/ProductionBoundaries.md:
   webflux-blocking-thread-starvation:
     difficulty: ADVANCED
     aiGenerated: true

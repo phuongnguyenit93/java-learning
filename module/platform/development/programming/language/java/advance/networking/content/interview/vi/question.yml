@@ -33,7 +33,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "9.NetworkingChoices/NetworkingChoices.md"
+      file: "9.NetworkingChoices/knowledge/NetworkingChoices.md"
       anchor: "transport-choice"
     apiRelated:
       controller: ""
@@ -77,7 +77,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "6.NioNetworking/NioNetworking.md"
+      file: "6.NioNetworking/knowledge/NioNetworking.md"
       anchor: "network-io-model-choice"
     apiRelated:
       controller: ""
@@ -110,7 +110,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "9.NetworkingChoices/NetworkingChoices.md"
+      file: "9.NetworkingChoices/knowledge/NetworkingChoices.md"
       anchor: "networking-end-to-end-model"
     apiRelated:
       controller: ""

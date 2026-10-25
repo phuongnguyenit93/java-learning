@@ -1,4 +1,4 @@
-1.MentalModel/Instrumentation.md:
+1.MentalModel/knowledge/Instrumentation.md:
   instrumentation-purpose:
     difficulty: BASIC
     aiGenerated: true
@@ -24,7 +24,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-2.JavaAgent/JavaAgent.md:
+2.JavaAgent/knowledge/JavaAgent.md:
   java-agent-model:
     difficulty: BASIC
     aiGenerated: true
@@ -50,7 +50,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-3.AgentPackaging/AgentPackaging.md:
+3.AgentPackaging/knowledge/AgentPackaging.md:
   agent-jar:
     difficulty: BASIC
     aiGenerated: true
@@ -81,7 +81,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-4.AgentLoading/AgentLoading.md:
+4.AgentLoading/knowledge/AgentLoading.md:
   javaagent-premain-flow:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -112,7 +112,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-5.InstrumentationApi/InstrumentationApi.md:
+5.InstrumentationApi/knowledge/InstrumentationApi.md:
   instrumentation-service:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -143,7 +143,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-6.ClassFileTransformer/ClassFileTransformer.md:
+6.ClassFileTransformer/knowledge/ClassFileTransformer.md:
   transformer-contract:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -174,7 +174,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-7.TransformationPipeline/TransformationPipeline.md:
+7.TransformationPipeline/knowledge/TransformationPipeline.md:
   transformation-trigger-points:
     difficulty: ADVANCED
     aiGenerated: true
@@ -205,7 +205,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-8.RedefinitionRetransformation/RedefinitionRetransformation.md:
+8.RedefinitionRetransformation/knowledge/RedefinitionRetransformation.md:
   redefine-purpose:
     difficulty: ADVANCED
     aiGenerated: true
@@ -231,7 +231,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-9.StructuralLimits/StructuralLimits.md:
+9.StructuralLimits/knowledge/StructuralLimits.md:
   modification-boundary:
     difficulty: ADVANCED
     aiGenerated: true
@@ -262,7 +262,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-10.BytecodeEngineeringBoundary/BytecodeEngineeringBoundary.md:
+10.BytecodeEngineeringBoundary/knowledge/BytecodeEngineeringBoundary.md:
   bytecode-transformation-model:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -288,7 +288,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-11.Tooling/Tooling.md:
+11.Tooling/knowledge/Tooling.md:
   tool-selection-principles:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -319,7 +319,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-12.UseCases/UseCases.md:
+12.UseCases/knowledge/UseCases.md:
   profiling-use-case:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -350,7 +350,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-13.OperationalSafety/OperationalSafety.md:
+13.OperationalSafety/knowledge/OperationalSafety.md:
   agent-trust-security:
     difficulty: ADVANCED
     aiGenerated: true
@@ -386,7 +386,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-14.DecisionGuide/DecisionGuide.md:
+14.DecisionGuide/knowledge/DecisionGuide.md:
   when-to-use-instrumentation:
     difficulty: INTERMEDIATE
     aiGenerated: true

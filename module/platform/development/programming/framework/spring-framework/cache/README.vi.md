@@ -1,25 +1,25 @@
 # 📂 README MODULE STRUCTURE (VI)
 
 * **1.CachePurpose**
-    * [CachePurpose](content/readme/docs/vi/menu/1.CachePurpose/CachePurpose.md)
+    * [CachePurpose](content/readme/docs/vi/menu/1.CachePurpose/knowledge/CachePurpose.md)
 * **2.CacheAbstraction**
-    * [CacheAbstraction](content/readme/docs/vi/menu/2.CacheAbstraction/CacheAbstraction.md)
+    * [CacheAbstraction](content/readme/docs/vi/menu/2.CacheAbstraction/knowledge/CacheAbstraction.md)
 * **3.DeclarativeCaching**
-    * [DeclarativeCaching](content/readme/docs/vi/menu/3.DeclarativeCaching/DeclarativeCaching.md)
+    * [DeclarativeCaching](content/readme/docs/vi/menu/3.DeclarativeCaching/knowledge/DeclarativeCaching.md)
 * **4.KeyAndResolution**
-    * [KeyAndResolution](content/readme/docs/vi/menu/4.KeyAndResolution/KeyAndResolution.md)
+    * [KeyAndResolution](content/readme/docs/vi/menu/4.KeyAndResolution/knowledge/KeyAndResolution.md)
 * **5.ConsistencyAndInvalidation**
-    * [ConsistencyAndInvalidation](content/readme/docs/vi/menu/5.ConsistencyAndInvalidation/ConsistencyAndInvalidation.md)
+    * [ConsistencyAndInvalidation](content/readme/docs/vi/menu/5.ConsistencyAndInvalidation/knowledge/ConsistencyAndInvalidation.md)
 * **6.InterceptionBoundary**
-    * [InterceptionBoundary](content/readme/docs/vi/menu/6.InterceptionBoundary/InterceptionBoundary.md)
+    * [InterceptionBoundary](content/readme/docs/vi/menu/6.InterceptionBoundary/knowledge/InterceptionBoundary.md)
 * **7.ConcurrencyAndAsync**
-    * [ConcurrencyAndAsync](content/readme/docs/vi/menu/7.ConcurrencyAndAsync/ConcurrencyAndAsync.md)
+    * [ConcurrencyAndAsync](content/readme/docs/vi/menu/7.ConcurrencyAndAsync/knowledge/ConcurrencyAndAsync.md)
 * **8.ProviderInteroperability**
-    * [ProviderInteroperability](content/readme/docs/vi/menu/8.ProviderInteroperability/ProviderInteroperability.md)
+    * [ProviderInteroperability](content/readme/docs/vi/menu/8.ProviderInteroperability/knowledge/ProviderInteroperability.md)
 * **9.FailureAndTransaction**
-    * [FailureAndTransaction](content/readme/docs/vi/menu/9.FailureAndTransaction/FailureAndTransaction.md)
+    * [FailureAndTransaction](content/readme/docs/vi/menu/9.FailureAndTransaction/knowledge/FailureAndTransaction.md)
 * **10.CacheStrategy**
-    * [CacheStrategy](content/readme/docs/vi/menu/10.CacheStrategy/CacheStrategy.md)
+    * [CacheStrategy](content/readme/docs/vi/menu/10.CacheStrategy/knowledge/CacheStrategy.md)
 
 # Spring Cache
 

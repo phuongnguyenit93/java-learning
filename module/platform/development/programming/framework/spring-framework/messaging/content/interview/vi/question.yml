@@ -48,7 +48,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.MessageModel/MessageModel.md"
+      file: "2.MessageModel/knowledge/MessageModel.md"
       anchor: "channel-delivery-semantics"
     apiRelated:
       controller: "ChannelExperimentController"
@@ -61,7 +61,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "5.StompMessageFlow/StompMessageFlow.md"
+      file: "5.StompMessageFlow/knowledge/StompMessageFlow.md"
       anchor: "application-message-flow"
     apiRelated:
       controller: "StompExperimentController"
@@ -87,7 +87,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "13.OperationsTestingDecisions/OperationsTestingDecisions.md"
+      file: "13.OperationsTestingDecisions/knowledge/OperationsTestingDecisions.md"
       anchor: "choose-stomp-broker"
     apiRelated:
       controller: ""
@@ -100,7 +100,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "13.OperationsTestingDecisions/OperationsTestingDecisions.md"
+      file: "13.OperationsTestingDecisions/knowledge/OperationsTestingDecisions.md"
       anchor: "broker-availability-recovery"
     apiRelated:
       controller: ""
@@ -139,7 +139,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "12.RSocketResponders/RSocketResponders.md"
+      file: "12.RSocketResponders/knowledge/RSocketResponders.md"
       anchor: "rsocket-interaction-cardinality"
     apiRelated:
       controller: "RSocketExperimentController"

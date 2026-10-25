@@ -10,7 +10,7 @@ AbstractClassController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 2.AbstractClass/AbstractClass.md
+      file: 2.AbstractClass/knowledge/AbstractClass.md
       anchor: abstract-class-model
     methodName: templateBehavior
     params: [
@@ -38,7 +38,7 @@ DefaultMethodController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 6.DefaultStaticPrivate/DefaultStaticPrivate.md
+      file: 6.DefaultStaticPrivate/knowledge/DefaultStaticPrivate.md
       anchor: default-method
     methodName: dispatch
     params: [
@@ -65,7 +65,7 @@ DefaultMethodController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 7.MultipleInheritance/MultipleInheritance.md
+      file: 7.MultipleInheritance/knowledge/MultipleInheritance.md
       anchor: default-method-conflict
     methodName: resolveConflict
     params: [
@@ -93,7 +93,7 @@ InterfaceController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 3.Interface/Interface.md
+      file: 3.Interface/knowledge/Interface.md
       anchor: interface-implementation
     methodName: multipleContracts
     params: [
@@ -122,7 +122,7 @@ InterfaceEvolutionController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 6.DefaultStaticPrivate/DefaultStaticPrivate.md
+      file: 6.DefaultStaticPrivate/knowledge/DefaultStaticPrivate.md
       anchor: default-method-evolution
     methodName: defaultCompatibility
     params: [

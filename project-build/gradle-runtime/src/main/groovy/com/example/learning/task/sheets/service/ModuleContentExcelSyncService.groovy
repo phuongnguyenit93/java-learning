@@ -147,6 +147,8 @@ class ModuleContentExcelSyncService {
                 String stem = second.substring(0, second.length() - 3)
                 groups.add([row: i, title: title, filename: second,
                             source: groups.size() + 1 + '.' + stem + '/' + second,
+                            knowledgeSource: groups.size() + 1 + '.' + stem +
+                                    '/knowledge/' + second,
                             children: []])
             } else {
                 if (groups.isEmpty()) throw new GradleException('Orphan lesson B' + i)
@@ -169,24 +171,24 @@ class ModuleContentExcelSyncService {
                 'content/readme/metadata/en/knowledge-metadata.yml'))
         Map metadata = parseYaml(metadataFile)
         groups.each { Map group ->
-            File file = required(new File(menu, group.source as String))
+            File file = required(new File(menu, group.knowledgeSource as String))
             Map parsed = parseMarkdown(file.getText('UTF-8'))
             List<Map> sections = parsed.sections as List<Map>
             List<Map> lessons = group.children as List<Map>
             if (sections.size() != lessons.size()) {
                 throw new GradleException('EN lesson count differs from VI Excel at ' +
-                        group.source + ': ' + sections.size() + '/' + lessons.size())
+                        group.knowledgeSource + ': ' + sections.size() + '/' + lessons.size())
             }
             set(sheet, group.row as int, 1, parsed.title as String, report)
-            Map byAnchor = metadata[group.source] instanceof Map
-                    ? metadata[group.source] as Map : [:]
+            Map byAnchor = metadata[group.knowledgeSource] instanceof Map
+                    ? metadata[group.knowledgeSource] as Map : [:]
             String stem = (group.filename as String).replaceFirst(/(?i)\.md$/, '')
             String slug = ReadmeSheetImportService.slugFromStem(stem)
             sections.eachWithIndex { Map section, int i ->
                 String expected = slug + '-' + String.format('%03d', i + 1)
                 if (section.id != expected) {
                     throw new GradleException('EN README anchor mismatch: expected ' +
-                            expected + ', found ' + section.id + ' (' + group.source + ')')
+                            expected + ', found ' + section.id + ' (' + group.knowledgeSource + ')')
                 }
                 int row = lessons[i].row as int
                 set(sheet, row, 2, section.title as String, report)
@@ -302,10 +304,10 @@ class ModuleContentExcelSyncService {
         List items = document.questions instanceof List ? document.questions as List : []
         if (!items) throw new GradleException('Empty EN ' + kind + ' YAML.')
         Map<String, Map> bySource = groups.collectEntries {
-            [(it.source.toString()): it]
+            [(it.knowledgeSource.toString()): it]
         }
         Map<String, List> gathered = groups.collectEntries {
-            [(it.source.toString()): []]
+            [(it.knowledgeSource.toString()): []]
         }
         items.eachWithIndex { Object item, int index ->
             String source = item instanceof Map ? item.readmeRelated?.file?.toString() : null
@@ -316,12 +318,12 @@ class ModuleContentExcelSyncService {
             gathered[source].add(item)
         }
         groups.each { Map group ->
-            List chapter = gathered[group.source]
+            List chapter = gathered[group.knowledgeSource]
             if (!chapter) {
                 // Interview may intentionally have no questions for a chapter;
                 // Quiz importer requires nonempty rows for every chapter.
                 if (kind == 'quiz') {
-                    throw new GradleException('Missing EN Quiz for ' + group.source)
+                    throw new GradleException('Missing EN Quiz for ' + group.knowledgeSource)
                 }
                 fragments(sheet, group.row as int, firstColumn, 4, '', report)
                 return

@@ -1,4 +1,4 @@
-1.Introduction/Introduction.md:
+1.Introduction/knowledge/Introduction.md:
   oop-1-1:
     difficulty: BASIC
     aiGenerated: true
@@ -19,7 +19,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-2.ClassAndObject/ClassAndObject.md:
+2.ClassAndObject/knowledge/ClassAndObject.md:
   oop-2-1:
     difficulty: BASIC
     aiGenerated: true
@@ -45,7 +45,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-3.Encapsulation/Encapsulation.md:
+3.Encapsulation/knowledge/Encapsulation.md:
   oop-3-1:
     difficulty: BASIC
     aiGenerated: true
@@ -66,7 +66,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-4.Abstraction/Abstraction.md:
+4.Abstraction/knowledge/Abstraction.md:
   oop-4-1:
     difficulty: BASIC
     aiGenerated: true
@@ -87,7 +87,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-5.Inheritance/Inheritance.md:
+5.Inheritance/knowledge/Inheritance.md:
   oop-5-1:
     difficulty: BASIC
     aiGenerated: true
@@ -108,7 +108,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-6.PolymorphismAndRelationships/PolymorphismAndRelationships.md:
+6.PolymorphismAndRelationships/knowledge/PolymorphismAndRelationships.md:
   oop-6-1:
     difficulty: BASIC
     aiGenerated: true
@@ -129,7 +129,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-7.OOPDesign/OOPDesign.md:
+7.OOPDesign/knowledge/OOPDesign.md:
   oop-7-1:
     difficulty: BASIC
     aiGenerated: true

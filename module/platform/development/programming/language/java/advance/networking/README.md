@@ -1,23 +1,23 @@
 # 📂 README MODULE STRUCTURE (EN)
 
 * **1.NetworkingModel**
-    * [NetworkingModel](content/readme/docs/en/menu/1.NetworkingModel/NetworkingModel.md)
+    * [NetworkingModel](content/readme/docs/en/menu/1.NetworkingModel/knowledge/NetworkingModel.md)
 * **2.AddressingEndpoints**
-    * [AddressingEndpoints](content/readme/docs/en/menu/2.AddressingEndpoints/AddressingEndpoints.md)
+    * [AddressingEndpoints](content/readme/docs/en/menu/2.AddressingEndpoints/knowledge/AddressingEndpoints.md)
 * **3.TcpSockets**
-    * [TcpSockets](content/readme/docs/en/menu/3.TcpSockets/TcpSockets.md)
+    * [TcpSockets](content/readme/docs/en/menu/3.TcpSockets/knowledge/TcpSockets.md)
 * **4.UdpDatagrams**
-    * [UdpDatagrams](content/readme/docs/en/menu/4.UdpDatagrams/UdpDatagrams.md)
+    * [UdpDatagrams](content/readme/docs/en/menu/4.UdpDatagrams/knowledge/UdpDatagrams.md)
 * **5.FailureControl**
-    * [FailureControl](content/readme/docs/en/menu/5.FailureControl/FailureControl.md)
+    * [FailureControl](content/readme/docs/en/menu/5.FailureControl/knowledge/FailureControl.md)
 * **6.NioNetworking**
-    * [NioNetworking](content/readme/docs/en/menu/6.NioNetworking/NioNetworking.md)
+    * [NioNetworking](content/readme/docs/en/menu/6.NioNetworking/knowledge/NioNetworking.md)
 * **7.HttpClient**
-    * [HttpClient](content/readme/docs/en/menu/7.HttpClient/HttpClient.md)
+    * [HttpClient](content/readme/docs/en/menu/7.HttpClient/knowledge/HttpClient.md)
 * **8.WebSocketClient**
-    * [WebSocketClient](content/readme/docs/en/menu/8.WebSocketClient/WebSocketClient.md)
+    * [WebSocketClient](content/readme/docs/en/menu/8.WebSocketClient/knowledge/WebSocketClient.md)
 * **9.NetworkingChoices**
-    * [NetworkingChoices](content/readme/docs/en/menu/9.NetworkingChoices/NetworkingChoices.md)
+    * [NetworkingChoices](content/readme/docs/en/menu/9.NetworkingChoices/knowledge/NetworkingChoices.md)
 
 # Advanced Java Networking
 

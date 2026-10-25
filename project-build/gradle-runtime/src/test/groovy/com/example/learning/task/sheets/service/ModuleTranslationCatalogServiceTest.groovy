@@ -28,7 +28,7 @@ class ModuleTranslationCatalogServiceTest {
         quiz.setText(quiz.getText('UTF-8').replace('Câu hỏi', 'English question')
                 .replace('Giải thích', 'Explanation'), 'UTF-8')
         File doc = new File(f.module as File,
-                'content/readme/docs/en/menu/1.Basic/Basic.md')
+                'content/readme/docs/en/menu/1.Basic/knowledge/Basic.md')
         doc.setText(doc.getText('UTF-8').replace('Bài học', 'Learning section')
                 .replace('Nội dung', 'English explanation'), 'UTF-8')
 
@@ -65,7 +65,7 @@ class ModuleTranslationCatalogServiceTest {
     void cannotStartNewTranslationBaselineAfterTranslationHasBegun() {
         Map f = fixture()
         File source = new File(f.module as File,
-                'content/readme/docs/en/menu/1.Basic/Basic.md')
+                'content/readme/docs/en/menu/1.Basic/knowledge/Basic.md')
         source.setText(source.getText('UTF-8').replace('Nội dung',
                 'English description'), 'UTF-8')
         try {
@@ -130,6 +130,31 @@ System.out.println("KEEP");
                 'SWAGGER_API_CASES', 'Controller.method().cases[0].response'))
     }
 
+    @Test
+    void catalogIncludesNestedAndLegacyRootKnowledgeButIgnoresAuxiliaryChapterFiles() {
+        Map f = fixture()
+        File module = f.module as File
+        write(module, 'content/readme/docs/vi/menu/1.Basic/chapter-links.md',
+                '# Not a Knowledge article')
+        write(module, 'content/readme/docs/en/menu/1.Basic/extra.md',
+                '# English-only auxiliary file')
+        write(module, 'content/readme/docs/vi/menu/1.Basic/Legacy.md',
+                '# Legacy Knowledge location is not classified')
+        write(module, 'content/readme/docs/vi/menu/LegacyRoot.md',
+                '# Legacy root Knowledge')
+        write(module, 'content/readme/docs/en/menu/LegacyRoot.md',
+                '# Legacy root Knowledge')
+        List<Map> inventory = ModuleTranslationCatalogService.inventory(module)
+        assertEquals(6, inventory.size())
+        assertEquals(2, inventory.count { it.type == 'README' })
+        assertTrue(inventory.any { it.enPath ==
+                'content/readme/docs/en/menu/1.Basic/knowledge/Basic.md' })
+        assertTrue(inventory.any { it.enPath ==
+                'content/readme/docs/en/menu/LegacyRoot.md' })
+        assertFalse(inventory.any { it.enPath?.contains('chapter-links') ||
+                it.enPath?.contains('Legacy.md') || it.enPath?.contains('extra.md') })
+    }
+
     private Map fixture() {
         File root = temp.newFolder('repo')
         File module = new File(root, 'module/demo')
@@ -138,11 +163,11 @@ System.out.println("KEEP");
         [
                 'content/readme/docs/vi/BASE.md': '# Giới thiệu',
                 'content/readme/docs/vi/LIST.md':
-                        '# README MODULE STRUCTURE (VI)\n* [Basic](content/readme/docs/vi/menu/1.Basic/Basic.md)',
-                'content/readme/docs/vi/menu/1.Basic/Basic.md':
+                        '# README MODULE STRUCTURE (VI)\n* [Basic](content/readme/docs/vi/menu/1.Basic/knowledge/Basic.md)',
+                'content/readme/docs/vi/menu/1.Basic/knowledge/Basic.md':
                         '# Chương\n## <a id="basic-001">Bài học</a>\nNội dung giải thích',
                 'content/readme/metadata/vi/knowledge-metadata.yml':
-                        '1.Basic/Basic.md:\n  basic-001: {difficulty: BASIC, reviewed: false}',
+                        '1.Basic/knowledge/Basic.md:\n  basic-001: {difficulty: BASIC, reviewed: false}',
                 'content/roadmap/vi/roadmap.yml':
                         'roadmap:\n  - id: stable\n    title: Tiêu đề\n    purpose: Mục tiêu\n    objectives: [Hiểu nguyên lý]',
                 'content/quiz/vi/question.yml': '''questions:
@@ -154,7 +179,7 @@ System.out.println("KEEP");
       - {id: C, answer: Không, explanation: Giải thích không}
       - {id: D, answer: Khác, explanation: Giải thích khác}
     correctAnswerId: A
-    readmeRelated: {file: "1.Basic/Basic.md", anchor: "basic-001"}
+    readmeRelated: {file: "1.Basic/knowledge/Basic.md", anchor: "basic-001"}
 ''',
                 'content/video/vi/menu/1.Basic/video-script.yml':
                         'title: Tiêu đề\nsections:\n  - title: Bài học\n    items:\n      - {type: SCENE, time: "00:00-00:10", visual: Hình ảnh, script: Thuyết minh, purpose: Mục đích}',

@@ -1,27 +1,27 @@
 # 📂 README MODULE STRUCTURE (EN)
 
 * **1.ActuatorPurpose**
-    * [ActuatorPurpose](content/readme/docs/en/menu/1.ActuatorPurpose/ActuatorPurpose.md)
+    * [ActuatorPurpose](content/readme/docs/en/menu/1.ActuatorPurpose/knowledge/ActuatorPurpose.md)
 * **2.EndpointModel**
-    * [EndpointModel](content/readme/docs/en/menu/2.EndpointModel/EndpointModel.md)
+    * [EndpointModel](content/readme/docs/en/menu/2.EndpointModel/knowledge/EndpointModel.md)
 * **3.EndpointAvailabilityExposure**
-    * [EndpointAvailabilityExposure](content/readme/docs/en/menu/3.EndpointAvailabilityExposure/EndpointAvailabilityExposure.md)
+    * [EndpointAvailabilityExposure](content/readme/docs/en/menu/3.EndpointAvailabilityExposure/knowledge/EndpointAvailabilityExposure.md)
 * **4.Health**
-    * [Health](content/readme/docs/en/menu/4.Health/Health.md)
+    * [Health](content/readme/docs/en/menu/4.Health/knowledge/Health.md)
 * **5.AvailabilityProbes**
-    * [AvailabilityProbes](content/readme/docs/en/menu/5.AvailabilityProbes/AvailabilityProbes.md)
+    * [AvailabilityProbes](content/readme/docs/en/menu/5.AvailabilityProbes/knowledge/AvailabilityProbes.md)
 * **6.InfoEnvironment**
-    * [InfoEnvironment](content/readme/docs/en/menu/6.InfoEnvironment/InfoEnvironment.md)
+    * [InfoEnvironment](content/readme/docs/en/menu/6.InfoEnvironment/knowledge/InfoEnvironment.md)
 * **7.MetricsMicrometer**
-    * [MetricsMicrometer](content/readme/docs/en/menu/7.MetricsMicrometer/MetricsMicrometer.md)
+    * [MetricsMicrometer](content/readme/docs/en/menu/7.MetricsMicrometer/knowledge/MetricsMicrometer.md)
 * **8.LoggersDiagnostics**
-    * [LoggersDiagnostics](content/readme/docs/en/menu/8.LoggersDiagnostics/LoggersDiagnostics.md)
+    * [LoggersDiagnostics](content/readme/docs/en/menu/8.LoggersDiagnostics/knowledge/LoggersDiagnostics.md)
 * **9.CustomEndpoints**
-    * [CustomEndpoints](content/readme/docs/en/menu/9.CustomEndpoints/CustomEndpoints.md)
+    * [CustomEndpoints](content/readme/docs/en/menu/9.CustomEndpoints/knowledge/CustomEndpoints.md)
 * **10.ManagementAccess**
-    * [ManagementAccess](content/readme/docs/en/menu/10.ManagementAccess/ManagementAccess.md)
+    * [ManagementAccess](content/readme/docs/en/menu/10.ManagementAccess/knowledge/ManagementAccess.md)
 * **11.ObservabilitySynthesis**
-    * [ObservabilitySynthesis](content/readme/docs/en/menu/11.ObservabilitySynthesis/ObservabilitySynthesis.md)
+    * [ObservabilitySynthesis](content/readme/docs/en/menu/11.ObservabilitySynthesis/knowledge/ObservabilitySynthesis.md)
 
 # Spring Boot Actuator
 

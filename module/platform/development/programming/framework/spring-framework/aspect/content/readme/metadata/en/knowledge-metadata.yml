@@ -1,4 +1,4 @@
-1.CrossCutting/CrossCutting.md:
+1.CrossCutting/knowledge/CrossCutting.md:
   cross-cutting-concern:
     difficulty: BASIC
     aiGenerated: true
@@ -14,7 +14,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-2.Terminology/Terminology.md:
+2.Terminology/knowledge/Terminology.md:
   terminology-map:
     difficulty: BASIC
     aiGenerated: true
@@ -35,7 +35,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-3.Proxy/Proxy.md:
+3.Proxy/knowledge/Proxy.md:
   proxy-mental-model:
     difficulty: BASIC
     aiGenerated: true
@@ -61,7 +61,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-4.Pointcut/Pointcut.md:
+4.Pointcut/knowledge/Pointcut.md:
   aop-declaration-styles:
     difficulty: BASIC
     aiGenerated: true
@@ -97,7 +97,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-5.Annotation/Annotation.md:
+5.Annotation/knowledge/Annotation.md:
   annotation-contract:
     difficulty: BASIC
     aiGenerated: true
@@ -118,7 +118,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-6.Advice/Advice.md:
+6.Advice/knowledge/Advice.md:
   advice-semantics:
     difficulty: BASIC
     aiGenerated: true
@@ -144,7 +144,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-7.Around/Around.md:
+7.Around/knowledge/Around.md:
   around-mental-model:
     difficulty: BASIC
     aiGenerated: true
@@ -180,7 +180,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-8.Ordering/Ordering.md:
+8.Ordering/knowledge/Ordering.md:
   ordering-mental-model:
     difficulty: BASIC
     aiGenerated: true
@@ -206,7 +206,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-9.Introduction/Introduction.md:
+9.Introduction/knowledge/Introduction.md:
   introduction-mental-model:
     difficulty: BASIC
     aiGenerated: true
@@ -227,7 +227,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-10.ProxyFactory/ProxyFactory.md:
+10.ProxyFactory/knowledge/ProxyFactory.md:
   proxy-factory-mental-model:
     difficulty: BASIC
     aiGenerated: true
@@ -248,7 +248,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-11.Advisor/Advisor.md:
+11.Advisor/knowledge/Advisor.md:
   advisor-mental-model:
     difficulty: BASIC
     aiGenerated: true
@@ -274,7 +274,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-12.Infrastructure/Infrastructure.md:
+12.Infrastructure/knowledge/Infrastructure.md:
   auto-proxy-mental-model:
     difficulty: BASIC
     aiGenerated: true
@@ -305,7 +305,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-13.SelfInvocation/SelfInvocation.md:
+13.SelfInvocation/knowledge/SelfInvocation.md:
   self-invocation-mental-model:
     difficulty: BASIC
     aiGenerated: true
@@ -341,7 +341,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-14.Patterns/Patterns.md:
+14.Patterns/knowledge/Patterns.md:
   practical-patterns:
     difficulty: BASIC
     aiGenerated: true
@@ -367,7 +367,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-15.RuntimeBoundary/RuntimeBoundary.md:
+15.RuntimeBoundary/knowledge/RuntimeBoundary.md:
   spring-aop-runtime:
     difficulty: BASIC
     aiGenerated: true

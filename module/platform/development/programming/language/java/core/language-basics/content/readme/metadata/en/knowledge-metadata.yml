@@ -1,10 +1,10 @@
-1.LanguagePurpose/LanguagePurpose.md:
+1.LanguagePurpose/knowledge/LanguagePurpose.md:
   language-basics-roadmap:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
     isImportant: false
-2.SourceCodeStructure/SourceCodeStructure.md:
+2.SourceCodeStructure/knowledge/SourceCodeStructure.md:
   source-file-type-structure:
     difficulty: BASIC
     aiGenerated: true
@@ -20,7 +20,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-3.PrimitiveReference/PrimitiveReference.md:
+3.PrimitiveReference/knowledge/PrimitiveReference.md:
   primitive-vs-reference-model:
     difficulty: BASIC
     aiGenerated: true
@@ -36,7 +36,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-4.VariablesScope/VariablesScope.md:
+4.VariablesScope/knowledge/VariablesScope.md:
   variable-kinds-and-lifetime:
     difficulty: BASIC
     aiGenerated: true
@@ -52,7 +52,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-5.Null/Null.md:
+5.Null/knowledge/Null.md:
   null-reference:
     difficulty: BASIC
     aiGenerated: true
@@ -73,7 +73,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-6.WrapperBoxing/WrapperBoxing.md:
+6.WrapperBoxing/knowledge/WrapperBoxing.md:
   wrapper-types:
     difficulty: BASIC
     aiGenerated: true
@@ -94,7 +94,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-7.Operators/Operators.md:
+7.Operators/knowledge/Operators.md:
   numeric-promotion:
     difficulty: BASIC
     aiGenerated: true
@@ -115,7 +115,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-8.Casting/Casting.md:
+8.Casting/knowledge/Casting.md:
   primitive-casting:
     difficulty: BASIC
     aiGenerated: true
@@ -126,7 +126,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-9.ControlFlow/ControlFlow.md:
+9.ControlFlow/knowledge/ControlFlow.md:
   branching-model:
     difficulty: BASIC
     aiGenerated: true
@@ -147,7 +147,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-10.Arrays/Arrays.md:
+10.Arrays/knowledge/Arrays.md:
   array-type-model:
     difficulty: BASIC
     aiGenerated: true
@@ -168,7 +168,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-11.Methods/Methods.md:
+11.Methods/knowledge/Methods.md:
   method-signature:
     difficulty: BASIC
     aiGenerated: true
@@ -204,7 +204,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-12.Varargs/Varargs.md:
+12.Varargs/knowledge/Varargs.md:
   varargs-array-model:
     difficulty: BASIC
     aiGenerated: true
@@ -220,7 +220,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-13.PassByValue/PassByValue.md:
+13.PassByValue/knowledge/PassByValue.md:
   java-pass-by-value:
     difficulty: BASIC
     aiGenerated: true
@@ -236,7 +236,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-14.PackagesImports/PackagesImports.md:
+14.PackagesImports/knowledge/PackagesImports.md:
   package-namespace:
     difficulty: BASIC
     aiGenerated: true
@@ -257,7 +257,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-15.TypeSystemMentalModel/TypeSystemMentalModel.md:
+15.TypeSystemMentalModel/knowledge/TypeSystemMentalModel.md:
   compile-time-vs-runtime-type:
     difficulty: BASIC
     aiGenerated: true
@@ -288,7 +288,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-16.LanguageBasicsSynthesis/LanguageBasicsSynthesis.md:
+16.LanguageBasicsSynthesis/knowledge/LanguageBasicsSynthesis.md:
   language-basics-synthesis:
     difficulty: BASIC
     aiGenerated: true

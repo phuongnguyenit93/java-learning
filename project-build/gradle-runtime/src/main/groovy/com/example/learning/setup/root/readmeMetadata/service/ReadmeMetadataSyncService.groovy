@@ -182,12 +182,14 @@ ${moduleRoot.absolutePath}
         Set<String> allIds = new LinkedHashSet<>()
         File menuDirectory = new File(moduleDirectory, 'content/readme/docs/vi/menu')
         documents.each { String sourcePath, String markdown ->
-            Map oldFile = resolveOptionalMap(existing[sourcePath],
-                    "Invalid existing Knowledge metadata file: ${sourcePath}") ?: [:]
+            String knowledgePath = normalizeKnowledgePath(sourcePath)
+            if (next.containsKey(knowledgePath)) {
+                throw new GradleException('Duplicate imported Knowledge path: ' + knowledgePath)
+            }
+            Map oldFile = existingKnowledgeMetadata(existing, knowledgePath)
             Map nextFile = new LinkedHashMap()
-            File virtualFile = new File(menuDirectory, sourcePath)
+            File virtualFile = new File(menuDirectory, knowledgePath)
             if (sourcePath.startsWith('/') || sourcePath.contains('\\') ||
-                    sourcePath.split('/').any { it in ['', '.', '..'] } ||
                     !virtualFile.canonicalFile.toPath().startsWith(menuDirectory.canonicalFile.toPath())) {
                 throw new GradleException('Unsafe Knowledge source path: ' + sourcePath)
             }
@@ -226,7 +228,7 @@ ${moduleRoot.absolutePath}
                         sourcePath, section.id)
                 nextFile[section.id] = item
             }
-            if (nextFile) next[sourcePath] = nextFile
+            if (nextFile) next[knowledgePath] = nextFile
         }
         return next.isEmpty() ? '{}\n' : writer.dump(next)
     }
@@ -289,9 +291,7 @@ ${moduleRoot.absolutePath}
 
                 Map<String, Object> existingFileEntry =
                         resolveOptionalMap(
-                                existingRoot[
-                                        sourcePath
-                                ],
+                                existingKnowledgeMetadata(existingRoot, sourcePath),
                                 """
 Invalid README metadata file entry.
 
@@ -415,6 +415,29 @@ ${candidate.id}
                 }
         }
 
+
+        // Staged migration: do not scan legacy menu Markdown, but keep its
+        // metadata while that original file still exists and has not moved.
+        Set<String> migratedLegacyKeys = new LinkedHashSet<>()
+        synchronizedRoot.keySet().each { String path ->
+            migratedLegacyKeys.add(path.replace('/knowledge/', '/'))
+            migratedLegacyKeys.add(path.substring(path.lastIndexOf('/') + 1))
+        }
+        existingRoot.each { Object oldPath, Object oldMetadata ->
+            if (!(oldPath instanceof String) ||
+                    migratedLegacyKeys.contains(oldPath) ||
+                    synchronizedRoot.containsKey(oldPath)) return
+            String sourcePath = oldPath as String
+            if (sourcePath.startsWith('/') || sourcePath.contains('\\') ||
+                    sourcePath.split('/').any { it in ['', '.', '..'] } ||
+                    !sourcePath.toLowerCase(Locale.ROOT).endsWith('.md')) return
+            File legacyFile = new File(languageSource.menuDirectory, sourcePath)
+            if (legacyFile.canonicalFile.toPath().startsWith(
+                    languageSource.menuDirectory.canonicalFile.toPath()) &&
+                    legacyFile.isFile()) {
+                synchronizedRoot[sourcePath] = oldMetadata
+            }
+        }
 
         String content =
                 synchronizedRoot.isEmpty()
@@ -724,6 +747,60 @@ The file will NOT be overwritten.
         return value as Map<String, Object>
     }
 
+    /**
+     * Knowledge paths are chapter/knowledge/file.md. An imported Sheet
+     * snapshot may still use chapter/file.md until its importer is migrated.
+     */
+    private static String normalizeKnowledgePath(String sourcePath) {
+        if (sourcePath == null || sourcePath.contains('\\') ||
+                sourcePath.startsWith('/')) {
+            throw new GradleException('Unsafe Knowledge source path: ' + sourcePath)
+        }
+        List<String> segments = sourcePath.split('/') as List<String>
+        if (!(segments.size() in [2, 3]) ||
+                !(segments[0] ==~ /\d+\..+/) ||
+                (segments.size() == 3 && segments[1] != 'knowledge') ||
+                (segments.last() in ['', '.', '..']) ||
+                !segments.last().toLowerCase(Locale.ROOT).endsWith('.md')) {
+            throw new GradleException('Unsafe Knowledge source path: ' + sourcePath)
+        }
+        return segments.size() == 2
+                ? segments[0] + '/knowledge/' + segments[1]
+                : sourcePath
+    }
+
+    /**
+     * Move metadata by article identity without resetting review or human
+     * fields when chapter/file.md becomes chapter/knowledge/file.md.
+     * If both keys exist, current-path values take precedence; missing
+     * fields are retained from the legacy entry.
+     */
+    private static Map<String, Object> existingKnowledgeMetadata(
+            Map root, String knowledgePath
+    ) {
+        String canonical = normalizeKnowledgePath(knowledgePath)
+        String legacy = canonical.replace('/knowledge/', '/')
+        String legacyRootFile = canonical.substring(canonical.lastIndexOf('/') + 1)
+        Map merged = new LinkedHashMap()
+        [legacyRootFile, legacy, canonical].unique().each { String key ->
+            Map oldEntries = resolveOptionalMap(root[key],
+                    'Invalid Knowledge metadata file: ' + key) ?: [:]
+            oldEntries.each { Object sectionId, Object entry ->
+                if (merged[sectionId] instanceof Map && entry instanceof Map) {
+                    Map combined = new LinkedHashMap(merged[sectionId] as Map)
+                    (entry as Map).each { Object field, Object value ->
+                        if (value != null) combined[field] = value
+                    }
+                    merged[sectionId] = combined
+                }
+                else {
+                    merged[sectionId] = entry
+                }
+            }
+        }
+        return merged
+    }
+
 
     private static List<Project> resolveRealModuleProjects(
             Project rootProject,
@@ -960,67 +1037,36 @@ The file will NOT be overwritten.
             File directory,
             List<File> result
     ) {
-
-        File[] children =
-                directory.listFiles()
-
-
-        if (children == null) {
-
+        File[] chapters = directory.listFiles()
+        if (chapters == null) {
             throw new GradleException(
-                    """
-Unable to read README knowledge directory:
-
-${directory.absolutePath}
-""".stripIndent()
-            )
+                    'Unable to read README Knowledge menu directory: ' + directory.absolutePath)
         }
-
-
-        children
-                .toList()
-                .sort {
-                    File left,
-                    File right ->
-
-
-                        left.name <=> right.name
+        chapters.each { File chapter ->
+            if (!chapter.isDirectory() || !(chapter.name ==~ /\d+\..+/)) {
+                return
+            }
+            File knowledge = new File(chapter, 'knowledge')
+            if (!knowledge.isDirectory()) return
+            if (!knowledge.canonicalFile.toPath().startsWith(
+                    directory.canonicalFile.toPath())) {
+                throw new GradleException(
+                        'Knowledge folder escapes README menu: ' + knowledge.absolutePath)
+            }
+            File[] files = knowledge.listFiles()
+            if (files == null) {
+                throw new GradleException(
+                        'Unable to read README Knowledge directory: ' + knowledge.absolutePath)
+            }
+            files.each { File file ->
+                if (file.isFile() && !file.name.startsWith('.') &&
+                        file.name.toLowerCase(Locale.ROOT).endsWith('.md') &&
+                        file.canonicalFile.toPath().startsWith(
+                                knowledge.canonicalFile.toPath())) {
+                    result.add(file)
                 }
-                .each {
-                    File child ->
-
-
-                        if (child.name.startsWith('.')) {
-                            return
-                        }
-
-
-                        if (child.isDirectory()) {
-
-                            collectMarkdownFiles(
-                                    child,
-                                    result
-                            )
-
-
-                            return
-                        }
-
-
-                        if (
-                                child.isFile() &&
-                                        child.name.toLowerCase(
-                                                Locale.ROOT
-                                        ).endsWith(
-                                                '.md'
-                                        )
-                        ) {
-
-                            result.add(
-                                    child
-                            )
-                        }
-                }
+            }
+        }
     }
 
 

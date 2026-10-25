@@ -12,7 +12,7 @@ RuntimeDiagnosticsExperimentController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 3.ThreadDiagnostics/ThreadDiagnostics.md
+      file: 3.ThreadDiagnostics/knowledge/ThreadDiagnostics.md
       anchor: locks-deadlocks-and-contention
     methodName: threadContention
     params:
@@ -41,7 +41,7 @@ RuntimeDiagnosticsExperimentController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 4.HeapGcDiagnostics/HeapGcDiagnostics.md
+      file: 4.HeapGcDiagnostics/knowledge/HeapGcDiagnostics.md
       anchor: class-histogram
     methodName: heapRetention
     params:
@@ -70,7 +70,7 @@ RuntimeDiagnosticsExperimentController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 6.JFR/JFR.md
+      file: 6.JFR/knowledge/JFR.md
       anchor: cpu-thread-lock-analysis
     methodName: jfrCpuWindow
     params:
@@ -99,7 +99,7 @@ RuntimeDiagnosticsExperimentController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 7.ManagementJMX/ManagementJMX.md
+      file: 7.ManagementJMX/knowledge/ManagementJMX.md
       anchor: platform-management-surfaces
     methodName: mxBeanSnapshot
     params: [

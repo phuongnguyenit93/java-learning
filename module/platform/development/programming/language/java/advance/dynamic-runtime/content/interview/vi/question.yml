@@ -33,7 +33,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "8.Synthesis/Synthesis.md"
+      file: "8.Synthesis/knowledge/Synthesis.md"
       anchor: "choose-invocation-mechanism"
     apiRelated:
       controller: ""
@@ -44,7 +44,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.TypedInvocation/TypedInvocation.md"
+      file: "2.TypedInvocation/knowledge/TypedInvocation.md"
       anchor: "invocation-type-failures"
     apiRelated:
       controller: ""
@@ -55,7 +55,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "3.LookupAccess/LookupAccess.md"
+      file: "3.LookupAccess/knowledge/LookupAccess.md"
       anchor: "lookup-context"
     apiRelated:
       controller: "DynamicRuntimeController"
@@ -66,7 +66,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.MethodHandleAdaptation/MethodHandleAdaptation.md"
+      file: "4.MethodHandleAdaptation/knowledge/MethodHandleAdaptation.md"
       anchor: "method-handle-type-adaptation"
     apiRelated:
       controller: "DynamicRuntimeController"
@@ -110,7 +110,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "8.Synthesis/Synthesis.md"
+      file: "8.Synthesis/knowledge/Synthesis.md"
       anchor: "dynamic-linkage-end-to-end"
     apiRelated:
       controller: ""

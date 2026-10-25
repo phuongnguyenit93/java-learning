@@ -1,15 +1,15 @@
 # 📂 README MODULE STRUCTURE (EN)
 
 * **1.Introduction**
-    * [DeclarativeProgramming](content/readme/docs/en/menu/1.Introduction/DeclarativeProgramming.md)
+    * [DeclarativeProgramming](content/readme/docs/en/menu/1.Introduction/knowledge/DeclarativeProgramming.md)
 * **2.IntentVsProcedure**
-    * [IntentVsProcedure](content/readme/docs/en/menu/2.IntentVsProcedure/IntentVsProcedure.md)
+    * [IntentVsProcedure](content/readme/docs/en/menu/2.IntentVsProcedure/knowledge/IntentVsProcedure.md)
 * **3.LogicProgramming**
-    * [LogicProgramming](content/readme/docs/en/menu/3.LogicProgramming/LogicProgramming.md)
+    * [LogicProgramming](content/readme/docs/en/menu/3.LogicProgramming/knowledge/LogicProgramming.md)
 * **4.QueryRuleStyles**
-    * [QueryRuleStyles](content/readme/docs/en/menu/4.QueryRuleStyles/QueryRuleStyles.md)
+    * [QueryRuleStyles](content/readme/docs/en/menu/4.QueryRuleStyles/knowledge/QueryRuleStyles.md)
 * **5.Tradeoffs**
-    * [Tradeoffs](content/readme/docs/en/menu/5.Tradeoffs/Tradeoffs.md)
+    * [Tradeoffs](content/readme/docs/en/menu/5.Tradeoffs/knowledge/Tradeoffs.md)
 
 # Learning Declarative Programming
 

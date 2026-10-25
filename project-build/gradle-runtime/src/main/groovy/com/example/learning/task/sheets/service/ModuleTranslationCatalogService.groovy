@@ -158,8 +158,10 @@ class ModuleTranslationCatalogService {
         }
         File docs = new File(module, DOC + 'vi/menu')
         for (String path : walk(docs)) {
-            if (!path.endsWith('.md')) throw new GradleException('Unexpected VI README: ' + path)
-            targets[DOC + 'en/menu/' + path] = 'README'
+            if (path ==~ /[^\/]+\.md/ ||
+                    path ==~ /[^\/]+\/knowledge\/[^\/]+\.md/) {
+                targets[DOC + 'en/menu/' + path] = 'README'
+            }
         }
         File swagger = new File(module, SWAGGER + 'vi')
         for (String path : walk(swagger)) {
@@ -188,6 +190,14 @@ class ModuleTranslationCatalogService {
             File en = new File(module, area + '/en')
             Set a = walk(vi) as Set
             Set b = walk(en) as Set
+            if (area == 'content/readme/docs') {
+                a = a.findAll { it in ['BASE.md', 'LIST.md'] ||
+                        it ==~ /menu\/[^\/]+\.md/ ||
+                        it ==~ /menu\/[^\/]+\/knowledge\/[^\/]+\.md/ } as Set
+                b = b.findAll { it in ['BASE.md', 'LIST.md'] ||
+                        it ==~ /menu\/[^\/]+\.md/ ||
+                        it ==~ /menu\/[^\/]+\/knowledge\/[^\/]+\.md/ } as Set
+            }
             if (a != b) throw new GradleException('VI/EN tree mismatch: ' + area)
         }
         return entries

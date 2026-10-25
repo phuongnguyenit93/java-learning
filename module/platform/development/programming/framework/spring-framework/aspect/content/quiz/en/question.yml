@@ -49,7 +49,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.CrossCutting/CrossCutting.md", anchor: "cross-cutting-concern"}
+    readmeRelated: {file: "1.CrossCutting/knowledge/CrossCutting.md", anchor: "cross-cutting-concern"}
     apiRelated: {controller: "CrossCuttingController", methodSignature: "observeCrossCutting()"}
 
   - id: aop-self-invocation-boundary
@@ -62,7 +62,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "13.SelfInvocation/SelfInvocation.md", anchor: "self-invocation-demo"}
+    readmeRelated: {file: "13.SelfInvocation/knowledge/SelfInvocation.md", anchor: "self-invocation-demo"}
     apiRelated: {controller: "SelfInvocationController", methodSignature: "compareSelfInvocation()"}
 
   - id: aop-pointcut-this-target
@@ -75,7 +75,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.Pointcut/Pointcut.md", anchor: "pointcut-mental-model"}
+    readmeRelated: {file: "4.Pointcut/knowledge/Pointcut.md", anchor: "pointcut-mental-model"}
     apiRelated: {controller: "PointcutController", methodSignature: "comparePointcuts()"}
 
   - id: aop-advice-failure-path
@@ -88,7 +88,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.Advice/Advice.md", anchor: "advice-failure-demo"}
+    readmeRelated: {file: "6.Advice/knowledge/Advice.md", anchor: "advice-failure-demo"}
     apiRelated: {controller: "AdviceLifecycleController", methodSignature: "failure()"}
 
   - id: aop-around-skip-proceed
@@ -101,7 +101,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.Around/Around.md", anchor: "around-skip-demo"}
+    readmeRelated: {file: "7.Around/knowledge/Around.md", anchor: "around-skip-demo"}
     apiRelated: {controller: "AroundAdviceController", methodSignature: "skip()"}
 
   - id: aop-ordering-precedence
@@ -114,7 +114,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.Ordering/Ordering.md", anchor: "ordering-mental-model"}
+    readmeRelated: {file: "8.Ordering/knowledge/Ordering.md", anchor: "ordering-mental-model"}
     apiRelated: {controller: "OrderingController", methodSignature: "observeOrdering()"}
 
   - id: aop-introduction-proxy-surface
@@ -127,7 +127,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.Introduction/Introduction.md", anchor: "introduction-demo"}
+    readmeRelated: {file: "9.Introduction/knowledge/Introduction.md", anchor: "introduction-demo"}
     apiRelated: {controller: "IntroductionController", methodSignature: "observeIntroduction()"}
 
   - id: aop-proxyfactory-jdk-cglib
@@ -140,7 +140,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "10.ProxyFactory/ProxyFactory.md", anchor: "jdk-vs-cglib"}
+    readmeRelated: {file: "10.ProxyFactory/knowledge/ProxyFactory.md", anchor: "jdk-vs-cglib"}
     apiRelated: {controller: "ProgrammaticProxyController", methodSignature: "compareProxyFactoryStrategies()"}
 
   - id: aop-advisor-static-dynamic-matcher
@@ -153,7 +153,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "11.Advisor/Advisor.md", anchor: "static-dynamic-pointcut"}
+    readmeRelated: {file: "11.Advisor/knowledge/Advisor.md", anchor: "static-dynamic-pointcut"}
     apiRelated: {controller: "AdvisorController", methodSignature: "observeAdvisor()"}
 
   - id: aop-runtime-boundary
@@ -166,5 +166,5 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "15.RuntimeBoundary/RuntimeBoundary.md", anchor: "runtime-boundary-demo"}
+    readmeRelated: {file: "15.RuntimeBoundary/knowledge/RuntimeBoundary.md", anchor: "runtime-boundary-demo"}
     apiRelated: {controller: "RuntimeBoundaryController", methodSignature: "inspectRuntimeBoundary()"}

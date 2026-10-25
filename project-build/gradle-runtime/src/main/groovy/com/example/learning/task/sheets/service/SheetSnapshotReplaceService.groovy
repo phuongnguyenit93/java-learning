@@ -13,7 +13,7 @@ import java.nio.file.StandardCopyOption
  */
 class SheetSnapshotReplaceService {
     private static final List<List<String>> ALLOWED_SUFFIXES = [
-            ['content', 'roadmap', 'vi'], ['content', 'readme', 'docs', 'vi', 'menu'],
+            ['content', 'roadmap', 'vi'],
             ['content', 'video', 'vi', 'menu'], ['content', 'interview', 'vi'],
             ['content', 'quiz', 'vi']
     ].asImmutable()
@@ -31,9 +31,14 @@ class SheetSnapshotReplaceService {
         }
         List<String> parts = []
         targetPath.each { Path part -> parts.add(part.toString()) }
-        if (!ALLOWED_SUFFIXES.any { List<String> suffix ->
+        boolean knowledgeFolder = parts.size() > 8 &&
+                parts.takeRight(7).take(5) ==
+                        ['content', 'readme', 'docs', 'vi', 'menu'] &&
+                (parts[-2] ==~ /[0-9]+\.[A-Za-z][A-Za-z0-9]*/) &&
+                parts[-1] == 'knowledge'
+        if (!(knowledgeFolder || ALLOWED_SUFFIXES.any { List<String> suffix ->
             parts.size() > suffix.size() + 1 && parts.takeRight(suffix.size()) == suffix
-        } || hasSymlink(directory.toPath())) {
+        }) || hasSymlink(directory.toPath())) {
             throw new GradleException('Refusing to clean non-owned or linked path: ' + directory)
         }
         if (directory.exists() && !directory.isDirectory()) {

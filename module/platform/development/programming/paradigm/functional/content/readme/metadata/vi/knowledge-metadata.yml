@@ -1,4 +1,4 @@
-1.Introduction/FunctionalProgramming.md:
+1.Introduction/knowledge/FunctionalProgramming.md:
   functional-what:
     difficulty: BASIC
     aiGenerated: true
@@ -34,7 +34,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-2.PureFunctions/PureFunctions.md:
+2.PureFunctions/knowledge/PureFunctions.md:
   purity-concept:
     difficulty: BASIC
     aiGenerated: true
@@ -60,7 +60,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-3.Immutability/Immutability.md:
+3.Immutability/knowledge/Immutability.md:
   immutable-values:
     difficulty: BASIC
     aiGenerated: true
@@ -86,7 +86,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-4.FunctionsComposition/FunctionsComposition.md:
+4.FunctionsComposition/knowledge/FunctionsComposition.md:
   functions-as-values:
     difficulty: BASIC
     aiGenerated: true
@@ -117,7 +117,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-5.SideEffects/SideEffects.md:
+5.SideEffects/knowledge/SideEffects.md:
   effect-concept:
     difficulty: BASIC
     aiGenerated: true
@@ -143,7 +143,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-6.Tradeoffs/Tradeoffs.md:
+6.Tradeoffs/knowledge/Tradeoffs.md:
   functional-use-cases:
     difficulty: BASIC
     aiGenerated: true

@@ -1,13 +1,13 @@
 # 📂 README MODULE STRUCTURE (VI)
 
 * **1.Introduction**
-    * [AOP](content/readme/docs/vi/menu/1.Introduction/AOP.md)
+    * [AOP](content/readme/docs/vi/menu/1.Introduction/knowledge/AOP.md)
 * **2.Terminology**
-    * [Terminology](content/readme/docs/vi/menu/2.Terminology/Terminology.md)
+    * [Terminology](content/readme/docs/vi/menu/2.Terminology/knowledge/Terminology.md)
 * **3.ImplementationModels**
-    * [ImplementationModels](content/readme/docs/vi/menu/3.ImplementationModels/ImplementationModels.md)
+    * [ImplementationModels](content/readme/docs/vi/menu/3.ImplementationModels/knowledge/ImplementationModels.md)
 * **4.Tradeoffs**
-    * [Tradeoffs](content/readme/docs/vi/menu/4.Tradeoffs/Tradeoffs.md)
+    * [Tradeoffs](content/readme/docs/vi/menu/4.Tradeoffs/knowledge/Tradeoffs.md)
 
 # Lập trình hướng khía cạnh (Aspect-Oriented Programming — AOP)
 

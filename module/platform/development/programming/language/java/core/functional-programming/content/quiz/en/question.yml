@@ -49,7 +49,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.FunctionalProgrammingPurpose/FunctionalProgrammingPurpose.md", anchor: "functional-programming-purpose"}
+    readmeRelated: {file: "1.FunctionalProgrammingPurpose/knowledge/FunctionalProgrammingPurpose.md", anchor: "functional-programming-purpose"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: fp-q02
@@ -62,7 +62,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.FunctionalProgrammingPurpose/FunctionalProgrammingPurpose.md", anchor: "behavior-parameterization"}
+    readmeRelated: {file: "1.FunctionalProgrammingPurpose/knowledge/FunctionalProgrammingPurpose.md", anchor: "behavior-parameterization"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: fp-q03
@@ -75,7 +75,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.FunctionalProgrammingPurpose/FunctionalProgrammingPurpose.md", anchor: "behavior-before-lambdas"}
+    readmeRelated: {file: "1.FunctionalProgrammingPurpose/knowledge/FunctionalProgrammingPurpose.md", anchor: "behavior-before-lambdas"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: fp-q04
@@ -88,7 +88,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.FunctionalProgrammingPurpose/FunctionalProgrammingPurpose.md", anchor: "functional-multi-paradigm-boundary"}
+    readmeRelated: {file: "1.FunctionalProgrammingPurpose/knowledge/FunctionalProgrammingPurpose.md", anchor: "functional-multi-paradigm-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: fp-q05
@@ -101,7 +101,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.FunctionalProgrammingPurpose/FunctionalProgrammingPurpose.md", anchor: "functional-programming-module-boundary"}
+    readmeRelated: {file: "1.FunctionalProgrammingPurpose/knowledge/FunctionalProgrammingPurpose.md", anchor: "functional-programming-module-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: fp-q06
@@ -114,7 +114,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.FunctionalInterfaceContracts/FunctionalInterfaceContracts.md", anchor: "sam-contract"}
+    readmeRelated: {file: "2.FunctionalInterfaceContracts/knowledge/FunctionalInterfaceContracts.md", anchor: "sam-contract"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: fp-q07
@@ -127,7 +127,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.FunctionalInterfaceContracts/FunctionalInterfaceContracts.md", anchor: "sam-object-method-rule"}
+    readmeRelated: {file: "2.FunctionalInterfaceContracts/knowledge/FunctionalInterfaceContracts.md", anchor: "sam-object-method-rule"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: fp-q08
@@ -140,7 +140,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.FunctionalInterfaceContracts/FunctionalInterfaceContracts.md", anchor: "sam-inherited-method-rule"}
+    readmeRelated: {file: "2.FunctionalInterfaceContracts/knowledge/FunctionalInterfaceContracts.md", anchor: "sam-inherited-method-rule"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: fp-q09
@@ -153,7 +153,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.FunctionalInterfaceContracts/FunctionalInterfaceContracts.md", anchor: "functional-interface-annotation"}
+    readmeRelated: {file: "2.FunctionalInterfaceContracts/knowledge/FunctionalInterfaceContracts.md", anchor: "functional-interface-annotation"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: fp-q10
@@ -166,7 +166,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.FunctionalInterfaceContracts/FunctionalInterfaceContracts.md", anchor: "functional-interface-function-type"}
+    readmeRelated: {file: "2.FunctionalInterfaceContracts/knowledge/FunctionalInterfaceContracts.md", anchor: "functional-interface-function-type"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: fp-q11
@@ -179,7 +179,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.LambdaAndTargetTyping/LambdaAndTargetTyping.md", anchor: "target-typing"}
+    readmeRelated: {file: "3.LambdaAndTargetTyping/knowledge/LambdaAndTargetTyping.md", anchor: "target-typing"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: fp-q12
@@ -192,7 +192,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.LambdaAndTargetTyping/LambdaAndTargetTyping.md", anchor: "lambda-body-result-compatibility"}
+    readmeRelated: {file: "3.LambdaAndTargetTyping/knowledge/LambdaAndTargetTyping.md", anchor: "lambda-body-result-compatibility"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: fp-q13
@@ -205,7 +205,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.LambdaAndTargetTyping/LambdaAndTargetTyping.md", anchor: "lambda-target-contexts"}
+    readmeRelated: {file: "3.LambdaAndTargetTyping/knowledge/LambdaAndTargetTyping.md", anchor: "lambda-target-contexts"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: fp-q14
@@ -218,7 +218,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.LambdaAndTargetTyping/LambdaAndTargetTyping.md", anchor: "lambda-execution-timing"}
+    readmeRelated: {file: "3.LambdaAndTargetTyping/knowledge/LambdaAndTargetTyping.md", anchor: "lambda-execution-timing"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: fp-q15
@@ -231,7 +231,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.LambdaAndTargetTyping/LambdaAndTargetTyping.md", anchor: "lambda-overload-ambiguity"}
+    readmeRelated: {file: "3.LambdaAndTargetTyping/knowledge/LambdaAndTargetTyping.md", anchor: "lambda-overload-ambiguity"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: fp-q16
@@ -244,7 +244,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.CaptureScopeAndState/CaptureScopeAndState.md", anchor: "effectively-final"}
+    readmeRelated: {file: "4.CaptureScopeAndState/knowledge/CaptureScopeAndState.md", anchor: "effectively-final"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: fp-q17
@@ -257,7 +257,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.CaptureScopeAndState/CaptureScopeAndState.md", anchor: "captured-reference-mutation"}
+    readmeRelated: {file: "4.CaptureScopeAndState/knowledge/CaptureScopeAndState.md", anchor: "captured-reference-mutation"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: fp-q18
@@ -270,7 +270,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.CaptureScopeAndState/CaptureScopeAndState.md", anchor: "lambda-this"}
+    readmeRelated: {file: "4.CaptureScopeAndState/knowledge/CaptureScopeAndState.md", anchor: "lambda-this"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: fp-q19
@@ -283,7 +283,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.CaptureScopeAndState/CaptureScopeAndState.md", anchor: "instance-static-state-access"}
+    readmeRelated: {file: "4.CaptureScopeAndState/knowledge/CaptureScopeAndState.md", anchor: "instance-static-state-access"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: fp-q20
@@ -296,7 +296,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.CaptureScopeAndState/CaptureScopeAndState.md", anchor: "captured-local-values"}
+    readmeRelated: {file: "4.CaptureScopeAndState/knowledge/CaptureScopeAndState.md", anchor: "captured-local-values"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: fp-q21
@@ -309,7 +309,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.StandardFunctionalInterfaces/StandardFunctionalInterfaces.md", anchor: "supplier-contract"}
+    readmeRelated: {file: "5.StandardFunctionalInterfaces/knowledge/StandardFunctionalInterfaces.md", anchor: "supplier-contract"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: fp-q22
@@ -322,7 +322,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.StandardFunctionalInterfaces/StandardFunctionalInterfaces.md", anchor: "operator-contracts"}
+    readmeRelated: {file: "5.StandardFunctionalInterfaces/knowledge/StandardFunctionalInterfaces.md", anchor: "operator-contracts"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: fp-q23
@@ -335,7 +335,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.StandardFunctionalInterfaces/StandardFunctionalInterfaces.md", anchor: "bi-functional-interfaces"}
+    readmeRelated: {file: "5.StandardFunctionalInterfaces/knowledge/StandardFunctionalInterfaces.md", anchor: "bi-functional-interfaces"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: fp-q24
@@ -348,7 +348,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.StandardFunctionalInterfaces/StandardFunctionalInterfaces.md", anchor: "primitive-specializations"}
+    readmeRelated: {file: "5.StandardFunctionalInterfaces/knowledge/StandardFunctionalInterfaces.md", anchor: "primitive-specializations"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: fp-q25
@@ -361,7 +361,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.StandardFunctionalInterfaces/StandardFunctionalInterfaces.md", anchor: "standard-vs-custom-functional-interface"}
+    readmeRelated: {file: "5.StandardFunctionalInterfaces/knowledge/StandardFunctionalInterfaces.md", anchor: "standard-vs-custom-functional-interface"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: fp-q26
@@ -374,7 +374,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.MethodReferences/MethodReferences.md", anchor: "unbound-instance-method-reference"}
+    readmeRelated: {file: "6.MethodReferences/knowledge/MethodReferences.md", anchor: "unbound-instance-method-reference"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: fp-q27
@@ -387,7 +387,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.MethodReferences/MethodReferences.md", anchor: "bound-instance-method-reference"}
+    readmeRelated: {file: "6.MethodReferences/knowledge/MethodReferences.md", anchor: "bound-instance-method-reference"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: fp-q28
@@ -400,7 +400,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.MethodReferences/MethodReferences.md", anchor: "method-reference-result-adaptation"}
+    readmeRelated: {file: "6.MethodReferences/knowledge/MethodReferences.md", anchor: "method-reference-result-adaptation"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: fp-q29
@@ -413,7 +413,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.MethodReferences/MethodReferences.md", anchor: "constructor-reference"}
+    readmeRelated: {file: "6.MethodReferences/knowledge/MethodReferences.md", anchor: "constructor-reference"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: fp-q30
@@ -426,7 +426,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.MethodReferences/MethodReferences.md", anchor: "overloaded-method-reference"}
+    readmeRelated: {file: "6.MethodReferences/knowledge/MethodReferences.md", anchor: "overloaded-method-reference"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: fp-q31
@@ -439,7 +439,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.BehaviorCompositionAndHigherOrderUse/BehaviorCompositionAndHigherOrderUse.md", anchor: "higher-order-methods"}
+    readmeRelated: {file: "7.BehaviorCompositionAndHigherOrderUse/knowledge/BehaviorCompositionAndHigherOrderUse.md", anchor: "higher-order-methods"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: fp-q32
@@ -452,7 +452,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.BehaviorCompositionAndHigherOrderUse/BehaviorCompositionAndHigherOrderUse.md", anchor: "function-composition"}
+    readmeRelated: {file: "7.BehaviorCompositionAndHigherOrderUse/knowledge/BehaviorCompositionAndHigherOrderUse.md", anchor: "function-composition"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: fp-q33
@@ -465,7 +465,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.BehaviorCompositionAndHigherOrderUse/BehaviorCompositionAndHigherOrderUse.md", anchor: "predicate-composition"}
+    readmeRelated: {file: "7.BehaviorCompositionAndHigherOrderUse/knowledge/BehaviorCompositionAndHigherOrderUse.md", anchor: "predicate-composition"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: fp-q34
@@ -478,7 +478,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.BehaviorCompositionAndHigherOrderUse/BehaviorCompositionAndHigherOrderUse.md", anchor: "consumer-composition"}
+    readmeRelated: {file: "7.BehaviorCompositionAndHigherOrderUse/knowledge/BehaviorCompositionAndHigherOrderUse.md", anchor: "consumer-composition"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: fp-q35
@@ -491,7 +491,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.BehaviorCompositionAndHigherOrderUse/BehaviorCompositionAndHigherOrderUse.md", anchor: "composition-side-effects"}
+    readmeRelated: {file: "7.BehaviorCompositionAndHigherOrderUse/knowledge/BehaviorCompositionAndHigherOrderUse.md", anchor: "composition-side-effects"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: fp-q36
@@ -504,7 +504,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.OptionalAndAbsence/OptionalAndAbsence.md", anchor: "optional-transform-filter"}
+    readmeRelated: {file: "8.OptionalAndAbsence/knowledge/OptionalAndAbsence.md", anchor: "optional-transform-filter"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: fp-q37
@@ -517,7 +517,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.OptionalAndAbsence/OptionalAndAbsence.md", anchor: "optional-fallback-and-failure"}
+    readmeRelated: {file: "8.OptionalAndAbsence/knowledge/OptionalAndAbsence.md", anchor: "optional-fallback-and-failure"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: fp-q38
@@ -530,7 +530,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.OptionalAndAbsence/OptionalAndAbsence.md", anchor: "optional-consumption"}
+    readmeRelated: {file: "8.OptionalAndAbsence/knowledge/OptionalAndAbsence.md", anchor: "optional-consumption"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: fp-q39
@@ -543,7 +543,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.OptionalAndAbsence/OptionalAndAbsence.md", anchor: "optional-api-design"}
+    readmeRelated: {file: "8.OptionalAndAbsence/knowledge/OptionalAndAbsence.md", anchor: "optional-api-design"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: fp-q40
@@ -556,7 +556,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.OptionalAndAbsence/OptionalAndAbsence.md", anchor: "optional-null-boundary"}
+    readmeRelated: {file: "8.OptionalAndAbsence/knowledge/OptionalAndAbsence.md", anchor: "optional-null-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: fp-q41
@@ -569,7 +569,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.StreamApiBoundary/StreamApiBoundary.md", anchor: "stream-functional-interface-bridge"}
+    readmeRelated: {file: "9.StreamApiBoundary/knowledge/StreamApiBoundary.md", anchor: "stream-functional-interface-bridge"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: fp-q42
@@ -582,7 +582,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.StreamApiBoundary/StreamApiBoundary.md", anchor: "stream-behavior-contracts"}
+    readmeRelated: {file: "9.StreamApiBoundary/knowledge/StreamApiBoundary.md", anchor: "stream-behavior-contracts"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: fp-q43
@@ -595,7 +595,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.StreamApiBoundary/StreamApiBoundary.md", anchor: "stream-lambda-method-reference"}
+    readmeRelated: {file: "9.StreamApiBoundary/knowledge/StreamApiBoundary.md", anchor: "stream-lambda-method-reference"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: fp-q44
@@ -608,7 +608,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.StreamApiBoundary/StreamApiBoundary.md", anchor: "collection-vs-stream-boundary"}
+    readmeRelated: {file: "9.StreamApiBoundary/knowledge/StreamApiBoundary.md", anchor: "collection-vs-stream-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: fp-q45
@@ -621,7 +621,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.StreamApiBoundary/StreamApiBoundary.md", anchor: "stream-mechanics-boundary"}
+    readmeRelated: {file: "9.StreamApiBoundary/knowledge/StreamApiBoundary.md", anchor: "stream-mechanics-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: fp-q46
@@ -634,7 +634,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "10.TradeoffsFailuresAndSynthesis/TradeoffsFailuresAndSynthesis.md", anchor: "checked-exception-constraint"}
+    readmeRelated: {file: "10.TradeoffsFailuresAndSynthesis/knowledge/TradeoffsFailuresAndSynthesis.md", anchor: "checked-exception-constraint"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: fp-q47
@@ -647,7 +647,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "10.TradeoffsFailuresAndSynthesis/TradeoffsFailuresAndSynthesis.md", anchor: "checked-exception-adaptation"}
+    readmeRelated: {file: "10.TradeoffsFailuresAndSynthesis/knowledge/TradeoffsFailuresAndSynthesis.md", anchor: "checked-exception-adaptation"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: fp-q48
@@ -660,7 +660,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "10.TradeoffsFailuresAndSynthesis/TradeoffsFailuresAndSynthesis.md", anchor: "functional-vs-oop-choice"}
+    readmeRelated: {file: "10.TradeoffsFailuresAndSynthesis/knowledge/TradeoffsFailuresAndSynthesis.md", anchor: "functional-vs-oop-choice"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: fp-q49
@@ -673,7 +673,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "10.TradeoffsFailuresAndSynthesis/TradeoffsFailuresAndSynthesis.md", anchor: "functional-vs-imperative-choice"}
+    readmeRelated: {file: "10.TradeoffsFailuresAndSynthesis/knowledge/TradeoffsFailuresAndSynthesis.md", anchor: "functional-vs-imperative-choice"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: fp-q50
@@ -686,5 +686,5 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "10.TradeoffsFailuresAndSynthesis/TradeoffsFailuresAndSynthesis.md", anchor: "common-functional-pitfalls"}
+    readmeRelated: {file: "10.TradeoffsFailuresAndSynthesis/knowledge/TradeoffsFailuresAndSynthesis.md", anchor: "common-functional-pitfalls"}
     apiRelated: {controller: "", methodSignature: ""}

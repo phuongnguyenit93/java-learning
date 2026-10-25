@@ -1,4 +1,4 @@
-1.Immutability/Immutability.md:
+1.Immutability/knowledge/Immutability.md:
   string-purpose:
     difficulty: BASIC
     aiGenerated: true
@@ -19,7 +19,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-2.StringPool/StringPool.md:
+2.StringPool/knowledge/StringPool.md:
   string-pool-model:
     difficulty: BASIC
     aiGenerated: true
@@ -35,7 +35,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-3.Equality/Equality.md:
+3.Equality/knowledge/Equality.md:
   string-equals:
     difficulty: BASIC
     aiGenerated: true
@@ -51,7 +51,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-4.CoreStringOperations/CoreStringOperations.md:
+4.CoreStringOperations/knowledge/CoreStringOperations.md:
   string-char-sequence:
     difficulty: BASIC
     aiGenerated: true
@@ -87,7 +87,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-5.Concatenation/Concatenation.md:
+5.Concatenation/knowledge/Concatenation.md:
   concat-semantics:
     difficulty: BASIC
     aiGenerated: true
@@ -108,7 +108,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-6.StringBuilder/StringBuilder.md:
+6.StringBuilder/knowledge/StringBuilder.md:
   builder-mutable-buffer:
     difficulty: BASIC
     aiGenerated: true
@@ -124,7 +124,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-7.StringBuffer/StringBuffer.md:
+7.StringBuffer/knowledge/StringBuffer.md:
   buffer-synchronization:
     difficulty: BASIC
     aiGenerated: true
@@ -140,7 +140,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-8.Intern/Intern.md:
+8.Intern/knowledge/Intern.md:
   intern-semantics:
     difficulty: BASIC
     aiGenerated: true
@@ -156,7 +156,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-9.UnicodeCodePoint/UnicodeCodePoint.md:
+9.UnicodeCodePoint/knowledge/UnicodeCodePoint.md:
   utf16-char-model:
     difficulty: BASIC
     aiGenerated: true
@@ -192,7 +192,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-10.Encoding/Encoding.md:
+10.Encoding/knowledge/Encoding.md:
   text-vs-bytes:
     difficulty: BASIC
     aiGenerated: true
@@ -213,7 +213,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-11.Regex/Regex.md:
+11.Regex/knowledge/Regex.md:
   regex-purpose:
     difficulty: BASIC
     aiGenerated: true
@@ -244,7 +244,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-12.TextBlocks/TextBlocks.md:
+12.TextBlocks/knowledge/TextBlocks.md:
   text-block-syntax:
     difficulty: BASIC
     aiGenerated: true

@@ -49,7 +49,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.MentalModel/MentalModel.md", anchor: "i18n-vs-l10n"}
+    readmeRelated: {file: "1.MentalModel/knowledge/MentalModel.md", anchor: "i18n-vs-l10n"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: localization-q02
@@ -62,7 +62,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.MentalModel/MentalModel.md", anchor: "locale-sensitive-data"}
+    readmeRelated: {file: "1.MentalModel/knowledge/MentalModel.md", anchor: "locale-sensitive-data"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: localization-q03
@@ -75,7 +75,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.MentalModel/MentalModel.md", anchor: "localization-boundaries"}
+    readmeRelated: {file: "1.MentalModel/knowledge/MentalModel.md", anchor: "localization-boundaries"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: localization-q04
@@ -88,7 +88,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.Locale/Locale.md", anchor: "locale-model"}
+    readmeRelated: {file: "2.Locale/knowledge/Locale.md", anchor: "locale-model"}
     apiRelated: {controller: "LocaleController", methodSignature: "compareLocales()"}
 
   - id: localization-q05
@@ -101,7 +101,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.Locale/Locale.md", anchor: "locale-construction"}
+    readmeRelated: {file: "2.Locale/knowledge/Locale.md", anchor: "locale-construction"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: localization-q07
@@ -114,7 +114,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.Locale/Locale.md", anchor: "locale-equality"}
+    readmeRelated: {file: "2.Locale/knowledge/Locale.md", anchor: "locale-equality"}
     apiRelated: {controller: "LocaleController", methodSignature: "compareLocales()"}
 
   - id: localization-q08
@@ -127,7 +127,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.LanguageTags/LanguageTags.md", anchor: "bcp47-language-tag"}
+    readmeRelated: {file: "3.LanguageTags/knowledge/LanguageTags.md", anchor: "bcp47-language-tag"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: localization-q09
@@ -140,7 +140,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.LanguageTags/LanguageTags.md", anchor: "for-language-tag"}
+    readmeRelated: {file: "3.LanguageTags/knowledge/LanguageTags.md", anchor: "for-language-tag"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: localization-q56
@@ -153,7 +153,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.LanguageTags/LanguageTags.md", anchor: "locale-matching"}
+    readmeRelated: {file: "3.LanguageTags/knowledge/LanguageTags.md", anchor: "locale-matching"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: localization-q10
@@ -166,7 +166,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.LanguageTags/LanguageTags.md", anchor: "language-script-region"}
+    readmeRelated: {file: "3.LanguageTags/knowledge/LanguageTags.md", anchor: "language-script-region"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: localization-q57
@@ -179,7 +179,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.LanguageTags/LanguageTags.md", anchor: "locale-extensions"}
+    readmeRelated: {file: "3.LanguageTags/knowledge/LanguageTags.md", anchor: "locale-extensions"}
     apiRelated: {controller: "DateTimeLocalizationController", methodSignature: "weekAndNumberingConventions()"}
 
   - id: localization-q11
@@ -192,7 +192,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.LanguageTags/LanguageTags.md", anchor: "canonicalization-boundary"}
+    readmeRelated: {file: "3.LanguageTags/knowledge/LanguageTags.md", anchor: "canonicalization-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: localization-q12
@@ -205,7 +205,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.ResourceBundle/ResourceBundle.md", anchor: "resourcebundle-model"}
+    readmeRelated: {file: "4.ResourceBundle/knowledge/ResourceBundle.md", anchor: "resourcebundle-model"}
     apiRelated: {controller: "BundleController", methodSignature: "resolveBundle()"}
 
   - id: localization-q13
@@ -218,7 +218,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.ResourceBundle/ResourceBundle.md", anchor: "bundle-naming"}
+    readmeRelated: {file: "4.ResourceBundle/knowledge/ResourceBundle.md", anchor: "bundle-naming"}
     apiRelated: {controller: "BundleController", methodSignature: "resolveBundle()"}
 
   - id: localization-q14
@@ -231,7 +231,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.ResourceBundle/ResourceBundle.md", anchor: "properties-vs-class-bundle"}
+    readmeRelated: {file: "4.ResourceBundle/knowledge/ResourceBundle.md", anchor: "properties-vs-class-bundle"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: localization-q15
@@ -244,7 +244,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.ResourceBundle/ResourceBundle.md", anchor: "bundle-cache"}
+    readmeRelated: {file: "4.ResourceBundle/knowledge/ResourceBundle.md", anchor: "bundle-cache"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: localization-q16
@@ -257,7 +257,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.MessageFormat/MessageFormat.md", anchor: "messageformat-model"}
+    readmeRelated: {file: "5.MessageFormat/knowledge/MessageFormat.md", anchor: "messageformat-model"}
     apiRelated: {controller: "MessageController", methodSignature: "format()"}
 
   - id: localization-q46
@@ -270,7 +270,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.MessageFormat/MessageFormat.md", anchor: "translation-key-design"}
+    readmeRelated: {file: "5.MessageFormat/knowledge/MessageFormat.md", anchor: "translation-key-design"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: localization-q17
@@ -283,7 +283,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.MessageFormat/MessageFormat.md", anchor: "messageformat-types"}
+    readmeRelated: {file: "5.MessageFormat/knowledge/MessageFormat.md", anchor: "messageformat-types"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: localization-q18
@@ -296,7 +296,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.MessageFormat/MessageFormat.md", anchor: "quote-escaping"}
+    readmeRelated: {file: "5.MessageFormat/knowledge/MessageFormat.md", anchor: "quote-escaping"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: localization-q19
@@ -309,7 +309,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.MessageFormat/MessageFormat.md", anchor: "messageformat-locale"}
+    readmeRelated: {file: "5.MessageFormat/knowledge/MessageFormat.md", anchor: "messageformat-locale"}
     apiRelated: {controller: "MessageController", methodSignature: "format()"}
 
   - id: localization-q20
@@ -322,7 +322,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.NumberFormatting/NumberFormatting.md", anchor: "number-format"}
+    readmeRelated: {file: "6.NumberFormatting/knowledge/NumberFormatting.md", anchor: "number-format"}
     apiRelated: {controller: "NumberLocalizationController", methodSignature: "formatAndParse()"}
 
   - id: localization-q21
@@ -335,7 +335,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.NumberFormatting/NumberFormatting.md", anchor: "decimal-format"}
+    readmeRelated: {file: "6.NumberFormatting/knowledge/NumberFormatting.md", anchor: "decimal-format"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: localization-q22
@@ -348,7 +348,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.NumberFormatting/NumberFormatting.md", anchor: "compact-number-format"}
+    readmeRelated: {file: "6.NumberFormatting/knowledge/NumberFormatting.md", anchor: "compact-number-format"}
     apiRelated: {controller: "NumberLocalizationController", methodSignature: "compact()"}
 
   - id: localization-q23
@@ -361,7 +361,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.NumberFormatting/NumberFormatting.md", anchor: "parsing-numbers"}
+    readmeRelated: {file: "6.NumberFormatting/knowledge/NumberFormatting.md", anchor: "parsing-numbers"}
     apiRelated: {controller: "NumberLocalizationController", methodSignature: "formatAndParse()"}
 
   - id: localization-q24
@@ -374,7 +374,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.NumberFormatting/NumberFormatting.md", anchor: "formatting-vs-domain-value"}
+    readmeRelated: {file: "6.NumberFormatting/knowledge/NumberFormatting.md", anchor: "formatting-vs-domain-value"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: localization-q25
@@ -387,7 +387,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.Currency/Currency.md", anchor: "currency-model"}
+    readmeRelated: {file: "7.Currency/knowledge/Currency.md", anchor: "currency-model"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: localization-q26
@@ -400,7 +400,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.Currency/Currency.md", anchor: "currency-vs-locale"}
+    readmeRelated: {file: "7.Currency/knowledge/Currency.md", anchor: "currency-vs-locale"}
     apiRelated: {controller: "CurrencyController", methodSignature: "currencyVsLocale()"}
 
   - id: localization-q27
@@ -413,7 +413,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.Currency/Currency.md", anchor: "currency-format"}
+    readmeRelated: {file: "7.Currency/knowledge/Currency.md", anchor: "currency-format"}
     apiRelated: {controller: "CurrencyController", methodSignature: "currencyVsLocale()"}
 
   - id: localization-q28
@@ -426,7 +426,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.Currency/Currency.md", anchor: "money-boundary"}
+    readmeRelated: {file: "7.Currency/knowledge/Currency.md", anchor: "money-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: localization-q29
@@ -439,7 +439,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.Collator/Collator.md", anchor: "collator-model"}
+    readmeRelated: {file: "8.Collator/knowledge/Collator.md", anchor: "collator-model"}
     apiRelated: {controller: "CollationController", methodSignature: "sort()"}
 
   - id: localization-q30
@@ -452,7 +452,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.Collator/Collator.md", anchor: "collation-strength"}
+    readmeRelated: {file: "8.Collator/knowledge/Collator.md", anchor: "collation-strength"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: localization-q31
@@ -465,7 +465,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.Collator/Collator.md", anchor: "collator-vs-string-order"}
+    readmeRelated: {file: "8.Collator/knowledge/Collator.md", anchor: "collator-vs-string-order"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: localization-q32
@@ -478,7 +478,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.Collator/Collator.md", anchor: "sorting-user-text"}
+    readmeRelated: {file: "8.Collator/knowledge/Collator.md", anchor: "sorting-user-text"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: localization-q33
@@ -491,7 +491,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.DateTimeLocalization/DateTimeLocalization.md", anchor: "localized-date-format"}
+    readmeRelated: {file: "9.DateTimeLocalization/knowledge/DateTimeLocalization.md", anchor: "localized-date-format"}
     apiRelated: {controller: "DateTimeLocalizationController", methodSignature: "format()"}
 
   - id: localization-q34
@@ -504,7 +504,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.DateTimeLocalization/DateTimeLocalization.md", anchor: "locale-vs-zone"}
+    readmeRelated: {file: "9.DateTimeLocalization/knowledge/DateTimeLocalization.md", anchor: "locale-vs-zone"}
     apiRelated: {controller: "DateTimeLocalizationController", methodSignature: "format()"}
 
   - id: localization-q35
@@ -517,7 +517,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.DateTimeLocalization/DateTimeLocalization.md", anchor: "locale-week-conventions"}
+    readmeRelated: {file: "9.DateTimeLocalization/knowledge/DateTimeLocalization.md", anchor: "locale-week-conventions"}
     apiRelated: {controller: "DateTimeLocalizationController", methodSignature: "weekAndNumberingConventions()"}
 
   - id: localization-q36
@@ -530,7 +530,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.DateTimeLocalization/DateTimeLocalization.md", anchor: "localized-numbering-calendar"}
+    readmeRelated: {file: "9.DateTimeLocalization/knowledge/DateTimeLocalization.md", anchor: "localized-numbering-calendar"}
     apiRelated: {controller: "DateTimeLocalizationController", methodSignature: "weekAndNumberingConventions()"}
 
   - id: localization-q37
@@ -543,7 +543,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.DateTimeLocalization/DateTimeLocalization.md", anchor: "localized-pattern"}
+    readmeRelated: {file: "9.DateTimeLocalization/knowledge/DateTimeLocalization.md", anchor: "localized-pattern"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: localization-q38
@@ -556,7 +556,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.DateTimeLocalization/DateTimeLocalization.md", anchor: "localized-parsing"}
+    readmeRelated: {file: "9.DateTimeLocalization/knowledge/DateTimeLocalization.md", anchor: "localized-parsing"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: localization-q47
@@ -569,7 +569,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "10.TextSegmentation/TextSegmentation.md", anchor: "breakiterator-model"}
+    readmeRelated: {file: "10.TextSegmentation/knowledge/TextSegmentation.md", anchor: "breakiterator-model"}
     apiRelated: {controller: "TextSegmentationController", methodSignature: "boundaries()"}
 
   - id: localization-q48
@@ -582,7 +582,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "10.TextSegmentation/TextSegmentation.md", anchor: "character-boundary"}
+    readmeRelated: {file: "10.TextSegmentation/knowledge/TextSegmentation.md", anchor: "character-boundary"}
     apiRelated: {controller: "TextSegmentationController", methodSignature: "boundaries()"}
 
   - id: localization-q49
@@ -595,7 +595,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "10.TextSegmentation/TextSegmentation.md", anchor: "word-sentence-boundary"}
+    readmeRelated: {file: "10.TextSegmentation/knowledge/TextSegmentation.md", anchor: "word-sentence-boundary"}
     apiRelated: {controller: "TextSegmentationController", methodSignature: "boundaries()"}
 
   - id: localization-q50
@@ -608,7 +608,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "10.TextSegmentation/TextSegmentation.md", anchor: "line-boundary"}
+    readmeRelated: {file: "10.TextSegmentation/knowledge/TextSegmentation.md", anchor: "line-boundary"}
     apiRelated: {controller: "TextSegmentationController", methodSignature: "boundaries()"}
 
   - id: localization-q51
@@ -621,7 +621,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "10.TextSegmentation/TextSegmentation.md", anchor: "breakiterator-boundary"}
+    readmeRelated: {file: "10.TextSegmentation/knowledge/TextSegmentation.md", anchor: "breakiterator-boundary"}
     apiRelated: {controller: "TextSegmentationController", methodSignature: "boundaries()"}
 
   - id: localization-q52
@@ -634,7 +634,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "11.BidirectionalText/BidirectionalText.md", anchor: "bidi-model"}
+    readmeRelated: {file: "11.BidirectionalText/knowledge/BidirectionalText.md", anchor: "bidi-model"}
     apiRelated: {controller: "BidirectionalTextController", methodSignature: "analyze()"}
 
   - id: localization-q53
@@ -647,7 +647,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "11.BidirectionalText/BidirectionalText.md", anchor: "ltr-rtl-runs"}
+    readmeRelated: {file: "11.BidirectionalText/knowledge/BidirectionalText.md", anchor: "ltr-rtl-runs"}
     apiRelated: {controller: "BidirectionalTextController", methodSignature: "analyze()"}
 
   - id: localization-q54
@@ -660,7 +660,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "11.BidirectionalText/BidirectionalText.md", anchor: "java-bidi"}
+    readmeRelated: {file: "11.BidirectionalText/knowledge/BidirectionalText.md", anchor: "java-bidi"}
     apiRelated: {controller: "BidirectionalTextController", methodSignature: "analyze()"}
 
   - id: localization-q55
@@ -673,7 +673,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "11.BidirectionalText/BidirectionalText.md", anchor: "bidi-boundary"}
+    readmeRelated: {file: "11.BidirectionalText/knowledge/BidirectionalText.md", anchor: "bidi-boundary"}
     apiRelated: {controller: "BidirectionalTextController", methodSignature: "analyze()"}
 
   - id: localization-q39
@@ -686,7 +686,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "12.Fallback/Fallback.md", anchor: "bundle-candidate-chain"}
+    readmeRelated: {file: "12.Fallback/knowledge/Fallback.md", anchor: "bundle-candidate-chain"}
     apiRelated: {controller: "BundleController", methodSignature: "resolveBundle()"}
 
   - id: localization-q40
@@ -699,7 +699,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "12.Fallback/Fallback.md", anchor: "default-locale-fallback"}
+    readmeRelated: {file: "12.Fallback/knowledge/Fallback.md", anchor: "default-locale-fallback"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: localization-q41
@@ -712,7 +712,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "12.Fallback/Fallback.md", anchor: "base-bundle"}
+    readmeRelated: {file: "12.Fallback/knowledge/Fallback.md", anchor: "base-bundle"}
     apiRelated: {controller: "BundleController", methodSignature: "resolveBundle()"}
 
   - id: localization-q42
@@ -725,7 +725,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "12.Fallback/Fallback.md", anchor: "missing-resource"}
+    readmeRelated: {file: "12.Fallback/knowledge/Fallback.md", anchor: "missing-resource"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: localization-q06
@@ -738,7 +738,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "13.LocalePitfalls/LocalePitfalls.md", anchor: "default-locale"}
+    readmeRelated: {file: "13.LocalePitfalls/knowledge/LocalePitfalls.md", anchor: "default-locale"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: localization-q43
@@ -751,7 +751,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "13.LocalePitfalls/LocalePitfalls.md", anchor: "turkish-i"}
+    readmeRelated: {file: "13.LocalePitfalls/knowledge/LocalePitfalls.md", anchor: "turkish-i"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: localization-q44
@@ -764,7 +764,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "13.LocalePitfalls/LocalePitfalls.md", anchor: "default-locale-production-risk"}
+    readmeRelated: {file: "13.LocalePitfalls/knowledge/LocalePitfalls.md", anchor: "default-locale-production-risk"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: localization-q45
@@ -777,7 +777,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "13.LocalePitfalls/LocalePitfalls.md", anchor: "format-parse-roundtrip"}
+    readmeRelated: {file: "13.LocalePitfalls/knowledge/LocalePitfalls.md", anchor: "format-parse-roundtrip"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: localization-q58
@@ -790,5 +790,5 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "13.LocalePitfalls/LocalePitfalls.md", anchor: "localization-synthesis"}
+    readmeRelated: {file: "13.LocalePitfalls/knowledge/LocalePitfalls.md", anchor: "localization-synthesis"}
     apiRelated: {controller: "", methodSignature: ""}

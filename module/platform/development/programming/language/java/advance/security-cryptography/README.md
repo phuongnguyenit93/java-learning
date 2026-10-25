@@ -1,39 +1,39 @@
 # 📂 README MODULE STRUCTURE (EN)
 
 * **1.MentalModel**
-    * [MentalModel](content/readme/docs/en/menu/1.MentalModel/MentalModel.md)
+    * [MentalModel](content/readme/docs/en/menu/1.MentalModel/knowledge/MentalModel.md)
 * **2.EncodingVsEncryption**
-    * [EncodingVsEncryption](content/readme/docs/en/menu/2.EncodingVsEncryption/EncodingVsEncryption.md)
+    * [EncodingVsEncryption](content/readme/docs/en/menu/2.EncodingVsEncryption/knowledge/EncodingVsEncryption.md)
 * **3.ProvidersAlgorithms**
-    * [ProvidersAlgorithms](content/readme/docs/en/menu/3.ProvidersAlgorithms/ProvidersAlgorithms.md)
+    * [ProvidersAlgorithms](content/readme/docs/en/menu/3.ProvidersAlgorithms/knowledge/ProvidersAlgorithms.md)
 * **4.SecureRandom**
-    * [SecureRandom](content/readme/docs/en/menu/4.SecureRandom/SecureRandom.md)
+    * [SecureRandom](content/readme/docs/en/menu/4.SecureRandom/knowledge/SecureRandom.md)
 * **5.KeysKeyPair**
-    * [KeysKeyPair](content/readme/docs/en/menu/5.KeysKeyPair/KeysKeyPair.md)
+    * [KeysKeyPair](content/readme/docs/en/menu/5.KeysKeyPair/knowledge/KeysKeyPair.md)
 * **6.MessageDigest**
-    * [MessageDigest](content/readme/docs/en/menu/6.MessageDigest/MessageDigest.md)
+    * [MessageDigest](content/readme/docs/en/menu/6.MessageDigest/knowledge/MessageDigest.md)
 * **7.Mac**
-    * [Mac](content/readme/docs/en/menu/7.Mac/Mac.md)
+    * [Mac](content/readme/docs/en/menu/7.Mac/knowledge/Mac.md)
 * **8.DigitalSignature**
-    * [DigitalSignature](content/readme/docs/en/menu/8.DigitalSignature/DigitalSignature.md)
+    * [DigitalSignature](content/readme/docs/en/menu/8.DigitalSignature/knowledge/DigitalSignature.md)
 * **9.SymmetricEncryption**
-    * [SymmetricEncryption](content/readme/docs/en/menu/9.SymmetricEncryption/SymmetricEncryption.md)
+    * [SymmetricEncryption](content/readme/docs/en/menu/9.SymmetricEncryption/knowledge/SymmetricEncryption.md)
 * **10.AsymmetricEncryption**
-    * [AsymmetricEncryption](content/readme/docs/en/menu/10.AsymmetricEncryption/AsymmetricEncryption.md)
+    * [AsymmetricEncryption](content/readme/docs/en/menu/10.AsymmetricEncryption/knowledge/AsymmetricEncryption.md)
 * **11.AuthenticatedEncryption**
-    * [AuthenticatedEncryption](content/readme/docs/en/menu/11.AuthenticatedEncryption/AuthenticatedEncryption.md)
+    * [AuthenticatedEncryption](content/readme/docs/en/menu/11.AuthenticatedEncryption/knowledge/AuthenticatedEncryption.md)
 * **12.KeyEstablishment**
-    * [KeyEstablishment](content/readme/docs/en/menu/12.KeyEstablishment/KeyEstablishment.md)
+    * [KeyEstablishment](content/readme/docs/en/menu/12.KeyEstablishment/knowledge/KeyEstablishment.md)
 * **13.KeyDerivation**
-    * [KeyDerivation](content/readme/docs/en/menu/13.KeyDerivation/KeyDerivation.md)
+    * [KeyDerivation](content/readme/docs/en/menu/13.KeyDerivation/knowledge/KeyDerivation.md)
 * **14.KeyStore**
-    * [KeyStore](content/readme/docs/en/menu/14.KeyStore/KeyStore.md)
+    * [KeyStore](content/readme/docs/en/menu/14.KeyStore/knowledge/KeyStore.md)
 * **15.CertificatesTrust**
-    * [CertificatesTrust](content/readme/docs/en/menu/15.CertificatesTrust/CertificatesTrust.md)
+    * [CertificatesTrust](content/readme/docs/en/menu/15.CertificatesTrust/knowledge/CertificatesTrust.md)
 * **16.TlsJsse**
-    * [TlsJsse](content/readme/docs/en/menu/16.TlsJsse/TlsJsse.md)
+    * [TlsJsse](content/readme/docs/en/menu/16.TlsJsse/knowledge/TlsJsse.md)
 * **17.CryptoPitfalls**
-    * [CryptoPitfalls](content/readme/docs/en/menu/17.CryptoPitfalls/CryptoPitfalls.md)
+    * [CryptoPitfalls](content/readme/docs/en/menu/17.CryptoPitfalls/knowledge/CryptoPitfalls.md)
 
 # Security & Cryptography in Java
 

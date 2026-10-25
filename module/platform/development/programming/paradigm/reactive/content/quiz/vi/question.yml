@@ -44,7 +44,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.Introduction/ReactiveProgramming.md"
+      file: "1.Introduction/knowledge/ReactiveProgramming.md"
       anchor: "reactive-what"
     apiRelated:
       controller: ""
@@ -68,7 +68,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.Introduction/ReactiveProgramming.md"
+      file: "1.Introduction/knowledge/ReactiveProgramming.md"
       anchor: "reactive-why"
     apiRelated:
       controller: ""
@@ -92,7 +92,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.Introduction/ReactiveProgramming.md"
+      file: "1.Introduction/knowledge/ReactiveProgramming.md"
       anchor: "reactive-values-vs-streams"
     apiRelated:
       controller: ""
@@ -116,7 +116,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.Introduction/ReactiveProgramming.md"
+      file: "1.Introduction/knowledge/ReactiveProgramming.md"
       anchor: "reactive-foundation-bridge"
     apiRelated:
       controller: ""
@@ -140,7 +140,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.Introduction/ReactiveProgramming.md"
+      file: "1.Introduction/knowledge/ReactiveProgramming.md"
       anchor: "reactive-solution"
     apiRelated:
       controller: ""
@@ -164,7 +164,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.Introduction/ReactiveProgramming.md"
+      file: "1.Introduction/knowledge/ReactiveProgramming.md"
       anchor: "reactive-streams-boundary"
     apiRelated:
       controller: ""
@@ -188,7 +188,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.Introduction/ReactiveProgramming.md"
+      file: "1.Introduction/knowledge/ReactiveProgramming.md"
       anchor: "reactive-framework-boundary"
     apiRelated:
       controller: ""
@@ -212,7 +212,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.Introduction/ReactiveProgramming.md"
+      file: "1.Introduction/knowledge/ReactiveProgramming.md"
       anchor: "reactive-learning-path"
     apiRelated:
       controller: ""
@@ -237,7 +237,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.DataFlow/DataFlow.md"
+      file: "2.DataFlow/knowledge/DataFlow.md"
       anchor: "reactive-source-producer-consumer"
     apiRelated:
       controller: ""
@@ -261,7 +261,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.DataFlow/DataFlow.md"
+      file: "2.DataFlow/knowledge/DataFlow.md"
       anchor: "reactive-transform-combine"
     apiRelated:
       controller: ""
@@ -285,7 +285,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.DataFlow/DataFlow.md"
+      file: "2.DataFlow/knowledge/DataFlow.md"
       anchor: "reactive-push-pull"
     apiRelated:
       controller: ""
@@ -309,7 +309,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.DataFlow/DataFlow.md"
+      file: "2.DataFlow/knowledge/DataFlow.md"
       anchor: "reactive-composition"
     apiRelated:
       controller: ""
@@ -333,7 +333,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.DataFlow/DataFlow.md"
+      file: "2.DataFlow/knowledge/DataFlow.md"
       anchor: "reactive-subscribe-lifecycle"
     apiRelated:
       controller: ""
@@ -357,7 +357,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.DataFlow/DataFlow.md"
+      file: "2.DataFlow/knowledge/DataFlow.md"
       anchor: "reactive-execution-timing"
     apiRelated:
       controller: ""
@@ -381,7 +381,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.DataFlow/DataFlow.md"
+      file: "2.DataFlow/knowledge/DataFlow.md"
       anchor: "reactive-flow-trace"
     apiRelated:
       controller: ""
@@ -405,7 +405,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "3.Backpressure/Backpressure.md"
+      file: "3.Backpressure/knowledge/Backpressure.md"
       anchor: "reactive-rate-mismatch"
     apiRelated:
       controller: ""
@@ -429,7 +429,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "3.Backpressure/Backpressure.md"
+      file: "3.Backpressure/knowledge/Backpressure.md"
       anchor: "reactive-queue-overflow"
     apiRelated:
       controller: ""
@@ -453,7 +453,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "3.Backpressure/Backpressure.md"
+      file: "3.Backpressure/knowledge/Backpressure.md"
       anchor: "reactive-demand-flow-control"
     apiRelated:
       controller: ""
@@ -477,7 +477,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "3.Backpressure/Backpressure.md"
+      file: "3.Backpressure/knowledge/Backpressure.md"
       anchor: "reactive-overload-strategies"
     apiRelated:
       controller: ""
@@ -501,7 +501,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "3.Backpressure/Backpressure.md"
+      file: "3.Backpressure/knowledge/Backpressure.md"
       anchor: "reactive-backpressure-boundary"
     apiRelated:
       controller: ""
@@ -525,7 +525,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.ReactiveStreams/ReactiveStreams.md"
+      file: "4.ReactiveStreams/knowledge/ReactiveStreams.md"
       anchor: "reactive-spec-scope"
     apiRelated:
       controller: ""
@@ -549,7 +549,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.ReactiveStreams/ReactiveStreams.md"
+      file: "4.ReactiveStreams/knowledge/ReactiveStreams.md"
       anchor: "reactive-four-roles"
     apiRelated:
       controller: ""
@@ -573,7 +573,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.ReactiveStreams/ReactiveStreams.md"
+      file: "4.ReactiveStreams/knowledge/ReactiveStreams.md"
       anchor: "reactive-signal-sequence"
     apiRelated:
       controller: ""
@@ -597,7 +597,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.ReactiveStreams/ReactiveStreams.md"
+      file: "4.ReactiveStreams/knowledge/ReactiveStreams.md"
       anchor: "reactive-request-n"
     apiRelated:
       controller: ""
@@ -621,7 +621,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.ReactiveStreams/ReactiveStreams.md"
+      file: "4.ReactiveStreams/knowledge/ReactiveStreams.md"
       anchor: "reactive-protocol-failures"
     apiRelated:
       controller: ""
@@ -645,7 +645,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.ReactiveStreams/ReactiveStreams.md"
+      file: "4.ReactiveStreams/knowledge/ReactiveStreams.md"
       anchor: "reactive-interoperability"
     apiRelated:
       controller: ""
@@ -669,7 +669,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "5.ErrorCancellation/ErrorCancellation.md"
+      file: "5.ErrorCancellation/knowledge/ErrorCancellation.md"
       anchor: "reactive-terminal-success"
     apiRelated:
       controller: ""
@@ -693,7 +693,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "5.ErrorCancellation/ErrorCancellation.md"
+      file: "5.ErrorCancellation/knowledge/ErrorCancellation.md"
       anchor: "reactive-terminal-failure"
     apiRelated:
       controller: ""
@@ -717,7 +717,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "5.ErrorCancellation/ErrorCancellation.md"
+      file: "5.ErrorCancellation/knowledge/ErrorCancellation.md"
       anchor: "reactive-cancellation"
     apiRelated:
       controller: ""
@@ -741,7 +741,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "5.ErrorCancellation/ErrorCancellation.md"
+      file: "5.ErrorCancellation/knowledge/ErrorCancellation.md"
       anchor: "reactive-inflight-signals"
     apiRelated:
       controller: ""
@@ -765,7 +765,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "5.ErrorCancellation/ErrorCancellation.md"
+      file: "5.ErrorCancellation/knowledge/ErrorCancellation.md"
       anchor: "reactive-resource-cleanup"
     apiRelated:
       controller: ""
@@ -789,7 +789,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "5.ErrorCancellation/ErrorCancellation.md"
+      file: "5.ErrorCancellation/knowledge/ErrorCancellation.md"
       anchor: "reactive-lifecycle-trace"
     apiRelated:
       controller: ""
@@ -813,7 +813,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "6.Tradeoffs/Tradeoffs.md"
+      file: "6.Tradeoffs/knowledge/Tradeoffs.md"
       anchor: "reactive-end-to-end-example"
     apiRelated:
       controller: ""
@@ -837,7 +837,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "6.Tradeoffs/Tradeoffs.md"
+      file: "6.Tradeoffs/knowledge/Tradeoffs.md"
       anchor: "reactive-compare-callback"
     apiRelated:
       controller: ""
@@ -861,7 +861,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "6.Tradeoffs/Tradeoffs.md"
+      file: "6.Tradeoffs/knowledge/Tradeoffs.md"
       anchor: "reactive-async-parallel-boundary"
     apiRelated:
       controller: ""
@@ -885,7 +885,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "6.Tradeoffs/Tradeoffs.md"
+      file: "6.Tradeoffs/knowledge/Tradeoffs.md"
       anchor: "reactive-debug-complexity"
     apiRelated:
       controller: ""
@@ -909,7 +909,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "6.Tradeoffs/Tradeoffs.md"
+      file: "6.Tradeoffs/knowledge/Tradeoffs.md"
       anchor: "reactive-framework-handoff"
     apiRelated:
       controller: ""
@@ -933,7 +933,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "6.Tradeoffs/Tradeoffs.md"
+      file: "6.Tradeoffs/knowledge/Tradeoffs.md"
       anchor: "reactive-final-decision"
     apiRelated:
       controller: ""

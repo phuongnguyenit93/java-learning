@@ -10,7 +10,7 @@ BigDecimalController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 5.BigDecimal/BigDecimal.md
+      file: 5.BigDecimal/knowledge/BigDecimal.md
       anchor: big-decimal-construction
     methodName: construction
     params: [
@@ -37,7 +37,7 @@ BigDecimalController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 8.BigDecimalComparison/BigDecimalComparison.md
+      file: 8.BigDecimalComparison/knowledge/BigDecimalComparison.md
       anchor: big-decimal-equals
     methodName: comparison
     params: [
@@ -63,7 +63,7 @@ BigDecimalController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 5.BigDecimal/BigDecimal.md
+      file: 5.BigDecimal/knowledge/BigDecimal.md
       anchor: big-decimal-arithmetic
     methodName: divisionAndRounding
     params: [
@@ -89,7 +89,7 @@ BigDecimalController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 6.PrecisionScale/PrecisionScale.md
+      file: 6.PrecisionScale/knowledge/PrecisionScale.md
       anchor: precision-vs-scale
     methodName: precisionScale
     params: [
@@ -115,7 +115,7 @@ BigDecimalController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 6.PrecisionScale/PrecisionScale.md
+      file: 6.PrecisionScale/knowledge/PrecisionScale.md
       anchor: math-context
     methodName: mathContextVsScale
     params: [
@@ -141,7 +141,7 @@ BigDecimalController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 7.Rounding/Rounding.md
+      file: 7.Rounding/knowledge/Rounding.md
       anchor: rounding-modes
     methodName: roundingModes
     params: [
@@ -168,7 +168,7 @@ BigDecimalController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 8.BigDecimalComparison/BigDecimalComparison.md
+      file: 8.BigDecimalComparison/knowledge/BigDecimalComparison.md
       anchor: big-decimal-collections
     methodName: collectionSemantics
     params: [
@@ -195,7 +195,7 @@ FloatingPointController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 3.FloatingPoint/FloatingPoint.md
+      file: 3.FloatingPoint/knowledge/FloatingPoint.md
       anchor: precision-rounding-error
     methodName: precision
     params: [
@@ -221,7 +221,7 @@ FloatingPointController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 3.FloatingPoint/FloatingPoint.md
+      file: 3.FloatingPoint/knowledge/FloatingPoint.md
       anchor: nan-infinity-negative-zero
     methodName: specialValues
     params: [
@@ -247,7 +247,7 @@ FloatingPointController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 3.FloatingPoint/FloatingPoint.md
+      file: 3.FloatingPoint/knowledge/FloatingPoint.md
       anchor: floating-point-comparison
     methodName: comparison
     params: [
@@ -275,7 +275,7 @@ IntegerArithmeticController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 2.IntegerOverflow/IntegerOverflow.md
+      file: 2.IntegerOverflow/knowledge/IntegerOverflow.md
       anchor: integer-overflow-wraparound
     methodName: overflow
     params: [
@@ -301,7 +301,7 @@ IntegerArithmeticController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 1.NumericModel/NumericModel.md
+      file: 1.NumericModel/knowledge/NumericModel.md
       anchor: numeric-conversions
     methodName: intermediateOverflow
     params: [
@@ -328,7 +328,7 @@ IntegerArithmeticController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 2.IntegerOverflow/IntegerOverflow.md
+      file: 2.IntegerOverflow/knowledge/IntegerOverflow.md
       anchor: boundary-values
     methodName: boundaryCases
     params: [
@@ -356,7 +356,7 @@ RandomController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 10.Random/Random.md
+      file: 10.Random/knowledge/Random.md
       anchor: pseudo-random-model
     methodName: seededSequence
     params: [
@@ -383,7 +383,7 @@ BigIntegerController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 4.BigInteger/BigInteger.md
+      file: 4.BigInteger/knowledge/BigInteger.md
       anchor: big-integer-operations
     methodName: conversionBoundary
     params: [
@@ -409,7 +409,7 @@ BigIntegerController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 4.BigInteger/BigInteger.md
+      file: 4.BigInteger/knowledge/BigInteger.md
       anchor: big-integer-operations
     methodName: remainderVsMod
     params: [
@@ -436,7 +436,7 @@ MathController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 9.Math/Math.md
+      file: 9.Math/knowledge/Math.md
       anchor: math-core-functions
     methodName: floorDivision
     params: [
@@ -462,7 +462,7 @@ MathController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 9.Math/Math.md
+      file: 9.Math/knowledge/Math.md
       anchor: exact-arithmetic-methods
     methodName: exactBoundaries
     params: [

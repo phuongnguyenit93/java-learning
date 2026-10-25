@@ -1,4 +1,4 @@
-1.Introduction/AOP.md:
+1.Introduction/knowledge/AOP.md:
   aop-what:
     difficulty: BASIC
     aiGenerated: true
@@ -39,7 +39,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-2.Terminology/Terminology.md:
+2.Terminology/knowledge/Terminology.md:
   aop-aspect:
     difficulty: BASIC
     aiGenerated: true
@@ -85,7 +85,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-3.ImplementationModels/ImplementationModels.md:
+3.ImplementationModels/knowledge/ImplementationModels.md:
   aop-compile-time:
     difficulty: BASIC
     aiGenerated: true
@@ -116,7 +116,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-4.Tradeoffs/Tradeoffs.md:
+4.Tradeoffs/knowledge/Tradeoffs.md:
   aop-benefits:
     difficulty: BASIC
     aiGenerated: true

@@ -44,7 +44,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.ApplicationLifecycleEvents/ApplicationLifecycleEvents.md"
+      file: "2.ApplicationLifecycleEvents/knowledge/ApplicationLifecycleEvents.md"
       anchor: "context-started-ready-events"
     apiRelated:
       controller: "ApplicationRuntimeExperimentController"
@@ -68,7 +68,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.ApplicationLifecycleEvents/ApplicationLifecycleEvents.md"
+      file: "2.ApplicationLifecycleEvents/knowledge/ApplicationLifecycleEvents.md"
       anchor: "early-listener-registration"
     apiRelated:
       controller: ""
@@ -92,7 +92,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "3.ArgumentsAndRunners/ArgumentsAndRunners.md"
+      file: "3.ArgumentsAndRunners/knowledge/ArgumentsAndRunners.md"
       anchor: "applicationrunner-vs-commandlinerunner"
     apiRelated:
       controller: ""
@@ -116,7 +116,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "3.ArgumentsAndRunners/ArgumentsAndRunners.md"
+      file: "3.ArgumentsAndRunners/knowledge/ArgumentsAndRunners.md"
       anchor: "application-arguments-model"
     apiRelated:
       controller: "ApplicationRuntimeExperimentController"
@@ -140,7 +140,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.AvailabilityFailureExit/AvailabilityFailureExit.md"
+      file: "4.AvailabilityFailureExit/knowledge/AvailabilityFailureExit.md"
       anchor: "liveness-readiness-model"
     apiRelated:
       controller: ""
@@ -164,7 +164,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.AvailabilityFailureExit/AvailabilityFailureExit.md"
+      file: "4.AvailabilityFailureExit/knowledge/AvailabilityFailureExit.md"
       anchor: "application-exit-codes"
     apiRelated:
       controller: ""
@@ -188,7 +188,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "5.TaskExecutionScheduling/TaskExecutionScheduling.md"
+      file: "5.TaskExecutionScheduling/knowledge/TaskExecutionScheduling.md"
       anchor: "application-task-executor"
     apiRelated:
       controller: "ApplicationRuntimeExperimentController"
@@ -212,7 +212,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "6.VirtualThreads/VirtualThreads.md"
+      file: "6.VirtualThreads/knowledge/VirtualThreads.md"
       anchor: "virtual-thread-switch"
     apiRelated:
       controller: ""
@@ -236,7 +236,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "6.VirtualThreads/VirtualThreads.md"
+      file: "6.VirtualThreads/knowledge/VirtualThreads.md"
       anchor: "virtual-thread-daemon-keepalive"
     apiRelated:
       controller: ""
@@ -260,7 +260,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "7.StartupOptimization/StartupOptimization.md"
+      file: "7.StartupOptimization/knowledge/StartupOptimization.md"
       anchor: "lazy-initialization-tradeoffs"
     apiRelated:
       controller: ""
@@ -284,7 +284,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "7.StartupOptimization/StartupOptimization.md"
+      file: "7.StartupOptimization/knowledge/StartupOptimization.md"
       anchor: "application-startup-tracking"
     apiRelated:
       controller: ""
@@ -308,7 +308,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "8.RuntimeCustomization/RuntimeCustomization.md"
+      file: "8.RuntimeCustomization/knowledge/RuntimeCustomization.md"
       anchor: "property-first-customization"
     apiRelated:
       controller: ""
@@ -332,7 +332,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "9.Logging/Logging.md"
+      file: "9.Logging/knowledge/Logging.md"
       anchor: "early-logging-bootstrap"
     apiRelated:
       controller: ""
@@ -356,7 +356,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "9.Logging/Logging.md"
+      file: "9.Logging/knowledge/Logging.md"
       anchor: "spring-logging-config-files"
     apiRelated:
       controller: ""
@@ -380,7 +380,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "10.SslBundles/SslBundles.md"
+      file: "10.SslBundles/knowledge/SslBundles.md"
       anchor: "sslbundles-catalog"
     apiRelated:
       controller: ""
@@ -404,7 +404,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "10.SslBundles/SslBundles.md"
+      file: "10.SslBundles/knowledge/SslBundles.md"
       anchor: "ssl-bundle-consumers"
     apiRelated:
       controller: ""
@@ -428,7 +428,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "11.DockerCompose/DockerCompose.md"
+      file: "11.DockerCompose/knowledge/DockerCompose.md"
       anchor: "compose-discovery-lifecycle"
     apiRelated:
       controller: ""
@@ -452,7 +452,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "11.DockerCompose/DockerCompose.md"
+      file: "11.DockerCompose/knowledge/DockerCompose.md"
       anchor: "compose-mapped-ports-precedence"
     apiRelated:
       controller: ""
@@ -476,7 +476,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "12.RuntimeSynthesis/RuntimeSynthesis.md"
+      file: "12.RuntimeSynthesis/knowledge/RuntimeSynthesis.md"
       anchor: "runtime-hook-selection"
     apiRelated:
       controller: ""
@@ -500,7 +500,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "12.RuntimeSynthesis/RuntimeSynthesis.md"
+      file: "12.RuntimeSynthesis/knowledge/RuntimeSynthesis.md"
       anchor: "runtime-problem-classification"
     apiRelated:
       controller: ""

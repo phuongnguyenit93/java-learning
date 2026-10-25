@@ -1,4 +1,4 @@
-1.AutoConfigurationFoundation/AutoConfigurationFoundation.md:
+1.AutoConfigurationFoundation/knowledge/AutoConfigurationFoundation.md:
   auto-configuration-what-why:
     difficulty: BASIC
     aiGenerated: true
@@ -19,7 +19,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-2.ActivationDiscovery/ActivationDiscovery.md:
+2.ActivationDiscovery/knowledge/ActivationDiscovery.md:
   spring-boot-application-and-enable-auto-configuration:
     difficulty: BASIC
     aiGenerated: true
@@ -45,7 +45,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-3.ConditionModel/ConditionModel.md:
+3.ConditionModel/knowledge/ConditionModel.md:
   condition-model-purpose:
     difficulty: BASIC
     aiGenerated: true
@@ -76,7 +76,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-4.BackOffUserControl/BackOffUserControl.md:
+4.BackOffUserControl/knowledge/BackOffUserControl.md:
   back-off-as-design-contract:
     difficulty: BASIC
     aiGenerated: true
@@ -102,7 +102,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-5.OrderingComposition/OrderingComposition.md:
+5.OrderingComposition/knowledge/OrderingComposition.md:
   configuration-order-vs-bean-order:
     difficulty: BASIC
     aiGenerated: true
@@ -128,7 +128,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-6.ExclusionsDiagnostics/ExclusionsDiagnostics.md:
+6.ExclusionsDiagnostics/knowledge/ExclusionsDiagnostics.md:
   when-to-exclude-auto-configuration:
     difficulty: BASIC
     aiGenerated: true
@@ -154,7 +154,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-7.CustomAuthoring/CustomAuthoring.md:
+7.CustomAuthoring/knowledge/CustomAuthoring.md:
   auto-configuration-class-contract:
     difficulty: BASIC
     aiGenerated: true
@@ -185,7 +185,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-8.AutoConfigurationTesting/AutoConfigurationTesting.md:
+8.AutoConfigurationTesting/knowledge/AutoConfigurationTesting.md:
   why-focused-context-tests:
     difficulty: BASIC
     aiGenerated: true
@@ -216,7 +216,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-9.StarterSynthesis/StarterSynthesis.md:
+9.StarterSynthesis/knowledge/StarterSynthesis.md:
   starter-purpose:
     difficulty: BASIC
     aiGenerated: true

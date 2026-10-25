@@ -1,15 +1,15 @@
 # 📂 README MODULE STRUCTURE (VI)
 
 * **1.Introduction**
-    * [ImperativeProgramming](content/readme/docs/vi/menu/1.Introduction/ImperativeProgramming.md)
+    * [ImperativeProgramming](content/readme/docs/vi/menu/1.Introduction/knowledge/ImperativeProgramming.md)
 * **2.StateAndCommands**
-    * [StateAndCommands](content/readme/docs/vi/menu/2.StateAndCommands/StateAndCommands.md)
+    * [StateAndCommands](content/readme/docs/vi/menu/2.StateAndCommands/knowledge/StateAndCommands.md)
 * **3.ControlFlow**
-    * [ControlFlow](content/readme/docs/vi/menu/3.ControlFlow/ControlFlow.md)
+    * [ControlFlow](content/readme/docs/vi/menu/3.ControlFlow/knowledge/ControlFlow.md)
 * **4.ProceduralProgramming**
-    * [ProceduralProgramming](content/readme/docs/vi/menu/4.ProceduralProgramming/ProceduralProgramming.md)
+    * [ProceduralProgramming](content/readme/docs/vi/menu/4.ProceduralProgramming/knowledge/ProceduralProgramming.md)
 * **5.Tradeoffs**
-    * [Tradeoffs](content/readme/docs/vi/menu/5.Tradeoffs/Tradeoffs.md)
+    * [Tradeoffs](content/readme/docs/vi/menu/5.Tradeoffs/knowledge/Tradeoffs.md)
 
 # Học lập trình mệnh lệnh
 

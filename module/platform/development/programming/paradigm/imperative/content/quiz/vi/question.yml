@@ -45,7 +45,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.Introduction/ImperativeProgramming.md"
+      file: "1.Introduction/knowledge/ImperativeProgramming.md"
       anchor: "imperative-what"
     apiRelated:
       controller: ""
@@ -69,7 +69,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.Introduction/ImperativeProgramming.md"
+      file: "1.Introduction/knowledge/ImperativeProgramming.md"
       anchor: "imperative-why"
     apiRelated:
       controller: ""
@@ -93,7 +93,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.Introduction/ImperativeProgramming.md"
+      file: "1.Introduction/knowledge/ImperativeProgramming.md"
       anchor: "imperative-before"
     apiRelated:
       controller: ""
@@ -117,7 +117,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.Introduction/ImperativeProgramming.md"
+      file: "1.Introduction/knowledge/ImperativeProgramming.md"
       anchor: "imperative-solution"
     apiRelated:
       controller: ""
@@ -141,7 +141,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.Introduction/ImperativeProgramming.md"
+      file: "1.Introduction/knowledge/ImperativeProgramming.md"
       anchor: "imperative-boundary"
     apiRelated:
       controller: ""
@@ -165,7 +165,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.Introduction/ImperativeProgramming.md"
+      file: "1.Introduction/knowledge/ImperativeProgramming.md"
       anchor: "imperative-learning-path"
     apiRelated:
       controller: ""
@@ -189,7 +189,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.StateAndCommands/StateAndCommands.md"
+      file: "2.StateAndCommands/knowledge/StateAndCommands.md"
       anchor: "imperative-state-model"
     apiRelated:
       controller: ""
@@ -213,7 +213,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.StateAndCommands/StateAndCommands.md"
+      file: "2.StateAndCommands/knowledge/StateAndCommands.md"
       anchor: "imperative-commands-values"
     apiRelated:
       controller: ""
@@ -237,7 +237,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.StateAndCommands/StateAndCommands.md"
+      file: "2.StateAndCommands/knowledge/StateAndCommands.md"
       anchor: "imperative-assignment"
     apiRelated:
       controller: ""
@@ -261,7 +261,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.StateAndCommands/StateAndCommands.md"
+      file: "2.StateAndCommands/knowledge/StateAndCommands.md"
       anchor: "imperative-sequencing"
     apiRelated:
       controller: ""
@@ -285,7 +285,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.StateAndCommands/StateAndCommands.md"
+      file: "2.StateAndCommands/knowledge/StateAndCommands.md"
       anchor: "imperative-state-tracing"
     apiRelated:
       controller: ""
@@ -309,7 +309,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.StateAndCommands/StateAndCommands.md"
+      file: "2.StateAndCommands/knowledge/StateAndCommands.md"
       anchor: "imperative-unexpected-mutation"
     apiRelated:
       controller: ""
@@ -333,7 +333,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "3.ControlFlow/ControlFlow.md"
+      file: "3.ControlFlow/knowledge/ControlFlow.md"
       anchor: "imperative-control-purpose"
     apiRelated:
       controller: ""
@@ -357,7 +357,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "3.ControlFlow/ControlFlow.md"
+      file: "3.ControlFlow/knowledge/ControlFlow.md"
       anchor: "imperative-branch-selection"
     apiRelated:
       controller: ""
@@ -381,7 +381,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "3.ControlFlow/ControlFlow.md"
+      file: "3.ControlFlow/knowledge/ControlFlow.md"
       anchor: "imperative-repetition"
     apiRelated:
       controller: ""
@@ -405,7 +405,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "3.ControlFlow/ControlFlow.md"
+      file: "3.ControlFlow/knowledge/ControlFlow.md"
       anchor: "imperative-loop-progress"
     apiRelated:
       controller: ""
@@ -429,7 +429,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "3.ControlFlow/ControlFlow.md"
+      file: "3.ControlFlow/knowledge/ControlFlow.md"
       anchor: "imperative-termination"
     apiRelated:
       controller: ""
@@ -453,7 +453,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "3.ControlFlow/ControlFlow.md"
+      file: "3.ControlFlow/knowledge/ControlFlow.md"
       anchor: "imperative-control-trace"
     apiRelated:
       controller: ""
@@ -477,7 +477,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.ProceduralProgramming/ProceduralProgramming.md"
+      file: "4.ProceduralProgramming/knowledge/ProceduralProgramming.md"
       anchor: "imperative-procedure-purpose"
     apiRelated:
       controller: ""
@@ -501,7 +501,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.ProceduralProgramming/ProceduralProgramming.md"
+      file: "4.ProceduralProgramming/knowledge/ProceduralProgramming.md"
       anchor: "imperative-procedure-contract"
     apiRelated:
       controller: ""
@@ -525,7 +525,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.ProceduralProgramming/ProceduralProgramming.md"
+      file: "4.ProceduralProgramming/knowledge/ProceduralProgramming.md"
       anchor: "imperative-procedure-local-state"
     apiRelated:
       controller: ""
@@ -549,7 +549,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.ProceduralProgramming/ProceduralProgramming.md"
+      file: "4.ProceduralProgramming/knowledge/ProceduralProgramming.md"
       anchor: "imperative-procedure-effects"
     apiRelated:
       controller: ""
@@ -573,7 +573,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.ProceduralProgramming/ProceduralProgramming.md"
+      file: "4.ProceduralProgramming/knowledge/ProceduralProgramming.md"
       anchor: "imperative-procedure-decomposition"
     apiRelated:
       controller: ""
@@ -597,7 +597,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.ProceduralProgramming/ProceduralProgramming.md"
+      file: "4.ProceduralProgramming/knowledge/ProceduralProgramming.md"
       anchor: "imperative-procedure-limitations"
     apiRelated:
       controller: ""
@@ -621,7 +621,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "5.Tradeoffs/Tradeoffs.md"
+      file: "5.Tradeoffs/knowledge/Tradeoffs.md"
       anchor: "imperative-correctness"
     apiRelated:
       controller: ""
@@ -645,7 +645,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "5.Tradeoffs/Tradeoffs.md"
+      file: "5.Tradeoffs/knowledge/Tradeoffs.md"
       anchor: "imperative-state-risks"
     apiRelated:
       controller: ""
@@ -669,7 +669,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "5.Tradeoffs/Tradeoffs.md"
+      file: "5.Tradeoffs/knowledge/Tradeoffs.md"
       anchor: "imperative-debug-tracing"
     apiRelated:
       controller: ""
@@ -693,7 +693,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "5.Tradeoffs/Tradeoffs.md"
+      file: "5.Tradeoffs/knowledge/Tradeoffs.md"
       anchor: "imperative-control-tradeoffs"
     apiRelated:
       controller: ""
@@ -717,7 +717,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "5.Tradeoffs/Tradeoffs.md"
+      file: "5.Tradeoffs/knowledge/Tradeoffs.md"
       anchor: "imperative-declarative-contrast"
     apiRelated:
       controller: ""
@@ -741,7 +741,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "5.Tradeoffs/Tradeoffs.md"
+      file: "5.Tradeoffs/knowledge/Tradeoffs.md"
       anchor: "imperative-paradigm-bridges"
     apiRelated:
       controller: ""

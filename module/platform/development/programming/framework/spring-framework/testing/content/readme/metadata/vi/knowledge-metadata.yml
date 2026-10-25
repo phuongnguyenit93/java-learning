@@ -1,4 +1,4 @@
-1.Introduction/SpringTesting.md:
+1.Introduction/knowledge/SpringTesting.md:
   spring-testing-purpose:
     difficulty: BASIC
     aiGenerated: true
@@ -24,7 +24,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-2.TestContextFramework/TestContextFramework.md:
+2.TestContextFramework/knowledge/TestContextFramework.md:
   testcontext-framework-role:
     difficulty: BASIC
     aiGenerated: true
@@ -55,7 +55,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-3.ContextConfiguration/ContextConfiguration.md:
+3.ContextConfiguration/knowledge/ContextConfiguration.md:
   context-configuration-model:
     difficulty: BASIC
     aiGenerated: true
@@ -86,7 +86,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-4.TestFixtures/TestFixtures.md:
+4.TestFixtures/knowledge/TestFixtures.md:
   fixture-dependency-injection:
     difficulty: BASIC
     aiGenerated: true
@@ -112,7 +112,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-5.TestEnvironment/TestEnvironment.md:
+5.TestEnvironment/knowledge/TestEnvironment.md:
   active-profiles:
     difficulty: BASIC
     aiGenerated: true
@@ -143,7 +143,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-6.ContextCaching/ContextCaching.md:
+6.ContextCaching/knowledge/ContextCaching.md:
   context-cache-purpose:
     difficulty: BASIC
     aiGenerated: true
@@ -179,7 +179,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-7.TransactionalDatabaseTesting/TransactionalDatabaseTesting.md:
+7.TransactionalDatabaseTesting/knowledge/TransactionalDatabaseTesting.md:
   test-managed-transactions:
     difficulty: BASIC
     aiGenerated: true
@@ -225,7 +225,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-8.MockMvcTesting/MockMvcTesting.md:
+8.MockMvcTesting/knowledge/MockMvcTesting.md:
   mockmvc-purpose-and-model:
     difficulty: BASIC
     aiGenerated: true
@@ -266,7 +266,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-9.WebTestClientAndClientTesting/WebTestClientAndClientTesting.md:
+9.WebTestClientAndClientTesting/knowledge/WebTestClientAndClientTesting.md:
   webtestclient-purpose-and-model:
     difficulty: BASIC
     aiGenerated: true
@@ -302,7 +302,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-10.TestLifecycle/TestLifecycle.md:
+10.TestLifecycle/knowledge/TestLifecycle.md:
   test-lifecycle-callbacks:
     difficulty: INTERMEDIATE
     aiGenerated: true

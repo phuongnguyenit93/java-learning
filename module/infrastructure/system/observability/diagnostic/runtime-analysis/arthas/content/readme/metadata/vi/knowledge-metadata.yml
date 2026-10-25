@@ -1,10 +1,10 @@
-0.Preset/Definition.md:
+0.Preset/knowledge/Definition.md:
   define-arthas:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
     isImportant: false
-1.Setup/Docker.md:
+1.Setup/knowledge/Docker.md:
   docker-arthas:
     difficulty: BASIC
     aiGenerated: true
@@ -15,7 +15,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-1.Setup/Local.md:
+1.Setup/knowledge/Local.md:
   arthas-local:
     difficulty: BASIC
     aiGenerated: true
@@ -31,7 +31,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-2.Command/Command.md:
+2.Command/knowledge/Command.md:
   arthas-command:
     difficulty: BASIC
     aiGenerated: true

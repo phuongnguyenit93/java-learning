@@ -1,4 +1,4 @@
-1.SpringMvcFoundation/SpringMvcFoundation.md:
+1.SpringMvcFoundation/knowledge/SpringMvcFoundation.md:
   spring-mvc-purpose:
     difficulty: BASIC
     aiGenerated: true
@@ -24,7 +24,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-2.DispatcherServletLifecycle/DispatcherServletLifecycle.md:
+2.DispatcherServletLifecycle/knowledge/DispatcherServletLifecycle.md:
   dispatcher-servlet-front-controller:
     difficulty: BASIC
     aiGenerated: true
@@ -55,7 +55,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-3.AnnotatedControllers/AnnotatedControllers.md:
+3.AnnotatedControllers/knowledge/AnnotatedControllers.md:
   annotated-controller-model:
     difficulty: BASIC
     aiGenerated: true
@@ -81,7 +81,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-4.WebMvcFunctionalEndpoints/WebMvcFunctionalEndpoints.md:
+4.WebMvcFunctionalEndpoints/knowledge/WebMvcFunctionalEndpoints.md:
   webmvc-fn-mental-model:
     difficulty: BASIC
     aiGenerated: true
@@ -107,7 +107,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-5.MvcBindingValidation/MvcBindingValidation.md:
+5.MvcBindingValidation/knowledge/MvcBindingValidation.md:
   mvc-binding-lifecycle:
     difficulty: BASIC
     aiGenerated: true
@@ -143,7 +143,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-6.MessageConversionRepresentation/MessageConversionRepresentation.md:
+6.MessageConversionRepresentation/knowledge/MessageConversionRepresentation.md:
   http-message-converters:
     difficulty: BASIC
     aiGenerated: true
@@ -169,7 +169,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-7.ViewRenderingNavigation/ViewRenderingNavigation.md:
+7.ViewRenderingNavigation/knowledge/ViewRenderingNavigation.md:
   model-and-view:
     difficulty: BASIC
     aiGenerated: true
@@ -195,7 +195,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-8.MvcErrorHandling/MvcErrorHandling.md:
+8.MvcErrorHandling/knowledge/MvcErrorHandling.md:
   handler-exception-resolver-chain:
     difficulty: BASIC
     aiGenerated: true
@@ -231,7 +231,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-9.AsyncMvcStreaming/AsyncMvcStreaming.md:
+9.AsyncMvcStreaming/knowledge/AsyncMvcStreaming.md:
   servlet-async-lifecycle:
     difficulty: BASIC
     aiGenerated: true
@@ -262,7 +262,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-10.CrossCuttingRequestInfrastructure/CrossCuttingRequestInfrastructure.md:
+10.CrossCuttingRequestInfrastructure/knowledge/CrossCuttingRequestInfrastructure.md:
   filters-interceptors-and-placement:
     difficulty: BASIC
     aiGenerated: true
@@ -288,7 +288,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-11.WebSupportResourceDelivery/WebSupportResourceDelivery.md:
+11.WebSupportResourceDelivery/knowledge/WebSupportResourceDelivery.md:
   multipart-request-resolution:
     difficulty: BASIC
     aiGenerated: true
@@ -314,7 +314,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-12.MvcConfigurationExtension/MvcConfigurationExtension.md:
+12.MvcConfigurationExtension/knowledge/MvcConfigurationExtension.md:
   enable-web-mvc:
     difficulty: BASIC
     aiGenerated: true
@@ -360,7 +360,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-13.SynchronousHttpClients/SynchronousHttpClients.md:
+13.SynchronousHttpClients/knowledge/SynchronousHttpClients.md:
   synchronous-client-model:
     difficulty: BASIC
     aiGenerated: true
@@ -401,7 +401,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-14.HttpServiceInterfaces/HttpServiceInterfaces.md:
+14.HttpServiceInterfaces/knowledge/HttpServiceInterfaces.md:
   http-exchange-contract:
     difficulty: BASIC
     aiGenerated: true
@@ -432,7 +432,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-15.SpringWebSynthesis/SpringWebSynthesis.md:
+15.SpringWebSynthesis/knowledge/SpringWebSynthesis.md:
   mvc-request-end-to-end:
     difficulty: BASIC
     aiGenerated: true

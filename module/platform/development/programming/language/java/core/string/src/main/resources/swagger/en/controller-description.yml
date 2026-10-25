@@ -5,32 +5,32 @@ EncodingController:
     <p><code>roundTrip()</code> uses UTF-8 on both sides; <code>wrongCharset()</code> intentionally decodes UTF-8 bytes as ISO-8859-1 to produce mojibake. Together they separate byte transport from byte interpretation.</p>
     <p>Do not conclude that a Java <code>String</code> intrinsically “has UTF-8”. Charset enters when text crosses a byte-oriented boundary.</p>
   readmeRelated:
-    file: 10.Encoding/Encoding.md
+    file: 10.Encoding/knowledge/Encoding.md
 RegexController:
   description: |-
     <h2>Regular Expressions</h2>
     <p>These APIs demonstrate two different regex concerns: extracting structured matches with <code>Pattern</code>/<code>Matcher</code>, and observing backtracking cost for a risky pattern shape.</p>
     <p><code>groups()</code> reads captures only after a successful match. <code>backtracking()</code> uses a deliberately bounded input; its timing is illustrative evidence, not a benchmark or SLA.</p>
   readmeRelated:
-    file: 11.Regex/Regex.md
+    file: 11.Regex/knowledge/Regex.md
 StringConcatController:
   description: |-
     <h2>String Concatenation and Construction</h2>
     <p>The experiment compares repeated immutable String concatenation with one <code>StringBuilder</code> while constructing the same <code>"0123"</code> result.</p>
     <p>Intermediate identity hashes are observation aids only. They are neither allocation counters nor absolute proof of the number of allocated String objects.</p>
   readmeRelated:
-    file: 5.Concatenation/Concatenation.md
+    file: 5.Concatenation/knowledge/Concatenation.md
 StringPoolController:
   description: |-
     <h2>String Pool and Reference Identity</h2>
     <p>The experiment places a String literal, a compile-time constant concatenation, <code>new String(...)</code>, and <code>intern()</code> side by side to separate content equality from reference identity.</p>
     <p>The endpoint deliberately uses <code>==</code> to observe identity. Application text comparison should still use <code>equals()</code> for content.</p>
   readmeRelated:
-    file: 2.StringPool/StringPool.md
+    file: 2.StringPool/knowledge/StringPool.md
 UnicodeController:
   description: |-
     <h2>Unicode in String</h2>
     <p>These APIs demonstrate two separate issues: a supplementary code point may occupy two UTF-16 code units, and canonically equivalent Strings may contain different code-point sequences.</p>
     <p><code>charVsCodePoint()</code> exposes counts/code points; <code>normalization()</code> compares equality before and after NFC. Do not infer Unicode equality from visual rendering alone.</p>
   readmeRelated:
-    file: 9.UnicodeCodePoint/UnicodeCodePoint.md
+    file: 9.UnicodeCodePoint/knowledge/UnicodeCodePoint.md

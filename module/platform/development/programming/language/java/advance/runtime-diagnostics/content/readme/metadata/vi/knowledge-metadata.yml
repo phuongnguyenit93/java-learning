@@ -1,4 +1,4 @@
-1.MentalModel/RuntimeDiagnostics.md:
+1.MentalModel/knowledge/RuntimeDiagnostics.md:
   runtime-diagnostics-purpose:
     difficulty: BASIC
     aiGenerated: true
@@ -24,7 +24,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-2.JdkDiagnosticTools/JdkDiagnosticTools.md:
+2.JdkDiagnosticTools/knowledge/JdkDiagnosticTools.md:
   target-jvm-identification:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -60,7 +60,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-3.ThreadDiagnostics/ThreadDiagnostics.md:
+3.ThreadDiagnostics/knowledge/ThreadDiagnostics.md:
   thread-diagnostics-purpose:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -96,7 +96,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-4.HeapGcDiagnostics/HeapGcDiagnostics.md:
+4.HeapGcDiagnostics/knowledge/HeapGcDiagnostics.md:
   heap-gc-diagnostics-purpose:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -137,7 +137,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-5.NativeMemoryTracking/NativeMemoryTracking.md:
+5.NativeMemoryTracking/knowledge/NativeMemoryTracking.md:
   native-memory-diagnostics-purpose:
     difficulty: ADVANCED
     aiGenerated: true
@@ -173,7 +173,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-6.JFR/JFR.md:
+6.JFR/knowledge/JFR.md:
   jfr-diagnostics-purpose:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -214,7 +214,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-7.ManagementJMX/ManagementJMX.md:
+7.ManagementJMX/knowledge/ManagementJMX.md:
   java-management-purpose:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -255,7 +255,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-8.CrashPostmortemDiagnostics/CrashPostmortemDiagnostics.md:
+8.CrashPostmortemDiagnostics/knowledge/CrashPostmortemDiagnostics.md:
   postmortem-diagnostics-purpose:
     difficulty: ADVANCED
     aiGenerated: true
@@ -291,7 +291,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-9.TroubleshootingWorkflow/TroubleshootingWorkflow.md:
+9.TroubleshootingWorkflow/knowledge/TroubleshootingWorkflow.md:
   troubleshooting-workflow-purpose:
     difficulty: INTERMEDIATE
     aiGenerated: true

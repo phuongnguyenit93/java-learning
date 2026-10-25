@@ -36,7 +36,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.CachePurpose/CachePurpose.md"
+      file: "1.CachePurpose/knowledge/CachePurpose.md"
       anchor: "spring-cache-abstraction-boundary"
     apiRelated:
       controller: ""
@@ -49,7 +49,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.CacheAbstraction/CacheAbstraction.md"
+      file: "2.CacheAbstraction/knowledge/CacheAbstraction.md"
       anchor: "cache-manager"
     apiRelated:
       controller: ""
@@ -62,7 +62,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.KeyAndResolution/KeyAndResolution.md"
+      file: "4.KeyAndResolution/knowledge/KeyAndResolution.md"
       anchor: "cache-key-design-pitfalls"
     apiRelated:
       controller: "CacheKeyController"
@@ -75,7 +75,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "6.InterceptionBoundary/InterceptionBoundary.md"
+      file: "6.InterceptionBoundary/knowledge/InterceptionBoundary.md"
       anchor: "self-invocation"
     apiRelated:
       controller: "CacheInterceptionController"
@@ -88,7 +88,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "7.ConcurrencyAndAsync/ConcurrencyAndAsync.md"
+      file: "7.ConcurrencyAndAsync/knowledge/ConcurrencyAndAsync.md"
       anchor: "cacheable-sync"
     apiRelated:
       controller: "CacheConcurrencyController"
@@ -101,7 +101,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "7.ConcurrencyAndAsync/ConcurrencyAndAsync.md"
+      file: "7.ConcurrencyAndAsync/knowledge/ConcurrencyAndAsync.md"
       anchor: "async-provider-capability"
     apiRelated:
       controller: ""
@@ -114,7 +114,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "9.FailureAndTransaction/FailureAndTransaction.md"
+      file: "9.FailureAndTransaction/knowledge/FailureAndTransaction.md"
       anchor: "immediate-cache-operations"
     apiRelated:
       controller: ""
@@ -127,7 +127,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "10.CacheStrategy/CacheStrategy.md"
+      file: "10.CacheStrategy/knowledge/CacheStrategy.md"
       anchor: "provider-selection"
     apiRelated:
       controller: ""

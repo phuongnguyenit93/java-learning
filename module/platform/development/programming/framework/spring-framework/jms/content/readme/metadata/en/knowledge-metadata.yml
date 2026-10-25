@@ -1,4 +1,4 @@
-1.Foundations/SpringJmsFoundations.md:
+1.Foundations/knowledge/SpringJmsFoundations.md:
   jms-purpose:
     difficulty: BASIC
     aiGenerated: true
@@ -24,7 +24,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-2.TemplateAccess/JmsTemplateAccess.md:
+2.TemplateAccess/knowledge/JmsTemplateAccess.md:
   jms-template-core-roles:
     difficulty: BASIC
     aiGenerated: true
@@ -65,7 +65,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-3.DestinationsConversionMetadata/DestinationsConversionMetadata.md:
+3.DestinationsConversionMetadata/knowledge/DestinationsConversionMetadata.md:
   jms-destination-model:
     difficulty: BASIC
     aiGenerated: true
@@ -96,7 +96,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-4.ListenerContainer/ListenerContainer.md:
+4.ListenerContainer/knowledge/ListenerContainer.md:
   jms-mdp-model:
     difficulty: BASIC
     aiGenerated: true
@@ -127,7 +127,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-5.AnnotationEndpoints/AnnotationEndpoints.md:
+5.AnnotationEndpoints/knowledge/AnnotationEndpoints.md:
   jms-enable-jms:
     difficulty: BASIC
     aiGenerated: true
@@ -163,7 +163,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-6.TransactionsDelivery/TransactionsDelivery.md:
+6.TransactionsDelivery/knowledge/TransactionsDelivery.md:
   jms-acknowledgement-model:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -194,7 +194,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-7.ConcurrencyRecoveryLifecycle/ConcurrencyRecoveryLifecycle.md:
+7.ConcurrencyRecoveryLifecycle/knowledge/ConcurrencyRecoveryLifecycle.md:
   jms-listener-concurrency:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -225,7 +225,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-8.ProductionReadiness/ProductionReadiness.md:
+8.ProductionReadiness/knowledge/ProductionReadiness.md:
   jms-observability-61:
     difficulty: INTERMEDIATE
     aiGenerated: true

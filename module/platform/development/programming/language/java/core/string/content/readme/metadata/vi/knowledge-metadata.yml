@@ -1,4 +1,4 @@
-1.StringOverview/StringOverview.md:
+1.StringOverview/knowledge/StringOverview.md:
   string-overview-001:
     difficulty: BASIC
     aiGenerated: true
@@ -39,7 +39,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-2.StringCreation/StringCreation.md:
+2.StringCreation/knowledge/StringCreation.md:
   string-creation-001:
     difficulty: BASIC
     aiGenerated: true
@@ -80,7 +80,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-3.UnicodeUtf16/UnicodeUtf16.md:
+3.UnicodeUtf16/knowledge/UnicodeUtf16.md:
   unicode-utf16-001:
     difficulty: BASIC
     aiGenerated: true
@@ -121,7 +121,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-4.StringImmutability/StringImmutability.md:
+4.StringImmutability/knowledge/StringImmutability.md:
   string-immutability-001:
     difficulty: BASIC
     aiGenerated: true
@@ -162,7 +162,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-5.StringPoolIntern/StringPoolIntern.md:
+5.StringPoolIntern/knowledge/StringPoolIntern.md:
   string-pool-intern-001:
     difficulty: BASIC
     aiGenerated: true
@@ -203,7 +203,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-6.StringAccess/StringAccess.md:
+6.StringAccess/knowledge/StringAccess.md:
   string-access-001:
     difficulty: BASIC
     aiGenerated: true
@@ -244,7 +244,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-7.StringExtraction/StringExtraction.md:
+7.StringExtraction/knowledge/StringExtraction.md:
   string-extraction-001:
     difficulty: BASIC
     aiGenerated: true
@@ -285,7 +285,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-8.StringComparison/StringComparison.md:
+8.StringComparison/knowledge/StringComparison.md:
   string-comparison-001:
     difficulty: BASIC
     aiGenerated: true
@@ -331,7 +331,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-9.StringSearch/StringSearch.md:
+9.StringSearch/knowledge/StringSearch.md:
   string-search-001:
     difficulty: BASIC
     aiGenerated: true
@@ -377,7 +377,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-10.StringWhitespace/StringWhitespace.md:
+10.StringWhitespace/knowledge/StringWhitespace.md:
   string-whitespace-001:
     difficulty: BASIC
     aiGenerated: true
@@ -418,7 +418,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-11.StringTransformation/StringTransformation.md:
+11.StringTransformation/knowledge/StringTransformation.md:
   string-transformation-001:
     difficulty: BASIC
     aiGenerated: true
@@ -459,7 +459,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-12.CaseNormalization/CaseNormalization.md:
+12.CaseNormalization/knowledge/CaseNormalization.md:
   case-normalization-001:
     difficulty: BASIC
     aiGenerated: true
@@ -500,7 +500,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-13.StringConcatenation/StringConcatenation.md:
+13.StringConcatenation/knowledge/StringConcatenation.md:
   string-concatenation-001:
     difficulty: BASIC
     aiGenerated: true
@@ -541,7 +541,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-14.StringBuilder/StringBuilder.md:
+14.StringBuilder/knowledge/StringBuilder.md:
   string-builder-001:
     difficulty: BASIC
     aiGenerated: true
@@ -602,7 +602,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-15.StringBuffer/StringBuffer.md:
+15.StringBuffer/knowledge/StringBuffer.md:
   string-buffer-001:
     difficulty: BASIC
     aiGenerated: true
@@ -638,7 +638,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-16.StringJoining/StringJoining.md:
+16.StringJoining/knowledge/StringJoining.md:
   string-joining-001:
     difficulty: BASIC
     aiGenerated: true
@@ -674,7 +674,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-17.StringSplitting/StringSplitting.md:
+17.StringSplitting/knowledge/StringSplitting.md:
   string-splitting-001:
     difficulty: BASIC
     aiGenerated: true
@@ -720,7 +720,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-18.RegularExpressions/RegularExpressions.md:
+18.RegularExpressions/knowledge/RegularExpressions.md:
   regular-expressions-001:
     difficulty: BASIC
     aiGenerated: true
@@ -766,7 +766,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-19.RegexReplacement/RegexReplacement.md:
+19.RegexReplacement/knowledge/RegexReplacement.md:
   regex-replacement-001:
     difficulty: BASIC
     aiGenerated: true
@@ -807,7 +807,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-20.StringFormatting/StringFormatting.md:
+20.StringFormatting/knowledge/StringFormatting.md:
   string-formatting-001:
     difficulty: BASIC
     aiGenerated: true
@@ -853,7 +853,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-21.TextBlocks/TextBlocks.md:
+21.TextBlocks/knowledge/TextBlocks.md:
   text-blocks-001:
     difficulty: BASIC
     aiGenerated: true
@@ -899,7 +899,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-22.StringLinesStreams/StringLinesStreams.md:
+22.StringLinesStreams/knowledge/StringLinesStreams.md:
   string-lines-streams-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -940,7 +940,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-23.StringEncoding/StringEncoding.md:
+23.StringEncoding/knowledge/StringEncoding.md:
   string-encoding-001:
     difficulty: BASIC
     aiGenerated: true
@@ -986,7 +986,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-24.ValueConversion/ValueConversion.md:
+24.ValueConversion/knowledge/ValueConversion.md:
   value-conversion-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -1027,7 +1027,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-25.StringCollections/StringCollections.md:
+25.StringCollections/knowledge/StringCollections.md:
   string-collections-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -1063,7 +1063,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-26.StringInternals/StringInternals.md:
+26.StringInternals/knowledge/StringInternals.md:
   string-internals-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -1099,7 +1099,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-27.StringPerformance/StringPerformance.md:
+27.StringPerformance/knowledge/StringPerformance.md:
   string-performance-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -1140,7 +1140,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-28.StringApiDesign/StringApiDesign.md:
+28.StringApiDesign/knowledge/StringApiDesign.md:
   string-api-design-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -1181,7 +1181,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-29.StringTesting/StringTesting.md:
+29.StringTesting/knowledge/StringTesting.md:
   string-testing-001:
     difficulty: BASIC
     aiGenerated: true
@@ -1227,7 +1227,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-30.StringPractice/StringPractice.md:
+30.StringPractice/knowledge/StringPractice.md:
   string-practice-001:
     difficulty: ADVANCED
     aiGenerated: true

@@ -58,7 +58,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.Introduction/SpringTesting.md"
+      file: "1.Introduction/knowledge/SpringTesting.md"
       anchor: "test-scope-ladder"
     apiRelated:
       controller: ""
@@ -83,7 +83,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.TestContextFramework/TestContextFramework.md"
+      file: "2.TestContextFramework/knowledge/TestContextFramework.md"
       anchor: "testcontext-core-abstractions"
     apiRelated:
       controller: ""
@@ -108,7 +108,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "3.ContextConfiguration/ContextConfiguration.md"
+      file: "3.ContextConfiguration/knowledge/ContextConfiguration.md"
       anchor: "context-configuration-model"
     apiRelated:
       controller: ""
@@ -133,7 +133,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.TestFixtures/TestFixtures.md"
+      file: "4.TestFixtures/knowledge/TestFixtures.md"
       anchor: "test-instance-and-constructor-injection"
     apiRelated:
       controller: ""
@@ -158,7 +158,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "5.TestEnvironment/TestEnvironment.md"
+      file: "5.TestEnvironment/knowledge/TestEnvironment.md"
       anchor: "environment-inheritance-and-cache-identity"
     apiRelated:
       controller: ""
@@ -183,7 +183,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "6.ContextCaching/ContextCaching.md"
+      file: "6.ContextCaching/knowledge/ContextCaching.md"
       anchor: "context-failure-threshold"
     apiRelated:
       controller: ""
@@ -208,7 +208,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "7.TransactionalDatabaseTesting/TransactionalDatabaseTesting.md"
+      file: "7.TransactionalDatabaseTesting/knowledge/TransactionalDatabaseTesting.md"
       anchor: "transaction-testing-pitfalls"
     apiRelated:
       controller: ""
@@ -233,7 +233,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "8.MockMvcTesting/MockMvcTesting.md"
+      file: "8.MockMvcTesting/knowledge/MockMvcTesting.md"
       anchor: "mockmvc-setup-strategies"
     apiRelated:
       controller: ""
@@ -258,7 +258,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "9.WebTestClientAndClientTesting/WebTestClientAndClientTesting.md"
+      file: "9.WebTestClientAndClientTesting/knowledge/WebTestClientAndClientTesting.md"
       anchor: "mockmvc-webtestclient-binding"
     apiRelated:
       controller: ""
@@ -283,7 +283,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "10.TestLifecycle/TestLifecycle.md"
+      file: "10.TestLifecycle/knowledge/TestLifecycle.md"
       anchor: "testexecutionlistener-ordering"
     apiRelated:
       controller: ""

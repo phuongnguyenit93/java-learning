@@ -35,7 +35,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "13.SelfInvocation/SelfInvocation.md"
+      file: "13.SelfInvocation/knowledge/SelfInvocation.md"
       anchor: "self-invocation-remediation"
     apiRelated:
       controller: "SelfInvocationController"
@@ -48,7 +48,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.Pointcut/Pointcut.md"
+      file: "4.Pointcut/knowledge/Pointcut.md"
       anchor: "pointcut-designators-and-composition"
     apiRelated:
       controller: "PointcutController"
@@ -61,7 +61,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "6.Advice/Advice.md"
+      file: "6.Advice/knowledge/Advice.md"
       anchor: "advice-semantics"
     apiRelated:
       controller: ""
@@ -74,7 +74,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "8.Ordering/Ordering.md"
+      file: "8.Ordering/knowledge/Ordering.md"
       anchor: "ordering-mental-model"
     apiRelated:
       controller: "OrderingController"
@@ -87,7 +87,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "11.Advisor/Advisor.md"
+      file: "11.Advisor/knowledge/Advisor.md"
       anchor: "advisor-mental-model"
     apiRelated:
       controller: "AdvisorController"
@@ -100,7 +100,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "9.Introduction/Introduction.md"
+      file: "9.Introduction/knowledge/Introduction.md"
       anchor: "introduction-mental-model"
     apiRelated:
       controller: "IntroductionController"
@@ -113,7 +113,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "14.Patterns/Patterns.md"
+      file: "14.Patterns/knowledge/Patterns.md"
       anchor: "aop-design-tradeoffs"
     apiRelated:
       controller: ""
@@ -126,7 +126,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "15.RuntimeBoundary/RuntimeBoundary.md"
+      file: "15.RuntimeBoundary/knowledge/RuntimeBoundary.md"
       anchor: "spring-aop-vs-aspectj"
     apiRelated:
       controller: "RuntimeBoundaryController"

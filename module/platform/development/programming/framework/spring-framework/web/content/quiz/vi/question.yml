@@ -49,7 +49,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.DispatcherServletLifecycle/DispatcherServletLifecycle.md", anchor: "handler-mapping-and-execution-chain"}
+    readmeRelated: {file: "2.DispatcherServletLifecycle/knowledge/DispatcherServletLifecycle.md", anchor: "handler-mapping-and-execution-chain"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: annotated-functional-coexistence
@@ -62,7 +62,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.WebMvcFunctionalEndpoints/WebMvcFunctionalEndpoints.md", anchor: "annotated-and-functional-coexistence"}
+    readmeRelated: {file: "4.WebMvcFunctionalEndpoints/knowledge/WebMvcFunctionalEndpoints.md", anchor: "annotated-and-functional-coexistence"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: mvc-validation-exception-paths
@@ -75,7 +75,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.MvcBindingValidation/MvcBindingValidation.md", anchor: "validation-exception-paths"}
+    readmeRelated: {file: "5.MvcBindingValidation/knowledge/MvcBindingValidation.md", anchor: "validation-exception-paths"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: mvc-406-vs-415
@@ -88,7 +88,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.MessageConversionRepresentation/MessageConversionRepresentation.md", anchor: "content-negotiation-and-media-types"}
+    readmeRelated: {file: "6.MessageConversionRepresentation/knowledge/MessageConversionRepresentation.md", anchor: "content-negotiation-and-media-types"}
     apiRelated: {controller: "MvcInputExperimentController", methodSignature: "validatedBody(CreateOrderRequest)"}
 
   - id: mvc-exception-advice-resolution
@@ -101,7 +101,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.MvcErrorHandling/MvcErrorHandling.md", anchor: "exception-handler-and-controller-advice"}
+    readmeRelated: {file: "8.MvcErrorHandling/knowledge/MvcErrorHandling.md", anchor: "exception-handler-and-controller-advice"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: async-callable-runtime-evidence
@@ -114,7 +114,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.AsyncMvcStreaming/AsyncMvcStreaming.md", anchor: "servlet-async-lifecycle"}
+    readmeRelated: {file: "9.AsyncMvcStreaming/knowledge/AsyncMvcStreaming.md", anchor: "servlet-async-lifecycle"}
     apiRelated: {controller: "AsyncMvcExperimentController", methodSignature: "callable()"}
 
   - id: filter-interceptor-placement
@@ -127,7 +127,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "10.CrossCuttingRequestInfrastructure/CrossCuttingRequestInfrastructure.md", anchor: "filters-interceptors-and-placement"}
+    readmeRelated: {file: "10.CrossCuttingRequestInfrastructure/knowledge/CrossCuttingRequestInfrastructure.md", anchor: "filters-interceptors-and-placement"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: conditional-get-revalidation
@@ -140,7 +140,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "11.WebSupportResourceDelivery/WebSupportResourceDelivery.md", anchor: "conditional-requests-and-http-caching"}
+    readmeRelated: {file: "11.WebSupportResourceDelivery/knowledge/WebSupportResourceDelivery.md", anchor: "conditional-requests-and-http-caching"}
     apiRelated: {controller: "ConditionalCacheExperimentController", methodSignature: "conditional()"}
 
   - id: rest-client-retrieve-vs-exchange
@@ -153,7 +153,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "13.SynchronousHttpClients/SynchronousHttpClients.md", anchor: "status-and-error-handling"}
+    readmeRelated: {file: "13.SynchronousHttpClients/knowledge/SynchronousHttpClients.md", anchor: "status-and-error-handling"}
     apiRelated: {controller: "HttpClientExperimentController", methodSignature: "restClientStatus()"}
 
   - id: http-service-adapter-independence
@@ -166,5 +166,5 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "14.HttpServiceInterfaces/HttpServiceInterfaces.md", anchor: "synchronous-http-client-adapters"}
+    readmeRelated: {file: "14.HttpServiceInterfaces/knowledge/HttpServiceInterfaces.md", anchor: "synchronous-http-client-adapters"}
     apiRelated: {controller: "HttpClientExperimentController", methodSignature: "httpServiceAdapters(String)"}

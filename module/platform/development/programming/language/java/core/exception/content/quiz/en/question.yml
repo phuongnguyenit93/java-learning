@@ -49,7 +49,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.ExceptionPurpose/ExceptionPurpose.md", anchor: "exception-purpose"}
+    readmeRelated: {file: "1.ExceptionPurpose/knowledge/ExceptionPurpose.md", anchor: "exception-purpose"}
     apiRelated: {controller: "PropagationController", methodSignature: "propagate()"}
 
   - id: exception-throwable-hierarchy
@@ -62,7 +62,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.ThrowableModel/ThrowableModel.md", anchor: "throwable-hierarchy"}
+    readmeRelated: {file: "2.ThrowableModel/knowledge/ThrowableModel.md", anchor: "throwable-hierarchy"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: exception-error-vs-exception
@@ -75,7 +75,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.ThrowableModel/ThrowableModel.md", anchor: "error-vs-exception"}
+    readmeRelated: {file: "2.ThrowableModel/knowledge/ThrowableModel.md", anchor: "error-vs-exception"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: exception-stack-trace-cause
@@ -88,7 +88,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.ThrowableModel/ThrowableModel.md", anchor: "stack-trace-cause"}
+    readmeRelated: {file: "2.ThrowableModel/knowledge/ThrowableModel.md", anchor: "stack-trace-cause"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: exception-checked-contract
@@ -101,7 +101,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.CheckedUncheckedContracts/CheckedUncheckedContracts.md", anchor: "checked-exception"}
+    readmeRelated: {file: "3.CheckedUncheckedContracts/knowledge/CheckedUncheckedContracts.md", anchor: "checked-exception"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: exception-unchecked-rule
@@ -114,7 +114,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.CheckedUncheckedContracts/CheckedUncheckedContracts.md", anchor: "unchecked-exception"}
+    readmeRelated: {file: "3.CheckedUncheckedContracts/knowledge/CheckedUncheckedContracts.md", anchor: "unchecked-exception"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: exception-checked-vs-unchecked-design
@@ -127,7 +127,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.CheckedUncheckedContracts/CheckedUncheckedContracts.md", anchor: "checked-vs-unchecked-design"}
+    readmeRelated: {file: "3.CheckedUncheckedContracts/knowledge/CheckedUncheckedContracts.md", anchor: "checked-vs-unchecked-design"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: exception-throw-statement
@@ -140,7 +140,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.ThrowingPropagation/ThrowingPropagation.md", anchor: "throw-statement"}
+    readmeRelated: {file: "4.ThrowingPropagation/knowledge/ThrowingPropagation.md", anchor: "throw-statement"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: exception-throws-clause
@@ -153,7 +153,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.ThrowingPropagation/ThrowingPropagation.md", anchor: "throws-clause"}
+    readmeRelated: {file: "4.ThrowingPropagation/knowledge/ThrowingPropagation.md", anchor: "throws-clause"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: exception-propagation
@@ -166,7 +166,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.ThrowingPropagation/ThrowingPropagation.md", anchor: "exception-propagation"}
+    readmeRelated: {file: "4.ThrowingPropagation/knowledge/ThrowingPropagation.md", anchor: "exception-propagation"}
     apiRelated: {controller: "PropagationController", methodSignature: "propagate()"}
 
   - id: exception-catch-selection
@@ -179,7 +179,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.ThrowingPropagation/ThrowingPropagation.md", anchor: "catch-selection"}
+    readmeRelated: {file: "4.ThrowingPropagation/knowledge/ThrowingPropagation.md", anchor: "catch-selection"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: exception-chaining
@@ -192,7 +192,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.ThrowingPropagation/ThrowingPropagation.md", anchor: "exception-chaining"}
+    readmeRelated: {file: "4.ThrowingPropagation/knowledge/ThrowingPropagation.md", anchor: "exception-chaining"}
     apiRelated: {controller: "PropagationController", methodSignature: "wrapCause()"}
 
   - id: exception-lost-cause
@@ -205,7 +205,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.ThrowingPropagation/ThrowingPropagation.md", anchor: "lost-cause-pitfall"}
+    readmeRelated: {file: "4.ThrowingPropagation/knowledge/ThrowingPropagation.md", anchor: "lost-cause-pitfall"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: exception-precise-rethrow
@@ -218,7 +218,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.ThrowingPropagation/ThrowingPropagation.md", anchor: "precise-rethrow"}
+    readmeRelated: {file: "4.ThrowingPropagation/knowledge/ThrowingPropagation.md", anchor: "precise-rethrow"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: exception-override-throws
@@ -231,7 +231,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.ThrowingPropagation/ThrowingPropagation.md", anchor: "override-throws-rules"}
+    readmeRelated: {file: "4.ThrowingPropagation/knowledge/ThrowingPropagation.md", anchor: "override-throws-rules"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: exception-checked-narrowing
@@ -244,7 +244,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.ThrowingPropagation/ThrowingPropagation.md", anchor: "checked-exception-narrowing"}
+    readmeRelated: {file: "4.ThrowingPropagation/knowledge/ThrowingPropagation.md", anchor: "checked-exception-narrowing"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: exception-try-catch-flow
@@ -257,7 +257,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.HandlingCleanup/HandlingCleanup.md", anchor: "try-catch-flow"}
+    readmeRelated: {file: "5.HandlingCleanup/knowledge/HandlingCleanup.md", anchor: "try-catch-flow"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: exception-multi-catch
@@ -270,7 +270,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.HandlingCleanup/HandlingCleanup.md", anchor: "multi-catch"}
+    readmeRelated: {file: "5.HandlingCleanup/knowledge/HandlingCleanup.md", anchor: "multi-catch"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: exception-finally-semantics
@@ -283,7 +283,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.HandlingCleanup/HandlingCleanup.md", anchor: "finally-semantics"}
+    readmeRelated: {file: "5.HandlingCleanup/knowledge/HandlingCleanup.md", anchor: "finally-semantics"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: exception-return-finally
@@ -296,7 +296,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.HandlingCleanup/HandlingCleanup.md", anchor: "return-finally"}
+    readmeRelated: {file: "5.HandlingCleanup/knowledge/HandlingCleanup.md", anchor: "return-finally"}
     apiRelated: {controller: "FinallyController", methodSignature: "returnInteraction()"}
 
   - id: exception-autocloseable
@@ -309,7 +309,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.ResourceSafeFailure/ResourceSafeFailure.md", anchor: "autocloseable"}
+    readmeRelated: {file: "6.ResourceSafeFailure/knowledge/ResourceSafeFailure.md", anchor: "autocloseable"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: exception-resource-close-order
@@ -322,7 +322,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.ResourceSafeFailure/ResourceSafeFailure.md", anchor: "resource-close-order"}
+    readmeRelated: {file: "6.ResourceSafeFailure/knowledge/ResourceSafeFailure.md", anchor: "resource-close-order"}
     apiRelated: {controller: "ResourceController", methodSignature: "closeOrder()"}
 
   - id: exception-twr-vs-finally
@@ -335,7 +335,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.ResourceSafeFailure/ResourceSafeFailure.md", anchor: "twr-vs-finally"}
+    readmeRelated: {file: "6.ResourceSafeFailure/knowledge/ResourceSafeFailure.md", anchor: "twr-vs-finally"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: exception-primary-suppressed
@@ -348,7 +348,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.ResourceSafeFailure/ResourceSafeFailure.md", anchor: "primary-vs-suppressed"}
+    readmeRelated: {file: "6.ResourceSafeFailure/knowledge/ResourceSafeFailure.md", anchor: "primary-vs-suppressed"}
     apiRelated: {controller: "ResourceController", methodSignature: "suppressed()"}
 
   - id: exception-get-suppressed
@@ -361,7 +361,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.ResourceSafeFailure/ResourceSafeFailure.md", anchor: "get-suppressed"}
+    readmeRelated: {file: "6.ResourceSafeFailure/knowledge/ResourceSafeFailure.md", anchor: "get-suppressed"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: exception-close-failure
@@ -374,7 +374,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.ResourceSafeFailure/ResourceSafeFailure.md", anchor: "close-failure"}
+    readmeRelated: {file: "6.ResourceSafeFailure/knowledge/ResourceSafeFailure.md", anchor: "close-failure"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: exception-effective-final-resource
@@ -387,7 +387,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.ResourceSafeFailure/ResourceSafeFailure.md", anchor: "effective-final-resource"}
+    readmeRelated: {file: "6.ResourceSafeFailure/knowledge/ResourceSafeFailure.md", anchor: "effective-final-resource"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: exception-custom-purpose
@@ -400,7 +400,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.CustomExceptionsContext/CustomExceptionsContext.md", anchor: "custom-exception-purpose"}
+    readmeRelated: {file: "7.CustomExceptionsContext/knowledge/CustomExceptionsContext.md", anchor: "custom-exception-purpose"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: exception-custom-context
@@ -413,7 +413,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.CustomExceptionsContext/CustomExceptionsContext.md", anchor: "exception-context"}
+    readmeRelated: {file: "7.CustomExceptionsContext/knowledge/CustomExceptionsContext.md", anchor: "exception-context"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: exception-hierarchy-design
@@ -426,7 +426,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.CustomExceptionsContext/CustomExceptionsContext.md", anchor: "exception-hierarchy-design"}
+    readmeRelated: {file: "7.CustomExceptionsContext/knowledge/CustomExceptionsContext.md", anchor: "exception-hierarchy-design"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: exception-boundary-translation
@@ -439,7 +439,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.ExceptionBoundaryDesign/ExceptionBoundaryDesign.md", anchor: "exception-boundaries"}
+    readmeRelated: {file: "8.ExceptionBoundaryDesign/knowledge/ExceptionBoundaryDesign.md", anchor: "exception-boundaries"}
     apiRelated: {controller: "ExceptionDesignController", methodSignature: "translateBoundary()"}
 
   - id: exception-do-not-swallow
@@ -452,7 +452,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.ExceptionBoundaryDesign/ExceptionBoundaryDesign.md", anchor: "do-not-swallow"}
+    readmeRelated: {file: "8.ExceptionBoundaryDesign/knowledge/ExceptionBoundaryDesign.md", anchor: "do-not-swallow"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: exception-logging-boundary
@@ -465,7 +465,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.ExceptionBoundaryDesign/ExceptionBoundaryDesign.md", anchor: "logging-boundary"}
+    readmeRelated: {file: "8.ExceptionBoundaryDesign/knowledge/ExceptionBoundaryDesign.md", anchor: "logging-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: exception-as-control-flow
@@ -478,7 +478,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.ExceptionBoundaryDesign/ExceptionBoundaryDesign.md", anchor: "exception-as-control-flow"}
+    readmeRelated: {file: "8.ExceptionBoundaryDesign/knowledge/ExceptionBoundaryDesign.md", anchor: "exception-as-control-flow"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: exception-cleanup-recovery
@@ -491,7 +491,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.ExceptionBoundaryDesign/ExceptionBoundaryDesign.md", anchor: "cleanup-and-recovery"}
+    readmeRelated: {file: "8.ExceptionBoundaryDesign/knowledge/ExceptionBoundaryDesign.md", anchor: "cleanup-and-recovery"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: exception-synthesis
@@ -504,5 +504,5 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.ExceptionSynthesis/ExceptionSynthesis.md", anchor: "exception-synthesis"}
+    readmeRelated: {file: "9.ExceptionSynthesis/knowledge/ExceptionSynthesis.md", anchor: "exception-synthesis"}
     apiRelated: {controller: "", methodSignature: ""}

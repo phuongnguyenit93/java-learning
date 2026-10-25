@@ -35,7 +35,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.Introduction/Introduction.md"
+      file: "1.Introduction/knowledge/Introduction.md"
       anchor: "web-runtime-boundaries"
     apiRelated:
       controller: ""
@@ -48,7 +48,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.WebApplicationType/WebApplicationType.md"
+      file: "2.WebApplicationType/knowledge/WebApplicationType.md"
       anchor: "servlet-reactive-precedence"
     apiRelated:
       controller: ""
@@ -61,7 +61,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "3.EmbeddedServerModel/EmbeddedServerModel.md"
+      file: "3.EmbeddedServerModel/knowledge/EmbeddedServerModel.md"
       anchor: "web-server-context-startup"
     apiRelated:
       controller: "WebRuntimeExperimentController"
@@ -74,7 +74,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.ServletServerAutoConfiguration/ServletServerAutoConfiguration.md"
+      file: "4.ServletServerAutoConfiguration/knowledge/ServletServerAutoConfiguration.md"
       anchor: "servlet-server-backoff"
     apiRelated:
       controller: ""
@@ -87,7 +87,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "5.ReactiveServerAutoConfiguration/ReactiveServerAutoConfiguration.md"
+      file: "5.ReactiveServerAutoConfiguration/knowledge/ReactiveServerAutoConfiguration.md"
       anchor: "reactive-server-webflux-boundary"
     apiRelated:
       controller: ""
@@ -100,7 +100,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "6.ServerProperties/ServerProperties.md"
+      file: "6.ServerProperties/knowledge/ServerProperties.md"
       anchor: "portable-vs-server-specific-properties"
     apiRelated:
       controller: "WebRuntimeExperimentController"
@@ -113,7 +113,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "7.ServerCustomization/ServerCustomization.md"
+      file: "7.ServerCustomization/knowledge/ServerCustomization.md"
       anchor: "server-customization-decision-order"
     apiRelated:
       controller: ""
@@ -126,7 +126,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "8.HttpFeatures/HttpFeatures.md"
+      file: "8.HttpFeatures/knowledge/HttpFeatures.md"
       anchor: "http-feature-portability"
     apiRelated:
       controller: ""
@@ -139,7 +139,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "9.TlsSslBundles/TlsSslBundles.md"
+      file: "9.TlsSslBundles/knowledge/TlsSslBundles.md"
       anchor: "ssl-bundle-consumption"
     apiRelated:
       controller: ""
@@ -152,7 +152,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "10.ForwardedHeadersProxy/ForwardedHeadersProxy.md"
+      file: "10.ForwardedHeadersProxy/knowledge/ForwardedHeadersProxy.md"
       anchor: "forwarded-header-trust-boundary"
     apiRelated:
       controller: "WebRuntimeExperimentController"
@@ -165,7 +165,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "11.GracefulShutdown/GracefulShutdown.md"
+      file: "11.GracefulShutdown/knowledge/GracefulShutdown.md"
       anchor: "in-flight-request-grace-period"
     apiRelated:
       controller: ""
@@ -178,7 +178,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "12.BootWebDefaults/BootWebDefaults.md"
+      file: "12.BootWebDefaults/knowledge/BootWebDefaults.md"
       anchor: "web-runtime-end-to-end-model"
     apiRelated:
       controller: ""

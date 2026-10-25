@@ -95,7 +95,7 @@ HttpClientExperimentController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 14.HttpServiceInterfaces/HttpServiceInterfaces.md
+      file: 14.HttpServiceInterfaces/knowledge/HttpServiceInterfaces.md
       anchor: synchronous-http-client-adapters
     methodName: httpServiceAdapters
     params:

@@ -33,9 +33,9 @@ class ModuleLanguageCloneServiceTest {
         assertNotNull(applied.backup)
         assertFalse(file(module, 'content/readme/docs/en/menu/Old.md').exists())
         assertEquals('Vietnamese knowledge body', file(module,
-                'content/readme/docs/en/menu/1.Basic/Basic.md').text.readLines().last())
+                'content/readme/docs/en/menu/1.Basic/knowledge/Basic.md').text.readLines().last())
         assertTrue(file(module, 'content/readme/docs/en/LIST.md').text
-                .contains('content/readme/docs/en/menu/1.Basic/Basic.md'))
+                .contains('content/readme/docs/en/menu/1.Basic/knowledge/Basic.md'))
         assertFalse(file(module, 'content/readme/docs/en/LIST.md').text
                 .contains('content/readme/docs/vi/menu/'))
         assertEquals(beforeVi, snapshotVi(module))
@@ -84,7 +84,7 @@ class ModuleLanguageCloneServiceTest {
             assertTrue(error.message.contains('injected commit failure'))
         }
         assertEquals(original, file(module, 'content/readme/docs/en/menu/Old.md').text)
-        assertFalse(file(module, 'content/readme/docs/en/menu/1.Basic/Basic.md').exists())
+        assertFalse(file(module, 'content/readme/docs/en/menu/1.Basic/knowledge/Basic.md').exists())
         assertEquals('old metadata', file(module,
                 'content/readme/metadata/en/knowledge-metadata.yml').text)
         assertEquals('old English roadmap', file(module,
@@ -121,6 +121,33 @@ class ModuleLanguageCloneServiceTest {
         assertEquals('old English', file(module, 'content/readme/docs/en/menu/Old.md').text)
     }
 
+    @Test
+    void ignoresAuxiliaryMarkdownUnderChapterWhenCheckingKnowledgeRelations() {
+        Map f = fixture()
+        File module = f.module as File
+        write(module, 'content/readme/docs/vi/menu/1.Basic/chapter-links.md',
+                '# Links with no Knowledge anchors')
+        write(module, 'content/readme/docs/vi/menu/1.Basic/Legacy.md',
+                '# Old location with no Knowledge anchors')
+        assertEquals('DRY_RUN',
+                new ModuleLanguageCloneService().execute(f.root as File, module, false).status)
+    }
+
+    @Test
+    void preservesRootLevelLegacyKnowledgeValidation() {
+        Map f = fixture()
+        File module = f.module as File
+        write(module, 'content/readme/docs/vi/menu/LegacyRoot.md',
+                '# Legacy\n\n## <a id="legacy-001">Legacy lesson</a>\n\nLegacy body')
+        File metadata = file(module, 'content/readme/metadata/vi/knowledge-metadata.yml')
+        metadata.append('\nLegacyRoot.md:\n  legacy-001: {difficulty: BASIC}\n', 'UTF-8')
+        File list = file(module, 'content/readme/docs/vi/LIST.md')
+        list.append('* [Legacy](content/readme/docs/vi/menu/LegacyRoot.md)\n', 'UTF-8')
+
+        Map dry = new ModuleLanguageCloneService().execute(f.root as File, module, false)
+        assertEquals('DRY_RUN', dry.status)
+    }
+
     private Map fixture() {
         File root = tmp.newFolder('repo')
         File module = file(root, 'module/demo')
@@ -130,11 +157,11 @@ class ModuleLanguageCloneServiceTest {
         write(module, 'content/readme/docs/vi/BASE.md', '# Vietnamese introduction')
         write(module, 'content/readme/docs/vi/LIST.md',
                 '# README MODULE STRUCTURE (VI)\n\n' +
-                '* **1.Basic**\n    * [Basic](content/readme/docs/vi/menu/1.Basic/Basic.md)\n')
-        write(module, 'content/readme/docs/vi/menu/1.Basic/Basic.md',
+                '* **1.Basic**\n    * [Basic](content/readme/docs/vi/menu/1.Basic/knowledge/Basic.md)\n')
+        write(module, 'content/readme/docs/vi/menu/1.Basic/knowledge/Basic.md',
                 '# Basic\n\n## <a id="basic-001">Vietnamese lesson</a>\n\nVietnamese knowledge body')
         write(module, 'content/readme/metadata/vi/knowledge-metadata.yml', '''
-1.Basic/Basic.md:
+1.Basic/knowledge/Basic.md:
   basic-001:
     difficulty: BASIC
     aiGenerated: true
@@ -165,7 +192,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.Basic/Basic.md", anchor: "basic-001"}
+    readmeRelated: {file: "1.Basic/knowledge/Basic.md", anchor: "basic-001"}
     apiRelated: {controller: ExampleController, methodSignature: "demo()"}
 '''.trim())
         write(module, 'content/interview/vi/question.yml', '''
@@ -174,7 +201,7 @@ questions:
     answer: Vietnamese answer
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.Basic/Basic.md", anchor: "basic-001"}
+    readmeRelated: {file: "1.Basic/knowledge/Basic.md", anchor: "basic-001"}
     apiRelated: {controller: "", methodSignature: ""}
 '''.trim())
         write(module, 'content/video/vi/menu/1.Basic/video-script.yml', '''
@@ -194,7 +221,7 @@ sections:
 ExampleController:
   "demo()":
     summary: Vietnamese summary
-    readmeRelated: {file: "1.Basic/Basic.md", anchor: "basic-001"}
+    readmeRelated: {file: "1.Basic/knowledge/Basic.md", anchor: "basic-001"}
 '''.trim())
         write(module, 'content/readme/docs/en/menu/Old.md', 'old English')
         write(module, 'content/readme/metadata/en/knowledge-metadata.yml', 'old metadata')

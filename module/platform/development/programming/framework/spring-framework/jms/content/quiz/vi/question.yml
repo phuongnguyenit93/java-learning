@@ -49,7 +49,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.Foundations/SpringJmsFoundations.md", anchor: "jms-framework-spec-provider-boundary"}
+    readmeRelated: {file: "1.Foundations/knowledge/SpringJmsFoundations.md", anchor: "jms-framework-spec-provider-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: jms-sync-receive-timeout
@@ -62,7 +62,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.TemplateAccess/JmsTemplateAccess.md", anchor: "jms-template-sync-receive"}
+    readmeRelated: {file: "2.TemplateAccess/knowledge/JmsTemplateAccess.md", anchor: "jms-template-sync-receive"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: jms-request-reply-runtime
@@ -75,7 +75,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.TemplateAccess/JmsTemplateAccess.md", anchor: "jms-template-request-reply"}
+    readmeRelated: {file: "2.TemplateAccess/knowledge/JmsTemplateAccess.md", anchor: "jms-template-request-reply"}
     apiRelated: {controller: "JmsTemplateExperimentController", methodSignature: "observeRequestReplyRoundTrip()"}
 
   - id: jms-json-type-id
@@ -88,7 +88,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.DestinationsConversionMetadata/DestinationsConversionMetadata.md", anchor: "jms-payload-conversion"}
+    readmeRelated: {file: "3.DestinationsConversionMetadata/knowledge/DestinationsConversionMetadata.md", anchor: "jms-payload-conversion"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: jms-listener-container-ownership
@@ -101,7 +101,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.ListenerContainer/ListenerContainer.md", anchor: "jms-listener-container-responsibilities"}
+    readmeRelated: {file: "4.ListenerContainer/knowledge/ListenerContainer.md", anchor: "jms-listener-container-responsibilities"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: jms-listener-validation
@@ -114,7 +114,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.AnnotationEndpoints/AnnotationEndpoints.md", anchor: "jms-listener-conversion-validation"}
+    readmeRelated: {file: "5.AnnotationEndpoints/knowledge/AnnotationEndpoints.md", anchor: "jms-listener-conversion-validation"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: jms-listener-reply-precedence
@@ -127,7 +127,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.AnnotationEndpoints/AnnotationEndpoints.md", anchor: "jms-listener-replies"}
+    readmeRelated: {file: "5.AnnotationEndpoints/knowledge/AnnotationEndpoints.md", anchor: "jms-listener-replies"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: jms-rollback-redelivery-idempotency
@@ -140,7 +140,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.TransactionsDelivery/TransactionsDelivery.md", anchor: "jms-redelivery-idempotency"}
+    readmeRelated: {file: "6.TransactionsDelivery/knowledge/TransactionsDelivery.md", anchor: "jms-redelivery-idempotency"}
     apiRelated: {controller: "JmsTransactionExperimentController", methodSignature: "observeRollbackRedelivery()"}
 
   - id: jms-concurrency-ordering
@@ -153,7 +153,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.ConcurrencyRecoveryLifecycle/ConcurrencyRecoveryLifecycle.md", anchor: "jms-ordering-tradeoffs"}
+    readmeRelated: {file: "7.ConcurrencyRecoveryLifecycle/knowledge/ConcurrencyRecoveryLifecycle.md", anchor: "jms-ordering-tradeoffs"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: jms-observability-boundary
@@ -166,5 +166,5 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.ProductionReadiness/ProductionReadiness.md", anchor: "jms-observability-61"}
+    readmeRelated: {file: "8.ProductionReadiness/knowledge/ProductionReadiness.md", anchor: "jms-observability-61"}
     apiRelated: {controller: "JmsObservabilityExperimentController", methodSignature: "observePublishProcessBoundary()"}

@@ -44,7 +44,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.MentalModel/NativeInteroperability.md"
+      file: "1.MentalModel/knowledge/NativeInteroperability.md"
       anchor: "managed-native-boundary"
     apiRelated:
       controller: ""
@@ -69,7 +69,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.NativeLibraryAbi/NativeLibraryAbi.md"
+      file: "2.NativeLibraryAbi/knowledge/NativeLibraryAbi.md"
       anchor: "abi-calling-convention"
     apiRelated:
       controller: ""
@@ -94,7 +94,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "3.JNI/JNI.md"
+      file: "3.JNI/knowledge/JNI.md"
       anchor: "jni-references"
     apiRelated:
       controller: ""
@@ -119,7 +119,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "5.FFM/FFM.md"
+      file: "5.FFM/knowledge/FFM.md"
       anchor: "ffm-restricted-operations"
     apiRelated:
       controller: ""
@@ -144,7 +144,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "6.MemorySegment/MemorySegment.md"
+      file: "6.MemorySegment/knowledge/MemorySegment.md"
       anchor: "segment-spatial-bounds"
     apiRelated:
       controller: "MemorySegmentExperimentController"
@@ -169,7 +169,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "7.ArenaLifetime/ArenaLifetime.md"
+      file: "7.ArenaLifetime/knowledge/ArenaLifetime.md"
       anchor: "temporal-safety"
     apiRelated:
       controller: "ArenaExperimentController"
@@ -194,7 +194,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "7.ArenaLifetime/ArenaLifetime.md"
+      file: "7.ArenaLifetime/knowledge/ArenaLifetime.md"
       anchor: "arena-thread-access"
     apiRelated:
       controller: "ArenaExperimentController"
@@ -219,7 +219,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "8.MemoryLayout/MemoryLayout.md"
+      file: "8.MemoryLayout/knowledge/MemoryLayout.md"
       anchor: "layout-path-access"
     apiRelated:
       controller: "MemoryLayoutExperimentController"
@@ -244,7 +244,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "10.DowncallUpcall/DowncallUpcall.md"
+      file: "10.DowncallUpcall/knowledge/DowncallUpcall.md"
       anchor: "downcall-handle"
     apiRelated:
       controller: "LinkerExperimentController"
@@ -269,7 +269,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "10.DowncallUpcall/DowncallUpcall.md"
+      file: "10.DowncallUpcall/knowledge/DowncallUpcall.md"
       anchor: "callback-lifetime"
     apiRelated:
       controller: ""

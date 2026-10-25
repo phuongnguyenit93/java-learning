@@ -10,7 +10,7 @@ EncodingController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 10.Encoding/Encoding.md
+      file: 10.Encoding/knowledge/Encoding.md
       anchor: charset-encode-decode
     methodName: roundTrip
     params: [
@@ -38,7 +38,7 @@ EncodingController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 10.Encoding/Encoding.md
+      file: 10.Encoding/knowledge/Encoding.md
       anchor: charset-encode-decode
     methodName: wrongCharset
     params: [
@@ -66,7 +66,7 @@ RegexController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 11.Regex/Regex.md
+      file: 11.Regex/knowledge/Regex.md
       anchor: regex-groups
     methodName: groups
     params: [
@@ -94,7 +94,7 @@ RegexController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 11.Regex/Regex.md
+      file: 11.Regex/knowledge/Regex.md
       anchor: regex-performance
     methodName: backtracking
     params: [
@@ -123,7 +123,7 @@ StringConcatController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 5.Concatenation/Concatenation.md
+      file: 5.Concatenation/knowledge/Concatenation.md
       anchor: loop-concat-cost
     methodName: constructionTrace
     params: [
@@ -153,7 +153,7 @@ StringPoolController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 2.StringPool/StringPool.md
+      file: 2.StringPool/knowledge/StringPool.md
       anchor: pool-identity
     methodName: identity
     params: [
@@ -182,7 +182,7 @@ UnicodeController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 9.UnicodeCodePoint/UnicodeCodePoint.md
+      file: 9.UnicodeCodePoint/knowledge/UnicodeCodePoint.md
       anchor: surrogate-pairs
     methodName: charVsCodePoint
     params: [
@@ -210,7 +210,7 @@ UnicodeController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 9.UnicodeCodePoint/UnicodeCodePoint.md
+      file: 9.UnicodeCodePoint/knowledge/UnicodeCodePoint.md
       anchor: canonical-equivalence
     methodName: normalization
     params: [

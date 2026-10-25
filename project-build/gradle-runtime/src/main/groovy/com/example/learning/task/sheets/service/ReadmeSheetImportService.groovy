@@ -11,8 +11,9 @@ import org.gradle.api.GradleException
  * source-of-truth snapshot. Parent A rows use B as the AI-authored filename;
  * child B rows use C:N as optional, contiguous Markdown fragments.
  *
- * No AI call is performed here. Module content/readme/docs/vi/menu is the
- * Sheet-owned snapshot; the existing README metadata service synchronizes
+ * No AI call is performed here. Only each chapter's knowledge/ directory is
+ * Sheet-owned; chapter siblings (Video, objectives, links) are never touched.
+ * The existing README metadata service synchronizes
  * the matching vi/knowledge-metadata.yml using generated section IDs and O.
  */
 class ReadmeSheetImportService {
@@ -209,7 +210,7 @@ class ReadmeSheetImportService {
             String filename = group.filename as String
             String stem = filename.substring(0, filename.length() - 3)
             String slug = slugFromStem(stem)
-            String relative = "${groupIndex + 1}.${stem}/${filename}"
+            String relative = "${groupIndex + 1}.${stem}/knowledge/${filename}"
             StringBuilder markdown = new StringBuilder("# ${escapeMenuTitle(group.title)}\n")
             Map<String, String> rawBodies = new LinkedHashMap<>()
             (group.children as List<Map>).eachWithIndex { Map lesson, int index ->
@@ -266,7 +267,7 @@ class ReadmeSheetImportService {
         groups.eachWithIndex { Map group, int index ->
             String filename = group.filename as String
             String stem = filename.substring(0, filename.length() - 3)
-            String source = "${index + 1}.${stem}/${filename}"
+            String source = "${index + 1}.${stem}/knowledge/${filename}"
             result[source] = (group.children as List<Map>).collect { Map child ->
                 int offset = (child.row as int) - 20
                 List<Object> entry = offset >= 0 && offset < difficultyRows.size()
@@ -288,7 +289,7 @@ class ReadmeSheetImportService {
         groups.eachWithIndex { Map group, int index ->
             String filename = group.filename as String
             String stem = filename.substring(0, filename.length() - 3)
-            String source = "${index + 1}.${stem}/${filename}"
+            String source = "${index + 1}.${stem}/knowledge/${filename}"
             result[source] = (group.children as List<Map>).collect { Map child ->
                 int offset = (child.row as int) - 20
                 List<Object> entry = offset >= 0 && offset < rows.size()
@@ -344,9 +345,12 @@ class ReadmeSheetImportService {
     }
 
     /**
-     * Sheet-only full snapshot of content/readme/docs/vi/menu. All previous files,
-     * subdirectories and stale artifacts are permanently deleted on APPLY,
-     * even when the regenerated documents are byte-identical. No backup.
+     * Knowledge-only snapshots, one <chapter>/knowledge/ directory at a time.
+     * Never replace the whole menu tree or a chapter folder: those directories
+     * contain independent content owned by other importers and people.
+     *
+     * Legacy <chapter>/<chapter>.md content must be migrated first. Refuse to
+     * generate a duplicate instead of silently deleting or leaving stale data.
      */
     static Map<String, Object> syncDocuments(
             File repositoryRoot,
@@ -354,9 +358,65 @@ class ReadmeSheetImportService {
             Map<String, String> expected,
             boolean apply
     ) {
-        return SheetSnapshotReplaceService.replace(
-                repositoryRoot, menuDirectory, expected, apply
-        )
+        File moduleRoot = new File(repositoryRoot.canonicalFile, 'module').canonicalFile
+        File menu = menuDirectory.canonicalFile
+        if (!menu.toPath().startsWith(moduleRoot.toPath()) ||
+                !menu.toPath().toString().replace('\\', '/')
+                        .endsWith('/content/readme/docs/vi/menu')) {
+            throw new GradleException('Unsafe Knowledge menu destination: ' + menu)
+        }
+        Map<String, Map<String, String>> byChapter = new LinkedHashMap<>()
+        expected.each { String relative, String body ->
+            def match = (relative =~ /\A([0-9]+\.[A-Za-z][A-Za-z0-9]*)\/knowledge\/([A-Za-z][A-Za-z0-9]*\.md)\z/)
+            if (!match.matches() || body == null) {
+                throw new GradleException('Invalid Knowledge-only snapshot path: ' + relative)
+            }
+            String chapter = match.group(1)
+            String filename = match.group(2)
+            if (!byChapter.containsKey(chapter)) byChapter[chapter] = [:]
+            byChapter[chapter][filename] = body
+        }
+        if (menu.isDirectory()) {
+            menu.listFiles().findAll { File file -> file.isDirectory() &&
+                    (file.name ==~ /[0-9]+\..+/) }.each { File chapter ->
+                // A chapter may also contain authored YAML/Markdown siblings.
+                // Only a nested knowledge/ directory belongs to this task.
+                File[] legacy = chapter.listFiles()?.findAll {
+                    it.isFile() &&
+                            it.name.toLowerCase(Locale.ROOT).endsWith('.md') &&
+                            !it.name.equalsIgnoreCase('chapter-links.md')
+                }
+                if (legacy) {
+                    throw new GradleException('Legacy Knowledge must move into knowledge/ first: ' +
+                            legacy.first())
+                }
+                if (new File(chapter, 'knowledge').exists() &&
+                        !byChapter.containsKey(chapter.name)) byChapter[chapter.name] = [:]
+            }
+        }
+        // Preflight all targets before modifying any chapter.
+        byChapter.each { String chapter, Map<String, String> docs ->
+            File folder = new File(menu, chapter + '/knowledge')
+            SheetSnapshotReplaceService.replace(repositoryRoot, folder, docs, false)
+        }
+        int previousCount = 0
+        int written = 0
+        boolean changed = false
+        byChapter.each { String chapter, Map<String, String> docs ->
+            File folder = new File(menu, chapter + '/knowledge')
+            Map<String, String> before = SheetSnapshotReplaceService.readTree(folder)
+            previousCount += before.size()
+            if (before != docs) changed = true
+            if (apply) {
+                SheetSnapshotReplaceService.replace(repositoryRoot, folder, docs, true)
+                written += docs.size()
+            }
+        }
+        return [status: !apply ? (changed ? 'DRY_RUN' : 'UNCHANGED') :
+                !changed ? 'UNCHANGED' : expected.isEmpty() ? 'CLEARED_EMPTY' :
+                previousCount == 0 ? 'IMPORTED' : 'UPDATED',
+                clearedOldFiles: apply ? previousCount : 0,
+                expectedFiles: expected.size(), writtenFiles: apply ? written : 0]
     }
 
     static Map<String, String> readTree(File root) {

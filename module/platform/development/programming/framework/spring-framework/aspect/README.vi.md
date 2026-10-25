@@ -1,35 +1,35 @@
 # 📂 README MODULE STRUCTURE (VI)
 
 * **1.CrossCutting**
-    * [CrossCutting](content/readme/docs/vi/menu/1.CrossCutting/CrossCutting.md)
+    * [CrossCutting](content/readme/docs/vi/menu/1.CrossCutting/knowledge/CrossCutting.md)
 * **2.Terminology**
-    * [Terminology](content/readme/docs/vi/menu/2.Terminology/Terminology.md)
+    * [Terminology](content/readme/docs/vi/menu/2.Terminology/knowledge/Terminology.md)
 * **3.Proxy**
-    * [Proxy](content/readme/docs/vi/menu/3.Proxy/Proxy.md)
+    * [Proxy](content/readme/docs/vi/menu/3.Proxy/knowledge/Proxy.md)
 * **4.Pointcut**
-    * [Pointcut](content/readme/docs/vi/menu/4.Pointcut/Pointcut.md)
+    * [Pointcut](content/readme/docs/vi/menu/4.Pointcut/knowledge/Pointcut.md)
 * **5.Annotation**
-    * [Annotation](content/readme/docs/vi/menu/5.Annotation/Annotation.md)
+    * [Annotation](content/readme/docs/vi/menu/5.Annotation/knowledge/Annotation.md)
 * **6.Advice**
-    * [Advice](content/readme/docs/vi/menu/6.Advice/Advice.md)
+    * [Advice](content/readme/docs/vi/menu/6.Advice/knowledge/Advice.md)
 * **7.Around**
-    * [Around](content/readme/docs/vi/menu/7.Around/Around.md)
+    * [Around](content/readme/docs/vi/menu/7.Around/knowledge/Around.md)
 * **8.Ordering**
-    * [Ordering](content/readme/docs/vi/menu/8.Ordering/Ordering.md)
+    * [Ordering](content/readme/docs/vi/menu/8.Ordering/knowledge/Ordering.md)
 * **9.Introduction**
-    * [Introduction](content/readme/docs/vi/menu/9.Introduction/Introduction.md)
+    * [Introduction](content/readme/docs/vi/menu/9.Introduction/knowledge/Introduction.md)
 * **10.ProxyFactory**
-    * [ProxyFactory](content/readme/docs/vi/menu/10.ProxyFactory/ProxyFactory.md)
+    * [ProxyFactory](content/readme/docs/vi/menu/10.ProxyFactory/knowledge/ProxyFactory.md)
 * **11.Advisor**
-    * [Advisor](content/readme/docs/vi/menu/11.Advisor/Advisor.md)
+    * [Advisor](content/readme/docs/vi/menu/11.Advisor/knowledge/Advisor.md)
 * **12.Infrastructure**
-    * [Infrastructure](content/readme/docs/vi/menu/12.Infrastructure/Infrastructure.md)
+    * [Infrastructure](content/readme/docs/vi/menu/12.Infrastructure/knowledge/Infrastructure.md)
 * **13.SelfInvocation**
-    * [SelfInvocation](content/readme/docs/vi/menu/13.SelfInvocation/SelfInvocation.md)
+    * [SelfInvocation](content/readme/docs/vi/menu/13.SelfInvocation/knowledge/SelfInvocation.md)
 * **14.Patterns**
-    * [Patterns](content/readme/docs/vi/menu/14.Patterns/Patterns.md)
+    * [Patterns](content/readme/docs/vi/menu/14.Patterns/knowledge/Patterns.md)
 * **15.RuntimeBoundary**
-    * [RuntimeBoundary](content/readme/docs/vi/menu/15.RuntimeBoundary/RuntimeBoundary.md)
+    * [RuntimeBoundary](content/readme/docs/vi/menu/15.RuntimeBoundary/knowledge/RuntimeBoundary.md)
 
 # Spring AOP
 

@@ -34,7 +34,7 @@ questions:
       A .class file is only class bytes. The JVM still has to locate the representation for a binary name, create a runtime Class identity, verify/prepare/link the type, and then run static initialization only when semantics require it. Loading brings a type into a runtime namespace, linking makes it structurally valid and ready, and initialization executes static initialization code that may have side effects. Separating the phases supports demand-driven loading, bytecode checks before use, and delayed side effects until active use.
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.Lifecycle/Lifecycle.md", anchor: "loading-linking-initialization"}
+    readmeRelated: {file: "1.Lifecycle/knowledge/Lifecycle.md", anchor: "loading-linking-initialization"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
@@ -43,7 +43,7 @@ questions:
       A binary name is a runtime name such as com.example.Plugin; a class-file path is commonly com/example/Plugin.class relative to a classpath root; the classpath is the set of locations a loader may search for classes and resources. The compiler uses import to resolve source names, but import does not generate a runtime instruction that forces loading or initialization. The runtime needs the type only when execution, resolution, or dynamic loading actually requests it.
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.Lifecycle/Lifecycle.md", anchor: "loading-linking-initialization"}
+    readmeRelated: {file: "1.Lifecycle/knowledge/Lifecycle.md", anchor: "loading-linking-initialization"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
@@ -52,7 +52,7 @@ questions:
       First ask whether the loader found the requested bytes: an explicit dynamic lookup that cannot find them commonly produces ClassNotFoundException. If the runtime needs a dependency whose definition is unavailable, or a class previously failed initialization, NoClassDefFoundError may appear. If bytes reached definition/linking but the runtime cannot form a valid type system, the failure belongs to the LinkageError family, including ClassFormatError, VerifyError, NoSuchMethodError, or IncompatibleClassChangeError. Diagnose along find bytes → define/link → initialize.
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.Lifecycle/Lifecycle.md", anchor: "linking-phases"}
+    readmeRelated: {file: "1.Lifecycle/knowledge/Lifecycle.md", anchor: "linking-phases"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
@@ -61,7 +61,7 @@ questions:
       A framework may need to inspect metadata, identity, or assignability before it decides to execute plugin code. If loading automatically ran static initializers, mere inspection could open connections, register global state, or fail because configuration is not ready. Class.forName with initialize=false can obtain the runtime Class without requesting initialization; calling it with true or performing an active use makes static side effects appear. That directly demonstrates that loaded and initialized are different states.
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.Lifecycle/Lifecycle.md", anchor: "load-vs-initialize"}
+    readmeRelated: {file: "1.Lifecycle/knowledge/Lifecycle.md", anchor: "load-vs-initialize"}
     apiRelated: {controller: "ClassLifecycleController", methodSignature: "loadWithoutInit()"}
 
   - question: >-
@@ -70,7 +70,7 @@ questions:
       An application class is commonly defined by the Application/System ClassLoader, a platform class by the Platform ClassLoader, and many core classes such as String by the bootstrap loader, represented as null by Class.getClassLoader. The parent chain commonly reads application → platform → bootstrap boundary. This shows which namespace actually owns each type and prepares the delegation model: the loader that starts a request is not necessarily the defining loader that ultimately owns the Class.
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.BuiltInClassLoaders/BuiltInClassLoaders.md", anchor: "loader-chain"}
+    readmeRelated: {file: "2.BuiltInClassLoaders/knowledge/BuiltInClassLoaders.md", anchor: "loader-chain"}
     apiRelated: {controller: "ClassLoaderChainController", methodSignature: "inspectChain()"}
 
   - question: >-
@@ -79,7 +79,7 @@ questions:
       Null is the Java API representation for a bootstrap-defined class because the bootstrap loader is not exposed as an ordinary ClassLoader object. It does not mean String was never loaded, has no owner, or bypasses class-loading rules. When debugging, read null as the bootstrap boundary and avoid relying on concrete implementation class names for built-in loaders.
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.BuiltInClassLoaders/BuiltInClassLoaders.md", anchor: "bootstrap-loader"}
+    readmeRelated: {file: "2.BuiltInClassLoaders/knowledge/BuiltInClassLoaders.md", anchor: "bootstrap-loader"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
@@ -88,7 +88,7 @@ questions:
       The layers create a clear ownership boundary between JDK platform modules and application code/dependencies. Platform types gain a stable namespace, application code keeps its own classpath/lifecycle layer, and a custom loader can choose an appropriate parent to control what is shared. The design value is the boundary and delegation chain, not memorizing the concrete implementation class name of each loader.
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.BuiltInClassLoaders/BuiltInClassLoaders.md", anchor: "platform-loader"}
+    readmeRelated: {file: "2.BuiltInClassLoaders/knowledge/BuiltInClassLoaders.md", anchor: "platform-loader"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
@@ -97,7 +97,7 @@ questions:
       loadClass first checks whether this loader already loaded the class, then gives parent/bootstrap a chance to satisfy the request, and only if they cannot does the current loader search its own source. With the overload that has a resolve flag, resolve=true requests resolveClass for the loaded Class, which belongs to linking/resolution. It does not execute static initializers. Initialization is a separate phase triggered by the relevant active-use/runtime rules.
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.ParentDelegation/ParentDelegation.md", anchor: "parent-delegation"}
+    readmeRelated: {file: "3.ParentDelegation/knowledge/ParentDelegation.md", anchor: "parent-delegation"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
@@ -106,7 +106,7 @@ questions:
       The host should define the shared Plugin API in a parent. When a plugin loader needs Plugin, parent-first delegation returns the same Plugin.class instead of letting every plugin define a same-named copy. Because runtime type identity depends on the defining loader, this keeps shared interfaces, DTOs, exceptions, and facades compatible between host and plugin. Delegation is therefore a namespace-consistency mechanism, not merely a lookup optimization.
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.ParentDelegation/ParentDelegation.md", anchor: "delegation-purpose"}
+    readmeRelated: {file: "3.ParentDelegation/knowledge/ParentDelegation.md", anchor: "delegation-purpose"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
@@ -115,7 +115,7 @@ questions:
       Child-first can be useful when a plugin or container must isolate its own dependency version from the host. Applied indiscriminately, however, it can duplicate shared APIs, singleton/static state, and library types, causing ClassCastException, discovery mismatches, or behavior that depends on lookup order. A sound design usually partitions the policy: parent-first for java.* and shared contracts, selective child-first for implementation dependencies that truly require isolation.
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.ParentDelegation/ParentDelegation.md", anchor: "child-first-boundary"}
+    readmeRelated: {file: "3.ParentDelegation/knowledge/ParentDelegation.md", anchor: "child-first-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
@@ -124,7 +124,7 @@ questions:
       Parent delegation is the default lookup policy: a child asks its parent first. The protected core-package rule is an independent runtime/ClassLoader constraint that prevents custom defineClass calls from taking over the java.* namespace. Even if a loader changes its delegation policy, it still cannot turn arbitrary bytes into java.lang.String. Keeping the mechanisms separate avoids the false idea that core namespaces are protected only by parent-first lookup.
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.ParentDelegation/ParentDelegation.md", anchor: "protected-packages-boundary"}
+    readmeRelated: {file: "3.ParentDelegation/knowledge/ParentDelegation.md", anchor: "protected-packages-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
@@ -133,7 +133,7 @@ questions:
       loadClass is the orchestration contract for findLoadedClass, parent delegation, locking, and optional resolution. findClass is the extension point where the current loader finds bytes and defines a class after the parent cannot satisfy the request. If the only requirement is a different byte source, overriding findClass preserves ClassLoader's built-in invariants. Overriding loadClass is appropriate only for a truly different policy such as controlled child-first loading, where the implementation must preserve more invariants itself.
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.CustomClassLoader/CustomClassLoader.md", anchor: "classloader-contract"}
+    readmeRelated: {file: "4.CustomClassLoader/knowledge/CustomClassLoader.md", anchor: "classloader-contract"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
@@ -142,7 +142,7 @@ questions:
       defineClass asks the JVM to define a runtime Class from class-file bytes under the identity of the current loader; the JVM still enforces format, name, and loading constraints. The result is a Class<?> with a specific defining loader, but static initialization remains a separate phase and runs only when an initialization trigger occurs. A custom loader therefore chooses the byte source/namespace while the JVM still owns verification, linking, and initialization semantics.
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.CustomClassLoader/CustomClassLoader.md", anchor: "define-class"}
+    readmeRelated: {file: "4.CustomClassLoader/knowledge/CustomClassLoader.md", anchor: "define-class"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
@@ -151,7 +151,7 @@ questions:
       The parent determines which types the child can share through delegation. If the host's Plugin API is the shared contract, using the loader that defines Plugin as the parent lets child implementations resolve that interface to the same Class identity. A wrong parent can isolate a contract that was supposed to be shared, making plugin instances not assignable to the host API. Byte source and parent boundary are separate decisions: one chooses where implementation bytes come from, the other chooses which namespace is shared.
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.CustomClassLoader/CustomClassLoader.md", anchor: "custom-source"}
+    readmeRelated: {file: "4.CustomClassLoader/knowledge/CustomClassLoader.md", anchor: "custom-source"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
@@ -160,7 +160,7 @@ questions:
       It must avoid defining the same binary name twice in one namespace under concurrency, keep delegation/shared-contract boundaries explicit, obey package/runtime constraints, and manage resource handles according to lifecycle. If a loader supports close, such as URLClassLoader, close releases file/JAR resources but does not force class unloading. These requirements show that custom loading has state and lifecycle; reading bytes and calling defineClass is not by itself a safe loader design.
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.CustomClassLoader/CustomClassLoader.md", anchor: "custom-loader-safety"}
+    readmeRelated: {file: "4.CustomClassLoader/knowledge/CustomClassLoader.md", anchor: "custom-loader-safety"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
@@ -169,7 +169,7 @@ questions:
       The defining ClassLoader is responsible for defining the runtime type. An initiating ClassLoader is recorded as having initiated loading directly or through delegation. The same ordinary named class/interface can therefore be associated with multiple initiating loaders while still having one defining loader. For example, a plugin loader can request java.lang.String and receive the String defined by bootstrap through delegation; the plugin loader may be recorded as an initiating loader while bootstrap remains the defining side. The distinction matters later because runtime type identity uses the defining-loader role, not whichever loader first received the request.
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.ParentDelegation/ParentDelegation.md", anchor: "initiating-vs-defining-loader"}
+    readmeRelated: {file: "3.ParentDelegation/knowledge/ParentDelegation.md", anchor: "initiating-vs-defining-loader"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
@@ -178,7 +178,7 @@ questions:
       The defining loader is part of runtime identity, so (PaymentPlugin, loaderA) and (PaymentPlugin, loaderB) are different Class objects even when their textual names and bytes match. This creates isolated namespaces, allowing plugins or containers to keep dependency versions and static state separate. The trade-off is that an object from one namespace is not automatically assignable to the same-named type in another namespace.
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.ClassIdentity/ClassIdentity.md", anchor: "same-name-different-type"}
+    readmeRelated: {file: "5.ClassIdentity/knowledge/ClassIdentity.md", anchor: "same-name-different-type"}
     apiRelated: {controller: "CustomClassLoaderController", methodSignature: "sameNameIdentity()"}
 
   - question: >-
@@ -187,7 +187,7 @@ questions:
       The displayed names can match while the object belongs to PaymentPlugin defined by loaderA and the target type is PaymentPlugin defined by loaderB. The JVM compares runtime identities, not just getName(), so the cast legitimately fails. Debug by printing the class name, Class object, and getClassLoader for both source and target, then check whether a shared API was accidentally defined again by a child loader.
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.ClassIdentity/ClassIdentity.md", anchor: "class-cast-loader-failure"}
+    readmeRelated: {file: "5.ClassIdentity/knowledge/ClassIdentity.md", anchor: "class-cast-loader-failure"}
     apiRelated: {controller: "ClassIdentityController", methodSignature: "crossLoaderCast()"}
 
   - question: >-
@@ -196,7 +196,7 @@ questions:
       These types form the communication language between host and plugin. If each side has a same-named copy defined by a different loader, method signatures may look identical while assignability, catch matching, annotation lookup, or DTO casts are incompatible. Defining the contract in a parent that both sides delegate to gives it one shared identity, while implementation classes and private dependencies can remain isolated in child namespaces.
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.ClassIdentity/ClassIdentity.md", anchor: "loader-boundary-api"}
+    readmeRelated: {file: "5.ClassIdentity/knowledge/ClassIdentity.md", anchor: "loader-boundary-api"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
@@ -205,7 +205,7 @@ questions:
       Parent delegation naturally lets a child look upward, but framework code defined by a parent cannot naturally look down to implementations visible only to an application/plugin child loader. TCCL associates a lookup context with a Thread so framework code can use the caller/application loader for discovery. It does not change the defining loader of the framework or any existing Class; it simply supplies a different loader reference for lookup operations.
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.ContextClassLoader/ContextClassLoader.md", anchor: "tccl-purpose"}
+    readmeRelated: {file: "6.ContextClassLoader/knowledge/ContextClassLoader.md", anchor: "tccl-purpose"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
@@ -214,7 +214,7 @@ questions:
       ServiceLoader.load(serviceType) uses the thread context ClassLoader to find provider metadata and implementations that the framework's defining loader may not see. Discovery is useful only if the provider implements the same SPI Class identity that the consumer uses; if a child defines its own copy of the SPI, the same-named provider is not assignable to the parent's serviceType. TCCL solves lookup visibility, not an incorrectly designed class-identity boundary.
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.ContextClassLoader/ContextClassLoader.md", anchor: "tccl-discovery"}
+    readmeRelated: {file: "6.ContextClassLoader/knowledge/ContextClassLoader.md", anchor: "tccl-discovery"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
@@ -223,7 +223,7 @@ questions:
       TCCL is mutable Thread state, and pooled threads are reused for unrelated tasks. If code sets a plugin loader and an exception occurs before restoration, the next task may inherit the stale lookup context, causing incorrect discovery and potentially retaining the plugin loader past its lifecycle. Saving the previous value, setting a narrow scope, and restoring in finally gives the context change a reliable lifecycle even when the work fails.
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.ContextClassLoader/ContextClassLoader.md", anchor: "tccl-lifecycle"}
+    readmeRelated: {file: "6.ContextClassLoader/knowledge/ContextClassLoader.md", anchor: "tccl-lifecycle"}
     apiRelated: {controller: "ContextClassLoaderController", methodSignature: "temporaryTccl()"}
 
   - question: >-
@@ -232,7 +232,7 @@ questions:
       Class.getResource("x") is package-relative, while Class.getResource("/x") starts at the class/module resource root. ClassLoader.getResource("x") uses a root-relative resource name and conventionally no leading slash. A lookup result may come from a directory, JAR, or runtime image using file:, jar:, or jrt: protocols, so code that only needs content should prefer URL/stream access rather than forcing every resource into Path/File. Resource lookup uses a loader-visible namespace, but finding a resource does not define a Class, create runtime type identity, or trigger class initialization.
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.ResourceLoading/ResourceLoading.md", anchor: "resource-vs-class-loading"}
+    readmeRelated: {file: "7.ResourceLoading/knowledge/ResourceLoading.md", anchor: "resource-vs-class-loading"}
     apiRelated: {controller: "ResourceLoadingController", methodSignature: "resolve()"}
 
   - question: >-
@@ -241,7 +241,7 @@ questions:
       Treat the returned InputStream as a resource owned by the caller and close it, normally with try-with-resources. The stream may be backed by a file, JAR entry, runtime image, or custom source, and keeping handles open can interfere with replacement or cleanup. Closing that stream releases the stream's underlying resource; it does not unload classes or make a defining ClassLoader unreachable. Resource-handle lifecycle and ClassLoader reachability are related operational concerns but different mechanisms.
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.ResourceLoading/ResourceLoading.md", anchor: "resource-stream-lifecycle"}
+    readmeRelated: {file: "7.ResourceLoading/knowledge/ResourceLoading.md", anchor: "resource-stream-lifecycle"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
@@ -250,7 +250,7 @@ questions:
       getResource is a first-match style lookup, while getResources or resources can enumerate every visible matching resource, which is important for SPI metadata or configuration fragments contributed by several artifacts. Enumeration alone does not define application semantics: the application should still decide whether to merge, deduplicate, prioritize, reject conflicts, or preserve encounter order instead of relying on undocumented ordering between unrelated artifacts. Custom ClassLoaders can also change resource lookup behavior, so that merge policy should be explicit.
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.ResourceLoading/ResourceLoading.md", anchor: "resource-enumeration"}
+    readmeRelated: {file: "7.ResourceLoading/knowledge/ResourceLoading.md", anchor: "resource-enumeration"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
@@ -259,7 +259,7 @@ questions:
       A class literal such as T.class does not by itself trigger initialization, and reading a compile-time constant such as static final int A = 30 may use an inlined value without initializing its declaring class. Also, if source accesses a static field through a subtype name but the field is actually declared by a superclass, an initialization-triggering field access initializes the declaring type, not simply whatever token appears left of the dot. Reason from active-use rules and the actual declaration, not source appearance.
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.Initialization/Initialization.md", anchor: "constant-no-init"}
+    readmeRelated: {file: "8.Initialization/knowledge/Initialization.md", anchor: "constant-no-init"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
@@ -268,7 +268,7 @@ questions:
       Initialization state belongs to a particular runtime class identity. For one Class identity, the JVM synchronizes initialization so one thread performs the initialization work while other threads that require that same type wait for completion or failure; the initializer is not run independently by every racing thread. If loader A and loader B independently define the same binary name, those are two different runtime class identities, so each identity has its own initialization state and can initialize independently once.
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.Initialization/Initialization.md", anchor: "initialization-locking"}
+    readmeRelated: {file: "8.Initialization/knowledge/Initialization.md", anchor: "initialization-locking"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
@@ -277,7 +277,7 @@ questions:
       When initialization fails, that runtime Class identity is marked erroneous. If the original cause is an exception rather than an Error, the first caller commonly sees ExceptionInInitializerError; later active uses of the same Class do not rerun the initializer and commonly see NoClassDefFoundError indicating that the class could not initialize. To repeat the experiment from a clean state, create a new runtime identity, for example by defining the class with a fresh loader, rather than trying to reset the old Class.
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.Initialization/Initialization.md", anchor: "initialization-failure"}
+    readmeRelated: {file: "8.Initialization/knowledge/Initialization.md", anchor: "initialization-failure"}
     apiRelated: {controller: "InitializationController", methodSignature: "failureState()"}
 
   - question: >-
@@ -286,7 +286,7 @@ questions:
       Classes defined by a disposable loader only become eligible for unloading when their defining loader is no longer reachable, and GC/unloading timing is nondeterministic. Parent-owned caches, listeners, pooled-thread TCCL, ThreadLocal values, plugin threads/executors, or callbacks can all create a path from a GC root to plugin objects, Classes, or the loader. Shutdown should stop work/threads, unregister callbacks, clear ThreadLocal/TCCL/caches, close resource handles, and drop strong references. WeakReference, logging, and profilers are observation tools; System.gc() is neither an unload command nor immediate proof of a leak.
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.UnloadingLeaks/UnloadingLeaks.md", anchor: "redeploy-leak"}
+    readmeRelated: {file: "9.UnloadingLeaks/knowledge/UnloadingLeaks.md", anchor: "redeploy-leak"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - question: >-
@@ -295,5 +295,5 @@ questions:
       The lifecycle spine is: a loading request follows delegation/custom lookup rules, one loader ultimately defines an ordinary named class, binary name plus defining ClassLoader establish runtime type identity, linking prepares the type, active use can trigger initialization, and later the defining-loader graph must become unreachable before its classes can become unloadable. TCCL and resource lookup are cross-cutting: TCCL supplies a discovery context when parent-owned code needs child/application visibility, while Class/ClassLoader resource APIs locate non-class data in a loader-visible namespace. Neither should be inserted as a mandatory stage between linking and initialization.
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.UnloadingLeaks/UnloadingLeaks.md", anchor: "end-to-end-synthesis"}
+    readmeRelated: {file: "9.UnloadingLeaks/knowledge/UnloadingLeaks.md", anchor: "end-to-end-synthesis"}
     apiRelated: {controller: "", methodSignature: ""}

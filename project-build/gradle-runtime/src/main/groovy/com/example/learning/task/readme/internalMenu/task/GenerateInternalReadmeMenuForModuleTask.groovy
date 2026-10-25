@@ -229,6 +229,7 @@ ${menuDirectory.absolutePath}
 
         GenerateInternalReadmeMenuForModuleTask.collectMarkdownFilesRecursive(
                 menuDirectory,
+                menuDirectory,
                 result
         )
 
@@ -271,6 +272,7 @@ ${menuDirectory.absolutePath}
 
     private static void collectMarkdownFilesRecursive(
             File directory,
+            File menuDirectory,
             List<File> result
     ) {
 
@@ -307,6 +309,7 @@ ${menuDirectory.absolutePath}
 
                             GenerateInternalReadmeMenuForModuleTask.collectMarkdownFilesRecursive(
                                     child,
+                                    menuDirectory,
                                     result
                             )
 
@@ -316,11 +319,7 @@ ${menuDirectory.absolutePath}
 
                         if (
                                 child.isFile() &&
-                                        child.name
-                                                .toLowerCase(
-                                                        Locale.ROOT
-                                                )
-                                                .endsWith('.md')
+                                        isKnowledgeMarkdownFile(menuDirectory, child)
                         ) {
 
                             result.add(
@@ -328,5 +327,25 @@ ${menuDirectory.absolutePath}
                             )
                         }
                 }
+    }
+
+
+    private static boolean isKnowledgeMarkdownFile(
+            File menuDirectory,
+            File markdownFile
+    ) {
+
+        if (
+                !markdownFile.name.toLowerCase(Locale.ROOT).endsWith('.md') ||
+                        markdownFile.name.equalsIgnoreCase('chapter-links.md')
+        ) {
+            return false
+        }
+
+        def relative = menuDirectory.toPath().relativize(markdownFile.toPath())
+
+        return relative.nameCount == 1 ||
+                (relative.nameCount >= 3 &&
+                        relative.getName(1).toString() == 'knowledge')
     }
 }

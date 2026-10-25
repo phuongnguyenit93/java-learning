@@ -3,40 +3,40 @@ AliasingController:
     <h2>Aliasing</h2>
     <p>Observe how two references to one mutable object share identity and therefore observe the same mutation.</p>
   readmeRelated:
-    file: 13.ObjectAliasingMutability/ObjectAliasingMutability.md
+    file: 13.ObjectAliasingMutability/knowledge/ObjectAliasingMutability.md
 ConstructionController:
   description: |-
     <h2>Construction</h2>
     <p>Observe why dynamic dispatch from a superclass constructor can reach subclass code before subclass state is initialized.</p>
   readmeRelated:
-    file: 8.ObjectCreationLifecycle/ObjectCreationLifecycle.md
+    file: 8.ObjectCreationLifecycle/knowledge/ObjectCreationLifecycle.md
 CopyController:
   description: |-
     <h2>Copy</h2>
     <p>Compare shallow copy and deep copy by observing ownership of nested mutable state.</p>
   readmeRelated:
-    file: 12.CopySemantics/CopySemantics.md
+    file: 12.CopySemantics/knowledge/CopySemantics.md
 EnumController:
   description: |-
     <h2>Enum</h2>
     <p>Observe enum identity, values/valueOf behavior, interface implementation, and constant-specific behavior.</p>
   readmeRelated:
-    file: 11.Enum/Enum.md
+    file: 11.Enum/knowledge/Enum.md
 ImmutabilityController:
   description: |-
     <h2>Immutability</h2>
     <p>Observe how an input defensive copy separates caller-owned mutable state, while the stored unmodifiable List can be exposed directly without an output defensive copy.</p>
   readmeRelated:
-    file: 14.ImmutabilityDefensiveCopy/ImmutabilityDefensiveCopy.md
+    file: 14.ImmutabilityDefensiveCopy/knowledge/ImmutabilityDefensiveCopy.md
 InitializationController:
   description: |-
     <h2>Initialization</h2>
     <p>Trace instance construction across a superclass/subclass path and inspect the static trace recorded when the nested Parent and Child classes were initialized for the first time.</p>
   readmeRelated:
-    file: 7.InitializationOrder/InitializationOrder.md
+    file: 7.InitializationOrder/knowledge/InitializationOrder.md
 NestedClassController:
   description: |-
     <h2>Nested Class</h2>
     <p>Observe how a local class accesses an effectively-final local variable and enclosing-instance state.</p>
   readmeRelated:
-    file: 9.NestedInnerClass/NestedInnerClass.md
+    file: 9.NestedInnerClass/knowledge/NestedInnerClass.md

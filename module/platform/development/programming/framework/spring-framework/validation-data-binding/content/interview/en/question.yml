@@ -35,7 +35,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.Foundation/Foundation.md"
+      file: "1.Foundation/knowledge/Foundation.md"
       anchor: "validation-vs-binding"
     apiRelated:
       controller: "ValidationExperimentController"
@@ -48,7 +48,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.Foundation/Foundation.md"
+      file: "1.Foundation/knowledge/Foundation.md"
       anchor: "conversion-vs-formatting"
     apiRelated:
       controller: ""
@@ -61,7 +61,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.PropertyAccess/PropertyAccess.md"
+      file: "2.PropertyAccess/knowledge/PropertyAccess.md"
       anchor: "binding-result-model"
     apiRelated:
       controller: ""
@@ -74,7 +74,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "8.SafeBinding/SafeBinding.md"
+      file: "8.SafeBinding/knowledge/SafeBinding.md"
       anchor: "safe-binding-controls"
     apiRelated:
       controller: "SafeBindingExperimentController"
@@ -87,7 +87,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "6.DataBinder/DataBinder.md"
+      file: "6.DataBinder/knowledge/DataBinder.md"
       anchor: "constructor-binding-model"
     apiRelated:
       controller: ""
@@ -100,7 +100,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "7.BeanValidation/BeanValidation.md"
+      file: "7.BeanValidation/knowledge/BeanValidation.md"
       anchor: "local-validator-factory-bean"
     apiRelated:
       controller: ""
@@ -113,7 +113,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "7.BeanValidation/BeanValidation.md"
+      file: "7.BeanValidation/knowledge/BeanValidation.md"
       anchor: "method-validation-post-processor"
     apiRelated:
       controller: ""

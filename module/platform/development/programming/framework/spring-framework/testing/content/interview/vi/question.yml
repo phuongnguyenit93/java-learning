@@ -35,7 +35,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.Introduction/SpringTesting.md"
+      file: "1.Introduction/knowledge/SpringTesting.md"
       anchor: "test-scope-ladder"
     apiRelated:
       controller: ""
@@ -48,7 +48,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.TestContextFramework/TestContextFramework.md"
+      file: "2.TestContextFramework/knowledge/TestContextFramework.md"
       anchor: "testcontext-framework-role"
     apiRelated:
       controller: ""
@@ -61,7 +61,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "6.ContextCaching/ContextCaching.md"
+      file: "6.ContextCaching/knowledge/ContextCaching.md"
       anchor: "context-cache-key"
     apiRelated:
       controller: ""
@@ -74,7 +74,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "7.TransactionalDatabaseTesting/TransactionalDatabaseTesting.md"
+      file: "7.TransactionalDatabaseTesting/knowledge/TransactionalDatabaseTesting.md"
       anchor: "transaction-testing-pitfalls"
     apiRelated:
       controller: ""
@@ -87,7 +87,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "8.MockMvcTesting/MockMvcTesting.md"
+      file: "8.MockMvcTesting/knowledge/MockMvcTesting.md"
       anchor: "mockmvc-limitations-and-live-server"
     apiRelated:
       controller: ""
@@ -100,7 +100,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "9.WebTestClientAndClientTesting/WebTestClientAndClientTesting.md"
+      file: "9.WebTestClientAndClientTesting/knowledge/WebTestClientAndClientTesting.md"
       anchor: "mock-server-vs-live-integration"
     apiRelated:
       controller: ""

@@ -1,4 +1,4 @@
-1.Introduction/ReactiveProgramming.md:
+1.Introduction/knowledge/ReactiveProgramming.md:
   reactive-what:
     difficulty: BASIC
     aiGenerated: true
@@ -39,7 +39,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-2.DataFlow/DataFlow.md:
+2.DataFlow/knowledge/DataFlow.md:
   reactive-source-producer-consumer:
     difficulty: BASIC
     aiGenerated: true
@@ -75,7 +75,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-3.Backpressure/Backpressure.md:
+3.Backpressure/knowledge/Backpressure.md:
   reactive-rate-mismatch:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -101,7 +101,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-4.ReactiveStreams/ReactiveStreams.md:
+4.ReactiveStreams/knowledge/ReactiveStreams.md:
   reactive-spec-scope:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -132,7 +132,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-5.ErrorCancellation/ErrorCancellation.md:
+5.ErrorCancellation/knowledge/ErrorCancellation.md:
   reactive-terminal-success:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -163,7 +163,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-6.Tradeoffs/Tradeoffs.md:
+6.Tradeoffs/knowledge/Tradeoffs.md:
   reactive-end-to-end-example:
     difficulty: INTERMEDIATE
     aiGenerated: true

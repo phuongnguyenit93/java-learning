@@ -75,6 +75,33 @@ class SheetSnapshotReplaceServiceTest {
         assertEquals('old script', authored.getText('UTF-8'))
     }
 
+    @Test
+    void forbidsReplacingEntireReadmeMenuButAllowsKnowledgeOnly() {
+        File root = temporary.newFolder('knowledge-ownership')
+        File chapter = new File(root, 'module/example/content/readme/docs/vi/menu/1.Class')
+        File knowledge = new File(chapter, 'knowledge')
+        assertTrue(knowledge.mkdirs())
+        File links = new File(chapter, 'chapter-links.md')
+        links.setText('Independent Markdown', 'UTF-8')
+        File objectives = new File(chapter, 'lesson-objectives.yml')
+        objectives.setText('Independent YAML', 'UTF-8')
+        File stale = new File(knowledge, 'Old.md')
+        stale.setText('Old Knowledge', 'UTF-8')
+
+        assertFailure {
+            SheetSnapshotReplaceService.replace(root, chapter.parentFile,
+                    ['1.Class/knowledge/Class.md': '# New'], true)
+        }
+        assertTrue(stale.isFile())
+        Map result = SheetSnapshotReplaceService.replace(root, knowledge,
+                ['Class.md': '# New Knowledge'], true)
+        assertEquals('UPDATED', result.status)
+        assertFalse(stale.exists())
+        assertEquals('# New Knowledge', new File(knowledge, 'Class.md').getText('UTF-8'))
+        assertEquals('Independent Markdown', links.getText('UTF-8'))
+        assertEquals('Independent YAML', objectives.getText('UTF-8'))
+    }
+
     private static void assertFailure(Closure action) {
         try {
             action.call()

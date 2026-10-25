@@ -10,7 +10,7 @@ ClassLoaderChainController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 2.BuiltInClassLoaders/BuiltInClassLoaders.md
+      file: 2.BuiltInClassLoaders/knowledge/BuiltInClassLoaders.md
       anchor: loader-chain
     methodName: inspectChain
     params: [
@@ -38,7 +38,7 @@ ClassLifecycleController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 1.Lifecycle/Lifecycle.md
+      file: 1.Lifecycle/knowledge/Lifecycle.md
       anchor: load-vs-initialize
     methodName: loadWithoutInit
     params: [
@@ -66,7 +66,7 @@ ResourceLoadingController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 7.ResourceLoading/ResourceLoading.md
+      file: 7.ResourceLoading/knowledge/ResourceLoading.md
       anchor: loader-resource
     methodName: resolve
     params: [
@@ -94,7 +94,7 @@ CustomClassLoaderController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 5.ClassIdentity/ClassIdentity.md
+      file: 5.ClassIdentity/knowledge/ClassIdentity.md
       anchor: same-name-different-type
     methodName: sameNameIdentity
     params: [
@@ -122,7 +122,7 @@ ClassIdentityController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 5.ClassIdentity/ClassIdentity.md
+      file: 5.ClassIdentity/knowledge/ClassIdentity.md
       anchor: class-cast-loader-failure
     methodName: crossLoaderCast
     params: [
@@ -149,7 +149,7 @@ ContextClassLoaderController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 6.ContextClassLoader/ContextClassLoader.md
+      file: 6.ContextClassLoader/knowledge/ContextClassLoader.md
       anchor: tccl-lifecycle
     methodName: temporaryTccl
     params: [
@@ -177,7 +177,7 @@ InitializationController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 8.Initialization/Initialization.md
+      file: 8.Initialization/knowledge/Initialization.md
       anchor: initialization-failure
     methodName: failureState
     params: [

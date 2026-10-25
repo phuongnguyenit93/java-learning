@@ -35,7 +35,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.AutoConfigurationFoundation/AutoConfigurationFoundation.md"
+      file: "1.AutoConfigurationFoundation/knowledge/AutoConfigurationFoundation.md"
       anchor: "defaults-and-back-off-contract"
     apiRelated:
       controller: ""
@@ -48,7 +48,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.ActivationDiscovery/ActivationDiscovery.md"
+      file: "2.ActivationDiscovery/knowledge/ActivationDiscovery.md"
       anchor: "candidate-discovery-vs-bean-creation"
     apiRelated:
       controller: ""
@@ -61,7 +61,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "3.ConditionModel/ConditionModel.md"
+      file: "3.ConditionModel/knowledge/ConditionModel.md"
       anchor: "optional-class-linkage"
     apiRelated:
       controller: ""
@@ -74,7 +74,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "3.ConditionModel/ConditionModel.md"
+      file: "3.ConditionModel/knowledge/ConditionModel.md"
       anchor: "bean-conditions-and-timing"
     apiRelated:
       controller: ""
@@ -87,7 +87,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "3.ConditionModel/ConditionModel.md"
+      file: "3.ConditionModel/knowledge/ConditionModel.md"
       anchor: "property-conditions"
     apiRelated:
       controller: ""
@@ -100,7 +100,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.BackOffUserControl/BackOffUserControl.md"
+      file: "4.BackOffUserControl/knowledge/BackOffUserControl.md"
       anchor: "bean-type-specificity"
     apiRelated:
       controller: ""
@@ -113,7 +113,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "5.OrderingComposition/OrderingComposition.md"
+      file: "5.OrderingComposition/knowledge/OrderingComposition.md"
       anchor: "configuration-order-vs-bean-order"
     apiRelated:
       controller: ""
@@ -126,7 +126,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "6.ExclusionsDiagnostics/ExclusionsDiagnostics.md"
+      file: "6.ExclusionsDiagnostics/knowledge/ExclusionsDiagnostics.md"
       anchor: "condition-diagnosis-playbook"
     apiRelated:
       controller: ""
@@ -139,7 +139,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "7.CustomAuthoring/CustomAuthoring.md"
+      file: "7.CustomAuthoring/knowledge/CustomAuthoring.md"
       anchor: "registration-and-package-boundaries"
     apiRelated:
       controller: ""
@@ -152,7 +152,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "7.CustomAuthoring/CustomAuthoring.md"
+      file: "7.CustomAuthoring/knowledge/CustomAuthoring.md"
       anchor: "auto-configure-metadata"
     apiRelated:
       controller: ""
@@ -165,7 +165,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "7.CustomAuthoring/CustomAuthoring.md"
+      file: "7.CustomAuthoring/knowledge/CustomAuthoring.md"
       anchor: "stable-auto-configuration-identities"
     apiRelated:
       controller: ""
@@ -178,7 +178,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "8.AutoConfigurationTesting/AutoConfigurationTesting.md"
+      file: "8.AutoConfigurationTesting/knowledge/AutoConfigurationTesting.md"
       anchor: "application-context-runner"
     apiRelated:
       controller: ""
@@ -191,7 +191,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "9.StarterSynthesis/StarterSynthesis.md"
+      file: "9.StarterSynthesis/knowledge/StarterSynthesis.md"
       anchor: "starter-split-or-combine"
     apiRelated:
       controller: ""
@@ -204,7 +204,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "9.StarterSynthesis/StarterSynthesis.md"
+      file: "9.StarterSynthesis/knowledge/StarterSynthesis.md"
       anchor: "starter-end-to-end-flow"
     apiRelated:
       controller: ""

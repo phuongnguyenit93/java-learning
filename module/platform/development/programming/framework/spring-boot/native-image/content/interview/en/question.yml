@@ -34,7 +34,7 @@ questions:
   aiGenerated: true
   reviewed: false
   readmeRelated:
-    file: 1.Purpose/NativeImage.md
+    file: 1.Purpose/knowledge/NativeImage.md
     anchor: native-image-problem
   apiRelated:
     controller: ""
@@ -45,7 +45,7 @@ questions:
   aiGenerated: true
   reviewed: false
   readmeRelated:
-    file: 1.Purpose/NativeImage.md
+    file: 1.Purpose/knowledge/NativeImage.md
     anchor: native-image-cost-model
   apiRelated:
     controller: ""
@@ -56,7 +56,7 @@ questions:
   aiGenerated: true
   reviewed: false
   readmeRelated:
-    file: 2.AOTPipeline/AOTPipeline.md
+    file: 2.AOTPipeline/knowledge/AOTPipeline.md
     anchor: aot-generated-assets
   apiRelated:
     controller: ""
@@ -67,7 +67,7 @@ questions:
   aiGenerated: true
   reviewed: false
   readmeRelated:
-    file: 2.AOTPipeline/AOTPipeline.md
+    file: 2.AOTPipeline/knowledge/AOTPipeline.md
     anchor: aot-entry-model
   apiRelated:
     controller: ""
@@ -78,7 +78,7 @@ questions:
   aiGenerated: true
   reviewed: false
   readmeRelated:
-    file: 2.AOTPipeline/AOTPipeline.md
+    file: 2.AOTPipeline/knowledge/AOTPipeline.md
     anchor: aot-diagnostic-evidence
   apiRelated:
     controller: ""
@@ -89,7 +89,7 @@ questions:
   aiGenerated: true
   reviewed: false
   readmeRelated:
-    file: 3.ClosedWorld/ClosedWorld.md
+    file: 3.ClosedWorld/knowledge/ClosedWorld.md
     anchor: closed-world-runtime-boundary
   apiRelated:
     controller: ""
@@ -100,7 +100,7 @@ questions:
   aiGenerated: true
   reviewed: false
   readmeRelated:
-    file: 3.ClosedWorld/ClosedWorld.md
+    file: 3.ClosedWorld/knowledge/ClosedWorld.md
     anchor: aot-bean-graph
   apiRelated:
     controller: ""
@@ -111,7 +111,7 @@ questions:
   aiGenerated: true
   reviewed: false
   readmeRelated:
-    file: 4.RuntimeHints/RuntimeHints.md
+    file: 4.RuntimeHints/knowledge/RuntimeHints.md
     anchor: inferred-vs-explicit-hints
   apiRelated:
     controller: ""
@@ -122,7 +122,7 @@ questions:
   aiGenerated: true
   reviewed: false
   readmeRelated:
-    file: 4.RuntimeHints/RuntimeHints.md
+    file: 4.RuntimeHints/knowledge/RuntimeHints.md
     anchor: reflection-resource-proxy-hints
   apiRelated:
     controller: ""
@@ -133,7 +133,7 @@ questions:
   aiGenerated: true
   reviewed: false
   readmeRelated:
-    file: 4.RuntimeHints/RuntimeHints.md
+    file: 4.RuntimeHints/knowledge/RuntimeHints.md
     anchor: reachability-metadata
   apiRelated:
     controller: ""
@@ -144,7 +144,7 @@ questions:
   aiGenerated: true
   reviewed: false
   readmeRelated:
-    file: 4.RuntimeHints/RuntimeHints.md
+    file: 4.RuntimeHints/knowledge/RuntimeHints.md
     anchor: missing-hint-diagnosis
   apiRelated:
     controller: ""
@@ -155,7 +155,7 @@ questions:
   aiGenerated: true
   reviewed: false
   readmeRelated:
-    file: 5.BuildAndRun/BuildAndRun.md
+    file: 5.BuildAndRun/knowledge/BuildAndRun.md
     anchor: aot-to-native-compile
   apiRelated:
     controller: ""
@@ -166,7 +166,7 @@ questions:
   aiGenerated: true
   reviewed: false
   readmeRelated:
-    file: 5.BuildAndRun/BuildAndRun.md
+    file: 5.BuildAndRun/knowledge/BuildAndRun.md
     anchor: graalvm-native-build-tools
   apiRelated:
     controller: ""
@@ -177,7 +177,7 @@ questions:
   aiGenerated: true
   reviewed: false
   readmeRelated:
-    file: 8.ReadinessSynthesis/ReadinessSynthesis.md
+    file: 8.ReadinessSynthesis/knowledge/ReadinessSynthesis.md
     anchor: native-delivery-choice
   apiRelated:
     controller: ""
@@ -188,7 +188,7 @@ questions:
   aiGenerated: true
   reviewed: false
   readmeRelated:
-    file: 6.NativeTesting/NativeTesting.md
+    file: 6.NativeTesting/knowledge/NativeTesting.md
     anchor: jvm-first-test-strategy
   apiRelated:
     controller: ""
@@ -210,7 +210,7 @@ questions:
   aiGenerated: true
   reviewed: false
   readmeRelated:
-    file: 7.CompatibilityTradeoffs/CompatibilityTradeoffs.md
+    file: 7.CompatibilityTradeoffs/knowledge/CompatibilityTradeoffs.md
     anchor: dependency-native-readiness
   apiRelated:
     controller: ""
@@ -221,7 +221,7 @@ questions:
   aiGenerated: true
   reviewed: false
   readmeRelated:
-    file: 7.CompatibilityTradeoffs/CompatibilityTradeoffs.md
+    file: 7.CompatibilityTradeoffs/knowledge/CompatibilityTradeoffs.md
     anchor: native-failure-classification
   apiRelated:
     controller: ""
@@ -232,7 +232,7 @@ questions:
   aiGenerated: true
   reviewed: false
   readmeRelated:
-    file: 7.CompatibilityTradeoffs/CompatibilityTradeoffs.md
+    file: 7.CompatibilityTradeoffs/knowledge/CompatibilityTradeoffs.md
     anchor: when-not-native
   apiRelated:
     controller: ""
@@ -243,7 +243,7 @@ questions:
   aiGenerated: true
   reviewed: false
   readmeRelated:
-    file: 8.ReadinessSynthesis/ReadinessSynthesis.md
+    file: 8.ReadinessSynthesis/knowledge/ReadinessSynthesis.md
     anchor: native-evidence-loop
   apiRelated:
     controller: ""

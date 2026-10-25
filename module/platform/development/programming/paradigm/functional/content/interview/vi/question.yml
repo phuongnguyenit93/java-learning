@@ -33,7 +33,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.Introduction/FunctionalProgramming.md"
+      file: "1.Introduction/knowledge/FunctionalProgramming.md"
       anchor: "functional-what"
     apiRelated:
       controller: ""
@@ -43,7 +43,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.Introduction/FunctionalProgramming.md"
+      file: "1.Introduction/knowledge/FunctionalProgramming.md"
       anchor: "functional-why"
     apiRelated:
       controller: ""
@@ -53,7 +53,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.Introduction/FunctionalProgramming.md"
+      file: "1.Introduction/knowledge/FunctionalProgramming.md"
       anchor: "functional-without"
     apiRelated:
       controller: ""
@@ -63,7 +63,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.Introduction/FunctionalProgramming.md"
+      file: "1.Introduction/knowledge/FunctionalProgramming.md"
       anchor: "functional-prerequisites"
     apiRelated:
       controller: ""
@@ -73,7 +73,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.Introduction/FunctionalProgramming.md"
+      file: "1.Introduction/knowledge/FunctionalProgramming.md"
       anchor: "functional-solution"
     apiRelated:
       controller: ""
@@ -83,7 +83,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.Introduction/FunctionalProgramming.md"
+      file: "1.Introduction/knowledge/FunctionalProgramming.md"
       anchor: "functional-when"
     apiRelated:
       controller: ""
@@ -93,7 +93,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.Introduction/FunctionalProgramming.md"
+      file: "1.Introduction/knowledge/FunctionalProgramming.md"
       anchor: "functional-learning-journey"
     apiRelated:
       controller: ""
@@ -103,7 +103,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.PureFunctions/PureFunctions.md"
+      file: "2.PureFunctions/knowledge/PureFunctions.md"
       anchor: "purity-concept"
     apiRelated:
       controller: ""
@@ -113,7 +113,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.PureFunctions/PureFunctions.md"
+      file: "2.PureFunctions/knowledge/PureFunctions.md"
       anchor: "purity-motivation"
     apiRelated:
       controller: ""
@@ -123,7 +123,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.PureFunctions/PureFunctions.md"
+      file: "2.PureFunctions/knowledge/PureFunctions.md"
       anchor: "purity-input-output"
     apiRelated:
       controller: ""
@@ -133,7 +133,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.PureFunctions/PureFunctions.md"
+      file: "2.PureFunctions/knowledge/PureFunctions.md"
       anchor: "referential-transparency"
     apiRelated:
       controller: ""
@@ -143,7 +143,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.PureFunctions/PureFunctions.md"
+      file: "2.PureFunctions/knowledge/PureFunctions.md"
       anchor: "purity-boundaries"
     apiRelated:
       controller: ""
@@ -153,7 +153,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "3.Immutability/Immutability.md"
+      file: "3.Immutability/knowledge/Immutability.md"
       anchor: "immutable-values"
     apiRelated:
       controller: ""
@@ -163,7 +163,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "3.Immutability/Immutability.md"
+      file: "3.Immutability/knowledge/Immutability.md"
       anchor: "value-vs-state"
     apiRelated:
       controller: ""
@@ -173,7 +173,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "3.Immutability/Immutability.md"
+      file: "3.Immutability/knowledge/Immutability.md"
       anchor: "immutable-updates"
     apiRelated:
       controller: ""
@@ -183,7 +183,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "3.Immutability/Immutability.md"
+      file: "3.Immutability/knowledge/Immutability.md"
       anchor: "sharing-and-cost"
     apiRelated:
       controller: ""
@@ -193,7 +193,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "3.Immutability/Immutability.md"
+      file: "3.Immutability/knowledge/Immutability.md"
       anchor: "immutability-limits"
     apiRelated:
       controller: ""
@@ -203,7 +203,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.FunctionsComposition/FunctionsComposition.md"
+      file: "4.FunctionsComposition/knowledge/FunctionsComposition.md"
       anchor: "functions-as-values"
     apiRelated:
       controller: ""
@@ -213,7 +213,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.FunctionsComposition/FunctionsComposition.md"
+      file: "4.FunctionsComposition/knowledge/FunctionsComposition.md"
       anchor: "higher-order-functions"
     apiRelated:
       controller: ""
@@ -223,7 +223,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.FunctionsComposition/FunctionsComposition.md"
+      file: "4.FunctionsComposition/knowledge/FunctionsComposition.md"
       anchor: "function-composition"
     apiRelated:
       controller: ""
@@ -233,7 +233,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.FunctionsComposition/FunctionsComposition.md"
+      file: "4.FunctionsComposition/knowledge/FunctionsComposition.md"
       anchor: "map-filter-reduce"
     apiRelated:
       controller: ""
@@ -243,7 +243,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.FunctionsComposition/FunctionsComposition.md"
+      file: "4.FunctionsComposition/knowledge/FunctionsComposition.md"
       anchor: "transformation-walkthrough"
     apiRelated:
       controller: ""
@@ -253,7 +253,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.FunctionsComposition/FunctionsComposition.md"
+      file: "4.FunctionsComposition/knowledge/FunctionsComposition.md"
       anchor: "composition-limits"
     apiRelated:
       controller: ""
@@ -263,7 +263,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "5.SideEffects/SideEffects.md"
+      file: "5.SideEffects/knowledge/SideEffects.md"
       anchor: "effect-concept"
     apiRelated:
       controller: ""
@@ -273,7 +273,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "5.SideEffects/SideEffects.md"
+      file: "5.SideEffects/knowledge/SideEffects.md"
       anchor: "pure-core-effects"
     apiRelated:
       controller: ""
@@ -283,7 +283,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "5.SideEffects/SideEffects.md"
+      file: "5.SideEffects/knowledge/SideEffects.md"
       anchor: "effect-coordination"
     apiRelated:
       controller: ""
@@ -293,7 +293,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "5.SideEffects/SideEffects.md"
+      file: "5.SideEffects/knowledge/SideEffects.md"
       anchor: "effect-testing"
     apiRelated:
       controller: ""
@@ -303,7 +303,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "5.SideEffects/SideEffects.md"
+      file: "5.SideEffects/knowledge/SideEffects.md"
       anchor: "effects-real-world"
     apiRelated:
       controller: ""
@@ -313,7 +313,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "6.Tradeoffs/Tradeoffs.md"
+      file: "6.Tradeoffs/knowledge/Tradeoffs.md"
       anchor: "functional-use-cases"
     apiRelated:
       controller: ""
@@ -323,7 +323,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "6.Tradeoffs/Tradeoffs.md"
+      file: "6.Tradeoffs/knowledge/Tradeoffs.md"
       anchor: "functional-costs"
     apiRelated:
       controller: ""
@@ -333,7 +333,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "6.Tradeoffs/Tradeoffs.md"
+      file: "6.Tradeoffs/knowledge/Tradeoffs.md"
       anchor: "functional-vs-other-styles"
     apiRelated:
       controller: ""
@@ -343,7 +343,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "6.Tradeoffs/Tradeoffs.md"
+      file: "6.Tradeoffs/knowledge/Tradeoffs.md"
       anchor: "functional-end-to-end"
     apiRelated:
       controller: ""
@@ -353,7 +353,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "6.Tradeoffs/Tradeoffs.md"
+      file: "6.Tradeoffs/knowledge/Tradeoffs.md"
       anchor: "functional-boundaries"
     apiRelated:
       controller: ""

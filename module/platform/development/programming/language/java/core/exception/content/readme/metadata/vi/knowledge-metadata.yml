@@ -1,4 +1,4 @@
-1.ExceptionOverview/ExceptionOverview.md:
+1.ExceptionOverview/knowledge/ExceptionOverview.md:
   exception-overview-001:
     difficulty: BASIC
     aiGenerated: true
@@ -39,7 +39,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-2.ExceptionHierarchy/ExceptionHierarchy.md:
+2.ExceptionHierarchy/knowledge/ExceptionHierarchy.md:
   exception-hierarchy-001:
     difficulty: BASIC
     aiGenerated: true
@@ -80,7 +80,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-3.ExceptionControlFlow/ExceptionControlFlow.md:
+3.ExceptionControlFlow/knowledge/ExceptionControlFlow.md:
   exception-control-flow-001:
     difficulty: BASIC
     aiGenerated: true
@@ -126,7 +126,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-4.ThrowStatement/ThrowStatement.md:
+4.ThrowStatement/knowledge/ThrowStatement.md:
   throw-statement-001:
     difficulty: BASIC
     aiGenerated: true
@@ -167,7 +167,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-5.ThrowsClause/ThrowsClause.md:
+5.ThrowsClause/knowledge/ThrowsClause.md:
   throws-clause-001:
     difficulty: BASIC
     aiGenerated: true
@@ -213,7 +213,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-6.TryCatch/TryCatch.md:
+6.TryCatch/knowledge/TryCatch.md:
   try-catch-001:
     difficulty: BASIC
     aiGenerated: true
@@ -264,7 +264,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-7.MultiCatchRethrow/MultiCatchRethrow.md:
+7.MultiCatchRethrow/knowledge/MultiCatchRethrow.md:
   multi-catch-rethrow-001:
     difficulty: BASIC
     aiGenerated: true
@@ -305,7 +305,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-8.Finally/Finally.md:
+8.Finally/knowledge/Finally.md:
   finally-001:
     difficulty: BASIC
     aiGenerated: true
@@ -351,7 +351,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-9.TryWithResources/TryWithResources.md:
+9.TryWithResources/knowledge/TryWithResources.md:
   try-with-resources-001:
     difficulty: BASIC
     aiGenerated: true
@@ -412,7 +412,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-10.ThrowableInternals/ThrowableInternals.md:
+10.ThrowableInternals/knowledge/ThrowableInternals.md:
   throwable-internals-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -463,7 +463,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-11.CauseAndSuppressed/CauseAndSuppressed.md:
+11.CauseAndSuppressed/knowledge/CauseAndSuppressed.md:
   cause-and-suppressed-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -509,7 +509,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-12.CustomExceptions/CustomExceptions.md:
+12.CustomExceptions/knowledge/CustomExceptions.md:
   custom-exceptions-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -560,7 +560,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-13.ExceptionInheritance/ExceptionInheritance.md:
+13.ExceptionInheritance/knowledge/ExceptionInheritance.md:
   exception-inheritance-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -606,7 +606,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-14.LambdaGenericExceptions/LambdaGenericExceptions.md:
+14.LambdaGenericExceptions/knowledge/LambdaGenericExceptions.md:
   lambda-generic-exceptions-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -652,7 +652,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-15.CommonRuntimeExceptions/CommonRuntimeExceptions.md:
+15.CommonRuntimeExceptions/knowledge/CommonRuntimeExceptions.md:
   common-runtime-exceptions-001:
     difficulty: BASIC
     aiGenerated: true
@@ -713,7 +713,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-16.APIExceptions/APIExceptions.md:
+16.APIExceptions/knowledge/APIExceptions.md:
   api-exceptions-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -769,7 +769,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-17.ErrorAndInitialization/ErrorAndInitialization.md:
+17.ErrorAndInitialization/knowledge/ErrorAndInitialization.md:
   error-and-initialization-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -815,7 +815,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-18.ExceptionApiDesign/ExceptionApiDesign.md:
+18.ExceptionApiDesign/knowledge/ExceptionApiDesign.md:
   exception-api-design-001:
     difficulty: ADVANCED
     aiGenerated: true
@@ -866,7 +866,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-19.ExceptionSafety/ExceptionSafety.md:
+19.ExceptionSafety/knowledge/ExceptionSafety.md:
   exception-safety-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -912,7 +912,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-20.ThreadExceptionHandling/ThreadExceptionHandling.md:
+20.ThreadExceptionHandling/knowledge/ThreadExceptionHandling.md:
   thread-exception-handling-001:
     difficulty: BASIC
     aiGenerated: true
@@ -963,7 +963,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-21.InterruptionAndCancellation/InterruptionAndCancellation.md:
+21.InterruptionAndCancellation/knowledge/InterruptionAndCancellation.md:
   interruption-and-cancellation-001:
     difficulty: BASIC
     aiGenerated: true
@@ -1009,7 +1009,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-22.CompletableFutureExceptions/CompletableFutureExceptions.md:
+22.CompletableFutureExceptions/knowledge/CompletableFutureExceptions.md:
   completable-future-exceptions-001:
     difficulty: BASIC
     aiGenerated: true
@@ -1065,7 +1065,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-23.ExceptionDiagnosticsAndLogging/ExceptionDiagnosticsAndLogging.md:
+23.ExceptionDiagnosticsAndLogging/knowledge/ExceptionDiagnosticsAndLogging.md:
   exception-diagnostics-and-logging-001:
     difficulty: BASIC
     aiGenerated: true
@@ -1121,7 +1121,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-24.ExceptionPerformance/ExceptionPerformance.md:
+24.ExceptionPerformance/knowledge/ExceptionPerformance.md:
   exception-performance-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -1162,7 +1162,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-25.ExceptionHandlingPitfalls/ExceptionHandlingPitfalls.md:
+25.ExceptionHandlingPitfalls/knowledge/ExceptionHandlingPitfalls.md:
   exception-handling-pitfalls-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -1218,7 +1218,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-26.ExceptionTesting/ExceptionTesting.md:
+26.ExceptionTesting/knowledge/ExceptionTesting.md:
   exception-testing-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -1269,7 +1269,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-27.ExceptionHandlingPractice/ExceptionHandlingPractice.md:
+27.ExceptionHandlingPractice/knowledge/ExceptionHandlingPractice.md:
   exception-handling-practice-001:
     difficulty: ADVANCED
     aiGenerated: true
@@ -1320,7 +1320,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-28.ExceptionReference/ExceptionReference.md:
+28.ExceptionReference/knowledge/ExceptionReference.md:
   exception-reference-001:
     difficulty: INTERMEDIATE
     aiGenerated: true

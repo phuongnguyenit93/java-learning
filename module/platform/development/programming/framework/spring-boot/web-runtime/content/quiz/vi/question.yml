@@ -44,7 +44,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '2.WebApplicationType/WebApplicationType.md'
+      file: '2.WebApplicationType/knowledge/WebApplicationType.md'
       anchor: 'servlet-reactive-precedence'
     apiRelated:
       controller: ''
@@ -69,7 +69,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '6.ServerProperties/ServerProperties.md'
+      file: '6.ServerProperties/knowledge/ServerProperties.md'
       anchor: 'port-address-endpoint-controls'
     apiRelated:
       controller: ''
@@ -94,7 +94,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '3.EmbeddedServerModel/EmbeddedServerModel.md'
+      file: '3.EmbeddedServerModel/knowledge/EmbeddedServerModel.md'
       anchor: 'replacing-default-server'
     apiRelated:
       controller: ''
@@ -119,7 +119,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '3.EmbeddedServerModel/EmbeddedServerModel.md'
+      file: '3.EmbeddedServerModel/knowledge/EmbeddedServerModel.md'
       anchor: 'web-server-context-startup'
     apiRelated:
       controller: 'WebRuntimeExperimentController'
@@ -144,7 +144,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '6.ServerProperties/ServerProperties.md'
+      file: '6.ServerProperties/knowledge/ServerProperties.md'
       anchor: 'server-properties-model'
     apiRelated:
       controller: 'WebRuntimeExperimentController'
@@ -169,7 +169,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '7.ServerCustomization/ServerCustomization.md'
+      file: '7.ServerCustomization/knowledge/ServerCustomization.md'
       anchor: 'custom-web-server-factory'
     apiRelated:
       controller: ''
@@ -194,7 +194,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '7.ServerCustomization/ServerCustomization.md'
+      file: '7.ServerCustomization/knowledge/ServerCustomization.md'
       anchor: 'server-customization-decision-order'
     apiRelated:
       controller: ''
@@ -219,7 +219,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '6.ServerProperties/ServerProperties.md'
+      file: '6.ServerProperties/knowledge/ServerProperties.md'
       anchor: 'portable-vs-server-specific-properties'
     apiRelated:
       controller: ''
@@ -244,7 +244,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '8.HttpFeatures/HttpFeatures.md'
+      file: '8.HttpFeatures/knowledge/HttpFeatures.md'
       anchor: 'http-response-compression'
     apiRelated:
       controller: ''
@@ -269,7 +269,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '8.HttpFeatures/HttpFeatures.md'
+      file: '8.HttpFeatures/knowledge/HttpFeatures.md'
       anchor: 'http2-support'
     apiRelated:
       controller: ''
@@ -294,7 +294,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '9.TlsSslBundles/TlsSslBundles.md'
+      file: '9.TlsSslBundles/knowledge/TlsSslBundles.md'
       anchor: 'bundle-vs-discrete-ssl-properties'
     apiRelated:
       controller: ''
@@ -319,7 +319,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '10.ForwardedHeadersProxy/ForwardedHeadersProxy.md'
+      file: '10.ForwardedHeadersProxy/knowledge/ForwardedHeadersProxy.md'
       anchor: 'forward-header-strategies'
     apiRelated:
       controller: 'WebRuntimeExperimentController'
@@ -344,7 +344,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '10.ForwardedHeadersProxy/ForwardedHeadersProxy.md'
+      file: '10.ForwardedHeadersProxy/knowledge/ForwardedHeadersProxy.md'
       anchor: 'forwarded-header-trust-boundary'
     apiRelated:
       controller: ''
@@ -369,7 +369,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '11.GracefulShutdown/GracefulShutdown.md'
+      file: '11.GracefulShutdown/knowledge/GracefulShutdown.md'
       anchor: 'server-specific-shutdown-behavior'
     apiRelated:
       controller: ''
@@ -394,7 +394,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '12.BootWebDefaults/BootWebDefaults.md'
+      file: '12.BootWebDefaults/knowledge/BootWebDefaults.md'
       anchor: 'spring-framework-web-handoff'
     apiRelated:
       controller: ''

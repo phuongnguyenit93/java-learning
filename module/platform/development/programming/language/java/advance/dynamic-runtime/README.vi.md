@@ -1,21 +1,21 @@
 # 📂 README MODULE STRUCTURE (VI)
 
 * **1.MentalModel**
-    * [DynamicRuntime](content/readme/docs/vi/menu/1.MentalModel/DynamicRuntime.md)
+    * [DynamicRuntime](content/readme/docs/vi/menu/1.MentalModel/knowledge/DynamicRuntime.md)
 * **2.TypedInvocation**
-    * [TypedInvocation](content/readme/docs/vi/menu/2.TypedInvocation/TypedInvocation.md)
+    * [TypedInvocation](content/readme/docs/vi/menu/2.TypedInvocation/knowledge/TypedInvocation.md)
 * **3.LookupAccess**
-    * [LookupAccess](content/readme/docs/vi/menu/3.LookupAccess/LookupAccess.md)
+    * [LookupAccess](content/readme/docs/vi/menu/3.LookupAccess/knowledge/LookupAccess.md)
 * **4.MethodHandleAdaptation**
-    * [MethodHandleAdaptation](content/readme/docs/vi/menu/4.MethodHandleAdaptation/MethodHandleAdaptation.md)
+    * [MethodHandleAdaptation](content/readme/docs/vi/menu/4.MethodHandleAdaptation/knowledge/MethodHandleAdaptation.md)
 * **5.CallSite**
-    * [CallSite](content/readme/docs/vi/menu/5.CallSite/CallSite.md)
+    * [CallSite](content/readme/docs/vi/menu/5.CallSite/knowledge/CallSite.md)
 * **6.InvokeDynamic**
-    * [InvokeDynamic](content/readme/docs/vi/menu/6.InvokeDynamic/InvokeDynamic.md)
+    * [InvokeDynamic](content/readme/docs/vi/menu/6.InvokeDynamic/knowledge/InvokeDynamic.md)
 * **7.VarHandle**
-    * [VarHandle](content/readme/docs/vi/menu/7.VarHandle/VarHandle.md)
+    * [VarHandle](content/readme/docs/vi/menu/7.VarHandle/knowledge/VarHandle.md)
 * **8.Synthesis**
-    * [Synthesis](content/readme/docs/vi/menu/8.Synthesis/Synthesis.md)
+    * [Synthesis](content/readme/docs/vi/menu/8.Synthesis/knowledge/Synthesis.md)
 
 # Dynamic Runtime
 

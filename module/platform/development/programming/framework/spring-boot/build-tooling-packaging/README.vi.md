@@ -1,29 +1,29 @@
 # 📂 README MODULE STRUCTURE (VI)
 
 * **1.Purpose**
-    * [Purpose](content/readme/docs/vi/menu/1.Purpose/Purpose.md)
+    * [Purpose](content/readme/docs/vi/menu/1.Purpose/knowledge/Purpose.md)
 * **2.BuildPlugins**
-    * [BuildPlugins](content/readme/docs/vi/menu/2.BuildPlugins/BuildPlugins.md)
+    * [BuildPlugins](content/readme/docs/vi/menu/2.BuildPlugins/knowledge/BuildPlugins.md)
 * **3.DependencyManagement**
-    * [DependencyManagement](content/readme/docs/vi/menu/3.DependencyManagement/DependencyManagement.md)
+    * [DependencyManagement](content/readme/docs/vi/menu/3.DependencyManagement/knowledge/DependencyManagement.md)
 * **4.BootRun**
-    * [BootRun](content/readme/docs/vi/menu/4.BootRun/BootRun.md)
+    * [BootRun](content/readme/docs/vi/menu/4.BootRun/knowledge/BootRun.md)
 * **5.BootJarBootWar**
-    * [BootJarBootWar](content/readme/docs/vi/menu/5.BootJarBootWar/BootJarBootWar.md)
+    * [BootJarBootWar](content/readme/docs/vi/menu/5.BootJarBootWar/knowledge/BootJarBootWar.md)
 * **6.ExecutableArchives**
-    * [ExecutableArchives](content/readme/docs/vi/menu/6.ExecutableArchives/ExecutableArchives.md)
+    * [ExecutableArchives](content/readme/docs/vi/menu/6.ExecutableArchives/knowledge/ExecutableArchives.md)
 * **7.LayeredArchives**
-    * [LayeredArchives](content/readme/docs/vi/menu/7.LayeredArchives/LayeredArchives.md)
+    * [LayeredArchives](content/readme/docs/vi/menu/7.LayeredArchives/knowledge/LayeredArchives.md)
 * **8.ReproducibleBuilds**
-    * [ReproducibleBuilds](content/readme/docs/vi/menu/8.ReproducibleBuilds/ReproducibleBuilds.md)
+    * [ReproducibleBuilds](content/readme/docs/vi/menu/8.ReproducibleBuilds/knowledge/ReproducibleBuilds.md)
 * **9.Buildpacks**
-    * [Buildpacks](content/readme/docs/vi/menu/9.Buildpacks/Buildpacks.md)
+    * [Buildpacks](content/readme/docs/vi/menu/9.Buildpacks/knowledge/Buildpacks.md)
 * **10.OciImages**
-    * [OciImages](content/readme/docs/vi/menu/10.OciImages/OciImages.md)
+    * [OciImages](content/readme/docs/vi/menu/10.OciImages/knowledge/OciImages.md)
 * **11.DockerBuildStrategy**
-    * [DockerBuildStrategy](content/readme/docs/vi/menu/11.DockerBuildStrategy/DockerBuildStrategy.md)
+    * [DockerBuildStrategy](content/readme/docs/vi/menu/11.DockerBuildStrategy/knowledge/DockerBuildStrategy.md)
 * **12.DeploymentHandoff**
-    * [DeploymentHandoff](content/readme/docs/vi/menu/12.DeploymentHandoff/DeploymentHandoff.md)
+    * [DeploymentHandoff](content/readme/docs/vi/menu/12.DeploymentHandoff/knowledge/DeploymentHandoff.md)
 
 # Spring Boot Build Tooling và Packaging
 

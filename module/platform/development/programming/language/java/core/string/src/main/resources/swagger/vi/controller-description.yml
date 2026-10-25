@@ -5,32 +5,32 @@ EncodingController:
     <p><code>roundTrip()</code> cho thấy trường hợp hai phía cùng dùng UTF-8; <code>wrongCharset()</code> cố ý giải mã byte UTF-8 bằng ISO-8859-1 để tạo mojibake. Hai experiment giúp phân biệt lỗi truyền byte với lỗi diễn giải byte.</p>
     <p>Không suy luận rằng bản thân <code>String</code> “có sẵn UTF-8”. Charset chỉ xuất hiện khi văn bản đi qua ranh giới byte.</p>
   readmeRelated:
-    file: 10.Encoding/Encoding.md
+    file: 10.Encoding/knowledge/Encoding.md
 RegexController:
   description: |-
     <h2>Biểu thức chính quy (Regex)</h2>
     <p>Các API trong controller này minh họa hai mặt quan trọng của Regex: trích xuất dữ liệu bằng <code>Pattern</code>/<code>Matcher</code> và chi phí quay lui khi mẫu có cấu trúc rủi ro.</p>
     <p><code>groups()</code> cho thấy chỉ đọc nhóm bắt giữ sau khi phép so khớp thành công. <code>backtracking()</code> dùng một đầu vào nhỏ, có giới hạn để quan sát dạng rủi ro; thời gian đo được chỉ là bằng chứng minh họa, không phải benchmark hay SLA.</p>
   readmeRelated:
-    file: 11.Regex/Regex.md
+    file: 11.Regex/knowledge/Regex.md
 StringConcatController:
   description: |-
     <h2>Nối và xây dựng String</h2>
     <p>Experiment so sánh việc nối String lặp lại với việc dùng một <code>StringBuilder</code> để xây cùng kết quả <code>"0123"</code>.</p>
     <p>Các giá trị hash định danh trung gian chỉ giúp quan sát rằng phép nối lặp lại đi qua nhiều kết quả String; chúng không phải bộ đếm cấp phát và cũng không phải bằng chứng tuyệt đối về số đối tượng được cấp phát.</p>
   readmeRelated:
-    file: 5.Concatenation/Concatenation.md
+    file: 5.Concatenation/knowledge/Concatenation.md
 StringPoolController:
   description: |-
     <h2>String Pool và định danh tham chiếu</h2>
     <p>Experiment đặt String literal, biểu thức hằng nối chuỗi, <code>new String(...)</code> và <code>intern()</code> cạnh nhau để tách rõ so sánh nội dung khỏi so sánh định danh tham chiếu.</p>
     <p>Endpoint cố ý dùng <code>==</code> để quan sát định danh tham chiếu. Trong mã nghiệp vụ, so sánh nội dung String vẫn dựa trên <code>equals()</code>.</p>
   readmeRelated:
-    file: 2.StringPool/StringPool.md
+    file: 2.StringPool/knowledge/StringPool.md
 UnicodeController:
   description: |-
     <h2>Unicode trong String</h2>
     <p>Các API trong controller này minh họa hai vấn đề khác nhau: một điểm mã ngoài BMP có thể chiếm hai đơn vị mã UTF-16, và hai String tương đương chuẩn tắc có thể có chuỗi điểm mã khác nhau.</p>
     <p><code>charVsCodePoint()</code> cung cấp số đếm/điểm mã quan sát được; <code>normalization()</code> so sánh bằng nhau trước và sau NFC. Không suy luận chỉ từ cách văn bản được hiển thị.</p>
   readmeRelated:
-    file: 9.UnicodeCodePoint/UnicodeCodePoint.md
+    file: 9.UnicodeCodePoint/knowledge/UnicodeCodePoint.md

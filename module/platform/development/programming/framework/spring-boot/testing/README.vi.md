@@ -1,27 +1,27 @@
 # 📂 README MODULE STRUCTURE (VI)
 
 * **1.Introduction**
-    * [BootTesting](content/readme/docs/vi/menu/1.Introduction/BootTesting.md)
+    * [BootTesting](content/readme/docs/vi/menu/1.Introduction/knowledge/BootTesting.md)
 * **2.SpringBootTest**
-    * [SpringBootTest](content/readme/docs/vi/menu/2.SpringBootTest/SpringBootTest.md)
+    * [SpringBootTest](content/readme/docs/vi/menu/2.SpringBootTest/knowledge/SpringBootTest.md)
 * **3.WebEnvironment**
-    * [WebEnvironment](content/readme/docs/vi/menu/3.WebEnvironment/WebEnvironment.md)
+    * [WebEnvironment](content/readme/docs/vi/menu/3.WebEnvironment/knowledge/WebEnvironment.md)
 * **4.TestSlices**
-    * [TestSlices](content/readme/docs/vi/menu/4.TestSlices/TestSlices.md)
+    * [TestSlices](content/readme/docs/vi/menu/4.TestSlices/knowledge/TestSlices.md)
 * **5.WebLayerTesting**
-    * [WebLayerTesting](content/readme/docs/vi/menu/5.WebLayerTesting/WebLayerTesting.md)
+    * [WebLayerTesting](content/readme/docs/vi/menu/5.WebLayerTesting/knowledge/WebLayerTesting.md)
 * **6.DataLayerTesting**
-    * [DataLayerTesting](content/readme/docs/vi/menu/6.DataLayerTesting/DataLayerTesting.md)
+    * [DataLayerTesting](content/readme/docs/vi/menu/6.DataLayerTesting/knowledge/DataLayerTesting.md)
 * **7.TestAutoConfiguration**
-    * [TestAutoConfiguration](content/readme/docs/vi/menu/7.TestAutoConfiguration/TestAutoConfiguration.md)
+    * [TestAutoConfiguration](content/readme/docs/vi/menu/7.TestAutoConfiguration/knowledge/TestAutoConfiguration.md)
 * **8.PropertyOverrides**
-    * [PropertyOverrides](content/readme/docs/vi/menu/8.PropertyOverrides/PropertyOverrides.md)
+    * [PropertyOverrides](content/readme/docs/vi/menu/8.PropertyOverrides/knowledge/PropertyOverrides.md)
 * **9.MockReplacement**
-    * [MockReplacement](content/readme/docs/vi/menu/9.MockReplacement/MockReplacement.md)
+    * [MockReplacement](content/readme/docs/vi/menu/9.MockReplacement/knowledge/MockReplacement.md)
 * **10.Testcontainers**
-    * [Testcontainers](content/readme/docs/vi/menu/10.Testcontainers/Testcontainers.md)
+    * [Testcontainers](content/readme/docs/vi/menu/10.Testcontainers/knowledge/Testcontainers.md)
 * **11.IntegrationTestingStrategy**
-    * [IntegrationTestingStrategy](content/readme/docs/vi/menu/11.IntegrationTestingStrategy/IntegrationTestingStrategy.md)
+    * [IntegrationTestingStrategy](content/readme/docs/vi/menu/11.IntegrationTestingStrategy/knowledge/IntegrationTestingStrategy.md)
 
 # Kiểm thử ứng dụng với Spring Boot
 

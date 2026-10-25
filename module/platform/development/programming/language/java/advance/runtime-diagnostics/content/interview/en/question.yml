@@ -33,7 +33,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.MentalModel/RuntimeDiagnostics.md"
+      file: "1.MentalModel/knowledge/RuntimeDiagnostics.md"
       anchor: "diagnostic-reasoning-loop"
     apiRelated:
       controller: ""
@@ -55,7 +55,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.HeapGcDiagnostics/HeapGcDiagnostics.md"
+      file: "4.HeapGcDiagnostics/knowledge/HeapGcDiagnostics.md"
       anchor: "memory-leak-evidence"
     apiRelated:
       controller: ""
@@ -77,7 +77,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "6.JFR/JFR.md"
+      file: "6.JFR/knowledge/JFR.md"
       anchor: "cpu-thread-lock-analysis"
     apiRelated:
       controller: "RuntimeDiagnosticsExperimentController"

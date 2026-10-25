@@ -8,7 +8,7 @@ ExceptionDesignController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 8.ExceptionBoundaryDesign/ExceptionBoundaryDesign.md
+      file: 8.ExceptionBoundaryDesign/knowledge/ExceptionBoundaryDesign.md
       anchor: exception-boundaries
     methodName: translateBoundary
     params: []
@@ -31,7 +31,7 @@ FinallyController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 5.HandlingCleanup/HandlingCleanup.md
+      file: 5.HandlingCleanup/knowledge/HandlingCleanup.md
       anchor: return-finally
     methodName: returnInteraction
     params: []
@@ -54,7 +54,7 @@ PropagationController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 4.ThrowingPropagation/ThrowingPropagation.md
+      file: 4.ThrowingPropagation/knowledge/ThrowingPropagation.md
       anchor: exception-propagation
     methodName: propagate
     params: []
@@ -76,7 +76,7 @@ PropagationController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 4.ThrowingPropagation/ThrowingPropagation.md
+      file: 4.ThrowingPropagation/knowledge/ThrowingPropagation.md
       anchor: exception-chaining
     methodName: wrapCause
     params: []
@@ -99,7 +99,7 @@ ResourceController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 6.ResourceSafeFailure/ResourceSafeFailure.md
+      file: 6.ResourceSafeFailure/knowledge/ResourceSafeFailure.md
       anchor: resource-close-order
     methodName: closeOrder
     params: []
@@ -121,7 +121,7 @@ ResourceController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 6.ResourceSafeFailure/ResourceSafeFailure.md
+      file: 6.ResourceSafeFailure/knowledge/ResourceSafeFailure.md
       anchor: primary-vs-suppressed
     methodName: suppressed
     params: []

@@ -1,4 +1,4 @@
-1.MentalModel/DynamicRuntime.md:
+1.MentalModel/knowledge/DynamicRuntime.md:
   dynamic-runtime-purpose:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -19,7 +19,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-2.TypedInvocation/TypedInvocation.md:
+2.TypedInvocation/knowledge/TypedInvocation.md:
   method-type-model:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -45,7 +45,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-3.LookupAccess/LookupAccess.md:
+3.LookupAccess/knowledge/LookupAccess.md:
   lookup-purpose:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -71,7 +71,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-4.MethodHandleAdaptation/MethodHandleAdaptation.md:
+4.MethodHandleAdaptation/knowledge/MethodHandleAdaptation.md:
   method-handle-adaptation-model:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -102,7 +102,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-5.CallSite/CallSite.md:
+5.CallSite/knowledge/CallSite.md:
   call-site-model:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -128,7 +128,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-6.InvokeDynamic/InvokeDynamic.md:
+6.InvokeDynamic/knowledge/InvokeDynamic.md:
   invokedynamic-purpose:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -159,7 +159,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-7.VarHandle/VarHandle.md:
+7.VarHandle/knowledge/VarHandle.md:
   var-handle-purpose:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -195,7 +195,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-8.Synthesis/Synthesis.md:
+8.Synthesis/knowledge/Synthesis.md:
   choose-invocation-mechanism:
     difficulty: INTERMEDIATE
     aiGenerated: true

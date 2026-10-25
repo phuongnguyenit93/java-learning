@@ -35,7 +35,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.Hierarchy/Hierarchy.md"
+      file: "1.Hierarchy/knowledge/Hierarchy.md"
       anchor: "collection-purpose"
     apiRelated:
       controller: ""
@@ -48,7 +48,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.Hierarchy/Hierarchy.md"
+      file: "1.Hierarchy/knowledge/Hierarchy.md"
       anchor: "collection-vs-collections"
     apiRelated:
       controller: ""
@@ -61,7 +61,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.Hierarchy/Hierarchy.md"
+      file: "1.Hierarchy/knowledge/Hierarchy.md"
       anchor: "interface-vs-implementation"
     apiRelated:
       controller: ""
@@ -74,7 +74,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.Hierarchy/Hierarchy.md"
+      file: "1.Hierarchy/knowledge/Hierarchy.md"
       anchor: "collection-api-contract"
     apiRelated:
       controller: ""
@@ -87,7 +87,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.List/List.md"
+      file: "2.List/knowledge/List.md"
       anchor: "arraylist-model"
     apiRelated:
       controller: "ListController"
@@ -100,7 +100,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.List/List.md"
+      file: "2.List/knowledge/List.md"
       anchor: "list-practical-boundaries"
     apiRelated:
       controller: ""
@@ -113,7 +113,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "3.Set/Set.md"
+      file: "3.Set/knowledge/Set.md"
       anchor: "set-semantics"
     apiRelated:
       controller: "SetController"
@@ -126,7 +126,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "3.Set/Set.md"
+      file: "3.Set/knowledge/Set.md"
       anchor: "treeset-order"
     apiRelated:
       controller: ""
@@ -139,7 +139,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.Map/Map.md"
+      file: "4.Map/knowledge/Map.md"
       anchor: "map-entry-model"
     apiRelated:
       controller: ""
@@ -152,7 +152,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.Map/Map.md"
+      file: "4.Map/knowledge/Map.md"
       anchor: "map-views"
     apiRelated:
       controller: ""
@@ -165,7 +165,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "8.EqualityHashing/EqualityHashing.md"
+      file: "8.EqualityHashing/knowledge/EqualityHashing.md"
       anchor: "mutable-element-risk"
     apiRelated:
       controller: "HashingController"
@@ -178,7 +178,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.Map/Map.md"
+      file: "4.Map/knowledge/Map.md"
       anchor: "linkedhashmap-order"
     apiRelated:
       controller: ""
@@ -191,7 +191,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.Map/Map.md"
+      file: "4.Map/knowledge/Map.md"
       anchor: "map-compute-merge"
     apiRelated:
       controller: "MapController"
@@ -204,7 +204,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "5.QueueDeque/QueueDeque.md"
+      file: "5.QueueDeque/knowledge/QueueDeque.md"
       anchor: "exception-vs-special-value"
     apiRelated:
       controller: "QueueController"
@@ -217,7 +217,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "5.QueueDeque/QueueDeque.md"
+      file: "5.QueueDeque/knowledge/QueueDeque.md"
       anchor: "priority-queue"
     apiRelated:
       controller: ""
@@ -230,7 +230,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "6.Iteration/Iteration.md"
+      file: "6.Iteration/knowledge/Iteration.md"
       anchor: "listiterator-contract"
     apiRelated:
       controller: ""
@@ -243,7 +243,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "10.FailFast/FailFast.md"
+      file: "10.FailFast/knowledge/FailFast.md"
       anchor: "concurrent-modification-exception"
     apiRelated:
       controller: "IterationController"
@@ -256,7 +256,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "6.Iteration/Iteration.md"
+      file: "6.Iteration/knowledge/Iteration.md"
       anchor: "spliterator-boundary"
     apiRelated:
       controller: ""
@@ -269,7 +269,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "7.OrderingSorting/OrderingSorting.md"
+      file: "7.OrderingSorting/knowledge/OrderingSorting.md"
       anchor: "encounter-order"
     apiRelated:
       controller: ""
@@ -282,7 +282,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "7.OrderingSorting/OrderingSorting.md"
+      file: "7.OrderingSorting/knowledge/OrderingSorting.md"
       anchor: "comparison-result-contract"
     apiRelated:
       controller: ""
@@ -295,7 +295,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "7.OrderingSorting/OrderingSorting.md"
+      file: "7.OrderingSorting/knowledge/OrderingSorting.md"
       anchor: "navigable-range-operations"
     apiRelated:
       controller: ""
@@ -308,7 +308,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "8.EqualityHashing/EqualityHashing.md"
+      file: "8.EqualityHashing/knowledge/EqualityHashing.md"
       anchor: "collection-equality-boundary"
     apiRelated:
       controller: ""
@@ -321,7 +321,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "8.EqualityHashing/EqualityHashing.md"
+      file: "8.EqualityHashing/knowledge/EqualityHashing.md"
       anchor: "mutable-element-risk"
     apiRelated:
       controller: "HashingController"
@@ -334,7 +334,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "9.MutableImmutable/MutableImmutable.md"
+      file: "9.MutableImmutable/knowledge/MutableImmutable.md"
       anchor: "view-vs-copy"
     apiRelated:
       controller: "ImmutabilityController"
@@ -347,7 +347,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "11.ImplementationChoice/ImplementationChoice.md"
+      file: "11.ImplementationChoice/knowledge/ImplementationChoice.md"
       anchor: "choice-by-characteristics"
     apiRelated:
       controller: ""
@@ -360,7 +360,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "11.ImplementationChoice/ImplementationChoice.md"
+      file: "11.ImplementationChoice/knowledge/ImplementationChoice.md"
       anchor: "null-policy-matrix"
     apiRelated:
       controller: ""
@@ -373,7 +373,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "12.EnumCollections/EnumCollections.md"
+      file: "12.EnumCollections/knowledge/EnumCollections.md"
       anchor: "enum-collection-benefits"
     apiRelated:
       controller: "EnumCollectionController"

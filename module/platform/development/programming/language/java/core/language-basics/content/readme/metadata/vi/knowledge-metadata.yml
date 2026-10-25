@@ -1,4 +1,4 @@
-1.LanguageOverview/LanguageOverview.md:
+1.LanguageOverview/knowledge/LanguageOverview.md:
   language-overview-001:
     difficulty: BASIC
     aiGenerated: true
@@ -39,7 +39,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-2.ToolsAndExecution/ToolsAndExecution.md:
+2.ToolsAndExecution/knowledge/ToolsAndExecution.md:
   tools-and-execution-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -80,7 +80,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-3.ProgramStructure/ProgramStructure.md:
+3.ProgramStructure/knowledge/ProgramStructure.md:
   program-structure-001:
     difficulty: BASIC
     aiGenerated: true
@@ -121,7 +121,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-4.JavaVocabulary/JavaVocabulary.md:
+4.JavaVocabulary/knowledge/JavaVocabulary.md:
   java-vocabulary-001:
     difficulty: BASIC
     aiGenerated: true
@@ -162,7 +162,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-5.Literals/Literals.md:
+5.Literals/knowledge/Literals.md:
   literals-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -208,7 +208,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-6.VariablesAndConstants/VariablesAndConstants.md:
+6.VariablesAndConstants/knowledge/VariablesAndConstants.md:
   variables-and-constants-001:
     difficulty: BASIC
     aiGenerated: true
@@ -259,7 +259,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-7.PrimitiveTypes/PrimitiveTypes.md:
+7.PrimitiveTypes/knowledge/PrimitiveTypes.md:
   primitive-types-001:
     difficulty: BASIC
     aiGenerated: true
@@ -310,7 +310,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-8.CharactersAndStrings/CharactersAndStrings.md:
+8.CharactersAndStrings/knowledge/CharactersAndStrings.md:
   characters-and-strings-001:
     difficulty: BASIC
     aiGenerated: true
@@ -361,7 +361,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-9.ReferencesAndNull/ReferencesAndNull.md:
+9.ReferencesAndNull/knowledge/ReferencesAndNull.md:
   references-and-null-001:
     difficulty: BASIC
     aiGenerated: true
@@ -402,7 +402,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-10.TypeConversion/TypeConversion.md:
+10.TypeConversion/knowledge/TypeConversion.md:
   type-conversion-001:
     difficulty: BASIC
     aiGenerated: true
@@ -453,7 +453,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-11.PrimitiveWrappers/PrimitiveWrappers.md:
+11.PrimitiveWrappers/knowledge/PrimitiveWrappers.md:
   primitive-wrappers-001:
     difficulty: BASIC
     aiGenerated: true
@@ -494,7 +494,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-12.VarTypeInference/VarTypeInference.md:
+12.VarTypeInference/knowledge/VarTypeInference.md:
   var-type-inference-001:
     difficulty: BASIC
     aiGenerated: true
@@ -535,7 +535,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-13.Expressions/Expressions.md:
+13.Expressions/knowledge/Expressions.md:
   expressions-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -576,7 +576,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-14.Arithmetic/Arithmetic.md:
+14.Arithmetic/knowledge/Arithmetic.md:
   arithmetic-001:
     difficulty: BASIC
     aiGenerated: true
@@ -627,7 +627,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-15.AssignmentAndUnaryOperators/AssignmentAndUnaryOperators.md:
+15.AssignmentAndUnaryOperators/knowledge/AssignmentAndUnaryOperators.md:
   assignment-and-unary-operators-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -668,7 +668,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-16.Comparisons/Comparisons.md:
+16.Comparisons/knowledge/Comparisons.md:
   comparisons-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -709,7 +709,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-17.LogicAndConditions/LogicAndConditions.md:
+17.LogicAndConditions/knowledge/LogicAndConditions.md:
   logic-and-conditions-001:
     difficulty: BASIC
     aiGenerated: true
@@ -755,7 +755,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-18.BitwiseOperators/BitwiseOperators.md:
+18.BitwiseOperators/knowledge/BitwiseOperators.md:
   bitwise-operators-001:
     difficulty: BASIC
     aiGenerated: true
@@ -796,7 +796,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-19.IfStatements/IfStatements.md:
+19.IfStatements/knowledge/IfStatements.md:
   if-statements-001:
     difficulty: BASIC
     aiGenerated: true
@@ -837,7 +837,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-20.SwitchStatements/SwitchStatements.md:
+20.SwitchStatements/knowledge/SwitchStatements.md:
   switch-statements-001:
     difficulty: BASIC
     aiGenerated: true
@@ -888,7 +888,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-21.TypePatterns/TypePatterns.md:
+21.TypePatterns/knowledge/TypePatterns.md:
   type-patterns-001:
     difficulty: BASIC
     aiGenerated: true
@@ -934,7 +934,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-22.Loops/Loops.md:
+22.Loops/knowledge/Loops.md:
   loops-001:
     difficulty: BASIC
     aiGenerated: true
@@ -985,7 +985,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-23.IterationAndControlFlow/IterationAndControlFlow.md:
+23.IterationAndControlFlow/knowledge/IterationAndControlFlow.md:
   iteration-and-control-flow-001:
     difficulty: BASIC
     aiGenerated: true
@@ -1031,7 +1031,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-24.OneDimensionalArrays/OneDimensionalArrays.md:
+24.OneDimensionalArrays/knowledge/OneDimensionalArrays.md:
   one-dimensional-arrays-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -1082,7 +1082,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-25.MultidimensionalArrays/MultidimensionalArrays.md:
+25.MultidimensionalArrays/knowledge/MultidimensionalArrays.md:
   multidimensional-arrays-001:
     difficulty: BASIC
     aiGenerated: true
@@ -1128,7 +1128,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-26.Methods/Methods.md:
+26.Methods/knowledge/Methods.md:
   methods-001:
     difficulty: BASIC
     aiGenerated: true
@@ -1184,7 +1184,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-27.ScopeAndInitialization/ScopeAndInitialization.md:
+27.ScopeAndInitialization/knowledge/ScopeAndInitialization.md:
   scope-and-initialization-001:
     difficulty: BASIC
     aiGenerated: true
@@ -1225,7 +1225,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-28.ClassesAndObjects/ClassesAndObjects.md:
+28.ClassesAndObjects/knowledge/ClassesAndObjects.md:
   classes-and-objects-001:
     difficulty: BASIC
     aiGenerated: true
@@ -1286,7 +1286,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-29.PackagesAndImports/PackagesAndImports.md:
+29.PackagesAndImports/knowledge/PackagesAndImports.md:
   packages-and-imports-001:
     difficulty: BASIC
     aiGenerated: true
@@ -1332,7 +1332,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-30.ErrorsAndExceptions/ErrorsAndExceptions.md:
+30.ErrorsAndExceptions/knowledge/ErrorsAndExceptions.md:
   errors-and-exceptions-001:
     difficulty: BASIC
     aiGenerated: true
@@ -1378,7 +1378,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-31.BasicIO/BasicIO.md:
+31.BasicIO/knowledge/BasicIO.md:
   basic-io-001:
     difficulty: BASIC
     aiGenerated: true
@@ -1424,7 +1424,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-32.PracticeAndQuality/PracticeAndQuality.md:
+32.PracticeAndQuality/knowledge/PracticeAndQuality.md:
   practice-and-quality-001:
     difficulty: INTERMEDIATE
     aiGenerated: true

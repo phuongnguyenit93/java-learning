@@ -1,4 +1,4 @@
-1.MentalModel/RuntimeExtensibility.md:
+1.MentalModel/knowledge/RuntimeExtensibility.md:
   runtime-extensibility-purpose:
     difficulty: BASIC
     aiGenerated: true
@@ -24,7 +24,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-2.SPIContract/SPIContract.md:
+2.SPIContract/knowledge/SPIContract.md:
   spi-contract-purpose:
     difficulty: BASIC
     aiGenerated: true
@@ -50,7 +50,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-3.ServiceLoaderIntegration/ServiceLoaderIntegration.md:
+3.ServiceLoaderIntegration/knowledge/ServiceLoaderIntegration.md:
   serviceloader-discovery-model:
     difficulty: BASIC
     aiGenerated: true
@@ -81,7 +81,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-4.ProviderDiscoveryStrategy/ProviderDiscoveryStrategy.md:
+4.ProviderDiscoveryStrategy/knowledge/ProviderDiscoveryStrategy.md:
   discovery-vs-selection:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -112,7 +112,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-5.ClasspathModulePathIntegration/ClasspathModulePathIntegration.md:
+5.ClasspathModulePathIntegration/knowledge/ClasspathModulePathIntegration.md:
   classpath-provider-configuration:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -143,7 +143,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-6.PluginArchitecture/PluginArchitecture.md:
+6.PluginArchitecture/knowledge/PluginArchitecture.md:
   plugin-architecture-purpose:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -174,7 +174,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-7.PluginLifecycle/PluginLifecycle.md:
+7.PluginLifecycle/knowledge/PluginLifecycle.md:
   plugin-lifecycle-model:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -205,7 +205,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-8.PluginIsolationDesign/PluginIsolationDesign.md:
+8.PluginIsolationDesign/knowledge/PluginIsolationDesign.md:
   plugin-isolation-purpose:
     difficulty: ADVANCED
     aiGenerated: true
@@ -241,7 +241,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-9.VersionCompatibility/VersionCompatibility.md:
+9.VersionCompatibility/knowledge/VersionCompatibility.md:
   compatibility-contract:
     difficulty: ADVANCED
     aiGenerated: true
@@ -272,7 +272,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-10.ModuleLayerIntegration/ModuleLayerIntegration.md:
+10.ModuleLayerIntegration/knowledge/ModuleLayerIntegration.md:
   modulelayer-purpose:
     difficulty: ADVANCED
     aiGenerated: true
@@ -303,7 +303,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-11.SynthesisAndPitfalls/SynthesisAndPitfalls.md:
+11.SynthesisAndPitfalls/knowledge/SynthesisAndPitfalls.md:
   extensibility-end-to-end-flow:
     difficulty: INTERMEDIATE
     aiGenerated: true

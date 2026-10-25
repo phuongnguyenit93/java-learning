@@ -49,7 +49,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.Foundation/Foundation.md", anchor: "validation-vs-binding"}
+    readmeRelated: {file: "1.Foundation/knowledge/Foundation.md", anchor: "validation-vs-binding"}
     apiRelated: {controller: "ValidationExperimentController", methodSignature: "bindingVsValidation()"}
 
   - id: conversion-formatting-selection
@@ -62,7 +62,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.Foundation/Foundation.md", anchor: "conversion-vs-formatting"}
+    readmeRelated: {file: "1.Foundation/knowledge/Foundation.md", anchor: "conversion-vs-formatting"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: binding-result-error-evidence
@@ -75,7 +75,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.PropertyAccess/PropertyAccess.md", anchor: "binding-result-model"}
+    readmeRelated: {file: "2.PropertyAccess/knowledge/PropertyAccess.md", anchor: "binding-result-model"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: type-descriptor-context
@@ -88,7 +88,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.TypeConversion/TypeConversion.md", anchor: "type-descriptor-context"}
+    readmeRelated: {file: "3.TypeConversion/knowledge/TypeConversion.md", anchor: "type-descriptor-context"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: formatter-locale-boundary
@@ -101,7 +101,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.Formatting/Formatting.md", anchor: "formatting-locale-boundary"}
+    readmeRelated: {file: "4.Formatting/knowledge/Formatting.md", anchor: "formatting-locale-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: validator-validate-object-boundary
@@ -114,7 +114,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.Validation/Validation.md", anchor: "validator-contract"}
+    readmeRelated: {file: "5.Validation/knowledge/Validation.md", anchor: "validator-contract"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: declarative-binding-default-posture
@@ -127,7 +127,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.SafeBinding/SafeBinding.md", anchor: "safe-binding-controls"}
+    readmeRelated: {file: "8.SafeBinding/knowledge/SafeBinding.md", anchor: "safe-binding-controls"}
     apiRelated: {controller: "SafeBindingExperimentController", methodSignature: "declarativeBinding()"}
 
   - id: required-fields-vs-validation
@@ -140,7 +140,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.DataBinder/DataBinder.md", anchor: "binding-field-policies"}
+    readmeRelated: {file: "6.DataBinder/knowledge/DataBinder.md", anchor: "binding-field-policies"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: bean-validation-spring-adapter
@@ -153,7 +153,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.BeanValidation/BeanValidation.md", anchor: "local-validator-factory-bean"}
+    readmeRelated: {file: "7.BeanValidation/knowledge/BeanValidation.md", anchor: "local-validator-factory-bean"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: method-validation-activation-vs-groups
@@ -166,5 +166,5 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.BeanValidation/BeanValidation.md", anchor: "validation-groups-hints"}
+    readmeRelated: {file: "7.BeanValidation/knowledge/BeanValidation.md", anchor: "validation-groups-hints"}
     apiRelated: {controller: "", methodSignature: ""}

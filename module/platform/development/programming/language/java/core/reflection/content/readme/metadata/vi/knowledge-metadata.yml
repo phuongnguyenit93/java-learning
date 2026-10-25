@@ -1,4 +1,4 @@
-1.ReflectionOverview/ReflectionOverview.md:
+1.ReflectionOverview/knowledge/ReflectionOverview.md:
   reflection-overview-001:
     difficulty: BASIC
     isImportant: true
@@ -39,7 +39,7 @@
     isImportant: false
     aiGenerated: true
     reviewed: false
-2.ClassObjects/ClassObjects.md:
+2.ClassObjects/knowledge/ClassObjects.md:
   class-objects-001:
     difficulty: BASIC
     isImportant: true
@@ -90,7 +90,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-3.TypeNamesIdentity/TypeNamesIdentity.md:
+3.TypeNamesIdentity/knowledge/TypeNamesIdentity.md:
   type-names-identity-001:
     difficulty: BASIC
     isImportant: true
@@ -141,7 +141,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-4.TypeRelationships/TypeRelationships.md:
+4.TypeRelationships/knowledge/TypeRelationships.md:
   type-relationships-001:
     difficulty: BASIC
     isImportant: true
@@ -182,7 +182,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-5.MemberLookup/MemberLookup.md:
+5.MemberLookup/knowledge/MemberLookup.md:
   member-lookup-001:
     difficulty: BASIC
     isImportant: true
@@ -238,7 +238,7 @@
     isImportant: false
     aiGenerated: true
     reviewed: false
-6.ModifiersFlags/ModifiersFlags.md:
+6.ModifiersFlags/knowledge/ModifiersFlags.md:
   modifiers-flags-001:
     difficulty: BASIC
     isImportant: true
@@ -284,7 +284,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-7.AccessControl/AccessControl.md:
+7.AccessControl/knowledge/AccessControl.md:
   access-control-001:
     difficulty: BASIC
     isImportant: true
@@ -330,7 +330,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-8.ModuleEncapsulation/ModuleEncapsulation.md:
+8.ModuleEncapsulation/knowledge/ModuleEncapsulation.md:
   module-encapsulation-001:
     difficulty: BASIC
     isImportant: true
@@ -381,7 +381,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-9.Fields/Fields.md:
+9.Fields/knowledge/Fields.md:
   fields-001:
     difficulty: INTERMEDIATE
     isImportant: true
@@ -442,7 +442,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-10.FinalFields/FinalFields.md:
+10.FinalFields/knowledge/FinalFields.md:
   final-fields-001:
     difficulty: BASIC
     isImportant: true
@@ -483,7 +483,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-11.Methods/Methods.md:
+11.Methods/knowledge/Methods.md:
   methods-001:
     difficulty: BASIC
     isImportant: true
@@ -544,7 +544,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-12.Constructors/Constructors.md:
+12.Constructors/knowledge/Constructors.md:
   constructors-001:
     difficulty: INTERMEDIATE
     isImportant: true
@@ -600,7 +600,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-13.ArgumentConversions/ArgumentConversions.md:
+13.ArgumentConversions/knowledge/ArgumentConversions.md:
   argument-conversions-001:
     difficulty: BASIC
     isImportant: true
@@ -656,7 +656,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-14.ExecutableParameters/ExecutableParameters.md:
+14.ExecutableParameters/knowledge/ExecutableParameters.md:
   executable-parameters-001:
     difficulty: INTERMEDIATE
     isImportant: true
@@ -707,7 +707,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-15.GenericTypeModel/GenericTypeModel.md:
+15.GenericTypeModel/knowledge/GenericTypeModel.md:
   generic-type-model-001:
     difficulty: INTERMEDIATE
     isImportant: true
@@ -763,7 +763,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-16.GenericTypeResolution/GenericTypeResolution.md:
+16.GenericTypeResolution/knowledge/GenericTypeResolution.md:
   generic-type-resolution-001:
     difficulty: BASIC
     isImportant: true
@@ -814,7 +814,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-17.RuntimeAnnotations/RuntimeAnnotations.md:
+17.RuntimeAnnotations/knowledge/RuntimeAnnotations.md:
   runtime-annotations-001:
     difficulty: BASIC
     isImportant: true
@@ -875,7 +875,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-18.TypeUseAnnotations/TypeUseAnnotations.md:
+18.TypeUseAnnotations/knowledge/TypeUseAnnotations.md:
   type-use-annotations-001:
     difficulty: BASIC
     isImportant: true
@@ -921,7 +921,7 @@
     isImportant: false
     aiGenerated: true
     reviewed: false
-19.DynamicArrays/DynamicArrays.md:
+19.DynamicArrays/knowledge/DynamicArrays.md:
   dynamic-arrays-001:
     difficulty: BASIC
     isImportant: true
@@ -972,7 +972,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-20.NestedTypesNestmates/NestedTypesNestmates.md:
+20.NestedTypesNestmates/knowledge/NestedTypesNestmates.md:
   nested-types-nestmates-001:
     difficulty: BASIC
     isImportant: true
@@ -1018,7 +1018,7 @@
     isImportant: false
     aiGenerated: true
     reviewed: false
-21.EnumTypes/EnumTypes.md:
+21.EnumTypes/knowledge/EnumTypes.md:
   enum-types-001:
     difficulty: BASIC
     isImportant: true
@@ -1054,7 +1054,7 @@
     isImportant: false
     aiGenerated: true
     reviewed: false
-22.RecordTypes/RecordTypes.md:
+22.RecordTypes/knowledge/RecordTypes.md:
   record-types-001:
     difficulty: BASIC
     isImportant: true
@@ -1100,7 +1100,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-23.SealedHierarchies/SealedHierarchies.md:
+23.SealedHierarchies/knowledge/SealedHierarchies.md:
   sealed-hierarchies-001:
     difficulty: BASIC
     isImportant: true
@@ -1136,7 +1136,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-24.DynamicProxies/DynamicProxies.md:
+24.DynamicProxies/knowledge/DynamicProxies.md:
   dynamic-proxies-001:
     difficulty: BASIC
     isImportant: true
@@ -1207,7 +1207,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-25.MethodHandlesVarHandles/MethodHandlesVarHandles.md:
+25.MethodHandlesVarHandles/knowledge/MethodHandlesVarHandles.md:
   method-handles-var-handles-001:
     difficulty: INTERMEDIATE
     isImportant: true
@@ -1263,7 +1263,7 @@
     isImportant: false
     aiGenerated: true
     reviewed: false
-26.ExceptionsDiagnostics/ExceptionsDiagnostics.md:
+26.ExceptionsDiagnostics/knowledge/ExceptionsDiagnostics.md:
   exceptions-diagnostics-001:
     difficulty: INTERMEDIATE
     isImportant: true
@@ -1324,7 +1324,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-27.ToolingDesign/ToolingDesign.md:
+27.ToolingDesign/knowledge/ToolingDesign.md:
   tooling-design-001:
     difficulty: INTERMEDIATE
     isImportant: true
@@ -1380,7 +1380,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-28.CachingPerformance/CachingPerformance.md:
+28.CachingPerformance/knowledge/CachingPerformance.md:
   caching-performance-001:
     difficulty: INTERMEDIATE
     isImportant: true
@@ -1431,7 +1431,7 @@
     isImportant: false
     aiGenerated: true
     reviewed: false
-29.LimitationsAlternatives/LimitationsAlternatives.md:
+29.LimitationsAlternatives/knowledge/LimitationsAlternatives.md:
   limitations-alternatives-001:
     difficulty: BASIC
     isImportant: true
@@ -1482,7 +1482,7 @@
     isImportant: false
     aiGenerated: true
     reviewed: false
-30.ReflectionTesting/ReflectionTesting.md:
+30.ReflectionTesting/knowledge/ReflectionTesting.md:
   reflection-testing-001:
     difficulty: INTERMEDIATE
     isImportant: true
@@ -1538,7 +1538,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-31.ReflectionPractice/ReflectionPractice.md:
+31.ReflectionPractice/knowledge/ReflectionPractice.md:
   reflection-practice-001:
     difficulty: INTERMEDIATE
     isImportant: true
@@ -1589,7 +1589,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-32.ReflectionReference/ReflectionReference.md:
+32.ReflectionReference/knowledge/ReflectionReference.md:
   reflection-reference-001:
     difficulty: BASIC
     isImportant: true

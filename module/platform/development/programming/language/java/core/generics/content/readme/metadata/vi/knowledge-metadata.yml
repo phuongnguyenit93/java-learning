@@ -1,4 +1,4 @@
-1.GenericsOverview/GenericsOverview.md:
+1.GenericsOverview/knowledge/GenericsOverview.md:
   generics-overview-001:
     difficulty: BASIC
     aiGenerated: true
@@ -39,7 +39,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-2.GenericsSyntax/GenericsSyntax.md:
+2.GenericsSyntax/knowledge/GenericsSyntax.md:
   generics-syntax-001:
     difficulty: BASIC
     aiGenerated: true
@@ -80,7 +80,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-3.GenericClassesInterfaces/GenericClassesInterfaces.md:
+3.GenericClassesInterfaces/knowledge/GenericClassesInterfaces.md:
   generic-classes-interfaces-001:
     difficulty: BASIC
     aiGenerated: true
@@ -121,7 +121,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-4.GenericMethods/GenericMethods.md:
+4.GenericMethods/knowledge/GenericMethods.md:
   generic-methods-001:
     difficulty: BASIC
     aiGenerated: true
@@ -162,7 +162,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-5.TypeParameterScope/TypeParameterScope.md:
+5.TypeParameterScope/knowledge/TypeParameterScope.md:
   type-parameter-scope-001:
     difficulty: BASIC
     aiGenerated: true
@@ -198,7 +198,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-6.GenericInheritance/GenericInheritance.md:
+6.GenericInheritance/knowledge/GenericInheritance.md:
   generic-inheritance-001:
     difficulty: BASIC
     aiGenerated: true
@@ -239,7 +239,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-7.GenericTypeBounds/GenericTypeBounds.md:
+7.GenericTypeBounds/knowledge/GenericTypeBounds.md:
   generic-type-bounds-001:
     difficulty: BASIC
     aiGenerated: true
@@ -280,7 +280,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-8.GenericTypeRelations/GenericTypeRelations.md:
+8.GenericTypeRelations/knowledge/GenericTypeRelations.md:
   generic-type-relations-001:
     difficulty: BASIC
     aiGenerated: true
@@ -321,7 +321,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-9.UnboundedWildcard/UnboundedWildcard.md:
+9.UnboundedWildcard/knowledge/UnboundedWildcard.md:
   unbounded-wildcard-001:
     difficulty: BASIC
     aiGenerated: true
@@ -357,7 +357,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-10.UpperBoundedWildcards/UpperBoundedWildcards.md:
+10.UpperBoundedWildcards/knowledge/UpperBoundedWildcards.md:
   upper-bounded-wildcards-001:
     difficulty: BASIC
     aiGenerated: true
@@ -393,7 +393,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-11.LowerBoundedWildcards/LowerBoundedWildcards.md:
+11.LowerBoundedWildcards/knowledge/LowerBoundedWildcards.md:
   lower-bounded-wildcards-001:
     difficulty: BASIC
     aiGenerated: true
@@ -429,7 +429,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-12.PECS/PECS.md:
+12.PECS/knowledge/PECS.md:
   pecs-001:
     difficulty: BASIC
     aiGenerated: true
@@ -470,7 +470,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-13.WildcardCapture/WildcardCapture.md:
+13.WildcardCapture/knowledge/WildcardCapture.md:
   wildcard-capture-001:
     difficulty: BASIC
     aiGenerated: true
@@ -511,7 +511,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-14.TypeInference/TypeInference.md:
+14.TypeInference/knowledge/TypeInference.md:
   type-inference-001:
     difficulty: BASIC
     aiGenerated: true
@@ -557,7 +557,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-15.RecursiveTypeBounds/RecursiveTypeBounds.md:
+15.RecursiveTypeBounds/knowledge/RecursiveTypeBounds.md:
   recursive-type-bounds-001:
     difficulty: BASIC
     aiGenerated: true
@@ -593,7 +593,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-16.TypeErasure/TypeErasure.md:
+16.TypeErasure/knowledge/TypeErasure.md:
   type-erasure-001:
     difficulty: BASIC
     aiGenerated: true
@@ -634,7 +634,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-17.GenericOverridesAndBridges/GenericOverridesAndBridges.md:
+17.GenericOverridesAndBridges/knowledge/GenericOverridesAndBridges.md:
   generic-overrides-and-bridges-001:
     difficulty: BASIC
     aiGenerated: true
@@ -675,7 +675,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-18.RawTypesAndLegacyInterop/RawTypesAndLegacyInterop.md:
+18.RawTypesAndLegacyInterop/knowledge/RawTypesAndLegacyInterop.md:
   raw-types-and-legacy-interop-001:
     difficulty: BASIC
     aiGenerated: true
@@ -716,7 +716,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-19.RuntimeTypes/RuntimeTypes.md:
+19.RuntimeTypes/knowledge/RuntimeTypes.md:
   runtime-types-001:
     difficulty: BASIC
     aiGenerated: true
@@ -757,7 +757,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-20.GenericArrays/GenericArrays.md:
+20.GenericArrays/knowledge/GenericArrays.md:
   generic-arrays-001:
     difficulty: BASIC
     aiGenerated: true
@@ -798,7 +798,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-21.GenericVarargs/GenericVarargs.md:
+21.GenericVarargs/knowledge/GenericVarargs.md:
   generic-varargs-001:
     difficulty: BASIC
     aiGenerated: true
@@ -839,7 +839,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-22.GenericsLanguageLimits/GenericsLanguageLimits.md:
+22.GenericsLanguageLimits/knowledge/GenericsLanguageLimits.md:
   generics-language-limits-001:
     difficulty: BASIC
     aiGenerated: true
@@ -885,7 +885,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-23.LambdaStandardAPIs/LambdaStandardAPIs.md:
+23.LambdaStandardAPIs/knowledge/LambdaStandardAPIs.md:
   lambda-standard-ap-is-001:
     difficulty: BASIC
     aiGenerated: true
@@ -926,7 +926,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-24.GenericTypeReflection/GenericTypeReflection.md:
+24.GenericTypeReflection/knowledge/GenericTypeReflection.md:
   generic-type-reflection-001:
     difficulty: BASIC
     aiGenerated: true
@@ -972,7 +972,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-25.GenericAPIDesign/GenericAPIDesign.md:
+25.GenericAPIDesign/knowledge/GenericAPIDesign.md:
   generic-api-design-001:
     difficulty: BASIC
     aiGenerated: true
@@ -1018,7 +1018,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-26.GenericsTestingAndDiagnostics/GenericsTestingAndDiagnostics.md:
+26.GenericsTestingAndDiagnostics/knowledge/GenericsTestingAndDiagnostics.md:
   generics-testing-and-diagnostics-001:
     difficulty: BASIC
     aiGenerated: true
@@ -1059,7 +1059,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-27.GenericsIntegratedPractice/GenericsIntegratedPractice.md:
+27.GenericsIntegratedPractice/knowledge/GenericsIntegratedPractice.md:
   generics-integrated-practice-001:
     difficulty: BASIC
     aiGenerated: true

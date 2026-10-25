@@ -35,7 +35,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.Basic/Basic.md"
+      file: "1.Basic/knowledge/Basic.md"
       anchor: "annotation-model"
     apiRelated:
       controller: ""
@@ -48,7 +48,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.BuiltIn/BuiltIn.md"
+      file: "2.BuiltIn/knowledge/BuiltIn.md"
       anchor: "override-annotation"
     apiRelated:
       controller: "BuiltInAnnotationController"
@@ -61,7 +61,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.BuiltIn/BuiltIn.md"
+      file: "2.BuiltIn/knowledge/BuiltIn.md"
       anchor: "deprecated-annotation"
     apiRelated:
       controller: ""
@@ -74,7 +74,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.BuiltIn/BuiltIn.md"
+      file: "2.BuiltIn/knowledge/BuiltIn.md"
       anchor: "safevarargs"
     apiRelated:
       controller: ""
@@ -87,7 +87,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.BuiltIn/BuiltIn.md"
+      file: "2.BuiltIn/knowledge/BuiltIn.md"
       anchor: "functionalinterface"
     apiRelated:
       controller: ""
@@ -100,7 +100,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "3.CustomAnnotation/CustomAnnotation.md"
+      file: "3.CustomAnnotation/knowledge/CustomAnnotation.md"
       anchor: "declare-annotation"
     apiRelated:
       controller: ""
@@ -113,7 +113,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "3.CustomAnnotation/CustomAnnotation.md"
+      file: "3.CustomAnnotation/knowledge/CustomAnnotation.md"
       anchor: "annotation-restrictions"
     apiRelated:
       controller: ""
@@ -126,7 +126,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "3.CustomAnnotation/CustomAnnotation.md"
+      file: "3.CustomAnnotation/knowledge/CustomAnnotation.md"
       anchor: "annotation-elements-defaults"
     apiRelated:
       controller: ""
@@ -139,7 +139,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.Retention/Retention.md"
+      file: "4.Retention/knowledge/Retention.md"
       anchor: "retention-source"
     apiRelated:
       controller: ""
@@ -152,7 +152,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.Retention/Retention.md"
+      file: "4.Retention/knowledge/Retention.md"
       anchor: "retention-use-case"
     apiRelated:
       controller: "AnnotationInspectionController"
@@ -165,7 +165,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "5.Target/Target.md"
+      file: "5.Target/knowledge/Target.md"
       anchor: "annotation-use-sites"
     apiRelated:
       controller: ""
@@ -178,7 +178,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "5.Target/Target.md"
+      file: "5.Target/knowledge/Target.md"
       anchor: "type-use-annotation"
     apiRelated:
       controller: ""
@@ -191,7 +191,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "5.Target/Target.md"
+      file: "5.Target/knowledge/Target.md"
       anchor: "target-design"
     apiRelated:
       controller: ""
@@ -204,7 +204,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "6.MetaAnnotation/MetaAnnotation.md"
+      file: "6.MetaAnnotation/knowledge/MetaAnnotation.md"
       anchor: "target-meta"
     apiRelated:
       controller: ""
@@ -217,7 +217,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "6.MetaAnnotation/MetaAnnotation.md"
+      file: "6.MetaAnnotation/knowledge/MetaAnnotation.md"
       anchor: "repeatable-meta"
     apiRelated:
       controller: ""
@@ -230,7 +230,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "7.RepeatableInherited/RepeatableInherited.md"
+      file: "7.RepeatableInherited/knowledge/RepeatableInherited.md"
       anchor: "repeatable-container"
     apiRelated:
       controller: ""
@@ -243,7 +243,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "7.RepeatableInherited/RepeatableInherited.md"
+      file: "7.RepeatableInherited/knowledge/RepeatableInherited.md"
       anchor: "get-annotations-by-type"
     apiRelated:
       controller: "RepeatableAnnotationController"
@@ -256,7 +256,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "7.RepeatableInherited/RepeatableInherited.md"
+      file: "7.RepeatableInherited/knowledge/RepeatableInherited.md"
       anchor: "annotation-inheritance-boundaries"
     apiRelated:
       controller: "InheritedAnnotationController"
@@ -269,7 +269,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "8.AnnotationProcessing/AnnotationProcessing.md"
+      file: "8.AnnotationProcessing/knowledge/AnnotationProcessing.md"
       anchor: "processing-rounds"
     apiRelated:
       controller: ""
@@ -282,7 +282,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "8.AnnotationProcessing/AnnotationProcessing.md"
+      file: "8.AnnotationProcessing/knowledge/AnnotationProcessing.md"
       anchor: "processor-contract"
     apiRelated:
       controller: ""
@@ -295,7 +295,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "8.AnnotationProcessing/AnnotationProcessing.md"
+      file: "8.AnnotationProcessing/knowledge/AnnotationProcessing.md"
       anchor: "supported-types-source-version"
     apiRelated:
       controller: ""
@@ -308,7 +308,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "8.AnnotationProcessing/AnnotationProcessing.md"
+      file: "8.AnnotationProcessing/knowledge/AnnotationProcessing.md"
       anchor: "processing-vs-reflection"
     apiRelated:
       controller: ""
@@ -321,7 +321,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "8.AnnotationProcessing/AnnotationProcessing.md"
+      file: "8.AnnotationProcessing/knowledge/AnnotationProcessing.md"
       anchor: "processor-pitfalls"
     apiRelated:
       controller: ""
@@ -334,7 +334,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "9.AnnotationDesign/AnnotationDesign.md"
+      file: "9.AnnotationDesign/knowledge/AnnotationDesign.md"
       anchor: "annotation-fit"
     apiRelated:
       controller: ""
@@ -347,7 +347,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "9.AnnotationDesign/AnnotationDesign.md"
+      file: "9.AnnotationDesign/knowledge/AnnotationDesign.md"
       anchor: "annotation-alternatives"
     apiRelated:
       controller: ""
@@ -360,7 +360,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "9.AnnotationDesign/AnnotationDesign.md"
+      file: "9.AnnotationDesign/knowledge/AnnotationDesign.md"
       anchor: "annotation-end-to-end"
     apiRelated:
       controller: ""
@@ -373,7 +373,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "9.AnnotationDesign/AnnotationDesign.md"
+      file: "9.AnnotationDesign/knowledge/AnnotationDesign.md"
       anchor: "annotation-overuse-pitfalls"
     apiRelated:
       controller: ""
@@ -386,7 +386,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "9.AnnotationDesign/AnnotationDesign.md"
+      file: "9.AnnotationDesign/knowledge/AnnotationDesign.md"
       anchor: "annotation-design-checklist"
     apiRelated:
       controller: ""

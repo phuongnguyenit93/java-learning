@@ -58,7 +58,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.Purpose/WebFluxPurpose.md"
+      file: "1.Purpose/knowledge/WebFluxPurpose.md"
       anchor: "webflux-throughput-vs-latency"
     apiRelated:
       controller: ""
@@ -83,7 +83,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.RuntimeArchitecture/WebFluxRuntime.md"
+      file: "2.RuntimeArchitecture/knowledge/WebFluxRuntime.md"
       anchor: "webflux-dispatch-strategies"
     apiRelated:
       controller: ""
@@ -108,7 +108,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.RuntimeArchitecture/WebFluxRuntime.md"
+      file: "2.RuntimeArchitecture/knowledge/WebFluxRuntime.md"
       anchor: "webflux-runtime-threading"
     apiRelated:
       controller: ""
@@ -133,7 +133,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "3.HttpDataFlow/ReactiveHttpDataFlow.md"
+      file: "3.HttpDataFlow/knowledge/ReactiveHttpDataFlow.md"
       anchor: "webflux-streaming-vs-aggregation"
     apiRelated:
       controller: "ReactiveHttpDataController"
@@ -158,7 +158,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "3.HttpDataFlow/ReactiveHttpDataFlow.md"
+      file: "3.HttpDataFlow/knowledge/ReactiveHttpDataFlow.md"
       anchor: "webflux-data-buffer-lifecycle"
     apiRelated:
       controller: ""
@@ -183,7 +183,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.AnnotatedControllers/AnnotatedControllers.md"
+      file: "4.AnnotatedControllers/knowledge/AnnotatedControllers.md"
       anchor: "webflux-controller-binding-validation"
     apiRelated:
       controller: ""
@@ -208,7 +208,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "5.FunctionalEndpoints/FunctionalEndpoints.md"
+      file: "5.FunctionalEndpoints/knowledge/FunctionalEndpoints.md"
       anchor: "webflux-direct-http-handler-adaptation"
     apiRelated:
       controller: ""
@@ -233,7 +233,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "6.CrossCuttingProcessing/CrossCuttingProcessing.md"
+      file: "6.CrossCuttingProcessing/knowledge/CrossCuttingProcessing.md"
       anchor: "webflux-reactor-context"
     apiRelated:
       controller: "ReactiveContextController"
@@ -258,7 +258,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "6.CrossCuttingProcessing/CrossCuttingProcessing.md"
+      file: "6.CrossCuttingProcessing/knowledge/CrossCuttingProcessing.md"
       anchor: "webflux-blocking-execution"
     apiRelated:
       controller: "ReactiveContextController"
@@ -283,7 +283,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "7.WebClient/WebClient.md"
+      file: "7.WebClient/knowledge/WebClient.md"
       anchor: "webclient-exchange-control"
     apiRelated:
       controller: ""

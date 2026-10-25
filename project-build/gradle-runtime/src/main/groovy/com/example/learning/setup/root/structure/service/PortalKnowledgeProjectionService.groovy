@@ -370,17 +370,22 @@ Route identifiers must be unique for modules that expose README knowledge.
 
                     if (!children.isEmpty()) {
 
-                        result.add(
-                                [
-                                        kind    : 'FOLDER',
-                                        id      : relativePath(
-                                                languageSource.menuDirectory,
-                                                child
-                                        ),
-                                        title   : child.name,
-                                        children: children
-                                ]
-                        )
+                        if (child.name == 'knowledge') {
+                            // Physical knowledge directory is not a Portal menu level.
+                            result.addAll(children)
+                        } else {
+                            result.add(
+                                    [
+                                            kind    : 'FOLDER',
+                                            id      : relativePath(
+                                                    languageSource.menuDirectory,
+                                                    child
+                                            ),
+                                            title   : child.name,
+                                            children: children
+                                    ]
+                            )
+                        }
                     }
 
 
@@ -390,7 +395,10 @@ Route identifiers must be unique for modules that expose README knowledge.
 
                 if (
                         !child.isFile() ||
-                                !child.name.toLowerCase(Locale.ROOT).endsWith('.md')
+                                !isKnowledgeMarkdownFile(
+                                        languageSource.menuDirectory,
+                                        child
+                                )
                 ) {
 
                     return
@@ -1761,6 +1769,7 @@ Expected YAML boolean true or false.
 
                         source.menuDirectory.isDirectory() &&
                                 containsMarkdownFile(
+                                        source.menuDirectory,
                                         source.menuDirectory
                                 )
                 }
@@ -1844,7 +1853,8 @@ ${directory.absolutePath}
 
 
     private static boolean containsMarkdownFile(
-            File directory
+            File directory,
+            File menuDirectory
     ) {
 
         File[] children =
@@ -1874,14 +1884,39 @@ ${directory.absolutePath}
                 if (child.isDirectory()) {
 
                     return containsMarkdownFile(
-                            child
+                            child,
+                            menuDirectory
                     )
                 }
 
 
                 return child.isFile() &&
-                        child.name.toLowerCase(Locale.ROOT).endsWith('.md')
+                        isKnowledgeMarkdownFile(
+                                menuDirectory,
+                                child
+                        )
         }
+    }
+
+
+    private static boolean isKnowledgeMarkdownFile(
+            File menuDirectory,
+            File markdownFile
+    ) {
+
+        if (
+                !markdownFile.name.toLowerCase(Locale.ROOT).endsWith('.md') ||
+                        markdownFile.name.equalsIgnoreCase('chapter-links.md')
+        ) {
+            return false
+        }
+
+        Path relative = menuDirectory.toPath().relativize(markdownFile.toPath())
+
+        // Keep legacy menu/*.md; chapter articles must live under knowledge/.
+        return relative.nameCount == 1 ||
+                (relative.nameCount >= 3 &&
+                        relative.getName(1).toString() == 'knowledge')
     }
 
 

@@ -57,7 +57,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.AutoConfigurationFoundation/AutoConfigurationFoundation.md", anchor: "defaults-and-back-off-contract"}
+    readmeRelated: {file: "1.AutoConfigurationFoundation/knowledge/AutoConfigurationFoundation.md", anchor: "defaults-and-back-off-contract"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: imports-vs-component-scanning
@@ -78,7 +78,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.ActivationDiscovery/ActivationDiscovery.md", anchor: "auto-configuration-imports"}
+    readmeRelated: {file: "2.ActivationDiscovery/knowledge/ActivationDiscovery.md", anchor: "auto-configuration-imports"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: candidate-discovery-not-bean-creation
@@ -99,7 +99,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.ActivationDiscovery/ActivationDiscovery.md", anchor: "candidate-discovery-vs-bean-creation"}
+    readmeRelated: {file: "2.ActivationDiscovery/knowledge/ActivationDiscovery.md", anchor: "candidate-discovery-vs-bean-creation"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: optional-class-linkage-boundary
@@ -120,7 +120,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.ConditionModel/ConditionModel.md", anchor: "optional-class-linkage"}
+    readmeRelated: {file: "3.ConditionModel/knowledge/ConditionModel.md", anchor: "optional-class-linkage"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: missing-bean-target-vs-return-type
@@ -141,7 +141,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.BackOffUserControl/BackOffUserControl.md", anchor: "bean-type-specificity"}
+    readmeRelated: {file: "4.BackOffUserControl/knowledge/BackOffUserControl.md", anchor: "bean-type-specificity"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: conditional-expression-early-bean
@@ -162,7 +162,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.ConditionModel/ConditionModel.md", anchor: "bean-conditions-and-timing"}
+    readmeRelated: {file: "3.ConditionModel/knowledge/ConditionModel.md", anchor: "bean-conditions-and-timing"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: property-condition-input-model
@@ -183,7 +183,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.ConditionModel/ConditionModel.md", anchor: "property-conditions"}
+    readmeRelated: {file: "3.ConditionModel/knowledge/ConditionModel.md", anchor: "property-conditions"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: auto-configuration-order-vs-bean-order
@@ -204,7 +204,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.OrderingComposition/OrderingComposition.md", anchor: "configuration-order-vs-bean-order"}
+    readmeRelated: {file: "5.OrderingComposition/knowledge/OrderingComposition.md", anchor: "configuration-order-vs-bean-order"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: exclusion-vs-indirect-fighting
@@ -225,7 +225,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.ExclusionsDiagnostics/ExclusionsDiagnostics.md", anchor: "when-to-exclude-auto-configuration"}
+    readmeRelated: {file: "6.ExclusionsDiagnostics/knowledge/ExclusionsDiagnostics.md", anchor: "when-to-exclude-auto-configuration"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: condition-report-diagnosis
@@ -246,7 +246,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.ExclusionsDiagnostics/ExclusionsDiagnostics.md", anchor: "condition-evaluation-report"}
+    readmeRelated: {file: "6.ExclusionsDiagnostics/knowledge/ExclusionsDiagnostics.md", anchor: "condition-evaluation-report"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: auto-configuration-authoring-boundary
@@ -267,7 +267,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.CustomAuthoring/CustomAuthoring.md", anchor: "registration-and-package-boundaries"}
+    readmeRelated: {file: "7.CustomAuthoring/knowledge/CustomAuthoring.md", anchor: "registration-and-package-boundaries"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: auto-configure-metadata-role
@@ -288,7 +288,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.CustomAuthoring/CustomAuthoring.md", anchor: "auto-configure-metadata"}
+    readmeRelated: {file: "7.CustomAuthoring/knowledge/CustomAuthoring.md", anchor: "auto-configure-metadata"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: focused-context-test-choice
@@ -309,7 +309,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.AutoConfigurationTesting/AutoConfigurationTesting.md", anchor: "application-context-runner"}
+    readmeRelated: {file: "8.AutoConfigurationTesting/knowledge/AutoConfigurationTesting.md", anchor: "application-context-runner"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: starter-split-combine-role
@@ -330,5 +330,5 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.StarterSynthesis/StarterSynthesis.md", anchor: "starter-split-or-combine"}
+    readmeRelated: {file: "9.StarterSynthesis/knowledge/StarterSynthesis.md", anchor: "starter-split-or-combine"}
     apiRelated: {controller: "", methodSignature: ""}

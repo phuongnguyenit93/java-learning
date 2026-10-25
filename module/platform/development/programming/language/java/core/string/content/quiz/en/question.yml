@@ -49,7 +49,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.Immutability/Immutability.md", anchor: "string-purpose"}
+    readmeRelated: {file: "1.Immutability/knowledge/Immutability.md", anchor: "string-purpose"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: string-immutability-result
@@ -62,7 +62,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.Immutability/Immutability.md", anchor: "string-operation-new-value"}
+    readmeRelated: {file: "1.Immutability/knowledge/Immutability.md", anchor: "string-operation-new-value"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: string-pool-identity
@@ -75,7 +75,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.StringPool/StringPool.md", anchor: "pool-identity"}
+    readmeRelated: {file: "2.StringPool/knowledge/StringPool.md", anchor: "pool-identity"}
     apiRelated: {controller: "StringPoolController", methodSignature: "identity()"}
 
   - id: string-equality-rule
@@ -88,7 +88,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.Equality/Equality.md", anchor: "string-reference-equality"}
+    readmeRelated: {file: "3.Equality/knowledge/Equality.md", anchor: "string-reference-equality"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: string-compile-time-concat
@@ -101,7 +101,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.Concatenation/Concatenation.md", anchor: "compile-time-concat"}
+    readmeRelated: {file: "5.Concatenation/knowledge/Concatenation.md", anchor: "compile-time-concat"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: string-builder-loop
@@ -114,7 +114,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.StringBuilder/StringBuilder.md", anchor: "builder-usage"}
+    readmeRelated: {file: "6.StringBuilder/knowledge/StringBuilder.md", anchor: "builder-usage"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: string-buffer-vs-builder
@@ -127,7 +127,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.StringBuffer/StringBuffer.md", anchor: "builder-vs-buffer"}
+    readmeRelated: {file: "7.StringBuffer/knowledge/StringBuffer.md", anchor: "builder-vs-buffer"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: string-intern-canonical
@@ -140,7 +140,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.Intern/Intern.md", anchor: "intern-identity"}
+    readmeRelated: {file: "8.Intern/knowledge/Intern.md", anchor: "intern-identity"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: string-charset-roundtrip
@@ -153,7 +153,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "10.Encoding/Encoding.md", anchor: "charset-encode-decode"}
+    readmeRelated: {file: "10.Encoding/knowledge/Encoding.md", anchor: "charset-encode-decode"}
     apiRelated: {controller: "EncodingController", methodSignature: "roundTrip()"}
 
   - id: string-codepoint-length
@@ -166,7 +166,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.UnicodeCodePoint/UnicodeCodePoint.md", anchor: "surrogate-pairs"}
+    readmeRelated: {file: "9.UnicodeCodePoint/knowledge/UnicodeCodePoint.md", anchor: "surrogate-pairs"}
     apiRelated: {controller: "UnicodeController", methodSignature: "charVsCodePoint()"}
 
   - id: string-normalization-equality
@@ -179,7 +179,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.UnicodeCodePoint/UnicodeCodePoint.md", anchor: "canonical-equivalence"}
+    readmeRelated: {file: "9.UnicodeCodePoint/knowledge/UnicodeCodePoint.md", anchor: "canonical-equivalence"}
     apiRelated: {controller: "UnicodeController", methodSignature: "normalization()"}
 
   - id: string-grapheme-boundary
@@ -192,7 +192,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.UnicodeCodePoint/UnicodeCodePoint.md", anchor: "code-unit-code-point-grapheme"}
+    readmeRelated: {file: "9.UnicodeCodePoint/knowledge/UnicodeCodePoint.md", anchor: "code-unit-code-point-grapheme"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: string-regex-greedy
@@ -205,7 +205,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "11.Regex/Regex.md", anchor: "regex-quantifiers"}
+    readmeRelated: {file: "11.Regex/knowledge/Regex.md", anchor: "regex-quantifiers"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: string-regex-backtracking-risk
@@ -218,7 +218,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "11.Regex/Regex.md", anchor: "regex-performance"}
+    readmeRelated: {file: "11.Regex/knowledge/Regex.md", anchor: "regex-performance"}
     apiRelated: {controller: "RegexController", methodSignature: "backtracking()"}
 
   - id: string-text-block-whitespace
@@ -231,7 +231,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "12.TextBlocks/TextBlocks.md", anchor: "incidental-whitespace"}
+    readmeRelated: {file: "12.TextBlocks/knowledge/TextBlocks.md", anchor: "incidental-whitespace"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: string-char-array-copy
@@ -244,7 +244,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.Immutability/Immutability.md", anchor: "string-immutability"}
+    readmeRelated: {file: "1.Immutability/knowledge/Immutability.md", anchor: "string-immutability"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: string-final-constant-variable
@@ -257,7 +257,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.Concatenation/Concatenation.md", anchor: "compile-time-concat"}
+    readmeRelated: {file: "5.Concatenation/knowledge/Concatenation.md", anchor: "compile-time-concat"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: string-equals-ignore-case-locale
@@ -270,7 +270,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.Equality/Equality.md", anchor: "case-insensitive-boundary"}
+    readmeRelated: {file: "3.Equality/knowledge/Equality.md", anchor: "case-insensitive-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: string-charsequence-equality
@@ -283,7 +283,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.CoreStringOperations/CoreStringOperations.md", anchor: "string-char-sequence"}
+    readmeRelated: {file: "4.CoreStringOperations/knowledge/CoreStringOperations.md", anchor: "string-char-sequence"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: string-empty-vs-blank
@@ -296,7 +296,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.CoreStringOperations/CoreStringOperations.md", anchor: "string-inspection"}
+    readmeRelated: {file: "4.CoreStringOperations/knowledge/CoreStringOperations.md", anchor: "string-inspection"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: string-substring-half-open
@@ -309,7 +309,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.CoreStringOperations/CoreStringOperations.md", anchor: "string-extraction"}
+    readmeRelated: {file: "4.CoreStringOperations/knowledge/CoreStringOperations.md", anchor: "string-extraction"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: string-replace-vs-replaceall
@@ -322,7 +322,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.CoreStringOperations/CoreStringOperations.md", anchor: "string-transformation"}
+    readmeRelated: {file: "4.CoreStringOperations/knowledge/CoreStringOperations.md", anchor: "string-transformation"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: string-lines-repeat
@@ -335,7 +335,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.CoreStringOperations/CoreStringOperations.md", anchor: "string-transformation"}
+    readmeRelated: {file: "4.CoreStringOperations/knowledge/CoreStringOperations.md", anchor: "string-transformation"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: string-split-limit
@@ -348,7 +348,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.CoreStringOperations/CoreStringOperations.md", anchor: "string-split-join"}
+    readmeRelated: {file: "4.CoreStringOperations/knowledge/CoreStringOperations.md", anchor: "string-split-join"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: string-valueof-null
@@ -361,7 +361,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.CoreStringOperations/CoreStringOperations.md", anchor: "string-conversion-formatting"}
+    readmeRelated: {file: "4.CoreStringOperations/knowledge/CoreStringOperations.md", anchor: "string-conversion-formatting"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: string-concat-order
@@ -374,7 +374,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.Concatenation/Concatenation.md", anchor: "concat-semantics"}
+    readmeRelated: {file: "5.Concatenation/knowledge/Concatenation.md", anchor: "concat-semantics"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: string-builder-capacity
@@ -387,7 +387,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.StringBuilder/StringBuilder.md", anchor: "builder-capacity"}
+    readmeRelated: {file: "6.StringBuilder/knowledge/StringBuilder.md", anchor: "builder-capacity"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: string-builder-snapshot
@@ -400,7 +400,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.StringBuilder/StringBuilder.md", anchor: "builder-usage"}
+    readmeRelated: {file: "6.StringBuilder/knowledge/StringBuilder.md", anchor: "builder-usage"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: string-buffer-compound
@@ -413,7 +413,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.StringBuffer/StringBuffer.md", anchor: "thread-safety-boundary"}
+    readmeRelated: {file: "7.StringBuffer/knowledge/StringBuffer.md", anchor: "thread-safety-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: string-intern-cardinality
@@ -426,7 +426,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.Intern/Intern.md", anchor: "intern-tradeoffs"}
+    readmeRelated: {file: "8.Intern/knowledge/Intern.md", anchor: "intern-tradeoffs"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: string-java21-default-charset
@@ -439,7 +439,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "10.Encoding/Encoding.md", anchor: "default-charset-risk"}
+    readmeRelated: {file: "10.Encoding/knowledge/Encoding.md", anchor: "default-charset-risk"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: string-malformed-unmappable
@@ -452,7 +452,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "10.Encoding/Encoding.md", anchor: "malformed-input"}
+    readmeRelated: {file: "10.Encoding/knowledge/Encoding.md", anchor: "malformed-input"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: string-unpaired-surrogate
@@ -465,7 +465,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.UnicodeCodePoint/UnicodeCodePoint.md", anchor: "code-unit-code-point-grapheme"}
+    readmeRelated: {file: "9.UnicodeCodePoint/knowledge/UnicodeCodePoint.md", anchor: "code-unit-code-point-grapheme"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: string-grapheme-segmentation
@@ -478,7 +478,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.UnicodeCodePoint/UnicodeCodePoint.md", anchor: "code-unit-code-point-grapheme"}
+    readmeRelated: {file: "9.UnicodeCodePoint/knowledge/UnicodeCodePoint.md", anchor: "code-unit-code-point-grapheme"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: string-regex-matching-modes
@@ -491,7 +491,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "11.Regex/Regex.md", anchor: "pattern-matcher"}
+    readmeRelated: {file: "11.Regex/knowledge/Regex.md", anchor: "pattern-matcher"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: string-regex-flags
@@ -504,7 +504,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "11.Regex/Regex.md", anchor: "regex-syntax-boundary"}
+    readmeRelated: {file: "11.Regex/knowledge/Regex.md", anchor: "regex-syntax-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: string-textblock-indent-runtime
@@ -517,7 +517,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "12.TextBlocks/TextBlocks.md", anchor: "incidental-whitespace"}
+    readmeRelated: {file: "12.TextBlocks/knowledge/TextBlocks.md", anchor: "incidental-whitespace"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: string-translate-escapes
@@ -530,5 +530,5 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "12.TextBlocks/TextBlocks.md", anchor: "escape-processing"}
+    readmeRelated: {file: "12.TextBlocks/knowledge/TextBlocks.md", anchor: "escape-processing"}
     apiRelated: {controller: "", methodSignature: ""}

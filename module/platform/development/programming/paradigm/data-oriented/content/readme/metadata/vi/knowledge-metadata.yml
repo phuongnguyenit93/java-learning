@@ -1,4 +1,4 @@
-1.DataOrientedProgramming/DataOrientedProgramming.md:
+1.DataOrientedProgramming/knowledge/DataOrientedProgramming.md:
   dop-concept:
     difficulty: BASIC
     aiGenerated: true
@@ -34,7 +34,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-2.CodeDataSeparation/CodeDataSeparation.md:
+2.CodeDataSeparation/knowledge/CodeDataSeparation.md:
   code-data-concept:
     difficulty: BASIC
     aiGenerated: true
@@ -55,7 +55,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-3.GenericData/GenericData.md:
+3.GenericData/knowledge/GenericData.md:
   generic-concept:
     difficulty: BASIC
     aiGenerated: true
@@ -81,7 +81,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-4.ImmutableData/ImmutableData.md:
+4.ImmutableData/knowledge/ImmutableData.md:
   dop-immutable-principle:
     difficulty: BASIC
     aiGenerated: true
@@ -102,7 +102,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-5.DataSchema/DataSchema.md:
+5.DataSchema/knowledge/DataSchema.md:
   dop-schema-concept:
     difficulty: BASIC
     aiGenerated: true
@@ -128,7 +128,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-6.DataFlow/DataFlow.md:
+6.DataFlow/knowledge/DataFlow.md:
   dop-flow-scenario:
     difficulty: BASIC
     aiGenerated: true
@@ -154,7 +154,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-7.JavaPerspective/JavaPerspective.md:
+7.JavaPerspective/knowledge/JavaPerspective.md:
   amber-definition:
     difficulty: BASIC
     aiGenerated: true
@@ -180,7 +180,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-8.Tradeoffs/Tradeoffs.md:
+8.Tradeoffs/knowledge/Tradeoffs.md:
   dop-choose:
     difficulty: BASIC
     aiGenerated: true

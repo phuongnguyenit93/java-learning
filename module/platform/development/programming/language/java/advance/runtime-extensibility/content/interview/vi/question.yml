@@ -35,7 +35,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.MentalModel/RuntimeExtensibility.md"
+      file: "1.MentalModel/knowledge/RuntimeExtensibility.md"
       anchor: "extensibility-mechanism-spectrum"
     apiRelated:
       controller: ""
@@ -48,7 +48,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.SPIContract/SPIContract.md"
+      file: "2.SPIContract/knowledge/SPIContract.md"
       anchor: "contract-stability"
     apiRelated:
       controller: ""
@@ -74,7 +74,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.ProviderDiscoveryStrategy/ProviderDiscoveryStrategy.md"
+      file: "4.ProviderDiscoveryStrategy/knowledge/ProviderDiscoveryStrategy.md"
       anchor: "provider-selection-policy"
     apiRelated:
       controller: "RuntimeExtensibilityController"
@@ -100,7 +100,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "7.PluginLifecycle/PluginLifecycle.md"
+      file: "7.PluginLifecycle/knowledge/PluginLifecycle.md"
       anchor: "replacement-and-upgrade"
     apiRelated:
       controller: "RuntimeExtensibilityController"
@@ -113,7 +113,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "8.PluginIsolationDesign/PluginIsolationDesign.md"
+      file: "8.PluginIsolationDesign/knowledge/PluginIsolationDesign.md"
       anchor: "class-identity-boundaries"
     apiRelated:
       controller: ""
@@ -126,7 +126,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "9.VersionCompatibility/VersionCompatibility.md"
+      file: "9.VersionCompatibility/knowledge/VersionCompatibility.md"
       anchor: "capability-versioning"
     apiRelated:
       controller: ""
@@ -139,7 +139,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "10.ModuleLayerIntegration/ModuleLayerIntegration.md"
+      file: "10.ModuleLayerIntegration/knowledge/ModuleLayerIntegration.md"
       anchor: "resolve-vs-resolveandbind"
     apiRelated:
       controller: ""
@@ -152,7 +152,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "11.SynthesisAndPitfalls/SynthesisAndPitfalls.md"
+      file: "11.SynthesisAndPitfalls/knowledge/SynthesisAndPitfalls.md"
       anchor: "mechanism-selection"
     apiRelated:
       controller: ""

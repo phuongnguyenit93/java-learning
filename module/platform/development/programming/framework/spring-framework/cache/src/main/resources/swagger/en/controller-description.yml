@@ -3,16 +3,16 @@ CacheConcurrencyController:
     <h2>Synchronized Cache Loading</h2>
     <p>Triggers several callers for the same missing key and observes whether <code>@Cacheable(sync=true)</code> collapses them into one loader invocation.</p>
   readmeRelated:
-    file: 7.ConcurrencyAndAsync/ConcurrencyAndAsync.md
+    file: 7.ConcurrencyAndAsync/knowledge/ConcurrencyAndAsync.md
 CacheInterceptionController:
   description: |-
     <h2>Cache Interception Boundary</h2>
     <p>Compares calls that enter a Spring-managed cache proxy with self-invocation inside the target bean.</p>
   readmeRelated:
-    file: 6.InterceptionBoundary/InterceptionBoundary.md
+    file: 6.InterceptionBoundary/knowledge/InterceptionBoundary.md
 CacheKeyController:
   description: |-
     <h2>Cache Key Completeness Failure and Fix</h2>
     <p>Contrasts an incomplete key that wrongly reuses a cached variant with a complete key that includes the result-shaping input.</p>
   readmeRelated:
-    file: 4.KeyAndResolution/KeyAndResolution.md
+    file: 4.KeyAndResolution/knowledge/KeyAndResolution.md

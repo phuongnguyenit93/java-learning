@@ -58,7 +58,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.Spring_Task_Executor/SpringExecutor.md"
+      file: "2.Spring_Task_Executor/knowledge/SpringExecutor.md"
       anchor: "async-annotation"
     apiRelated:
       controller: ""
@@ -83,7 +83,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "3.ContextPropagation/ContextPropagation.md"
+      file: "3.ContextPropagation/knowledge/ContextPropagation.md"
       anchor: "task-decorator"
     apiRelated:
       controller: "TaskExecutorController"
@@ -108,7 +108,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.Spring_Task_Executor/SpringExecutor.md"
+      file: "2.Spring_Task_Executor/knowledge/SpringExecutor.md"
       anchor: "async-return-type"
     apiRelated:
       controller: "TaskExecutorController"
@@ -133,7 +133,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.Spring_Task_Executor/SpringExecutor.md"
+      file: "2.Spring_Task_Executor/knowledge/SpringExecutor.md"
       anchor: "spring-executor-config"
     apiRelated:
       controller: "TaskExecutorController"
@@ -158,7 +158,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.TaskScheduler/TaskScheduler.md"
+      file: "4.TaskScheduler/knowledge/TaskScheduler.md"
       anchor: "scheduler-execution-models"
     apiRelated:
       controller: "TaskSchedulerExperimentController"
@@ -183,7 +183,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "6.VirtualThreadIntegration/VirtualThreadIntegration.md"
+      file: "6.VirtualThreadIntegration/knowledge/VirtualThreadIntegration.md"
       anchor: "virtual-thread-fixed-delay"
     apiRelated:
       controller: "TaskSchedulerExperimentController"
@@ -208,7 +208,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "5.Scheduling/Scheduling.md"
+      file: "5.Scheduling/knowledge/Scheduling.md"
       anchor: "reactive-scheduled-methods"
     apiRelated:
       controller: ""
@@ -233,7 +233,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "6.VirtualThreadIntegration/VirtualThreadIntegration.md"
+      file: "6.VirtualThreadIntegration/knowledge/VirtualThreadIntegration.md"
       anchor: "virtual-thread-decision"
     apiRelated:
       controller: ""
@@ -258,7 +258,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "7.LifecycleFailureProduction/LifecycleFailureProduction.md"
+      file: "7.LifecycleFailureProduction/knowledge/LifecycleFailureProduction.md"
       anchor: "executor-lifecycle"
     apiRelated:
       controller: ""
@@ -283,7 +283,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.TaskScheduler/TaskScheduler.md"
+      file: "4.TaskScheduler/knowledge/TaskScheduler.md"
       anchor: "trigger-context"
     apiRelated:
       controller: ""

@@ -10,7 +10,7 @@ WebRuntimeExperimentController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 3.EmbeddedServerModel/EmbeddedServerModel.md
+      file: 3.EmbeddedServerModel/knowledge/EmbeddedServerModel.md
       anchor: web-server-context-startup
     methodName: embeddedServer
     params: [
@@ -37,7 +37,7 @@ WebRuntimeExperimentController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 6.ServerProperties/ServerProperties.md
+      file: 6.ServerProperties/knowledge/ServerProperties.md
       anchor: server-properties-model
     methodName: serverProperties
     params: [
@@ -65,7 +65,7 @@ WebRuntimeExperimentController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 10.ForwardedHeadersProxy/ForwardedHeadersProxy.md
+      file: 10.ForwardedHeadersProxy/knowledge/ForwardedHeadersProxy.md
       anchor: forward-header-strategies
     methodName: requestMetadata
     params: [

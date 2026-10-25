@@ -35,7 +35,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.Purpose/Purpose.md"
+      file: "1.Purpose/knowledge/Purpose.md"
       anchor: "transaction-unit-of-work"
     apiRelated:
       controller: ""
@@ -48,7 +48,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.Abstraction/Abstraction.md"
+      file: "2.Abstraction/knowledge/Abstraction.md"
       anchor: "transaction-manager-selection"
     apiRelated:
       controller: ""
@@ -61,7 +61,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.Declarative/Declarative.md"
+      file: "4.Declarative/knowledge/Declarative.md"
       anchor: "transaction-proxy-boundary"
     apiRelated:
       controller: "TransactionExperimentController"
@@ -74,7 +74,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "7.Propagation/Propagation.md"
+      file: "7.Propagation/knowledge/Propagation.md"
       anchor: "transaction-propagation-rollback-only"
     apiRelated:
       controller: "TransactionExperimentController"
@@ -87,7 +87,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "7.Propagation/Propagation.md"
+      file: "7.Propagation/knowledge/Propagation.md"
       anchor: "transaction-propagation-requires-new"
     apiRelated:
       controller: ""
@@ -100,7 +100,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "8.Programmatic/Programmatic.md"
+      file: "8.Programmatic/knowledge/Programmatic.md"
       anchor: "transaction-declarative-vs-programmatic"
     apiRelated:
       controller: ""
@@ -113,7 +113,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "9.Reactive/Reactive.md"
+      file: "9.Reactive/knowledge/Reactive.md"
       anchor: "transaction-reactive-context-model"
     apiRelated:
       controller: ""
@@ -126,7 +126,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "10.EventsLifecycle/EventsLifecycle.md"
+      file: "10.EventsLifecycle/knowledge/EventsLifecycle.md"
       anchor: "transaction-event-listener"
     apiRelated:
       controller: "TransactionExperimentController"

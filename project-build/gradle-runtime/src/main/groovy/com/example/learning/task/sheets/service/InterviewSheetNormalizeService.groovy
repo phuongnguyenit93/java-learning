@@ -65,7 +65,7 @@ class InterviewSheetNormalizeService {
             populated++
             String filename = parent.filename as String
             String expectedFile = (index + 1) + '.' +
-                    filename.substring(0, filename.length() - 3) + '/' + filename
+                    filename.substring(0, filename.length() - 3) + '/knowledge/' + filename
             Map normalized = normalizeYaml(joinFragments(oldPieces, row), expectedFile, row)
             questionCount += (normalized.questions as List).size()
             List<String> newPieces = splitFragments(
@@ -159,7 +159,8 @@ class InterviewSheetNormalizeService {
             boolean reviewed = flag(q, 'reviewed', false, at)
             Map readme = relation(q, 'readmeRelated', 'file', 'anchor', at)
             Map api = relation(q, 'apiRelated', 'controller', 'methodSignature', at)
-            if (readme.file && readme.file != file) {
+            String legacyFile = file.replace('/knowledge/', '/')
+            if (readme.file && readme.file != file && readme.file != legacyFile) {
                 throw new GradleException(at + ': conflicting README file path; not overwritten.')
             }
             items.add([

@@ -353,6 +353,19 @@ class PortalQuizProjectionService {
             return
         }
 
+        // Relations must target Knowledge articles, never other menu resources.
+        List<String> segments = file.split('/') as List<String>
+        if (segments.size() != 3 ||
+                !(segments[0] ==~ /\d+\..+/) ||
+                segments[1] != 'knowledge' ||
+                !segments[2].toLowerCase(Locale.ROOT).endsWith('.md')) {
+            warnUnresolvedRelation(
+                    routeId, language, questionId, 'readmeRelated',
+                    "file='" + file + "', anchor='" + anchor + "'",
+                    'README relation must target chapter/knowledge/file.md'
+            )
+            return
+        }
 
         Path targetPath =
                 readmeMenuPath
@@ -366,6 +379,14 @@ class PortalQuizProjectionService {
                 !targetPath.startsWith(
                         readmeMenuPath
                 ) ||
+                        !readmeMenuPath.resolve(segments[0]).resolve('knowledge')
+                                .toFile().canonicalFile.toPath().startsWith(
+                                        readmeMenuPath.toFile().canonicalFile.toPath()
+                                ) ||
+                        !targetPath.toFile().canonicalFile.toPath().startsWith(
+                                readmeMenuPath.resolve(segments[0])
+                                        .resolve('knowledge').toFile().canonicalFile.toPath()
+                        ) ||
                         !targetPath.toFile().isFile()
         ) {
 

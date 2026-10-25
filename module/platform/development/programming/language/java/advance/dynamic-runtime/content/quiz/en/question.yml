@@ -44,7 +44,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "8.Synthesis/Synthesis.md"
+      file: "8.Synthesis/knowledge/Synthesis.md"
       anchor: "choose-invocation-mechanism"
     apiRelated:
       controller: ""
@@ -69,7 +69,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.TypedInvocation/TypedInvocation.md"
+      file: "2.TypedInvocation/knowledge/TypedInvocation.md"
       anchor: "invoke-exact-vs-invoke"
     apiRelated:
       controller: ""
@@ -94,7 +94,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "3.LookupAccess/LookupAccess.md"
+      file: "3.LookupAccess/knowledge/LookupAccess.md"
       anchor: "lookup-context"
     apiRelated:
       controller: "DynamicRuntimeController"
@@ -119,7 +119,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.MethodHandleAdaptation/MethodHandleAdaptation.md"
+      file: "4.MethodHandleAdaptation/knowledge/MethodHandleAdaptation.md"
       anchor: "method-handle-binding"
     apiRelated:
       controller: "DynamicRuntimeController"
@@ -144,7 +144,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.MethodHandleAdaptation/MethodHandleAdaptation.md"
+      file: "4.MethodHandleAdaptation/knowledge/MethodHandleAdaptation.md"
       anchor: "method-handle-guards"
     apiRelated:
       controller: ""
@@ -169,7 +169,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "5.CallSite/CallSite.md"
+      file: "5.CallSite/knowledge/CallSite.md"
       anchor: "call-site-target-updates"
     apiRelated:
       controller: "DynamicRuntimeController"
@@ -194,7 +194,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "6.InvokeDynamic/InvokeDynamic.md"
+      file: "6.InvokeDynamic/knowledge/InvokeDynamic.md"
       anchor: "invokedynamic-linkage-failures"
     apiRelated:
       controller: ""
@@ -219,7 +219,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "7.VarHandle/VarHandle.md"
+      file: "7.VarHandle/knowledge/VarHandle.md"
       anchor: "var-handle-access-mode-type"
     apiRelated:
       controller: ""
@@ -244,7 +244,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "7.VarHandle/VarHandle.md"
+      file: "7.VarHandle/knowledge/VarHandle.md"
       anchor: "var-handle-atomic-updates"
     apiRelated:
       controller: "DynamicRuntimeController"
@@ -269,7 +269,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "7.VarHandle/VarHandle.md"
+      file: "7.VarHandle/knowledge/VarHandle.md"
       anchor: "var-handle-memory-model-boundary"
     apiRelated:
       controller: ""

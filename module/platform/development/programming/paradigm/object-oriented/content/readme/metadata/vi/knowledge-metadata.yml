@@ -1,4 +1,4 @@
-1.OOPBasic/OOPBasic.md:
+1.OOPBasic/knowledge/OOPBasic.md:
   oop-basic-001:
     difficulty: BASIC
     aiGenerated: true
@@ -39,7 +39,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-2.Class/Class.md:
+2.Class/knowledge/Class.md:
   class-001:
     difficulty: BASIC
     aiGenerated: true
@@ -80,7 +80,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-3.Object/Object.md:
+3.Object/knowledge/Object.md:
   object-001:
     difficulty: BASIC
     aiGenerated: true
@@ -126,7 +126,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-4.Lifecycle/Lifecycle.md:
+4.Lifecycle/knowledge/Lifecycle.md:
   lifecycle-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -172,7 +172,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-5.Encapsulation/Encapsulation.md:
+5.Encapsulation/knowledge/Encapsulation.md:
   encapsulation-001:
     difficulty: BASIC
     aiGenerated: true
@@ -218,7 +218,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-6.Abstraction/Abstraction.md:
+6.Abstraction/knowledge/Abstraction.md:
   abstraction-001:
     difficulty: BASIC
     aiGenerated: true
@@ -259,7 +259,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-7.Interface/Interface.md:
+7.Interface/knowledge/Interface.md:
   interface-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -305,7 +305,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-8.Inheritance/Inheritance.md:
+8.Inheritance/knowledge/Inheritance.md:
   inheritance-001:
     difficulty: BASIC
     aiGenerated: true
@@ -356,7 +356,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-9.Subtyping/Subtyping.md:
+9.Subtyping/knowledge/Subtyping.md:
   subtyping-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -397,7 +397,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-10.Polymorphism/Polymorphism.md:
+10.Polymorphism/knowledge/Polymorphism.md:
   polymorphism-001:
     difficulty: BASIC
     aiGenerated: true
@@ -448,7 +448,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-11.Composition/Composition.md:
+11.Composition/knowledge/Composition.md:
   composition-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -489,7 +489,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-12.Relationships/Relationships.md:
+12.Relationships/knowledge/Relationships.md:
   relationships-001:
     difficulty: BASIC
     aiGenerated: true
@@ -530,7 +530,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-13.ClassDesign/ClassDesign.md:
+13.ClassDesign/knowledge/ClassDesign.md:
   class-design-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -576,7 +576,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-14.Modeling/Modeling.md:
+14.Modeling/knowledge/Modeling.md:
   modeling-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -622,7 +622,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-15.SOLID/SOLID.md:
+15.SOLID/knowledge/SOLID.md:
   solid-001:
     difficulty: BASIC
     aiGenerated: true
@@ -663,7 +663,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-16.DesignPatterns/DesignPatterns.md:
+16.DesignPatterns/knowledge/DesignPatterns.md:
   design-patterns-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -729,7 +729,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-17.LanguageMechanics/LanguageMechanics.md:
+17.LanguageMechanics/knowledge/LanguageMechanics.md:
   language-mechanics-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -775,7 +775,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-18.DesignPitfalls/DesignPitfalls.md:
+18.DesignPitfalls/knowledge/DesignPitfalls.md:
   design-pitfalls-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -826,7 +826,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-19.Testing/Testing.md:
+19.Testing/knowledge/Testing.md:
   testing-001:
     difficulty: ADVANCED
     aiGenerated: true
@@ -877,7 +877,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-20.Refactoring/Refactoring.md:
+20.Refactoring/knowledge/Refactoring.md:
   refactoring-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -923,7 +923,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-21.Practice/Practice.md:
+21.Practice/knowledge/Practice.md:
   practice-001:
     difficulty: BASIC
     aiGenerated: true

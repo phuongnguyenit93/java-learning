@@ -33,7 +33,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '1.Introduction/BootTesting.md'
+      file: '1.Introduction/knowledge/BootTesting.md'
       anchor: 'boot-testing-problem'
     apiRelated:
       controller: ''
@@ -44,7 +44,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '2.SpringBootTest/SpringBootTest.md'
+      file: '2.SpringBootTest/knowledge/SpringBootTest.md'
       anchor: 'full-context-vs-slice'
     apiRelated:
       controller: ''
@@ -55,7 +55,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '3.WebEnvironment/WebEnvironment.md'
+      file: '3.WebEnvironment/knowledge/WebEnvironment.md'
       anchor: 'real-server-transaction-boundary'
     apiRelated:
       controller: ''
@@ -66,7 +66,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '4.TestSlices/TestSlices.md'
+      file: '4.TestSlices/knowledge/TestSlices.md'
       anchor: 'single-slice-rule'
     apiRelated:
       controller: ''
@@ -77,7 +77,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '5.WebLayerTesting/WebLayerTesting.md'
+      file: '5.WebLayerTesting/knowledge/WebLayerTesting.md'
       anchor: 'webmvc-test-collaborators'
     apiRelated:
       controller: ''
@@ -88,7 +88,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '6.DataLayerTesting/DataLayerTesting.md'
+      file: '6.DataLayerTesting/knowledge/DataLayerTesting.md'
       anchor: 'data-test-database-customization'
     apiRelated:
       controller: ''
@@ -99,7 +99,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '7.TestAutoConfiguration/TestAutoConfiguration.md'
+      file: '7.TestAutoConfiguration/knowledge/TestAutoConfiguration.md'
       anchor: 'test-context-missing-bean-diagnosis'
     apiRelated:
       controller: ''
@@ -110,7 +110,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '7.TestAutoConfiguration/TestAutoConfiguration.md'
+      file: '7.TestAutoConfiguration/knowledge/TestAutoConfiguration.md'
       anchor: 'import-auto-configuration'
     apiRelated:
       controller: ''
@@ -121,7 +121,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '8.PropertyOverrides/PropertyOverrides.md'
+      file: '8.PropertyOverrides/knowledge/PropertyOverrides.md'
       anchor: 'test-property-cache-impact'
     apiRelated:
       controller: ''
@@ -132,7 +132,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '8.PropertyOverrides/PropertyOverrides.md'
+      file: '8.PropertyOverrides/knowledge/PropertyOverrides.md'
       anchor: 'testconfiguration-purpose'
     apiRelated:
       controller: ''
@@ -143,7 +143,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '9.MockReplacement/MockReplacement.md'
+      file: '9.MockReplacement/knowledge/MockReplacement.md'
       anchor: 'mock-replacement-context-boundary'
     apiRelated:
       controller: ''
@@ -154,7 +154,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '9.MockReplacement/MockReplacement.md'
+      file: '9.MockReplacement/knowledge/MockReplacement.md'
       anchor: 'mock-refresh-time-limit'
     apiRelated:
       controller: ''
@@ -165,7 +165,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '10.Testcontainers/Testcontainers.md'
+      file: '10.Testcontainers/knowledge/Testcontainers.md'
       anchor: 'service-connection-purpose'
     apiRelated:
       controller: ''
@@ -176,7 +176,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '10.Testcontainers/Testcontainers.md'
+      file: '10.Testcontainers/knowledge/Testcontainers.md'
       anchor: 'dynamic-property-source-fallback'
     apiRelated:
       controller: ''
@@ -187,7 +187,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '11.IntegrationTestingStrategy/IntegrationTestingStrategy.md'
+      file: '11.IntegrationTestingStrategy/knowledge/IntegrationTestingStrategy.md'
       anchor: 'testing-strategy-spectrum'
     apiRelated:
       controller: ''
@@ -198,7 +198,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: '11.IntegrationTestingStrategy/IntegrationTestingStrategy.md'
+      file: '11.IntegrationTestingStrategy/knowledge/IntegrationTestingStrategy.md'
       anchor: 'testing-failure-classification'
     apiRelated:
       controller: ''

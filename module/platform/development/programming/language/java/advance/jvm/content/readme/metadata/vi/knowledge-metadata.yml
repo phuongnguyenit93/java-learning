@@ -1,4 +1,4 @@
-1.JVMOverview/JVMOverview.md:
+1.JVMOverview/knowledge/JVMOverview.md:
   jvm-overview-001:
     difficulty: BASIC
     aiGenerated: true
@@ -39,7 +39,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-2.JvmLifecycle/JvmLifecycle.md:
+2.JvmLifecycle/knowledge/JvmLifecycle.md:
   jvm-lifecycle-001:
     difficulty: BASIC
     aiGenerated: true
@@ -80,7 +80,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-3.JvmDataTypes/JvmDataTypes.md:
+3.JvmDataTypes/knowledge/JvmDataTypes.md:
   jvm-data-types-001:
     difficulty: BASIC
     aiGenerated: true
@@ -121,7 +121,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-4.ClassFileFormat/ClassFileFormat.md:
+4.ClassFileFormat/knowledge/ClassFileFormat.md:
   class-file-format-001:
     difficulty: BASIC
     aiGenerated: true
@@ -182,7 +182,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-5.BytecodeInstructions/BytecodeInstructions.md:
+5.BytecodeInstructions/knowledge/BytecodeInstructions.md:
   bytecode-instructions-001:
     difficulty: BASIC
     aiGenerated: true
@@ -233,7 +233,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-6.StackFramesAndCalls/StackFramesAndCalls.md:
+6.StackFramesAndCalls/knowledge/StackFramesAndCalls.md:
   stack-frames-and-calls-001:
     difficulty: BASIC
     aiGenerated: true
@@ -279,7 +279,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-7.ClassLoadingAndIdentity/ClassLoadingAndIdentity.md:
+7.ClassLoadingAndIdentity/knowledge/ClassLoadingAndIdentity.md:
   class-loading-and-identity-001:
     difficulty: BASIC
     aiGenerated: true
@@ -320,7 +320,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-8.LinkingAndInitialization/LinkingAndInitialization.md:
+8.LinkingAndInitialization/knowledge/LinkingAndInitialization.md:
   linking-and-initialization-001:
     difficulty: BASIC
     aiGenerated: true
@@ -381,7 +381,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-9.JVMRuntimeMemoryAreas/JVMRuntimeMemoryAreas.md:
+9.JVMRuntimeMemoryAreas/knowledge/JVMRuntimeMemoryAreas.md:
   jvm-runtime-memory-areas-001:
     difficulty: BASIC
     aiGenerated: true
@@ -427,7 +427,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-10.HotspotObjects/HotspotObjects.md:
+10.HotspotObjects/knowledge/HotspotObjects.md:
   hotspot-objects-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -473,7 +473,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-11.ObjectReachability/ObjectReachability.md:
+11.ObjectReachability/knowledge/ObjectReachability.md:
   object-reachability-001:
     difficulty: ADVANCED
     aiGenerated: true
@@ -519,7 +519,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-12.GarbageCollectionMechanics/GarbageCollectionMechanics.md:
+12.GarbageCollectionMechanics/knowledge/GarbageCollectionMechanics.md:
   garbage-collection-mechanics-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -565,7 +565,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-13.GarbageCollectors/GarbageCollectors.md:
+13.GarbageCollectors/knowledge/GarbageCollectors.md:
   garbage-collectors-001:
     difficulty: BASIC
     aiGenerated: true
@@ -616,7 +616,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-14.InterpretationAndJIT/InterpretationAndJIT.md:
+14.InterpretationAndJIT/knowledge/InterpretationAndJIT.md:
   interpretation-and-jit-001:
     difficulty: BASIC
     aiGenerated: true
@@ -662,7 +662,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-15.HotSpotOptimizations/HotSpotOptimizations.md:
+15.HotSpotOptimizations/knowledge/HotSpotOptimizations.md:
   hot-spot-optimizations-001:
     difficulty: ADVANCED
     aiGenerated: true
@@ -708,7 +708,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-16.JVMThreadsAndSynchronization/JVMThreadsAndSynchronization.md:
+16.JVMThreadsAndSynchronization/knowledge/JVMThreadsAndSynchronization.md:
   jvm-threads-and-synchronization-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -764,7 +764,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-17.FastStartup/FastStartup.md:
+17.FastStartup/knowledge/FastStartup.md:
   fast-startup-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -805,7 +805,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-18.ResourceConfiguration/ResourceConfiguration.md:
+18.ResourceConfiguration/knowledge/ResourceConfiguration.md:
   resource-configuration-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -856,7 +856,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-19.JvmObservabilityAndErrors/JvmObservabilityAndErrors.md:
+19.JvmObservabilityAndErrors/knowledge/JvmObservabilityAndErrors.md:
   jvm-observability-and-errors-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -917,7 +917,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-20.JVMExperiments/JVMExperiments.md:
+20.JVMExperiments/knowledge/JVMExperiments.md:
   jvm-experiments-001:
     difficulty: INTERMEDIATE
     aiGenerated: true

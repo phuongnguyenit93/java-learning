@@ -1,4 +1,4 @@
-1.Overview/Overview.md:
+1.Overview/knowledge/Overview.md:
   overview-001:
     difficulty: BASIC
     isImportant: true
@@ -39,7 +39,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-2.TypeFoundations/TypeFoundations.md:
+2.TypeFoundations/knowledge/TypeFoundations.md:
   type-foundations-001:
     difficulty: INTERMEDIATE
     isImportant: true
@@ -75,7 +75,7 @@
     isImportant: false
     aiGenerated: true
     reviewed: false
-3.AbstractClasses/AbstractClasses.md:
+3.AbstractClasses/knowledge/AbstractClasses.md:
   abstract-classes-001:
     difficulty: BASIC
     isImportant: true
@@ -126,7 +126,7 @@
     isImportant: false
     aiGenerated: true
     reviewed: false
-4.AbstractMethods/AbstractMethods.md:
+4.AbstractMethods/knowledge/AbstractMethods.md:
   abstract-methods-001:
     difficulty: BASIC
     isImportant: true
@@ -172,7 +172,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-5.ObjectInitialization/ObjectInitialization.md:
+5.ObjectInitialization/knowledge/ObjectInitialization.md:
   object-initialization-001:
     difficulty: INTERMEDIATE
     isImportant: true
@@ -213,7 +213,7 @@
     isImportant: false
     aiGenerated: true
     reviewed: false
-6.InterfaceDeclaration/InterfaceDeclaration.md:
+6.InterfaceDeclaration/knowledge/InterfaceDeclaration.md:
   interface-declaration-001:
     difficulty: BASIC
     isImportant: true
@@ -254,7 +254,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-7.InterfaceMembers/InterfaceMembers.md:
+7.InterfaceMembers/knowledge/InterfaceMembers.md:
   interface-members-001:
     difficulty: INTERMEDIATE
     isImportant: true
@@ -295,7 +295,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-8.ContractImplementation/ContractImplementation.md:
+8.ContractImplementation/knowledge/ContractImplementation.md:
   contract-implementation-001:
     difficulty: BASIC
     isImportant: true
@@ -341,7 +341,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-9.MethodOverriding/MethodOverriding.md:
+9.MethodOverriding/knowledge/MethodOverriding.md:
   method-overriding-001:
     difficulty: INTERMEDIATE
     isImportant: true
@@ -392,7 +392,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-10.Polymorphism/Polymorphism.md:
+10.Polymorphism/knowledge/Polymorphism.md:
   polymorphism-001:
     difficulty: INTERMEDIATE
     isImportant: true
@@ -438,7 +438,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-11.DefaultMethods/DefaultMethods.md:
+11.DefaultMethods/knowledge/DefaultMethods.md:
   default-methods-001:
     difficulty: INTERMEDIATE
     isImportant: true
@@ -484,7 +484,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-12.StaticAndPrivate/StaticAndPrivate.md:
+12.StaticAndPrivate/knowledge/StaticAndPrivate.md:
   static-and-private-001:
     difficulty: BASIC
     isImportant: true
@@ -520,7 +520,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-13.MultipleInheritance/MultipleInheritance.md:
+13.MultipleInheritance/knowledge/MultipleInheritance.md:
   multiple-inheritance-001:
     difficulty: BASIC
     isImportant: true
@@ -571,7 +571,7 @@
     isImportant: false
     aiGenerated: true
     reviewed: false
-14.InterfaceAndObject/InterfaceAndObject.md:
+14.InterfaceAndObject/knowledge/InterfaceAndObject.md:
   interface-and-object-001:
     difficulty: INTERMEDIATE
     isImportant: true
@@ -602,7 +602,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-15.FunctionalInterfaces/FunctionalInterfaces.md:
+15.FunctionalInterfaces/knowledge/FunctionalInterfaces.md:
   functional-interfaces-001:
     difficulty: BASIC
     isImportant: true
@@ -653,7 +653,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-16.Generics/Generics.md:
+16.Generics/knowledge/Generics.md:
   generics-001:
     difficulty: BASIC
     isImportant: true
@@ -704,7 +704,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-17.NestedTypes/NestedTypes.md:
+17.NestedTypes/knowledge/NestedTypes.md:
   nested-types-001:
     difficulty: BASIC
     isImportant: true
@@ -745,7 +745,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-18.EnumsAndRecords/EnumsAndRecords.md:
+18.EnumsAndRecords/knowledge/EnumsAndRecords.md:
   enums-and-records-001:
     difficulty: INTERMEDIATE
     isImportant: true
@@ -776,7 +776,7 @@
     isImportant: false
     aiGenerated: true
     reviewed: false
-19.SealedHierarchies/SealedHierarchies.md:
+19.SealedHierarchies/knowledge/SealedHierarchies.md:
   sealed-hierarchies-001:
     difficulty: BASIC
     isImportant: true
@@ -822,7 +822,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-20.TypeInitialization/TypeInitialization.md:
+20.TypeInitialization/knowledge/TypeInitialization.md:
   type-initialization-001:
     difficulty: INTERMEDIATE
     isImportant: true
@@ -853,7 +853,7 @@
     isImportant: false
     aiGenerated: true
     reviewed: false
-21.AbstractionChoices/AbstractionChoices.md:
+21.AbstractionChoices/knowledge/AbstractionChoices.md:
   abstraction-choices-001:
     difficulty: INTERMEDIATE
     isImportant: true
@@ -904,7 +904,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-22.DesignPatterns/DesignPatterns.md:
+22.DesignPatterns/knowledge/DesignPatterns.md:
   design-patterns-001:
     difficulty: INTERMEDIATE
     isImportant: true
@@ -950,7 +950,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-23.JdkApis/JdkApis.md:
+23.JdkApis/knowledge/JdkApis.md:
   jdk-apis-001:
     difficulty: INTERMEDIATE
     isImportant: true
@@ -991,7 +991,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-24.ApiEvolution/ApiEvolution.md:
+24.ApiEvolution/knowledge/ApiEvolution.md:
   api-evolution-001:
     difficulty: BASIC
     isImportant: true
@@ -1037,7 +1037,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-25.TestingAndDiagnostics/TestingAndDiagnostics.md:
+25.TestingAndDiagnostics/knowledge/TestingAndDiagnostics.md:
   testing-and-diagnostics-001:
     difficulty: INTERMEDIATE
     isImportant: true
@@ -1083,7 +1083,7 @@
     isImportant: false
     aiGenerated: true
     reviewed: false
-26.Practice/Practice.md:
+26.Practice/knowledge/Practice.md:
   practice-001:
     difficulty: INTERMEDIATE
     isImportant: true
@@ -1134,7 +1134,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-27.Reference/Reference.md:
+27.Reference/knowledge/Reference.md:
   reference-001:
     difficulty: BASIC
     isImportant: true

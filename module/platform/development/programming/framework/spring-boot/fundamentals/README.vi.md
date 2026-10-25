@@ -1,23 +1,23 @@
 # 📂 README MODULE STRUCTURE (VI)
 
 * **1.SpringBootPurpose**
-    * [SpringBootPurpose](content/readme/docs/vi/menu/1.SpringBootPurpose/SpringBootPurpose.md)
+    * [SpringBootPurpose](content/readme/docs/vi/menu/1.SpringBootPurpose/knowledge/SpringBootPurpose.md)
 * **2.ApplicationBootstrap**
-    * [ApplicationBootstrap](content/readme/docs/vi/menu/2.ApplicationBootstrap/ApplicationBootstrap.md)
+    * [ApplicationBootstrap](content/readme/docs/vi/menu/2.ApplicationBootstrap/knowledge/ApplicationBootstrap.md)
 * **3.PrimaryConfiguration**
-    * [PrimaryConfiguration](content/readme/docs/vi/menu/3.PrimaryConfiguration/PrimaryConfiguration.md)
+    * [PrimaryConfiguration](content/readme/docs/vi/menu/3.PrimaryConfiguration/knowledge/PrimaryConfiguration.md)
 * **4.StartersAndClasspath**
-    * [StartersAndClasspath](content/readme/docs/vi/menu/4.StartersAndClasspath/StartersAndClasspath.md)
+    * [StartersAndClasspath](content/readme/docs/vi/menu/4.StartersAndClasspath/knowledge/StartersAndClasspath.md)
 * **5.StartupObservation**
-    * [StartupObservation](content/readme/docs/vi/menu/5.StartupObservation/StartupObservation.md)
+    * [StartupObservation](content/readme/docs/vi/menu/5.StartupObservation/knowledge/StartupObservation.md)
 * **6.ApplicationShapes**
-    * [ApplicationShapes](content/readme/docs/vi/menu/6.ApplicationShapes/ApplicationShapes.md)
+    * [ApplicationShapes](content/readme/docs/vi/menu/6.ApplicationShapes/knowledge/ApplicationShapes.md)
 * **7.DevTools**
-    * [DevTools](content/readme/docs/vi/menu/7.DevTools/DevTools.md)
+    * [DevTools](content/readme/docs/vi/menu/7.DevTools/knowledge/DevTools.md)
 * **8.PackagingMentalModel**
-    * [PackagingMentalModel](content/readme/docs/vi/menu/8.PackagingMentalModel/PackagingMentalModel.md)
+    * [PackagingMentalModel](content/readme/docs/vi/menu/8.PackagingMentalModel/knowledge/PackagingMentalModel.md)
 * **9.FundamentalsSynthesis**
-    * [FundamentalsSynthesis](content/readme/docs/vi/menu/9.FundamentalsSynthesis/FundamentalsSynthesis.md)
+    * [FundamentalsSynthesis](content/readme/docs/vi/menu/9.FundamentalsSynthesis/knowledge/FundamentalsSynthesis.md)
 
 # Spring Boot Fundamentals
 

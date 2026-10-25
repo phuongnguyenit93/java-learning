@@ -11,7 +11,7 @@ AccessReflectionController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 7.AccessControl/AccessControl.md
+      file: 7.AccessControl/knowledge/AccessControl.md
       anchor: try-set-accessible
     methodName: accessChecks
     params: [
@@ -39,7 +39,7 @@ ClassMetadataController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 2.ClassMetadata/ClassMetadata.md
+      file: 2.ClassMetadata/knowledge/ClassMetadata.md
       anchor: class-kind
     methodName: inspectType
     params: [
@@ -67,7 +67,7 @@ ConstructorReflectionController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 6.DynamicInvocation/DynamicInvocation.md
+      file: 6.DynamicInvocation/knowledge/DynamicInvocation.md
       anchor: constructor-newinstance
     methodName: construct
     params: [
@@ -95,7 +95,7 @@ DynamicProxyController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 9.DynamicProxy/DynamicProxy.md
+      file: 9.DynamicProxy/knowledge/DynamicProxy.md
       anchor: invocation-handler
     methodName: intercept
     params: [
@@ -123,7 +123,7 @@ FieldReflectionController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 6.DynamicInvocation/DynamicInvocation.md
+      file: 6.DynamicInvocation/knowledge/DynamicInvocation.md
       anchor: field-read-write
     methodName: inspectAndMutate
     params: [
@@ -151,7 +151,7 @@ GenericReflectionController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 8.GenericTypeInspection/GenericTypeInspection.md
+      file: 8.GenericTypeInspection/knowledge/GenericTypeInspection.md
       anchor: parameterized-type
     methodName: genericSignature
     params: [
@@ -179,7 +179,7 @@ MethodReflectionController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 6.DynamicInvocation/DynamicInvocation.md
+      file: 6.DynamicInvocation/knowledge/DynamicInvocation.md
       anchor: method-invoke
     methodName: invoke
     params: [

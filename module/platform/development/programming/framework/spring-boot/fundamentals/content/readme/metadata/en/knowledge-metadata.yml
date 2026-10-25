@@ -1,4 +1,4 @@
-1.SpringBootPurpose/SpringBootPurpose.md:
+1.SpringBootPurpose/knowledge/SpringBootPurpose.md:
   spring-boot-purpose:
     difficulty: BASIC
     aiGenerated: true
@@ -29,7 +29,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-2.ApplicationBootstrap/ApplicationBootstrap.md:
+2.ApplicationBootstrap/knowledge/ApplicationBootstrap.md:
   springapplication-role:
     difficulty: BASIC
     aiGenerated: true
@@ -55,7 +55,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-3.PrimaryConfiguration/PrimaryConfiguration.md:
+3.PrimaryConfiguration/knowledge/PrimaryConfiguration.md:
   primary-configuration-purpose:
     difficulty: BASIC
     aiGenerated: true
@@ -81,7 +81,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-4.StartersAndClasspath/StartersAndClasspath.md:
+4.StartersAndClasspath/knowledge/StartersAndClasspath.md:
   starter-purpose:
     difficulty: BASIC
     aiGenerated: true
@@ -107,7 +107,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-5.StartupObservation/StartupObservation.md:
+5.StartupObservation/knowledge/StartupObservation.md:
   startup-as-evidence:
     difficulty: BASIC
     aiGenerated: true
@@ -133,7 +133,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-6.ApplicationShapes/ApplicationShapes.md:
+6.ApplicationShapes/knowledge/ApplicationShapes.md:
   application-shapes:
     difficulty: BASIC
     aiGenerated: true
@@ -159,7 +159,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-7.DevTools/DevTools.md:
+7.DevTools/knowledge/DevTools.md:
   devtools-purpose:
     difficulty: BASIC
     aiGenerated: true
@@ -190,7 +190,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-8.PackagingMentalModel/PackagingMentalModel.md:
+8.PackagingMentalModel/knowledge/PackagingMentalModel.md:
   packaging-purpose:
     difficulty: BASIC
     aiGenerated: true
@@ -216,7 +216,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-9.FundamentalsSynthesis/FundamentalsSynthesis.md:
+9.FundamentalsSynthesis/knowledge/FundamentalsSynthesis.md:
   end-to-end-boot-flow:
     difficulty: BASIC
     aiGenerated: true

@@ -14,7 +14,7 @@ OrderPreviewController:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 6.DataFlow/DataFlow.md
+      file: 6.DataFlow/knowledge/DataFlow.md
       anchor: dop-flow-scenario
     methodName: preview
     params:

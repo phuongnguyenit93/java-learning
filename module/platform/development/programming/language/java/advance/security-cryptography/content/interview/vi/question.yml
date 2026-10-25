@@ -34,7 +34,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 1.MentalModel/MentalModel.md
+      file: 1.MentalModel/knowledge/MentalModel.md
       anchor: threat-model-boundary
     apiRelated:
       controller: ""
@@ -46,7 +46,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 3.ProvidersAlgorithms/ProvidersAlgorithms.md
+      file: 3.ProvidersAlgorithms/knowledge/ProvidersAlgorithms.md
       anchor: provider-selection
     apiRelated:
       controller: ""
@@ -58,7 +58,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 4.SecureRandom/SecureRandom.md
+      file: 4.SecureRandom/knowledge/SecureRandom.md
       anchor: entropy-and-seeding
     apiRelated:
       controller: ""
@@ -70,7 +70,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 7.Mac/Mac.md
+      file: 7.Mac/knowledge/Mac.md
       anchor: mac-comparison
     apiRelated:
       controller: ""
@@ -94,7 +94,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 12.KeyEstablishment/KeyEstablishment.md
+      file: 12.KeyEstablishment/knowledge/KeyEstablishment.md
       anchor: agreement-vs-kem
     apiRelated:
       controller: KeyEstablishmentExperimentController
@@ -106,7 +106,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 13.KeyDerivation/KeyDerivation.md
+      file: 13.KeyDerivation/knowledge/KeyDerivation.md
       anchor: salt-and-work-factor
     apiRelated:
       controller: KeyDerivationExperimentController
@@ -119,7 +119,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 14.KeyStore/KeyStore.md
+      file: 14.KeyStore/knowledge/KeyStore.md
       anchor: keystore-vs-truststore
     apiRelated:
       controller: ""
@@ -143,7 +143,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: 16.TlsJsse/TlsJsse.md
+      file: 16.TlsJsse/knowledge/TlsJsse.md
       anchor: tls-algorithm-constraints
     apiRelated:
       controller: ""

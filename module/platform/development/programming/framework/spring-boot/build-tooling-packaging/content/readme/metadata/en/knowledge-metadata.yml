@@ -1,4 +1,4 @@
-1.Purpose/Purpose.md:
+1.Purpose/knowledge/Purpose.md:
   build-tooling-purpose:
     difficulty: BASIC
     aiGenerated: true
@@ -19,7 +19,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-2.BuildPlugins/BuildPlugins.md:
+2.BuildPlugins/knowledge/BuildPlugins.md:
   boot-build-plugins:
     difficulty: BASIC
     aiGenerated: true
@@ -40,7 +40,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-3.DependencyManagement/DependencyManagement.md:
+3.DependencyManagement/knowledge/DependencyManagement.md:
   spring-boot-dependencies:
     difficulty: BASIC
     aiGenerated: true
@@ -61,7 +61,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-4.BootRun/BootRun.md:
+4.BootRun/knowledge/BootRun.md:
   boot-aware-development-run:
     difficulty: BASIC
     aiGenerated: true
@@ -87,7 +87,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-5.BootJarBootWar/BootJarBootWar.md:
+5.BootJarBootWar/knowledge/BootJarBootWar.md:
   bootjar-bootwar-repackage:
     difficulty: BASIC
     aiGenerated: true
@@ -108,7 +108,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-6.ExecutableArchives/ExecutableArchives.md:
+6.ExecutableArchives/knowledge/ExecutableArchives.md:
   nested-archive-model:
     difficulty: BASIC
     aiGenerated: true
@@ -134,7 +134,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-7.LayeredArchives/LayeredArchives.md:
+7.LayeredArchives/knowledge/LayeredArchives.md:
   layered-archive-purpose:
     difficulty: BASIC
     aiGenerated: true
@@ -160,7 +160,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-8.ReproducibleBuilds/ReproducibleBuilds.md:
+8.ReproducibleBuilds/knowledge/ReproducibleBuilds.md:
   reproducible-packaging-purpose:
     difficulty: BASIC
     aiGenerated: true
@@ -181,7 +181,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-9.Buildpacks/Buildpacks.md:
+9.Buildpacks/knowledge/Buildpacks.md:
   buildpack-model:
     difficulty: BASIC
     aiGenerated: true
@@ -207,7 +207,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-10.OciImages/OciImages.md:
+10.OciImages/knowledge/OciImages.md:
   boot-build-image:
     difficulty: BASIC
     aiGenerated: true
@@ -228,7 +228,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-11.DockerBuildStrategy/DockerBuildStrategy.md:
+11.DockerBuildStrategy/knowledge/DockerBuildStrategy.md:
   dockerfile-vs-buildpacks:
     difficulty: BASIC
     aiGenerated: true
@@ -249,7 +249,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-12.DeploymentHandoff/DeploymentHandoff.md:
+12.DeploymentHandoff/knowledge/DeploymentHandoff.md:
   artifact-strategy:
     difficulty: BASIC
     aiGenerated: true

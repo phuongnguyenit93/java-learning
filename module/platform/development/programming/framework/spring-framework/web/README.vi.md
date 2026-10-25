@@ -1,35 +1,35 @@
 # 📂 README MODULE STRUCTURE (VI)
 
 * **1.SpringMvcFoundation**
-    * [SpringMvcFoundation](content/readme/docs/vi/menu/1.SpringMvcFoundation/SpringMvcFoundation.md)
+    * [SpringMvcFoundation](content/readme/docs/vi/menu/1.SpringMvcFoundation/knowledge/SpringMvcFoundation.md)
 * **2.DispatcherServletLifecycle**
-    * [DispatcherServletLifecycle](content/readme/docs/vi/menu/2.DispatcherServletLifecycle/DispatcherServletLifecycle.md)
+    * [DispatcherServletLifecycle](content/readme/docs/vi/menu/2.DispatcherServletLifecycle/knowledge/DispatcherServletLifecycle.md)
 * **3.AnnotatedControllers**
-    * [AnnotatedControllers](content/readme/docs/vi/menu/3.AnnotatedControllers/AnnotatedControllers.md)
+    * [AnnotatedControllers](content/readme/docs/vi/menu/3.AnnotatedControllers/knowledge/AnnotatedControllers.md)
 * **4.WebMvcFunctionalEndpoints**
-    * [WebMvcFunctionalEndpoints](content/readme/docs/vi/menu/4.WebMvcFunctionalEndpoints/WebMvcFunctionalEndpoints.md)
+    * [WebMvcFunctionalEndpoints](content/readme/docs/vi/menu/4.WebMvcFunctionalEndpoints/knowledge/WebMvcFunctionalEndpoints.md)
 * **5.MvcBindingValidation**
-    * [MvcBindingValidation](content/readme/docs/vi/menu/5.MvcBindingValidation/MvcBindingValidation.md)
+    * [MvcBindingValidation](content/readme/docs/vi/menu/5.MvcBindingValidation/knowledge/MvcBindingValidation.md)
 * **6.MessageConversionRepresentation**
-    * [MessageConversionRepresentation](content/readme/docs/vi/menu/6.MessageConversionRepresentation/MessageConversionRepresentation.md)
+    * [MessageConversionRepresentation](content/readme/docs/vi/menu/6.MessageConversionRepresentation/knowledge/MessageConversionRepresentation.md)
 * **7.ViewRenderingNavigation**
-    * [ViewRenderingNavigation](content/readme/docs/vi/menu/7.ViewRenderingNavigation/ViewRenderingNavigation.md)
+    * [ViewRenderingNavigation](content/readme/docs/vi/menu/7.ViewRenderingNavigation/knowledge/ViewRenderingNavigation.md)
 * **8.MvcErrorHandling**
-    * [MvcErrorHandling](content/readme/docs/vi/menu/8.MvcErrorHandling/MvcErrorHandling.md)
+    * [MvcErrorHandling](content/readme/docs/vi/menu/8.MvcErrorHandling/knowledge/MvcErrorHandling.md)
 * **9.AsyncMvcStreaming**
-    * [AsyncMvcStreaming](content/readme/docs/vi/menu/9.AsyncMvcStreaming/AsyncMvcStreaming.md)
+    * [AsyncMvcStreaming](content/readme/docs/vi/menu/9.AsyncMvcStreaming/knowledge/AsyncMvcStreaming.md)
 * **10.CrossCuttingRequestInfrastructure**
-    * [CrossCuttingRequestInfrastructure](content/readme/docs/vi/menu/10.CrossCuttingRequestInfrastructure/CrossCuttingRequestInfrastructure.md)
+    * [CrossCuttingRequestInfrastructure](content/readme/docs/vi/menu/10.CrossCuttingRequestInfrastructure/knowledge/CrossCuttingRequestInfrastructure.md)
 * **11.WebSupportResourceDelivery**
-    * [WebSupportResourceDelivery](content/readme/docs/vi/menu/11.WebSupportResourceDelivery/WebSupportResourceDelivery.md)
+    * [WebSupportResourceDelivery](content/readme/docs/vi/menu/11.WebSupportResourceDelivery/knowledge/WebSupportResourceDelivery.md)
 * **12.MvcConfigurationExtension**
-    * [MvcConfigurationExtension](content/readme/docs/vi/menu/12.MvcConfigurationExtension/MvcConfigurationExtension.md)
+    * [MvcConfigurationExtension](content/readme/docs/vi/menu/12.MvcConfigurationExtension/knowledge/MvcConfigurationExtension.md)
 * **13.SynchronousHttpClients**
-    * [SynchronousHttpClients](content/readme/docs/vi/menu/13.SynchronousHttpClients/SynchronousHttpClients.md)
+    * [SynchronousHttpClients](content/readme/docs/vi/menu/13.SynchronousHttpClients/knowledge/SynchronousHttpClients.md)
 * **14.HttpServiceInterfaces**
-    * [HttpServiceInterfaces](content/readme/docs/vi/menu/14.HttpServiceInterfaces/HttpServiceInterfaces.md)
+    * [HttpServiceInterfaces](content/readme/docs/vi/menu/14.HttpServiceInterfaces/knowledge/HttpServiceInterfaces.md)
 * **15.SpringWebSynthesis**
-    * [SpringWebSynthesis](content/readme/docs/vi/menu/15.SpringWebSynthesis/SpringWebSynthesis.md)
+    * [SpringWebSynthesis](content/readme/docs/vi/menu/15.SpringWebSynthesis/knowledge/SpringWebSynthesis.md)
 
 # Spring Framework Web
 

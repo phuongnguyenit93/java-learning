@@ -1,29 +1,29 @@
 # 📂 README MODULE STRUCTURE (VI)
 
 * **1.RuntimeModel**
-    * [RuntimeModel](content/readme/docs/vi/menu/1.RuntimeModel/RuntimeModel.md)
+    * [RuntimeModel](content/readme/docs/vi/menu/1.RuntimeModel/knowledge/RuntimeModel.md)
 * **2.ApplicationLifecycleEvents**
-    * [ApplicationLifecycleEvents](content/readme/docs/vi/menu/2.ApplicationLifecycleEvents/ApplicationLifecycleEvents.md)
+    * [ApplicationLifecycleEvents](content/readme/docs/vi/menu/2.ApplicationLifecycleEvents/knowledge/ApplicationLifecycleEvents.md)
 * **3.ArgumentsAndRunners**
-    * [ArgumentsAndRunners](content/readme/docs/vi/menu/3.ArgumentsAndRunners/ArgumentsAndRunners.md)
+    * [ArgumentsAndRunners](content/readme/docs/vi/menu/3.ArgumentsAndRunners/knowledge/ArgumentsAndRunners.md)
 * **4.AvailabilityFailureExit**
-    * [AvailabilityFailureExit](content/readme/docs/vi/menu/4.AvailabilityFailureExit/AvailabilityFailureExit.md)
+    * [AvailabilityFailureExit](content/readme/docs/vi/menu/4.AvailabilityFailureExit/knowledge/AvailabilityFailureExit.md)
 * **5.TaskExecutionScheduling**
-    * [TaskExecutionScheduling](content/readme/docs/vi/menu/5.TaskExecutionScheduling/TaskExecutionScheduling.md)
+    * [TaskExecutionScheduling](content/readme/docs/vi/menu/5.TaskExecutionScheduling/knowledge/TaskExecutionScheduling.md)
 * **6.VirtualThreads**
-    * [VirtualThreads](content/readme/docs/vi/menu/6.VirtualThreads/VirtualThreads.md)
+    * [VirtualThreads](content/readme/docs/vi/menu/6.VirtualThreads/knowledge/VirtualThreads.md)
 * **7.StartupOptimization**
-    * [StartupOptimization](content/readme/docs/vi/menu/7.StartupOptimization/StartupOptimization.md)
+    * [StartupOptimization](content/readme/docs/vi/menu/7.StartupOptimization/knowledge/StartupOptimization.md)
 * **8.RuntimeCustomization**
-    * [RuntimeCustomization](content/readme/docs/vi/menu/8.RuntimeCustomization/RuntimeCustomization.md)
+    * [RuntimeCustomization](content/readme/docs/vi/menu/8.RuntimeCustomization/knowledge/RuntimeCustomization.md)
 * **9.Logging**
-    * [Logging](content/readme/docs/vi/menu/9.Logging/Logging.md)
+    * [Logging](content/readme/docs/vi/menu/9.Logging/knowledge/Logging.md)
 * **10.SslBundles**
-    * [SslBundles](content/readme/docs/vi/menu/10.SslBundles/SslBundles.md)
+    * [SslBundles](content/readme/docs/vi/menu/10.SslBundles/knowledge/SslBundles.md)
 * **11.DockerCompose**
-    * [DockerCompose](content/readme/docs/vi/menu/11.DockerCompose/DockerCompose.md)
+    * [DockerCompose](content/readme/docs/vi/menu/11.DockerCompose/knowledge/DockerCompose.md)
 * **12.RuntimeSynthesis**
-    * [RuntimeSynthesis](content/readme/docs/vi/menu/12.RuntimeSynthesis/RuntimeSynthesis.md)
+    * [RuntimeSynthesis](content/readme/docs/vi/menu/12.RuntimeSynthesis/knowledge/RuntimeSynthesis.md)
 
 # Spring Boot Application Runtime
 

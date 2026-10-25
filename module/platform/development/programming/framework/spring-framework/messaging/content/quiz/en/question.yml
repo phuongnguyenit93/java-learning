@@ -49,7 +49,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.Introduction/SpringMessaging.md", anchor: "spring-messaging-foundation"}
+    readmeRelated: {file: "1.Introduction/knowledge/SpringMessaging.md", anchor: "spring-messaging-foundation"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: channel-executor-delivery-semantics
@@ -62,7 +62,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.MessageModel/MessageModel.md", anchor: "channel-delivery-semantics"}
+    readmeRelated: {file: "2.MessageModel/knowledge/MessageModel.md", anchor: "channel-delivery-semantics"}
     apiRelated: {controller: "ChannelExperimentController", methodSignature: "deliverySemantics()"}
 
   - id: channel-async-failure-visibility
@@ -75,7 +75,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.MessageModel/MessageModel.md", anchor: "messaging-errors"}
+    readmeRelated: {file: "2.MessageModel/knowledge/MessageModel.md", anchor: "messaging-errors"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: websocket-vs-stomp-layering
@@ -88,7 +88,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.StompModel/StompModel.md", anchor: "stomp-purpose"}
+    readmeRelated: {file: "4.StompModel/knowledge/StompModel.md", anchor: "stomp-purpose"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: stomp-routing-prefix-boundary
@@ -101,7 +101,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.StompMessageFlow/StompMessageFlow.md", anchor: "destination-prefixes"}
+    readmeRelated: {file: "5.StompMessageFlow/knowledge/StompMessageFlow.md", anchor: "destination-prefixes"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: stomp-application-round-trip-flow
@@ -114,7 +114,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.StompMessageFlow/StompMessageFlow.md", anchor: "application-message-flow"}
+    readmeRelated: {file: "5.StompMessageFlow/knowledge/StompMessageFlow.md", anchor: "application-message-flow"}
     apiRelated: {controller: "StompExperimentController", methodSignature: "roundTrip()"}
 
   - id: message-mapping-application-role
@@ -127,7 +127,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.StompApplicationHandling/StompApplicationHandling.md", anchor: "message-mapping"}
+    readmeRelated: {file: "6.StompApplicationHandling/knowledge/StompApplicationHandling.md", anchor: "message-mapping"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: simple-broker-feature-boundary
@@ -140,7 +140,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.BrokerRouting/BrokerRouting.md", anchor: "simple-broker-limits"}
+    readmeRelated: {file: "7.BrokerRouting/knowledge/BrokerRouting.md", anchor: "simple-broker-limits"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: broker-relay-connection-recovery
@@ -153,7 +153,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.BrokerRouting/BrokerRouting.md", anchor: "broker-relay-connections"}
+    readmeRelated: {file: "7.BrokerRouting/knowledge/BrokerRouting.md", anchor: "broker-relay-connections"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: broker-outage-send-policy
@@ -166,7 +166,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "13.OperationsTestingDecisions/OperationsTestingDecisions.md", anchor: "broker-availability-recovery"}
+    readmeRelated: {file: "13.OperationsTestingDecisions/knowledge/OperationsTestingDecisions.md", anchor: "broker-availability-recovery"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: user-destination-multi-session
@@ -179,7 +179,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.BrokerRouting/BrokerRouting.md", anchor: "multi-session-users"}
+    readmeRelated: {file: "7.BrokerRouting/knowledge/BrokerRouting.md", anchor: "multi-session-users"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: stomp-client-receipt-semantics
@@ -192,7 +192,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.StompClientLifecycle/StompClientLifecycle.md", anchor: "stomp-client-receipts"}
+    readmeRelated: {file: "8.StompClientLifecycle/knowledge/StompClientLifecycle.md", anchor: "stomp-client-receipts"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: stomp-reconnect-subscriptions
@@ -205,7 +205,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.StompClientLifecycle/StompClientLifecycle.md", anchor: "stomp-connection-recovery"}
+    readmeRelated: {file: "8.StompClientLifecycle/knowledge/StompClientLifecycle.md", anchor: "stomp-connection-recovery"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: executor-channel-interceptor-boundary
@@ -218,7 +218,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.StompLifecycleInterception/StompLifecycleInterception.md", anchor: "executor-channel-interceptor"}
+    readmeRelated: {file: "9.StompLifecycleInterception/knowledge/StompLifecycleInterception.md", anchor: "executor-channel-interceptor"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: stomp-ordering-per-session
@@ -231,7 +231,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.StompLifecycleInterception/StompLifecycleInterception.md", anchor: "preserve-receive-order"}
+    readmeRelated: {file: "9.StompLifecycleInterception/knowledge/StompLifecycleInterception.md", anchor: "preserve-receive-order"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: messaging-security-boundary
@@ -244,7 +244,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.StompLifecycleInterception/StompLifecycleInterception.md", anchor: "message-authorization-boundary"}
+    readmeRelated: {file: "9.StompLifecycleInterception/knowledge/StompLifecycleInterception.md", anchor: "message-authorization-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: rsocket-interaction-cardinality
@@ -257,7 +257,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "12.RSocketResponders/RSocketResponders.md", anchor: "rsocket-interaction-cardinality"}
+    readmeRelated: {file: "12.RSocketResponders/knowledge/RSocketResponders.md", anchor: "rsocket-interaction-cardinality"}
     apiRelated: {controller: "RSocketExperimentController", methodSignature: "interactionCardinality()"}
 
   - id: rsocket-requester-responder-symmetry
@@ -270,7 +270,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "10.RSocketInteraction/RSocketInteraction.md", anchor: "rsocket-symmetry"}
+    readmeRelated: {file: "10.RSocketInteraction/knowledge/RSocketInteraction.md", anchor: "rsocket-symmetry"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: messaging-topology-choice
@@ -283,5 +283,5 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "13.OperationsTestingDecisions/OperationsTestingDecisions.md", anchor: "choose-messaging-model"}
+    readmeRelated: {file: "13.OperationsTestingDecisions/knowledge/OperationsTestingDecisions.md", anchor: "choose-messaging-model"}
     apiRelated: {controller: "", methodSignature: ""}

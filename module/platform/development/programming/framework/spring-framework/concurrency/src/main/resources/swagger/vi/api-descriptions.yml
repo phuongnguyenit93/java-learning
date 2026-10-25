@@ -24,7 +24,7 @@ TaskExecutorController:
       ]
     usage: true
     readmeRelated:
-      file: 3.ContextPropagation/ContextPropagation.md
+      file: 3.ContextPropagation/knowledge/ContextPropagation.md
       anchor: spring-async-demo
     aiGenerated: true
     reviewed: false
@@ -52,7 +52,7 @@ TaskExecutorController:
       ]
     usage: true
     readmeRelated:
-      file: 2.Spring_Task_Executor/SpringExecutor.md
+      file: 2.Spring_Task_Executor/knowledge/SpringExecutor.md
       anchor: async-return-type
     aiGenerated: true
     reviewed: false
@@ -80,7 +80,7 @@ TaskExecutorController:
       ]
     usage: true
     readmeRelated:
-      file: 2.Spring_Task_Executor/SpringExecutor.md
+      file: 2.Spring_Task_Executor/knowledge/SpringExecutor.md
       anchor: spring-executor-config
     aiGenerated: true
     reviewed: false
@@ -110,7 +110,7 @@ TaskSchedulerExperimentController:
       ]
     usage: true
     readmeRelated:
-      file: 4.TaskScheduler/TaskScheduler.md
+      file: 4.TaskScheduler/knowledge/TaskScheduler.md
       anchor: scheduler-execution-models
     aiGenerated: true
     reviewed: false

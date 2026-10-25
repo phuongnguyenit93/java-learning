@@ -1,13 +1,13 @@
 # 📂 README MODULE STRUCTURE (EN)
 
 * **1.Introduction**
-    * [AOP](content/readme/docs/en/menu/1.Introduction/AOP.md)
+    * [AOP](content/readme/docs/en/menu/1.Introduction/knowledge/AOP.md)
 * **2.Terminology**
-    * [Terminology](content/readme/docs/en/menu/2.Terminology/Terminology.md)
+    * [Terminology](content/readme/docs/en/menu/2.Terminology/knowledge/Terminology.md)
 * **3.ImplementationModels**
-    * [ImplementationModels](content/readme/docs/en/menu/3.ImplementationModels/ImplementationModels.md)
+    * [ImplementationModels](content/readme/docs/en/menu/3.ImplementationModels/knowledge/ImplementationModels.md)
 * **4.Tradeoffs**
-    * [Tradeoffs](content/readme/docs/en/menu/4.Tradeoffs/Tradeoffs.md)
+    * [Tradeoffs](content/readme/docs/en/menu/4.Tradeoffs/knowledge/Tradeoffs.md)
 
 # Aspect-Oriented Programming (AOP)
 

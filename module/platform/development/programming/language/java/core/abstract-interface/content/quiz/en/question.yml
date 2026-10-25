@@ -49,7 +49,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.AbstractClass/AbstractClass.md", anchor: "abstract-class-model"}
+    readmeRelated: {file: "2.AbstractClass/knowledge/AbstractClass.md", anchor: "abstract-class-model"}
     apiRelated: {controller: "AbstractClassController", methodSignature: "templateBehavior()"}
 
   - id: abstract-method-contract
@@ -62,7 +62,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.AbstractClass/AbstractClass.md", anchor: "abstract-method"}
+    readmeRelated: {file: "2.AbstractClass/knowledge/AbstractClass.md", anchor: "abstract-method"}
     apiRelated: {controller: "AbstractClassController", methodSignature: "templateBehavior()"}
 
   - id: abstract-constructor-chain
@@ -75,7 +75,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.AbstractClass/AbstractClass.md", anchor: "abstract-constructor"}
+    readmeRelated: {file: "2.AbstractClass/knowledge/AbstractClass.md", anchor: "abstract-constructor"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: abstract-class-limit
@@ -88,7 +88,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.AbstractClass/AbstractClass.md", anchor: "abstract-class-limits"}
+    readmeRelated: {file: "2.AbstractClass/knowledge/AbstractClass.md", anchor: "abstract-class-limits"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: interface-contract-decoupling
@@ -101,7 +101,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.Interface/Interface.md", anchor: "interface-contract"}
+    readmeRelated: {file: "3.Interface/knowledge/Interface.md", anchor: "interface-contract"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: interface-field-semantics
@@ -114,7 +114,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.Interface/Interface.md", anchor: "interface-fields"}
+    readmeRelated: {file: "3.Interface/knowledge/Interface.md", anchor: "interface-fields"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: interface-abstract-visibility
@@ -127,7 +127,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.Interface/Interface.md", anchor: "interface-method-kinds"}
+    readmeRelated: {file: "3.Interface/knowledge/Interface.md", anchor: "interface-method-kinds"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: multiple-contracts-same-object
@@ -140,7 +140,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.Interface/Interface.md", anchor: "interface-implementation"}
+    readmeRelated: {file: "3.Interface/knowledge/Interface.md", anchor: "interface-implementation"}
     apiRelated: {controller: "InterfaceController", methodSignature: "multipleContracts()"}
 
   - id: abstract-vs-interface-state
@@ -153,7 +153,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.AbstractVsInterface/AbstractVsInterface.md", anchor: "abstract-vs-interface-state"}
+    readmeRelated: {file: "4.AbstractVsInterface/knowledge/AbstractVsInterface.md", anchor: "abstract-vs-interface-state"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: one-class-many-interfaces
@@ -166,7 +166,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.AbstractVsInterface/AbstractVsInterface.md", anchor: "abstract-vs-interface-inheritance"}
+    readmeRelated: {file: "4.AbstractVsInterface/knowledge/AbstractVsInterface.md", anchor: "abstract-vs-interface-inheritance"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: selection-guidance-refund
@@ -179,7 +179,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.AbstractVsInterface/AbstractVsInterface.md", anchor: "selection-guidance"}
+    readmeRelated: {file: "4.AbstractVsInterface/knowledge/AbstractVsInterface.md", anchor: "selection-guidance"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: interface-extends-contract
@@ -192,7 +192,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.InterfaceInheritance/InterfaceInheritance.md", anchor: "interface-extends-interface"}
+    readmeRelated: {file: "5.InterfaceInheritance/knowledge/InterfaceInheritance.md", anchor: "interface-extends-interface"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: multiple-interface-hierarchy-compatibility
@@ -205,7 +205,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.InterfaceInheritance/InterfaceInheritance.md", anchor: "multiple-interface-hierarchy"}
+    readmeRelated: {file: "5.InterfaceInheritance/knowledge/InterfaceInheritance.md", anchor: "multiple-interface-hierarchy"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: interface-redeclaration-refine
@@ -218,7 +218,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.InterfaceInheritance/InterfaceInheritance.md", anchor: "interface-redeclaration"}
+    readmeRelated: {file: "5.InterfaceInheritance/knowledge/InterfaceInheritance.md", anchor: "interface-redeclaration"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: default-reabstract-requirement
@@ -231,7 +231,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.DefaultStaticPrivate/DefaultStaticPrivate.md", anchor: "default-method-evolution"}
+    readmeRelated: {file: "6.DefaultStaticPrivate/knowledge/DefaultStaticPrivate.md", anchor: "default-method-evolution"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: default-method-inheritance
@@ -244,7 +244,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.DefaultStaticPrivate/DefaultStaticPrivate.md", anchor: "default-method"}
+    readmeRelated: {file: "6.DefaultStaticPrivate/knowledge/DefaultStaticPrivate.md", anchor: "default-method"}
     apiRelated: {controller: "DefaultMethodController", methodSignature: "dispatch()"}
 
   - id: static-interface-method-call
@@ -257,7 +257,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.DefaultStaticPrivate/DefaultStaticPrivate.md", anchor: "static-interface-method"}
+    readmeRelated: {file: "6.DefaultStaticPrivate/knowledge/DefaultStaticPrivate.md", anchor: "static-interface-method"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: private-interface-helper
@@ -270,7 +270,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.DefaultStaticPrivate/DefaultStaticPrivate.md", anchor: "private-interface-method"}
+    readmeRelated: {file: "6.DefaultStaticPrivate/knowledge/DefaultStaticPrivate.md", anchor: "private-interface-method"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: default-method-evolution
@@ -283,7 +283,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.DefaultStaticPrivate/DefaultStaticPrivate.md", anchor: "default-method-evolution"}
+    readmeRelated: {file: "6.DefaultStaticPrivate/knowledge/DefaultStaticPrivate.md", anchor: "default-method-evolution"}
     apiRelated: {controller: "InterfaceEvolutionController", methodSignature: "defaultCompatibility()"}
 
   - id: unrelated-default-conflict
@@ -296,7 +296,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.MultipleInheritance/MultipleInheritance.md", anchor: "default-method-conflict"}
+    readmeRelated: {file: "7.MultipleInheritance/knowledge/MultipleInheritance.md", anchor: "default-method-conflict"}
     apiRelated: {controller: "DefaultMethodController", methodSignature: "resolveConflict()"}
 
   - id: class-wins-default
@@ -309,7 +309,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.MultipleInheritance/MultipleInheritance.md", anchor: "class-wins-rule"}
+    readmeRelated: {file: "7.MultipleInheritance/knowledge/MultipleInheritance.md", anchor: "class-wins-rule"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: explicit-interface-super
@@ -322,7 +322,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.MultipleInheritance/MultipleInheritance.md", anchor: "explicit-super-interface"}
+    readmeRelated: {file: "7.MultipleInheritance/knowledge/MultipleInheritance.md", anchor: "explicit-super-interface"}
     apiRelated: {controller: "DefaultMethodController", methodSignature: "resolveConflict()"}
 
   - id: diamond-most-specific
@@ -335,7 +335,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.MultipleInheritance/MultipleInheritance.md", anchor: "diamond-interface"}
+    readmeRelated: {file: "7.MultipleInheritance/knowledge/MultipleInheritance.md", anchor: "diamond-interface"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: abstraction-purpose-two-mechanisms
@@ -348,7 +348,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.AbstractionPurpose/AbstractionPurpose.md", anchor: "abstraction-mechanism-purpose"}
+    readmeRelated: {file: "1.AbstractionPurpose/knowledge/AbstractionPurpose.md", anchor: "abstraction-mechanism-purpose"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: subinterface-default-conflict
@@ -361,7 +361,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.MultipleInheritance/MultipleInheritance.md", anchor: "default-method-conflict"}
+    readmeRelated: {file: "7.MultipleInheritance/knowledge/MultipleInheritance.md", anchor: "default-method-conflict"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: abstraction-synthesis-combined-design
@@ -374,5 +374,5 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.AbstractionSynthesis/AbstractionSynthesis.md", anchor: "abstraction-design-example"}
+    readmeRelated: {file: "8.AbstractionSynthesis/knowledge/AbstractionSynthesis.md", anchor: "abstraction-design-example"}
     apiRelated: {controller: "", methodSignature: ""}

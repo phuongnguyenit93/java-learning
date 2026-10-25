@@ -1,4 +1,4 @@
-1.MentalModel/MentalModel.md:
+1.MentalModel/knowledge/MentalModel.md:
   io-data-flow:
     difficulty: BASIC
     aiGenerated: true
@@ -19,7 +19,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-2.ByteStreams/ByteStreams.md:
+2.ByteStreams/knowledge/ByteStreams.md:
   inputstream-outputstream:
     difficulty: BASIC
     aiGenerated: true
@@ -50,7 +50,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-3.CharacterStreams/CharacterStreams.md:
+3.CharacterStreams/knowledge/CharacterStreams.md:
   reader-writer:
     difficulty: BASIC
     aiGenerated: true
@@ -61,7 +61,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-4.BufferedIO/BufferedIO.md:
+4.BufferedIO/knowledge/BufferedIO.md:
   wrapper-composition:
     difficulty: BASIC
     aiGenerated: true
@@ -92,7 +92,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-5.File/File.md:
+5.File/knowledge/File.md:
   legacy-file-model:
     difficulty: BASIC
     aiGenerated: true
@@ -108,7 +108,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-6.PathFiles/PathFiles.md:
+6.PathFiles/knowledge/PathFiles.md:
   path-model:
     difficulty: BASIC
     aiGenerated: true
@@ -154,7 +154,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-7.BuffersChannels/BuffersChannels.md:
+7.BuffersChannels/knowledge/BuffersChannels.md:
   buffer-state:
     difficulty: BASIC
     aiGenerated: true
@@ -185,7 +185,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-8.FileChannel/FileChannel.md:
+8.FileChannel/knowledge/FileChannel.md:
   filechannel-random-access:
     difficulty: BASIC
     aiGenerated: true
@@ -211,7 +211,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-9.ResourceManagement/ResourceManagement.md:
+9.ResourceManagement/knowledge/ResourceManagement.md:
   closeable-lifecycle:
     difficulty: BASIC
     aiGenerated: true
@@ -232,7 +232,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-10.Serialization/Serialization.md:
+10.Serialization/knowledge/Serialization.md:
   java-serialization-model:
     difficulty: BASIC
     aiGenerated: true
@@ -258,7 +258,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-11.ChoosingIO/ChoosingIO.md:
+11.ChoosingIO/knowledge/ChoosingIO.md:
   choose-stream-reader-channel:
     difficulty: BASIC
     aiGenerated: true

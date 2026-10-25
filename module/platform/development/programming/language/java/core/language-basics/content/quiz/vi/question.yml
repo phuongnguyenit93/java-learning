@@ -49,7 +49,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.LanguagePurpose/LanguagePurpose.md", anchor: "language-basics-roadmap"}
+    readmeRelated: {file: "1.LanguagePurpose/knowledge/LanguagePurpose.md", anchor: "language-basics-roadmap"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: source-code-statement-expression
@@ -62,7 +62,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.SourceCodeStructure/SourceCodeStructure.md", anchor: "statement-expression-model"}
+    readmeRelated: {file: "2.SourceCodeStructure/knowledge/SourceCodeStructure.md", anchor: "statement-expression-model"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: primitive-reference-copy
@@ -75,7 +75,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.PrimitiveReference/PrimitiveReference.md", anchor: "primitive-vs-reference-model"}
+    readmeRelated: {file: "3.PrimitiveReference/knowledge/PrimitiveReference.md", anchor: "primitive-vs-reference-model"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: local-definite-assignment
@@ -88,7 +88,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.VariablesScope/VariablesScope.md", anchor: "definite-assignment"}
+    readmeRelated: {file: "4.VariablesScope/knowledge/VariablesScope.md", anchor: "definite-assignment"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: wrapper-identity-cache
@@ -101,7 +101,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.WrapperBoxing/WrapperBoxing.md", anchor: "wrapper-caching"}
+    readmeRelated: {file: "6.WrapperBoxing/knowledge/WrapperBoxing.md", anchor: "wrapper-caching"}
     apiRelated: {controller: "WrapperController", methodSignature: "wrapperIdentity()"}
 
   - id: wrapper-null-unboxing
@@ -114,7 +114,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.WrapperBoxing/WrapperBoxing.md", anchor: "unboxing-null"}
+    readmeRelated: {file: "6.WrapperBoxing/knowledge/WrapperBoxing.md", anchor: "unboxing-null"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: numeric-promotion-byte
@@ -127,7 +127,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.Operators/Operators.md", anchor: "numeric-promotion"}
+    readmeRelated: {file: "7.Operators/knowledge/Operators.md", anchor: "numeric-promotion"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: short-circuit-null-guard
@@ -140,7 +140,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.Operators/Operators.md", anchor: "short-circuit-operators"}
+    readmeRelated: {file: "7.Operators/knowledge/Operators.md", anchor: "short-circuit-operators"}
     apiRelated: {controller: "OperatorController", methodSignature: "shortCircuit()"}
 
   - id: reference-downcast-runtime
@@ -153,7 +153,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "15.TypeSystemMentalModel/TypeSystemMentalModel.md", anchor: "class-cast-failure"}
+    readmeRelated: {file: "15.TypeSystemMentalModel/knowledge/TypeSystemMentalModel.md", anchor: "class-cast-failure"}
     apiRelated: {controller: "CastingController", methodSignature: "safeAndUnsafeCast(String)"}
 
   - id: overload-phase-widening
@@ -166,7 +166,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "11.Methods/Methods.md", anchor: "overload-resolution-phases"}
+    readmeRelated: {file: "11.Methods/knowledge/Methods.md", anchor: "overload-resolution-phases"}
     apiRelated: {controller: "OverloadResolutionController", methodSignature: "selectionMatrix()"}
 
   - id: null-overload-ambiguity
@@ -179,7 +179,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "11.Methods/Methods.md", anchor: "null-overload-ambiguity"}
+    readmeRelated: {file: "11.Methods/knowledge/Methods.md", anchor: "null-overload-ambiguity"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: java-pass-by-value
@@ -192,7 +192,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "13.PassByValue/PassByValue.md", anchor: "java-pass-by-value"}
+    readmeRelated: {file: "13.PassByValue/knowledge/PassByValue.md", anchor: "java-pass-by-value"}
     apiRelated: {controller: "PassByValueController", methodSignature: "mutateAndReassign()"}
 
   - id: array-covariance-runtime
@@ -205,7 +205,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "10.Arrays/Arrays.md", anchor: "array-covariance-risk"}
+    readmeRelated: {file: "10.Arrays/knowledge/Arrays.md", anchor: "array-covariance-risk"}
     apiRelated: {controller: "ArrayController", methodSignature: "covarianceFailure()"}
 
   - id: switch-expression-yield
@@ -218,7 +218,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.ControlFlow/ControlFlow.md", anchor: "switch-expression"}
+    readmeRelated: {file: "9.ControlFlow/knowledge/ControlFlow.md", anchor: "switch-expression"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: compile-runtime-type-dispatch
@@ -231,7 +231,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "15.TypeSystemMentalModel/TypeSystemMentalModel.md", anchor: "overload-vs-override-dispatch"}
+    readmeRelated: {file: "15.TypeSystemMentalModel/knowledge/TypeSystemMentalModel.md", anchor: "overload-vs-override-dispatch"}
     apiRelated: {controller: "MethodDispatchController", methodSignature: "overloadVsOverride()"}
 
   - id: package-private-boundary
@@ -244,7 +244,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "14.PackagesImports/PackagesImports.md", anchor: "package-access"}
+    readmeRelated: {file: "14.PackagesImports/knowledge/PackagesImports.md", anchor: "package-access"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: varargs-array-model
@@ -257,7 +257,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "12.Varargs/Varargs.md", anchor: "varargs-array-model"}
+    readmeRelated: {file: "12.Varargs/knowledge/Varargs.md", anchor: "varargs-array-model"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: primitive-byte-range
@@ -270,7 +270,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.PrimitiveReference/PrimitiveReference.md", anchor: "primitive-ranges-and-defaults"}
+    readmeRelated: {file: "3.PrimitiveReference/knowledge/PrimitiveReference.md", anchor: "primitive-ranges-and-defaults"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: floating-literal-default-type
@@ -283,7 +283,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.PrimitiveReference/PrimitiveReference.md", anchor: "primitive-ranges-and-defaults"}
+    readmeRelated: {file: "3.PrimitiveReference/knowledge/PrimitiveReference.md", anchor: "primitive-ranges-and-defaults"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: var-is-static-typing
@@ -296,7 +296,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.VariablesScope/VariablesScope.md", anchor: "variable-kinds-and-lifetime"}
+    readmeRelated: {file: "4.VariablesScope/knowledge/VariablesScope.md", anchor: "variable-kinds-and-lifetime"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: pattern-variable-flow-scope
@@ -309,7 +309,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "15.TypeSystemMentalModel/TypeSystemMentalModel.md", anchor: "instanceof-safe-cast"}
+    readmeRelated: {file: "15.TypeSystemMentalModel/knowledge/TypeSystemMentalModel.md", anchor: "instanceof-safe-cast"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: compound-assignment-byte
@@ -322,7 +322,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.Operators/Operators.md", anchor: "numeric-promotion"}
+    readmeRelated: {file: "7.Operators/knowledge/Operators.md", anchor: "numeric-promotion"}
     apiRelated: {controller: "TypeSystemController", methodSignature: "conversionContexts()"}
 
   - id: conditional-operator-lazy-branch
@@ -335,7 +335,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.Operators/Operators.md", anchor: "short-circuit-operators"}
+    readmeRelated: {file: "7.Operators/knowledge/Operators.md", anchor: "short-circuit-operators"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: primitive-narrowing-cast
@@ -348,7 +348,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.Casting/Casting.md", anchor: "primitive-casting"}
+    readmeRelated: {file: "8.Casting/knowledge/Casting.md", anchor: "primitive-casting"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: for-continue-update-order
@@ -361,7 +361,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.ControlFlow/ControlFlow.md", anchor: "loop-control"}
+    readmeRelated: {file: "9.ControlFlow/knowledge/ControlFlow.md", anchor: "loop-control"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: switch-pattern-null-case
@@ -374,7 +374,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "15.TypeSystemMentalModel/TypeSystemMentalModel.md", anchor: "instanceof-safe-cast"}
+    readmeRelated: {file: "15.TypeSystemMentalModel/knowledge/TypeSystemMentalModel.md", anchor: "instanceof-safe-cast"}
     apiRelated: {controller: "ControlFlowController", methodSignature: "patternSwitch()"}
 
   - id: non-void-return-path
@@ -387,7 +387,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "11.Methods/Methods.md", anchor: "method-signature"}
+    readmeRelated: {file: "11.Methods/knowledge/Methods.md", anchor: "method-signature"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: argument-evaluation-left-to-right
@@ -400,7 +400,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "11.Methods/Methods.md", anchor: "method-call-evaluation"}
+    readmeRelated: {file: "11.Methods/knowledge/Methods.md", anchor: "method-call-evaluation"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: varargs-null-vs-empty
@@ -413,7 +413,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "12.Varargs/Varargs.md", anchor: "varargs-array-model"}
+    readmeRelated: {file: "12.Varargs/knowledge/Varargs.md", anchor: "varargs-array-model"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: array-copy-reference-elements
@@ -426,7 +426,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "10.Arrays/Arrays.md", anchor: "array-initialization"}
+    readmeRelated: {file: "10.Arrays/knowledge/Arrays.md", anchor: "array-initialization"}
     apiRelated: {controller: "ArrayController", methodSignature: "copyReferenceElements()"}
 
   - id: package-subpackage-access
@@ -439,7 +439,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "14.PackagesImports/PackagesImports.md", anchor: "package-access"}
+    readmeRelated: {file: "14.PackagesImports/knowledge/PackagesImports.md", anchor: "package-access"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: conversion-context-difference
@@ -452,7 +452,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "15.TypeSystemMentalModel/TypeSystemMentalModel.md", anchor: "assignment-compatibility"}
+    readmeRelated: {file: "15.TypeSystemMentalModel/knowledge/TypeSystemMentalModel.md", anchor: "assignment-compatibility"}
     apiRelated: {controller: "TypeSystemController", methodSignature: "conversionContexts()"}
 
   - id: language-basics-end-to-end-flow
@@ -465,5 +465,5 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "16.LanguageBasicsSynthesis/LanguageBasicsSynthesis.md", anchor: "end-to-end-value-flow"}
+    readmeRelated: {file: "16.LanguageBasicsSynthesis/knowledge/LanguageBasicsSynthesis.md", anchor: "end-to-end-value-flow"}
     apiRelated: {controller: "", methodSignature: ""}

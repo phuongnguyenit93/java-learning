@@ -49,7 +49,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.MentalModel/MentalModel.md", anchor: "io-data-flow"}
+    readmeRelated: {file: "1.MentalModel/knowledge/MentalModel.md", anchor: "io-data-flow"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q02
@@ -62,7 +62,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.MentalModel/MentalModel.md", anchor: "bytes-vs-characters"}
+    readmeRelated: {file: "1.MentalModel/knowledge/MentalModel.md", anchor: "bytes-vs-characters"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q03
@@ -75,7 +75,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.MentalModel/MentalModel.md", anchor: "blocking-io-boundary"}
+    readmeRelated: {file: "1.MentalModel/knowledge/MentalModel.md", anchor: "blocking-io-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q53
@@ -88,7 +88,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.MentalModel/MentalModel.md", anchor: "blocking-io-boundary"}
+    readmeRelated: {file: "1.MentalModel/knowledge/MentalModel.md", anchor: "blocking-io-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q04
@@ -101,7 +101,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.MentalModel/MentalModel.md", anchor: "resource-lifecycle"}
+    readmeRelated: {file: "1.MentalModel/knowledge/MentalModel.md", anchor: "resource-lifecycle"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q05
@@ -114,7 +114,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.ByteStreams/ByteStreams.md", anchor: "inputstream-outputstream"}
+    readmeRelated: {file: "2.ByteStreams/knowledge/ByteStreams.md", anchor: "inputstream-outputstream"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q06
@@ -127,7 +127,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.ByteStreams/ByteStreams.md", anchor: "standard-console-io"}
+    readmeRelated: {file: "2.ByteStreams/knowledge/ByteStreams.md", anchor: "standard-console-io"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q07
@@ -140,7 +140,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.ByteStreams/ByteStreams.md", anchor: "read-contract"}
+    readmeRelated: {file: "2.ByteStreams/knowledge/ByteStreams.md", anchor: "read-contract"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q08
@@ -153,7 +153,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.ByteStreams/ByteStreams.md", anchor: "partial-read-write"}
+    readmeRelated: {file: "2.ByteStreams/knowledge/ByteStreams.md", anchor: "partial-read-write"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q09
@@ -166,7 +166,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.ByteStreams/ByteStreams.md", anchor: "typed-binary-io"}
+    readmeRelated: {file: "2.ByteStreams/knowledge/ByteStreams.md", anchor: "typed-binary-io"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q10
@@ -179,7 +179,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.ByteStreams/ByteStreams.md", anchor: "typed-binary-io"}
+    readmeRelated: {file: "2.ByteStreams/knowledge/ByteStreams.md", anchor: "typed-binary-io"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q11
@@ -192,7 +192,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.CharacterStreams/CharacterStreams.md", anchor: "reader-writer"}
+    readmeRelated: {file: "3.CharacterStreams/knowledge/CharacterStreams.md", anchor: "reader-writer"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q12
@@ -205,7 +205,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.CharacterStreams/CharacterStreams.md", anchor: "charset-bridge"}
+    readmeRelated: {file: "3.CharacterStreams/knowledge/CharacterStreams.md", anchor: "charset-bridge"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q13
@@ -218,7 +218,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.CharacterStreams/CharacterStreams.md", anchor: "charset-bridge"}
+    readmeRelated: {file: "3.CharacterStreams/knowledge/CharacterStreams.md", anchor: "charset-bridge"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q41
@@ -231,7 +231,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.BufferedIO/BufferedIO.md", anchor: "wrapper-composition"}
+    readmeRelated: {file: "4.BufferedIO/knowledge/BufferedIO.md", anchor: "wrapper-composition"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q15
@@ -244,7 +244,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.BufferedIO/BufferedIO.md", anchor: "buffering-purpose"}
+    readmeRelated: {file: "4.BufferedIO/knowledge/BufferedIO.md", anchor: "buffering-purpose"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q14
@@ -257,7 +257,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.BufferedIO/BufferedIO.md", anchor: "character-buffering"}
+    readmeRelated: {file: "4.BufferedIO/knowledge/BufferedIO.md", anchor: "character-buffering"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q16
@@ -270,7 +270,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.BufferedIO/BufferedIO.md", anchor: "flush-semantics"}
+    readmeRelated: {file: "4.BufferedIO/knowledge/BufferedIO.md", anchor: "flush-semantics"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q17
@@ -283,7 +283,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.BufferedIO/BufferedIO.md", anchor: "buffer-size-tradeoff"}
+    readmeRelated: {file: "4.BufferedIO/knowledge/BufferedIO.md", anchor: "buffer-size-tradeoff"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q18
@@ -296,7 +296,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.File/File.md", anchor: "legacy-file-model"}
+    readmeRelated: {file: "5.File/knowledge/File.md", anchor: "legacy-file-model"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q19
@@ -309,7 +309,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.File/File.md", anchor: "file-api-boundary"}
+    readmeRelated: {file: "5.File/knowledge/File.md", anchor: "file-api-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q20
@@ -322,7 +322,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.PathFiles/PathFiles.md", anchor: "path-model"}
+    readmeRelated: {file: "6.PathFiles/knowledge/PathFiles.md", anchor: "path-model"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q22
@@ -335,7 +335,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.PathFiles/PathFiles.md", anchor: "resolve-normalize"}
+    readmeRelated: {file: "6.PathFiles/knowledge/PathFiles.md", anchor: "resolve-normalize"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q23
@@ -348,7 +348,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.PathFiles/PathFiles.md", anchor: "files-operations"}
+    readmeRelated: {file: "6.PathFiles/knowledge/PathFiles.md", anchor: "files-operations"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q24
@@ -361,7 +361,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.PathFiles/PathFiles.md", anchor: "temporary-files"}
+    readmeRelated: {file: "6.PathFiles/knowledge/PathFiles.md", anchor: "temporary-files"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q42
@@ -374,7 +374,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.PathFiles/PathFiles.md", anchor: "file-attributes"}
+    readmeRelated: {file: "6.PathFiles/knowledge/PathFiles.md", anchor: "file-attributes"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q21
@@ -387,7 +387,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.PathFiles/PathFiles.md", anchor: "filesystem-provider-model"}
+    readmeRelated: {file: "6.PathFiles/knowledge/PathFiles.md", anchor: "filesystem-provider-model"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q25
@@ -400,7 +400,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.PathFiles/PathFiles.md", anchor: "file-permissions-ownership"}
+    readmeRelated: {file: "6.PathFiles/knowledge/PathFiles.md", anchor: "file-permissions-ownership"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q26
@@ -413,7 +413,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.PathFiles/PathFiles.md", anchor: "directory-stream-walk"}
+    readmeRelated: {file: "6.PathFiles/knowledge/PathFiles.md", anchor: "directory-stream-walk"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q27
@@ -426,7 +426,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.PathFiles/PathFiles.md", anchor: "watch-service-boundary"}
+    readmeRelated: {file: "6.PathFiles/knowledge/PathFiles.md", anchor: "watch-service-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q28
@@ -439,7 +439,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.BuffersChannels/BuffersChannels.md", anchor: "buffer-state"}
+    readmeRelated: {file: "7.BuffersChannels/knowledge/BuffersChannels.md", anchor: "buffer-state"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q29
@@ -452,7 +452,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.BuffersChannels/BuffersChannels.md", anchor: "flip-clear-compact"}
+    readmeRelated: {file: "7.BuffersChannels/knowledge/BuffersChannels.md", anchor: "flip-clear-compact"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q30
@@ -465,7 +465,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.BuffersChannels/BuffersChannels.md", anchor: "byte-order-structured-binary"}
+    readmeRelated: {file: "7.BuffersChannels/knowledge/BuffersChannels.md", anchor: "byte-order-structured-binary"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q31
@@ -478,7 +478,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.BuffersChannels/BuffersChannels.md", anchor: "channel-model"}
+    readmeRelated: {file: "7.BuffersChannels/knowledge/BuffersChannels.md", anchor: "channel-model"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q32
@@ -491,7 +491,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.BuffersChannels/BuffersChannels.md", anchor: "scatter-gather-boundary"}
+    readmeRelated: {file: "7.BuffersChannels/knowledge/BuffersChannels.md", anchor: "scatter-gather-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q33
@@ -504,7 +504,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.BuffersChannels/BuffersChannels.md", anchor: "bytebuffer-types"}
+    readmeRelated: {file: "7.BuffersChannels/knowledge/BuffersChannels.md", anchor: "bytebuffer-types"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q34
@@ -517,7 +517,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.FileChannel/FileChannel.md", anchor: "filechannel-random-access"}
+    readmeRelated: {file: "8.FileChannel/knowledge/FileChannel.md", anchor: "filechannel-random-access"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q56
@@ -530,7 +530,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.FileChannel/FileChannel.md", anchor: "filechannel-random-access"}
+    readmeRelated: {file: "8.FileChannel/knowledge/FileChannel.md", anchor: "filechannel-random-access"}
     apiRelated: {controller: "", methodSignature: ""}
   - id: io-q36
     question: "FileChannel.transferTo(...) returns fewer bytes than requested. What is the correct conclusion?"
@@ -542,7 +542,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.FileChannel/FileChannel.md", anchor: "filechannel-transfer"}
+    readmeRelated: {file: "8.FileChannel/knowledge/FileChannel.md", anchor: "filechannel-transfer"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q37
@@ -555,7 +555,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.FileChannel/FileChannel.md", anchor: "file-lock-boundary"}
+    readmeRelated: {file: "8.FileChannel/knowledge/FileChannel.md", anchor: "file-lock-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q43
@@ -568,7 +568,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.FileChannel/FileChannel.md", anchor: "memory-mapped-boundary"}
+    readmeRelated: {file: "8.FileChannel/knowledge/FileChannel.md", anchor: "memory-mapped-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q35
@@ -581,7 +581,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.FileChannel/FileChannel.md", anchor: "asynchronous-filechannel-boundary"}
+    readmeRelated: {file: "8.FileChannel/knowledge/FileChannel.md", anchor: "asynchronous-filechannel-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q44
@@ -594,7 +594,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.ResourceManagement/ResourceManagement.md", anchor: "closeable-lifecycle"}
+    readmeRelated: {file: "9.ResourceManagement/knowledge/ResourceManagement.md", anchor: "closeable-lifecycle"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q38
@@ -607,7 +607,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.ResourceManagement/ResourceManagement.md", anchor: "resource-ownership"}
+    readmeRelated: {file: "9.ResourceManagement/knowledge/ResourceManagement.md", anchor: "resource-ownership"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q45
@@ -620,7 +620,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.ResourceManagement/ResourceManagement.md", anchor: "try-with-resources-io"}
+    readmeRelated: {file: "9.ResourceManagement/knowledge/ResourceManagement.md", anchor: "try-with-resources-io"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q47
@@ -633,7 +633,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "10.Serialization/Serialization.md", anchor: "java-serialization-model"}
+    readmeRelated: {file: "10.Serialization/knowledge/Serialization.md", anchor: "java-serialization-model"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q46
@@ -646,7 +646,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "10.Serialization/Serialization.md", anchor: "serializable-graph"}
+    readmeRelated: {file: "10.Serialization/knowledge/Serialization.md", anchor: "serializable-graph"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q55
@@ -659,7 +659,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "10.Serialization/Serialization.md", anchor: "serialversionuid"}
+    readmeRelated: {file: "10.Serialization/knowledge/Serialization.md", anchor: "serialversionuid"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q48
@@ -672,7 +672,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "10.Serialization/Serialization.md", anchor: "transient-field"}
+    readmeRelated: {file: "10.Serialization/knowledge/Serialization.md", anchor: "transient-field"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q39
@@ -685,7 +685,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "10.Serialization/Serialization.md", anchor: "serialization-security-risk"}
+    readmeRelated: {file: "10.Serialization/knowledge/Serialization.md", anchor: "serialization-security-risk"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q40
@@ -698,7 +698,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "11.ChoosingIO/ChoosingIO.md", anchor: "choose-stream-reader-channel"}
+    readmeRelated: {file: "11.ChoosingIO/knowledge/ChoosingIO.md", anchor: "choose-stream-reader-channel"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q54
@@ -711,7 +711,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "11.ChoosingIO/ChoosingIO.md", anchor: "choose-stream-reader-channel"}
+    readmeRelated: {file: "11.ChoosingIO/knowledge/ChoosingIO.md", anchor: "choose-stream-reader-channel"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q49
@@ -724,7 +724,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "11.ChoosingIO/ChoosingIO.md", anchor: "memory-vs-streaming"}
+    readmeRelated: {file: "11.ChoosingIO/knowledge/ChoosingIO.md", anchor: "memory-vs-streaming"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q50
@@ -737,7 +737,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "11.ChoosingIO/ChoosingIO.md", anchor: "charset-explicit"}
+    readmeRelated: {file: "11.ChoosingIO/knowledge/ChoosingIO.md", anchor: "charset-explicit"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q51
@@ -750,7 +750,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "11.ChoosingIO/ChoosingIO.md", anchor: "io-error-handling"}
+    readmeRelated: {file: "11.ChoosingIO/knowledge/ChoosingIO.md", anchor: "io-error-handling"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: io-q52
@@ -763,5 +763,5 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "11.ChoosingIO/ChoosingIO.md", anchor: "io-performance-boundary"}
+    readmeRelated: {file: "11.ChoosingIO/knowledge/ChoosingIO.md", anchor: "io-performance-boundary"}
     apiRelated: {controller: "", methodSignature: ""}

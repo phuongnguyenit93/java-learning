@@ -1,4 +1,4 @@
-1.ActuatorPurpose/ActuatorPurpose.md:
+1.ActuatorPurpose/knowledge/ActuatorPurpose.md:
   actuator-role:
     difficulty: BASIC
     aiGenerated: true
@@ -29,7 +29,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-2.EndpointModel/EndpointModel.md:
+2.EndpointModel/knowledge/EndpointModel.md:
   actuator-endpoint-abstraction:
     difficulty: BASIC
     aiGenerated: true
@@ -55,7 +55,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-3.EndpointAvailabilityExposure/EndpointAvailabilityExposure.md:
+3.EndpointAvailabilityExposure/knowledge/EndpointAvailabilityExposure.md:
   endpoint-enablement:
     difficulty: BASIC
     aiGenerated: true
@@ -91,7 +91,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-4.Health/Health.md:
+4.Health/knowledge/Health.md:
   health-endpoint-purpose:
     difficulty: BASIC
     aiGenerated: true
@@ -122,7 +122,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-5.AvailabilityProbes/AvailabilityProbes.md:
+5.AvailabilityProbes/knowledge/AvailabilityProbes.md:
   availability-health-handoff:
     difficulty: BASIC
     aiGenerated: true
@@ -148,7 +148,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-6.InfoEnvironment/InfoEnvironment.md:
+6.InfoEnvironment/knowledge/InfoEnvironment.md:
   info-endpoint-purpose:
     difficulty: BASIC
     aiGenerated: true
@@ -179,7 +179,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-7.MetricsMicrometer/MetricsMicrometer.md:
+7.MetricsMicrometer/knowledge/MetricsMicrometer.md:
   micrometer-meter-registry-boundary:
     difficulty: BASIC
     aiGenerated: true
@@ -210,7 +210,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-8.LoggersDiagnostics/LoggersDiagnostics.md:
+8.LoggersDiagnostics/knowledge/LoggersDiagnostics.md:
   loggers-endpoint:
     difficulty: BASIC
     aiGenerated: true
@@ -246,7 +246,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-9.CustomEndpoints/CustomEndpoints.md:
+9.CustomEndpoints/knowledge/CustomEndpoints.md:
   custom-endpoint-purpose:
     difficulty: BASIC
     aiGenerated: true
@@ -277,7 +277,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-10.ManagementAccess/ManagementAccess.md:
+10.ManagementAccess/knowledge/ManagementAccess.md:
   minimal-management-exposure:
     difficulty: BASIC
     aiGenerated: true
@@ -308,7 +308,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-11.ObservabilitySynthesis/ObservabilitySynthesis.md:
+11.ObservabilitySynthesis/knowledge/ObservabilitySynthesis.md:
   actuator-production-flow:
     difficulty: BASIC
     aiGenerated: true

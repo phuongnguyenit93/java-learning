@@ -1,4 +1,4 @@
-1.GenericsPurpose/GenericsPurpose.md:
+1.GenericsPurpose/knowledge/GenericsPurpose.md:
   generic-type-purpose:
     difficulty: BASIC
     aiGenerated: true
@@ -9,7 +9,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-2.GenericTypesAndMethods/GenericTypesAndMethods.md:
+2.GenericTypesAndMethods/knowledge/GenericTypesAndMethods.md:
   generic-type-declaration:
     difficulty: BASIC
     aiGenerated: true
@@ -45,7 +45,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-3.BoundedTypeParameters/BoundedTypeParameters.md:
+3.BoundedTypeParameters/knowledge/BoundedTypeParameters.md:
   upper-bounded-type:
     difficulty: BASIC
     aiGenerated: true
@@ -66,7 +66,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-4.InvarianceAndSubtyping/InvarianceAndSubtyping.md:
+4.InvarianceAndSubtyping/knowledge/InvarianceAndSubtyping.md:
   generic-invariance-intro:
     difficulty: BASIC
     aiGenerated: true
@@ -92,7 +92,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-5.WildcardsAndPECS/WildcardsAndPECS.md:
+5.WildcardsAndPECS/knowledge/WildcardsAndPECS.md:
   unbounded-wildcard:
     difficulty: BASIC
     aiGenerated: true
@@ -148,7 +148,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-6.RawTypesAndLegacyBoundaries/RawTypesAndLegacyBoundaries.md:
+6.RawTypesAndLegacyBoundaries/knowledge/RawTypesAndLegacyBoundaries.md:
   raw-type-compatibility:
     difficulty: BASIC
     aiGenerated: true
@@ -169,7 +169,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-7.TypeErasureAndRuntimeModel/TypeErasureAndRuntimeModel.md:
+7.TypeErasureAndRuntimeModel/knowledge/TypeErasureAndRuntimeModel.md:
   erasure-model:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -195,7 +195,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-8.GenericLimitationsAndApiDesign/GenericLimitationsAndApiDesign.md:
+8.GenericLimitationsAndApiDesign/knowledge/GenericLimitationsAndApiDesign.md:
   no-generic-primitives:
     difficulty: BASIC
     aiGenerated: true

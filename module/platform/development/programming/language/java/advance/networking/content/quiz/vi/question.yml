@@ -44,7 +44,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "3.TcpSockets/TcpSockets.md"
+      file: "3.TcpSockets/knowledge/TcpSockets.md"
       anchor: "tcp-message-framing"
     apiRelated:
       controller: "TcpExperimentController"
@@ -69,7 +69,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.UdpDatagrams/UdpDatagrams.md"
+      file: "4.UdpDatagrams/knowledge/UdpDatagrams.md"
       anchor: "datagram-packet-addressing"
     apiRelated:
       controller: "UdpExperimentController"
@@ -94,7 +94,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.UdpDatagrams/UdpDatagrams.md"
+      file: "4.UdpDatagrams/knowledge/UdpDatagrams.md"
       anchor: "datagram-connect-semantics"
     apiRelated:
       controller: ""
@@ -119,7 +119,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "5.FailureControl/FailureControl.md"
+      file: "5.FailureControl/knowledge/FailureControl.md"
       anchor: "socket-timeouts"
     apiRelated:
       controller: "FailureExperimentController"
@@ -144,7 +144,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "6.NioNetworking/NioNetworking.md"
+      file: "6.NioNetworking/knowledge/NioNetworking.md"
       anchor: "selector-readiness-model"
     apiRelated:
       controller: "NioExperimentController"
@@ -169,7 +169,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "7.HttpClient/HttpClient.md"
+      file: "7.HttpClient/knowledge/HttpClient.md"
       anchor: "http-sync-async"
     apiRelated:
       controller: ""
@@ -194,7 +194,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.AddressingEndpoints/AddressingEndpoints.md"
+      file: "2.AddressingEndpoints/knowledge/AddressingEndpoints.md"
       anchor: "socket-address-model"
     apiRelated:
       controller: ""
@@ -219,7 +219,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "8.WebSocketClient/WebSocketClient.md"
+      file: "8.WebSocketClient/knowledge/WebSocketClient.md"
       anchor: "websocket-demand-control"
     apiRelated:
       controller: ""
@@ -244,7 +244,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "8.WebSocketClient/WebSocketClient.md"
+      file: "8.WebSocketClient/knowledge/WebSocketClient.md"
       anchor: "websocket-close-error"
     apiRelated:
       controller: ""
@@ -269,7 +269,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "9.NetworkingChoices/NetworkingChoices.md"
+      file: "9.NetworkingChoices/knowledge/NetworkingChoices.md"
       anchor: "transport-choice"
     apiRelated:
       controller: ""

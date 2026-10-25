@@ -605,10 +605,10 @@ Knowledge section governance is stored next to localized README source, not insi
 src/main/resources/readme/{lang}/knowledge-metadata.yml
 ```
 
-The Markdown under `readme/{lang}/menu/**/*.md` remains the content/source-of-truth for whether a Knowledge topic exists. `knowledge-metadata.yml` is keyed by README path and exact anchored section id and currently owns these per-section fields:
+The Markdown under `content/readme/docs/{lang}/menu/<chapter>/knowledge/**/*.md` remains the content/source-of-truth for whether a Knowledge topic exists. Unstructured legacy `menu/*.md` files retain their flat compatibility layout until given explicit chapter ownership; auxiliary chapter files such as `chapter-links.md` are not Knowledge. `knowledge-metadata.yml` is keyed by README path relative to `menu` and exact anchored section id and currently owns these per-section fields:
 
 ```yaml
-1.Basic/Basic.md:
+1.Basic/knowledge/Basic.md:
   thread-state:
     difficulty: ADVANCED
     aiGenerated: true

@@ -1,4 +1,4 @@
-1.Overview/Overview.md:
+1.Overview/knowledge/Overview.md:
   overview-001:
     difficulty: BASIC
     isImportant: true
@@ -39,7 +39,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-2.NamesAndBytecode/NamesAndBytecode.md:
+2.NamesAndBytecode/knowledge/NamesAndBytecode.md:
   names-and-bytecode-001:
     difficulty: BASIC
     isImportant: true
@@ -80,7 +80,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-3.ClassLifecycle/ClassLifecycle.md:
+3.ClassLifecycle/knowledge/ClassLifecycle.md:
   class-lifecycle-001:
     difficulty: BASIC
     isImportant: true
@@ -131,7 +131,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-4.ClassInitialization/ClassInitialization.md:
+4.ClassInitialization/knowledge/ClassInitialization.md:
   class-initialization-001:
     difficulty: BASIC
     isImportant: true
@@ -182,7 +182,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-5.BuiltInClassLoaders/BuiltInClassLoaders.md:
+5.BuiltInClassLoaders/knowledge/BuiltInClassLoaders.md:
   built-in-class-loaders-001:
     difficulty: BASIC
     isImportant: true
@@ -238,7 +238,7 @@
     isImportant: false
     aiGenerated: true
     reviewed: false
-6.ParentDelegation/ParentDelegation.md:
+6.ParentDelegation/knowledge/ParentDelegation.md:
   parent-delegation-001:
     difficulty: BASIC
     isImportant: true
@@ -284,7 +284,7 @@
     isImportant: false
     aiGenerated: true
     reviewed: false
-7.TypeIdentity/TypeIdentity.md:
+7.TypeIdentity/knowledge/TypeIdentity.md:
   type-identity-001:
     difficulty: INTERMEDIATE
     isImportant: true
@@ -335,7 +335,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-8.ClassLoadingAPI/ClassLoadingAPI.md:
+8.ClassLoadingAPI/knowledge/ClassLoadingAPI.md:
   class-loading-api-001:
     difficulty: INTERMEDIATE
     isImportant: true
@@ -391,7 +391,7 @@
     isImportant: false
     aiGenerated: true
     reviewed: false
-9.ClasspathAndModulePath/ClasspathAndModulePath.md:
+9.ClasspathAndModulePath/knowledge/ClasspathAndModulePath.md:
   classpath-and-module-path-001:
     difficulty: BASIC
     isImportant: true
@@ -442,7 +442,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-10.ResourceLoading/ResourceLoading.md:
+10.ResourceLoading/knowledge/ResourceLoading.md:
   resource-loading-001:
     difficulty: BASIC
     isImportant: true
@@ -493,7 +493,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-11.ContextClassLoader/ContextClassLoader.md:
+11.ContextClassLoader/knowledge/ContextClassLoader.md:
   context-class-loader-001:
     difficulty: BASIC
     isImportant: true
@@ -539,7 +539,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-12.URLClassLoader/URLClassLoader.md:
+12.URLClassLoader/knowledge/URLClassLoader.md:
   url-class-loader-001:
     difficulty: BASIC
     isImportant: true
@@ -585,7 +585,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-13.CustomClassLoader/CustomClassLoader.md:
+13.CustomClassLoader/knowledge/CustomClassLoader.md:
   custom-class-loader-001:
     difficulty: INTERMEDIATE
     isImportant: true
@@ -646,7 +646,7 @@
     isImportant: false
     aiGenerated: true
     reviewed: false
-14.LoadingPolicies/LoadingPolicies.md:
+14.LoadingPolicies/knowledge/LoadingPolicies.md:
   loading-policies-001:
     difficulty: INTERMEDIATE
     isImportant: true
@@ -692,7 +692,7 @@
     isImportant: false
     aiGenerated: true
     reviewed: false
-15.ConcurrentClassLoading/ConcurrentClassLoading.md:
+15.ConcurrentClassLoading/knowledge/ConcurrentClassLoading.md:
   concurrent-class-loading-001:
     difficulty: INTERMEDIATE
     isImportant: true
@@ -733,7 +733,7 @@
     isImportant: false
     aiGenerated: true
     reviewed: false
-16.PackagesAndCodeSources/PackagesAndCodeSources.md:
+16.PackagesAndCodeSources/knowledge/PackagesAndCodeSources.md:
   packages-and-code-sources-001:
     difficulty: INTERMEDIATE
     isImportant: true
@@ -774,7 +774,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-17.ModulesAndLayers/ModulesAndLayers.md:
+17.ModulesAndLayers/knowledge/ModulesAndLayers.md:
   modules-and-layers-001:
     difficulty: BASIC
     isImportant: true
@@ -835,7 +835,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-18.ServiceLoading/ServiceLoading.md:
+18.ServiceLoading/knowledge/ServiceLoading.md:
   service-loading-001:
     difficulty: BASIC
     isImportant: true
@@ -886,7 +886,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-19.PluginArchitecture/PluginArchitecture.md:
+19.PluginArchitecture/knowledge/PluginArchitecture.md:
   plugin-architecture-001:
     difficulty: INTERMEDIATE
     isImportant: true
@@ -937,7 +937,7 @@
     isImportant: false
     aiGenerated: true
     reviewed: false
-20.DynamicClassDefinition/DynamicClassDefinition.md:
+20.DynamicClassDefinition/knowledge/DynamicClassDefinition.md:
   dynamic-class-definition-001:
     difficulty: INTERMEDIATE
     isImportant: true
@@ -983,7 +983,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-21.ClassUnloadingAndMemory/ClassUnloadingAndMemory.md:
+21.ClassUnloadingAndMemory/knowledge/ClassUnloadingAndMemory.md:
   class-unloading-and-memory-001:
     difficulty: INTERMEDIATE
     isImportant: true
@@ -1034,7 +1034,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-22.SecurityBoundaries/SecurityBoundaries.md:
+22.SecurityBoundaries/knowledge/SecurityBoundaries.md:
   security-boundaries-001:
     difficulty: ADVANCED
     isImportant: true
@@ -1070,7 +1070,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-23.CommonClassLoadingErrors/CommonClassLoadingErrors.md:
+23.CommonClassLoadingErrors/knowledge/CommonClassLoadingErrors.md:
   common-class-loading-errors-001:
     difficulty: INTERMEDIATE
     isImportant: true
@@ -1131,7 +1131,7 @@
     isImportant: false
     aiGenerated: true
     reviewed: false
-24.ClassLoadingDiagnostics/ClassLoadingDiagnostics.md:
+24.ClassLoadingDiagnostics/knowledge/ClassLoadingDiagnostics.md:
   class-loading-diagnostics-001:
     difficulty: INTERMEDIATE
     isImportant: true
@@ -1187,7 +1187,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-25.ClassLoadingPerformance/ClassLoadingPerformance.md:
+25.ClassLoadingPerformance/knowledge/ClassLoadingPerformance.md:
   class-loading-performance-001:
     difficulty: ADVANCED
     isImportant: true
@@ -1228,7 +1228,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-26.ClassLoadingVerification/ClassLoadingVerification.md:
+26.ClassLoadingVerification/knowledge/ClassLoadingVerification.md:
   class-loading-verification-001:
     difficulty: INTERMEDIATE
     isImportant: true
@@ -1274,7 +1274,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-27.ClassLoadingExercises/ClassLoadingExercises.md:
+27.ClassLoadingExercises/knowledge/ClassLoadingExercises.md:
   class-loading-exercises-001:
     difficulty: INTERMEDIATE
     isImportant: true
@@ -1325,7 +1325,7 @@
     isImportant: true
     aiGenerated: true
     reviewed: false
-28.ReferenceTables/ReferenceTables.md:
+28.ReferenceTables/knowledge/ReferenceTables.md:
   reference-tables-001:
     difficulty: INTERMEDIATE
     isImportant: true

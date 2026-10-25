@@ -3,40 +3,40 @@ AccessReflectionController:
     <h2>Access Reflection Controller</h2>
     <p>Thí nghiệm về ranh giới giữa việc khám phá thành phần private và quyền sử dụng thành phần đó qua <code>canAccess</code>/<code>trySetAccessible</code>.</p>
   readmeRelated:
-    file: 7.AccessControl/AccessControl.md
+    file: 7.AccessControl/knowledge/AccessControl.md
 ClassMetadataController:
   description: |-
     <h2>Class Metadata Controller</h2>
     <p>Quan sát những gì một <code>Class&lt;?&gt;</code> mô tả về kiểu lúc chạy: loại kiểu, modifier, cờ truy cập, superclass, interface và quan hệ gán kiểu.</p>
   readmeRelated:
-    file: 2.ClassMetadata/ClassMetadata.md
+    file: 2.ClassMetadata/knowledge/ClassMetadata.md
 ConstructorReflectionController:
   description: |-
     <h2>Constructor Reflection Controller</h2>
     <p>Quan sát cách constructor được khám phá như siêu dữ liệu rồi dùng để tạo đối tượng khi cách khởi tạo cụ thể chỉ được chọn lúc chạy.</p>
   readmeRelated:
-    file: 5.Constructors/Constructors.md
+    file: 5.Constructors/knowledge/Constructors.md
 DynamicProxyController:
   description: |-
     <h2>Dynamic Proxy Controller</h2>
     <p>Minh họa JDK Dynamic Proxy tạo phần triển khai interface lúc chạy và chuyển lời gọi qua một <code>InvocationHandler</code> chung.</p>
   readmeRelated:
-    file: 9.DynamicProxy/DynamicProxy.md
+    file: 9.DynamicProxy/knowledge/DynamicProxy.md
 FieldReflectionController:
   description: |-
     <h2>Field Reflection Controller</h2>
     <p>Quan sát việc khám phá, đọc và ghi trạng thái bằng <code>Field</code>, đồng thời phân biệt việc tìm thấy field private với việc có quyền truy cập.</p>
   readmeRelated:
-    file: 3.Fields/Fields.md
+    file: 3.Fields/knowledge/Fields.md
 GenericReflectionController:
   description: |-
     <h2>Generic Reflection Controller</h2>
     <p>Quan sát siêu dữ liệu chữ ký generic còn giữ lại sau xóa kiểu qua <code>ParameterizedType</code>, <code>WildcardType</code> và <code>TypeVariable</code>.</p>
   readmeRelated:
-    file: 8.GenericTypeInspection/GenericTypeInspection.md
+    file: 8.GenericTypeInspection/knowledge/GenericTypeInspection.md
 MethodReflectionController:
   description: |-
     <h2>Method Reflection Controller</h2>
     <p>Quan sát việc khám phá method, siêu dữ liệu chữ ký, lời gọi động và ranh giới lỗi giữa Reflection với mã đích.</p>
   readmeRelated:
-    file: 4.Methods/Methods.md
+    file: 4.Methods/knowledge/Methods.md

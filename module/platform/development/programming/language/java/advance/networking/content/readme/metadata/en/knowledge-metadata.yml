@@ -1,4 +1,4 @@
-1.NetworkingModel/NetworkingModel.md:
+1.NetworkingModel/knowledge/NetworkingModel.md:
   networking-purpose:
     difficulty: BASIC
     aiGenerated: true
@@ -24,7 +24,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-2.AddressingEndpoints/AddressingEndpoints.md:
+2.AddressingEndpoints/knowledge/AddressingEndpoints.md:
   inet-address-model:
     difficulty: BASIC
     aiGenerated: true
@@ -65,7 +65,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-3.TcpSockets/TcpSockets.md:
+3.TcpSockets/knowledge/TcpSockets.md:
   tcp-connection-model:
     difficulty: BASIC
     aiGenerated: true
@@ -101,7 +101,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-4.UdpDatagrams/UdpDatagrams.md:
+4.UdpDatagrams/knowledge/UdpDatagrams.md:
   udp-datagram-model:
     difficulty: BASIC
     aiGenerated: true
@@ -132,7 +132,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-5.FailureControl/FailureControl.md:
+5.FailureControl/knowledge/FailureControl.md:
   network-wait-points:
     difficulty: BASIC
     aiGenerated: true
@@ -168,7 +168,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-6.NioNetworking/NioNetworking.md:
+6.NioNetworking/knowledge/NioNetworking.md:
   network-channels:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -209,7 +209,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-7.HttpClient/HttpClient.md:
+7.HttpClient/knowledge/HttpClient.md:
   http-client-model:
     difficulty: BASIC
     aiGenerated: true
@@ -260,7 +260,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-8.WebSocketClient/WebSocketClient.md:
+8.WebSocketClient/knowledge/WebSocketClient.md:
   websocket-client-model:
     difficulty: BASIC
     aiGenerated: true
@@ -301,7 +301,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-9.NetworkingChoices/NetworkingChoices.md:
+9.NetworkingChoices/knowledge/NetworkingChoices.md:
   networking-choice-model:
     difficulty: INTERMEDIATE
     aiGenerated: true

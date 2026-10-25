@@ -1,25 +1,25 @@
 # 📂 README MODULE STRUCTURE (VI)
 
 * **1.Introduction**
-    * [CoreContainer](content/readme/docs/vi/menu/1.Introduction/CoreContainer.md)
+    * [CoreContainer](content/readme/docs/vi/menu/1.Introduction/knowledge/CoreContainer.md)
 * **2.ContainerModel**
-    * [ContainerModel](content/readme/docs/vi/menu/2.ContainerModel/ContainerModel.md)
+    * [ContainerModel](content/readme/docs/vi/menu/2.ContainerModel/knowledge/ContainerModel.md)
 * **3.BeanRegistration**
-    * [BeanRegistration](content/readme/docs/vi/menu/3.BeanRegistration/BeanRegistration.md)
+    * [BeanRegistration](content/readme/docs/vi/menu/3.BeanRegistration/knowledge/BeanRegistration.md)
 * **4.DependencyInjection**
-    * [DependencyInjection](content/readme/docs/vi/menu/4.DependencyInjection/DependencyInjection.md)
+    * [DependencyInjection](content/readme/docs/vi/menu/4.DependencyInjection/knowledge/DependencyInjection.md)
 * **5.BeanScope**
-    * [BeanScope](content/readme/docs/vi/menu/5.BeanScope/BeanScope.md)
+    * [BeanScope](content/readme/docs/vi/menu/5.BeanScope/knowledge/BeanScope.md)
 * **6.BeanLifecycle**
-    * [BeanLifecycle](content/readme/docs/vi/menu/6.BeanLifecycle/BeanLifecycle.md)
+    * [BeanLifecycle](content/readme/docs/vi/menu/6.BeanLifecycle/knowledge/BeanLifecycle.md)
 * **7.EnvironmentAndSpEL**
-    * [EnvironmentAndSpEL](content/readme/docs/vi/menu/7.EnvironmentAndSpEL/EnvironmentAndSpEL.md)
+    * [EnvironmentAndSpEL](content/readme/docs/vi/menu/7.EnvironmentAndSpEL/knowledge/EnvironmentAndSpEL.md)
 * **8.ApplicationContextServices**
-    * [ApplicationContextServices](content/readme/docs/vi/menu/8.ApplicationContextServices/ApplicationContextServices.md)
+    * [ApplicationContextServices](content/readme/docs/vi/menu/8.ApplicationContextServices/knowledge/ApplicationContextServices.md)
 * **9.ExtensionPoints**
-    * [ExtensionPoints](content/readme/docs/vi/menu/9.ExtensionPoints/ExtensionPoints.md)
+    * [ExtensionPoints](content/readme/docs/vi/menu/9.ExtensionPoints/knowledge/ExtensionPoints.md)
 * **10.ContainerDesignAndDiagnostics**
-    * [ContainerDesignAndDiagnostics](content/readme/docs/vi/menu/10.ContainerDesignAndDiagnostics/ContainerDesignAndDiagnostics.md)
+    * [ContainerDesignAndDiagnostics](content/readme/docs/vi/menu/10.ContainerDesignAndDiagnostics/knowledge/ContainerDesignAndDiagnostics.md)
 
 # Spring Core Container
 

@@ -35,7 +35,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.Foundations/SpringJmsFoundations.md"
+      file: "1.Foundations/knowledge/SpringJmsFoundations.md"
       anchor: "jms-framework-spec-provider-boundary"
     apiRelated:
       controller: ""
@@ -48,7 +48,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.TemplateAccess/JmsTemplateAccess.md"
+      file: "2.TemplateAccess/knowledge/JmsTemplateAccess.md"
       anchor: "jms-template-request-reply"
     apiRelated:
       controller: "JmsTemplateExperimentController"
@@ -61,7 +61,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "3.DestinationsConversionMetadata/DestinationsConversionMetadata.md"
+      file: "3.DestinationsConversionMetadata/knowledge/DestinationsConversionMetadata.md"
       anchor: "jms-payload-conversion"
     apiRelated:
       controller: ""
@@ -74,7 +74,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.ListenerContainer/ListenerContainer.md"
+      file: "4.ListenerContainer/knowledge/ListenerContainer.md"
       anchor: "jms-listener-container-choices"
     apiRelated:
       controller: ""
@@ -100,7 +100,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "6.TransactionsDelivery/TransactionsDelivery.md"
+      file: "6.TransactionsDelivery/knowledge/TransactionsDelivery.md"
       anchor: "jms-redelivery-idempotency"
     apiRelated:
       controller: "JmsTransactionExperimentController"

@@ -1,4 +1,4 @@
-1.Basic/Basic.md:
+1.Basic/knowledge/Basic.md:
   reflection-model:
     difficulty: BASIC
     aiGenerated: true
@@ -9,7 +9,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-2.ClassMetadata/ClassMetadata.md:
+2.ClassMetadata/knowledge/ClassMetadata.md:
   class-object-entrypoints:
     difficulty: BASIC
     aiGenerated: true
@@ -55,7 +55,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-3.Fields/Fields.md:
+3.Fields/knowledge/Fields.md:
   field-discovery:
     difficulty: BASIC
     aiGenerated: true
@@ -71,7 +71,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-4.Methods/Methods.md:
+4.Methods/knowledge/Methods.md:
   method-discovery:
     difficulty: BASIC
     aiGenerated: true
@@ -82,7 +82,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-5.Constructors/Constructors.md:
+5.Constructors/knowledge/Constructors.md:
   constructor-discovery:
     difficulty: BASIC
     aiGenerated: true
@@ -93,7 +93,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-6.DynamicInvocation/DynamicInvocation.md:
+6.DynamicInvocation/knowledge/DynamicInvocation.md:
   field-read-write:
     difficulty: BASIC
     aiGenerated: true
@@ -149,7 +149,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-7.AccessControl/AccessControl.md:
+7.AccessControl/knowledge/AccessControl.md:
   language-vs-reflective-access:
     difficulty: BASIC
     aiGenerated: true
@@ -170,7 +170,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-8.GenericTypeInspection/GenericTypeInspection.md:
+8.GenericTypeInspection/knowledge/GenericTypeInspection.md:
   type-interface:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -196,7 +196,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-9.DynamicProxy/DynamicProxy.md:
+9.DynamicProxy/knowledge/DynamicProxy.md:
   jdk-proxy-model:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -222,7 +222,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-10.LimitationsRisks/LimitationsRisks.md:
+10.LimitationsRisks/knowledge/LimitationsRisks.md:
   reflection-cost-boundary:
     difficulty: BASIC
     aiGenerated: true

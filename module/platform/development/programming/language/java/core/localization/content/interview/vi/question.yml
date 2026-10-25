@@ -35,7 +35,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.MentalModel/MentalModel.md"
+      file: "1.MentalModel/knowledge/MentalModel.md"
       anchor: "i18n-vs-l10n"
     apiRelated:
       controller: ""
@@ -48,7 +48,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.MentalModel/MentalModel.md"
+      file: "1.MentalModel/knowledge/MentalModel.md"
       anchor: "locale-sensitive-data"
     apiRelated:
       controller: ""
@@ -61,7 +61,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.MentalModel/MentalModel.md"
+      file: "1.MentalModel/knowledge/MentalModel.md"
       anchor: "localization-boundaries"
     apiRelated:
       controller: ""
@@ -74,7 +74,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.Locale/Locale.md"
+      file: "2.Locale/knowledge/Locale.md"
       anchor: "locale-model"
     apiRelated:
       controller: "LocaleController"
@@ -87,7 +87,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.Locale/Locale.md"
+      file: "2.Locale/knowledge/Locale.md"
       anchor: "locale-equality"
     apiRelated:
       controller: "LocaleController"
@@ -100,7 +100,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "3.LanguageTags/LanguageTags.md"
+      file: "3.LanguageTags/knowledge/LanguageTags.md"
       anchor: "bcp47-language-tag"
     apiRelated:
       controller: ""
@@ -113,7 +113,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "3.LanguageTags/LanguageTags.md"
+      file: "3.LanguageTags/knowledge/LanguageTags.md"
       anchor: "locale-matching"
     apiRelated:
       controller: ""
@@ -126,7 +126,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "3.LanguageTags/LanguageTags.md"
+      file: "3.LanguageTags/knowledge/LanguageTags.md"
       anchor: "locale-extensions"
     apiRelated:
       controller: "DateTimeLocalizationController"
@@ -139,7 +139,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "3.LanguageTags/LanguageTags.md"
+      file: "3.LanguageTags/knowledge/LanguageTags.md"
       anchor: "canonicalization-boundary"
     apiRelated:
       controller: ""
@@ -152,7 +152,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.ResourceBundle/ResourceBundle.md"
+      file: "4.ResourceBundle/knowledge/ResourceBundle.md"
       anchor: "resourcebundle-model"
     apiRelated:
       controller: "BundleController"
@@ -165,7 +165,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.ResourceBundle/ResourceBundle.md"
+      file: "4.ResourceBundle/knowledge/ResourceBundle.md"
       anchor: "bundle-naming"
     apiRelated:
       controller: "BundleController"
@@ -178,7 +178,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.ResourceBundle/ResourceBundle.md"
+      file: "4.ResourceBundle/knowledge/ResourceBundle.md"
       anchor: "properties-vs-class-bundle"
     apiRelated:
       controller: ""
@@ -191,7 +191,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.ResourceBundle/ResourceBundle.md"
+      file: "4.ResourceBundle/knowledge/ResourceBundle.md"
       anchor: "bundle-cache"
     apiRelated:
       controller: ""
@@ -204,7 +204,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "5.MessageFormat/MessageFormat.md"
+      file: "5.MessageFormat/knowledge/MessageFormat.md"
       anchor: "messageformat-model"
     apiRelated:
       controller: "MessageController"
@@ -217,7 +217,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "5.MessageFormat/MessageFormat.md"
+      file: "5.MessageFormat/knowledge/MessageFormat.md"
       anchor: "translation-key-design"
     apiRelated:
       controller: ""
@@ -230,7 +230,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "5.MessageFormat/MessageFormat.md"
+      file: "5.MessageFormat/knowledge/MessageFormat.md"
       anchor: "quote-escaping"
     apiRelated:
       controller: ""
@@ -243,7 +243,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "5.MessageFormat/MessageFormat.md"
+      file: "5.MessageFormat/knowledge/MessageFormat.md"
       anchor: "messageformat-locale"
     apiRelated:
       controller: "MessageController"
@@ -256,7 +256,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "6.NumberFormatting/NumberFormatting.md"
+      file: "6.NumberFormatting/knowledge/NumberFormatting.md"
       anchor: "number-format"
     apiRelated:
       controller: "NumberLocalizationController"
@@ -269,7 +269,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "6.NumberFormatting/NumberFormatting.md"
+      file: "6.NumberFormatting/knowledge/NumberFormatting.md"
       anchor: "decimal-format"
     apiRelated:
       controller: ""
@@ -282,7 +282,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "6.NumberFormatting/NumberFormatting.md"
+      file: "6.NumberFormatting/knowledge/NumberFormatting.md"
       anchor: "compact-number-format"
     apiRelated:
       controller: "NumberLocalizationController"
@@ -295,7 +295,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "6.NumberFormatting/NumberFormatting.md"
+      file: "6.NumberFormatting/knowledge/NumberFormatting.md"
       anchor: "parsing-numbers"
     apiRelated:
       controller: "NumberLocalizationController"
@@ -308,7 +308,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "6.NumberFormatting/NumberFormatting.md"
+      file: "6.NumberFormatting/knowledge/NumberFormatting.md"
       anchor: "formatting-vs-domain-value"
     apiRelated:
       controller: ""
@@ -321,7 +321,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "7.Currency/Currency.md"
+      file: "7.Currency/knowledge/Currency.md"
       anchor: "currency-model"
     apiRelated:
       controller: ""
@@ -334,7 +334,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "7.Currency/Currency.md"
+      file: "7.Currency/knowledge/Currency.md"
       anchor: "currency-vs-locale"
     apiRelated:
       controller: "CurrencyController"
@@ -347,7 +347,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "7.Currency/Currency.md"
+      file: "7.Currency/knowledge/Currency.md"
       anchor: "money-boundary"
     apiRelated:
       controller: ""
@@ -360,7 +360,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "8.Collator/Collator.md"
+      file: "8.Collator/knowledge/Collator.md"
       anchor: "collator-model"
     apiRelated:
       controller: "CollationController"
@@ -373,7 +373,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "8.Collator/Collator.md"
+      file: "8.Collator/knowledge/Collator.md"
       anchor: "collation-strength"
     apiRelated:
       controller: ""
@@ -386,7 +386,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "8.Collator/Collator.md"
+      file: "8.Collator/knowledge/Collator.md"
       anchor: "sorting-user-text"
     apiRelated:
       controller: ""
@@ -399,7 +399,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "9.DateTimeLocalization/DateTimeLocalization.md"
+      file: "9.DateTimeLocalization/knowledge/DateTimeLocalization.md"
       anchor: "localized-date-format"
     apiRelated:
       controller: "DateTimeLocalizationController"
@@ -412,7 +412,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "9.DateTimeLocalization/DateTimeLocalization.md"
+      file: "9.DateTimeLocalization/knowledge/DateTimeLocalization.md"
       anchor: "locale-vs-zone"
     apiRelated:
       controller: "DateTimeLocalizationController"
@@ -425,7 +425,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "9.DateTimeLocalization/DateTimeLocalization.md"
+      file: "9.DateTimeLocalization/knowledge/DateTimeLocalization.md"
       anchor: "locale-week-conventions"
     apiRelated:
       controller: "DateTimeLocalizationController"
@@ -438,7 +438,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "9.DateTimeLocalization/DateTimeLocalization.md"
+      file: "9.DateTimeLocalization/knowledge/DateTimeLocalization.md"
       anchor: "localized-parsing"
     apiRelated:
       controller: ""
@@ -451,7 +451,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "10.TextSegmentation/TextSegmentation.md"
+      file: "10.TextSegmentation/knowledge/TextSegmentation.md"
       anchor: "breakiterator-model"
     apiRelated:
       controller: "TextSegmentationController"
@@ -464,7 +464,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "10.TextSegmentation/TextSegmentation.md"
+      file: "10.TextSegmentation/knowledge/TextSegmentation.md"
       anchor: "character-boundary"
     apiRelated:
       controller: "TextSegmentationController"
@@ -477,7 +477,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "10.TextSegmentation/TextSegmentation.md"
+      file: "10.TextSegmentation/knowledge/TextSegmentation.md"
       anchor: "word-sentence-boundary"
     apiRelated:
       controller: "TextSegmentationController"
@@ -490,7 +490,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "10.TextSegmentation/TextSegmentation.md"
+      file: "10.TextSegmentation/knowledge/TextSegmentation.md"
       anchor: "breakiterator-boundary"
     apiRelated:
       controller: "TextSegmentationController"
@@ -503,7 +503,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "11.BidirectionalText/BidirectionalText.md"
+      file: "11.BidirectionalText/knowledge/BidirectionalText.md"
       anchor: "bidi-model"
     apiRelated:
       controller: "BidirectionalTextController"
@@ -516,7 +516,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "11.BidirectionalText/BidirectionalText.md"
+      file: "11.BidirectionalText/knowledge/BidirectionalText.md"
       anchor: "ltr-rtl-runs"
     apiRelated:
       controller: "BidirectionalTextController"
@@ -529,7 +529,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "11.BidirectionalText/BidirectionalText.md"
+      file: "11.BidirectionalText/knowledge/BidirectionalText.md"
       anchor: "bidi-boundary"
     apiRelated:
       controller: "BidirectionalTextController"
@@ -542,7 +542,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "12.Fallback/Fallback.md"
+      file: "12.Fallback/knowledge/Fallback.md"
       anchor: "bundle-candidate-chain"
     apiRelated:
       controller: "BundleController"
@@ -555,7 +555,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "12.Fallback/Fallback.md"
+      file: "12.Fallback/knowledge/Fallback.md"
       anchor: "default-locale-fallback"
     apiRelated:
       controller: ""
@@ -568,7 +568,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "12.Fallback/Fallback.md"
+      file: "12.Fallback/knowledge/Fallback.md"
       anchor: "missing-resource"
     apiRelated:
       controller: ""
@@ -581,7 +581,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "13.LocalePitfalls/LocalePitfalls.md"
+      file: "13.LocalePitfalls/knowledge/LocalePitfalls.md"
       anchor: "default-locale"
     apiRelated:
       controller: ""
@@ -594,7 +594,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "13.LocalePitfalls/LocalePitfalls.md"
+      file: "13.LocalePitfalls/knowledge/LocalePitfalls.md"
       anchor: "turkish-i"
     apiRelated:
       controller: ""
@@ -607,7 +607,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "13.LocalePitfalls/LocalePitfalls.md"
+      file: "13.LocalePitfalls/knowledge/LocalePitfalls.md"
       anchor: "format-parse-roundtrip"
     apiRelated:
       controller: ""
@@ -620,7 +620,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "13.LocalePitfalls/LocalePitfalls.md"
+      file: "13.LocalePitfalls/knowledge/LocalePitfalls.md"
       anchor: "localization-synthesis"
     apiRelated:
       controller: ""

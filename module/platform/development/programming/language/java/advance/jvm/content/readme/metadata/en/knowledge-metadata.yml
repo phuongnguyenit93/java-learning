@@ -1,4 +1,4 @@
-1.JvmPurposeContract/JvmPurposeContract.md:
+1.JvmPurposeContract/knowledge/JvmPurposeContract.md:
   jvm-purpose:
     difficulty: BASIC
     aiGenerated: true
@@ -29,7 +29,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-2.ClassFileBytecode/ClassFileBytecode.md:
+2.ClassFileBytecode/knowledge/ClassFileBytecode.md:
   classfile-format-overview:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -70,7 +70,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-3.RuntimeDataAreasFrames/RuntimeDataAreasFrames.md:
+3.RuntimeDataAreasFrames/knowledge/RuntimeDataAreasFrames.md:
   runtime-data-areas-purpose:
     difficulty: BASIC
     aiGenerated: true
@@ -131,7 +131,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-4.ManagedHeapGC/ManagedHeapGC.md:
+4.ManagedHeapGC/knowledge/ManagedHeapGC.md:
   managed-heap-purpose:
     difficulty: BASIC
     aiGenerated: true
@@ -182,7 +182,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-5.AdaptiveExecutionJIT/AdaptiveExecutionJIT.md:
+5.AdaptiveExecutionJIT/knowledge/AdaptiveExecutionJIT.md:
   execution-engine-model:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -233,7 +233,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-6.ProcessMemory/ProcessMemory.md:
+6.ProcessMemory/knowledge/ProcessMemory.md:
   process-memory-purpose:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -279,7 +279,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-7.HotSpotErgonomics/HotSpotErgonomics.md:
+7.HotSpotErgonomics/knowledge/HotSpotErgonomics.md:
   ergonomics-purpose:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -320,7 +320,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-8.EndToEndModel/EndToEndModel.md:
+8.EndToEndModel/knowledge/EndToEndModel.md:
   startup-to-execution-flow:
     difficulty: INTERMEDIATE
     aiGenerated: true

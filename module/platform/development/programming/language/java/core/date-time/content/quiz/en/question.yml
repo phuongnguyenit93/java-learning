@@ -49,7 +49,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.MentalModel/MentalModel.md", anchor: "date-time-domains"}
+    readmeRelated: {file: "1.MentalModel/knowledge/MentalModel.md", anchor: "date-time-domains"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q02
@@ -62,7 +62,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.MentalModel/MentalModel.md", anchor: "date-time-domains"}
+    readmeRelated: {file: "1.MentalModel/knowledge/MentalModel.md", anchor: "date-time-domains"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q03
@@ -75,7 +75,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.MentalModel/MentalModel.md", anchor: "date-time-domains"}
+    readmeRelated: {file: "1.MentalModel/knowledge/MentalModel.md", anchor: "date-time-domains"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q04
@@ -88,7 +88,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.MentalModel/MentalModel.md", anchor: "immutable-date-time"}
+    readmeRelated: {file: "1.MentalModel/knowledge/MentalModel.md", anchor: "immutable-date-time"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q05
@@ -101,7 +101,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.MentalModel/MentalModel.md", anchor: "immutable-date-time"}
+    readmeRelated: {file: "1.MentalModel/knowledge/MentalModel.md", anchor: "immutable-date-time"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q06
@@ -114,7 +114,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "1.MentalModel/MentalModel.md", anchor: "choose-date-time-type"}
+    readmeRelated: {file: "1.MentalModel/knowledge/MentalModel.md", anchor: "choose-date-time-type"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q07
@@ -127,7 +127,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.LocalDate/LocalDate.md", anchor: "local-date-model"}
+    readmeRelated: {file: "2.LocalDate/knowledge/LocalDate.md", anchor: "local-date-model"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q25
@@ -140,7 +140,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.LocalDate/LocalDate.md", anchor: "local-date-model"}
+    readmeRelated: {file: "2.LocalDate/knowledge/LocalDate.md", anchor: "local-date-model"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q08
@@ -153,7 +153,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.LocalDate/LocalDate.md", anchor: "local-date-arithmetic"}
+    readmeRelated: {file: "2.LocalDate/knowledge/LocalDate.md", anchor: "local-date-arithmetic"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q10
@@ -166,7 +166,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.LocalDate/LocalDate.md", anchor: "local-date-arithmetic"}
+    readmeRelated: {file: "2.LocalDate/knowledge/LocalDate.md", anchor: "local-date-arithmetic"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q09
@@ -179,7 +179,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "2.LocalDate/LocalDate.md", anchor: "calendar-validity"}
+    readmeRelated: {file: "2.LocalDate/knowledge/LocalDate.md", anchor: "calendar-validity"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q11
@@ -192,7 +192,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.LocalTime/LocalTime.md", anchor: "local-time-model"}
+    readmeRelated: {file: "3.LocalTime/knowledge/LocalTime.md", anchor: "local-time-model"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q26
@@ -205,7 +205,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.LocalTime/LocalTime.md", anchor: "local-time-model"}
+    readmeRelated: {file: "3.LocalTime/knowledge/LocalTime.md", anchor: "local-time-model"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q12
@@ -218,7 +218,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.LocalTime/LocalTime.md", anchor: "local-time-precision"}
+    readmeRelated: {file: "3.LocalTime/knowledge/LocalTime.md", anchor: "local-time-precision"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q13
@@ -231,7 +231,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "3.LocalTime/LocalTime.md", anchor: "local-time-wrap"}
+    readmeRelated: {file: "3.LocalTime/knowledge/LocalTime.md", anchor: "local-time-wrap"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q14
@@ -244,7 +244,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.LocalDateTime/LocalDateTime.md", anchor: "local-date-time-model"}
+    readmeRelated: {file: "4.LocalDateTime/knowledge/LocalDateTime.md", anchor: "local-date-time-model"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q27
@@ -257,7 +257,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.LocalDateTime/LocalDateTime.md", anchor: "local-date-time-model"}
+    readmeRelated: {file: "4.LocalDateTime/knowledge/LocalDateTime.md", anchor: "local-date-time-model"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q15
@@ -270,7 +270,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.LocalDateTime/LocalDateTime.md", anchor: "local-date-time-ambiguity"}
+    readmeRelated: {file: "4.LocalDateTime/knowledge/LocalDateTime.md", anchor: "local-date-time-ambiguity"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q16
@@ -283,7 +283,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.LocalDateTime/LocalDateTime.md", anchor: "local-date-time-ambiguity"}
+    readmeRelated: {file: "4.LocalDateTime/knowledge/LocalDateTime.md", anchor: "local-date-time-ambiguity"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q17
@@ -296,7 +296,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "4.LocalDateTime/LocalDateTime.md", anchor: "local-date-time-use-cases"}
+    readmeRelated: {file: "4.LocalDateTime/knowledge/LocalDateTime.md", anchor: "local-date-time-use-cases"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q18
@@ -309,7 +309,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.Instant/Instant.md", anchor: "instant-model"}
+    readmeRelated: {file: "5.Instant/knowledge/Instant.md", anchor: "instant-model"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q19
@@ -322,7 +322,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.Instant/Instant.md", anchor: "epoch-time"}
+    readmeRelated: {file: "5.Instant/knowledge/Instant.md", anchor: "epoch-time"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q20
@@ -335,7 +335,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.Instant/Instant.md", anchor: "epoch-time"}
+    readmeRelated: {file: "5.Instant/knowledge/Instant.md", anchor: "epoch-time"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q21
@@ -348,7 +348,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "5.Instant/Instant.md", anchor: "instant-use-cases"}
+    readmeRelated: {file: "5.Instant/knowledge/Instant.md", anchor: "instant-use-cases"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q22
@@ -361,7 +361,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.ZoneOffsetZoneId/ZoneOffsetZoneId.md", anchor: "zone-offset"}
+    readmeRelated: {file: "6.ZoneOffsetZoneId/knowledge/ZoneOffsetZoneId.md", anchor: "zone-offset"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q23
@@ -374,7 +374,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.ZoneOffsetZoneId/ZoneOffsetZoneId.md", anchor: "zone-id"}
+    readmeRelated: {file: "6.ZoneOffsetZoneId/knowledge/ZoneOffsetZoneId.md", anchor: "zone-id"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q56
@@ -387,7 +387,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.ZoneOffsetZoneId/ZoneOffsetZoneId.md", anchor: "zone-id"}
+    readmeRelated: {file: "6.ZoneOffsetZoneId/knowledge/ZoneOffsetZoneId.md", anchor: "zone-id"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q24
@@ -400,7 +400,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "6.ZoneOffsetZoneId/ZoneOffsetZoneId.md", anchor: "zone-rules"}
+    readmeRelated: {file: "6.ZoneOffsetZoneId/knowledge/ZoneOffsetZoneId.md", anchor: "zone-rules"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q29
@@ -413,7 +413,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.ZonedOffsetDateTime/ZonedOffsetDateTime.md", anchor: "zoned-date-time"}
+    readmeRelated: {file: "7.ZonedOffsetDateTime/knowledge/ZonedOffsetDateTime.md", anchor: "zoned-date-time"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q28
@@ -426,7 +426,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.ZonedOffsetDateTime/ZonedOffsetDateTime.md", anchor: "offset-date-time"}
+    readmeRelated: {file: "7.ZonedOffsetDateTime/knowledge/ZonedOffsetDateTime.md", anchor: "offset-date-time"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q33
@@ -439,7 +439,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.ZonedOffsetDateTime/ZonedOffsetDateTime.md", anchor: "same-instant-vs-same-local"}
+    readmeRelated: {file: "7.ZonedOffsetDateTime/knowledge/ZonedOffsetDateTime.md", anchor: "same-instant-vs-same-local"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q51
@@ -452,7 +452,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "7.ZonedOffsetDateTime/ZonedOffsetDateTime.md", anchor: "zone-conversion"}
+    readmeRelated: {file: "7.ZonedOffsetDateTime/knowledge/ZonedOffsetDateTime.md", anchor: "zone-conversion"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q30
@@ -465,7 +465,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.DurationPeriod/DurationPeriod.md", anchor: "duration-time-based"}
+    readmeRelated: {file: "8.DurationPeriod/knowledge/DurationPeriod.md", anchor: "duration-time-based"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q31
@@ -478,7 +478,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.DurationPeriod/DurationPeriod.md", anchor: "period-date-based"}
+    readmeRelated: {file: "8.DurationPeriod/knowledge/DurationPeriod.md", anchor: "period-date-based"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q61
@@ -491,7 +491,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.DurationPeriod/DurationPeriod.md", anchor: "period-date-based"}
+    readmeRelated: {file: "8.DurationPeriod/knowledge/DurationPeriod.md", anchor: "period-date-based"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q32
@@ -504,7 +504,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "8.DurationPeriod/DurationPeriod.md", anchor: "duration-vs-period"}
+    readmeRelated: {file: "8.DurationPeriod/knowledge/DurationPeriod.md", anchor: "duration-vs-period"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q55
@@ -517,7 +517,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.FormattingParsing/FormattingParsing.md", anchor: "date-time-formatter"}
+    readmeRelated: {file: "9.FormattingParsing/knowledge/FormattingParsing.md", anchor: "date-time-formatter"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q34
@@ -530,7 +530,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.FormattingParsing/FormattingParsing.md", anchor: "format-patterns"}
+    readmeRelated: {file: "9.FormattingParsing/knowledge/FormattingParsing.md", anchor: "format-patterns"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q35
@@ -543,7 +543,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.FormattingParsing/FormattingParsing.md", anchor: "format-patterns"}
+    readmeRelated: {file: "9.FormattingParsing/knowledge/FormattingParsing.md", anchor: "format-patterns"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q36
@@ -556,7 +556,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.FormattingParsing/FormattingParsing.md", anchor: "strict-smart-lenient"}
+    readmeRelated: {file: "9.FormattingParsing/knowledge/FormattingParsing.md", anchor: "strict-smart-lenient"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q37
@@ -569,7 +569,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "9.FormattingParsing/FormattingParsing.md", anchor: "parse-target-type"}
+    readmeRelated: {file: "9.FormattingParsing/knowledge/FormattingParsing.md", anchor: "parse-target-type"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q38
@@ -582,7 +582,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "10.ArithmeticComparison/ArithmeticComparison.md", anchor: "temporal-arithmetic"}
+    readmeRelated: {file: "10.ArithmeticComparison/knowledge/ArithmeticComparison.md", anchor: "temporal-arithmetic"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q39
@@ -595,7 +595,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "10.ArithmeticComparison/ArithmeticComparison.md", anchor: "between-semantics"}
+    readmeRelated: {file: "10.ArithmeticComparison/knowledge/ArithmeticComparison.md", anchor: "between-semantics"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q52
@@ -608,7 +608,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "10.ArithmeticComparison/ArithmeticComparison.md", anchor: "between-semantics"}
+    readmeRelated: {file: "10.ArithmeticComparison/knowledge/ArithmeticComparison.md", anchor: "between-semantics"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q40
@@ -621,7 +621,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "10.ArithmeticComparison/ArithmeticComparison.md", anchor: "date-time-comparison"}
+    readmeRelated: {file: "10.ArithmeticComparison/knowledge/ArithmeticComparison.md", anchor: "date-time-comparison"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q48
@@ -634,7 +634,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "10.ArithmeticComparison/ArithmeticComparison.md", anchor: "dst-gap-overlap"}
+    readmeRelated: {file: "10.ArithmeticComparison/knowledge/ArithmeticComparison.md", anchor: "dst-gap-overlap"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q49
@@ -647,7 +647,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "10.ArithmeticComparison/ArithmeticComparison.md", anchor: "dst-gap-overlap"}
+    readmeRelated: {file: "10.ArithmeticComparison/knowledge/ArithmeticComparison.md", anchor: "dst-gap-overlap"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q57
@@ -660,7 +660,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "10.ArithmeticComparison/ArithmeticComparison.md", anchor: "dst-gap-overlap"}
+    readmeRelated: {file: "10.ArithmeticComparison/knowledge/ArithmeticComparison.md", anchor: "dst-gap-overlap"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q41
@@ -673,7 +673,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "10.ArithmeticComparison/ArithmeticComparison.md", anchor: "business-calendar-boundary"}
+    readmeRelated: {file: "10.ArithmeticComparison/knowledge/ArithmeticComparison.md", anchor: "business-calendar-boundary"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q42
@@ -686,7 +686,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "11.Clock/Clock.md", anchor: "clock-abstraction"}
+    readmeRelated: {file: "11.Clock/knowledge/Clock.md", anchor: "clock-abstraction"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q58
@@ -699,7 +699,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "11.Clock/Clock.md", anchor: "clock-abstraction"}
+    readmeRelated: {file: "11.Clock/knowledge/Clock.md", anchor: "clock-abstraction"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q59
@@ -712,7 +712,7 @@ questions:
     correctAnswerId: D
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "11.Clock/Clock.md", anchor: "clock-abstraction"}
+    readmeRelated: {file: "11.Clock/knowledge/Clock.md", anchor: "clock-abstraction"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q43
@@ -725,7 +725,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "11.Clock/Clock.md", anchor: "fixed-clock-testing"}
+    readmeRelated: {file: "11.Clock/knowledge/Clock.md", anchor: "fixed-clock-testing"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q44
@@ -738,7 +738,7 @@ questions:
     correctAnswerId: C
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "11.Clock/Clock.md", anchor: "clock-injection"}
+    readmeRelated: {file: "11.Clock/knowledge/Clock.md", anchor: "clock-injection"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q45
@@ -751,7 +751,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "12.LegacyInteropPitfalls/LegacyInteropPitfalls.md", anchor: "legacy-date-calendar"}
+    readmeRelated: {file: "12.LegacyInteropPitfalls/knowledge/LegacyInteropPitfalls.md", anchor: "legacy-date-calendar"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q53
@@ -764,7 +764,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "12.LegacyInteropPitfalls/LegacyInteropPitfalls.md", anchor: "legacy-date-calendar"}
+    readmeRelated: {file: "12.LegacyInteropPitfalls/knowledge/LegacyInteropPitfalls.md", anchor: "legacy-date-calendar"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q46
@@ -777,7 +777,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "12.LegacyInteropPitfalls/LegacyInteropPitfalls.md", anchor: "legacy-conversion"}
+    readmeRelated: {file: "12.LegacyInteropPitfalls/knowledge/LegacyInteropPitfalls.md", anchor: "legacy-conversion"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q54
@@ -790,7 +790,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "12.LegacyInteropPitfalls/LegacyInteropPitfalls.md", anchor: "legacy-conversion"}
+    readmeRelated: {file: "12.LegacyInteropPitfalls/knowledge/LegacyInteropPitfalls.md", anchor: "legacy-conversion"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q60
@@ -803,7 +803,7 @@ questions:
     correctAnswerId: B
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "12.LegacyInteropPitfalls/LegacyInteropPitfalls.md", anchor: "legacy-conversion"}
+    readmeRelated: {file: "12.LegacyInteropPitfalls/knowledge/LegacyInteropPitfalls.md", anchor: "legacy-conversion"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q47
@@ -816,7 +816,7 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "12.LegacyInteropPitfalls/LegacyInteropPitfalls.md", anchor: "system-default-zone-risk"}
+    readmeRelated: {file: "12.LegacyInteropPitfalls/knowledge/LegacyInteropPitfalls.md", anchor: "system-default-zone-risk"}
     apiRelated: {controller: "", methodSignature: ""}
 
   - id: date-time-q50
@@ -829,5 +829,5 @@ questions:
     correctAnswerId: A
     aiGenerated: true
     reviewed: false
-    readmeRelated: {file: "12.LegacyInteropPitfalls/LegacyInteropPitfalls.md", anchor: "timestamp-storage-boundary"}
+    readmeRelated: {file: "12.LegacyInteropPitfalls/knowledge/LegacyInteropPitfalls.md", anchor: "timestamp-storage-boundary"}
     apiRelated: {controller: "", methodSignature: ""}

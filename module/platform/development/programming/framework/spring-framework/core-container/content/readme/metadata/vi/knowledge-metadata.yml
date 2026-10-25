@@ -1,4 +1,4 @@
-1.Overview/Overview.md:
+1.Overview/knowledge/Overview.md:
   overview-001:
     difficulty: BASIC
     aiGenerated: true
@@ -44,7 +44,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-2.FirstApplication/FirstApplication.md:
+2.FirstApplication/knowledge/FirstApplication.md:
   first-application-001:
     difficulty: BASIC
     aiGenerated: true
@@ -85,7 +85,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-3.BeanDefinition/BeanDefinition.md:
+3.BeanDefinition/knowledge/BeanDefinition.md:
   bean-definition-001:
     difficulty: BASIC
     aiGenerated: true
@@ -131,7 +131,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-4.DependencyInjection/DependencyInjection.md:
+4.DependencyInjection/knowledge/DependencyInjection.md:
   dependency-injection-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -172,7 +172,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-5.Autowired/Autowired.md:
+5.Autowired/knowledge/Autowired.md:
   autowired-001:
     difficulty: ADVANCED
     aiGenerated: true
@@ -218,7 +218,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-6.CandidateSelection/CandidateSelection.md:
+6.CandidateSelection/knowledge/CandidateSelection.md:
   candidate-selection-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -269,7 +269,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-7.FlexibleDependencies/FlexibleDependencies.md:
+7.FlexibleDependencies/knowledge/FlexibleDependencies.md:
   flexible-dependencies-001:
     difficulty: BASIC
     aiGenerated: true
@@ -315,7 +315,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-8.ComponentScanning/ComponentScanning.md:
+8.ComponentScanning/knowledge/ComponentScanning.md:
   component-scanning-001:
     difficulty: BASIC
     aiGenerated: true
@@ -361,7 +361,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-9.JavaConfiguration/JavaConfiguration.md:
+9.JavaConfiguration/knowledge/JavaConfiguration.md:
   java-configuration-001:
     difficulty: BASIC
     aiGenerated: true
@@ -412,7 +412,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-10.ConfigurationComposition/ConfigurationComposition.md:
+10.ConfigurationComposition/knowledge/ConfigurationComposition.md:
   configuration-composition-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -458,7 +458,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-11.XmlConfiguration/XmlConfiguration.md:
+11.XmlConfiguration/knowledge/XmlConfiguration.md:
   xml-configuration-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -504,7 +504,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-12.BeanCreationTiming/BeanCreationTiming.md:
+12.BeanCreationTiming/knowledge/BeanCreationTiming.md:
   bean-creation-timing-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -545,7 +545,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-13.BeanScopes/BeanScopes.md:
+13.BeanScopes/knowledge/BeanScopes.md:
   bean-scopes-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -596,7 +596,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-14.CrossScopeDependencies/CrossScopeDependencies.md:
+14.CrossScopeDependencies/knowledge/CrossScopeDependencies.md:
   cross-scope-dependencies-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -642,7 +642,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-15.BeanLifecycle/BeanLifecycle.md:
+15.BeanLifecycle/knowledge/BeanLifecycle.md:
   bean-lifecycle-001:
     difficulty: BASIC
     aiGenerated: true
@@ -693,7 +693,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-16.ContextLifecycle/ContextLifecycle.md:
+16.ContextLifecycle/knowledge/ContextLifecycle.md:
   context-lifecycle-001:
     difficulty: ADVANCED
     aiGenerated: true
@@ -734,7 +734,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-17.AwareCallbacks/AwareCallbacks.md:
+17.AwareCallbacks/knowledge/AwareCallbacks.md:
   aware-callbacks-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -765,7 +765,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-18.FactoryBean/FactoryBean.md:
+18.FactoryBean/knowledge/FactoryBean.md:
   factory-bean-001:
     difficulty: BASIC
     aiGenerated: true
@@ -806,7 +806,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-19.DefinitionExtension/DefinitionExtension.md:
+19.DefinitionExtension/knowledge/DefinitionExtension.md:
   definition-extension-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -852,7 +852,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-20.InstanceExtension/InstanceExtension.md:
+20.InstanceExtension/knowledge/InstanceExtension.md:
   instance-extension-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -898,7 +898,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-21.ConfigurationEnvironment/ConfigurationEnvironment.md:
+21.ConfigurationEnvironment/knowledge/ConfigurationEnvironment.md:
   configuration-environment-001:
     difficulty: BASIC
     aiGenerated: true
@@ -944,7 +944,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-22.ProfilesAndConditions/ProfilesAndConditions.md:
+22.ProfilesAndConditions/knowledge/ProfilesAndConditions.md:
   profiles-and-conditions-001:
     difficulty: BASIC
     aiGenerated: true
@@ -990,7 +990,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-23.ValuesAndExpressions/ValuesAndExpressions.md:
+23.ValuesAndExpressions/knowledge/ValuesAndExpressions.md:
   values-and-expressions-001:
     difficulty: BASIC
     aiGenerated: true
@@ -1036,7 +1036,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-24.Resources/Resources.md:
+24.Resources/knowledge/Resources.md:
   resources-001:
     difficulty: BASIC
     aiGenerated: true
@@ -1082,7 +1082,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-25.Internationalization/Internationalization.md:
+25.Internationalization/knowledge/Internationalization.md:
   internationalization-001:
     difficulty: BASIC
     aiGenerated: true
@@ -1118,7 +1118,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-26.ApplicationEvents/ApplicationEvents.md:
+26.ApplicationEvents/knowledge/ApplicationEvents.md:
   application-events-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -1174,7 +1174,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-27.ContextHierarchy/ContextHierarchy.md:
+27.ContextHierarchy/knowledge/ContextHierarchy.md:
   context-hierarchy-001:
     difficulty: BASIC
     aiGenerated: true
@@ -1215,7 +1215,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-28.ProgrammaticRegistration/ProgrammaticRegistration.md:
+28.ProgrammaticRegistration/knowledge/ProgrammaticRegistration.md:
   programmatic-registration-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -1261,7 +1261,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-29.CircularDependenciesAndProxies/CircularDependenciesAndProxies.md:
+29.CircularDependenciesAndProxies/knowledge/CircularDependenciesAndProxies.md:
   circular-dependencies-and-proxies-001:
     difficulty: ADVANCED
     aiGenerated: true
@@ -1307,7 +1307,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-30.AdvancedIntegration/AdvancedIntegration.md:
+30.AdvancedIntegration/knowledge/AdvancedIntegration.md:
   advanced-integration-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -1343,7 +1343,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-31.ContainerTesting/ContainerTesting.md:
+31.ContainerTesting/knowledge/ContainerTesting.md:
   container-testing-001:
     difficulty: BASIC
     aiGenerated: true
@@ -1389,7 +1389,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-32.Troubleshooting/Troubleshooting.md:
+32.Troubleshooting/knowledge/Troubleshooting.md:
   troubleshooting-001:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -1440,7 +1440,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-33.ComprehensivePractice/ComprehensivePractice.md:
+33.ComprehensivePractice/knowledge/ComprehensivePractice.md:
   comprehensive-practice-001:
     difficulty: INTERMEDIATE
     aiGenerated: true

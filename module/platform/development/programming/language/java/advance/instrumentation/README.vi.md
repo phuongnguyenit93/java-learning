@@ -1,33 +1,33 @@
 # 📂 README MODULE STRUCTURE (VI)
 
 * **1.MentalModel**
-    * [Instrumentation](content/readme/docs/vi/menu/1.MentalModel/Instrumentation.md)
+    * [Instrumentation](content/readme/docs/vi/menu/1.MentalModel/knowledge/Instrumentation.md)
 * **2.JavaAgent**
-    * [JavaAgent](content/readme/docs/vi/menu/2.JavaAgent/JavaAgent.md)
+    * [JavaAgent](content/readme/docs/vi/menu/2.JavaAgent/knowledge/JavaAgent.md)
 * **3.AgentPackaging**
-    * [AgentPackaging](content/readme/docs/vi/menu/3.AgentPackaging/AgentPackaging.md)
+    * [AgentPackaging](content/readme/docs/vi/menu/3.AgentPackaging/knowledge/AgentPackaging.md)
 * **4.AgentLoading**
-    * [AgentLoading](content/readme/docs/vi/menu/4.AgentLoading/AgentLoading.md)
+    * [AgentLoading](content/readme/docs/vi/menu/4.AgentLoading/knowledge/AgentLoading.md)
 * **5.InstrumentationApi**
-    * [InstrumentationApi](content/readme/docs/vi/menu/5.InstrumentationApi/InstrumentationApi.md)
+    * [InstrumentationApi](content/readme/docs/vi/menu/5.InstrumentationApi/knowledge/InstrumentationApi.md)
 * **6.ClassFileTransformer**
-    * [ClassFileTransformer](content/readme/docs/vi/menu/6.ClassFileTransformer/ClassFileTransformer.md)
+    * [ClassFileTransformer](content/readme/docs/vi/menu/6.ClassFileTransformer/knowledge/ClassFileTransformer.md)
 * **7.TransformationPipeline**
-    * [TransformationPipeline](content/readme/docs/vi/menu/7.TransformationPipeline/TransformationPipeline.md)
+    * [TransformationPipeline](content/readme/docs/vi/menu/7.TransformationPipeline/knowledge/TransformationPipeline.md)
 * **8.RedefinitionRetransformation**
-    * [RedefinitionRetransformation](content/readme/docs/vi/menu/8.RedefinitionRetransformation/RedefinitionRetransformation.md)
+    * [RedefinitionRetransformation](content/readme/docs/vi/menu/8.RedefinitionRetransformation/knowledge/RedefinitionRetransformation.md)
 * **9.StructuralLimits**
-    * [StructuralLimits](content/readme/docs/vi/menu/9.StructuralLimits/StructuralLimits.md)
+    * [StructuralLimits](content/readme/docs/vi/menu/9.StructuralLimits/knowledge/StructuralLimits.md)
 * **10.BytecodeEngineeringBoundary**
-    * [BytecodeEngineeringBoundary](content/readme/docs/vi/menu/10.BytecodeEngineeringBoundary/BytecodeEngineeringBoundary.md)
+    * [BytecodeEngineeringBoundary](content/readme/docs/vi/menu/10.BytecodeEngineeringBoundary/knowledge/BytecodeEngineeringBoundary.md)
 * **11.Tooling**
-    * [Tooling](content/readme/docs/vi/menu/11.Tooling/Tooling.md)
+    * [Tooling](content/readme/docs/vi/menu/11.Tooling/knowledge/Tooling.md)
 * **12.UseCases**
-    * [UseCases](content/readme/docs/vi/menu/12.UseCases/UseCases.md)
+    * [UseCases](content/readme/docs/vi/menu/12.UseCases/knowledge/UseCases.md)
 * **13.OperationalSafety**
-    * [OperationalSafety](content/readme/docs/vi/menu/13.OperationalSafety/OperationalSafety.md)
+    * [OperationalSafety](content/readme/docs/vi/menu/13.OperationalSafety/knowledge/OperationalSafety.md)
 * **14.DecisionGuide**
-    * [DecisionGuide](content/readme/docs/vi/menu/14.DecisionGuide/DecisionGuide.md)
+    * [DecisionGuide](content/readme/docs/vi/menu/14.DecisionGuide/knowledge/DecisionGuide.md)
 
 # Java Instrumentation
 

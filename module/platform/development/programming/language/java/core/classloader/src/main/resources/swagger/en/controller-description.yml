@@ -3,40 +3,40 @@ ClassIdentityController:
     <h2>Class Identity across Loader Boundaries</h2>
     <p>Observe how the same binary name with different defining loaders becomes incompatible runtime types and causes cross-loader cast failure.</p>
   readmeRelated:
-    file: 5.ClassIdentity/ClassIdentity.md
+    file: 5.ClassIdentity/knowledge/ClassIdentity.md
 ClassLifecycleController:
   description: |-
     <h2>Loading Is Not Initialization</h2>
     <p>Use a fresh loader on every call to prove that a runtime Class can be loaded before static initialization executes.</p>
   readmeRelated:
-    file: 1.Lifecycle/Lifecycle.md
+    file: 1.Lifecycle/knowledge/Lifecycle.md
 ClassLoaderChainController:
   description: |-
     <h2>Built-in ClassLoader Chain</h2>
     <p>Observe Application/System, Platform, and the bootstrap boundary to see different ownership for application and JDK classes.</p>
   readmeRelated:
-    file: 2.BuiltInClassLoaders/BuiltInClassLoaders.md
+    file: 2.BuiltInClassLoaders/knowledge/BuiltInClassLoaders.md
 ContextClassLoaderController:
   description: |-
     <h2>Thread Context ClassLoader Lifecycle</h2>
     <p>Practice save, set, and restore for TCCL in a narrow scope so loader context does not leak into unrelated work.</p>
   readmeRelated:
-    file: 6.ContextClassLoader/ContextClassLoader.md
+    file: 6.ContextClassLoader/knowledge/ContextClassLoader.md
 CustomClassLoaderController:
   description: |-
     <h2>Class Identity through Independent Custom Loaders</h2>
     <p>Use two independent custom loaders as the experiment mechanism to prove that the same binary name and bytes can still produce distinct runtime types.</p>
   readmeRelated:
-    file: 5.ClassIdentity/ClassIdentity.md
+    file: 5.ClassIdentity/knowledge/ClassIdentity.md
 InitializationController:
   description: |-
     <h2>Initialization Failure and Erroneous State</h2>
     <p>Use a fresh class identity per request to observe the first initialization failure and the later active use that does not retry the initializer.</p>
   readmeRelated:
-    file: 8.Initialization/Initialization.md
+    file: 8.Initialization/knowledge/Initialization.md
 ResourceLoadingController:
   description: |-
     <h2>Resource Lookup through Class and ClassLoader</h2>
     <p>Compare package-relative, absolute Class-resource, and loader-root paths for the same packaged resource.</p>
   readmeRelated:
-    file: 7.ResourceLoading/ResourceLoading.md
+    file: 7.ResourceLoading/knowledge/ResourceLoading.md

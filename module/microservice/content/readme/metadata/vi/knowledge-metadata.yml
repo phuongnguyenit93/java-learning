@@ -1,4 +1,4 @@
-0.Preset/Knowledge.md:
+0.Preset/knowledge/Knowledge.md:
   monilith-vs-microservice:
     difficulty: BASIC
     aiGenerated: true
@@ -24,25 +24,25 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-0.Preset/Logging.md:
+0.Preset/knowledge/Logging.md:
   centralized-logging:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
     isImportant: false
-0.Preset/Observability.md:
+0.Preset/knowledge/Observability.md:
   3-core-of-observability:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
     isImportant: false
-0.Preset/Roadmap.md:
+0.Preset/knowledge/Roadmap.md:
   microservice-roadmap:
     difficulty: BASIC
     aiGenerated: true
     reviewed: false
     isImportant: false
-1.Basic/ConfigServer.md:
+1.Basic/knowledge/ConfigServer.md:
   static-config-and-dynamic-config:
     difficulty: BASIC
     aiGenerated: true
@@ -53,7 +53,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-2.Discovery Server/Discovery_Server.md:
+2.Discovery Server/knowledge/Discovery_Server.md:
   context-path-mistake:
     difficulty: BASIC
     aiGenerated: true

@@ -39,7 +39,7 @@ File `proposal.yml` là **đề xuất thay đổi metadata**, không phải b�
 
 ```yaml
 moduleId: "example-module"
-chapterKey: "1.Introduction/Concept.md"
+chapterKey: "1.Introduction/knowledge/Concept.md"
 sourceSha256: "<exact seed sourceSha256>"
 relations:
   - kind: "swagger-controller"
@@ -48,7 +48,7 @@ relations:
     field: "readmeRelated"
     decision: "SET"
     value:
-      file: "1.Introduction/Concept.md"
+      file: "1.Introduction/knowledge/Concept.md"
     evidence: "Controller minh họa trực tiếp chương Concept."
   - kind: "swagger-method"
     language: "vi"
@@ -56,7 +56,7 @@ relations:
     field: "readmeRelated"
     decision: "SET"
     value:
-      file: "1.Introduction/Concept.md"
+      file: "1.Introduction/knowledge/Concept.md"
       anchor: "concept-inspect"
     evidence: "Section này giải thích đúng hành vi inspect()."
   - kind: "quiz"

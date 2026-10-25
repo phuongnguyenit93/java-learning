@@ -8,7 +8,7 @@ import org.yaml.snakeyaml.Yaml
 import static org.junit.Assert.*
 
 class QuizSheetNormalizeServiceTest {
-    private static final String FILE = '1.OOPBasic/OOPBasic.md'
+    private static final String FILE = '1.OOPBasic/knowledge/OOPBasic.md'
 
     private static Map authored(String label = 'Tình huống Java?') {
         return [question: label, answers: [
@@ -54,6 +54,19 @@ class QuizSheetNormalizeServiceTest {
         assertEquals(true, normalized.questions[1].reviewed)
         assertEquals('some-anchor', normalized.questions[1].readmeRelated.anchor)
         assertEquals('DemoController', normalized.questions[1].apiRelated.controller)
+    }
+
+    @Test
+    void migratesLegacyReadmePathButPreservesQuizIdentityAndReview() {
+        Map source = authored() + [id: 'manually-edited', aiGenerated: false,
+                reviewed: true, readmeRelated: [file: '1.OOPBasic/OOPBasic.md', anchor: 'old-anchor'],
+                apiRelated: [controller: 'Catalog', methodSignature: 'lookup()']]
+        Map result = normalize([questions: [source]])
+        assertEquals('manually-edited', result.questions[0].id)
+        assertEquals([file: FILE, anchor: 'old-anchor'], result.questions[0].readmeRelated)
+        assertEquals(false, result.questions[0].aiGenerated)
+        assertEquals(true, result.questions[0].reviewed)
+        assertEquals('Catalog', result.questions[0].apiRelated.controller)
     }
 
     @Test

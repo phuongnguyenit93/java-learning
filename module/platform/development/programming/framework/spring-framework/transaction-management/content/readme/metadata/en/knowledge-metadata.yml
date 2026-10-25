@@ -1,4 +1,4 @@
-1.Purpose/Purpose.md:
+1.Purpose/knowledge/Purpose.md:
   transaction-purpose:
     difficulty: BASIC
     aiGenerated: true
@@ -24,7 +24,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-2.Abstraction/Abstraction.md:
+2.Abstraction/knowledge/Abstraction.md:
   transaction-manager-strategy:
     difficulty: BASIC
     aiGenerated: true
@@ -65,7 +65,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-3.ResourceSynchronization/ResourceSynchronization.md:
+3.ResourceSynchronization/knowledge/ResourceSynchronization.md:
   transaction-bound-resources:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -91,7 +91,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-4.Declarative/Declarative.md:
+4.Declarative/knowledge/Declarative.md:
   transaction-declarative-model:
     difficulty: BASIC
     aiGenerated: true
@@ -127,7 +127,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-5.TransactionPolicy/TransactionPolicy.md:
+5.TransactionPolicy/knowledge/TransactionPolicy.md:
   transaction-policy-model:
     difficulty: BASIC
     aiGenerated: true
@@ -153,7 +153,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-6.Rollback/Rollback.md:
+6.Rollback/knowledge/Rollback.md:
   transaction-rollback-defaults:
     difficulty: BASIC
     aiGenerated: true
@@ -179,7 +179,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-7.Propagation/Propagation.md:
+7.Propagation/knowledge/Propagation.md:
   transaction-physical-logical:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -215,7 +215,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-8.Programmatic/Programmatic.md:
+8.Programmatic/knowledge/Programmatic.md:
   transaction-declarative-vs-programmatic:
     difficulty: BASIC
     aiGenerated: true
@@ -241,7 +241,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-9.Reactive/Reactive.md:
+9.Reactive/knowledge/Reactive.md:
   transaction-reactive-context-model:
     difficulty: ADVANCED
     aiGenerated: true
@@ -272,7 +272,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-10.EventsLifecycle/EventsLifecycle.md:
+10.EventsLifecycle/knowledge/EventsLifecycle.md:
   transaction-event-listener:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -298,7 +298,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-11.BoundarySynthesis/BoundarySynthesis.md:
+11.BoundarySynthesis/knowledge/BoundarySynthesis.md:
   transaction-service-layer-boundary:
     difficulty: INTERMEDIATE
     aiGenerated: true

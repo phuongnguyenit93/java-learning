@@ -44,7 +44,7 @@ questions:
   aiGenerated: true
   reviewed: false
   readmeRelated:
-    file: '1.Introduction/AOP.md'
+    file: '1.Introduction/knowledge/AOP.md'
     anchor: 'aop-what'
   apiRelated:
     controller: ''
@@ -68,7 +68,7 @@ questions:
   aiGenerated: true
   reviewed: false
   readmeRelated:
-    file: '1.Introduction/AOP.md'
+    file: '1.Introduction/knowledge/AOP.md'
     anchor: 'aop-why'
   apiRelated:
     controller: ''
@@ -92,7 +92,7 @@ questions:
   aiGenerated: true
   reviewed: false
   readmeRelated:
-    file: '1.Introduction/AOP.md'
+    file: '1.Introduction/knowledge/AOP.md'
     anchor: 'aop-without'
   apiRelated:
     controller: ''
@@ -116,7 +116,7 @@ questions:
   aiGenerated: true
   reviewed: false
   readmeRelated:
-    file: '1.Introduction/AOP.md'
+    file: '1.Introduction/knowledge/AOP.md'
     anchor: 'aop-limit'
   apiRelated:
     controller: ''
@@ -140,7 +140,7 @@ questions:
   aiGenerated: true
   reviewed: false
   readmeRelated:
-    file: '1.Introduction/AOP.md'
+    file: '1.Introduction/knowledge/AOP.md'
     anchor: 'aop-solution'
   apiRelated:
     controller: ''
@@ -164,7 +164,7 @@ questions:
   aiGenerated: true
   reviewed: false
   readmeRelated:
-    file: '1.Introduction/AOP.md'
+    file: '1.Introduction/knowledge/AOP.md'
     anchor: 'aop-object-responsibility-bridge'
   apiRelated:
     controller: ''
@@ -188,7 +188,7 @@ questions:
   aiGenerated: true
   reviewed: false
   readmeRelated:
-    file: '2.Terminology/Terminology.md'
+    file: '2.Terminology/knowledge/Terminology.md'
     anchor: 'aop-aspect'
   apiRelated:
     controller: ''
@@ -212,7 +212,7 @@ questions:
   aiGenerated: true
   reviewed: false
   readmeRelated:
-    file: '2.Terminology/Terminology.md'
+    file: '2.Terminology/knowledge/Terminology.md'
     anchor: 'aop-join-point'
   apiRelated:
     controller: ''
@@ -236,7 +236,7 @@ questions:
   aiGenerated: true
   reviewed: false
   readmeRelated:
-    file: '2.Terminology/Terminology.md'
+    file: '2.Terminology/knowledge/Terminology.md'
     anchor: 'aop-pointcut'
   apiRelated:
     controller: ''
@@ -260,7 +260,7 @@ questions:
   aiGenerated: true
   reviewed: false
   readmeRelated:
-    file: '2.Terminology/Terminology.md'
+    file: '2.Terminology/knowledge/Terminology.md'
     anchor: 'aop-advice'
   apiRelated:
     controller: ''
@@ -284,7 +284,7 @@ questions:
   aiGenerated: true
   reviewed: false
   readmeRelated:
-    file: '2.Terminology/Terminology.md'
+    file: '2.Terminology/knowledge/Terminology.md'
     anchor: 'aop-target'
   apiRelated:
     controller: ''
@@ -308,7 +308,7 @@ questions:
   aiGenerated: true
   reviewed: false
   readmeRelated:
-    file: '2.Terminology/Terminology.md'
+    file: '2.Terminology/knowledge/Terminology.md'
     anchor: 'aop-weaving'
   apiRelated:
     controller: ''
@@ -332,7 +332,7 @@ questions:
   aiGenerated: true
   reviewed: false
   readmeRelated:
-    file: '2.Terminology/Terminology.md'
+    file: '2.Terminology/knowledge/Terminology.md'
     anchor: 'aop-advice-kinds'
   apiRelated:
     controller: ''
@@ -356,7 +356,7 @@ questions:
   aiGenerated: true
   reviewed: false
   readmeRelated:
-    file: '2.Terminology/Terminology.md'
+    file: '2.Terminology/knowledge/Terminology.md'
     anchor: 'aop-effective-execution'
   apiRelated:
     controller: ''
@@ -380,7 +380,7 @@ questions:
   aiGenerated: true
   reviewed: false
   readmeRelated:
-    file: '3.ImplementationModels/ImplementationModels.md'
+    file: '3.ImplementationModels/knowledge/ImplementationModels.md'
     anchor: 'aop-compile-time'
   apiRelated:
     controller: ''
@@ -404,7 +404,7 @@ questions:
   aiGenerated: true
   reviewed: false
   readmeRelated:
-    file: '3.ImplementationModels/ImplementationModels.md'
+    file: '3.ImplementationModels/knowledge/ImplementationModels.md'
     anchor: 'aop-load-time'
   apiRelated:
     controller: ''
@@ -428,7 +428,7 @@ questions:
   aiGenerated: true
   reviewed: false
   readmeRelated:
-    file: '3.ImplementationModels/ImplementationModels.md'
+    file: '3.ImplementationModels/knowledge/ImplementationModels.md'
     anchor: 'aop-runtime'
   apiRelated:
     controller: ''
@@ -452,7 +452,7 @@ questions:
   aiGenerated: true
   reviewed: false
   readmeRelated:
-    file: '3.ImplementationModels/ImplementationModels.md'
+    file: '3.ImplementationModels/knowledge/ImplementationModels.md'
     anchor: 'aop-model-boundary'
   apiRelated:
     controller: ''
@@ -476,7 +476,7 @@ questions:
   aiGenerated: true
   reviewed: false
   readmeRelated:
-    file: '3.ImplementationModels/ImplementationModels.md'
+    file: '3.ImplementationModels/knowledge/ImplementationModels.md'
     anchor: 'aop-interception-limits'
   apiRelated:
     controller: ''
@@ -500,7 +500,7 @@ questions:
   aiGenerated: true
   reviewed: false
   readmeRelated:
-    file: '4.Tradeoffs/Tradeoffs.md'
+    file: '4.Tradeoffs/knowledge/Tradeoffs.md'
     anchor: 'aop-benefits'
   apiRelated:
     controller: ''
@@ -524,7 +524,7 @@ questions:
   aiGenerated: true
   reviewed: false
   readmeRelated:
-    file: '4.Tradeoffs/Tradeoffs.md'
+    file: '4.Tradeoffs/knowledge/Tradeoffs.md'
     anchor: 'aop-cost'
   apiRelated:
     controller: ''
@@ -548,7 +548,7 @@ questions:
   aiGenerated: true
   reviewed: false
   readmeRelated:
-    file: '4.Tradeoffs/Tradeoffs.md'
+    file: '4.Tradeoffs/knowledge/Tradeoffs.md'
     anchor: 'aop-good-fit'
   apiRelated:
     controller: ''
@@ -572,7 +572,7 @@ questions:
   aiGenerated: true
   reviewed: false
   readmeRelated:
-    file: '4.Tradeoffs/Tradeoffs.md'
+    file: '4.Tradeoffs/knowledge/Tradeoffs.md'
     anchor: 'aop-bad-fit'
   apiRelated:
     controller: ''
@@ -596,7 +596,7 @@ questions:
   aiGenerated: true
   reviewed: false
   readmeRelated:
-    file: '4.Tradeoffs/Tradeoffs.md'
+    file: '4.Tradeoffs/knowledge/Tradeoffs.md'
     anchor: 'aop-pointcut-pitfalls'
   apiRelated:
     controller: ''
@@ -620,7 +620,7 @@ questions:
   aiGenerated: true
   reviewed: false
   readmeRelated:
-    file: '4.Tradeoffs/Tradeoffs.md'
+    file: '4.Tradeoffs/knowledge/Tradeoffs.md'
     anchor: 'aop-design-walkthrough'
   apiRelated:
     controller: ''

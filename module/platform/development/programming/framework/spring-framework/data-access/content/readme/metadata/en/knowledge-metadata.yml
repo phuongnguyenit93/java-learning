@@ -1,4 +1,4 @@
-1.Introduction/DataAccess.md:
+1.Introduction/knowledge/DataAccess.md:
   data-access-purpose:
     difficulty: BASIC
     aiGenerated: true
@@ -19,7 +19,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-2.DaoExceptionModel/DaoExceptionModel.md:
+2.DaoExceptionModel/knowledge/DaoExceptionModel.md:
   data-access-exception-model:
     difficulty: BASIC
     aiGenerated: true
@@ -45,7 +45,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-3.SpringJdbcCore/SpringJdbcCore.md:
+3.SpringJdbcCore/knowledge/SpringJdbcCore.md:
   jdbc-datasource-workflow:
     difficulty: BASIC
     aiGenerated: true
@@ -76,7 +76,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-4.AdvancedJdbc/AdvancedJdbc.md:
+4.AdvancedJdbc/knowledge/AdvancedJdbc.md:
   jdbc-batch-operations:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -102,7 +102,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-5.SpringR2dbcCore/SpringR2dbcCore.md:
+5.SpringR2dbcCore/knowledge/SpringR2dbcCore.md:
   r2dbc-connection-factory-database-client:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -128,7 +128,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-6.ResourceTransactionParticipation/ResourceTransactionParticipation.md:
+6.ResourceTransactionParticipation/knowledge/ResourceTransactionParticipation.md:
   resource-acquisition-release:
     difficulty: INTERMEDIATE
     aiGenerated: true
@@ -159,7 +159,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-7.AbstractionChoice/AbstractionChoice.md:
+7.AbstractionChoice/knowledge/AbstractionChoice.md:
   choose-jdbc-client-layer:
     difficulty: INTERMEDIATE
     aiGenerated: true

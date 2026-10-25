@@ -8,7 +8,7 @@ import org.yaml.snakeyaml.Yaml
 import static org.junit.Assert.*
 
 class InterviewSheetNormalizeServiceTest {
-    private static final String FILE = '1.OOPBasic/OOPBasic.md'
+    private static final String FILE = '1.OOPBasic/knowledge/OOPBasic.md'
 
     @Test
     void authoredYamlPreservesMarkdownAnswersAndNormalizesDeterministically() {
@@ -76,6 +76,22 @@ class InterviewSheetNormalizeServiceTest {
         assertEquals(normalized, InterviewSheetNormalizeService.normalizeJson(serialized, FILE, 20))
         assertEquals(serialized, JsonOutput.prettyPrint(JsonOutput.toJson(
                 InterviewSheetNormalizeService.normalizeJson(serialized, FILE, 20))) + '\n')
+    }
+
+    @Test
+    void migratesLegacyReadmePathWithoutChangingHumanFields() {
+        Map source = [questions: [[question: 'Q', answer: '**Markdown**',
+                aiGenerated: false, reviewed: true,
+                readmeRelated: [file: '1.OOPBasic/OOPBasic.md', anchor: 'existing-anchor'],
+                apiRelated: [controller: 'Api', methodSignature: 'run()']]]]
+        Map result = InterviewSheetNormalizeService.normalizeYaml(
+                JsonOutput.toJson(source), FILE, 20)
+        assertEquals(FILE, result.questions[0].readmeRelated.file)
+        assertEquals('existing-anchor', result.questions[0].readmeRelated.anchor)
+        assertEquals(false, result.questions[0].aiGenerated)
+        assertEquals(true, result.questions[0].reviewed)
+        assertEquals('**Markdown**', result.questions[0].answer)
+        assertEquals('Api', result.questions[0].apiRelated.controller)
     }
 
     @Test

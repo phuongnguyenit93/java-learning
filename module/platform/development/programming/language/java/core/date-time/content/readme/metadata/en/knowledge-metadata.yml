@@ -1,4 +1,4 @@
-1.MentalModel/MentalModel.md:
+1.MentalModel/knowledge/MentalModel.md:
   date-time-domains:
     difficulty: BASIC
     aiGenerated: true
@@ -14,7 +14,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-2.LocalDate/LocalDate.md:
+2.LocalDate/knowledge/LocalDate.md:
   local-date-model:
     difficulty: BASIC
     aiGenerated: true
@@ -30,7 +30,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-3.LocalTime/LocalTime.md:
+3.LocalTime/knowledge/LocalTime.md:
   local-time-model:
     difficulty: BASIC
     aiGenerated: true
@@ -46,7 +46,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-4.LocalDateTime/LocalDateTime.md:
+4.LocalDateTime/knowledge/LocalDateTime.md:
   local-date-time-model:
     difficulty: BASIC
     aiGenerated: true
@@ -62,7 +62,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-5.Instant/Instant.md:
+5.Instant/knowledge/Instant.md:
   instant-model:
     difficulty: BASIC
     aiGenerated: true
@@ -78,7 +78,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-6.ZoneOffsetZoneId/ZoneOffsetZoneId.md:
+6.ZoneOffsetZoneId/knowledge/ZoneOffsetZoneId.md:
   zone-offset:
     difficulty: BASIC
     aiGenerated: true
@@ -94,7 +94,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-7.ZonedOffsetDateTime/ZonedOffsetDateTime.md:
+7.ZonedOffsetDateTime/knowledge/ZonedOffsetDateTime.md:
   zoned-date-time:
     difficulty: BASIC
     aiGenerated: true
@@ -115,7 +115,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-8.DurationPeriod/DurationPeriod.md:
+8.DurationPeriod/knowledge/DurationPeriod.md:
   duration-time-based:
     difficulty: BASIC
     aiGenerated: true
@@ -131,7 +131,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-9.FormattingParsing/FormattingParsing.md:
+9.FormattingParsing/knowledge/FormattingParsing.md:
   date-time-formatter:
     difficulty: BASIC
     aiGenerated: true
@@ -152,7 +152,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-10.ArithmeticComparison/ArithmeticComparison.md:
+10.ArithmeticComparison/knowledge/ArithmeticComparison.md:
   temporal-arithmetic:
     difficulty: BASIC
     aiGenerated: true
@@ -178,7 +178,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-11.Clock/Clock.md:
+11.Clock/knowledge/Clock.md:
   clock-abstraction:
     difficulty: BASIC
     aiGenerated: true
@@ -194,7 +194,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-12.LegacyInteropPitfalls/LegacyInteropPitfalls.md:
+12.LegacyInteropPitfalls/knowledge/LegacyInteropPitfalls.md:
   legacy-date-calendar:
     difficulty: BASIC
     aiGenerated: true

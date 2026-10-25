@@ -33,7 +33,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.Purpose/Purpose.md"
+      file: "1.Purpose/knowledge/Purpose.md"
       anchor: "build-tooling-purpose"
     apiRelated:
       controller: ""
@@ -44,7 +44,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.BuildPlugins/BuildPlugins.md"
+      file: "2.BuildPlugins/knowledge/BuildPlugins.md"
       anchor: "plugin-choice-boundary"
     apiRelated:
       controller: ""
@@ -55,7 +55,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "3.DependencyManagement/DependencyManagement.md"
+      file: "3.DependencyManagement/knowledge/DependencyManagement.md"
       anchor: "managed-version-override"
     apiRelated:
       controller: ""
@@ -66,7 +66,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "4.BootRun/BootRun.md"
+      file: "4.BootRun/knowledge/BootRun.md"
       anchor: "build-tool-run-vs-packaged-run"
     apiRelated:
       controller: ""
@@ -77,7 +77,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "5.BootJarBootWar/BootJarBootWar.md"
+      file: "5.BootJarBootWar/knowledge/BootJarBootWar.md"
       anchor: "executable-vs-plain-archive"
     apiRelated:
       controller: ""
@@ -88,7 +88,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "6.ExecutableArchives/ExecutableArchives.md"
+      file: "6.ExecutableArchives/knowledge/ExecutableArchives.md"
       anchor: "spring-boot-loader-purpose"
     apiRelated:
       controller: ""
@@ -99,7 +99,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "7.LayeredArchives/LayeredArchives.md"
+      file: "7.LayeredArchives/knowledge/LayeredArchives.md"
       anchor: "layer-order-and-cache"
     apiRelated:
       controller: ""
@@ -110,7 +110,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "8.ReproducibleBuilds/ReproducibleBuilds.md"
+      file: "8.ReproducibleBuilds/knowledge/ReproducibleBuilds.md"
       anchor: "reproducibility-expectation"
     apiRelated:
       controller: ""
@@ -121,7 +121,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "9.Buildpacks/Buildpacks.md"
+      file: "9.Buildpacks/knowledge/Buildpacks.md"
       anchor: "buildpack-lifecycle-boundary"
     apiRelated:
       controller: ""
@@ -132,7 +132,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "10.OciImages/OciImages.md"
+      file: "10.OciImages/knowledge/OciImages.md"
       anchor: "image-builder-connection"
     apiRelated:
       controller: ""
@@ -143,7 +143,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "11.DockerBuildStrategy/DockerBuildStrategy.md"
+      file: "11.DockerBuildStrategy/knowledge/DockerBuildStrategy.md"
       anchor: "control-standardization-maintenance"
     apiRelated:
       controller: ""
@@ -154,7 +154,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "12.DeploymentHandoff/DeploymentHandoff.md"
+      file: "12.DeploymentHandoff/knowledge/DeploymentHandoff.md"
       anchor: "build-failure-classification"
     apiRelated:
       controller: ""

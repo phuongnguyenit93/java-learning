@@ -35,7 +35,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "1.Introduction/DataAccess.md"
+      file: "1.Introduction/knowledge/DataAccess.md"
       anchor: "data-access-responsibility-boundary"
     apiRelated:
       controller: ""
@@ -48,7 +48,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "2.DaoExceptionModel/DaoExceptionModel.md"
+      file: "2.DaoExceptionModel/knowledge/DaoExceptionModel.md"
       anchor: "jdbc-r2dbc-exception-translation"
     apiRelated:
       controller: "DaoExceptionExperimentController"
@@ -61,7 +61,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "3.SpringJdbcCore/SpringJdbcCore.md"
+      file: "3.SpringJdbcCore/knowledge/SpringJdbcCore.md"
       anchor: "jdbc-row-mapping-cardinality"
     apiRelated:
       controller: "JdbcCoreExperimentController"
@@ -87,7 +87,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "5.SpringR2dbcCore/SpringR2dbcCore.md"
+      file: "5.SpringR2dbcCore/knowledge/SpringR2dbcCore.md"
       anchor: "r2dbc-reactive-sql-execution"
     apiRelated:
       controller: "R2dbcExperimentController"
@@ -100,7 +100,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "6.ResourceTransactionParticipation/ResourceTransactionParticipation.md"
+      file: "6.ResourceTransactionParticipation/knowledge/ResourceTransactionParticipation.md"
       anchor: "thread-vs-subscriber-context-resources"
     apiRelated:
       controller: "ResourceParticipationExperimentController"
@@ -113,7 +113,7 @@ questions:
     aiGenerated: true
     reviewed: false
     readmeRelated:
-      file: "7.AbstractionChoice/AbstractionChoice.md"
+      file: "7.AbstractionChoice/knowledge/AbstractionChoice.md"
       anchor: "blocking-jdbc-in-reactive-paths"
     apiRelated:
       controller: ""

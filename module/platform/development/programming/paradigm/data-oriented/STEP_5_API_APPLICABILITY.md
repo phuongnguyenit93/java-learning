@@ -21,7 +21,7 @@ The API is **not** intended to prove that all maps are superior to typed models,
 
 - Originally the current module was LIBRARY with BUILD_SWAGGER=FALSE and no Java controller. Those are *implementation gaps*, not reasons to omit a high-value trust-boundary experiment.
 - Canonical master.json now sets MODULE_TYPE=SERVLET and BUILD_SWAGGER=TRUE. Repository Gradle setup generated the Boot application, appropriate Spring MVC starter and Swagger Servlet adapter dependencies. No ad hoc dependency injection or generated build.gradle edits.
-- One OrderPreviewController POST maps to readme **6.DataFlow/DataFlow.md** / anchored **dop-flow-scenario**, with exact generated method signature preview(Map<String,Object>,int). Controller has only HTTP binding and status selection; OrderShapeSchema separately defines/validates the external map shape; OrderPreviewService separately calculates from accepted generic data and derives a new result. Code remains within this child worktree only.
+- One OrderPreviewController POST maps to readme **6.DataFlow/knowledge/DataFlow.md** / anchored **dop-flow-scenario**, with exact generated method signature preview(Map<String,Object>,int). Controller has only HTTP binding and status selection; OrderShapeSchema separately defines/validates the external map shape; OrderPreviewService separately calculates from accepted generic data and derives a new result. Code remains within this child worktree only.
 - Both localized Swagger sets include controller-description.yml, api-descriptions.yml, api-execution.yml and api-params.yml with substantive rationale, varied input experiments, exact Knowledge mapping, and clear observation/conclusion.
 
 ## Initial author validation and independent gate

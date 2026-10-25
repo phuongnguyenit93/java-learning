@@ -1,4 +1,4 @@
-1.MentalModel/MentalModel.md:
+1.MentalModel/knowledge/MentalModel.md:
   i18n-vs-l10n:
     difficulty: BASIC
     aiGenerated: true
@@ -14,7 +14,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-2.Locale/Locale.md:
+2.Locale/knowledge/Locale.md:
   locale-model:
     difficulty: BASIC
     aiGenerated: true
@@ -30,7 +30,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-3.LanguageTags/LanguageTags.md:
+3.LanguageTags/knowledge/LanguageTags.md:
   bcp47-language-tag:
     difficulty: BASIC
     aiGenerated: true
@@ -61,7 +61,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-4.ResourceBundle/ResourceBundle.md:
+4.ResourceBundle/knowledge/ResourceBundle.md:
   resourcebundle-model:
     difficulty: BASIC
     aiGenerated: true
@@ -82,7 +82,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-5.MessageFormat/MessageFormat.md:
+5.MessageFormat/knowledge/MessageFormat.md:
   messageformat-model:
     difficulty: BASIC
     aiGenerated: true
@@ -108,7 +108,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-6.NumberFormatting/NumberFormatting.md:
+6.NumberFormatting/knowledge/NumberFormatting.md:
   number-format:
     difficulty: BASIC
     aiGenerated: true
@@ -134,7 +134,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-7.Currency/Currency.md:
+7.Currency/knowledge/Currency.md:
   currency-model:
     difficulty: BASIC
     aiGenerated: true
@@ -155,7 +155,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-8.Collator/Collator.md:
+8.Collator/knowledge/Collator.md:
   collator-model:
     difficulty: BASIC
     aiGenerated: true
@@ -176,7 +176,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-9.DateTimeLocalization/DateTimeLocalization.md:
+9.DateTimeLocalization/knowledge/DateTimeLocalization.md:
   localized-date-format:
     difficulty: BASIC
     aiGenerated: true
@@ -207,7 +207,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-10.TextSegmentation/TextSegmentation.md:
+10.TextSegmentation/knowledge/TextSegmentation.md:
   breakiterator-model:
     difficulty: BASIC
     aiGenerated: true
@@ -233,7 +233,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-11.BidirectionalText/BidirectionalText.md:
+11.BidirectionalText/knowledge/BidirectionalText.md:
   bidi-model:
     difficulty: BASIC
     aiGenerated: true
@@ -254,7 +254,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-12.Fallback/Fallback.md:
+12.Fallback/knowledge/Fallback.md:
   bundle-candidate-chain:
     difficulty: BASIC
     aiGenerated: true
@@ -275,7 +275,7 @@
     aiGenerated: true
     reviewed: false
     isImportant: false
-13.LocalePitfalls/LocalePitfalls.md:
+13.LocalePitfalls/knowledge/LocalePitfalls.md:
   default-locale:
     difficulty: BASIC
     aiGenerated: true
