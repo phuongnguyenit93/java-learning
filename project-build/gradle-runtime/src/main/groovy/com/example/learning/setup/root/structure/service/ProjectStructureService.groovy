@@ -332,38 +332,20 @@ ${moduleDirectory.absolutePath}
             node.videoLanguages =
                     findVideoLanguages(
                             directory,
-                            moduleLanguages,
-                            'TRUE'.equalsIgnoreCase(
-                                    getMasterValue(
-                                            master,
-                                            'BUILD_VIDEO'
-                                    )
-                            )
+                            moduleLanguages
                     )
 
 
             node.roadmapLanguages =
                     findRoadmapLanguages(
                             directory,
-                            moduleLanguages,
-                            !'FALSE'.equalsIgnoreCase(
-                                    getMasterValue(
-                                            master,
-                                            'BUILD_ROADMAP'
-                                    )
-                            )
+                            moduleLanguages
                     )
 
 
             node.referenceAvailable =
                     hasAuthoredReference(
-                            directory,
-                            !'FALSE'.equalsIgnoreCase(
-                                    getMasterValue(
-                                            master,
-                                            'BUILD_REFERENCE'
-                                    )
-                            )
+                            directory
                     )
 
 
@@ -378,12 +360,6 @@ ${moduleDirectory.absolutePath}
                     findQuestionCounts(
                             directory,
                             moduleLanguages,
-                            'TRUE'.equalsIgnoreCase(
-                                    getMasterValue(
-                                            master,
-                                            'BUILD_QUIZ'
-                                    )
-                            ),
                             'quiz'
                     )
 
@@ -392,12 +368,6 @@ ${moduleDirectory.absolutePath}
                     findQuestionCounts(
                             directory,
                             moduleLanguages,
-                            'TRUE'.equalsIgnoreCase(
-                                    getMasterValue(
-                                            master,
-                                            'BUILD_INTERVIEW'
-                                    )
-                            ),
                             'interview'
                     )
         }
@@ -1030,14 +1000,8 @@ ${moduleDirectory.absolutePath}
 
     private static Set<String> findRoadmapLanguages(
             File moduleDirectory,
-            List<String> moduleLanguages,
-            boolean roadmapEnabled
+            List<String> moduleLanguages
     ) {
-
-        if (!roadmapEnabled) {
-            return [] as Set<String>
-        }
-
 
         File roadmapDirectory =
                 new File(
@@ -1067,7 +1031,7 @@ ${moduleDirectory.absolutePath}
 
                 if (
                         roadmapFile.isFile() &&
-                                containsRoadmapMilestone(
+                                PortalRoadmapProjectionService.hasAuthoredRoadmap(
                                         roadmapFile
                                 )
                 ) {
@@ -1084,14 +1048,8 @@ ${moduleDirectory.absolutePath}
 
     private static Set<String> findVideoLanguages(
             File moduleDirectory,
-            List<String> moduleLanguages,
-            boolean videoEnabled
+            List<String> moduleLanguages
     ) {
-
-        if (!videoEnabled) {
-            return [] as Set<String>
-        }
-
 
         Set<String> result =
                 new LinkedHashSet<>()
@@ -1123,14 +1081,8 @@ ${moduleDirectory.absolutePath}
 
 
     private static boolean hasAuthoredReference(
-            File moduleDirectory,
-            boolean referenceEnabled
+            File moduleDirectory
     ) {
-
-        if (!referenceEnabled) {
-            return false
-        }
-
 
         File referenceFile =
                 new File(
@@ -1144,53 +1096,32 @@ ${moduleDirectory.absolutePath}
         }
 
 
-        return referenceFile
-                .getText('UTF-8')
-                .readLines()
-                .any {
-                    String line ->
-
-                    String trimmed =
-                            line.trim()
-
-
-                    !trimmed.startsWith('#') &&
-                            trimmed ==~ /^-\s+title:\s*.+$/
-                }
+        return PortalReferenceProjectionService.hasAuthoredReferences(referenceFile)
     }
 
 
     private static boolean containsAuthoredVideo(File directory) {
-        File[] children = directory.listFiles()
-        if (children == null) return false
-        for (File child : children) {
-            if (child.isDirectory()) {
-                if (containsAuthoredVideo(child)) return true
-                continue
-            }
-            if (child.isFile() && child.name == 'video-script.yml' &&
-                    child.parentFile.name == 'video' &&
-                    child.parentFile.parentFile.name ==~ /[1-9][0-9]*\.[A-Za-z][A-Za-z0-9]*/) {
-                com.example.learning.utils.schema.validate.VideoYamlContentUtils.parse(
-                        child.getText('UTF-8'))
-                return true
-            }
+        File[] chapters = directory.listFiles()
+        if (chapters == null) {
+            throw new GradleException("Unable to list Video chapters: ${directory.absolutePath}")
         }
-        return false
-    }
-
-    private static boolean containsRoadmapMilestone(
-            File roadmapFile
-    ) {
-
-        return roadmapFile
-                .getText('UTF-8')
-                .readLines()
-                .any {
-                    String line ->
-
-                        line ==~ /^\s*-\s+id:\s*.+$/
-                }
+        Set<String> chapterIds = new LinkedHashSet<>()
+        boolean found = false
+        chapters.findAll { File chapter ->
+            chapter.isDirectory() && chapter.name ==~ /[1-9][0-9]*\.[A-Za-z][A-Za-z0-9]*/
+        }.each { File chapter ->
+            File script = new File(chapter, 'video/video-script.yml')
+            if (!script.isFile()) return
+            String id = com.example.learning.utils.schema.validate.VideoYamlContentUtils
+                    .categoryId(script).toLowerCase(Locale.ROOT)
+            if (!chapterIds.add(id)) {
+                throw new GradleException("Duplicate authored Video category: ${id} in ${directory}")
+            }
+            com.example.learning.utils.schema.validate.VideoYamlContentUtils.parse(
+                    script.getText('UTF-8'))
+            found = true
+        }
+        return found
     }
 
 
@@ -1256,11 +1187,8 @@ ${moduleDirectory.absolutePath}
     private static Map<String, Integer> findQuestionCounts(
             File moduleDirectory,
             List<String> moduleLanguages,
-            boolean enabled,
             String kind
     ) {
-        if (!enabled) return [:]
-
         Map<String, Integer> counts = new LinkedHashMap<>()
         moduleLanguages.each { String language ->
             File menu = new File(moduleDirectory, "content/readme/docs/${language}/menu")
@@ -1271,6 +1199,7 @@ ${moduleDirectory.absolutePath}
             }
 
             int total = 0
+            Set<String> quizIds = new LinkedHashSet<>()
             chapters.findAll { File chapter ->
                 chapter.isDirectory() && chapter.name ==~ /\d+\..+/
             }.each { File chapter ->
@@ -1285,7 +1214,18 @@ ${moduleDirectory.absolutePath}
                 if (!(document instanceof Map) || !((document as Map).questions instanceof List)) {
                     throw new GradleException("Invalid ${kind} questions root: ${source}")
                 }
-                total += ((document as Map).questions as List).size()
+                ContractSchemaValidateUtils.validateData(kind, document)
+                List questions = ((document as Map).questions as List)
+                if (kind == 'quiz') {
+                    questions.each { Map question ->
+                        String id = question.id.toString().trim()
+                        if (!quizIds.add(id)) {
+                            throw new GradleException(
+                                    "Duplicate Quiz id '${id}' across chapters in ${menu}")
+                        }
+                    }
+                }
+                total += questions.size()
             }
             if (total > 0) counts[language] = total
         }

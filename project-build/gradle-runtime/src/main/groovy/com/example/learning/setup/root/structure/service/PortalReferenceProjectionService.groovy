@@ -2,7 +2,6 @@ package com.example.learning.setup.root.structure.service
 
 import com.example.learning.utils.schema.validate.ContractSchemaValidateUtils
 import com.example.learning.utils.GradleBuildUtils
-import com.example.learning.utils.ProjectPropertyUtils
 import org.gradle.api.GradleException
 import org.gradle.api.Project
 import org.gradle.api.logging.Logger
@@ -28,8 +27,6 @@ class PortalReferenceProjectionService {
 
     private final Logger logger
 
-    private final Yaml yamlReader
-
 
     PortalReferenceProjectionService(
             Logger logger
@@ -39,8 +36,6 @@ class PortalReferenceProjectionService {
                 logger
 
 
-        this.yamlReader =
-                new Yaml()
     }
 
 
@@ -83,15 +78,6 @@ class PortalReferenceProjectionService {
         ).each {
             Project moduleProject ->
 
-            if (
-                    !ProjectPropertyUtils.isEnabled(
-                            moduleProject,
-                            'BUILD_REFERENCE'
-                    )
-            ) {
-                return
-            }
-
 
             File referenceFile =
                     new File(
@@ -105,7 +91,7 @@ class PortalReferenceProjectionService {
             }
 
 
-            if (!validateAndHasReferences(referenceFile)) {
+            if (!hasAuthoredReferences(referenceFile)) {
                 return
             }
 
@@ -153,16 +139,17 @@ class PortalReferenceProjectionService {
     }
 
 
-    private boolean validateAndHasReferences(
+    static boolean hasAuthoredReferences(
             File referenceFile
     ) {
+        if (!referenceFile.isFile()) return false
 
         Object document
 
 
         try {
             document =
-                    yamlReader.load(
+                    new Yaml().load(
                             referenceFile.getText('UTF-8')
                     )
         }
@@ -279,11 +266,10 @@ class PortalReferenceProjectionService {
             File moduleRoot
     ) {
 
+        // Windows ProjectBuilder may spell a child projectDir with an 8.3
+        // short path while the module root uses its long path.
         Path moduleRootPath =
-                moduleRoot
-                        .toPath()
-                        .toAbsolutePath()
-                        .normalize()
+                moduleRoot.canonicalFile.toPath()
 
 
         return rootProject
@@ -292,11 +278,7 @@ class PortalReferenceProjectionService {
                     Project candidate ->
 
                     Path projectPath =
-                            candidate
-                                    .projectDir
-                                    .toPath()
-                                    .toAbsolutePath()
-                                    .normalize()
+                            candidate.projectDir.canonicalFile.toPath()
 
 
                     projectPath.startsWith(

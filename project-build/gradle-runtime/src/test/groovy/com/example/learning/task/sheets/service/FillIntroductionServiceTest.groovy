@@ -14,7 +14,7 @@ class FillIntroductionServiceTest {
         File root = temporary.newFolder('repo')
         File module = new File(root, 'module/example')
         assertTrue(module.mkdirs())
-        new File(module, 'gradle.properties').text = 'BUILD_README=TRUE\n'
+        new File(module, 'gradle.properties').text = ''
         File output = new File(module, 'content/readme/docs/vi/BASE.md')
         String markdown = '# Module Introduction\n\nLearning goals.\n'
 

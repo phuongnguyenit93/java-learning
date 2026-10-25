@@ -65,28 +65,17 @@ class PortalRoadmapProjectionService {
         Set<String> routeIds =
                 new LinkedHashSet<>()
 
-
         resolveRealModuleProjects(
                 rootProject,
                 moduleRoot
         ).each {
             Project moduleProject ->
 
-            if (
-                    !ProjectPropertyUtils.isEnabled(
-                            moduleProject,
-                            'BUILD_ROADMAP'
-                    )
-            ) {
-                return
-            }
-
 
             List<LanguageSource> sources =
                     resolveLanguageSources(
                             moduleProject
                     )
-
 
             if (sources.isEmpty()) {
                 return
@@ -119,9 +108,6 @@ class PortalRoadmapProjectionService {
                     )
                 }
 
-
-                Object authored = new Yaml().load(source.roadmapFile.getText('UTF-8'))
-                ContractSchemaValidateUtils.validateData('roadmap', authored)
 
                 outputs[relativeOutput] =
                         Files.readAllBytes(
@@ -203,16 +189,32 @@ class PortalRoadmapProjectionService {
                     }
 
 
-                    result.add(
-                            new LanguageSource(
-                                    language,
-                                    roadmapFile
-                            )
-                    )
+                    if (hasAuthoredRoadmap(roadmapFile)) {
+                        result.add(new LanguageSource(language, roadmapFile))
+                    }
                 }
 
 
         return result
+    }
+
+    /**
+     * Validate authored Roadmap YAML and require at least one actual milestone.
+     * A comment-only file or an empty roadmap array is a skeleton.
+     */
+    static boolean hasAuthoredRoadmap(File roadmapFile) {
+        if (!roadmapFile.isFile()) return false
+        Object authored
+        try {
+            authored = new Yaml().load(roadmapFile.getText('UTF-8'))
+        } catch (Exception exception) {
+            throw new GradleException("Invalid Roadmap YAML: ${roadmapFile.absolutePath}", exception)
+        }
+        if (authored == null) return false
+        ContractSchemaValidateUtils.validateData('roadmap', authored)
+        return authored instanceof Map &&
+                (authored as Map).roadmap instanceof List &&
+                !((authored as Map).roadmap as List).isEmpty()
     }
 
 
@@ -221,11 +223,11 @@ class PortalRoadmapProjectionService {
             File moduleRoot
     ) {
 
+        // Gradle ProjectBuilder on Windows can return 8.3 short paths for
+        // child projectDir while rootProject.projectDir uses the long path.
+        // Compare canonical paths rather than their different spellings.
         Path moduleRootPath =
-                moduleRoot
-                        .toPath()
-                        .toAbsolutePath()
-                        .normalize()
+                moduleRoot.canonicalFile.toPath()
 
 
         return rootProject
@@ -234,11 +236,7 @@ class PortalRoadmapProjectionService {
                     Project candidate ->
 
                     Path projectPath =
-                            candidate
-                                    .projectDir
-                                    .toPath()
-                                    .toAbsolutePath()
-                                    .normalize()
+                            candidate.projectDir.canonicalFile.toPath()
 
 
                     projectPath.startsWith(

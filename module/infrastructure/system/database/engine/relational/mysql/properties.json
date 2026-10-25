@@ -18,9 +18,6 @@
             "VALUE": ""
         }
     },
-    "README": {
-
-    },
     "DATABASE_MODULE": {
         "DATABASE_MODULE_NAME": {
             "DESCRIPTION": "Name of database you are using",

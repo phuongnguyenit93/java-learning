@@ -23,18 +23,12 @@ class ContentSkeletonPathsTest {
         File moduleDir = temporary.newFolder('module')
         def project = ProjectBuilder.builder().withProjectDir(moduleDir).build()
         project.ext.MODULE_LANGUAGE = 'vi,en'
-        for (String feature in [
-                'BUILD_README', 'BUILD_QUIZ', 'BUILD_INTERVIEW',
-                'BUILD_ROADMAP', 'BUILD_REFERENCE', 'BUILD_VIDEO'
-        ]) {
-            project.extensions.extraProperties.set(feature, 'TRUE')
-        }
 
         new ReadmeStructureService(project.logger).setup(project)
         for (String language in ['vi', 'en']) {
             File doc = new File(
                     moduleDir,
-                    "content/readme/docs/${language}/menu/1.Basic/Basic.md"
+                    "content/readme/docs/${language}/menu/1.Basic/knowledge/Basic.md"
             )
             assertTrue(doc.parentFile.mkdirs())
             doc.setText('# Basic\n\n## <a id="basic-001">Overview</a>\n', 'UTF-8')
@@ -73,7 +67,6 @@ class ContentSkeletonPathsTest {
         File moduleDir = temporary.newFolder('authored-roadmap-module')
         def project = ProjectBuilder.builder().withProjectDir(moduleDir).build()
         project.ext.MODULE_LANGUAGE = 'vi,en'
-        project.ext.BUILD_ROADMAP = 'TRUE'
         File authored = new File(moduleDir, 'content/roadmap/vi/roadmap.yml')
         assertTrue(authored.parentFile.mkdirs())
         String original = '# authored manually without generated markers\nroadmap: []\n'
@@ -87,23 +80,22 @@ class ContentSkeletonPathsTest {
 
         File emptyModule = temporary.newFolder('new-roadmap-module')
         def newProject = ProjectBuilder.builder().withProjectDir(emptyModule).build()
-        newProject.ext.BUILD_ROADMAP = 'TRUE'
         new RoadmapStructureService(newProject.logger).setup(newProject)
         assertTrue(new File(emptyModule, 'content/roadmap').isDirectory())
         assertEquals(0, new File(emptyModule, 'content/roadmap').listFiles().length)
 
-        File disabledModule = temporary.newFolder('disabled-roadmap-module')
-        def disabledProject = ProjectBuilder.builder().withProjectDir(disabledModule).build()
-        disabledProject.ext.BUILD_ROADMAP = 'FALSE'
-        new RoadmapStructureService(disabledProject.logger).setup(disabledProject)
-        assertFalse(new File(disabledModule, 'content').exists())
+        File noPropertiesModule = temporary.newFolder('no-properties-roadmap-module')
+        def noPropertiesProject = ProjectBuilder.builder()
+                .withProjectDir(noPropertiesModule).build()
+        new RoadmapStructureService(noPropertiesProject.logger).setup(noPropertiesProject)
+        assertTrue(new File(noPropertiesModule, 'content/roadmap').isDirectory())
+        assertEquals(0, new File(noPropertiesModule, 'content/roadmap').listFiles().length)
     }
 
     @Test
     void roadmapSetupDoesNotOverwriteConflictingContentFile() {
         File moduleDir = temporary.newFolder('conflicting-roadmap-module')
         def project = ProjectBuilder.builder().withProjectDir(moduleDir).build()
-        project.ext.BUILD_ROADMAP = 'TRUE'
         File content = new File(moduleDir, 'content')
         assertTrue(content.mkdirs())
         File conflicting = new File(content, 'roadmap')
@@ -118,12 +110,51 @@ class ContentSkeletonPathsTest {
     }
 
     @Test
-    void quizAndInterviewSetupOnlyEnsureDirectoriesAndPreserveAuthoredFiles() {
+    void referenceSetupCreatesOnceAndNeverReplacesAuthoredContent() {
+        File moduleDir = temporary.newFolder('reference-module')
+        def project = ProjectBuilder.builder().withProjectDir(moduleDir).build()
+        def setup = new ReferenceStructureService(project.logger)
+        File references = new File(moduleDir, 'content/reference/references.yml')
+
+        setup.setup(project)
+        assertTrue(references.isFile())
+        byte[] skeleton = references.bytes
+        setup.setup(project)
+        assertArrayEquals(skeleton, references.bytes)
+
+        String authored = 'references:\n  - title: Existing source\n    url: https://example.org\n'
+        references.setText(authored, 'UTF-8')
+        setup.setup(project)
+        assertEquals(authored, references.getText('UTF-8'))
+    }
+
+    @Test
+    void readmeSetupKeepsAuthoredLanguagesAndDoesNotPruneEmptyOtherLanguageTrees() {
+        File moduleDir = temporary.newFolder('readme-module')
+        def project = ProjectBuilder.builder().withProjectDir(moduleDir).build()
+        project.ext.MODULE_LANGUAGE = 'vi'
+        File enMenu = new File(moduleDir, 'content/readme/docs/en/menu')
+        assertTrue(enMenu.mkdirs())
+        File englishBase = new File(enMenu.parentFile, 'BASE.md')
+        englishBase.setText('# Existing English draft\n', 'UTF-8')
+        File viBase = new File(moduleDir, 'content/readme/docs/vi/BASE.md')
+
+        def setup = new ReadmeStructureService(project.logger)
+        setup.setup(project)
+        assertTrue(viBase.isFile())
+        viBase.setText('# Vietnamese authored introduction\n', 'UTF-8')
+        setup.setup(project)
+
+        assertEquals('# Vietnamese authored introduction\n', viBase.getText('UTF-8'))
+        assertEquals('# Existing English draft\n', englishBase.getText('UTF-8'))
+        assertTrue('Unused language trees are not deleted during sync', enMenu.isDirectory())
+    }
+
+    @Test
+    void quizAndInterviewLegacySetupOnlyValidatesPathsAndPreservesAuthoredFiles() {
         File moduleDir = temporary.newFolder('authored-module')
         def project = ProjectBuilder.builder().withProjectDir(moduleDir).build()
         project.ext.MODULE_LANGUAGE = 'vi,en'
-        project.ext.BUILD_QUIZ = 'TRUE'
-        project.ext.BUILD_INTERVIEW = 'TRUE'
 
         File quizFile = new File(moduleDir, 'content/quiz/vi/question.yml')
         File interviewFile = new File(moduleDir, 'content/interview/vi/question.yml')
@@ -146,22 +177,18 @@ class ContentSkeletonPathsTest {
         assertFalse(new File(moduleDir, 'content/quiz/en').exists())
         assertFalse(new File(moduleDir, 'content/interview/en').exists())
 
-        // BUILD is a feature switch: FALSE does not create even the folder.
-        File disabledModule = temporary.newFolder('disabled-module')
-        def disabledProject = ProjectBuilder.builder().withProjectDir(disabledModule).build()
-        disabledProject.ext.BUILD_QUIZ = 'FALSE'
-        disabledProject.ext.BUILD_INTERVIEW = 'FALSE'
-        new QuizStructureService(disabledProject.logger).setup(disabledProject)
-        new InterviewStructureService(disabledProject.logger).setup(disabledProject)
-        assertFalse(new File(disabledModule, 'content').exists())
+        // Neither setup creates a legacy folder on a new module.
+        File newModule = temporary.newFolder('new-question-module')
+        def newProject = ProjectBuilder.builder().withProjectDir(newModule).build()
+        new QuizStructureService(newProject.logger).setup(newProject)
+        new InterviewStructureService(newProject.logger).setup(newProject)
+        assertFalse(new File(newModule, 'content').exists())
     }
 
     @Test
     void refusesReplacingExistingFilesWithFeatureFolders() {
         File moduleDir = temporary.newFolder('conflicting-module')
         def project = ProjectBuilder.builder().withProjectDir(moduleDir).build()
-        project.ext.BUILD_QUIZ = 'TRUE'
-        project.ext.BUILD_INTERVIEW = 'TRUE'
         File content = new File(moduleDir, 'content')
         assertTrue(content.mkdirs())
         File quizPath = new File(content, 'quiz')

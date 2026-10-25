@@ -1,6 +1,5 @@
 package com.example.learning.setup.module.interview.service
 
-import com.example.learning.utils.ProjectPropertyUtils
 import org.gradle.api.GradleException
 import org.gradle.api.Project
 import org.gradle.api.logging.Logger
@@ -19,15 +18,12 @@ class InterviewStructureService {
     }
 
     void setup(Project project) {
-        if (!ProjectPropertyUtils.isEnabled(project, 'BUILD_INTERVIEW')) {
-            logger.info('[INTERVIEW-STRUCTURE] Skip {} because BUILD_INTERVIEW != TRUE.', project.path)
-            return
-        }
-
         File directory = new File(project.projectDir, 'content/interview')
         if (directory.exists() && !directory.isDirectory()) {
             throw new GradleException("Interview content path is not a directory: ${directory.absolutePath}")
         }
         // Existing legacy content is retained for migration/review, not mutated.
+        logger.info('[INTERVIEW-STRUCTURE] Preserve legacy content for {} without creating folders.',
+                project.path)
     }
 }

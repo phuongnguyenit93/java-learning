@@ -25,26 +25,6 @@ class ReadmeStructureService {
     ) {
 
         // ====================================================
-        // BUILD_README
-        // ====================================================
-
-        if (
-                !ProjectPropertyUtils.isEnabled(
-                        project,
-                        'BUILD_README'
-                )
-        ) {
-
-            logger.info(
-                    '[README-STRUCTURE] Skip {} because BUILD_README != TRUE.',
-                    project.path
-            )
-
-            return
-        }
-
-
-        // ====================================================
         // Root README.md
         // ====================================================
 
@@ -96,14 +76,8 @@ class ReadmeStructureService {
         }
 
 
-        // ====================================================
-        // Cleanup
-        // ====================================================
-
-        cleanupUnusedLanguages(
-                project,
-                languages
-        )
+        // Never delete existing language trees during Gradle configuration.
+        // Authored content and language pruning belong to explicit workflows.
     }
 
 

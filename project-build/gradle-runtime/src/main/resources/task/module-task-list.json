@@ -1,6 +1,6 @@
 [
   {"type": "env", "propCheck": "BUILD_ENV"},
-  {"type": "readme", "propCheck": "BUILD_README"},
+  {"type": "readme", "propCheck": ""},
   {"type": "sheets", "propCheck": ""},
   {"type": "yml", "propCheck": "BUILD_YML"},
   {"type": "intellij", "propCheck": ""},

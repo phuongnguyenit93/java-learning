@@ -21,7 +21,7 @@ class PortalInterviewProjectionService {
     }
 
     void generate(Project rootProject) {
-        ChapterQuestionProjectionSupport.generate(rootProject, 'interview', 'BUILD_INTERVIEW', logger)
+        ChapterQuestionProjectionSupport.generate(rootProject, 'interview', logger)
     }
 }
 
@@ -34,7 +34,7 @@ class ChapterQuestionProjectionSupport {
     private static final String OUTPUT_DIRECTORY = LearningDataPaths.MODULE_DIRECTORY
     private static final String QUESTION_FILE = 'question.yml'
 
-    static void generate(Project rootProject, String kind, String flag, Logger logger,
+    static void generate(Project rootProject, String kind, Logger logger,
                          Closure questionValidator = null) {
         File moduleRoot = new File(rootProject.projectDir, 'module')
         if (!moduleRoot.isDirectory()) {
@@ -52,14 +52,12 @@ class ChapterQuestionProjectionSupport {
         }.sort { Project left, Project right ->
             left.projectDir.absolutePath <=> right.projectDir.absolutePath
         }.each { Project module ->
-            if (!ProjectPropertyUtils.isEnabled(module, flag)) return
-
             String routeId = (module.findProperty('SERVICE_NAME') ?: module.projectDir.name)
                     .toString().trim()
             List<String> languages = ProjectPropertyUtils.getStringList(module, 'MODULE_LANGUAGE')
                     .collect { String language -> language.toLowerCase(Locale.ROOT) }
                     .unique()
-            boolean hasSource = false
+            boolean hasQuestions = false
 
             languages.each { String language ->
                 File menu = new File(module.projectDir, "content/readme/docs/${language}/menu")
@@ -69,17 +67,14 @@ class ChapterQuestionProjectionSupport {
                 Set<String> quizIds = new LinkedHashSet<>()
                 Map<String, Map<String, List<String>>> anchorCache = new LinkedHashMap<>()
                 int total = 0
-                boolean hasLanguageSource = false
-
                 chapters.each { File chapter ->
                     File source = new File(chapter, "${kind}/${QUESTION_FILE}")
                     if (!source.isFile()) return
-                    hasSource = true
-                    hasLanguageSource = true
 
                     Map document = readAndValidate(source, kind)
                     List questions = document.questions as List
                     if (questions.isEmpty()) return
+                    hasQuestions = true
 
                     questions.eachWithIndex { Object rawQuestion, int questionIndex ->
                         Map question = rawQuestion as Map
@@ -112,10 +107,9 @@ class ChapterQuestionProjectionSupport {
                     total += questions.size()
                 }
 
-                // An empty authored skeleton creates no published chapter.
-                // An index with no chapters is harmless, but catalog visibility
-                // only advertises languages with actual questions.
-                if (hasLanguageSource) {
+                // Skip empty authored skeletons entirely; availability in the
+                // module catalog follows only published question content.
+                if (total > 0) {
                     putOutput(outputs, "${routeId}/${kind}/${language}/index.json",
                             JsonOutput.prettyPrint(JsonOutput.toJson([
                                     chapters      : indexChapters,
@@ -123,7 +117,7 @@ class ChapterQuestionProjectionSupport {
                             ])) + '\n')
                 }
             }
-            if (hasSource && !routes.add(routeId)) {
+            if (hasQuestions && !routes.add(routeId)) {
                 throw new GradleException("Duplicate Portal ${kind} route identifier: ${routeId}")
             }
         }

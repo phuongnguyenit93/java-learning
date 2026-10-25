@@ -1,6 +1,5 @@
 package com.example.learning.setup.module.reference.service
 
-import com.example.learning.utils.ProjectPropertyUtils
 import org.gradle.api.GradleException
 import org.gradle.api.Project
 import org.gradle.api.logging.Logger
@@ -47,24 +46,6 @@ class ReferenceStructureService {
     void setup(
             Project project
     ) {
-
-        if (
-                !ProjectPropertyUtils.isEnabled(
-                        project,
-                        'BUILD_REFERENCE'
-                )
-        ) {
-
-            logger.info(
-                    '[REFERENCE-STRUCTURE] Skip {} because BUILD_REFERENCE != TRUE.',
-                    project.path
-            )
-
-
-            return
-        }
-
-
         File referenceFile =
                 new File(
                         project.projectDir,

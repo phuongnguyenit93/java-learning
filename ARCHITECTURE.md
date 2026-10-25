@@ -122,15 +122,13 @@ relatedModules
 
 Milestone/order phải được thiết kế và approve độc lập trước. Với legacy content, mapping `relatedKnowledge` tạm thời sang category cũ được phép để migrate Portal nhưng không được reverse-engineer roadmap từ mapping đó.
 
-Roadmap setup hiện follow module capability flow:
+Roadmap setup không phụ thuộc flag riêng:
 
 ```text
-automation/master.json
-→ BUILD_ROADMAP (default TRUE)
-→ MODULE_LANGUAGE
-→ ModuleOrchestrationPlugin
-→ RoadmapSetupPlugin
-→ roadmap/<language>/roadmap.yml
+MODULE_LANGUAGE
+→ RoadmapSetupPlugin (chỉ tạo cấu trúc chung, không ghi đè bài)
+→ content/roadmap/<language>/roadmap.yml (do STEP 2/importer author)
+→ Portal tự phát hiện Roadmap YAML hợp lệ
 ```
 
 Mỗi language roadmap tự sở hữu curriculum của nó; Gradle chỉ tạo/sync generated schema comment và không overwrite phần `roadmap:` do human/AI viết.
@@ -221,7 +219,7 @@ Ví dụ:
 
 ```text
 ModuleOrchestrationPlugin
-        ↓ quyết định BUILD_README có bật hay không
+        ↓ luôn áp dụng setup cơ bản cho module thực
 ReadmeSetupPlugin
         ↓ wiring lifecycle
 Readme service
@@ -375,11 +373,11 @@ Condition chính:
 | Capability | Condition |
 | --- | --- |
 | ENV | `BUILD_ENV=TRUE` hoặc `BUILD_ENV_PROFILE=TRUE` |
-| README | `BUILD_README=TRUE` |
-| Video | `BUILD_VIDEO=TRUE` |
+| README | setup mặc định cho module; nội dung dựa trên Knowledge có thật |
+| Video | Video YAML hợp lệ tại `<chapter>/video/video-script.yml` |
 | Swagger | `BUILD_SWAGGER=TRUE` |
-| Quiz | `BUILD_QUIZ=TRUE` |
-| Interview | `BUILD_INTERVIEW=TRUE` |
+| Quiz | Có câu hỏi Quiz hợp lệ ở thư mục chương |
+| Interview | Có câu hỏi Interview hợp lệ ở thư mục chương |
 | Execution Context | `BUILD_EXECUTION_CONTEXT=TRUE` |
 | Task system | `USE_TASK=TRUE` |
 | Docker | `docker-compose.yml` tồn tại |
@@ -494,18 +492,18 @@ real module discovered
         ↓ ModuleConfigurationSyncService
 master.json + properties.json synchronized
         ↓ module-owned VALUE configuration
-BUILD_README=TRUE
+MODULE_LANGUAGE + module đã đăng ký
         ↓ module orchestration / ReadmeSetupPlugin
 content/readme/docs/{lang}/menu/<chapter>/knowledge/*.md
         ↓ optional STEP_OPTIONAL_VIDEO after STEP_FINAL
 <chapter>/video/video-script.yml (authored via Sheet X:AA)
-        ↓ BUILD_VIDEO=TRUE after Video QA
+        ↓ authored Video YAML hợp lệ sau Video QA
 Portal Video index.json + content/{categoryId}/script.json
 ```
 
 `ModuleListEnum`, `module-structure.txt`, `STRUCTURE.md` và các generated registry/structure outputs khác nằm phía generator; bootstrap module không được coi các file này là canonical input để sửa tay.
 
-Concept-oriented module có thể bắt đầu ở `MODULE_TYPE=LIBRARY` với chỉ README capability. Không bắt buộc phải có Java source, module-local `build.gradle`, Video, Swagger, Quiz hay Interview ngay trong phase dựng curriculum skeleton. `BUILD_VIDEO` chỉ nên bật sau khi README menu đã có Markdown chapter thực tế; Video setup cố ý fail nếu source README menu không tồn tại hoặc không có Markdown để tránh tạo presentation artifact không có Knowledge source.
+Concept-oriented module có thể bắt đầu ở `MODULE_TYPE=LIBRARY` với chỉ README capability. Không bắt buộc phải có Java source, module-local `build.gradle`, Video, Swagger, Quiz hay Interview ngay trong phase dựng curriculum skeleton. Video chỉ xuất hiện khi có YAML được author/QA thực tế trong Menu; không cần flag hay Video skeleton khi Gradle Sync.
 
 Current technical caveat: nếu `SERVICE_NAME` còn blank, settings info generation fallback sang directory name rồi validate nó theo enum-constant format. Vì vậy directory mới có dấu `-` sẽ fail bootstrap trước khi có `SERVICE_NAME` hợp lệ. Workaround hiện tại là sync lần đầu bằng tên thư mục tạm hợp lệ theo enum, set stable `SERVICE_NAME`, rename về final taxonomy path, rồi chạy Gradle lại. Đây là bootstrap implementation detail, không phải requirement rằng learning directory phải dùng underscore.
 
@@ -557,8 +555,6 @@ SERVICE_NAME_DESCRIBE
 IS_MODULE_DEPEND
 BUILD_ENV
 BUILD_YML
-BUILD_README
-BUILD_VIDEO
 BUILD_TESTER
 BUILD_SWAGGER
 BUILD_EXECUTION_CONTEXT
@@ -867,7 +863,7 @@ USE_TASK=TRUE
         ↓
 Task dispatcher active
 
-BUILD_README=TRUE
+README task không còn cần flag
         ↓
 README task capability active
 
@@ -935,7 +931,7 @@ Implementation: `project-build/gradle-runtime/src/main/groovy/com/example/learni
 - readme/vi/menu: tạo toàn bộ README từ Menu A:B và Knowledge C:N (12 ô/hàng);
 - video của từng chương tại `content/readme/docs/vi/menu/<chapter>/video/video-script.yml`: lấy script `X:AA` trên hàng Menu cấp 1, chỉ thay các file Video đã được preflight theo ownership và dọn orphan Video cũ; không đụng Knowledge/Metadata/Quiz/Interview.
 
-Importer Video preflight toàn tab rồi stage từng chương và thay snapshot chỉ cho file `video/video-script.yml`; rollback nếu commit lỗi. **Không bao giờ xóa nguyên cây Menu**; không đụng roadmap/en, docs/en, BASE/LIST, Knowledge, Metadata, Interview, Quiz hoặc Sheet. Video importer không tự bật BUILD_VIDEO hoặc chạy Portal projection; Video trống là optional. Các importer có chính sách ownership riêng, không được sao chép cơ chế xóa toàn thư mục của service khác.
+Importer Video preflight toàn tab rồi stage từng chương và thay snapshot chỉ cho file `video/video-script.yml`; rollback nếu commit lỗi. **Không bao giờ xóa nguyên cây Menu**; không đụng roadmap/en, docs/en, BASE/LIST, Knowledge, Metadata, Interview, Quiz hoặc Sheet. Video importer không chạy Portal projection; Portal tự phát hiện file Video hợp lệ ở bước build. Video trống là optional.
 Current workflow: STEP 5 owns chapter filenames and Java skeletons; STEP 6 implements Java APIs; STEP 7 authors Swagger VI/EN; STEP 8 is unassigned. STEP 9 generates Interview YAML (P:S) from each Menu Cấp 1, with Normalize/import after worker+Prime QA; STEP 10 generates Quiz YAML (T:W) including A/B/C/D answers/explanations and correctAnswerId, with deterministic Normalize/import; STEP 11 enriches related metadata. STEP_OPTIONAL_VIDEO creates Video VI (X:AA) and STEP_OPTIONAL_VIDEO_TRANSLATE handles EN only after STEP_FINAL. Each authoring STEP with workers has its matching worker-only file. Reuse sleeping workers, following Mode A/B limits.
 
 | Sheet authoring contract | Đơn vị sở hữu | Nguồn chính | Vùng kết quả |
@@ -1213,16 +1209,14 @@ Video script là **presentation artifact** tách khỏi README/Knowledge. Nó de
 Enablement contract:
 
 ```text
-BUILD_VIDEO=FALSE   # canonical default
-
-BUILD_VIDEO=TRUE
+Authored chapter Video YAML hợp lệ
         ↓
 PortalVideoProjectionService (publication only)
         ↓
 Static index.json + per-chapter script.json
 ```
 
-`BUILD_VIDEO=TRUE` yêu cầu `BUILD_README=TRUE` vì README Menu là structural source of truth. Localized Video structure dùng cùng `MODULE_LANGUAGE`; không có language list riêng.
+Knowledge Menu là structural source of truth; Portal chỉ quét Video trong các `MODULE_LANGUAGE` đã khai báo, không có language list riêng hoặc build flag cho Video.
 
 Canonical path mapping:
 
@@ -1297,7 +1291,7 @@ Về learning dependency, Video script nằm downstream của finalized Knowledg
 
 Canonical unit ở cấp kiến trúc là **một Menu Cấp 1 → một Video YAML optional**, mỗi Menu Cấp 2 là một `sections[]` trong Video theo thứ tự Knowledge. Video nằm ở `content/readme/docs/<lang>/menu/<chapter>/video/video-script.yml`; narration được phép diễn giải/điều phối scene và demo nhưng không được tạo technical claim cạnh tranh với Knowledge. Detailed authoring contract ở `GENERAL_AGENT_RULES.md` và STEP_OPTIONAL_VIDEO.
 
-Current implementation dùng `BUILD_VIDEO` để bật build-time Portal Video projection (không tự tạo skeleton). `PortalVideoProjectionService` đọc authored `content/readme/docs/{lang}/menu/<chapter>/video/video-script.yml`, validate Scene/Transition fields, rồi generate:
+Current implementation tự phát hiện build-time Portal Video projection (không tạo skeleton). `PortalVideoProjectionService` đọc authored `content/readme/docs/{lang}/menu/<chapter>/video/video-script.yml`, validate Scene/Transition fields, rồi generate:
 
 ```text
 build/learning-data/java/module/{ROUTE_ID}/video/{lang}/index.json
@@ -2303,9 +2297,9 @@ trừ khi architecture contract của artifact đó được thay đổi rõ rà
 | Portal module hierarchy/catalog | filesystem/module discovery + module metadata via `ProjectStructureService` | `build/learning-data/java/module-catalog.json` |
 | Portal module Overview | `module/**/readme/{lang}/BASE.md` | `build/learning-data/java/module/{ROUTE_ID}/overview/{lang}.md` |
 | Portal Knowledge | `module/**/readme/{lang}/menu/**/*.md` anchored sections + `src/main/resources/readme/{lang}/knowledge-metadata.yml` governance | `build/learning-data/java/module/{ROUTE_ID}/knowledge/{lang}/...` |
-| Portal Video | authored `module/**/content/readme/docs/{lang}/menu/<chapter>/video/video-script.yml` when `BUILD_VIDEO=TRUE` | `build/learning-data/java/module/{ROUTE_ID}/video/{lang}/index.json` + `content/{categoryId}/script.json` + catalog `video` path |
-| Portal Quiz | `BUILD_QUIZ=TRUE` + `module/**/src/main/resources/quiz/{lang}/question.yml` validated by canonical Quiz schema | `build/learning-data/java/module/{ROUTE_ID}/quiz/{lang}/question.yml` + catalog `quiz` path |
-| Portal Interview | `BUILD_INTERVIEW=TRUE` + `module/**/src/main/resources/interview/{lang}/question.yml` validated by canonical Interview schema | `build/learning-data/java/module/{ROUTE_ID}/interview/{lang}/question.yml` + catalog `interview` path |
+| Portal Video | authored `module/**/content/readme/docs/{lang}/menu/<chapter>/video/video-script.yml` hợp lệ | `build/learning-data/java/module/{ROUTE_ID}/video/{lang}/index.json` + `content/{categoryId}/script.json` + catalog `video` path |
+| Portal Quiz | `content/readme/docs/{lang}/menu/<chapter>/quiz/question.yml` chứa câu hỏi hợp lệ | `build/learning-data/java/module/{ROUTE_ID}/quiz/{lang}/index.json` + chapter `question.yml` + catalog Quiz |
+| Portal Interview | `content/readme/docs/{lang}/menu/<chapter>/interview/question.yml` chứa câu hỏi hợp lệ | `build/learning-data/java/module/{ROUTE_ID}/interview/{lang}/index.json` + chapter `question.yml` + catalog Interview |
 | Portal API metadata | complete `module/**/src/main/resources/swagger/{lang}` four-file set | `build/learning-data/java/module/{ROUTE_ID}/api/{lang}/...` + catalog `api` base path |
 | Portal production frontend | React/TypeScript source | Vite `dist` → Spring `classpath:/static` |
 

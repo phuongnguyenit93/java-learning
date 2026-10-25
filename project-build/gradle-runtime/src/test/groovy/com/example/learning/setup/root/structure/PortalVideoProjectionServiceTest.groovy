@@ -25,11 +25,9 @@ class PortalVideoProjectionServiceTest {
         def rootProject = ProjectBuilder.builder().withProjectDir(root).build()
         def module = ProjectBuilder.builder().withParent(rootProject)
                 .withProjectDir(moduleDir).build()
-        module.extensions.extraProperties.set('BUILD_VIDEO', 'TRUE')
         module.extensions.extraProperties.set('MODULE_LANGUAGE', 'vi')
         module.extensions.extraProperties.set('SERVICE_NAME', 'EXAMPLE')
         assertTrue(rootProject.allprojects.contains(module))
-        assertTrue(ProjectPropertyUtils.isEnabled(module, 'BUILD_VIDEO'))
         assertEquals(['vi'], ProjectPropertyUtils.getStringList(module, 'MODULE_LANGUAGE'))
 
         File first = new File(moduleDir, 'content/readme/docs/vi/menu/1.OOPBasic/video/video-script.yml')
@@ -49,10 +47,10 @@ class PortalVideoProjectionServiceTest {
         assertTrue(unrelated.parentFile.mkdirs())
         unrelated.setText('not a Video YAML', 'UTF-8')
         def videoLanguages = ProjectStructureService.getDeclaredMethod(
-                'findVideoLanguages', File, List, Boolean.TYPE)
+                'findVideoLanguages', File, List)
         videoLanguages.accessible = true
-        assertEquals(['vi'] as Set, videoLanguages.invoke(null, moduleDir, ['vi'], true) as Set)
-        assertTrue((videoLanguages.invoke(null, moduleDir, ['vi'], false) as Set).isEmpty())
+        assertEquals(['vi'] as Set, videoLanguages.invoke(null, moduleDir, ['vi']) as Set)
+        assertTrue((videoLanguages.invoke(null, moduleDir, ['en']) as Set).isEmpty())
         assertTrue(first.isFile())
         assertTrue(second.isFile())
         assertTrue(rootProject.allprojects.any { p ->
@@ -95,6 +93,6 @@ class PortalVideoProjectionServiceTest {
         projector.generate(rootProject)
         assertFalse(indexFile.exists())
         assertFalse(new File(resultRoot, 'content/OOPBasic/script.json').exists())
-        assertTrue((videoLanguages.invoke(null, moduleDir, ['vi'], true) as Set).isEmpty())
+        assertTrue((videoLanguages.invoke(null, moduleDir, ['vi']) as Set).isEmpty())
     }
 }

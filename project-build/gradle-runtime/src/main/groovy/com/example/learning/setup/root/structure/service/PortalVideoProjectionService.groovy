@@ -41,7 +41,6 @@ class PortalVideoProjectionService {
         }.sort { Project a, Project b ->
             a.projectDir.absolutePath <=> b.projectDir.absolutePath
         }.each { Project module ->
-            if (!ProjectPropertyUtils.isEnabled(module, 'BUILD_VIDEO')) return
             List<String> languages = ProjectPropertyUtils.getStringList(
                     module, 'MODULE_LANGUAGE').collect { String value ->
                 value?.trim()?.toLowerCase(Locale.ROOT)
@@ -54,11 +53,15 @@ class PortalVideoProjectionService {
                 File menu = new File(module.projectDir, "content/readme/docs/${language}/menu")
                 if (!menu.isDirectory()) return
                 List<File> scriptFiles = []
-                menu.eachFileRecurse { File file ->
-                    if (file.isFile() && file.name == VideoYamlContentUtils.FILENAME &&
-                            file.parentFile.name == 'video') {
-                        scriptFiles.add(file)
-                    }
+                File[] chapters = menu.listFiles()
+                if (chapters == null) {
+                    throw new GradleException("Cannot list Portal Video chapters: ${menu}")
+                }
+                chapters.findAll { File chapter ->
+                    chapter.isDirectory() && chapter.name ==~ /[1-9][0-9]*\.[A-Za-z][A-Za-z0-9]*/
+                }.each { File chapter ->
+                    File script = new File(chapter, "video/${VideoYamlContentUtils.FILENAME}")
+                    if (script.isFile()) scriptFiles.add(script)
                 }
                 scriptFiles.each { File file ->
                     VideoYamlContentUtils.categoryId(file)

@@ -426,7 +426,7 @@ thay hoặc xóa nếu Sheet không còn nội dung; không xóa thư mục `men
 Knowledge/Metadata/Interview/Quiz. Nếu ghi dở lỗi phải rollback byte cũ.
 Hàng script trống không có file tương ứng; toàn bộ trống → xóa đúng Video VI
 thuộc ownership. DRY_RUN không ghi. Script lỗi → BLOCKER trước khi xóa.
-Không chỉnh BUILD_VIDEO, Video EN hay Google Sheets.
+Không chỉnh Video EN, Google Sheets hoặc cấu hình kỹ thuật của module.
 
 Tài liệu chính thức: [Application Default Credentials](https://cloud.google.com/docs/authentication/application-default-credentials),
 [Service Account Impersonation](https://cloud.google.com/docs/authentication/use-service-account-impersonation),

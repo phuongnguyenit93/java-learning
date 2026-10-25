@@ -409,7 +409,6 @@ ${enumName}
      * Nó không còn dùng cho USE_TASK,
      * nhưng vẫn được dùng cho propCheck:
      *
-     * BUILD_README
      * BUILD_SWAGGER
      * BUILD_YML
      * ...

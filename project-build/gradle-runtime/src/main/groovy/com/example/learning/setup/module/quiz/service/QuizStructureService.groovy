@@ -1,6 +1,5 @@
 package com.example.learning.setup.module.quiz.service
 
-import com.example.learning.utils.ProjectPropertyUtils
 import org.gradle.api.GradleException
 import org.gradle.api.Project
 import org.gradle.api.logging.Logger
@@ -19,15 +18,12 @@ class QuizStructureService {
     }
 
     void setup(Project project) {
-        if (!ProjectPropertyUtils.isEnabled(project, 'BUILD_QUIZ')) {
-            logger.info('[QUIZ-STRUCTURE] Skip {} because BUILD_QUIZ != TRUE.', project.path)
-            return
-        }
-
         File directory = new File(project.projectDir, 'content/quiz')
         if (directory.exists() && !directory.isDirectory()) {
             throw new GradleException("Quiz content path is not a directory: ${directory.absolutePath}")
         }
         // Existing legacy content is retained for migration/review, not mutated.
+        logger.info('[QUIZ-STRUCTURE] Preserve legacy content for {} without creating folders.',
+                project.path)
     }
 }

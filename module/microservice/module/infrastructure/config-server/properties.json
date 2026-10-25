@@ -18,9 +18,6 @@
             "VALUE": "SPRING_WEB"
         }
     },
-    "README": {
-
-    },
     "MODULE_DEPEND": {
         "MODULE_DEPEND_LIST": {
             "DESCRIPTION": "To define which module depend will be added to this module",

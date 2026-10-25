@@ -4,7 +4,7 @@
 
 **Trạng thái:** Vì J3 là marker chỉ dành cho các STEP số, **không ghi `J3 = STEP_OPTIONAL_VIDEO`**, không ghi lùi J3 khi đang ở STEP 15. Sau khi lưu Video VI vào Sheet và nhập module, Prime chạy `exportModuleSheetToExcel` module-local DRY_RUN → APPLY để đồng bộ lại `content/sheet/vi/module.xlsx` nếu snapshot VI đã có. Phải readback dữ liệu X:AA trên Sheet, trong YAML module và Excel VI. Export offline không thay J3. Nếu thiếu task/credential thì báo blocker, không giả vờ Excel đã cập nhật.
 
-**Git:** STEP_FINAL đã chạy trước nên Video mới **chưa tự được commit/push**. Không tự gọi `git commit/push`; khi người dùng muốn phát hành bổ sung, chạy lại STEP_FINAL với manifest chỉ gồm phần Video và thay đổi `BUILD_VIDEO` của đúng module. Nếu STEP_FINAL đã dọn worktree/branch thì mở phiên optional ở worktree/branch mới đã được xác minh, không sửa repo/branch của phiên khác.
+**Git:** STEP_FINAL đã chạy trước nên Video mới **chưa tự được commit/push**. Không tự gọi `git commit/push`; khi người dùng muốn phát hành bổ sung, chạy lại STEP_FINAL với manifest chỉ gồm phần Video thuộc đúng module. Nếu STEP_FINAL đã dọn worktree/branch thì mở phiên optional ở worktree/branch mới đã được xác minh, không sửa repo/branch của phiên khác.
 
 ## 0. Mục tiêu và phạm vi
 
@@ -13,7 +13,7 @@
 - **Không còn bảng "Chủ đề" ở cột N**. Menu Cấp 1 `A<PARENT_ROW>` là `title`; worker viết YAML vào `X<PARENT_ROW>:AA<PARENT_ROW>`. Difficulty `O` dành riêng cho các hàng Menu Cấp 2.
 - **Mỗi worker chỉ có MỘT lượt công việc trọn vẹn**: đọc Knowledge → phân loại `NEW_FILL/FORMAT_FIX/UNCHANGED` → chỉ soạn toàn văn YAML khi tạo mới, hoặc sửa đúng format khi đã có script → preflight → ghi nếu cần → đọc lại → QA → báo cáo. **Không có PHA A/PHA B hoặc PREPARED**.
 - Pool theo **Mode A/B của session (A=3 mặc định; B=N do user chỉ định, thiếu N → BLOCKER; tính cả ACTIVE + SLEEPING)**, ưu tiên tái sử dụng và spawn tuần tự mỗi lệnh một worker. Mỗi worker sở hữu một chương, một hàng video; các worker làm song song không tranh chấp hàng.
-- Worker không sửa Knowledge A:N, Difficulty O, Template, các tab khác, Gradle/source/video YAML file hoặc cấu hình BUILD_VIDEO. **Chỉ Prime**, sau khi Video VI QA PASS, được bật `BUILD_VIDEO` cho **đúng module đã opt-in** nếu chưa bật, để Portal có thể publish Video. Không commit/push hoặc tự chạy STEP khác.
+- Worker không sửa Knowledge A:N, Difficulty O, Template, các tab khác, Gradle/source/video YAML file hoặc `master.json`. Sau khi Video VI QA và import PASS, **Portal tự nhận diện Video hợp lệ**, không bật/tắt build flag. Không commit/push hoặc tự chạy STEP khác.
 
 ### Cổng context và phân tách PRIME / WORKER
 
@@ -75,7 +75,7 @@ Với mỗi chương, yêu cầu một YAML parseable hoàn chỉnh theo `projec
 
 Sau APPLY kiểm tra đúng `I3` và báo `MODULE_SYNC_TASK`, `MODULE_PATH`, `TAB_GID`, `DRY_RUN`, `APPLY`, `SYNC_STATUS`, `DESTINATION`, `BLOCKER`. Với Video, importer APPLY preflight/stage **toàn bộ các chương** trước khi thay snapshot; chỉ xóa/thay những file `<chapter>/video/video-script.yml` do Video sở hữu, có rollback nếu lỗi, tuyệt đối không xóa toàn menu, Knowledge, Metadata, Quiz hoặc Interview. Nếu chương chưa đầy đủ thì không APPLY. Tiêu chí nội dung: `script` là **lời thoại tự nhiên** không chép README; `visual` mô tả hình/chuyển động/code có thể dựng; `purpose` là mục tiêu sư phạm. Khi đưa Java/code/đầu ra vào script/visual, QA kỹ thuật như README: cú pháp, phiên bản, giải thích và stdout phải đúng; cú pháp Markdown/code fence nếu xuất hiện phải cân đối nhưng không biến YAML Video thành README.
 
-**Prime post-import bắt buộc:** Đọc `<I3>/master.json`; nếu `BUILD_VIDEO.VALUE = "FALSE"` thì bật thành `"TRUE"` chỉ ở module đang làm (không bật trước khi QA Video PASS), xác minh Gradle config và Video projection. Chạy `:<MODULE_GRADLE_PATH>:exportModuleSheetToExcel` riêng theo hướng dẫn `STEP_12.md` với `-Planguage=vi`, DRY_RUN → APPLY; đọc lại `content/sheet/vi/module.xlsx`, đối chiếu X:AA và kiểm tra `J3` giữ nguyên. Nếu xuất bản không thể chứng minh an toàn → blocker, không tuyên bố optional Video hoàn tất.
+**Prime post-import bắt buộc:** Sau khi source YAML được QA/import, Portal tự phát hiện `<chapter>/video/video-script.yml` hợp lệ theo `MODULE_LANGUAGE` mà không cần flag trong `master.json`. Prime xác minh Gradle config và Video projection thực tế. Chạy `:<MODULE_GRADLE_PATH>:exportModuleSheetToExcel` riêng theo `STEP_12.md` với `-Planguage=vi`, DRY_RUN → APPLY; đọc lại `content/sheet/vi/module.xlsx`, đối chiếu X:AA và kiểm tra `J3` giữ nguyên. Nếu xuất bản không thể chứng minh an toàn → blocker, không tuyên bố optional Video hoàn tất.
 
 ### 6. Mẫu tin nhắn Prime gửi worker — CHỈ bốn dòng
 

@@ -137,28 +137,17 @@ class ModuleOrchestrationPlugin
         }
 
         // ====================================================
-        // Roadmap setup
-        //
-        // Roadmap is upstream from README/Knowledge.
-        // Each active MODULE_LANGUAGE owns its own roadmap file.
+        // Roadmap setup is only needed by modules with learning Docs or an
+        // existing Roadmap directory; runtime support modules do not receive
+        // learning skeletons just because Gradle is configured.
         // ====================================================
 
-        if (
-                ProjectPropertyUtils.isEnabled(
-                        project,
-                        'BUILD_ROADMAP'
-                )
-        ) {
-
+        boolean hasLearningDocs =
+                new File(project.projectDir, 'content/readme/docs').isDirectory()
+        if (hasLearningDocs ||
+                new File(project.projectDir, 'content/roadmap').exists()) {
             project.pluginManager.apply(
                     ProjectPluginEnum.ROADMAP_SETUP_PLUGIN.id
-            )
-        }
-        else {
-
-            project.logger.info(
-                    '[PROJECT-ORCHESTRATION] Skip ROADMAP setup for {} because BUILD_ROADMAP != TRUE.',
-                    project.path
             )
         }
 
@@ -169,52 +158,33 @@ class ModuleOrchestrationPlugin
         // It is not localized by MODULE_LANGUAGE.
         // ====================================================
 
-        if (
-                ProjectPropertyUtils.isEnabled(
-                        project,
-                        'BUILD_REFERENCE'
-                )
-        ) {
-
+        if (hasLearningDocs ||
+                new File(project.projectDir, 'content/reference').exists()) {
             project.pluginManager.apply(
                     ProjectPluginEnum.REFERENCE_SETUP_PLUGIN.id
             )
         }
-        else {
-
-            project.logger.info(
-                    '[PROJECT-ORCHESTRATION] Skip REFERENCE setup for {} because BUILD_REFERENCE != TRUE.',
-                    project.path
-            )
-        }
 
         // ====================================================
-        // README setup
+        // README setup is idempotent for established README + Docs modules.
+        // Do not synthesize a root README for a Docs-only module during sync.
         // ====================================================
 
-        if (
-                ProjectPropertyUtils.isEnabled(
-                        project,
-                        'BUILD_README'
-                )
-        ) {
-
+        if (hasLearningDocs &&
+                new File(project.projectDir, 'README.md').isFile()) {
             project.pluginManager.apply(
                     ProjectPluginEnum.README_SETUP_PLUGIN.id
             )
-        }
-        else {
-
+        } else {
             project.logger.info(
-                    '[PROJECT-ORCHESTRATION] Skip README setup for {} because BUILD_README != TRUE.',
+                    '[PROJECT-ORCHESTRATION] Skip README setup for {}: no established README.md and Docs pair.',
                     project.path
             )
         }
 
         // ====================================================
-        // Video: no module skeleton setup plugin. BUILD_VIDEO remains a
-        // publishing/projection flag; Video Script YAML is imported
-        // explicitly from Google Sheets, never generated on Gradle Sync.
+        // Video Script YAML is imported explicitly from Google Sheets;
+        // no Video skeleton setup plugin runs on Gradle Sync.
         // ====================================================
 
         project.logger.info(
@@ -244,51 +214,9 @@ class ModuleOrchestrationPlugin
             )
         }
 
-        // ====================================================
-        // Quiz setup
-        // ====================================================
-
-        if (
-                ProjectPropertyUtils.isEnabled(
-                        project,
-                        'BUILD_QUIZ'
-                )
-        ) {
-
-            project.pluginManager.apply(
-                    ProjectPluginEnum.QUIZ_SETUP_PLUGIN.id
-            )
-        }
-        else {
-
-            project.logger.info(
-                    '[PROJECT-ORCHESTRATION] Skip QUIZ setup for {} because BUILD_QUIZ != TRUE.',
-                    project.path
-            )
-        }
-
-        // ====================================================
-        // Interview setup
-        // ====================================================
-
-        if (
-                ProjectPropertyUtils.isEnabled(
-                        project,
-                        'BUILD_INTERVIEW'
-                )
-        ) {
-
-            project.pluginManager.apply(
-                    ProjectPluginEnum.INTERVIEW_SETUP_PLUGIN.id
-            )
-        }
-        else {
-
-            project.logger.info(
-                    '[PROJECT-ORCHESTRATION] Skip INTERVIEW setup for {} because BUILD_INTERVIEW != TRUE.',
-                    project.path
-            )
-        }
+        // Quiz/Interview chapters are authored by their importers.
+        // Legacy setup plugins are intentionally not applied: they must
+        // not recreate empty content/quiz or content/interview directories.
 
         // ====================================================
         // Execution Context setup

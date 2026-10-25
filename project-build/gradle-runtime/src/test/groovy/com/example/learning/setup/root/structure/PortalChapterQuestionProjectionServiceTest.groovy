@@ -77,11 +77,11 @@ class PortalChapterQuestionProjectionServiceTest {
         assertEquals('video data', video.text)
 
         def counts = ProjectStructureService.getDeclaredMethod(
-                'findQuestionCounts', File, List, boolean, String)
+                'findQuestionCounts', File, List, String)
         counts.accessible = true
-        assertEquals([vi: 2], counts.invoke(null, fixture.moduleDir, ['vi'], true, 'quiz'))
-        assertEquals([vi: 1], counts.invoke(null, fixture.moduleDir, ['vi'], true, 'interview'))
-        assertEquals([:], counts.invoke(null, fixture.moduleDir, ['vi'], false, 'quiz'))
+        assertEquals([vi: 2], counts.invoke(null, fixture.moduleDir, ['vi'], 'quiz'))
+        assertEquals([vi: 1], counts.invoke(null, fixture.moduleDir, ['vi'], 'interview'))
+        assertEquals([:], counts.invoke(null, fixture.moduleDir, ['en'], 'quiz'))
     }
 
     @Test
@@ -130,6 +130,25 @@ class PortalChapterQuestionProjectionServiceTest {
         }
     }
 
+    @Test
+    void emptyOnlyChapterSkeletonsDoNotAdvertiseQuizOrInterview() {
+        Fixture fixture = fixture()
+        writeYaml(fixture.moduleDir, '1.Basics/quiz/question.yml', [questions: []])
+        writeYaml(fixture.moduleDir, '1.Basics/interview/question.yml', [questions: []])
+
+        new PortalQuizProjectionService(fixture.root.logger).generate(fixture.root)
+        new PortalInterviewProjectionService(fixture.root.logger).generate(fixture.root)
+
+        assertFalse(published(fixture.root, 'DEMO/quiz/vi/index.json').exists())
+        assertFalse(published(fixture.root, 'DEMO/interview/vi/index.json').exists())
+
+        def counts = ProjectStructureService.getDeclaredMethod(
+                'findQuestionCounts', File, List, String)
+        counts.accessible = true
+        assertEquals([:], counts.invoke(null, fixture.moduleDir, ['vi'], 'quiz'))
+        assertEquals([:], counts.invoke(null, fixture.moduleDir, ['vi'], 'interview'))
+    }
+
     private Fixture fixture() {
         File rootDir = temporary.newFolder('repo')
         File moduleDir = new File(rootDir, 'module/demo')
@@ -139,8 +158,6 @@ class PortalChapterQuestionProjectionServiceTest {
         Project module = ProjectBuilder.builder().withParent(root).withProjectDir(moduleDir).build()
         module.extensions.extraProperties.set('MODULE_LANGUAGE', 'vi')
         module.extensions.extraProperties.set('SERVICE_NAME', 'DEMO')
-        module.extensions.extraProperties.set('BUILD_QUIZ', 'TRUE')
-        module.extensions.extraProperties.set('BUILD_INTERVIEW', 'TRUE')
         return new Fixture(root, moduleDir)
     }
 

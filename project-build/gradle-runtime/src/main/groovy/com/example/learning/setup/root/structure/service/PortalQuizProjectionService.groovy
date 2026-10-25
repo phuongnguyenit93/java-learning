@@ -17,7 +17,7 @@ class PortalQuizProjectionService {
 
     void generate(Project rootProject) {
         Map<String, Map> apiCache = new LinkedHashMap<>()
-        ChapterQuestionProjectionSupport.generate(rootProject, 'quiz', 'BUILD_QUIZ', logger) {
+        ChapterQuestionProjectionSupport.generate(rootProject, 'quiz', logger) {
             Project module, String language, String questionId, Map question ->
                 String cacheKey = "${module.projectDir.absolutePath}/${language}"
                 Map descriptions = apiCache.computeIfAbsent(cacheKey) {
