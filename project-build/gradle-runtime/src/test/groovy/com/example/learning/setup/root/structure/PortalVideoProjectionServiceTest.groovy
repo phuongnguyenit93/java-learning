@@ -1,6 +1,7 @@
 package com.example.learning.setup.root.structure
 
 import com.example.learning.setup.root.structure.service.PortalVideoProjectionService
+import com.example.learning.setup.root.structure.service.ProjectStructureService
 import com.example.learning.utils.ProjectPropertyUtils
 import com.example.learning.task.sheets.service.VideoSheetImportServiceTest
 import groovy.json.JsonSlurper
@@ -31,13 +32,27 @@ class PortalVideoProjectionServiceTest {
         assertTrue(ProjectPropertyUtils.isEnabled(module, 'BUILD_VIDEO'))
         assertEquals(['vi'], ProjectPropertyUtils.getStringList(module, 'MODULE_LANGUAGE'))
 
-        File first = new File(moduleDir, 'content/video/vi/menu/1.OOPBasic/video-script.yml')
-        File second = new File(moduleDir, 'content/video/vi/menu/2.Class/video-script.yml')
+        File first = new File(moduleDir, 'content/readme/docs/vi/menu/1.OOPBasic/video/video-script.yml')
+        File second = new File(moduleDir, 'content/readme/docs/vi/menu/2.Class/video/video-script.yml')
         assertTrue(first.parentFile.mkdirs())
         assertTrue(second.parentFile.mkdirs())
         first.setText(VideoSheetImportServiceTest.SCRIPT, 'UTF-8')
         second.setText(VideoSheetImportServiceTest.SCRIPT.replace(
                 'Tư duy OOP', 'Lớp'), 'UTF-8')
+        // Neither obsolete module-level sources nor unrelated chapter files
+        // are authoring Video paths after migration.
+        File legacy = new File(moduleDir, 'content/video/vi/menu/3.Legacy/video-script.yml')
+        assertTrue(legacy.parentFile.mkdirs())
+        legacy.setText(VideoSheetImportServiceTest.SCRIPT, 'UTF-8')
+        File unrelated = new File(moduleDir,
+                'content/readme/docs/vi/menu/3.Unrelated/knowledge/video-script.yml')
+        assertTrue(unrelated.parentFile.mkdirs())
+        unrelated.setText('not a Video YAML', 'UTF-8')
+        def videoLanguages = ProjectStructureService.getDeclaredMethod(
+                'findVideoLanguages', File, List, Boolean.TYPE)
+        videoLanguages.accessible = true
+        assertEquals(['vi'] as Set, videoLanguages.invoke(null, moduleDir, ['vi'], true) as Set)
+        assertTrue((videoLanguages.invoke(null, moduleDir, ['vi'], false) as Set).isEmpty())
         assertTrue(first.isFile())
         assertTrue(second.isFile())
         assertTrue(rootProject.allprojects.any { p ->
@@ -57,6 +72,9 @@ class PortalVideoProjectionServiceTest {
         Map index = new JsonSlurper().parse(indexFile) as Map
         assertEquals(2, index.videoCount)
         assertEquals(['OOPBasic', 'Class'], index.items*.categoryId)
+        assertEquals(['/module/EXAMPLE/video/vi/content/OOPBasic/script.json',
+                      '/module/EXAMPLE/video/vi/content/Class/script.json'],
+                index.items*.content)
         for (String category in ['OOPBasic', 'Class']) {
             File scriptFile = new File(resultRoot, "content/${category}/script.json")
             assertTrue(scriptFile.isFile())
@@ -67,6 +85,7 @@ class PortalVideoProjectionServiceTest {
             assertEquals(['SCENE', 'TRANSITION', 'SCENE'],
                     script.sections.collectMany { Map s -> s.items*.type })
             assertTrue(script.sourcePath.endsWith('/video-script.yml'))
+            assertTrue(script.sourcePath.endsWith('/video/video-script.yml'))
             assertEquals('', script.video.url)
         }
         projector.generate(rootProject)
@@ -76,5 +95,6 @@ class PortalVideoProjectionServiceTest {
         projector.generate(rootProject)
         assertFalse(indexFile.exists())
         assertFalse(new File(resultRoot, 'content/OOPBasic/script.json').exists())
+        assertTrue((videoLanguages.invoke(null, moduleDir, ['vi'], true) as Set).isEmpty())
     }
 }

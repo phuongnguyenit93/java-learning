@@ -2,7 +2,7 @@
 
 ## 0. Mục tiêu và ranh giới
 
-- STEP 12A diễn ra **sau STEP 12, trước STEP 14**. Mục tiêu: xóa lệch cấu trúc EN cũ, thay bằng bản clone chính xác của VI theo technical identity để worker STEP 14 **chỉ dịch văn bản**, không phải tái tạo structure. **Video không thuộc ba subtree clone bắt buộc**, không đọc/ghi/xóa `content/video/en`; Video xử lý hoàn toàn trong optional steps sau STEP_FINAL.
+- STEP 12A diễn ra **sau STEP 12, trước STEP 14**. Mục tiêu: xóa lệch cấu trúc EN cũ, thay bằng bản clone chính xác của VI theo technical identity để worker STEP 14 **chỉ dịch văn bản**, không phải tái tạo structure. **Video là ngoại lệ loại theo FILE, dù nằm trong subtree Docs**: không clone/ghi đè/xóa `content/readme/docs/{vi,en}/menu/<chapter>/video/video-script.yml`; Video xử lý hoàn toàn trong optional steps sau STEP_FINAL.
 - **Prime-only**, không giao worker, không dịch tự động, không tạo Google Sheets EN hoặc Excel EN (để dành STEP 15).
 - **Không clone** Java source/test, build config, `master.json`, `content/sheet/{vi,en}/module.xlsx`, `content/reference/references.yml`, JSON Portal đã generate hoặc source ở module khác.
 - **Chỉ dùng task module-local** `cloneModuleViToEn` ở `project-build/gradle-runtime`. Không dùng các Sheet importer để tái tạo EN và không gọi task dịch.

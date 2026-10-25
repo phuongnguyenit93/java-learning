@@ -1,11 +1,11 @@
 # STEP_OPTIONAL_VIDEO_TRANSLATE — OPTIONAL AFTER STEP_OPTIONAL_VIDEO (Prime + Worker)
 
-**Optional, không nằm trong chuỗi STEP 1–15 → STEP_FINAL.** Chỉ chạy theo yêu cầu, sau khi Video VI của `STEP_OPTIONAL_VIDEO` đã QA và import vào `content/video/vi/menu/`. Không chạy lại `STEP_12A`, `STEP_14` hoặc `STEP_15` để dịch Video; các bước đó đã hoàn thành trước Video và cố ý bỏ Video khỏi phạm vi.
+**Optional, không nằm trong chuỗi STEP 1–15 → STEP_FINAL.** Chỉ chạy theo yêu cầu, sau khi Video VI của `STEP_OPTIONAL_VIDEO` đã QA và import vào `content/readme/docs/vi/menu/<chapter>/video/video-script.yml`. Không chạy lại `STEP_12A`, `STEP_14` hoặc `STEP_15` để dịch Video; các bước đó đã hoàn thành trước Video và cố ý bỏ Video khỏi phạm vi dù Video cùng nằm trong Docs.
 
 ## 1. Prime preflight
 
 1. Đọc toàn văn `GENERAL_AGENT_RULES.md`, mọi `rules/*`, file này, `worker/STEP_OPTIONAL_VIDEO_TRANSLATE_WORKER.md` và mapping `module-generate-info.txt`. Xác minh module I3, VI gid, EN gid theo `content/sheet/en/publish-state.json` (chỉ đọc), trạng thái core `J3 = STEP 15` trên tab VI và EN, và bản publish đã QA. Không tạo EN tab mới.
-2. Kiểm kê **đúng các file** `content/video/vi/menu/<ordinal>.<stem>/video-script.yml`, đối chiếu README VI chapter/section và parse `VideoYamlContentUtils`. Video VI chưa hoàn tất, X:AA chưa sync, file lạ hoặc thiếu → blocker. Không dùng API/Quiz/Interview related để đoán Video.
+2. Kiểm kê **đúng các file** `content/readme/docs/vi/menu/<chapter>/video/video-script.yml`, đối chiếu Knowledge VI cùng chương và parse `VideoYamlContentUtils`. Video VI chưa hoàn tất, X:AA chưa sync, file lạ hoặc thiếu → blocker. Không dùng API/Quiz/Interview related để đoán Video.
 3. Mỗi file VI đã có phải có **đúng một** file EN cùng relative path. Nếu EN chưa tồn tại: **Prime** seed đúng bytes VI vào EN sau kiểm tra symlink/ownership và tạo backup/manifest trong `<I3>/build/optional-video-translate/<RUN_ID>/`. Nếu EN đã có: giữ nguyên, không clone đè bản dịch; kiểm tra trạng thái/semantic diff và resume file còn thiếu. Prime không dịch nội dung.
 4. Prime lập ledger hash VI/EN, số chapters và assign **một file EN độc quyền cho mỗi lượt worker**. Pool Mode A mặc định 3, Mode B theo N của session; ưu tiên worker SLEEPING, spawn tuần tự. Worker không đọc VI/source khác; file EN đã được seed VI chứa đủ chữ để tự dịch.
 
@@ -27,7 +27,7 @@ READ/WRITE=EXACT_EN_TARGET_ONLY | OWNER=<WORKER_ID>
 ## 3. Đồng bộ EN sau STEP 15 (Prime only)
 
 - **Không tái chạy** `publishModuleEnSheet`, `cloneModuleViToEn`, `prepareModuleTranslation` của core: chúng có source hash/baseline riêng và có thể thay nội dung ngoài Video.
-- Nguồn chuẩn EN là `content/video/en/menu/**/video-script.yml`, đích được phép cập nhật trên tab EN hiện hữu **chỉ `X:AA` các hàng Menu Cấp 1**. Giữ nguyên J3 ở VI/EN = `STEP 15`, Google Template, A:W, AB, toàn bộ metadata, translations khác. `content/sheet/vi/module.xlsx` đã được cập nhật bởi STEP_OPTIONAL_VIDEO; snapshot `content/sheet/en/module.xlsx` phải được export lại từ **chính tab EN** sau khi Sheet readback PASS.
+- Nguồn chuẩn EN là `content/readme/docs/en/menu/<chapter>/video/video-script.yml`, đích được phép cập nhật trên tab EN hiện hữu **chỉ `X:AA` các hàng Menu Cấp 1**. Giữ nguyên J3 ở VI/EN = `STEP 15`, Google Template, A:W, AB, toàn bộ metadata, translations khác. `content/sheet/vi/module.xlsx` đã được cập nhật bởi STEP_OPTIONAL_VIDEO; snapshot `content/sheet/en/module.xlsx` phải được export lại từ **chính tab EN** sau khi Sheet readback PASS. STEP 12A, STEP 14 và STEP 15 không được tự clone/dịch/ghi đè Video trong Docs.
 - Prime dùng task module-local `publishOptionalVideoEn` với `-PfileUrl=<SPREADSHEET_URL> -PviGid=<VI_GID> -PsheetMode=DRY_RUN` rồi `APPLY`. Task phải preflight đúng module/state/gid, validate file EN tương ứng từng chapter, chỉ cập nhật X:AA và verify exact readback; không được full-resync nội dung STEP 15 hoặc chấp nhận `DRY_RUN` là đã ghi. Nếu task không tồn tại/FAIL, báo `BLOCKER: OPTIONAL_VIDEO_EN_PUBLISH`; không tự gọi một task publish toàn Sheet thay thế.
 - Kiểm tra Excel VI/EN chứa Video phù hợp Sheet tại X:AA; nếu source thay đổi đồng thời hoặc workbook/export không khớp → BLOCKER, giữ trạng thái khôi phục và không tuyên bố completed.
 

@@ -176,6 +176,26 @@ System.out.println("KEEP");
         }
     }
 
+    @Test
+    void videoDifferencesNeverEnterStep14InventoryOrBlockMandatoryTranslation() {
+        Map f = fixture()
+        File module = f.module as File
+        File enVideo = new File(module,
+                'content/readme/docs/en/menu/1.Basic/video/video-script.yml')
+        assertTrue(enVideo.delete())
+        write(module, 'content/readme/docs/en/menu/2.Orphan/video/video-script.yml',
+                'English script authored after STEP 15')
+
+        def service = new ModuleTranslationCatalogService()
+        List<Map> inventory = ModuleTranslationCatalogService.inventory(module)
+        assertEquals(6, inventory.size())
+        assertFalse(inventory.any { it.enPath?.contains('/video/') })
+        assertEquals('PREPARED', service.execute(f.root as File, module,
+                'video-independent', 'PREPARE', true).status)
+        assertEquals('VALIDATED_STRUCTURE', service.execute(f.root as File, module,
+                'video-independent', 'VALIDATE', false).status)
+    }
+
     private Map fixture() {
         File root = temp.newFolder('repo')
         File module = new File(root, 'module/demo')
@@ -213,7 +233,7 @@ System.out.println("KEEP");
     readmeRelated: {anchor: basic-001}
     apiRelated: {controller: "", methodSignature: ""}
 ''',
-                'content/video/vi/menu/1.Basic/video-script.yml':
+                'content/readme/docs/vi/menu/1.Basic/video/video-script.yml':
                         'title: Tiêu đề\nsections:\n  - title: Bài học\n    items:\n      - {type: SCENE, time: "00:00-00:10", visual: Hình ảnh, script: Thuyết minh, purpose: Mục đích}',
                 'src/main/resources/swagger/vi/api-params.yml':
                         'request:\n  summary: Tóm tắt\n  description: Mô tả\n  usage: true'

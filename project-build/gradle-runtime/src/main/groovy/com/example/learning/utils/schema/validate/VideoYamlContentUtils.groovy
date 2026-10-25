@@ -125,7 +125,10 @@ class VideoYamlContentUtils {
         if (yamlFile.name != FILENAME) {
             throw new GradleException("Unexpected Video file: ${yamlFile}")
         }
-        String parentName = yamlFile.parentFile.name
+        if (yamlFile.parentFile.name != 'video') {
+            throw new GradleException("Video Script must belong to chapter/video/: ${yamlFile}")
+        }
+        String parentName = yamlFile.parentFile.parentFile.name
         def match = parentName =~ /\A[1-9][0-9]*\.([A-Za-z][A-Za-z0-9]*)\z/
         if (!match.matches()) {
             throw new GradleException("Video directory must match the Knowledge chapter path: ${parentName}")

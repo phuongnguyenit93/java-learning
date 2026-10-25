@@ -70,13 +70,13 @@ sections:
         Map<String, String> scripts = VideoSheetImportService.parseSheet(groups(), rows([
                 SCRIPT.substring(0, 91), SCRIPT.substring(91)
         ]))
-        assertEquals(['1.OOPBasic/video-script.yml'], scripts.keySet().toList())
+        assertEquals(['1.OOPBasic'], scripts.keySet().toList())
         assertEquals(SCRIPT, scripts.values().first())
         assertEquals([sections: 2, scenes: 2, transitions: 1],
                 VideoSheetImportService.validateVideo(
                         SCRIPT, 'Tư duy OOP', ['Khái niệm OOP', 'Lợi ích']))
         assertEquals('OOPBasic', VideoYamlContentUtils.categoryId(
-                new File('1.OOPBasic/video-script.yml')))
+                new File('1.OOPBasic/video/video-script.yml')))
     }
 
     @Test
@@ -86,6 +86,10 @@ sections:
         shouldFail { VideoSheetImportService.parseSheet(groups(), rows([
                 SCRIPT.substring(0, 15), '', SCRIPT.substring(15)
         ])) }
+        shouldFail { VideoSheetImportService.parseSheet(groups(), [
+                ['Video Script', 'Video Script', 'Video Script', 'Video Script'],
+                [SCRIPT], ['orphan content']
+        ]) }
         shouldFail { VideoSheetImportService.parseSheet(groups(), rows([
                 SCRIPT.replace('Tư duy OOP', 'Sai chủ đề')
         ])) }
@@ -107,43 +111,47 @@ sections:
     }
 
     @Test
-    void dryRunApplyRerunAndClearReplaceEntireVideoSnapshot() {
+    void dryRunApplyRerunAndClearOnlyOwnedVideoFiles() {
         File root = temp.newFolder('new-video')
-        File menu = new File(root, 'module/example/content/video/vi/menu')
-        Map<String, String> source = ['1.OOPBasic/video-script.yml': SCRIPT]
+        File module = new File(root, 'module/example')
+        File menu = new File(module, 'content/readme/docs/vi/menu')
+        groups().eachWithIndex { Map group, int i ->
+            assertTrue(new File(menu, "${i + 1}.${(group.filename as String)[0..-4]}/knowledge").mkdirs())
+        }
+        Map<String, String> source = ['1.OOPBasic': SCRIPT]
         assertEquals('DRY_RUN', VideoSheetImportService.sync(
-                menu, groups(), source, false, root).status)
-        assertFalse(menu.exists())
+                root, module, groups(), source, false).status)
+        assertFalse(new File(menu, '1.OOPBasic/video').exists())
         assertEquals('IMPORTED', VideoSheetImportService.sync(
-                menu, groups(), source, true, root).status)
-        File file = new File(menu, '1.OOPBasic/video-script.yml')
+                root, module, groups(), source, true).status)
+        File file = new File(menu, '1.OOPBasic/video/video-script.yml')
         assertEquals(SCRIPT, file.getText('UTF-8'))
         assertEquals('UNCHANGED', VideoSheetImportService.sync(
-                menu, groups(), source, true, root).status)
+                root, module, groups(), source, true).status)
         assertEquals('CLEARED_EMPTY', VideoSheetImportService.sync(
-                menu, groups(), [:], true, root).status)
+                root, module, groups(), [:], true).status)
         assertFalse(file.exists())
-        assertEquals([:], SheetSnapshotReplaceService.readTree(menu))
+        assertTrue(new File(menu, '1.OOPBasic/knowledge').isDirectory())
     }
 
     @Test
-    void legacyFilesOldUrlsAndOrphansAreRemovedWithoutBackup() {
+    void legacyOwnedFilesAreRemovedAfterChapterImportAndEnglishPreserved() {
         File root = temp.newFolder('legacy-video')
-        File menu = new File(root, 'module/example/content/video/vi/menu')
-        File published = new File(menu, '1.OOPBasic/video-script.yml')
-        assertTrue(published.parentFile.mkdirs())
-        published.setText(SCRIPT.replace('url: ""', 'url: "https://old.example/video"'), 'UTF-8')
-        File legacy = new File(menu, 'legacy/old-video.md')
-        assertTrue(legacy.parentFile.mkdirs())
-        legacy.setText('legacy', 'UTF-8')
+        File module = new File(root, 'module/example')
+        File menu = new File(module, 'content/readme/docs/vi/menu')
+        assertTrue(new File(menu, '1.OOPBasic/knowledge').mkdirs())
+        File published = new File(menu, '1.OOPBasic/video/video-script.yml')
+        File old = new File(module, 'content/video/vi/menu/1.OOPBasic/video-script.yml')
+        assertTrue(old.parentFile.mkdirs())
+        old.setText(SCRIPT.replace('url: ""', 'url: "https://old.example/video"'), 'UTF-8')
         File otherLanguage = new File(root, 'module/example/content/video/en/menu/1.OOPBasic/video-script.yml')
         assertTrue(otherLanguage.parentFile.mkdirs())
         otherLanguage.setText('preserve', 'UTF-8')
-        Map<String, String> source = ['1.OOPBasic/video-script.yml': SCRIPT]
+        Map<String, String> source = ['1.OOPBasic': SCRIPT]
         assertEquals('UPDATED', VideoSheetImportService.sync(
-                menu, groups(), source, true, root).status)
+                root, module, groups(), source, true).status)
         assertEquals(SCRIPT, published.getText('UTF-8'))
-        assertFalse(legacy.exists())
+        assertFalse(old.exists())
         assertEquals('preserve', otherLanguage.getText('UTF-8'))
         assertFalse(new File(root, '.gradle/sheet-video-backups').exists())
     }

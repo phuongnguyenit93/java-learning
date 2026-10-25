@@ -36,15 +36,12 @@ class ModuleLanguageCloneService {
             File vi = new File(module, area + '/vi')
             File en = new File(module, area + '/en')
             ModuleLanguageCloneService.checkPaths(module, vi, en)
-            expected[area] = ModuleLanguageCloneService.readTree(vi)
+            // Video is authored after STEP 15. Preserve existing EN Video even
+            // when mandatory STEP 12A is re-run from a newer VI tree.
+            expected[area] = ModuleLanguageCloneService.sourceTree(module, area)
             before[area] = ModuleLanguageCloneService.readTree(en)
         }
         requireSource(expected)
-        Map<String, byte[]> docs = expected['content/readme/docs']
-        String list = new String(docs['LIST.md'], StandardCharsets.UTF_8)
-                .replace('content/readme/docs/vi/menu/', 'content/readme/docs/en/menu/')
-                .replace('README MODULE STRUCTURE (VI)', 'README MODULE STRUCTURE (EN)')
-        docs['LIST.md'] = list.getBytes(StandardCharsets.UTF_8)
         ModuleLanguageCloneValidationService.validate(expected, root)
 
         int total = expected.values().sum { Map tree -> tree.size() } as int
@@ -145,13 +142,21 @@ class ModuleLanguageCloneService {
     protected void afterReplacement(int completed) { }
 
     private static Map<String, byte[]> sourceTree(File module, String key) {
-        Map<String, byte[]> actual = readTree(new File(module, key + '/vi'))
-        if (key != 'content/readme/docs' || actual.isEmpty()) return actual
+        boolean docs = key == 'content/readme/docs'
+        Map<String, byte[]> actual = readTree(new File(module, key + '/vi'), docs)
+        if (!docs || actual.isEmpty() || !actual.containsKey('LIST.md')) return actual
         String original = new String(actual['LIST.md'], StandardCharsets.UTF_8)
                 .replace('content/readme/docs/vi/menu/', 'content/readme/docs/en/menu/')
                 .replace('README MODULE STRUCTURE (VI)', 'README MODULE STRUCTURE (EN)')
         actual['LIST.md'] = original.getBytes(StandardCharsets.UTF_8)
+        readTree(new File(module, key + '/en')).each { String path, byte[] bytes ->
+            if (videoPath(path)) actual[path] = bytes
+        }
         return actual
+    }
+
+    private static boolean videoPath(String relative) {
+        relative ==~ /menu\/[^\/]+\/video(?:\/.*)?/
     }
 
     private static void requireSource(Map<String, Map<String, byte[]>> trees) {
@@ -180,7 +185,7 @@ class ModuleLanguageCloneService {
         }
     }
 
-    static Map<String, byte[]> readTree(File folder) {
+    static Map<String, byte[]> readTree(File folder, boolean excludeVideo = false) {
         if (!folder.exists()) return new LinkedHashMap<>()
         if (!folder.isDirectory() || Files.isSymbolicLink(folder.toPath())) {
             throw new GradleException('Unsafe language directory: ' + folder)
@@ -190,6 +195,9 @@ class ModuleLanguageCloneService {
         def walker = Files.walk(folder.toPath())
         try {
             walker.forEach { Path file ->
+                String relative = folder.toPath().relativize(file).toString()
+                        .replace(File.separatorChar, '/' as char)
+                if (excludeVideo && videoPath(relative)) return
                 if (Files.isSymbolicLink(file)) {
                     throw new GradleException('Symlink inside language tree: ' + file)
                 }
@@ -197,8 +205,6 @@ class ModuleLanguageCloneService {
                     if (!file.toFile().canonicalFile.toPath().startsWith(root)) {
                         throw new GradleException('Language file escaped module: ' + file)
                     }
-                    String relative = folder.toPath().relativize(file).toString()
-                            .replace(File.separatorChar, '/' as char)
                     result[relative] = Files.readAllBytes(file)
                 }
             }

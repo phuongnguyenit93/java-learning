@@ -1093,18 +1093,6 @@ ${moduleDirectory.absolutePath}
         }
 
 
-        File videoDirectory =
-                new File(
-                        moduleDirectory,
-                        'content/video'
-                )
-
-
-        if (!videoDirectory.isDirectory()) {
-            return [] as Set<String>
-        }
-
-
         Set<String> result =
                 new LinkedHashSet<>()
 
@@ -1114,8 +1102,8 @@ ${moduleDirectory.absolutePath}
 
             File menuDirectory =
                     new File(
-                            videoDirectory,
-                            "${language}/menu"
+                            moduleDirectory,
+                            "content/readme/docs/${language}/menu"
                     )
 
 
@@ -1180,7 +1168,9 @@ ${moduleDirectory.absolutePath}
                 if (containsAuthoredVideo(child)) return true
                 continue
             }
-            if (child.isFile() && child.name == 'video-script.yml') {
+            if (child.isFile() && child.name == 'video-script.yml' &&
+                    child.parentFile.name == 'video' &&
+                    child.parentFile.parentFile.name ==~ /[1-9][0-9]*\.[A-Za-z][A-Za-z0-9]*/) {
                 com.example.learning.utils.schema.validate.VideoYamlContentUtils.parse(
                         child.getText('UTF-8'))
                 return true

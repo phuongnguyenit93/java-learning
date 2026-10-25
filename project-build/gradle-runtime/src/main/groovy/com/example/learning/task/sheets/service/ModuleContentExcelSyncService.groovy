@@ -334,11 +334,11 @@ class ModuleContentExcelSyncService {
     }
 
     private static void video(File module, XSSFSheet sheet, List<Map> groups, Map report) {
-        File root = new File(module, 'content/video/en/menu')
+        File root = new File(module, 'content/readme/docs/en/menu')
         if (!root.isDirectory()) {
-            File vi = new File(module, 'content/video/vi/menu')
+            File vi = new File(module, 'content/readme/docs/vi/menu')
             boolean authoredVi = vi.isDirectory() && vi.listFiles()?.any { File chapter ->
-                chapter.isDirectory() && new File(chapter, 'video-script.yml').isFile()
+                chapter.isDirectory() && new File(chapter, 'video/video-script.yml').isFile()
             }
             if (authoredVi) {
                 throw new GradleException('Missing EN video tree.')
@@ -349,9 +349,12 @@ class ModuleContentExcelSyncService {
             return
         }
         groups.each { Map group ->
-            String path = group.source.toString().replaceFirst('/[^/]+$', '/video-script.yml')
+            String path = group.source.toString().replaceFirst('/[^/]+$', '/video/video-script.yml')
             File file = new File(root, path)
             if (!file.isFile()) {
+                if (new File(module, 'content/readme/docs/vi/menu/' + path).isFile()) {
+                    throw new GradleException('Missing EN Video for chapter: ' + path)
+                }
                 // A chapter may not have an authored Video even when enabled.
                 fragments(sheet, group.row as int, 24, 4, '', report)
                 return

@@ -412,20 +412,21 @@ Luồng xử lý chung:
 ### Import Video Script từ STEP_OPTIONAL_VIDEO (sau STEP_FINAL) — 100% Groovy/Java (không AI)
 
 VideoSheetImportService chạy sau Roadmap và README trong cả hai task.
-Mỗi Menu Cấp 1 ở `A<R>` có Video Script YAML tại đúng `P<R>:S<R>`
+Mỗi Menu Cấp 1 ở `A<R>` có Video Script YAML tại đúng `X<R>:AA<R>`
 (header `X19:AA19 = Video Script`); ghép X→AA không thêm separator.
 Importer dùng filename Knowledge `.md` ở `B<R>` làm định danh thư mục
-`<ordinal>.<stem>/video-script.yml`; không suy ra row từ số thứ tự chương.
+`content/readme/docs/vi/menu/<ordinal>.<stem>/video/video-script.yml`; không suy ra row từ số thứ tự chương.
 Validate cú pháp YAML, `title` với A, `sections[].title` với B con,
 Scene/Transition, Time/Visual/Script/Purpose và mỗi fragment tối đa
 30.000 Unicode code points, không gọi AI.
 
-APPLY dựng/validate/stage/readback snapshot trước, rồi xóa vĩnh viễn
-toàn bộ `content/video/vi/menu` và cài chỉ các Video Script có nội dung trên Sheet.
-KHÔNG giữ video.url, skeleton, video đã biên soạn hay orphan cũ.
-Hàng script trống không có file tương ứng; toàn bộ trống → CLEARED_EMPTY.
-Không backup. DRY_RUN không ghi. Script lỗi → BLOCKER trước khi xóa.
-Không chỉnh BUILD_VIDEO, video/en hay Google Sheets.
+APPLY preflight/validate/stage toàn bộ Video theo chương trước khi thay snapshot.
+Chỉ những file `<chapter>/video/video-script.yml` thuộc sở hữu Video mới bị
+thay hoặc xóa nếu Sheet không còn nội dung; không xóa thư mục `menu/` hoặc
+Knowledge/Metadata/Interview/Quiz. Nếu ghi dở lỗi phải rollback byte cũ.
+Hàng script trống không có file tương ứng; toàn bộ trống → xóa đúng Video VI
+thuộc ownership. DRY_RUN không ghi. Script lỗi → BLOCKER trước khi xóa.
+Không chỉnh BUILD_VIDEO, Video EN hay Google Sheets.
 
 Tài liệu chính thức: [Application Default Credentials](https://cloud.google.com/docs/authentication/application-default-credentials),
 [Service Account Impersonation](https://cloud.google.com/docs/authentication/use-service-account-impersonation),

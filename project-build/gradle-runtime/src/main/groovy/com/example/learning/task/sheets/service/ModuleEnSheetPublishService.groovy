@@ -628,12 +628,15 @@ class ModuleEnSheetPublishService {
             def stream = Files.walk(parent.toPath())
             try {
                 stream.forEach { Path child ->
+                    String relative = module.toPath().relativize(child).toString()
+                            .replace(File.separatorChar, '/' as char)
+                    // Video scripts have their own optional publish transaction.
+                    if (relative ==~ /content\/readme\/docs\/en\/menu\/[^\/]+\/video(?:\/.*)?/) return
                     if (Files.isSymbolicLink(child)) {
                         throw new GradleException('Symlink in translation tree: ' + child)
                     }
                     if (Files.isRegularFile(child, LinkOption.NOFOLLOW_LINKS)) {
-                        files.add(module.toPath().relativize(child).toString()
-                                .replace(File.separatorChar, '/' as char))
+                        files.add(relative)
                     }
                 }
             } finally { stream.close() }

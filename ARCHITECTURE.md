@@ -496,13 +496,11 @@ master.json + properties.json synchronized
         ↓ module-owned VALUE configuration
 BUILD_README=TRUE
         ↓ module orchestration / ReadmeSetupPlugin
-README.md + localized BASE.md/LIST.md/menu directories
-        ↓ human authoring
-readme/{lang}/menu/**/*.md
-        ↓ optional after README chapter files exist
-BUILD_VIDEO=TRUE
-        ↓ module orchestration / VideoSetupPlugin
-video/{lang}/menu/**/*.md skeletons mirrored from README structure
+content/readme/docs/{lang}/menu/<chapter>/knowledge/*.md
+        ↓ optional STEP_OPTIONAL_VIDEO after STEP_FINAL
+<chapter>/video/video-script.yml (authored via Sheet X:AA)
+        ↓ BUILD_VIDEO=TRUE after Video QA
+Portal Video index.json + content/{categoryId}/script.json
 ```
 
 `ModuleListEnum`, `module-structure.txt`, `STRUCTURE.md` và các generated registry/structure outputs khác nằm phía generator; bootstrap module không được coi các file này là canonical input để sửa tay.
@@ -935,9 +933,9 @@ Implementation: `project-build/gradle-runtime/src/main/groovy/com/example/learni
 **Google Sheets → module (ByLocation / ByFiles):** SheetContentImportCoordinator điều phối các importer qua Gradle task, không gọi AI. Sheet là nguồn chuẩn của các cây đầu ra độc lập:
 - roadmap/vi: tạo mới roadmap.yml từ F:G:H, không giữ YAML comment, quan hệ hoặc file phụ cũ;
 - readme/vi/menu: tạo toàn bộ README từ Menu A:B và Knowledge C:N (12 ô/hàng);
-- video/vi/menu: lấy script `X:AA` trên hàng Menu cấp 1, không giữ video.url, skeleton, script hay orphan cũ nếu không xuất hiện trong Sheet.
+- video của từng chương tại `content/readme/docs/vi/menu/<chapter>/video/video-script.yml`: lấy script `X:AA` trên hàng Menu cấp 1, chỉ thay các file Video đã được preflight theo ownership và dọn orphan Video cũ; không đụng Knowledge/Metadata/Quiz/Interview.
 
-APPLY luôn dựng và kiểm chứng snapshot mới trong stage, sau đó xóa vĩnh viễn toàn bộ cây đầu ra service sở hữu rồi cài đặt/readback snapshot, kể cả khi nội dung không đổi. Không backup và không merge dữ liệu cũ. Snapshot trống hợp lệ tạo kết quả CLEARED_EMPTY; DRY_RUN không ghi. Với dữ liệu sai cấu trúc, dịch vụ từ chối trước khi xóa. Menu có cấp 1 nhưng thiếu filename vẫn SKIP mà không làm mất file hiện có. Không xóa roadmap/en, readme/en, video/en, README.vi.md, BASE/LIST, metadata hay Sheet. Video importer không tự bật BUILD_VIDEO hoặc chạy Portal projection. Đây chỉ là chính sách của Sheet importer, không thay đổi chính sách human-owned của VideoStructureService khi chạy độc lập.
+Importer Video preflight toàn tab rồi stage từng chương và thay snapshot chỉ cho file `video/video-script.yml`; rollback nếu commit lỗi. **Không bao giờ xóa nguyên cây Menu**; không đụng roadmap/en, docs/en, BASE/LIST, Knowledge, Metadata, Interview, Quiz hoặc Sheet. Video importer không tự bật BUILD_VIDEO hoặc chạy Portal projection; Video trống là optional. Các importer có chính sách ownership riêng, không được sao chép cơ chế xóa toàn thư mục của service khác.
 Current workflow: STEP 5 owns chapter filenames and Java skeletons; STEP 6 implements Java APIs; STEP 7 authors Swagger VI/EN; STEP 8 is unassigned. STEP 9 generates Interview YAML (P:S) from each Menu Cấp 1, with Normalize/import after worker+Prime QA; STEP 10 generates Quiz YAML (T:W) including A/B/C/D answers/explanations and correctAnswerId, with deterministic Normalize/import; STEP 11 enriches related metadata. STEP_OPTIONAL_VIDEO creates Video VI (X:AA) and STEP_OPTIONAL_VIDEO_TRANSLATE handles EN only after STEP_FINAL. Each authoring STEP with workers has its matching worker-only file. Reuse sleeping workers, following Mode A/B limits.
 
 | Sheet authoring contract | Đơn vị sở hữu | Nguồn chính | Vùng kết quả |
@@ -962,7 +960,7 @@ Current workflow: STEP 5 owns chapter filenames and Java skeletons; STEP 6 imple
 - **STEP 5 chapter filenames:** Each chapter worker assigns parent-B `.md` filename, reviews C:N content and child O Difficulty. Prime checks whole-tab filename and kebab-prefix uniqueness and reassigns collisions only to owner. **STEP 9 writes Interview YAML P:S**; STEP 10 writes Quiz YAML T:W; optional Video after FINAL uses X:AA.
 - **STEP 9 Interview YAML (worker + Prime Normalize + Import):** New Template header P18=Interview, P19:S19=Interview YAML; legacy JSON header/source still accepted by code. Worker writes YAML questions with question/answer, Markdown allowed as YAML multiline answer. After all chapters pass, Prime runs root `normalizeInterviewQuestionsFromSheet` DRY_RUN/APPLY to emit normalized YAML with defaults/related and exact readback, then module-local `generateModuleInterviewFromSheetByLocation` DRY_RUN/APPLY; verify `content/interview/vi/question.yml` before advancing J3. Do not auto-migrate stale tabs in STEP.
 - **STEP 10 Quiz YAML (worker + Prime Normalize + Import):** Template header T18=Quiz, T19:W19=Quiz YAML, four adjacent 30k-Unicode cells per parent row. Three Module Content workbooks (45 + 50 + 1 tabs) use the same column ordering: Interview P:S, Quiz T:W, Video X:AA. Worker writes only question/answers A–D/explanations/correctAnswerId; `normalizeQuizQuestionsFromSheet` fills filename+ordinal question IDs (retaining existing), aiGenerated/reviewed defaults, README file-only relation and empty anchor/API; repeated normalized runs are deterministic. Exact readback before module-local `generateModuleQuizFromSheetByLocation`, which validates and replaces `content/quiz/vi/question.yml` only after full-tab completeness, DRY_RUN/APPLY and Prime QA. `LEGACY_QUESTION_LINKS` temporarily supports file-only until anchor is enriched; strict mode does not. No automatic Quiz skeleton in individual modules.
-- **STEP_OPTIONAL_VIDEO (after STEP_FINAL):** X18=Video, X19:AA19=Video Script; worker writes YAML to X:AA on exact parent row with sections aligned to Menu Level 2, SCENE/TRANSITION, timeline, visual/script/purpose. Ensure technical QA equivalent to README but narration natural and not copied from README. After whole-tab QA, Prime runs `generateModuleVideoFromSheetByLocation` DRY_RUN/APPLY, verifies `content/video/vi/menu/<ordinal>.<stem>/video-script.yml` and only then confirms optional completion; **never advances J3**. The optional Video step never reads/writes Interview P:S.
+- **STEP_OPTIONAL_VIDEO (after STEP_FINAL):** X18=Video, X19:AA19=Video Script; worker writes YAML to X:AA on exact parent row with sections aligned to Menu Level 2, SCENE/TRANSITION, timeline, visual/script/purpose. Ensure technical QA equivalent to README but narration natural and not copied from README. After whole-tab QA, Prime runs `generateModuleVideoFromSheetByLocation` DRY_RUN/APPLY, verifies `content/readme/docs/vi/menu/<chapter>/video/video-script.yml` and only then confirms optional completion; **never advances J3**. The optional Video step never reads/writes Interview P:S; Video remains outside STEP 12A/14/15 mandatory VI/EN translation despite sharing the Docs tree.
 - **Phân biệt contract và code importer:** `ReadmeSheetImportService` đọc **đủ Knowledge `C:N` (12 ô/hàng)**; `O` là Difficulty riêng. `InterviewSheetNormalizeService`/importer dùng `P:S`; `QuizSheetNormalizeService`/importer dùng `T:W`; `VideoSheetImportService` dùng `X:AA` trên đúng hàng cha, không còn dùng N-topic/O:R kiểu cũ.
 - Worker preflight giá trị/công thức/metadata của ô đích và ownership trước write; STEP 5 là trường hợp có quyền **thay thế** Knowledge đã tồn tại trong phạm vi của nó, với snapshot, dọn mảnh đuôi và readback. Prime nghiệm thu độc lập và chỉ cập nhật `J3` sau khi **toàn bộ phạm vi tab** đạt QA; thử nghiệm vài chương **không** tự nâng Current STEP. Template, vùng lân cận, notes/format và nội dung không thuộc quyền phải được giữ nguyên.
 
@@ -1219,11 +1217,9 @@ BUILD_VIDEO=FALSE   # canonical default
 
 BUILD_VIDEO=TRUE
         ↓
-ModuleOrchestrationPlugin
+PortalVideoProjectionService (publication only)
         ↓
-VideoSetupPlugin
-        ↓
-VideoStructureService
+Static index.json + per-chapter script.json
 ```
 
 `BUILD_VIDEO=TRUE` yêu cầu `BUILD_README=TRUE` vì README Menu là structural source of truth. Localized Video structure dùng cùng `MODULE_LANGUAGE`; không có language list riêng.
@@ -1231,19 +1227,19 @@ VideoStructureService
 Canonical path mapping:
 
 ```text
-readme/{lang}/menu/<relative-path>.md
-        ↓ mirror folder/file shape
-video/{lang}/menu/<same-relative-path>.md
+content/readme/docs/{lang}/menu/<chapter>/knowledge/*.md
+        ↓ chapter + Menu Cấp 2 mapping (optional after FINAL)
+content/readme/docs/{lang}/menu/<chapter>/video/video-script.yml
 ```
 
-Video không được đặt thành `*_VIDEO.md` bên trong `readme/{lang}/menu`, vì README final-list generation, internal-menu generation và Portal Knowledge projection đều scan Markdown ở namespace đó như Knowledge. Tách `video/` giữ boundary rõ:
+Video là YAML trong thư mục con `video/` của mỗi chapter, không phải Markdown của Knowledge; README final-list, internal-menu và Portal Knowledge chỉ quét `knowledge/*.md`. Tách folder giữ boundary rõ:
 
 ```text
 readme = what to learn
 video  = how to present it
 ```
 
-Structure synchronization chỉ sở hữu việc **tạo file còn thiếu**. Khi source Knowledge tồn tại mà Video path tương ứng chưa tồn tại, service tạo skeleton từ H1/H2 hiện tại. Skeleton giữ metadata rất nhỏ:
+Không có Video skeleton auto-sync. Authored Video YAML được worker tạo trong Sheet X:AA và importer chỉ ghi file của từng chương sau khi preflight toàn bộ. Skeleton sau đây là ví dụ lịch sử để hiểu nội dung presentation, không phải source tự sinh trong module:
 
 ```yaml
 ---
@@ -1270,38 +1266,38 @@ Scene N
 
 Mỗi H2 là một video section/chapter. Section đầu tiên cần ít nhất một Scene; từ section thứ hai trở đi cần ít nhất một Transition từ section trước và ít nhất một Scene. Số Scene thực tế không bị cố định; content-generation step tự quyết định theo độ sâu Knowledge, code walkthrough hoặc runtime evidence.
 
-Ownership sau khi skeleton được tạo:
+Ownership nguồn Video:
 
 ```text
-README H1/H2 + path
-→ structural source of truth
+Knowledge chapter/section titles + finalized content
+→ source of truth for section order and technical correctness
 
 Video URL + Transition/Scene script
 → human/AI-owned presentation content
 ```
 
-Vì vậy ordinary Video structure sync phải tuân thủ:
+Video **không được tạo skeleton tự động khi Gradle Sync**. Chỉ khi optional STEP Video hoàn thành QA, importer mới ghi file dưới đúng chương:
 
 ```text
-README exists + Video missing
-→ CREATE skeleton
+Knowledge chapter exists + Video absent
+→ VALID OPTIONAL STATE; do nothing
 
-README exists + Video exists
-→ KEEP unchanged
+Video Sheet parent cell contains validated YAML
+→ STAGE chapter/video/video-script.yml and APPLY owned Video snapshot
 
-Video exists + README missing
-→ WARN orphan; KEEP unchanged
+Video source exists but Knowledge chapter missing
+→ BLOCKER; do not create a phantom chapter
 ```
 
-Repository deliberately không có stable file id cho mapping này. Path là mapping convention. Nếu README file/folder được rename/move, lần sync kế tiếp tạo skeleton ở path mới và cảnh báo file Video cũ là orphan. Developer tự move/reconcile script + published URL rồi xóa stale artifact khi đã kiểm tra xong. Generator không được đoán rename và không được auto-delete orphan Video vì artifact có thể đã chứa URL publish hoặc script được review.
+Repository không có stable Video file id ngoài chapter identity. Khi đổi tên Knowledge chapter, cần rà soát/di chuyển Video YAML và xác minh `categoryId`, URL publish và các section trước khi import snapshot mới. Importer chỉ dọn những `video-script.yml` thuộc ownership sau khi preflight toàn module thành công, không tự đổi chapter hoặc ghi đè bản dịch EN.
 
-`video/` là supporting content directory và phải bị loại khỏi module-child/module-order discovery giống `readme/`, `roadmap/`, `src/`, `build/`. Nó không tạo module hierarchy mới trong `STRUCTURE.md` hay `module-catalog.json`.
+`<chapter>/video/` là supporting content directory nằm bên cạnh `knowledge/`, `metadata/`, `interview/`, `quiz/`, không phải module con, không tạo hierarchy mới trong `STRUCTURE.md` hoặc `module-catalog.json`.
 
 Về learning dependency, Video script nằm downstream của finalized Knowledge và có thể dùng API/runtime evidence khi evidence đó tồn tại và có giá trị sư phạm. Exact numbered position, prerequisite và rule-file routing của Video không được duplicate trong `ARCHITECTURE.md`; chúng phải được resolve từ canonical `module-generate-agent/GENERAL_AGENT_RULES.md`.
 
-Canonical unit ở cấp kiến trúc là **one Knowledge Menu Markdown file → one Video**; Video path mirror exact relative path của Knowledge và H2 order của Knowledge trở thành Video section order. Narration được phép chuyển written Knowledge thành spoken explanation, thêm transition, visual direction và demo flow, nhưng không được âm thầm tạo technical claim cạnh tranh với Knowledge. Detailed authoring contract được truy cập theo delegation hiện hành trong `GENERAL_AGENT_RULES.md`.
+Canonical unit ở cấp kiến trúc là **một Menu Cấp 1 → một Video YAML optional**, mỗi Menu Cấp 2 là một `sections[]` trong Video theo thứ tự Knowledge. Video nằm ở `content/readme/docs/<lang>/menu/<chapter>/video/video-script.yml`; narration được phép diễn giải/điều phối scene và demo nhưng không được tạo technical claim cạnh tranh với Knowledge. Detailed authoring contract ở `GENERAL_AGENT_RULES.md` và STEP_OPTIONAL_VIDEO.
 
-Current implementation đã có `BUILD_VIDEO` + localized skeleton synchronization + build-time Portal Video projection. `PortalVideoProjectionService` đọc authored `video/{lang}/menu/**/*.md`, bỏ qua skeleton chưa có Scene, validate Scene/Transition fields, rồi generate:
+Current implementation dùng `BUILD_VIDEO` để bật build-time Portal Video projection (không tự tạo skeleton). `PortalVideoProjectionService` đọc authored `content/readme/docs/{lang}/menu/<chapter>/video/video-script.yml`, validate Scene/Transition fields, rồi generate:
 
 ```text
 build/learning-data/java/module/{ROUTE_ID}/video/{lang}/index.json
@@ -1310,7 +1306,7 @@ build/learning-data/java/module/{ROUTE_ID}/video/{lang}/content/{categoryId}/scr
 
 `ProjectStructureService` chỉ expose `video.{lang}` trong `module-catalog.json` khi language đó thực sự có authored Scene content. Vite dùng `build/learning-data/java` làm `publicDir`, sau đó `processResources` copy frontend build vào `classpath:/static`, nên Video projection đi cùng static-first Portal pipeline mà không cần REST endpoint hay copy mechanism riêng.
 
-**Embedded video và script-table UI vẫn chưa được implement**. Source vẫn phải là `video/{lang}/menu/**/*.md`; generated Portal data chỉ là downstream projection và không được write-back vào source.
+Frontend dùng Video index và script JSON riêng theo từng chapter; YAML trong `<chapter>/video/` chỉ là authoring source, Portal projection downstream không được write-back vào source.
 
 ---
 
@@ -2307,7 +2303,7 @@ trừ khi architecture contract của artifact đó được thay đổi rõ rà
 | Portal module hierarchy/catalog | filesystem/module discovery + module metadata via `ProjectStructureService` | `build/learning-data/java/module-catalog.json` |
 | Portal module Overview | `module/**/readme/{lang}/BASE.md` | `build/learning-data/java/module/{ROUTE_ID}/overview/{lang}.md` |
 | Portal Knowledge | `module/**/readme/{lang}/menu/**/*.md` anchored sections + `src/main/resources/readme/{lang}/knowledge-metadata.yml` governance | `build/learning-data/java/module/{ROUTE_ID}/knowledge/{lang}/...` |
-| Portal Video | authored `module/**/video/{lang}/menu/**/*.md` when `BUILD_VIDEO=TRUE` | `build/learning-data/java/module/{ROUTE_ID}/video/{lang}/index.json` + `content/{categoryId}/script.json` + catalog `video` path |
+| Portal Video | authored `module/**/content/readme/docs/{lang}/menu/<chapter>/video/video-script.yml` when `BUILD_VIDEO=TRUE` | `build/learning-data/java/module/{ROUTE_ID}/video/{lang}/index.json` + `content/{categoryId}/script.json` + catalog `video` path |
 | Portal Quiz | `BUILD_QUIZ=TRUE` + `module/**/src/main/resources/quiz/{lang}/question.yml` validated by canonical Quiz schema | `build/learning-data/java/module/{ROUTE_ID}/quiz/{lang}/question.yml` + catalog `quiz` path |
 | Portal Interview | `BUILD_INTERVIEW=TRUE` + `module/**/src/main/resources/interview/{lang}/question.yml` validated by canonical Interview schema | `build/learning-data/java/module/{ROUTE_ID}/interview/{lang}/question.yml` + catalog `interview` path |
 | Portal API metadata | complete `module/**/src/main/resources/swagger/{lang}` four-file set | `build/learning-data/java/module/{ROUTE_ID}/api/{lang}/...` + catalog `api` base path |

@@ -11,7 +11,7 @@
 ### W1 — Nguồn và quyền sở hữu
 
 1. Xác minh URL tab/gid do Prime giao. Đọc trực tiếp **chỉ** `A1,B1,A<PARENT>,B<PARENT>`, các `B<child>` và toàn bộ `C:N` trên đúng hàng con được giao. Ghép nguyên văn các ô Knowledge C→N **không separator**; đọc đủ mọi bài.
-2. `A<PARENT>` là tên Menu Cấp 1 / `title` YAML. `B<PARENT>` phải là **filename Knowledge `.md` hợp lệ** đã hoàn tất STEP 5; không tự đổi thành `.yml`. Mỗi `B<child>` là một `sections[].title` đúng nguyên văn và đúng thứ tự. Tên file thực tế khi nhập module được code suy ra từ B cha: `<ordinal>.<stem>/video-script.yml`. Worker **không đặt path** và không ghi tên file trong YAML.
+2. `A<PARENT>` là tên Menu Cấp 1 / `title` YAML. `B<PARENT>` phải là **filename Knowledge `.md` hợp lệ** đã hoàn tất STEP 5; không tự đổi thành `.yml`. Mỗi `B<child>` là một `sections[].title` đúng nguyên văn và đúng thứ tự. Tên file thực tế khi nhập module được code suy ra từ B cha: `content/readme/docs/vi/menu/<ordinal>.<stem>/video/video-script.yml`. Worker **không đặt path** và không ghi tên file trong YAML.
 3. Chỉ ghi `X<PARENT_ROW>:AA<PARENT_ROW>` của hàng cha. Không chọn số hàng từ chỉ số chương, không viết các hàng con, không sửa A:W, J3, Template, tab khác hoặc repo.
 4. Nếu Knowledge thiếu/truncated, Menu cha sai, filename B cha chưa QA hoặc header `X19:AA19 = Video Script` không đúng theo Prime: báo BLOCKER, không đoán. Vùng có script sẵn chỉ được đánh giá `UNCHANGED` hoặc sửa đúng lỗi `FORMAT_FIX` theo quy tắc đầu file, không sinh lại.
 

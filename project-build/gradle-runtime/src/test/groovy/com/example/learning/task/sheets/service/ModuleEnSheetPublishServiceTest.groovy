@@ -83,6 +83,28 @@ class ModuleEnSheetPublishServiceTest {
     }
 
     @Test
+    void videoAuthoredAfterStep15DoesNotChangeMandatoryPublishFingerprint() {
+        Map f = fixture()
+        List<String> events = []
+        List<Map> tabs = [
+                [gid:'0', title:'Template', moduleLocation:'', rows:700, columns:28],
+                [gid:'111', title:'OOP', moduleLocation:'module/demo', rows:700, columns:28]
+        ]
+        def service = mocked(tabs, events)
+        service.execute(f.root, f.module, URL, '111', 'CLONE', true)
+        File video = new File(f.module,
+                'content/readme/docs/en/menu/1.Basic/video/video-script.yml')
+        assertTrue(video.parentFile.mkdirs())
+        video.text = 'English Video authored after STEP 15'
+        assertEquals('APPLIED', service.execute(f.root, f.module,
+                URL, '111', 'CLONE', true).status)
+        video.text = 'Revised English Video'
+        assertEquals('APPLIED', service.execute(f.root, f.module,
+                URL, '111', 'CLONE', true).status)
+        assertEquals(1, events.count { it.startsWith('duplicate:') })
+    }
+
+    @Test
     void detectsDriftWithinChapterInterviewSource() {
         Map f = fixture()
         File question = new File(f.module,
@@ -118,6 +140,7 @@ class ModuleEnSheetPublishServiceTest {
                 sheet.getRow(19).getCell(0).setCellValue('English chapter')
                 sheet.getRow(20).getCell(1).setCellValue('English lesson')
                 sheet.getRow(20).createCell(2).setCellValue('English knowledge')
+                sheet.getRow(19).createCell(23).setCellValue('Optional Video EN')
                 en.withOutputStream { book.write(it) }
             }
         }
@@ -130,6 +153,7 @@ class ModuleEnSheetPublishServiceTest {
         assertTrue(plan.any { it.r==18 && it.c==0 && it.value=='Chapter' })
         assertTrue(plan.any { it.r==18 && it.c==15 && it.value=='Interview YAML' })
         assertFalse(plan.any { it.r==18 && it.c==14 }) // Difficulty header preserved
+        assertFalse(plan.any { it.r==19 && it.c in (23..26) }) // Video is optional
         List<Request> requests = []
         def service = new ModuleEnSheetPublishService() {
             @Override

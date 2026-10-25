@@ -192,9 +192,10 @@ class ModuleTranslationCatalogService {
             entries.add([type: type, viPath: vi, enPath: en,
                          viSha256: sha(viFile.bytes), enSha256: sha(enFile.bytes)])
         }
-        // Optional localized subtrees must not retain EN-only files.
+        // STEP 14 owns mandatory translations only. Video is authored later,
+        // and a chapter may have a VI script without an EN counterpart.
         for (String area : ['content/readme/docs', 'content/roadmap',
-                             'content/video', SWAGGER[0..-2]]) {
+                             SWAGGER[0..-2]]) {
             File vi = new File(module, area + '/vi')
             File en = new File(module, area + '/en')
             Set a = walk(vi) as Set
@@ -224,12 +225,18 @@ class ModuleTranslationCatalogService {
         try {
             List<String> values = []
             paths.forEach { Path child ->
+                String relative = root.relativize(child).toString()
+                        .replace(File.separatorChar, '/' as char)
+                // Video lives below README chapters but belongs to a later,
+                // independent workflow. Ignore its entire optional subtree.
+                boolean docs = directory.toString().replace(File.separatorChar, '/' as char)
+                        .contains('/content/readme/docs/')
+                if (docs && relative ==~ /(?:menu\/)?[^\/]+\/video(?:\/.*)?/) return
                 if (Files.isSymbolicLink(child)) {
                     throw new GradleException('Symlink not permitted: ' + child)
                 }
                 if (Files.isRegularFile(child, LinkOption.NOFOLLOW_LINKS)) {
-                    values.add(root.relativize(child).toString()
-                            .replace(File.separatorChar, '/' as char))
+                    values.add(relative)
                 }
             }
             return values.sort()

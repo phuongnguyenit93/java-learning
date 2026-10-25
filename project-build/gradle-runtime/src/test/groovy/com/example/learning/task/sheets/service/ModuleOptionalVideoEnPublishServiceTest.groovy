@@ -25,7 +25,7 @@ class ModuleOptionalVideoEnPublishServiceTest {
     @Test
     void refusesMissingEnglishVideoChapter() {
         File module = fixture()
-        File en = new File(module, 'content/video/en/menu/1.Intro/video-script.yml')
+        File en = new File(module, 'content/readme/docs/en/menu/1.Intro/video/video-script.yml')
         assertTrue(en.delete())
         try {
             ModuleOptionalVideoEnPublishService.plan(module)
@@ -38,13 +38,23 @@ class ModuleOptionalVideoEnPublishServiceTest {
     @Test
     void refusesOrphanVideoThatDoesNotMapToMenu() {
         File module = fixture()
-        write(module, 'content/video/en/menu/2.Orphan/video-script.yml', script('Orphan'))
+        write(module, 'content/readme/docs/en/menu/2.Orphan/video/video-script.yml', script('Orphan'))
         try {
             ModuleOptionalVideoEnPublishService.plan(module)
             fail('Expected orphan detection')
         } catch (GradleException ex) {
             assertTrue(ex.message.contains('Orphan'))
         }
+    }
+
+    @Test
+    void otherDocumentsInReadmeMenuAreOutsideOptionalVideoPlan() {
+        File module = fixture()
+        write(module, 'content/readme/docs/en/menu/1.Intro/knowledge/Intro.md',
+                '# English lesson')
+        write(module, 'content/readme/docs/vi/menu/1.Intro/quiz/question.yml',
+                'questions: []')
+        assertEquals(4, ModuleOptionalVideoEnPublishService.plan(module).size())
     }
 
     private File fixture() {
@@ -65,9 +75,9 @@ class ModuleOptionalVideoEnPublishServiceTest {
             sheet.createRow(20).createCell(1).setCellValue('Tổng quan')
             excel.withOutputStream { book.write(it) }
         }
-        write(module, 'content/video/vi/menu/1.Intro/video-script.yml',
+        write(module, 'content/readme/docs/vi/menu/1.Intro/video/video-script.yml',
                 script('Giới thiệu', 'Tổng quan'))
-        write(module, 'content/video/en/menu/1.Intro/video-script.yml',
+        write(module, 'content/readme/docs/en/menu/1.Intro/video/video-script.yml',
                 script('English overview'))
         return module
     }

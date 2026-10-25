@@ -5,50 +5,73 @@ import com.google.api.services.sheets.v4.Sheets
 import org.gradle.api.GradleException
 
 /**
- * Imports authored Video Script YAML from X:AA on the actual Menu Level 1 row.
- * The Sheet owns the complete content/video/vi/menu snapshot. Empty scripts
- * remove their obsolete files and APPLY replaces all prior Video files.
- * No AI inference, no module skeleton generation and no metadata merger.
+ * Imports optional Video Script YAML from X:AA on each Menu Level 1 parent.
+ * The Sheet owns only the VI chapter/video/video-script.yml files. A blank
+ * Video column snapshot clears those files without touching other content.
  */
 class VideoSheetImportService {
     private static final int CELL_LIMIT = 30000
 
     Map<String, Object> execute(File root, Map<String, Object> context, boolean apply) {
-        File readme = ReadmeSheetImportService.resolveMenuDirectory(
+        File menu = ReadmeSheetImportService.resolveMenuDirectory(
                 root, context.moduleLocation as String)
-        File directory = new File(readme.parentFile.parentFile.parentFile.parentFile, 'video/vi/menu')
+        File module = new File(root.canonicalFile, context.moduleLocation as String).absoluteFile
         Sheets sheets = context.client as Sheets
         String id = context.spreadsheetId as String
         String tab = "'" + (context.tabTitle as String).replace("'", "''") + "'"
-        List<List<Object>> menu = (sheets.spreadsheets().values()
+        Map base = [tab: context.tabTitle, gid: context.sheetId,
+                    location: context.moduleLocation, directory: menu]
+
+        def metadata = sheets.spreadsheets().get(id)
+                .setFields('sheets(properties(sheetId,gridProperties(columnCount)))')
+                .execute()
+        def selected = (metadata.sheets ?: []).find {
+            it.properties?.sheetId?.toString() == context.sheetId?.toString()
+        }
+        if (!selected) {
+            throw new GradleException("Video tab gid=${context.sheetId} no longer exists.")
+        }
+        if ((selected.properties?.gridProperties?.columnCount ?: 0) < 27) {
+            return base + [status: 'SKIPPED_NO_VIDEO_SCHEMA', videoCount: 0,
+                           writtenVideos: 0, skippedEmptyVideos: 0,
+                           pendingVideos: 0, clearedOldFiles: 0]
+        }
+
+        List<List<Object>> menuRows = (sheets.spreadsheets().values()
                 .get(id, tab + '!A19:B').execute().values ?: []) as List<List<Object>>
-        Map parsed = ReadmeSheetImportService.parseMenu(menu)
+        Map parsed = ReadmeSheetImportService.parseMenu(menuRows)
         if (parsed.status != 'READY') {
-            if (parsed.status == 'SKIPPED_EMPTY_MENU') {
-                return sync(directory, [], [:], apply, root) + [
-                        tab: context.tabTitle, gid: context.sheetId,
-                        location: context.moduleLocation, directory: directory]
-            }
-            return [status: parsed.status, videoCount: 0, writtenVideos: 0,
-                    skippedEmptyVideos: 0, missingRows: parsed.missingRows ?: []]
+            return base + [status: parsed.status, videoCount: 0,
+                           writtenVideos: 0, skippedEmptyVideos: 0,
+                           pendingVideos: 0, clearedOldFiles: 0,
+                           missingRows: parsed.missingRows ?: []]
         }
         List<Map> groups = parsed.groups as List<Map>
-        List<List<Object>> video = (sheets.spreadsheets().values()
-                .get(id, tab + '!X19:AA' + (parsed.lastRow as int))
-                .execute().values ?: []) as List<List<Object>>
-        Map<String, String> scripts = parseSheet(groups, video)
-        return sync(directory, groups, scripts, apply, root) + [
-                tab: context.tabTitle, gid: context.sheetId,
-                directory: directory, location: context.moduleLocation]
+        List<List<Object>> rows = (sheets.spreadsheets().values()
+                .get(id, tab + '!X19:AA').execute().values ?: []) as List<List<Object>>
+        // Video is optional. A sheet with no Video headers/data is not an
+        // instruction to delete authored files. Four present headers and
+        // empty parent cells, however, are an intentional empty snapshot.
+        if (rows.every { List<Object> cells -> (0..<4).every { !raw(cells, it) } }) {
+            return base + [status: 'SKIPPED_NO_VIDEO_SCHEMA', videoCount: 0,
+                           writtenVideos: 0, skippedEmptyVideos: 0,
+                           pendingVideos: 0, clearedOldFiles: 0]
+        }
+        Map<String, String> scripts = parseSheet(groups, rows)
+        return base + sync(root, module, groups, scripts, apply)
     }
 
-    /**
-     * X19:AA19 are the four Video Script headers; X20:AA20 is parent row 20.
-     * For every Menu Level 1 use group.parentRow, never the group ordinal.
-     */
+    /** The Video range starts at X19; X20 is the actual first parent row. */
     static Map<String, String> parseSheet(List<Map> groups, List<List<Object>> video) {
         if (!(0..<4).every { int c -> raw(row(video, 0), c).trim() == 'Video Script' }) {
             throw new GradleException('Invalid Video headers at X19:AA19.')
+        }
+        Set<Integer> parents = groups.collect { (it.parentRow as Number).intValue() } as Set
+        video.drop(1).eachWithIndex { List<Object> cells, int offset ->
+            int sheetRow = offset + 20
+            if (!parents.contains(sheetRow) && (0..<4).any { int c -> raw(cells, c) }) {
+                throw new GradleException("Orphan Video data at X${sheetRow}:AA${sheetRow}.")
+            }
         }
         Map<String, String> scripts = new LinkedHashMap<>()
         groups.eachWithIndex { Map group, int index ->
@@ -61,9 +84,7 @@ class VideoSheetImportService {
             boolean gap = false
             (0..<4).each { int c ->
                 String part = raw(cells, c)
-                if (!part) {
-                    gap = true
-                }
+                if (!part) gap = true
                 else {
                     if (gap) {
                         throw new GradleException("Noncontiguous Video fragments at X${sheetRow}:AA${sheetRow}.")
@@ -79,11 +100,10 @@ class VideoSheetImportService {
             if (!(filename ==~ /(?i)[a-z][a-z0-9]*\.md/)) {
                 throw new GradleException("Invalid Knowledge filename for Video at B${sheetRow}: ${filename}")
             }
-            String stem = filename.substring(0, filename.length() - 3)
-            String relative = "${index + 1}.${stem}/${VideoYamlContentUtils.FILENAME}"
+            String chapter = "${index + 1}.${filename.substring(0, filename.length() - 3)}"
             validateVideo(content.toString(), group.title as String,
                     (group.children as List<Map>).collect { it.title as String })
-            scripts[relative] = content.toString()
+            scripts[chapter] = content.toString()
         }
         return scripts
     }
@@ -94,29 +114,19 @@ class VideoSheetImportService {
                 transitions: validated.transitions]
     }
 
-    static Map sync(File videoDirectory, List<Map> groups,
-                    Map<String, String> scripts, boolean apply, File repositoryRoot) {
-        Map<String, String> previous = SheetSnapshotReplaceService.readTree(videoDirectory)
-        int unchanged = scripts.count { String name, String content ->
-            previous[name] == content
-        }
-        Map result = SheetSnapshotReplaceService.replace(
-                repositoryRoot, videoDirectory, scripts, apply)
-        return result + [
-                videoCount: scripts.size(),
-                skippedEmptyVideos: groups.size() - scripts.size(),
-                unchangedVideos: unchanged,
-                writtenVideos: apply ? scripts.size() : 0,
-                pendingVideos: apply ? 0 :
-                        (scripts.count { String name, String content ->
-                            previous[name] != content
-                        } + previous.keySet().count { String name ->
-                            !scripts.containsKey(name)
-                        }),
-                filePaths: scripts.keySet().collect { String name ->
-                    new File(videoDirectory, name).toString()
-                }
-        ]
+    static Map sync(File root, File module, List<Map> groups,
+                    Map<String, String> scripts, boolean apply) {
+        Map result = ChapterVideoSnapshotService.replace(root, module, scripts, apply)
+        int unchanged = result.unchangedFiles as int
+        return result + [videoCount: scripts.size(),
+                         skippedEmptyVideos: groups.size() - scripts.size(),
+                         unchangedVideos: unchanged,
+                         writtenVideos: apply ? scripts.size() : 0,
+                         pendingVideos: apply ? 0 : result.pendingFiles,
+                         filePaths: scripts.keySet().collect { String chapter ->
+                             new File(module,
+                                     "content/readme/docs/vi/menu/${chapter}/video/${VideoYamlContentUtils.FILENAME}").toString()
+                         }]
     }
 
     private static List<Object> row(List<List<Object>> rows, int index) {

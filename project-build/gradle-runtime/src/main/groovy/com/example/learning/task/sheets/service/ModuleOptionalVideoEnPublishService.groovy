@@ -155,9 +155,9 @@ class ModuleOptionalVideoEnPublishService extends ModuleEnSheetPublishService {
                 int authored = 0
                 chapters.each { Map chapter ->
                     String relative = (chapter.source as String)
-                            .replaceFirst('/[^/]+$', '/video-script.yml')
-                    File viFile = safe(module, 'content/video/vi/menu/' + relative)
-                    File enFile = safe(module, 'content/video/en/menu/' + relative)
+                            .replaceFirst('/[^/]+$', '/video/video-script.yml')
+                    File viFile = safe(module, 'content/readme/docs/vi/menu/' + relative)
+                    File enFile = safe(module, 'content/readme/docs/en/menu/' + relative)
                     if (viFile.isFile() != enFile.isFile()) {
                         throw new GradleException('VI/EN Video coverage differs: ' + relative)
                     }
@@ -197,23 +197,30 @@ class ModuleOptionalVideoEnPublishService extends ModuleEnSheetPublishService {
                 if (!authored) throw new GradleException('No VI Video scripts for optional sync.')
                 // Detect orphan EN or VI files (a renamed chapter must not be silently lost).
                 for (String lang : ['vi', 'en']) {
-                    File menu = safe(module, 'content/video/' + lang + '/menu')
+                    File menu = safe(module, 'content/readme/docs/' + lang + '/menu')
                     if (!menu.isDirectory()) continue
                     Set<String> expected = chapters.collect { Map chapter ->
-                        (chapter.source as String).replaceFirst('/[^/]+$', '/video-script.yml')
+                        (chapter.source as String).replaceFirst('/[^/]+$', '/video/video-script.yml')
                     } as Set<String>
-                    menu.eachFileRecurse { File file ->
-                        if (Files.isSymbolicLink(file.toPath())) {
-                            throw new GradleException('Symlink Video forbidden: ' + file)
-                        }
-                        if (file.isFile()) {
-                            String relative = menu.toPath().relativize(file.toPath())
-                                    .toString().replace(File.separatorChar, '/' as char)
-                            if (!expected.contains(relative)) {
-                                throw new GradleException('Orphan ' + lang + ' Video: ' + relative)
+                    def paths = Files.walk(menu.toPath())
+                    try {
+                        paths.forEach { Path path ->
+                            String relative = menu.toPath().relativize(path).toString()
+                                    .replace(File.separatorChar, '/' as char)
+                            // Other README, Knowledge, Quiz and Interview files
+                            // live in this tree and are outside Video ownership.
+                            if (!(relative ==~ /[^\/]+\/video(?:\/.*)?/) &&
+                                    !relative.endsWith('/video-script.yml')) return
+                            if (Files.isSymbolicLink(path)) {
+                                throw new GradleException('Symlink Video forbidden: ' + path)
+                            }
+                            if (Files.isRegularFile(path, LinkOption.NOFOLLOW_LINKS)) {
+                                if (!expected.contains(relative)) {
+                                    throw new GradleException('Orphan ' + lang + ' Video: ' + relative)
+                                }
                             }
                         }
-                    }
+                    } finally { paths.close() }
                 }
                 return plan
             }
@@ -236,16 +243,24 @@ class ModuleOptionalVideoEnPublishService extends ModuleEnSheetPublishService {
 
     private static String snapshot(File module) {
         MessageDigest sha = MessageDigest.getInstance('SHA-256')
-        for (String folder : ['content/video/vi/menu', 'content/video/en/menu']) {
+        for (String folder : ['content/readme/docs/vi/menu',
+                              'content/readme/docs/en/menu']) {
             File directory = safe(module, folder)
             if (!directory.isDirectory()) continue
-            List<File> files = []
-            directory.eachFileRecurse { File file -> if (file.isFile()) files.add(file) }
-            files.sort { File file -> file.absolutePath }.each { File file ->
-                safe(module, module.toPath().relativize(file.toPath()).toString())
-                sha.update(file.absolutePath.getBytes('UTF-8'))
-                sha.update(file.bytes)
-            }
+            def paths = Files.walk(directory.toPath())
+            try {
+                List<Path> files = []
+                paths.forEach { Path file ->
+                    if (file.fileName.toString() == 'video-script.yml') files.add(file)
+                }
+                files.sort { Path file -> file.toString() }.each { Path file ->
+                    File video = safe(module, module.toPath().relativize(file).toString())
+                    if (Files.isRegularFile(file, LinkOption.NOFOLLOW_LINKS)) {
+                        sha.update(video.absolutePath.getBytes('UTF-8'))
+                        sha.update(video.bytes)
+                    }
+                }
+            } finally { paths.close() }
         }
         sha.update(safe(module, 'content/sheet/vi/module.xlsx').bytes)
         return sha.digest().encodeHex().toString()

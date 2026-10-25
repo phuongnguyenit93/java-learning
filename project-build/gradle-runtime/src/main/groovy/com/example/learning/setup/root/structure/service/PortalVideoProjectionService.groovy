@@ -14,7 +14,7 @@ import java.nio.file.Path
 /**
  * Video YAML -> published Video Script / Video Index JSON.
  * Video's source category identity comes from its Knowledge chapter folder
- * (e.g. 1.Introduction/video-script.yml -> Introduction), NOT its common
+ * (e.g. 1.Introduction/video/video-script.yml -> Introduction), NOT its common
  * filename video-script.yml. No Markdown parsing and no source writes.
  */
 class PortalVideoProjectionService {
@@ -51,11 +51,12 @@ class PortalVideoProjectionService {
                     .toString().trim()
             boolean anyVideo = false
             languages.each { String language ->
-                File menu = new File(module.projectDir, "content/video/${language}/menu")
+                File menu = new File(module.projectDir, "content/readme/docs/${language}/menu")
                 if (!menu.isDirectory()) return
                 List<File> scriptFiles = []
                 menu.eachFileRecurse { File file ->
-                    if (file.isFile() && file.name == VideoYamlContentUtils.FILENAME) {
+                    if (file.isFile() && file.name == VideoYamlContentUtils.FILENAME &&
+                            file.parentFile.name == 'video') {
                         scriptFiles.add(file)
                     }
                 }
@@ -63,8 +64,8 @@ class PortalVideoProjectionService {
                     VideoYamlContentUtils.categoryId(file)
                 }
                 scriptFiles.sort { File a, File b ->
-                    int leftOrder = Integer.parseInt(a.parentFile.name.split('\\.')[0])
-                    int rightOrder = Integer.parseInt(b.parentFile.name.split('\\.')[0])
+                    int leftOrder = Integer.parseInt(a.parentFile.parentFile.name.split('\\.')[0])
+                    int rightOrder = Integer.parseInt(b.parentFile.parentFile.name.split('\\.')[0])
                     (leftOrder <=> rightOrder) ?:
                             (relativePath(menu, a) <=> relativePath(menu, b))
                 }
@@ -74,8 +75,9 @@ class PortalVideoProjectionService {
                 Set<String> categoryIds = new LinkedHashSet<>()
                 scriptFiles.each { File scriptFile ->
                     String relative = relativePath(menu, scriptFile)
-                    if (relative.count('/') != 1) {
-                        throw new GradleException("Video Script must be inside a single chapter folder: ${scriptFile}")
+                    if (relative.count('/') != 2 ||
+                            !relative.endsWith('/video/' + VideoYamlContentUtils.FILENAME)) {
+                        throw new GradleException("Video Script must belong to chapter/video/: ${scriptFile}")
                     }
                     String categoryId = VideoYamlContentUtils.categoryId(scriptFile)
                     if (!categoryIds.add(categoryId.toLowerCase(Locale.ROOT))) {

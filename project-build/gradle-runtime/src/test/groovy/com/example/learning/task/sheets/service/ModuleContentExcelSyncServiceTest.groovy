@@ -84,6 +84,24 @@ class ModuleContentExcelSyncServiceTest {
     }
 
     @Test
+    void videoExportChecksMissingEnglishWhenVietnameseVideoExists() {
+        Map f = fixture()
+        File module = f.module as File
+        write(module, 'content/readme/docs/vi/menu/1.Basic/video/video-script.yml',
+                'title: Vietnamese Video')
+        File en = new File(module,
+                'content/readme/docs/en/menu/1.Basic/video/video-script.yml')
+        assertTrue(en.delete())
+        try {
+            new ModuleContentExcelSyncService().execute(f.root as File, module,
+                    'VIDEO', false)
+            fail('Explicit Video export must detect an untranslated VI chapter')
+        } catch (GradleException error) {
+            assertTrue(error.message.contains('Missing EN Video'))
+        }
+    }
+
+    @Test
     void requiresExpectedAnchorAndKeepsExistingWorkbookIntact() {
         Map f = fixture()
         def service = new ModuleContentExcelSyncService()
@@ -287,7 +305,7 @@ questions:
     correctAnswerId: A
     readmeRelated: {anchor: basic-001}
 '''.trim())
-        write(module, 'content/video/en/menu/1.Basic/video-script.yml', '''
+        write(module, 'content/readme/docs/en/menu/1.Basic/video/video-script.yml', '''
 title: English video script
 sections:
   - title: English lesson

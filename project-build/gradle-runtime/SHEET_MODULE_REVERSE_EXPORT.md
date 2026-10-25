@@ -37,7 +37,7 @@ modify VI Excel, or write to Google Sheets.
 | `syncModuleRoadmapToExcel` | `content/roadmap/en/roadmap.yml` | `F3:H` milestone title, purpose, objectives |
 | `syncModuleInterviewToExcel` | `content/interview/en/question.yml` | `P:S` at its original chapter parent row |
 | `syncModuleQuizToExcel` | `content/quiz/en/question.yml` | `T:W` at its original chapter parent row |
-| `syncModuleVideoToExcel` | `content/video/en/menu/*/video-script.yml` | `X:AA` at its original chapter parent row |
+| `syncModuleVideoToExcel` | `content/readme/docs/en/menu/<chapter>/video/video-script.yml` | `X:AA` at its original chapter parent row; optional after FINAL |
 | `syncModuleContentToExcel` | All applicable sources above | All above ranges, one atomic write |
 
 `DRY_RUN` is the default. Each task uses the **existing** EN workbook if it
