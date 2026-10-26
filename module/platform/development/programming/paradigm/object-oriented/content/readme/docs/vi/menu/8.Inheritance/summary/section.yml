@@ -75,10 +75,6 @@ roadmap:
   title: Giới hạn và chi phí của cây kế thừa sâu
   description: |-
     Nhận diện fragile base class, chi phí kiểm thử của cây sâu và lựa chọn giữ nguyên hợp đồng khi tái cấu trúc.
-
-    **Mối liên hệ:** Chương bắt đầu từ hợp đồng is-a và cấu trúc đối tượng, chuyển sang mở rộng/ghi đè hành vi, giới hạn truy cập và khởi tạo, rồi xác định các điểm mở rộng hợp lệ. Hai bài về interface và mixin bổ sung cách ghép khả năng ngoài một cây lớp; bài cuối đặt mọi lựa chọn trong bối cảnh chi phí bảo trì và rủi ro thay đổi. Thứ tự này hỗ trợ học theo chiều sâu, nhưng mixin/trait cũng là một góc nhìn so sánh độc lập với kỹ thuật kế thừa lớp.
-
-    [↓ Xem bảng đối chiếu các bài học](#2-bảng-đối-chiếu-các-bài-học)
   transition: null
 comparisonMarkdown: |-
   ## 2. Bảng đối chiếu các bài học

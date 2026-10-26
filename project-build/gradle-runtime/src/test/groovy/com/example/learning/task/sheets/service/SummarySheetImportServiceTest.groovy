@@ -134,4 +134,22 @@ class SummarySheetImportServiceTest {
             assertTrue(expected.message.contains('Invalid roadmap lesson'))
         }
     }
+
+    @Test
+    void refusesLegacyConclusionAndComparisonAnchorInsideLessonDescription() {
+        List<String> ids = ['oop-basic-001', 'oop-basic-002']
+        for (String extra : [
+                '\n\n**Mối liên hệ:** Tổng kết không thuộc bài cuối.',
+                '\n\n[↓ Xem bảng đối chiếu các bài học](#2-bảng-đối-chiếu-các-bài-học)'
+        ]) {
+            Map value = new Yaml().load(section('OOP', ids)) as Map
+            value.roadmap[1].description += extra
+            try {
+                SummarySectionYamlService.read(new Yaml().dump(value), ids)
+                fail('Redundant chapter prose accepted: ' + extra)
+            } catch (GradleException expected) {
+                assertTrue(expected.message.contains('Redundant chapter conclusion/link'))
+            }
+        }
+    }
 }

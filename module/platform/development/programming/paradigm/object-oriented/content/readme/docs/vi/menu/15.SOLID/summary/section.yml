@@ -64,10 +64,6 @@ roadmap:
   title: Cân bằng các nguyên tắc với độ phức tạp thực tế
   description: |-
     Đánh giá KISS/YAGNI/DRY và change surface: từ SimpleCheckout một rule đến DeliveryFeePolicy khi Standard/Express thay đổi riêng, giữ kiểm thử và tránh overengineering.
-
-    **Mối liên hệ:** Bài đầu tạo bản đồ năm nguyên tắc, sau đó lần lượt đi sâu vào SRP để xác định ranh giới trách nhiệm, OCP để mở rộng có kiểm soát, LSP để bảo vệ tính thay thế và ISP để giữ interface trung thực với client. DIP sắp lại hướng phụ thuộc, bài kế tiếp làm rõ DI là kỹ thuật lắp ghép phục vụ thiết kế; bài cuối dùng áp lực thay đổi thực tế, test và chi phí abstraction để quyết định mức SOLID phù hợp.
-
-    [↓ Xem bảng đối chiếu các bài học](#2-bảng-đối-chiếu-các-bài-học)
   transition: null
 comparisonMarkdown: |-
   ## 2. Bảng đối chiếu các bài học

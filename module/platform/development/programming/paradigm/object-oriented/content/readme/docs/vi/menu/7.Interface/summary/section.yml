@@ -72,10 +72,6 @@ roadmap:
   title: Thiết kế giao diện thanh toán hoặc lưu trữ
   description: |-
     Tách PaymentGateway, PaymentRepository và CheckoutService qua DTO và constructor injection; dùng fake kiểm tra luồng yêu cầu. Bài chỉ rõ giới hạn idempotency trong RAM khi gateway thành công nhưng lưu kết quả thất bại.
-
-    **Mối liên hệ:** Chương bắt đầu bằng việc xác định interface là lời hứa và vai trò, chuyển sang triển khai, tổ chức phụ thuộc và kết hợp nhiều vai trò, rồi ra quyết định interface/abstract class/composition và phân tách ISP. Quy tắc thành viên Java giải thích tính khả thi của thiết kế; behavioral contract/LSP cho tiêu chí kiểm chứng khi thay implementation; bài checkout cuối áp dụng toàn bộ vào hai adapter hạ tầng và những tình huống lỗi thực tế.
-
-    [↓ Xem bảng đối chiếu các bài học](#2-bảng-đối-chiếu-các-bài-học)
   transition: null
 comparisonMarkdown: |-
   ## 2. Bảng đối chiếu các bài học

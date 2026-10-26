@@ -72,10 +72,6 @@ roadmap:
   title: Tránh để đối tượng chưa khởi tạo xong bị sử dụng
   description: |-
     Bảo đảm object được khởi tạo hoàn tất trước khi công bố cho callback, thread hay registry; sử dụng safe publication phù hợp.
-
-    **Mối liên hệ:** Chương đi từ bản chất tạo đối tượng và bảo vệ trạng thái ban đầu, qua các cách xây dựng đối tượng, tới khả năng truy cập và thu hồi bộ nhớ. Sau đó, người học chuyển sang trách nhiệm đóng tài nguyên và cuối cùng bảo vệ thời điểm object được đưa ra cho mã ngoài hoặc luồng khác. GC, `close()` và safe publication giải quyết ba khía cạnh khác nhau của vòng đời; cần kiểm tra đúng hợp đồng của từng khía cạnh.
-
-    [↓ Xem bảng đối chiếu các bài học](#2-bảng-đối-chiếu-các-bài-học)
   transition: null
 comparisonMarkdown: |-
   ## 2. Bảng đối chiếu các bài học

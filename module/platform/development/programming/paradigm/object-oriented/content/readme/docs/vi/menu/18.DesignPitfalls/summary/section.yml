@@ -77,10 +77,6 @@ roadmap:
   title: Lạm dụng mẫu thiết kế và trừu tượng hóa quá sớm
   description: |-
     Nhìn bằng chứng biến thiên trước khi đưa Strategy/Factory vào thiết kế; dùng regression tests để tiến hóa từ chính sách đơn.
-
-    **Mối liên hệ:** Chương đi từ trách nhiệm của class và invariant của object tới thiết kế API có hành vi, sử dụng kế thừa/đa hình và interface đúng hợp đồng. Những bài về phụ thuộc vòng, shared state và key mutable mở rộng đánh giá từ một đối tượng sang tương tác và dữ liệu dùng chung. Cuối cùng, bài về pattern giúp lựa chọn mức trừu tượng hóa tương xứng với nhu cầu. Các mùi thiết kế là các góc kiểm tra bổ sung, không phải một chuỗi phụ thuộc kỹ thuật bắt buộc theo thứ tự.
-
-    [↓ Xem bảng đối chiếu các bài học](#2-bảng-đối-chiếu-các-bài-học)
   transition: null
 comparisonMarkdown: |-
   ## 2. Bảng đối chiếu các bài học

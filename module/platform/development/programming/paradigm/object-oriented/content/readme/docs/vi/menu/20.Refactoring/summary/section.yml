@@ -72,10 +72,6 @@ roadmap:
   title: Cải thiện thiết kế từng bước với kiểm thử bảo vệ
   description: |-
     Bài kết thúc chương bằng vòng lặp thay đổi nhỏ có safety-net tests, bảo toàn public behavior, exception và side effect; dùng ngưỡng pricing để bắt regression cụ thể.
-
-    **Mối liên hệ:** Tái cấu trúc bắt đầu bằng nhận diện vấn đề dựa trên code smell và chi phí thay đổi thực tế. Từ đó người học đổi tên, tách phương thức/lớp và chuyển hành vi về đối tượng sở hữu, rồi thu hẹp API dữ liệu để giữ invariant. Hai hướng tiếp theo là đa hình để loại nhánh theo loại lặp lại và composition để thay quan hệ kế thừa không đúng; bước gộp abstraction là góc nhìn bổ sung tránh thiết kế quá mức. Mọi phép biến đổi phải được dẫn dắt và kiểm chứng bằng kiểm thử bảo vệ, giữ hợp đồng hành vi đã công bố.
-
-    [↓ Xem bảng đối chiếu các bài học](#2-bảng-đối-chiếu-các-bài-học)
   transition: null
 comparisonMarkdown: |-
   ## 2. Bảng đối chiếu các bài học

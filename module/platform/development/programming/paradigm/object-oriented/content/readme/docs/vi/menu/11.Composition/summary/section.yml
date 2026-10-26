@@ -64,10 +64,6 @@ roadmap:
   title: Chuyển thiết kế kế thừa sang kết hợp
   description: |-
     Chuyển OrderService từ kế thừa OrderStore sang sử dụng OrderRepository, kiểm kê caller và giữ hợp đồng qua test.
-
-    **Mối liên hệ:** Tám bài tạo thành một lộ trình từ ghép đối tượng và diễn đạt đúng quan hệ giữa các lớp, tới ủy quyền trách nhiệm, lựa chọn phương pháp tái sử dụng và điều khiển collaborator. Các bài tiếp theo làm rõ cách cấp dependency và quản lý quyền sở hữu/vòng đời. Bài cuối áp dụng các nguyên lý đã học vào chuyển đổi kế thừa thiếu phù hợp sang composition an toàn. Phần runtime swap và phần migration là các tình huống vận dụng khác nhau; chúng không là điều kiện tiên quyết tuyệt đối của mọi thiết kế composition.
-
-    [↓ Xem bảng đối chiếu các bài học](#2-bảng-đối-chiếu-các-bài-học)
   transition: null
 comparisonMarkdown: |-
   ## 2. Bảng đối chiếu các bài học

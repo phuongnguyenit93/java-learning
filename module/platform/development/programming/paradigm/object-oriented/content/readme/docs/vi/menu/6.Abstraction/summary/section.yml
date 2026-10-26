@@ -64,10 +64,6 @@ roadmap:
   title: Rò rỉ chi tiết thực hiện qua giao diện sử dụng
   description: |-
     Phát hiện API bắt caller biết HashMap, SQL, session hoặc hành vi không được cam kết. Chuyển sang BookCatalog có hợp đồng tìm kiếm rõ, phân biệt không tìm thấy với lỗi hệ thống và kiểm soát dữ liệu trả về.
-
-    **Mối liên hệ:** Chương tiến từ lựa chọn đặc điểm thiết yếu theo ngữ cảnh, phân biệt hợp đồng với bảo vệ trạng thái, đặc tả cam kết hành vi, đến cách thể hiện bằng lớp trừu tượng và lớp cụ thể. Hai bài cuối đưa kiến thức vào quyết định thiết kế thực tế: chỉ tạo mức trừu tượng có ích và tránh để chi tiết backend chi phối caller.
-
-    [↓ Xem bảng đối chiếu các bài học](#2-bảng-đối-chiếu-các-bài-học)
   transition: null
 comparisonMarkdown: |-
   ## 2. Bảng đối chiếu các bài học

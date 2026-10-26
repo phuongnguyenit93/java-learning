@@ -64,10 +64,6 @@ roadmap:
   title: Phản ví dụ hình chữ nhật và hình vuông
   description: |-
     Kiểm chứng hành vi sai của Square extends mutable Rectangle và thiết kế lại hợp đồng Shape/resize để bảo vệ invariant.
-
-    **Mối liên hệ:** Chương làm rõ cách một kiểu con có thể xuất hiện trong hệ kiểu Java và được dùng qua hợp đồng kiểu cha. Sau khi phân biệt kế thừa mã, subtyping danh nghĩa và runtime dispatch, người học có thể upcast để khai thác đa hình, downcast có kiểm tra khi thực sự cần và kiểm thử LSP qua kết quả, trạng thái, ngoại lệ. Rectangle–Square đóng vai trò phản chứng giúp đánh giá tính thay thế bằng cam kết cụ thể thay vì tên lớp.
-
-    [↓ Xem bảng đối chiếu các bài học](#2-bảng-đối-chiếu-các-bài-học)
   transition: null
 comparisonMarkdown: |-
   ## 2. Bảng đối chiếu các bài học

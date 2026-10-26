@@ -97,10 +97,6 @@ roadmap:
   title: Khi mẫu thiết kế làm hệ thống phức tạp hơn cần thiết
   description: |-
     So sánh lợi ích mở rộng với chi phí abstraction, tránh God Factory/Facade và refactor dựa trên hành vi.
-
-    **Mối liên hệ:** Chương bắt đầu bằng cách chọn pattern theo bối cảnh, rồi xem lần lượt cách tạo object, tích hợp và tổ chức cấu trúc, thay đổi thuật toán/trạng thái, thông báo sự kiện và đóng gói workflow/yêu cầu. Các mẫu chia sẻ kỹ thuật composition, kế thừa và đa hình nhưng giải quyết những vấn đề khác nhau; bài cuối yêu cầu so sánh lợi ích với chi phí thực tế, chỉ giữ ranh giới nào bảo vệ contract và khả năng thay đổi đã có bằng chứng.
-
-    [↓ Xem bảng đối chiếu các bài học](#2-bảng-đối-chiếu-các-bài-học)
   transition: null
 comparisonMarkdown: |-
   ## 2. Bảng đối chiếu các bài học

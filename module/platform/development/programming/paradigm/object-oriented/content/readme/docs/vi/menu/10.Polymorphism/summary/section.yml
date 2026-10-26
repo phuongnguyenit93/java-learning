@@ -75,10 +75,6 @@ roadmap:
   title: Ví dụ nhiều phương thức thanh toán
   description: |-
     CheckoutService dùng một PaymentMethod.pay cho thẻ, ví, chuyển khoản; phân biệt PAID/DECLINED/PENDING và kiểm thử với fake.
-
-    **Mối liên hệ:** Chương bắt đầu từ một lời gọi có nhiều cách thực hiện và quan hệ subtype, sau đó giải thích quy tắc compile-time và runtime chọn phương thức. Các bài ghi đè, nạp chồng, hiding và phạm vi thành viên giúp dự đoán chính xác hành vi Java; phần capability cùng refactor loại bỏ điều kiện trùng lặp; ví dụ thanh toán cuối đưa những kỹ thuật ấy vào bài toán nghiệp vụ có nhiều trạng thái.
-
-    [↓ Xem bảng đối chiếu các bài học](#2-bảng-đối-chiếu-các-bài-học)
   transition: null
 comparisonMarkdown: |-
   ## 2. Bảng đối chiếu các bài học

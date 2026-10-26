@@ -71,10 +71,6 @@ roadmap:
   title: Giới hạn việc truy cập sâu vào chuỗi đối tượng
   description: |-
     Áp dụng Law of Demeter và Tell, don't ask; Loan yêu cầu tính phí qua cộng tác viên gần thay vì service tự đi qua Member/Plan.
-
-    **Mối liên hệ:** Chương bắt đầu bằng phân chia trách nhiệm theo lý do thay đổi và xem xét cohesion bên trong, coupling bên ngoài. Từ đó người học thiết lập biên giữa miền và I/O, thể hiện hợp đồng bằng tên gọi, phân vai entity/value object/service, lựa chọn mô hình hành vi phù hợp. Hai bài cuối bảo vệ tính dự đoán của API khi đọc/ghi và hạn chế client phụ thuộc chuỗi cấu trúc nội bộ. Mỗi bước là một góc nhìn hỗ trợ ra quyết định thiết kế, không mặc định bài kề nhau luôn là điều kiện tiên quyết tuyệt đối.
-
-    [↓ Xem bảng đối chiếu các bài học](#2-bảng-đối-chiếu-các-bài-học)
   transition: null
 comparisonMarkdown: |-
   ## 2. Bảng đối chiếu các bài học

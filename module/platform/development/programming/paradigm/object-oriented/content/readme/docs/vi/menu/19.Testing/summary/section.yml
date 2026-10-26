@@ -80,10 +80,6 @@ roadmap:
   title: Kiểm thử tương tác giữa nhiều đối tượng
   description: |-
     Tổng hợp ở workflow nhiều đối tượng: xác minh reserve/charge/release/send đúng nhánh và thứ tự; kết hợp interaction test với fake có trạng thái.
-
-    **Mối liên hệ:** Học phần đi từ cam kết hành vi công khai đến tính hợp lệ ngay khi constructor hoàn tất, rồi bảo vệ invariant xuyên các trạng thái và kiểm chứng hợp đồng qua nhiều implementation/subtype. Sau đó người học xây test doubles và điểm thay thế phụ thuộc để cô lập trách nhiệm, lựa chọn assertion bền với refactor, chạy regression suite và cuối cùng kiểm tra sự phối hợp nhiều đối tượng. Các bài contract-test và test-double có những điểm giao nhau có chủ đích nhưng đóng vai trò riêng: định nghĩa điều cần đúng, tổ chức cách kiểm, thiết kế điểm thay thế và xác nhận workflow thực tế.
-
-    [↓ Xem bảng đối chiếu các bài học](#2-bảng-đối-chiếu-các-bài-học)
   transition: null
 comparisonMarkdown: |-
   ## 2. Bảng đối chiếu các bài học

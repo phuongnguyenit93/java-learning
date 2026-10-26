@@ -85,10 +85,6 @@ roadmap:
   title: 'Dự án tổng hợp: thay đổi yêu cầu và đánh giá thiết kế'
   description: |-
     Thích nghi hệ thống với giới hạn 5 phiếu và hạn 7 ngày cho sách tham khảo; giữ nguyên dueOn lịch sử và đánh giá qua ma trận test.
-
-    **Mối liên hệ:** Bảy bài tập đầu biến các nguyên tắc OOP thành năng lực thực hành từ lớp/đối tượng, đóng gói, đa hình, thiết kế quan hệ tới value object và refactor có kiểm thử. Bốn bài sau là chuỗi dự án thư viện: phân tích yêu cầu → thiết kế lớp/quan hệ → hiện thực và kiểm thử → thay đổi yêu cầu có bảo toàn hợp đồng. Các thao tác thất bại phải giữ invariant, còn thay đổi chính sách phải được kiểm chứng cả với dữ liệu cũ và mới.
-
-    [↓ Xem bảng đối chiếu các bài học](#2-bảng-đối-chiếu-các-bài-học)
   transition: null
 comparisonMarkdown: |-
   ## 2. Bảng đối chiếu các bài học

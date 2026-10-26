@@ -50,6 +50,12 @@ class SummarySectionYamlService {
                     !(item.description instanceof String) || !item.description.trim()) {
                 throw new GradleException('Invalid roadmap lesson at index ' + i)
             }
+            // Roadmap cards must contain only the lesson description. The UI
+            // already renders transitions and the comparison table separately.
+            if ((item.description as String) =~ /(?m)^\s*\*\*Mối liên hệ:\*\*/ ||
+                    (item.description as String).contains('[↓ Xem bảng đối chiếu các bài học]')) {
+                throw new GradleException('Redundant chapter conclusion/link in roadmap lesson at index ' + i)
+            }
             if (i == ids.size() - 1) {
                 if (item.transition != null) throw new GradleException('Last roadmap step has a transition.')
             } else if (!(item.transition instanceof Map) ||

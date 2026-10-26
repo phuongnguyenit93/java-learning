@@ -161,7 +161,7 @@ comparisonMarkdown: |-
 **QA và giới hạn bắt buộc:**
 
 - YAML parser phải chấp nhận document, **không có duplicate key**, đủ đúng sáu root key, đủ N roadmap items, mỗi item đúng cấu trúc, ID/order/transition đúng, bài cuối null, `comparisonMarkdown` đủ một bảng GFM và hàng/cột hợp lệ. Nội dung từ Knowledge SAU review và đồng bộ tất cả AC con. Với một bài, chỉ có một item transition null và bảng có cột Bài 1.
-- Không thêm field `moiLienHe` hoặc link Markdown `[↓ Xem bảng ...](#...)` nằm ngoài schema. Portal dùng cấu trúc YAML để phân phần roadmap và bảng. Đoạn tổng kết có giá trị nên được thể hiện bằng mô tả học tập thích hợp trong `roadmap[].description`, không chế thêm key.
+- **Không thêm khối `**Mối liên hệ:**` hoặc link `[↓ Xem bảng đối chiếu các bài học](#...)` vào bất kỳ `roadmap[].description` nào, đặc biệt bài cuối.** Mỗi description chỉ tóm tắt nội dung của bài tương ứng; chuyển tiếp nằm trong `transition` và bảng được Portal đặt ngay sau roadmap từ `comparisonMarkdown`. Không thêm key `moiLienHe`, không đưa link ngoài schema.
 - **AC cha chứa YAML thuần, khác định dạng với AC con Markdown.** Tối đa **30.000 ký tự trong duy nhất một ô AC cha**. Nếu vượt báo `BLOCKER: CHAPTER_LINK_AC_CAPACITY` (số bài/tổng ký tự), **không truncate, không chia sang AD, không bỏ bài**.
 - **Idempotency:** AC cha trống sạch → `CHAPTER_LINK=NEW_FILL`; AC cha có YAML đúng schema, khớp bài/ID/Knowledge cuối → `UNCHANGED`; Markdown chapter cũ, YAML sai, bài thiếu hoặc stale → `BLOCKER: EXISTING_CHAPTER_LINK/STALE_CHAPTER_LINK`, không tự chuyển đổi/ghi đè. Formula/chip/notes xung đột cũng blocker. Khi Prime đã ủy quyền riêng thay nội dung, preflight lại trước khi sửa.
 

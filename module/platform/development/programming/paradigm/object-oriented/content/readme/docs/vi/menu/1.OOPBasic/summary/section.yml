@@ -64,10 +64,6 @@ roadmap:
   title: Khi nên và không nên sử dụng OOP
   description: |-
     Dùng các tiêu chí trạng thái, invariant, biến thể hành vi và độ phức tạp để chọn object, hàm hoặc sự kết hợp phù hợp với bài toán.
-
-    **Mối liên hệ:** Chương bắt đầu bằng nhu cầu tổ chức hệ thống rồi đi từ đối tượng và cơ chế Java tới tương tác, bốn công cụ OOP và các lựa chọn kiến trúc. Việc so sánh với thủ tục và nguyên mẫu làm rõ giới hạn của một cách cài đặt; bài cuối giúp quyết định khi nào vận dụng OOP thực sự có lợi.
-
-    [↓ Xem bảng đối chiếu các bài học](#2-bảng-đối-chiếu-các-bài-học)
   transition: null
 comparisonMarkdown: |-
   ## 2. Bảng đối chiếu các bài học

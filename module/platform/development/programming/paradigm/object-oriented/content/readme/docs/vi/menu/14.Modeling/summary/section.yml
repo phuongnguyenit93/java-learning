@@ -65,10 +65,6 @@ roadmap:
   title: Đối chiếu mô hình với mã và tình huống thực tế
   description: |-
     Đối chiếu yêu cầu, mô hình, Java, test và dữ liệu chạy; bảo đảm business rule tiếp tục đúng khi đổi mã hoặc môi trường.
-
-    **Mối liên hệ:** Một vòng mô hình hóa OOP đi từ xác nhận tình huống sử dụng và business rule đến xác định đối tượng, phân vai, diễn tập cộng tác và mô tả bằng các sơ đồ bổ trợ. Class diagram giải thích cấu trúc, object diagram cho ảnh chụp instance, sequence diagram theo dõi thông điệp, state diagram bảo vệ vòng đời; bước đối chiếu cuối cùng phải kiểm chứng từng bất biến bằng Java, test và dữ liệu thực tế. Các kỹ thuật sơ đồ phản ánh những góc nhìn bổ trợ, không bắt buộc luôn áp dụng theo một quy trình tuyến tính cố định.
-
-    [↓ Xem bảng đối chiếu các bài học](#2-bảng-đối-chiếu-các-bài-học)
   transition: null
 comparisonMarkdown: |-
   ## 2. Bảng đối chiếu các bài học

@@ -80,10 +80,6 @@ roadmap:
   title: Ví dụ bảo vệ số dư và trạng thái đơn hàng
   description: |-
     Bài này kết hợp các kỹ thuật đóng gói vào hai trường hợp thực hành: Account không cho số dư âm và Order chỉ chuyển trạng thái theo quy trình CREATED, PAID, SHIPPED hoặc CANCELLED. Người học kiểm tra nhánh thành công, thất bại, overflow, snapshot danh sách và giới hạn của synchronized trong bộ nhớ.
-
-    **Mối liên hệ:** Chương đi từ xác lập ranh giới và bất biến (bài 1–2), chọn mức truy cập và API có ý nghĩa (bài 3–4), bảo vệ đầu vào cùng tham chiếu mutable (bài 5–7), đặt luật trong hành vi domain object (bài 8) rồi kiểm nghiệm đầy đủ trên tài khoản và đơn hàng (bài 9). Những phần về quyền truy cập, validation, snapshot và đồng bộ là các lớp bảo vệ bổ sung, mỗi lớp giải quyết một nguồn sai lệch khác nhau.
-
-    [↓ Xem bảng đối chiếu các bài học](#2-bảng-đối-chiếu-các-bài-học)
   transition: null
 comparisonMarkdown: |-
   ## 2. Bảng đối chiếu các bài học

@@ -64,10 +64,6 @@ roadmap:
   title: Theo dõi tương tác của các đối tượng trong một tình huống
   description: |-
     Tổng hợp identity, tham chiếu và state vào checkout cùng sequence diagram và nhánh lỗi.
-
-    **Mối liên hệ:** Từ identity, state, behavior của một instance, chương làm rõ việc truyền giá trị tham chiếu, aliasing và equality giữa các instance. Sau đó người học xét tính mutable, phạm vi sao chép và tác động của shared state; hiểu sự vắng mặt qua null/Optional; cuối cùng áp dụng vào luồng checkout nhiều object. Các bài về hash, copy và null bổ sung những chiều an toàn riêng, không mặc định là điều kiện tiên quyết của bài liền kề.
-
-    [↓ Xem bảng đối chiếu các bài học](#2-bảng-đối-chiếu-các-bài-học)
   transition: null
 comparisonMarkdown: |-
   ## 2. Bảng đối chiếu các bài học

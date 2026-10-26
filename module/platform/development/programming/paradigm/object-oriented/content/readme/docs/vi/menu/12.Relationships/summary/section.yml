@@ -62,10 +62,6 @@ roadmap:
   title: Đọc ký hiệu quan hệ trong sơ đồ lớp
   description: |-
     Tổng hợp sáu ký hiệu quan hệ và các nhãn UML để đọc sơ đồ, kiểm tra việc biểu diễn association, ownership, multiplicity và contract trong Java.
-
-    **Mối liên hệ:** Từ liên kết giữa từng cặp object, chương lần lượt phân biệt dependency và ownership, đặt ràng buộc bội số rồi lựa chọn đường điều hướng trong object graph. Khi cần điều hướng hai chiều, một invariant và cổng cập nhật thống nhất phải bảo vệ các tham chiếu tương ứng. Ở cấp thiết kế lớn hơn, sơ đồ phụ thuộc cần tránh chu trình không cần thiết. Bài UML cuối cùng gom các quyết định này thành một cách đọc và kiểm tra mô hình nhất quán.
-
-    [↓ Xem bảng đối chiếu các bài học](#2-bảng-đối-chiếu-các-bài-học)
   transition: null
 comparisonMarkdown: |-
   ## 2. Bảng đối chiếu các bài học

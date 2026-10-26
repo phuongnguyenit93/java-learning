@@ -72,10 +72,6 @@ roadmap:
   title: Khác biệt ngôn ngữ khi hiện thực cùng một thiết kế OOP
   description: |-
     Đối chiếu cùng thiết kế ShippingPolicy trên năm ngôn ngữ và xác nhận parity bằng ràng buộc input, đơn vị tiền và test biên.
-
-    **Mối liên hệ:** Chương xây nền tảng từ generics và quan hệ kiểu tới cách Java phân giải lời gọi, tính biểu thức và công bố trạng thái; sau đó định nghĩa những hợp đồng quan trọng của `Object` (`equals`, `hashCode`, `toString`) và cách một method báo thành công hoặc thất bại. Bài cuối đối chiếu thiết kế trên nhiều ngôn ngữ để nhấn mạnh rằng trách nhiệm, invariant và kết quả kiểm thử có thể giữ nguyên dù cú pháp thay đổi. Các bài về kiểu, biểu diễn và lỗi cung cấp nhiều góc nhìn bổ trợ; mũi tên biểu thị hướng học thuận tiện, không khẳng định mọi bài chỉ học được sau bài đứng trước.
-
-    [↓ Xem bảng đối chiếu các bài học](#2-bảng-đối-chiếu-các-bài-học)
   transition: null
 comparisonMarkdown: |-
   ## 2. Bảng đối chiếu các bài học

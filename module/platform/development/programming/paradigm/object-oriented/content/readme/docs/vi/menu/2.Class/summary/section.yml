@@ -58,10 +58,6 @@ roadmap:
   title: Thiết kế lớp qua ví dụ tài khoản ngân hàng
   description: |-
     Áp dụng các nguyên tắc trên vào `BankAccount` có bất biến số dư và giao dịch được kiểm tra.
-
-    **Mối liên hệ:** Chương bắt đầu từ cấu trúc class, vòng đời instance rồi đi sâu vào quyền sở hữu và truy cập dữ liệu, hợp đồng method, khả năng thay đổi trạng thái và `this`. Bài cuối kết nối những khái niệm đó thành mô hình tài khoản ngân hàng bảo vệ bất biến. Các bài cung cấp các góc nhìn bổ trợ để thiết kế một class đúng đắn.
-
-    [↓ Xem bảng đối chiếu các bài học](#2-bảng-đối-chiếu-các-bài-học)
   transition: null
 comparisonMarkdown: |-
   ## 2. Bảng đối chiếu các bài học
