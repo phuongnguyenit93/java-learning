@@ -1,0 +1,320 @@
+summaries:
+- id: language-mechanics-001
+  title: Kiểu tổng quát và lớp có tham số kiểu
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Kiểu tổng quát và lớp có tham số kiểu**
+
+    Hiểu vai trò của **Java generics** trong hợp đồng kiểu và tái sử dụng lớp/phương thức. Từ `Box<T>`, `Pair<K,V>` và `InMemoryRepository<ID,T>`, phân biệt generic declaration, type parameter, type argument, inference và generic method; nhận diện giới hạn về invariance, wildcard, type erasure và rủi ro raw type.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cấu trúc và sử dụng generic type
+
+    1. Trong `Box<T>`, `Box<String>` và `new Box<>("Java")`, đâu là khai báo tham số kiểu, đâu là đối số kiểu và compiler suy luận gì?
+    2. Vì sao `Pair<K,V>` biểu diễn hai kiểu độc lập, còn `InMemoryRepository<ID,T>.findById(ID)` giữ được kết quả `Optional<T>`?
+    3. Phương thức `<R> Box<R> map(...)` khác gì `T` của class và vì sao static method phải khai báo type parameter riêng?
+
+    ### An toàn kiểu và giới hạn
+
+    1. Vì sao `List<Integer>` không gán được cho `List<Number>` và `Box<Integer>` không phải `Box<Number>`?
+    2. `List<? extends Number>` và `List<? super Integer>` cho phép đọc/ghi theo kiểu nào, và PECS hỗ trợ thiết kế `copyAll` ra sao?
+    3. Type erasure ảnh hưởng `new T()`, `instanceof List<String>`, overload và `static T` thế nào?
+    4. Raw `List` thêm `Integer` vào `List<String>` có thể gây heap pollution và `ClassCastException` ở đâu?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Khai báo cấu trúc tổng quát | Viết `Box<T>`, `Pair<K,V>` và repository typed sao cho getter/setter/query bảo toàn type argument. |
+    | Tổ chức generic method | Sử dụng `<R>`, static `<T>` và diamond inference mà không cần cast thủ công. |
+    | Chọn API đúng kiểu | Chỉ ra nơi cần bound hoặc wildcard; giải thích phép gán bị từ chối bởi invariance. |
+    | Nhận diện ranh giới erasure | Giải thích các thao tác generic không được biên dịch, thay `new T()` bằng factory/Supplier phù hợp. |
+    | Kiểm chứng hợp đồng | Xác định compile-time error, unchecked warning, null policy và runtime behavior trong ví dụ. |
+- id: language-mechanics-002
+  title: Ràng buộc tham số kiểu
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Ràng buộc tham số kiểu**
+
+    Khai báo **bounded type parameter** để thuật toán chỉ nhận các kiểu có năng lực cần dùng. Bài đào sâu `<T extends Number>`, intersection `&`, `Comparable<? super T>`, ràng buộc đệ quy `<E extends Enum<E>>` và ảnh hưởng của erasure, đồng thời phân biệt bound của `T` với wildcard tại nơi sử dụng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Upper bound và thuật toán generic
+
+    1. Vì sao `NumberBox<T extends Number>` gọi được `doubleValue()` nhưng `Box<T>` không gọi được?
+    2. Vì sao class bound phải đứng trước interface trong `<T extends Number & Comparable<? super T>>`, còn dấu phẩy chỉ phân cách những type parameter khác nhau?
+    3. Tại sao `Comparable<? super T>` cho phép `Employee` kế thừa `Comparable<Person>` được dùng trong hàm `max`?
+    4. Vì sao bound kiểu `Number` không tự cung cấp toán tử `+` cho `T` hay bảo đảm tiền chính xác và non-null?
+
+    ### Wildcard, đệ quy và runtime
+
+    1. Khi kết quả phải giữ nguyên `T`, chọn bounded generic method hay wildcard `? extends Number` và vì sao?
+    2. Trường hợp nào dùng `? super Integer` như đích ghi và vì sao Java không cho `<T super Integer>`?
+    3. `<E extends Enum<E>>` mô tả điều gì; sai tên enum constant được phát hiện lúc biên dịch hay chạy?
+    4. Erasure của intersection bound chọn bound nào, và vì sao `new T()` hoặc `instanceof T` bị hạn chế?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế bound hợp lệ | Khai báo `<T extends Number & Comparable<? super T>>` cho `NumericRange` và kiểm tra tính hợp lệ. |
+    | Giữ subtype hợp lệ | Giải thích và chạy `max(List<Employee>)` khi Employee so sánh thông qua Person. |
+    | Chọn giữa T và wildcard | Viết chữ ký phù hợp cho hàm trả đúng element type và hàm chỉ đọc số. |
+    | Nhận diện lỗi hệ thống kiểu | Phân biệt lỗi compile time, erasure, dữ liệu null và kiểm tra invariant runtime. |
+- id: language-mechanics-003
+  title: Quan hệ kiểu của các cấu trúc tổng quát
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Quan hệ kiểu của các cấu trúc tổng quát**
+
+    Hiểu **quan hệ kiểu giữa generic declarations và parameterized types**: Java dùng invariance đối với type argument cụ thể nhưng cho phép use-site variance qua `?`, `? extends`, `? super`. Qua `GenericTypeRelationsDemo`, suy ra phép gán hợp lệ, khả năng đọc/ghi, PECS, wildcard capture, generic inheritance và khác biệt với array covariance.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Subtype, invariance và wildcard
+
+    1. Vì sao `ArrayList<Integer>` là `List<Integer>` nhưng `List<Integer>` không là `List<Number>`?
+    2. Khi tham chiếu là `List<?>`, `List<? extends Number>` hoặc `List<? super Integer>`, compiler bảo đảm kiểu đọc và phép `add` nào?
+    3. Vì sao `List<?>` không đồng nghĩa `List<Object>` và wildcard không làm collection immutable?
+
+    ### Thiết kế và kiểm chứng type relationships
+
+    1. Vì sao `<T> copy(List<? super T> dst, List<? extends T> src)` cho phép `Integer` sang `Number`?
+    2. Vì sao `StringStore extends MemoryStore<String>` triển khai `Store<String>` nhưng không thành `Store<Object>`?
+    3. Trong `swapFirstTwo(List<?>)`, helper `<T>` giải quyết vấn đề wildcard capture như thế nào?
+    4. Array covariance có thể gây `ArrayStoreException` lúc chạy, còn generic invariance chặn loại phép gán tương đương ở giai đoạn nào?
+    5. Type erasure và raw types gây ra name clash hoặc heap pollution ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dự đoán tính hợp lệ | Phân loại đúng phép gán `List<Integer>`, `List<Number>`, các wildcard và `Store<T>`. |
+    | Chọn chữ ký producer/consumer | Sửa các API sum/copy/seed theo vai trò đọc và ghi dữ liệu. |
+    | Xử lý wildcard capture | Dùng helper generic để hoán đổi giá trị cùng element type mà không cast thiếu kiểm chứng. |
+    | Giải thích lỗi kiểu | Phân biệt compile error, `ArrayStoreException`, heap pollution và mutability của danh sách. |
+- id: language-mechanics-004
+  title: Kiểu tĩnh, kiểu động và kiểm tra kiểu
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Kiểu tĩnh, kiểu động và kiểm tra kiểu**
+
+    Phân biệt **statically typed language** với runtime polymorphism trong Java. Qua `Notification`, người học phân biệt static type của biến và class thực tế của object, giải thích overload chọn theo kiểu tĩnh, override dispatch theo object, `var` là suy luận kiểu, đồng thời đặt runtime validation tại ranh giới dữ liệu/JSON/reflection thay cho cast mù.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Kiểu tĩnh và hành vi động
+
+    1. Với `Notification n = new EmailNotification()`, compiler thấy kiểu gì, JVM gọi implementation `format()` nào?
+    2. Vì sao `describe(Object)` được chọn khi biến có kiểu `Object` dù đang chứa `String`, nhưng `describe((String)value)` chọn overload khác?
+    3. `var count = 10` có cho phép gán tiếp chuỗi không; điều đó khác dynamic typing như thế nào?
+    4. Static method hiding khác runtime dispatch của instance override ra sao?
+
+    ### Kiểm tra khi chạy và thiết kế API
+
+    1. Vì sao `(String) Integer.valueOf(42)` có thể dẫn đến `ClassCastException`, còn `instanceof` pattern xử lý input không biết kiểu an toàn hơn?
+    2. Generics kiểm tra type argument tại compile time nhưng vì sao không thể `instanceof List<String>` khi nhận JSON?
+    3. Class<T>.isInstance/cast xác nhận điều gì và vì sao vẫn phải kiểm tra email trống, amount âm hoặc quyền nghiệp vụ?
+    4. Khi nào `instanceof` là phân loại ở boundary, khi nào thay bằng interface và polymorphism?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt hệ thống kiểu | Giải thích Java kiểu tĩnh vẫn có dynamic dispatch và phân biệt với Python/JavaScript. |
+    | Dự đoán dispatch | Đọc đúng kết quả overload(Object/String), override `format()` và static hiding. |
+    | Dùng kiểm tra kiểu an toàn | Phân loại `Object` bằng pattern `instanceof`/`Class.cast`, không downcast thiếu kiểm chứng. |
+    | Kiểm tra dữ liệu ngoài | Chuyển `List<?>` sang `List<String>` được kiểm tra từng phần tử và vẫn xác thực quy tắc nghiệp vụ. |
+- id: language-mechanics-005
+  title: Toán tử, thuộc tính và quy ước của ngôn ngữ
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Toán tử, thuộc tính và quy ước của ngôn ngữ**
+
+    Sử dụng toán tử, numeric promotion, short-circuit, field/accessor và quy ước Java để xây API OOP rõ nghĩa, tránh sai số, overflow và rò rỉ trạng thái. Bài phân biệt `==` với value equality, JavaBeans property với field, `record` accessor với getter, cũng như `final`, `static`, `var` và tính bất biến thực sự.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Toán tử và đánh giá biểu thức
+
+    1. Vì sao `5 / 2` nhận 2 trước khi gán vào double và `(double)5/2` ra 2.5?
+    2. Precedence, associativity và evaluation order là ba khái niệm khác nhau ra sao trong `"Tổng: " + 1 + 2` và `x = y = z`?
+    3. Vì sao `byte value = 127; value += 1` có thể âm, còn `Math.addExact` ném khi tràn số quan trọng?
+    4. Vì sao `&&` giữ được null guard nhưng `&` vẫn đánh giá vế phải; `>>` khác `>>>` khi dịch số âm?
+
+    ### Field, property và hành vi
+
+    1. Với String, array và record, khi nào dùng `==`, `equals`, `Arrays.equals` và so sánh BigDecimal bằng `compareTo`?
+    2. Field, JavaBeans property (`getX/isX`), local variable và record component accessor `x()` khác nhau thế nào?
+    3. Vì sao `final List` vẫn mutable và khi nào cần `List.copyOf`/hành vi nghiệp vụ thay setter?
+    4. `Product` record cùng `CartLine.increaseQuantity()` kiểm soát đơn giá và quantity như thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Tính biểu thức đúng | Dự đoán chia nguyên, promotion, short-circuit, bit shift, `?:` và `+=` narrowing. |
+    | Bảo vệ phép tính | Áp dụng Math.addExact/multiplyExact, đơn vị VND và số thập phân thích hợp. |
+    | Thiết kế đóng gói | Phân biệt field, getter/setter, record accessor, `final` và dữ liệu mutable. |
+    | Kiểm chứng tác động | Viết API tăng quantity có validate và test state giữ nguyên khi lỗi. |
+- id: language-mechanics-006
+  title: Hợp đồng so sánh bằng và mã băm
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Hợp đồng so sánh bằng và mã băm**
+
+    Định nghĩa **value equality** hoặc identity có chủ đích qua `equals(Object)` và `hashCode()` để `HashSet`/`HashMap` nhận biết key đúng. Bài làm rõ phản xạ/đối xứng/bắc cầu, hash collision, key bất biến, field tham gia equality, array/record/BigDecimal và bẫy inheritance hoặc entity JPA generated ID.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng equals và hash
+
+    1. `==` giữa hai reference khác gì `equals` của `CustomerId` và comparison `Comparable` trả 0?
+    2. Năm tính chất của `equals(Object)` là gì; tại sao `equals(a,b)` true buộc hash bằng nhau nhưng hash bằng nhau không chứng minh equals?
+    3. Vì sao `HashSet.add`, `HashMap.get` cần cả `hashCode` và `equals` để xử lý collision?
+    4. Tại sao equality theo `tenantId` + `customerId` phải có hash nhất quán với đúng ngữ nghĩa định danh?
+
+    ### Các bẫy vòng đời và cấu trúc dữ liệu
+
+    1. Điều gì xảy ra nếu thay `username` của key sau `Map.put`, dù equals/hashCode được tính từ cùng field?
+    2. Vì sao `Point.equals(ColoredPoint)` có thể không đối xứng và `final`/composition giúp hạn chế lỗi?
+    3. Record chứa array có tự `deepEquals` không và khi nào cần `Arrays.equals` + `Arrays.hashCode` cùng defensive copy?
+    4. Tại sao `BigDecimal("1.0")` khác `BigDecimal("1.00")` trong HashSet nhưng có thể được TreeSet xem là một giá trị?
+    5. Với JPA entity có ID do DB cấp và proxy, tại sao không có một công thức equals/hashCode dùng cho mọi lifecycle?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Viết value object an toàn | Cài `CustomerId`/`ProductKey` bất biến với equals/hashCode theo tập field định danh nhất quán. |
+    | Kiểm chứng hash collection | Chứng minh key mới nhưng bằng giá trị tra được `HashMap`, thêm vào `HashSet` không tăng số phần tử. |
+    | Phát hiện rủi ro | Chỉ ra mutable key, hash collision, lỗi symmetry do inheritance và sự khác biệt comparator. |
+    | Xử lý kiểu đặc biệt | Chọn đúng equality/hash cho array, record, BigDecimal và đánh giá entity ORM theo lifecycle. |
+    | Kiểm thử hợp đồng | Lập test reflexive/symmetric/transitive/null/hash consistency và key stability. |
+- id: language-mechanics-007
+  title: Biểu diễn chuỗi và thông tin chẩn đoán của đối tượng
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Biểu diễn chuỗi và thông tin chẩn đoán của đối tượng**
+
+    Thiết kế **`toString()` như biểu diễn chẩn đoán** giúp người phát triển theo dõi ID/trạng thái nhưng tránh lộ bí mật và chi phí I/O. Qua `Order` và `OrderDiagnostic`, bài phân biệt chuỗi cho developer với DTO/API/customer message, tìm hiểu `Object.toString`, record/array/collection, logging, stack trace và lỗi đệ quy do quan hệ hai chiều.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Biểu diễn đối tượng và dữ liệu an toàn
+
+    1. Vì sao `ClassName@hexHash` của Object không phải địa chỉ bộ nhớ hay ID nghiệp vụ đáng tin?
+    2. `println(order)` hoặc `String.valueOf(order)` dùng `toString` ra sao và khác gọi trực tiếp `nullRef.toString()` như thế nào?
+    3. Trong `Order.toString`, tại sao nên giữ `orderId`, `status`, `itemCount`, `traceId` mà không ghi email/token?
+    4. Vì sao `record Credentials` tự sinh toString có thể lộ password và array cần `Arrays.toString/deepToString`?
+
+    ### Chẩn đoán và tác dụng phụ
+
+    1. Vì sao hai object `Parent`/`Child` tự in nhau có thể gây `StackOverflowError`, và cách hiển thị quan hệ bằng ID giúp gì?
+    2. Tại sao `toString` không nên query repository, duyệt graph lớn hoặc trở thành định dạng JSON/schema của API?
+    3. Logging có level, supplier/placeholder và truyền Throwable khác gì chỉ nối chuỗi message?
+    4. Test nào xác nhận chẩn đoán đủ trường hữu ích nhưng không lộ secret, ngay cả khi format thay đổi?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Override toString có chủ đích | Tạo diagnostic gọn, không null, không side effect với allowlist field phù hợp. |
+    | Kiểm soát dữ liệu nhạy cảm | Phân biệt trường được phép log và email/token cần loại bỏ; viết test không rò rỉ. |
+    | Nhận diện recursion và hiệu năng | Chỉ ra vòng tham chiếu, lazy loading, list lớn và biện pháp snapshot cạn. |
+    | Phân biệt đích biểu diễn | Thiết kế DTO/public view/structured log riêng thay vì parse hoặc serialize `toString`. |
+- id: language-mechanics-008
+  title: Ngoại lệ, trạng thái lỗi và hợp đồng phương thức
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Ngoại lệ, trạng thái lỗi và hợp đồng phương thức**
+
+    Thiết kế **method contract** bao gồm tiền/hậu điều kiện, invariant, side effect và failure semantics. Qua `StockService.reserve`, phân biệt `Reserved/Rejected` cho kết quả nghiệp vụ dự kiến, `IllegalArgumentException` cho đầu vào sai, exception hạ tầng cho sự cố; hiểu checked/unchecked, propagation/cause, try-with-resources và bảo vệ trạng thái khi lỗi/đồng thời.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Kết quả, ngoại lệ và hợp đồng
+
+    1. Vì sao OUT_OF_STOCK, quantity âm và database unavailable cần kết quả hoặc exception có ý nghĩa khác nhau?
+    2. Precondition, postcondition, invariant, failure contract và atomicity nói gì về trạng thái sau `reserve`?
+    3. Khi nào nên chọn `boolean`, `Optional`, sealed `ReserveResult` hoặc domain exception?
+    4. Checked exception khác unchecked ở quy tắc compile-time nào và `throw` khác `throws` ra sao?
+
+    ### Propagation, nguyên tử và thay thế
+
+    1. Vì sao `new RuntimeException(e.getMessage())` mất cause và nên translate exception ở tầng nào?
+    2. Try-with-resources giữ primary/suppressed exception thế nào và vì sao cleanup không đồng nghĩa rollback?
+    3. Nếu đã trừ balance rồi email ném lỗi, bắt exception có tự hoàn tác không; transaction/outbox/idempotency cần giải quyết điều gì?
+    4. Trong override theo LSP, việc thêm checked exception hoặc đổi nghĩa Optional.empty có thể phá hợp đồng như thế nào?
+    5. Vì sao timeout không luôn retry an toàn và `InterruptedException` cần xử lý/khôi phục interrupt ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Viết hợp đồng rõ ràng | Mô tả đầu vào, kết quả, từ chối và trạng thái giữ nguyên khi thất bại. |
+    | Phân loại lỗi đúng tầng | Thiết kế Result/Optional hoặc exception có lý do; không che DB failure thành kết quả không tồn tại. |
+    | Giữ nguyên nhân và tài nguyên | Wrap exception có cause, dùng try-with-resources và phân biệt suppressed exceptions. |
+    | Bảo đảm trạng thái | Viết test thành công/từ chối/đối số sai, xác minh không thay đổi state ngoài ý muốn. |
+    | Đánh giá rủi ro phân tán | Nêu transaction, optimistic lock, retry và idempotency khi có side effect. |
+- id: language-mechanics-009
+  title: Khác biệt ngôn ngữ khi hiện thực cùng một thiết kế OOP
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Khác biệt ngôn ngữ khi hiện thực cùng một thiết kế OOP**
+
+    So sánh cách **cùng một mô hình `ShippingPolicy`** được thể hiện bằng Java, Kotlin, Python, TypeScript và C#, nhận diện khác biệt nominal/structural typing, record/data class/protocol/interface, semantics equality/nullability, số nguyên/decimal và runtime validation. Trọng tâm là giữ hợp đồng phí vận chuyển đúng khi port code thay vì sao chép từng class.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cùng yêu cầu qua năm ngôn ngữ
+
+    1. Quy tắc `standard = 20.000 VND`, `express = 35.000 + 8.000 × ceil(grams/1000)` được biểu diễn bằng cùng những vai trò nào?
+    2. Java/Kotlin/C# khai báo hợp đồng interface theo kiểu nominal thế nào, khác Python Protocol và TypeScript structural typing ra sao?
+    3. Java record, Kotlin data class, Python frozen dataclass, TypeScript Readonly, C# readonly record struct khác nhau về reference/value và bất biến sâu như thế nào?
+    4. Vì sao Python `bool` cần kiểm tra riêng dù kế thừa int, còn TypeScript JSON/number cần runtime validation?
+
+    ### Port thiết kế và giữ tính đúng đắn
+
+    1. Vì sao Java/Kotlin/C# dùng chia nguyên, Python dùng `//`, TypeScript dùng `Math.ceil` trong bài tính trọng lượng dương?
+    2. Vì sao Java record `equals`, Kotlin `==`/`===`, Python `==`/`is`, JS `===` và C# record equality không được dịch máy móc?
+    3. Những test nào bảo đảm mức 1, 1000, 1001, 1200, 100000 gram cùng trường hợp lỗi giữ nguyên hành vi giữa các triển khai?
+    4. Khi nào thay interface một-method bằng function type/callable mà vẫn giữ đúng ranh giới policy và service?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | So sánh cơ chế ngôn ngữ | Nêu được nominal/structural typing, nullability và runtime checks của năm ngôn ngữ. |
+    | Giữ hợp đồng phí vận chuyển | Viết/kiểm thử công thức standard/express và từ chối gram ngoài 1–100000. |
+    | Phân biệt equality và mutability | Chỉ ra khác biệt reference/value, readonly/final và collection mutable khi chuyển code. |
+    | Port có kiểm chứng | Lập bảng ca parity cho các trọng lượng biên, mã không hỗ trợ và dữ liệu JSON sai kiểu. |

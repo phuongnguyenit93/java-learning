@@ -1,0 +1,359 @@
+summaries:
+- id: class-design-001
+  title: Xác định trách nhiệm của từng lớp
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Xác định trách nhiệm của từng lớp**
+
+    Thiết kế OOP bắt đầu từ việc xác định mỗi lớp phải biết gì, làm gì và chịu tác động của những loại thay đổi nào. Bài học giúp đi từ use case tới một bản đồ trách nhiệm rõ, tránh một lớp ôm SQL, quy tắc nghiệp vụ, giao diện và thông báo.
+
+    Ví dụ mượn sách phân biệt BookCopy, Loan, LoanPolicy, LoanRepository và LoanService. Người học nhận ra nơi có đủ dữ liệu để bảo vệ invariant, cách dùng CRC Card để kiểm tra cộng tác viên và vì sao phân chia đúng vẫn cần transaction khi mượn sách đồng thời.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Xác lập trách nhiệm và ranh giới
+
+    1. Trách nhiệm knowing và doing khác danh sách phương thức của class như thế nào?
+    2. Trong use case mượn bản sách, ai sở hữu điều kiện hạn trả, giới hạn mượn, trạng thái lượt mượn và nơi lưu dữ liệu?
+    3. Vì sao SRP được đánh giá theo lý do thay đổi của một nhóm trách nhiệm thay vì đếm số method?
+    4. Khi tạo CRC Card cho LoanService và LoanPolicy, dấu hiệu nào cho biết hai lớp đang giữ cùng một quy tắc?
+
+    ### Điều phối, kiểm thử và thay đổi
+
+    1. Vì sao LoanService hỏi repository và policy rồi tạo Loan thay vì tự chạy SQL, tự tính hạn trả hoặc chỉnh trạng thái nội bộ?
+    2. Nếu chuyển lưu trữ từ LinkedHashMap sang SQL, thành phần nào phải đổi và thành phần nào nên giữ nguyên?
+    3. Làm thế nào test chính sách hạn trả bằng Clock cố định mà không cần truy cập database?
+    4. Vì sao chuỗi kiểm tra số lượt mượn rồi save trong ví dụ chưa bảo đảm nguyên tử khi nhiều request chạy đồng thời?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lập bản đồ trách nhiệm | Liệt kê đúng owner của dữ liệu, invariant, quy tắc, orchestration và persistence từ một yêu cầu mượn sách. |
+    | Áp dụng SRP và Information Expert | Giải thích vị trí của Loan, LoanPolicy và LoanService theo lý do thay đổi và nơi có đủ thông tin. |
+    | Mô tả cộng tác bằng CRC | Viết thẻ Class–Responsibilities–Collaborators cho các lớp chính và phát hiện lớp đang gánh việc ngoài phạm vi. |
+    | Thiết kế hợp đồng lớp | Đề xuất constructor và API mượn sách có validation, bảo vệ trạng thái và chỉ công bố hành vi cần thiết. |
+    | Kiểm thử riêng từng trách nhiệm | Tạo tình huống thiếu bản sách, vượt giới hạn, ngày trả không hợp lệ và chỉ ra test phù hợp từng owner. |
+    | Đánh giá biên concurrency | Giải thích điểm kiểm tra–ghi không nguyên tử và ranh giới khóa/giao dịch cần có khi triển khai thật. |
+- id: class-design-002
+  title: Tính gắn kết bên trong lớp
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tính gắn kết bên trong lớp**
+
+    Bài học rèn cách nhận diện tính gắn kết của field, method và invariant trong cùng một lớp. Khi một class vừa tính tiền, ghi kho dữ liệu và gửi biên nhận, các yêu cầu không liên quan vẫn buộc sửa cùng class và khiến phép tính đơn giản khó kiểm thử.
+
+    Qua LegacyCheckoutService và CohesionDemo, người học tách Cart, OrderRepository, ReceiptSender và CheckoutService theo trách nhiệm. Bài học cũng giải thích giới hạn của LCOM, ma trận method–field và vì sao coordinator có nhiều cộng tác viên vẫn có thể cohesive.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phân tích nội bộ lớp
+
+    1. Cohesion cao khác với việc lớp có ít method hoặc mọi method cùng đọc một field như thế nào?
+    2. Vì sao LegacyCheckoutService được xem là gắn kết thấp khi tính tổng, lưu đơn và gửi email trong một class?
+    3. Ma trận method × field giúp phát hiện những nhóm trách nhiệm độc lập nào và vì sao nó chưa đủ để kết luận về nghiệp vụ?
+    4. Tại sao phải ghi rõ biến thể LCOM hoặc công cụ đo khi dùng metric để đánh giá lớp?
+
+    ### Refactor có kiểm soát
+
+    1. Trong CohesionDemo, vì sao Cart vẫn giữ addLine, total, isEmpty và snapshot cùng một lớp?
+    2. CheckoutService gọi repository và sender theo một workflow thì có phải thiếu cohesion không?
+    3. Khi tách class, làm thế nào giữ bất biến của Cart và tránh đưa danh sách mutable cho caller?
+    4. Những giới hạn nào về snapshot/total đồng thời, lỗi gửi biên nhận và transaction vẫn cần xử lý sau khi tách đúng trách nhiệm?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chẩn đoán cohesion | Đánh giá một class theo mục tiêu, invariant và các nhóm lý do thay đổi, không dựa vào số dòng. |
+    | Phân tích method và field | Tạo ma trận method–field, phát hiện cụm độc lập và đối chiếu lại với trách nhiệm nghiệp vụ. |
+    | Tổ chức lại lớp đa trách nhiệm | Đề xuất Cart, repository, sender và coordinator với API ngắn, rõ và phân chia đúng thay đổi. |
+    | Kiểm thử hành vi sau refactor | Kiểm tra Cart.total, validation, snapshot và thứ tự save → send qua fake mà không khởi động I/O thật. |
+    | Cân bằng cohesion với coupling | Phát hiện trường hợp tách quá nhiều lớp chỉ chuyển tiếp lời gọi khiến số phụ thuộc tăng vô ích. |
+    | Nêu rủi ro ngoài phạm vi cohesion | Chỉ ra transaction, tính nguyên tử thông báo và thread safety cần giải quyết riêng. |
+- id: class-design-003
+  title: Mức phụ thuộc giữa các lớp
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Mức phụ thuộc giữa các lớp**
+
+    Bài học giúp nhận diện những phụ thuộc ở mức mã nguồn, runtime và thay đổi nghiệp vụ. Một CheckoutService tự tạo CardProcessor, SmtpMailer, biết endpoint và định dạng bên ngoài sẽ khó thay provider và khó chạy test an toàn.
+
+    Thông qua PaymentGateway, ReceiptSender và constructor injection, người học giảm phụ thuộc vào chi tiết dễ đổi mà vẫn giữ hợp đồng nghiệp vụ cần thiết. Các ví dụ còn phân biệt DIP với DI, một interface có ích với một facade lộ SDK, coupling theo event và chi phí xử lý lỗi phân tán.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất và loại phụ thuộc
+
+    1. Phụ thuộc mã nguồn, runtime và change coupling có thể khác nhau thế nào đối với CheckoutService?
+    2. Tại sao số import ít hoặc có sẵn interface chưa chứng minh coupling thấp?
+    3. Data coupling, control coupling, stamp coupling và external coupling tạo những rủi ro nào khi hợp đồng bị thiết kế quá rộng?
+    4. Fan-in, fan-out, CBO và chu trình package giúp tìm điểm cần review nhưng có giới hạn gì?
+
+    ### Cách ly biến động và kiểm thử
+
+    1. Vì sao truyền PaymentGateway và ReceiptSender qua constructor giúp test checkout bằng fake?
+    2. DIP khác DI thế nào, và một constructor nhận lớp concrete đã chắc tuân DIP chưa?
+    3. Làm sao chứng minh gửi biên nhận không xảy ra nếu gateway ném lỗi trước khi thanh toán thành công?
+    4. Vì sao payment thành công nhưng gửi biên nhận lỗi vẫn cần trạng thái, retry/idempotency dù đã giảm coupling?
+    5. Thông điệp qua event broker còn phụ thuộc những yếu tố nào dù hai module không import nhau?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Nhận diện coupling thực | Vẽ phụ thuộc CheckoutService với provider/SMTP và chỉ ra nơi biết chi tiết, nơi bị ảnh hưởng khi provider thay đổi. |
+    | Thiết kế contract ổn định | Đề xuất PaymentGateway.charge và ReceiptSender.send theo hành vi thay vì bê nguyên các bước SDK vào interface. |
+    | Áp dụng DI và DIP có lý do | Chuyển khởi tạo dependency ra khỏi service và phân biệt cơ chế inject với hướng phụ thuộc vào abstraction. |
+    | Kiểm thử thay thế collaborator | Dùng fake ghi nhận orderId, amountCents, email và paymentId để xác minh đúng checkout. |
+    | Đánh giá coupling module | Nhận diện chu trình import, dependency theo schema event và đề xuất ranh giới contract phù hợp. |
+    | Phân tích tác dụng phụ khi lỗi | Giải thích rủi ro thanh toán thành công nhưng thông báo thất bại và yêu cầu retry/idempotency. |
+- id: class-design-004
+  title: Tách dữ liệu, nghiệp vụ và tương tác bên ngoài
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tách dữ liệu, nghiệp vụ và tương tác bên ngoài**
+
+    Một luồng checkout có thể cùng nhận dữ liệu, tính tiền, lưu đơn và gửi thông báo. Bài học phân chia request DTO, domain entity/value object, policy, application service, port và adapter để mỗi phần giữ một trách nhiệm có thể kiểm chứng.
+
+    Ví dụ SeparationOfConcernsDemo tạo OrderLine có validation, Order bảo vệ tổng tiền, StandardPricingPolicy áp SAVE10, CheckoutService điều phối, còn repository/gateway cung cấp I/O. Người học cũng nhận biết rủi ro lưu đơn thành công nhưng gửi receipt thất bại và phạm vi thực tế của transaction/outbox.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Định vị các thành phần
+
+    1. Request DTO, OrderLine, Order, PricingPolicy, CheckoutService, repository port và adapter đảm nhận những trách nhiệm khác nhau nào?
+    2. Vì sao tách dữ liệu khỏi I/O không có nghĩa đẩy toàn bộ hành vi của entity vào service?
+    3. Lỗi SKU rỗng, quantity không dương và tổng tiền tràn số nên bị chặn ở những thành phần nào?
+    4. Vì sao một class domain tự gọi JDBC hoặc SMTP làm sai ranh giới phụ thuộc?
+
+    ### Kiểm thử và tính nhất quán khi tích hợp
+
+    1. SAVE10 được áp dụng và làm tròn theo đơn vị cent thế nào trong ví dụ tính 315.00 thành 283.50?
+    2. Tại sao mã ưu đãi không hỗ trợ phải bị từ chối trước khi gọi repository.save và gửi biên nhận?
+    3. Nếu save thành công rồi gateway lỗi, vì sao @Transactional trên DB không hoàn tác được SMTP?
+    4. Outbox, retry và idempotency hỗ trợ bảo đảm gì, và vì sao chúng vẫn tạo eventual consistency?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân nhóm trách nhiệm | Phân loại từng kiểu trong checkout thành input DTO, domain, policy, application, port hoặc I/O adapter. |
+    | Bảo vệ domain invariant | Xác định nơi validate dòng hàng, tính subtotal bằng Math.addExact và từ chối policy trả số tiền không hợp lệ. |
+    | Thiết kế luồng phụ thuộc | Vẽ controller → command → service → domain/port → adapter và chỉ rõ hướng phụ thuộc mã nguồn. |
+    | Kiểm chứng kết quả giá | Tính tay tổng và giảm SAVE10 theo cent, đối chiếu với ví dụ Java 17. |
+    | Test workflow không cần I/O | Dùng fake repository/gateway để chứng minh không lưu/gửi khi dữ liệu hoặc khuyến mãi sai. |
+    | Thiết kế xử lý lỗi sau lưu | Đề xuất thông báo sau commit bằng outbox, cách retry và trạng thái đơn được lưu đúng. |
+- id: class-design-005
+  title: Đặt tên lớp, thuộc tính và phương thức
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đặt tên lớp, thuộc tính và phương thức**
+
+    Đặt tên là một phần của hợp đồng OOP. Người đọc cần đoán được class chịu trách nhiệm gì, field biểu diễn dữ liệu và đơn vị nào, method đang truy vấn hay gây tác dụng phụ gì mà không phải mở ngay phần thân.
+
+    Bài học sử dụng ShoppingCart, CartSnapshot, CheckoutService và OrderRepository để minh họa convention Java, tính trung thực của insert/findById, khả năng đọc tên boolean và dữ liệu đơn vị rõ. Người học còn xét giới hạn JavaBeans/record/JSON/JPA khi rename public API để tránh làm hỏng client, mapping hoặc binary compatibility.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Tên theo trách nhiệm và ngữ nghĩa
+
+    1. Vì sao DataManager.process(x) và flag khiến người dùng phải đoán trách nhiệm và trạng thái?
+    2. Quy tắc UpperCamelCase, lowerCamelCase và UPPER_SNAKE_CASE dùng cho các thành phần Java nào?
+    3. Tại sao remainingSeats, balanceCents và retryDelayMillis an toàn hơn number, balance hoặc delay thiếu đơn vị?
+    4. findById, requireById, insert, createOrder và placeOrder cần mô tả các ngữ nghĩa khác nhau nào?
+    5. Vì sao một getter có tác dụng phụ hoặc gọi mạng không được coi là truy vấn rẻ chỉ vì tên bắt đầu bằng get?
+
+    ### Thiết kế API và đổi tên
+
+    1. ShoppingCart.snapshot() và OrderRepository.insert() trong NamingDemo nói gì về bất biến dữ liệu và trùng orderId?
+    2. Vì sao record accessor là customerId() thay vì getter JavaBeans mặc định getCustomerId()?
+    3. Tại sao đổi tên getter, field hoặc API public có thể ảnh hưởng JSON, JPA, reflection, Spring và client nhị phân?
+    4. Khi đổi createOrder thành placeOrder, cần kiểm tra usage, contract, migration và phép thử nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chọn tên Java đúng convention | Đặt tên class/interface/record, method, field, parameter, enum và hằng số theo quy ước phù hợp. |
+    | Làm rõ ý nghĩa dữ liệu | Đổi những tên mơ hồ sang tên có domain, đơn vị và trạng thái như balanceCents hay registrationClosed. |
+    | Diễn đạt tác động API | Phân biệt find/require, insert/upsert, get/fetch và create/enqueue theo kết quả hoặc side effect được cam kết. |
+    | Thiết kế mô hình có tên nhất quán | Đọc và sửa API ShoppingCart–CartSnapshot–CheckoutService để caller hiểu trách nhiệm, snapshot và duplicate ID. |
+    | Review ranh giới framework | Phân biệt record accessor với JavaBeans và chỉ ra nguy cơ đổi tên với JSON/JPA/reflection. |
+    | Lập kế hoạch rename an toàn | Liệt kê caller, contract, IDE rename, wrapper deprecated, test và vấn đề source/binary compatibility. |
+- id: class-design-006
+  title: Đối tượng thực thể, đối tượng giá trị và dịch vụ
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đối tượng thực thể, đối tượng giá trị và dịch vụ**
+
+    Bài học giúp lựa chọn class theo ý nghĩa nghiệp vụ: Entity có danh tính ổn định qua thay đổi, Value Object bằng nhau theo giá trị và thường bất biến, Service chứa quy tắc phối hợp không thuộc tự nhiên về một đối tượng đơn lẻ.
+
+    Ví dụ Account, Money và TransferService làm rõ UUID của Account, Currency và minorUnits của Money, chuyển tiền qua hai entity. Bài cũng phân biệt Domain Service với Application Service và cảnh báo không đồng nhất @Entity/@Service của framework với vai trò miền hoặc coi thao tác in-memory như giao dịch ngân hàng nguyên tử.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Định danh, equality và bất biến
+
+    1. Vì sao hai Account có cùng số dư chưa chắc là cùng Entity, trong khi hai Money cùng minorUnits/currency có thể bằng nhau?
+    2. Khi Account đổi số dư mà UUID giữ nguyên, điều gì khiến nó vẫn là cùng một thực thể?
+    3. Tại sao hashCode dựa trên thuộc tính có thể thay đổi có thể làm hỏng việc tìm object trong HashSet?
+    4. Record có equals theo thành phần nhưng vì sao không mặc nhiên bảo đảm deep immutability?
+    5. Money.plus và Money.minus phải kiểm tra currency, dấu tiền và tràn số như thế nào?
+
+    ### Phân vai hành vi và transaction
+
+    1. Account.withdraw và Money.plus nên giữ quy tắc nào, còn TransferService cần phối hợp hai Account ra sao?
+    2. Domain Service khác Application Service ở phạm vi quy tắc, repository, quyền và transaction như thế nào?
+    3. Vì sao hai lần save Account riêng không tự thành một giao dịch nguyên tử?
+    4. @Entity trong JPA và @Service trong Spring có tự quyết định class là Domain Entity hoặc Domain Service không?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt ba vai trò | Phân loại Account, Money, TransferService và DTO theo danh tính, giá trị hoặc hành vi phối hợp. |
+    | Thiết kế entity equality | Lập quy tắc identity theo UUID và nêu ngoại lệ khi ID do database cấp muộn hoặc có proxy JPA. |
+    | Tạo Value Object bất biến | Đề xuất Money bằng minorUnits/Currency, dùng equals theo thành phần và phép toán phát hiện tràn. |
+    | Bảo vệ số dư trong Entity | Chỉ rõ Account.deposit/withdraw kiểm tra số dương, cùng loại tiền và số dư không âm. |
+    | Đặt service đúng tầng | Tách luật chuyển giữa hai account khỏi việc tải, lưu và mở transaction của application service. |
+    | Xác định giới hạn demo | Giải thích vì sao preflight in-memory chưa ngăn race condition, mất cập nhật hoặc lỗi commit một phía. |
+- id: class-design-007
+  title: Mô hình giàu hành vi và mô hình chỉ chứa dữ liệu
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Mô hình giàu hành vi và mô hình chỉ chứa dữ liệu**
+
+    Bài học hướng dẫn chọn nơi lưu quy tắc nghiệp vụ: đặt chuyển trạng thái ngay trong entity có dữ liệu cần bảo vệ hay dùng data-only DTO/projection khi bài toán chỉ mang dữ liệu. Trọng tâm là mức độ bảo vệ invariant, không phải số getter/setter.
+
+    Qua RichVsAnemicDemo, Order sở hữu addItem, confirm, cancel và tính tổng từ OrderLine; application service chỉ tải, lưu và thông báo. Người học hiểu vì sao một rich model cần giới hạn trách nhiệm, khi nào record/CRUD đơn giản đủ, và tại sao ORM transaction cùng concurrency vẫn phải được thiết kế riêng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Lựa chọn mô hình dựa trên invariant
+
+    1. Vì sao OrderData cho phép setter trạng thái và tổng tiền công khai có thể phá các bất biến của đơn hàng?
+    2. Rich Domain Model khác Anemic Domain Model về nơi đặt rule, quyền sửa state và nguy cơ nhân bản validation thế nào?
+    3. Order.addItem và Order.confirm phải từ chối thao tác nào sau khi đơn ở CONFIRMED?
+    4. Vì sao một record Quantity có constructor kiểm tra và method plus không nhất thiết là mô hình thiếu hành vi?
+    5. Khi nào DTO, projection, báo cáo hoặc CRUD đơn giản phù hợp với data-only model?
+
+    ### Tách orchestration và đảm bảo hệ thống
+
+    1. Trong RichVsAnemicDemo, OrderLine, Order, repository, notifier và application service có vai trò gì?
+    2. Vì sao entity không nên tự mở JDBC hoặc gửi SMTP chỉ để được gọi là rich?
+    3. Khi trạng thái Order được lưu trong JPA, cần kiểm tra transaction, optimistic locking hoặc lost update ở đâu?
+    4. Những bước nào giúp chuyển từ setter công khai sang addItem/confirm mà giữ tương thích và kiểm thử được hành vi cũ?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | So sánh hai mô hình | Chỉ ra nơi quy tắc đang nằm và hệ quả đối với invariant khi nhiều caller cập nhật Order. |
+    | Xây dựng rich entity | Thiết kế addItem, confirm, cancel, totalCents trên Order với trạng thái DRAFT/CONFIRMED/CANCELLED rõ. |
+    | Bảo vệ dữ liệu và tổng tiền | Ngăn quantity không dương, giá âm, cộng gộp SKU sai, tràn số và lộ collection mutable. |
+    | Giữ service đúng nhiệm vụ | Tách domain behavior khỏi repository, notifier, transaction và use case orchestration. |
+    | Lựa chọn data-only có lý do | Phân biệt rich entity với request DTO, report projection hoặc một CRUD không có invariant phức tạp. |
+    | Lập lộ trình refactor | Định nghĩa state machine, bổ sung test, chuyển caller, thu hẹp setter và kiểm tra ORM/concurrency. |
+- id: class-design-008
+  title: Tách truy vấn khỏi thao tác thay đổi trạng thái
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tách truy vấn khỏi thao tác thay đổi trạng thái**
+
+    Bài học giúp người học viết API mà việc đọc dữ liệu không âm thầm thay đổi trạng thái nghiệp vụ, còn lệnh ghi thể hiện rõ ý định, điều kiện hợp lệ và tác dụng phụ. Ví dụ getAvailableQuantity vừa kiểm tra vừa trừ kho cho thấy vì sao một getter có thể tạo lỗi chỉ do UI refresh.
+
+    Qua Stock và AccountDemo, người học phân biệt canReserve/balance/snapshot với reserve/deposit/withdraw; hiểu CQS khác kiến trúc CQRS, tính nguyên tử khi nhiều yêu cầu cạnh tranh và nhu cầu idempotency khi một command được retry.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phân loại truy vấn và lệnh
+
+    1. Vì sao getAvailableQuantity(requested) vừa trừ tồn kho vi phạm kỳ vọng về query?
+    2. canReserve, availableUnits, snapshot khác reserve, deposit, withdraw ở hành vi quan sát được như thế nào?
+    3. Tại sao createOrder trả OrderId vẫn là command và CQS không buộc mọi command phải có kiểu void?
+    4. CQS ở cấp method khác CQRS ở cấp kiến trúc và read model như thế nào?
+    5. Logging, memoization, lazy loading và truy vấn từ xa làm ranh giới query trở nên có điều kiện ra sao?
+
+    ### Đồng thời và retry
+
+    1. Vì sao canReserve(2) trả true không bảo đảm reserve(2) thành công nếu request khác chen vào?
+    2. AccountDemo sử dụng synchronized trong một JVM bảo đảm gì và chưa bảo đảm gì khi dữ liệu nằm trên nhiều máy?
+    3. Khi deposit(100) hoặc sendEmail bị retry, lỗi lặp side effect khác query lặp thế nào?
+    4. Idempotency key cần được kiểm tra và ghi nhận nguyên tử ở đâu để tránh xử lý lặp trên nhiều instance?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Nhận diện hiệu ứng API | Phân loại method query/command theo thay đổi state thực tế, bất kể tiền tố tên hoặc return type. |
+    | Thiết kế query rõ | Đề xuất balance, snapshot, canReserve trả dữ liệu không thay đổi state miền và không lộ collection mutable. |
+    | Thiết kế command hợp lệ | Viết reserve/withdraw có validate ngay lúc ghi và giữ invariant trên đường thành công lẫn thất bại. |
+    | Phân biệt CQS/CQRS | Giải thích khi nào chỉ cần phân tách method và chi phí khi thêm read/write model riêng. |
+    | Phân tích TOCTOU | Chỉ ra race giữa query và command rồi đề xuất atomic update hoặc lock/transaction ở owner. |
+    | Kiểm tra idempotency | So sánh setStatus với deposit, xây tình huống retry có request ID không gây hiệu ứng lặp. |
+- id: class-design-009
+  title: Giới hạn việc truy cập sâu vào chuỗi đối tượng
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Giới hạn việc truy cập sâu vào chuỗi đối tượng**
+
+    Một chuỗi loan.getMember().getMembershipPlan().getDailyLateFeeCents() buộc mã gọi biết chi tiết nhiều đối tượng và tự nhân phí phạt. Bài học giúp người học đánh giá mức coupling thực tế, đưa hành vi về chủ thể phù hợp hoặc chuyển dữ liệu qua Value Object thay vì đào sâu đồ thị object.
+
+    Ví dụ DemeterDemo sử dụng Loan.calculateLateFeeCents, Member.lateFeeFor và MembershipPlan.feeFor để giữ trách nhiệm ở từng tầng gần nhau. Người học cũng phân biệt chain gây rò rỉ với DTO, fluent API, Stream và nhận ra rằng đổi chain Java không tự giải quyết N+1 query, lazy loading hay transaction.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Law of Demeter và nơi sở hữu hành vi
+
+    1. Chuỗi Loan → Member → MembershipPlan khiến LoanReturnService phụ thuộc vào những quyết định nội bộ nào?
+    2. Law of Demeter gợi ý những loại đối tượng trực tiếp nào một method nên trao đổi thông điệp?
+    3. Vì sao gọi loan.calculateLateFeeCents(days) làm giảm mức hiểu biết của service về cấu trúc phía sau?
+    4. Khi nào một policy độc lập nhận loan snapshot tốt hơn việc nhét mọi thuật toán vào Loan?
+    5. Vì sao thêm hàng loạt getter chuyển tiếp trên Order có thể chỉ che dấu chuỗi truy cập mà chưa đặt đúng trách nhiệm?
+
+    ### Giới hạn và kiểm chứng thiết kế
+
+    1. Vì sao chuỗi String.trim().toLowerCase(), builder hay Stream không tự là vi phạm LoD?
+    2. Optional.map qua nhiều object có giảm coupling không hay chỉ giảm thao tác kiểm tra null?
+    3. Nếu MembershipPlan đổi cách tính phí theo số ngày miễn và trần tiền, service ngoài Loan nên phải sửa những gì?
+    4. Getter có lazy relation JPA gây N+1 hoặc LazyInitializationException thì rút chuỗi vào một method có đủ để xử lý không?
+    5. Vì sao mức phí theo gói hiện tại khác phí theo gói ở thời điểm mượn và mô hình phải cam kết trường hợp nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Nhận biết message chain nguy hiểm | Tìm chuỗi caller đi sâu vào nhiều entity để tính rule và xác định coupling đến cấu trúc nội bộ. |
+    | Áp dụng Tell, don't ask | Đề xuất Loan.calculateLateFeeCents và các method cộng tác gần nhau thay cho công thức rải trong service. |
+    | Đặt rule hoặc VO đúng nơi | Chọn MembershipPlan.feeFor, domain policy hoặc ShippingAddress dựa trên nơi sở hữu thông tin. |
+    | Phân tích ngoại lệ LoD | Phân biệt chuỗi business object với DTO, Money value object, Stream và fluent builder có hợp đồng rõ. |
+    | Đảm bảo hành vi giữ nguyên | Kiểm tra phí Basic/Premium theo ngày, lỗi trả hai lần và tác động của việc đổi gói thành viên. |
+    | Nhận diện rủi ro persistence | Giải thích cách projection/fetch strategy mới xử lý N+1/lazy ngoài việc thu ngắn chuỗi Java. |

@@ -1,0 +1,62 @@
+# KẾT HỢP — LIÊN KẾT BÀI HỌC
+
+## 1. Mạch liên kết bài học
+
+### Bài 1 — Ghép đối tượng để xây dựng hành vi
+
+Thiết kế một hành vi lớn bằng việc lắp ghép formatter, transport và đối tượng điều phối; quan sát delegation và kiểm thử ranh giới.
+
+↓ **Từ xây dựng hành vi bằng thành phần → chọn đúng loại quan hệ và mức sở hữu của các thành phần.**
+
+### Bài 2 — Quan hệ “có một” và quan hệ “là một”
+
+Nhận diện is-a, has-a và các mức sở hữu của liên kết giữa Car, Vehicle, PowerSource hoặc Order và OrderLine.
+
+↓ **Từ quan hệ has-a/is-a → xem chính xác công việc được chuyển qua từng ranh giới và ai chịu trách nhiệm lỗi.**
+
+### Bài 3 — Ủy quyền công việc cho đối tượng khác
+
+Lần theo hợp đồng và đường gọi TicketRouter → TicketClassifier → AssignmentPort, giữ đúng trách nhiệm kết quả và lỗi.
+
+↓ **Từ đường gọi delegation → so sánh chiều tái sử dụng qua subclass với sự lắp ghép nhiều collaborator.**
+
+### Bài 4 — Tái sử dụng bằng kết hợp và bằng kế thừa
+
+So sánh khung kế thừa AbstractReport với ReportPublisher ghép Formatter/Destination để lựa chọn theo những chiều thay đổi độc lập.
+
+↓ **Từ lựa chọn tái sử dụng → nghiên cứu trường hợp cần thay collaborator ngay trong thời gian service hoạt động.**
+
+### Bài 5 — Thay đổi đối tượng cộng tác khi chạy
+
+Thực hành đổi DiscountPolicy trong runtime và đánh giá nhất quán per-call, visibility đa luồng, vòng đời cộng tác viên.
+
+↓ **Từ khả năng thay collaborator → thiết kế cách cung cấp dependency và phạm vi dùng trong Java.**
+
+### Bài 6 — Tiêm phụ thuộc qua hàm khởi tạo hoặc phương thức
+
+Cấp dependency qua constructor hoặc tham số phương thức để tránh hard-code implementation và thuận tiện tiêm fake kiểm thử.
+
+↓ **Từ cách tiêm dependency → làm rõ ai thực sự sở hữu trạng thái/tài nguyên và ai chịu trách nhiệm dọn dẹp.**
+
+### Bài 7 — Quyền sở hữu và vòng đời đối tượng được chứa
+
+Xác lập owner cho trạng thái và tài nguyên, chặn alias mutable và đóng writer/socket theo AutoCloseable.
+
+↓ **Từ hợp đồng và vòng đời được xác định → thực hành chuyển một hierarchy sai sang composition có kiểm chứng.**
+
+### Bài 8 — Chuyển thiết kế kế thừa sang kết hợp
+
+Chuyển OrderService từ kế thừa OrderStore sang sử dụng OrderRepository, kiểm kê caller và giữ hợp đồng qua test.
+
+**Mối liên hệ:** Tám bài tạo thành một lộ trình từ ghép đối tượng và diễn đạt đúng quan hệ giữa các lớp, tới ủy quyền trách nhiệm, lựa chọn phương pháp tái sử dụng và điều khiển collaborator. Các bài tiếp theo làm rõ cách cấp dependency và quản lý quyền sở hữu/vòng đời. Bài cuối áp dụng các nguyên lý đã học vào chuyển đổi kế thừa thiếu phù hợp sang composition an toàn. Phần runtime swap và phần migration là các tình huống vận dụng khác nhau; chúng không là điều kiện tiên quyết tuyệt đối của mọi thiết kế composition.
+
+[↓ Xem bảng đối chiếu các bài học](#2-bảng-đối-chiếu-các-bài-học)
+
+## 2. Bảng đối chiếu các bài học
+
+| Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Tên | Ghép đối tượng để xây dựng hành vi | Quan hệ “có một” và quan hệ “là một” | Ủy quyền công việc cho đối tượng khác | Tái sử dụng bằng kết hợp và bằng kế thừa | Thay đổi đối tượng cộng tác khi chạy | Tiêm phụ thuộc qua hàm khởi tạo hoặc phương thức | Quyền sở hữu và vòng đời đối tượng được chứa | Chuyển thiết kế kế thừa sang kết hợp |
+| Vấn đề cần hiểu | Hành vi lớn hình thành từ các object phối hợp ra sao? | Đâu là is-a, has-a, association hay ownership mạnh? | Ai giao việc, ai làm, ai chịu trách nhiệm kết quả? | Nên tái sử dụng bằng extends hay ghép các vai trò? | Thay collaborator lúc chạy mà giữ nhất quán thế nào? | Cấp collaborator từ ngoài ở phạm vi nào? | Ai quản lý state và đóng tài nguyên được chứa? | Bỏ extends thế nào mà không phá client và contract? |
+| Giá trị đối với OOP/module | Phân chia trách nhiệm, thay formatter/transport dễ dàng. | Mô hình quan hệ đúng và bảo toàn subtype contract. | API cộng tác có đường lỗi và luồng rõ. | Giảm phình cây lớp khi nhiều biến thể độc lập. | Chuyển policy và kiểm soát concurrent requests. | Giảm coupling, test không cần gửi thông báo thật. | Giữ invariant và tránh leak file/connection. | Cải thiện phân lớp nghiệp vụ, lưu trữ và khả năng test. |
+| Tư duy hình thành | Phối hợp object qua interface/field. | Chọn quan hệ theo hợp đồng và vòng đời. | Nhìn theo luồng lời gọi và responsibility. | Đánh giá các chiều thay đổi trước khi chọn reuse. | Phân biệt snapshot mỗi call với mutable global state. | Xác định dependency bắt buộc hay theo từng tác vụ. | Đặt owner và quyền truy cập trước khi code. | Refactor từng bước theo hành vi quan sát được. |

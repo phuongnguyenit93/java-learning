@@ -1,34 +1,34 @@
 sections:
   design-patterns-001:
     difficulty: INTERMEDIATE
-    isImportant: false
+    isImportant: true
   design-patterns-002:
     difficulty: INTERMEDIATE
-    isImportant: false
+    isImportant: true
   design-patterns-003:
     difficulty: INTERMEDIATE
-    isImportant: false
+    isImportant: true
   design-patterns-004:
     difficulty: ADVANCED
-    isImportant: false
+    isImportant: true
   design-patterns-005:
     difficulty: INTERMEDIATE
-    isImportant: false
+    isImportant: true
   design-patterns-006:
     difficulty: INTERMEDIATE
     isImportant: false
   design-patterns-007:
     difficulty: INTERMEDIATE
-    isImportant: false
+    isImportant: true
   design-patterns-008:
     difficulty: INTERMEDIATE
-    isImportant: false
+    isImportant: true
   design-patterns-009:
     difficulty: ADVANCED
-    isImportant: false
+    isImportant: true
   design-patterns-010:
     difficulty: ADVANCED
-    isImportant: false
+    isImportant: true
   design-patterns-011:
     difficulty: INTERMEDIATE
     isImportant: false
@@ -37,4 +37,4 @@ sections:
     isImportant: false
   design-patterns-013:
     difficulty: ADVANCED
-    isImportant: false
+    isImportant: true

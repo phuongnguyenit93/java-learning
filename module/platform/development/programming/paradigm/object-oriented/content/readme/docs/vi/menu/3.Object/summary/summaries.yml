@@ -1,0 +1,307 @@
+summaries:
+- id: object-001
+  title: Danh tính, trạng thái và hành vi của đối tượng
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Danh tính, trạng thái và hành vi của đối tượng**
+
+    Bài xác định object Java qua danh tính, trạng thái quan sát được và hành vi có hợp đồng. Ví dụ hai Order được tạo riêng, alias cùng instance và các chuyển DRAFT → CONFIRMED → CANCELLED giúp phân biệt identity Java với ID nghiệp vụ, đồng thời giải thích vì sao object phải bảo vệ invariant qua phương thức.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nhận diện object
+
+    1. Danh tính, trạng thái và hành vi trả lời ba câu hỏi khác nhau nào về một Order?
+    2. Vì sao hai lần new Order tạo hai instance dù customer và state giống nhau?
+    3. Cùng orderId trong database có chứng minh hai tham chiếu Java là cùng một instance không?
+
+    ### Hành vi và ranh giới
+
+    1. Vì sao alias.addItem làm first thay đổi mà second vẫn giữ dữ liệu cũ?
+    2. Khi nào confirm, cancel bị từ chối và invariant của Order được giữ ra sao?
+    3. Private field, final class và List.copyOf bảo vệ những khía cạnh nào khác nhau?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Nhận diện instance | Vẽ sơ đồ first, second, alias và dự đoán phép ==. |
+    | Truy vết trạng thái | Mô tả cùng một Order đổi trạng thái qua addItem, confirm, cancel. |
+    | Phân định identity | Giải thích sự khác nhau giữa identity JVM và mã đơn hàng. |
+    | Phân tích hợp đồng | Chỉ ra precondition và postcondition của confirm/cancel. |
+    | Bảo vệ state | Đánh giá getter danh sách và lý do dùng snapshot với String bất biến. |
+- id: object-002
+  title: Tham chiếu, giá trị và cách truyền đối tượng
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tham chiếu, giá trị và cách truyền đối tượng**
+
+    Bài phân biệt biến primitive chứa giá trị trực tiếp với biến tham chiếu chứa giá trị tham chiếu tới object. Qua Student, Wallet, Account và Box, người học thấy Java luôn truyền tham số theo giá trị; phương thức có thể sửa đối tượng chung nhưng gán lại tham số cục bộ không thay biến của caller.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phép gán và tham chiếu
+
+    1. Gán b = a cho int và cho Student thực chất sao chép những giá trị gì?
+    2. Vì sao b.deposit ảnh hưởng object của a nhưng b = new Wallet không thay a?
+    3. Final có ngăn StringBuilder.append thay đổi nội dung object không?
+
+    ### Tham số Java
+
+    1. Vì sao gọi depositTo làm Account thay đổi mà Java vẫn pass-by-value?
+    2. Tại sao replaceLocally và swap không thể hoán đổi biến tham chiếu của caller?
+    3. Vì sao clone mảng hai chiều còn chia sẻ những hàng int[] bên trong?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dự đoán phép gán | Phân biệt kết quả với int và Student khi sửa biến hoặc field. |
+    | Giải thích pass-by-value | Vẽ hai biến caller/parameter nhận cùng giá trị tham chiếu. |
+    | Phân tích phương thức | Theo dấu depositTo, replaceLocally, swap và Box.modify. |
+    | Thiết kế an toàn | Trả instance mới hoặc clone mảng khi cần tránh sửa dữ liệu của caller. |
+    | Nhận diện sao chép nông | Chỉ ra các mảng con còn dùng chung sau matrix.clone. |
+- id: object-003
+  title: Nhiều tham chiếu cùng trỏ đến một đối tượng
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Nhiều tham chiếu cùng trỏ đến một đối tượng**
+
+    Bài làm rõ aliasing khi nhiều biến, field, collection hoặc tham số cùng trỏ một instance. Qua Student, Employee/Address, Box và List, người học lần theo tác động của setter, gán lại biến, sao chép container và giới hạn của chia sẻ mutable object giữa nhiều luồng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Những đường alias
+
+    1. Vì sao second = first không tạo thêm Student và setter qua second đổi kết quả của first?
+    2. Sau b = new Student hoặc b = null thì a còn tham chiếu object ban đầu không?
+    3. Vì sao incrementBoth(box, box) tăng cùng một Box hai lần?
+
+    ### Aliasing qua object khác
+
+    1. Hai Employee được new riêng vẫn có thể dùng chung Address như thế nào?
+    2. new ArrayList<>(original) làm list độc lập nhưng còn chia sẻ Student phần tử ra sao?
+    3. Aliasing tự nó khác race condition giữa nhiều thread ở điểm nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Vẽ graph tham chiếu | Đếm instance và các biến trỏ tới chúng sau từng lệnh. |
+    | Truy vết alias | Dự đoán field của Student và Address khi sửa qua đường khác. |
+    | Phân biệt gán lại | Giải thích b = null, b = new Student và group.set(0,s). |
+    | Nhận diện share sâu | Kiểm tra reference của container và element sau shallow copy. |
+    | Đề xuất ownership | Dùng DTO bất biến/snapshot khi cần giới hạn quyền thay đổi. |
+- id: object-004
+  title: Phân biệt cùng đối tượng với bằng nhau về giá trị
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phân biệt cùng đối tượng với bằng nhau về giá trị**
+
+    Bài phân biệt == so sánh identity của reference với equals theo hợp đồng lớp. Qua Point, Book, String, array, BigDecimal và record, người học xây dựng equals/hashCode nhất quán, so sánh entity với value object và nhận biết nguy cơ khi thay field của key mutable trong HashMap.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Identity và equality
+
+    1. Vì sao hai Book cùng ISBN vẫn equals false nếu chỉ kế thừa Object.equals?
+    2. String mới, String literal và record Point cho kết quả ==, equals khác nhau thế nào?
+    3. Khi so sánh mảng nhiều chiều hoặc BigDecimal khác scale, nên dùng API nào?
+
+    ### Hợp đồng hash
+
+    1. Các tính chất phản xạ, đối xứng, bắc cầu, nhất quán của equals yêu cầu gì?
+    2. Vì sao equals true bắt buộc hashCode bằng nhau nhưng hashCode bằng nhau không đủ chứng minh equals?
+    3. Thay field tham gia hash sau khi đưa MutableKey vào map có thể khiến lookup lỗi vì sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dự đoán equality | Giải thích ==/equals của Book, Point, String và record. |
+    | Triển khai equals | Viết đúng equals(Object) với @Override và kiểm tra null/kiểu. |
+    | Triển khai hashCode | Dùng đúng field equality và thử hành vi HashSet/HashMap. |
+    | Chọn so sánh chuyên biệt | Áp dụng Objects.equals, Arrays.deepEquals và BigDecimal.compareTo phù hợp. |
+    | Giữ key ổn định | Chỉ ra và sửa lỗi MutableKey đổi hash khi đang nằm trong HashMap. |
+- id: object-005
+  title: Đối tượng có thể thay đổi và đối tượng bất biến
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đối tượng có thể thay đổi và đối tượng bất biến**
+
+    Bài đối chiếu mutable StringBuilder/ArrayList với immutable String/LocalDate, sau đó thực hành MutableCart và ImmutableCart. Người học thấy thay biến reference không làm thay immutable object; final hay record không tự đảm bảo deep immutability và snapshot phải bảo vệ cả phần tử mutable.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Mutable và immutable
+
+    1. String.concat và StringBuilder.append thay đổi instance nào?
+    2. Vì sao final List, final class và record không tự bảo đảm bất biến sâu?
+    3. MutableCart.addProduct và ImmutableCart.withAddedProduct khác nhau ở instance và số item như thế nào?
+
+    ### Thiết kế chia sẻ
+
+    1. List.copyOf làm cấu trúc list ổn định nhưng MutableTask phần tử có còn đổi được không?
+    2. Collections.unmodifiableList và List.copyOf phản ánh cập nhật nguồn theo cách nào?
+    3. Khi dùng immutable config giữa nhiều luồng vì sao cần safe publication?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại object | So sánh String với StringBuilder theo thay đổi tại chỗ. |
+    | Truy vết Cart | Giải thích empty, one, two của ImmutableCart và alias MutableCart. |
+    | Bảo vệ phần tử | Xác định khi nào cần copy list và dùng phần tử immutable. |
+    | Phân biệt modifier | Giải thích giới hạn của final và record. |
+    | Chọn chiến lược | Đánh đổi mutable có kiểm soát với immutable trả bản mới. |
+- id: object-006
+  title: Sao chép nông và sao chép sâu
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Sao chép nông và sao chép sâu**
+
+    Bài phân biệt gán alias với shallow copy chỉ tạo outer object và deep copy các thành phần cần độc lập. Qua Customer/Address, List<Item>, mảng nhiều chiều và Node graph chứa vòng, người học chọn copy constructor, clone hoặc IdentityHashMap để tránh lỗi chia sẻ mutable state và bảo toàn shared references.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Mức sao chép
+
+    1. Gán alias, shallowCopy(Customer) và deepCopy(Customer) tạo số object thế nào?
+    2. Object.clone, int[].clone và Product[].clone giữ phần tử/tham chiếu khác nhau thế nào?
+    3. Vì sao sao chép List<Item> rồi sửa Item có thể làm list nguồn quan sát thay đổi?
+
+    ### Đồ thị và ownership
+
+    1. Vì sao int[][].clone vẫn chia sẻ mảng hàng con?
+    2. Khi có vòng A → B → A, tại sao cần seen bằng IdentityHashMap và ghi bản sao trước khi đệ quy?
+    3. Vì sao deep copy toàn bộ entity, socket hay ORM object có thể sai ngữ nghĩa?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt mức copy | Dùng == và mutation chứng minh alias, shallow và deep Customer. |
+    | Sao chép collection | Tạo list mới rồi copy từng Item mutable khi cần. |
+    | Sao chép mảng lồng | Clone từng hàng int[] và dự đoán output khi sửa. |
+    | Bảo toàn graph | Giải thích visited mapping giữ đúng chu trình và shared reference. |
+    | Thiết kế defensive copy | Bảo vệ ScoreReport bằng clone khi nhận và trả mảng. |
+- id: object-007
+  title: Chia sẻ đối tượng và tác động của thay đổi trạng thái
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chia sẻ đối tượng và tác động của thay đổi trạng thái**
+
+    Bài theo dõi TemperaturePolicy được MobileControl và WallDisplay cùng tham chiếu, làm rõ state đang sống so với snapshot đã chụp. Người học giải thích vì sao việc gán controller mới không thay reference của wall, UI cần render/event mới và các cập nhật đồng thời có thể đòi AtomicInteger hoặc immutable range công bố qua volatile.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Theo dõi tác động
+
+    1. Vì sao MobileControl.changeTarget(24) làm WallDisplay thấy 24 ở lần render tiếp theo?
+    2. Vì sao oldRenderedText và oldHistory không tự đổi theo policy?
+    3. Sau khi mobile nhận replacement mới vì sao wall còn target 24 nhưng replacement trở thành 19?
+
+    ### Thiết kế hợp đồng chia sẻ
+
+    1. Live object, snapshot và independent copy khác nhau về quyền quan sát/cập nhật thế nào?
+    2. Thay object trong registry hoặc sửa policy có tự trigger mọi UI render không?
+    3. Vì sao volatile count chưa làm count++ nguyên tử, khi nào cần AtomicInteger?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Vẽ quan hệ tham chiếu | Xác định Policy #1 và #2 được các controller/view giữ. |
+    | Theo dõi state | Lập bảng trước/sau changeTarget và render của WallDisplay. |
+    | Phân biệt snapshot | Giải thích dữ liệu cũ của String và List.copyOf(history). |
+    | Thiết kế API chia sẻ | Đề xuất owner mutation cùng query, snapshot và thông báo refresh. |
+    | Đánh giá concurrency | Chọn nguyên tử cho Counter hoặc thay volatile immutable TemperatureRange. |
+- id: object-008
+  title: Giá trị rỗng và đối tượng chưa tồn tại
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Giá trị rỗng và đối tượng chưa tồn tại**
+
+    Bài làm rõ biến local chưa được gán, tham chiếu null, object thực có chuỗi hoặc collection rỗng và entity không tìm thấy. Với CustomerRepository/Optional, người học lựa chọn kiểm tra đầu vào bắt buộc, API tra cứu tùy chọn, collection rỗng và xử lý lỗi nguồn dữ liệu mà không vô tình nhầm các trạng thái vắng mặt.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Null và object hiện hữu
+
+    1. Customer c; khác Customer c = null như thế nào ở lúc biên dịch và lúc chạy?
+    2. null, chuỗi rỗng, chuỗi blank và List.of() biểu diễn những trạng thái khác nhau nào?
+    3. Nếu first = null nhưng alias còn giữ Box, object đã biến mất hoặc bị GC chưa?
+
+    ### Thiết kế API vắng mặt
+
+    1. findById trả Optional.empty khi không thấy ID khác lỗi database ở ý nghĩa nào?
+    2. Objects.requireNonNull, Objects.equals, Optional và collection rỗng thích hợp những tình huống nào?
+    3. Vì sao unboxing Integer null, dereference null và Optional.empty().get có các kiểu lỗi khác nhau?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt absence | Tách biến local chưa gán, tham chiếu null và object có field null. |
+    | Dự đoán lỗi | Chỉ ra compile error, NullPointerException và NoSuchElementException. |
+    | Viết kiểm tra an toàn | Áp dụng short-circuit, Objects.equals và requireNonNull. |
+    | Thiết kế API tìm kiếm | Trả Optional.empty cho not found, collection rỗng cho 0 phần tử và báo lỗi DB riêng. |
+    | Giải thích lifetime | Lý giải gán biến null không xóa những object còn reachable. |
+- id: object-009
+  title: Theo dõi tương tác của các đối tượng trong một tình huống
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Theo dõi tương tác của các đối tượng trong một tình huống**
+
+    Bài tổng hợp qua checkout giữa Cart, Inventory, PaymentGateway, OrderService, Order và Notifier. Người học dùng bảng trạng thái, call stack, log và UML sequence diagram để giải thích đối tượng nào nhận lời gọi, truyền tham chiếu nào, thay đổi tồn kho ở đâu, xử lý PaymentDeclinedException và giới hạn của bù trừ trong mô hình đơn luồng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Luồng thành công
+
+    1. Main gọi checkout trên instance nào và Cart.total có tự sửa Inventory không?
+    2. Reserve, pay, tạo Order, notifier.send và return order diễn ra theo thứ tự nào?
+    3. Vì sao inventory trong main thấy stock còn 3 dù OrderService gọi reserve?
+
+    ### Nhánh lỗi và quan sát
+
+    1. Khi PaymentGateway(false) vì sao release trả kho từ 3 lên 5, không tạo Order hoặc gửi thông báo?
+    2. Sequence diagram, call stack và bảng state cung cấp thông tin bổ sung nào cho log?
+    3. Khi payment timeout hoặc có checkout đồng thời, vì sao bản bù trừ trong bộ nhớ chưa đủ?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Xác định trách nhiệm | Liệt kê sáu đối tượng, trạng thái và phương thức trong luồng checkout. |
+    | Truy vết lời gọi | Lập bảng caller/callee, tham số, kết quả và delta tồn kho. |
+    | Vẽ sequence diagram | Diễn tả nhánh thành công và exception dẫn đến release. |
+    | Tính trạng thái cuối | Giải thích tồn cuối 3 ở thành công và 5 ở thanh toán bị từ chối. |
+    | Debug có bằng chứng | Đặt breakpoint và so call stack với trace; nêu giới hạn transaction/idempotency. |

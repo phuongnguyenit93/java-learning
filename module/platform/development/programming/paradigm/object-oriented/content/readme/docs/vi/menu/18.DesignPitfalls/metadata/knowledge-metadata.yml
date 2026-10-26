@@ -1,31 +1,31 @@
 sections:
   design-pitfalls-001:
     difficulty: INTERMEDIATE
-    isImportant: false
+    isImportant: true
   design-pitfalls-002:
     difficulty: ADVANCED
-    isImportant: false
+    isImportant: true
   design-pitfalls-003:
     difficulty: INTERMEDIATE
-    isImportant: false
+    isImportant: true
   design-pitfalls-004:
     difficulty: INTERMEDIATE
-    isImportant: false
+    isImportant: true
   design-pitfalls-005:
     difficulty: INTERMEDIATE
-    isImportant: false
+    isImportant: true
   design-pitfalls-006:
     difficulty: ADVANCED
-    isImportant: false
+    isImportant: true
   design-pitfalls-007:
     difficulty: ADVANCED
-    isImportant: false
+    isImportant: true
   design-pitfalls-008:
     difficulty: ADVANCED
-    isImportant: false
+    isImportant: true
   design-pitfalls-009:
     difficulty: ADVANCED
-    isImportant: false
+    isImportant: true
   design-pitfalls-010:
     difficulty: ADVANCED
     isImportant: false

@@ -1,0 +1,351 @@
+summaries:
+- id: design-pitfalls-001
+  title: Lớp ôm quá nhiều trách nhiệm
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Lớp ôm quá nhiều trách nhiệm**
+
+    Một lớp lớn chưa chắc đã sai; lỗi God Class xuất hiện khi một lớp cùng chịu nhiều lý do thay đổi như tính giá, lưu dữ liệu, gửi thông báo và xác thực. Bài học giúp xác định ranh giới trách nhiệm theo chính sách và hiệu ứng phụ, tách use case điều phối khỏi calculator/repository/notifier, và dùng characterization tests để giữ kết quả nghiệp vụ khi refactor. Việc tạo thêm lớp chỉ có ích nếu giảm coupling mà không làm mất tính dễ hiểu của quy trình.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nhận diện trách nhiệm thật
+
+    1. Vì sao số dòng hoặc số phương thức không đủ kết luận một class là God Class?
+    2. Khi cùng OrderManager phải sửa vì quy tắc giá, SQL và email, những lý do thay đổi nào đang bị gộp?
+    3. SRP nói về lý do thay đổi liên quan nhau như thế nào, và vì sao một use case có nhiều bước chưa chắc là God Class?
+    4. Những dấu hiệu nào trong code, git history và unit tests cho thấy coupling cao hoặc cohesion thấp?
+
+    ### Tách lớp và giữ hành vi
+
+    1. Trong quy trình đặt hàng, phần nào nên ở PlaceOrderUseCase, PriceCalculator, repository và notifier?
+    2. Vì sao tách God Class thành hàng loạt lớp chỉ forwarding hoặc chuyển tất cả vào Utils chưa giải quyết lỗi?
+    3. Nếu lưu đơn thành công nhưng thông báo thất bại, ranh giới giao dịch nào cần được xem xét khi tách lớp?
+    4. Cần ghi nhận đầu vào, kết quả, exception và side effect nào trước khi refactor để tránh hồi quy?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích God Class | Dựa trên trách nhiệm và lý do thay đổi, chỉ ra dấu hiệu cần tách của OrderManager hoặc UserManager mà không dựa thuần độ dài. |
+    | Thiết kế lại ranh giới | Phác họa PlaceOrderUseCase phối hợp PriceCalculator, repository, notifier với trách nhiệm cụ thể. |
+    | Giữ hợp đồng nghiệp vụ | Lập characterization tests cho kết quả giá, thao tác lưu và luồng thất bại khi di chuyển code. |
+    | Đánh giá kết quả refactor | Chỉ ra trường hợp wrapper, Utils hoặc quá nhiều lớp nhỏ chỉ đổi hình thức mà không giảm coupling. |
+- id: design-pitfalls-002
+  title: Trạng thái công khai và mất điều kiện bất biến
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Trạng thái công khai và mất điều kiện bất biến**
+
+    Bài học tập trung vào cách đối tượng bảo vệ điều kiện bất biến qua suốt vòng đời, không chỉ kiểm tra dữ liệu khi được tạo. Ví dụ SeatInventory yêu cầu số chỗ đặt từ 0 đến sức chứa, từ chối thao tác sai mà giữ trạng thái cũ; các ví dụ collection và record cho thấy private/final hay unmodifiable view có thể vẫn để lộ đường sửa qua alias. Người học xem cả đường thay đổi trạng thái, constructor, subclass và truy cập đồng thời để thiết kế API có hành vi và kiểm thử invariant.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bất biến và encapsulation
+
+    1. Invariant reserved nằm trong khoảng từ 0 tới capacity khác gì với tiền điều kiện seats dương trong reserve()?
+    2. Vì sao field private và final vẫn chưa bảo vệ trạng thái nếu getter trả chính list mutable hay constructor giữ alias ngoài?
+    3. Khác nhau giữa Collections.unmodifiableList(view) và defensive snapshot bằng List.copyOf khi list gốc vẫn được sửa là gì?
+    4. Setter start/end độc lập có thể phá điều kiện start trước end như thế nào?
+
+    ### Các đường cập nhật và kiểm thử
+
+    1. SeatInventory.reserve phải xử lý kiểm tra đủ chỗ và cập nhật như một thao tác nào khi có nhiều luồng?
+    2. Vì sao record chứa List mutable chưa phải immutable sâu và protected field có thể mở đường bỏ qua validation?
+    3. Khi reserve hoặc cập nhật lịch bị từ chối, test nên xác minh những hậu điều kiện nào?
+    4. Invariant, immutability và thread safety khác nhau ở điều gì dù thường cùng xuất hiện?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Viết và kiểm chứng invariant | Biểu diễn 0 <= reserved <= capacity, dự đoán trạng thái sau các ca đặt/hủy chỗ hợp lệ và bị từ chối. |
+    | Đóng các đường sửa trái phép | Sửa LeakyCart hoặc BrokenTeam bằng phương thức nghiệp vụ, bản sao phòng vệ và ranh giới alias phù hợp. |
+    | Thiết kế atomic update | Đề xuất synchronized/biện pháp đồng bộ để check-and-update chỗ ngồi không race condition. |
+    | Kiểm thử thất bại | Viết ca thử cho input sai, vượt sức chứa và lỗi sửa lén qua collection hay setter độc lập. |
+- id: design-pitfalls-003
+  title: Getter, setter tràn lan nhưng thiếu hành vi
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Getter, setter tràn lan nhưng thiếu hành vi**
+
+    Bài học phân biệt đối tượng nghiệp vụ chỉ chứa getters/setters với đối tượng tự giữ quy tắc hành vi. Với vòng đời Order, việc thay setStatus bằng confirm, ship, cancel và thay getLines().add bằng addLine giúp nơi sở hữu trạng thái tự kiểm tra chuyển trạng thái, tiền và danh sách dòng hàng. Bài cũng chỉ rõ DTO, transaction script, JPA entity và lớp dữ liệu đơn giản vẫn có thể dùng getter/setter hợp lý; lựa chọn phải dựa trên invariant và ranh giới giao dịch thực tế.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Từ dữ liệu đến hành vi
+
+    1. Vì sao class Order chỉ có getStatus/setStatus để toàn bộ service tự kiểm tra trạng thái là dấu hiệu anemic domain model?
+    2. Quy tắc nào của vòng đời DRAFT → CONFIRMED → SHIPPED và CANCELLED nên nằm trong phương thức Order?
+    3. Đổi tên setStatus thành changeStatus có giải quyết lỗi không nếu vẫn cho gán mọi trạng thái?
+    4. Tell, Don't Ask yêu cầu đặt quyết định nghiệp vụ ở đâu và có cấm hoàn toàn truy vấn/getter không?
+
+    ### Bối cảnh và kiểm chứng
+
+    1. Vì sao DTO, report row hoặc transaction script đơn giản có thể giữ thiết kế thiên dữ liệu mà không sai?
+    2. Trước khi xóa setter của JPA entity có nhiều caller, cần kiểm tra mapping, use case và hợp đồng persistence nào?
+    3. Những test nào xác nhận confirm/ship/cancel không cho phép chuyển trạng thái sai và giữ state sau lỗi?
+    4. Vì sao đóng gói trạng thái bên trong Order chưa đủ để bảo đảm concurrency, transaction hoặc idempotency?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Xây dựng API theo nghiệp vụ | Chuyển setStatus/setItems thành confirm, ship, cancel, addLine với precondition và hậu điều kiện rõ. |
+    | Truy vết vòng đời | Dự đoán các chuyển trạng thái hợp lệ/bị cấm trong Order và lý do bị từ chối. |
+    | Phân biệt loại object | Phân tích Entity, Value Object, DTO và Application Service để quyết định nơi chứa logic, getter và setter. |
+    | Refactor và kiểm thử an toàn | Lập test cho đường thành công/thất bại và rà soát caller/JPA mapping trước khi hạn chế setter. |
+- id: design-pitfalls-004
+  title: Kế thừa chỉ để dùng lại vài phương thức
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Kế thừa chỉ để dùng lại vài phương thức**
+
+    Bài học chỉ ra `extends` là cam kết kiểu con có thể thay thế lớp cha, không đơn thuần là phím tắt lấy vài phương thức. `Inventory extends HashMap` vô tình công khai put, clear và các thao tác có thể phá quy tắc tồn kho; phiên bản composition giữ Map bên trong và chỉ cho gọi restock/reserve qua validation. Người học phân biệt composition với delegation, đánh giá rủi ro protected hooks/constructor override và chỉ dùng kế thừa khi hợp đồng superclass thật sự phù hợp.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Đúng kiểu và đúng hợp đồng
+
+    1. Vì sao PricingService extends một tiện ích định dạng chỉ để gọi method tạo ra quan hệ is-a giả?
+    2. Inventory extends HashMap thừa hưởng những API nào có thể bỏ qua invariant số lượng tồn kho?
+    3. Liskov Substitution Principle yêu cầu điều gì nếu mọi Inventory đều được xem như một Map?
+    4. Rủi ro nào xảy ra nếu constructor base gọi một method có thể override trước khi trường subclass được khởi tạo?
+
+    ### Sửa thiết kế và kiểm chứng
+
+    1. Giữ Map private trong Inventory và công khai restock/reserve thay đổi ranh giới trách nhiệm như thế nào?
+    2. Trong ví dụ này composition chỉ cấu trúc thành phần còn delegation biểu hiện qua những lời gọi nào?
+    3. Khi một subclass thật sự là subtype với extension points được tài liệu hóa, vì sao inheritance vẫn có thể thích hợp?
+    4. Cần kiểm thử gì để chứng minh reserve không thể làm số lượng âm dù client cố bypass validation?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Nhận diện kế thừa giả | Phân tích tại sao Inventory extends HashMap hoặc Service extends Utility tạo API/hợp đồng sai. |
+    | Đề xuất composition | Thiết kế Inventory có Map private và method restock/reserve giữ invariant. |
+    | Kiểm chứng tính thay thế | Giải thích điều kiện phải thỏa LSP trước khi chấp nhận extends. |
+    | Test hành vi bị lộ | Tạo ca kiểm tra đường put/clear, reserve quá tồn kho và bảo vệ trạng thái sau refactor. |
+- id: design-pitfalls-005
+  title: Lạm dụng ép kiểu và kiểm tra kiểu
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Lạm dụng ép kiểu và kiểm tra kiểu**
+
+    Bài học nhận diện code liên tục kiểm tra `instanceof`, downcast hoặc getClass() để lựa chọn cách tính cùng một hành vi, từ đó chuyển thuật toán về những implementation đáp ứng một interface chung như ShippingPolicy. Người học vẫn phân biệt các kiểm tra kiểu chính đáng ở boundary dữ liệu không tin cậy, capability tùy chọn hoặc tập subtype đóng. Bài nhấn mạnh cast không đổi loại đối tượng runtime, generics giữ an toàn kiểu và bộ contract tests phải kiểm tra hành vi thay vì tên class.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ép kiểu và đa hình
+
+    1. Kiểu tĩnh, kiểu runtime và dynamic dispatch khác nhau như thế nào khi tham chiếu Animal giữ một Dog?
+    2. Vì sao cast tham chiếu Animal chứa Cat sang Dog có thể được compiler chấp nhận nhưng lại ném ClassCastException?
+    3. Nhiều nhánh instanceof theo loại vận chuyển xuất hiện ở nhiều service cho thấy vấn đề gì về phân bố hành vi?
+    4. Đưa tính phí vào ShippingPolicy và implementation cụ thể thay đổi vai trò của Checkout như thế nào?
+
+    ### Ngoại lệ hợp lý và ranh giới
+
+    1. Khi nhận Object từ JSON, plugin hoặc legacy API, vì sao kiểm tra kiểu là điều kiện bảo vệ cần thiết?
+    2. Khi một subtype có năng lực scan bổ sung, vì sao một kiểm tra capability có thể hợp lý?
+    3. Generics hoặc Class<T>.cast bảo vệ việc chuyển kiểu khác với unchecked cast ra sao?
+    4. Vì sao việc kiểm tra trạng thái PAID nên được mô hình thành quy tắc trạng thái thay vì lạm dụng subclass theo state?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích cast/runtime | Dự đoán kết quả của upcast, downcast và trường hợp ClassCastException. |
+    | Refactor type branching | Chuyển nhánh tính phí vận chuyển thành ShippingPolicy có nhiều implementation. |
+    | Chọn kiểm tra kiểu phù hợp | Phân loại các ca instanceof cho boundary dữ liệu, sealed hierarchy, capability và branching lặp. |
+    | Kiểm tra hợp đồng | Đề xuất cùng bộ test cho mọi ShippingPolicy, đảm bảo kết quả và hành vi nhất quán. |
+- id: design-pitfalls-006
+  title: Giao diện quá lớn hoặc quá nhiều lớp trừu tượng
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Giao diện quá lớn hoặc quá nhiều lớp trừu tượng**
+
+    Bài học đối chiếu hai lỗi: fat interface buộc client phụ thuộc thao tác không sử dụng và quá nhiều tầng abstraction chỉ chuyển lời gọi. Trong ví dụ quản lý tài liệu, PreviewService chỉ cần DocumentReader còn EditorialService cần thao tác sửa; tách theo client giúp một nguồn chỉ đọc không phải ném UnsupportedOperationException cho save. Người học áp dụng ISP theo hợp đồng có nghĩa, phân biệt với SRP/LSP/DIP, kiểm toán số tầng gián tiếp và giữ class cụ thể khi không có ranh giới biến động hữu ích.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hợp đồng đúng theo client
+
+    1. Vì sao DocumentManager chứa read, save, delete và email khiến PreviewService phụ thuộc quá rộng?
+    2. ReadOnlyDocumentSource phải ném UnsupportedOperationException cho save ảnh hưởng thế nào tới hợp đồng và LSP?
+    3. DocumentReader/DocumentWriter theo client khác gì với việc tách mỗi method thành một interface?
+    4. Default method ném lỗi không hỗ trợ có thật sự chữa được vấn đề fat interface không?
+
+    ### Tránh tầng trừu tượng vô ích
+
+    1. Khi PreviewFacade → Provider → Factory chỉ forward method, những chi phí đọc hiểu và thay đổi nào tăng lên?
+    2. Ma trận client–method và implementation–capability giúp tìm ranh giới ISP cụ thể ra sao?
+    3. Khi nào một DocumentRepository kết hợp Reader và Writer hợp lý cho một client cần thao tác nhất quán?
+    4. Vì sao việc hạn chế method qua interface không tự tạo kiểm soát authorization ở API boundary?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích fat interface | Lập client usage matrix chỉ ra thao tác không cần của PreviewService và EditorialService. |
+    | Tách hợp đồng có căn cứ | Đề xuất DocumentReader/DocumentWriter và chỉ định implementation đúng khả năng mà không viết stub giả. |
+    | Đánh giá abstraction layers | Chỉ ra lớp forward thuần không mang chính sách, validation hay boundary thay đổi để giản lược luồng. |
+    | Giữ tính tương thích | Lập danh sách client và migration khi thay hợp đồng công khai từ DocumentManager sang interface nhỏ. |
+- id: design-pitfalls-007
+  title: Phụ thuộc vòng và truy cập sâu vào đối tượng
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phụ thuộc vòng và truy cập sâu vào đối tượng**
+
+    Bài học phân biệt vòng phụ thuộc trong đồ thị service/module với chuỗi truy cập sâu vào cấu trúc object. Trong bài toán OrderService và ShippingService, gọi ngược nhau làm khởi tạo và test khó, còn `order.getCustomer().getAddress().getCity()` rải khắp nghiệp vụ khiến client biết quá nhiều biểu diễn nội bộ. Người học dùng hướng phụ thuộc một chiều, truyền ShipmentRequest/DTO hẹp, chuyển hành vi về đúng chủ sở hữu và chỉ dùng event/abstraction khi bảo toàn được hợp đồng thời gian và tính nhất quán.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nhận diện coupling qua đồ thị và mã
+
+    1. Đồ thị OrderService → ShippingService → OrderService là vòng phụ thuộc theo tiêu chí nào?
+    2. Vì sao constructor injection của hai Spring bean đòi nhau có thể gây lỗi khởi tạo?
+    3. Deep object navigation khác với việc gọi fluent API hoặc đọc DTO trong mapper ở điểm nào?
+    4. Law of Demeter gợi ý giới hạn tri thức của một service về các object bên trong collaborator ra sao?
+
+    ### Phá vòng và giữ trách nhiệm
+
+    1. Truyền ShipmentRequest và DeliveryAddress cho ShippingService giúp bỏ phụ thuộc ngược nào?
+    2. Đưa hành vi như eligibleForShipping vào object sở hữu dữ liệu khác gì tạo thêm getter trả nguyên object graph?
+    3. Vì sao chỉ trích hai interface nhưng giữ A → BPort → B → APort → A không giải quyết vòng phụ thuộc?
+    4. Nếu thay lời gọi trực tiếp bằng event OrderPaid, những điều kiện về timing, duplicate và failure cần định nghĩa?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Vẽ và phát hiện cycle | Vẽ đồ thị phụ thuộc trước/sau giữa OrderService, ShippingService và DeliveryGateway. |
+    | Giảm truy cập sâu | Thiết kế ShipmentRequest hoặc phương thức domain hẹp thay chuỗi getCustomer/getAddress/getCity trong nghiệp vụ. |
+    | Lập kế hoạch phá cycle | Đề xuất luồng điều phối một chiều hoặc tách policy có chủ sở hữu rõ và đánh giá hợp đồng. |
+    | Chống refactor hình thức | Chỉ ra vòng tồn tại sau khi đổi sang interface, hay rủi ro khi dùng event chỉ để né gọi trực tiếp. |
+- id: design-pitfalls-008
+  title: Trạng thái dùng chung khó kiểm soát
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Trạng thái dùng chung khó kiểm soát**
+
+    Bài học giải thích nguồn gốc lỗi khi nhiều tham chiếu có quyền sửa cùng một trạng thái, cả khi không có thread song song do aliasing và khi có concurrency do check-then-act. Qua counter/hạn mức dùng chung, người học phân biệt volatile, synchronized, atomic, concurrent collection, transaction và idempotency; không có từ khóa nào tự sửa mọi ranh giới. Bài còn cảnh báo static/singleton service Spring giữ dữ liệu request và sự khác biệt giữa trạng thái trong một JVM với database/cluster.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nguồn chia sẻ và lỗi quan sát
+
+    1. Shared mutable state khác gì với chia sẻ dữ liệu immutable hoặc shared object không cho sửa?
+    2. Trong ví dụ hai thread kiểm tra và giảm hạn mức, race condition làm invariant bị sai như thế nào?
+    3. Vì sao cùng một List mutable được nhiều object giữ alias vẫn nguy hiểm ngay cả khi một thread?
+    4. Vì sao một Spring singleton service giữ userId/currentOrder trong field có thể làm rò thông tin giữa request?
+
+    ### Chọn cơ chế bảo vệ
+
+    1. volatile bảo đảm visibility nhưng không làm phép kiểm tra rồi cập nhật trở thành nguyên tử như thế nào?
+    2. synchronized và AtomicInteger giúp được tình huống nào, còn invariant gồm nhiều field đòi hỏi gì thêm?
+    3. Vì sao ConcurrentHashMap không tự biến read-modify-write nhiều thao tác thành một transaction nghiệp vụ?
+    4. Điều gì thay đổi khi trạng thái nằm ở database hoặc nhiều node thay vì chỉ trong một JVM?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Nhận diện owner và alias | Liệt kê đường tham chiếu có thể sửa trạng thái chung qua static, singleton hoặc collection. |
+    | Phân tích race condition | Dự đoán kết quả sai của check-then-act và xây đường cập nhật hạn mức nguyên tử. |
+    | Chọn công cụ đúng phạm vi | Giải thích giới hạn của volatile, synchronized, AtomicInteger, ConcurrentHashMap, transaction/optimistic locking. |
+    | Kiểm thử concurrency | Thiết kế ca thử có điều phối thread và xác nhận invariant, đồng thời kiểm tra aliasing không phụ thuộc ngẫu nhiên. |
+- id: design-pitfalls-009
+  title: Đối tượng có thể thay đổi làm sai phép so sánh hoặc mã băm
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đối tượng có thể thay đổi làm sai phép so sánh hoặc mã băm**
+
+    Bài học đi vào lỗi tinh vi khi thuộc tính mutable tham gia equals/hashCode hoặc Comparator thay đổi trong lúc object đang được dùng làm key/Set element. `HashMap.get()` có thể không tìm được chính tham chiếu key do hash thay đổi; `TreeSet` có rủi ro tương tự khi thứ tự sắp xếp đổi. Người học phân biệt entity mutable với identity ổn định, dùng CustomerId bất biến làm key, phòng vệ record chứa List/array và kiểm tra trường do ORM hoặc Lombok đưa vào hợp đồng equality.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế collection và hợp đồng
+
+    1. Vì sao HashMap có thể không tìm được cùng object sau khi field dùng tính hashCode bị sửa?
+    2. equals và hashCode yêu cầu điều kiện tương thích nào đối với hai object được coi bằng nhau?
+    3. Vì sao HashSet đôi lúc có thể chứa biểu hiện hai entry cùng tham chiếu sau khi key mutable đổi hash?
+    4. TreeMap/TreeSet có rủi ro khác gì nếu field dùng cho Comparator thay đổi?
+
+    ### Thiết kế khóa ổn định
+
+    1. Vì sao CustomerId record chứa String bất biến phù hợp làm key hơn CustomerProfile có displayName thay đổi?
+    2. Record có List hoặc byte[] tự bất biến sâu và tự so sánh array theo nội dung không, vì sao?
+    3. Với JPA entity có ID sinh sau persist, phải cân nhắc cách thiết kế equals/hashCode và vị trí dùng key như thế nào?
+    4. Vì sao ConcurrentHashMap, Lombok-generated hash hoặc cache mã băm không tự cứu key mutable sai hợp đồng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích cơ chế thất bại | Truy vết bucket hash và dự đoán hành vi tra cứu khi MutableCustomerKey đổi mã. |
+    | Thiết kế key ổn định | Phân tách CustomerId immutable khỏi CustomerProfile mutable, giữ lookup sau đổi displayName. |
+    | Kiểm tra value object | Chỉ ra rủi ro với record chứa List/array và bổ sung defensive copy/equality thích hợp. |
+    | Đánh giá collection/ORM | Lập test equals-hash contract và lookup HashMap/HashSet/TreeSet, rà soát JPA ID và fields Lombok chọn. |
+- id: design-pitfalls-010
+  title: Lạm dụng mẫu thiết kế và trừu tượng hóa quá sớm
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Lạm dụng mẫu thiết kế và trừu tượng hóa quá sớm**
+
+    Bài học giúp lựa chọn lúc nào abstraction hoặc Design Pattern thật sự giảm chi phí thay đổi và lúc nào nó chỉ thêm indirection. Từ một quy tắc phí vận chuyển đơn giản đến hai chính sách STANDARD/EXPRESS được xác nhận, người học quan sát thời điểm Strategy bắt đầu có giá trị; KISS, YAGNI, DRY và SOLID được hiểu theo bối cảnh thay vì slogan. Mục tiêu là tìm bằng chứng thay đổi, khóa hành vi cũ bằng tests rồi trích đúng ranh giới ổn định, tránh tạo generic framework, factory hay interface cho một nhu cầu chưa có.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Đánh giá nhu cầu abstraction
+
+    1. Vì sao một chính sách phí giao hàng đơn giản có thể chỉ cần một hàm có validation thay vì hệ interface/factory?
+    2. Khác nhau giữa lạm dụng pattern vì sai quy mô và trừu tượng hóa quá sớm vì đoán sai điểm biến thiên là gì?
+    3. KISS, YAGNI và DRY bị hiểu lệch thế nào nếu chỉ đếm số dòng trùng hoặc số lớp?
+    4. Vì sao hai công thức cùng 5% nhưng phục vụ hai quy tắc nghiệp vụ độc lập chưa chắc nên gom vào một abstraction?
+
+    ### Khi nào nên đưa Strategy vào
+
+    1. Khi STANDARD và EXPRESS có thuật toán thay đổi độc lập, FeePolicy giải quyết ranh giới nào?
+    2. Trước khi trích FeePolicy, cần ghi nhận input, ngưỡng 500000 VND, exception và ca biên nào để giữ hành vi cũ?
+    3. Những dấu hiệu nào cho thấy chuỗi interface/provider/factory chỉ forwarding và tạo ma sát cho người bảo trì?
+    4. Trong trường hợp API công khai hay ranh giới security/external dependency đã rõ, khi nào abstraction sớm có căn cứ?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Nhận diện overengineering | Phân tích sơ đồ nhiều tầng và chỉ ra abstraction không có hợp đồng hoặc chiều thay đổi thực. |
+    | Đánh giá thời điểm Strategy | So sánh SimpleCheckout với PolicyCheckout khi mới một chính sách và khi thêm EXPRESS. |
+    | Giữ kết quả khi refactor | Đề xuất regression tests ở ngưỡng phí và biên trọng lượng trước/sau khi tách FeePolicy. |
+    | Ra quyết định thiết kế | Nêu bằng chứng nhu cầu, ranh giới ổn định/biến thiên và chi phí vận hành trước khi thêm pattern. |

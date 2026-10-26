@@ -1,31 +1,31 @@
 sections:
   polymorphism-001:
     difficulty: BASIC
-    isImportant: false
+    isImportant: true
   polymorphism-002:
     difficulty: INTERMEDIATE
-    isImportant: false
+    isImportant: true
   polymorphism-003:
     difficulty: ADVANCED
-    isImportant: false
+    isImportant: true
   polymorphism-004:
     difficulty: INTERMEDIATE
-    isImportant: false
+    isImportant: true
   polymorphism-005:
     difficulty: ADVANCED
-    isImportant: false
+    isImportant: true
   polymorphism-006:
     difficulty: ADVANCED
-    isImportant: false
+    isImportant: true
   polymorphism-007:
     difficulty: INTERMEDIATE
-    isImportant: false
+    isImportant: true
   polymorphism-008:
     difficulty: ADVANCED
     isImportant: false
   polymorphism-009:
     difficulty: INTERMEDIATE
-    isImportant: false
+    isImportant: true
   polymorphism-010:
     difficulty: INTERMEDIATE
     isImportant: false

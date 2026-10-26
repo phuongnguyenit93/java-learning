@@ -1,25 +1,25 @@
 sections:
   solid-001:
     difficulty: BASIC
-    isImportant: false
+    isImportant: true
   solid-002:
     difficulty: INTERMEDIATE
-    isImportant: false
+    isImportant: true
   solid-003:
     difficulty: INTERMEDIATE
-    isImportant: false
+    isImportant: true
   solid-004:
     difficulty: ADVANCED
-    isImportant: false
+    isImportant: true
   solid-005:
     difficulty: INTERMEDIATE
-    isImportant: false
+    isImportant: true
   solid-006:
     difficulty: ADVANCED
-    isImportant: false
+    isImportant: true
   solid-007:
     difficulty: INTERMEDIATE
-    isImportant: false
+    isImportant: true
   solid-008:
     difficulty: ADVANCED
-    isImportant: false
+    isImportant: true

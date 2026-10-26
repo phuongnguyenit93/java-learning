@@ -1,28 +1,28 @@
 sections:
   language-mechanics-001:
     difficulty: INTERMEDIATE
-    isImportant: false
+    isImportant: true
   language-mechanics-002:
     difficulty: ADVANCED
-    isImportant: false
+    isImportant: true
   language-mechanics-003:
     difficulty: ADVANCED
-    isImportant: false
+    isImportant: true
   language-mechanics-004:
     difficulty: INTERMEDIATE
-    isImportant: false
+    isImportant: true
   language-mechanics-005:
     difficulty: INTERMEDIATE
-    isImportant: false
+    isImportant: true
   language-mechanics-006:
     difficulty: ADVANCED
-    isImportant: false
+    isImportant: true
   language-mechanics-007:
     difficulty: INTERMEDIATE
-    isImportant: false
+    isImportant: true
   language-mechanics-008:
     difficulty: ADVANCED
-    isImportant: false
+    isImportant: true
   language-mechanics-009:
     difficulty: ADVANCED
     isImportant: false

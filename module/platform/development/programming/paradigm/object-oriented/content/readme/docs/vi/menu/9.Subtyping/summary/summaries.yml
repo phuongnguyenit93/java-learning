@@ -1,0 +1,273 @@
+summaries:
+- id: subtyping-001
+  title: Phân biệt kế thừa mã với quan hệ kiểu con
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phân biệt kế thừa mã với quan hệ kiểu con**
+
+    Bài học đặt hai quyết định thiết kế cạnh nhau: tái sử dụng xử lý đã có và cho phép một kiểu thay thế kiểu khác. Qua NotificationSender, MessagePreparation và AbstractReport, người học biết khi nào cần implements/extends để công bố vai trò, khi nào dùng composition/delegation để chia sẻ thuật toán mà không tạo quan hệ kiểu con sai nghĩa.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hai mục tiêu và cơ chế Java
+
+    1. Kế thừa mã giải quyết nhu cầu nào, còn quan hệ subtype giải quyết nhu cầu nào trong một hệ thống thông báo?
+    2. Vì sao EmailSender và SmsSender cùng dùng MessagePreparation nhưng chỉ là subtype của NotificationSender, không là subtype của helper?
+    3. Trong AbstractReport/SalesReport, extends tạo đồng thời những mối quan hệ nào và method render() final giữ vai trò gì?
+
+    ### Khả năng thay thế và lựa chọn thiết kế
+
+    1. Tại sao một subclass biên dịch hợp lệ vẫn có thể phá tiền điều kiện, hậu điều kiện hoặc tác dụng phụ mà client của supertype trông đợi?
+    2. Điều gì xảy ra khi Square extends Rectangle với hai setter độc lập, và vì sao đó không chỉ là lỗi tái sử dụng code?
+    3. Khi nào default method của interface mang lại code dùng chung, và khi nào nên dùng helper/composition thay cho superclass?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân biệt mục tiêu | Chỉ ra riêng phần tái sử dụng mã, quan hệ subtype danh nghĩa và yêu cầu thay thế về hành vi trong một thiết kế. |
+    | Phân tích quan hệ | Đọc được implements, extends và liên kết has-a trong sơ đồ NotificationSender–Sender–MessagePreparation. |
+    | Đánh giá extends | Giải thích được vì sao SalesReport kế thừa render() hợp lý nhưng CsvExporter không nên kế thừa TextEscaper chỉ để dùng escape(). |
+    | Kiểm tra hợp đồng | Xác định được một trường hợp subtype làm sai cam kết đầu vào, đầu ra hoặc trạng thái dù chữ ký đúng. |
+    | Lựa chọn cơ chế | Đề xuất dùng interface, abstract class, default method hoặc composition với lý do về vai trò và mức phụ thuộc. |
+- id: subtyping-002
+  title: Quan hệ “là một” và tính thay thế
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Quan hệ “là một” và tính thay thế**
+
+    Bài học chuyển từ quan hệ kiểu Java sang khả năng thay thế trong chương trình thật. Với ShippingPolicy, StandardShipping và ExpressShipping, người học phân biệt sự khác nhau được phép về thuật toán với hành vi vi phạm hợp đồng, đồng thời kiểm tra precondition, postcondition, invariant và các dấu hiệu quan hệ is-a bị chọn sai.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Subtyping và hợp đồng chung
+
+    1. Khi Dog extends Animal, compiler bảo đảm điều gì và những cam kết hành vi nào vẫn cần developer kiểm chứng?
+    2. Vì sao StandardShipping báo 40000 VND và ExpressShipping báo 66000 VND cho cùng Parcel vẫn có thể cùng đáp ứng ShippingPolicy?
+    3. ShippingPolicy cam kết gì về Parcel hợp lệ, phí không âm, null, overflow và side effect?
+
+    ### Khả năng thay thế trong thực tế
+
+    1. Vì sao VeryLocalShipping từ chối một tuyến 10 km hợp lệ có thể phá LSP, còn trả phí khác nhau thì không?
+    2. Tiền điều kiện, hậu điều kiện và bất biến thay đổi ra sao khi subtype thực sự giữ đúng hợp đồng supertype?
+    3. Khi nào Car có Engine nên là composition, và khi nào client cần kiểm tra contract tests thay vì chỉ hỏi tên miền is-a?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Nhận diện subtype | Phân biệt được quan hệ extends/implements được compiler xác nhận và khả năng thay thế theo hợp đồng. |
+    | Đọc ví dụ báo giá | Giải thích nguồn gốc 40000/66000 VND và chứng minh cả hai implementation dùng chung hợp đồng ShippingPolicy. |
+    | Phát hiện vi phạm | Chỉ ra precondition bị siết, postcondition yếu đi hoặc side effect không được hứa trong implementation. |
+    | Phân tích is-a/has-a | Đề xuất is-a hay composition dựa trên nghĩa vụ công khai thay vì chỉ sự giống nhau trong tên lớp. |
+    | Kiểm thử substitutability | Đề xuất tình huống cho verifyContract(ShippingPolicy) về null, kết quả không âm, đầu vào giữ nguyên và phạm vi hợp lệ. |
+- id: subtyping-003
+  title: Tương thích kiểu theo tên và theo cấu trúc
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Tương thích kiểu theo tên và theo cấu trúc**
+
+    Bài học giải thích vì sao Java không xem hai class là tương thích chỉ nhờ trùng tên/chữ ký phương thức. Qua MessageSender và LegacySmsSdk, người học thấy cần quan hệ extends/implements đúng, sử dụng adapter hoặc method reference khi tích hợp SDK cũ, đồng thời phân biệt nominal typing của Java với structural typing ở TypeScript.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Quan hệ nominal và structural
+
+    1. Vì sao EmailSender có thể gán cho MessageSender còn LegacySmsSdk có cùng send(String,String) lại không thể?
+    2. Structural typing khác nominal typing ở đâu, và tại sao cùng chữ ký send(...) chưa chứng minh cùng ý nghĩa nghiệp vụ?
+    3. Quan hệ extends/implements gián tiếp được Java công nhận như thế nào khi một class thực hiện interface được kế thừa?
+
+    ### Tích hợp và giới hạn chuyển kiểu
+
+    1. SmsSenderAdapter giúp sử dụng LegacySmsSdk trong NotificationService thế nào mà không biến SDK thành subtype của MessageSender?
+    2. Vì sao legacy::prefix có thể được gán cho functional interface nhưng legacy không tự trở thành subtype của interface?
+    3. Khi nào một phép cast qua Object gây ClassCastException, và vì sao List<EmailSender> không gán trực tiếp thành List<MessageSender>?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Chẩn đoán lỗi kiểu | Giải thích được trường hợp incompatible types do hai class có API giống nhau nhưng không có quan hệ subtype nominal. |
+    | Thiết kế adapter | Phác thảo SmsSenderAdapter implements MessageSender và ủy quyền send(...) cho LegacySmsSdk. |
+    | So sánh hai hệ kiểu | Phân tích ngắn ví dụ TypeScript structurally compatible và Java yêu cầu quan hệ kiểu tường minh. |
+    | Dùng functional interface | Nhận diện chuyển đổi hợp lệ qua lambda/method reference mà không đánh đồng với structural subtyping của object gốc. |
+    | Phân tích giới hạn | Dự đoán trường hợp cast runtime lỗi, hai record có cùng fields vẫn khác kiểu, và generic List invariance. |
+- id: subtyping-004
+  title: Kiểu khai báo và kiểu thực tế của đối tượng
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Kiểu khai báo và kiểu thực tế của đối tượng**
+
+    Bài học giúp dự đoán kết quả khi biến tham chiếu có kiểu khai báo là interface nhưng đổi qua nhiều implementation runtime. Qua CardPayment/EWalletPayment và ví dụ overload/override, người học phân biệt thao tác compiler cho phép gọi, thân method được dispatch khi chạy và các trường hợp field, static method không tuân theo dispatch động.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Hai kiểu trong một tham chiếu
+
+    1. Trong PaymentMethod method = new CardPayment("1234"), kiểu khai báo và kiểu thực tế là gì, và mỗi kiểu quyết định điều gì?
+    2. Vì sao gán method = new EWalletPayment(...) không đổi kiểu khai báo nhưng thay kết quả description()/pay()?
+    3. Tại sao không gọi được lastFourDigits() trực tiếp qua PaymentMethod dù runtime object là CardPayment?
+
+    ### Phân giải lời gọi và giới hạn
+
+    1. Vì sao Animal a = new Dog() rồi a.sound() gọi bản override của Dog, nhưng inspect(a) lại chọn overload Animal?
+    2. Field hiding và static method hiding khác instance method overriding như thế nào?
+    3. Điều gì xảy ra với instanceof, getClass(), method call khi tham chiếu bằng null hoặc khi collection chứa nhiều subtype?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Nhận diện hai loại kiểu | Ghi đúng declared type và runtime class của từng biến trong chuỗi gán CardPayment/EWalletPayment. |
+    | Dự đoán đa hình | Chỉ ra method override của implementation nào được gọi qua PaymentMethod trong từng thời điểm. |
+    | Phân biệt overload và override | Dự đoán output Woof/Overload: Animal/Overload: Dog từ ví dụ DispatchRulesDemo và giải thích. |
+    | Chẩn đoán thành viên | Phát hiện method không nằm trong API kiểu khai báo và giải thích field/static hiding khác dispatch động. |
+    | Thiết kế phụ thuộc | Đề xuất tham số interface cho CheckoutService khi code chỉ cần hành vi thanh toán chung. |
+- id: subtyping-005
+  title: Chuyển từ kiểu con sang kiểu cha
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Chuyển từ kiểu con sang kiểu cha**
+
+    Bài học tập trung vào phép chuyển tham chiếu từ subtype sang supertype trong Java. Qua PremiumCustomer, Customer, Auditable và các interface thanh toán, người học chứng minh upcast không tạo bản sao, không đổi runtime object, nhưng thu hẹp API được nhìn thấy ở thời điểm biên dịch để client phụ thuộc đúng khả năng cần dùng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Cơ chế upcasting
+
+    1. Trong PremiumCustomer premium và Customer asCustomer = premium, Java tạo bao nhiêu object và asCustomer giữ góc nhìn kiểu nào?
+    2. Vì sao asCustomer.tier() gọi bản override PREMIUM còn asCustomer.points() không biên dịch?
+    3. Có thể upcast một Taxi sang những supertype nào qua extends và implements, và vì sao cast tường minh thường không cần?
+
+    ### Ứng dụng và những ngộ nhận
+
+    1. Làm sao List<Customer> chứa cả Customer và PremiumCustomer mà vẫn chọn đúng tier() theo runtime type?
+    2. Vì sao upcasting sang PaymentProcessor/RefundProcessor giúp giới hạn API theo khả năng nhưng không tạo cơ chế phân quyền bảo mật?
+    3. Vì sao List<PremiumCustomer> không tự trở thành List<Customer>, và khi nào dùng List<? extends Customer>?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lần theo tham chiếu | Vẽ được các biến premium/asCustomer/asAuditable/asObject cùng tham chiếu một PremiumCustomer. |
+    | Dự đoán kết quả | Giải thích được output tier, greeting, auditLabel và so sánh identity trong ví dụ Customer. |
+    | Kiểm tra API tĩnh | Phân loại lời gọi hợp lệ/không hợp lệ qua Customer và Auditable mà không hiểu nhầm là xóa dữ liệu lớp con. |
+    | Áp dụng supertype | Thiết kế hàm nhận Customer hoặc interface PaymentProcessor để dùng đa hình mà không cần class cụ thể. |
+    | Đối chiếu generic | Giải thích List invariance và lựa chọn wildcard đọc subtype phù hợp mà không ép kiểu danh sách sai. |
+- id: subtyping-006
+  title: Ép về kiểu con và kiểm tra kiểu
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Ép về kiểu con và kiểm tra kiểu**
+
+    Bài học xử lý chiều chuyển kiểu có rủi ro: một tham chiếu supertype chưa bảo đảm object thực tế thuộc subtype mong muốn. Qua Vehicle, ElectricCar và Bicycle, người học dùng instanceof, pattern matching và getClass() đúng mục đích, dự đoán ClassCastException, null và giới hạn kiểm tra generic do type erasure.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ép kiểu và xác nhận subtype
+
+    1. Khi nào (Dog) animal thành công hoặc ném ClassCastException nếu animal trỏ Dog hay Cat?
+    2. instanceof Car khác v.getClass() == Car.class thế nào nếu v là ElectricCar?
+    3. Java 17 dùng instanceof Car car và flow scoping ra sao để chỉ gọi API subtype sau khi kiểm tra đúng?
+
+    ### Lỗi và lựa chọn thiết kế
+
+    1. Cast null sang Dog trả kết quả gì, còn gọi method trên giá trị đó sẽ gây lỗi nào?
+    2. Vì sao không thể dùng instanceof List<String> nhưng có thể dùng List<?> trong bối cảnh type erasure?
+    3. Khi hành vi là move() chung cho Vehicle, vì sao nên dùng override thay cho chuỗi instanceof theo từng loại?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Dự đoán cast | Phân biệt lỗi compile-time với ClassCastException runtime và kết quả cast null qua các tình huống Animal/Dog/Cat. |
+    | Sử dụng instanceof | Viết nhánh pattern matching để gọi Car.openTrunk() hoặc Bicycle.ringBell() an toàn từ Vehicle. |
+    | Kiểm tra class | Dự đoán chính xác instanceof Car, instanceof ElectricCar và getClass()==Car.class với ElectricCar. |
+    | Giải thích generics runtime | Nêu được giới hạn của instanceof List<String> và rủi ro unchecked cast trong Java. |
+    | Đề xuất abstraction | Thay chuỗi kiểm tra loại phương tiện chỉ nhằm gọi move() bằng method đa hình trên Vehicle. |
+- id: subtyping-007
+  title: Giữ đúng hợp đồng khi mở rộng kiểu
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Giữ đúng hợp đồng khi mở rộng kiểu**
+
+    Bài học biến nguyên tắc LSP thành tiêu chí có thể kiểm chứng khi thêm implementation cho DiscountPolicy. Ví dụ NoDiscount, PercentageDiscount và các policy cố tình sai làm rõ việc giữ miền đầu vào, giới hạn số tiền trả, tác động phụ, ngoại lệ và cách kiểm thử cùng một hợp đồng trên mọi subtype.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Các điều kiện hợp đồng
+
+    1. Vì sao DiscountPolicy phải chấp nhận mọi subtotalVnd không âm, kể cả 0, và kết quả phải nằm trong đoạn [0, subtotalVnd]?
+    2. Subtype có thể thay đổi thuật toán như PercentageDiscount mà vẫn giữ đúng tiền điều kiện, hậu điều kiện và bất biến như thế nào?
+    3. Trong ví dụ DiscountDemo, vì sao 105 VND giảm 20% còn phải trả 84 VND, và cách tính nào tránh tràn long?
+
+    ### Nhận diện sai lệch và kiểm chứng
+
+    1. WrongMinimumDiscount tự từ chối hóa đơn nhỏ và WrongSurcharge tăng tiền phải trả đã vi phạm các phần nào của hợp đồng?
+    2. Vì sao một subtype ném UnsupportedOperationException bất ngờ hoặc tạo side effect ngoài cam kết không tự nhiên trở thành hợp lệ chỉ vì compiler chấp nhận?
+    3. Bộ verifyContract cần những đầu vào biên, trường hợp lỗi và phép kiểm tra kết quả nào để phát hiện implementation vi phạm?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Đặc tả contract | Viết được precondition, postcondition, invariant, exception và side effect của payableVnd(). |
+    | Theo dõi phép tính | Dự đoán kết quả các chính sách không giảm và giảm 20% với 1000, 105 và subtotal 0. |
+    | Phát hiện LSP violation | Chỉ ra vi phạm của WrongMinimumDiscount, WrongSurcharge và ví dụ ReadOnlyAccount giả vờ hỗ trợ withdraw(). |
+    | Sửa implementation | Đề xuất chính sách khuyến mãi dưới ngưỡng trả nguyên subtotal thay vì từ chối đầu vào hợp lệ. |
+    | Thiết kế kiểm thử chung | Xây tình huống contract tests cho 0, giá trị nhỏ, Long.MAX_VALUE, số âm và phạm vi kết quả. |
+- id: subtyping-008
+  title: Phản ví dụ hình chữ nhật và hình vuông
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phản ví dụ hình chữ nhật và hình vuông**
+
+    Bài học dùng phản ví dụ Rectangle–Square để chứng minh một quan hệ đúng trong hình học chưa chắc phù hợp với API mutable. Qua DemoBad và DemoGood, người học thấy setter độc lập bị phá, nhận diện xung đột invariant, thử contract tests và lựa chọn interface nhỏ hoặc value object bất biến để thiết kế lại.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Phân tích sai lệch Rectangle–Square
+
+    1. Hợp đồng setWidth() và setHeight() của Mutable Rectangle cam kết điều gì về chiều còn lại?
+    2. Vì sao gọi setWidth(5) rồi setHeight(3) cho Rectangle trả diện tích 15, còn Square subclass trả 9?
+    3. Tại sao Square đổi cả hai cạnh vi phạm postcondition, còn ném lỗi khi hai cạnh khác nhau lại siết precondition?
+
+    ### Thiết kế lại và kiểm thử
+
+    1. Vì sao chỉ dùng lời nói hình học is-a không đủ để quyết định extends cho API có setter độc lập?
+    2. Shape chỉ công bố name()/area() và các record RectShape/SquareShape bất biến tránh xung đột như thế nào?
+    3. Các contract tests nào phát hiện setter làm thay đổi chiều không liên quan, và vì sao chuỗi instanceof trong client chưa sửa được hợp đồng sai?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Theo dõi thực thi | Mô phỏng hai lời gọi setWidth(5), setHeight(3) và giải thích chênh lệch diện tích 15 so với 9. |
+    | Chỉ ra vi phạm | Xác định postcondition của setter bị phá và precondition bị siết khi Square từ chối kích thước hợp lệ. |
+    | Kiểm thử thay thế | Viết kiểm tra chiều còn lại không đổi sau từng setter và quan sát Rectangle PASS/Square FAIL. |
+    | Thiết kế lại abstraction | Đề xuất Shape chỉ đọc cùng hai loại hình bất biến có phương thức thay kích thước riêng. |
+    | Lựa chọn ranh giới | Giải thích khi nào có thể dùng contract Scalable chung hoặc tách RectangleResizer/SquareResizer theo khả năng. |

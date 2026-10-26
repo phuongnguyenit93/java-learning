@@ -1,0 +1,312 @@
+summaries:
+- id: encapsulation-001
+  title: Ẩn thông tin và ranh giới của đối tượng
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Ẩn thông tin và ranh giới của đối tượng**
+
+    Bài học giúp phân định dữ liệu và quyết định triển khai mà đối tượng cần giữ riêng với những hành vi thực sự nên công khai. Qua ShoppingCart, người học thấy vì sao field private, API có ý nghĩa và snapshot an toàn phải đi cùng nhau để caller không sửa giỏ hàng ngoài quy tắc.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nguyên tắc và ranh giới
+
+    1. Đóng gói, ẩn thông tin và access control giải quyết những câu hỏi khác nhau như thế nào?
+    2. Vì sao chuyển một field sang private vẫn chưa đủ nếu getter làm lộ danh sách mutable?
+    3. Những gì trong hợp đồng public cần giữ ổn định khi thay List bằng Map?
+
+    ### Thiết kế và kiểm chứng ShoppingCart
+
+    1. Vì sao addItem và changeQuantity bảo vệ giỏ tốt hơn việc trả Map nội bộ hoặc đặt tổng tiền tùy ý?
+    2. Tại sao ShoppingCart tính và kiểm tra tràn trước khi put, và lỗi bị từ chối ảnh hưởng trạng thái ra sao?
+    3. List.copyOf(lines.values()) tạo loại snapshot nào và điều kiện gì ở CartLine khiến nó an toàn?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân định ranh giới | Chỉ ra trạng thái, hành vi công khai và chi tiết triển khai cần ẩn trong một lớp giỏ hàng. |
+    | Phân biệt khái niệm | Giải thích bằng ví dụ khác nhau giữa encapsulation, information hiding và bốn modifier truy cập Java. |
+    | Thiết kế API | Đề xuất addItem, changeQuantity, removeItem thay cho quyền sửa collection và setTotal. |
+    | Dự đoán hành vi | Giải thích kết quả snapshot trước/sau changeQuantity và ngoại lệ khi sửa snapshot. |
+    | Kiểm tra bảo vệ invariant | Viết ca thử số lượng âm, SKU trùng và tràn long, xác minh giỏ giữ trạng thái khi từ chối. |
+- id: encapsulation-002
+  title: Điều kiện bất biến của đối tượng
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Điều kiện bất biến của đối tượng**
+
+    Bài học định nghĩa invariant là điều kiện của một trạng thái đối tượng hợp lệ và hướng dẫn chứng minh nó đúng sau khởi tạo, mỗi thao tác thành công và cả khi bị từ chối. Ví dụ StockItem kiểm soát onHand, reserved, available thông qua reserve, release, ship và restock.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bản chất invariant
+
+    1. Invariant khác precondition, postcondition và immutability ở đâu?
+    2. Vì sao reserved không âm riêng lẻ vẫn chưa đủ bảo đảm reserved không vượt onHand?
+    3. Đối tượng mutable có thể giữ invariant trong suốt vòng đời bằng cách nào?
+
+    ### Chứng minh các thao tác và trường hợp lỗi
+
+    1. Với onHand bằng 10 và reserved bằng 4, vì sao reserve(7) phải thất bại và trạng thái sau lỗi cần ra sao?
+    2. Vì sao ship phải cập nhật cả reserved và onHand, còn restock nên dùng Math.addExact?
+    3. Khi nhiều thread cùng reserve, điều gì khiến kiểm tra hợp lệ riêng lẻ không còn bảo đảm invariant?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Diễn đạt invariant | Viết điều kiện 0 ≤ reserved ≤ onHand và suy ra available từ hai trường. |
+    | Phân biệt hợp đồng | Phân loại một quy tắc cụ thể thành invariant, tiền điều kiện hoặc hậu điều kiện. |
+    | Phân tích chuyển trạng thái | Tính trạng thái StockItem sau các thao tác reserve, ship, release và restock hợp lệ. |
+    | Phát hiện lỗi | Chỉ ra cập nhật trước kiểm tra trong unsafeReserve và sửa thành kiểm tra trước, ghi sau. |
+    | Thiết kế kiểm thử | Lập ca biên, exception và overflow, xác minh trạng thái vẫn hợp lệ sau thất bại. |
+    | Giới hạn đồng thời | Giải thích vì sao cùng một khóa phải bảo vệ mọi đường đọc/ghi hoặc cần transaction ở tầng dữ liệu. |
+- id: encapsulation-003
+  title: Kiểm soát truy cập và thay đổi trạng thái
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Kiểm soát truy cập và thay đổi trạng thái**
+
+    Bài học biến nguyên tắc đóng gói thành lựa chọn mức truy cập Java và các phương thức cập nhật có kiểm tra. Với Wallet, người học thực hành bảo vệ số dư, lịch sử giao dịch, nhánh thiếu tiền và hiểu giới hạn giữa quyền truy cập ở mức ngôn ngữ với phân quyền người dùng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Visibility trong Java
+
+    1. private, package-private, protected và public cho phép truy cập trong những phạm vi nào?
+    2. Vì sao protected ở lớp con khác package có giới hạn theo đối tượng tham chiếu và top-level class không dùng private?
+    3. Quy tắc least visibility hỗ trợ ổn định hợp đồng public ra sao?
+
+    ### Kiểm soát Wallet và ranh giới trách nhiệm
+
+    1. Deposit xử lý tràn số bằng Math.addExact trước khi gán số dư như thế nào?
+    2. Withdraw trả false khi thiếu tiền thay vì ném lỗi ảnh hưởng hợp đồng API ra sao?
+    3. Vì sao snapshot lịch sử và private balance không tự bảo đảm thread safety hoặc kiểm tra quyền người dùng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Áp dụng mức truy cập | Chọn và giải thích modifier cho field, helper, API công khai và thành phần cộng tác cùng package. |
+    | Phân tích Wallet | Theo dấu deposit, withdraw, balanceCents và history để xác định đường thay đổi trạng thái. |
+    | Kiểm chứng nhánh lỗi | Dự đoán kết quả nạp tiền tràn, rút vượt số dư và sửa snapshot lịch sử. |
+    | Phân biệt các lớp bảo vệ | Giải thích khác biệt giữa Java access control, authentication/authorization và đồng bộ đa luồng. |
+    | Đề xuất API thay thế | Thay setBalance không kiểm tra bằng deposit/withdraw có điều kiện. |
+- id: encapsulation-004
+  title: Getter, setter và phương thức thể hiện ý định
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Getter, setter và phương thức thể hiện ý định**
+
+    Bài học giúp quyết định khi nào nên dùng getter, setter có validation, command theo nghiệp vụ hoặc value object bất biến. Qua BankAccount, Profile, Booking và Money, người học xác định quyền quan sát, quyền sửa độc lập, cập nhật nhiều field cùng lúc và ranh giới giữa DTO với domain model.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Lựa chọn API đúng ngữ nghĩa
+
+    1. Khi nào setDisplayName hợp lý nhưng setBalance hoặc setStatus dễ làm rối quy tắc nghiệp vụ?
+    2. Getter tính toán như getItemCount khác getter trả field hay mutable collection ở điểm nào?
+    3. Vì sao lệnh reschedule(start, end) bảo vệ cặp thời điểm tốt hơn hai setter độc lập?
+
+    ### Hợp đồng, framework và tính bất biến
+
+    1. Phân biệt query và command; vì sao canWithdraw không thay kiểm tra cuối trong withdraw khi chạy đồng thời?
+    2. Quy ước JavaBeans, record và yêu cầu framework có luôn buộc domain object mở public setter không?
+    3. Vì sao Money.plus tạo instance mới phù hợp với value object bất biến?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại phương thức | Giải thích vai trò getter, setter, command, query và constructor trong API lớp. |
+    | Thiết kế BankAccount | Đề xuất deposit, withdraw, renameOwner, close và các quy tắc trước khi thay đổi. |
+    | Đánh giá setter | Chọn setter có kiểm tra cho thuộc tính độc lập và hành vi nghiệp vụ cho trạng thái liên kết. |
+    | Bảo vệ getter | Chọn giá trị tính toán hoặc snapshot và phát hiện getter phơi dữ liệu mutable/bí mật. |
+    | Cập nhật nguyên khối | Thiết kế reschedule kiểm tra cả start/end trước khi gán. |
+    | Tách mô hình | Phân biệt DTO/JavaBean phục vụ binding với domain model sở hữu luật; giải thích Money.plus. |
+- id: encapsulation-005
+  title: Kiểm tra đầu vào tại ranh giới đối tượng
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Kiểm tra đầu vào tại ranh giới đối tượng**
+
+    Bài học chỉ ra nơi dữ liệu đi vào trạng thái do object sở hữu và trách nhiệm kiểm tra ở constructor, factory, mutator và hành vi nghiệp vụ. Các ví dụ CourseEnrollment, Reservation, Scores và CourseCode minh họa chuẩn hóa rồi validate, kiểm tra quan hệ nhiều field, copy dữ liệu mutable và phân tầng validation.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Quy tắc đầu vào và tính nhất quán
+
+    1. Vì sao chỉ validate ở controller không đủ bảo vệ CourseEnrollment khi đối tượng được tạo từ batch job hoặc service khác?
+    2. Phân biệt đối số sai với hành động không hợp lệ ở trạng thái hiện tại và chọn ngoại lệ tương ứng như thế nào?
+    3. Vì sao cần chuẩn hóa mã rồi xác thực chính giá trị sẽ được lưu?
+
+    ### Cập nhật an toàn và quyền sở hữu dữ liệu
+
+    1. Với reconfigure(1, 5), vì sao gán capacity trước có thể làm Reservation hỏng dù có ném exception?
+    2. Vì sao Scores clone mảng đầu vào trước khi validate và tiếp tục clone khi getter trả dữ liệu?
+    3. DTO, domain object, service và database lần lượt sở hữu những kiểm tra nào; phần nào cần transaction/locking?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Thiết kế validation | Cài kiểm tra courseCode, credits thuộc 1..30 ở constructor và changeCredits. |
+    | Phân biệt quy tắc | Xếp null/format/range/quan hệ-field/trạng thái hiện tại vào vị trí kiểm tra phù hợp. |
+    | Cập nhật an toàn | Sửa reconfigure để validate toàn bộ trạng thái mới rồi mới gán. |
+    | Chuẩn hóa có kiểm soát | Giải thích và hiện thực CourseCode record với strip và kiểm tra định dạng. |
+    | Chặn lách validation | Phát hiện aliasing của Scores, áp dụng clone ở đầu vào và đầu ra. |
+    | Giới hạn validation | Giải thích trường hợp cần ràng buộc duy nhất trong DB hoặc phối hợp check-update khi đồng thời. |
+- id: encapsulation-006
+  title: Ngăn lộ dữ liệu nội bộ có thể thay đổi
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Ngăn lộ dữ liệu nội bộ có thể thay đổi**
+
+    Bài học tập trung vào hai đường rò rỉ mutable reference: đối tượng giữ chính dữ liệu mà caller truyền vào và getter trả dữ liệu nội bộ ra ngoài. Với EnrollmentBook và Attachment, người học thử sửa list và mảng từ cả hai phía, rồi dùng bản sao hoặc snapshot phù hợp để giữ quyền cập nhật trong lớp.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nhận diện aliasing
+
+    1. Inbound aliasing khác outbound aliasing thế nào trong UnsafeClassroom?
+    2. Vì sao private final List vẫn có thể bị caller làm thay đổi bằng input.add hoặc getStudents().clear?
+    3. Một List.copyOf chứa phần tử mutable có còn nguy cơ rò rỉ trạng thái nào?
+
+    ### Lựa chọn hợp đồng đọc an toàn
+
+    1. Vì sao EnrollmentBook lưu bản sao đầu vào và getStudents trả List.copyOf, còn Attachment clone byte[] ở cả hai chiều?
+    2. Unmodifiable view, structural snapshot và bản sao ArrayList cho phép caller sửa và quan sát thay đổi khác nhau ra sao?
+    3. Khi list rất lớn hoặc bị cập nhật đa luồng, cần cân nhắc gì thay vì sao chép mù quáng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phát hiện đường rò | Vẽ hoặc giải thích các tham chiếu chia sẻ giữa caller, field private và getter. |
+    | Chặn rò rỉ đầu vào | Sao chép list ở constructor, kiểm tra giới hạn sức chứa và không trùng học viên. |
+    | Chặn rò rỉ đầu ra | Trả snapshot List.copyOf hoặc clone mảng và chứng minh caller sửa không ảnh hưởng nội bộ. |
+    | Phân biệt cách trả | Dự đoán output của unmodifiableList và List.copyOf khi backing list thay đổi. |
+    | Kiểm tra giới hạn | Chỉ ra shallow copy không bảo vệ mutable element và snapshot cần đồng bộ khi có race. |
+- id: encapsulation-007
+  title: Sao chép phòng vệ và biểu diễn bất biến
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Sao chép phòng vệ và biểu diễn bất biến**
+
+    Bài học đào sâu cách lựa chọn giữa defensive copy tại ranh giới và biểu diễn immutable. Với SafeReminder, Instant và EventSnapshot, người học sao chép Date cả khi nhận/trả, chuyển phần tử AttendeeDraft thành giá trị bất biến và hiểu vì sao một list chỉ đọc chưa đủ nếu phần tử vẫn mutable.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Chiến lược sao chép và biểu diễn
+
+    1. final Date khác Instant bất biến thế nào và vì sao SafeReminder phải copy ở cả constructor lẫn getter?
+    2. Shallow copy, deep copy có chủ đích và List.copyOf phân biệt nhau ở container lẫn phần tử như thế nào?
+    3. Vì sao tạo snapshot giá trị tài khoản hoặc hóa đơn thường đúng hơn clone nguyên entity định danh?
+
+    ### Xây dựng snapshot ổn định
+
+    1. EventSnapshot chặn việc form đổi Date, rename AttendeeDraft và thêm người sau xác nhận ra sao?
+    2. Vì sao List.copyOf kết hợp Attendee bất biến cho phép trả getAttendees mà không cần sao chép mỗi lần?
+    3. Bất biến của snapshot đã tạo có tự giải quyết việc sao chép trong lúc dữ liệu bị cập nhật đa luồng hoặc công bố tham chiếu không?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Bảo vệ kiểu Date | Viết constructor/getter tạo new Date từ getTime và dự đoán kết quả sau khi caller gọi setTime. |
+    | Chọn kiểu immutable | Giải thích tại sao Instant có thể được chia sẻ và reschedule nên trả Reminder mới. |
+    | Phân tích mức sao chép | Xác định tham chiếu phần tử mutable còn chia sẻ khi copy list nông. |
+    | Thiết kế snapshot | Chuyển dữ liệu EventSnapshot từ AttendeeDraft mutable sang Attendee bất biến và chốt danh sách. |
+    | Đánh giá chi phí và đồng thời | Nêu điều kiện cần đồng bộ khi chụp dữ liệu và khi công bố snapshot mới. |
+- id: encapsulation-008
+  title: Đóng gói hành vi thay vì chỉ bao bọc dữ liệu
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đóng gói hành vi thay vì chỉ bao bọc dữ liệu**
+
+    Bài học chuyển tư duy từ lớp chỉ chứa field và setter sang đối tượng chịu trách nhiệm cho hành động hợp lệ. EncapsulatedOrderDemo minh họa Order tự kiểm tra addLine, confirm, cancel, suy ra tổng tiền từ OrderLine và bảo vệ danh sách, đồng thời phân biệt trách nhiệm của entity với application service.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Mô hình giàu hành vi
+
+    1. Vì sao OrderData dù có private field vẫn cho phép đơn xác nhận rỗng hoặc tổng âm?
+    2. Tell, Don't Ask gợi ý điều gì khi code bên ngoài liên tục getStatus rồi setStatus?
+    3. Vì sao total nên tính từ lines và trạng thái cần chuyển qua confirm/cancel thay vì setter?
+
+    ### Vòng đời và kiến trúc
+
+    1. Với DRAFT, CONFIRMED, CANCELLED, những thao tác nào được phép hoặc bị từ chối trong EncapsulatedOrderDemo?
+    2. Vì sao Order không nên trực tiếp gọi cổng thanh toán hay gửi thông báo khi application service điều phối use case?
+    3. Những ca kiểm thử nào chứng minh thao tác thất bại không làm sửa trạng thái hay list nội bộ?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Nhận diện mô hình thiếu hành vi | Phân tích thiết kế get-if-set và chỉ ra luật nghiệp vụ bị phân tán. |
+    | Thiết kế state machine | Liệt kê chuyển DRAFT → CONFIRMED → CANCELLED và các chuyển trái phép. |
+    | Cài đặt hành vi | Đề xuất addLine, confirm, cancel và requireDraft kèm điều kiện kiểm tra trước mutation. |
+    | Giữ nguồn dữ liệu nhất quán | Giải thích vì sao getTotal tính từ dòng hàng và getLines trả snapshot an toàn. |
+    | Phân chia trách nhiệm | Đặt luật đơn hàng tại entity, truy vấn DB/thanh toán/phát sự kiện tại service/adapter. |
+    | Kiểm thử hành vi | Mô tả test xác nhận đơn rỗng, sửa đơn đã xác nhận và sửa list qua getter. |
+- id: encapsulation-009
+  title: Ví dụ bảo vệ số dư và trạng thái đơn hàng
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Ví dụ bảo vệ số dư và trạng thái đơn hàng**
+
+    Bài học kết hợp các kỹ thuật đóng gói vào hai trường hợp thực hành: Account không cho số dư âm và Order chỉ chuyển trạng thái theo quy trình CREATED, PAID, SHIPPED hoặc CANCELLED. Người học kiểm tra nhánh thành công, thất bại, overflow, snapshot danh sách và giới hạn của synchronized trong bộ nhớ.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Bảo vệ số dư Account
+
+    1. Vì sao Account dùng private balanceCents và synchronized deposit/withdraw thay cho setter?
+    2. Điều gì xảy ra với số dư khi withdraw vượt số dư hoặc deposit làm tràn long?
+    3. Synchronized trên cùng instance giải quyết tình huống nào và vì sao không thay transaction giữa hai tài khoản hoặc database?
+
+    ### Bảo vệ vòng đời Order
+
+    1. Vì sao OrderStatus dùng enum vẫn cần markPaid, ship, cancel có điều kiện trạng thái?
+    2. Các lời gọi ship khi CREATED, cancel khi SHIPPED, markPaid khi CANCELLED cần giữ trạng thái ra sao?
+    3. List.copyOf(items) kết hợp OrderItem record ngăn những đường sửa nào; điều gì thay đổi nếu OrderItem mutable?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Theo dõi trạng thái tài khoản | Tính số dư sau nạp/rút và xác định kết quả true/false của withdraw. |
+    | Xử lý trường hợp biên | Giải thích exception số tiền âm, tràn long và chứng minh số dư không đổi khi thao tác thất bại. |
+    | Kiểm tra state machine | Vẽ các cạnh CREATED → PAID → SHIPPED và CREATED → CANCELLED với hành vi tương ứng. |
+    | Bảo vệ collection | Chứng minh sửa danh sách đầu vào hoặc gọi clear trên items không phá Order đã tạo. |
+    | Đánh giá phạm vi đồng bộ | Phân biệt synchronized trong một instance với giao dịch nhiều tài khoản, lưu trữ và phân quyền. |
+    | Mở rộng có điều kiện | Đề xuất thêm hạn mức rút hoặc DELIVERED, bao gồm ca từ chối không thay đổi các field. |

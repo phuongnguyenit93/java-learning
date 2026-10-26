@@ -1,28 +1,28 @@
 sections:
   class-design-001:
     difficulty: INTERMEDIATE
-    isImportant: false
+    isImportant: true
   class-design-002:
     difficulty: INTERMEDIATE
-    isImportant: false
+    isImportant: true
   class-design-003:
     difficulty: INTERMEDIATE
-    isImportant: false
+    isImportant: true
   class-design-004:
     difficulty: ADVANCED
-    isImportant: false
+    isImportant: true
   class-design-005:
     difficulty: INTERMEDIATE
-    isImportant: false
+    isImportant: true
   class-design-006:
     difficulty: ADVANCED
-    isImportant: false
+    isImportant: true
   class-design-007:
     difficulty: ADVANCED
     isImportant: false
   class-design-008:
     difficulty: ADVANCED
-    isImportant: false
+    isImportant: true
   class-design-009:
     difficulty: INTERMEDIATE
-    isImportant: false
+    isImportant: true

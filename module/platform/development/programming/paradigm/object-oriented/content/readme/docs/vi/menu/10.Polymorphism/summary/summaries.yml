@@ -1,0 +1,356 @@
+summaries:
+- id: polymorphism-001
+  title: Đa hình và nhiều cách thực hiện cùng một thao tác
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đa hình và nhiều cách thực hiện cùng một thao tác**
+
+    Nhận diện đa hình qua cùng lời gọi ShippingPolicy.quote(Parcel) nhưng các đối tượng EconomyShipping, StandardShipping và ExpressShipping thực thi công thức riêng. Bài giải thích vai trò của kiểu tham chiếu và kiểu runtime, cách CheckoutService chỉ phụ thuộc vào hợp đồng báo giá, cùng yêu cầu mọi implementation giữ quy tắc đầu vào, kết quả và lỗi.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Lời gọi chung và hành vi khác nhau
+
+    1. Vì sao ba class giao hàng có thể cùng được lưu dưới kiểu ShippingPolicy và cùng nhận lời gọi quote(Parcel)?
+    2. Kiểu khai báo của biến policy và lớp runtime của đối tượng ảnh hưởng khác nhau thế nào đến lời gọi quote?
+    3. Với kiện 1.500 g nội thành, vì sao Economy, Standard và Express lần lượt báo 20.000, 25.000 và 95.000 VND?
+
+    ### Hợp đồng và nơi chọn strategy
+
+    1. Vì sao chỉ trùng tên quote mà không khai báo implements ShippingPolicy thì chưa đủ để Java dùng như một subtype?
+    2. Điều gì sẽ xảy ra nếu implementation báo giá âm hoặc trả thời gian dự kiến không hợp lệ dù code biên dịch?
+    3. Khi nào Map hoặc switch tại bước chọn gói là hợp lý, và khi nào chuỗi điều kiện lặp ở nhiều service làm mất lợi ích đa hình?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Nhận diện dynamic dispatch | Truy vết ba lượt quote đến ba implementation tương ứng từ cùng biến ShippingPolicy. |
+    | Kiểm chứng công thức | Tính lại phí và thời gian của ba gói với kiện 1.500 g nội thành. |
+    | Thiết kế client chung | Dùng CheckoutService nhận ShippingPolicy mà không cài công thức của từng gói. |
+    | Đánh giá hợp đồng | Kiểm tra kết quả quote khác null, phí không âm, ngày dự kiến dương và đầu vào hợp lệ. |
+    | Mở rộng strategy | Chỉ đúng nơi đăng ký một implementation mới và các contract tests cần thêm. |
+- id: polymorphism-002
+  title: Đa hình kiểu con qua giao diện hoặc lớp cha
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đa hình kiểu con qua giao diện hoặc lớp cha**
+
+    Làm rõ đa hình kiểu con với interface implements và superclass extends. Qua NotificationSender và Report, người học thấy tham chiếu kiểu cha có thể mang nhiều object khác nhau, một final method ở superclass vẫn gọi được hook override, cùng giới hạn upcasting/downcasting và generic collection invariant.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Kiểu cha và thực thi
+
+    1. Vì sao NotificationDispatcher dùng được EmailSender hoặc PushSender mà không chứa nhánh theo loại kênh?
+    2. Report.preview() được khai báo final nhưng gọi SalesReport.content() và AuditReport.content() khác nhau như thế nào?
+    3. Khi một Device reference trỏ Printer, tại sao upcasting không tạo object mới và không cho gọi trực tiếp printPage()?
+
+    ### Ép kiểu và hợp đồng subtype
+
+    1. Trong trường hợp nào ép Device xuống Printer tạo ClassCastException và khi nào kiểm tra instanceof là thích hợp?
+    2. Vì sao danh sách chỉ chứa EmailSender không tự gán được cho List khai báo phần tử NotificationSender trong Java?
+    3. Khi thêm SmsSender, những cam kết về đầu vào Notification, trạng thái DeliveryResult và lỗi phải giữ ra sao?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân tích subtype | Phân biệt quan hệ implements và extends, kiểu tĩnh/runtime trong lời gọi qua biến cha. |
+    | Theo dõi override từ superclass | Giải thích vì sao Report.preview final vẫn thực thi content do subclass cung cấp. |
+    | Ép kiểu an toàn | Chẩn đoán compile error và ClassCastException rồi đặt instanceof tại điểm cần chức năng subtype. |
+    | Dùng collection đa hình | Duyệt List các NotificationSender và giải thích khác biệt generic invariant với wildcard extends. |
+    | Giữ khả năng thay thế | Nêu những ràng buộc hành vi chung khi dùng nhiều kênh gửi thông báo. |
+- id: polymorphism-003
+  title: Phân giải phương thức tĩnh và phân giải động
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phân giải phương thức tĩnh và phân giải động**
+
+    Phân tích một lời gọi Java theo hai giai đoạn: compiler tìm và chọn chữ ký overload từ kiểu tĩnh của receiver, đối số; sau đó JVM chọn thân override của method instance dựa trên object runtime. Dispatcher/SmartDispatcher cho phép kiểm chứng cast receiver, static hiding, field resolution, super, constructor và ý nghĩa các opcode gọi method.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Compile time và runtime
+
+    1. Vì sao general.dispatch(sms) gọi SmartDispatcher.dispatch(Event) còn specific.dispatch(sms) gọi bản SmsEvent?
+    2. Cast receiver từ SmartDispatcher về Dispatcher khiến tập overload mà compiler nhìn thấy thay đổi thế nào?
+    3. Vì sao với choose(long), choose(Integer), choose(int...), đối số literal 5 chọn overload long?
+    4. Overloading có tự dùng lớp runtime của đối số để tìm chữ ký cụ thể hơn sau khi chương trình chạy không?
+
+    ### Thành viên đặc biệt và quan sát JVM
+
+    1. Static method hiding và field lookup khác với instance method overriding ở bước quyết định nào?
+    2. Lời gọi this.run() và super.run() khác nhau ra sao, đặc biệt khi method lớp cha gọi hook subclass?
+    3. Tại sao không nên gọi hook overridable từ constructor superclass?
+    4. invokedynamic khác ý nghĩa với dispatch OOP của invokevirtual hay invokeinterface thế nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải dispatch hai pha | Lập bảng chính xác chữ ký compile time và implementation runtime cho các lời gọi Dispatcher. |
+    | Phân tích cast receiver | Dự đoán output specific.dispatch(sms) trước/sau ép kiểu receiver. |
+    | Chẩn đoán overload | Giải thích widening, boxing, varargs và ambiguity với null. |
+    | Phân biệt hiding | Dự đoán lời gọi static và field theo kiểu tĩnh mà không nhầm với override. |
+    | Liên hệ bytecode | Nêu nhóm lời gọi của invokestatic, invokevirtual, invokeinterface, invokespecial và phân biệt invokedynamic. |
+- id: polymorphism-004
+  title: Ghi đè và lựa chọn phương thức khi chạy
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Ghi đè và lựa chọn phương thức khi chạy**
+
+    Đi sâu vào overriding đúng chữ ký và hợp đồng. RuntimeDispatchDemo giữ kiểm tra khoảng cách và tổng phí trong DeliveryPlan.quote final, cho lớp con thay đổi distanceFee qua hook, có thể tận dụng super.distanceFee. Bài cũng giải thích covariant return, visibility, checked exception và bẫy dispatch đến subclass trong constructor lớp cha.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Override và quy trình chung
+
+    1. Vì sao StandardPlan.quote(3) là 16.000 VND, ExpressPlan.quote(3) là 26.000 VND dù cùng gọi quote?
+    2. Final quote() không override được nhưng vì sao vẫn gọi được ExpressPlan.distanceFee()?
+    3. Khi nào covariant return hợp lệ và vì sao giảm access hay mở rộng checked exception không phù hợp sẽ bị từ chối?
+    4. super.distanceFee() đóng vai trò gì khi ExpressPlan muốn cộng thêm 5.000 VND?
+
+    ### Bảo vệ invariant và construction
+
+    1. Vì sao constructor Parent có thể in null khi nó gọi describe() bị Child override?
+    2. Với một subclass mới, cần bảo toàn những quy tắc nào về distanceKm, phụ phí không âm và overflow?
+    3. Nếu method ở lớp con đổi tham số thành kiểu khác, vì sao nó trở thành overload thay vì override?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Viết override hợp lệ | Cài @Override đúng chữ ký, quyền truy cập, return type và checked exception. |
+    | Đọc Template Method | Truy vết từ final quote sang hook distanceFee để tính phí Standard/Express. |
+    | Dùng super đúng mục đích | Kết hợp thuật toán cha và phụ phí con mà không lặp validation hoặc side effect. |
+    | Phát hiện bẫy constructor | Giải thích output null trước khi field subclass được khởi tạo và đề xuất tránh hook sớm. |
+    | Giữ contract khi mở rộng | Chỉ ra invariant được bảo vệ tại lớp nền và điều kiện hook phải đáp ứng. |
+- id: polymorphism-005
+  title: Phân biệt ghi đè với nạp chồng
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phân biệt ghi đè với nạp chồng**
+
+    Phân biệt overloading cùng tên khác tham số với overriding cùng chữ ký tương thích ở supertype. DispatchDemo minh họa hai pha compiler chọn overload rồi JVM chọn override; các ca null, cast, widening/boxing/varargs và @Override giúp người học debug chính xác code nhiều phương thức cùng tên.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Chữ ký và hai giai đoạn
+
+    1. Vì sao đổi riêng return type hoặc tên tham số không tạo overload hợp lệ?
+    2. Trong DispatchDemo, tại sao formatter.format(animalReference) chạy SpecialFormatter: Animal nhưng formatter.format(dog) chạy Formatter: Dog?
+    3. Cast (Animal) dog thay đổi lựa chọn overload như thế nào dù vẫn là object Dog?
+    4. Vì sao ChildHandler chỉ thêm handle(String) không làm lời gọi qua BaseHandler tự dùng overload ấy?
+
+    ### Các ca dễ nhầm
+
+    1. show(null) chọn String thay Object trong trường hợp nào và khi nào mơ hồ giữa String với Integer?
+    2. Tại sao literal 10 chọn show(long) khi đồng thời có show(Integer) và show(int...) ở ví dụ?
+    3. Static, private, final method và constructor được overload hay override với ràng buộc nào?
+    4. Dùng @Override và DispatchContractCheck xác nhận chữ ký thực sự được ghi đè bằng cách nào?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phân loại method trùng tên | Viết được hai chữ ký overload và một override hợp lệ, giải thích return type không phân biệt overload. |
+    | Dự đoán kết quả | Tái tạo năm dòng output DispatchDemo theo kiểu tĩnh của argument và runtime receiver. |
+    | Giải cast và null | Phân tích most-specific, ambiguity và thay đổi overload khi ép kiểu. |
+    | Phân biệt conversion | Giải thích pha widening, boxing, varargs trong overload resolution. |
+    | Kiểm chứng override | Dùng @Override và kiểm tra ngắn để phát hiện chữ ký lạc khỏi hợp đồng. |
+- id: polymorphism-006
+  title: Phân biệt che khuất thành viên với ghi đè
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phân biệt che khuất thành viên với ghi đè**
+
+    Chỉ rõ một class con khai báo thành viên trùng tên với cha có thể là field hiding, static hiding hoặc instance override. Demo Parent/Child cho thấy field được chọn theo kiểu tĩnh, static theo tên class còn describe theo runtime. Bài giải thích hai field cùng tên có trạng thái độc lập và vì sao nên đóng gói dữ liệu rồi expose hành vi có hợp đồng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Trùng tên nhưng khác quy tắc
+
+    1. Vì sao Parent parentView trỏ Child nhưng parentView.label và childView.label trả hai field khác nhau?
+    2. Tại sao parentView.kind() không dùng dynamic dispatch còn parentView.describe() có?
+    3. Phương thức secretLabel() ở SecureChild có override private method cùng tên trong SecureBase không và vì sao?
+    4. Trong Child.inspect(), this.label, super.label, this.describe() và super.describe() lấy member từ đâu?
+
+    ### Trạng thái và thiết kế API
+
+    1. Khi gán CounterChild.count và CounterBase.count qua hai tham chiếu, vì sao số liệu giữ độc lập?
+    2. Field final có thể bị hide trong subclass thế nào, còn final instance method chặn override ra sao?
+    3. Vì sao nên dùng environment() getter được override thay vì public field environment trùng tên?
+    4. Khi hai interface cùng khai báo VERSION hoặc default action(), những mơ hồ cần giải quyết là gì?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Nhận diện hiding | Phân loại chính xác field hiding, static hiding, private method riêng và override. |
+    | Dự đoán kết quả Demo | Giải thích được các dòng parentView.label, kind, describe, report và inspect. |
+    | Theo dõi hai field độc lập | Mô phỏng cập nhật count của Parent/Child qua cast mà không nhầm là một biến. |
+    | Dùng super hợp lệ | Phân biệt super.field, super.method và giới hạn truy cập private. |
+    | Chỉnh thiết kế trạng thái | Đề xuất private field và phương thức overridable để biểu diễn hành vi runtime. |
+- id: polymorphism-007
+  title: Phạm vi đa hình của phương thức và thuộc tính
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Phạm vi đa hình của phương thức và thuộc tính**
+
+    Xác định các thành viên Java có hoặc không có đa hình động: instance overridable, abstract, interface/default method đối chiếu với field, static, private, final, constructor và overload. PolymorphismScopeDemo minh họa cùng VipTicket có giá trị field khác nhau khi đổi kiểu tham chiếu, trong khi display/getDisplayName override theo runtime; chính sách DiscountPolicy biến dữ liệu thành hành vi có hợp đồng.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Ranh giới member
+
+    1. Với Ticket ticket trỏ VipTicket, vì sao ticket.display() là VIP-method nhưng ticket.label là Ticket-field?
+    2. Vì sao cast sang VipTicket đổi field được nhìn thấy nhưng không đổi object runtime?
+    3. Vì sao ticket.showInternalNote() và showField() vẫn dùng private method hoặc field của Ticket?
+    4. Getter getDisplayName() có thể override như thế nào dù Person.name vẫn là field private của lớp cha?
+
+    ### Thiết kế điểm mở rộng
+
+    1. Abstract method, method interface và default method có thể dispatch vào class thực tế ra sao?
+    2. Final, static, private method và constructor không cung cấp runtime polymorphism như instance overridable vì sao?
+    3. super.header() khác với lời gọi header() từ Report.render() trên MonthlyReport ở điểm nào?
+    4. Vì sao chuyển field Discount.percent sang DiscountPolicy.apply() giúp client nhận đúng quy tắc giảm giá?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Lập ma trận polymorphic members | Phân loại phương thức overridable và các member không được override theo runtime. |
+    | Giải thích Ticket/VipTicket | Dự đoán đúng output display, label, code, category, showInternalNote, showField và bothFields. |
+    | Thiết kế getter | Viết getter Employee override để mở rộng tên hiển thị trên dữ liệu private của Person. |
+    | Chọn behavior thay field | Dùng DiscountPolicy.apply để tính kết quả 90.000 và 100.000 VND từ cùng giá ban đầu. |
+    | Phân tích cast và super | Giải thích được cast chỉ đổi kiểu tĩnh và super không tạo đối tượng cha thứ hai. |
+- id: polymorphism-008
+  title: Duck typing và đa hình theo khả năng
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Duck typing và đa hình theo khả năng**
+
+    Mở rộng tư duy đa hình từ cây kế thừa danh từ sang những khả năng độc lập mà client cần, đồng thời phân biệt Java nominal typing với duck typing động ở Python. Qua WildDuck, RobotDuck, SqueakyToy, interface Quackable/Swimmable/Rechargeable và method reference toy::quack, bài minh họa cách adapter kết nối class có cùng hành vi nhưng chưa implements interface và khi nào instanceof chỉ kiểm tra vai trò tùy chọn.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Kiểu cấu trúc và kiểu danh nghĩa
+
+    1. Vì sao Python make_sound có thể gọi quack trên class khác họ, còn Java không tự gán SqueakyToy vào Quackable dù method cùng tên?
+    2. WildDuck implements Quackable, Swimmable có tự là subtype của một AmphibiousVoice extends cả hai interface không?
+    3. Quackable q = toy::quack khác phép gán trực tiếp q = toy về quan hệ kiểu và đối tượng adapter thế nào?
+    4. Reflection Java khác duck typing động và structural typing được kiểm tra khi biên dịch ra sao?
+
+    ### Thiết kế theo năng lực
+
+    1. Vì sao runActivity gọi quack cho cả ba participant nhưng chỉ WildDuck được bơi và RobotDuck được sạc?
+    2. Khi swimmingLesson luôn đòi khả năng bơi, vì sao nên nhận Swimmable thay vì Object và cast?
+    3. Instanceof ở hoạt động tùy chọn khác ra sao với kiểm tra kiểu lặp chỉ để thay thế hành vi quack?
+    4. Vì sao các class có cùng method signature vẫn có thể khác nhau về side effect, lỗi và hợp đồng?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Giải thích nominal typing | Chỉ ra Java yêu cầu quan hệ implements/extends hoặc adapter chứ không tự coi method cùng tên là subtype. |
+    | Mô hình hóa capability | Tách Quackable, Swimmable, Rechargeable theo đúng khả năng từng đối tượng. |
+    | Dùng method reference | Viết toy::quack làm Quackable mà không sửa class SqueakyToy. |
+    | Chọn optional capability | Dùng instanceof tại ranh giới thích hợp và nhận interface trực tiếp khi tính năng bắt buộc. |
+    | Đánh giá integration | Giải thích giới hạn reflection và lý do cần contract test cho adapter. |
+- id: polymorphism-009
+  title: Đa hình thay cho điều kiện kiểm tra từng loại
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Đa hình thay cho điều kiện kiểm tra từng loại**
+
+    Áp dụng polymorphism vào bài toán refactor nhiều nhánh if/else hoặc instanceof theo tên dịch vụ vận chuyển. ShippingPolicy và QuoteService tách công thức khỏi code điều phối, factory/switch ở ranh giới chịu trách nhiệm lựa chọn implementation. Bài cũng dạy giữ kiểm thử hồi quy và contract test để thay cấu trúc mà không đổi giá, lỗi hay đơn vị.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Nhận diện cơ hội refactor
+
+    1. Nếu cùng nhánh STANDARD/EXPRESS/ECO xuất hiện ở nhiều service, rủi ro nào phát sinh khi thêm SAME_DAY?
+    2. Vì sao QuoteService chỉ dùng ShippingPolicy làm giảm phụ thuộc vào concrete classes?
+    3. Với Parcel 1.500 g, 3 km, làm sao tính đúng 18.000, 41.000 và 12.500 VND của ba implementation?
+    4. Vì sao mọi policy trả quote hợp lệ vẫn cần contract test dù compiler bảo đảm chữ ký?
+
+    ### Ranh giới của đa hình
+
+    1. Tại sao switch ở selectPolicy để đổi mã đầu vào thành implementation vẫn hợp lý?
+    2. Khi nào if theo trạng thái đơn giản hoặc instanceof để xử lý dữ liệu hỗn hợp tốt hơn tạo hàng loạt subclass?
+    3. Quy trình refactor từng bước phải so sánh những kết quả và trường hợp biên nào trước khi xóa các nhánh cũ?
+    4. Vì sao một policy trả âm hoặc tự đổi tiền VND sang đơn vị khác có thể vi phạm LSP dù QuoteService giữ nguyên?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Phát hiện điều kiện theo loại | Xác định được chuỗi nhánh lặp nhiều nơi và rủi ro bỏ sót xử lý khi thêm gói. |
+    | Refactor thành strategy | Đưa công thức vào ShippingPolicy implementations; giữ QuoteService chỉ gọi quote. |
+    | Đặt boundary chọn kiểu | Lựa chọn rõ factory, switch hay Map registry ở đầu vào mà không nhân bản công thức. |
+    | Kiểm thử hồi quy | Xác minh ba kết quả 18.000/41.000/12.500 VND và loại SameDay 58.000 VND. |
+    | Đánh giá tradeoff | Biện minh lúc điều kiện nhỏ, enum/sealed hoặc instance checking vẫn phù hợp. |
+- id: polymorphism-010
+  title: Ví dụ nhiều phương thức thanh toán
+  summary: |-
+    # 0. Định hướng học tập
+
+    ## 1. Mục đích của bài học
+
+    **Ví dụ nhiều phương thức thanh toán**
+
+    Tổng hợp kỹ thuật đa hình vào checkout Java mô phỏng. PaymentMethod có name/pay được triển khai riêng bởi CardPayment, WalletPayment và BankTransferPayment; cùng CheckoutService gọi pay nhưng thu được PAID, DECLINED hoặc PENDING với ý nghĩa khác nhau. Người học dùng RecordingPayment kiểm tra luồng gọi, mở rộng COD và nhận diện giới hạn của demo trong xử lý tiền thật.
+
+    ## 2. Những câu hỏi người học phải tự trả lời được
+
+    ### Runtime polymorphism trong thanh toán
+
+    1. Vì sao CheckoutService không cần instanceof CardPayment hoặc WalletPayment mà vẫn gọi đúng implementation pay?
+    2. Với WalletPayment bắt đầu 150.000 VND, vì sao sau 120.000 VND còn 30.000 và lần trả thêm 40.000 bị từ chối?
+    3. Tại sao BankTransferPayment phải trả PENDING sau khi tạo hướng dẫn thay vì mặc định PAID?
+    4. Thêm CashOnDeliveryPayment trả PENDING tác động đến CheckoutService và danh sách chọn phương thức ra sao?
+
+    ### Kiểm thử và giới hạn thực tế
+
+    1. RecordingPayment phải ghi những thông tin gì để chứng minh CheckoutService gọi đúng một lần và truyền nguyên request?
+    2. Nếu implementation trả null, CheckoutService trong ví dụ phát hiện bằng cách nào?
+    3. Vì sao synchronized trên WalletPayment chỉ bảo vệ instance trong một JVM thay vì nhiều máy?
+    4. Trong thanh toán thật, timeout, chuyển khoản chờ xác nhận và retry gây rủi ro gì nếu không có idempotency hay lưu bền vững?
+
+    ## 3. Sau khi học xong, người học phải đạt được điều gì?
+
+    | Năng lực | Kết quả mong đợi |
+    | --- | --- |
+    | Trace đa hình checkout | Xác định đúng class runtime chạy pay và tái hiện ba kết quả thẻ, ví, chuyển khoản. |
+    | Hiểu trạng thái thanh toán | Phân biệt PAID/DECLINED/PENDING, dự đoán số dư 30.000 VND và lần từ chối tiếp theo. |
+    | Mở rộng method | Tạo COD implements PaymentMethod và xác minh service vẫn gọi pay mà không cần nhánh mới. |
+    | Test bằng fake | Dùng RecordingPayment xác nhận số lần gọi, request và status trả về của CheckoutService. |
+    | Chỉ ra giới hạn demo | Giải thích yêu cầu idempotency, persistence, trạng thái chưa chắc chắn và concurrency trong hệ thống thực. |
