@@ -27,6 +27,16 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
+        with:
+          submodules: recursive
+
+      - name: Verify pinned learning contracts checkout
+        shell: bash
+        run: |
+          set -euo pipefail
+          git submodule status --recursive
+          test -f learning-contract/contract.json
+          test -f learning-contract/schemas/common.schema.json
 
       - name: Validate Local Run fingerprint algorithm
         run: python3 -m unittest discover -s scripts/tests -p 'test_local_run_fingerprint_v2.py'
