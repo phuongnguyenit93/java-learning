@@ -31,10 +31,28 @@ class ModuleContentExcelSyncServiceTest {
   - title: Language Specification
     url: https://docs.oracle.com/javase/specs/
 ''')
-        write(module, 'content/readme/docs/vi/menu/1.Basic/summary/section.md', '# VI section')
+        String structured = new org.yaml.snakeyaml.Yaml().dump(
+                SummarySectionYamlService.fromMarkdown('''# English section
+
+## 1. Learning flow
+
+### Bài 1 — Basic
+
+Understand the basics.
+
+## 2. Comparison
+
+| Criteria | Bài 1 |
+| --- | --- |
+| Skills | Basics |
+| Example | Account |
+| Scope | Java |
+| Verify | Object |
+''', ['basic-001']))
+        write(module, 'content/readme/docs/vi/menu/1.Basic/summary/section.yml', structured)
         write(module, 'content/readme/docs/vi/menu/1.Basic/summary/summaries.yml',
                 'summaries:\n  - {id: basic-001, title: VN, summary: Lesson VI}\n')
-        write(module, 'content/readme/docs/en/menu/1.Basic/summary/section.md', '# English section')
+        write(module, 'content/readme/docs/en/menu/1.Basic/summary/section.yml', structured)
         write(module, 'content/readme/docs/en/menu/1.Basic/summary/summaries.yml',
                 'summaries:\n  - {id: basic-001, title: English, summary: Lesson EN}\n')
         Map result = new ModuleContentExcelSyncService().execute(
@@ -48,7 +66,7 @@ class ModuleContentExcelSyncServiceTest {
                         .contains('Language Specification'))
                 assertEquals('Summary', ModuleContentExcelSyncService.text(s, 18, 29))
                 assertEquals('Summary Markdown', ModuleContentExcelSyncService.text(s, 19, 29))
-                assertEquals('# English section', ModuleContentExcelSyncService.text(s, 20, 29))
+                assertTrue(ModuleContentExcelSyncService.text(s, 20, 29).startsWith('# English section'))
                 assertEquals('Lesson EN', ModuleContentExcelSyncService.text(s, 21, 29))
             }
         }

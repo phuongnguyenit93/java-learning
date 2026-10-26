@@ -1,11 +1,13 @@
 package com.example.learning.setup.root.structure
 
 import com.example.learning.setup.root.structure.service.PortalSummaryProjectionService
+import com.example.learning.task.sheets.service.SummarySectionYamlService
 import groovy.json.JsonSlurper
 import org.gradle.testfixtures.ProjectBuilder
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
+import org.yaml.snakeyaml.Yaml
 
 import static org.junit.Assert.*
 
@@ -24,7 +26,24 @@ class PortalSummaryProjectionServiceTest {
         module.extensions.extraProperties.set('SERVICE_NAME','EXAMPLE')
         File dir = new File(moduleDir,'content/readme/docs/vi/menu/1.OOPBasic/summary')
         assertTrue(dir.mkdirs())
-        new File(dir,'section.md').setText('# Tổng kết\n','UTF-8')
+        new File(dir,'section.yml').setText(new Yaml().dump(
+                SummarySectionYamlService.fromMarkdown('''# Tổng kết
+
+## 1. Mạch liên kết bài học
+
+### Bài 1 — OOP là gì?
+
+Nội dung định hướng.
+
+## 2. Bảng đối chiếu các bài học
+
+| Tiêu chí | Bài 1 |
+| --- | --- |
+| Kết quả | Định hướng |
+| Ví dụ | Account |
+| Phạm vi | Java |
+| Kiểm tra | Object |
+''', ['oop-basic-001'])), 'UTF-8')
         File yaml = new File(dir,'summaries.yml')
         yaml.setText('''summaries:
   - id: oop-basic-001
@@ -42,12 +61,13 @@ class PortalSummaryProjectionServiceTest {
         assertTrue(content.isFile())
         assertEquals(1,(new JsonSlurper().parse(index) as Map).sectionCount)
         Map rendered = new JsonSlurper().parse(content) as Map
-        assertEquals('# Tổng kết\n',rendered.section)
+        assertEquals('LEARNING_ROADMAP',rendered.section.type)
+        assertEquals('oop-basic-001',rendered.section.roadmap[0].id)
         assertEquals('oop-basic-001',rendered.summaries[0].id)
         service.generate(project)
         assertTrue(index.exists())
         assertTrue(yaml.delete())
-        assertTrue(new File(dir,'section.md').delete())
+        assertTrue(new File(dir,'section.yml').delete())
         service.generate(project)
         assertFalse(index.exists())
         assertFalse(content.exists())

@@ -1,0 +1,93 @@
+version: 1
+type: LEARNING_ROADMAP
+title: LỖI THIẾT KẾ — LIÊN KẾT BÀI HỌC
+roadmapHeading: Mạch liên kết bài học
+roadmap:
+- id: design-pitfalls-001
+  order: 1
+  title: Lớp ôm quá nhiều trách nhiệm
+  description: Nhận diện God Class qua lý do thay đổi, cohesion/coupling; tách use case điều phối khỏi tính giá, lưu trữ và
+    thông báo theo trách nhiệm.
+  transition:
+    to: design-pitfalls-002
+    description: '**Từ trách nhiệm của lớp → trách nhiệm bảo vệ dữ liệu và các quy tắc bất biến bên trong lớp.**'
+- id: design-pitfalls-002
+  order: 2
+  title: Trạng thái công khai và mất điều kiện bất biến
+  description: Bảo vệ invariant qua API nghiệp vụ, chặn alias mutable và kiểm thử atomic updates, kể cả khi nhiều thread truy
+    cập.
+  transition:
+    to: design-pitfalls-003
+    description: '**Từ encapsulation bảo vệ trạng thái → API nghiệp vụ thay thế lối sửa từng field qua setter.**'
+- id: design-pitfalls-003
+  order: 3
+  title: Getter, setter tràn lan nhưng thiếu hành vi
+  description: Chuyển từ getter/setter mở sang hành vi confirm/ship/cancel giữ vòng đời Order, phân biệt với DTO và transaction
+    script hợp lý.
+  transition:
+    to: design-pitfalls-004
+    description: '**Góc nhìn bổ sung: từ API domain quá mở → quan hệ kế thừa làm lộ API không thuộc trách nhiệm.**'
+- id: design-pitfalls-004
+  order: 4
+  title: Kế thừa chỉ để dùng lại vài phương thức
+  description: Tránh extends chỉ mượn method khiến Inventory vô tình lộ Map API; giữ Map private và ủy quyền thao tác an toàn.
+  transition:
+    to: design-pitfalls-005
+    description: '**Từ đánh giá hợp đồng subtype → tránh gọi theo kiểu cụ thể khắp nơi bằng đa hình.**'
+- id: design-pitfalls-005
+  order: 5
+  title: Lạm dụng ép kiểu và kiểm tra kiểu
+  description: Thay branching lặp theo instanceof/cast bằng đa hình ShippingPolicy; dành kiểm tra type cho boundary/capability
+    phù hợp.
+  transition:
+    to: design-pitfalls-006
+    description: '**Từ dùng đa hình đúng → thiết kế interface đủ hẹp để các implementation thực hiện trọn lời hứa.**'
+- id: design-pitfalls-006
+  order: 6
+  title: Giao diện quá lớn hoặc quá nhiều lớp trừu tượng
+  description: Áp dụng ISP theo nhu cầu DocumentReader/Writer, loại method không hỗ trợ và rút những tầng forwarding không
+    mang giá trị.
+  transition:
+    to: design-pitfalls-007
+    description: '**Từ ranh giới interface → ranh giới hướng phụ thuộc và cách trao đổi dữ liệu giữa đối tượng.**'
+- id: design-pitfalls-007
+  order: 7
+  title: Phụ thuộc vòng và truy cập sâu vào đối tượng
+  description: Phá vòng OrderService–ShippingService, truyền request dữ liệu hẹp và giảm deep navigation theo Law of Demeter.
+  transition:
+    to: design-pitfalls-008
+    description: '**Từ cấu trúc phụ thuộc → kiểm soát chia sẻ trạng thái và điều phối thay đổi an toàn.**'
+- id: design-pitfalls-008
+  order: 8
+  title: Trạng thái dùng chung khó kiểm soát
+  description: Đặt owner cho shared mutable state, phòng race conditions và chọn atomic, lock hay transaction theo phạm vi.
+  transition:
+    to: design-pitfalls-009
+    description: '**Từ shared mutable state → tình huống đặc biệt khi thay field ảnh hưởng equality/hash của key.**'
+- id: design-pitfalls-009
+  order: 9
+  title: Đối tượng có thể thay đổi làm sai phép so sánh hoặc mã băm
+  description: Giữ equals/hashCode/comparator ổn định cho key/Set element; tách CustomerId khỏi hồ sơ mutable và kiểm tra
+    record/ORM.
+  transition:
+    to: design-pitfalls-010
+    description: '**Góc nhìn tổng hợp: từ các lỗi cụ thể → cân nhắc lúc nào nên dùng pattern hoặc trừu tượng hóa.**'
+- id: design-pitfalls-010
+  order: 10
+  title: Lạm dụng mẫu thiết kế và trừu tượng hóa quá sớm
+  description: |-
+    Nhìn bằng chứng biến thiên trước khi đưa Strategy/Factory vào thiết kế; dùng regression tests để tiến hóa từ chính sách đơn.
+
+    **Mối liên hệ:** Chương đi từ trách nhiệm của class và invariant của object tới thiết kế API có hành vi, sử dụng kế thừa/đa hình và interface đúng hợp đồng. Những bài về phụ thuộc vòng, shared state và key mutable mở rộng đánh giá từ một đối tượng sang tương tác và dữ liệu dùng chung. Cuối cùng, bài về pattern giúp lựa chọn mức trừu tượng hóa tương xứng với nhu cầu. Các mùi thiết kế là các góc kiểm tra bổ sung, không phải một chuỗi phụ thuộc kỹ thuật bắt buộc theo thứ tự.
+
+    [↓ Xem bảng đối chiếu các bài học](#2-bảng-đối-chiếu-các-bài-học)
+  transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Lớp ôm quá nhiều trách nhiệm | Trạng thái công khai và mất điều kiện bất biến | Getter, setter tràn lan nhưng thiếu hành vi | Kế thừa chỉ để dùng lại vài phương thức | Lạm dụng ép kiểu và kiểm tra kiểu | Giao diện quá lớn hoặc quá nhiều lớp trừu tượng | Phụ thuộc vòng và truy cập sâu vào đối tượng | Trạng thái dùng chung khó kiểm soát | Đối tượng có thể thay đổi làm sai phép so sánh hoặc mã băm | Lạm dụng mẫu thiết kế và trừu tượng hóa quá sớm |
+  | Vấn đề cần hiểu | Lớp nào ôm nhiều lý do thay đổi? | Ai kiểm soát invariant và alias? | Ai sở hữu quy tắc chuyển trạng thái? | Subtype có đúng hợp đồng cha? | Type branching thay thế bằng hành vi chung ra sao? | Contract nào client thật sự cần? | Có cycle hoặc knowledge về object graph quá sâu? | Ai sửa shared state và bằng cơ chế gì? | Key mutable ảnh hưởng lookup/sort thế nào? | Pattern tạo giá trị từ khi nào? |
+  | Giá trị đối với OOP/module | Tách module theo trách nhiệm kiểm chứng được. | Dữ liệu hợp lệ qua mọi thao tác và thất bại. | API domain khó bị lạm dụng. | Bảo toàn LSP và bỏ các method kế thừa không mong muốn. | Mở rộng implementation không sửa caller. | Giảm API coupling và implementation stub. | Giữ phụ thuộc một chiều và giảm ripple. | Tránh race, rò request và mất cập nhật. | Giữ Map/Set/cache hoạt động đúng. | Giảm chi phí thay đổi và lớp trung gian vô ích. |
+  | Tư duy hình thành | Xét cohesion theo lý do thay đổi. | Nêu invariant rồi tìm mọi đường mutation. | Tell object làm đúng hành vi. | Chọn is-a theo nghĩa, không theo code reuse. | Hỏi hành vi nào thuộc subtype. | Thiết kế theo client capability. | Vẽ dependency và ownership graph. | Tách visibility, atomicity và transaction. | Giữ định danh ổn định giữa các mutation. | Đòi bằng chứng trước khi trích abstraction. |

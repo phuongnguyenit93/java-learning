@@ -1,0 +1,80 @@
+version: 1
+type: LEARNING_ROADMAP
+title: TƯ DUY OOP — LIÊN KẾT BÀI HỌC
+roadmapHeading: Mạch liên kết bài học
+roadmap:
+- id: oop-basic-001
+  order: 1
+  title: OOP là gì và bài toán tổ chức chương trình
+  description: Nhận diện vấn đề tổ chức hệ thống khi dữ liệu, hành vi và quy tắc phát triển; dùng BankAccount và luồng checkout
+    để thấy giá trị của ranh giới trách nhiệm.
+  transition:
+    to: oop-basic-002
+    description: '**Từ nhu cầu tổ chức hệ thống → phân tích thành phần nhỏ nhất phải chịu trách nhiệm và giữ trạng thái hợp
+      lệ.**'
+- id: oop-basic-002
+  order: 2
+  title: Đối tượng, trạng thái, hành vi và trách nhiệm
+  description: 'Đi sâu vào một Order cụ thể: trạng thái, invariant, hành vi hợp lệ và trách nhiệm bảo vệ chúng qua vòng đời.'
+  transition:
+    to: oop-basic-003
+    description: '**Từ bản chất object → đọc chính xác class, type, instance và tham chiếu trong mã Java.**'
+- id: oop-basic-003
+  order: 3
+  title: 'Lớp, kiểu và thể hiện: các khái niệm nền tảng'
+  description: Phân biệt định nghĩa class, type nhìn từ compiler, instance ở runtime và biến tham chiếu để dự đoán những đối
+    tượng thực sự được tạo ra.
+  transition:
+    to: oop-basic-004
+    description: '**Từ một object riêng lẻ → xem các object trao đổi lời gọi để hoàn thành nghiệp vụ.**'
+- id: oop-basic-004
+  order: 4
+  title: Tương tác giữa đối tượng và lời gọi phương thức
+  description: Theo dõi người gọi, receiver, argument, kết quả và exception trong luồng mượn sách khi nhiều đối tượng phối
+    hợp.
+  transition:
+    to: oop-basic-005
+    description: '**Từ lời gọi có hợp đồng → học những cơ chế bảo vệ và mở rộng cách thực hiện hợp đồng đó.**'
+- id: oop-basic-005
+  order: 5
+  title: Đóng gói, trừu tượng, kế thừa và đa hình
+  description: Nhận diện bốn công cụ thiết kế qua Cart và DiscountPolicy; phân tích hợp đồng chung, trạng thái được bảo vệ
+    và hành vi được chọn lúc chạy.
+  transition:
+    to: oop-basic-006
+    description: '**Từ các công cụ OOP → đối chiếu với cách tổ chức bằng hàm để hiểu lợi ích theo từng yêu cầu.**'
+- id: oop-basic-006
+  order: 6
+  title: 'OOP và lập trình thủ tục: cách phân chia bài toán'
+  description: So sánh hai cách tổ chức cùng một phép tính giỏ hàng 405.000 đồng, đánh giá trách nhiệm, cohesion, coupling
+    và nhu cầu thay đổi.
+  transition:
+    to: oop-basic-007
+    description: '**Từ tổ chức trách nhiệm trong Java → mở rộng cách nhìn sang một mô hình OOP dùng nguyên mẫu.**'
+- id: oop-basic-007
+  order: 7
+  title: OOP dựa trên lớp và OOP dựa trên nguyên mẫu
+  description: Đối chiếu class/method dispatch của Java với object/prototype chain của JavaScript, gồm shadowing và dữ liệu
+    mutable dùng chung.
+  transition:
+    to: oop-basic-008
+    description: '**Từ các biến thể mô hình OOP → lựa chọn mức thiết kế cần thiết dựa trên tình huống thật.**'
+- id: oop-basic-008
+  order: 8
+  title: Khi nên và không nên sử dụng OOP
+  description: |-
+    Dùng các tiêu chí trạng thái, invariant, biến thể hành vi và độ phức tạp để chọn object, hàm hoặc sự kết hợp phù hợp với bài toán.
+
+    **Mối liên hệ:** Chương bắt đầu bằng nhu cầu tổ chức hệ thống rồi đi từ đối tượng và cơ chế Java tới tương tác, bốn công cụ OOP và các lựa chọn kiến trúc. Việc so sánh với thủ tục và nguyên mẫu làm rõ giới hạn của một cách cài đặt; bài cuối giúp quyết định khi nào vận dụng OOP thực sự có lợi.
+
+    [↓ Xem bảng đối chiếu các bài học](#2-bảng-đối-chiếu-các-bài-học)
+  transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | OOP là gì và bài toán tổ chức chương trình | Đối tượng, trạng thái, hành vi và trách nhiệm | Lớp, kiểu và thể hiện: các khái niệm nền tảng | Tương tác giữa đối tượng và lời gọi phương thức | Đóng gói, trừu tượng, kế thừa và đa hình | OOP và lập trình thủ tục: cách phân chia bài toán | OOP dựa trên lớp và OOP dựa trên nguyên mẫu | Khi nên và không nên sử dụng OOP |
+  | Vấn đề cần hiểu | Vì sao cần OOP để tổ chức hệ thống? | Object giữ trạng thái và quy tắc thế nào? | Class, type, instance và reference khác nhau? | Các object phối hợp và truyền kết quả/lỗi thế nào? | Bốn cơ chế bảo vệ và mở rộng hành vi ra sao? | Chia bài toán theo hàm hay trách nhiệm đối tượng? | Method được tìm qua class hay prototype chain? | Khi nào OOP đáng chi phí thiết kế? |
+  | Giá trị đối với OOP/module | Đặt nền tảng ranh giới nghiệp vụ | Xây object duy trì invariant | Đọc chính xác mô hình Java runtime | Thiết kế collaboration và method contract | Áp dụng encapsulation, abstraction, inheritance, polymorphism | Đánh giá cohesion và coupling giữa các cách tổ chức | Hiểu mô hình OOP khác ngoài Java | Tránh overengineering và chọn abstraction có ích |
+  | Tư duy hình thành | Từ chức năng rời rạc sang trách nhiệm | Từ dữ liệu sang hành vi bảo vệ dữ liệu | Từ tên biến sang identity và type | Từ lời gọi đơn lẻ sang chuỗi cộng tác | Từ cơ chế cú pháp sang hợp đồng thiết kế | Từ sở thích paradigm sang đánh đổi | Từ class cố định sang delegation động | Từ mô hình có thể dùng sang mô hình nên dùng |

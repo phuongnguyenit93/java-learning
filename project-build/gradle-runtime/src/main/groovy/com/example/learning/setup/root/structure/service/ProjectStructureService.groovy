@@ -1121,7 +1121,7 @@ ${moduleDirectory.absolutePath}
             File[] chapters = menu.listFiles()
             if (chapters == null) throw new GradleException('Cannot list Summary menu: ' + menu)
             if (chapters.any { File chapter -> chapter.isDirectory() &&
-                    new File(chapter, 'summary/section.md').isFile() &&
+                    new File(chapter, 'summary/section.yml').isFile() &&
                     new File(chapter, 'summary/summaries.yml').isFile() }) {
                 result.add(lang)
             }

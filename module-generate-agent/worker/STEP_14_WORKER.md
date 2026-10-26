@@ -16,7 +16,7 @@
 | --- | --- |
 | `README` | Văn bản hiển thị: H1/H2/H3… tiêu đề; nhãn menu, text trong câu, đoạn Markdown, text link (không đổi href), text trong table/list, blockquote, phần giảng giải; chuỗi `<summary>Xem chi tiết</summary>` có thể dịch text bên trong |
 | `INTRODUCTION` | Văn bản Markdown trong `BASE.md` theo cùng quy tắc README |
-| `SUMMARY_SECTION` | Văn bản Markdown trong `summary/section.md` theo quy tắc README |
+| `SUMMARY_SECTION` | YAML `summary/section.yml`: chỉ dịch `title`, `roadmapHeading`, `roadmap[].title`, `roadmap[].description`, `roadmap[].transition.description` và `comparisonMarkdown` (bảng vẫn là Markdown). Giữ nguyên `version`, `type`, `roadmap[].id`, `roadmap[].order`, `roadmap[].transition.to`, cấu trúc danh sách và số bài. |
 | `SUMMARY_LESSONS` | **Chỉ** `summaries[].title` và `summaries[].summary` trong `summary/summaries.yml`; `summaries[].id`, root, thứ tự/đếm bài và schema khóa bất biến |
 | `QUIZ` | `questions[].question`, `questions[].answers[].answer`, `questions[].answers[].explanation` |
 | `INTERVIEW` | `questions[].question`, `questions[].answer` |

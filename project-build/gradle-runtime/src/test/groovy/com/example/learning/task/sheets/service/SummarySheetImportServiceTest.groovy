@@ -30,11 +30,54 @@ class SummarySheetImportServiceTest {
     @Test
     void createsSectionAndSummariesYamlAndCleansStaleChapterWithoutTouchingKnowledge() {
         Map all = SummarySheetImportService.prepare(GROUPS, ac([
-                20:'# OOP summary\n', 21:'## What is OOP?\n', 22:'**Objects**\n',
-                23:'# Encapsulation\n', 24:'## Definition\n'
+                20:'''# OOP summary
+
+## 1. Mạch liên kết bài học
+
+### Bài 1 — Là gì?
+
+Learn OOP.
+
+↓ **Learn objects next**
+
+### Bài 2 — Class & Object
+
+Work with objects.
+
+## 2. Bảng đối chiếu các bài học
+
+| Tiêu chí | Bài 1 | Bài 2 |
+| --- | --- | --- |
+| Kỹ năng | OOP | Objects |
+| Ví dụ | Account | Order |
+| Phạm vi | Java | Java |
+| Kiểm tra | Class | Instance |
+''', 21:'## What is OOP?\n', 22:'**Objects**\n',
+                23:'''# Encapsulation
+
+## 1. Mạch liên kết bài học
+
+### Bài 1 — Encapsulation
+
+Protect data.
+
+## 2. Bảng đối chiếu các bài học
+
+| Tiêu chí | Bài 1 |
+| --- | --- |
+| Kỹ năng | Encapsulation |
+| Ví dụ | BankAccount |
+| Phạm vi | Java |
+| Kiểm tra | Private fields |
+''', 24:'## Definition\n'
         ]))
-        assertEquals(['section.md','summaries.yml'] as Set, all['1.OOPBasic'].keySet())
-        assertEquals('# OOP summary\n', all['1.OOPBasic']['section.md'])
+        assertEquals(['section.yml','summaries.yml'] as Set, all['1.OOPBasic'].keySet())
+        Map chapterYaml = new Yaml().load(all['1.OOPBasic']['section.yml']) as Map
+        assertEquals('LEARNING_ROADMAP', chapterYaml.type)
+        assertEquals(['oop-basic-001', 'oop-basic-002'], chapterYaml.roadmap*.id)
+        assertEquals('oop-basic-002', chapterYaml.roadmap[0].transition.to)
+        assertNull(chapterYaml.roadmap[1].transition)
+        assertTrue(chapterYaml.comparisonMarkdown.contains('| Kỹ năng | OOP | Objects |'))
         Map yaml = new Yaml().load(all['1.OOPBasic']['summaries.yml']) as Map
         assertEquals(['oop-basic-001','oop-basic-002'], yaml.summaries*.id)
         assertEquals(['Là gì?','Class & Object'], yaml.summaries*.title)
@@ -61,7 +104,7 @@ class SummarySheetImportServiceTest {
         assertTrue(stale.exists())
         assertEquals('UPDATED', SheetSnapshotReplaceService.replaceAll(root, targets, true).status)
         assertFalse(stale.exists())
-        assertEquals(['section.md','summaries.yml'] as Set,
+        assertEquals(['section.yml','summaries.yml'] as Set,
                 new File(menu, '1.OOPBasic/summary').list().toList().toSet())
         assertEquals('keep', new File(menu, '1.OOPBasic/knowledge/Existing.md').getText('UTF-8'))
     }

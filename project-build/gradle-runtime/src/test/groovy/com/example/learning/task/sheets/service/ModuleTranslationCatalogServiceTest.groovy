@@ -14,10 +14,27 @@ class ModuleTranslationCatalogServiceTest {
     void summaryTranslationInventoryAndProtectedIdsAreChecked() {
         Map f = fixture()
         File module = f.module as File
-        String viSection = '# Mục tiêu\n\n## Nội dung\n'
+        String viSection = new org.yaml.snakeyaml.Yaml().dump(
+                SummarySectionYamlService.fromMarkdown('''# Mục tiêu
+
+## 1. Mạch liên kết bài học
+
+### Bài 1 — Bài học
+
+Nội dung.
+
+## 2. Bảng đối chiếu các bài học
+
+| Tiêu chí | Bài 1 |
+| --- | --- |
+| Kết quả | Nội dung |
+| Ví dụ | Account |
+| Phạm vi | Java |
+| Kiểm tra | Object |
+''', ['basic-001']))
         String summaryYaml = 'summaries:\n  - id: basic-001\n    title: Bài học\n    summary: "## Nội dung"\n'
         for (String lang : ['vi', 'en']) {
-            write(module, "content/readme/docs/${lang}/menu/1.Basic/summary/section.md",viSection)
+            write(module, "content/readme/docs/${lang}/menu/1.Basic/summary/section.yml",viSection)
             write(module, "content/readme/docs/${lang}/menu/1.Basic/summary/summaries.yml",summaryYaml)
         }
         List<Map> files = ModuleTranslationCatalogService.inventory(module)

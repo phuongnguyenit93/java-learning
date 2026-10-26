@@ -2,7 +2,7 @@
 
 
 
-> **2026-10-25:** STEP 14 must translate existing VI `<chapter>/summary/section.md` and all `summaries.yml` items into EN without altering IDs/order/code/links/Markdown structure. Reference is language-neutral and must not be translated. Prime QA/readback Summary EN before STEP 15.
+> **2026-10-25:** STEP 14 must translate existing VI `<chapter>/summary/section.yml` and all `summaries.yml` items into EN without altering IDs/order/code/links/Markdown structure. Reference is language-neutral and must not be translated. Prime QA/readback Summary EN before STEP 15.
 
 > **Quy trình:** Hoàn tất preflight gate của STEP 12A → lập catalog/backup → giao worker **mỗi lượt một file** → Prime QA từng file → QA toàn module → CURRENT_STEP.VALUE readback. Whitelist/blacklist nằm trong `worker/STEP_14_WORKER.md`. Không thực thi STEP 15 khi STEP 14 chưa hoàn tất.
 
@@ -82,7 +82,7 @@ Chỉ khi **cả 6 gate = PASS** thì ghi `STEP_14_PRECHECK=PASS` vào báo cáo
 | --- | --- |
 | README | Mỗi `content/readme/docs/en/menu/<chapter>/knowledge/<file>.md` |
 | INTRODUCTION | `content/readme/docs/en/BASE.md` |
-| SUMMARY_SECTION | `content/readme/docs/en/menu/<chapter>/summary/section.md` |
+| SUMMARY_SECTION | `content/readme/docs/en/menu/<chapter>/summary/section.yml` |
 | SUMMARY_LESSONS | `content/readme/docs/en/menu/<chapter>/summary/summaries.yml` |
 | QUIZ | Mỗi `content/readme/docs/en/menu/<chapter>/quiz/question.yml` |
 | INTERVIEW | Mỗi `content/readme/docs/en/menu/<chapter>/interview/question.yml` |

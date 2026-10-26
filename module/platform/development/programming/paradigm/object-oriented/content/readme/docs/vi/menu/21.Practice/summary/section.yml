@@ -1,0 +1,101 @@
+version: 1
+type: LEARNING_ROADMAP
+title: THỰC HÀNH — LIÊN KẾT BÀI HỌC
+roadmapHeading: Mạch liên kết bài học
+roadmap:
+- id: practice-001
+  order: 1
+  title: Bài tập lớp và đối tượng qua tài khoản ngân hàng
+  description: Thiết kế BankAccount với dữ liệu riêng, API nạp/rút/chuyển và test các invariant số dư, overflow, lỗi giao
+    dịch.
+  transition:
+    to: practice-002
+    description: '**Từ thực hành tạo object có trạng thái → thực hành bảo vệ mọi đường sửa trạng thái bằng encapsulation**'
+- id: practice-002
+  order: 2
+  title: Bài tập đóng gói quy tắc của đơn hàng
+  description: 'Áp dụng encapsulation vào Order: kiểm soát dòng hàng, tổng tiền, DRAFT/PLACED/CANCELLED và các thay đổi thất
+    bại.'
+  transition:
+    to: practice-003
+    description: '**Từ invariant của một aggregate → vận dụng interface và đa hình cho nhiều hành vi thanh toán**'
+- id: practice-003
+  order: 3
+  title: Bài tập giao diện và đa hình thanh toán
+  description: Dùng PaymentMethod và dynamic dispatch để xử lý nhiều loại thanh toán với chung hợp đồng mà không thêm nhánh
+    ở processor.
+  transition:
+    to: practice-004
+    description: '**Từ hợp đồng interface → quyết định dùng kế thừa hay kết hợp khi mở rộng thiết kế**'
+- id: practice-004
+  order: 4
+  title: Bài tập chọn kế thừa hay kết hợp
+  description: Chọn inheritance theo is-a và hợp đồng Shape; chọn composition cho formatter/sink thay thế được trong ReportPublisher.
+  transition:
+    to: practice-005
+    description: '**Từ quan hệ lớp/cộng tác viên → xây value object và quy tắc so sánh ổn định**'
+- id: practice-005
+  order: 5
+  title: Bài tập đối tượng giá trị và so sánh bằng
+  description: Chuẩn hóa Sku/Money, bảo đảm equals/hashCode/compareTo, khóa collection bất biến và kiểm tra tác hại mutable
+    alias.
+  transition:
+    to: practice-006
+    description: '**Từ thiết kế từng object đúng hợp đồng → học nhận diện dấu hiệu thiết kế sai trong code có thật**'
+- id: practice-006
+  order: 6
+  title: Bài tập nhận diện lỗi thiết kế
+  description: 'Review đoạn checkout có mùi thiết kế: chỉ ra bằng chứng, tách Order, payment, ledger và bảo vệ hành vi bằng
+    test.'
+  transition:
+    to: practice-007
+    description: '**Từ phát hiện lỗi thiết kế → áp dụng quy trình refactor có kiểm thử hồi quy**'
+- id: practice-007
+  order: 7
+  title: Bài tập tái cấu trúc đoạn mã thủ tục thành mô hình đối tượng
+  description: Chuyển hàm tính tiền thủ tục thành Order, DiscountPolicy, ShippingPolicy, CheckoutService và Receipt có regression
+    tests.
+  transition:
+    to: practice-008
+    description: '**Từ cải tiến bài toán nhỏ → khởi động dự án nhiều use case bằng phân tích yêu cầu**'
+- id: practice-008
+  order: 8
+  title: 'Dự án tổng hợp: phân tích yêu cầu và tình huống sử dụng'
+  description: Thu thập yêu cầu thư viện, actor, BR/FR/NFR, use case, luồng lỗi và bảng truy vết tới ca kiểm thử.
+  transition:
+    to: practice-009
+    description: '**Từ yêu cầu/ca nghiệm thu → thiết kế các class, quan hệ và invariant cho hệ thống thư viện**'
+- id: practice-009
+  order: 9
+  title: 'Dự án tổng hợp: thiết kế lớp và quan hệ'
+  description: Biến yêu cầu thành Book, BookCopy, Member, Loan và service/policy; kiểm soát quan hệ, danh tính và invariant.
+  transition:
+    to: practice-010
+    description: '**Từ thiết kế đối tượng → hiện thực các use case và kiểm chứng hành vi trong Java/JUnit**'
+- id: practice-010
+  order: 10
+  title: 'Dự án tổng hợp: hiện thực và kiểm thử hành vi'
+  description: Triển khai mượn/trả theo copyId với Clock và JUnit; kiểm tra trạng thái khi thành công/thất bại và giới hạn
+    đồng thời.
+  transition:
+    to: practice-011
+    description: '**Từ ứng dụng đã có kiểm thử → tiếp nhận thay đổi quy tắc mà giữ đúng dữ liệu lịch sử**'
+- id: practice-011
+  order: 11
+  title: 'Dự án tổng hợp: thay đổi yêu cầu và đánh giá thiết kế'
+  description: |-
+    Thích nghi hệ thống với giới hạn 5 phiếu và hạn 7 ngày cho sách tham khảo; giữ nguyên dueOn lịch sử và đánh giá qua ma trận test.
+
+    **Mối liên hệ:** Bảy bài tập đầu biến các nguyên tắc OOP thành năng lực thực hành từ lớp/đối tượng, đóng gói, đa hình, thiết kế quan hệ tới value object và refactor có kiểm thử. Bốn bài sau là chuỗi dự án thư viện: phân tích yêu cầu → thiết kế lớp/quan hệ → hiện thực và kiểm thử → thay đổi yêu cầu có bảo toàn hợp đồng. Các thao tác thất bại phải giữ invariant, còn thay đổi chính sách phải được kiểm chứng cả với dữ liệu cũ và mới.
+
+    [↓ Xem bảng đối chiếu các bài học](#2-bảng-đối-chiếu-các-bài-học)
+  transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 | Bài 11 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Bài tập lớp và đối tượng qua tài khoản ngân hàng | Bài tập đóng gói quy tắc của đơn hàng | Bài tập giao diện và đa hình thanh toán | Bài tập chọn kế thừa hay kết hợp | Bài tập đối tượng giá trị và so sánh bằng | Bài tập nhận diện lỗi thiết kế | Bài tập tái cấu trúc đoạn mã thủ tục thành mô hình đối tượng | Dự án tổng hợp: phân tích yêu cầu và tình huống sử dụng | Dự án tổng hợp: thiết kế lớp và quan hệ | Dự án tổng hợp: hiện thực và kiểm thử hành vi | Dự án tổng hợp: thay đổi yêu cầu và đánh giá thiết kế |
+  | Vấn đề cần hiểu | Class, instance, chuyển tiền an toàn trong RAM? | Order bảo vệ trạng thái và tổng tiền thế nào? | Nhiều PaymentMethod cùng một API hoạt động thế nào? | Khi nào is-a phù hợp, khi nào dùng collaborator? | Giá trị bằng nhau và collection key chính xác ra sao? | Đâu là bug, code smell và trách nhiệm bị đặt sai? | Giữ phép tính gốc khi tách chính sách thế nào? | Ai cần gì, trong phạm vi nào, nghiệm thu ra sao? | Class nào quản lý đầu sách, bản sách, phiếu và invariant? | Mượn/trả đúng trong các trường hợp lỗi/ngày biên thế nào? | Thay policy mới mà không phá dueOn cũ thế nào? |
+  | Giá trị đối với OOP/module | Củng cố class-object, encapsulation, invariant, test. | Thiết kế aggregate Order có API an toàn. | Áp dụng đa hình runtime và tách processor. | Giữ hợp đồng thay thế, giảm hierarchy cứng. | Sử dụng value object bất biến đúng equals/hash/ordering. | Có phương pháp review và phân trách nhiệm. | Tái cấu trúc có test, giảm phụ thuộc vào magic string. | Đặt yêu cầu/test làm cơ sở thiết kế. | Chuyển yêu cầu sang mô hình object có quan hệ rõ. | Kiểm tra luồng nghiệp vụ có nhiều thực thể. | Đánh giá OOP khi chính sách và hợp đồng thay đổi. |
+  | Tư duy hình thành | Giữ dữ liệu trong lớp và kiểm tra trước khi thay. | Đổi trạng thái qua hành vi, không mở field tùy ý. | Lập trình theo contract, thay implementation. | Chọn quan hệ theo ngữ nghĩa và tiền/hậu điều kiện. | Chuẩn hóa trước khi so sánh và lưu collection. | Review theo bằng chứng, hậu quả và test. | Đổi từng bước, kiểm tra equivalence và lỗi biên. | Hỏi rõ giả định, luồng thất bại và tiêu chí đo. | Xác định identity và chủ sở hữu invariant. | Quan sát trạng thái sau từng nhánh thành công/lỗi. | Giữ hợp đồng lịch sử và chứng minh tác động bằng test. |

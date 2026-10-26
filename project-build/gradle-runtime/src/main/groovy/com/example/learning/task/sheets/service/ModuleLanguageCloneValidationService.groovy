@@ -125,7 +125,7 @@ class ModuleLanguageCloneValidationService {
             }
         }
         chapterAnchors.each { String chapter, Set<String> anchors ->
-            String sectionPath = 'menu/' + chapter + '/summary/section.md'
+            String sectionPath = 'menu/' + chapter + '/summary/section.yml'
             String summariesPath = 'menu/' + chapter + '/summary/summaries.yml'
             boolean sectionExists = docs.containsKey(sectionPath)
             boolean summariesExist = docs.containsKey(summariesPath)
@@ -133,9 +133,6 @@ class ModuleLanguageCloneValidationService {
                 throw new GradleException('Incomplete VI Summary chapter: ' + chapter)
             }
             if (summariesExist) {
-                if (!content(docs[sectionPath]).trim()) {
-                    throw new GradleException('Empty VI Summary section: ' + chapter)
-                }
                 Map summaryData = yaml(docs[summariesPath], summariesPath)
                 if (summaryData.keySet() != (['summaries'] as Set) ||
                         !(summaryData.summaries instanceof List) ||
@@ -153,6 +150,7 @@ class ModuleLanguageCloneValidationService {
                 if (ids != anchors.toList()) {
                     throw new GradleException('Summary IDs/order do not match Knowledge: ' + chapter)
                 }
+                SummarySectionYamlService.read(content(docs[sectionPath]), ids as List<String>)
             }
             ['quiz', 'interview'].each { String kind ->
                 String path = 'menu/' + chapter + '/' + kind + '/question.yml'
@@ -178,7 +176,7 @@ class ModuleLanguageCloneValidationService {
                 .each { String path ->
                     String chapter = path.split('/')[1]
                     if (!chapterAnchors.containsKey(chapter) ||
-                            !(path.endsWith('/summary/section.md') ||
+                            !(path.endsWith('/summary/section.yml') ||
                                     path.endsWith('/summary/summaries.yml'))) {
                         throw new GradleException('Unexpected Summary file: ' + path)
                     }

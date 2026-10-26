@@ -24,9 +24,9 @@ class ModuleTranslationValidationService {
     static void compare(String type, byte[] vi, byte[] en) {
         String source = decode(vi)
         String target = decode(en)
-        if (type in ['README', 'INTRODUCTION', 'SUMMARY_SECTION']) {
+        if (type in ['README', 'INTRODUCTION']) {
             markdown(source, target)
-        } else if (type ==~ /QUIZ|INTERVIEW|ROADMAP|VIDEO|SUMMARY_LESSONS|SWAGGER_.+/) {
+        } else if (type ==~ /QUIZ|INTERVIEW|ROADMAP|VIDEO|SUMMARY_SECTION|SUMMARY_LESSONS|SWAGGER_.+/) {
             yaml(type, source, target)
         } else {
             throw new GradleException('Unknown translation type: ' + type)
@@ -143,7 +143,10 @@ class ModuleTranslationValidationService {
             if ((a as String).trim() && !(b as String).trim()) {
                 throw new GradleException('Translated scalar was erased: ' + path)
             }
-            if (type == 'SUMMARY_LESSONS' && path.endsWith('.summary')) {
+            if ((type == 'SUMMARY_LESSONS' && path.endsWith('.summary')) ||
+                    (type == 'SUMMARY_SECTION' && (path == 'comparisonMarkdown' ||
+                            path ==~ /roadmap\[\d+\]\.description/ ||
+                            path ==~ /roadmap\[\d+\]\.transition\.description/))) {
                 markdown(a as String, b as String)
             } else {
                 lockedTokens(a as String, b as String, path)
@@ -157,6 +160,9 @@ class ModuleTranslationValidationService {
         switch (type) {
             case 'SUMMARY_LESSONS':
                 return path ==~ /summaries\[\d+\]\.(title|summary)/
+            case 'SUMMARY_SECTION':
+                return path in ['title', 'roadmapHeading', 'comparisonMarkdown'] ||
+                        path ==~ /roadmap\[\d+\]\.(title|description|transition\.description)/
             case 'QUIZ':
                 return path ==~ /questions\[\d+\]\.(question|answers\[\d+\]\.(answer|explanation))/
             case 'INTERVIEW':

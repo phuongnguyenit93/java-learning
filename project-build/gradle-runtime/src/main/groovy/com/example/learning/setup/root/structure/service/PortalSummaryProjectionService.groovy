@@ -1,6 +1,7 @@
 package com.example.learning.setup.root.structure.service
 
 import com.example.learning.utils.ProjectPropertyUtils
+import com.example.learning.task.sheets.service.SummarySectionYamlService
 import groovy.json.JsonOutput
 import org.gradle.api.GradleException
 import org.gradle.api.Project
@@ -47,7 +48,7 @@ class PortalSummaryProjectionService {
                             (Integer.parseInt(a.name.split('\\.')[0]) <=>
                              Integer.parseInt(b.name.split('\\.')[0])) ?: (a.name <=> b.name)
                         }.each { File chapter ->
-                    File section = new File(chapter, 'summary/section.md')
+                    File section = new File(chapter, 'summary/section.yml')
                     File yaml = new File(chapter, 'summary/summaries.yml')
                     if (!section.exists() && !yaml.exists()) return
                     if (!section.isFile() || !yaml.isFile() ||
@@ -55,8 +56,6 @@ class PortalSummaryProjectionService {
                             Files.isSymbolicLink(yaml.toPath())) {
                         throw new GradleException('Incomplete/linked Portal Summary: ' + chapter)
                     }
-                    String markdown = section.getText('UTF-8')
-                    if (!markdown.trim()) throw new GradleException('Empty Summary section: ' + section)
                     Map doc = readYaml(yaml)
                     if (doc.keySet() != (['summaries'] as Set) ||
                             !(doc.summaries instanceof List) || (doc.summaries as List).isEmpty()) {
@@ -73,10 +72,12 @@ class PortalSummaryProjectionService {
                             throw new GradleException('Invalid Summary lesson in ' + yaml)
                         }
                     }
+                    Map roadmap = SummarySectionYamlService.read(section.getText('UTF-8'),
+                            (doc.summaries as List).collect { it.id as String })
                     String categoryId = chapter.name.substring(chapter.name.indexOf('.') + 1)
                     String contentPath = route + '/summary/' + lang + '/content/' + categoryId + '/summary.json'
                     put(result, contentPath, [version:1, moduleId:route, language:lang,
-                            categoryId:categoryId, section:markdown, summaries:doc.summaries])
+                            categoryId:categoryId, section:roadmap, summaries:doc.summaries])
                     items.add([categoryId:categoryId, title:categoryId,
                             content:'/module/' + encode(route) + '/summary/' + encode(lang) +
                                     '/content/' + encode(categoryId) + '/summary.json',

@@ -7,8 +7,8 @@ import org.yaml.snakeyaml.Yaml
 
 /**
  * STEP 5's reviewed AC Markdown is authoritative. Each VI chapter owns
- * exactly summary/section.md and summary/summaries.yml; no AI or conversion
- * of lesson prose is performed. Other chapter siblings are never touched.
+ * exactly summary/section.yml and summary/summaries.yml. Chapter AC Markdown
+ * is converted deterministically to roadmap YAML; lesson prose is unchanged.
  */
 class SummarySheetImportService {
     static final int MAX_CELL = 30000
@@ -110,8 +110,9 @@ class SummarySheetImportService {
             if (!section || lessons.any { !it.summary }) {
                 throw new GradleException('Incomplete Summary AC for chapter ' + chapter)
             }
+            Map structured = SummarySectionYamlService.fromMarkdown(section, lessons*.id as List<String>)
             prepared[chapter] = [
-                    'section.md': section,
+                    'section.yml': writer.dump(structured),
                     'summaries.yml': writer.dump([summaries: lessons])
             ]
         }

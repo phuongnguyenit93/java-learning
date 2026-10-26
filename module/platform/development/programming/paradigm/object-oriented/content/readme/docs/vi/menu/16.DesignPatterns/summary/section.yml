@@ -1,0 +1,113 @@
+version: 1
+type: LEARNING_ROADMAP
+title: MẪU THIẾT KẾ — LIÊN KẾT BÀI HỌC
+roadmapHeading: Mạch liên kết bài học
+roadmap:
+- id: design-patterns-001
+  order: 1
+  title: 'Mẫu thiết kế: vấn đề, bối cảnh và đánh đổi'
+  description: Mô tả pattern qua vấn đề, bối cảnh, ràng buộc và đánh đổi; so sánh switch/Strategy trên checkout trước khi
+    chọn abstraction.
+  transition:
+    to: design-patterns-002
+    description: '**Từ cách cân nhắc vấn đề và trade-off → chọn kỹ thuật tạo đối tượng theo quan hệ biến thiên thực.**'
+- id: design-patterns-002
+  order: 2
+  title: Factory Method và Abstract Factory
+  description: Tách quyết định tạo Product bằng Creator subclass hoặc Abstract Factory cho họ UI Light/Dark nhất quán.
+  transition:
+    to: design-patterns-003
+    description: '**Từ factory chọn class/họ sản phẩm → xét cách cấu hình từng object phức tạp và các bất biến khởi tạo.**'
+- id: design-patterns-003
+  order: 3
+  title: Builder và việc tạo đối tượng phức tạp
+  description: Tổ chức các bước tạo Order nhiều trường bằng fluent Builder, kiểm tra bất biến tại build() và chụp snapshot
+    dữ liệu.
+  transition:
+    to: design-patterns-004
+    description: '**Từ chất lượng khởi tạo object → đánh giá vòng đời của instance dùng chung và rủi ro mutable state.**'
+- id: design-patterns-004
+  order: 4
+  title: Singleton và rủi ro trạng thái dùng chung
+  description: Quản lý một instance theo phạm vi xác định, phân biệt initialization với thread safety, scope Spring và dependency
+    injection.
+  transition:
+    to: design-patterns-005
+    description: '**Từ quyền sở hữu và vòng đời object → chuyển sang ranh giới tích hợp SDK với contract khác.**'
+- id: design-patterns-005
+  order: 5
+  title: Adapter và tích hợp giao diện khác nhau
+  description: Chuyển chữ ký, dữ liệu tiền tệ, trạng thái và lỗi từ SDK cũ sang hợp đồng PaymentGateway do ứng dụng sở hữu.
+  transition:
+    to: design-patterns-006
+    description: '**Từ đổi hợp đồng bằng Adapter → chuyển góc nhìn sang giữ nguyên interface nhưng bọc thêm hành vi.**'
+- id: design-patterns-006
+  order: 6
+  title: Decorator và bổ sung hành vi
+  description: Bổ sung prefix, giới hạn độ dài, metric cho MessageChannel qua wrapper giữ cùng interface, lưu ý thứ tự và
+    lỗi.
+  transition:
+    to: design-patterns-007
+    description: '**Từ chuỗi wrapper quanh một component → đơn giản hóa nhiều subsystem bằng một điểm vào cấp cao.**'
+- id: design-patterns-007
+  order: 7
+  title: Facade và đơn giản hóa cách sử dụng
+  description: Gom quy trình báo giá qua Catalog, Inventory, Discount, Shipping thành API quote rõ ràng và kiểm thử được.
+  transition:
+    to: design-patterns-008
+    description: '**Từ API cấp cao ổn định → đóng gói các công thức thay thế bên trong workflow.**'
+- id: design-patterns-008
+  order: 8
+  title: Strategy và thay thế thuật toán
+  description: Thay chính sách giảm giá bằng các DiscountStrategy qua composition, bảo toàn contract và giới hạn lựa chọn.
+  transition:
+    to: design-patterns-009
+    description: '**Từ việc chọn thuật toán → xem hành vi đổi theo chính trạng thái vòng đời và transition hợp lệ.**'
+- id: design-patterns-009
+  order: 9
+  title: State và hành vi theo trạng thái
+  description: Đóng gói hành vi theo trạng thái Order, bảo vệ ma trận transition và kiểm soát consistency.
+  transition:
+    to: design-patterns-010
+    description: '**Từ chuyển trạng thái nội bộ → thông báo nhiều thành phần quan tâm mà không ghép cứng chúng.**'
+- id: design-patterns-010
+  order: 10
+  title: Observer và thông báo thay đổi
+  description: Thông báo trạng thái đổi tới nhiều listener, bảo vệ subscription lifecycle, event order và transaction boundary.
+  transition:
+    to: design-patterns-011
+    description: '**Từ phản ứng theo sự kiện → xem một loại phối hợp khác: khung thuật toán cố định với bước tùy biến.**'
+- id: design-patterns-011
+  order: 11
+  title: Template Method và khung thuật toán
+  description: Giữ khung xuất báo cáo trong final generate(), dành primitive operations và hooks cho subclass tùy biến.
+  transition:
+    to: design-patterns-012
+    description: '**Từ khung thuật toán chia sẻ → đóng gói một yêu cầu riêng thành object có thể thực thi và ghi lịch sử.**'
+- id: design-patterns-012
+  order: 12
+  title: Command và đóng gói yêu cầu
+  description: Biến yêu cầu AddTask/CompleteTask thành object với Receiver, Invoker và undo/redo có lịch sử.
+  transition:
+    to: design-patterns-013
+    description: '**Từ nhiều cách tổ chức linh hoạt → đánh giá lại chi phí pattern, giữ thiết kế đơn giản khi biến thể không
+      thực sự cần.**'
+- id: design-patterns-013
+  order: 13
+  title: Khi mẫu thiết kế làm hệ thống phức tạp hơn cần thiết
+  description: |-
+    So sánh lợi ích mở rộng với chi phí abstraction, tránh God Factory/Facade và refactor dựa trên hành vi.
+
+    **Mối liên hệ:** Chương bắt đầu bằng cách chọn pattern theo bối cảnh, rồi xem lần lượt cách tạo object, tích hợp và tổ chức cấu trúc, thay đổi thuật toán/trạng thái, thông báo sự kiện và đóng gói workflow/yêu cầu. Các mẫu chia sẻ kỹ thuật composition, kế thừa và đa hình nhưng giải quyết những vấn đề khác nhau; bài cuối yêu cầu so sánh lợi ích với chi phí thực tế, chỉ giữ ranh giới nào bảo vệ contract và khả năng thay đổi đã có bằng chứng.
+
+    [↓ Xem bảng đối chiếu các bài học](#2-bảng-đối-chiếu-các-bài-học)
+  transition: null
+comparisonMarkdown: |-
+  ## 2. Bảng đối chiếu các bài học
+
+  | Tiêu chí | Bài 1 | Bài 2 | Bài 3 | Bài 4 | Bài 5 | Bài 6 | Bài 7 | Bài 8 | Bài 9 | Bài 10 | Bài 11 | Bài 12 | Bài 13 |
+  | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Tên | Mẫu thiết kế: vấn đề, bối cảnh và đánh đổi | Factory Method và Abstract Factory | Builder và việc tạo đối tượng phức tạp | Singleton và rủi ro trạng thái dùng chung | Adapter và tích hợp giao diện khác nhau | Decorator và bổ sung hành vi | Facade và đơn giản hóa cách sử dụng | Strategy và thay thế thuật toán | State và hành vi theo trạng thái | Observer và thông báo thay đổi | Template Method và khung thuật toán | Command và đóng gói yêu cầu | Khi mẫu thiết kế làm hệ thống phức tạp hơn cần thiết |
+  | Vấn đề cần hiểu | Vì sao cần pattern? | Tạo một Product hay cả họ? | Tạo object nhiều ràng buộc? | Một instance có an toàn? | SDK khác contract ra sao? | Bọc thêm hành vi theo thứ tự? | Client biết quá nhiều subsystem? | Thay thuật toán nào? | Đổi state nào hợp lệ? | Ai nhận sự kiện và lúc nào? | Bước workflow nào giữ cố định? | Ai thực thi và hoàn tác lệnh? | Abstraction nào thật sự đáng có? |
+  | Giá trị đối với OOP/module | Quyết định dựa trên bối cảnh | Giảm phụ thuộc loại object cụ thể | Khởi tạo hợp lệ, dễ đọc | Tránh rò request/race | Bảo vệ domain khỏi vendor API | Ghép hành vi mà không sửa lõi | Ranh giới module gọn | Đa hình thuật toán theo hợp đồng | Giữ invariant vòng đời | Giảm coupling giữa publisher/listeners | Tái sử dụng khung ổn định | Tách nguồn gọi khỏi xử lý | Giảm indirection vô ích |
+  | Tư duy hình thành | Vấn đề trước tên mẫu | Tạo đúng product/họ | Dựng đủ trạng thái hợp lệ | Scope khác thread safety | Map cả ý nghĩa và lỗi | Thứ tự bọc là hành vi | Đơn giản phía client, không giấu rủi ro | Biến thể có chủ sở hữu | Transition theo luật | Phát sau thay đổi, quản lý lifecycle | Ổn định trước, mở rộng điểm nhỏ | Yêu cầu là một đơn vị thực thi | Đủ đơn giản nhưng giữ contract |

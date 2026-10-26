@@ -214,7 +214,7 @@ class ModuleContentExcelSyncService {
         File enMenu = new File(module, 'content/readme/docs/en/menu')
         groups.each { Map group ->
             String chapter = group.source.toString().replaceFirst('/[^/]+$', '')
-            File section = new File(enMenu, chapter + '/summary/section.md')
+            File section = new File(enMenu, chapter + '/summary/section.yml')
             File summary = new File(enMenu, chapter + '/summary/summaries.yml')
             File viSummary = new File(module, 'content/readme/docs/vi/menu/' +
                     chapter + '/summary/summaries.yml')
@@ -230,9 +230,14 @@ class ModuleContentExcelSyncService {
                     (doc.summaries as List).size() != (group.children as List).size()) {
                 throw new GradleException('EN Summary lesson count mismatch: ' + chapter)
             }
-            set(sheet, group.row as int, 29, section.getText('UTF-8'), report)
             String stem = group.filename.toString().replaceFirst(/(?i)\.md$/, '')
             String slug = ReadmeSheetImportService.slugFromStem(stem)
+            List<String> ids = (0..<(group.children as List).size()).collect { int i ->
+                slug + '-' + String.format('%03d', i + 1)
+            }
+            set(sheet, group.row as int, 29,
+                    SummarySectionYamlService.toMarkdown(
+                            SummarySectionYamlService.read(section.getText('UTF-8'), ids), ids, 'en'), report)
             (group.children as List<Map>).eachWithIndex { Map child, int i ->
                 Map item = (doc.summaries as List)[i] as Map
                 String id = slug + '-' + String.format('%03d', i + 1)
