@@ -1,16 +1,46 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "JLS 21 — Packages and Modules"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-7.html"
+    description: "Đặc tả module-info.java, requires, exports, opens, uses và provides; nền tảng Java Platform Module System (JPMS) từ Java 9."
+  - title: "Java SE 21 — ModuleDescriptor"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/module/ModuleDescriptor.html"
+    description: "Mô tả named, open và automatic module; dependencies, exported/open packages và khai báo service providers."
+  - title: "Java SE 21 — ModuleFinder"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/module/ModuleFinder.html"
+    description: "Khám phá module trên module path và hỗ trợ resolution, service binding trong môi trường modular."
+  - title: "Java SE 21 — java.lang.Module"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Module.html"
+    description: "Đại diện module tại runtime, quan hệ đọc module, exports, opens và reflection boundaries."
+  - title: "JDK 21 — jlink Command"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/specs/man/jlink.html"
+    description: "Ghép các module cần thiết thành custom runtime image nhỏ gọn, phù hợp triển khai ứng dụng modular."
+  - title: "JDK 21 — jshell Command"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/specs/man/jshell.html"
+    description: "REPL để thử trực tiếp biểu thức, phương thức và lớp, hữu ích khi học ngôn ngữ hoặc kiểm chứng ý tưởng."
+  - title: "Java SE 21 — List Factory Methods"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html"
+    description: "Các factory List.of tạo danh sách không thể thay đổi, loại trừ null, phù hợp khai báo tập dữ liệu cố định."
+  - title: "Java SE 21 — Set Factory Methods"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Set.html"
+    description: "Set.of tạo tập không thể thay đổi, không chấp nhận null hoặc phần tử trùng lặp."
+  - title: "Java SE 21 — Map Factory Methods"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html"
+    description: "Map.of và Map.ofEntries tạo map không thể thay đổi, không cho phép null hoặc khóa trùng."
+  - title: "Java SE 21 — Stream"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/stream/Stream.html"
+    description: "Các phép bổ sung từ Java 9: takeWhile, dropWhile, ofNullable và iterate có điều kiện dừng."
+  - title: "Java SE 21 — Optional"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html"
+    description: "Các tiện ích Java 9 như ifPresentOrElse, or và stream cho luồng xử lý giá trị tùy chọn."
+  - title: "Java SE 21 — ProcessHandle"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/ProcessHandle.html"
+    description: "Quản lý và quan sát tiến trình, PID, metadata, child processes và cơ chế onExit."
+  - title: "Java SE 21 — Flow API"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/Flow.html"
+    description: "Các hợp đồng Reactive Streams gồm Publisher, Subscriber, Subscription, Processor và backpressure."
+  - title: "Java SE 21 — StackWalker"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/StackWalker.html"
+    description: "Duyệt stack frames một cách có kiểm soát để chẩn đoán và quan sát ngữ cảnh lời gọi."
+  - title: "Java SE 21 — VarHandle"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/invoke/VarHandle.html"
+    description: "Truy cập biến với memory ordering modes và thao tác atomic để xây dựng cấu trúc dữ liệu đồng thời."

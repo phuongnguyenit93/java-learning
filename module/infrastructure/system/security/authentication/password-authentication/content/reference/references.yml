@@ -1,16 +1,28 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "NIST SP 800-63B-4 — Authentication and Authenticator Management (Final, 2025)"
+    url: "https://csrc.nist.gov/pubs/sp/800/63/b/4/final"
+    description: "Tiêu chuẩn hiện hành về password authentication: độ dài, blocklist mật khẩu lộ lọt, rate limiting, hỗ trợ password manager, hashing và yêu cầu bảo đảm xác thực."
+  - title: "NIST SP 800-63B-4 — Password Authenticators"
+    url: "https://pages.nist.gov/800-63-4/sp800-63b/authenticators/"
+    description: "Chi tiết về password verifier và activation secret: xử lý Unicode, kiểm tra độ dài, kênh TLS, chống thử mật khẩu hàng loạt và bảo vệ hash bằng salt và cost factor."
+  - title: "OWASP — Authentication Cheat Sheet"
+    url: "https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html"
+    description: "Thiết kế luồng đăng nhập an toàn: phản hồi lỗi thống nhất tránh user enumeration, xác thực lại cho thao tác nhạy cảm, bảo vệ brute force và quản lý đổi mật khẩu."
+  - title: "OWASP — Password Storage Cheat Sheet"
+    url: "https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html"
+    description: "Lưu mật khẩu bằng thuật toán băm chậm như Argon2id, scrypt, bcrypt hoặc PBKDF2 tùy hoàn cảnh; per-user salt, pepper, tham số độ khó và nâng cấp hash."
+  - title: "RFC 9106 — Argon2 Memory-Hard Function"
+    url: "https://www.rfc-editor.org/rfc/rfc9106.html"
+    description: "Đặc tả hàm băm mật khẩu Argon2id với tham số memory cost, time cost, parallelism và salt; đối phó offline password guessing và time-memory trade-off."
+  - title: "OWASP — Forgot Password Cheat Sheet"
+    url: "https://cheatsheetseries.owasp.org/cheatsheets/Forgot_Password_Cheat_Sheet.html"
+    description: "Khôi phục và đặt lại mật khẩu: reset token ngẫu nhiên, một lần sử dụng, thời hạn ngắn, không tiết lộ sự tồn tại tài khoản, bảo vệ session sau reset."
+  - title: "OWASP — Credential Stuffing Prevention Cheat Sheet"
+    url: "https://cheatsheetseries.owasp.org/cheatsheets/Credential_Stuffing_Prevention_Cheat_Sheet.html"
+    description: "Phòng chống credential stuffing, password spraying và bot login bằng MFA, phát hiện hành vi bất thường, throttling, monitoring và kiểm soát theo rủi ro."
+  - title: "OWASP — Multifactor Authentication Cheat Sheet"
+    url: "https://cheatsheetseries.owasp.org/cheatsheets/Multifactor_Authentication_Cheat_Sheet.html"
+    description: "Kết hợp mật khẩu với yếu tố xác thực độc lập, giảm rủi ro phishing, lưu ý enrollment, fallback và recovery để không tạo đường vòng vượt MFA."
+  - title: "OWASP — Session Management Cheat Sheet"
+    url: "https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html"
+    description: "Quản lý phiên sau đăng nhập: session ID entropy, cookie Secure/HttpOnly/SameSite, session renewal, timeout, logout và vô hiệu hóa phiên khi rủi ro."

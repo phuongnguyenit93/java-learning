@@ -1,16 +1,31 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "RFC 5280 — Internet X.509 PKI Certificate and CRL Profile"
+    url: "https://www.rfc-editor.org/rfc/rfc5280.html"
+    description: "Cấu trúc chứng chỉ X.509 v3, root/intermediate CA, extensions, xây dựng và xác thực certification path, CRL và thu hồi chứng chỉ."
+  - title: "RFC 2986 — PKCS #10 Certification Request Syntax"
+    url: "https://www.rfc-editor.org/rfc/rfc2986.html"
+    description: "Định dạng Certificate Signing Request (CSR), subject, public key, attributes và chữ ký chứng minh quyền sở hữu private key."
+  - title: "RFC 3647 — Certificate Policy and Certification Practices Framework"
+    url: "https://www.rfc-editor.org/rfc/rfc3647.html"
+    description: "Khung Certificate Policy (CP) và Certification Practice Statement (CPS), trách nhiệm CA/RA, cấp mới, gia hạn, re-key, thu hồi và audit."
+  - title: "RFC 9525 — Service Identity in TLS"
+    url: "https://www.rfc-editor.org/rfc/rfc9525.html"
+    description: "Xác minh danh tính dịch vụ qua subjectAltName, DNS/IP identifiers, hostname matching và ranh giới với kiểm tra certificate chain."
+  - title: "RFC 6960 — Online Certificate Status Protocol (OCSP)"
+    url: "https://www.rfc-editor.org/rfc/rfc6960.html"
+    description: "Tra cứu trạng thái chứng chỉ good/revoked/unknown từ OCSP responder; khác biệt với kiểm tra CRL và giới hạn của kết quả trạng thái."
+  - title: "RFC 8555 — Automatic Certificate Management Environment (ACME)"
+    url: "https://www.rfc-editor.org/rfc/rfc8555.html"
+    description: "Tự động xác thực quyền kiểm soát domain, cấp phát và quản lý vòng đời chứng chỉ trong Web PKI bằng ACME."
+  - title: "RFC 7030 — Enrollment over Secure Transport (EST)"
+    url: "https://www.rfc-editor.org/rfc/rfc7030.html"
+    description: "Giao thức enrollment chứng chỉ client và phân phối chứng chỉ CA trên kênh bảo mật; ứng dụng trong PKI thiết bị và doanh nghiệp."
+  - title: "RFC 9162 — Certificate Transparency Version 2.0"
+    url: "https://www.rfc-editor.org/rfc/rfc9162.html"
+    description: "Đặc tả Experimental về log chứng chỉ TLS công khai, audit CA và phát hiện cấp phát sai; phân biệt giao thức với triển khai thực tế."
+  - title: "NIST SP 800-57 Part 1 Rev. 5 — Key Management"
+    url: "https://www.nist.gov/publications/recommendation-key-management-part-1-general-1"
+    description: "Nguyên tắc tạo, lưu trữ, phân phối, bảo vệ, sao lưu, luân chuyển và hủy cryptographic keys qua toàn bộ vòng đời."
+  - title: "CA/Browser Forum — TLS Server Baseline Requirements"
+    url: "https://cabforum.org/working-groups/server/baseline-requirements/requirements/"
+    description: "Yêu cầu thực hành đối với CA phát hành chứng chỉ TLS công khai: xác minh danh tính, quản trị khóa, cấp phát, thu hồi, kiểm toán và thời hạn."

@@ -1,16 +1,37 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "Google Cloud — How Application Default Credentials Works"
+    url: "https://docs.cloud.google.com/docs/authentication/application-default-credentials"
+    description: "Cơ chế ADC tìm credentials theo thứ tự: GOOGLE_APPLICATION_CREDENTIALS, tệp ADC cục bộ rồi service account gắn với tài nguyên qua metadata server; phân biệt file cấu hình federation và private key."
+  - title: "Google Cloud — Set Up Application Default Credentials"
+    url: "https://docs.cloud.google.com/docs/authentication/provide-credentials-adc"
+    description: "Cách chọn phương pháp cung cấp ADC theo môi trường vận hành, phân biệt credentials của ứng dụng với thông tin đăng nhập dùng riêng cho gcloud CLI."
+  - title: "Google Cloud — Set Up ADC for Local Development"
+    url: "https://docs.cloud.google.com/docs/authentication/set-up-adc-local-dev-environment"
+    description: "Dùng gcloud auth application-default login, user credentials hoặc service account impersonation khi phát triển; tránh khóa dài hạn nếu có phương án an toàn hơn."
+  - title: "Google Cloud — Set Up ADC with an Attached Service Account"
+    url: "https://docs.cloud.google.com/docs/authentication/set-up-adc-attached-service-account"
+    description: "Gắn service account chuyên dụng vào tài nguyên Google Cloud, cấp vai trò IAM tối thiểu và để ADC nhận token ngắn hạn từ metadata server."
+  - title: "Google Cloud — Set Up ADC for Containers"
+    url: "https://docs.cloud.google.com/docs/authentication/set-up-adc-containerized-environment"
+    description: "Hướng dẫn xác thực trong container dùng cho kiểm thử cục bộ, Cloud Run và GKE; phân biệt local ADC với workload identity trên nền tảng."
+  - title: "Google Cloud — Set Up ADC On-premises or Another Cloud"
+    url: "https://docs.cloud.google.com/docs/authentication/set-up-adc-on-premises"
+    description: "Ưu tiên Workload Identity Federation khi chạy workload bên ngoài Google Cloud; dùng credential configuration file thay thế service account key dài hạn."
+  - title: "Google Cloud — Workload Identity Federation"
+    url: "https://docs.cloud.google.com/iam/docs/workload-identity-federation"
+    description: "Liên kết danh tính từ nhà cung cấp bên ngoài bằng STS; cấp quyền trực tiếp hoặc impersonate service account mà không tạo khóa tĩnh."
+  - title: "Google Cloud — Service Account Impersonation"
+    url: "https://docs.cloud.google.com/iam/docs/service-account-impersonation"
+    description: "Sử dụng credentials tạm thời, chính sách IAM và audit logs để giảm rủi ro khi ứng dụng thực thi theo danh tính service account."
+  - title: "Google Cloud — Best Practices for Service Accounts"
+    url: "https://docs.cloud.google.com/iam/docs/best-practices-service-accounts"
+    description: "Thiết lập least privilege, phân tách service account theo workload, giới hạn quyền impersonation và bảo vệ metadata server."
+  - title: "Google Cloud — Best Practices for Managing Service Account Keys"
+    url: "https://docs.cloud.google.com/iam/docs/best-practices-for-managing-service-account-keys"
+    description: "Tránh khóa dài hạn; nếu bất khả kháng phải kiểm soát lưu trữ, không đưa khóa lên source repository, giám sát lộ lọt và xoay vòng/thu hồi."
+  - title: "Google Cloud — Best Practices for Workload Identity Federation"
+    url: "https://docs.cloud.google.com/iam/docs/best-practices-for-using-workload-identity-federation"
+    description: "Giới hạn danh tính ngoài được tin cậy, áp dụng attribute mapping và conditions, tránh privilege escalation và đặc quyền quá rộng."
+  - title: "Google Cloud — Troubleshoot ADC"
+    url: "https://docs.cloud.google.com/docs/authentication/troubleshoot-adc"
+    description: "Kiểm tra nguồn credentials có thứ tự ưu tiên, sự khác biệt gcloud CLI/ADC, quyền IAM, quota project, scopes và lỗi định dạng credential."

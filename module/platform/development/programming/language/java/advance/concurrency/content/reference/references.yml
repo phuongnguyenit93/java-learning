@@ -1,16 +1,22 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "Java Language Specification — Chapter 17: Threads and Locks"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-17.html"
+    description: "Đặc tả chính thức về đồng bộ hóa, wait/notify, ngắt luồng, Java Memory Model và quan hệ happens-before."
+  - title: "Java SE 21 API — Thread"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Thread.html"
+    description: "Vòng đời thread, start/join, interruption, ThreadLocal và platform/virtual threads."
+  - title: "Java SE 21 API — java.util.concurrent"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/package-summary.html"
+    description: "Tài liệu nền về ExecutorService, Future, thread pools, queues, synchronizers, ForkJoin và các công cụ concurrency."
+  - title: "Java SE 21 API — java.util.concurrent.locks"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/locks/package-summary.html"
+    description: "Lock, Condition, ReentrantLock và ReadWriteLock; đối chiếu với synchronized và intrinsic monitors."
+  - title: "Java SE 21 API — java.util.concurrent.atomic"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/atomic/package-summary.html"
+    description: "Atomic variables, compare-and-set và cập nhật dữ liệu an toàn giữa các thread."
+  - title: "Java SE 21 API — CompletableFuture"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/CompletableFuture.html"
+    description: "Lập trình bất đồng bộ, kết hợp CompletionStage, xử lý lỗi và lựa chọn Executor."
+  - title: "OpenJDK JEP 444 — Virtual Threads"
+    url: "https://openjdk.org/jeps/444"
+    description: "Đặc tả thiết kế virtual threads được phát hành chính thức từ Java 21; phạm vi, cách dùng và giới hạn."

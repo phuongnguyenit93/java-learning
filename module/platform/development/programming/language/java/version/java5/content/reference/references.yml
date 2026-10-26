@@ -1,16 +1,43 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "JLS 21 — Generic Types and Type Parameters"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-4.html"
+    description: "Đặc tả Generics, parameterized types, wildcard, type variables và type erasure; các tính năng từ Java 5 vẫn nền tảng trong Java hiện đại."
+  - title: "JLS 21 — Boxing and Unboxing Conversions"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-5.html"
+    description: "Quy tắc tự chuyển đổi giữa primitive và wrapper, unboxing null, numeric conversion và khả năng phát sinh NullPointerException."
+  - title: "JLS 21 — Static Import Declarations"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-7.html"
+    description: "Cú pháp import static cho method và hằng số; lưu ý tránh lạm dụng vì giảm tính rõ ràng khi đọc mã."
+  - title: "JLS 21 — Enum Classes and Generic Methods"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-8.html"
+    description: "Đặc tả enum, constructor, method, generic class/method, covariant return và các giới hạn khai báo được hỗ trợ hiện nay."
+  - title: "JLS 21 — Annotation Interfaces"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-9.html"
+    description: "Cú pháp annotation interface, annotation element, meta-annotation, retention và target trong hệ thống kiểu Java hiện đại."
+  - title: "JLS 21 — Enhanced for Statement"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-14.html"
+    description: "Vòng lặp for-each áp dụng với mảng và Iterable, quy tắc lặp và các hạn chế khi thay đổi collection."
+  - title: "JLS 21 — Variable Arity Method Invocation"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-15.html"
+    description: "Lời gọi phương thức varargs, quá trình lựa chọn overload, chuyển đổi argument và lưu ý về generic varargs."
+  - title: "Java SE 21 API — Annotations"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/package-summary.html"
+    description: "API annotation chuẩn, RetentionPolicy, ElementType, Target và nền tảng xử lý metadata lúc biên dịch hoặc runtime."
+  - title: "Java SE 21 API — EnumSet"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/EnumSet.html"
+    description: "Cấu trúc Set chuyên dụng cho enum, phù hợp mô hình các lựa chọn hoặc trạng thái có kiểu rõ ràng."
+  - title: "Java SE 21 API — Scanner"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Scanner.html"
+    description: "Phân tích văn bản và dữ liệu nguyên thủy với delimiter, regular expressions và locale; một API có từ Java 5 vẫn còn hỗ trợ."
+  - title: "Java SE 21 API — Formatter"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Formatter.html"
+    description: "Định dạng chuỗi, số và dữ liệu theo locale; là nền tảng cho các lời gọi format và printf."
+  - title: "Java SE 21 API — java.util.concurrent"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/package-summary.html"
+    description: "Executor, Future, BlockingQueue, Semaphore và các tiện ích lập trình đồng thời được giới thiệu từ Java 5, tiếp tục dùng hiện nay."
+  - title: "Java SE 21 API — java.util.concurrent.atomic"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/atomic/package-summary.html"
+    description: "Các kiểu dữ liệu atomic và thao tác cập nhật thread-safe, hỗ trợ thuật toán đồng thời không khóa trên một số biến."
+  - title: "Java SE 21 API — java.util.concurrent.locks"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/locks/package-summary.html"
+    description: "Lock, Condition và ReadWriteLock để đồng bộ hóa khi cần khả năng điều khiển linh hoạt hơn synchronized."

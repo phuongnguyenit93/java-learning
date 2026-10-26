@@ -1,16 +1,31 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "OWASP — REST Security Cheat Sheet"
+    url: "https://cheatsheetseries.owasp.org/cheatsheets/REST_Security_Cheat_Sheet.html"
+    description: "Hướng dẫn dùng API key để nhận diện và giới hạn lưu lượng gọi API; không chỉ dựa vào API key cho tài nguyên nhạy cảm, vẫn cần xác thực/phân quyền phù hợp và TLS."
+  - title: "Google Cloud — Best Practices for Managing API Keys"
+    url: "https://docs.cloud.google.com/docs/authentication/api-keys-best-practices"
+    description: "Giới hạn API key theo ứng dụng/API, tránh hardcode hoặc đưa vào query string, bảo vệ khi lưu trữ/vận chuyển, rotation, xóa khóa cũ và theo dõi lạm dụng."
+  - title: "Google Cloud — Manage API Keys"
+    url: "https://docs.cloud.google.com/docs/authentication/api-keys"
+    description: "Phân biệt API key dùng để nhận diện dự án và quota với authorization key gắn service account; cách tạo, hạn chế và quản lý khóa, tránh nhầm API key với cơ chế xác thực người dùng."
+  - title: "OWASP — Secrets Management Cheat Sheet"
+    url: "https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html"
+    description: "Các nguyên tắc vòng đời bí mật API/HMAC: sinh khóa có entropy phù hợp, lưu trong secret manager, phân quyền tối thiểu, phân phối, rotation, thu hồi và kiểm toán."
+  - title: "RFC 2104 — HMAC: Keyed-Hashing for Message Authentication"
+    url: "https://www.rfc-editor.org/rfc/rfc2104.html"
+    description: "Định nghĩa HMAC trên hàm băm mật mã và shared secret; phân biệt kiểm tra tính toàn vẹn/xác thực thông điệp với mã hóa hoặc xác thực danh tính riêng lẻ."
+  - title: "NIST FIPS 198-1 — The Keyed-Hash Message Authentication Code"
+    url: "https://csrc.nist.gov/pubs/fips/198-1/final"
+    description: "Chuẩn về phép tính HMAC bằng hàm băm và khóa bí mật dùng chung; nền tảng cho thiết kế và đánh giá cơ chế MAC."
+  - title: "RFC 4231 — HMAC-SHA Test Vectors"
+    url: "https://www.rfc-editor.org/rfc/rfc4231.html"
+    description: "Các bộ test chuẩn cho HMAC-SHA-224/256/384/512, dùng kiểm tra tính đúng đắn và khả năng tương tác giữa các triển khai."
+  - title: "RFC 9421 — HTTP Message Signatures"
+    url: "https://www.rfc-editor.org/rfc/rfc9421.html"
+    description: "Chuẩn ký/MAC trên thành phần HTTP request: header, method, path, signature parameters, timestamp và nonce nhằm xác minh tính toàn vẹn và giảm replay."
+  - title: "RFC 9530 — Digest Fields"
+    url: "https://www.rfc-editor.org/rfc/rfc9530.html"
+    description: "Cách dùng Content-Digest và Repr-Digest xác minh digest của payload HTTP; digest riêng lẻ không xác thực người gửi, cần kết hợp chữ ký/MAC để ràng buộc nội dung."
+  - title: "AWS IAM — Create a Signed API Request (SigV4)"
+    url: "https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_sigv-create-signed-request.html"
+    description: "Ví dụ xác thực request bằng HMAC-SHA256: canonical request, string-to-sign, derived signing key, chữ ký trong Authorization header và kiểm tra toàn vẹn thành phần request."

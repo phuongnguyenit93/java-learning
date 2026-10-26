@@ -1,16 +1,28 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "Dev.java — Lambda Expressions"
+    url: "https://dev.java/learn/lambdas/"
+    description: "Chuỗi bài học chính thức về lambda expressions, functional interfaces, method references, hàm hợp thành và Comparator."
+  - title: "Dev.java — Functional Interfaces"
+    url: "https://dev.java/learn/language/fp/lambdas/functional-interfaces/"
+    description: "Bốn nhóm giao diện hàm của Java gồm Supplier, Consumer, Predicate và Function, cùng BiFunction và primitive specializations."
+  - title: "Dev.java — Method References"
+    url: "https://dev.java/learn/language/fp/lambdas/method-references/"
+    description: "Cú pháp và các dạng method reference: static, bound/unbound instance methods, constructor reference và tương đương lambda."
+  - title: "Dev.java — The Stream API"
+    url: "https://dev.java/learn/api/streams/"
+    description: "Lộ trình map-filter-reduce, intermediate/terminal operations, collectors, Optional và parallel streams trên dữ liệu trong bộ nhớ."
+  - title: "JLS Java SE 21 — Chapter 9: Functional Interfaces"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-9.html"
+    description: "Đặc tả §9.8 về functional interface, single abstract method và khả năng tương thích với lambda/method references."
+  - title: "Java SE 21 API — java.util.function"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/package-summary.html"
+    description: "Các functional interfaces tiêu chuẩn như Function, Predicate, Consumer, Supplier, Operators và biến thể cho kiểu nguyên thủy."
+  - title: "Java SE 21 API — java.util.stream"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/stream/package-summary.html"
+    description: "Mô hình Stream pipeline, tính lazy, thao tác không trạng thái/có trạng thái, non-interference, reduction và xử lý song song."
+  - title: "Java SE 21 API — Collectors"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/stream/Collectors.html"
+    description: "Các collector có sẵn như toList, groupingBy, partitioningBy, mapping, reducing và tính chất gom kết quả."
+  - title: "Java SE 21 API — Optional"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html"
+    description: "Biểu diễn giá trị có thể vắng mặt và phối hợp map, flatMap, filter, orElse, ifPresent trong xử lý hàm."

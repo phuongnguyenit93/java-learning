@@ -1,16 +1,31 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "RFC 6749 — The OAuth 2.0 Authorization Framework"
+    url: "https://www.rfc-editor.org/rfc/rfc6749.html"
+    description: "Đặc tả cơ sở cho cấp phát access token và refresh token, các OAuth grant, token endpoint, scope, thời hạn hiệu lực và refresh flow."
+  - title: "RFC 6750 — OAuth 2.0 Bearer Token Usage"
+    url: "https://www.rfc-editor.org/rfc/rfc6750.html"
+    description: "Cách trình bày bearer access token qua HTTP Authorization header, yêu cầu TLS và chống rò rỉ token trong vận chuyển, lưu trữ."
+  - title: "RFC 9700 — Best Current Practice for OAuth 2.0 Security"
+    url: "https://www.rfc-editor.org/rfc/rfc9700.html"
+    description: "Hướng dẫn bảo mật cập nhật về refresh token rotation, replay detection, expiration/revocation, PKCE, audience restriction và sender-constrained token."
+  - title: "RFC 7009 — OAuth 2.0 Token Revocation"
+    url: "https://www.rfc-editor.org/rfc/rfc7009.html"
+    description: "Chuẩn revocation endpoint để thu hồi access/refresh token khi logout, ngừng cấp quyền hoặc nghi ngờ token bị lộ."
+  - title: "RFC 7662 — OAuth 2.0 Token Introspection"
+    url: "https://www.rfc-editor.org/rfc/rfc7662.html"
+    description: "Định nghĩa introspection endpoint để resource server kiểm tra trạng thái active, expiration, scope và metadata của token."
+  - title: "RFC 9068 — JWT Profile for OAuth 2.0 Access Tokens"
+    url: "https://www.rfc-editor.org/rfc/rfc9068.html"
+    description: "Chuẩn hóa cấu trúc JWT access token, issuer, audience, subject, expiration và quy trình validate token tại resource server."
+  - title: "RFC 8725 — JSON Web Token Best Current Practices"
+    url: "https://www.rfc-editor.org/rfc/rfc8725.html"
+    description: "Biện pháp xác minh JWT an toàn: thuật toán chữ ký được phép, key selection, issuer/audience validation, chống token substitution."
+  - title: "RFC 9449 — OAuth 2.0 Demonstrating Proof of Possession"
+    url: "https://www.rfc-editor.org/rfc/rfc9449.html"
+    description: "Ràng buộc access/refresh token với public key của client bằng DPoP, giảm nguy cơ sử dụng token bị đánh cắp và phát lại."
+  - title: "RFC 8705 — OAuth 2.0 Mutual-TLS and Certificate-Bound Tokens"
+    url: "https://www.rfc-editor.org/rfc/rfc8705.html"
+    description: "Ràng buộc token với chứng chỉ mTLS, xác thực client và ngăn bearer token bị sử dụng ngoài phiên sở hữu chứng chỉ."
+  - title: "OWASP Cheat Sheet — OAuth2"
+    url: "https://cheatsheetseries.owasp.org/cheatsheets/OAuth2_Cheat_Sheet.html"
+    description: "Khuyến nghị thực hành an toàn cho OAuth, quản lý access/refresh tokens, sender-constraining, giảm rủi ro authorization code và token leakage."

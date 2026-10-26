@@ -1,16 +1,31 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "Dev.java — The Collections Framework"
+    url: "https://dev.java/learn/api/collections-and-streams/collections-framework/"
+    description: "Lộ trình chính thức về cấu trúc Collections Framework, hierarchy, List, Set, Map, Queue, immutable collections và cách chọn collection."
+  - title: "Dev.java — Storing Data Using the Collections Framework"
+    url: "https://dev.java/learn/api/collections-and-streams/collections-framework/intro/"
+    description: "Phân biệt interfaces và implementations, chọn collection theo truy cập index, uniqueness, key-value, queue và iteration."
+  - title: "Java SE 21 — Collection Interface"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Collection.html"
+    description: "Hợp đồng Collection, thao tác add/remove, iterable, stream và các view collections; nền tảng cho List, Set và Queue."
+  - title: "Java SE 21 — List Interface"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html"
+    description: "Danh sách có thứ tự, cho phép phần tử trùng, truy cập theo index, ListIterator và khác biệt ArrayList/LinkedList."
+  - title: "Java SE 21 — Set Interface"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Set.html"
+    description: "Tập hợp không trùng phần tử, hợp đồng equals/hashCode và đặc điểm Set.of, HashSet, LinkedHashSet, TreeSet."
+  - title: "Java SE 21 — Map Interface"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html"
+    description: "Cặp khóa-giá trị, uniqueness của key, Map views, lưu ý mutable keys, Map.of và các kiểu HashMap, TreeMap."
+  - title: "Java SE 21 — Queue Interface"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Queue.html"
+    description: "Các cặp phương thức offer/add, poll/remove, peek/element và chính sách FIFO/priority trong queue."
+  - title: "Java SE 21 — Collections Utility"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Collections.html"
+    description: "Các thuật toán sort, binarySearch, reverse, shuffle và wrapper synchronized/unmodifiable collections."
+  - title: "Java SE 21 — Comparator Interface"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Comparator.html"
+    description: "Sắp xếp theo Comparator, comparing/thenComparing, natural order và tính nhất quán với equals trong sorted collections."
+  - title: "Oracle JDK 21 — Sequenced Collections, Sets, and Maps"
+    url: "https://docs.oracle.com/en/java/javase/21/core/creating-sequenced-collections-sets-and-maps.html"
+    description: "Các interface SequencedCollection, SequencedSet, SequencedMap của Java 21; getFirst/getLast, reversed view và encounter order."

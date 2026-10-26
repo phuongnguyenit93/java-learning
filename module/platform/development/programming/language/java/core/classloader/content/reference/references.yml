@@ -1,16 +1,28 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "JVM Specification Java SE 21 — Chapter 5: Loading, Linking, and Initializing"
+    url: "https://docs.oracle.com/javase/specs/jvms/se21/html/jvms-5.html"
+    description: "Đặc tả cơ chế bootstrap và user-defined class loaders, định danh lớp, loading constraints, linking, resolution và initialization trong JVM."
+  - title: "Java Language Specification Java SE 21 — Chapter 12: Execution"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-12.html"
+    description: "Góc nhìn ngôn ngữ Java về vòng đời lớp: load, verify, prepare, resolve, initialize và unload; thời điểm static initializer chạy."
+  - title: "Java SE 21 API — ClassLoader"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/ClassLoader.html"
+    description: "API và quy tắc parent-first delegation, loadClass/findClass/defineClass, bootstrap/platform/system loaders, resources và class loader tùy biến."
+  - title: "Java SE 21 API — URLClassLoader"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/net/URLClassLoader.html"
+    description: "Ví dụ class loader tải class và resource từ thư mục/JAR thông qua URL; parent delegation, close và tài nguyên."
+  - title: "Java SE 21 API — SecureClassLoader"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/security/SecureClassLoader.html"
+    description: "API xây dựng class loader có gắn CodeSource/ProtectionDomain và mối quan hệ với cơ chế tải lớp của Java."
+  - title: "Java SE 21 API — Class"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html"
+    description: "Đối tượng Class đại diện cho loại ở runtime; Class.forName, getClassLoader và class identity khi có nhiều class loader."
+  - title: "Java SE 21 API — ModuleLayer"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/ModuleLayer.html"
+    description: "Liên kết module graph với class loaders trong JPMS; boot layer và tạo module layers với một hoặc nhiều loaders."
+  - title: "Java SE 21 API — Thread"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Thread.html"
+    description: "Thread context class loader qua getContextClassLoader/setContextClassLoader và vai trò trong nạp dịch vụ hoặc framework."
+  - title: "Java SE 21 API — ServiceLoader"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ServiceLoader.html"
+    description: "Service provider loading qua class loaders và module layers; cơ chế khám phá/khởi tạo plugin tại runtime."

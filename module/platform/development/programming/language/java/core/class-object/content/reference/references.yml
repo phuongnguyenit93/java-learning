@@ -1,16 +1,28 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "Oracle Java SE 21 — Object API"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html"
+    description: "Lớp gốc của mọi class Java; hợp đồng equals, hashCode, toString, getClass, clone và các phương thức cơ bản của đối tượng."
+  - title: "Oracle Java SE 21 — Class API"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html"
+    description: "Đối tượng Class đại diện kiểu runtime, class literals, type metadata và thao tác kiểm tra kiểu."
+  - title: "Oracle Java SE 21 — Objects API"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Objects.html"
+    description: "Các hàm tiện ích cho object: equals, deepEquals, hash, requireNonNull và so sánh null-safe."
+  - title: "JLS 21 — Chapter 8: Classes"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-8.html"
+    description: "Khai báo class, fields, methods, constructor, instance/static members, access modifiers, nested class, record và enum."
+  - title: "JLS 21 — Chapter 4: Types, Values and Variables"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-4.html"
+    description: "Phân biệt kiểu nguyên thủy và kiểu tham chiếu, giá trị object/reference, null, biến và giá trị mặc định."
+  - title: "JLS 21 — Chapter 5: Conversions and Contexts"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-5.html"
+    description: "Các phép chuyển đổi kiểu tham chiếu, ép kiểu, boxing/unboxing và kiểm tra kiểu tại runtime."
+  - title: "JLS 21 — Chapter 6: Names"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-6.html"
+    description: "Scope và access control cho class, fields, methods, constructor; shadowing và cách phân giải tên."
+  - title: "JLS 21 — Chapter 12: Execution"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-12.html"
+    description: "Class loading, linking, initialization, quy trình khởi tạo instance và vòng đời object tại runtime."
+  - title: "JLS 21 — Chapter 15: Expressions"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-15.html"
+    description: "Biểu thức new, this, truy cập field, gọi method, instanceof và trình tự đánh giá khi tạo đối tượng."

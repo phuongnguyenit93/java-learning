@@ -1,16 +1,28 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "Oracle Java SE 21 — Troubleshooting Guide"
+    url: "https://docs.oracle.com/en/java/javase/21/troubleshoot/"
+    description: "Tài liệu nền tảng về quy trình chẩn đoán JVM, sự cố tiến trình, lỗi runtime, thu thập dữ liệu và hướng xử lý."
+  - title: "Oracle JDK 21 — jcmd Command"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/specs/man/jcmd.html"
+    description: "Lệnh chẩn đoán JVM đang chạy: thread dump, heap histogram, heap dump, Native Memory Tracking và điều khiển Flight Recorder."
+  - title: "Oracle JDK 21 — jfr Command"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/specs/man/jfr.html"
+    description: "Cách đọc, lọc, tóm tắt và phân tích tệp Java Flight Recorder để điều tra hiệu năng và sự kiện runtime."
+  - title: "Oracle JDK 21 — jstack Command"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/specs/man/jstack.html"
+    description: "Tham khảo cách lấy stack trace và thông tin lock của Java threads; chú ý trạng thái công cụ thử nghiệm."
+  - title: "Oracle JDK 21 — jmap Command"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/specs/man/jmap.html"
+    description: "Cú pháp heap histogram, heap dump và thống kê class loader khi cần điều tra đối tượng và bộ nhớ JVM."
+  - title: "Oracle JDK 21 — jstat Command"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/specs/man/jstat.html"
+    description: "Theo dõi các thống kê JVM theo thời gian, đặc biệt số liệu garbage collection; chú ý trạng thái công cụ thử nghiệm."
+  - title: "Oracle JDK 21 — jhsdb Command"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/specs/man/jhsdb.html"
+    description: "Điều tra core dump sau crash bằng Serviceability Agent; cảnh báo attach vào tiến trình đang chạy có rủi ro."
+  - title: "Oracle JDK 21 — java Command (Serviceability / Unified Logging)"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/specs/man/java.html"
+    description: "Tra cứu tùy chọn -Xlog, heap dump khi OutOfMemoryError và cài đặt JVM phục vụ giám sát, chẩn đoán."
+  - title: "Oracle Java SE 21 — Troubleshoot Memory Leaks"
+    url: "https://docs.oracle.com/en/java/javase/21/troubleshoot/troubleshooting-memory-leaks.html"
+    description: "Quy trình phân biệt thiếu heap với memory leak, đọc GC logs, heap histogram/dump và phân tích Flight Recording."

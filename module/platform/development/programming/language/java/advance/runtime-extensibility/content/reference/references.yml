@@ -1,16 +1,25 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "Java SE 21 — ServiceLoader"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ServiceLoader.html"
+    description: "SPI và plugin discovery: service interface, provider, META-INF/services, uses/provides trong module và cơ chế tải provider theo yêu cầu."
+  - title: "Java SE 21 — ClassLoader"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/ClassLoader.html"
+    description: "Nạp lớp động, mô hình parent delegation, định danh lớp theo class loader và tra cứu resource khi xây plugin runtime."
+  - title: "Java SE 21 — URLClassLoader"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/net/URLClassLoader.html"
+    description: "Nạp class và resource từ JAR/thư mục ở runtime; cách quản lý đường dẫn, quan hệ loader cha và đóng class loader."
+  - title: "Java SE 21 — ModuleFinder"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/module/ModuleFinder.html"
+    description: "Tìm module trên đường dẫn và dùng với Configuration để resolve tập module cho các thành phần mở rộng."
+  - title: "Java SE 21 — ModuleLayer"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/ModuleLayer.html"
+    description: "Xây và quản lý module layer mới tại runtime, module graph và class loader cho plugin theo JPMS."
+  - title: "Java SE 21 — Dynamic Proxy"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/reflect/Proxy.html"
+    description: "Tạo proxy triển khai interface tại runtime qua InvocationHandler, phù hợp interceptor, decorator và tích hợp plugin."
+  - title: "Java SE 21 — MethodHandles.Lookup"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/invoke/MethodHandles.Lookup.html"
+    description: "Tra cứu constructor, method và field ở runtime có kiểm tra quyền truy cập; liên hệ reflection, method handle và ranh giới module."
+  - title: "Java SE 21 — Module"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Module.html"
+    description: "Mô hình đọc module, exports/opens và ranh giới truy cập động ảnh hưởng cơ chế mở rộng ứng dụng."

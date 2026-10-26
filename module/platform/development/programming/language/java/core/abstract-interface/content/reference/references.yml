@@ -1,16 +1,25 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "JLS Java SE 21 — Chapter 8: Classes"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-8.html"
+    description: "Đặc tả abstract class, abstract method, extends, implements, phương thức kế thừa và quy tắc overriding."
+  - title: "JLS Java SE 21 — Chapter 9: Interfaces"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-9.html"
+    description: "Quy tắc khai báo interface, extends nhiều interface, abstract/default/static/private methods, xung đột kế thừa và functional interface."
+  - title: "JLS Java SE 21 — Chapter 13: Binary Compatibility"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-13.html"
+    description: "Hệ quả tương thích nhị phân khi thay đổi abstract class, abstract method, interface member và default method trong API."
+  - title: "Dev.java — Abstract Methods and Classes"
+    url: "https://dev.java/learn/inheritance/abstract-classes/"
+    description: "Giải thích sự khác nhau giữa abstract class và interface, trạng thái chung, phương thức có/không có thân và cách chọn thiết kế."
+  - title: "Dev.java — Interfaces"
+    url: "https://dev.java/learn/interfaces/defining-interfaces/"
+    description: "Cách định nghĩa interface như hợp đồng API, khai báo hằng, các loại phương thức và extends interface."
+  - title: "Dev.java — Implementing an Interface"
+    url: "https://dev.java/learn/interfaces/examples/"
+    description: "Hướng dẫn dùng implements, triển khai hợp đồng của interface, default/static/private methods và xử lý xung đột."
+  - title: "Dev.java — Using an Interface as a Type"
+    url: "https://dev.java/learn/interfaces/interfaces-as-a-type/"
+    description: "Thực hành lập trình theo kiểu interface, đa hình và truyền đối tượng triển khai vào API không phụ thuộc lớp cụ thể."
+  - title: "Dev.java — Overriding and Hiding Methods"
+    url: "https://dev.java/learn/inheritance/overriding/"
+    description: "Quy tắc override, covariant return type, @Override và lựa chọn phương thức khi superclass cùng interface có default method."

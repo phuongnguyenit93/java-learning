@@ -1,16 +1,40 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "OASIS — SAML 2.0 Technical Overview"
+    url: "https://docs.oasis-open.org/security/saml/Post2.0/sstc-saml-tech-overview-2.0-cd-02.html"
+    description: "Tổng quan SAML 2.0, vai trò Identity Provider và Service Provider, mô hình federation, flow Web Browser SSO và Single Logout."
+  - title: "OASIS — SAML 2.0 Assertions and Protocols"
+    url: "https://docs.oasis-open.org/security/saml/v2.0/saml-core-2.0-os.pdf"
+    description: "Đặc tả XML Assertion, AuthnStatement, AttributeStatement, AuthnRequest, Response, Conditions, SubjectConfirmation và protocol."
+  - title: "OASIS — SAML 2.0 Profiles"
+    url: "https://docs.oasis-open.org/security/saml/v2.0/saml-profiles-2.0-os.pdf"
+    description: "Quy tắc Web Browser SSO Profile, SP-initiated và IdP-initiated login, Artifact và Single Logout profile."
+  - title: "OASIS — SAML 2.0 Bindings"
+    url: "https://docs.oasis-open.org/security/saml/v2.0/saml-bindings-2.0-os.pdf"
+    description: "Cơ chế vận chuyển thông điệp qua HTTP Redirect, HTTP POST, HTTP Artifact, SOAP và RelayState."
+  - title: "OASIS — SAML 2.0 Metadata"
+    url: "https://docs.oasis-open.org/security/saml/v2.0/saml-metadata-2.0-os.pdf"
+    description: "Cách IdP và SP trao đổi entityID, SSO/SLO endpoints, Assertion Consumer Service, signing/encryption keys và metadata trust."
+  - title: "OASIS — SAML 2.0 Authentication Context"
+    url: "https://docs.oasis-open.org/security/saml/v2.0/saml-authn-context-2.0-os.pdf"
+    description: "Thông tin và mức ngữ cảnh xác thực, AuthnContextClassRef cùng yêu cầu phương thức xác thực."
+  - title: "OASIS — SAML 2.0 Security and Privacy Considerations"
+    url: "https://docs.oasis-open.org/security/saml/v2.0/saml-sec-consider-2.0-os.pdf"
+    description: "Mối đe dọa assertion theft/replay, message modification, bảo vệ chữ ký, mã hóa, thời hạn và quản lý trust."
+  - title: "OASIS — SAML 2.0 Approved Errata 05"
+    url: "https://docs.oasis-open.org/security/saml/v2.0/errata05/os/saml-v2.0-errata05-os.html"
+    description: "Các đính chính chính thức cho đặc tả SAML 2.0, cần đối chiếu khi triển khai hoặc phân tích tính tương thích."
+  - title: "OWASP — SAML Security Cheat Sheet"
+    url: "https://cheatsheetseries.owasp.org/cheatsheets/SAML_Security_Cheat_Sheet.html"
+    description: "Kiểm tra SAML Response/Assertion, signature wrapping, issuer, audience, Destination, Recipient, InResponseTo, thời hạn và replay."
+  - title: "NIST SP 800-63C-4 — Federation and Assertions"
+    url: "https://pages.nist.gov/800-63-4/sp800-63c.html"
+    description: "Hướng dẫn mới về identity federation, assertions, Federation Assurance Levels, quan hệ IdP–Relying Party và quản lý phiên."
+  - title: "W3C — XML Signature Syntax and Processing 1.1"
+    url: "https://www.w3.org/TR/xmldsig-core1/"
+    description: "Chuẩn XML digital signature, canonicalization, references, SignedInfo và xác minh tính toàn vẹn cho SAML XML."
+  - title: "W3C — XML Encryption Syntax and Processing 1.1"
+    url: "https://www.w3.org/TR/xmlenc-core1/"
+    description: "Chuẩn mã hóa XML/EncryptedData và bảo vệ nội dung nhạy cảm trong SAML Assertions."
+  - title: "OASIS — SAML 2.0 Glossary"
+    url: "https://docs.oasis-open.org/security/saml/v2.0/saml-glossary-2.0-os.pdf"
+    description: "Thuật ngữ chính thức về federation, assertion, IdP, Service Provider, subject, trust và các vai trò trong SAML."

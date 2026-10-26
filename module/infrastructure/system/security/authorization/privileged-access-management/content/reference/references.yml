@@ -1,16 +1,31 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "NIST SP 800-53 Rev. 5 — Security and Privacy Controls"
+    url: "https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final"
+    description: "Nền tảng kiểm soát đặc quyền: AC-6 least privilege, tài khoản quản trị, phân tách nhiệm vụ, xác thực mạnh, ghi log và rà soát quyền truy cập."
+  - title: "NIST SP 800-63-4 — Digital Identity Guidelines"
+    url: "https://csrc.nist.gov/pubs/sp/800/63/4/final"
+    description: "Tiêu chuẩn identity proofing, authentication, authenticator management và mức đảm bảo định danh; áp dụng bảo vệ đăng nhập đặc quyền bằng xác thực mạnh."
+  - title: "Microsoft — Developing a Privileged Access Strategy"
+    url: "https://learn.microsoft.com/en-us/security/privileged-access-workstations/privileged-access-strategy"
+    description: "Chiến lược bảo vệ truy cập đặc quyền theo Zero Trust, kết hợp danh tính, thiết bị tin cậy, phiên quản trị và giảm bề mặt tấn công."
+  - title: "Microsoft — Securing Privileged Access Accounts"
+    url: "https://learn.microsoft.com/en-us/security/privileged-access-workstations/privileged-access-accounts"
+    description: "Quản lý vòng đời tài khoản admin, xác minh danh tính, bảo vệ đăng nhập, thiết lập điều kiện truy cập và giảm rủi ro chiếm đoạt đặc quyền."
+  - title: "Google Cloud — Privileged Access Manager Overview"
+    url: "https://docs.cloud.google.com/iam/docs/pam-overview"
+    description: "Mô hình Just-in-Time access: entitlement, yêu cầu lý do, phê duyệt, giới hạn thời gian, thu hồi role và giám sát grant/audit trail."
+  - title: "Microsoft Entra — Privileged Identity Management Deployment Plan"
+    url: "https://learn.microsoft.com/en-us/entra/id-governance/privileged-identity-management/pim-deployment-plan"
+    description: "Quy trình triển khai PIM: inventoried privileged roles, eligible/active assignment, JIT, MFA, approval, access review, audit history và rollback."
+  - title: "Microsoft Entra — Privileged Account Security Operations"
+    url: "https://learn.microsoft.com/en-us/entra/architecture/security-operations-privileged-accounts"
+    description: "Theo dõi hành vi tài khoản đặc quyền, sign-in/role changes, suspicious activity, đặc quyền tồn đọng và cảnh báo phiên quản trị bất thường."
+  - title: "Microsoft Entra — Emergency Access Administrator Accounts"
+    url: "https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/security-emergency-access"
+    description: "Thiết kế break-glass accounts dành cho sự cố, bảo vệ xác thực, kiểm soát việc sử dụng, thử nghiệm định kỳ và cảnh báo mọi lần đăng nhập."
+  - title: "Google Cloud — Privileged Access Manager Permissions and Setup"
+    url: "https://docs.cloud.google.com/iam/docs/pam-permissions-and-setup"
+    description: "Thực hành phân quyền PAM cho admin, requester, approver và auditor; thiết lập IAM, entitlement/grant, separation of duties và audit log."
+  - title: "Microsoft Entra — Activate Roles in Privileged Identity Management"
+    url: "https://learn.microsoft.com/en-us/azure/active-directory/privileged-identity-management/pim-resource-roles-activate-your-roles"
+    description: "Hướng dẫn vòng đời kích hoạt role đặc quyền theo thời hạn: từ quyền eligible, request/justification đến cấp và tự hết hạn quyền active."

@@ -1,16 +1,40 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "IETF RFC 7519 — JSON Web Token (JWT)"
+    url: "https://www.rfc-editor.org/rfc/rfc7519.html"
+    description: "Chuẩn JWT: cấu trúc JOSE Header, Claims Set, registered claims như iss, sub, aud, exp, nbf, iat, jti và các bước tạo/kiểm tra token."
+  - title: "IETF RFC 7515 — JSON Web Signature (JWS)"
+    url: "https://www.rfc-editor.org/rfc/rfc7515.html"
+    description: "Chữ ký số hoặc MAC bảo đảm tính toàn vẹn và xác thực nội dung; JWS Compact/JSON Serialization và protected header."
+  - title: "IETF RFC 7516 — JSON Web Encryption (JWE)"
+    url: "https://www.rfc-editor.org/rfc/rfc7516.html"
+    description: "Mã hóa nội dung JWT để bảo mật tính riêng tư; thành phần JWE, Compact/JSON Serialization và nested JWT."
+  - title: "IETF RFC 7517 — JSON Web Key (JWK)"
+    url: "https://www.rfc-editor.org/rfc/rfc7517.html"
+    description: "Biểu diễn khóa mật mã bằng JSON, JWK Set (JWKS), key identifiers và phân phối khóa xác minh."
+  - title: "IETF RFC 7518 — JSON Web Algorithms (JWA)"
+    url: "https://www.rfc-editor.org/rfc/rfc7518.html"
+    description: "Danh mục thuật toán và tham số JOSE sử dụng với JWS, JWE, JWK; phân biệt thuật toán ký và mã hóa."
+  - title: "IETF RFC 8725 — JSON Web Token Best Current Practices"
+    url: "https://www.rfc-editor.org/rfc/rfc8725.html"
+    description: "Phòng tránh algorithm confusion, kiểm tra chữ ký/issuer/audience/kiểu token, key selection và các lỗi xác minh JWT."
+  - title: "IETF RFC 9068 — JWT Profile for OAuth 2.0 Access Tokens"
+    url: "https://www.rfc-editor.org/rfc/rfc9068.html"
+    description: "Định dạng và quy tắc kiểm tra JWT access token, phân biệt access token với ID token và chống nhầm lẫn token."
+  - title: "IETF RFC 8414 — OAuth 2.0 Authorization Server Metadata"
+    url: "https://www.rfc-editor.org/rfc/rfc8414.html"
+    description: "Công bố metadata của authorization server, issuer, jwks_uri và endpoint để client/resource server tra cứu có kiểm soát."
+  - title: "OpenID Connect Core 1.0 — ID Token"
+    url: "https://openid.net/specs/openid-connect-core-1_0.html"
+    description: "Cơ chế xác thực người dùng, ID token dạng JWT và xác minh iss, aud, exp, nonce trong OpenID Connect."
+  - title: "OWASP — JSON Web Token Cheat Sheet"
+    url: "https://cheatsheetseries.owasp.org/cheatsheets/JSON_Web_Token_Cheat_Sheet.html"
+    description: "Các nguy cơ JWT phổ biến: yếu điểm khi xác minh token, đánh cắp token, lưu trữ, vòng đời và vô hiệu hóa; tập trung nguyên tắc chung."
+  - title: "IETF RFC 9700 — Best Current Practice for OAuth 2.0 Security"
+    url: "https://www.rfc-editor.org/rfc/rfc9700.html"
+    description: "Bảo vệ bearer/access token, chống replay, refresh token rotation và thực hành an toàn trong OAuth 2.0."
+  - title: "IETF RFC 6750 — OAuth 2.0 Bearer Token Usage"
+    url: "https://www.rfc-editor.org/rfc/rfc6750.html"
+    description: "Cách gửi access token trong HTTP Authorization header và rủi ro token leakage, replay khi sử dụng bearer token."
+  - title: "IETF RFC 9449 — OAuth 2.0 DPoP"
+    url: "https://www.rfc-editor.org/rfc/rfc9449.html"
+    description: "Sender-constrained token dựa trên proof-of-possession JWT, giúp hạn chế việc sử dụng lại token bị đánh cắp."

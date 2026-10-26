@@ -1,16 +1,43 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "Oracle Java SE 17 — API Overview"
+    url: "https://docs.oracle.com/en/java/javase/17/docs/api/index.html"
+    description: "Tài liệu API chính thức của Java 17; đối chiếu các module Java SE/JDK và phạm vi phiên bản LTS."
+  - title: "Oracle Java SE 21 — Significant Changes in JDK Releases"
+    url: "https://docs.oracle.com/en/java/javase/21/migrate/significant-changes-jdk-release.html"
+    description: "Tổng hợp thay đổi đáng chú ý của các bản JDK, bao gồm Java 17: sealed classes, random generators, encapsulation và filtering."
+  - title: "Oracle Java SE 21 — Sealed Classes"
+    url: "https://docs.oracle.com/en/java/javase/21/language/sealed-classes-and-interfaces.html"
+    description: "Hướng dẫn sealed, non-sealed, final, permits và kiểm soát lớp được phép kế thừa; tính năng chính thức từ Java 17."
+  - title: "JLS 21 — Sealed Classes"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-8.html"
+    description: "Đặc tả sealed class, permitted direct subclasses, modifiers và quy tắc kế thừa còn áp dụng hiện nay."
+  - title: "JLS 21 — Sealed Interfaces"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-9.html"
+    description: "Đặc tả sealed/non-sealed interfaces, danh sách kiểu được phép triển khai và ràng buộc phân cấp."
+  - title: "Java SE 21 — Class Reflection API"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html"
+    description: "Kiểm tra kiểu sealed bằng isSealed/getPermittedSubclasses khi phân tích hệ thống kiểu lúc chạy."
+  - title: "Oracle JDK 21 — Strong Encapsulation and Migration"
+    url: "https://docs.oracle.com/en/java/javase/21/migrate/migrating-jdk-8-later-jdk-releases.html"
+    description: "Từ Java 17, JDK internals được đóng gói mạnh theo mặc định; giải thích lỗi reflection và cách dùng --add-opens có chọn lọc."
+  - title: "Java SE 21 — java.util.random Package"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/random/package-summary.html"
+    description: "API sinh số giả ngẫu nhiên mới từ Java 17; chọn thuật toán phù hợp, tránh dùng PRNG thường cho mục đích mật mã."
+  - title: "Java SE 21 — RandomGenerator"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/random/RandomGenerator.html"
+    description: "Giao diện chuẩn của pseudorandom generator, các kiểu Streamable, Splittable, Jumpable và hành vi tạo số."
+  - title: "Java SE 21 — RandomGeneratorFactory"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/random/RandomGeneratorFactory.html"
+    description: "Chọn, khám phá và khởi tạo thuật toán random generator bằng tên hoặc thuộc tính thuật toán."
+  - title: "Java SE 21 — ObjectInputFilter"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/ObjectInputFilter.html"
+    description: "Bảo vệ deserialization bằng kiểm tra class, số lượng object, độ sâu graph và giới hạn byte; hỗ trợ filter theo ngữ cảnh."
+  - title: "Oracle Java SE 21 — Serialization Filtering"
+    url: "https://docs.oracle.com/en/java/javase/21/core/serialization-filtering1.html"
+    description: "Hướng dẫn tạo bộ lọc serialize/deserialize bằng pattern hoặc custom filter để giảm rủi ro đọc dữ liệu không tin cậy."
+  - title: "Oracle Java SE 21 — Filter Factories"
+    url: "https://docs.oracle.com/en/java/javase/21/core/filter-factories.html"
+    description: "Cơ chế chọn hoặc kết hợp ObjectInputFilter theo từng ngữ cảnh ứng dụng, được bổ sung từ Java 17."
+  - title: "JLS 21 — Floating-Point Expressions"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-15.html"
+    description: "Quy tắc floating-point expressions với ngữ nghĩa always-strict từ Java 17, không dựa trên chế độ strictfp lịch sử."

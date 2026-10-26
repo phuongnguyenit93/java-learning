@@ -1,16 +1,25 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "Java SE 21 — Java Native Interface (JNI) Specification"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/specs/jni/index.html"
+    description: "Đặc tả JNI: native methods, ánh xạ kiểu, tham chiếu Java, gọi mã C/C++ và xử lý lỗi khi tích hợp với JVM."
+  - title: "Java SE 21 — javac Command"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/specs/man/javac.html"
+    description: "Tài liệu tùy chọn -h của javac để sinh C/C++ header phục vụ triển khai Java native methods."
+  - title: "Java SE 21 — System API"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/System.html"
+    description: "Tra cứu System.load, System.loadLibrary, mapLibraryName và cách nạp thư viện native theo hệ điều hành."
+  - title: "Java SE 21 — Foreign Function and Memory API (Preview)"
+    url: "https://docs.oracle.com/en/java/javase/21/core/foreign-function-and-memory-api.html"
+    description: "FFM trên Java 21 ở trạng thái preview: Arena, MemorySegment, downcall, upcall và thao tác dữ liệu ngoài JVM."
+  - title: "Java SE 22 — Foreign Function and Memory API"
+    url: "https://docs.oracle.com/en/java/javase/22/core/foreign-function-and-memory-api.html"
+    description: "Hướng dẫn FFM chính thức từ Java 22: native calls, memory layouts, vòng đời vùng nhớ và function pointers."
+  - title: "Java SE 22 API — java.lang.foreign"
+    url: "https://docs.oracle.com/en/java/javase/22/docs/api/java.base/java/lang/foreign/package-summary.html"
+    description: "API reference cho Linker, SymbolLookup, FunctionDescriptor, MemorySegment và các bảo đảm an toàn bộ nhớ."
+  - title: "OpenJDK — jextract Guide"
+    url: "https://github.com/openjdk/jextract/blob/master/doc/GUIDE.md"
+    description: "Cách sinh Java bindings từ thư viện C header bằng jextract, sử dụng Foreign Function and Memory API."
+  - title: "OpenJDK JEP 472 — Prepare to Restrict the Use of JNI"
+    url: "https://openjdk.org/jeps/472"
+    description: "Chính sách kiểm soát native access và cảnh báo với JNI/FFM ở các phiên bản JDK mới, nhằm bảo vệ tính toàn vẹn JVM."

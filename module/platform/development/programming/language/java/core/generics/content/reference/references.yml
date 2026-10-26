@@ -1,16 +1,25 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "Dev.java — Generics Overview"
+    url: "https://dev.java/learn/generics/"
+    description: "Lộ trình chính thức về kiểu tổng quát, suy luận kiểu, wildcard, type erasure và giới hạn của Generics."
+  - title: "Dev.java — Introducing Generics"
+    url: "https://dev.java/learn/generics/intro/"
+    description: "Generic class/interface/method, type parameter, bounded type, raw type, subtyping và lợi ích kiểm tra kiểu lúc biên dịch."
+  - title: "Dev.java — Type Inference"
+    url: "https://dev.java/learn/generics/type-inference/"
+    description: "Suy luận kiểu cho generic method, toán tử diamond và target typing theo ngữ cảnh biểu thức."
+  - title: "Dev.java — Wildcards"
+    url: "https://dev.java/learn/generics/wildcards/"
+    description: "Wildcard ?, ? extends, ? super, wildcard capture và hướng dẫn dùng loại nhận/đọc dữ liệu (PECS)."
+  - title: "Dev.java — Type Erasure"
+    url: "https://dev.java/learn/generics/type-erasure/"
+    description: "Trình biên dịch xóa type parameter, tạo cast/bridge method khi cần và các hệ quả ở runtime."
+  - title: "Dev.java — Restrictions on Generics"
+    url: "https://dev.java/learn/generics/restrictions/"
+    description: "Những giới hạn như type argument không dùng primitive trực tiếp, generic array creation, instanceof và ngoại lệ liên quan generic."
+  - title: "Java Language Specification SE 21 — Chapter 4"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-4.html"
+    description: "Đặc tả type variables, parameterized types, wildcards, erasure, reifiable/raw types và quan hệ subtype."
+  - title: "Java Language Specification SE 21 — Chapter 18"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-18.html"
+    description: "Quy tắc type inference của trình biên dịch đối với generic method, constraint, bounds và lựa chọn kiểu suy ra."

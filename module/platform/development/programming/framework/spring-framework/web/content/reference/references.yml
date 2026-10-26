@@ -1,49 +1,28 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
-
 references:
-  - title: "Jakarta Servlet 6.0 Specification"
-    url: "https://jakarta.ee/specifications/servlet/6.0/"
-    description: "Official Servlet specification for the server-side request, response, container, dispatch, filter, and asynchronous-processing model that underpins the repository's Servlet-stack Spring MVC baseline."
-
-  - title: "Spring Framework 6.1.14 - org.springframework.web.servlet API"
-    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/web/servlet/package-summary.html"
-    description: "Version-aligned API reference for the central Spring MVC contracts and infrastructure used by the repository baseline."
-
-  - title: "Spring Framework 6.1.14 - DispatcherServlet API"
-    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/web/servlet/DispatcherServlet.html"
-    description: "Authoritative reference for the front-controller responsibilities, default strategies, handler mapping, adapter, exception resolution, view resolution, multipart, and locale integration."
-
-  - title: "Spring Framework 6.1.14 - Web Binding Annotations API"
-    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/web/bind/annotation/package-summary.html"
-    description: "Version-aligned reference for request mapping, controller advice, binding, request-body, response-body, CORS, and related web annotations."
-
-  - title: "Spring Framework 6.1.14 - HTTP Message Conversion API"
-    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/http/converter/package-summary.html"
-    description: "Version-aligned reference for HttpMessageConverter and the object-to-HTTP representation conversion layer shared by Spring MVC and synchronous clients."
-
-  - title: "Spring Framework 6.1.14 - Synchronous Web Client API"
-    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/web/client/package-summary.html"
-    description: "Version-aligned reference for RestClient, RestTemplate, synchronous client errors, and shared client-side web support."
-
-  - title: "Spring Framework 6.1.14 - RestClient API"
-    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/web/client/RestClient.html"
-    description: "Version-aligned API reference for RestClient, the fluent synchronous HTTP client introduced in Spring Framework 6.1."
-
-  - title: "Spring Framework 6.1.14 - HTTP Service Proxy API"
-    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/web/service/invoker/package-summary.html"
-    description: "Version-aligned reference for HttpServiceProxyFactory and the common HTTP service proxy infrastructure used by declarative HTTP interfaces."
+  - title: "Spring Framework Reference — Spring Web MVC"
+    url: "https://docs.spring.io/spring-framework/reference/web/webmvc.html"
+    description: "Tổng quan Spring MVC trên Servlet stack: kiến trúc request handling, REST controller, HTTP, view rendering và cấu hình."
+  - title: "Spring Framework Reference — DispatcherServlet Processing"
+    url: "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-servlet/sequence.html"
+    description: "Luồng xử lý request qua DispatcherServlet, handler mapping, interceptor, controller và view rendering."
+  - title: "Spring Framework Reference — Annotated Controllers"
+    url: "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller.html"
+    description: "Mô hình @Controller và @RestController, các kiểu tham số, kết quả và cách xử lý request."
+  - title: "Spring Framework Reference — Mapping Requests"
+    url: "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-requestmapping.html"
+    description: "@RequestMapping và @GetMapping/@PostMapping; định tuyến theo path, HTTP method, header, params và media types."
+  - title: "Spring Framework Reference — @RequestBody"
+    url: "https://docs.spring.io/spring/reference/7.1/web/webmvc/mvc-controller/ann-methods/requestbody.html"
+    description: "Đọc request body qua HttpMessageConverter; chuyển dữ liệu từ HTTP sang đối tượng Java."
+  - title: "Spring Framework Reference — Exception Handling"
+    url: "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-exceptionhandler.html"
+    description: "@ExceptionHandler và @ControllerAdvice; xử lý lỗi tập trung và ánh xạ lỗi thành HTTP response."
+  - title: "Spring Framework Reference — MVC Message Converters"
+    url: "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-config/message-converters.html"
+    description: "Tùy chỉnh HttpMessageConverter để đọc/ghi HTTP message bodies, JSON hoặc XML."
+  - title: "Spring Framework Reference — CORS"
+    url: "https://docs.spring.io/spring-framework/reference/web/webmvc-cors.html"
+    description: "CORS trên Servlet stack; @CrossOrigin, cấu hình toàn cục, preflight và origin/credentials."
+  - title: "Spring Framework Reference — MVC Config"
+    url: "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-config.html"
+    description: "WebMvcConfigurer, interceptors, content negotiation, resources, view resolution và các extension points."

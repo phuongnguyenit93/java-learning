@@ -1,48 +1,34 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
-
 references:
-  - title: "Validation, Data Binding, and Type Conversion - Spring Framework Reference"
+  - title: "Spring Framework — Validation, Data Binding, and Type Conversion"
     url: "https://docs.spring.io/spring-framework/reference/core/validation.html"
-    description: "Official Spring Framework reference chapter that explains the module-wide relationship among validation, data binding, JavaBeans property access, type conversion, formatting, and Bean Validation integration."
-  - title: "Spring Framework 6.1.14 API"
-    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/index.html"
-    description: "Version-pinned Spring Framework 6.1.14 API index used to verify module-level contracts without drifting to a newer Framework generation."
-  - title: "Validator API - Spring Framework 6.1"
-    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/validation/Validator.html"
-    description: "Version-pinned Spring Framework 6.1.14 contract for the UI-agnostic Validator abstraction and Errors-based validation model."
-  - title: "Spring Type Conversion"
-    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/core/convert/ConversionService.html"
-    description: "Version-pinned Spring Framework 6.1.14 API contract for ConversionService and TypeDescriptor-aware conversion."
-  - title: "Spring Field Formatting"
-    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/format/support/DefaultFormattingConversionService.html"
-    description: "Version-pinned Spring Framework 6.1.14 API for the formatting-aware ConversionService that combines converters with FormatterRegistry-based formatting."
-  - title: "BeanWrapper API - Spring Framework 6.1"
-    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/beans/BeanWrapper.html"
-    description: "Version-pinned Spring Framework 6.1.14 contract for bean property access, nested property paths, conversion support, and PropertyEditor integration."
-  - title: "MessageCodesResolver API - Spring Framework 6.1"
-    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/validation/MessageCodesResolver.html"
-    description: "Version-pinned Spring Framework 6.1.14 contract for expanding binding and validation error codes before MessageSource localization."
-  - title: "Java Bean Validation"
-    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/validation/beanvalidation/LocalValidatorFactoryBean.html"
-    description: "Version-pinned Spring Framework 6.1.14 integration contract for bootstrapping Jakarta Bean Validation and exposing it through Spring's Validator infrastructure."
-  - title: "MethodValidationPostProcessor API - Spring Framework 6.1"
-    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/validation/beanvalidation/MethodValidationPostProcessor.html"
-    description: "Version-pinned Spring Framework 6.1.14 API for Spring-driven executable method validation, including parameter and return-value constraints and validation groups."
-  - title: "DataBinder API - Spring Framework 6.1"
-    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/validation/DataBinder.html"
-    description: "Version-pinned Spring Framework 6.1.14 API contract for constructor/property binding, declarative binding, validation integration, and safe field exposure."
+    description: "Tổng quan cách Spring phối hợp Validator, DataBinder, BeanWrapper, chuyển đổi kiểu dữ liệu và Bean Validation."
+  - title: "Spring Framework — Validation Using Spring's Validator Interface"
+    url: "https://docs.spring.io/spring-framework/reference/core/validation/validator.html"
+    description: "Định nghĩa hợp đồng Validator, hỗ trợ supports/validate, Errors, mã lỗi và việc viết bộ kiểm tra dữ liệu tùy chỉnh."
+  - title: "Spring Framework — Data Binding"
+    url: "https://docs.spring.io/spring-framework/reference/core/validation/data-binding.html"
+    description: "Cách liên kết thuộc tính JavaBean, BeanWrapper, DataBinder và PropertyEditor; nền tảng xử lý dữ liệu đầu vào."
+  - title: "Spring Framework — Spring Type Conversion"
+    url: "https://docs.spring.io/spring-framework/reference/core/validation/convert.html"
+    description: "Converter, ConverterFactory, GenericConverter, ConversionService và cấu hình chuyển kiểu dùng chung."
+  - title: "Spring Framework — Spring Field Formatting"
+    url: "https://docs.spring.io/spring-framework/reference/core/validation/format.html"
+    description: "Formatter, parse/print theo Locale và tích hợp ConversionService để định dạng dữ liệu biểu mẫu."
+  - title: "Spring Framework — Java Bean Validation"
+    url: "https://docs.spring.io/spring-framework/reference/core/validation/beanvalidation.html"
+    description: "Tích hợp Jakarta Bean Validation, LocalValidatorFactoryBean, cấu hình và kết hợp bộ kiểm tra với DataBinder."
+  - title: "Spring MVC — @InitBinder"
+    url: "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-initbinder.html"
+    description: "Tùy chỉnh WebDataBinder trong controller và ControllerAdvice; đăng ký editor, converter, formatter, validator."
+  - title: "Spring MVC — @ModelAttribute Arguments"
+    url: "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-methods/modelattrib-method-args.html"
+    description: "Binding dữ liệu từ request vào model attribute, constructor/property binding, @Valid và BindingResult."
+  - title: "Spring MVC — Validation"
+    url: "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-validation.html"
+    description: "Phân biệt validation tham số và validation phương thức; hiểu MethodArgumentNotValidException và HandlerMethodValidationException."
+  - title: "Spring MVC — @RequestBody"
+    url: "https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-methods/requestbody.html"
+    description: "Chuyển request body thành đối tượng qua HttpMessageConverter, kiểm tra @Valid/@Validated và xử lý Errors."
+  - title: "Spring WebFlux — Validation"
+    url: "https://docs.spring.io/spring-framework/reference/web/webflux/controller/ann-validation.html"
+    description: "Validation trong WebFlux, WebExchangeBindException, HandlerMethodValidationException và cấu hình validator."

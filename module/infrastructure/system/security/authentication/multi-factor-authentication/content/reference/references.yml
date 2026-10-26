@@ -1,16 +1,37 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "NIST SP 800-63B-4 — Authentication and Authenticator Management (Final 2025)"
+    url: "https://csrc.nist.gov/pubs/sp/800/63/B/4/final"
+    description: "Chuẩn xác thực số và các mức AAL1, AAL2, AAL3; yêu cầu về yếu tố xác thực, quản lý authenticator, chống phishing, vòng đời và các ràng buộc đối với MFA."
+  - title: "NIST SP 800-63B-4 — Authenticators"
+    url: "https://pages.nist.gov/800-63-4/sp800-63b/authenticators/"
+    description: "Phân loại OTP, out-of-band, cryptographic authenticators, multi-factor cryptographic/OTP, yếu tố kích hoạt, phishing resistance và cách triển khai an toàn."
+  - title: "NIST SP 800-63B-4 — Threats and Security Considerations"
+    url: "https://pages.nist.gov/800-63-4/sp800-63b/security/"
+    description: "Phân tích phishing, replay, verifier impersonation, authentication fatigue, endpoint compromise và biện pháp tăng độ tin cậy của MFA."
+  - title: "W3C Recommendation 2026 — Web Authentication Level 3"
+    url: "https://www.w3.org/TR/2026/REC-webauthn-3-20260825/"
+    description: "Chuẩn WebAuthn sử dụng public-key credentials, authenticator, relying party, origin binding, user presence/verification và attestation."
+  - title: "FIDO Alliance — FIDO User Authentication Specifications"
+    url: "https://fidoalliance.org/specifications/"
+    description: "Các chuẩn FIDO2 gồm WebAuthn và CTAP, khóa mật mã bất đối xứng, bảo mật chống phishing và định danh theo từng dịch vụ."
+  - title: "FIDO Alliance — Passkeys"
+    url: "https://fidoalliance.org/passkeys-2/"
+    description: "Passkey theo mô hình FIDO2, synced và device-bound passkeys, vai trò PIN/sinh trắc học cục bộ; phân biệt đăng nhập không mật khẩu với xác thực đa yếu tố."
+  - title: "RFC 4226 — HOTP: HMAC-Based One-Time Password"
+    url: "https://www.rfc-editor.org/rfc/rfc4226.html"
+    description: "Thuật toán OTP dựa trên bộ đếm và HMAC, đồng bộ counter, bí mật chung, giới hạn lượt thử và các rủi ro bảo mật khi triển khai."
+  - title: "RFC 6238 — TOTP: Time-Based One-Time Password"
+    url: "https://www.rfc-editor.org/rfc/rfc6238.html"
+    description: "OTP dựa trên thời gian với secret và time step, chấp nhận clock drift và chống replay; TOTP nhập thủ công không có phishing resistance."
+  - title: "OWASP — Multifactor Authentication Cheat Sheet"
+    url: "https://cheatsheetseries.owasp.org/cheatsheets/Multifactor_Authentication_Cheat_Sheet.html"
+    description: "Thiết kế MFA đa yếu tố độc lập, enrollment, method switching, recovery, phishing-resistant MFA, push fatigue, number matching và adaptive MFA."
+  - title: "OWASP — Authentication Cheat Sheet"
+    url: "https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html"
+    description: "Reauthentication đối với thao tác nhạy cảm, tăng mức xác thực khi có dấu hiệu rủi ro, xử lý lỗi đăng nhập và quản lý yếu tố xác thực."
+  - title: "OWASP — Forgot Password Cheat Sheet"
+    url: "https://cheatsheetseries.owasp.org/cheatsheets/Forgot_Password_Cheat_Sheet.html"
+    description: "Khôi phục tài khoản và MFA bằng bằng chứng tin cậy, recovery codes, giới hạn tác động khi bị chiếm quyền và vô hiệu hóa sessions/authenticators bị lộ."
+  - title: "OWASP — Session Management Cheat Sheet"
+    url: "https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html"
+    description: "Bảo vệ phiên sau đăng nhập MFA, session renewal, reauthentication khi thay đổi cấu hình xác thực và chấm dứt phiên đáng ngờ."

@@ -1,49 +1,34 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
-
 references:
-  - title: "Spring Framework 6.1 Release Notes"
-    url: "https://github.com/spring-projects/spring-framework/wiki/Spring-Framework-6.1-Release-Notes"
-    description: "Official 6.1 release-line notes, including JdbcClient and R2DBC data-access changes relevant to this repository baseline."
-
-  - title: "JdbcClient (Spring Framework 6.1.14 API)"
-    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/jdbc/core/simple/JdbcClient.html"
-    description: "Repository-baseline API reference for the Spring 6.1 fluent JDBC facade."
-
-  - title: "JdbcTemplate (Spring Framework 6.1.14 API)"
-    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/jdbc/core/JdbcTemplate.html"
-    description: "Repository-baseline API reference for the central Spring JDBC template and callback/resource-management model."
-
-  - title: "DataSourceUtils (Spring Framework 6.1.14 API)"
-    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/jdbc/datasource/DataSourceUtils.html"
-    description: "Repository-baseline API reference for transaction-aware JDBC Connection acquisition and release."
-
-  - title: "DatabaseClient (Spring Framework 6.1.14 API)"
-    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/r2dbc/core/DatabaseClient.html"
-    description: "Repository-baseline API reference confirming DatabaseClient as Spring Framework R2DBC core infrastructure."
-
-  - title: "ConnectionFactoryUtils (Spring Framework 6.1.14 API)"
-    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/r2dbc/connection/ConnectionFactoryUtils.html"
-    description: "Repository-baseline API reference for transaction-aware R2DBC Connection acquisition and release."
-
-  - title: "org.springframework.dao (Spring Framework 6.1.14 API)"
-    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/dao/package-summary.html"
-    description: "Repository-baseline package reference for Spring's technology-independent data-access exception model."
-
-  - title: "PersistenceExceptionTranslationPostProcessor (Spring Framework 6.1.14 API)"
-    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/dao/annotation/PersistenceExceptionTranslationPostProcessor.html"
-    description: "Repository-baseline API reference for transparent persistence exception translation on eligible @Repository beans."
+  - title: "Spring Framework — Data Access"
+    url: "https://docs.spring.io/spring/reference/data-access.html"
+    description: "Tổng quan các tầng truy cập dữ liệu Spring: transaction management, DAO, JDBC, R2DBC và ORM."
+  - title: "Spring Framework — DAO Support"
+    url: "https://docs.spring.io/spring-framework/reference/data-access/dao.html"
+    description: "Thiết kế DAO, @Repository và cơ chế dịch ngoại lệ công nghệ lưu trữ thành DataAccessException nhất quán."
+  - title: "Spring Framework — Controlling Database Connections"
+    url: "https://docs.spring.io/spring-framework/reference/data-access/jdbc/connections.html"
+    description: "Cấu hình DataSource, lấy và giải phóng connection, liên kết connection với transaction và vai trò connection pool."
+  - title: "Spring Framework — JDBC Core Classes"
+    url: "https://docs.spring.io/spring-framework/reference/data-access/jdbc/core.html"
+    description: "JdbcTemplate, NamedParameterJdbcTemplate, JdbcClient, RowMapper, truy vấn/cập nhật dữ liệu và xử lý lỗi."
+  - title: "Spring Framework — JDBC Batch Operations"
+    url: "https://docs.spring.io/spring-framework/reference/data-access/jdbc/advanced.html"
+    description: "Thực hiện cập nhật hàng loạt bằng JdbcTemplate, NamedParameterJdbcTemplate và batch parameter source."
+  - title: "Spring Framework — SimpleJdbc Classes"
+    url: "https://docs.spring.io/spring-framework/reference/data-access/jdbc/simple.html"
+    description: "SimpleJdbcInsert, SimpleJdbcCall, metadata database và xử lý khóa tự sinh hoặc stored procedure."
+  - title: "Spring Framework — JDBC Parameter and Data Value Handling"
+    url: "https://docs.spring.io/spring-framework/reference/data-access/jdbc/parameter-handling.html"
+    description: "Xử lý kiểu SQL, tham số null, BLOB/CLOB và danh sách giá trị trong điều kiện IN."
+  - title: "Spring Framework — Data Access with R2DBC"
+    url: "https://docs.spring.io/spring-framework/reference/data-access/r2dbc.html"
+    description: "Truy cập SQL non-blocking bằng DatabaseClient, ConnectionFactory, reactive query và R2dbcTransactionManager."
+  - title: "Spring Framework — ORM Data Access"
+    url: "https://docs.spring.io/spring-framework/reference/data-access/orm.html"
+    description: "Tổng quan cách Spring tích hợp ORM, JPA, Hibernate, resource management và nhất quán ngoại lệ."
+  - title: "Spring Framework — JPA Integration"
+    url: "https://docs.spring.io/spring-framework/reference/data-access/orm/jpa.html"
+    description: "Cấu hình EntityManagerFactory, @PersistenceContext, EntityManager và tương tác với JpaTransactionManager."
+  - title: "Spring Framework — Transaction Management"
+    url: "https://docs.spring.io/spring-framework/reference/data-access/transaction.html"
+    description: "Khái niệm transaction abstraction, transaction manager và quản lý transaction khai báo hoặc lập trình."

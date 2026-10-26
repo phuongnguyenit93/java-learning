@@ -1,16 +1,28 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "Oracle — Java SE 14 Language Changes"
+    url: "https://docs.oracle.com/en/java/javase/14/language/java-language-changes.html"
+    description: "Đối chiếu các thay đổi ngôn ngữ Java 14; switch expressions là tính năng chính thức, còn records, pattern matching instanceof và text blocks từng ở giai đoạn preview nên cần học theo bản final hiện nay."
+  - title: "Oracle JDK 21 — Switch Expressions and Statements"
+    url: "https://docs.oracle.com/en/java/javase/21/language/switch-expressions-and-statements.html"
+    description: "Cách dùng switch expression đã chính thức từ Java 14 với case ->, yield, kiểm soát fall-through và trả về giá trị; kiến thức tiếp tục áp dụng ở JDK hiện đại."
+  - title: "Oracle JDK 21 — Record Classes"
+    url: "https://docs.oracle.com/en/java/javase/21/language/records.html"
+    description: "Học records theo đặc tả ổn định từ Java 16 thay vì cú pháp preview Java 14: components, canonical constructor, accessors, equals, hashCode, toString và tính bất biến nông."
+  - title: "Oracle JDK 21 — Pattern Matching for instanceof"
+    url: "https://docs.oracle.com/en/java/javase/21/language/pattern-matching-instanceof.html"
+    description: "Sử dụng instanceof pattern matching đã ổn định từ Java 16, scope của pattern variable và type-safe extraction; không áp dụng giới hạn tạm thời của preview Java 14."
+  - title: "Oracle JDK 21 — Text Blocks"
+    url: "https://docs.oracle.com/en/java/javase/21/language/text-blocks.html"
+    description: "Tham khảo text blocks bản chính thức từ Java 15 với chuỗi nhiều dòng, dấu ba nháy kép, xuống dòng, indentation và escape; thay thế hướng dẫn preview thời Java 14."
+  - title: "Oracle JDK 21 — The java Command: Helpful NullPointerException Messages"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/specs/man/java.html"
+    description: "Tra cứu tùy chọn ShowCodeDetailsInExceptionMessages và thông báo NPE chỉ rõ reference null; cải tiến xuất hiện từ Java 14 và được bật mặc định ở JDK hiện đại."
+  - title: "Oracle JDK 26 API — RecordingStream (JFR Event Streaming)"
+    url: "https://docs.oracle.com/en/java/javase/26/docs/api/jdk.jfr/jdk/jfr/consumer/RecordingStream.html"
+    description: "API jdk.jfr.consumer.RecordingStream xuất hiện từ Java 14 và vẫn tồn tại: đăng ký onEvent, đọc JVM events liên tục để giám sát, phân tích GC và hiệu năng."
+  - title: "Oracle JDK 21 — Garbage Collection Tuning Guide"
+    url: "https://docs.oracle.com/en/java/javase/21/gctuning/index.html"
+    description: "Kiến thức hiện hành về G1 GC, quản lý heap, NUMA, tối ưu độ trễ và throughput; đặt cải tiến G1 NUMA-aware của Java 14 trong bối cảnh JVM còn được hỗ trợ."
+  - title: "Oracle JDK 26 — jpackage Tool"
+    url: "https://docs.oracle.com/en/java/javase/26/docs/specs/man/jpackage.html"
+    description: "Học jpackage theo phiên bản chính thức hiện hành để đóng gói Java application image và native installers; công cụ từng incubate ở Java 14 và đã được chuẩn hóa từ Java 16."

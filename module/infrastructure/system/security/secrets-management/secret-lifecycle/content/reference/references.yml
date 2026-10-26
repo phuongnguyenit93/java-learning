@@ -1,16 +1,28 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "OWASP — Secrets Management Cheat Sheet"
+    url: "https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html"
+    description: "Tổng quan vòng đời secrets: tạo, cấp phát, lưu trữ, cấp quyền, rotation, revocation, expiration, metadata, audit và quy trình ứng phó khi rò rỉ."
+  - title: "NIST SP 800-57 Part 1 Rev. 5 — Key Management"
+    url: "https://csrc.nist.gov/pubs/sp/800/57/pt1/r5/final"
+    description: "Khung quản lý khóa mật mã: các trạng thái và giai đoạn key lifecycle, cryptoperiod, sao lưu, phục hồi, hủy khóa và bảo vệ keying material."
+  - title: "OWASP — Key Management Cheat Sheet"
+    url: "https://cheatsheetseries.owasp.org/cheatsheets/Key_Management_Cheat_Sheet"
+    description: "Hướng dẫn tạo, phân phối, lưu, rotation, decommission, zeroization, HSM/KMS, access control và ghi nhận hoạt động quản lý khóa."
+  - title: "OWASP — Cryptographic Storage Cheat Sheet"
+    url: "https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html"
+    description: "Bảo vệ secret và khóa mã hóa khi lưu trữ; phân biệt data encryption key/key-encryption key, thời hạn sử dụng và xử lý key compromise."
+  - title: "NIST SP 800-53 Rev. 5 — Security and Privacy Controls"
+    url: "https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final"
+    description: "Các control liên quan đến quản lý authenticator (IA-5), access control, auditing và ứng phó sự cố để xây chính sách vòng đời credential."
+  - title: "OWASP — CI/CD Security Cheat Sheet"
+    url: "https://cheatsheetseries.owasp.org/cheatsheets/CI_CD_Security_Cheat_Sheet.html"
+    description: "Bảo vệ secret trong pipeline, tránh hardcode và ghi log, sử dụng credential tạm thời, áp dụng least privilege và secret scanning."
+  - title: "OWASP — Logging Cheat Sheet"
+    url: "https://cheatsheetseries.owasp.org/cheatsheets/Logging_Cheat_Sheet.html"
+    description: "Nguyên tắc không ghi plaintext passwords, access tokens, connection strings hoặc khóa mật mã vào log; vẫn duy trì audit metadata an toàn."
+  - title: "Kubernetes — Good Practices for Kubernetes Secrets"
+    url: "https://kubernetes.io/docs/concepts/security/secrets-good-practices/"
+    description: "Ví dụ vận hành secrets trên hạ tầng: encryption at rest, RBAC tối thiểu, short-lived secrets, không lưu manifest chứa secret vào repository."
+  - title: "GitHub Docs — Secret Scanning Validity Checks"
+    url: "https://docs.github.com/en/code-security/concepts/secret-security/validity-checks"
+    description: "Cơ chế xác minh token phát hiện bị lộ còn hiệu lực hay không, giúp ưu tiên thu hồi và rotation nhanh theo mức độ rủi ro."

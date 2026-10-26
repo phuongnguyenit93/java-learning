@@ -1,16 +1,40 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "Oracle — Significant Changes in JDK 21"
+    url: "https://docs.oracle.com/en/java/javase/21/migrate/significant-changes-jdk-release.html"
+    description: "Tổng quan các tính năng ổn định của JDK 21; phân biệt tính năng chính thức với những thử nghiệm preview và incubator."
+  - title: "Oracle — Java SE 21 Language Changes"
+    url: "https://docs.oracle.com/en/java/javase/21/language/java-language-changes-release.html"
+    description: "Danh sách tính năng ngôn ngữ theo phiên bản; Record Patterns và Pattern Matching for switch trở thành chính thức ở Java 21."
+  - title: "Oracle — Record Patterns"
+    url: "https://docs.oracle.com/en/java/javase/21/language/record-patterns.html"
+    description: "Kiểm tra và tách các thành phần record bằng pattern, hỗ trợ nested record patterns, type inference và instanceof."
+  - title: "Oracle — Pattern Matching for switch"
+    url: "https://docs.oracle.com/en/java/javase/21/language/pattern-matching-switch.html"
+    description: "Sử dụng type patterns trong switch, when guards, xử lý null, dominance và yêu cầu exhaustiveness."
+  - title: "Oracle — Virtual Threads Guide"
+    url: "https://docs.oracle.com/en/java/javase/21/core/virtual-threads.html"
+    description: "Cơ chế virtual threads chính thức từ Java 21, thread-per-request, blocking I/O, pinning, observability và giới hạn sử dụng."
+  - title: "Java SE 21 API — Thread"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Thread.html"
+    description: "Các API Thread.ofVirtual và Thread.startVirtualThread; phân biệt virtual threads với platform threads và workload phù hợp."
+  - title: "Java SE 21 API — Executors"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/Executors.html"
+    description: "Executors.newVirtualThreadPerTaskExecutor cho một virtual thread mỗi tác vụ; không pool virtual threads."
+  - title: "Oracle — Sequenced Collections Guide"
+    url: "https://docs.oracle.com/en/java/javase/21/core/creating-sequenced-collections-sets-and-maps.html"
+    description: "Giải thích JEP 431 và cách mô hình hóa thứ tự duyệt, thao tác đầu/cuối và reversed view cho collections."
+  - title: "Java SE 21 API — SequencedCollection"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/SequencedCollection.html"
+    description: "Giao diện collection có thứ tự với getFirst/getLast, addFirst/addLast và reversed view."
+  - title: "Java SE 21 API — SequencedSet"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/SequencedSet.html"
+    description: "Tập phần tử duy nhất có thứ tự duyệt, reversed view và các implementations hỗ trợ."
+  - title: "Java SE 21 API — SequencedMap"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/SequencedMap.html"
+    description: "Map có thứ tự duyệt, thao tác entry đầu/cuối, sequenced views và reversed view."
+  - title: "Java SE 21 API — KEM"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/javax/crypto/KEM.html"
+    description: "API Key Encapsulation Mechanism từ Java 21: encapsulate và decapsulate shared secret với public-key cryptography."
+  - title: "Oracle JDK 21 — Generational ZGC"
+    url: "https://docs.oracle.com/en/java/javase/21/gctuning/available-collectors.html"
+    description: "Kiến trúc Generational ZGC có ở JDK 21; học quản lý độ trễ GC và lưu ý flag ZGenerational đã bị loại bỏ ở JDK mới."

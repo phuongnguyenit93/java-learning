@@ -1,16 +1,37 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "Oracle Java SE 21 — java.io Package"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/package-summary.html"
+    description: "Tổng quan API input/output theo stream, file system và object serialization; tham khảo cảnh báo về giải tuần tự hóa dữ liệu không tin cậy."
+  - title: "Oracle Java SE 21 — InputStream"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/InputStream.html"
+    description: "Luồng byte đầu vào, read, transferTo, skip, đóng tài nguyên và cách thiết kế I/O dạng byte."
+  - title: "Oracle Java SE 21 — Reader"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/Reader.html"
+    description: "Luồng ký tự đầu vào, phân biệt character streams và byte streams, kết hợp bộ giải mã ký tự."
+  - title: "Oracle Java SE 21 — BufferedReader"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/BufferedReader.html"
+    description: "Đọc văn bản có buffer, đọc từng dòng bằng readLine và lines; hiểu vai trò buffering khi I/O tốn chi phí."
+  - title: "Oracle Java SE 21 — RandomAccessFile"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/RandomAccessFile.html"
+    description: "Đọc/ghi truy cập ngẫu nhiên bằng file pointer, seek và các phương thức đọc/ghi dữ liệu có kiểu."
+  - title: "Oracle Java SE 21 — Files"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/nio/file/Files.html"
+    description: "Các thao tác NIO.2 đối với file/thư mục: read, write, copy, move, walk, stream và attributes."
+  - title: "Oracle Java SE 21 — Path"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/nio/file/Path.html"
+    description: "Biểu diễn đường dẫn hệ thống tệp, resolve, relativize, normalize và thao tác với filesystem."
+  - title: "Oracle Java SE 21 — FileChannel"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/nio/channels/FileChannel.html"
+    description: "Channel đọc/ghi file theo vị trí, transfer, file locking và ánh xạ tệp vào bộ nhớ."
+  - title: "Oracle Java SE 21 — ByteBuffer"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/nio/ByteBuffer.html"
+    description: "Buffer trong Java NIO với position, limit, capacity, flip, clear và thao tác get/put."
+  - title: "Oracle Java SE 21 — Charset"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/nio/charset/Charset.html"
+    description: "Mã hóa và giải mã giữa byte và Unicode, lựa chọn charset rõ ràng khi đọc ghi văn bản."
+  - title: "Oracle Java SE 21 — Serializable"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/Serializable.html"
+    description: "Cơ chế object serialization, marker interface và các lưu ý thiết kế, tương thích khi lưu đối tượng."
+  - title: "Oracle Java SE 21 — AsynchronousFileChannel"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/nio/channels/AsynchronousFileChannel.html"
+    description: "I/O bất đồng bộ trên file bằng Future hoặc CompletionHandler và quản lý channel."

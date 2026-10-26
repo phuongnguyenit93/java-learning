@@ -1,16 +1,28 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "Dev.java — Exceptions"
+    url: "https://dev.java/learn/language/annotations-exceptions/exceptions/"
+    description: "Giới thiệu cơ chế exception, phân loại lỗi và cách tổ chức xử lý ngoại lệ trong Java."
+  - title: "Dev.java — Catching and Handling Exceptions"
+    url: "https://dev.java/learn/catching-and-handling-exceptions/"
+    description: "Cách dùng try, catch, finally và try-with-resources để xử lý ngoại lệ và giải phóng tài nguyên."
+  - title: "Dev.java — Throwing Exceptions"
+    url: "https://dev.java/learn/language/annotations-exceptions/exceptions/throwing/"
+    description: "Tạo và ném ngoại lệ bằng throw/throws, khai báo exception tùy chỉnh và exception chaining."
+  - title: "Dev.java — Checked and Unchecked Exceptions"
+    url: "https://dev.java/learn/language/annotations-exceptions/exceptions/unchecked-exception-controversy/"
+    description: "Phân biệt checked/unchecked exceptions và lựa chọn kiểu ngoại lệ dựa trên khả năng phục hồi của caller."
+  - title: "Java Language Specification 21 — Chapter 11: Exceptions"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-11.html"
+    description: "Đặc tả phân loại exception, kiểm tra checked exception khi biên dịch và cách lan truyền ngoại lệ ở runtime."
+  - title: "Java SE 21 — Throwable"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Throwable.html"
+    description: "Superclass của lỗi và ngoại lệ: cause, suppressed exceptions, stack trace, message và các phương thức chẩn đoán."
+  - title: "Java SE 21 — Exception"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Exception.html"
+    description: "Cơ sở cho các ngoại lệ ứng dụng; mối quan hệ với checked exceptions và RuntimeException."
+  - title: "Java SE 21 — RuntimeException"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/RuntimeException.html"
+    description: "Unchecked exceptions, hệ phân cấp và tác động đến khai báo throws trong API."
+  - title: "Java SE 21 — AutoCloseable"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/AutoCloseable.html"
+    description: "Quy ước close() phục vụ try-with-resources, thứ tự đóng tài nguyên và suppressed exceptions."

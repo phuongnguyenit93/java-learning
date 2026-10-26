@@ -1,16 +1,40 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "IETF RFC 8693 — OAuth 2.0 Token Exchange"
+    url: "https://www.rfc-editor.org/rfc/rfc8693.html"
+    description: "Chuẩn Security Token Service (STS) trao đổi token giữa các trust domain, xử lý subject token, audience, scope, delegation và impersonation."
+  - title: "IETF RFC 7523 — JWT Profile for OAuth 2.0"
+    url: "https://www.rfc-editor.org/rfc/rfc7523.html"
+    description: "Dùng JWT assertion để xin access token hoặc xác thực OAuth client; quy tắc kiểm tra chữ ký, issuer, audience và thời hạn."
+  - title: "IETF RFC 8725 — JWT Best Current Practices"
+    url: "https://www.rfc-editor.org/rfc/rfc8725.html"
+    description: "Thực hành xác minh JWT an toàn: algorithm selection, issuer/audience checks, chống token substitution và key confusion."
+  - title: "SPIFFE — Overview"
+    url: "https://spiffe.io/docs/latest/spiffe-about/overview/"
+    description: "Chuẩn identity cho workload đa môi trường, SPIFFE ID, SVID và xác thực dịch vụ bằng X.509 hoặc JWT."
+  - title: "SPIRE — Concepts"
+    url: "https://spiffe.io/docs/latest/spire-about/spire-concepts/"
+    description: "SPIRE Server/Agent, node/workload attestation, Workload API, cấp và xoay vòng SVID cho ứng dụng."
+  - title: "Kubernetes — Service Accounts"
+    url: "https://kubernetes.io/docs/concepts/security/service-accounts/"
+    description: "Danh tính workload trong Kubernetes, projected short-lived tokens, TokenRequest API, audience binding và quyền truy cập tối thiểu."
+  - title: "Google Cloud — Workload Identity Federation"
+    url: "https://docs.cloud.google.com/iam/docs/workload-identity-federation"
+    description: "Liên kết identity bên ngoài qua OIDC, SAML, AWS/Azure hay certificate; token exchange, attribute mapping và IAM conditions không cần key dài hạn."
+  - title: "Google Cloud — Identities for Workloads"
+    url: "https://docs.cloud.google.com/iam/docs/workload-identities"
+    description: "So sánh federated identities, service accounts và khóa tĩnh, lựa chọn short-lived credentials cho workload."
+  - title: "AWS STS — AssumeRoleWithWebIdentity"
+    url: "https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRoleWithWebIdentity.html"
+    description: "Trao đổi OIDC/web identity token lấy AWS temporary credentials; trust policy và bảo vệ quyền theo role."
+  - title: "Microsoft Entra — Federated Identity Credentials"
+    url: "https://learn.microsoft.com/graph/api/resources/federatedidentitycredentials-overview?view=graph-rest-1.0"
+    description: "Issuer, subject và audience của federated credential, cấp quyền cho workload bên ngoài mà không lưu client secret lâu dài."
+  - title: "Microsoft Entra — Workload Identities"
+    url: "https://learn.microsoft.com/en-us/entra/workload-id/workload-identities-overview"
+    description: "Phân biệt identity của ứng dụng, service principal, managed identity và các tình huống bảo vệ non-human identities."
+  - title: "GitHub Actions — Configuring OIDC in Cloud Providers"
+    url: "https://docs.github.com/en/actions/how-tos/secure-your-work/security-harden-deployments/oidc-in-cloud-providers"
+    description: "Liên kết GitHub Actions với cloud provider bằng OIDC, hạn chế trust theo repository/environment và loại bỏ deployment secrets dài hạn."
+  - title: "OpenID Connect Core 1.0"
+    url: "https://openid.net/specs/openid-connect-core-1_0.html"
+    description: "Chuẩn OIDC về ID token, issuer, audience, discovery liên quan, nền tảng xác lập quan hệ tin cậy khi federation."

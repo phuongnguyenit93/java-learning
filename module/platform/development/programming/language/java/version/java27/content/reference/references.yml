@@ -1,16 +1,43 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "Oracle — JDK 27 Release Notes"
+    url: "https://www.oracle.com/java/technologies/javase/27-relnote-issues.html"
+    description: "Ghi chú phát hành Java 27, các thay đổi ổn định, bảo mật, hiệu năng, khả năng tương thích và cảnh báo nâng cấp."
+  - title: "Oracle — Significant Changes in JDK 27"
+    url: "https://docs.oracle.com/en/java/javase/27/migrate/significant-changes-jdk-27-release.html"
+    description: "Tóm tắt thay đổi JDK 27, phân biệt JEP ổn định với preview/incubator và các cảnh báo tương thích."
+  - title: "Inside Java — JDK 27 Is Now Available"
+    url: "https://inside.java/2026/09/15/jdk-27-available/"
+    description: "Tổng quan phát hành GA Java 27 ngày 15/09/2026 và bốn cải tiến ổn định nổi bật."
+  - title: "OpenJDK JEP 523 — G1 Default Everywhere"
+    url: "https://openjdk.org/jeps/523"
+    description: "G1 trở thành bộ thu gom rác mặc định trên mọi môi trường, kể cả máy một CPU và container ít RAM."
+  - title: "Oracle Java 27 — Available Garbage Collectors"
+    url: "https://docs.oracle.com/en/java/javase/27/gctuning/available-collectors.html"
+    description: "Đối chiếu G1, Serial, Parallel và ZGC; chọn theo yêu cầu throughput, pause time và tài nguyên thực tế."
+  - title: "Oracle Java 27 — G1 GC Tuning"
+    url: "https://docs.oracle.com/en/java/javase/27/gctuning/garbage-first-garbage-collector-tuning.html"
+    description: "Khuyến nghị sử dụng G1 mặc định, quan sát GC log và điều chỉnh heap, pause-time target khi cần."
+  - title: "OpenJDK JEP 527 — Post-Quantum Hybrid TLS 1.3"
+    url: "https://openjdk.org/jeps/527"
+    description: "Kết hợp trao đổi khóa elliptic-curve truyền thống và ML-KEM trong TLS 1.3 nhằm chống nguy cơ thu thập dữ liệu giải mã sau này."
+  - title: "Inside Java — JDK 27 Security Enhancements"
+    url: "https://inside.java/2026/09/16/jdk27-security-enhancements/"
+    description: "Tổng hợp hỗ trợ hybrid key exchange hậu lượng tử trong TLS 1.3 và các cải tiến bảo mật có hiệu lực."
+  - title: "OpenJDK JEP 534 — Compact Object Headers by Default"
+    url: "https://openjdk.org/jeps/534"
+    description: "Compact Object Headers được bật mặc định, giảm kích thước object header xuống 64 bit trên JVM 64 bit."
+  - title: "Oracle Java 27 — java Command Options"
+    url: "https://docs.oracle.com/en/java/javase/27/docs/specs/man/java.html"
+    description: "Tài liệu tùy chọn JVM đang hỗ trợ, gồm cách kiểm tra compact object headers và cấu hình bộ thu gom rác."
+  - title: "OpenJDK JEP 536 — JFR In-Process Data Redaction"
+    url: "https://openjdk.org/jeps/536"
+    description: "JFR mặc định che dữ liệu nhạy cảm trong đối số dòng lệnh và giá trị ban đầu của environment/system properties."
+  - title: "Oracle — Consolidated JDK 27 Release Notes"
+    url: "https://www.oracle.com/java/technologies/javase/27all-relnotes.html"
+    description: "Chi tiết thay đổi Flight RecorderOptions, redact-key/redact-argument và các cập nhật JDK 27."
+  - title: "Inside Java — JDK 27 Performance Improvements"
+    url: "https://inside.java/2026/09/28/performance-update-jdk27/"
+    description: "Phân tích tác động hiệu năng G1 mặc định, tối ưu runtime và ảnh hưởng trong môi trường tài nguyên hạn chế."
+  - title: "Oracle — Java 27 Language Updates"
+    url: "https://docs.oracle.com/en/java/javase/27/language/index.html"
+    description: "Tài liệu ngôn ngữ phiên bản 27; xác định rõ những tính năng đang preview để không coi là cú pháp ổn định."

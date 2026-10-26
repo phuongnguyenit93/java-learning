@@ -1,16 +1,31 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "Oracle — JDK 16 Release Notes"
+    url: "https://www.oracle.com/java/technologies/javase/16-relnote-issues.html"
+    description: "Nguồn lịch sử chính thức để xác định những tính năng Java 16 đã phát hành ổn định, bao gồm Records, instanceof patterns, jpackage, Unix-domain sockets, Elastic Metaspace và JFR; tránh dùng các API incubator/preview cũ."
+  - title: "Oracle JDK 21 — Record Classes"
+    url: "https://docs.oracle.com/en/java/javase/21/language/records.html"
+    description: "Học Records đã chính thức từ Java 16: record components, canonical/compact constructor, accessor, equals, hashCode và toString; hiểu rõ tính bất biến nông thay vì xem record như đối tượng bất biến sâu."
+  - title: "Oracle JDK 21 — Pattern Matching for instanceof"
+    url: "https://docs.oracle.com/en/java/javase/21/language/pattern-matching-instanceof.html"
+    description: "Pattern matching cho instanceof trở thành tính năng chính thức ở Java 16; dùng type pattern và flow-scoped variable để kiểm tra kiểu và lấy đối tượng an toàn mà không cần ép kiểu thủ công."
+  - title: "Oracle JDK 21 — Sealed Classes and Interfaces"
+    url: "https://docs.oracle.com/en/java/javase/21/language/sealed-classes-and-interfaces.html"
+    description: "Sealed classes còn preview ở Java 16 nhưng được chuẩn hóa từ Java 17; học cú pháp ổn định sealed, permits, final và non-sealed để kiểm soát cây kế thừa."
+  - title: "Oracle JDK 21 — jpackage Command"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/specs/man/jpackage.html"
+    description: "jpackage chuyển từ incubator sang công cụ chính thức trong Java 16; đóng gói ứng dụng thành app image hoặc installer cho hệ điều hành bằng cú pháp ổn định hiện nay."
+  - title: "Oracle JDK 21 — NIO Channels and Unix Domain Sockets"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/nio/channels/package-summary.html"
+    description: "Hỗ trợ Unix-domain sockets chính thức từ Java 16 trong NIO SocketChannel/ServerSocketChannel; phân biệt IPC cùng máy với TCP, ProtocolFamily.UNIX và UnixDomainSocketAddress."
+  - title: "Oracle JDK 21 — Z Garbage Collector"
+    url: "https://docs.oracle.com/en/java/javase/21/gctuning/z-garbage-collector2.html"
+    description: "Hiểu mục tiêu độ trễ thấp và xử lý đồng thời của ZGC, liên hệ cải tiến concurrent thread-stack processing ở Java 16; tham khảo cách tuning đang áp dụng thay vì sao chép cờ GC cũ."
+  - title: "Oracle JDK 21 — Significant Changes in the JDK"
+    url: "https://docs.oracle.com/en/java/javase/21/migrate/significant-changes-jdk-release.html"
+    description: "Đối chiếu các JEP ổn định Java 16: Elastic Metaspace giảm bộ nhớ class metadata, ZGC, UNIX sockets và jpackage; nhận diện chính xác mục preview/incubator không nên học theo nguyên trạng."
+  - title: "Oracle JDK 21 — Strong Encapsulation and Migration"
+    url: "https://docs.oracle.com/en/java/javase/21/migrate/migrating-jdk-8-later-jdk-releases.html"
+    description: "Tác động thực tế của JEP 396 ở Java 16 và cơ chế đóng gói mạnh hơn từ Java 17: tránh dựa vào JDK internals, hiểu lỗi InaccessibleObjectException và thay thế reflective access không còn hợp lệ."
+  - title: "Oracle JDK 21 API — DateTimeFormatter"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/format/DateTimeFormatter.html"
+    description: "Tham chiếu pattern B (day period) được bổ sung từ Java 16 để định dạng giờ theo cách nói buổi sáng, chiều hoặc tối theo locale; áp dụng với API java.time hiện hành."

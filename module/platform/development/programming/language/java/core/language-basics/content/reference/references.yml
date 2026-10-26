@@ -1,16 +1,25 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "Dev.java — Java Language Basics"
+    url: "https://dev.java/learn/language-basics/"
+    description: "Lộ trình thực hành Java cơ bản: khai báo biến, primitive types, arrays, var, toán tử, expressions, statements, blocks, if/loops và switch."
+  - title: "JLS Java SE 21 — Chapter 3: Lexical Structure"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-3.html"
+    description: "Đặc tả chính thức về identifier, keyword, literal, comment, ký tự Unicode, escape sequences, toán tử và tokens."
+  - title: "JLS Java SE 21 — Chapter 4: Types, Values, and Variables"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-4.html"
+    description: "Giải thích primitive/reference types, giá trị, khai báo, phạm vi sử dụng, biến final và giá trị mặc định."
+  - title: "JLS Java SE 21 — Chapter 5: Conversions and Contexts"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-5.html"
+    description: "Quy tắc ép kiểu và chuyển đổi widening/narrowing, boxing/unboxing, assignment, casting và numeric promotion."
+  - title: "JLS Java SE 21 — Chapter 6: Names"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-6.html"
+    description: "Quy tắc định danh, phân giải tên, phạm vi (scope), shadowing và cách truy cập biến, kiểu hay thành viên."
+  - title: "JLS Java SE 21 — Chapter 10: Arrays"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-10.html"
+    description: "Đặc tả về kiểu mảng, khai báo, khởi tạo, truy cập phần tử, chiều dài, array store và mảng nhiều chiều."
+  - title: "JLS Java SE 21 — Chapter 14: Blocks, Statements, and Patterns"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-14.html"
+    description: "Luồng điều khiển if, switch, vòng lặp, break/continue/return, khối lệnh, biến cục bộ và pattern matching."
+  - title: "JLS Java SE 21 — Chapter 15: Expressions"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-15.html"
+    description: "Biểu thức, toán tử, thứ tự đánh giá, ưu tiên, phép gán, toán tử điều kiện và kết quả tính toán."

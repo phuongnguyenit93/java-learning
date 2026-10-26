@@ -1,16 +1,31 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "Oracle JDK 25 Migration Guide — Significant Changes in JDK 22 Release"
+    url: "https://docs.oracle.com/en/java/javase/25/migrate/significant-changes-jdk-22.html"
+    description: "Tổng quan các JEP thuộc Java 22; phân biệt tính năng hoàn thiện với preview/incubator để học đúng phần vẫn áp dụng trên JDK hiện đại."
+  - title: "Oracle Java 22 — Unnamed Variables and Patterns"
+    url: "https://docs.oracle.com/en/java/javase/22/language/unnamed-variables-and-patterns.html"
+    description: "Tính năng chính thức từ Java 22: ký hiệu gạch dưới (_) cho biến hoặc record pattern không sử dụng, kể cả catch, lambda và vòng lặp khi phù hợp."
+  - title: "Oracle JDK 25 API — Foreign Function and Memory (java.lang.foreign)"
+    url: "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/foreign/package-summary.html"
+    description: "Foreign Function & Memory API ổn định từ Java 22: MemorySegment, Arena, MemoryLayout, Linker, SymbolLookup; vòng đời vùng nhớ và gọi native functions an toàn."
+  - title: "Oracle JDK 25 — The java Command"
+    url: "https://docs.oracle.com/en/java/javase/25/docs/specs/man/java.html"
+    description: "Tài liệu launcher hiện hành: source-file mode và chạy chương trình gồm nhiều file .java (JEP 458 của Java 22), cú pháp lệnh và giới hạn của chế độ chạy nguồn."
+  - title: "Oracle JDK 25 — Garbage-First (G1) Garbage Collector"
+    url: "https://docs.oracle.com/en/java/javase/25/gctuning/garbage-first-g1-garbage-collector1.html"
+    description: "Kiến thức G1 GC còn hiệu lực; liên hệ region pinning được triển khai từ Java 22 nhằm giảm trì hoãn GC khi native JNI critical region còn giữ đối tượng."
+  - title: "Oracle JDK 25 API — Gatherers"
+    url: "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/stream/Gatherers.html"
+    description: "Stream Gatherers từng preview tại Java 22 và đã chính thức trong Java 24: windowFixed, windowSliding, scan, fold và mapConcurrent để mở rộng thao tác trung gian trên Stream."
+  - title: "Oracle JDK 25 API — Class-File API"
+    url: "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/classfile/package-summary.html"
+    description: "Class-File API từng preview tại Java 22, chính thức từ Java 24: đọc, tạo và biến đổi bytecode/classfile qua ClassFile, ClassModel, builder và transform."
+  - title: "Oracle JDK 25 API — ScopedValue"
+    url: "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/ScopedValue.html"
+    description: "Scoped Values từng preview trong Java 22, chính thức từ Java 25: truyền dữ liệu theo dynamic scope và chia sẻ ngữ cảnh an toàn, hiệu quả cùng virtual threads."
+  - title: "Oracle Java 25 — Flexible Constructor Bodies"
+    url: "https://docs.oracle.com/en/java/javase/25/language/flexible-constructor-bodies.html"
+    description: "Tính năng từng preview tại Java 22 dưới tên Statements before super(...), đã hoàn thiện ở Java 25; cho phép validation và tính toán trước super()/this() mà không truy cập this."
+  - title: "Dev.java — Launching Simple Source-Code Programs"
+    url: "https://dev.java/learn/first-steps/first-java-code/launch-simple-source-code-programs/"
+    description: "Ví dụ chính thức về chạy trực tiếp mã Java không cần biên dịch thủ công, gồm nhiều file nguồn từ JDK 22; dành cho script, demo và bài học nhỏ."

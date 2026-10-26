@@ -1,16 +1,37 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "Oracle — Java Language Changes in Java SE 10"
+    url: "https://docs.oracle.com/en/java/javase/21/language/java-language-changes-release.html"
+    description: "Tổng quan thay đổi ngôn ngữ Java 10, đặc biệt local-variable type inference; phân biệt với tính năng của các bản Java khác."
+  - title: "Oracle — Local Variable Type Inference"
+    url: "https://docs.oracle.com/en/java/javase/21/language/local-variable-type-inference.html"
+    description: "Cách dùng var cho biến cục bộ có initializer, các trường hợp không hợp lệ và tác động đến tính dễ đọc của mã nguồn."
+  - title: "JLS 21 — Blocks and Statements"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-14.html"
+    description: "Quy tắc khai báo biến cục bộ, suy luận kiểu với var, phạm vi biến và kiểm tra kiểu tại thời điểm biên dịch."
+  - title: "Dev.java — Unmodifiable Copies of Collections"
+    url: "https://dev.java/learn/api/collections-and-streams/collections-framework/factory-methods/"
+    description: "Hướng dẫn List.copyOf, Set.copyOf và Map.copyOf; phân biệt bản sao không sửa được với deep immutability."
+  - title: "Java SE 21 — List.copyOf"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html"
+    description: "Tạo danh sách không thể sửa từ Collection, bảo toàn thứ tự duyệt và không chấp nhận phần tử null."
+  - title: "Java SE 21 — Set.copyOf"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Set.html"
+    description: "Tạo tập hợp không thể sửa, loại phần tử trùng và không chấp nhận null; được bổ sung từ Java 10."
+  - title: "Java SE 21 — Map.copyOf"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html"
+    description: "Tạo bản sao Map không thể sửa, không chấp nhận khóa hoặc giá trị null và tách khỏi thay đổi cấu trúc Map gốc."
+  - title: "Java SE 21 — Unmodifiable Collectors"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/stream/Collectors.html"
+    description: "Các collector toUnmodifiableList, toUnmodifiableSet và toUnmodifiableMap từ Java 10; lưu ý null và khóa trùng."
+  - title: "Java SE 21 — Optional.orElseThrow"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html"
+    description: "Phương thức orElseThrow() không tham số xuất hiện ở Java 10, ném NoSuchElementException khi Optional rỗng."
+  - title: "Java SE 21 — Runtime.Version"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Runtime.Version.html"
+    description: "Biểu diễn, phân tích và so sánh version string của JDK; dùng API thay vì tự tách chuỗi phiên bản."
+  - title: "Oracle — JDK Version String Format and Migration"
+    url: "https://docs.oracle.com/en/java/javase/21/migrate/migrating-jdk-8-later-jdk-releases.html"
+    description: "Giải thích scheme FEATURE.INTERIM.UPDATE.PATCH áp dụng từ JDK 10 và tương thích trong các bản JDK hiện đại."
+  - title: "Oracle Java SE 21 — Class Data Sharing"
+    url: "https://docs.oracle.com/en/java/javase/21/vm/class-data-sharing.html"
+    description: "CDS và AppCDS tối ưu thời gian khởi động, chia sẻ metadata và sử dụng archives theo tài liệu JDK 21 hiện hành."

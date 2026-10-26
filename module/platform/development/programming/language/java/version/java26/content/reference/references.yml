@@ -1,16 +1,31 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "Oracle JDK 26 — Release Notes"
+    url: "https://www.oracle.com/java/technologies/javase/26-relnote-issues.html"
+    description: "Nguồn chính thức về tính năng Java 26 đã phát hành, thay đổi JVM và thư viện, mức tương thích và thay đổi bảo mật; phân biệt rõ JEP chính thức với preview hoặc incubator, không học các API thử nghiệm như API ổn định."
+  - title: "Oracle JDK 26 — Significant Changes"
+    url: "https://docs.oracle.com/en/java/javase/26/migrate/significant-changes-jdk-26-release.html"
+    description: "Tóm tắt tính năng Java 26 đang áp dụng: HTTP/3, AOT cache, G1 GC, cảnh báo khi sửa trường final bằng reflection và các vấn đề migration; phân loại nội dung thử nghiệm để tránh sử dụng như production API."
+  - title: "OpenJDK JEP 517 — HTTP/3 for HTTP Client API"
+    url: "https://openjdk.org/jeps/517"
+    description: "Thiết kế hỗ trợ HTTP/3 qua java.net.http, cơ chế QUIC/TLS, chọn phiên bản giao thức, dò khả năng server và fallback; đây là tính năng đã đưa vào JDK 26."
+  - title: "Oracle JDK 26 API — java.net.http.HttpClient"
+    url: "https://docs.oracle.com/en/java/javase/26/docs/api/java.net.http/java/net/http/HttpClient.html"
+    description: "API HttpClient phiên bản ổn định có thể cấu hình HTTP/3, HTTP/2 hoặc HTTP/1.1, gửi request đồng bộ hay bất đồng bộ và tái sử dụng kết nối; phân biệt preferred version với giao thức thực tế được thương lượng."
+  - title: "OpenJDK JEP 516 — Ahead-of-Time Object Caching with Any GC"
+    url: "https://openjdk.org/jeps/516"
+    description: "Cơ chế AOT object cache độc lập với garbage collector, hỗ trợ cả ZGC để giảm startup và warmup; hiểu lưu trữ và khôi phục đối tượng mà không giả định cùng định dạng heap."
+  - title: "OpenJDK — Project Leyden"
+    url: "https://openjdk.org/projects/leyden/"
+    description: "Bối cảnh AOT hiện đại: tối ưu thời gian khởi động, warmup và footprint; theo dõi tiến hóa từ class loading/linking đến object caching, thay vì sử dụng flag thử nghiệm hoặc cơ chế đã thay thế."
+  - title: "OpenJDK JEP 522 — G1 GC Throughput Improvements"
+    url: "https://openjdk.org/jeps/522"
+    description: "Cải tiến G1 ở Java 26 giảm đồng bộ giữa mutator và GC threads, tối ưu write barrier và throughput; liên hệ đánh đổi giữa độ trễ, hiệu suất và công việc concurrent refinement."
+  - title: "Oracle JDK 26 — Garbage-First GC Tuning"
+    url: "https://docs.oracle.com/en/java/javase/26/gctuning/garbage-first-garbage-collector-tuning.html"
+    description: "Hướng dẫn tuning G1 đang áp dụng: GC logs, heap sizing, mục tiêu pause time, tối ưu throughput và tránh khóa cứng young generation hoặc sao chép cờ JVM lỗi thời."
+  - title: "OpenJDK JEP 500 — Prepare to Make Final Mean Final"
+    url: "https://openjdk.org/jeps/500"
+    description: "Java 26 cảnh báo deep reflection sửa trường final để chuẩn bị kiểm soát integrity trong bản JDK sau; cập nhật thư viện serialization/reflection và tránh phụ thuộc vào hành vi phá tính bất biến."
+  - title: "Oracle JDK 26 — Security Updates"
+    url: "https://docs.oracle.com/en/java/javase/26/migrate/security-updates.html"
+    description: "Những thay đổi bảo mật đang hữu ích: kiểm soát thuật toán mã hóa bị cấm, hỗ trợ chữ ký ML-DSA, hybrid public-key encryption và xác minh chứng chỉ trong key manager."

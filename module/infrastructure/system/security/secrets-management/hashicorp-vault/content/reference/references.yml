@@ -1,16 +1,43 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "HashiCorp Vault — What is Vault?"
+    url: "https://developer.hashicorp.com/vault/docs/about-vault/what-is-vault"
+    description: "Vai trò Vault trong quản lý secrets tập trung, xác thực, phân quyền, mã hóa dữ liệu và kiểm toán truy cập."
+  - title: "HashiCorp Vault — How Vault Works"
+    url: "https://developer.hashicorp.com/vault/docs/about-vault/how-vault-works"
+    description: "Luồng authenticate, authorize, secrets engine, token, lease, audit và kiến trúc xử lý yêu cầu."
+  - title: "HashiCorp Vault — Auth Methods"
+    url: "https://developer.hashicorp.com/vault/docs/auth"
+    description: "Các cơ chế xác thực người dùng và workload, liên kết identity với policies và việc phát hành token."
+  - title: "HashiCorp Vault — AppRole Authentication"
+    url: "https://developer.hashicorp.com/vault/docs/auth/approle"
+    description: "Xác thực dịch vụ/máy tự động bằng RoleID, SecretID và các ràng buộc TTL, số lần sử dụng, CIDR."
+  - title: "HashiCorp Vault — Policies"
+    url: "https://developer.hashicorp.com/vault/docs/concepts/policies"
+    description: "ACL theo path và capability, mặc định từ chối quyền, least privilege và tổ chức quy tắc truy cập."
+  - title: "HashiCorp Vault — Token Authentication"
+    url: "https://developer.hashicorp.com/vault/docs/internals/token"
+    description: "Cấu trúc client token, policy association, token hierarchy, metadata và quản lý phiên truy cập."
+  - title: "HashiCorp Vault — KV Secrets Engine"
+    url: "https://developer.hashicorp.com/vault/docs/secrets/kv"
+    description: "Lưu secrets dạng key-value; khác nhau giữa KV v1 và KV v2 cùng phiên bản hóa, xóa và khôi phục."
+  - title: "HashiCorp Vault — Database Secrets Engine"
+    url: "https://developer.hashicorp.com/vault/docs/secrets/databases"
+    description: "Cấp database credentials động bằng roles, rotating static credentials và thu hồi thông qua lease."
+  - title: "HashiCorp Vault — Lease, Renew, and Revoke"
+    url: "https://developer.hashicorp.com/vault/docs/concepts/lease"
+    description: "TTL của secret/token, gia hạn, tự động hết hạn và thu hồi để giảm thời gian tồn tại của credentials."
+  - title: "HashiCorp Vault — Transit Secrets Engine"
+    url: "https://developer.hashicorp.com/vault/docs/secrets/transit"
+    description: "Encryption as a Service, khóa mã hóa tập trung, ký/xác minh, key versioning và envelope encryption."
+  - title: "HashiCorp Vault — PKI Secrets Engine Setup"
+    url: "https://developer.hashicorp.com/vault/docs/secrets/pki/setup"
+    description: "Cấp phát và quản lý chứng chỉ X.509, cấu hình CA và roles cho vòng đời certificate."
+  - title: "HashiCorp Vault — Audit Logging"
+    url: "https://developer.hashicorp.com/vault/docs/audit"
+    description: "Audit devices ghi API request/response, cấu hình ghi log và lưu ý sẵn sàng khi thiết bị audit lỗi."
+  - title: "HashiCorp Vault — Sealing Best Practices"
+    url: "https://developer.hashicorp.com/vault/docs/configuration/seal/seal-best-practices"
+    description: "Seal/unseal, phân chia key shares, auto-unseal qua KMS/HSM và quy trình vận hành bảo mật."
+  - title: "HashiCorp Vault — Integrated Storage (Raft)"
+    url: "https://developer.hashicorp.com/vault/docs/configuration/storage/raft"
+    description: "Lưu trữ tích hợp với Raft replication, high availability, thiết lập cụm và các tham số vận hành."

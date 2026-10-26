@@ -1,16 +1,43 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "Oracle — Java SE 7 Language Enhancements"
+    url: "https://docs.oracle.com/javase/7/docs/technotes/guides/language/enhancements.html"
+    description: "Danh sách thay đổi cú pháp từ Java 7: binary literals, underscores, String trong switch, diamond, multi-catch và try-with-resources; chỉ học các tính năng còn dùng được."
+  - title: "JLS 21 — Lexical Structure"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-3.html"
+    description: "Đặc tả hiện hành của binary literals và dấu gạch dưới trong số; tránh hiểu nhầm cú pháp literal cũ."
+  - title: "JLS 21 — Statements and Exception Handling"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-14.html"
+    description: "Try-with-resources, auto-close, suppressed exceptions, multi-catch và precise rethrow trong Java hiện đại."
+  - title: "JLS 21 — Class Instance Creation Expressions"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-15.html"
+    description: "Diamond operator và suy luận kiểu khi tạo generic instance, được định nghĩa bởi đặc tả Java SE 21."
+  - title: "Java SE 21 — AutoCloseable"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/AutoCloseable.html"
+    description: "Giao diện quản lý tài nguyên trong try-with-resources; quy tắc đóng và xử lý lỗi khi đóng tài nguyên."
+  - title: "Java SE 21 — Files"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/nio/file/Files.html"
+    description: "NIO.2 đọc, ghi, copy, move, kiểm tra thuộc tính và duyệt cây thư mục với xử lý IOException."
+  - title: "Java SE 21 — Path"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/nio/file/Path.html"
+    description: "Đại diện đường dẫn, resolve, normalize, relativize và phối hợp thao tác tệp với Files."
+  - title: "Java SE 21 — WatchService"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/nio/file/WatchService.html"
+    description: "Theo dõi sự kiện tạo, xóa, sửa trong thư mục; xử lý WatchKey, vòng đời và giới hạn theo hệ điều hành."
+  - title: "Java SE 21 — SimpleFileVisitor"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/nio/file/SimpleFileVisitor.html"
+    description: "Duyệt file tree bằng FileVisitor và xử lý lỗi khi thăm file hoặc thư mục."
+  - title: "Java SE 21 — AsynchronousFileChannel"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/nio/channels/AsynchronousFileChannel.html"
+    description: "API NIO.2 đọc/ghi file không đồng bộ bằng Future hoặc CompletionHandler."
+  - title: "Java SE 21 — ForkJoinPool"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/ForkJoinPool.html"
+    description: "Work-stealing task pool để xử lý chia để trị; cấu hình parallelism, join và common pool."
+  - title: "Java SE 21 — RecursiveTask"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/RecursiveTask.html"
+    description: "Chia bài toán thành tác vụ có kết quả bằng fork, compute và join trong Fork/Join framework."
+  - title: "Java SE 21 — ThreadLocalRandom"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/ThreadLocalRandom.html"
+    description: "Sinh số giả ngẫu nhiên theo từng thread và tránh tranh chấp khi sử dụng đồng thời; không dùng cho mật mã."
+  - title: "Java SE 21 — Objects"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Objects.html"
+    description: "Các tiện ích Java 7: equals, hash, compare, requireNonNull cho xử lý object an toàn hơn."

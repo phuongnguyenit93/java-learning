@@ -1,16 +1,31 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "Java SE 21 — Locale"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Locale.html"
+    description: "Khái niệm language, country, script, variant, BCP 47 và cách chọn Locale cho dữ liệu hiển thị theo vùng/ngôn ngữ."
+  - title: "Java SE 21 — Locale.Builder"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Locale.Builder.html"
+    description: "Tạo Locale hợp lệ từ language, region, script và Unicode locale extensions, kiểm tra cú pháp tag."
+  - title: "Java SE 21 — ResourceBundle"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ResourceBundle.html"
+    description: "Tổ chức chuỗi và tài nguyên đa ngôn ngữ, chọn bundle theo Locale và chiến lược fallback."
+  - title: "Java SE 21 — PropertyResourceBundle"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/PropertyResourceBundle.html"
+    description: "Lưu thông điệp dịch trong file .properties và tải tài nguyên được địa phương hóa qua ResourceBundle."
+  - title: "Java SE 21 — MessageFormat"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/text/MessageFormat.html"
+    description: "Định dạng thông điệp có tham số và các nhánh lựa chọn theo ngữ cảnh ngôn ngữ/Locale."
+  - title: "Java SE 21 — NumberFormat"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/text/NumberFormat.html"
+    description: "Format và parse số, phần trăm, tiền tệ theo Locale, dấu thập phân và phân cách nhóm."
+  - title: "Java SE 21 — DecimalFormatSymbols"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/text/DecimalFormatSymbols.html"
+    description: "Ký hiệu chữ số, dấu thập phân, dấu phân nhóm và ký hiệu tiền tệ theo Locale."
+  - title: "Java SE 21 — DateTimeFormatter"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/format/DateTimeFormatter.html"
+    description: "Định dạng ngày giờ theo localized styles hoặc pattern, điều khiển Locale bằng withLocale."
+  - title: "Java SE 21 — Collator"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/text/Collator.html"
+    description: "So sánh và sắp xếp chuỗi theo quy tắc ngôn ngữ thay vì thứ tự mã Unicode thuần."
+  - title: "Java SE 21 — BreakIterator"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/text/BreakIterator.html"
+    description: "Phát hiện ranh giới ký tự, từ và câu cho xử lý văn bản đa ngôn ngữ."

@@ -1,16 +1,25 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "Java SE 21 API — Object"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html"
+    description: "Đặc tả chính thức các contract equals, hashCode, toString, clone và phân biệt identity với equality; nền tảng của mọi đối tượng Java."
+  - title: "Java SE 21 API — Objects"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Objects.html"
+    description: "Các tiện ích equals, deepEquals, hash, hashCode và toString để xây dựng phương thức so sánh, băm và biểu diễn chuỗi nhất quán."
+  - title: "Java SE 21 API — Comparable"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Comparable.html"
+    description: "Contract của compareTo: thứ tự tự nhiên, tính đối xứng và bắc cầu của so sánh, cùng khuyến nghị nhất quán với equals."
+  - title: "Java SE 21 API — Comparator"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Comparator.html"
+    description: "Contract của bộ so sánh tùy chỉnh; xử lý trật tự toàn phần, composition và tương thích giữa compare với equals."
+  - title: "Java SE 21 API — HashMap"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/HashMap.html"
+    description: "Ngữ cảnh ứng dụng hợp đồng equals/hashCode đối với key trong cấu trúc hash-based và các rủi ro khi khóa biến đổi trạng thái."
+  - title: "Java SE 21 API — Cloneable"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Cloneable.html"
+    description: "Marker interface quy định điều kiện hỗ trợ Object.clone, sao chép field-by-field và CloneNotSupportedException."
+  - title: "Java SE 21 API — Record"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Record.html"
+    description: "Hợp đồng phương thức equals, hashCode, toString được sinh cho record và mối liên hệ với các thành phần dữ liệu của record."
+  - title: "Oracle Java Tutorials — Object as a Superclass"
+    url: "https://docs.oracle.com/javase/tutorial/java/IandI/objectclass.html"
+    description: "Giải thích bằng ví dụ cách override equals, hashCode, toString và clone; dùng đối chiếu thực hành với Java 21 API hiện hành."

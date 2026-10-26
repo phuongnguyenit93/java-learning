@@ -1,16 +1,37 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "Java Language Specification 21 — Primitive Numeric Types"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-4.html"
+    description: "Đặc tả byte, short, int, long, char, float, double; giá trị, giới hạn, số dấu phẩy động IEEE 754 và phép toán cơ bản."
+  - title: "Java Language Specification 21 — Conversions and Contexts"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-5.html"
+    description: "Quy tắc widening, narrowing, boxing, unboxing và numeric promotion để hiểu chuyển kiểu cùng nguy cơ mất độ chính xác."
+  - title: "Java SE 21 — Number API"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Number.html"
+    description: "Lớp nền tảng của các wrapper và số lớn; các phương thức chuyển giá trị sang kiểu số nguyên thủy."
+  - title: "Java SE 21 — Integer API"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Integer.html"
+    description: "Wrapper cho int, parseInt, valueOf, chuyển cơ số, unsigned operations và bit manipulation."
+  - title: "Java SE 21 — Double API"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Double.html"
+    description: "Biểu diễn và chuyển đổi số double, NaN, infinity, so sánh, bit representation và parseDouble."
+  - title: "Java SE 21 — BigInteger API"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/math/BigInteger.html"
+    description: "Số nguyên có độ chính xác tùy ý, phép toán lớn, chia lấy dư, lũy thừa, bitwise và modular arithmetic."
+  - title: "Java SE 21 — BigDecimal API"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/math/BigDecimal.html"
+    description: "Thập phân chính xác theo scale, precision, phép toán, so sánh và kiểm soát làm tròn khi xử lý giá trị tài chính."
+  - title: "Java SE 21 — MathContext API"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/math/MathContext.html"
+    description: "Thiết lập precision và rounding mode cho phép toán BigDecimal, gồm DECIMAL32, DECIMAL64, DECIMAL128."
+  - title: "Java SE 21 — RoundingMode API"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/math/RoundingMode.html"
+    description: "Các chính sách làm tròn UP, DOWN, CEILING, FLOOR, HALF_UP, HALF_EVEN và UNNECESSARY."
+  - title: "Java SE 21 — Math API"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Math.html"
+    description: "Hàm toán học cơ bản, số mũ, log, lượng giác, sqrt, rounding và exact integer arithmetic."
+  - title: "Java SE 21 — NumberFormat API"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/text/NumberFormat.html"
+    description: "Định dạng và phân tích số, phần trăm, tiền tệ, compact numbers theo Locale và các quy ước vùng."
+  - title: "Java SE 21 — RandomGenerator API"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/random/RandomGenerator.html"
+    description: "Giao diện sinh số giả ngẫu nhiên, phân phối, giới hạn miền giá trị và streams of random numbers."

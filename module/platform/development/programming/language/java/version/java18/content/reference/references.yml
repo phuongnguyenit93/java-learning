@@ -1,16 +1,31 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "Oracle JDK 24 Migration Guide — Significant Changes in JDK 18 Release"
+    url: "https://docs.oracle.com/en/java/javase/24/migrate/significant-changes-jdk-18.html"
+    description: "Tổng hợp những thay đổi Java 18 vẫn hữu ích trên JDK hiện đại: UTF-8 mặc định, Simple Web Server, JavaDoc snippets, Internet-Address Resolution SPI và Core Reflection. Phân biệt rõ preview/incubator cũ."
+  - title: "OpenJDK JEP 400 — UTF-8 by Default"
+    url: "https://openjdk.org/jeps/400"
+    description: "Quy tắc Java 18 chuẩn hóa UTF-8 làm charset mặc định cho phần lớn API Java SE; đánh giá tác động tới đọc/ghi file, chuyển chuỗi thành byte và ứng dụng đa nền tảng."
+  - title: "Oracle JDK 21 API — Charset.defaultCharset"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/nio/charset/Charset.html"
+    description: "Tra cứu Charset.defaultCharset và các charset chuẩn ở phiên bản ổn định; ưu tiên truyền StandardCharsets.UTF_8 tường minh khi yêu cầu định dạng dữ liệu độc lập cấu hình."
+  - title: "OpenJDK JEP 408 — Simple Web Server"
+    url: "https://openjdk.org/jeps/408"
+    description: "Thiết kế Simple Web Server được giới thiệu ở Java 18 nhằm phục vụ file tĩnh, thử nghiệm và phát triển nhanh; không phải web server production hay framework xử lý API."
+  - title: "Oracle JDK 21 — The jwebserver Command"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/specs/man/jwebserver.html"
+    description: "Cách dùng lệnh jwebserver hiện hành, cấu hình địa chỉ bind, cổng và thư mục static; hiểu giới hạn chỉ HTTP/1.1, không HTTPS hoặc động, mặc định chạy trên loopback."
+  - title: "OpenJDK JEP 413 — Code Snippets in Java API Documentation"
+    url: "https://openjdk.org/jeps/413"
+    description: "Giới thiệu inline tag {@snippet} cho JavaDoc, hỗ trợ ví dụ mã nguồn dễ đọc, kiểm chứng và trình bày; đây là tính năng chính thức từ Java 18."
+  - title: "Oracle JDK 21 — Programmer's Guide to Snippets"
+    url: "https://docs.oracle.com/en/java/javase/21/javadoc/snippets.html"
+    description: "Hướng dẫn cú pháp {@snippet}, inline/external snippets, @highlight, @replace, regions và snippet path để viết JavaDoc có ví dụ chính xác."
+  - title: "OpenJDK JEP 418 — Internet-Address Resolution SPI"
+    url: "https://openjdk.org/jeps/418"
+    description: "Định nghĩa SPI để tùy biến trình phân giải hostname/IP cho java.net.InetAddress; khái niệm service provider và DNS resolution còn áp dụng trên các JDK hiện đại."
+  - title: "Oracle JDK 21 API — InetAddressResolverProvider"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/net/spi/InetAddressResolverProvider.html"
+    description: "Tài liệu API SPI xuất hiện từ Java 18, mô tả service loading, cài đặt custom resolver, thứ tự chọn provider và fallback resolver của hệ điều hành."
+  - title: "OpenJDK JEP 416 — Reimplement Core Reflection with Method Handles"
+    url: "https://openjdk.org/jeps/416"
+    description: "Giải thích Core Reflection chuyển sang Method Handles ở Java 18, tác động tới Method, Field, Constructor và tương thích thư viện; không dựa vào implementation internals hoặc cờ fallback cũ."

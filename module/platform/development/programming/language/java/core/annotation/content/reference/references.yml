@@ -1,16 +1,31 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "Dev.java — Annotations"
+    url: "https://dev.java/learn/annotations/"
+    description: "Hướng dẫn chính thức về khai báo và sử dụng annotation, annotation có sẵn, type annotations và ứng dụng kiểm tra kiểu."
+  - title: "Java Language Specification 21 — Chapter 9"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-9.html"
+    description: "Đặc tả annotation interfaces, element values, meta-annotations, vị trí khai báo và quy tắc annotations lặp lại."
+  - title: "Java SE 21 — java.lang.annotation Package"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/package-summary.html"
+    description: "Tổng quan API annotation và các kiểu Target, Retention, Repeatable, Inherited, Documented, ElementType."
+  - title: "Java SE 21 — @Target"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/Target.html"
+    description: "Giới hạn vị trí áp dụng annotation cho class, method, field, parameter, type use và các ElementType khác."
+  - title: "Java SE 21 — @Retention"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/Retention.html"
+    description: "Đặt vòng đời metadata SOURCE, CLASS hoặc RUNTIME; xác định annotation có thể đọc bằng reflection hay không."
+  - title: "Java SE 21 — RetentionPolicy"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/RetentionPolicy.html"
+    description: "Ý nghĩa chính xác của SOURCE, CLASS và RUNTIME và chính sách CLASS mặc định khi không khai báo @Retention."
+  - title: "Java SE 21 — @Repeatable"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/Repeatable.html"
+    description: "Khai báo annotation được phép lặp trên cùng phần tử và annotation container tương ứng."
+  - title: "Java SE 21 — @Inherited"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/Inherited.html"
+    description: "Quy tắc kế thừa annotation từ lớp cha khi truy vấn class; không tự kế thừa annotation từ interface."
+  - title: "Java SE 21 — AnnotatedElement"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/reflect/AnnotatedElement.html"
+    description: "Đọc annotation RUNTIME thông qua getAnnotation/getAnnotationsByType và phân biệt declared/inherited/repeatable."
+  - title: "Java SE 21 — Annotation Processor"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/annotation/processing/Processor.html"
+    description: "Giao diện xử lý annotation tại compile-time, vòng xử lý rounds và cơ chế tạo thêm mã nguồn hoặc tài nguyên."

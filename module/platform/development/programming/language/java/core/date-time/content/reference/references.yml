@@ -1,16 +1,31 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "Java SE 21 API — java.time"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/package-summary.html"
+    description: "Tổng quan mô hình ngày giờ hiện đại, các kiểu immutable và thread-safe, phân biệt instant, local date/time, duration, period và múi giờ."
+  - title: "Java SE 21 API — Instant"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/Instant.html"
+    description: "Biểu diễn thời điểm tuyệt đối trên timeline theo epoch seconds và nano giây; phù hợp lưu timestamp và so sánh sự kiện."
+  - title: "Java SE 21 API — LocalDateTime"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/LocalDateTime.html"
+    description: "Ngày và giờ địa phương không gắn ZoneId hoặc offset; hiểu giới hạn khi chuyển thành một thời điểm tuyệt đối."
+  - title: "Java SE 21 API — ZonedDateTime"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/ZonedDateTime.html"
+    description: "Ngày giờ có múi giờ, chuyển đổi timeline, xử lý daylight saving time và các trường hợp overlap/gap."
+  - title: "Java SE 21 API — ZoneId"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/ZoneId.html"
+    description: "Phân biệt region-based time zone và fixed offset; sử dụng zone rules khi chuyển Instant sang thời gian địa phương."
+  - title: "Java SE 21 API — Clock"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/Clock.html"
+    description: "Trừu tượng hóa nguồn thời gian hiện tại và múi giờ; ứng dụng Clock.fixed hoặc Clock.offset để kiểm thử xác định."
+  - title: "Java SE 21 API — DateTimeFormatter"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/format/DateTimeFormatter.html"
+    description: "Định dạng và parse ngày giờ theo ISO, pattern, Locale, ZoneId; phân biệt dữ liệu lưu trữ với chuỗi trình bày."
+  - title: "Java SE 21 API — Duration"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/Duration.html"
+    description: "Khoảng thời gian theo giây/nano giây, phù hợp đo elapsed time; khác Period khi áp dụng qua chuyển đổi DST."
+  - title: "Java SE 21 API — Period"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/Period.html"
+    description: "Khoảng thời gian theo năm/tháng/ngày lịch; hiểu cách cộng ngày theo lịch so với 24 giờ thực tế."
+  - title: "Java SE 21 API — ChronoUnit"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/temporal/ChronoUnit.html"
+    description: "Các đơn vị chuẩn từ nanos tới years; thực hiện phép cộng, trừ và đo khoảng cách giữa hai Temporal."

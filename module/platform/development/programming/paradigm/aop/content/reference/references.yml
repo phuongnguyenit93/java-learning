@@ -1,30 +1,31 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
-
 references:
-  - title: "The AspectJ Programming Guide"
-    url: "https://eclipse.dev/aspectj/doc/latest/progguide/progguide.html"
-    description: "Eclipse AspectJ's primary explanations of crosscutting concerns, join points, pointcuts, advice, and the AspectJ model."
-  - title: "Aspect Oriented Programming with Spring"
-    url: "https://docs.spring.io/spring-framework/reference/core/aop.html"
-    description: "Official Spring Framework introduction distinguishing Spring's AOP capabilities and proxy approach from the wider AOP paradigm."
-  - title: "Declaring a Pointcut — Spring Framework"
-    url: "https://docs.spring.io/spring-framework/reference/core/aop/ataspectj/pointcuts.html"
-    description: "Official confirmation of Spring AOP's method-execution join point boundary, useful when comparing implementation models."
-  - title: "Proxying Mechanisms — Spring Framework"
-    url: "https://docs.spring.io/spring-framework/reference/core/aop/proxying.html"
-    description: "Official explanation of JDK interface-based versus class-based proxies and why self-invocation bypasses Spring AOP advice."
+  - title: "AspectJ — Getting Started with AOP"
+    url: "https://eclipse.dev/aspectj/doc/latest/progguide/gettingstarted.html"
+    description: "Giới thiệu lập trình hướng khía cạnh và crosscutting concerns, giải thích join point, pointcut, advice, aspect và inter-type declaration."
+  - title: "AspectJ — Join Points and Pointcuts"
+    url: "https://eclipse.dev/aspectj/doc/released/progguide/language-joinPoints.html"
+    description: "Tập hợp join points, phân biệt call và execution, phối hợp pointcut qua &&, ||, ! và quy tắc chọn pointcut hiệu quả."
+  - title: "AspectJ — Advice"
+    url: "https://eclipse.dev/aspectj/doc/released/progguide/language-advice.html"
+    description: "Before, after, after returning, after throwing và around/proceed; khai thác ngữ cảnh lúc chặn điểm thực thi."
+  - title: "AspectJ — Inter-type Declarations"
+    url: "https://eclipse.dev/aspectj/doc/released/progguide/language-interType.html"
+    description: "Static crosscutting: bổ sung field/method/constructor và quan hệ kiểu để mô-đun hóa đặc tính dùng chung."
+  - title: "AspectJ — Aspect Semantics and Instantiation"
+    url: "https://eclipse.dev/aspectj/doc/released/progguide/semantics-aspects.html"
+    description: "Định nghĩa aspect, cách tạo thể hiện, singleton, perthis/pertarget, phạm vi trạng thái và thứ tự ảnh hưởng giữa các aspect."
+  - title: "AspectJ — Language Semantics"
+    url: "https://eclipse.dev/aspectj/doc/latest/progguide/semantics.html"
+    description: "Chi tiết ngữ nghĩa join points, pointcuts, advice, cflow, context binding và quan hệ giữa crosscutting động và tĩnh."
+  - title: "AspectJ — Load-Time Weaving"
+    url: "https://eclipse.dev/aspectj/doc/latest/devguide/ltw.html"
+    description: "So sánh compile-time, post-compile và load-time weaving; class loader, weaving agent và cấu hình aop.xml."
+  - title: "AspectJ — Implementation Notes"
+    url: "https://eclipse.dev/aspectj/doc/latest/progguide/implementation.html"
+    description: "Các giới hạn do bytecode và phạm vi weaving, đặc biệt khác biệt call/execution, quanh advice và hiệu năng/matching."
+  - title: "AspectJ — Development Environment Guide"
+    url: "https://eclipse.dev/aspectj/doc/latest/devguide/devguide.html"
+    description: "Công cụ ajc, biên dịch, weaving class/JAR và triển khai/kiểm tra các aspect độc lập với framework."
+  - title: "AspectJ — FAQ"
+    url: "https://eclipse.dev/aspectj/doc/latest/faq/faq.html"
+    description: "Các câu hỏi nền tảng và nâng cao về mục đích AOP, điểm cắt, advice, khía cạnh, inter-type declaration và weaving."

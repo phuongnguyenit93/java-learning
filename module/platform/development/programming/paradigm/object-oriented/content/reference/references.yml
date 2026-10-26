@@ -1,39 +1,40 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
-
 references:
-  - title: "The Java Tutorials — Object-Oriented Programming Concepts"
-    url: "https://docs.oracle.com/javase/tutorial/java/concepts/index.html"
-    description: "Accessible first introduction to objects, state, behavior, classes, encapsulation, and collaboration. These classic tutorials use JDK 8 examples; this module focuses on language-independent ideas."
-  - title: "The Python Tutorial — Classes"
-    url: "https://docs.python.org/3/tutorial/classes.html"
-    description: "Official second-language view of object identity, state, methods, and aliasing; useful for distinguishing the OOP model from Java-specific class syntax."
-  - title: "The Java Tutorials — Polymorphism"
-    url: "https://docs.oracle.com/javase/tutorial/java/IandI/polymorphism.html"
-    description: "Beginner-friendly illustration of polymorphic method behavior through a shared declared type; language-specific mechanics belong to Java Core."
-  - title: "On the Criteria To Be Used in Decomposing Systems into Modules"
-    url: "https://doi.org/10.1145/361598.361623"
-    description: "David Parnas's original information-hiding and modularization paper; explains why protecting changeable design decisions matters beyond private fields."
-  - title: "I2E: Design by Contract and Assertions"
-    url: "https://www.eiffel.org/doc/eiffel/I2E-_Design_by_Contract_and_Assertions"
-    description: "Eiffel's official exposition of client obligations, supplier guarantees, and object invariants; supports reasoning about behavior contracts without requiring Eiffel syntax."
-  - title: "A Behavioral Notion of Subtyping"
-    url: "https://www.cs.cmu.edu/~svc/papers/view-publications-lw94.html"
-    description: "Liskov and Wing's research publication on behavioral substitutability; advanced background for why type inheritance alone is not a sufficient behavior guarantee."
-  - title: "Unified Modeling Language, Version 2.5.1"
-    url: "https://www.omg.org/spec/UML/2.5.1/PDF"
-    description: "OMG's authoritative specification for exact association and aggregation-kind terminology. Optional advanced reading; UML diagram syntax is outside this paradigm curriculum."
+  - title: "Dev.java — Objects, Classes, Interfaces, Packages, and Inheritance"
+    url: "https://dev.java/learn/oop/"
+    description: "Khái niệm hướng đối tượng: object có trạng thái và hành vi, class, đóng gói, kế thừa, interface và tổ chức package."
+  - title: "JLS 21 — Types, Values, and Variables"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-4.html"
+    description: "Kiểu tham chiếu, danh tính đối tượng, class/interface types, subtype và giá trị null trong Java."
+  - title: "JLS 21 — Names and Access Control"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-6.html"
+    description: "Scope, shadowing, access modifiers và quyền truy cập đến class, field, method, constructor."
+  - title: "JLS 21 — Classes"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-8.html"
+    description: "Class, field, method, constructor, inheritance, overriding, hiding, inner class, enum, record, abstract và sealed classes."
+  - title: "JLS 21 — Interfaces"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-9.html"
+    description: "Thiết kế interface, extends/implements, default/static methods, functional interface và đa hình qua hợp đồng."
+  - title: "JLS 21 — Execution and Object Lifecycle"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-12.html"
+    description: "Class loading, linking, initialization, thứ tự khởi tạo instance và vòng đời đối tượng trong Java."
+  - title: "JLS 21 — Expressions"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-15.html"
+    description: "Cách thực thi new, this, super, instanceof, method invocation, overload resolution và dynamic method dispatch."
+  - title: "Oracle Java SE 21 — Object API"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html"
+    description: "Hợp đồng chung của đối tượng: equals, hashCode, toString, getClass và phương thức từ java.lang.Object."
+  - title: "Oracle Java SE 21 — Class API"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html"
+    description: "Kiểu class tại runtime, thông tin metadata, reflective type checks và quan hệ kiểu."
+  - title: "Oracle Java SE 21 — Objects API"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Objects.html"
+    description: "So sánh, hashing và kiểm tra null an toàn khi thiết kế object và value object."
+  - title: "Refactoring.Guru — Design Patterns"
+    url: "https://refactoring.guru/design-patterns"
+    description: "Tổng quan pattern khởi tạo, cấu trúc, hành vi; nhận diện giải pháp có thể tái sử dụng trong thiết kế hướng đối tượng."
+  - title: "Refactoring.Guru — How to Refactor"
+    url: "https://refactoring.guru/refactoring/how-to"
+    description: "Các bước cải tiến thiết kế object, giảm code smell bằng thay đổi nhỏ và bảo đảm hành vi qua kiểm thử."
+  - title: "Design Principles — SOLID Design Principles"
+    url: "https://principles.design/examples/solid-design-principles"
+    description: "Năm nguyên tắc SOLID: Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, Dependency Inversion."

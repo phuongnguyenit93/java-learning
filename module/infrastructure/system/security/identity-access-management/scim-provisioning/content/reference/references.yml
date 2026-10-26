@@ -1,16 +1,40 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "IETF RFC 7642 — SCIM Concepts and Requirements"
+    url: "https://www.rfc-editor.org/rfc/rfc7642.html"
+    description: "Giới thiệu SCIM, vai trò client/service provider, identity provisioning và deprovisioning, tình huống sử dụng và yêu cầu liên miền."
+  - title: "IETF RFC 7643 — SCIM Core Schema"
+    url: "https://www.rfc-editor.org/rfc/rfc7643.html"
+    description: "Chuẩn JSON cho User, Group, Enterprise User extension, thuộc tính bắt buộc/tùy chọn, externalId và quản lý schema."
+  - title: "IETF RFC 7644 — SCIM Protocol"
+    url: "https://www.rfc-editor.org/rfc/rfc7644.html"
+    description: "REST endpoints /Users, /Groups, /Schemas, /ServiceProviderConfig; POST, GET, PUT, PATCH, DELETE, filters, pagination, ETag và bulk operations."
+  - title: "IETF RFC 9865 — SCIM Cursor-based Pagination"
+    url: "https://www.rfc-editor.org/rfc/rfc9865.html"
+    description: "Phần mở rộng 2025 cho phân trang SCIM bằng cursor khi đồng bộ lượng lớn tài khoản hoặc nhóm; cập nhật RFC 7643 và 7644."
+  - title: "IETF RFC 9967 — SCIM Profile for Security Event Tokens"
+    url: "https://www.rfc-editor.org/rfc/rfc9967.html"
+    description: "Phần mở rộng 2026 dùng SCIM Events/SET cho đồng bộ bất đồng bộ, thông báo thay đổi resource và phối hợp provisioning giữa các hệ thống."
+  - title: "IETF RFC 8417 — Security Event Token (SET)"
+    url: "https://www.rfc-editor.org/rfc/rfc8417.html"
+    description: "Chuẩn Security Event Token dùng biểu diễn sự kiện bảo mật dựa trên JWT, làm nền tảng cho cơ chế SCIM Events."
+  - title: "IETF RFC 6750 — OAuth 2.0 Bearer Token Usage"
+    url: "https://www.rfc-editor.org/rfc/rfc6750.html"
+    description: "Sử dụng Authorization: Bearer cho API SCIM và giảm rủi ro đánh cắp, phát tán hoặc sử dụng lại access token."
+  - title: "Microsoft Entra — SCIM Support in Entra ID"
+    url: "https://learn.microsoft.com/en-us/entra/identity/app-provisioning/scim-support-in-entra-id"
+    description: "Phân biệt Entra ở vai trò SCIM client hoặc SCIM service provider; quản lý User/Group và đồng bộ danh tính giữa hệ thống."
+  - title: "Microsoft Entra — How Application Provisioning Works"
+    url: "https://learn.microsoft.com/en-us/entra/identity/app-provisioning/how-provisioning-works"
+    description: "Joiner–mover–leaver lifecycle, attribute mappings, matching, scoping, initial/incremental sync, deprovisioning và xử lý lỗi."
+  - title: "Microsoft Entra — Develop a SCIM Endpoint"
+    url: "https://learn.microsoft.com/en-us/entra/identity/app-provisioning/use-scim-to-provision-users-and-groups"
+    description: "Hướng dẫn xây dựng endpoint SCIM 2.0, xử lý Users/Groups, schema, authorization, đồng bộ và tương thích với identity provider."
+  - title: "Microsoft Entra — SCIM Endpoint Validator"
+    url: "https://learn.microsoft.com/en-us/entra/identity/app-provisioning/scim-validator-tutorial"
+    description: "Kiểm thử tính tương thích SCIM 2.0 qua truy vấn, cập nhật, nhóm, matching attributes và các tình huống provisioning."
+  - title: "Okta Developer — Understanding SCIM"
+    url: "https://developer.okta.com/docs/concepts/scim/"
+    description: "Khái niệm cấp, cập nhật, vô hiệu hóa User/Group, source of truth, profile sourcing, attribute mapping và vòng đời danh tính."
+  - title: "Okta Developer — Build a SCIM Provisioning Integration"
+    url: "https://developer.okta.com/docs/guides/scim-provisioning-integration-overview/"
+    description: "Các bước thiết kế SCIM API, tích hợp với identity provider và kiểm thử quá trình quản lý tài khoản tự động."

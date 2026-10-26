@@ -1,41 +1,31 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
-
 references:
-  - title: "Spring Framework 6.1.14 API - org.springframework.test.context"
-    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/test/context/package-summary.html"
-    description: "Official Spring Framework 6.1.14 API overview for the TestContext Framework, including context management, dependency injection, transactional testing, events, and AOT-related support."
-
-  - title: "Spring Framework 6.1.14 API - MockMvc"
-    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/test/web/servlet/MockMvc.html"
-    description: "Official Spring Framework 6.1.14 API reference for the main server-side Spring MVC testing entry point."
-
-  - title: "Spring Framework 6.1.14 API - TransactionalTestExecutionListener"
-    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/test/context/transaction/TransactionalTestExecutionListener.html"
-    description: "Official Spring Framework 6.1.14 contract for test-managed transactions, rollback behavior, supported @Transactional test semantics, and TestTransaction integration."
-
-  - title: "Spring Framework 6.1 API - ContextCache"
-    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/test/context/cache/ContextCache.html"
-    description: "Official Spring Framework 6.1.14 API contract for TestContext ApplicationContext caching, cache sizing, eviction, statistics, and failure-count support introduced in the 6.1 line."
-
-  - title: "Spring Framework 6.1.14 API - WebTestClient"
-    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/test/web/reactive/server/WebTestClient.html"
-    description: "Official Spring Framework 6.1.14 API reference for WebTestClient mock-server and live-server bindings and response assertions."
-
-  - title: "Spring Framework 6.1.14 API - MockRestServiceServer"
-    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/test/web/client/MockRestServiceServer.html"
-    description: "Official Spring Framework 6.1.14 API reference for client-side REST testing with MockRestServiceServer and Spring Framework HTTP clients."
+  - title: "Spring Framework Reference — Testing"
+    url: "https://docs.spring.io/spring-framework/reference/testing.html"
+    description: "Tổng quan hỗ trợ kiểm thử của Spring Framework: unit test, integration test, TestContext, MockMvc và WebTestClient."
+  - title: "Spring Framework Reference — Unit Testing"
+    url: "https://docs.spring.io/spring-framework/reference/testing/unit.html"
+    description: "Nguyên tắc kiểm thử đơn vị với POJO và dependency injection; mock object để cô lập thành phần khỏi Spring container."
+  - title: "Spring Framework Reference — Integration Testing"
+    url: "https://docs.spring.io/spring-framework/reference/testing/integration.html"
+    description: "Kiểm thử tích hợp với Spring container, cấu hình application context, dependency injection và thành phần dữ liệu."
+  - title: "Spring Framework Reference — Spring TestContext Framework"
+    url: "https://docs.spring.io/spring-framework/reference/testing/testcontext-framework.html"
+    description: "Nền tảng kiểm thử dựa trên annotation; tích hợp JUnit Jupiter, quản lý TestContext, test listeners và test fixtures."
+  - title: "Spring Framework Reference — Context Management"
+    url: "https://docs.spring.io/spring-framework/reference/testing/testcontext-framework/ctx-management.html"
+    description: "Cách nạp và quản lý ApplicationContext cho test; @ContextConfiguration, cấu hình nguồn và các extension points."
+  - title: "Spring Framework Reference — Context Caching"
+    url: "https://docs.spring.io/spring-framework/reference/testing/testcontext-framework/ctx-management/caching.html"
+    description: "Cơ chế tái sử dụng ApplicationContext giữa các test, cache key, @DirtiesContext và tác động tới hiệu năng bộ test."
+  - title: "Spring Framework Reference — Transaction Management in Tests"
+    url: "https://docs.spring.io/spring-framework/reference/testing/testcontext-framework/tx.html"
+    description: "Test-managed transactions với @Transactional, rollback mặc định và TestTransaction để kiểm thử thao tác dữ liệu."
+  - title: "Spring Framework Reference — MockMvc"
+    url: "https://docs.spring.io/spring-framework/reference/testing/mockmvc.html"
+    description: "Kiểm thử request/response trong Spring MVC mà không cần khởi chạy server; MockMvc và các assertions."
+  - title: "Spring Framework Reference — WebTestClient"
+    url: "https://docs.spring.io/spring-framework/reference/testing/webtestclient.html"
+    description: "Kiểm thử HTTP cho Spring MVC và WebFlux bằng mock server hoặc end-to-end server, kiểm tra status, header và body."
+  - title: "Spring Framework Reference — Parallel Test Execution"
+    url: "https://docs.spring.io/spring-framework/reference/testing/testcontext-framework/parallel-test-execution.html"
+    description: "Điều kiện và giới hạn chạy test song song; tránh xung đột từ shared state, @DirtiesContext và context cache."

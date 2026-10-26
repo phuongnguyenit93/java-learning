@@ -1,16 +1,31 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "NIST — The NIST Model for Role-Based Access Control"
+    url: "https://csrc.nist.gov/pubs/conference/2000/07/26/nist-model-for-rbac-towards-a-unified-standard/final"
+    description: "Mô hình RBAC chuẩn hóa từ Core/Flat đến Hierarchical, Constrained và Symmetric RBAC; phân biệt user, role, permission, session và role activation."
+  - title: "NIST — Proposed Standard for Role-Based Access Control"
+    url: "https://csrc.nist.gov/pubs/journal/2001/08/proposed-nist-standard-for-rolebased-access-contro/final"
+    description: "Mô hình chuẩn hóa user-role assignment, permission-role assignment, role hierarchy, static/dynamic separation of duty và rà soát phân quyền."
+  - title: "NIST — Role Engineering and RBAC Standards"
+    url: "https://csrc.nist.gov/projects/role-based-access-control/role-engineering-and-rbac-standards"
+    description: "Nguồn lịch sử về thiết kế role, xây dựng ma trận vai trò-quyền hạn và sự hình thành tiêu chuẩn ANSI/INCITS 359-2004."
+  - title: "NIST — RBAC Frequently Asked Questions"
+    url: "https://csrc.nist.gov/Projects/role-based-access-control/faqs"
+    description: "Làm rõ ý nghĩa role, permissions, user membership, role hierarchy và các ràng buộc tổ chức trong mô hình RBAC tổng quát."
+  - title: "NIST IR 6192 — A Revised Model for RBAC"
+    url: "https://csrc.nist.gov/Pubs/ir/6192/Final"
+    description: "Phân tích mô hình RBAC hình thức, role hierarchies, quyền kế thừa và các thuộc tính cần kiểm chứng khi triển khai."
+  - title: "NIST — Historical RBAC Research Library"
+    url: "https://csrc.nist.gov/projects/role-based-access-control/rbac-library"
+    description: "Thư viện nghiên cứu RBAC lịch sử (đã lưu trữ), gồm nguồn gốc mô hình, role engineering, phân tách nhiệm vụ và tiêu chuẩn."
+  - title: "NIST SP 800-162 — Guide to Attribute-Based Access Control"
+    url: "https://csrc.nist.gov/pubs/sp/800/162/upd2/final"
+    description: "So sánh RBAC với ABAC, sử dụng thuộc tính người dùng, đối tượng và môi trường để bổ sung kiểm soát quyền chi tiết."
+  - title: "OWASP — Authorization Cheat Sheet"
+    url: "https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html"
+    description: "Thực hành least privilege, deny by default, kiểm tra quyền mỗi request, bảo vệ object-level access, kiểm thử và đánh giá role explosion."
+  - title: "OWASP Top 10:2025 — Broken Access Control"
+    url: "https://top10.owasp.org/2025/A01_2025-Broken_Access_Control/index.html"
+    description: "Các kiểu lỗi phân quyền, leo thang đặc quyền, truy cập tài nguyên trái phép và cách giảm rủi ro do kiểm soát quyền sai."
+  - title: "Kubernetes — Using RBAC Authorization"
+    url: "https://kubernetes.io/docs/reference/access-authn-authz/rbac/"
+    description: "Ví dụ RBAC độc lập ngôn ngữ ứng dụng: Role/ClusterRole, RoleBinding/ClusterRoleBinding, scope và cấp quyền tối thiểu."

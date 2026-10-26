@@ -1,16 +1,37 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "JavaCompiler (Java SE 21)"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/tools/JavaCompiler.html"
+    description: "API biên dịch Java từ chương trình, JSR 199 ra mắt ở Java 6."
+  - title: "Annotation Processor (Java SE 21)"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/annotation/processing/Processor.html"
+    description: "JSR 269: xử lý annotation trong nhiều vòng biên dịch và tạo mã nguồn."
+  - title: "ServiceLoader (Java SE 21)"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ServiceLoader.html"
+    description: "Nạp implementation qua Service Provider Interface, còn được hỗ trợ trong Java hiện đại."
+  - title: "Deque (Java SE 21)"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Deque.html"
+    description: "Collection hai đầu làm queue hay stack với thao tác thêm và lấy ở cả hai phía."
+  - title: "ArrayDeque (Java SE 21)"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ArrayDeque.html"
+    description: "Hiện thực Deque bằng mảng co giãn; lưu ý không thread-safe và không nhận null."
+  - title: "NavigableMap (Java SE 21)"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/NavigableMap.html"
+    description: "Tìm khóa theo lower, floor, ceiling, higher và tạo các view theo khoảng."
+  - title: "NavigableSet (Java SE 21)"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/NavigableSet.html"
+    description: "Tập có thứ tự với các phép tìm phần tử gần nhất, subset và descending view."
+  - title: "StAX XMLInputFactory (Java SE 21)"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.xml/javax/xml/stream/XMLInputFactory.html"
+    description: "Streaming API for XML từ Java 6; đọc XML tuần tự, cấu hình parser cẩn thận."
+  - title: "JDBC DriverManager (Java SE 21)"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.sql/java/sql/DriverManager.html"
+    description: "JDBC 4.0 khám phá driver qua service provider; DataSource vẫn là lựa chọn được ưu tiên."
+  - title: "JDBC SQLXML (Java SE 21)"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.sql/java/sql/SQLXML.html"
+    description: "Làm việc với giá trị SQL XML khi cơ sở dữ liệu và driver hỗ trợ."
+  - title: "Console (Java SE 21)"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/Console.html"
+    description: "Giao tiếp terminal qua readLine và readPassword; xử lý trường hợp không có console."
+  - title: "Desktop (Java SE 21)"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.desktop/java/awt/Desktop.html"
+    description: "Mở file hoặc URI bằng ứng dụng mặc định của máy khi có desktop environment."

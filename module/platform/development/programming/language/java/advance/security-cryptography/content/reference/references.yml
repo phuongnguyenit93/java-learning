@@ -1,16 +1,34 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "Oracle Java SE 21 — Security Developer's Guide"
+    url: "https://docs.oracle.com/en/java/javase/21/security/"
+    description: "Tổng quan bảo mật Java SE: nền tảng JCA, nhà cung cấp mật mã, TLS, quản lý khóa, chứng chỉ và các công cụ bảo mật."
+  - title: "Oracle Java SE 21 — Java Cryptography Architecture (JCA) Reference Guide"
+    url: "https://docs.oracle.com/en/java/javase/21/security/java-cryptography-architecture-jca-reference-guide.html"
+    description: "Kiến trúc JCA/JCE, provider, SecureRandom, hash, MAC, chữ ký số, mã hóa, sinh khóa và keystore."
+  - title: "Oracle Java SE 21 API — java.security"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/security/package-summary.html"
+    description: "API lõi cho MessageDigest, Signature, KeyPairGenerator, SecureRandom, KeyStore, Certificate và kiểm tra chứng chỉ."
+  - title: "Oracle Java SE 21 API — javax.crypto"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/javax/crypto/package-summary.html"
+    description: "API mã hóa và giải mã, tạo khóa bí mật, KeyAgreement, Cipher và MAC trong Java."
+  - title: "Oracle Java SE 21 — Security Standard Algorithm Names"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/specs/security/standard-names.html"
+    description: "Tên chuẩn cho thuật toán, transformation Cipher, chế độ/padding, kiểu keystore và tên provider-independent trong Java."
+  - title: "Oracle Java SE 21 — JDK Providers Documentation"
+    url: "https://docs.oracle.com/en/java/javase/21/security/oracle-providers.html"
+    description: "Các provider mặc định, thứ tự lựa chọn dịch vụ và những thuật toán được JDK hỗ trợ theo provider."
+  - title: "Oracle Java SE 21 — JSSE Reference Guide"
+    url: "https://docs.oracle.com/en/java/javase/21/security/java-secure-socket-extension-jsse-reference-guide.html"
+    description: "Thiết lập TLS/DTLS với SSLContext, trust manager, key manager, SSLSocket, SSLEngine và xác minh endpoint."
+  - title: "Oracle Java SE 21 — PKCS#11 Reference Guide"
+    url: "https://docs.oracle.com/en/java/javase/21/security/pkcs11-reference-guide1.html"
+    description: "Tích hợp token, smartcard, HSM và thư viện PKCS#11 vào mô hình provider mật mã của Java."
+  - title: "Oracle JDK 21 — Tool Specifications"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/specs/man/index.html"
+    description: "Tra cứu keytool để quản lý keystore, chứng chỉ X.509 và jarsigner để ký, xác minh JAR."
+  - title: "OWASP — Cryptographic Storage Cheat Sheet"
+    url: "https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html"
+    description: "Thực hành bảo vệ dữ liệu lưu trữ, lựa chọn mã hóa, quản lý khóa, IV/nonce và mô hình đe dọa."
+  - title: "OWASP — Password Storage Cheat Sheet"
+    url: "https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html"
+    description: "Phân biệt mã hóa và password hashing, lựa chọn Argon2id/scrypt/PBKDF2, salt, pepper và tham số chi phí."

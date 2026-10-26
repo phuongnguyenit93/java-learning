@@ -1,16 +1,43 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "JLS 21 — Lambda Expressions and Method References"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-15.html"
+    description: "Đặc tả lambda expressions, method references, target typing và cách giải quyết lời gọi phương thức; các tính năng ra đời từ Java 8 vẫn là nền tảng Java hiện đại."
+  - title: "JLS 21 — Functional Interfaces and Default Methods"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-9.html"
+    description: "Functional interface, default/static interface methods và các quy tắc kế thừa, xung đột phương thức mặc định."
+  - title: "Java SE 21 — java.util.function"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/package-summary.html"
+    description: "Các functional interface thường dùng như Function, Predicate, Consumer, Supplier, UnaryOperator cùng các kiểu primitive chuyên biệt."
+  - title: "Java SE 21 — java.util.stream"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/stream/package-summary.html"
+    description: "Stream pipeline, map/filter/reduce, intermediate và terminal operations, lazy evaluation, primitive streams và parallel streams."
+  - title: "Java SE 21 — Collectors"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/stream/Collectors.html"
+    description: "Các collector để grouping, partitioning, joining, collecting into maps và thống kê dữ liệu từ Stream."
+  - title: "Java SE 21 — Optional"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html"
+    description: "Biểu diễn kết quả có thể vắng mặt bằng Optional; sử dụng map, flatMap, orElse, orElseGet và tránh lạm dụng get."
+  - title: "Java SE 21 — java.time"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/package-summary.html"
+    description: "API thời gian hiện đại bất biến và thread-safe; phân biệt instant, local date/time, duration, period, zone và offset."
+  - title: "Java SE 21 — LocalDate"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/LocalDate.html"
+    description: "Ngày theo lịch ISO không mang múi giờ; cộng trừ ngày, thao tác ngày-tháng-năm và so sánh giá trị."
+  - title: "Java SE 21 — DateTimeFormatter"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/format/DateTimeFormatter.html"
+    description: "Định dạng và parse ngày giờ bằng chuẩn ISO, pattern và locale thay cho những cách xử lý lịch cũ dễ sai."
+  - title: "Java SE 21 — CompletableFuture"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/CompletableFuture.html"
+    description: "Lập trình bất đồng bộ với CompletionStage, chaining, composition, exception handling và phối hợp nhiều tác vụ."
+  - title: "Java SE 21 — Base64"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Base64.html"
+    description: "Bộ mã hóa và giải mã Base64 chuẩn, MIME và URL-safe; phân biệt encoding với encryption."
+  - title: "Java SE 21 — Repeatable"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/Repeatable.html"
+    description: "Chỉ định annotation có thể khai báo nhiều lần trên cùng phần tử và annotation container tương ứng."
+  - title: "Java SE 21 — Map"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html"
+    description: "Các default methods như computeIfAbsent, merge, replaceAll và forEach để cập nhật, duyệt và kết hợp giá trị."
+  - title: "Java SE 21 — Arrays"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Arrays.html"
+    description: "Các tiện ích Java 8 còn hữu ích như parallelSort, parallelPrefix và setAll; đánh giá đúng chi phí xử lý song song."

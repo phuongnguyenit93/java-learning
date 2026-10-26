@@ -1,16 +1,37 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "OpenJDK — JDK 23 Project and Feature List"
+    url: "https://openjdk.org/projects/jdk/23"
+    description: "Danh sách JEP chính thức của Java 23; phân biệt thay đổi đã ổn định với các tính năng preview hoặc incubator không nên dạy như API chính thức."
+  - title: "Oracle — JDK 23 Release Notes"
+    url: "https://www.oracle.com/java/technologies/javase/23-relnote-issues.html"
+    description: "Ghi chú phát hành Java 23, các thay đổi quan trọng, tương thích, loại bỏ và deprecation cần biết khi nâng cấp."
+  - title: "Oracle — Significant Changes in JDK 23"
+    url: "https://docs.oracle.com/en/java/javase/23/migrate/significant-changes-jdk-release.html"
+    description: "Tóm tắt Markdown Javadoc, Generational ZGC mặc định và các tác động migration, phân biệt thay đổi ổn định với preview."
+  - title: "OpenJDK JEP 467 — Markdown Documentation Comments"
+    url: "https://openjdk.org/jeps/467"
+    description: "Đặc tả JEP đưa comment kiểu /// và cú pháp Markdown vào Javadoc từ Java 23, vẫn còn được hỗ trợ."
+  - title: "Oracle JDK 23 — Markdown in Documentation Comments"
+    url: "https://docs.oracle.com/en/java/javase/23/javadoc/using-markdown-documentation-comments.html"
+    description: "Cú pháp ///, CommonMark, liên kết tới phần tử Java, bảng, đoạn mã và phối hợp thẻ Javadoc."
+  - title: "Oracle JDK 23 — Documentation Comment Specification"
+    url: "https://docs.oracle.com/en/java/javase/23/docs/specs/javadoc/doc-comment-spec.html"
+    description: "Đặc tả hai hình thức Javadoc truyền thống và Markdown, vị trí áp dụng và cách xử lý comment cho standard doclet."
+  - title: "Oracle JDK 24 — Markdown Javadoc Guide"
+    url: "https://docs.oracle.com/en/java/javase/24/javadoc/using-markdown-documentation-comments.html"
+    description: "Hướng dẫn Markdown Javadoc ở bản JDK sau Java 23, giúp học cách viết tài liệu API có thể dùng tiếp."
+  - title: "OpenJDK JEP 474 — ZGC Generational Mode by Default"
+    url: "https://openjdk.org/jeps/474"
+    description: "Java 23 đặt Generational ZGC làm chế độ mặc định của ZGC; nền tảng cho GC độ trễ thấp hiện đại."
+  - title: "Oracle JDK 24 — The Z Garbage Collector"
+    url: "https://docs.oracle.com/en/java/javase/24/gctuning/z-garbage-collector.html"
+    description: "Hướng dẫn ZGC dạng generational đang áp dụng: heap sizing, tuning và ghi rõ tùy chọn ZGenerational đã bị bỏ từ JDK 24."
+  - title: "OpenJDK JEP 471 — Deprecate Unsafe Memory Access"
+    url: "https://openjdk.org/jeps/471"
+    description: "Cảnh báo các phương thức truy cập bộ nhớ sun.misc.Unsafe bị đánh dấu để loại bỏ trong Java 23; ưu tiên API được hỗ trợ."
+  - title: "Java SE 25 — MemorySegment"
+    url: "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/foreign/MemorySegment.html"
+    description: "Thay thế thao tác bộ nhớ native không an toàn bằng Foreign Function and Memory API có quản lý vùng nhớ, giới hạn và vòng đời."
+  - title: "Java SE 25 — VarHandle"
+    url: "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/invoke/VarHandle.html"
+    description: "Cơ chế truy cập biến và các thao tác atomic với memory ordering được hỗ trợ, phù hợp thay thế nhiều trường hợp dùng Unsafe."

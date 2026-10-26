@@ -1,16 +1,34 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "Java SE 21 — String API"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html"
+    description: "API java.lang.String: immutable text, equality, comparison, search, substring, split, format, lines, strip và intern."
+  - title: "Java SE 21 — StringBuilder API"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/StringBuilder.html"
+    description: "Mutable sequence of characters, append/insert/delete/replace, capacity và hiệu quả nối chuỗi khi không cần đồng bộ."
+  - title: "Java SE 21 — StringBuffer API"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/StringBuffer.html"
+    description: "Mutable character sequence với phương thức synchronized; đối chiếu với StringBuilder trong môi trường nhiều luồng."
+  - title: "Java Language Specification 21 — Lexical Structure"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-3.html"
+    description: "Quy tắc cú pháp String literals, text blocks, escape sequences và đặc điểm Unicode trong mã nguồn Java."
+  - title: "Java SE 21 — Character API"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Character.html"
+    description: "UTF-16 char, Unicode code points, surrogate pairs và phương thức thao tác hoặc kiểm tra ký tự."
+  - title: "Java SE 21 — Charset API"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/nio/charset/Charset.html"
+    description: "Biểu diễn bộ mã ký tự, encode/decode, hỗ trợ charset và chuyển đổi văn bản sang bytes."
+  - title: "Java SE 21 — StandardCharsets API"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/nio/charset/StandardCharsets.html"
+    description: "Các hằng charset chuẩn như UTF_8, UTF_16, US_ASCII và ISO_8859_1 để mã hóa/giải mã rõ ràng."
+  - title: "Java SE 21 — Pattern API"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/regex/Pattern.html"
+    description: "Regular expression và Pattern/Matcher cho tìm kiếm, so khớp, tách và thay thế nội dung chuỗi."
+  - title: "Java SE 21 — StringJoiner API"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/StringJoiner.html"
+    description: "Ghép nhiều chuỗi với dấu phân tách, prefix/suffix và kết hợp Collectors.joining."
+  - title: "Java SE 21 — Formatter API"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Formatter.html"
+    description: "Cú pháp định dạng chuỗi kiểu printf, độ rộng, căn lề, precision và giá trị phụ thuộc Locale."
+  - title: "Java SE 21 — Normalizer API"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/text/Normalizer.html"
+    description: "Unicode normalization dạng NFC/NFD/NFKC/NFKD và cách chuẩn hóa văn bản để xử lý, tìm kiếm."

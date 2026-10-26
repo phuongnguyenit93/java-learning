@@ -1,49 +1,31 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
-
 references:
-  - title: "Spring Framework Reference — Cache Abstraction"
+  - title: "Spring Framework — Cache Abstraction"
     url: "https://docs.spring.io/spring-framework/reference/integration/cache.html"
-    description: "Current official conceptual overview for Spring caching. Use the Spring Framework 6.1.x Javadocs below as the version-aligned authority for API details in this repository."
-
-  - title: "Spring Framework Reference — Understanding the Cache Abstraction"
+    description: "Tổng quan cơ chế cache độc lập với cache provider, các thao tác truy xuất, cập nhật và vô hiệu hóa cache."
+  - title: "Spring Framework — Understanding the Cache Abstraction"
     url: "https://docs.spring.io/spring-framework/reference/integration/cache/strategies.html"
-    description: "Current official conceptual explanation of method-result caching, Cache and CacheManager responsibilities, and the boundary between Spring's abstraction and a backing implementation; version-sensitive API details are checked against 6.1.x Javadocs."
-
-  - title: "Spring Framework Reference — Declarative Annotation-based Caching"
+    description: "Giải thích cache hit/miss, khai báo cache và cấu hình nơi lưu trữ; lưu ý vấn đề đồng thời và dữ liệu cũ."
+  - title: "Spring Framework — Declarative Annotation-based Caching"
     url: "https://docs.spring.io/spring-framework/reference/integration/cache/annotations.html"
-    description: "Current official conceptual reference for declarative caching. The roadmap only adopts behavior verified against the repository's Spring Framework 6.1.x baseline, especially for asynchronous and reactive return types."
-
-  - title: "Spring Framework Reference — Configuring the Cache Storage"
-    url: "https://docs.spring.io/spring-framework/reference/integration/cache/store-configuration.html"
-    description: "Current official guidance on storage integrations and CacheManager responsibilities; provider availability may vary by Spring version, so 6.1.x API references remain authoritative for the repository baseline."
-
-  - title: "Spring Framework Reference — JCache (JSR-107) Annotations"
+    description: "Sử dụng @EnableCaching, @Cacheable, @CachePut, @CacheEvict, @Caching, @CacheConfig, cache key, SpEL và proxy/self-invocation."
+  - title: "Spring Framework — JCache (JSR-107) Annotations"
     url: "https://docs.spring.io/spring-framework/reference/integration/cache/jsr-107.html"
-    description: "Current official conceptual interoperability guidance for JCache annotations; the 6.1.x JCache packages and APIs are the version-aligned authority for this module."
-
-  - title: "Spring Framework 6.1 Javadoc — Cache"
-    url: "https://docs.spring.io/spring-framework/docs/6.1.x/javadoc-api/org/springframework/cache/Cache.html"
-    description: "Version-aligned API reference for Spring's Cache SPI, including synchronous loading, immediate operations, and the asynchronous retrieve methods introduced in Spring Framework 6.1."
-
-  - title: "Spring Framework 6.1 Javadoc — Cacheable"
-    url: "https://docs.spring.io/spring-framework/docs/6.1.x/javadoc-api/org/springframework/cache/annotation/Cacheable.html"
-    description: "Version-aligned annotation contract for cache lookup and population, conditions, key selection, and the exact limitations of sync=true."
-
-  - title: "Spring Framework 6.1 Javadoc — TransactionAwareCacheDecorator"
-    url: "https://docs.spring.io/spring-framework/docs/6.1.x/javadoc-api/org/springframework/cache/transaction/TransactionAwareCacheDecorator.html"
-    description: "Version-aligned contract for after-commit put/evict/clear behavior and the immediate operations that cannot be deferred transactionally."
+    description: "Tương tác với các annotation chuẩn JCache như @CacheResult, @CachePut và @CacheRemove."
+  - title: "Spring Framework — Declarative XML-based Caching"
+    url: "https://docs.spring.io/spring-framework/reference/integration/cache/declarative-xml.html"
+    description: "Cấu hình cache advice bằng XML và Spring AOP khi không dùng annotation."
+  - title: "Spring Framework — Configuring the Cache Storage"
+    url: "https://docs.spring.io/spring-framework/reference/integration/cache/store-configuration.html"
+    description: "Cấu hình CacheManager và các backend như ConcurrentMap, Caffeine hoặc JCache tùy môi trường."
+  - title: "Spring Framework — Plugging-in Different Back-end Caches"
+    url: "https://docs.spring.io/spring-framework/reference/integration/cache/plug.html"
+    description: "Mở rộng abstraction bằng Cache và CacheManager tùy chỉnh để tích hợp cache provider khác."
+  - title: "Spring Framework — Cache TTL, TTI and Eviction Policy"
+    url: "https://docs.spring.io/spring-framework/reference/integration/cache/specific-config.html"
+    description: "Phân biệt nhiệm vụ abstraction và cache provider khi đặt TTL, TTI, eviction hoặc chính sách lưu trữ."
+  - title: "Spring Framework API — CacheManager"
+    url: "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/cache/CacheManager.html"
+    description: "Hợp đồng SPI lấy cache theo tên, liệt kê cache và quản lý cache region."
+  - title: "Spring Framework API — Cache"
+    url: "https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/cache/Cache.html"
+    description: "Hợp đồng thao tác cache trực tiếp: get, put, evict, invalidate, clear và retrieve bất đồng bộ."

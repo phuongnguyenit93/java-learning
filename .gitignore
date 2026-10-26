@@ -64,4 +64,6 @@ backup
 
 # STEP 7 isolated Swagger drafts (Prime-only staging; never commit/package them).
 **/src/main/resources/step7-temp/
+# Per-worker temporary STEP contracts; Prime removes each file after assignment.
+module-generate-agent/temp/
 *.log

@@ -1,16 +1,31 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "Microsoft Learn — DPAPI Header and Interfaces"
+    url: "https://learn.microsoft.com/en-us/windows/win32/api/dpapi/"
+    description: "Tổng quan các API bảo vệ dữ liệu và bộ nhớ của Windows, cấu trúc DATA_BLOB và phạm vi sử dụng DPAPI."
+  - title: "Microsoft Learn — CryptProtectData"
+    url: "https://learn.microsoft.com/en-us/windows/win32/api/dpapi/nf-dpapi-cryptprotectdata"
+    description: "Mã hóa dữ liệu bằng DPAPI; phân biệt phạm vi tài khoản và máy, optional entropy, integrity, giới hạn của CRYPTPROTECT_LOCAL_MACHINE."
+  - title: "Microsoft Learn — CryptUnprotectData"
+    url: "https://learn.microsoft.com/en-us/windows/win32/api/dpapi/nf-dpapi-cryptunprotectdata"
+    description: "Giải mã dữ liệu DPAPI, yêu cầu cùng optional entropy, kiểm tra toàn vẹn, xử lý lỗi và giải phóng bộ nhớ an toàn."
+  - title: "Microsoft Learn — Example Using CryptProtectData"
+    url: "https://learn.microsoft.com/en-us/windows/win32/SecCrypto/example-c-program-using-cryptprotectdata"
+    description: "Ví dụ Win32 minh họa protect/unprotect và giới hạn tài khoản, máy, mật khẩu bị đặt lại cùng bài toán khôi phục dữ liệu."
+  - title: "Microsoft Learn — CryptProtectMemory"
+    url: "https://learn.microsoft.com/en-us/windows/win32/api/dpapi/nf-dpapi-cryptprotectmemory"
+    description: "Bảo vệ dữ liệu nhạy cảm tạm thời trong bộ nhớ; các chế độ SAME_PROCESS, CROSS_PROCESS, SAME_LOGON và giới hạn qua lần khởi động lại."
+  - title: "Microsoft Learn — CryptUnprotectMemory"
+    url: "https://learn.microsoft.com/en-us/windows/win32/api/dpapi/nf-dpapi-cryptunprotectmemory"
+    description: "Giải mã vùng nhớ trong cùng phiên khởi động, đồng bộ cờ bảo vệ và sử dụng SecureZeroMemory sau khi dùng bí mật."
+  - title: "Microsoft Learn — CNG DPAPI and DPAPI-NG"
+    url: "https://learn.microsoft.com/en-us/windows/win32/seccng/cng-dpapi"
+    description: "So sánh DPAPI truyền thống với DPAPI-NG và mô hình protection descriptors để chia sẻ bí mật giữa các máy theo danh tính."
+  - title: "Microsoft Learn — NCryptProtectSecret"
+    url: "https://learn.microsoft.com/en-us/windows/win32/api/ncryptprotect/nf-ncryptprotect-ncryptprotectsecret"
+    description: "Bảo vệ bí mật bằng protection descriptor trong DPAPI-NG; dữ liệu nhạy cảm và quản lý bộ nhớ kết quả."
+  - title: "Microsoft Learn — NCryptUnprotectSecret"
+    url: "https://learn.microsoft.com/en-us/windows/win32/api/ncryptprotect/nf-ncryptprotect-ncryptunprotectsecret"
+    description: "Khôi phục bí mật DPAPI-NG theo chính sách protection descriptor, quyền truy cập và các điều kiện giải mã."
+  - title: "Microsoft Learn — DPAPI Backup Keys in Active Directory"
+    url: "https://learn.microsoft.com/en-us/windows/win32/seccng/cng-dpapi-backup-keys-on-ad-domain-controllers"
+    description: "Vai trò DPAPI backup keys của domain controller, khôi phục khi đổi hoặc reset mật khẩu và nguyên tắc bảo vệ khóa dự phòng."

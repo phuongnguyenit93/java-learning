@@ -1,16 +1,34 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "RFC 6749 — The OAuth 2.0 Authorization Framework"
+    url: "https://www.rfc-editor.org/rfc/rfc6749.html"
+    description: "Đặc tả OAuth 2.0 về authorization server, client, resource server, access token, refresh token và các luồng cấp quyền; phân biệt authorization với xác thực người dùng."
+  - title: "RFC 6750 — OAuth 2.0 Bearer Token Usage"
+    url: "https://www.rfc-editor.org/rfc/rfc6750.html"
+    description: "Cách gửi bearer token qua HTTP Authorization header tới tài nguyên bảo vệ, yêu cầu bảo mật kênh truyền và giảm rò rỉ token."
+  - title: "RFC 7519 — JSON Web Token (JWT)"
+    url: "https://www.rfc-editor.org/rfc/rfc7519.html"
+    description: "Định dạng JWT và registered claims như iss, sub, aud, exp, nbf, iat, jti; phân biệt payload có thể đọc với tính toàn vẹn hay mã hóa."
+  - title: "RFC 7515 — JSON Web Signature (JWS)"
+    url: "https://www.rfc-editor.org/rfc/rfc7515.html"
+    description: "Mô hình chữ ký số hoặc MAC cho JSON data, protected header và cách xác minh tính toàn vẹn/token signature."
+  - title: "RFC 8725 — JWT Best Current Practices"
+    url: "https://www.rfc-editor.org/rfc/rfc8725.html"
+    description: "Bảo vệ JWT khỏi algorithm confusion, yếu tố giả mạo issuer/audience, token substitution và xử lý sai chữ ký hay loại token."
+  - title: "RFC 9068 — JWT Profile for OAuth 2.0 Access Tokens"
+    url: "https://www.rfc-editor.org/rfc/rfc9068.html"
+    description: "Cách chuẩn hóa access token ở dạng JWT và xác minh claims, issuer, audience, scope và token type tại resource server."
+  - title: "OpenID Connect Core 1.0 — Final"
+    url: "https://openid.net/specs/openid-connect-core-1_0.html"
+    description: "Chuẩn xác thực trên OAuth 2.0: ID Token, nonce, auth code flow, claims, issuer và các bước xác minh ID Token, khác với Access Token."
+  - title: "RFC 7636 — Proof Key for Code Exchange (PKCE)"
+    url: "https://www.rfc-editor.org/rfc/rfc7636.html"
+    description: "Cách dùng code_verifier và code_challenge để giảm tấn công đánh cắp authorization code ở public clients."
+  - title: "RFC 9449 — OAuth 2.0 DPoP"
+    url: "https://www.rfc-editor.org/rfc/rfc9449.html"
+    description: "Proof-of-possession ràng buộc token với cặp khóa client, chống replay và giảm rủi ro sử dụng access token bị đánh cắp."
+  - title: "RFC 9700 — Best Current Practice for OAuth 2.0 Security"
+    url: "https://www.rfc-editor.org/rfc/rfc9700.html"
+    description: "Hướng dẫn hiện đại về PKCE, redirect URI, loại bỏ luồng kém an toàn, bảo vệ token và xác minh chính xác quyền truy cập."
+  - title: "OWASP — OAuth2 Cheat Sheet"
+    url: "https://cheatsheetseries.owasp.org/cheatsheets/OAuth2_Cheat_Sheet.html"
+    description: "Thực hành bảo mật OAuth/OIDC: giảm token leakage, sử dụng PKCE, kiểm soát redirect, sender-constrained token và xác minh dữ liệu cấp quyền."

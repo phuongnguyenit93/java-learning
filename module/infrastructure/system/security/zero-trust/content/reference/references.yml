@@ -1,16 +1,28 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "NIST SP 800-207 — Zero Trust Architecture"
+    url: "https://www.nist.gov/publications/zero-trust-architecture"
+    description: "Tài liệu nền tảng định nghĩa Zero Trust, các nguyên tắc không cấp tin cậy mặc định, Policy Engine/Administrator/Enforcement Point, kiến trúc tham chiếu và use cases."
+  - title: "CISA — Zero Trust Maturity Model, Version 2.0"
+    url: "https://www.cisa.gov/sites/default/files/2023-04/zero_trust_maturity_model_v2_508.pdf"
+    description: "Mô hình đánh giá mức trưởng thành theo năm trụ cột Identity, Devices, Networks, Applications & Workloads, Data, cùng Visibility, Automation và Governance."
+  - title: "NIST SP 1800-35 — Implementing a Zero Trust Architecture"
+    url: "https://csrc.nist.gov/pubs/sp/1800/35/final"
+    description: "Hướng dẫn thực hành triển khai Zero Trust với 19 kiến trúc mẫu, từ bảo vệ tài nguyên đến identity governance, microsegmentation, SASE và tích hợp nhiều môi trường."
+  - title: "NIST SP 800-207A — ZTA for Cloud-Native Applications"
+    url: "https://csrc.nist.gov/pubs/sp/800/207/a/final"
+    description: "Mô hình Zero Trust cho dịch vụ cloud-native và multi-cloud: service identity, identity-tier policies, API gateway, sidecar proxy và service mesh."
+  - title: "NSA — Zero Trust Cybersecurity Information Sheets"
+    url: "https://www.nsa.gov/Cybersecurity/ZIG/CSIs/"
+    description: "Bộ hướng dẫn theo các trụ cột Zero Trust: người dùng, thiết bị, network/environment, dữ liệu, ứng dụng, quan sát/phân tích và tự động hóa."
+  - title: "NIST SP 800-63-4 — Digital Identity Guidelines"
+    url: "https://csrc.nist.gov/pubs/sp/800/63/4/final"
+    description: "Chuẩn về identity proofing, authentication, federation và mức bảo đảm danh tính; nền tảng xây dựng kiểm soát truy cập theo danh tính."
+  - title: "CISA — Modern Approaches to Network Access Security"
+    url: "https://www.cisa.gov/news-events/alerts/2024/06/18/cisa-and-partners-release-guidance-modern-approaches-network-access-security"
+    description: "Khuyến nghị chuyển từ remote access/VPN truyền thống sang Zero Trust, Secure Service Edge và SASE; nâng khả năng quan sát và kiểm soát rủi ro."
+  - title: "NIST SP 800-53 Rev. 5 — Security and Privacy Controls"
+    url: "https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final"
+    description: "Danh mục kiểm soát an toàn thông tin hỗ trợ ánh xạ kiến trúc Zero Trust vào Access Control, Identification and Authentication, Audit, Continuous Monitoring."
+  - title: "NSA — Advancing Zero Trust Maturity in Network and Environment"
+    url: "https://www.nsa.gov/Press-Room/Press-Releases-Statements/Press-Release-View/Article/3695223/nsa-releases-maturity-guidance-for-the-zero-trust-network-and-environment-pillar/"
+    description: "Định hướng khám phá luồng dữ liệu và phân đoạn mạng để giới hạn lateral movement, phát hiện xâm nhập và cô lập tác động."

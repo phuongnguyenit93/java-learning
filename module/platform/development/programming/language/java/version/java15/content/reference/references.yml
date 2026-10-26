@@ -1,16 +1,40 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "Oracle — Significant Changes in JDK 15"
+    url: "https://docs.oracle.com/en/java/javase/21/migrate/significant-changes-jdk-release.html"
+    description: "Tổng quan các thay đổi JDK 15: Text Blocks chính thức, Hidden Classes, EdDSA và ZGC dùng trong sản xuất; phân biệt preview và tính năng ổn định."
+  - title: "Oracle Java SE 21 — Text Blocks"
+    url: "https://docs.oracle.com/en/java/javase/21/language/text-blocks.html"
+    description: "Cú pháp text block nhiều dòng, dấu phân cách ba dấu nháy, giữ nội dung, lề thụt và escape sequences trong Java hiện đại."
+  - title: "JLS 21 — Text Blocks and Escape Sequences"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-3.html"
+    description: "Đặc tả Java SE 21 mục 3.10.6 Text Blocks và 3.10.7 escape sequences, quy tắc biên dịch chuỗi nhiều dòng."
+  - title: "Java SE 21 — String Text Utilities"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html"
+    description: "Các API Java 15 còn hỗ trợ như stripIndent, translateEscapes và formatted; xử lý chuỗi liên quan đến text blocks."
+  - title: "OpenJDK JEP 371 — Hidden Classes"
+    url: "https://openjdk.org/jeps/371"
+    description: "Tính năng Java 15 để runtime/framework tạo class không thể tham chiếu bằng tên nhị phân từ bytecode khác."
+  - title: "Java SE 21 — MethodHandles.Lookup"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/invoke/MethodHandles.Lookup.html"
+    description: "API defineHiddenClass để tạo hidden classes tại runtime, cùng yêu cầu quyền lookup và giới hạn truy cập."
+  - title: "Java SE 21 — Class Hidden Types"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html"
+    description: "Class.isHidden và đặc điểm hidden classes, không thể tìm bằng Class.forName và ClassLoader.loadClass."
+  - title: "OpenJDK JEP 339 — Edwards-Curve Digital Signature Algorithm"
+    url: "https://openjdk.org/jeps/339"
+    description: "Hỗ trợ EdDSA được đưa vào Java 15; chữ ký Ed25519/Ed448 tiếp tục được hỗ trợ trong Java hiện đại."
+  - title: "Java SE 21 — EdECPrivateKeySpec"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/security/spec/EdECPrivateKeySpec.html"
+    description: "Cấu trúc thông số khóa riêng EdDSA bổ sung từ Java 15, gắn với curve và tham số khóa."
+  - title: "Java SE 21 — NamedParameterSpec"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/security/spec/NamedParameterSpec.html"
+    description: "Các tham số tên chuẩn ED25519, ED448 và lựa chọn thuật toán khi thao tác khóa/chữ ký."
+  - title: "Java SE 21 — Security Algorithm Names"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/specs/security/standard-names.html"
+    description: "Tên thuật toán EdDSA, Ed25519, Ed448 dùng với Signature, KeyPairGenerator và KeyFactory."
+  - title: "OpenJDK JEP 377 — ZGC Production"
+    url: "https://openjdk.org/jeps/377"
+    description: "ZGC hết trạng thái experimental từ Java 15; hiểu mục tiêu GC tạm dừng thấp trong hệ thống hiện đại."
+  - title: "Oracle Java SE 21 — The Z Garbage Collector"
+    url: "https://docs.oracle.com/en/java/javase/21/gctuning/z-garbage-collector2.html"
+    description: "Hướng dẫn hiện hành cho ZGC, thiết lập heap, phân tích tải và giới hạn độ trễ; tránh tùy chọn đã cũ."

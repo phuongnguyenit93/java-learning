@@ -1,16 +1,25 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "Java SE 21 — JVM Specification Chapter 5: Loading, Linking, and Initializing"
+    url: "https://docs.oracle.com/javase/specs/jvms/se21/html/jvms-5.html"
+    description: "Đặc tả linking và resolution ở runtime, đặc biệt §5.4.3.6 về bootstrap methods, constant động và liên kết call site."
+  - title: "Java SE 21 — JVM Specification Chapter 6: Instruction Set"
+    url: "https://docs.oracle.com/javase/specs/jvms/se21/html/jvms-6.html"
+    description: "Mô tả bytecode invokedynamic, quy trình thực thi lời gọi được liên kết động và mối liên hệ với CallSite."
+  - title: "Java SE 21 API — java.lang.invoke"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/invoke/package-summary.html"
+    description: "Tổng quan các primitive kết nối Java với JVM: MethodHandle, MethodType, CallSite và bootstrap động."
+  - title: "Java SE 21 API — MethodHandle"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/invoke/MethodHandle.html"
+    description: "Typed executable reference, invokeExact/invoke, adaptation và kiểm tra MethodType khi gọi động."
+  - title: "Java SE 21 API — MethodHandles"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/invoke/MethodHandles.html"
+    description: "Lookup, kiểm tra quyền truy cập, method-handle factories và combinators dùng để tạo pipeline gọi động."
+  - title: "Java SE 21 API — CallSite"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/invoke/CallSite.html"
+    description: "Vai trò ConstantCallSite, MutableCallSite và VolatileCallSite trong đích liên kết và tái liên kết của invokedynamic."
+  - title: "Java SE 21 API — LambdaMetafactory"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/invoke/LambdaMetafactory.html"
+    description: "Bootstrap linkage cho lambda và method reference; phân biệt linkage, capture và invocation tại runtime."
+  - title: "Java SE 21 API — ConstantBootstraps"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/invoke/ConstantBootstraps.html"
+    description: "Các bootstrap methods chuẩn để tính hằng động (CONSTANT_Dynamic) trong constant pool."

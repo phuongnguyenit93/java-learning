@@ -1,16 +1,37 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "NIST SP 800-162 — Guide to Attribute Based Access Control"
+    url: "https://csrc.nist.gov/pubs/sp/800/162/upd2/final"
+    description: "Nền tảng kiểm soát truy cập theo chính sách và thuộc tính subject, resource, action, environment; phân biệt rule, attribute, policy và quyết định truy cập."
+  - title: "OASIS Standard — XACML 3.0 Core Specification"
+    url: "https://docs.oasis-open.org/xacml/3.0/xacml-3.0-core-spec-os-en.html"
+    description: "Kiến trúc PAP, PDP, PEP, PIP; rule, policy, policy set, combining algorithms, Permit/Deny, NotApplicable, Indeterminate và obligations."
+  - title: "NIST SP 800-207 — Zero Trust Architecture"
+    url: "https://csrc.nist.gov/pubs/sp/800/207/final"
+    description: "Kiến trúc policy engine, policy administrator, policy enforcement point; cấp quyền theo ngữ cảnh, rủi ro và nguyên tắc không tin cậy mặc định."
+  - title: "NIST SP 800-207A — Cloud-Native Access Control"
+    url: "https://csrc.nist.gov/pubs/sp/800/207/a/final"
+    description: "Áp dụng chính sách truy cập ứng dụng và dịch vụ xuyên môi trường multi-cloud, dựa trên danh tính workload và kiểm soát mức ứng dụng."
+  - title: "Open Policy Agent — Overview"
+    url: "https://www.openpolicyagent.org/docs"
+    description: "Policy engine tổng quát tách quyết định authorization khỏi thành phần thực thi; đánh giá request cùng policy và context data."
+  - title: "Open Policy Agent — Rego Policy Language"
+    url: "https://www.openpolicyagent.org/docs/policy-language"
+    description: "Ngôn ngữ policy-as-code Rego, rules, structured input/data, biểu thức và thiết kế quyết định truy cập có thể kiểm tra."
+  - title: "Open Policy Agent — Policy Testing"
+    url: "https://www.openpolicyagent.org/docs/policy-testing"
+    description: "Viết unit tests, negative cases và đo coverage cho policy; bảo vệ trước regression và thay đổi quyền ngoài dự kiến."
+  - title: "Open Policy Agent — External Data"
+    url: "https://www.openpolicyagent.org/docs/external-data"
+    description: "Lấy thuộc tính nguồn ngoài, đồng bộ context và policy qua input, bundles, push hoặc pull; cân nhắc độ mới dữ liệu và thời gian đánh giá."
+  - title: "Cedar Policy Language — Terms and Concepts"
+    url: "https://docs.cedarpolicy.com/overview/terminology.html"
+    description: "Policy-based authorization với principal, action, resource, context; so sánh RBAC/ABAC, permit/forbid, scope và điều kiện."
+  - title: "Cedar — Authorization Evaluation"
+    url: "https://docs.cedarpolicy.com/auth/authorization.html"
+    description: "Thuật toán kết hợp policy, default deny, forbid overrides permit và xử lý lỗi khi đánh giá điều kiện hoặc thông tin đối tượng."
+  - title: "Cedar — Basic Policy Construction"
+    url: "https://docs.cedarpolicy.com/policies/syntax-policy.html"
+    description: "Cú pháp policy với principal/action/resource, permit/forbid, when/unless; bảo đảm giới hạn quyền qua context và attributes."
+  - title: "OWASP — Authorization Cheat Sheet"
+    url: "https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html"
+    description: "Áp dụng least privilege, deny by default, kiểm tra mỗi request, object-level authorization, kiểm thử quyền và chống bypass client-side."

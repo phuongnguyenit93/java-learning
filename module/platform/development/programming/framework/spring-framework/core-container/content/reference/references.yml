@@ -1,65 +1,34 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
-
 references:
-  - title: "Spring Framework Reference — Container Overview"
-    url: "https://docs.spring.io/spring-framework/reference/6.1/core/beans/basics.html"
-    description: "Official Spring Framework 6.1 container overview covering ApplicationContext bootstrap, configuration metadata, and the core container model."
-
-  - title: "Spring Framework Reference — Classpath Scanning and Managed Components"
-    url: "https://docs.spring.io/spring-framework/reference/6.1/core/beans/classpath-scanning.html"
-    description: "Official reference for component scanning, stereotypes, bean naming, and managed-component registration."
-
-  - title: "Spring Framework Reference — Java-based Container Configuration"
-    url: "https://docs.spring.io/spring-framework/reference/6.1/core/beans/java.html"
-    description: "Official reference for @Configuration, @Bean, AnnotationConfigApplicationContext, and composition of Java configuration."
-
-  - title: "Spring Framework Reference — Dependencies"
-    url: "https://docs.spring.io/spring-framework/reference/6.1/core/beans/dependencies.html"
-    description: "Official reference for dependency injection, lazy initialization, autowiring, depends-on, and method injection."
-
-  - title: "Spring Framework Reference — Bean Scopes"
-    url: "https://docs.spring.io/spring-framework/reference/6.1/core/beans/factory-scopes.html"
-    description: "Official reference for singleton, prototype, web-aware and custom scopes, including scoped dependencies and lifecycle implications."
-
-  - title: "Spring Framework Reference — Customizing the Nature of a Bean"
-    url: "https://docs.spring.io/spring-framework/reference/6.1/core/beans/factory-nature.html"
-    description: "Official reference for initialization and destruction callbacks, Aware contracts, Lifecycle/SmartLifecycle, and shutdown ordering."
-
-  - title: "Spring Framework Reference — Container Extension Points"
-    url: "https://docs.spring.io/spring-framework/reference/6.1/core/beans/factory-extension.html"
-    description: "Official reference for BeanPostProcessor, BeanFactoryPostProcessor, FactoryBean, and container customization."
-
-  - title: "Spring Framework Reference — Environment Abstraction"
-    url: "https://docs.spring.io/spring-framework/reference/6.1/core/beans/environment.html"
-    description: "Official reference for Environment, profiles, PropertySource, property resolution, and environment-driven bean registration."
-
-  - title: "Spring Framework Reference — Additional Capabilities of the ApplicationContext"
-    url: "https://docs.spring.io/spring-framework/reference/6.1/core/beans/context-introduction.html"
-    description: "Official reference for MessageSource, application events, resource access, and hierarchical application contexts."
-
-  - title: "Spring Framework Reference — Resources"
-    url: "https://docs.spring.io/spring-framework/reference/6.1/core/resources.html"
-    description: "Official reference for Spring's Resource, ResourceLoader, resource locations, and resource-pattern abstractions."
-
-  - title: "Spring Framework Reference — Spring Expression Language (SpEL)"
-    url: "https://docs.spring.io/spring-framework/reference/6.1/core/expressions.html"
-    description: "Official reference for SpEL evaluation and expressions used in Spring configuration and bean metadata."
-
-  - title: "ApplicationContext — Spring Framework 6.1.14 API"
-    url: "https://docs.spring.io/spring-framework/docs/6.1.14/javadoc-api/org/springframework/context/ApplicationContext.html"
-    description: "Version-pinned API contract for the central application context interface used by the repository's Spring Framework baseline."
+  - title: "Spring Framework — Bean Overview"
+    url: "https://docs.spring.io/spring-framework/reference/core/beans/definition.html"
+    description: "BeanDefinition, bean name, dependencies và cách IoC container quản lý các thành phần ứng dụng."
+  - title: "Spring Framework — Dependency Injection"
+    url: "https://docs.spring.io/spring-framework/reference/core/beans/dependencies/factory-collaborators.html"
+    description: "Constructor injection, setter injection, vòng phụ thuộc và cơ chế lắp ráp dependency trong container."
+  - title: "Spring Framework — Bean Scopes"
+    url: "https://docs.spring.io/spring-framework/reference/core/beans/factory-scopes.html"
+    description: "Singleton, prototype, request, session, application, websocket và phạm vi vòng đời của bean."
+  - title: "Spring Framework — Using @Autowired"
+    url: "https://docs.spring.io/spring-framework/reference/core/beans/annotation-config/autowired.html"
+    description: "Tiêm phụ thuộc qua constructor, method hoặc field; optional dependencies và quy tắc lựa chọn bean."
+  - title: "Spring Framework — Autowiring Qualifiers"
+    url: "https://docs.spring.io/spring-framework/reference/core/beans/annotation-config/autowired-qualifiers.html"
+    description: "Dùng @Qualifier để thu hẹp ứng viên khi có nhiều bean cùng type và giải quyết ambiguity."
+  - title: "Spring Framework — Classpath Scanning and Managed Components"
+    url: "https://docs.spring.io/spring-framework/reference/core/beans/classpath-scanning.html"
+    description: "Component scanning, stereotype annotations, filter và tự động phát hiện bean definitions."
+  - title: "Spring Framework — Using the @Bean Annotation"
+    url: "https://docs.spring.io/spring-framework/reference/core/beans/java/bean-annotation.html"
+    description: "Khai báo bean bằng Java config, inject tham số phương thức factory và tùy chỉnh init/destroy."
+  - title: "Spring Framework — Using the @Configuration Annotation"
+    url: "https://docs.spring.io/spring-framework/reference/core/beans/java/configuration-annotation.html"
+    description: "Cấu hình container bằng @Configuration, quan hệ giữa các @Bean và hành vi gọi phương thức cấu hình."
+  - title: "Spring Framework — Customizing the Nature of a Bean"
+    url: "https://docs.spring.io/spring-framework/reference/core/beans/factory-nature.html"
+    description: "Vòng đời bean: @PostConstruct, @PreDestroy, InitializingBean, DisposableBean và Lifecycle."
+  - title: "Spring Framework — Container Extension Points"
+    url: "https://docs.spring.io/spring-framework/reference/core/beans/factory-extension.html"
+    description: "Phân biệt BeanPostProcessor xử lý bean instance với BeanFactoryPostProcessor xử lý definition metadata."
+  - title: "Spring Framework — Environment Abstraction"
+    url: "https://docs.spring.io/spring-framework/reference/core/beans/environment.html"
+    description: "Environment, @Profile, property sources và độ ưu tiên cấu hình theo môi trường chạy."

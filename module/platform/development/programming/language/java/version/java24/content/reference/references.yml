@@ -1,16 +1,34 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "Oracle — Significant Changes in JDK 24 Release"
+    url: "https://docs.oracle.com/en/java/javase/25/migrate/significant-changes-jdk-24.html"
+    description: "Tổng hợp và phân loại thay đổi Java 24: tính năng chính thức, cải tiến runtime, bảo mật và nội dung từng ở trạng thái preview hoặc incubator cần tránh dùng theo hướng dẫn cũ."
+  - title: "Oracle JDK 25 — Class-File API"
+    url: "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/classfile/package-summary.html"
+    description: "Class-File API được chuẩn hóa ở Java 24: đọc, sinh và biến đổi class files qua ClassFile, ClassModel và builder, phục vụ công cụ phân tích bytecode hiện đại."
+  - title: "Oracle JDK 25 — Stream Gatherers"
+    url: "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/stream/Gatherers.html"
+    description: "Các thao tác trung gian Stream được chuẩn hóa từ Java 24: windowFixed, windowSliding, fold, scan và mapConcurrent; học API cuối cùng thay vì ví dụ preview cũ."
+  - title: "OpenJDK JEP 491 — Synchronize Virtual Threads without Pinning"
+    url: "https://openjdk.org/jeps/491"
+    description: "Cải tiến Java 24 cho phép virtual threads đang chờ trong synchronized giải phóng platform thread, giảm carrier-thread pinning và cải thiện khả năng mở rộng ứng dụng đồng thời."
+  - title: "OpenJDK JEP 483 — Ahead-of-Time Class Loading and Linking"
+    url: "https://openjdk.org/jeps/483"
+    description: "Cơ chế lưu cache class đã load/link từ một lượt chạy để cải thiện JVM startup; nền tảng AOT còn tiếp tục được mở rộng ở các JDK đời sau."
+  - title: "OpenJDK JEP 475 — Late Barrier Expansion for G1"
+    url: "https://openjdk.org/jeps/475"
+    description: "Tối ưu đường biên của G1 bằng cách chuyển bước mở rộng GC barriers về giai đoạn muộn hơn của C2 compiler; kiến thức về hiệu năng JVM còn phù hợp."
+  - title: "OpenJDK JEP 490 — Generational ZGC"
+    url: "https://openjdk.org/jeps/490"
+    description: "Java 24 chuyển ZGC sang chế độ generational duy nhất; tham khảo thiết kế GC hiện hành và không áp dụng cấu hình non-generational ZGC đã bị loại bỏ."
+  - title: "OpenJDK JEP 496 — Quantum-Resistant ML-KEM"
+    url: "https://openjdk.org/jeps/496"
+    description: "Hỗ trợ cơ chế đóng gói khóa hậu lượng tử ML-KEM theo FIPS 203, dùng cho trao đổi hoặc thiết lập khóa bí mật; phân biệt KEM với mã hóa đối xứng và chữ ký số."
+  - title: "OpenJDK JEP 497 — Quantum-Resistant ML-DSA"
+    url: "https://openjdk.org/jeps/497"
+    description: "Hỗ trợ chữ ký số hậu lượng tử ML-DSA theo FIPS 204, ứng dụng xác thực người ký và kiểm tra toàn vẹn; so sánh rõ chức năng với ML-KEM."
+  - title: "Oracle JDK 25 API — ScopedValue"
+    url: "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/ScopedValue.html"
+    description: "Scoped Values từng preview ở Java 24 nhưng đã chính thức từ Java 25; dùng dynamic scope để truyền context an toàn trong luồng gọi và virtual threads."
+  - title: "OpenJDK JEP 486 — Permanently Disable the Security Manager"
+    url: "https://openjdk.org/jeps/486"
+    description: "Java 24 vô hiệu hóa vĩnh viễn Security Manager; nhận diện rủi ro tương thích và chuyển sang mô hình bảo mật ứng dụng, container hoặc hệ điều hành thay cho API legacy."

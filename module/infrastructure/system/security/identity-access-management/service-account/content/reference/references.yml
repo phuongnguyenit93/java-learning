@@ -1,16 +1,25 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "Google Cloud IAM — Best Practices for Using Service Accounts Securely"
+    url: "https://docs.cloud.google.com/iam/docs/best-practices-service-accounts"
+    description: "Nguyên tắc danh tính phi con người: service account riêng theo workload, least privilege, naming/ownership, phát hiện tài khoản không dùng, chặn impersonation và theo dõi audit logs."
+  - title: "Google Cloud IAM — Best Practices for Managing Service Account Keys"
+    url: "https://docs.cloud.google.com/iam/docs/best-practices-for-managing-service-account-keys"
+    description: "Hạn chế khóa dài hạn, tránh đưa key vào source/repository, kiểm soát tạo key, rotation, revocation, expiry và phản ứng khi credential bị lộ."
+  - title: "Google Cloud IAM — Service Account Credentials"
+    url: "https://docs.cloud.google.com/iam/docs/service-account-creds"
+    description: "Phân biệt short-lived credentials và user-managed keys; lựa chọn hình thức xác thực, điều kiện sử dụng và thời hạn credential của service accounts."
+  - title: "Google Cloud IAM — Workload Identity Federation"
+    url: "https://docs.cloud.google.com/iam/docs/workload-identity-federation"
+    description: "Dùng OIDC/SAML hoặc định danh workload từ môi trường khác để nhận credential ngắn hạn thay vì chia sẻ static service-account key."
+  - title: "Kubernetes — Service Accounts"
+    url: "https://kubernetes.io/docs/concepts/security/service-accounts/"
+    description: "Định danh riêng của workload trong Kubernetes; ServiceAccount, RBAC theo namespace, projected token tự hết hạn/xoay vòng và rủi ro token lâu dài."
+  - title: "AWS IAM — IAM Roles"
+    url: "https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html"
+    description: "Khái niệm vai trò cho ứng dụng và dịch vụ, trust policy và quyền truy cập tài nguyên; dùng credentials tạm thời thay vì access keys gắn cố định."
+  - title: "Microsoft Entra — Managed Identities for Azure Resources"
+    url: "https://learn.microsoft.com/en-us/entra/identity/managed-identities-azure-resources/overview"
+    description: "Đối chiếu service principal và managed identity với user identity; system-assigned/user-assigned lifecycle, quản lý RBAC và loại bỏ secret trong service-to-service authentication."
+  - title: "OWASP — Secrets Management Cheat Sheet"
+    url: "https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html"
+    description: "Quản lý credential của tài khoản máy: bảo mật khi tạo, phân phối, lưu trữ, giới hạn quyền, rotation, thu hồi, giám sát và ngăn secrets lọt vào log hoặc CI/CD."

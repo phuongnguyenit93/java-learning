@@ -1,16 +1,37 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "Oracle — JDK 11 Release Notes"
+    url: "https://www.oracle.com/java/technologies/javase/11-relnotes.html"
+    description: "Tổng quan các cải tiến ổn định của Java 11 và liên kết tới Java SE 11 API; dùng làm tài liệu lịch sử phiên bản, không giới thiệu công nghệ thử nghiệm lỗi thời."
+  - title: "Oracle — JDK 11 Important Changes"
+    url: "https://www.oracle.com/java/technologies/javase/11-relnote-issues.html"
+    description: "Thông tin về HTTP Client chuẩn hóa, TLS 1.3, Collection.toArray(IntFunction) và những thay đổi tương thích khi nâng cấp ứng dụng Java 11."
+  - title: "Oracle Java SE 11 API — String"
+    url: "https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html"
+    description: "String.isBlank, strip, stripLeading, stripTrailing, lines và repeat được thêm ở Java 11, tiếp tục khả dụng trong JDK hiện đại."
+  - title: "Oracle Java SE 11 API — Files"
+    url: "https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/nio/file/Files.html"
+    description: "Files.readString và writeString với mã hóa ký tự thích hợp; đọc và ghi file văn bản an toàn qua NIO.2."
+  - title: "Oracle Java SE 11 API — Path"
+    url: "https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/nio/file/Path.html"
+    description: "Path.of(String...) và Path.of(URI) để tạo đối tượng đường dẫn file; phân biệt đường dẫn hệ thống và URI."
+  - title: "Oracle Java SE 11 API — HttpClient"
+    url: "https://docs.oracle.com/en/java/javase/11/docs/api/java.net.http/java/net/http/HttpClient.html"
+    description: "HTTP Client chuẩn của java.net.http hỗ trợ HTTP/2, HttpRequest, HttpResponse, send và sendAsync/CompletableFuture."
+  - title: "Oracle Java SE 11 API — Optional"
+    url: "https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html"
+    description: "Optional.isEmpty() thêm ở Java 11; kiểm tra trạng thái vắng mặt của kết quả mà không cần thao tác trực tiếp với null."
+  - title: "Oracle Java SE 11 API — Predicate"
+    url: "https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/function/Predicate.html"
+    description: "Predicate.not(Predicate) thêm ở Java 11, đơn giản hóa phủ định điều kiện khi lọc Stream."
+  - title: "Oracle Java SE 11 API — Collection"
+    url: "https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Collection.html"
+    description: "Collection.toArray(IntFunction) và cú pháp String[]::new để chuyển collection sang mảng có kiểu."
+  - title: "OpenJDK — JEP 323 Lambda Parameter Type Inference"
+    url: "https://cr.openjdk.org/~dlsmith/jep323/lambda-parameters.html"
+    description: "Đặc tả dùng var trong tham số lambda từ Java 11, khai báo đồng nhất và hỗ trợ annotation tham số."
+  - title: "Oracle JDK 11 — java Launcher"
+    url: "https://docs.oracle.com/en/java/javase/11/tools/java.html"
+    description: "Chạy trực tiếp source file .java qua java launcher, cách source-file mode và tùy chọn --source hoạt động."
+  - title: "Oracle Java SE 11 API — Flight Recorder"
+    url: "https://docs.oracle.com/en/java/javase/11/docs/api/jdk.jfr/jdk/jfr/FlightRecorder.html"
+    description: "Java Flight Recorder cung cấp sự kiện chẩn đoán hiệu năng JVM, khởi tạo và quản lý recording với chi phí quan sát thấp."

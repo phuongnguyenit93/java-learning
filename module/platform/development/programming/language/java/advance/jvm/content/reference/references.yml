@@ -1,16 +1,31 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "Java SE 21 — Java Virtual Machine Specification"
+    url: "https://docs.oracle.com/javase/specs/jvms/se21/html/index.html"
+    description: "Đặc tả chuẩn về tệp class, bytecode, vùng dữ liệu runtime, frame, class loading/linking/initialization và thực thi lệnh JVM."
+  - title: "Oracle Java SE 21 — Java Virtual Machine Guide"
+    url: "https://docs.oracle.com/en/java/javase/21/vm/index.html"
+    description: "Hướng dẫn HotSpot VM về compiler, garbage collection, CDS, tối ưu hiệu năng, Native Memory Tracking và cơ chế runtime."
+  - title: "Oracle Java SE 21 — HotSpot Garbage Collection Tuning Guide"
+    url: "https://docs.oracle.com/en/java/javase/21/gctuning/index.html"
+    description: "Nền tảng quản lý heap, các garbage collector, yếu tố ảnh hưởng throughput/latency và phương pháp tuning GC."
+  - title: "Oracle Java SE 21 — HotSpot Performance Enhancements"
+    url: "https://docs.oracle.com/en/java/javase/21/vm/java-hotspot-virtual-machine-performance-enhancements.html"
+    description: "Tiered compilation, code cache, compressed oops, compact strings và escape analysis trong HotSpot."
+  - title: "Oracle Java SE 21 — Class Data Sharing"
+    url: "https://docs.oracle.com/en/java/javase/21/vm/class-data-sharing.html"
+    description: "Cơ chế CDS/AppCDS và ảnh hưởng đến thời gian khởi động, class metadata và bộ nhớ của các JVM."
+  - title: "Oracle JDK 21 — java Command"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/specs/man/java.html"
+    description: "Tùy chọn khởi chạy, JVM flags, Unified Logging (-Xlog), heap sizing, GC, diagnostic và quan sát hoạt động runtime."
+  - title: "Oracle JDK 21 — jcmd Command"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/specs/man/jcmd.html"
+    description: "Các lệnh kiểm tra JVM đang chạy: thread, class, memory, GC, code cache, Native Memory Tracking và Flight Recorder."
+  - title: "Oracle JDK 21 — jfr Command"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/specs/man/jfr.html"
+    description: "Phân tích sự kiện Java Flight Recorder về CPU, allocation, GC, thread và đặc điểm hoạt động của JVM."
+  - title: "Oracle Java SE 21 — Diagnostic Tools"
+    url: "https://docs.oracle.com/en/java/javase/21/troubleshoot/diagnostic-tools.html"
+    description: "Kỹ thuật giám sát JVM, phân tích heap, Native Memory Tracking, thread dump và các công cụ khắc phục sự cố."
+  - title: "Oracle Java SE 21 — JDK and Java Specifications"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/specs/"
+    description: "Cổng đặc tả chính thức giúp đối chiếu JVM Specification, Java Language Specification, Tool Specifications và JVM TI."

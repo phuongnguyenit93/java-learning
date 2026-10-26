@@ -1,16 +1,31 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "OWASP API1:2023 — Broken Object Level Authorization"
+    url: "https://api-security.owasp.org/editions/2023/en/0xa1-broken-object-level-authorization/"
+    description: "Rủi ro BOLA khi API nhận object ID từ người dùng nhưng không kiểm tra quyền thao tác trên từng đối tượng; phân biệt quyền truy cập endpoint và quyền truy cập resource."
+  - title: "OWASP API3:2023 — Broken Object Property Level Authorization"
+    url: "https://api-security.owasp.org/editions/2023/en/0xa3-broken-object-property-level-authorization/"
+    description: "Ràng buộc quyền đọc và sửa từng thuộc tính của đối tượng; phòng ngừa lộ trường nhạy cảm và mass assignment qua API."
+  - title: "OWASP API5:2023 — Broken Function Level Authorization"
+    url: "https://api-security.owasp.org/editions/2023/en/0xa5-broken-function-level-authorization/"
+    description: "So sánh object-level với function-level authorization; kiểm soát quyền theo hành động, role, HTTP method và endpoint quản trị."
+  - title: "OWASP — Authorization Cheat Sheet"
+    url: "https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html"
+    description: "Nguyên tắc deny by default, least privilege, kiểm tra quyền mỗi request trên máy chủ, ABAC/ReBAC và xử lý authorization failure an toàn."
+  - title: "OWASP — Insecure Direct Object Reference Prevention"
+    url: "https://cheatsheetseries.owasp.org/cheatsheets/Insecure_Direct_Object_Reference_Prevention_Cheat_Sheet.html"
+    description: "Nguyên nhân IDOR, kiểm tra ownership hoặc quan hệ quyền với đối tượng, giới hạn truy vấn theo danh tính; UUID khó đoán không thay thế kiểm tra quyền."
+  - title: "OWASP — REST Security Cheat Sheet"
+    url: "https://cheatsheetseries.owasp.org/cheatsheets/REST_Security_Cheat_Sheet.html"
+    description: "Quy tắc thực thi access control tại mọi REST endpoint và mọi HTTP method; xác thực token, từ chối truy cập và tránh rò rỉ dữ liệu."
+  - title: "OWASP — Authorization Decisions and Output Handling"
+    url: "https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Decisions_And_Output_Handling_Cheat_Sheet.html"
+    description: "Áp dụng kết quả quyết định phân quyền vào truy vấn dữ liệu, danh sách object IDs, lọc collection, count và export để ngăn lộ tài nguyên ngoài quyền."
+  - title: "OWASP WSTG — Insecure Direct Object References"
+    url: "https://wstg.owasp.org/latest/4-Web_Application_Security_Testing/05-Authorization/04-Insecure_Direct_Object_References/"
+    description: "Quy trình kiểm thử IDOR với object identifiers trong URL, request body và file; dùng nhiều tài khoản để phát hiện truy cập chéo đối tượng."
+  - title: "OWASP WSTG — Bypassing Authorization Schema"
+    url: "https://wstg.owasp.org/latest/4-Web_Application_Security_Testing/05-Authorization/02-Bypassing_Authorization_Schema/"
+    description: "Kiểm thử vượt quyền ngang và dọc bằng session khác nhau; đối chiếu các thao tác xem, sửa, xóa đối tượng và chức năng nhạy cảm."
+  - title: "NIST SP 800-162 — Attribute Based Access Control (ABAC)"
+    url: "https://csrc.nist.gov/pubs/sp/800/162/upd2/final"
+    description: "Mô hình ra quyết định quyền từ thuộc tính chủ thể, đối tượng, hành động, điều kiện môi trường và chính sách; nền tảng cho phân quyền chi tiết."

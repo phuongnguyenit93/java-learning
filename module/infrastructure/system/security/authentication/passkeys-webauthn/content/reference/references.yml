@@ -1,16 +1,28 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "W3C — Web Authentication (WebAuthn) Level 3"
+    url: "https://www.w3.org/TR/webauthn-3/"
+    description: "Đặc tả WebAuthn: PublicKeyCredential, RP ID, origin, challenge, authenticator, attestation, assertion và các bước xác minh chữ ký nhằm chống phishing và replay."
+  - title: "FIDO Alliance — User Authentication Specifications"
+    url: "https://fidoalliance.org/specifications/"
+    description: "Nguồn tiêu chuẩn chính thức của FIDO2, gồm WebAuthn và Client to Authenticator Protocol (CTAP), kết nối trình duyệt hoặc thiết bị với khóa bảo mật."
+  - title: "passkeys.dev — What Are Passkeys?"
+    url: "https://passkeys.dev/docs/intro/what-are-passkeys/"
+    description: "Giới thiệu passkey dựa trên mật mã khóa công khai, khóa riêng ở thiết bị hoặc kho đồng bộ, tính duy nhất theo website và khả năng chống phishing."
+  - title: "MDN — Web Authentication API"
+    url: "https://developer.mozilla.org/en-US/docs/Web/API/Web_Authentication_API"
+    description: "Tổng quan API trên trình duyệt để đăng ký credential và đăng nhập bằng challenge-response; vai trò navigator.credentials.create/get, authenticator và server."
+  - title: "Google — Passkeys Developer Guide for Relying Parties"
+    url: "https://developers.google.com/identity/passkeys/developer-guides"
+    description: "Hướng dẫn xây dựng đăng ký và xác thực passkey, tạo challenge, lưu public key, xác minh assertion, bảo đảm RP ID và luồng đa thiết bị."
+  - title: "NIST SP 800-63B-4 — Authenticator and Verifier Requirements"
+    url: "https://pages.nist.gov/800-63-4/sp800-63b/authenticators/"
+    description: "Yêu cầu bảo mật cho authenticator mật mã, user verification, phishing resistance theo domain, chống replay và phân biệt các mức AAL."
+  - title: "NIST SP 800-63B-4 — Syncable Authenticators"
+    url: "https://pages.nist.gov/800-63-4/sp800-63b/syncable/"
+    description: "Rủi ro và yêu cầu với passkeys đồng bộ: bảo vệ khóa trong sync fabric, sao lưu, quản lý thiết bị, flags BE/BS và khác biệt AAL2 so với AAL3."
+  - title: "passkeys.dev — Bootstrapping"
+    url: "https://passkeys.dev/docs/use-cases/bootstrapping/"
+    description: "Thiết kế đăng ký passkey đầu tiên khi người dùng chưa có credential, xác minh tài khoản hiện có và tránh kẻ tấn công cài passkey thay người dùng."
+  - title: "passkeys.dev — Reauthentication"
+    url: "https://passkeys.dev/docs/use-cases/reauth/"
+    description: "Sử dụng passkeys khi tái xác thực cho thao tác nhạy cảm hoặc phiên đã hết hạn; phân biệt đăng nhập mới với step-up hay reauthentication."

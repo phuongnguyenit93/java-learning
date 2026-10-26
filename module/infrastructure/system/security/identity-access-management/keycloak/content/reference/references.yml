@@ -1,16 +1,28 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "Keycloak — Official Documentation"
+    url: "https://www.keycloak.org/documentation"
+    description: "Điểm bắt đầu để học và đối chiếu các tài liệu chính thức về Keycloak, quản trị định danh, xác thực, phân quyền và triển khai."
+  - title: "Keycloak — Server Administration Guide"
+    url: "https://www.keycloak.org/docs/latest/server_admin/index.html"
+    description: "Hướng dẫn cấu hình realm, users, groups, roles, client, SSO, MFA, OIDC/SAML, identity federation, sessions, token timeout, key rotation và audit events."
+  - title: "Keycloak — Securing Applications and Services"
+    url: "https://www.keycloak.org/securing-apps/overview"
+    description: "Kiến trúc tích hợp ứng dụng/dịch vụ qua OpenID Connect, OAuth 2.0 và SAML; đăng ký client, sử dụng token và giao thức phù hợp mọi nền tảng."
+  - title: "Keycloak — Authorization Services Guide"
+    url: "https://www.keycloak.org/docs/latest/authorization_services/index.html"
+    description: "Thiết kế resource, scope, policy và permission; quản lý RBAC, ABAC và ra quyết định phân quyền tập trung cho ứng dụng."
+  - title: "Keycloak — Administration REST API"
+    url: "https://www.keycloak.org/docs-api/latest/rest-api/index.html"
+    description: "Giao diện quản trị theo API cho realm, user, group, client, role và cấu hình; hỗ trợ tự động hóa cùng kiểm soát quyền quản trị."
+  - title: "Keycloak — Configuring for Production"
+    url: "https://www.keycloak.org/server/configuration-production"
+    description: "Checklist hardening cho môi trường production: HTTPS/TLS, public hostname, reverse proxy, database, distributed cache, phân tách quản trị và high availability."
+  - title: "Keycloak — Configuring a Reverse Proxy"
+    url: "https://www.keycloak.org/server/reverseproxy"
+    description: "Các mô hình TLS re-encrypt, passthrough, forwarded headers, proxy/load balancer và bảo vệ các endpoint công khai/quản trị."
+  - title: "Keycloak — Configuring the Hostname (v2)"
+    url: "https://www.keycloak.org/server/hostname"
+    description: "Cấu hình issuer/public URL và backchannel an toàn; ngăn giả mạo hostname header hoặc chuyển hướng sai trong email và luồng xác thực."
+  - title: "Keycloak — All Configuration Options"
+    url: "https://www.keycloak.org/server/all-config"
+    description: "Tra cứu cấu hình và biến môi trường của Keycloak: security, logging, TLS, metrics, database, cache và các tính năng tùy chọn."

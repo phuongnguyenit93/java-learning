@@ -1,16 +1,37 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "RFC 6749 — OAuth 2.0 Authorization Framework"
+    url: "https://www.rfc-editor.org/rfc/rfc6749.html"
+    description: "Vai trò resource owner, client, authorization server, resource server; authorization code, scopes, access token, refresh token và cơ chế cấp quyền."
+  - title: "RFC 6750 — OAuth 2.0 Bearer Token Usage"
+    url: "https://www.rfc-editor.org/rfc/rfc6750.html"
+    description: "Sử dụng Bearer access token trong HTTP Authorization header, thách thức xác thực và nguy cơ rò rỉ token có thể tái sử dụng."
+  - title: "RFC 7636 — Proof Key for Code Exchange (PKCE)"
+    url: "https://www.rfc-editor.org/rfc/rfc7636.html"
+    description: "Code verifier/challenge, S256 và cách ngăn chặn authorization code interception khi sử dụng Authorization Code Flow."
+  - title: "RFC 9700 — OAuth 2.0 Security Best Current Practice"
+    url: "https://www.rfc-editor.org/rfc/rfc9700.html"
+    description: "Khuyến nghị bảo mật hiện hành: PKCE, redirect URI matching, chống mix-up, refresh token rotation, sender-constrained tokens và tránh implicit grant."
+  - title: "OpenID Connect Core 1.0 — Errata Set 2"
+    url: "https://openid.net/specs/openid-connect-core-1_0.html"
+    description: "OIDC là lớp định danh trên OAuth 2.0: authentication, ID Token, issuer/audience/nonce, scopes, claims, UserInfo và validation."
+  - title: "OpenID Connect Discovery 1.0 — Errata Set 2"
+    url: "https://openid.net/specs/openid-connect-discovery-1_0.html"
+    description: "Phát hiện OpenID Provider và cấu hình .well-known/openid-configuration, endpoints, issuer, JWKS và metadata validation."
+  - title: "RFC 8414 — OAuth 2.0 Authorization Server Metadata"
+    url: "https://www.rfc-editor.org/rfc/rfc8414.html"
+    description: "Chuẩn metadata và issuer để khám phá authorization/token endpoints, các phương thức ký và cấu hình hỗ trợ của authorization server."
+  - title: "RFC 9068 — JWT Profile for OAuth 2.0 Access Tokens"
+    url: "https://www.rfc-editor.org/rfc/rfc9068.html"
+    description: "Định dạng và xác minh JWT access token cho resource server, bao gồm iss, aud, exp, scope, signing keys và token type."
+  - title: "RFC 7009 — OAuth 2.0 Token Revocation"
+    url: "https://www.rfc-editor.org/rfc/rfc7009.html"
+    description: "Endpoint thu hồi access/refresh token, xử lý authorization grant và bài toán chấm dứt phiên hoặc quyền truy cập."
+  - title: "RFC 7662 — OAuth 2.0 Token Introspection"
+    url: "https://www.rfc-editor.org/rfc/rfc7662.html"
+    description: "Resource server kiểm tra trạng thái token qua introspection endpoint, trường active và metadata về scopes, audience, expiration."
+  - title: "RFC 9449 — OAuth 2.0 Demonstrating Proof of Possession (DPoP)"
+    url: "https://www.rfc-editor.org/rfc/rfc9449.html"
+    description: "Sender-constrained token bằng khóa bất đối xứng và DPoP proof; giới hạn replay và rủi ro nếu client bị xâm nhập."
+  - title: "RFC 8705 — OAuth 2.0 Mutual TLS and Certificate-Bound Tokens"
+    url: "https://www.rfc-editor.org/rfc/rfc8705.html"
+    description: "Client authentication qua mTLS và ràng buộc access token vào chứng chỉ để hạn chế sử dụng lại token bị đánh cắp."

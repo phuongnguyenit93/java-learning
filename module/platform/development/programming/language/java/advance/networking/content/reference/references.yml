@@ -1,16 +1,31 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "Java SE 21 — Socket"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/net/Socket.html"
+    description: "Client TCP socket, kết nối, luồng dữ liệu và các socket options như SO_TIMEOUT, SO_KEEPALIVE, TCP_NODELAY."
+  - title: "Java SE 21 — ServerSocket"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/net/ServerSocket.html"
+    description: "Tạo TCP server, bind địa chỉ/cổng, backlog, accept kết nối và quản lý vòng đời socket."
+  - title: "Java SE 21 — DatagramSocket"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/net/DatagramSocket.html"
+    description: "Lập trình UDP datagram, gửi/nhận packet, broadcast và các giới hạn về thứ tự chuyển phát."
+  - title: "Java SE 21 — java.nio.channels Package"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/nio/channels/package-summary.html"
+    description: "Nền tảng channel, buffer, selectable channel, blocking và non-blocking I/O trong Java NIO."
+  - title: "Java SE 21 — Selector"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/nio/channels/Selector.html"
+    description: "Multiplexing nhiều channel, SelectionKey, readiness events và thiết kế vòng lặp I/O không chặn."
+  - title: "Java SE 21 — AsynchronousSocketChannel"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/nio/channels/AsynchronousSocketChannel.html"
+    description: "Kết nối, đọc/ghi socket bất đồng bộ bằng Future hoặc CompletionHandler, trạng thái và lỗi I/O."
+  - title: "Java SE 21 — HttpClient"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.net.http/java/net/http/HttpClient.html"
+    description: "HTTP/1.1 và HTTP/2 client, request/response, sendAsync, timeout, proxy, SSL và quản lý kết nối."
+  - title: "Java SE 21 — WebSocket"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.net.http/java/net/http/WebSocket.html"
+    description: "WebSocket client, listener, nhận/gửi frame text/binary, ping/pong và kiểm soát yêu cầu nhận dữ liệu."
+  - title: "Java SE 21 — SSLContext"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/javax/net/ssl/SSLContext.html"
+    description: "Thiết lập TLS client/server với key manager, trust manager, SSL socket factory và SSLEngine."
+  - title: "Java SE 21 — SSLEngine"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/javax/net/ssl/SSLEngine.html"
+    description: "Triển khai TLS phi chặn với handshake, wrap/unwrap, buffer và quản lý đóng phiên bảo mật."

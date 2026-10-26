@@ -1,16 +1,22 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "Oracle JDK 21 — The javac Command"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/specs/man/javac.html"
+    description: "Tài liệu chính thức về biên dịch .java sang .class, classpath/module path, lựa chọn phiên bản đích và annotation processing."
+  - title: "Oracle JDK 21 — The javap Command"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/specs/man/javap.html"
+    description: "Cách dùng javap -c, -v, -s để xem bytecode, constant pool, chữ ký và thông tin class sau biên dịch."
+  - title: "JVM Specification 21 — Chapter 4: The class File Format"
+    url: "https://docs.oracle.com/javase/specs/jvms/se21/html/jvms-4.html"
+    description: "Đặc tả cấu trúc .class: magic number, phiên bản, constant pool, field, method và các attributes."
+  - title: "JVM Specification 21 — Chapter 5: Loading, Linking, and Initializing"
+    url: "https://docs.oracle.com/javase/specs/jvms/se21/html/jvms-5.html"
+    description: "Phân biệt bước biên dịch nguồn với nạp lớp, verification, resolution và khởi tạo lớp khi JVM chạy."
+  - title: "Java SE 21 API — javax.annotation.processing.Processor"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/annotation/processing/Processor.html"
+    description: "Hợp đồng annotation processor, các vòng xử lý (rounds), phát hiện processor và xử lý mã nguồn sinh ra lúc compile."
+  - title: "Java Language Specification 21 — Chapter 13: Binary Compatibility"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-13.html"
+    description: "Quy tắc tương thích nhị phân khi thay đổi class, interface và API; phân biệt binary compatibility với source compatibility."
+  - title: "Oracle JDK 21 — The java Command"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/specs/man/java.html"
+    description: "Tham khảo tùy chọn thực thi và JIT của HotSpot, giúp phân biệt biên dịch bytecode bằng javac với JIT ở runtime."

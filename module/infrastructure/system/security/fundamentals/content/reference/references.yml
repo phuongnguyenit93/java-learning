@@ -1,16 +1,31 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "NIST SP 800-12 Rev. 1 — An Introduction to Information Security"
+    url: "https://csrc.nist.gov/pubs/sp/800/12/r1/final"
+    description: "Kiến thức nhập môn về Confidentiality, Integrity, Availability (CIA triad), tài sản, mối đe dọa, lỗ hổng, an toàn thông tin và kiểm soát bảo mật."
+  - title: "NIST Cybersecurity Framework (CSF) 2.0"
+    url: "https://www.nist.gov/publications/nist-cybersecurity-framework-csf-20"
+    description: "Khung quản trị an ninh mạng theo sáu chức năng Govern, Identify, Protect, Detect, Respond và Recover; cách nhìn rủi ro ở cấp tổ chức."
+  - title: "NIST SP 800-30 Rev. 1 — Guide for Conducting Risk Assessments"
+    url: "https://csrc.nist.gov/pubs/sp/800/30/r1/final"
+    description: "Phương pháp phân tích tài sản, threat sources, vulnerabilities, likelihood, impact, risk và lựa chọn ưu tiên xử lý rủi ro."
+  - title: "NIST SP 800-53 Rev. 5 — Security and Privacy Controls"
+    url: "https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final"
+    description: "Danh mục security controls gồm Access Control, Identity and Authentication, Audit, Configuration, System Integrity, Incident Response và bảo vệ dữ liệu."
+  - title: "NIST SP 800-63-4 — Digital Identity Guidelines"
+    url: "https://csrc.nist.gov/pubs/sp/800/63/4/final"
+    description: "Kiến thức nền về định danh, xác thực, quản lý authenticator và liên kết danh tính; phân biệt xác thực với phân quyền."
+  - title: "NIST SP 800-57 Part 1 Rev. 5 — Key Management"
+    url: "https://csrc.nist.gov/pubs/sp/800/57/pt1/r5/final"
+    description: "Các nguyên tắc dùng mật mã: khóa đối xứng/bất đối xứng, dịch vụ mã hóa/chữ ký, key lifecycle và bảo vệ vật liệu mật mã."
+  - title: "NIST SP 800-218 — Secure Software Development Framework"
+    url: "https://csrc.nist.gov/pubs/sp/800/218/final"
+    description: "Quy tắc Secure by Design trong SDLC, giảm lỗ hổng qua yêu cầu bảo mật, thiết kế, kiểm thử và quản lý thành phần phụ thuộc."
+  - title: "NIST SP 800-61 Rev. 3 — Incident Response"
+    url: "https://csrc.nist.gov/pubs/sp/800/61/r3/final"
+    description: "Tổ chức chuẩn bị, phát hiện, phân tích, ứng phó và khôi phục sự cố; kết nối incident response với quản trị rủi ro liên tục."
+  - title: "OWASP Top 10:2025 — Web Application Security Risks"
+    url: "https://top10.owasp.org/2025/"
+    description: "Nhận diện các lớp rủi ro phổ biến như broken access control, security misconfiguration, software supply chain, cryptographic failures và injection."
+  - title: "NIST SP 800-207 — Zero Trust Architecture"
+    url: "https://csrc.nist.gov/pubs/sp/800/207/final"
+    description: "Các nguyên tắc least privilege, không mặc định tin cậy vị trí mạng, xác minh danh tính/thiết bị và kiểm soát quyền truy cập từng tài nguyên."

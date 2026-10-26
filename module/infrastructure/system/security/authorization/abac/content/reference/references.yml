@@ -1,16 +1,37 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "NIST SP 800-162 — Guide to Attribute Based Access Control"
+    url: "https://csrc.nist.gov/pubs/sp/800/162/upd2/final"
+    description: "Định nghĩa ABAC, chủ thể (subject), tài nguyên (object), thao tác (action), môi trường (environment), policy evaluation và so sánh với mô hình phân quyền dựa trên vai trò."
+  - title: "NIST SP 800-205 — Attribute Considerations for Access Control Systems"
+    url: "https://csrc.nist.gov/pubs/sp/800/205/final"
+    description: "Vòng đời thuộc tính: định nghĩa schema, nguồn cấp đáng tin cậy, issuance, validation, cập nhật, thu hồi và đảm bảo chất lượng dữ liệu thuộc tính."
+  - title: "OASIS XACML 3.0 — Core Specification"
+    url: "https://docs.oasis-open.org/xacml/3.0/xacml-3.0-core-spec-os-en.html"
+    description: "Chuẩn biểu diễn và đánh giá access policies theo thuộc tính; mô hình PAP/PDP/PEP/PIP, attribute retrieval, combining algorithms và Permit/Deny/NotApplicable/Indeterminate."
+  - title: "Open Policy Agent — Access Control Systems and ABAC"
+    url: "https://www.openpolicyagent.org/docs/comparisons/access-control-systems"
+    description: "Ví dụ ABAC thực tế sử dụng thuộc tính users, objects và actions; minh họa cách diễn đạt và kiểm tra chính sách phân quyền."
+  - title: "Open Policy Agent — Rego Policy Language"
+    url: "https://www.openpolicyagent.org/docs/policy-language"
+    description: "Biểu diễn ABAC bằng policy-as-code với input, structured data, rules và boolean conditions cho quyết định truy cập."
+  - title: "Cedar — Entities and Context Syntax"
+    url: "https://docs.cedarpolicy.com/auth/entities-syntax.html"
+    description: "Mô hình thuộc tính entity/principal/resource và ngữ cảnh request, cung cấp input được định kiểu để quyết định quyền truy cập."
+  - title: "Cedar — Policy Syntax"
+    url: "https://docs.cedarpolicy.com/policies/syntax-policy.html"
+    description: "Kết hợp principal, action, resource và điều kiện when/unless để viết chính sách truy cập theo ngữ cảnh, default deny và cấm tường minh."
+  - title: "AWS IAM — Attribute-Based Access Control"
+    url: "https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction_attribute-based-access-control.html"
+    description: "Kiểm soát truy cập bằng principal tags và resource tags; phân biệt ABAC với RBAC, dynamic authorization và least privilege khi mở rộng."
+  - title: "AWS IAM — ABAC Tutorial Using Tags"
+    url: "https://docs.aws.amazon.com/IAM/latest/UserGuide/tutorial_attribute-based-access-control.html"
+    description: "Ví dụ chính sách dựa trên tags cho tài nguyên, kiểm soát thay đổi tag có thể làm biến đổi quyền và quy tắc explicit deny."
+  - title: "Google Cloud — IAM Conditions Overview"
+    url: "https://docs.cloud.google.com/iam/docs/conditions-overview"
+    description: "Mô tả conditional access bằng thuộc tính resource, request time, tags và điều kiện CEL; phân quyền theo ngữ cảnh thay vì chỉ theo vai trò."
+  - title: "NIST SP 800-207 — Zero Trust Architecture"
+    url: "https://csrc.nist.gov/pubs/sp/800/207/final"
+    description: "Áp dụng tín hiệu danh tính, thiết bị và ngữ cảnh khi ra quyết định truy cập; policy decision và enforcement trong kiến trúc Zero Trust."
+  - title: "OWASP — Authorization Cheat Sheet"
+    url: "https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html"
+    description: "Khuyến nghị least privilege, deny by default, kiểm tra mỗi request, xác thực object-level access và kiểm thử policy để tránh bypass."

@@ -1,16 +1,31 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "OWASP — Session Management Cheat Sheet"
+    url: "https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html"
+    description: "Tổng quan quản lý phiên an toàn: sinh session ID khó đoán, chống session fixation/hijacking, cookie bảo mật, đổi ID sau xác thực, thời hạn phiên, logout, invalidation và audit."
+  - title: "NIST SP 800-63B-4 — Session Management"
+    url: "https://pages.nist.gov/800-63-4/sp800-63b/session/"
+    description: "Yêu cầu về session secret, session binding, reauthentication, inactivity/overall timeout, giám sát bất thường và phân biệt phiên đăng nhập với token cấp quyền."
+  - title: "MDN — HTTP Set-Cookie Header"
+    url: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Set-Cookie"
+    description: "Cú pháp và ý nghĩa Secure, HttpOnly, SameSite, Domain, Path, Max-Age/Expires và cookie prefixes; giới hạn cookie theo phạm vi và trình duyệt."
+  - title: "OWASP — Cross-Site Request Forgery Prevention Cheat Sheet"
+    url: "https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html"
+    description: "Phòng CSRF khi trình duyệt tự gửi session cookies bằng CSRF token, Origin/Referer validation, SameSite và kiểm tra yêu cầu thay đổi trạng thái."
+  - title: "OWASP — Cookie Theft Mitigation Cheat Sheet"
+    url: "https://cheatsheetseries.owasp.org/cheatsheets/Cookie_Theft_Mitigation_Cheat_Sheet.html"
+    description: "Giảm nguy cơ chiếm phiên do đánh cắp session cookie; phát hiện sử dụng bất thường và quản lý phiên bị nghi ngờ xâm phạm."
+  - title: "OWASP — Authentication Cheat Sheet"
+    url: "https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html"
+    description: "Ràng buộc xác thực với phiên, reauthentication cho thao tác nhạy cảm, step-up MFA, phát hiện sự kiện rủi ro và xoay vòng phiên."
+  - title: "OWASP WSTG — Session Management Schema"
+    url: "https://wstg.owasp.org/v4.2/4-Web_Application_Security_Testing/06-Session_Management_Testing/01-Testing_for_Session_Management_Schema/"
+    description: "Kiểm thử độ khó đoán của session ID, đặc tính cookie, vận chuyển qua HTTPS, thời hạn token và chống giả mạo phiên."
+  - title: "OWASP WSTG — Session Fixation"
+    url: "https://wstg.owasp.org/latest/4-Web_Application_Security_Testing/06-Session_Management/03-Session_Fixation/"
+    description: "Phân tích và kiểm thử session fixation: session ID trước/sau đăng nhập phải được thay mới để không cho kẻ tấn công cố định session."
+  - title: "OWASP WSTG — Logout Functionality"
+    url: "https://wstg.owasp.org/latest/4-Web_Application_Security_Testing/06-Session_Management/06-Logout_Functionality/"
+    description: "Kiểm thử logout thật sự hủy session phía server, vô hiệu hóa cookie/token đã bị sao chép, xử lý cache và kết thúc phiên an toàn."
+  - title: "OWASP WSTG — Session Timeout"
+    url: "https://wstg.owasp.org/latest/4-Web_Application_Security_Testing/06-Session_Management/07-Session_Timeout/"
+    description: "Kiểm thử idle timeout và session expiration do server thực thi; không thể phục hồi phiên cũ bằng cookie hoặc thao tác trình duyệt."

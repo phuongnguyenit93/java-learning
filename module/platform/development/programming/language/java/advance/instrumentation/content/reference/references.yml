@@ -1,16 +1,22 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "Java SE 21 — java.lang.instrument Package"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.instrument/java/lang/instrument/package-summary.html"
+    description: "Tài liệu nền tảng về Java agent, Agent-Class/Premain-Class, premain/agentmain và cơ chế biến đổi bytecode."
+  - title: "Java SE 21 — Instrumentation Interface"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.instrument/java/lang/instrument/Instrumentation.html"
+    description: "API addTransformer, getAllLoadedClasses, retransformClasses, redefineClasses cùng điều kiện hỗ trợ và giới hạn."
+  - title: "Java SE 21 — ClassFileTransformer Interface"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.instrument/java/lang/instrument/ClassFileTransformer.html"
+    description: "Thứ tự transformer, transform lúc class load/redefine/retransform và nguyên tắc xử lý byte array class file."
+  - title: "JDK 21 — The java Command"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/specs/man/java.html"
+    description: "Tham chiếu cú pháp -javaagent:jarpath[=options], -agentlib và cách khởi động JVM kèm agent."
+  - title: "Java SE 21 — Attach API VirtualMachine"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/jdk.attach/com/sun/tools/attach/VirtualMachine.html"
+    description: "Attach vào JVM đang chạy, loadAgent/agentmain, điều kiện hỗ trợ và lỗi khi nạp agent động."
+  - title: "JDK 21 — The jcmd Command"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/specs/man/jcmd.html"
+    description: "Công cụ chẩn đoán JVM, lệnh help theo PID và ví dụ quan sát tiến trình khi kiểm thử instrumentation."
+  - title: "Oracle JDK 21 Release Notes — Dynamic Agent Loading"
+    url: "https://www.oracle.com/java/technologies/javase/21-relnote-issues.html"
+    description: "Cảnh báo khi nạp Java/JVMTI agent động theo JEP 451; lưu ý về EnableDynamicAgentLoading và tính toàn vẹn JVM."

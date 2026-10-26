@@ -1,16 +1,46 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "NIST SP 800-63-4 — Digital Identity Guidelines"
+    url: "https://csrc.nist.gov/pubs/sp/800/63/4/final"
+    description: "Khung tổng thể về danh tính số: định danh, xác thực, federation, cấp độ bảo đảm và quản trị vòng đời danh tính."
+  - title: "NIST SP 800-63A-4 — Identity Proofing and Enrollment"
+    url: "https://csrc.nist.gov/pubs/sp/800/63/a/4/final"
+    description: "Kiểm chứng danh tính, đăng ký người dùng, identity assurance levels và những rủi ro khi cấp tài khoản."
+  - title: "NIST SP 800-63B-4 — Authentication and Authenticator Management"
+    url: "https://csrc.nist.gov/pubs/sp/800/63/b/4/final"
+    description: "Quản lý phương thức xác thực, mật khẩu, MFA, authenticator assurance levels, phục hồi tài khoản và vòng đời authenticator."
+  - title: "NIST SP 800-63C-4 — Federation and Assertions"
+    url: "https://csrc.nist.gov/pubs/sp/800/63/C/4/final"
+    description: "Liên kết danh tính giữa IdP và relying party, trust, identity assertions và federation assurance levels."
+  - title: "NIST SP 800-162 — Guide to Attribute Based Access Control"
+    url: "https://csrc.nist.gov/pubs/sp/800/162/upd2/final"
+    description: "Mô hình ABAC: quyết định truy cập theo thuộc tính chủ thể, tài nguyên, hành động và ngữ cảnh trong chính sách."
+  - title: "NIST SP 800-207 — Zero Trust Architecture"
+    url: "https://csrc.nist.gov/pubs/sp/800/207/final"
+    description: "Xác thực và phân quyền theo ngữ cảnh cho từng yêu cầu, giảm implicit trust và thực hiện least privilege."
+  - title: "OWASP — Authentication Cheat Sheet"
+    url: "https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html"
+    description: "Hướng dẫn bảo mật đăng nhập, MFA, xác thực lại, quản trị credentials và giám sát truy cập bất thường."
+  - title: "OWASP — Authorization Cheat Sheet"
+    url: "https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html"
+    description: "Phân biệt authentication/authorization, deny by default, least privilege, kiểm tra quyền từng yêu cầu và ngăn IDOR."
+  - title: "IETF RFC 7644 — SCIM Protocol"
+    url: "https://www.rfc-editor.org/rfc/rfc7644.html"
+    description: "Chuẩn provisioning/deprovisioning User và Group qua REST để đồng bộ danh tính giữa các hệ thống."
+  - title: "IETF RFC 9700 — OAuth 2.0 Security Best Current Practice"
+    url: "https://www.rfc-editor.org/rfc/rfc9700.html"
+    description: "Bảo vệ OAuth authorization, bearer/refresh tokens, chống chiếm quyền phiên và sử dụng token an toàn."
+  - title: "AWS IAM — Security Best Practices"
+    url: "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html"
+    description: "Tài khoản, role, policy, least privilege, temporary credentials, MFA, access review và xóa quyền không cần thiết."
+  - title: "AWS IAM — Policy Evaluation Logic"
+    url: "https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html"
+    description: "Cách tổng hợp identity/resource policies, explicit deny, permissions boundaries và các lớp kiểm soát quyền."
+  - title: "Google Cloud — IAM Overview"
+    url: "https://docs.cloud.google.com/iam/docs/overview"
+    description: "Mô hình principal, permission, role, resource, allow policy, policy inheritance và phân quyền tài nguyên."
+  - title: "Microsoft Entra — Role-Based Access Control Overview"
+    url: "https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/custom-overview"
+    description: "Vai trò RBAC, định nghĩa quyền, role assignment và phạm vi áp dụng cho users, groups, service principals."
+  - title: "Google Cloud — IAM Roles Overview"
+    url: "https://docs.cloud.google.com/iam/docs/roles-overview"
+    description: "Phân biệt basic, predefined và custom roles; chọn tập permissions vừa đủ theo nguyên tắc least privilege."

@@ -1,16 +1,37 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "Oracle — JDK 25 Consolidated Release Notes"
+    url: "https://www.oracle.com/java/technologies/javase/25all-relnotes.html"
+    description: "Tổng quan Java 25 đã phát hành; phân biệt tính năng chính thức với Preview, Incubator và Experimental để chọn kiến thức có thể dùng ổn định."
+  - title: "Oracle Java SE 25 — Language Changes by Release"
+    url: "https://docs.oracle.com/en/java/javase/25/language/java-language-changes-release.html"
+    description: "Danh sách thay đổi ngôn ngữ Java 25 đã hoàn thiện: Module Import Declarations, Compact Source Files với instance main, Flexible Constructor Bodies."
+  - title: "Oracle — Significant Changes in JDK 25"
+    url: "https://docs.oracle.com/en/java/javase/25/migrate/significant-changes-jdk-25.html"
+    description: "Hướng dẫn nâng cấp và sử dụng thay đổi JDK 25, từ ngôn ngữ/API đến AOT, JVM, JFR; nhận diện rõ tính năng chưa final và thay đổi tương thích."
+  - title: "OpenJDK JEP 506 — Scoped Values"
+    url: "https://openjdk.org/jeps/506"
+    description: "ScopedValue đã chính thức trong Java 25, truyền ngữ cảnh bất biến trong call tree và tác vụ con; phân biệt với ThreadLocal, chú ý phạm vi và lifetime."
+  - title: "OpenJDK JEP 510 — Key Derivation Function API"
+    url: "https://openjdk.org/jeps/510"
+    description: "API KDF chuẩn trong javax.crypto cho dẫn xuất khóa từ key material, hỗ trợ HKDF và tham số bảo mật; đã chính thức hóa ở Java 25."
+  - title: "OpenJDK JEP 511 — Module Import Declarations"
+    url: "https://openjdk.org/jeps/511"
+    description: "Lệnh import module để nhập các public types từ packages được module export; phân biệt import với module dependency và xử lý trùng tên kiểu."
+  - title: "OpenJDK JEP 512 — Compact Source Files and Instance Main Methods"
+    url: "https://openjdk.org/jeps/512"
+    description: "Chương trình Java gọn cho ví dụ và công cụ nhỏ: compact source files, instance main, import java.base ngầm định và các quy tắc tương thích."
+  - title: "OpenJDK JEP 513 — Flexible Constructor Bodies"
+    url: "https://openjdk.org/jeps/513"
+    description: "Cho phép kiểm tra dữ liệu và khởi tạo field an toàn trước super(...) hoặc this(...), nhưng chưa được sử dụng đối tượng this trước lúc đủ điều kiện."
+  - title: "OpenJDK JEP 514 — Ahead-of-Time Command-Line Ergonomics"
+    url: "https://openjdk.org/jeps/514"
+    description: "Đơn giản hóa tạo AOT cache qua JVM flags để cải thiện startup; phân biệt training run với sử dụng cache và điều kiện tái sử dụng hợp lệ."
+  - title: "OpenJDK JEP 515 — Ahead-of-Time Method Profiling"
+    url: "https://openjdk.org/jeps/515"
+    description: "Lưu thông tin profiling từ lần chạy training vào AOT cache, giúp JIT nhận profile sớm và giảm thời gian warm-up ứng dụng."
+  - title: "OpenJDK JEP 519 — Compact Object Headers"
+    url: "https://openjdk.org/jeps/519"
+    description: "Compact Object Headers trở thành product feature ở Java 25, giảm overhead object header trên JVM 64-bit; nắm cấu hình bật và rủi ro tương thích."
+  - title: "OpenJDK JEP 520 — JFR Method Timing & Tracing"
+    url: "https://openjdk.org/jeps/520"
+    description: "JFR ghi sự kiện method timing và tracing phục vụ phân tích performance, điều tra lỗi, cân nhắc mức quan sát và chi phí khi bật."

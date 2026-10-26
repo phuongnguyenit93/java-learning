@@ -1,16 +1,34 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "SPIFFE — Overview"
+    url: "https://spiffe.io/docs/latest/spiffe-about/overview/"
+    description: "Mục đích của chuẩn SPIFFE: định danh workload độc lập nền tảng và xác thực dịch vụ trong môi trường động, không dựa vào IP hay bí mật tĩnh."
+  - title: "SPIFFE — Core Concepts"
+    url: "https://spiffe.io/docs/latest/spiffe/concepts/"
+    description: "Các khái niệm workload, SPIFFE ID, trust domain, SVID, trust bundle và cách identity được cấp, kiểm chứng và xoay vòng."
+  - title: "SPIFFE Specification — Identity and SVID"
+    url: "https://spiffe.io/docs/latest/spiffe-specs/spiffe-id/"
+    description: "Quy tắc URI spiffe://, namespace theo trust domain và ngữ nghĩa tài liệu chứng minh danh tính SVID."
+  - title: "SPIFFE Specification — X.509-SVID"
+    url: "https://spiffe.io/docs/latest/spiffe-specs/x509-svid/"
+    description: "Định dạng X.509-SVID, chứng chỉ và chuỗi tin cậy, SPIFFE ID trong SAN, validation và ứng dụng mTLS workload-to-workload."
+  - title: "SPIFFE Specification — JWT-SVID"
+    url: "https://spiffe.io/docs/latest/spiffe-specs/jwt-svid/"
+    description: "Định dạng JWT-SVID, audience/expiry/signature validation, xác thực tại ranh giới L7 và rủi ro replay token."
+  - title: "SPIFFE Specification — Workload API"
+    url: "https://spiffe.io/docs/latest/spiffe-specs/spiffe_workload_api/"
+    description: "Cách workload nhận SVID và trust bundles qua endpoint cục bộ, nhiều identity, refresh/rotation và giới hạn bảo mật của API."
+  - title: "SPIFFE Specification — Federation"
+    url: "https://spiffe.io/docs/latest/spiffe-specs/spiffe_federation/"
+    description: "Trao đổi và cập nhật trust bundles giữa các trust domains để xác minh workload liên miền, bao gồm xác thực bundle endpoint."
+  - title: "SPIRE — Architecture and Concepts"
+    url: "https://spiffe.io/docs/latest/spire-about/spire-concepts/"
+    description: "Cấu trúc SPIRE Server/Agent, registration, node attestation và workload attestation dựa trên selectors trước khi phát SVID."
+  - title: "SPIRE — Configuration and Attestation"
+    url: "https://spiffe.io/docs/latest/deploying/configuring/"
+    description: "Cấu hình máy chủ, agent, node attestor và workload attestor cho các môi trường như Kubernetes, VM và bare metal."
+  - title: "SPIRE — Registering Workloads"
+    url: "https://spiffe.io/docs/latest/deploying/registering/"
+    description: "Registration entries: SPIFFE ID, parent ID và selectors, ánh xạ danh tính đến workload được chứng thực và cập nhật đăng ký."
+  - title: "SPIFFE — Working with SVIDs"
+    url: "https://spiffe.io/docs/latest/deploying/svids/"
+    description: "Sử dụng X.509-SVID, trust bundles và Workload API để xác thực nguồn gốc thông điệp hoặc tạo kết nối mTLS giữa dịch vụ."

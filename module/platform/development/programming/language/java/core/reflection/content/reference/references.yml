@@ -1,16 +1,31 @@
-# ============================================================
-# MODULE REFERENCE STRUCTURE
-# ============================================================
-#
-# This is the shared module-level reference catalog.
-# It is intentionally not split by MODULE_LANGUAGE.
-#
-# Example structure:
-#
-# references:
-#   - title: "Java Language Specification"
-#     url: "https://docs.oracle.com/javase/specs/"
-#     description: "Official Java language specification."
-#
-# Add only curated references that are useful for the module.
-# The build system must not overwrite this file after authored content exists.
+references:
+  - title: "Java SE 21 — java.lang.reflect Package"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/reflect/package-summary.html"
+    description: "Tổng quan reflection, truy vấn metadata class, method, field và constructor, cùng giới hạn về đóng gói và quyền truy cập."
+  - title: "Java SE 21 — Class<T>"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html"
+    description: "Lấy Class object, tra cứu member công khai hoặc do lớp khai báo, kiểu cha, interface, annotation, record và array."
+  - title: "Java SE 21 — Method"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/reflect/Method.html"
+    description: "Đọc chữ ký, kiểu trả về, annotations và gọi method động bằng invoke với đối tượng và tham số phù hợp."
+  - title: "Java SE 21 — Field"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/reflect/Field.html"
+    description: "Đọc và cập nhật field động bằng get/set, phân biệt static và instance field, conversion và access checks."
+  - title: "Java SE 21 — Constructor<T>"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/reflect/Constructor.html"
+    description: "Tra cứu constructor, tham số, access modifiers và khởi tạo đối tượng thông qua newInstance."
+  - title: "Java SE 21 — AccessibleObject"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/reflect/AccessibleObject.html"
+    description: "Quy tắc canAccess, trySetAccessible và setAccessible; giới hạn strong encapsulation theo exports/opens của JPMS."
+  - title: "Java SE 21 — Parameter"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/reflect/Parameter.html"
+    description: "Phân tích tham số method/constructor, tên tham số (nếu có metadata), kiểu và các annotation."
+  - title: "Java SE 21 — ParameterizedType"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/reflect/ParameterizedType.html"
+    description: "Đọc thông tin kiểu generic ở runtime, bao gồm actual type arguments, raw type và owner type."
+  - title: "Java SE 21 — AnnotatedElement"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/reflect/AnnotatedElement.html"
+    description: "Truy vấn annotation khai báo tại runtime và phân biệt annotation trực tiếp với annotation kế thừa/lặp lại."
+  - title: "Java SE 21 — Proxy"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/reflect/Proxy.html"
+    description: "Tạo dynamic proxy dựa trên interface và InvocationHandler để xử lý lời gọi phương thức tại runtime."
