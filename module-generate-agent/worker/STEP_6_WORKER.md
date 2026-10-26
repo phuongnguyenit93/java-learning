@@ -1,6 +1,6 @@
 # STEP 6 — WORKER ONLY: Xây dựng API
 
-**CURRENT_STEP policy (2026-10-25):** Progress is owned ONLY by `CURRENT_STEP.VALUE` (string) in the verified module `master.json`, never by any Google Sheet/Excel cell. Prime updates after full QA using `module-generate-agent/CURRENT_STEP.md`; Worker does not write it. Any old cell, label, formula, or Sheet-readback instructions about progress below are superseded. The STEP-specific completion gates still apply.
+**STEP status:** This worker must never read or update progress in Google Sheets/Excel or `master.json`. Prime alone records `CURRENT_STEP.VALUE` after whole-STEP QA.
 
 
 **Worker phải tự đọc TOÀN BỘ file này trước khi thực hiện nhiệm vụ**, không đọc file Prime, rules/MD/TXT ngoài nguồn được phép đọc. Tin giao việc Prime → Worker luôn gồm **đúng 4 dòng định vị**: URL Sheet/tab, các ô nguồn của **một chương**, **cả hai đường dẫn tuyệt đối tới package Java main và test mà Prime cấp quyền ghi**, và đường dẫn tuyệt đối tới file worker-only này. Worker không tự mở rộng vùng đọc/ghi hay chọn package khác.

@@ -1,9 +1,9 @@
 # AGENTS.md
 
-**CURRENT_STEP policy (2026-10-25):** Progress is owned ONLY by `CURRENT_STEP.VALUE` (string) in the verified module `master.json`, never by any Google Sheet/Excel cell. Prime updates after full QA using `module-generate-agent/CURRENT_STEP.md`; Worker does not write it. Any old cell, label, formula, or Sheet-readback instructions about progress below are superseded. The STEP-specific completion gates still apply.
+**Module progress:** The only checkpoint is `CURRENT_STEP.VALUE` (JSON string) in the verified module's `master.json`. Prime advances it after all QA gates, with no regression and exact readback; do not read or write progress in Google Sheets J3. See `module-generate-agent/rules/PRIME_RULES.md` section 2.
 
 
-**Reference/Summary import contract (2026-10-25):** See `module-generate-agent/REFERENCE_SUMMARY_IMPORT.md` for the canonical authored Sheet pipeline. Reference uses `L2=Reference`, YAML `L3`, and module-local `generateModuleReferenceFromSheetByLocation` to clean/refill only `content/reference/references.yml`. Summary replaces the name Learning Objectives (the existing Markdown rubric remains): `AC18=Summary`, `AC19=Summary Markdown`, with module-local `generateModuleSummaryFromSheetByLocation` producing exactly `<chapter>/summary/section.md` and `<chapter>/summary/summaries.yml` from AC parent/children. Neither importer uses AI; both are opt-in explicit DRY_RUN/APPLY tasks, not ordinary Gradle Sync. STEP 12/12A/14/15 and the Portal Summary JSON projector retain this data. Legacy AC header names are readable for compatibility. Treat any older text below that claims AC cannot import or STEP 15 supports only A:AB as superseded by this update.
+**Reference/Summary import:** See `module-generate-agent/STEP_2.md` (Sheet L2/L3 Reference YAML to shared `content/reference/references.yml`) and `module-generate-agent/STEP_5.md` (AC parent/children Summary Markdown to `summary/section.md` and `summary/summaries.yml`). Both are explicit code-only module-local DRY_RUN/APPLY imports, not automatic Gradle Sync. Legacy paired `Learning Objectives` headers remain readable. STEP 12/12A/14/15 preserve these contracts and STEP 15 uses A:AC (29 columns).
 
 ## 1. Purpose
 

@@ -1,9 +1,8 @@
 # STEP 14 — Translation VI → EN (Prime + Worker)
 
-**CURRENT_STEP policy (2026-10-25):** Progress is owned ONLY by `CURRENT_STEP.VALUE` (string) in the verified module `master.json`, never by any Google Sheet/Excel cell. Prime updates after full QA using `module-generate-agent/CURRENT_STEP.md`; Worker does not write it. Any old cell, label, formula, or Sheet-readback instructions about progress below are superseded. The STEP-specific completion gates still apply.
 
 
-> **2026-10-25:** Follow `REFERENCE_SUMMARY_IMPORT.md`. STEP 14 must translate existing VI `<chapter>/summary/section.md` and all `summaries.yml` items into EN without altering IDs/order/code/links/Markdown structure. Reference is language-neutral and must not be translated. Prime QA/readback Summary EN before STEP 15.
+> **2026-10-25:** STEP 14 must translate existing VI `<chapter>/summary/section.md` and all `summaries.yml` items into EN without altering IDs/order/code/links/Markdown structure. Reference is language-neutral and must not be translated. Prime QA/readback Summary EN before STEP 15.
 
 > **Quy trình:** Hoàn tất preflight gate của STEP 12A → lập catalog/backup → giao worker **mỗi lượt một file** → Prime QA từng file → QA toàn module → CURRENT_STEP.VALUE readback. Whitelist/blacklist nằm trong `worker/STEP_14_WORKER.md`. Không thực thi STEP 15 khi STEP 14 chưa hoàn tất.
 

@@ -1,6 +1,5 @@
 # STEP 6 — PRIME ONLY: Xây dựng và nghiệm thu API
 
-**CURRENT_STEP policy (2026-10-25):** Progress is owned ONLY by `CURRENT_STEP.VALUE` (string) in the verified module `master.json`, never by any Google Sheet/Excel cell. Prime updates after full QA using `module-generate-agent/CURRENT_STEP.md`; Worker does not write it. Any old cell, label, formula, or Sheet-readback instructions about progress below are superseded. The STEP-specific completion gates still apply.
 
 
 ## 0. Vị trí trong chuỗi STEP

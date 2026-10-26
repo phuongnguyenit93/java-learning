@@ -1,9 +1,8 @@
 # STEP 12 — PRIME ONLY: Export một tab Google Sheets thành `content/sheet/vi/module.xlsx`
 
-**CURRENT_STEP policy (2026-10-25):** Progress is owned ONLY by `CURRENT_STEP.VALUE` (string) in the verified module `master.json`, never by any Google Sheet/Excel cell. Prime updates after full QA using `module-generate-agent/CURRENT_STEP.md`; Worker does not write it. Any old cell, label, formula, or Sheet-readback instructions about progress below are superseded. The STEP-specific completion gates still apply.
 
 
-> **2026-10-25:** See `REFERENCE_SUMMARY_IMPORT.md`: verify snapshot retains Reference L2/L3 and Summary AC18/19 plus all parent/child AC values, including Excel's 32,767 UTF-16 character limit. A 28-column workbook is insufficient if the source tab already has AC.
+> **2026-10-25:** verify snapshot retains Reference L2/L3 and Summary AC18/19 plus all parent/child AC values, including Excel's 32,767 UTF-16 character limit. A 28-column workbook is insufficient if the source tab already has AC.
 
 ## 0. Mục tiêu và phạm vi
 
@@ -59,7 +58,7 @@ Prime phải **tự mở và kiểm tra file offline**, không chỉ tin exit co
 
 ## 4. Completion gate: update master.json only
 
-After Sheet export DRY_RUN/APPLY and ALL Excel QA PASS, Prime reads `<I3>/master.json`, verifies `CURRENT_STEP.TYPE = "string"`, confirms no concurrent edit and updates only `CURRENT_STEP.VALUE = "12"`. Exact readback is required, in accordance with `CURRENT_STEP.md` and `PRIME_RULES.md`.
+After Sheet export DRY_RUN/APPLY and ALL Excel QA PASS, Prime reads `<I3>/master.json`, verifies `CURRENT_STEP.TYPE = "string"`, confirms no concurrent edit and updates only `CURRENT_STEP.VALUE = "12"`. Exact readback is required, theo `rules/PRIME_RULES.md` `2.
 
 **Never update the source Sheet or exported Excel progress cell**, and **do not export Excel a second time** just to write a STEP value. The xlsx is a data snapshot, not the source of STEP status. If master.json write/readback fails, report `BLOCKER: CURRENT_STEP_UPDATE`; keep the validated XLSX intact for safe recovery.
 

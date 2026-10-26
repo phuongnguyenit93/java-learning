@@ -1,6 +1,6 @@
 # STEP 7 — WORKER ONLY: Hoàn thiện Swagger VI/EN trong staging của MỘT chương
 
-**CURRENT_STEP policy (2026-10-25):** Progress is owned ONLY by `CURRENT_STEP.VALUE` (string) in the verified module `master.json`, never by any Google Sheet/Excel cell. Prime updates after full QA using `module-generate-agent/CURRENT_STEP.md`; Worker does not write it. Any old cell, label, formula, or Sheet-readback instructions about progress below are superseded. The STEP-specific completion gates still apply.
+**STEP status:** This worker must never read or update progress in Google Sheets/Excel or `master.json`. Prime alone records `CURRENT_STEP.VALUE` after whole-STEP QA.
 
 
 **BẮT BUỘC tự đọc TOÀN VĂN file này trước khi làm việc và sau khi mất context.** Prime gửi đúng **bốn dòng định vị**: (1) URL Google Sheets tab đúng gid, (2) `A1, B1, I3`, một Menu Cấp 1 và toàn bộ Menu Cấp 2/Knowledge thuộc nó, (3) cặp đường dẫn Java main/test, seed Swagger **đã lọc riêng chương**, staging output chapter được cấp, (4) đường dẫn file worker-only này. Tin nhắn không chứa nội dung hay hướng dẫn; không tự đòi Prime gửi bản nháp.

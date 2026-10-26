@@ -1,6 +1,6 @@
 # STEP 10 — WORKER ONLY: Quiz YAML cho MỘT chương
 
-**CURRENT_STEP policy (2026-10-25):** Progress is owned ONLY by `CURRENT_STEP.VALUE` (string) in the verified module `master.json`, never by any Google Sheet/Excel cell. Prime updates after full QA using `module-generate-agent/CURRENT_STEP.md`; Worker does not write it. Any old cell, label, formula, or Sheet-readback instructions about progress below are superseded. The STEP-specific completion gates still apply.
+**STEP status:** This worker must never read or update progress in Google Sheets/Excel or `master.json`. Prime alone records `CURRENT_STEP.VALUE` after whole-STEP QA.
 
 
 > **BẮT BUỘC tự đọc TOÀN VĂN file worker-only này.** Prime chỉ cung cấp đúng URL tab, tọa độ nguồn, vùng T:W hàng cha và đường dẫn file này. Không tự đọc file Prime/rules/STEP khác, source repository hay lịch sử chat để thay Knowledge trên Sheet.

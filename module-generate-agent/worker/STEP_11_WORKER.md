@@ -1,6 +1,6 @@
 # STEP 11 — WORKER ONLY: Related metadata cho một Menu Cấp 1
 
-**CURRENT_STEP policy (2026-10-25):** Progress is owned ONLY by `CURRENT_STEP.VALUE` (string) in the verified module `master.json`, never by any Google Sheet/Excel cell. Prime updates after full QA using `module-generate-agent/CURRENT_STEP.md`; Worker does not write it. Any old cell, label, formula, or Sheet-readback instructions about progress below are superseded. The STEP-specific completion gates still apply.
+**STEP status:** This worker must never read or update progress in Google Sheets/Excel or `master.json`. Prime alone records `CURRENT_STEP.VALUE` after whole-STEP QA.
 
 
 **BẮT BUỘC đọc toàn văn file này trước khi làm việc và sau compaction.** Prime giao đúng bốn dòng: link tab (định danh, **không cho ghi**), tọa độ chương/hàng cha Interview+Quiz, đường dẫn `READ` input snapshot và `WRITE` proposal riêng chương, đường dẫn file worker-only này. Không đọc STEP Prime, GENERAL, rules/TXT, source repo hoặc thư mục ngoài scope đã giao; không yêu cầu Prime paste content.

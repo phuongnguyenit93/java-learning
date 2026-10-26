@@ -37,13 +37,28 @@ Chỉ có **hai mode**. Prime áp dụng giới hạn tổng worker `ACTIVE` + `
 
 ## 2. Cập nhật CURRENT_STEP trong master.json khi STEP hoàn tất
 
-**Nguồn duy nhất** là `<I3>/master.json`, khóa `CURRENT_STEP` với `TYPE=string`, `VALUE` là `"0"`, số STEP, `"12A"` hoặc `"FINAL"`. Áp dụng đúng giao thức `module-generate-agent/CURRENT_STEP.md` cho mọi STEP. **Không cập nhật J3 trong Google Sheets** kể cả tab/template còn chứa nhãn cũ.
+**Nguồn duy nhất** của tiến độ đã hoàn thành là đúng `<MODULE_LOCATION_I3>/master.json`, khóa canonical `CURRENT_STEP`:
 
-1. Prime xác nhận đúng tab/gid và `I3` theo mapping, xác minh duy nhất file `master.json` trong module thật. Riêng STEP 1 mapping chỉ có sau khi tạo tab; vẫn không ghi STEP vào Excel.
-2. Snapshot `CURRENT_STEP.VALUE` từ `master.json`. **Chỉ khi toàn bộ QA PASS** (worker/import/build/test, cleanup, readback) mới cập nhật duy nhất VALUE bằng **string** của STEP đã hoàn thành. Còn blocker hoặc worker pending → không cập nhật. STEP 4 vẫn tuân thủ NEW_FILL ONLY và STEP 5 mới review Knowledge cũ.
-3. Chống ghi lùi theo thứ tự STEP trong `CURRENT_STEP.md`, gồm `12A`, `FINAL`. Chạy lại STEP cũ không làm giảm tiến độ. STEP_FINAL hoàn tất ghi `"FINAL"`; Video tùy chọn không thay đổi giá trị.
-4. Ghi file an toàn và exact readback `master.json`, bảo toàn mọi key/VALUE khác và phạm vi ghi của module khác. Báo `CURRENT_STEP_BEFORE`, `CURRENT_STEP_AFTER`, `CURRENT_STEP_READBACK PASS` hoặc `BLOCKER: CURRENT_STEP_UPDATE`. Không đọc hoặc ghi J2/J3 làm nguồn tiến độ.
-5. Riêng STEP 6 yêu cầu Swagger skeleton QA; STEP 7 yêu cầu merge staging VI/EN và cleanup đạt PASS. Đây vẫn là completion gate, nhưng nơi ghi tiến độ chỉ là `master.json`.
+```json
+"CURRENT_STEP": {
+  "DESCRIPTION": "Last successfully completed module generation step (0, numeric STEP, 12A, FINAL)",
+  "TYPE": "string",
+  "VALUE": "0"
+}
+```
+
+- Giá trị **JSON string**, không phải số: `"0"` là chưa bắt đầu; các STEP hiện hành theo thứ tự **`0 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → 9 → 10 → 11 → 12 → 12A → 14 → 15 → FINAL`**. `"12A"` và `"FINAL"` là chuỗi nguyên văn, **không** chuyển thành số. STEP 8 và 13 hiện không được định nghĩa, không được tự đánh dấu hoàn tất. Giá trị `"8"` trong module được nhập từ J3 lịch sử không chứng minh đã hoàn thành STEP 8 của workflow hiện hành; đối chiếu bằng chứng cũ trước khi tiếp tục.
+- **Không đọc hoặc ghi trạng thái tiến độ ở Google Sheets/Excel J2/J3**, dù các tab/template cũ vẫn giữ nhãn `Current STEP`. Google Sheets `I3` vẫn được dùng để xác minh đường dẫn module; không phải nguồn trạng thái. Mọi backfill lịch sử phải có phạm vi và phép đối chiếu riêng được người dùng yêu cầu; không tự reset module về `"0"` hoặc cập nhật hàng loạt.
+- Prime chỉ cập nhật sau completion gate **của chính STEP và module**; worker không có quyền chỉnh trạng thái. Rerun STEP cũ không được ghi lùi; Video tùy chọn sau FINAL luôn giữ `"FINAL"`.
+
+1. Xác minh đúng spreadsheet/tab/gid và `I3` qua mapping `module-generate-info`, đường dẫn thực nằm trong `java-learning/module/`, đúng module/worktree và đúng duy nhất một `master.json`. STEP 1 chỉ xác nhận được mapping sau khi clone/lưu tab mới.
+2. Trước khi chạy, đọc/snapshot `CURRENT_STEP.TYPE` và `VALUE` trong file. `TYPE` phải là `string`, VALUE phải hợp lệ. Nếu khóa chưa tồn tại, chạy canonical module configuration sync để thêm `"0"` và exact readback; không tự chế cấu trúc. Nếu VALUE sai kiểu/schema hoặc có công việc đồng thời, báo `BLOCKER: CURRENT_STEP_UPDATE`, không ghi đoán.
+3. Chỉ khi **toàn bộ** worker/import/build/test, QA, cleanup và exact readback đạt PASS/UNCHANGED, không còn pending hoặc blocker, Prime mới được cập nhật **duy nhất `CURRENT_STEP.VALUE`** sang string của STEP mới. STEP 4 giữ NEW_FILL ONLY, STEP 5 mới review Knowledge; STEP 6 phải đạt Swagger skeleton QA, STEP 7 phải merge staging VI/EN và cleanup, STEP_FINAL phải qua đầy đủ gate Git. Với nhiều module, QA và ghi từng module độc lập, không ghi theo tên tab suy đoán.
+4. Áp dụng thứ tự explicit ở trên, **không so sánh string theo từ điển**. Nếu trạng thái hiện tại đi xa hơn, giữ nguyên sau khi rerun STEP cũ. Nếu phát hiện historical `"8"`/STEP khác do đổi số, kiểm chứng provenance/output trước khi quyết định tiến độ; không tự dịch sang STEP hiện tại.
+5. Snapshot trước khi ghi, chống sửa đồng thời, dùng patch/atomic replace an toàn hoặc backup/rollback, **giữ nguyên toàn bộ các key và VALUE khác**. Exact readback trên `master.json`, không ghi vào ô Excel/Sheet; thất bại phải báo blocker và không tuyên bố hoàn tất toàn STEP.
+6. Báo `CURRENT_STEP_MODULE_PATH`, `CURRENT_STEP_BEFORE`, `CURRENT_STEP_AFTER`, `CURRENT_STEP_READBACK=PASS/FAIL`, blocker nếu có. STEP_FINAL chỉ ghi `"FINAL"` sau khi đủ QA và đưa cập nhật này vào commit/push kết thúc. Các STEP_OPTIONAL_VIDEO/TRANSLATE không đổi `CURRENT_STEP`.
+
+**Luồng dữ liệu Portal:** `<module>/master.json` → `ProjectStructureService` → `module-catalog.json.currentStep` → `build-module-navigation.mjs` → `module-navigation.json` → Module Picker. FE ẩn `"0"`/field chưa có, hiển thị `Step N`/`Step 12A` và `Finished` cho `"FINAL"`. Sau khi cập nhật trạng thái cần regenerate/publish Java data, sync vào learning-platform và deploy mới thấy trên web.
 
 ## 3. Checklist đóng STEP cho Prime
 

@@ -1,6 +1,6 @@
 # STEP 4 — WORKER ONLY: Một bài Knowledge README trên Google Sheets
 
-**CURRENT_STEP policy (2026-10-25):** Progress is owned ONLY by `CURRENT_STEP.VALUE` (string) in the verified module `master.json`, never by any Google Sheet/Excel cell. Prime updates after full QA using `module-generate-agent/CURRENT_STEP.md`; Worker does not write it. Any old cell, label, formula, or Sheet-readback instructions about progress below are superseded. The STEP-specific completion gates still apply.
+**STEP status:** This worker must never read or update progress in Google Sheets/Excel or `master.json`. Prime alone records `CURRENT_STEP.VALUE` after whole-STEP QA.
 
 
 > **Chỉ dành cho worker.** Prime điều phối bằng `STEP_4.md`; worker **chỉ đọc file `worker/STEP_4_WORKER.md` này** để lấy quy trình, không đọc `STEP_4.md`, STEP khác, `GENERAL_AGENT_RULES.md`, file rules, TXT, README cũ hoặc lịch sử hội thoại để làm nội dung. Prime **chỉ gửi bốn dòng gồm link tab, tọa độ sáu ô nguồn (bốn ô bài học và hai ô Special Note), vùng đích và đường dẫn file này; không gửi thêm hướng dẫn/nội dung ghi chú**. Worker **bắt buộc tự đọc nguyên văn Special Note trên Google Sheets** và thực hiện trọn vẹn W1–W5 theo file này.

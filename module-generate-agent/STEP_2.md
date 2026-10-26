@@ -1,9 +1,10 @@
 # STEP 2 — PRIME ONLY: Điều phối Roadmap Title / Purpose / Objectives
 
-**CURRENT_STEP policy (2026-10-25):** Progress is owned ONLY by `CURRENT_STEP.VALUE` (string) in the verified module `master.json`, never by any Google Sheet/Excel cell. Prime updates after full QA using `module-generate-agent/CURRENT_STEP.md`; Worker does not write it. Any old cell, label, formula, or Sheet-readback instructions about progress below are superseded. The STEP-specific completion gates still apply.
 
 
-> **2026-10-25 Reference addition:** Follow `REFERENCE_SUMMARY_IMPORT.md`. STEP 2 now also owns `L2=Reference`, `L3=references: [...]` authored by worker and module-local `generateModuleReferenceFromSheetByLocation` (DRY_RUN → APPLY) by Prime. Prime's four-line handoff adds L2/L3 to the coordinates and L3 to the write scope; the worker may only author L3 within that scope. Existing Roadmap and Introduction may be left UNCHANGED during Reference-only backfill. This rule supersedes earlier STEP 2 restrictions that excluded column L.
+**Reference is part of STEP 2:** Worker authors vetted `references: [...]` YAML in Sheet L3, with header L2=Reference; Prime runs `generateModuleReferenceFromSheetByLocation` DRY_RUN then APPLY and reads back `content/reference/references.yml`. L3 ownership is explicit, and all other cells outside assigned Roadmap/Introduction scope remain read-only. A separate Reference-only backfill may leave already completed Roadmap/B17 untouched.
+
+**Reference import contract:** `K2/K3` remain Special Note (read-only). L3 is a single YAML document with root `references` and entries requiring `title`, `url` (real, verified URL) and optional `description`; use C2/Special Note for source relevance. Limit L3 to **30,000 Unicode code points and 32,767 UTF-16 units**; never spill to adjacent cells. The module-local importer is deterministic/code-only, cleans **only** `content/reference/` and writes the L3 YAML to language-neutral `content/reference/references.yml`. An empty L3 is `SKIPPED_EMPTY_REFERENCE` (must **not** delete previous output); missing L2 with empty L3 is `SKIPPED_NO_REFERENCE_SCHEMA`; explicit valid `references: []` is an intentional empty list. For a newly authored STEP 2, Roadmap + Introduction + Reference must all PASS before Prime advances the module `CURRENT_STEP` in `master.json`. For Reference-only backfill, do not reauthor/reimport F:H or B17, and do not advance an already-completed step.
 
 ## Mục tiêu và phân tách PRIME / WORKER
 

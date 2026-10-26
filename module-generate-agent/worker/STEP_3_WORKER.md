@@ -1,6 +1,6 @@
 # STEP 3 — WORKER ONLY: Tạo Menu hai cấp
 
-**CURRENT_STEP policy (2026-10-25):** Progress is owned ONLY by `CURRENT_STEP.VALUE` (string) in the verified module `master.json`, never by any Google Sheet/Excel cell. Prime updates after full QA using `module-generate-agent/CURRENT_STEP.md`; Worker does not write it. Any old cell, label, formula, or Sheet-readback instructions about progress below are superseded. The STEP-specific completion gates still apply.
+**STEP status:** This worker must never read or update progress in Google Sheets/Excel or `master.json`. Prime alone records `CURRENT_STEP.VALUE` after whole-STEP QA.
 
 
 > **Chỉ dành cho worker.** Prime điều phối theo `STEP_3.md`; bạn **chỉ đọc toàn văn file `worker/STEP_3_WORKER.md` này**, không đọc STEP Prime, STEP khác, General Rules, rules folder, TXT hoặc lịch sử bài cũ. Prime chỉ gửi **bốn dòng**: link tab; tọa độ `C3`, `A18:B19` và **hai ô tiêu đề/giá trị Special Note**; vùng ghi `A20:B<END>`; đường dẫn file này. **Prime không cung cấp nội dung hay tóm tắt Special Note; bạn BẮT BUỘC tự đọc nguyên văn hai ô đó trong Google Sheets.** Tự thực hiện trọn W1–W5.

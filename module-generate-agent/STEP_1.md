@@ -70,7 +70,7 @@ Ví dụ đã đối chiếu với cây module thực tế:
 
 ## Dropdown isImportant kế thừa từ Template
 
-Template có 28 cột (`A:AB`): `AB18 = Importance`, `AB19 = isImportant`, `AB20:AB700` phải có Data Validation `ONE_OF_LIST` với hai lựa chọn `TRUE`, `FALSE` (`strict=true`, `showCustomUi=true`). Chỉ hàng Menu Cấp 2 được STEP 5 ghi; hàng cha trống. AB trống giữ metadata `isImportant` cũ (hoặc default `false` nếu chưa có). Bước clone/preflight/readback STEP 1 phải bảo đảm cấu trúc cột AB cùng dropdown, không sửa Template hoặc tab cũ ngoài lần migration đã được người dùng yêu cầu.
+Template chuẩn có **29 cột (`A:AC`)**: `AB18 = Importance`, `AB19 = isImportant`, `AB20:AB700` phải có Data Validation `ONE_OF_LIST` với hai lựa chọn `TRUE`, `FALSE` (`strict=true`, `showCustomUi=true`). **AC18=Summary**, **AC19=Summary Markdown**; cặp nhãn cũ `Learning Objectives`/`Learning Objectives Markdown` chỉ được chấp nhận nguyên cặp trên tab đã tồn tại. Chỉ hàng Menu Cấp 2 được STEP 5 ghi AB và AC từng bài; AC hàng cha cũng do STEP 5 sở hữu. AB trống có default `false` khi import. Bước clone/preflight/readback STEP 1 phải bảo đảm AB và AC còn đầy đủ; không sửa Template hoặc tab cũ ngoài migration được người dùng yêu cầu.
 
 ## Dropdown Difficulty bắt buộc kế thừa từ Template
 
@@ -88,7 +88,7 @@ Quy tắc tích hợp vào quy trình STEP 1 ở trên:
 
 ## Nguyên tắc an toàn
 
-**Bố cục Template mới (28 cột):** sau Knowledge `C:N` và Difficulty `O`, giữ thứ tự **Interview P:S → Quiz T:W → Video X:AA → isImportant AB**. Interview có `P18 = Interview`, `P19:S19 = Interview YAML` (parser còn chấp nhận `Interview JSON` legacy). STEP 1 khi clone giữ nguyên ba nhóm cột cùng header/dữ liệu/format và CLIP 700 hàng đến cột AB; không tự migration khi Template khác chưa khớp và phải báo `INTERVIEW_SCHEMA/QUIZ_SCHEMA/VIDEO_SCHEMA=NOT_CONFIGURED` nếu thiếu.
+**Bố cục Template mới (29 cột):** sau Knowledge `C:N` và Difficulty `O`, giữ thứ tự **Interview P:S → Quiz T:W → Video X:AA → isImportant AB → Summary AC**. Interview có `P18 = Interview`, `P19:S19 = Interview YAML` (parser còn chấp nhận `Interview JSON` legacy). STEP 1 khi clone giữ nguyên các nhóm cột, header/dữ liệu/format và CLIP 700 hàng đến cột **AC**; không tự migration khi Template khác chưa khớp và phải báo `INTERVIEW_SCHEMA/QUIZ_SCHEMA/VIDEO_SCHEMA/SUMMARY_SCHEMA=NOT_CONFIGURED` nếu thiếu.
 
 **Quiz và Video:** `T18 = Quiz`, `T19:W19 = Quiz YAML`; `X18 = Video`, `X19:AA19 = Video Script`. **Không điền Quiz vào T20:W700 hoặc Video vào X20:AA700 khi clone**; STEP 10 worker sinh Quiz YAML vào hàng cha khi được giao; Video do STEP_OPTIONAL_VIDEO worker tạo sau STEP_FINAL. Ba spreadsheet `Module Content`, `Module Content 2`, `Module Content 3` đều đã được sắp xếp theo thứ tự này, không thay các vùng A:O.
 

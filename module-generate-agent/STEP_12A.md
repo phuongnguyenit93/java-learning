@@ -1,9 +1,8 @@
 # STEP 12A — PRIME ONLY: Clone cấu trúc và nội dung VI → EN bằng Gradle
 
-**CURRENT_STEP policy (2026-10-25):** Progress is owned ONLY by `CURRENT_STEP.VALUE` (string) in the verified module `master.json`, never by any Google Sheet/Excel cell. Prime updates after full QA using `module-generate-agent/CURRENT_STEP.md`; Worker does not write it. Any old cell, label, formula, or Sheet-readback instructions about progress below are superseded. The STEP-specific completion gates still apply.
 
 
-> **2026-10-25 Summary:** STEP 12A đã clone toàn bộ cây docs (ngoại trừ Video), vì vậy phải bao gồm `menu/<chapter>/summary/section.md` và `summaries.yml` nếu VI có. Validate Summary YAML/root `summaries`, số bài, order và `id` khớp Knowledge trước APPLY. STEP 14 sau đó dịch nội dung Summary EN; Reference là module-wide shared nên không clone/dịch. Xem `REFERENCE_SUMMARY_IMPORT.md`.
+**Summary clone:** STEP 12A clones the VI `summary/section.md` and `summaries.yml` under each chapter to EN, excluding Video. Validate the root `summaries`, child counts/order/IDs and Knowledge mapping before APPLY. Shared module-wide Reference is never cloned or translated; STEP 14 later translates only Summary EN text.
 
 ## 0. Mục tiêu và ranh giới
 

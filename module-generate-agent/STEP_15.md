@@ -1,9 +1,8 @@
 # STEP 15 — PRIME ONLY: Publish module EN to Google Sheets + Excel
 
-**CURRENT_STEP policy (2026-10-25):** Progress is owned ONLY by `CURRENT_STEP.VALUE` (string) in the verified module `master.json`, never by any Google Sheet/Excel cell. Prime updates after full QA using `module-generate-agent/CURRENT_STEP.md`; Worker does not write it. Any old cell, label, formula, or Sheet-readback instructions about progress below are superseded. The STEP-specific completion gates still apply.
 
 
-> **2026-10-25:** Follow `REFERENCE_SUMMARY_IMPORT.md`. EN Template requires 29 columns; Reference from shared `content/reference/references.yml` maps to L3, Summary EN `section.md` and `summaries.yml` to AC parent/children. Header labels are `L2=Reference`, `AC18=Summary`, `AC19=Summary Markdown`; exact readback and EN Summary content validation are mandatory. Existing below-step rules describing only A:AB are superseded by this AC extension.
+> **2026-10-25:** EN Template requires 29 columns (A:AC); Reference from shared `content/reference/references.yml` maps to L3, Summary EN `section.md` and `summaries.yml` to AC parent/children. Header labels are `L2=Reference`, `AC18=Summary`, `AC19=Summary Markdown`; exact readback and EN Summary content validation are mandatory.
 
 ## 0. Hard rule: code-only, no AI, no workers
 
@@ -31,7 +30,7 @@ than being pushed into Sheet cells.
    mapping. Confirm STEP 14 fully completed and readback on the VI gid.
 2. Verify VI tab `I3` exact module root-relative path, `CURRENT_STEP.VALUE = "14"` in module `master.json`; verify STEP 12 offline VI Excel has exactly one worksheet,
    correct `I3` and final VI menu row mapping.
-3. Validate the Google-native `Template`: 700+ rows, A:AB, Difficulty
+3. Validate the Google-native `Template`: 700+ rows, **A:AC (29 columns)**, Difficulty
    dropdown BASIC/INTERMEDIATE/ADVANCED at O20/O21/O700, isImportant
    dropdown TRUE/FALSE at AB20/AB700, and three conditional coloring rules
    for BASIC/INTERMEDIATE/ADVANCED on O20:O700.

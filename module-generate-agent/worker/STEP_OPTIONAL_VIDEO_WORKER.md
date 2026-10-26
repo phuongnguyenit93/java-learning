@@ -1,6 +1,6 @@
 # STEP_OPTIONAL_VIDEO — WORKER ONLY: Một chương, một Video Script YAML
 
-**CURRENT_STEP policy (2026-10-25):** Progress is owned ONLY by `CURRENT_STEP.VALUE` (string) in the verified module `master.json`, never by any Google Sheet/Excel cell. Prime updates after full QA using `module-generate-agent/CURRENT_STEP.md`; Worker does not write it. Any old cell, label, formula, or Sheet-readback instructions about progress below are superseded. The STEP-specific completion gates still apply.
+**STEP status:** This worker must never read or update progress in Google Sheets/Excel or `master.json`. Prime alone records `CURRENT_STEP.VALUE` after whole-STEP QA.
 
 
 > Chỉ dành cho worker. Prime điều phối trong STEP_OPTIONAL_VIDEO.md; bạn chỉ đọc TOÀN VĂN file này. Prime gửi link tab, tọa độ nguồn và **vùng X:AA tại đúng hàng Menu Cấp 1** cùng đường dẫn file worker. Không chia hai pha.
