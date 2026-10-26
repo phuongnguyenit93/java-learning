@@ -19,7 +19,7 @@ import org.springframework.context.annotation.Bean;
 
 @AutoConfiguration
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
-@ConditionalOnProperty(prefix = "execution-context", name = "enabled", havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(prefix = "execution-context", name = "enabled", havingValue = "true")
 @EnableConfigurationProperties(ExecutionContextProperties.class)
 public class ServletExecutionContextAutoConfiguration {
 

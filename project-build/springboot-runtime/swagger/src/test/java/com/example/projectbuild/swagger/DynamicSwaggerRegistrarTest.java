@@ -15,6 +15,7 @@ import org.springdoc.core.customizers.OpenApiCustomizer;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.env.StandardEnvironment;
+import org.springframework.web.method.HandlerMethod;
 
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -25,6 +26,43 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 class DynamicSwaggerRegistrarTest {
+
+    static class SampleHandler {
+        public void run() {}
+    }
+
+    @Test
+    void disabledExecutionContextNeverAnnotatesSwaggerOperations() throws Exception {
+        DynamicSwaggerRegistrar registrar = new DynamicSwaggerRegistrar();
+        StandardEnvironment environment = new StandardEnvironment();
+        environment.getPropertySources().addFirst(new MapPropertySource(
+                "explicitly-off", Map.of("execution-context.enabled", "false")));
+        registrar.setEnvironment(environment);
+        Operation operation = new Operation();
+        registrar.addExtension().customize(operation,
+                new HandlerMethod(new SampleHandler(), SampleHandler.class.getMethod("run")));
+        assertFalse(operation.getExtensions() != null &&
+                operation.getExtensions().containsKey("x-execution-context-enabled"));
+    }
+
+    @Test
+    void executionContextMetadataRequiresExplicitRuntimeOptIn() throws Exception {
+        HandlerMethod method = new HandlerMethod(new SampleHandler(), SampleHandler.class.getMethod("run"));
+        DynamicSwaggerRegistrar registrar = new DynamicSwaggerRegistrar();
+        StandardEnvironment environment = new StandardEnvironment();
+        registrar.setEnvironment(environment);
+
+        Operation defaultOff = new Operation();
+        registrar.addExtension().customize(defaultOff, method);
+        assertFalse(defaultOff.getExtensions() != null &&
+                defaultOff.getExtensions().containsKey("x-execution-context-enabled"));
+
+        environment.getPropertySources().addFirst(new MapPropertySource(
+                "explicitly-on", Map.of("execution-context.enabled", "true")));
+        Operation enabled = new Operation();
+        registrar.addExtension().customize(enabled, method);
+        assertEquals(Boolean.TRUE, enabled.getExtensions().get("x-execution-context-enabled"));
+    }
 
     private final ObjectMapper yamlMapper = new ObjectMapper(new YAMLFactory());
 

@@ -21,7 +21,7 @@ This does **not** say dynamic verification lacks value: focused Java runtime exp
 ## Implementation audit — performed after the learning decision
 
 - Isolated `.wt/paradigm/reactive` branch `module/reactive`, original HEAD `9d3433b8`; intentionally uncommitted approved STEP 2–4 source retained.
-- Current `master.json` is `MODULE_TYPE=LIBRARY`, `MODULE_LANGUAGE=[vi,en]`, `BUILD_README=TRUE`, `BUILD_SWAGGER=FALSE`, `BUILD_EXECUTION_CONTEXT=FALSE`. This configuration agrees with the curriculum-led conclusion; it was **not its premise**.
+- Current `master.json` is `MODULE_TYPE=LIBRARY`, `MODULE_LANGUAGE=[vi,en]`, `BUILD_README=TRUE`, `BUILD_SWAGGER=FALSE`. This configuration agrees with the curriculum-led conclusion; it was **not its premise**.
 - Child scan finds no Java learning controller/service, @Controller/@RestController, `src/main/resources/swagger/{vi,en}` documents, live reactive runtime, old API metadata or stale Knowledge-to-controller relation. Existing localized `knowledge-metadata.yml` belongs to README sections, not API docs.
 - Accordingly, there is no stale API to preserve/remove, no contradictory canonical flag to reconcile, and no justified Servlet/WebFlux runtime, Swagger source, API projection or Gradle setup to generate. Existing Roadmap/Menu/Knowledge/metadata/README stay unchanged.
 

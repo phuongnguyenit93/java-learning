@@ -22,9 +22,10 @@ class ContentBuildFlagRetirementTest {
         assertTrue('Unexpected content build flags: ' + config.keySet().intersect(RETIRED),
                 config.keySet().intersect(RETIRED).isEmpty())
 
-        // Genuine runtime/dependency feature controls remain independent.
+        // Build-time Execution Context flag is retired; runtime property controls behavior.
         assertTrue(config.containsKey('BUILD_SWAGGER'))
-        assertTrue(config.containsKey('BUILD_EXECUTION_CONTEXT'))
+        assertFalse('Execution Context must not have a build-time switch',
+                config.keySet().any { it.toString().contains('EXECUTION_CONTEXT') })
         assertTrue(config.containsKey('BUILD_ENV'))
     }
 

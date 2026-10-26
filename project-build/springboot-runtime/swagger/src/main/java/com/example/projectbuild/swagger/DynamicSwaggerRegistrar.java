@@ -113,7 +113,9 @@ public class DynamicSwaggerRegistrar implements ImportBeanDefinitionRegistrar , 
                     )
             );
 
-            if (ClassUtils.isPresent(
+            if (environment != null
+                    && environment.getProperty("execution-context.enabled", Boolean.class, false)
+                    && ClassUtils.isPresent(
                     EXECUTION_CONTEXT_SERVICE_CLASS,
                     handlerMethod.getBeanType().getClassLoader()
             )) {

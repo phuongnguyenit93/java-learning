@@ -18,7 +18,7 @@ This module teaches a learner to **identify, predict and evaluate** effective AO
 ## Implementation audit — performed only after the conceptual decision
 
 - Isolated worktree `.wt/paradigm/aop`, branch `module/aop`, original HEAD `9d3433b8`; valid STEP 2–4 changes remain uncommitted.
-- Current canonical `master.json` values: `MODULE_TYPE=LIBRARY`, `MODULE_LANGUAGE=[vi,en]`, `BUILD_README=TRUE`, `BUILD_SWAGGER=FALSE`, `BUILD_EXECUTION_CONTEXT=FALSE`. These values are **consistent with**, not reasons for, the independent applicability conclusion.
+- Current canonical `master.json` values: `MODULE_TYPE=LIBRARY`, `MODULE_LANGUAGE=[vi,en]`, `BUILD_README=TRUE`, `BUILD_SWAGGER=FALSE`. These values are **consistent with**, not reasons for, the independent applicability conclusion.
 - Physical child source has **no** existing Java learning controller/service, @Controller/@RestController, runtime application or `src/main/resources/swagger/{vi,en}` files. The existing `knowledge-metadata.yml` records are README governance, not Swagger/API. There are no legacy API documents or stale controller relations to remove.
 - Consequently no runtime dependency/config migration, Swagger setup, Gradle generator or projection mutation is indicated. Preserve all approved Roadmap, Knowledge, menu anchors, metadata and generated README output.
 

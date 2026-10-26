@@ -253,17 +253,6 @@ class ModuleBuildConfigurationService {
             ModuleType moduleType
     ) {
 
-        if (
-                !ProjectPropertyUtils.isEnabled(
-                        project,
-                        'BUILD_EXECUTION_CONTEXT'
-                )
-        ) {
-
-            return
-        }
-
-
         String adapterServiceName
 
 
@@ -279,8 +268,8 @@ class ModuleBuildConfigurationService {
 
             case ModuleType.REACTIVE:
 
-                project.logger.warn(
-                        '[MODULE-BUILD] BUILD_EXECUTION_CONTEXT is enabled for REACTIVE {}, but a reactive adapter has not been implemented yet.',
+                project.logger.info(
+                        '[MODULE-BUILD] Execution Context is servlet-only; REACTIVE {} has no adapter yet.',
                         project.path
                 )
 

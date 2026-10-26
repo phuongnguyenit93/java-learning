@@ -9,12 +9,13 @@
     padding: 6px 10px;
 }
 
-.swagger-ui .execute-wrapper {
+/* Leave Swagger's original Execute layout unchanged when runtime capture is OFF. */
+.swagger-ui .execute-wrapper:has(> .execution-context-action) {
     display: flex;
     gap: 8px;
 }
 
-.swagger-ui .execute-wrapper > .btn {
+.swagger-ui .execute-wrapper:has(> .execution-context-action) > .btn {
     flex: 1 1 0;
     width: auto;
     margin: 0;

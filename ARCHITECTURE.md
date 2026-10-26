@@ -383,7 +383,7 @@ Condition chính:
 | Swagger | `BUILD_SWAGGER=TRUE` |
 | Quiz | Có câu hỏi Quiz hợp lệ ở thư mục chương |
 | Interview | Có câu hỏi Interview hợp lệ ở thư mục chương |
-| Execution Context | `BUILD_EXECUTION_CONTEXT=TRUE` |
+| Execution Context | Servlet modules include the adapter; runtime `execution-context.enabled=true` activates it (default OFF) |
 | Task system | `USE_TASK=TRUE` |
 | Docker | `docker-compose.yml` tồn tại |
 
@@ -562,7 +562,6 @@ BUILD_ENV
 BUILD_YML
 BUILD_TESTER
 BUILD_SWAGGER
-BUILD_EXECUTION_CONTEXT
 BUILD_DATABASE_MODULE
 ADD_MODULE_DEPEND
 USE_DATABASE
@@ -1858,11 +1857,13 @@ project-build/springboot-runtime/execution-context-servlet
 Enablement của Servlet application:
 
 ```text
-BUILD_EXECUTION_CONTEXT=TRUE
+MODULE_TYPE=SERVLET (always packages Execution Context)
         ↓
 GLOBAL_EXECUTION_CONTEXT_SERVLET
         ↓
 GLOBAL_EXECUTION_CONTEXT
+        ↓
+execution-context.enabled=true at runtime (default OFF)
 ```
 
 Swagger không nằm trong dependency chain này. Swagger UI có thể là nơi user bấm Execute, nhưng HTTP request sau đó được Execution Context capture như bất kỳ request bình thường nào.
@@ -2295,7 +2296,7 @@ trừ khi architecture contract của artifact đó được thay đổi rõ rà
 | Suggested composed config | dependency/application YML inputs | `application-merged.yml` |
 | Build plugin registry input | plugin definitions/generator inputs | `ProjectPluginEnum` |
 | Repository structure | filesystem/module discovery | `STRUCTURE.md` |
-| Execution Context enablement | `BUILD_EXECUTION_CONTEXT` | orchestration/runtime dependency selection |
+| Execution Context enablement | `execution-context.enabled` | Runtime Spring Boot property (default OFF; Servlet adapter always packaged) |
 | Execution source context | Java source + build-time scanner/generator | `META-INF/execution-context/source-context.json` |
 | Portal module hierarchy/catalog | filesystem/module discovery + module metadata via `ProjectStructureService` | `build/learning-data/java/module-catalog.json` |
 | Portal module Overview | `module/**/readme/{lang}/BASE.md` | `build/learning-data/java/module/{ROUTE_ID}/overview/{lang}.md` |

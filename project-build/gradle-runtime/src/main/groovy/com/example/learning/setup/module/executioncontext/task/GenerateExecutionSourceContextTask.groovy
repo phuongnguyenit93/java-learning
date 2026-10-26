@@ -5,6 +5,7 @@ import org.gradle.api.DefaultTask
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.tasks.InputDirectory
+import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
@@ -15,6 +16,7 @@ abstract class GenerateExecutionSourceContextTask
         extends DefaultTask {
 
     @InputDirectory
+    @Optional
     @PathSensitive(PathSensitivity.RELATIVE)
     abstract DirectoryProperty getSourceDirectory()
 

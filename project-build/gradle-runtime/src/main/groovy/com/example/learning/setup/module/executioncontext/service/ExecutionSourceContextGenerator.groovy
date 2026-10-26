@@ -124,6 +124,12 @@ class ExecutionSourceContextGenerator {
         List<File> javaFiles =
                 []
 
+        // A newly provisioned Servlet module can have no Java sources yet.
+        // Generate an empty, deterministic context rather than failing Sync/bootJar.
+        if (!sourceDirectory.isDirectory()) {
+            return []
+        }
+
 
         sourceDirectory.eachFileRecurse(
                 FileType.FILES

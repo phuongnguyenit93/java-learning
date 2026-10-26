@@ -222,12 +222,8 @@ class ModuleOrchestrationPlugin
         // Execution Context setup
         // ====================================================
 
-        if (
-                ProjectPropertyUtils.isEnabled(
-                        project,
-                        'BUILD_EXECUTION_CONTEXT'
-                )
-        ) {
+        if ('SERVLET'.equalsIgnoreCase(
+                ProjectPropertyUtils.getString(project, 'MODULE_TYPE'))) {
 
             project.pluginManager.apply(
                     ProjectPluginEnum.EXECUTION_CONTEXT_SETUP_PLUGIN.id
@@ -236,7 +232,7 @@ class ModuleOrchestrationPlugin
         else {
 
             project.logger.info(
-                    '[PROJECT-ORCHESTRATION] Skip EXECUTION CONTEXT setup for {} because BUILD_EXECUTION_CONTEXT != TRUE.',
+                '[PROJECT-ORCHESTRATION] Skip servlet-only EXECUTION CONTEXT setup for {}.',
                     project.path
             )
         }

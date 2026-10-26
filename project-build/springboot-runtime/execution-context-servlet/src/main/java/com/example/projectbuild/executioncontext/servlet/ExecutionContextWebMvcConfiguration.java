@@ -1,6 +1,7 @@
 package com.example.projectbuild.executioncontext.servlet;
 
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -23,5 +24,13 @@ public class ExecutionContextWebMvcConfiguration implements WebMvcConfigurer {
                 "/execution-context",
                 "/execution-context/explorer.html"
         );
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        // Resources are deliberately NOT in /static. Only the runtime-enabled
+        // auto-configuration installs this handler; OFF exposes no Explorer UI.
+        registry.addResourceHandler("/execution-context/**")
+                .addResourceLocations("classpath:/META-INF/execution-context/ui/");
     }
 }

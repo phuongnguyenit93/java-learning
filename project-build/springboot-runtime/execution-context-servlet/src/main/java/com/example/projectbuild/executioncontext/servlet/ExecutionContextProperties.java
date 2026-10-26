@@ -8,7 +8,7 @@ import java.util.List;
 @ConfigurationProperties(prefix = "execution-context")
 public class ExecutionContextProperties {
 
-    private boolean enabled = true;
+    private boolean enabled = false;
     private boolean captureLogs = true;
     private boolean captureSystemStreams = true;
     private boolean queryEnabled = true;

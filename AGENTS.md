@@ -434,7 +434,7 @@ ReadmeSetupPlugin    for each real registered module
     ↓
 SwaggerSetupPlugin   if enabled
     ↓
-ExecutionContextSetupPlugin if BUILD_EXECUTION_CONTEXT=TRUE
+ExecutionContextSetupPlugin for Servlet modules (runtime defaults OFF)
     ↓
 TaskSetupPlugin      if USE_TASK=TRUE
     ↓
@@ -585,7 +585,6 @@ BUILD_ENV
 BUILD_YML
 BUILD_TESTER
 BUILD_SWAGGER
-BUILD_EXECUTION_CONTEXT
 BUILD_DATABASE_MODULE
 ADD_MODULE_DEPEND
 USE_DATABASE
@@ -1523,11 +1522,13 @@ GLOBAL_EXECUTION_CONTEXT_SERVLET
 Current Servlet enablement:
 
 ```text
-BUILD_EXECUTION_CONTEXT=TRUE
+MODULE_TYPE=SERVLET (always packages Execution Context)
         ↓
 GLOBAL_EXECUTION_CONTEXT_SERVLET
         ↓
 GLOBAL_EXECUTION_CONTEXT
+        ↓
+execution-context.enabled=true at runtime (default OFF)
 ```
 
 Reactive support is not yet implemented. Do not claim that `execution-context-reactive` exists until it is actually added and validated.
@@ -2342,7 +2343,7 @@ Shared Servlet exception handling
 → runtime packages stay under com.example.projectbuild.* and must not scan com.example.learning.*
 
 Execution Context
-→ BUILD_EXECUTION_CONTEXT is an independent capability flag
+→ Servlet always packages the MVC adapter; runtime execution-context.enabled controls activation (default OFF)
 → springboot-runtime/execution-context = neutral core
 → springboot-runtime/execution-context-servlet = current MVC/Servlet adapter
 → gradle-runtime generates META-INF/execution-context/source-context.json

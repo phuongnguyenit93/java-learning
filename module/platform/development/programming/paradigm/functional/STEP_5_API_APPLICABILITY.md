@@ -18,7 +18,7 @@ Evaluated the locked Paradigm Curriculum, seven approved Roadmap milestones in b
 
 ## Existing implementation audit — performed AFTER applicability decision
 
-The current master.json uses MODULE_TYPE=LIBRARY, BUILD_SWAGGER=FALSE, BUILD_TESTER=FALSE and BUILD_EXECUTION_CONTEXT=FALSE. These values **were not used to choose NOT REQUIRED**; they merely agree with the learning-value determination.
+The current master.json uses MODULE_TYPE=LIBRARY, BUILD_SWAGGER=FALSE and BUILD_TESTER=FALSE. These values **were not used to choose NOT REQUIRED**; they merely agree with the learning-value determination.
 
 Inspected current Java source tree, controller/mapping patterns and Swagger source/metadata paths. No executable learning controller, Swagger learning descriptions, or stale runtime/API configuration contradicted the decision. No legacy human-authored learning API required cleanup. No web capability, controller, Swagger metadata, generator invocation, or unrelated module modification is justified. Existing approved Roadmaps, Menu, Knowledge, reference and metadata are preserved.
 
