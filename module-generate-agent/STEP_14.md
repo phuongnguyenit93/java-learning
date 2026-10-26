@@ -2,7 +2,7 @@
 
 
 
-> **2026-10-25:** STEP 14 must translate existing VI `<chapter>/summary/section.yml` and all `summaries.yml` items into EN without altering IDs/order/code/links/Markdown structure. Reference is language-neutral and must not be translated. Prime QA/readback Summary EN before STEP 15.
+> **2026-10-26:** STEP 14 translates existing VI `<chapter>/summary/section.yml` YAML and `summaries.yml` items into EN. The chapter source originated as full YAML in STEP 5 parent AC; `comparisonMarkdown` remains a single GFM table **inside a YAML scalar**. Preserve all IDs/order, roadmap transition targets, YAML keys/schema, code/links and Markdown table structure; no conversion back into chapter Markdown. Reference is language-neutral and must not be translated. Prime QA/readback Summary EN before STEP 15, which copies `section.yml` EN verbatim into parent AC.
 
 > **Quy trình:** Hoàn tất preflight gate của STEP 12A → lập catalog/backup → giao worker **mỗi lượt một file** → Prime QA từng file → QA toàn module → CURRENT_STEP.VALUE readback. Whitelist/blacklist nằm trong `worker/STEP_14_WORKER.md`. Không thực thi STEP 15 khi STEP 14 chưa hoàn tất.
 

@@ -3,7 +3,7 @@
 **Module progress:** The only checkpoint is `CURRENT_STEP.VALUE` (JSON string) in the verified module's `master.json`. Prime advances it after all QA gates, with no regression and exact readback; do not read or write progress in Google Sheets J3. See `module-generate-agent/rules/PRIME_RULES.md` section 2.
 
 
-**Reference/Summary import:** See `module-generate-agent/STEP_2.md` (Sheet L2/L3 Reference YAML to shared `content/reference/references.yml`) and `module-generate-agent/STEP_5.md` (AC parent/children Summary Markdown to `summary/section.md` and `summary/summaries.yml`). Both are explicit code-only module-local DRY_RUN/APPLY imports, not automatic Gradle Sync. Legacy paired `Learning Objectives` headers remain readable. STEP 12/12A/14/15 preserve these contracts and STEP 15 uses A:AC (29 columns).
+**Reference/Summary import:** See `module-generate-agent/STEP_2.md` (Sheet L2/L3 Reference YAML to shared `content/reference/references.yml`) and `module-generate-agent/STEP_5.md` (AC parent is authored roadmap YAML copied verbatim into `summary/section.yml`; AC children remain Markdown assembled into `summary/summaries.yml`). Both are code-only module-local DRY_RUN/APPLY imports, not automatic Gradle Sync. Summary headers use `Summary` / `Summary YAML`; legacy `Learning Objectives` paired YAML labels are supported. STEP 12/12A/14/15 preserve these contracts and STEP 15 uses A:AC (29 columns).
 
 ## 1. Purpose
 

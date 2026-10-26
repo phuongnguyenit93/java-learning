@@ -2,7 +2,7 @@
 
 
 
-**Summary clone:** STEP 12A clones the VI `summary/section.yml` and `summaries.yml` under each chapter to EN, excluding Video. Validate the root `summaries`, child counts/order/IDs and Knowledge mapping before APPLY. Shared module-wide Reference is never cloned or translated; STEP 14 later translates only Summary EN text.
+**Summary clone:** STEP 12A clones the VI `summary/section.yml` (**directly authored as YAML in STEP 5 parent AC**) and `summaries.yml` (generated from child AC Markdown) under each chapter to EN, excluding Video. Validate root `section.yml` schema, `roadmap[]` ID/order/transition, `comparisonMarkdown` GFM table, root `summaries`, child counts/order/IDs and Knowledge mapping before APPLY. Shared module-wide Reference is never cloned or translated; STEP 14 later translates only Summary EN text.
 
 ## 0. Mục tiêu và ranh giới
 

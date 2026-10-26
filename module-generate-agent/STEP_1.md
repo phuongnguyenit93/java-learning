@@ -70,7 +70,7 @@ Ví dụ đã đối chiếu với cây module thực tế:
 
 ## Dropdown isImportant kế thừa từ Template
 
-Template chuẩn có **29 cột (`A:AC`)**: `AB18 = Importance`, `AB19 = isImportant`, `AB20:AB700` phải có Data Validation `ONE_OF_LIST` với hai lựa chọn `TRUE`, `FALSE` (`strict=true`, `showCustomUi=true`). **AC18=Summary**, **AC19=Summary Markdown**; cặp nhãn cũ `Learning Objectives`/`Learning Objectives Markdown` chỉ được chấp nhận nguyên cặp trên tab đã tồn tại. Chỉ hàng Menu Cấp 2 được STEP 5 ghi AB và AC từng bài; AC hàng cha cũng do STEP 5 sở hữu. AB trống có default `false` khi import. Bước clone/preflight/readback STEP 1 phải bảo đảm AB và AC còn đầy đủ; không sửa Template hoặc tab cũ ngoài migration được người dùng yêu cầu.
+Template chuẩn có **29 cột (`A:AC`)**: `AB18 = Importance`, `AB19 = isImportant`, `AB20:AB700` phải có Data Validation `ONE_OF_LIST` với hai lựa chọn `TRUE`, `FALSE` (`strict=true`, `showCustomUi=true`). **AC18=Summary**, **AC19=Summary YAML**; cặp nhãn cũ `Learning Objectives`/`Learning Objectives YAML` chỉ được chấp nhận nguyên cặp trên tab đã tồn tại. STEP 5 ghi **AC cha = nguyên YAML `section.yml`** (roadmap có cấu trúc + `comparisonMarkdown` bảng GFM), **AC con = Summary Markdown** theo barem 0/1/2/3. Chỉ hàng Menu Cấp 2 được STEP 5 ghi AB và AC từng bài; AC hàng cha cũng do STEP 5 sở hữu. AB trống có default `false` khi import. Bước clone/preflight/readback STEP 1 phải bảo đảm AB và AC còn đầy đủ; không sửa Template hoặc tab cũ ngoài migration được người dùng yêu cầu. Tab có header `Summary Markdown` trước đây cần migrate có kiểm soát sang contract YAML khi được ủy quyền, không tự diễn giải là schema mới.
 
 ## Dropdown Difficulty bắt buộc kế thừa từ Template
 

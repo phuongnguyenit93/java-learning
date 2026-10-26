@@ -363,7 +363,7 @@ class ModuleEnSheetPublishService {
                         plan.add([r: 1, c: 11, value: 'Reference'])
                         plan.add([r: 2, c: 11, value: cellValue(sheet.getRow(2)?.getCell(11))])
                         plan.add([r: 17, c: 28, value: 'Summary'])
-                        plan.add([r: 18, c: 28, value: 'Summary Markdown'])
+                        plan.add([r: 18, c: 28, value: 'Summary YAML'])
                         // Fixed labels are translated by code, not by an AI service.
                         Map<String,String> labels = [
                                 'A1':'Topic', 'A17':'Introduction', 'A18':'Menu',

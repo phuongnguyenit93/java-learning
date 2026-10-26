@@ -2,7 +2,7 @@
 
 
 
-> **2026-10-25:** EN Template requires 29 columns (A:AC); Reference from shared `content/reference/references.yml` maps to L3, Summary EN `section.yml` and `summaries.yml` to AC parent/children. Header labels are `L2=Reference`, `AC18=Summary`, `AC19=Summary Markdown`; exact readback and EN Summary content validation are mandatory.
+> **2026-10-26:** EN Template requires 29 columns (A:AC); Reference from shared `content/reference/references.yml` maps to L3. The complete **EN `summary/section.yml` YAML text maps verbatim into AC parent**; EN `summary/summaries.yml` lesson `summary` Markdown maps into AC child cells. Headers: `L2=Reference`, `AC18=Summary`, `AC19=Summary YAML`; exact readback and EN Summary YAML/Markdown validation are mandatory.
 
 ## 0. Hard rule: code-only, no AI, no workers
 
@@ -88,6 +88,13 @@ All default to `DRY_RUN`; only `APPLY` mutates Sheets or local files.
    `menu/<chapter>/{interview,quiz}/question.yml` của ngôn ngữ EN.
    Mỗi câu hỏi chỉ lưu `readmeRelated.anchor`; chapter được xác định bằng
    vị trí file, không dựa vào `readmeRelated.file`.
+   **Summary:** đọc đầy đủ `menu/<chapter>/summary/section.yml` EN, validate
+   root `version/type/title/roadmapHeading/roadmap/comparisonMarkdown`, lesson
+   ID/order/transition và bảng GFM; **ghi toàn bộ chuỗi YAML không chuyển đổi vào
+   đúng `AC<PARENT>`**. Đọc `summaries.yml`, kiểm tra mỗi `summaries[].id`
+   khớp bài/ID theo thứ tự, rồi ghi `summaries[].summary` Markdown vào đúng
+   `AC<CHILD>`. Header `AC19` phải là `Summary YAML`. Không tái dựng
+   Markdown chương từ YAML, không re-serialize `section.yml` và không dùng AI.
 3. Translate **fixed template labels only** using literal code mappings and
    clear VI-only authoring prompts. No freeform AI translation.
 4. Upload only `userEnteredValue` with the Google Sheets API, preserving
@@ -97,6 +104,9 @@ All default to `DRY_RUN`; only `APPLY` mutates Sheets or local files.
 ## 5. Verify, export, and update master.json
 
 1. Verify the uploaded EN content and all native Sheet formatting. Confirm the exact VI gid/I3, no drift in source hashes, and no conflicts.
+   Exact readback phải chứng minh mỗi `AC<PARENT>` **bằng đúng chuỗi UTF-8 của
+   `section.yml` EN** (bao gồm indent, `comparisonMarkdown` và line breaks),
+   mỗi `AC<CHILD>` bằng Summary Markdown trong `summaries.yml`, và `AC19=Summary YAML`.
 2. Export the verified official EN gid to `<MODULE>/content/sheet/en/module.xlsx`. Verify one worksheet and exact content readback. Do not require any STEP value in the workbook or Google Sheets.
 3. Persist phase `EXPORTED` in `content/sheet/en/publish-state.json`. The Gradle publisher **never reads or writes J2/J3**. It checks the module `master.json` has `CURRENT_STEP.VALUE = "14"` (or 15/FINAL for safe published replay).
 4. After **all** STEP 15 gates PASS, Prime alone updates `CURRENT_STEP.VALUE = "15"` in the verified module `master.json` and exact readback. If this update fails, the EN Sheet/Excel remains valid and can be resumed using the recorded state; do not duplicate the tab.

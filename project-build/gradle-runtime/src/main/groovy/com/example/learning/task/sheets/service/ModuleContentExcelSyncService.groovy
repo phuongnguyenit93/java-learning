@@ -207,7 +207,11 @@ class ModuleContentExcelSyncService {
             }
             return
         }
-        if (!([label,header] in [['Summary','Summary Markdown'],
+        // STEP 12's older VI workbook may still carry the Markdown label.
+        // Export upgrades its EN copy to YAML without modifying the VI source.
+        if (!([label,header] in [['Summary','Summary YAML'],
+                ['Learning Objectives','Learning Objectives YAML'],
+                ['Summary','Summary Markdown'],
                 ['Learning Objectives','Learning Objectives Markdown']])) {
             throw new GradleException('Invalid Summary headers in VI Excel AC18:AC19.')
         }
@@ -235,9 +239,9 @@ class ModuleContentExcelSyncService {
             List<String> ids = (0..<(group.children as List).size()).collect { int i ->
                 slug + '-' + String.format('%03d', i + 1)
             }
-            set(sheet, group.row as int, 29,
-                    SummarySectionYamlService.toMarkdown(
-                            SummarySectionYamlService.read(section.getText('UTF-8'), ids), ids, 'en'), report)
+            String chapterYaml = section.getText('UTF-8')
+            SummarySectionYamlService.read(chapterYaml, ids)
+            set(sheet, group.row as int, 29, chapterYaml, report)
             (group.children as List<Map>).eachWithIndex { Map child, int i ->
                 Map item = (doc.summaries as List)[i] as Map
                 String id = slug + '-' + String.format('%03d', i + 1)
@@ -250,7 +254,7 @@ class ModuleContentExcelSyncService {
             }
         }
         set(sheet, 18, 29, 'Summary', report)
-        set(sheet, 19, 29, 'Summary Markdown', report)
+        set(sheet, 19, 29, 'Summary YAML', report)
     }
 
     private static void readme(File module, XSSFSheet sheet, List<Map> groups, Map report) {

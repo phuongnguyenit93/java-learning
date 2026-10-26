@@ -14,24 +14,20 @@ class ModuleTranslationCatalogServiceTest {
     void summaryTranslationInventoryAndProtectedIdsAreChecked() {
         Map f = fixture()
         File module = f.module as File
-        String viSection = new org.yaml.snakeyaml.Yaml().dump(
-                SummarySectionYamlService.fromMarkdown('''# Mục tiêu
-
-## 1. Mạch liên kết bài học
-
-### Bài 1 — Bài học
-
-Nội dung.
-
-## 2. Bảng đối chiếu các bài học
+        String viSection = new org.yaml.snakeyaml.Yaml().dump([
+                version: 1, type: 'LEARNING_ROADMAP', title: 'Mục tiêu',
+                roadmapHeading: 'Mạch liên kết bài học',
+                roadmap: [[id: 'basic-001', order: 1, title: 'Bài học',
+                           description: 'Nội dung.', transition: null]],
+                comparisonMarkdown: '''## 2. Bảng đối chiếu các bài học
 
 | Tiêu chí | Bài 1 |
 | --- | --- |
 | Kết quả | Nội dung |
 | Ví dụ | Account |
 | Phạm vi | Java |
-| Kiểm tra | Object |
-''', ['basic-001']))
+| Kiểm tra | Object |'''
+        ])
         String summaryYaml = 'summaries:\n  - id: basic-001\n    title: Bài học\n    summary: "## Nội dung"\n'
         for (String lang : ['vi', 'en']) {
             write(module, "content/readme/docs/${lang}/menu/1.Basic/summary/section.yml",viSection)

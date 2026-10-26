@@ -1,7 +1,6 @@
 package com.example.learning.setup.root.structure
 
 import com.example.learning.setup.root.structure.service.PortalSummaryProjectionService
-import com.example.learning.task.sheets.service.SummarySectionYamlService
 import groovy.json.JsonSlurper
 import org.gradle.testfixtures.ProjectBuilder
 import org.junit.Rule
@@ -26,24 +25,20 @@ class PortalSummaryProjectionServiceTest {
         module.extensions.extraProperties.set('SERVICE_NAME','EXAMPLE')
         File dir = new File(moduleDir,'content/readme/docs/vi/menu/1.OOPBasic/summary')
         assertTrue(dir.mkdirs())
-        new File(dir,'section.yml').setText(new Yaml().dump(
-                SummarySectionYamlService.fromMarkdown('''# Tổng kết
-
-## 1. Mạch liên kết bài học
-
-### Bài 1 — OOP là gì?
-
-Nội dung định hướng.
-
-## 2. Bảng đối chiếu các bài học
+        new File(dir,'section.yml').setText(new Yaml().dump([
+                version: 1, type: 'LEARNING_ROADMAP', title: 'Tổng kết',
+                roadmapHeading: 'Mạch liên kết bài học',
+                roadmap: [[id: 'oop-basic-001', order: 1, title: 'OOP là gì?',
+                           description: 'Nội dung định hướng.', transition: null]],
+                comparisonMarkdown: '''## 2. Bảng đối chiếu các bài học
 
 | Tiêu chí | Bài 1 |
 | --- | --- |
 | Kết quả | Định hướng |
 | Ví dụ | Account |
 | Phạm vi | Java |
-| Kiểm tra | Object |
-''', ['oop-basic-001'])), 'UTF-8')
+| Kiểm tra | Object |'''
+        ]), 'UTF-8')
         File yaml = new File(dir,'summaries.yml')
         yaml.setText('''summaries:
   - id: oop-basic-001

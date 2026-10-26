@@ -5,70 +5,8 @@ import org.yaml.snakeyaml.LoaderOptions
 import org.yaml.snakeyaml.Yaml
 import org.yaml.snakeyaml.constructor.SafeConstructor
 
-import java.util.regex.Pattern
-
-/** Reversible STEP 5 chapter AC Markdown <-> structured roadmap YAML. */
+/** Validate authored chapter YAML before the Sheet snapshot is written as-is. */
 class SummarySectionYamlService {
-    private static final Pattern STEP = Pattern.compile(
-            '(?m)^###\\s+(?:Bài|Lesson)\\s+(\\d+)\\s*[—–-]\\s*(.+?)\\s*$')
-    private static final Pattern FLOW = Pattern.compile('(?m)^\\s*↓\\s+(.+?)\\s*$')
-
-    static Map fromMarkdown(String source, List<String> ids) {
-        String markdown = source.replace('\r\n', '\n').trim()
-        def head = (markdown =~ /(?m)^#\s+(.+)\s*$/)
-        def first = (markdown =~ /(?m)^##\s+1\.\s+(.+)\s*$/)
-        def second = (markdown =~ /(?m)^##\s+2\.\s+(.+)\s*$/)
-        if (!head.find() || head.start() != 0 || !first.find() || !second.find() ||
-                first.start() <= head.end() || second.start() <= first.end() ||
-                !markdown.substring(head.end(), first.start()).trim().isEmpty()) {
-            throw new GradleException('Summary chapter needs # title, ## 1. flow and ## 2. comparison.')
-        }
-        String flow = markdown.substring(first.end(), second.start()).trim()
-        def matches = STEP.matcher(flow)
-        List<Map> headings = []
-        while (matches.find()) {
-            headings.add([start: matches.start(), end: matches.end(),
-                          order: Integer.parseInt(matches.group(1)),
-                          title: matches.group(2).trim()])
-        }
-        if (headings.size() != ids.size() || headings.isEmpty() ||
-                !flow.substring(0, headings[0].start as int).trim().isEmpty()) {
-            throw new GradleException('Summary roadmap step count does not match Knowledge IDs.')
-        }
-        List<Map> steps = []
-        headings.eachWithIndex { Map entry, int i ->
-            if (entry.order != i + 1) throw new GradleException('Summary roadmap order mismatch.')
-            int end = i + 1 < headings.size() ? headings[i + 1].start as int : flow.length()
-            String body = flow.substring(entry.end as int, end).trim()
-            def arrow = FLOW.matcher(body)
-            String description
-            Map transition = null
-            if (arrow.find()) {
-                description = body.substring(0, arrow.start()).trim()
-                String after = body.substring(arrow.end()).trim()
-                if (i == headings.size() - 1 || after) {
-                    throw new GradleException('Invalid Summary roadmap transition at lesson ' + (i + 1))
-                }
-                transition = [to: ids[i + 1], description: arrow.group(1).trim()]
-            } else {
-                description = body
-                if (i < headings.size() - 1) {
-                    throw new GradleException('Missing Summary roadmap transition at lesson ' + (i + 1))
-                }
-            }
-            if (!description || (transition != null && !transition.description)) {
-                throw new GradleException('Empty Summary roadmap text at lesson ' + (i + 1))
-            }
-            steps.add([id: ids[i], order: entry.order, title: entry.title,
-                       description: description, transition: transition])
-        }
-        Map value = [version: 1, type: 'LEARNING_ROADMAP', title: head.group(1).trim(),
-                     roadmapHeading: first.group(1).trim(), roadmap: steps,
-                     comparisonMarkdown: markdown.substring(second.start()).trim()]
-        validate(value, ids)
-        return value
-    }
-
     static Map read(String source, List<String> ids) {
         LoaderOptions options = new LoaderOptions()
         options.allowDuplicateKeys = false
@@ -124,21 +62,4 @@ class SummarySectionYamlService {
         }
     }
 
-    static String toMarkdown(Map value, List<String> ids, String language = 'vi') {
-        validate(value, ids)
-        List<String> lines = ['# ' + value.title, '', '## 1. ' + value.roadmapHeading, '']
-        (value.roadmap as List).each { Map step ->
-            lines.add('### ' + (language == 'en' ? 'Lesson' : 'Bài') +
-                    ' ' + step.order + ' — ' + step.title)
-            lines.add('')
-            lines.add((step.description as String).trim())
-            lines.add('')
-            if (step.transition != null) {
-                lines.add('↓ ' + (step.transition.description as String).trim())
-                lines.add('')
-            }
-        }
-        lines.add((value.comparisonMarkdown as String).trim())
-        return lines.join('\n').trim() + '\n'
-    }
 }

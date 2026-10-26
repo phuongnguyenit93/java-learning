@@ -21,7 +21,7 @@ class ModuleContentExcelSyncServiceTest {
             cell(s, 2, 12, 'Reference')
             cell(s, 3, 12, 'references: []')
             cell(s, 18, 29, 'Summary')
-            cell(s, 19, 29, 'Summary Markdown')
+            cell(s, 19, 29, 'Summary YAML')
             cell(s, 20, 29, '# VI section')
             cell(s, 21, 29, '## VI lesson')
             viWorkbook.withOutputStream { book.write(it) }
@@ -31,24 +31,20 @@ class ModuleContentExcelSyncServiceTest {
   - title: Language Specification
     url: https://docs.oracle.com/javase/specs/
 ''')
-        String structured = new org.yaml.snakeyaml.Yaml().dump(
-                SummarySectionYamlService.fromMarkdown('''# English section
-
-## 1. Learning flow
-
-### Bài 1 — Basic
-
-Understand the basics.
-
-## 2. Comparison
+        String structured = new org.yaml.snakeyaml.Yaml().dump([
+                version: 1, type: 'LEARNING_ROADMAP', title: 'English section',
+                roadmapHeading: 'Learning flow',
+                roadmap: [[id: 'basic-001', order: 1, title: 'Basic',
+                           description: 'Understand the basics.', transition: null]],
+                comparisonMarkdown: '''## 2. Comparison
 
 | Criteria | Bài 1 |
 | --- | --- |
 | Skills | Basics |
 | Example | Account |
 | Scope | Java |
-| Verify | Object |
-''', ['basic-001']))
+| Verify | Object |'''
+        ])
         write(module, 'content/readme/docs/vi/menu/1.Basic/summary/section.yml', structured)
         write(module, 'content/readme/docs/vi/menu/1.Basic/summary/summaries.yml',
                 'summaries:\n  - {id: basic-001, title: VN, summary: Lesson VI}\n')
@@ -65,8 +61,8 @@ Understand the basics.
                 assertTrue(ModuleContentExcelSyncService.text(s, 3, 12)
                         .contains('Language Specification'))
                 assertEquals('Summary', ModuleContentExcelSyncService.text(s, 18, 29))
-                assertEquals('Summary Markdown', ModuleContentExcelSyncService.text(s, 19, 29))
-                assertTrue(ModuleContentExcelSyncService.text(s, 20, 29).startsWith('# English section'))
+                assertEquals('Summary YAML', ModuleContentExcelSyncService.text(s, 19, 29))
+                assertEquals(structured, ModuleContentExcelSyncService.text(s, 20, 29))
                 assertEquals('Lesson EN', ModuleContentExcelSyncService.text(s, 21, 29))
             }
         }

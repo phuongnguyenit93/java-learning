@@ -6,15 +6,14 @@ import org.yaml.snakeyaml.DumperOptions
 import org.yaml.snakeyaml.Yaml
 
 /**
- * STEP 5's reviewed AC Markdown is authoritative. Each VI chapter owns
- * exactly summary/section.yml and summary/summaries.yml. Chapter AC Markdown
- * is converted deterministically to roadmap YAML; lesson prose is unchanged.
+ * STEP 5's reviewed chapter AC YAML is authoritative. Validate it, then write
+ * its bytes as-is to section.yml. Child AC Markdown becomes summaries.yml.
  */
 class SummarySheetImportService {
     static final int MAX_CELL = 30000
     private static final List<List<String>> HEADERS = [
-            ['Summary', 'Summary Markdown'],
-            ['Learning Objectives', 'Learning Objectives Markdown']
+            ['Summary', 'Summary YAML'],
+            ['Learning Objectives', 'Learning Objectives YAML']
     ].asImmutable()
 
     Map<String, Object> execute(File repositoryRoot, Map<String, Object> context, boolean apply) {
@@ -110,9 +109,9 @@ class SummarySheetImportService {
             if (!section || lessons.any { !it.summary }) {
                 throw new GradleException('Incomplete Summary AC for chapter ' + chapter)
             }
-            Map structured = SummarySectionYamlService.fromMarkdown(section, lessons*.id as List<String>)
+            SummarySectionYamlService.read(section, lessons*.id as List<String>)
             prepared[chapter] = [
-                    'section.yml': writer.dump(structured),
+                    'section.yml': section,
                     'summaries.yml': writer.dump([summaries: lessons])
             ]
         }

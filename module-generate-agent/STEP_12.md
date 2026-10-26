@@ -2,7 +2,7 @@
 
 
 
-> **2026-10-25:** verify snapshot retains Reference L2/L3 and Summary AC18/19 plus all parent/child AC values, including Excel's 32,767 UTF-16 character limit. A 28-column workbook is insufficient if the source tab already has AC.
+> **2026-10-26:** verify snapshot retains Reference L2/L3 and Summary AC18/19 plus all parent/child AC values: **AC parent stores full `section.yml` YAML**, AC children store Summary Markdown 0/1/2/3. Export these cell values verbatim to 29-column Excel, respecting Excel's 32,767 UTF-16 character limit; do not convert AC parent YAML back into chapter Markdown. A 28-column workbook is insufficient if the source tab already has AC.
 
 ## 0. Mục tiêu và phạm vi
 
